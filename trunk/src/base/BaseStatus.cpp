@@ -85,9 +85,29 @@ namespace Base
 
     status.time.sec = report.time().sec();
     status.time.usec = report.time().usec();
-    status.position.point.x = currentReport.Xpos;
-    status.position.point.y = currentReport.Ypos;
+    
+    /**********
+     * Quick dirty patch to "correct" coordinates
+     * TODO: Check WHY!!!!!!
+     **********/
+    //    status.position.point.x = currentReport.Xpos;
+    //    status.position.point.y = currentReport.Ypos;
+    status.position.point.x = currentReport.Ypos;
+    status.position.point.y = -currentReport.Xpos;
+
+    /**********
+     * EndPatch
+     **********/
+
     status.position.heading = -base2rad(currentReport.Heading);
+
+    while (status.position.heading <= -M_PI) {
+      status.position.heading+=2*M_PI;
+    }
+    while (status.position.heading > M_PI) {
+      status.position.heading-=2*M_PI;
+    }
+    
 
     // shift velocities into the right metrics
     if (currentReport.RotateStatus & 0x800)
@@ -99,6 +119,13 @@ namespace Base
       status.velocity.translation = -currentReport.TranslateVelocity;
     else
       status.velocity.translation = currentReport.TranslateVelocity;
+
+    while (status.velocity.rotation <= -M_PI) {
+      status.velocity.rotation+=2*M_PI;
+    }
+    while (status.velocity.rotation > M_PI) {
+      status.velocity.rotation-=2*M_PI;
+    }
 
     if (odometry_) {
       odometry_->integrateData(status);
