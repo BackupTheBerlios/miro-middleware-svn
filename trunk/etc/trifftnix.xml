@@ -240,7 +240,7 @@
 <!-- parameter fuer neue (haeltnix) camera -->
   <parameter name="Camera" >
    <parameter value="0.060000" name="Latency" />
-   <parameter value="35.0" name="Alpha" />
+   <parameter value="34.5" name="Alpha" />
    <parameter value="515" name="Height" />
    <parameter value="197.159465" name="Cx" />
    <parameter value="139.645856" name="Cy" />
