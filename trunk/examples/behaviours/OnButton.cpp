@@ -38,7 +38,7 @@ OnButton::OnButton(CosNotifyChannelAdmin::EventChannel_ptr _ec,
   removed.length(1);
 
   added[0].domain_name =  CORBA::string_dup(domainName_.c_str());
-  added[0].type_name = CORBA::string_dup("Button");
+  added[0].type_name = CORBA::string_dup("B21ButtonStatusIDL");
 
   removed[0].domain_name =  CORBA::string_dup("*");
   removed[0].type_name = CORBA::string_dup("*");

@@ -17,8 +17,13 @@
 
 INSTALL = $(VBIN:%=$(INSBIN)/%)
 
+## hack for debug visualization
+INCLDIRS += -I$(NIX_ROOT)/src
+LDFLAGS +=  -L$(NIX_ROOT)/lib
+LDFLAGS +=  -L$(IPP_ROOT)/lib
+
 ## dynamic libraries if needed
-LDLIBS += -lmiro -lTAO_CosNaming -lTAO
+LDLIBS += -lnix -lippi20 -lippcv20 -lmiro -lTAO_CosNaming -lTAO
 
 ## program to be built
 BIN 	= Behaviours

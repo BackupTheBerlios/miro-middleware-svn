@@ -32,11 +32,13 @@ using Miro::ScanDescriptionIDL_var;
 using Miro::MotionArbiterMessage;
 
 WallFollow::WallFollow(Miro::Client& _client,
-				   EventChannel_ptr _ec,
-				   const string& _name,
-				   const string& _domainName) :
-  Super(_client, _ec, _name, _domainName)
+		       EventChannel_ptr _ec,
+		       const string& _name,
+		       const string& _domainName,
+		       Miro::StructuredPushSupplier * _pSupplier) :
+  Super(_client, _ec, _name, _domainName, _pSupplier)
 {
+  cout << "Constructing " << _name << endl;
 }
 
 WallFollowParameters *
@@ -62,7 +64,7 @@ WallFollow::action()
   message.id = this;
   message.active = false;
   message.velocity.translation = params->translation;
-  message.velocity.rotation = 0;
+  message.velocity.rotation = 0.;
 
   bool rL, rR;
   double mL = 0.;
@@ -71,14 +73,12 @@ WallFollow::action()
   double bR = 0.;
 
   //  cout << name_ << ": Regressionsgeraden" << endl;
-
   // left wall 
-  if (!(rL = regressionsGerade(left_, Miro::deg2Rad(90), mL, bL)))
-    rL = regressionsGerade(leftFront_, Miro::deg2Rad(45), mL, bL);
+  rL = regressionsGerade(left_, Miro::deg2Rad(90), mL, bL);
+  //    rL = regressionsGerade(leftFront_, Miro::deg2Rad(45), mL, bL);
 
-  if (!(rR = regressionsGerade(right_, Miro::deg2Rad(-90), mR, bR)))
-    rR = regressionsGerade(rightFront_, Miro::deg2Rad(-45), mR, bR);
-
+  rR = regressionsGerade(right_, Miro::deg2Rad(-90), mR, bR);
+  //    rR = regressionsGerade(rightFront_, Miro::deg2Rad(-45), mR, bR);
 
   //  cout << name_ << ": selecting action" << endl;
  
@@ -88,33 +88,45 @@ WallFollow::action()
 	 bL < bR ) ) {
 
     double alpha = atan2(mL, 1.);
+    double dist = cos(alpha) * bL;
 
     cout << name_ << " left: alpha=" << Miro::rad2Deg(alpha) 
-	 << "°\t b=" << bL << "mm" << endl;
+	 << "°\t d=" << dist << "mm" << endl;
 
     message.active = true;        // yes, we do something
     
-    if (bL < params->minDistance) // we are too near
-      alpha -= M_PI / 4.; // -45°
-    else if (bL > params->maxDistance) // we are too far
-      alpha += M_PI / 4.; // +45°
+    if (dist < params->minDistance) { // we are too near
+      alpha -= M_PI / 6.; // -30°
+      cout << name_ << " left: too near alpha" << Miro::rad2Deg(alpha) << "°" << endl;
+    }
+    else if (dist > params->maxDistance) { // we are too far
+      alpha += M_PI / 6.; // +30°
+      cout << name_ << " left: too far alpha" << Miro::rad2Deg(alpha) << "°" << endl;
+    }
 
-    message.velocity.rotation = min(params->rotation, mL);
+    message.velocity.rotation = min(params->rotation, 
+				    max(-params->rotation, alpha));
   }
   else if (rR) {
     double alpha = atan2(mR, 1.);
+    double dist = cos(alpha) * bR;
 
-    cout << name_ << " right: m=" << mR << "\talpha=" << Miro::rad2Deg(alpha)
-	 << "°\t b=" << bR << "mm" << endl;
+    cout << name_ << " right: alpha=" << Miro::rad2Deg(alpha)
+	 << "°\t d=" << dist << "mm" << endl;
 
     message.active = true;
 
-    if (bL < params->minDistance) // we are too near
-      mR += M_PI / 4.; // +45°
-    else if (bL > params->maxDistance) // we are too far
-      mR -= M_PI / 4.; // -45°
+    if (dist < params->minDistance) { // we are too near
+      alpha += M_PI / 6.; // +30°
+      cout << name_ << " right: too near alpha" << Miro::rad2Deg(alpha) << "°" << endl;
+    }
+    else if (dist > params->maxDistance) { // we are too far
+      alpha -= M_PI / 6.; // -30°
+      cout << name_ << " right: too far alpha" << Miro::rad2Deg(alpha) << "°"  << endl;
+    }
 
-    message.velocity.rotation = max(-params->rotation, mR);
+    message.velocity.rotation = min(params->rotation, 
+				    max(-params->rotation, alpha));
   }
 
   //  cout << name_ << ": action." << endl;
@@ -123,13 +135,13 @@ WallFollow::action()
 
 bool
 WallFollow::regressionsGerade(const SensorScan& _scan, double delta,
-			      double& m, double& b) const
+			      double& a, double& b) const
 {
   if (_scan.size() < 5) // too litle data
     return false;
 
   // correction angle
-  delta += heading_;
+  delta += heading_ - M_PI / 2.;
   Vector2d alpha(cos(-delta), sin(-delta));
 
   // build vector of egocentric sensor readings
@@ -138,6 +150,8 @@ WallFollow::regressionsGerade(const SensorScan& _scan, double delta,
   for (first = scan.begin(); first != last; ++first) {
     (*first) -= position_;
     (*first) *= alpha;
+
+    //    cout << "x =" << first->real() << "\t y=" << first->imag() << endl;
   }
 
   // Geradengleichung y = m*x + b
@@ -146,25 +160,25 @@ WallFollow::regressionsGerade(const SensorScan& _scan, double delta,
   //  cout << "sum: " << sum.real() << ", " << sum.imag() << endl;
 
   double n = scan.size();
-  double productSum = 0.;
-  double xSquareSum = 0.;
+  double xmean = sum.real() / n;
+  double ymean = sum.imag() / n;
+  double sxy = 0.;
+  double ssqx = 0.;
 
   for (first = scan.begin(); first != last; ++first) {
-    xSquareSum += first->real() * first->real();
-    productSum += first->real() * first->imag();
+    ssqx += first->real() * first->real();
+    sxy += first->real() * first->imag();
   }
 
-  double d = n * xSquareSum - sum.real() * sum.real();
+  double d = ssqx - n * xmean * xmean;
 
-  cout << "x*x Sum=" << xSquareSum << " \tpSum=" << productSum 
-       << "\td=" << d << endl;
+  //  cout << "x*x Sum=" << ssqx << " \tpSum=" << sxy << "\td=" << d << endl;
 
   if (fabs(d) < 0.0001)
     return false;
 
-  m = ( n * productSum - sum.real() * sum.imag() ) / d;
-  b = sum.imag() - m * sum.real();
-  b /= n;
+  a = (sxy - n * xmean * ymean) / d;
+  b = ymean - a * xmean;
 
   return true;
 }

@@ -22,7 +22,8 @@ public:
   WallFollow(Miro::Client& _client,
 	     CosNotifyChannelAdmin::EventChannel_ptr _ec,
 	     const std::string& _name,
-	     const std::string& _domainName);
+	     const std::string& _domainName,
+	     Miro::StructuredPushSupplier * _pSupplier = NULL);
 
   // factory method for BehaviourParameters
   WallFollowParameters * getParametersInstance();

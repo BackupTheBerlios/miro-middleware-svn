@@ -27,6 +27,9 @@
 #include "miro/MotionC.h"
 #include "miro/OdometryC.h"
 
+
+#include "miro/StructuredPushSupplier.h"
+
 #include <orbsvcs/CosNotifyCommC.h>
 
 using CosNotifyChannelAdmin::EventChannel;
@@ -64,6 +67,8 @@ int main(int argc, char *argv[])
     cout << "Resolving event channel." << endl;
     EventChannel_var ec = server.resolveName<EventChannel>("EventChannel");
     
+    Miro::StructuredPushSupplier supplier(ec.in(), server.namingContextName);
+    
     // optain references
     cout << "Resolving sensor and actuator services." << endl;
     RangeSensor_var infrared = server.resolveName<RangeSensor>("Infrared");
@@ -75,7 +80,7 @@ int main(int argc, char *argv[])
     TactileStop tactileStop(motion.in(), ec.in(), server.namingContextName);
     RangeSensorAvoid avoid1(server, ec.in(), "AvoidOne", server.namingContextName);
     RangeSensorAvoid avoid2(server, ec.in(), "AvoidTwo", server.namingContextName);
-    WallFollow wallFollow(server, ec.in(), "WallFollow", server.namingContextName);
+    WallFollow wallFollow(server, ec.in(), "WallFollow", server.namingContextName, &supplier);
     Straight straight(*task->reactor());
     Wander wander(*task->reactor());
     OnButton onButton(ec.in(), server.namingContextName);
@@ -114,6 +119,15 @@ int main(int argc, char *argv[])
     cout << "Server stoped, exiting." << endl;
 
     policy.close();
+
+    supplier.disconnect();
+
+    tactileStop.disconnect();
+    avoid1.disconnect();;
+    avoid2.disconnect();
+    wallFollow.disconnect();
+    onButton.disconnect();
+
     task->cancel();
   }
   catch (const CORBA::Exception & e) {

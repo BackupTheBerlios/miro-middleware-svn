@@ -17,6 +17,9 @@
 #include "miro/MotionArbiterMessage.h"
 #include "miro/Angle.h"
 
+#include "miro/StructuredPushSupplier.h"
+#include "nix/LineSamplesC.h"
+
 #include <algorithm>
 
 using std::cout;
@@ -32,16 +35,20 @@ using Miro::RangeSensor_ptr;
 using Miro::ScanDescriptionIDL_var;
 using Miro::MotionArbiterMessage;
 
+int counter = 0;
+
 RangeSensorBehaviour::RangeSensorBehaviour(Miro::Client& _client,
-				   EventChannel_ptr _ec,
-				   const string& _name,
-				   const string& _domainName) :
+					   EventChannel_ptr _ec,
+					   const string& _name,
+					   const string& _domainName,
+					   Miro::StructuredPushSupplier * _pSupplier) :
   Super(_ec),
   client_(_client),
   name_(_name),
   domainName_(_domainName),
   sensorName_(),
-  description_()
+  description_(),
+  pSupplier_(_pSupplier)
 {
   cout << "Constructing RangeSensorBehaviour behaviour." << endl;
 
@@ -130,6 +137,52 @@ RangeSensorBehaviour::action()
   else {
     std::cerr << name_ << ": Unhandled Event!" << endl; 
   }
+
+#ifdef SADF
+  if (pSupplier_ && !(++counter % 5)) {
+    Nix::VisionFeaturesIDL * features = new Nix::VisionFeaturesIDL();
+
+    cout << "left size: " << left_.size() << endl;
+
+    features->lineFeature.length(right_.size());
+    SensorScan::const_iterator j = right_.begin();
+    for (unsigned int i = 0; i < features->lineFeature.length(); ++i, ++j) {
+
+      Vector2d s(*j);
+      Vector2d alpha(cos(-heading_), sin(-heading_));
+
+      s -= position_;
+      s *= alpha;
+
+      features->lineFeature[i].distance = abs(s);
+      features->lineFeature[i].angle = arg(s);
+
+      //      cout << "abs: " << abs(s) << "\targ: " << Miro::rad2Deg(arg(s)) << "°" << endl;
+    }
+    features->rawPosition.point.x = position_.real();
+    features->rawPosition.point.y = position_.imag();
+    features->rawPosition.heading = heading_;
+
+    features->worldPosition.point.x = 0; // position_.real();
+    features->worldPosition.point.y = 0; // position_.imag();
+    features->worldPosition.heading = 0.; //heading_;
+    features->cameraAngle = 0;
+
+    
+    CosNotification::StructuredEvent lineEvent;
+
+    lineEvent.header.fixed_header.event_type.domain_name =
+      CORBA::string_dup(pSupplier_->domainName().c_str());
+    lineEvent.header.fixed_header.event_type.type_name = 
+      CORBA::string_dup("LineSamples");
+    lineEvent.header.fixed_header.event_name = CORBA::string_dup("");
+    lineEvent.header.variable_header.length(0);   // put nothing here
+    lineEvent.filterable_data.length(0);          // put nothing here
+
+    lineEvent.remainder_of_body <<= features;
+    pSupplier_->sendEvent(lineEvent);
+  } 
+#endif
 }
 
 const string&
@@ -182,6 +235,8 @@ RangeSensorBehaviour::evalSensor(unsigned long group, unsigned long index, long 
 
   // calc egocentric range end point;
   p += q;
+
+  //  cout << "abs(p)=" << abs(p) << "\targ(p)=" << Miro::rad2Deg(arg(p)) << "°" << endl;
 
   // left sensors
   if (a >= Miro::deg2Rad(90) - params->apexAngle && 

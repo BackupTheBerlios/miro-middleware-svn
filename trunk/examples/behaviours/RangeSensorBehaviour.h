@@ -22,6 +22,7 @@
 namespace Miro
 {
   class Client;
+  class StructuredPushSupplier;
 };
 
 class RangeSensorBehaviour : public Miro::EventBehaviour
@@ -33,9 +34,10 @@ protected:
 
 public:
   RangeSensorBehaviour(Miro::Client& _client,
-		   CosNotifyChannelAdmin::EventChannel_ptr _ec,
-		   const std::string& _name,
-		   const std::string& _domainName);
+		       CosNotifyChannelAdmin::EventChannel_ptr _ec,
+		       const std::string& _name,
+		       const std::string& _domainName,
+		       Miro::StructuredPushSupplier * _pSupplier = NULL);
 
   void init(const Miro::BehaviourParameters * _params);
   void action();
@@ -64,5 +66,7 @@ protected:
   std::string sensorName_;
 
   Miro::ScanDescriptionIDL_var description_;
+
+  Miro::StructuredPushSupplier * pSupplier_;
 };
 #endif

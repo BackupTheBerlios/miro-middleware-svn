@@ -19,7 +19,7 @@ using Miro::KeyValueList;
 
 WallFollowParameters::WallFollowParameters() :
   minDistance(600),
-  maxDistance(400)
+  maxDistance(800)
 {}
 
 void
@@ -27,12 +27,12 @@ WallFollowParameters::operator <<= (const KeyValueList& _params)
 {
   Super::operator <<= (_params);
 
-  QString str = _params.getValue("Translation");
+  QString str = _params.getValue("MinDistance");
   if (str.length() != 0)
-    translation = str.toInt();
-  str = _params.getValue("Rotation");
+    minDistance = str.toInt();
+  str = _params.getValue("MaxDistane");
   if (str.length() != 0)
-    rotation = Miro::deg2Rad(str.toDouble());
+    maxDistance = str.toInt();
 }
 
 void
