@@ -56,6 +56,9 @@ module Miro
      * setLRVelocity (or corresponding methods).
      */
     void getTargetLRVelocity(out long left, out long right);
+
+    //! Get the wheelbase of the robot.
+    double getWheelBase();
   };
 };
 #endif // differentialMotion_idl
