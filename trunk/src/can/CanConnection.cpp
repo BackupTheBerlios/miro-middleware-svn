@@ -71,6 +71,8 @@ namespace Can
   Connection::init() const
   {
 
+    std::cout << "CanConnectionInit: " << parameters_.module << " " << parameters_.device << endl;
+
     if(parameters_.module == "Can"){
        CanConfig cfg;
 

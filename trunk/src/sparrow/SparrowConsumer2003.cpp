@@ -222,11 +222,11 @@ namespace Sparrow
 
     connection->boardReply = 1;
 
-    Can::Parameters *CanParams = new Can::Parameters();
+    //Can::Parameters *CanParams = new Can::Parameters();
 
     CanId msgID = message.id();
 
-    if(CanParams->module == "pcan")
+    if(params_->module == "pcan")
        msgID = (msgID | 0x80000000);
 
     switch (msgID) {
@@ -341,7 +341,7 @@ namespace Sparrow
 
     case CAN_MOTOR_TICKS_LEFT:{
       FaulController::OdometryMessage odoMessage(FaulController::OdometryMessage::LEFT);
-      if(CanParams->module == "pcan"){
+      if(params_->module == "pcan"){
          Can::pcanmsg * msgp_;
 	 message.canMessage(&msgp_);
 	 // long tickTmp;
@@ -365,7 +365,7 @@ namespace Sparrow
     case CAN_MOTOR_TICKS_RIGHT:{
 
        FaulController::OdometryMessage odoMessage2(FaulController::OdometryMessage::RIGHT);
-       if(CanParams->module == "pcan"){
+       if(params_->module == "pcan"){
          Can::pcanmsg * msgp_;
 	 message.canMessage(&msgp_);
         //memcpy((void *) &(odoMessage2.ticks_),(void *) (msgp_->Msg.DATA),  4);
@@ -392,8 +392,7 @@ namespace Sparrow
 
     default:
 
-     cout << "SparrowConsumer2003: Unhandled can bus message: "
-	   << message << endl;
+     cout << "SparrowConsumer2003: Unhandled can bus message: " << message << endl;
     }
   }
 

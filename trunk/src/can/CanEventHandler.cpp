@@ -23,6 +23,7 @@
 #include "CanConnection.h"
 #include "CanMessage.h"
 #include "Parameters.h"
+#include "sparrow/Parameters.h"
 #include "pcan.h"
 #include "errno.h"
 
@@ -67,7 +68,7 @@ namespace Can
     DBG(cout << "canEventHandler: handle_input" << endl);
     //cout << "CanEventHandler vor ReadMessage" << endl;
     int count;
-    Parameters * params_ = new Parameters();
+    Sparrow::Parameters * params_ = Sparrow::Parameters::instance();
     if(params_->module == "pcan"){
        pcanmsg * msgp_;
 //       std::cout << "msgp " << (void *) msgp_ << endl;
