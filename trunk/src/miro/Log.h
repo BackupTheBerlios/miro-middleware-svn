@@ -21,9 +21,9 @@
 // It is provided to enable disabling of assert macros in inline code
 // of Miro without disabling them for user code too.
 //
-// MIRO_LOG: the standart ACE_LOG macro syntax.
+// MIRO_LOG: 
 // The first argument is the log level/priority.
-// The second argument is (Category, Message, ...);
+// The second argument is (Category, Message);
 //
 // MIRO_LOG_OSTR: a logging macro, providing an ostream.
 // This enables the use of ostream operators for logging output.
@@ -241,7 +241,7 @@ namespace Miro
     //! Log level of messages reporting an emergency.
     /** 
      * Your robot is on fire etc. This log level is not maskable,
-     * except if you turn of logging at configure time.
+     * except if you turn of logging at configure time. 
      */
     static signed int const LL_EMERGENCY = 0;
     //! Log level of messages reporting an alert.
@@ -260,7 +260,8 @@ namespace Miro
     static signed int const LL_ERROR = 3;
     //! Log level of messages reporting a warning.
     /**
-     * A warning should be fixed, but the program will work anyways.
+     * A warning should be fixed, but the program is likely work
+     * anyways.
      */
     static signed int const LL_WARNING = 4;
     //! Log level of messages reporting a notice.
@@ -276,7 +277,7 @@ namespace Miro
     static signed int const LL_DEBUG = 7;
     //! Log level of messages reporting program trace output.
     static signed int const LL_TRACE = 8;
-    //! Log level of messages reporting really verbose execution comments.
+    //! Log level of messages reporting really verbose comments on the progam execution.
     static signed int const LL_PRATTLE = 9;
 
     //! The highest log level.
