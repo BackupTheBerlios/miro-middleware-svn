@@ -19,6 +19,8 @@
 
 #include <ace/Arg_Shifter.h>
 #include <ace/OS.h>
+#include <ace/Event_Handler.h>
+#include <tao/CDR.h>
 
 #include <orbsvcs/Notify/Notify_EventChannelFactory_i.h>
 #include <orbsvcs/Notify/Notify_Default_CO_Factory.h>
@@ -47,26 +49,46 @@ using CosNotifyChannelAdmin::EventChannel;
 
 CosNaming::Name channelFactoryName;
 
-class StatisticHandler : public ACE::Event_Handler {
-    public:
-        StatisticHandler() {
-        }
-        
-        ~StatisticHandler() {
-        }
-
-        int handle_timeout(
-                const ACE_Time_Value &currentTime,
-                const void *act = 0) {
-            std::cout << "SECOND" << std::endl;
-        }
-                
-};
-
 class Consumer : public Miro::StructuredPushConsumer {
     public:
+        struct EventInfo {
+            public:
+                EventInfo() {
+                    reset();
+                }
+
+                ~EventInfo() {
+                }
+
+                EventInfo(const EventInfo &ei) {
+                    this->medianDataSize = ei.medianDataSize;
+                    this->trafficVolume = ei.trafficVolume;
+                    this->messageCount = ei.messageCount;
+                }
+                
+                inline void reset() {
+                    this->medianDataSize = 0;
+                    this->trafficVolume = 0;
+                    this->messageCount = 0;
+                }
+
+                inline void copy(EventInfo &ei) {
+                    ei = *this;
+                    reset();
+                }
+                 
+                int medianDataSize;
+                int trafficVolume;
+                int messageCount;
+        };
+       
+        typedef std::map<std::string, EventInfo> EventInfoMap;
+        EventInfoMap eventInfoMap;
+
+    public:
         Consumer(CosNotifyChannelAdmin::EventChannel_ptr ec,
-                 CosNotification::EventTypeSeq ets) :
+                 CosNotification::EventTypeSeq ets,
+                 bool _auto) :
             Miro::StructuredPushConsumer(ec)
         {
             CosNotification::EventTypeSeq none(0);
@@ -76,6 +98,8 @@ class Consumer : public Miro::StructuredPushConsumer {
             } catch (...) {
                 std::cout << "Uncaught exception while subscribing events" << std::endl;
             }
+
+            auto_ = _auto;
         }
 
         ~Consumer() {
@@ -86,10 +110,80 @@ class Consumer : public Miro::StructuredPushConsumer {
                 ACE_ENV_ARG_DECL_WITH_DEFAULTS)
             throw(CORBA::SystemException, CosEventComm::Disconnected)
         {
-            std::cout << "Got event from " << e.header.fixed_header.event_type.domain_name << "/" << e.header.fixed_header.event_type.type_name << std::endl;
+            TAO_OutputCDR cdr;
+
+            cdr << e;
+        
+            std::string domain = (const char *)e.header.fixed_header.event_type.domain_name;
+            std::string type = (const char *)e.header.fixed_header.event_type.type_name;
+            std::string id = domain + "/" + type;
+            EventInfoMap::iterator itr = eventInfoMap.find(id);
+            if (itr == eventInfoMap.end()) {
+                EventInfo ei;
+                eventInfoMap[id] = ei;
+                itr = eventInfoMap.find(id);
+            }
+            itr->second.messageCount += 1;
+            itr->second.trafficVolume += cdr.total_length();
+            itr->second.medianDataSize = (itr->second.medianDataSize + cdr.total_length()) / 2;
+//            std::cout << "Got event from " << e.header.fixed_header.event_type.domain_name << "/" << e.header.fixed_header.event_type.type_name << std::endl;
         }
+
+        void offer_change(
+                const CosNotification::EventTypeSeq & added,
+                const CosNotification::EventTypeSeq & removed
+                ACE_ENV_ARG_DECL_WITH_DEFAULTS)
+            ACE_THROW_SPEC ((
+                        CORBA::SystemException,
+                        CosNotifyComm::InvalidEventType))
+        {
+            std::cout << "> Added events:" << std::endl;
+            for (unsigned int i = 0; i < added.length(); i++) {
+                std::cout << "> + " << added[i].domain_name << "/" << added[i].type_name << std::endl;
+            }
+
+            std::cout << "> Removed events:" << std::endl;
+            for (unsigned int i = 0; i < removed.length(); i++) {
+                std::cout << "> - " << removed[i].domain_name << "/" << removed[i].type_name << std::endl;
+            }
+                
+            if (auto_) {
+                consumerAdmin_->subscription_change(added, removed);
+            }
+        }
+
+    protected:
+        bool auto_;
+
 };
      
+class StatisticHandler : public ACE_Event_Handler {
+    public:
+        StatisticHandler(Consumer *_consumer) {
+            consumer = _consumer;
+        }
+        
+        ~StatisticHandler() {
+        }
+
+        int handle_timeout(
+                const ACE_Time_Value &/*currentTime*/,
+                const void * /*act*/ = 0) {
+            std::cout << "> DUMP" << std::endl;
+            for (Consumer::EventInfoMap::iterator itr = consumer->eventInfoMap.begin();
+                 itr != consumer->eventInfoMap.end();
+                 itr++) {
+                std::cout << itr->first << ":\t\t (M:" << itr->second.medianDataSize << ", V:" << itr->second.trafficVolume << ", C:" << itr->second.messageCount << ")" << std::endl;
+                itr->second.reset();
+            }
+            return 0;
+        }
+
+    protected:
+        Consumer *consumer;
+                
+};
+
         
 NotifyMulticastTest::NotifyMulticastTest(int argc, char *argv[], bool _colocated) :
   Super(argc, argv),
@@ -103,7 +197,7 @@ NotifyMulticastTest::NotifyMulticastTest(int argc, char *argv[], bool _colocated
   id_(),
   ifgop_(CosNotifyChannelAdmin::OR_OP)
 {
-    St
+    bool autoSense = false;
   try {
     ec_ = resolveName<EventChannel>("EventChannel");
     DBG(cout << "found channel" << endl);
@@ -137,18 +231,22 @@ NotifyMulticastTest::NotifyMulticastTest(int argc, char *argv[], bool _colocated
           ets[i].type_name = CORBA::string_dup(argv[2 * i + 2]);
           std::cout << "Subscribing " << ets[i].domain_name << "/" << ets[i].type_name << std::endl;
       }
-      
+    
+  } else if (argc == 1) {
+      std::cout << "Autosensing for events" << std::endl;
+      autoSense = true;
+
   } else {
       std::cerr << "Wrong arg count" << std::endl;
       exit(1);
   }
 
-  consumer = new Consumer(ec_.in(), ets);
+  consumer = new Consumer(ec_.in(), ets, autoSense);
 
-  reactor_ = reactor(Consumer);
+  reactor_ = reactor();
 
-  sh_ = new StatisticHandler(Consumer);
-  shTime_ = ACE_Time(1, 0);
+  sh_ = new StatisticHandler(consumer);
+  shTime_ = ACE_Time_Value(1, 0);
   
   shId_ = reactor_->schedule_timer(sh_, 0, shTime_, shTime_);
 

@@ -62,7 +62,7 @@ public:
   
   CosNotification::EventTypeSeq ets;
 
-  ACE::Reactor *reactor_;
+  ACE_Reactor *reactor_;
 
   StatisticHandler *sh_;
   int shId_;
