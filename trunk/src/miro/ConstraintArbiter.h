@@ -57,7 +57,7 @@ namespace Miro
 
     VelocityIDL currentVelocity_;
 
-    VelocitySpace velocitySpace_, velocitySpacePaint_;
+    VelocitySpace velocitySpace_;
 
     ConstraintArbiterViewerTask * conArbViewTask_;
     bool conArbViewTaskCreated;

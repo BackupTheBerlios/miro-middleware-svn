@@ -32,10 +32,9 @@ namespace Miro
     pSupplier_(_pSupplier),
     reactor(ar_),
     timerId(0),
-    velocitySpace_(std::complex<double>(0., 0.), 2000, 700),
-    velocitySpacePaint_(std::complex<double>(0., 0.), 2000, 700),
+    velocitySpace_(1000, 20, 2000, 500, 20),
     conArbViewTask_(NULL),
-    conArbViewTaskCreated(true)
+    conArbViewTaskCreated(false)
   {
     currentVelocity_.translation = 0;
     currentVelocity_.rotation = 0.;
@@ -96,7 +95,7 @@ namespace Miro
 
     // create task for viewing velocity space
     if(!conArbViewTaskCreated) {
-      conArbViewTask_ = new ConstraintArbiterViewerTask(&velocitySpacePaint_);
+      conArbViewTask_ = new ConstraintArbiterViewerTask(&velocitySpace_);
       conArbViewTask_->open();
       conArbViewTaskCreated = true;
     }
@@ -129,9 +128,7 @@ namespace Miro
   int
   ConstraintArbiter::handle_timeout(const ACE_Time_Value &, const void*)
   {
-    Miro::VelocityIDL  velocity;
-    std::complex<double> newVelocity;
-
+    std::complex<double> velocity;
     std::FILE *logFile1;
 
     // let each behaviour calculate its velocity space ascend by priority
@@ -147,23 +144,21 @@ namespace Miro
     }
 
     // calculate new velocity using the content of the velocity space
-    newVelocity = velocitySpace_.applyObjectiveFunctionToEval();
-
-    // copy velocity space  for ConstraintArbiterViewer
-    velocitySpace_.getCopy(&velocitySpacePaint_);
-
-    // set motion
-    pMotion_->setLRVelocity(std::max(-400, std::min(400, (int)(10. * newVelocity.real()))), std::max(-400, std::min(400, (int)(10. * newVelocity.imag()))));
-    currentVelocity_ = velocity;
-
-    logFile1 = std::fopen("velocityspace.log","a");
-    for(int right = 0; right <= 200; right += 10) {
-	for(int left = 0; left <= 200; left += 10) {
-		fprintf(logFile1, "%d\n", velocitySpace_.velocitySpace_[left][right]);
-	}
-    }
-    fclose(logFile1);
-
+    velocity = velocitySpace_.applyObjectiveFunctionToEval();
+    
+    cout << "LEFT: " << velocity.real() << " ::: " << velocity.imag() << endl; 
+    
+    // set steering commands
+    pMotion_->setLRVelocity(velocity.real(), velocity.imag());
+    
+//    logFile1 = std::fopen("velocityspace.log","a");
+//    for(int r_index = 0; r_index <= 2*(velocitySpace_.maxVelocity_/velocitySpace_.spaceResolution_)+1; r_index++) {
+//	for(int l_index = 0; l_index <= 2*(velocitySpace_.maxVelocity_/velocitySpace_.spaceResolution_)+1; l_index++) {
+//		fprintf(logFile1, "%d\n", velocitySpace_.velocitySpace_[l_index][r_index]);
+//	}
+//    }
+//    fclose(logFile1);
+ 
     return 0;
   }
 

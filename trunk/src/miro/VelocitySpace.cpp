@@ -25,53 +25,52 @@ namespace Miro
 
   // constructor
   //
-  VelocitySpace::VelocitySpace(Vector2d _velocity, int _maxPosAccel, int _maxNegAccel) {
+  VelocitySpace::VelocitySpace(int _maxVelocity, int _spaceResolution, int _maxAccel, int _maxDecel, int _pace) {
+    
+    // init member variables for given parameters
+    maxVelocity_ = _maxVelocity;		// in mm/sec
+    spaceResolution_ = _spaceResolution;	// in mm
+    maxAccel_ = _maxAccel;			// in mm/sec2
+    maxDecel_ = _maxDecel;			// in mm/sec2
+    pace_ = _pace;				// in times/sec
 
-    for(int left = 0; left < VEL_SPACE_LEFT; left++) {
-      for(int right = 0; right < VEL_SPACE_RIGHT; right++) {
-        velocitySpace_[left][right] = 0;
-      }
+    // set up velocity space
+    velocitySpace_ = new int*[2*(maxVelocity_/spaceResolution_)+1];
+    for(int i=0; i<2*(maxVelocity_/spaceResolution_)+1; i++) {
+      velocitySpace_[i] = new int[2*(maxVelocity_/spaceResolution_)+1];
     }
-
-    maxPosAccel_ = _maxPosAccel;
-    maxNegAccel_ = _maxNegAccel;
-
-    setNewVelocitySpace(_velocity);
-
+    
+    // set initial dynamic window
+    setNewVelocity(Vector2d(0., 0.));
+	  
   }
 
-
+  
   // destructor
   //
   VelocitySpace::~VelocitySpace() {
 
   }
 
-  // copy function
-  void VelocitySpace::getCopy(Miro::VelocitySpace *_VelocitySpace) {
-
-    for(int left = 0; left < VEL_SPACE_LEFT; left++) {
-      for(int right = 0; right < VEL_SPACE_RIGHT; right++) {
-        _VelocitySpace->velocitySpace_[left][right] = velocitySpace_[left][right];
-      }
-    }
-
-  }
-
-
+  
   // add evaluation for preferred direction
   //
-  void VelocitySpace::addEvalForPreferredDirection(double _prefDir) {
+  void VelocitySpace::addEvalForPreferredDirection(double _prefDir, double _maxSpeed) {
 
-    double value_left, value_right;
-
-    for(int left = minLeft_; left <= maxLeft_; left++) {
-      for(int right = minRight_; right <= maxRight_; right++) {
-
-	value_left = cos(_prefDir - M_PI / 4.) * left - sin(_prefDir - M_PI / 4.) * right;
-	value_right = sin(_prefDir - M_PI / 4.) * left + cos(_prefDir - M_PI / 4.) * right;
-
-	velocitySpace_[left+100][right+100] = (int)(255. * (1. + atan((double)value_left / fabs((double)value_right)) / (M_PI / 2.)) / 2.);
+    double l_value, r_value, left, right;
+    
+    for(int l_index = minDynWinLeft_; l_index <= maxDynWinLeft_; l_index++) {
+      for(int r_index = minDynWinRight_; r_index <= maxDynWinRight_; r_index++) {
+        
+	left = getVelocityByIndex(l_index);
+	right = getVelocityByIndex(r_index);
+	l_value = cos(_prefDir - M_PI / 4.) * left - sin(_prefDir - M_PI / 4.) * right;
+	r_value = sin(_prefDir - M_PI / 4.) * left + cos(_prefDir - M_PI / 4.) * right;
+	
+	if(sqrt(left*left+right*right)<=_maxSpeed)
+	  velocitySpace_[l_index][r_index] = (int)(255. * (1. + atan((double)l_value / fabs((double)r_value)) / (M_PI / 2.)) / 2.);
+	else
+	  velocitySpace_[l_index][r_index] = 0;
 
       }
     }
@@ -93,7 +92,7 @@ namespace Miro
 
     int CURV[2*CURV_CNT+1][2*CURV_RES+1]; // curvature space
 
-    int count, seg, left, right, curv, target, front, back;
+    int count, seg, left, right, curv, target, front, back, temp_left, temp_right;
     bool frontObstacle, backObstacle;
     double fLeft, fRight, offset, angle, rel, break_dist, left_break, right_break;
 
@@ -208,14 +207,17 @@ namespace Miro
     // CALCULATING VELOCITY SPACE (BASED ON CURVATURE SPACE)
     //
 
-    for(left = minLeft_; left <= maxLeft_; left++) {
-      for(right = minRight_; right <= maxRight_; right++) {
+    for(int l_index = minDynWinLeft_; l_index <= maxDynWinLeft_; l_index++) {
+      for(int r_index = minDynWinRight_; r_index <= maxDynWinRight_; r_index++) {
 
+	// get left/right velocity from array indices
+	left = getVelocityByIndex(l_index);
+	right = getVelocityByIndex(r_index);
 	// calculating actual curvature
 	curv = (int)((atan((double)left / (double)right) + (M_PI / 2.)) * 2 * CURV_CNT / M_PI);
 	// calculating breaking distance
-	left_break = ((10. * fabs((double)left)) / BREAK_ACCEL) * 10. * (double)left;
-	right_break = ((10. * fabs((double)right)) / BREAK_ACCEL) * 10. * (double)right;
+	left_break = ((fabs((double)left)) / BREAK_ACCEL) * (double)left;
+	right_break = ((fabs((double)right)) / BREAK_ACCEL) * (double)right;
 	if(fabs(left_break) >= fabs(right_break))
 	  break_dist = left_break;
 	else
@@ -226,7 +228,8 @@ namespace Miro
 	else
 	  target = CURV_RES - CURV_DELAY + (int)(break_dist * (double)CURV_RES / (double)CURV_LEN);
 
-	velocitySpace_[left+100][right+100] = (int)((double)CURV[std::max(0,std::min(2*CURV_CNT,curv))][std::max(0,std::min(2*CURV_RES,target))] * (double)velocitySpace_[left+100][right+100] / 250.);
+	velocitySpace_[l_index][r_index] = (int)((double)CURV[std::max(0,std::min(2*CURV_CNT,curv))][std::max(0,std::min(2*CURV_RES,target))]
+	    * (double)velocitySpace_[l_index][r_index] / 250.);
 
       }
     }
@@ -247,87 +250,75 @@ namespace Miro
   //
   Vector2d VelocitySpace::applyObjectiveFunctionToEval() {
 
-    int biggestVelocitySpaceValue = 10;
-    double biggestVelocitySpaceRadius = 0.;
-    Vector2d biggestVelocitySpaceValueVelocity(0,0);
+    int biggestEval = 10;		// start with a threshold of 10
+    double biggestRad = 0.;
+    Vector2d biggestValueVelocity(0., 0.);
     bool found = false;
-    int temp_left, temp_right;
-    double angle;
+    double left, right, rel;
+    double temp_left, temp_right;
     const double WHEEL_DISTANCE = 330.;
 
-    for(int left = minLeft_; left < maxLeft_; left++) {
-      for(int right = minRight_; right < maxRight_; right++) {
+    // destinate best entry
+    for(int l_index = minDynWinLeft_; l_index <= maxDynWinLeft_; l_index++) {
+      for(int r_index = minDynWinRight_; r_index <= maxDynWinRight_; r_index++) {
 
-	angle = fabs((180. * (double)(left - right)) / (WHEEL_DISTANCE * M_PI));
+	left = getVelocityByIndex(l_index);
+	right = getVelocityByIndex(r_index);
+	rel = atan(left/right);
 
-        if((angle < 45.) && ((velocitySpace_[left+100][right+100] > biggestVelocitySpaceValue) ||
-	   ((velocitySpace_[left+100][right+100] == biggestVelocitySpaceValue) && ((left * left) + (right * right)) > biggestVelocitySpaceRadius) ))
-        {
-          biggestVelocitySpaceValue = velocitySpace_[left+100][right+100];
-	  biggestVelocitySpaceRadius = (left * left) + (right * right);
-	  biggestVelocitySpaceValueVelocity = Vector2d(left,right);
+	if(    (velocitySpace_[l_index][r_index] > biggestEval)
+	    || (velocitySpace_[l_index][r_index] == biggestEval
+	       && (left*left)+(right*right) > biggestRad )    )
+	{		
+          biggestEval = velocitySpace_[l_index][r_index];
+	  biggestRad = (left * left) + (right * right);
+	  biggestValueVelocity = Vector2d(left,right);
 	  found = true;
-
         }
       }
     }
 
+    // if no suitable entry found, slow down until stop
     if(found==false) {
-      if(minLeft_ < 0) {
-	if(maxLeft_ < 0) {
-	  temp_left = maxLeft_;
-	}
-	else {
-	  temp_left = 0;
-	}
+      if(velocity_.real() < 0.) {
+	temp_left = std::min(0., velocity_.real() + maxAccel_ / pace_);
       }
       else {
-	temp_left = minLeft_;
+        temp_left = std::max(0., velocity_.real() - maxDecel_ / pace_);	
       }
-      if(minRight_ < 0) {
-	if(maxRight_ < 0) {
-	  temp_right = maxRight_;
-	}
-	else {
-	  temp_right = 0;
-	}
+      if(velocity_.imag() < 0.) {
+        temp_right = std::min(0., velocity_.imag() + maxAccel_ / pace_);
       }
       else {
-	temp_right = minRight_;
+        temp_right = std::max(0., velocity_.imag() - maxDecel_ / pace_);	
       }
-
-      biggestVelocitySpaceValueVelocity = Vector2d(temp_left, temp_right);
-
+      biggestValueVelocity = Vector2d(temp_left, temp_right);
     }
 
-    setNewVelocitySpace(biggestVelocitySpaceValueVelocity);
+    // set new velocity 
+    setNewVelocity(biggestValueVelocity);
 
-    return biggestVelocitySpaceValueVelocity;
+    return biggestValueVelocity;
   }
 
 
   // private methods
   //
+
+ 
+  // set new velocity
   //
-
-
-  // set new VelocitySpace
-  //
-  void VelocitySpace::setNewVelocitySpace(Vector2d _velocity) {
-
+  void VelocitySpace::setNewVelocity(Vector2d _velocity) {
 
     velocity_ = _velocity;
-
-    velocity_ = std::complex<double>(std::max(std::min(40., velocity_.real()),-40.), std::max(std::min(40.,velocity_.imag()),-40.));
-
-    minRight_ = std::max((int)(std::imag(velocity_)  - (maxNegAccel_ / (10 * PACE))), -100);
-    maxRight_ = std::min(100, (int)(std::imag(velocity_) + (maxPosAccel_ / (10 * PACE))));
-    minLeft_ = std::max((int)(std::real(velocity_) - (maxNegAccel_ / (10 * PACE))), -100);
-    maxLeft_ = std::min(100, (int)(std::real(velocity_) + (maxPosAccel_ / (10 * PACE))));
+    minDynWinLeft_ = getIndexByVelocity((int)velocity_.real() - (maxDecel_ / pace_));
+    minDynWinRight_ = getIndexByVelocity((int)velocity_.imag() - (maxDecel_ / pace_));
+    maxDynWinLeft_ = getIndexByVelocity((int)velocity_.real() + (maxAccel_ / pace_));
+    maxDynWinRight_ = getIndexByVelocity((int)velocity_.imag() + (maxAccel_ / pace_));
 
   }
 
-
+  
   // get signed distance between point and line
   //
   double VelocitySpace::getSignedDistanceBetweenPointAndLine(Vector2d _p1, Vector2d _l1, Vector2d _l2) {
@@ -466,4 +457,17 @@ namespace Miro
   }
 
 
+  // calculate index of velocity space array for given velocity
+  //
+  int VelocitySpace::getIndexByVelocity(double _velocity) {
+    return (std::max(0, std::min(2 * maxVelocity_, maxVelocity_ + (int)_velocity)) / spaceResolution_);
+  }
+
+	
+  // calculate velocity for given index of velocity space array
+  //
+  double VelocitySpace::getVelocityByIndex(int _index) {
+    return (double)(std::max(-maxVelocity_, std::min(maxVelocity_, (_index * spaceResolution_) - maxVelocity_)));
+  }
+  
 };

@@ -15,11 +15,6 @@
 #include <vector>
 #include <complex>
 
-// florian: const static member variables?
-#define VEL_SPACE_LEFT 201
-#define VEL_SPACE_RIGHT 201
-#define PACE 5
-
 namespace Miro
 {
   typedef std::complex<double> Vector2d;
@@ -28,36 +23,39 @@ namespace Miro
   {
   public:
     // constructor
-    VelocitySpace(Vector2d, int, int);
+    VelocitySpace(int, int, int, int, int);
     // destructor
     ~VelocitySpace();
     // copy function
     void getCopy(Miro::VelocitySpace *);
 
-    // add evaluations for given, preferred direction to velocity space
-    void addEvalForPreferredDirection(double);
+    // add evaluations for given, preferred direction with given, maximum speed to velocity space
+    void addEvalForPreferredDirection(double, double);
     // add evaluations for given obstacle to velocity space
     void addEvalForObstacle(std::vector<Vector2d>&, std::vector<Vector2d>&);
     // obtain new velocity, by applying objective function to evaluations in velocity space
     Vector2d applyObjectiveFunctionToEval();
 
     // the velocity space
-    int velocitySpace_[VEL_SPACE_LEFT][VEL_SPACE_RIGHT];
+    int** velocitySpace_;
+    // maximum speed, speed resolution, maximum acceleration and maximum deceleretion
+    int maxVelocity_;
+    int spaceResolution_;
+    int maxAccel_;
+    int maxDecel_;
+    int pace_;
     // size of the dynamic window
-    int minLeft_;
-    int maxLeft_;
-    int minRight_;
-    int maxRight_;
-    // maximum positive and negative acceleration
-    int maxPosAccel_;
-    int maxNegAccel_;
+    int minDynWinLeft_;
+    int maxDynWinLeft_;
+    int minDynWinRight_;
+    int maxDynWinRight_;
     // actual velocity
     Vector2d velocity_;
 
 
   private:
     // set new VelocitySpace
-    void setNewVelocitySpace(Vector2d);
+    void setNewVelocity(Vector2d);
     // get signed distance between point and line
     double getSignedDistanceBetweenPointAndLine(Vector2d, Vector2d, Vector2d);
     // get distance between two lines
@@ -72,6 +70,10 @@ namespace Miro
     void rotatePolygon(std::vector<Vector2d>&, Vector2d, double);
     // move polygon by distance
     void movePolygon(std::vector<Vector2d>&, Vector2d);
+    // get index of velocity space array by velocity
+    int getIndexByVelocity(double);
+    // get velocity by index of velocity space array
+    double getVelocityByIndex(int);
     
   };
 };

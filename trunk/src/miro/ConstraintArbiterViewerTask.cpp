@@ -9,13 +9,13 @@ namespace Miro {
   ConstraintArbiterViewerTask::ConstraintArbiterViewerTask(VelocitySpace * _VelocitySpace) :
     Super(),
     temp(0),
-    winArbApp_(temp, (char **)NULL),
-    winArbView_(_VelocitySpace)
+    conArbApp_(temp, (char **)NULL),
+    conArbView_(_VelocitySpace)
   {
-    winArbView_.setCaption("Window Arbiter Viewer");
-    winArbView_.setBackgroundColor(Qt::white);
-    winArbApp_.setMainWidget(&winArbView_);
-    winArbView_.show();
+    conArbView_.setCaption("Constraint Arbiter Viewer");
+    conArbView_.setBackgroundColor(Qt::white);
+    conArbApp_.setMainWidget(&conArbView_);
+    conArbView_.show();
   }
   
   ConstraintArbiterViewerTask::~ConstraintArbiterViewerTask() {
@@ -23,7 +23,7 @@ namespace Miro {
   }
   
   int ConstraintArbiterViewerTask::svc() {
-    return winArbApp_.exec();
+    return conArbApp_.exec();
   }
   
   int ConstraintArbiterViewerTask::open(void *) {

@@ -28,8 +28,8 @@ namespace Miro
     int svc();
     int open(void * = 0);
     int temp;
-    QApplication winArbApp_;
-    ConstraintArbiterViewer winArbView_;
+    QApplication conArbApp_;
+    ConstraintArbiterViewer conArbView_;
 
   };
 };
