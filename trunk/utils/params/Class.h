@@ -39,15 +39,15 @@ public:
   void addParameter(const Parameter& _parameter);
   void addToConstructor(const QString& _ctor);
 
-  void generateHeader(ostream& ostr, unsigned long _indent) const;
-  void generateSource(ostream& ostr, unsigned long _indent) const;
+  void generateHeader(std::ostream& ostr, unsigned long _indent) const;
+  void generateSource(std::ostream& ostr, unsigned long _indent) const;
 
   const ParameterSet& parameterSet() const;
 
 protected:
-  void generateQDomOutOperator(ostream& ostr, 
+  void generateQDomOutOperator(std::ostream& ostr, 
 			       const QString& classPrefix, unsigned long indent) const;
-  void generateQDomInOperator(ostream& ostr, 
+  void generateQDomInOperator(std::ostream& ostr, 
 			      const QString& classPrefix, unsigned long indent) const;
 
   typedef std::pair<QString, QString> QStringPair;

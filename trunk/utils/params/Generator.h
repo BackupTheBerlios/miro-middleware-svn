@@ -37,8 +37,8 @@ public:
 
   void addClass(const QString& _group, const Class& _class);
 
-  void generateHeader(ostream& ostr) const;
-  void generateSource(ostream& ostr) const;
+  void generateHeader(std::ostream& ostr) const;
+  void generateSource(std::ostream& ostr) const;
 
   void getGroupedClasses(const QString& _group, 
 			 GroupMap::const_iterator& _first, GroupMap::const_iterator& _last) const;
