@@ -13,6 +13,7 @@
 
 #include "miro/VideoHelper.h"
 #include "miro/TimeHelper.h"
+#include "miro/Log.h"
 
 #include <qpainter.h>
 #include <qimage.h>
@@ -164,7 +165,12 @@ void MainForm::actualizeImage()
   }
   else {
     try {
-      video_->acquireNextImage(id_, bufferIndex_);
+      Miro::TimeIDL tC =
+	video_->acquireNextImage(id_, bufferIndex_);
+
+      ACE_Time_Value tA;
+      Miro::timeC2A(tC, tA);
+      MIRO_LOG_OSTR(LL_NOTICE, "image time stamp: " << tA);
     }
     catch (Miro::EOutOfBounds const& e) {
       cout << "Out of bounds exception:" << e.what << endl;
