@@ -9,44 +9,64 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
+#include "miro/TimeHelper.h"
+
+#include <ace/OS.h>
 #include <ace/DEV_Connector.h>
 #include <ace/TTY_IO.h>
 
 #include <iostream>
 
+// serial stuff knows too many standarts:
+
+#if defined (ACE_HAS_TERM_IOCTLS)
+#if defined(TCGETS)
+
+#define TTY_STRUCT_TYPE termios
+#define TTY_GET TCGETS
+#define TTY_SET TCSETS
+
+#elif defined(TCGETA)
+
+#define TTY_STRUCT_TYPE termio
+#define TTY_GET TCGETA
+#define TTY_SET TCSETA
+
+#endif
+#endif
+
+// old tty settings to restore at the end of the test
+struct TTY_STRUCT_TYPE oldTtySettings;
+
+// the io buffer to read and write from
 ACE_TTY_IO ioBuffer;
 
-
-ACE_TTY_IO::Serial_Params oldParams;
-
+// set faulhaber chip to binary mode
 int binInit()
 {
-  unsigned char value1;
-  unsigned char value2;
-  unsigned char value3;
-  unsigned char value4;
-  value1 = 200; //Modus1
-  value2 = 200; //Istlage
-  value3 = 202; //Modus2
-  value4 = 255; //kein zweiter wert
-   if (ioBuffer.send_n(&value1, 1) < 0) {
-    std::cerr << "write error" << std::endl;
-    return 1;
-   }
-    if (ioBuffer.send_n(&value2, 1) < 0) {
-    std::cerr << "write error" << std::endl;
-    return 1;
-   }
-    if (ioBuffer.send_n(&value3, 1) < 0) {
-    std::cerr << "write error" << std::endl;
-    return 1;
-   }
+  unsigned char value1 = 200; //Modus1
+  unsigned char value2 = 200; //Istlage
+  unsigned char value3 = 202; //Modus2
+  unsigned char value4 = 255; //kein zweiter wert
 
-    if (ioBuffer.send_n(&value4, 1) < 0) {
+  if (ioBuffer.send_n(&value1, 1) < 0) {
     std::cerr << "write error" << std::endl;
     return 1;
-   }
-   return 0;
+  }
+  if (ioBuffer.send_n(&value2, 1) < 0) {
+    std::cerr << "write error" << std::endl;
+    return 1;
+  }
+  if (ioBuffer.send_n(&value3, 1) < 0) {
+    std::cerr << "write error" << std::endl;
+    return 1;
+  }
+  
+  if (ioBuffer.send_n(&value4, 1) < 0) {
+    std::cerr << "write error" << std::endl;
+    return 1;
+  }
+  return 0;
 }
 
 int testParcours()
@@ -75,9 +95,26 @@ int testParcours()
 
 int saveTtyParams()
 {
-  // save the old tty configuration
-  ACE_TTY_IO::Serial_Params oldParams;
-  return ioBuffer.control(ACE_TTY_IO::GETPARAMS, &oldParams);
+  int rc = ioBuffer.ACE_IO_SAP::control(TTY_GET, (void *) &oldTtySettings);
+
+#if defined(TCGETS) || defined(TCGETA)
+  if (rc == 0) {
+    std::cout << "new tty status:" << std::endl << std::hex
+	      << "c_iflag = 0x" << oldTtySettings.c_iflag << std::endl
+	      << "c_oflag = 0x" << oldTtySettings.c_oflag << std::endl
+	      << "c_cflag = 0x" << oldTtySettings.c_cflag << std::endl
+	      << "c_lflag = 0x" << oldTtySettings.c_lflag << std::endl
+	      << "c_cc[4/5] = 0x" << (int)oldTtySettings.c_cc[VTIME] 
+	      << " " << (int)oldTtySettings.c_cc[VMIN] 
+	      << std::dec << std::endl;
+  }
+#endif 
+  return rc;
+}
+
+int restoreTtyParams()
+{
+  return ioBuffer.ACE_IO_SAP::control(TTY_SET, (void *) &oldTtySettings);
 }
 
 int setTtyParams()
@@ -97,21 +134,14 @@ int setTtyParams()
   ttyParams.xinenb = 0;
   ttyParams.xoutenb = 0;
 
-
   // let's initialize the TTY 
   return ioBuffer.control(ACE_TTY_IO::SETPARAMS, &ttyParams);
-}
-
-int restoreTtyParams()
-{
-  ACE_TTY_IO::Serial_Params oldParams;
-  return ioBuffer.control(ACE_TTY_IO::SETPARAMS, &oldParams);
 }
 
 int main (int argc, char * argv[])
 {
   int rc = 0;
-  char defaultName[] = "/dev/tty/s0";
+  char defaultName[] = "/dev/tts/0";
   char const * name = defaultName;
 
   if (argc > 1)
@@ -126,40 +156,22 @@ int main (int argc, char * argv[])
     std::cerr << "Failed to open device: " << name << std::endl;
     return 1;
   }
-  rc = binInit();
- // if ((rc = saveTtyParams()) == 0 &&
- //     (rc = setTtyParams()) == 0) {
 
-#if defined (ACE_HAS_TERM_IOCTLS)
-#if defined(TCGETS)
-    struct termios terminfo;
-    ioBuffer.ACE_IO_SAP::control(TCGETS, (void *) &terminfo);
-#elif defined(TCGETA)
-    struct termio terminfo;
-    ioBuffer.ACE_IO_SAP::control(TCGETA, (void *) &terminfo);
-#endif
-    
-#if defined(TCGETS) || defined(TCGETA)
-    std::cout << "new tty status:" << std::endl << std::hex
-	      << "c_iflag = 0x" << terminfo.c_iflag << std::endl
-	      << "c_oflag = 0x" << terminfo.c_oflag << std::endl
-	      << "c_cflag = 0x" << terminfo.c_cflag << std::endl
-	      << "c_lflag = 0x" << terminfo.c_lflag << std::endl
-	      << "c_cc[4/5] = 0x" << (int)terminfo.c_cc[VTIME] 
-	      << " " << (int)terminfo.c_cc[VMIN] 
-	      << std::dec << std::endl;
-#endif 
-    
-#endif // ACE_HAS_TERM_IOCTLS
+  if ((rc = saveTtyParams()) == 0 &&
+      (rc = setTtyParams()) == 0) {
 
-    for (int i=0;i<100;i++)
-    {
+    rc = binInit();
+
+    ACE_Time_Value start = ACE_OS::gettimeofday();
+    std::cout << "start: " << start << std::endl;
+    for (int i = 0; i < 100 && rc == 0; i++) {
       rc = testParcours();
       std::cout<< i <<": "<< endl;
     }
+    std::cout << "stop: " << (ACE_OS::gettimeofday() - start) << std::endl;
 
-   // restoreTtyParams();
-
+    restoreTtyParams();
+  }
 
   ioBuffer.close();
   return rc;
