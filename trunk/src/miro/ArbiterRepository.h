@@ -63,7 +63,7 @@ namespace Miro
     ArbiterRepository();
     //! Copy construction is prohibited
     ArbiterRepository(const ArbiterRepository&) {}
-    friend class Singleton<ArbiterRepository>;
+    friend class Singleton<ArbiterRepository>::ACE_Singleton_Type;
   };
-};
+}
 #endif

@@ -118,7 +118,7 @@ namespace Miro
     //--------------------------------------------------------------------------
     friend std::ostream& operator << <Type>(std::ostream&, const Self&);
     //! Allow Singleton to create a Repository
-    friend class Singleton<Self>;
+    friend class Singleton<Self>::ACE_Singleton_Type;
   };
 
   /**

@@ -62,8 +62,8 @@ namespace Miro
     BehaviourRepository();
     //! Copy construction is prohibited
     BehaviourRepository(const BehaviourRepository&) {}
-    friend class Singleton<BehaviourRepository>;
+    friend class Singleton<BehaviourRepository>::ACE_Singleton_Type;
   };
-};
+}
 #endif
 
