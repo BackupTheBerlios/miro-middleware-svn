@@ -32,7 +32,7 @@ namespace Miro
     kappa(0.),
     height(0.),
     alpha(0.),
-    latency(0, 120000)
+    latency(0, 80000)
   {}
 
   void
