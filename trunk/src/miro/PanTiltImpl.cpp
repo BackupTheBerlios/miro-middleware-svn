@@ -25,7 +25,10 @@ namespace Miro
 
   PanTiltPositionIDL PanTiltImpl::getTargetPosition() throw() 
   {
-    return targetPosition_;
+    PanTiltPositionIDL targetPosition;
+    targetPosition.panvalue=targetPan_;
+    targetPosition.tiltvalue=targetTilt_;
+    return targetPosition;
   }
 
   PanTiltLimitsIDL PanTiltImpl::getPanTiltLimits() throw(Miro::EDevIO) {

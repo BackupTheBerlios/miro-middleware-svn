@@ -51,7 +51,6 @@ namespace Miro
     //------------------------------------------------------------------------
     // protected object data
     //------------------------------------------------------------------------
-    PanTiltPositionIDL targetPosition_;
   };
 
   inline bool PanTiltImpl::testPosition(const PanTiltPositionIDL& value) {
@@ -62,7 +61,10 @@ namespace Miro
   }
   
   inline void PanTiltImpl::setTargetPosition(const PanTiltPositionIDL& value)
-  { targetPosition_=value; }
+  { 
+    targetPan_=value.panvalue;
+    targetTilt_=value.tiltvalue;
+  }
 
 }
 

@@ -58,7 +58,9 @@ int main(int argc, char *argv[])
       switch (c) {
       case '0':
 	cout << "current pan angle (deg): " 
-	     << (Miro::rad2Deg(pan->getPan()))  << endl;
+	     << (Miro::rad2Deg(pan->getPan()))  
+	     << " (target: " << Miro::rad2Deg(pan->getTargetPan()) << ")"
+	     << endl;
 	break;
       case '1':
 	cout << "new panning angle (deg): " << flush;

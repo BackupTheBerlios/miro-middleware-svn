@@ -131,6 +131,7 @@ namespace DpPanTilt
       throw Miro::ETimeOut();
     if (panTiltData.failed)
       throw Miro::EDevIO("PP<x> Command failed");
+    setTargetPan(panvalue);
   }
 
   void
@@ -149,6 +150,7 @@ namespace DpPanTilt
       throw Miro::ETimeOut();
     if (panTiltData.failed)
       throw Miro::EDevIO("TP<X> Command failed");
+    setTargetTilt(tiltvalue);
   }
 
   void PanTiltImpl::setPosition(const PanTiltPositionIDL &dest) throw ()
@@ -157,6 +159,8 @@ namespace DpPanTilt
 
     PanTiltImpl::setPan(dest.panvalue);
     PanTiltImpl::setTilt(dest.tiltvalue);
+    
+    setTargetPosition(dest);
   }
   
   void
@@ -180,6 +184,7 @@ namespace DpPanTilt
       throw Miro::ETimeOut();
     if (panTiltData.failed)
       throw Miro::EDevIO("A Command failed");
+    setTargetPosition(dest);
   }
   
   PanTiltSpdAccIDL  

@@ -270,7 +270,7 @@ namespace Canon
 	checkAnswer();
       }
     }
-    
+    setTargetPosition(dest);
   }
   
   //-------------------------------------------------------------------------

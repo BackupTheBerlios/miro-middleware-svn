@@ -75,7 +75,9 @@ int main(int argc, char *argv[])
       switch (c) {
       case '0':
 	cout << "current pan angle (deg): " 
-	     << (panTilt->getPan() * 180. / M_PI)  << endl;
+	     << (panTilt->getPan() * 180. / M_PI)  
+	     << " (target: " << Miro::rad2Deg(panTilt->getTargetPan()) << ")"
+	     << endl;
 	break;
       case '1':
 	cout << "new panning angle (deg): " << flush;
@@ -85,7 +87,9 @@ int main(int argc, char *argv[])
 	break;
       case '2':
 	cout << "current tilt angle (deg): " 
-	     << (panTilt->getTilt() * 180. / M_PI) << endl;
+	     << (panTilt->getTilt() * 180. / M_PI) 
+	     << " (target: " << Miro::rad2Deg(panTilt->getTargetTilt()) << ")"
+	     << endl;
 	break;
       case '3':
 	cout << "new tilting angle (deg): " << flush;
@@ -95,7 +99,9 @@ int main(int argc, char *argv[])
 	break;
       case '4':
 	cout << "current pantilt position: " 
-	     << panTilt->getPosition() << endl;
+	     << panTilt->getPosition() 
+	     << " (target: " << panTilt->getTargetPosition() << ")"
+	     << endl;
 	break;
       case '5':
 	cout << "new panning angle (deg): " << flush;

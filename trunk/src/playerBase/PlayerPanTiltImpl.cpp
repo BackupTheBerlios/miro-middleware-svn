@@ -160,6 +160,7 @@ namespace Player
     currentTilt = dest.tiltvalue* (upsideDown?  1 : -1);
     
     playerPTZ->SetCam(currentPan,currentTilt,playerPTZ->zoom);
+    setTargetPosition(dest);
   }
 
   void

@@ -87,6 +87,7 @@ namespace Sparrow
       // set positioning parameters
       lastPosition = currentPosition(t).angle;
       nextPosition = _value;
+      setTargetPan(_value);
       timeLastSet = t;
 
       if (pSupplier_) {
