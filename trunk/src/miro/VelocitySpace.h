@@ -77,6 +77,8 @@ namespace Miro
     // add evaluations for given obstacle to velocity space
     void addEvalForObstacleForRoundRobot(Polygon&, Polygon&, float);
     // obtain new velocity, by applying objective function to evaluations in velocity space
+    void addConstraintForSpace(double, bool);
+    
     Vector2d applyObjectiveFunctionToEval();
 
 

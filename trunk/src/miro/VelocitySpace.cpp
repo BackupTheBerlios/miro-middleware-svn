@@ -285,6 +285,33 @@ namespace Miro
       }
     }
   }
+  
+  void VelocitySpace::addConstraintForSpace(double _maxSpeed, bool _positive){
+  
+    for(int l_index = minDynWinLeft_; l_index <= maxDynWinLeft_; l_index++) {
+      for(int r_index = minDynWinRight_; r_index <= maxDynWinRight_; r_index++) {
+
+	double left = getVelocityByIndex(l_index);
+	double right = getVelocityByIndex(r_index);
+      
+        double leftNew = cos(-M_PI_4)*left - sin(-M_PI_4)*right;
+	double rightNew = sin(-M_PI_4)*left + cos(-M_PI_4)*right;
+	
+	if(_positive){
+	   if(fabs(atan2(rightNew, leftNew)) < Miro::deg2Rad(30) && (fabs(left) > _maxSpeed || fabs(right) > _maxSpeed))
+	      velocitySpace_[l_index][r_index] = 0.0;
+	}
+	else{
+	   if(fabs(atan2(rightNew, leftNew)) > Miro::deg2Rad(150) && (fabs(left) > _maxSpeed || fabs(right) > _maxSpeed))
+	      velocitySpace_[l_index][r_index] = 0.0;
+	}
+      
+      
+      }
+    }
+  
+  
+  }
 
 
 
