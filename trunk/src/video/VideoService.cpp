@@ -22,7 +22,9 @@
 #include "VideoDevice.h"
 #include "VideoDeviceBTTV.h"
 #include "VideoDeviceMeteor.h"
+#ifdef MIRO_HAS_1394
 #include "VideoDevice1394.h"
+#endif
 #include "VideoDeviceDummy.h"
 
 #include "VideoFilterRepository.h"
