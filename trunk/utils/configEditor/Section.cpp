@@ -48,7 +48,7 @@ void
 Section::contextMenu(QPopupMenu& _menu)
 {
   // get all current parameters
-  Miro::CFG::Generator::QStringVector childParameters;
+  Miro::CFG::QStringVector childParameters;
   QListViewItem * item = listViewItem()->firstChild();
   while (item != NULL) {
     ItemXML * itemXML =
@@ -71,14 +71,14 @@ Section::contextMenu(QPopupMenu& _menu)
 
   QString section = listViewItem()->text(0);
 
-  Miro::CFG::Generator::GroupMap::const_iterator first, last;
+  Miro::CFG::GroupMap::const_iterator first, last;
   ConfigFile::instance()->description().getGroupedTypes(section, first, last);
 
   for (; first != last; ++first) {
     if (first->second.isFinal()) {
       QString name = first->second.fullName();
       if (first->second.instance()) {
-	Miro::CFG::Generator::QStringVector::const_iterator i =
+	Miro::CFG::QStringVector::const_iterator i =
 	  std::find(childParameters.begin(), childParameters.end(), name);
 	if (i == childParameters.end()) {
 	  paramsList.push_back(name);

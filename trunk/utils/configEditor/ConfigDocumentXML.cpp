@@ -55,7 +55,7 @@ ConfigDocumentXML::contextMenu(QPopupMenu& _menu)
 
   _menu.insertItem("Add Section", menuAddSection_);
 
-  Miro::CFG::Generator::QStringVector childSections;
+  Miro::CFG::QStringVector childSections;
   QListViewItem * item = listViewItem()->firstChild();
   while (item != NULL) {
     childSections.push_back(item->text(0));
@@ -64,20 +64,20 @@ ConfigDocumentXML::contextMenu(QPopupMenu& _menu)
 
   // submenu: add all section names
   // not yet available in the document
-  Miro::CFG::Generator::QStringVector sections =
+  Miro::CFG::QStringVector sections =
     ConfigFile::instance()->description().groups();
-  Miro::CFG::Generator::QStringVector::const_iterator first, last = sections.end();
+  Miro::CFG::QStringVector::const_iterator first, last = sections.end();
   for (first = sections.begin(); first != last; ++first) {
 
     // if this section already exists, don't add it
-    Miro::CFG::Generator::QStringVector::const_iterator i = 
+    Miro::CFG::QStringVector::const_iterator i = 
       std::find(childSections.begin(), childSections.end(), *first);
     if (i != childSections.end())
       continue;
 
     // count the final parameter classes in the section
     int itemCount = 0;
-    Miro::CFG::Generator::GroupMap::const_iterator f, l;
+    Miro::CFG::GroupMap::const_iterator f, l;
     ConfigFile::instance()->description().getGroupedTypes(*first, f, l);
     for (; f != l; ++f) {
       if (f->second.isFinal()) {
