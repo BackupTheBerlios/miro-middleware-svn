@@ -14,6 +14,8 @@
 
 #include "miro/Exception.h"
 
+#include <ace/Shared_Memory_MM.h>
+
 #include <iostream>
 
 #undef DEBUG
@@ -91,7 +93,10 @@ namespace Video
       if (err == -1)
 	throw Miro::CException(errno, "VideoDeviceBTTV::handleConnect() - VIDIOCGMBUF");
 
-      map = (char *)mmap(0, gb_buffers.size, PROT_READ, MAP_SHARED, videoFd, 0);
+      shmmap.open(videoFd, gb_buffers.size, PROT_READ, MAP_SHARED);
+
+      map = (char *) shmmap.malloc();
+//mmap(0, gb_buffers.size, PROT_READ, MAP_SHARED, videoFd, 0);
       if (map == (char *)-1)
 	throw Miro::CException(errno, "VideoDeviceBTTV::handleConnect() - mmap()");
     }
@@ -170,7 +175,8 @@ namespace Video
     channels = NULL;
 
     if (map != (char*)-1) {
-      munmap(map, gb_buffers.size);
+      shmmap.close();
+      // munmap(map, gb_buffers.size);
       map = (char*)-1;
     }
     videoFd = -1;
