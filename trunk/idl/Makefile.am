@@ -54,6 +54,7 @@ globalsources = \
 	SphinxSpeech.idl \
 	BehaviourEngine.idl \
 	Joystick.idl \
+	DistanceScan.idl \
 	ArbiterEvent.idl
 
 b21sources = \
