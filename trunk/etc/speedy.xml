@@ -174,8 +174,8 @@
       <!-- OmniCam -->
 
       <instance type="Video::Parameters" name="OmniCam" >
-	<parameter value="320" name="Width" />
-	<parameter value="240" name="Height" />
+	<parameter value="160" name="Width" />
+	<parameter value="120" name="Height" />
 	<parameter value="yuv420p" name="Palette" />
 	<parameter name="Filter">
 	  <parameter value="DeviceQuickCam" name="Name" />
@@ -298,10 +298,9 @@
       </instance>
 
       <instance type="Video::FilterOmni2Pan" name="FilterOmni2Pan">
-	<parameter value="166" name="CenterX" />
-	<parameter value="120" name="CenterY" />
-	<parameter value="120" name="Radius" />
-	<!-- roadrunner: x=160 y=122 r=124 -->
+	<parameter value="83" name="CenterX" />
+	<parameter value="60" name="CenterY" />
+	<parameter value="60" name="Radius" />
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
 	  <parameter value="Pan" name="Name" />
@@ -368,7 +367,7 @@
         <parameter value="32767" name="Contrast" />
         <parameter value="32767" name="Brightness" />
         <parameter value="32767" name="Hue" />
-        <parameter value="30" name="Framerate" />
+        <parameter value="20" name="Framerate" />
         <parameter value="0" name="DynamicNoiseReduction" />
 	<parameter value="0" name="FlickerlessMode" />
         <parameter value="0" name="BacklightCompensation" />
@@ -384,6 +383,7 @@
       <!-- SONY CAM -->
 
       <instance type="Video::Parameters" name="SonyCam" >
+	<parameter value="SonyCamBroker" name="VideoBroker" />
 	<parameter value="640" name="Width" />
 	<parameter value="480" name="Height" />
 	<parameter value="yuv422" name="Palette" />
