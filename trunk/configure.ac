@@ -268,6 +268,7 @@ AC_CONFIG_FILES([Makefile
                  utils/logPlayer/Makefile
                  utils/notify/Makefile
                  utils/nsIOR/Makefile
+                 utils/configEditor/Makefile
                  utils/policyController/Makefile
                  utils/policyEditor/Makefile
                  utils/qtJoystick/Makefile
