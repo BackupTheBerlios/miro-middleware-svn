@@ -25,7 +25,7 @@ namespace Miro
    */
   OdometryTracking::OdometryTracking(CosNotifyChannelAdmin::EventChannel_ptr _ec,
 				     const std::string& _domainName) :
-    Super(_ec, false),
+    Super(_ec),
     odoTruncate_(false),
     rawTruncate_(false)
   {
@@ -33,19 +33,14 @@ namespace Miro
     
     // subscribe for the events we'd like to get
     MIRO_DBG(MIRO,LL_NOTICE, "subscribe for events\n");
-    CosNotification::EventTypeSeq added(2);
-    CosNotification::EventTypeSeq removed(1);
+    CosNotification::EventTypeSeq added;
     added.length(2);
-    removed.length(1);
 
     added[0].domain_name = CORBA::string_dup(_domainName.c_str());
     added[0].type_name   = CORBA::string_dup("Odometry");
     added[1].domain_name = CORBA::string_dup(_domainName.c_str());
     added[1].type_name   = CORBA::string_dup("RawPosition");
-    removed[0].domain_name =  CORBA::string_dup("*");
-    removed[0].type_name = CORBA::string_dup("*");
-    consumerAdmin_->subscription_change(added, removed);
-    connect();
+    setSubscriptions(added);
 
     MIRO_DBG(MIRO,LL_NOTICE, "finished\n");
   }

@@ -36,7 +36,7 @@ namespace Miro
     OdometryTracking(CosNotifyChannelAdmin::EventChannel_ptr _ec,
 		     const std::string& domainName);
 
-    //! CORBA StructuredPushSupplier interface method implementation.
+    //! CORBA StructuredPushConsumer interface method implementation.
     virtual void push_structured_event(const CosNotification::StructuredEvent & notification
 				       ACE_ENV_ARG_DECL_WITH_DEFAULTS)
       throw(CORBA::SystemException, CosEventComm::Disconnected);

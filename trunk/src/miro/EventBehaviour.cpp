@@ -44,8 +44,8 @@ namespace Miro
 
   EventBehaviour::EventBehaviour(CosNotifyChannelAdmin::EventChannel_ptr _ec) :
     Super(),
-    consumer(*this, _ec),
-    event(NULL)
+    event(NULL),
+    consumer(*this, _ec)
   {
     MIRO_DBG(MIRO,LL_CTOR_DTOR, "Constructing EventBehaviour\n");
   }
@@ -65,13 +65,26 @@ namespace Miro
   EventBehaviour::open()
   {
     Super::open();
-    // consumer.proxySupplier_->resume_connection();
+    consumer.subscribe();
   }
 
   void
   EventBehaviour::close()
   {
-    // consumer.proxySupplier_->suspend_connection();
+    consumer.unsubscribe();
     Super::close();
   }
-};
+
+  void
+  EventBehaviour::setSingleSubscription(std::string const& _domainName,
+					std::string const& _eventName)
+  {
+    CosNotification::EventTypeSeq added;
+    added.length(1);
+    
+    added[0].domain_name =  CORBA::string_dup(_domainName.c_str());
+    added[0].type_name = CORBA::string_dup(_eventName.c_str());
+    
+    consumer.setSubscriptions(added, active_);
+  }
+}

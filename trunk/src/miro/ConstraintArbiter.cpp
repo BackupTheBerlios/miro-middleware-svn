@@ -48,6 +48,12 @@ namespace Miro
       notifyEvent.header.fixed_header.event_name = CORBA::string_dup("");
       notifyEvent.header.variable_header.length(0);   // put nothing here
       notifyEvent.filterable_data.length(0);          // put nothing here
+
+      // offer declaration
+      CosNotification::EventTypeSeq offers;
+      offers.length(1);
+      offers[0] = notifyEvent.header.fixed_header.event_type;
+      pSupplier_->addOffers(offers);
     }
 
   }
@@ -146,7 +152,7 @@ namespace Miro
     // calculate new velocity using the content of the velocity space
     velocity = velocitySpace_.applyObjectiveFunctionToEval();
     
-    std::cout << "LEFT: " << velocity.real() << " ::: " << velocity.imag() << std::endl; 
+    //    cout << "LEFT: " << velocity.real() << " ::: " << velocity.imag() << endl; 
     
     // set steering commands
     pMotion_->setLRVelocity(velocity.real(), velocity.imag());

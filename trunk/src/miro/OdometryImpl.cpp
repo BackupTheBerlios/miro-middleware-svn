@@ -49,12 +49,20 @@ namespace Miro
 	notifyRawEvent_.header.variable_header.length(0);   // put nothing here
 	notifyRawEvent_.filterable_data.length(0);          // put nothing here
       }
+
+      CosNotification::EventTypeSeq offers;
+      offers.length((rawPositionEvents_)? 2 : 1);
+      offers[0] = notifyEvent_.header.fixed_header.event_type;
+      if (rawPositionEvents_) {
+	offers[1] = notifyRawEvent_.header.fixed_header.event_type;
+      }
+      supplier_->addOffers(offers);
     }
   }
 
   void
   OdometryDispatcher::setData(const MotionStatusIDL& _status,
-			const RawPositionIDL& _raw)
+			      const RawPositionIDL& _raw)
   {
     notifyEvent_.remainder_of_body <<= _status;
     notifyRawEvent_.remainder_of_body <<= _raw;

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002, 2003
+// (c) 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // This code was originally taken from the orbsvs/examples/Notify/Supplier.
@@ -15,6 +15,7 @@
 #define miroSturcturedPushSupplier_h
 
 #include "Synch.h"
+#include "Log.h"
 
 #include <orbsvcs/CosNotifyChannelAdminS.h>
 #include <orbsvcs/CosNotifyCommC.h>
@@ -24,14 +25,33 @@
 
 namespace Miro
 {
+  //! StructuredPushSupplier interface implementation.
+  /**
+   * This class implements the StructuredPushSupplier interface of the
+   * CORBA notification service. It performs bookkeeping of
+   * subscriptions from consumers to the events offered by this
+   * supplier and allowes efficient querying of this information for
+   * event producers.
+   */
   class StructuredPushSupplier : public POA_CosNotifyComm::StructuredPushSupplier
   {
   public:
+    //--------------------------------------------------------------------------
+    // public types
+    //--------------------------------------------------------------------------
+
+    typedef std::vector<unsigned long> IndexVector;
+
+    //--------------------------------------------------------------------------
+    // public methods
+    //--------------------------------------------------------------------------
+
     //! Initializing constructor.
     StructuredPushSupplier(CosNotifyChannelAdmin::EventChannel_ptr  _ec,
-			   const std::string& _domainName = std::string(),
+			   std::string const& _domainName = std::string(),
 			   bool _connect = true,
-			   const CosNotification::EventTypeSeq & _event = CosNotification::EventTypeSeq());
+			   CosNotification::EventTypeSeq const& _offer = 
+			   CosNotification::EventTypeSeq());
 
     //! Destructor
     virtual ~StructuredPushSupplier();
@@ -41,16 +61,33 @@ namespace Miro
     //! Disconnect supplier to proxy consumer.
     void disconnect();
 
+    //! Test whether an offered event is subscribed.
     bool subscribed(unsigned long _index) const;
+    //! Test whether an offered event is subscribed.
     bool subscribed(std::string const& _domain, std::string const& _type) const;
+
+    //! Add a set of offers to the notification channel.
+    IndexVector addOffers(CosNotification::EventTypeSeq const& _added);
+    //! Set the set of offers to the notification channel.
+    void setOffers(CosNotification::EventTypeSeq const& _offers);
 
     //! Send one event.
     void sendEvent(const CosNotification::StructuredEvent& event);
     
     //! Accessor method for the domain name.
-    const std::string& domainName();
+    std::string const& domainName() const;
 
   protected:
+    //--------------------------------------------------------------------------
+    // protected types
+    //--------------------------------------------------------------------------
+
+    typedef std::vector<bool> SubscriptionVector;
+
+    //--------------------------------------------------------------------------
+    // protected methods
+    //--------------------------------------------------------------------------
+
     // inherited IDL interfae
 
     //! CosNotifyComm::StructuredPushSupplier interface method implementation.
@@ -63,9 +100,22 @@ namespace Miro
     virtual void disconnect_structured_push_supplier(ACE_ENV_SINGLE_ARG_DECL_WITH_DEFAULTS)
       throw(CORBA::SystemException);
 
-    typedef std::vector<bool> SubscriptionVector;
+    //! Tell the admin about an offer change and update the subscription vector.
+    void initiateOfferChange(CosNotification::EventTypeSeq const& _added,
+			     CosNotification::EventTypeSeq const& _removed);
 
-    //! The channel we connect to. 
+    //--------------------------------------------------------------------------
+    // protected static methods
+    //--------------------------------------------------------------------------
+
+    //! Helper method to initialize the default offer.
+    static CosNotification::EventTypeSeq asterixOffer();
+
+    //--------------------------------------------------------------------------
+    // protected data
+    //--------------------------------------------------------------------------
+
+   //! The channel we connect to. 
     CosNotifyChannelAdmin::EventChannel_var ec_;
     //! The group operator between admin-proxy's. 
     CosNotifyChannelAdmin::InterFilterGroupOperator ifgop_;
@@ -85,11 +135,13 @@ namespace Miro
     std::string domainName_;
 
     //! Lock for the connected_ flag.
-    Miro::Mutex connectedMutex_;
+    mutable Miro::Mutex connectedMutex_;
     //! If true, the supplier is connected to the event channel.
     bool connected_;
 
-    CosNotification::EventTypeSeq event_;
+    //! Vector of offered event types
+    CosNotification::EventTypeSeq offers_;
+    //! Vector matching subscriptions to offered events.
     SubscriptionVector subscription_;
   };
 
@@ -97,17 +149,29 @@ namespace Miro
   void
   StructuredPushSupplier::sendEvent(const CosNotification::StructuredEvent& event)
   {
-//    Guard guard(connectedMutex_);
     if (connected_) {
       proxyConsumer_->push_structured_event(event);
     }
   }
 
+
+  /**
+   * @param index The index of the event in the offer vector.  This
+   * index is returned as a vector from addOffers. Offers specified as
+   * constructor the argument offer are indexed in ascending order,
+   * starting with 0.
+   */
   inline
   bool
   StructuredPushSupplier::subscribed(unsigned long _index) const {
-    assert(_index < subscription_.size());
+    MIRO_ASSERT(_index < subscription_.size());
     return subscription_[_index];
+  }
+
+  inline
+  std::string const& 
+  StructuredPushSupplier::domainName() const {
+    return domainName_;
   }
 }
 #endif

@@ -50,6 +50,12 @@ namespace Miro
 	CORBA::string_dup(actionPatternName_.c_str());
       notifyEvent.header.variable_header.length(0);   // put nothing here
       notifyEvent.filterable_data.length(0);          // put nothing here
+
+      // offer declaration
+      CosNotification::EventTypeSeq offers;
+      offers.length(1);
+      offers[0] = notifyEvent.header.fixed_header.event_type;
+      pSupplier_->addOffers(offers);
     }
   }
 

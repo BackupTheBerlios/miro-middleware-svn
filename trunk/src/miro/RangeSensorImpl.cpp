@@ -44,6 +44,12 @@ namespace Miro
 	notifyEvent_[i].header.variable_header.length(0);   // put nothing here
 	notifyEvent_[i].filterable_data.length(0);          // put nothing here
       }
+
+      // offer declaration
+      CosNotification::EventTypeSeq offers;
+      offers.length(1);
+      offers[0] = notifyEvent_[0].header.fixed_header.event_type;
+      supplier_->addOffers(offers);
     }
   }
 
@@ -73,8 +79,6 @@ namespace Miro
   int
   RangeSensorDispatcher::svc()
   {
-
-
     while(!canceled()) {
       Guard guard(mutex_);
       ACE_Time_Value timeout(ACE_OS::gettimeofday());
