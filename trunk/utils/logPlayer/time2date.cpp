@@ -31,9 +31,7 @@ int main (int argc, char * argv[])
 
   ACE_Time_Value t(sec, usec);
 
-  ACE_Date_Time d(t);
-
-  std::cout << Miro::timeString(d) << std::endl;
+  std::cout << Miro::timeString(t) << std::endl;
 
   return 0;
 #else
