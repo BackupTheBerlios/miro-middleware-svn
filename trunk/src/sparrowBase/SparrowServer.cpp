@@ -222,7 +222,8 @@ SparrowBase::init(bool _startReactorTastk)
   if (_startReactorTastk)
     reactorTask.open(0);
 
-  mcAdapter_->init();
+  if (Sparrow::Parameters::instance()->channelSharing)
+    mcAdapter_->init();
 }
 
 SparrowBase::~SparrowBase()
