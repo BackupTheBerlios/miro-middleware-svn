@@ -15,6 +15,16 @@
 
 module Miro
 {
+  //! Struct representing a panning limits  configuration.
+  struct PanLimitsIDL
+  {
+    //! Minimal pan position.
+    double minpanposition;
+    //! Maximal pan position.
+    double maxpanposition;
+  };
+
+
   //! Basic interface for a panning unit.
   /** 
    * @author Hans Utz
@@ -37,6 +47,14 @@ module Miro
      * is thrown to indicate low level device problems.
      */
     double getPan() raises(EDevIO);
+
+    //! Get the panning angle limits.
+    /**
+     * @return The angles within the pan unit works, specified in radiant.
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    PanLimitsIDL getPanLimits() raises(EDevIO);
   };
 };
 #endif // Pan_idl

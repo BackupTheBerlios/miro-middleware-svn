@@ -52,6 +52,10 @@ namespace Canon
       throw(Miro::EOutOfBounds, Miro::EDevIO);
     virtual double getPan()
       throw(Miro::EDevIO);
+    /**
+     * returns the pan angle limits
+     */
+    virtual Miro::PanLimitsIDL getPanLimits() throw(Miro::EDevIO);
 
     //-------------------------------------------------------------------------
     // from tilt.idl
@@ -60,6 +64,10 @@ namespace Canon
       throw(Miro::EOutOfBounds, Miro::EDevIO);
     virtual double getTilt()
       throw(Miro::EDevIO);
+    /**
+     * returns the tilt angle limits
+     */
+    virtual Miro::TiltLimitsIDL getTiltLimits() throw(Miro::EDevIO);
 
     //-------------------------------------------------------------------------
     // from panTilt.idl
@@ -80,9 +88,15 @@ namespace Canon
       throw(Miro::ETimeOut, Miro::EDevIO, Miro::EOutOfBounds);
     virtual Miro::CanonPanTiltSpdAccIDL getSpdAcc()
       throw(Miro::EDevIO, Miro::ETimeOut);
-    virtual Miro::CanonPanTiltLimitsIDL getLimits()
+    virtual Miro::PanTiltLimitsIDL getPanTiltLimits()
       throw(Miro::EDevIO, Miro::ETimeOut);
-
+    /**
+     * DEPRECATED.
+     * Use getPanTiltLimits() instead
+     */
+    virtual Miro::PanTiltLimitsIDL getLimits()
+      throw(Miro::EDevIO, Miro::ETimeOut);
+   
     Answer * getAnswer();
     void checkAnswer() throw(Miro::EDevIO,Miro::EOutOfBounds, Miro::ETimeOut);
 

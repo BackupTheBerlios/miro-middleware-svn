@@ -43,6 +43,10 @@ namespace Player
       throw(Miro::EOutOfBounds, Miro::EDevIO);
     virtual double getPan()
       throw(Miro::EDevIO);
+    /**
+     * returns the pan angle limits
+     */
+    virtual Miro::PanLimitsIDL getPanLimits() throw(Miro::EDevIO);
 
     //-------------------------------------------------------------------------
     // from tilt.idl
@@ -51,6 +55,10 @@ namespace Player
       throw(Miro::EOutOfBounds, Miro::EDevIO);
     virtual double getTilt()
       throw(Miro::EDevIO);
+    /**
+     * returns the tilt angle limits
+     */
+    virtual Miro::TiltLimitsIDL getTiltLimits() throw(Miro::EDevIO);
 
     //-------------------------------------------------------------------------
     // from panTilt.idl
@@ -59,6 +67,14 @@ namespace Player
       throw(Miro::EDevIO);
     virtual void setPosition(const Miro::PanTiltPositionIDL & dest) 
       throw(Miro::EOutOfBounds, Miro::EDevIO);
+    virtual Miro::PanTiltLimitsIDL getPanTiltLimits()
+      throw(Miro::EDevIO, Miro::ETimeOut);
+    /**
+     * DEPRECATED.
+     * Use getPanTiltLimits() instead
+     */
+    virtual Miro::PanTiltLimitsIDL getLimits()
+      throw(Miro::EDevIO, Miro::ETimeOut);
 
     void setPlayerPTZProxy(PtzProxy * _playerPTZ);
 

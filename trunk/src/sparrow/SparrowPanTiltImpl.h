@@ -49,6 +49,8 @@ namespace Sparrow
       throw (Miro::EDevIO, Miro::EOutOfBounds);
     virtual CORBA::Double getPan() throw (Miro::EDevIO);
 
+    virtual Miro::PanLimitsIDL getPanLimits() throw (Miro::EDevIO);
+
     //  virtual void setTilt(CORBA::Double value)
     //    throw (Miro::EDevIO, Miro::EOutOfBounds);
     //  virtual CORBA::Double getTilt() throw (Miro::EDevIO);

@@ -34,7 +34,9 @@ namespace Player
   using Miro::rad2Deg;
   using Miro::deg2Rad;
   //  using Miro::PlayerPanTiltSpdAccIDL;
-  //  using Miro::PlayerPanTiltLimitsIDL;
+  using Miro::PanTiltLimitsIDL;
+  using Miro::PanLimitsIDL;
+  using Miro::TiltLimitsIDL;
 
   // maximum wait time for cond.wait calls
   ACE_Time_Value PlayerPanTiltImpl::maxWait = ACE_Time_Value(0, 500000);
@@ -143,6 +145,46 @@ namespace Player
     
     playerPTZ->SetCam(currentPan,currentTilt,playerPTZ->zoom);
   }
+
+  PanTiltLimitsIDL
+  PlayerPanTiltImpl::getPanTiltLimits() throw(Miro::EDevIO, Miro::ETimeOut)
+  {
+    PanTiltLimitsIDL result;
+    result.minpanposition=-90;
+    result.maxpanposition=90;
+    result.mintiltposition=-90;
+    result.maxtiltposition=90;
+
+    return result;
+  }
+
+  PanTiltLimitsIDL PlayerPanTiltImpl::getLimits() throw(Miro::EDevIO, Miro::ETimeOut) 
+  {
+    cerr << "PanTilt::getLimits() is Deprecated" << endl;
+    cerr << "Use PanTilt::getPanTiltLimits" << endl;
+    return getPanTiltLimits();
+  }
+
+  PanLimitsIDL PlayerPanTiltImpl::getPanLimits() throw(Miro::EDevIO)
+  {
+    PanLimitsIDL result;
+
+    result.minpanposition=-90;
+    result.maxpanposition=90;
+
+    return result;
+  }
+
+  TiltLimitsIDL PlayerPanTiltImpl::getTiltLimits() throw(Miro::EDevIO)
+  {
+    TiltLimitsIDL result;
+
+    result.mintiltposition=-90;
+    result.maxtiltposition=90;
+
+    return result;
+  }
+
 
   void
   PlayerPanTiltImpl::setPlayerPTZProxy(PtzProxy * _playerPTZ)

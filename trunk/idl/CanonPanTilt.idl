@@ -32,19 +32,6 @@ module Miro
     double     tiltmaxspeed;
   };
 
-  //! Struct representing a pantilt limits  configuration.
-  struct CanonPanTiltLimitsIDL
-  {
-    //! Minimal pan position.
-    double minpanposition;
-    //! Maximal pan position.
-    double maxpanposition;
-    //! Minimal tilt position.
-    double mintiltposition;
-    //! Maximal tilt position.
-    double maxtiltposition;
-  };
-
 
   //! Interface to the panTilt unit supplied with canon VC series cameras.
   /**
@@ -78,7 +65,7 @@ module Miro
     /**
      * @return The actual limits settings of the PTU.
      */
-    CanonPanTiltLimitsIDL  getLimits() raises(Miro::EDevIO, Miro::ETimeOut);
+    //   CanonPanTiltLimitsIDL  getLimits() raises(Miro::EDevIO, Miro::ETimeOut);
 
   };
 };

@@ -15,6 +15,16 @@
 
 module Miro
 {
+  //! Struct representing a tilting limits  configuration.
+  struct TiltLimitsIDL
+  {
+    //! Minimal tilt position.
+    double mintiltposition;
+    //! Maximal tilt position.
+    double maxtiltposition;
+  };
+
+
   //! Basic interface for a tilting unit.
   /** 
    * @author Hans Utz
@@ -37,6 +47,15 @@ module Miro
      * is thrown to indicate low level device problems.
      */
     double getTilt() raises(EDevIO);
+
+    //! Get the tilting angle limits.
+    /**
+     * @return The angles within the tilt unit works, specified in radiant.
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    TiltLimitsIDL getTiltLimits() raises(EDevIO);
+
   };
 };
 

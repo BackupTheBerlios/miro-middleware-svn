@@ -198,8 +198,8 @@ void cameraMenu(Service& service)
 
   cout << "camera limits:" << endl;
 
-  Miro::CanonPanTiltLimitsIDL limits;
-  limits=service.canonPanTiltImpl.getLimits();
+  Miro::PanTiltLimitsIDL limits;
+  limits=service.canonPanTiltImpl.getPanTiltLimits();
 
   cout << "Pan min/max value: " << limits.minpanposition << " / " << limits.maxpanposition << endl;
   cout << "Tilt min/max value: " << limits.mintiltposition << " / " << limits.maxtiltposition << endl;
@@ -226,7 +226,7 @@ void cameraMenu(Service& service)
          << "g - set AGC Gain " << endl
          << "h - set White Balance Auto" << endl
          << "i - set White Balance Lock" << endl 
-	 << "k - set White Balance Mamual" << endl
+	 << "k - set White Balance Manual" << endl
 	 << "l - set White Balance Value" << endl 
 	 << endl << "x - back" << endl;
     cin >> str;

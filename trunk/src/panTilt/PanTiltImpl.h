@@ -60,11 +60,19 @@ namespace DpPanTilt
     // Pan interface
     virtual void setPan(double panvalue) throw();
     virtual double getPan() throw();
+    /**
+     * returns the pan angle limits
+     */
+    virtual Miro::PanLimitsIDL getPanLimits() throw();
 
     // -----------------------------------------------------------------------
     // Tilt interface
     virtual void setTilt(double tiltvalue) throw();
     virtual double getTilt() throw();
+    /**
+     * returns the tilt angle limits
+     */
+    virtual Miro::TiltLimitsIDL getTiltLimits() throw();
 
     // -----------------------------------------------------------------------
     // PanTilt interface
@@ -92,7 +100,13 @@ namespace DpPanTilt
     virtual Miro::PanTiltSpdAccIDL  getSpdAcc() throw();
 
     /**
-     * returns the actual speed and acceleration settings of the pantilt 
+     * returns the pan and tilt angle limits of the pantilt 
+     */
+    virtual Miro::PanTiltLimitsIDL getPanTiltLimits() throw();
+
+    /**
+     * DEPRECATED.
+     * Use getPanTiltLimits() instead
      */
     virtual Miro::PanTiltLimitsIDL  getLimits() throw();
 

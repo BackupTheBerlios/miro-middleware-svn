@@ -48,7 +48,7 @@ main(int argc, char *argv[])
     try {
       try {
 	spdacc = pantilt->getSpdAcc();
-	limits = pantilt->getLimits();
+	limits = pantilt->getPanTiltLimits();
 	powers = pantilt->getPowers();
 
       } catch (const ETimeOut& e) {
@@ -189,7 +189,7 @@ main(int argc, char *argv[])
       try {
 	// check our (re)settings
 	spdacc = pantilt->getSpdAcc();
-	limits = pantilt->getLimits();
+	limits = pantilt->getPanTiltLimits();
 	powers = pantilt->getPowers();
 
       } catch (const ETimeOut& e) {

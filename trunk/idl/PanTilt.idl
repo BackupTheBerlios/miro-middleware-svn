@@ -25,6 +25,21 @@ module Miro
     double     tiltvalue;
   };
 
+
+  //! Struct representing a pantilt limits  configuration.
+  struct PanTiltLimitsIDL
+  {
+    //! Minimal pan position.
+    double minpanposition;
+    //! Maximal pan position.
+    double maxpanposition;
+    //! Minimal tilt position.
+    double mintiltposition;
+    //! Maximal tilt position.
+    double maxtiltposition;
+  };
+
+
   //! Interface to a pantilt unit.
   /** 
    * @author Hans Utz
@@ -33,6 +48,7 @@ module Miro
   {
     //! Get the current panTilt position. 
     /**
+     * @return The current panning and tilting angles.
      * @throw EDevIO
      * is thrown to indicate low level device problems.
      */
@@ -48,6 +64,23 @@ module Miro
      * is thrown to indicate low level device problems.
      */
     void setPosition(in PanTiltPositionIDL destination) raises(EOutOfBounds, EDevIO);
+
+    //! Query the limits of the PTU.
+    /**
+     * @return The actual limits settings of the PTU.
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     * @throw ETimeOut
+     * is thrown to when no answer was received within the allowed time.
+     */
+    PanTiltLimitsIDL getPanTiltLimits() raises(Miro::EDevIO, Miro::ETimeOut);
+
+    //! Query the limits of the PTU. DEPRECATED
+    /**
+     * getLimits() has been deprecated. Use gatPanTiltLimits() instead
+     */
+    PanTiltLimitsIDL getLimits() raises(Miro::EDevIO, Miro::ETimeOut);
+
   };
 };
 

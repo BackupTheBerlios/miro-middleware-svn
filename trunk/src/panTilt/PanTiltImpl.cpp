@@ -28,6 +28,8 @@ namespace DpPanTilt
   using Miro::PanTiltSpdAccIDL;
   using Miro::PanTiltLimitsIDL;
   using Miro::PanTiltPowersIDL;
+  using Miro::PanLimitsIDL;
+  using Miro::TiltLimitsIDL;
 
   /***************************************************************************
    *
@@ -405,9 +407,7 @@ namespace DpPanTilt
 
   }
   
-
-
-  Miro::PanTiltLimitsIDL  PanTiltImpl::getLimits() throw ()
+  PanTiltLimitsIDL  PanTiltImpl::getPanTiltLimits() throw ()
   {
     ACE_Time_Value abstimeout;
     ACE_Time_Value timeout(20,0); // 10 seconds for data request (far to long, but its just here to return sometime)
@@ -456,6 +456,35 @@ namespace DpPanTilt
     result.maxpanposition = pan2rad( panTiltData.maxPanPosition );
     result.mintiltposition = tilt2rad( panTiltData.minTiltPosition );
     result.maxtiltposition = tilt2rad( panTiltData.maxTiltPosition );
+
+    return result;
+  }
+
+  PanTiltLimitsIDL PanTiltImpl::getLimits() throw() 
+  {
+    MIRO_DBG(B21,LL_WARNING,"PanTilt::getLimits() is Deprecated");
+    MIRO_DBG(B21,LL_WARNING,"Use PanTilt::getPanTiltLimits");
+    return getPanTiltLimits();
+  }
+
+  PanLimitsIDL PanTiltImpl::getPanLimits() throw()
+  {
+    PanLimitsIDL result;
+    PanTiltLimitsIDL panTiltLimits=getPanTiltLimits();
+
+    result.minpanposition=panTiltLimits.minpanposition;
+    result.maxpanposition=panTiltLimits.maxpanposition;
+
+    return result;
+  }
+
+  TiltLimitsIDL PanTiltImpl::getTiltLimits() throw()
+  {
+    TiltLimitsIDL result;
+    PanTiltLimitsIDL panTiltLimits=getPanTiltLimits();
+
+    result.mintiltposition=panTiltLimits.mintiltposition;
+    result.maxtiltposition=panTiltLimits.maxtiltposition;
 
     return result;
   }

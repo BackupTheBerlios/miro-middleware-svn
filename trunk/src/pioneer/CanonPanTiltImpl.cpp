@@ -46,7 +46,9 @@ namespace Canon
   using Miro::rad2Deg;
   using Miro::deg2Rad;
   using Miro::CanonPanTiltSpdAccIDL;
-  using Miro::CanonPanTiltLimitsIDL;
+  using Miro::PanTiltLimitsIDL;
+  using Miro::PanLimitsIDL;
+  using Miro::TiltLimitsIDL;
 
   // maximum wait time for cond.wait calls
   ACE_Time_Value CanonPanTiltImpl::maxWait = ACE_Time_Value(0, 500000);
@@ -496,10 +498,10 @@ namespace Canon
     return result;
   }
 
-  CanonPanTiltLimitsIDL 
-  CanonPanTiltImpl::getLimits() throw(Miro::EDevIO, Miro::ETimeOut)
+  PanTiltLimitsIDL 
+  CanonPanTiltImpl::getPanTiltLimits() throw(Miro::EDevIO, Miro::ETimeOut)
   {
-    CanonPanTiltLimitsIDL result;
+    PanTiltLimitsIDL result;
     if (!initialized) 
       initialize();
 
@@ -602,6 +604,36 @@ namespace Canon
     waitInitialize(false,true); //don't force reinit but wait
     return result;
   }
+
+  PanTiltLimitsIDL CanonPanTiltImpl::getLimits() throw(Miro::EDevIO, Miro::ETimeOut) 
+  {
+    cerr << "PanTilt::getLimits() is Deprecated" << endl;
+    cerr << "Use PanTilt::getPanTiltLimits" << endl;
+    return getPanTiltLimits();
+  }
+
+  PanLimitsIDL CanonPanTiltImpl::getPanLimits() throw(Miro::EDevIO)
+  {
+    PanLimitsIDL result;
+    PanTiltLimitsIDL panTiltLimits=getPanTiltLimits();
+
+    result.minpanposition=panTiltLimits.minpanposition;
+    result.maxpanposition=panTiltLimits.maxpanposition;
+
+    return result;
+  }
+
+  TiltLimitsIDL CanonPanTiltImpl::getTiltLimits() throw(Miro::EDevIO)
+  {
+    TiltLimitsIDL result;
+    PanTiltLimitsIDL panTiltLimits=getPanTiltLimits();
+
+    result.mintiltposition=panTiltLimits.mintiltposition;
+    result.maxtiltposition=panTiltLimits.maxtiltposition;
+
+    return result;
+  }
+
   
   //-------------------------------------------------------------------
   // auxiliary functions

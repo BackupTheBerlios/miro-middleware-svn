@@ -40,19 +40,6 @@ module Miro
     double     tiltacc;
   };
 
-  //! Struct representing a pantilt limits  configuration.
-  struct PanTiltLimitsIDL
-  {
-    //! Minimal pan position.
-    double minpanposition;
-    //! Maximal pan position.
-    double maxpanposition;
-    //! Minimal tilt position.
-    double mintiltposition;
-    //! Maximal tilt position.
-    double maxtiltposition;
-  };
-
   //! Struct representing a pantilt hold and move power configuration.
   struct PanTiltPowersIDL 
   {
@@ -110,12 +97,6 @@ module Miro
      * @return The actual speed and acceleration settings of the PTU.
      */
     PanTiltSpdAccIDL  getSpdAcc() raises(Miro::EDevIO, Miro::ETimeOut);
-
-    //! Query the limits of the PTU.
-    /**
-     * @return The actual limits settings of the PTU.
-     */
-    PanTiltLimitsIDL  getLimits() raises(Miro::EDevIO, Miro::ETimeOut);
 
     //! Set the actual powers settings.
     void setPowers( in PanTiltPowersIDL dest ) 
