@@ -164,7 +164,7 @@ namespace FaulMotor
 //    cout << " AccL: " << acctestL << endl;
 
     if (fabs(acctestL - prevAccL) > 2) {         //zur datenverringerung
-      sprintf(speedMessageL, "ac%d", acctestL); // build acc message
+      sprintf(accMessageL, "ac%d", acctestL); // build acc message
       prevAccL = acctestL;
     }
     else {
@@ -173,7 +173,7 @@ namespace FaulMotor
     }
 
     if (fabs(acctestR - prevAccR) > 2) {
-      sprintf(speedMessageR, "ac%d", acctestR); // build acc message
+      sprintf(accMessageR, "ac%d", acctestR); // build acc message
       prevAccR = acctestR;
     }
     else {

@@ -90,6 +90,7 @@ namespace FaulController
     if (len) {
       rc = ttyConnection->ioBuffer.send_n(buffer, len);
       lastWrite_ = ACE_OS::gettimeofday();
+      // std::cout << "faulTTy: " << buffer << "end" << endl;
     }
 
     mutex_.release();
