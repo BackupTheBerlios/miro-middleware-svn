@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2002, 2003
+// (c) 2002, 2003, 2004, 2005
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // 
@@ -24,19 +24,18 @@ class ACE_Reactor;
 namespace Miro
 {
   class Exception;
-};
+}
 
 namespace Pioneer
 {
   // forward declarations
   class Consumer;
-};
+}
 
 namespace Canon
 {
   class CanonPanTiltImpl :  public virtual POA_Miro::CanonPanTilt,
-			    //			    public virtual ::Miro::PanTilt,
-			    public Miro::PanTiltImpl
+			    public virtual Miro::PanTiltImpl
   {
     //-------------------------------------------------------------------------
     // public methods
@@ -51,26 +50,26 @@ namespace Canon
     //-------------------------------------------------------------------------
     // from pan.idl
     //-------------------------------------------------------------------------
-    virtual void setPan(double angle)
+    virtual void setPan(CORBA::Float angle)
       throw(Miro::EOutOfBounds, Miro::EDevIO);
-    virtual double getPan()
+    virtual CORBA::Float getPan()
       throw(Miro::EDevIO);
     /**
      * returns the pan angle limits
      */
-    virtual Miro::PanLimitsIDL getPanLimits() throw(Miro::EDevIO);
+    virtual Miro::PanLimitsIDL getPanLimits() throw();
 
     //-------------------------------------------------------------------------
     // from tilt.idl
     //-------------------------------------------------------------------------
-    virtual void setTilt(double angle)
+    virtual void setTilt(CORBA::Float angle)
       throw(Miro::EOutOfBounds, Miro::EDevIO);
-    virtual double getTilt()
+    virtual CORBA::Float getTilt()
       throw(Miro::EDevIO);
     /**
      * returns the tilt angle limits
      */
-    virtual Miro::TiltLimitsIDL getTiltLimits() throw(Miro::EDevIO);
+    virtual Miro::TiltLimitsIDL getTiltLimits() throw();
 
     //-------------------------------------------------------------------------
     // from panTilt.idl
@@ -79,8 +78,7 @@ namespace Canon
       throw(Miro::EDevIO);
     virtual void setPosition(const Miro::PanTiltPositionIDL & dest) 
       throw(Miro::EOutOfBounds, Miro::EDevIO);
-    virtual Miro::PanTiltLimitsIDL getPanTiltLimits()
-      throw(Miro::EDevIO);
+    virtual Miro::PanTiltLimitsIDL getPanTiltLimits() throw();
 
     //-------------------------------------------------------------------------
     // from canonPanTilt.idl
@@ -139,7 +137,7 @@ namespace Canon
   inline Answer* CanonPanTiltImpl::getAnswer() {
     return &answer;
   }
-};
+}
 
 #endif
 

@@ -214,8 +214,8 @@ void cameraMenu(Service& service)
   Miro::PanTiltLimitsIDL limits;
   limits=service.pPanTiltImpl->getPanTiltLimits();
 
-  cout << "Pan min/max value: " << limits.minpanposition << " / " << limits.maxpanposition << endl;
-  cout << "Tilt min/max value: " << limits.mintiltposition << " / " << limits.maxtiltposition << endl;
+  cout << "Pan min/max value: " << limits.pan.minAngle << " / " << limits.pan.maxAngle << endl;
+  cout << "Tilt min/max value: " << limits.tilt.minAngle << " / " << limits.tilt.maxAngle << endl;
 
   while(loop) {
     cout << endl
@@ -259,10 +259,10 @@ void cameraMenu(Service& service)
 	  Miro::PanTiltPositionIDL pos;
 	  cout << "pan (deg): " << endl;
 	  cin >> angle;
-	  pos.panvalue=deg2Rad(angle);
+	  pos.panValue=deg2Rad(angle);
 	  cout << "tilt (deg): " << endl;
 	  cin >> angle;
-	  pos.tiltvalue=deg2Rad(angle);
+	  pos.tiltValue=deg2Rad(angle);
 	  
 	  service.pPanTiltImpl->setPosition(pos);
 	  break;
@@ -273,10 +273,10 @@ void cameraMenu(Service& service)
 	  Miro::PanTiltPositionIDL pos;
 	  cout << "pan (deg): " << endl;
 	  cin >> angle;
-	  pos.panvalue=deg2Rad(angle);
+	  pos.panValue=deg2Rad(angle);
 	  cout << "tilt (deg): " << endl;
 	  cin >> angle;
-	  pos.tiltvalue=deg2Rad(angle);
+	  pos.tiltValue=deg2Rad(angle);
 	  
 	  service.pPanTiltImpl->setWaitPosition(pos);
 	  break;
@@ -302,8 +302,8 @@ void cameraMenu(Service& service)
       case '5' :
 	{
 	  Miro::PanTiltPositionIDL pos=service.pPanTiltImpl->getPosition();
-	  cout << "Pan: " << Miro::rad2Deg(pos.panvalue) << "°" << endl;
-	  cout << "Tilt: " << Miro::rad2Deg(pos.tiltvalue) << "°" << endl;
+	  cout << "Pan: " << Miro::rad2Deg(pos.panValue) << "°" << endl;
+	  cout << "Tilt: " << Miro::rad2Deg(pos.tiltValue) << "°" << endl;
 	  break;
 	}
       case '6':

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2002, 2003
+// (c) 2002, 2003. 2004, 2005
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // 
@@ -98,23 +98,23 @@ namespace Canon
   // from pan.idl
   //-------------------------------------------------------------------------
   void
-  CanonPanTiltImpl::setPan(double angle) throw(Miro::EOutOfBounds, Miro::EDevIO)
+  CanonPanTiltImpl::setPan(CORBA::Float angle) throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
     Miro::PanTiltPositionIDL dest;
 
     //if camera is inverse mounted, change sign for current saved value
     //as it will be changed again on setPosition
-    dest.panvalue = angle;
-    dest.tiltvalue = (upsideDown? -currentTilt : currentTilt);
+    dest.panValue = angle;
+    dest.tiltValue = (upsideDown? -currentTilt : currentTilt);
 
     setPosition(dest);
   }
   
-  double
+  CORBA::Float
   CanonPanTiltImpl::getPan() throw(Miro::EDevIO)
   {
     Miro::PanTiltPositionIDL pos = getPosition();
-    return pos.panvalue;
+    return pos.panValue;
     
   }
   
@@ -122,23 +122,23 @@ namespace Canon
   // from tilt.idl
   //-------------------------------------------------------------------------
   void 
-  CanonPanTiltImpl::setTilt(double angle) throw(Miro::EOutOfBounds, Miro::EDevIO)
+  CanonPanTiltImpl::setTilt(CORBA::Float angle) throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
     Miro::PanTiltPositionIDL dest;
     //if camera is not inverse mounted, change sign for current saved value
     //as it will be changed again on setPosition
     //to maintain coherence with other PanTilt implementations it must
     //work opposite to camera default.
-    dest.panvalue=(!upsideDown?-currentPan:currentPan);
-    dest.tiltvalue=angle;
+    dest.panValue=(!upsideDown?-currentPan:currentPan);
+    dest.tiltValue=angle;
     setPosition(dest);
   }
 
-  double 
+  CORBA::Float 
   CanonPanTiltImpl::getTilt() throw(Miro::EDevIO)
   {
     Miro::PanTiltPositionIDL pos = getPosition();
-    return pos.tiltvalue;
+    return pos.tiltValue;
 
   }
   
@@ -182,17 +182,17 @@ namespace Canon
 	done = true;
     }
 
-    result.panvalue =
+    result.panValue =
       deg2Rad(double(str2int(pAnswer->parameter(),4)-0x8000) * panPulseRatio);
-    result.tiltvalue =
+    result.tiltValue =
       deg2Rad(double(str2int(pAnswer->parameter()+4,4)-0x8000) * tiltPulseRatio);
 
     if (upsideDown) {
       //if inverse mounting, switch directions
-      result.tiltvalue = -result.tiltvalue;
+      result.tiltValue = -result.tiltValue;
     } else {
       //Miro's horitzontal standart is opposite to camera's !!!
-      result.panvalue = -result.panvalue;
+      result.panValue = -result.panValue;
     }
 
     return result;
@@ -209,8 +209,8 @@ namespace Canon
 
     //if camera in inverse position, change sign for pan/tilt
     //Miro's pan works opposite to camera's!!!
-    currentPan = dest.panvalue * (!upsideDown? -1 : 1);
-    currentTilt = dest.tiltvalue* (upsideDown? -1 : 1);
+    currentPan = dest.panValue * (!upsideDown? -1 : 1);
+    currentTilt = dest.tiltValue* (upsideDown? -1 : 1);
     
     char angleASCII[9];
     Canon::Message panTiltValue(PAN_TILT_SET_POSITION,
@@ -282,23 +282,23 @@ namespace Canon
   {
     Miro::PanTiltPositionIDL goal,dest;
 
-    goal.panvalue = currentPan;
-    goal.tiltvalue = currentTilt;
+    goal.panValue = currentPan;
+    goal.tiltValue = currentTilt;
 
     //if the camera is inverse mounted, must change the sign
     if (upsideDown) {
-      goal.tiltvalue = -goal.tiltvalue;
+      goal.tiltValue = -goal.tiltValue;
     } else {
       //Miro's pan standart is opposite to camera's !!!
-      goal.panvalue = -goal.panvalue;
+      goal.panValue = -goal.panValue;
     }
 
     do {
       //test if finished
       dest = getPosition();
     } 
-    while ( (fabs(goal.panvalue-dest.panvalue) > 0.01) || 
-	    (fabs(goal.tiltvalue-dest.tiltvalue) > 0.01) );
+    while ( (fabs(goal.panValue-dest.panValue) > 0.01) || 
+	    (fabs(goal.tiltValue-dest.tiltValue) > 0.01) );
       //0.01 rad tolerance (aprox 0.6 deg)
   }
   
@@ -501,7 +501,7 @@ namespace Canon
   }
 
   PanTiltLimitsIDL 
-  CanonPanTiltImpl::getPanTiltLimits() throw(Miro::EDevIO)
+  CanonPanTiltImpl::getPanTiltLimits() throw()
   {
     PanTiltLimitsIDL result;
     if (!initialized) 
@@ -598,10 +598,10 @@ namespace Canon
 
     //if in inverse mounting, the max and min values must be switched
     //remember that Miro's pan standart is opposite to camera's own
-    result.minpanposition=(!upsideDown?-maxPan:minPan);
-    result.maxpanposition=(!upsideDown?-minPan:maxPan);
-    result.mintiltposition=(upsideDown?-maxTilt:minTilt);
-    result.maxtiltposition=(upsideDown?-minTilt:maxTilt);
+    result.pan.minAngle =(!upsideDown?-maxPan:minPan);
+    result.pan.maxAngle =(!upsideDown?-minPan:maxPan);
+    result.tilt.minAngle =(upsideDown?-maxTilt:minTilt);
+    result.tilt.maxAngle =(upsideDown?-minTilt:maxTilt);
 
     waitInitialize(false,true); //don't force reinit but wait
     return result;
@@ -614,26 +614,16 @@ namespace Canon
     return getPanTiltLimits();
   }
 
-  PanLimitsIDL CanonPanTiltImpl::getPanLimits() throw(Miro::EDevIO)
+  PanLimitsIDL CanonPanTiltImpl::getPanLimits() throw()
   {
-    PanLimitsIDL result;
     PanTiltLimitsIDL panTiltLimits=getPanTiltLimits();
-
-    result.minpanposition=panTiltLimits.minpanposition;
-    result.maxpanposition=panTiltLimits.maxpanposition;
-
-    return result;
+    return panTiltLimits.pan;
   }
 
-  TiltLimitsIDL CanonPanTiltImpl::getTiltLimits() throw(Miro::EDevIO)
+  TiltLimitsIDL CanonPanTiltImpl::getTiltLimits() throw()
   {
-    TiltLimitsIDL result;
     PanTiltLimitsIDL panTiltLimits=getPanTiltLimits();
-
-    result.mintiltposition=panTiltLimits.mintiltposition;
-    result.maxtiltposition=panTiltLimits.maxtiltposition;
-
-    return result;
+    return panTiltLimits.tilt;
   }
 
   

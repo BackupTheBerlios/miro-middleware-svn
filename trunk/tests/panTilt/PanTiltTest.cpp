@@ -106,28 +106,28 @@ int main(int argc, char *argv[])
       case '5':
 	cout << "new panning angle (deg): " << flush;
 	cin >> pan;
-	position.panvalue = pan * M_PI/180.;
+	position.panValue = pan * M_PI/180.;
 	cout << "new tilting angle (deg): " << flush;
 	cin >> tilt;
-	position.tiltvalue = tilt * M_PI/180.;
+	position.tiltValue = tilt * M_PI/180.;
 	panTilt->setPosition(position);
 	break;
       case '6':
 	panLimits=panTilt->getPanLimits();
 	cout << "pan limits: " << flush
-	     << panLimits.minpanposition *180/M_PI << " <-> " << panLimits.maxpanposition*180/M_PI <<endl;
+	     << panLimits.minAngle *180/M_PI << " <-> " << panLimits.maxAngle*180/M_PI <<endl;
 	break;
       case '7':
 	tiltLimits=panTilt->getTiltLimits();
 	cout << "tilt limits: " << flush
-	     << tiltLimits.mintiltposition*180/M_PI<< " <-> " << tiltLimits.maxtiltposition*180/M_PI <<endl;
+	     << tiltLimits.minAngle*180/M_PI<< " <-> " << tiltLimits.maxAngle*180/M_PI <<endl;
 	break;
       case '8':
 	panTiltLimits=panTilt->getPanTiltLimits();
 	cout << "pan limits: " << flush
-	     << panTiltLimits.minpanposition*180/M_PI << " <-> " << panTiltLimits.maxpanposition*180/M_PI << endl;
+	     << panTiltLimits.pan.minAngle*180/M_PI << " <-> " << panTiltLimits.pan.maxAngle*180/M_PI << endl;
 	cout << "tilt limits: " << flush
-	     << panTiltLimits.mintiltposition*180/M_PI << " <-> " << panTiltLimits.maxtiltposition*180/M_PI <<endl;
+	     << panTiltLimits.tilt.minAngle*180/M_PI << " <-> " << panTiltLimits.tilt.maxAngle*180/M_PI <<endl;
 	break;
       case 'q':
 	quit = true;

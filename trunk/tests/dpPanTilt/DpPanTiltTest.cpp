@@ -71,10 +71,10 @@ main(int argc, char *argv[])
     cout << "panacc          [rad/(s^2)]:" << spdacc.panacc << endl;
     cout << "tiltacc         [rad/(s^2)]:" << spdacc.tiltacc << endl;
     cout << "Limits :" << endl;
-    cout << "minpanposition  [rad]:" << limits.minpanposition << endl;
-    cout << "maxpanposition  [rad]:" << limits.maxpanposition << endl;
-    cout << "mintiltposition [rad]:" << limits.mintiltposition << endl;
-    cout << "maxtiltposition [rad]:" << limits.maxtiltposition << endl;
+    cout << "pan.minAngle  [rad]:" << limits.pan.minAngle << endl;
+    cout << "pan.maxAngle  [rad]:" << limits.pan.maxAngle << endl;
+    cout << "tilt.minAngle [rad]:" << limits.tilt.minAngle << endl;
+    cout << "tilt.maxAngle [rad]:" << limits.tilt.maxAngle << endl;
     cout << " Powers :" << endl;
     cout << "panhold         :" << powers.panhold << endl;
     cout << "tilthold        :" << powers.tilthold << endl;
@@ -214,10 +214,10 @@ main(int argc, char *argv[])
     cout << "tiltacc         [rad/(s^2)]:" << spdacc.tiltacc << endl;
 
     cout << "Limits :" << endl;
-    cout << "minpanposition  [rad/s]:" << limits.minpanposition << endl;
-    cout << "maxpanposition  [rad/s]:" << limits.maxpanposition << endl;
-    cout << "mintiltposition [rad/s]:" << limits.mintiltposition << endl;
-    cout << "maxtiltposition [rad/s]:" << limits.maxtiltposition << endl;
+    cout << "pan.minAngle  [rad/s]:" << limits.pan.minAngle << endl;
+    cout << "pan.maxAngle  [rad/s]:" << limits.pan.maxAngle << endl;
+    cout << "tilt.minAngle [rad/s]:" << limits.tilt.minAngle << endl;
+    cout << "tilt.maxAngle [rad/s]:" << limits.tilt.maxAngle << endl;
 
     cout << " Powers :" << endl;
     cout << "panhold         :" << powers.panhold << endl;
@@ -230,14 +230,14 @@ main(int argc, char *argv[])
 
     PanTiltPositionIDL ptdata;
 
-    ptdata.panvalue = 4.95;
-    ptdata.tiltvalue = 0.45;
+    ptdata.panValue = 4.95;
+    ptdata.tiltValue = 0.45;
     try {
       try {
 	cout << "destination was 4.95/0.45 (which should produce an error)" << endl;
 	pantilt->setWaitPosition( ptdata );
 	ptdata = pantilt->getPosition( );
-	cout << "reached :" << ptdata.panvalue << "," << ptdata.tiltvalue << endl;
+	cout << "reached :" << ptdata.panValue << "," << ptdata.tiltValue << endl;
       } catch (const ETimeOut& e) {
 	cerr << "Blocking call timed out." << endl;
       }
@@ -245,14 +245,14 @@ main(int argc, char *argv[])
       cerr << "Device IO exception :" << e << endl;
     }
 
-    ptdata.panvalue = -1.35;
-    ptdata.tiltvalue = -0.45;
+    ptdata.panValue = -1.35;
+    ptdata.tiltValue = -0.45;
     try {
       try {
 	cout << "destination was -1.35,-0.45" << endl;
 	pantilt->setWaitPosition( ptdata );
 	ptdata = pantilt->getPosition(  );
-	cout << "reached :" << ptdata.panvalue << "," << ptdata.tiltvalue << endl;
+	cout << "reached :" << ptdata.panValue << "," << ptdata.tiltValue << endl;
       } catch (const ETimeOut& e) {
 	cerr << "Blocking call timed out." << endl;
       }
@@ -260,15 +260,15 @@ main(int argc, char *argv[])
       cerr << "Device IO exception :" << e << endl;
     }
 
-    ptdata.panvalue = 0;
-    ptdata.tiltvalue = 0;
+    ptdata.panValue = 0;
+    ptdata.tiltValue = 0;
 
     try {
       try {
 	cout << "destination was 0,0" << endl;
 	pantilt->setPosition( ptdata );
 	ptdata = pantilt->getPosition(  );
-	cout << "reached :" << ptdata.panvalue << "," << ptdata.tiltvalue << endl;
+	cout << "reached :" << ptdata.panValue << "," << ptdata.tiltValue << endl;
 
       } catch (const ETimeOut& e) {
 	cerr << "Blocking call timed out." << endl;

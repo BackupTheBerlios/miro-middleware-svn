@@ -100,12 +100,12 @@ private:
   Miro::RangeSensorImpl sonar;
   Miro::RangeSensorImpl tactile;
   Miro::RangeSensorImpl infrared;
-  Miro::PanTiltImpl * pPanTiltImpl;
+  Canon::CanonPanTiltImpl * pPanTiltImpl;
 #ifdef MIRO_HAS_DEPRECATED
   Canon::CanonCameraImpl canonCamera;
 #endif
   //  Miro::PanTiltImpl * panTilt;
-  Miro::CameraControlImpl * pCameraControlImpl;
+  Canon::CanonCameraControlImpl * pCameraControlImpl;
   Miro::GripperImpl gripper;
   Miro::ObjectVectorImpl objectVector;
   //Miro::CortexImpl cortex;
@@ -122,8 +122,8 @@ private:
   Miro::CanonCamera_var pCanonCamera;
 #endif
   //  Miro::CanonPanTilt_var pCanonPanTilt;
-  Miro::PanTilt_var pPanTilt;
-  Miro::CameraControl_var pCameraControl;
+  Miro::CanonPanTilt_var pPanTilt;
+  Miro::CanonCameraControl_var pCameraControl;
   Miro::Gripper_var pGripper;
   Miro::ObjectVector_var pObjectVector;
   //Miro::Cortex_var pCortex;
