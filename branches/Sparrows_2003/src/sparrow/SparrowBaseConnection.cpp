@@ -48,7 +48,9 @@ namespace Sparrow
 
   {
     DBG(cout << "Constructing SparrowConnection." << endl);
-
+    std::cout << "Reactor" << (void*) reactor << endl;
+    std::cout << "_Reactor" << (void*) _reactor << endl;
+    
 
   }
 

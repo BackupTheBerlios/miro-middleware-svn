@@ -40,12 +40,13 @@ using std::cout;
 using std::cerr;
 
 FaulhaberHardware::FaulhaberHardware(ACE_Reactor * _reactor,
-				     Miro::OdometryImpl * _pOdometryImpl) :
+				     Miro::OdometryImpl * _pOdometryImpl,
+				     Sparrow::Connection2003 * connection2003_) :
   reactor(_reactor),
   timerId(-1),
   pConsumer(new FaulMotor::Consumer(_pOdometryImpl)),
   pTimerEventHandler(new FaulMotor::TimerEventHandler(connection)),
-  connection(_reactor, pConsumer)
+  connection(_reactor, pConsumer, connection2003_)
 {
   ACE_Time_Value tv(0,50000);
 
@@ -109,8 +110,6 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
   pPioneer(NULL),
 
   // Faulhaber board initialization
-  pFaulhaber((Sparrow::Parameters::instance()->faulhaber)?
-	   new FaulhaberHardware(reactorTask.reactor(), &odometry) : NULL),
 
   // Service initialization
 
@@ -123,11 +122,11 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 {
 
    if(Sparrow::Parameters::instance()->sparrow2003){
+       std::cout << "Sparrow2003-Base-Constructor" << std::endl;
+   //aCollector = new Sparrow::AliveCollector();
 
-   aCollector = new Sparrow::AliveCollector();
-
-   pSparrowConsumer2003 = new Sparrow::Consumer2003();/**sparrowConnection,
-					 ( (Sparrow::Parameters::instance()->faulhaber)?
+  pSparrowConsumer2003 = new Sparrow::Consumer2003();/**sparrowConnection,
+					 /*( (Sparrow::Parameters::instance()->faulhaber)?
 					   NULL :
 					   &odometry),
 					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:sparrowStall,
@@ -139,22 +138,26 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 		    pSparrowConsumer2003);
 
 
-
-   sparrowKicker = new Sparrow::KickerImpl(sparrowConnection2003);
+   std::cout << "Hier 1" << flush;
+   //sparrowKicker = new Sparrow::KickerImpl(sparrowConnection2003);
    //sparrowButtons = new Sparrow::ButtonsImpl(*pSparrowConsumer2003, &structuredPushSupplier_);
    //sparrowStall = new Sparrow::StallImpl(*sparrowConnection2003, &structuredPushSupplier_);
-   //sparrowPanTilt = new Sparrow::PanTiltImpl(*sparrowConnection2003);
+   //sparrowPanTilt = new Sparrow::PanTiltImpl(sparrowConnection2003);
+   pFaulhaber =  new FaulhaberHardware(reactorTask.reactor(), &odometry, sparrowConnection2003);
 
+   std::cout << "Hier 2" << flush;
    pSparrowConsumer2003->registerInterfaces(sparrowConnection2003,
 					( (Sparrow::Parameters::instance()->faulhaber)?
 					   NULL :
 					   &odometry),
 					   &infrared,
-					   pFaulhaber->pConsumer);
+					   pFaulhaber->pConsumer,
+					   NULL);
+
 
    pSparrowMotion = (POA_Miro::Motion *) new FaulMotor::MotionImpl(pFaulhaber->connection);
 
-   aEventHandler = new Sparrow::AliveEventHandler(aCollector, sparrowConnection2003);
+   //aEventHandler = new Sparrow::AliveEventHandler(aCollector, sparrowConnection2003);
    //(reactorTask.reactor())->schedule_timer(aEventHandler, NULL, delay,interval);
 
    }
@@ -176,6 +179,10 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
    sparrowButtons = new Sparrow::ButtonsImpl(*pSparrowConsumer, &structuredPushSupplier_);
    sparrowStall = new Sparrow::StallImpl(*sparrowConnection, &structuredPushSupplier_);
    sparrowPanTilt = new Sparrow::PanTiltImpl(sparrowConnection);
+
+   pFaulhaber = ((Sparrow::Parameters::instance()->faulhaber)?
+	   new FaulhaberHardware(reactorTask.reactor(), &odometry, NULL) : NULL),
+
 
    pSparrowConsumer->registerInterfaces(sparrowConnection,
 					( (Sparrow::Parameters::instance()->faulhaber)?
@@ -235,8 +242,6 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 //	   new PioneerHardware(reactorTask.reactor(), pSonar_.get()) : NULL),
   pPioneer(NULL),
   // Faulhaber board initialization
-  pFaulhaber((Sparrow::Parameters::instance()->faulhaber)?
-	   new FaulhaberHardware(reactorTask.reactor(), &odometry) : NULL),
 
   // Service initialization
 
@@ -250,7 +255,7 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 
    if(Sparrow::Parameters::instance()->sparrow2003){
 
-   aCollector = new Sparrow::AliveCollector();
+   //aCollector = new Sparrow::AliveCollector();
    pSparrowConsumer2003 = new Sparrow::Consumer2003(); /**sparrowConnection,
 					 ( (Sparrow::Parameters::instance()->faulhaber)?
 					   NULL :
@@ -263,10 +268,13 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 		    pCanEventHandler,
 		    pSparrowConsumer2003);
 
+   pFaulhaber = new FaulhaberHardware(reactorTask.reactor(), &odometry, sparrowConnection2003);
+
+
    sparrowKicker = new Sparrow::KickerImpl(sparrowConnection2003);
    //sparrowButtons = new Sparrow::ButtonsImpl(*pSparrowConsumer2003, &structuredPushSupplier_);
    //sparrowStall = new Sparrow::StallImpl(*sparrowConnection2003, &structuredPushSupplier_);
-   //sparrowPanTilt = new Sparrow::PanTiltImpl(*sparrowConnection2003);
+   sparrowPanTilt = new Sparrow::PanTiltImpl(sparrowConnection2003);
 
 
 
@@ -278,14 +286,15 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 					   NULL :
 					   &odometry),
 					 &infrared,
-					 pFaulhaber->pConsumer);
+					 pFaulhaber->pConsumer,
+					 NULL);
 
    pSparrowMotion = (POA_Miro::Motion *) new FaulMotor::MotionImpl(pFaulhaber->connection);
 
-   aEventHandler = new Sparrow::AliveEventHandler(aCollector, sparrowConnection2003);
+   //aEventHandler = new Sparrow::AliveEventHandler(aCollector, sparrowConnection2003);
 
 
-   //(reactorTask.reactor())->schedule_timer(aEventHandler, NULL, delay,interval);
+   //(reactorTask.reactor())->schedule_timer(aEventHandler, NULL, delay,interval);*/
 
 
    }
@@ -306,6 +315,9 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
    sparrowButtons = new Sparrow::ButtonsImpl(*pSparrowConsumer, &structuredPushSupplier_);
    sparrowStall = new Sparrow::StallImpl(*sparrowConnection, &structuredPushSupplier_);
    sparrowPanTilt = new Sparrow::PanTiltImpl(sparrowConnection);
+
+   pFaulhaber = ((Sparrow::Parameters::instance()->faulhaber)?
+	   new FaulhaberHardware(reactorTask.reactor(), &odometry, NULL) : NULL),
 
 
    pSparrowConsumer->registerInterfaces(sparrowConnection,
@@ -333,9 +345,11 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 void
 SparrowBase::init(bool _startReactorTastk)
 {
+
   pOdometry = odometry._this();
   pMotion = pSparrowMotion->_this();
   pInfrared = infrared._this();
+
   if(!Sparrow::Parameters::instance()->sparrow2003){
     pKicker = sparrowKicker->_this();
     pButtons = sparrowButtons->_this();

@@ -78,15 +78,30 @@ SensorStream::push_structured_event(const StructuredEvent & notification
   else if (notification.remainder_of_body >>= pSensorGroup) {
 
     if(group_en && group == pSensorGroup->group){
-    for( int i = 2; i < argCounter; i++ ) {
+    for( int i = 2; i < argCounter-2; i++ ) {
       unsigned int k;
-      sscanf( argVector[ i ], " %i ", &k );
+      sscanf( argVector[ i ], " %d ", &k );
 
       for (unsigned int j = 0; j < pSensorGroup->range.length(); ++j)
 	if (j == k) {
           cout.width(6);
 	  cout << pSensorGroup->range[j] << "\t";
 	}
+    }
+    }
+    else{
+    for( int i = 2; i < argCounter; i++ ) {
+      unsigned int k;
+      sscanf( argVector[ i ], " %d ", &k );
+
+      for (unsigned int j = 0; j < pSensorGroup->range.length(); ++j)
+	if (j == k) {
+          cout.width(6);
+	  cout << pSensorGroup->range[j] << "\t";
+	}
+
+
+
     }
     cout << endl;
     }

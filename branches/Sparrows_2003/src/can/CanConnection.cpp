@@ -96,12 +96,12 @@ namespace Can
          throw Miro::Exception("can_IOCSBAUD() ioctl error");
 
        if(acode != -1){
-          if(ioctl(ioBuffer.get_handle(), CAN_IOCSACODE, &baud_rate))
+          if(ioctl(ioBuffer.get_handle(), CAN_IOCSACODE, &acode))
             throw Miro::Exception("can_IOCSACODE() ioctl error");
        }
 
        if(amask != -1){
-          if(ioctl(ioBuffer.get_handle(), CAN_IOCSAMASK, &baud_rate))
+          if(ioctl(ioBuffer.get_handle(), CAN_IOCSAMASK, &amask))
             throw Miro::Exception("can_IOCSAMASK() ioctl error");
        }
 
@@ -117,7 +117,7 @@ namespace Can
   void
   Connection::write(Message& message)
   {
-    
+
     if(parameters_.module == "sja1000"){
        (message.canMessage())->type = EXTENDED;
 
@@ -140,6 +140,8 @@ namespace Can
 
     // will definitely choke if base is off
     int rc = ioBuffer.send_n(message.canMessage(), sizeof(canmsg));
+
+    std::cout << "message " << message.canMessage()->d[0] << message.canMessage()->d[1] << endl;
 
     lastWrite = time;
     ACE_OS::sleep(canTimeOut);

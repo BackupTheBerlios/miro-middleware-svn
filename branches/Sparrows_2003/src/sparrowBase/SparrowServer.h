@@ -55,7 +55,8 @@ struct FaulhaberHardware
   FaulMotor::Connection connection;
 
   FaulhaberHardware(ACE_Reactor * _reactor,
-		    Miro::OdometryImpl * _pOdometryImpl);
+		    Miro::OdometryImpl * _pOdometryImpl,
+		    Sparrow::Connection2003 * connection2003_);
   ~FaulhaberHardware();
 };
 

@@ -54,7 +54,10 @@ namespace Sparrow
     eventHandler(new EventHandler2003(*this)),
     boardReply(-1)
   {
-    DBG(cout << "Constructing SparrowConnection." << endl);
+    DBG(cout << "Constructing SparrowConnection2003." << endl);
+    std::cout << "_Reactor " << (void*) _reactor << endl;
+    std::cout << "Reactor " << (void*)  reactor << endl;
+    std::cout << "this->Reactor " << (void*)  this->reactor << endl;
 
     // Complete initialization after entering of the reactor processing loop.
     // So we start immediately after the start of the reactor
@@ -74,6 +77,7 @@ namespace Sparrow
 				params_->buttonsPollInterval) ) // interval
 	== -1)
       throw Miro::ACE_Exception(errno, "Failed to register timer for buttons polling.");*/
+      std::cout << "Ende Constructor SparrowConnectione 2003" << endl;
   }
 
   void
@@ -118,6 +122,25 @@ namespace Sparrow
      return true;
   }
 
+  void
+  Connection2003::writeLeftWheel(const char * buffer, int length)
+  {
+    Message message;
+    message.length(length);
+    message.id(CAN_WRITE_MOTOR_LEFT);
+    message.setBuffer(0, buffer, length);
+    write(message);
+  }
+
+  void
+  Connection2003::writeRightWheel(const char * buffer, int length)
+  {
+    Message message;
+    message.length(length);
+    message.id(CAN_WRITE_MOTOR_RIGHT);
+    message.setBuffer(0, buffer, length);
+    write(message);
+  }
 
   void
   Connection2003::setServo(unsigned char servo, double rad)

@@ -52,17 +52,18 @@ namespace Can
     DBG(cout << "Constructing CanEventHandler." << endl);
   }
 
-  EventHandler::~EventHandler() 
+  EventHandler::~EventHandler()
   {
     DBG(cout << "Destructing CanEventHandler." << endl);
   }
 
   // file descriptor callback
   int
-  EventHandler::handle_input (ACE_HANDLE fd) 
+  EventHandler::handle_input (ACE_HANDLE fd)
   {
-    DBG(cout << "canEventHandler: handle_input" << endl);
 
+    DBG(cout << "canEventHandler: handle_input" << endl);
+    cout << "CanEventHandler vor ReadMessage" << endl;
     int count = ACE_OS::read(fd, msg->canMessage(), sizeof(canmsg));
 
     // since we are called by the ACE_Reactor, we dont emit exceptions
@@ -74,7 +75,7 @@ namespace Can
       return 0;
     }
     if (count != sizeof(canmsg)) {
-      cerr << "canEventHandler: read() != sizeof(canmsg): " 
+      cerr << "canEventHandler: read() != sizeof(canmsg): "
 	   << count << " != " << sizeof(canmsg) << endl;
       return 0;
     }
@@ -82,10 +83,10 @@ namespace Can
     msg->time() = ACE_OS::gettimeofday(); // set time stamp
 #ifdef DEBUG
     if ((++canCounter % 100) == 0)
-      cout << "Time: " << msg->time() << endl 
+      cout << "Time: " << msg->time() << endl
 	   << "Processed Can mesages: " << canCounter << endl;
 #endif
-    
+
     dispatchMessage();
 
 #ifdef DEBUG

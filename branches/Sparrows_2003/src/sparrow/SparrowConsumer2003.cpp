@@ -18,6 +18,7 @@
 #include "miro/RangeSensorImpl.h"
 #include "miro/TimeHelper.h"
 #include "can/Parameters.h"
+#include "faulTty/FaulTtyMessage.h"
 
 
 
@@ -47,12 +48,14 @@ namespace Sparrow
     pOdometry_(_pOdometry),
     pIR_(_pIR),
     params_(Parameters::instance()),
-    status_(),
+    status_()
+
+/*
     irAliveMutex1(),
     irAliveCond1(irAliveMutex1),
     irAliveMutex2(),
     irAliveCond2(irAliveMutex2)
-
+*/
     //x_(0.),
     //y_(0.),
     //index_(0)
@@ -81,11 +84,14 @@ namespace Sparrow
 
   Consumer2003::Consumer2003():
     params_(Parameters::instance()),
-    status_(),
+    status_()
+
+/*
     irAliveMutex1(),
     irAliveCond1(irAliveMutex1),
     irAliveMutex2(),
     irAliveCond2(irAliveMutex2)
+*/
 
     //x_(0.),
     //y_(0.),
@@ -109,7 +115,7 @@ namespace Sparrow
   Consumer2003::~Consumer2003()
   {
     cout << "Destructing SparrowConsumer." << endl;
-
+/*
     irAliveCond1.broadcast();
 
     irAliveMutex1.release();
@@ -117,13 +123,14 @@ namespace Sparrow
     irAliveCond2.broadcast();
 
     irAliveMutex2.release();
-
+*/
   }
 
   void Consumer2003::registerInterfaces(Connection2003 * _connection,
 	     				Miro::OdometryImpl * _pOdometry,
 	     				Miro::RangeSensorImpl * _pIR,
-					FaulMotor::Consumer * _faulConsumer)
+					FaulMotor::Consumer * _faulConsumer,
+					AliveCollector * _aliveCollector)
   {
 
 
@@ -132,6 +139,7 @@ namespace Sparrow
      pOdometry_ = _pOdometry;
      pIR_ = _pIR;
      faulConsumer = _faulConsumer;
+     pAliveCollector = _aliveCollector;
 
      if (pOdometry_) {
       Miro::PositionIDL origin;
@@ -174,9 +182,8 @@ namespace Sparrow
 
     switch (msgID) {
 
-      case CAN_R_IR_GET_CONT1:
+      case CAN_R_IR_GET_CONT1:{
       DBG(cout << "Consumer::receiveThread: receiveThread message: IR_CONT1" << endl);
-
       if (pIR_) {
 	Sparrow::Parameters * param = Sparrow::Parameters::instance(); //uli
 	long calRange;
@@ -185,7 +192,6 @@ namespace Sparrow
 	data->group = 0;
 	data->range.length(8);
 	for (int i = 7; i >= 0; --i)  {
-
         calRange = IR_LOOKUP_TABLE[message.charData(i)];
 
         // -1 wenn Entfernung >= 50cm
@@ -197,9 +203,11 @@ namespace Sparrow
 	}
 	pIR_->integrateData(data);
       }
-      break;
 
-      case CAN_R_IR_GET_CONT2:
+      break;
+      }
+
+      case CAN_R_IR_GET_CONT2:{
       DBG(cout << "Consumer::receiveThread: receiveThread message: IR_CONT2" << endl);
 
       if (pIR_) {
@@ -211,6 +219,7 @@ namespace Sparrow
 	data->range.length(8);
 	for (int i = 7; i >= 0; --i)  {
 	/*  if (message.charData(i) != -1) {
+
 
 	    calRange = ((int)message.charData(i) * 10 - param->irScaling[i].offset);
 	    calRange = calRange - param->irScaling[i].minDistance;
@@ -236,32 +245,70 @@ namespace Sparrow
 	pIR_->integrateData(data);
       }
       break;
+      }
 
-    case CAN_R_IR_ALIVE1: {
+// Kicker_Alive, Pan_Alive, Motor_Alive, IR_Alive1+2
+
+    case CAN_R_IR_ALIVE1:{
       DBG(cout << "Consumer::receiveThread:  received message: IR_ALIVE1" << endl);
+      //pAliveCollector->setLastInfraredAlive(ACE_OS::gettimeofday());
 
-      versSub = message.shortData(0);
-      versNr = versSub >> 4;
-      versSub = versSub & 0x0F; // versNr loeschen mit AND 00001111
-      cout << "IR_ALIVE_VERSION: "<< versNr << "." << versSub << endl;
-      cout << "IR_TIME_STAMP (sec):" << message.shortData(2) << endl;
-      Miro::Guard guard(irAliveMutex1);
-      irAliveCond1.broadcast();
       break;
     }
 
-    case CAN_R_IR_ALIVE2: {
+
+    case CAN_R_IR_ALIVE2:{
       DBG(cout << "Consumer::receiveThread:  received message: IR_ALIVE2" << endl);
+      //pAliveCollector->setLastInfraredAlive(ACE_OS::gettimeofday());
 
-      versSub = message.shortData(0);
-      versNr = versSub >> 4;
-      versSub = versSub & 0x0F; // versNr loeschen mit AND 00001111
-      cout << "IR_ALIVE_VERSION: "<< versNr << "." << versSub << endl;
-      cout << "IR_TIME_STAMP (sec):" << message.shortData(2) << endl;
-      Miro::Guard guard(irAliveMutex2);
-      irAliveCond2.broadcast();
       break;
     }
+
+
+    case CAN_R_MOTOR_ALIVE:{
+      DBG(cout << "Consumer::receiveThread:  received message: MOTOR_ALIVE" << endl);
+      //pAliveCollector->setLastMotorAlive(ACE_OS::gettimeofday());
+
+      break;
+    }
+
+
+    case CAN_PAN_ALIVE:{
+      DBG(cout << "Consumer::receiveThread:  received message: PAN_ALIVE" << endl);
+      //pAliveCollector->setLastPanAlive(ACE_OS::gettimeofday());
+
+      break;
+    }
+
+
+    case CAN_R_KICK_ALIVE:{
+      DBG(cout << "Consumer::receiveThread:  received message: KICK_ALIVE" << endl);
+      //pAliveCollector->setLastKickAlive(ACE_OS::gettimeofday());
+
+      break;
+    }
+
+    case CAN_MOTOR_TICKS_LEFT:{
+      FaulTty::OdometryMessage odoMessage(FaulTty::OdometryMessage::LEFT);
+      memcpy((void *) &(odoMessage.ticks_),(void *) (message.canMessage())->d,  4);
+      faulConsumer->handleMessage(&odoMessage);
+      std::cout << "MotorTicksLeft" << message << endl;
+
+
+       break;
+    }
+
+    case CAN_MOTOR_TICKS_RIGHT:{
+
+       FaulTty::OdometryMessage odoMessage2(FaulTty::OdometryMessage::RIGHT);
+       memcpy((void *) &(odoMessage2.ticks_),(void *) (message.canMessage())->d,  4);
+       faulConsumer->handleMessage(&odoMessage2);
+       std::cout << "MotorTicksRight" << message << endl;
+       break;
+
+   }
+
+
 
       // Debug Messages
 

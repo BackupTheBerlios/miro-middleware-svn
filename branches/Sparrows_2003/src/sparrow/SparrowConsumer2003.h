@@ -12,6 +12,7 @@
 #define SparrowConsumer2003_h
 
 #include "SparrowDevice2003.h"
+#include "AliveCollector.h"
 #include "faulMotor/FaulMotorConsumer.h"
 #include "Parameters.h"
 
@@ -46,7 +47,8 @@ namespace Sparrow
     virtual void registerInterfaces(Connection2003 * _connection,
 	     				Miro::OdometryImpl * _pOdometry,
 	     				Miro::RangeSensorImpl * _pIR,
-					FaulMotor::Consumer * _faulConsumer);
+					FaulMotor::Consumer * _faulConsumer,
+					AliveCollector * _aliveCollector);
 
     short * getTable1();
     short * getTable2();
@@ -61,15 +63,20 @@ namespace Sparrow
     Miro::MotionStatusIDL status_;
     FaulMotor::Consumer * faulConsumer;
 
+    AliveCollector * pAliveCollector;
+
+
   public:
     unsigned char   digital[8];
     unsigned short  analog[16];
 
+/*
     Miro::Mutex     irAliveMutex1;
     Miro::Condition irAliveCond1;
 
     Miro::Mutex     irAliveMutex2;
     Miro::Condition irAliveCond2;
+*/
 
 
     //Miro::Condition accelCond;

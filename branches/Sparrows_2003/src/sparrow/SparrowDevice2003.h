@@ -43,7 +43,7 @@ namespace Sparrow
   }
 
   inline
-  double ticks2rad(unsigned short ticks) { 
+  double ticks2rad(unsigned short ticks) {
     long h = ticks % 1024;
     if (h > 512)
       h -= 1024;
@@ -62,6 +62,10 @@ namespace Sparrow
   static const unsigned long CAN_SET_POWER     = 0x81010102;
   static const unsigned long CAN_SET_SPEED     = 0x82010102;
   static const unsigned long CAN_SET_SPEED_ROT = 0x83010102;
+  static const unsigned long CAN_WRITE_MOTOR_LEFT = 0x05010102;
+  static const unsigned long CAN_WRITE_MOTOR_RIGHT = 0x04010102;
+  static const unsigned long CAN_MOTOR_TICKS_LEFT = 0x85020201;
+  static const unsigned long CAN_MOTOR_TICKS_RIGHT = 0x84020201;
 
   // preliminary values and message names
   static const unsigned long CAN_SET_ACCELS    = 0x89010102;
@@ -72,14 +76,14 @@ namespace Sparrow
   static const unsigned long CAN_INIT_MAX      = 0x8b010102;
   static const unsigned long CAN_MOTOR_INIT    = 0x8c010102;
   static const unsigned long CAN_MOTOR_ALL_OFF = 0x8e010102;
-  static const unsigned long CAN_MOTOR_ALIVE   = 0x8f010102;
+  //static const unsigned long CAN_MOTOR_ALIVE   = 0x8f010102;
   static const unsigned long CAN_R_MOTOR_ALIVE = 0x8f810201;
 
   // odometry messages
 
   static const unsigned long CAN_GET_POS_CONT  = 0x81020102;
   static const unsigned long CAN_R_GET_POS     = 0x81820201;
-  static const unsigned long CAN_SET_POS       = 0x8a020102; 
+  static const unsigned long CAN_SET_POS       = 0x8a020102;
   static const unsigned long CAN_SET_POS_REL   = 0x8b020102;
   static const unsigned long CAN_ODO_ALIVE     = 0x8f020102;
   static const unsigned long CAN_R_ODO_ALIVE   = 0x8f820201;
@@ -108,7 +112,7 @@ namespace Sparrow
   static const unsigned long CAN_KICK          = 0x81010103;
   static const unsigned long CAN_KICK_IF_BALL  = 0x82010103;
   static const unsigned long CAN_KICK_ALL_OFF  = 0x8e010103;
-  static const unsigned long CAN_KICK_ALIVE    = 0x8f010103;
+  //static const unsigned long CAN_KICK_ALIVE    = 0x8f010103;
   static const unsigned long CAN_R_KICK_ALIVE  = 0x8f810301;
 
   // servo messages
@@ -121,14 +125,17 @@ namespace Sparrow
   // infrared messages
 
   static const unsigned long CAN_IR_GET_CONT1   = 0x81050102;
-  static const unsigned long CAN_R_IR_GET_CONT1 = 0x81850201;
+  static const unsigned long CAN_R_IR_GET_CONT1 = 0x83810501;
   static const unsigned long CAN_IR_ALIVE1      = 0x8f050102;
   static const unsigned long CAN_R_IR_ALIVE1    = 0x8f850201;
 
-  static const unsigned long CAN_IR_GET_CONT2   = 0x00000001;    //noch unbekannt
+  static const unsigned long CAN_IR_GET_CONT2   = 0x00000001;    // noch unbekannt
   static const unsigned long CAN_R_IR_GET_CONT2 = 0x00000002;
   static const unsigned long CAN_IR_ALIVE2      = 0x00000003;
   static const unsigned long CAN_R_IR_ALIVE2    = 0x00000004;
+
+  // pan messages
+  static const unsigned long CAN_PAN_ALIVE      = 0x00000001;  // noch unbekannt
 
   // debug messages
 

@@ -34,4 +34,12 @@ namespace Can
     ostr.setf(ios::dec, ios::basefield);
     return ostr;
   }
+
+  void Message::setBuffer(int pos, const char * buffer, int length){
+
+       memcpy(&(message_.d[pos]), buffer , length);
+
+  }
+
+
 };

@@ -4,17 +4,17 @@
 //
 // for details copyright, usage and credits to other groups see Miro/COPYRIGHT
 // for documentation see Miro/doc
-// 
+//
 // (c) 1999,2000
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
+// Authors:
+//   Stefan Enderle,
+//   Stefan Sablatnoeg,
 //   Hans Utz
-// 
+//
 // $Id$
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
 #ifndef CanMessage_h
 #define CanMessage_h
@@ -47,6 +47,8 @@ namespace Can
     void           shortData(int i, unsigned short d); // sets two chars !
     long  longData(int i) const;
     void           longData(int i, unsigned long d);   // sets four chars !
+
+    void           setBuffer(int pos, const char * buffer, int length ) ;
 
     CanId          id()  const     { return message_.id; }
     void           id(CanId _id)   { message_.id = _id; }

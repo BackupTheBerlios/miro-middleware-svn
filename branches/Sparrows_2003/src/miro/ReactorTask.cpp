@@ -82,7 +82,7 @@ namespace Miro
       delta = timeout;
       // trigger message handling
       try {
-	cout << "." << flush;
+//	cout << "." << flush;
 	reactor_.handle_events(delta);
       }
       catch (const ETimeOut& e) {

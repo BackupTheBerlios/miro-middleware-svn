@@ -115,9 +115,9 @@ int main(int argc, char * argv[])
 	   << "  1 - initMax" << endl
 	   << "  2 - initStall" << endl
 	   << "  3 - initDrive" << endl
-	   << "  4 - setPower" << endl
+	   << "  4 - setPower" << endl*/
 	   << "  5 - setSpeed" << endl
-	   << "  6 - setSpeedRot" << endl
+	   /*<< "  6 - setSpeedRot" << endl
 	   << "  7 - kick" << endl
 	   << "  8 - drive distance" << endl
 	   << "  9 - turn in place" << endl

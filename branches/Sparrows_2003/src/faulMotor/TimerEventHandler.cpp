@@ -41,9 +41,10 @@ namespace FaulMotor
   int
   TimerEventHandler::handle_timeout(const ACE_Time_Value &, const void *)
   {
-    std::cout << "TimerEventHandler handle timeout" << endl;
-    connection_.getTicks();
-    
+    //std::cout << "TimerEventHandler handle timeout" << endl;
+    //connection_.getTicks();
+    //std::cout << "Nach getTicks" << endl;
+
     return 0;
   }
 };

@@ -45,7 +45,12 @@ namespace Sparrow
     void setServo(unsigned char servo, double rad);
     void kick(unsigned char ventilatetime, unsigned char kicktime);
 
+    void writeLeftWheel(const char * buffer, int length);
+    void writeRightWheel(const char * buffer, int length);
+
+
     void alivetimeout();
+
 
   protected:
 
