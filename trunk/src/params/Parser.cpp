@@ -162,8 +162,6 @@ bool Parser::startElement( const QString&,
 	  break;
 	}
 
-	QString description = attributes.value("description");
-
 	name[0] = name[0].lower();
 	QString type = attributes.value("type");
 	if (type.isEmpty()) {
@@ -251,7 +249,7 @@ bool Parser::startElement( const QString&,
 	else {
 	  QString measure = attributes.value("measure");
 	
-	  class_.addParameter(Parameter(type, name, def, fullDef, measure, description));
+	  class_.addParameter(Parameter(type, name, def, fullDef, measure, QString()));
 	}
       }
       else if (qName == "constructor") {

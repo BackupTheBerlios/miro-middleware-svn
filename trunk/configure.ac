@@ -192,6 +192,11 @@ AC_CONFIG_FILES([Makefile
                  examples/stall/Makefile
                  examples/video/Makefile
                  examples/videoFilter/Makefile
+                 examples/behaviours/Makefile
+                 examples/behaviours/b21/Makefile
+                 examples/behaviours/engine/Makefile
+                 examples/behaviours/rangeSensor/Makefile
+                 examples/behaviours/simple/Makefile
                  performance-tests/Makefile
                  performance-tests/can/Makefile
                  performance-tests/image/Makefile
@@ -242,11 +247,6 @@ AC_CONFIG_FILES([Makefile
                  lib/Makefile
 ])
 
-#                 examples/behaviours/Makefile
-#                 examples/behaviours/b21/Makefile
-#                 examples/behaviours/engine/Makefile
-#                 examples/behaviours/rangeSensor/Makefile
-#                 examples/behaviours/simple/Makefile
 #                 tests/xml/Makefile
 #                 utils/makeConfig/Makefile
 #                 utils/sparrowBoard/Makefile

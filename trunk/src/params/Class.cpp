@@ -75,15 +75,10 @@ Class::generateHeader(std::ostream& ostr, unsigned long _indent) const
 
   // data members
   ParameterSet::const_iterator j;
-  for (j = parameter_.begin(); j != parameter_.end(); ++j) {
-    ostr << spaces.left(indent);
-    if (!j->description_.isEmpty())
-      ostr << "/// " << j->description_
-	   << std::endl
-	   << spaces.left(indent);
-    ostr << ((j->type_ != "angle")? j->type_ : QString("double")) 
+  for (j = parameter_.begin(); j != parameter_.end(); ++j)
+    ostr << spaces.left(indent) 
+	 << ((j->type_ != "angle")? j->type_ : QString("double")) 
 	 << " " << j->name_ << ";" << std::endl;
-  }
   if (parameter_.size() != 0)
     ostr << std::endl;
 

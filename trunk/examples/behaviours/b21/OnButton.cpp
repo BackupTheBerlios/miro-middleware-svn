@@ -18,7 +18,7 @@ const std::string OnButton::name_ = "OnButton";
 BEHAVIOUR_PARAMETERS_FACTORY_IMPL(OnButton, OnButtonParameters)
 
 OnButton::OnButton(CosNotifyChannelAdmin::EventChannel_ptr _ec,
-		   const string& _domainName) :
+		   const std::string& _domainName) :
   Super(_ec)
 {
   // subscribe for Button events
@@ -63,7 +63,7 @@ OnButton::action()
   }
 }
 
-const string&
+const std::string&
 OnButton::getBehaviourName() const 
 {
   return name_;

@@ -19,7 +19,7 @@ BEHAVIOUR_PARAMETERS_FACTORY_IMPL(SonarAvoid, SonarAvoidParameters)
 
 SonarAvoid::SonarAvoid(Miro::RangeSensor_ptr _rangeSensor,
 		       CosNotifyChannelAdmin::EventChannel_ptr _ec,
-		       const string& _domainName) :
+		       const std::string& _domainName) :
   Super(_ec),
   domainName_(_domainName),
   sensor_()
@@ -108,7 +108,7 @@ SonarAvoid::action()
   }
 }
 
-const string&
+const std::string&
 SonarAvoid::getBehaviourName() const
 {
   return name_;

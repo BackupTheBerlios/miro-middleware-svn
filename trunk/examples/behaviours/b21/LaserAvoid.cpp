@@ -15,6 +15,8 @@
 
 #include "LaserAvoid.h"
 
+#include <string>
+
 const std::string LaserAvoid::name_ = "LaserAvoid";
 
 BEHAVIOUR_PARAMETERS_FACTORY_IMPL(LaserAvoid, LaserAvoidParameters)
@@ -76,7 +78,7 @@ LaserAvoid::action()
   arbitrate(message);
 }
 
-const string&
+const std::string&
 LaserAvoid::getBehaviourName() const
 {
   return name_;
