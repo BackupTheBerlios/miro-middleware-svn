@@ -65,19 +65,23 @@ namespace Video
 
   //--------------------------------------------------------------------
   void
-  Device::enqueueBrokerRequest(BrokerRequest const& _request)
+  Device::enqueueBrokerRequests(BrokerRequestVector const& _request)
   {
     std::cout << __PRETTY_FUNCTION__ << std::endl;
 
     Miro::Guard guard(mutex_);
-    brokerRequest_.push_back(_request);
+    brokerRequest_.reserve(brokerRequest_.size() + _request.size());
+    BrokerRequestVector::const_iterator first, last = _request.end();
+    for (first = _request.begin(); first != last; ++first) {
+      brokerRequest_.push_back(*first);
+    }
   }
 
   //--------------------------------------------------------------------
   void
-  Device::setBrokerRequests()
+  Device::setBrokerRequestQueue()
   {
-    // std::cout << __PRETTY_FUNCTION__ << std::endl;
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
 
     Miro::Guard guard(mutex_);
     BrokerRequestVector::const_iterator first, last = brokerRequest_.end();
@@ -99,5 +103,5 @@ namespace Video
 
     throw Miro::Exception(std::string("Video::Parameters: unknown palette: ") + pal);
   }
-};
+}
 

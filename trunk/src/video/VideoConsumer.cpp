@@ -73,6 +73,7 @@ namespace Video
     while (!canceled())
     {
       try {
+	videoDevice.setBrokerRequestQueue();
 	videoDevice.calcConnectivity();
 	videoDevice.processFilterTree();
       }

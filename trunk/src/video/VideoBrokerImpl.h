@@ -48,5 +48,4 @@ namespace Miro
   };
 }
 
-
 #endif /* Miro_VideoBrokerImpl_h  */

@@ -120,6 +120,4 @@ namespace Video
   
     return filter;
   }
-
-
-};
+}

@@ -57,9 +57,5 @@ namespace Video
     Miro::VideoBrokerImpl * pBroker_;
     Miro::VideoBroker_ptr broker_;
   };
-};
+}
 #endif // VideoServer_h
-
-
-
-

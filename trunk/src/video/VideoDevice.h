@@ -33,7 +33,7 @@ namespace Video
     Device(Miro::ImageFormatIDL const & _format);
     virtual ~Device();
 
-    void enqueueBrokerRequest(BrokerRequest const& _request);
+    void enqueueBrokerRequests(BrokerRequestVector const& _request);
 
     //--------------------------------------------------------------------------
     // inherited interface methods
@@ -43,6 +43,7 @@ namespace Video
     //    virtual void init(const Video::FilterParameters *);
     //    virtual int svc();
     
+    void setBrokerRequestQueue();
     //--------------------------------------------------------------------------
     // static methods
 
@@ -59,10 +60,6 @@ namespace Video
     int getPixelSize(const int) const;
 
     //--------------------------------------------------------------------------
-    // protected inherited methods
-    virtual void setBrokerRequests();
-
-    //--------------------------------------------------------------------------
     // protected types
     
     //--------------------------------------------------------------------------
@@ -74,5 +71,5 @@ namespace Video
 
     BrokerRequestVector brokerRequest_;
   };
-};
+}
 #endif

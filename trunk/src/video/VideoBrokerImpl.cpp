@@ -35,7 +35,7 @@ namespace Miro
 				       BufferSetIDL_out buffers)
     ACE_THROW_SPEC ((EOutOfBounds, EDevIO, ETimeOut))
   {
-    std::cout << __PRETTY_FUNCTION__ << std::endl;
+    std::cout << "start " << __PRETTY_FUNCTION__ << std::endl;
 
     if (connections.length() == 0)
       throw EOutOfBounds("Empty connection set.");
@@ -73,10 +73,7 @@ namespace Miro
       request.push_back(::Video::BrokerRequest(filter, link));
     }
 
-    ::Video::BrokerRequestVector::const_iterator first, last = request.end();
-    for (first = request.begin(); first != last; ++first) {
-      device_->enqueueBrokerRequest(*first);
-    }
+    device_->enqueueBrokerRequests(request);
 
     std::cout << "wait for completion of all filters" << std::endl;
     ACE_Time_Value maxWait = ACE_OS::gettimeofday() + ACE_Time_Value(10, 100000);
@@ -89,6 +86,7 @@ namespace Miro
       }
 
       buffersPending = false;
+      ::Video::BrokerRequestVector::const_iterator first, last = request.end();
       for (first = request.begin(); first != last; ++first) {
 	if (!first->link->protectedProcessed()) {
 	  buffersPending = true;
@@ -100,12 +98,15 @@ namespace Miro
 
 
     std::cout << "get time stamp for images" << std::endl;
-    ACE_Time_Value t;
     CORBA::ULong index = 0;
-    first = request.begin();
-    t = first->filter->
+    ::Video::BrokerRequestVector::const_iterator first = request.begin();
+    ::Video::BrokerRequestVector::const_iterator last = request.end();
+
+    ACE_Time_Value t = first->filter->
       interface()->bufferManager()->bufferTimeStamp(buffers[index]);
+
     std::cout << "check for filter synchronisation: " << t << std::endl;
+
     for (++index, ++first; first != last; ++first, ++index) {
       std::cout << "t: " << first->filter->
 	interface()->bufferManager()->bufferTimeStamp(buffers[index]) << std::endl;
@@ -122,7 +123,7 @@ namespace Miro
       delete first->link;
     }
 
-    std::cout << __PRETTY_FUNCTION__  << " end" << std::endl;
+    std::cout << "end " << __PRETTY_FUNCTION__  << std::endl;
 
 
     return stamp;

@@ -14,6 +14,7 @@
 #include "miro/Synch.h"
 
 #include <vector>
+#include <iostream>
 
 namespace Video
 {
@@ -67,8 +68,9 @@ namespace Video
   void
   BrokerLink::setIndex(unsigned int _index) {
     Miro::Guard guard(mutex_);
-    processed_ = true;
+    std::cout << "setIndex" << std::endl;
     index_ = _index;
+    processed_ = true;
     condition_.broadcast();
   }
 
@@ -87,7 +89,6 @@ namespace Video
     filter(_filter),
     link(_link)
   {}
-
 }
 
 #endif // VideoBrokerLink_h
