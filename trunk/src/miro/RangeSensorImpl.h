@@ -12,6 +12,7 @@
 #define RangeSensorImpl_h
 
 #include "RangeSensorS.h"
+#include "Thread.h"
 #include "Synch.h"
 
 #include <orbsvcs/CosNotifyCommC.h>
@@ -20,6 +21,42 @@ namespace Miro
 {
   // forward declaration
   class StructuredPushSupplier;
+  class RangeSensorImpl;
+
+  class RangeSensorDispatcher : public Thread
+  {
+    typedef Thread Super;
+  public:
+    RangeSensorDispatcher(const ScanDescriptionIDL& _description,
+			  StructuredPushSupplier * _supplier);
+    int svc();
+    void cancel(bool _wait = true);
+
+    void setData(RangeScanEventIDL * _data);
+    void setData(RangeGroupEventIDL * _data);
+    void setData(RangeBunchEventIDL * _data);
+
+    void dispatch();
+
+  protected:
+    //! Supplier for events.
+    StructuredPushSupplier * supplier_;
+    //! True if also RawPosition events shall be emitted.
+    bool rawPositionEvents_;
+
+    //! Lock
+    Mutex mutex_;
+    //! Condition for getWaitPosition etc.
+    Condition cond_;
+    //! Preinitialized data structure for RangeSensor event.
+    CosNotification::StructuredEvent notifyEvent_;
+    
+    //! Timeout for dispatching thread condition.
+    static ACE_Time_Value maxWait_;
+
+    friend RangeSensorImpl;
+  };
+
 
   //! Generic implementation of the RangeSensor interface.
   /**
@@ -35,7 +72,8 @@ namespace Miro
   public:
     //! Initializing constructor.
     RangeSensorImpl(const ScanDescriptionIDL& _description,
-		    StructuredPushSupplier * _supplier = NULL);
+		    StructuredPushSupplier * _supplier = NULL,
+		    bool _asychDispatching = false);
     ~RangeSensorImpl();
 
     //! Input from range sensors, that acquire full scans at once.
@@ -76,8 +114,11 @@ namespace Miro
     Condition condition_;
     //! Current sensor scan.
     RangeScanEventIDL scan_;
-    //! Preinitialized data structure for RangeSensor events.
-    CosNotification::StructuredEvent notifyEvent_;
+
+    //! Flag to indicate the we dispatch events asynchrnously.
+    bool asynchDispatching_;
+    //! Thread for asynchronous dispatching of events.
+    RangeSensorDispatcher dispatcherThread_;
 
     //! Timeout for getWaitPosition etc.
     static ACE_Time_Value maxWait_;

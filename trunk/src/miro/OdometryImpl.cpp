@@ -63,6 +63,8 @@ namespace Miro
   int
   OdometryDispatcher::svc()
   {
+    cout << "Asynchronous Odometry dispatching" << endl;
+
     while(!canceled()) {
       Guard guard(mutex_);
       ACE_Time_Value timeout(ACE_OS::gettimeofday());
@@ -89,7 +91,10 @@ namespace Miro
   OdometryDispatcher::cancel(bool _wait)
   {
     canceled_ = true;
-    cond_.broadcast();
+    {
+      Guard guard(mutex_);
+      cond_.broadcast();
+    }
     Super::cancel(_wait);
   }
 
