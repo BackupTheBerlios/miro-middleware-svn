@@ -24,6 +24,7 @@
   </parameter>
   <parameter name="DeviceDummy" >
    <parameter name="Device" value="./timeSeries" />
+   <parameter name="Buffers" value="4" />
   </parameter>
   <parameter name="FilterCopy">
    <parameter value="true" name="InterfaceInstance" />
