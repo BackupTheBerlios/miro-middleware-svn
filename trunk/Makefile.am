@@ -26,6 +26,7 @@ SUBDIRS = \
 	tests \
 	examples \
 	performance-tests \
+	botsvcs \
 	utils \
 	dtd \
 	etc \

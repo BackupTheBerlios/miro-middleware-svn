@@ -255,11 +255,6 @@ AC_CONFIG_FILES([Makefile
                  examples/tcm2/Makefile
                  examples/video/Makefile
                  examples/videoFilter/Makefile
-                 examples/behaviours/Makefile
-                 examples/behaviours/b21/Makefile
-                 examples/behaviours/engine/Makefile
-                 examples/behaviours/rangeSensor/Makefile
-                 examples/behaviours/simple/Makefile
                  performance-tests/Makefile
                  performance-tests/can/Makefile
                  performance-tests/mcp/Makefile
@@ -270,8 +265,6 @@ AC_CONFIG_FILES([Makefile
 		 performance-tests/logging/Makefile
                  tests/Makefile
                  tests/b21/Makefile
-                 tests/behaviourEngine/Makefile
-                 tests/behaviours/Makefile
                  tests/dpPanTilt/Makefile
                  tests/dtlk/Makefile
                  tests/faul/Makefile
@@ -304,6 +297,22 @@ AC_CONFIG_FILES([Makefile
                  utils/rangeSensor/Makefile
                  utils/widgets/Makefile
 		 utils/notifyObserver/Makefile
+		 botsvcs/Makefile
+		 botsvcs/BAP/Makefile
+		 botsvcs/tests/Makefile
+                 botsvcs/tests/BAP/Makefile
+                 botsvcs/tests/BAP/lib/Makefile
+                 botsvcs/tests/BAP/parsing/Makefile
+                 botsvcs/tests/BAP/engine/Makefile
+                 botsvcs/tests/BAP/priorityArbiter/Makefile
+                 botsvcs/tests/BAP/dynamicPolicy/Makefile
+                 botsvcs/tests/BAP/monitor/Makefile
+		 botsvcs/examples/Makefile
+                 botsvcs/examples/BAP/Makefile
+                 botsvcs/examples/BAP/b21/Makefile
+                 botsvcs/examples/BAP/engine/Makefile
+                 botsvcs/examples/BAP/rangeSensor/Makefile
+                 botsvcs/examples/BAP/simple/Makefile
                  doc/Makefile
                  doc/fig/Makefile
                  doc/tex/Makefile
