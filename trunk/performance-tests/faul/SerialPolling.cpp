@@ -19,13 +19,44 @@ ACE_TTY_IO ioBuffer;
 
 ACE_TTY_IO::Serial_Params oldParams;
 
+int binInit()
+{
+  unsigned char value1;
+  unsigned char value2;
+  unsigned char value3;
+  unsigned char value4;
+  value1 = 200; //Modus1
+  value2 = 200; //Istlage
+  value3 = 202; //Modus2
+  value4 = 255; //kein zweiter wert
+   if (ioBuffer.send_n(&value1, 1) < 0) {
+    std::cerr << "write error" << std::endl;
+    return 1;
+   }
+    if (ioBuffer.send_n(&value2, 1) < 0) {
+    std::cerr << "write error" << std::endl;
+    return 1;
+   }
+    if (ioBuffer.send_n(&value3, 1) < 0) {
+    std::cerr << "write error" << std::endl;
+    return 1;
+   }
 
-int testParcours() 
+    if (ioBuffer.send_n(&value4, 1) < 0) {
+    std::cerr << "write error" << std::endl;
+    return 1;
+   }
+   return 0;
+}
+
+int testParcours()
 {
   // add your read and write code here
   
-  char * message = "test";
-  if (ioBuffer.send_n(message, strlen(message)) < 0) {
+  //char * message = "test";
+  unsigned char value;
+  value = 201;
+  if (ioBuffer.send_n(&value, 1) < 0) {
     std::cerr << "write error" << std::endl;
     return 1;
   }
@@ -34,8 +65,10 @@ int testParcours()
   char buffer[BUFFER_SIZE];
   if (ioBuffer.recv_n(buffer, BUFFER_SIZE) < 0) {
     std::cerr << "read error" << std::endl;
+
     return 1;
   }
+  std::cout << buffer << endl;
 
   return 0;
 }
@@ -93,9 +126,9 @@ int main (int argc, char * argv[])
     std::cerr << "Failed to open device: " << name << std::endl;
     return 1;
   }
-
-  if ((rc = saveTtyParams()) == 0 &&
-      (rc = setTtyParams()) == 0) {
+  rc = binInit();
+ // if ((rc = saveTtyParams()) == 0 &&
+ //     (rc = setTtyParams()) == 0) {
 
 #if defined (ACE_HAS_TERM_IOCTLS)
 #if defined(TCGETS)
@@ -118,11 +151,15 @@ int main (int argc, char * argv[])
 #endif 
     
 #endif // ACE_HAS_TERM_IOCTLS
-    
-    rc = testParcours();
 
-    restoreTtyParams();
-  }
+    for (int i=0;i<100;i++)
+    {
+      rc = testParcours();
+      std::cout<< i <<": "<< endl;
+    }
+
+   // restoreTtyParams();
+
 
   ioBuffer.close();
   return rc;
