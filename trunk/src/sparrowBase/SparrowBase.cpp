@@ -27,24 +27,10 @@
 #include <orbsvcs/Notify/Notify_Default_Collection_Factory.h>
 #include <orbsvcs/Notify/Notify_Default_EMO_Factory.h>
 
-#include <iostream>
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
-
-using std::cout;
-using std::cerr;
-using std::endl;
-
-char hostName[256];
-
 int
 main(int argc, char *argv[])
 {
-  int rc = 0;
+  int rc = 1;
   // Init TAO Factories
   TAO_Notify_Default_CO_Factory::init_svc();
   TAO_Notify_Default_POA_Factory::init_svc();
@@ -78,41 +64,45 @@ main(int argc, char *argv[])
     config->getParameters("Miro::NMC::Parameters", *notifyMulticastParameters);
     config->fini();
 
-#ifdef DEBUG
-    cout << "  robot paramters:" << endl << robotParameters << endl;
-    cout << "  sparrow paramters:" << endl << *pSparrowParameters << endl;
+    MIRO_LOG_OSTR(LL_NOTICE,
+		  "  robot paramters:\n" << robotParameters <<
+		  "\n  sparrow paramters:\n" << *pSparrowParameters);
     if (pFaulMotorParameters)
-      cout << "  faulhaber paramters:" << endl << *pFaulMotorParameters << endl;
-    cout << "  NotifyMulticast parameters: " << endl << *notifyMulticastParameters << endl;
-#endif
+      MIRO_LOG_OSTR(LL_NOTICE,
+		    "  faulhaber paramters:\n" << *pFaulMotorParameters);
+    MIRO_LOG_OSTR(LL_NOTICE,
+		  "  NotifyMulticast parameters:\n" << *notifyMulticastParameters);
 
-    DBG(cout << "Initialize server daemon." << endl);
+    MIRO_LOG(LL_NOTICE, "Initialize server daemon.");
     Miro::Server server(argc, argv);
     try {
       SparrowBase sparrowBase(server);
 	     
-      DBG(cout << "Loop forever handling events." << endl);
+      MIRO_LOG(LL_NOTICE, "Initialize server daemon.");
       server.run(4);
-      DBG(cout << "sparrowBase ended, exiting." << endl);
+      MIRO_LOG(LL_NOTICE, "Initialize server daemon.");
       server.detach(2);
+
+      rc = 0;
     }
-    catch (const Miro::EOutOfBounds& e) {
-      cerr << "OutOfBounds excetpion: Wrong parameter for device initialization." << endl;
-      rc = 1;
+    catch (Miro::EOutOfBounds const& e) {
+          MIRO_LOG(LL_CRITICAL, 
+		   "OutOfBounds excetpion: Wrong parameter for device initialization.");
     }
-    catch (const Miro::EDevIO& e) {
-      cerr << "DevIO excetpion: Device access failed." << endl;
-      rc = 1;
+    catch (Miro::EDevIO const& e) {
+          MIRO_LOG_OSTR(LL_CRITICAL, 
+			"DevIO excetpion: Device access failed.\nn" << e);
     }
-    catch (const CORBA::Exception & e) {
-      cerr << "Uncaught CORBA exception: " << e << endl;
-      rc = 1;
+    catch (CORBA::Exception const& e) {
+          MIRO_LOG_OSTR(LL_CRITICAL, 
+			"Uncaught CORBA exception:\n" << e);
     }
     server.shutdown();
     server.wait();
   }
-  catch (const Miro::Exception& e) {
-    cerr << "Miro exception: " << e << endl;
+  catch (Miro::Exception const& e) {
+          MIRO_LOG_OSTR(LL_CRITICAL, 
+			"Miro exception: " << e);
     rc = 1;
   }
   return rc;
