@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002, 2003
+// (c) 1999, 2000, 2001, 2002, 2003, 2004, 2005
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -58,7 +58,11 @@ namespace Miro
       if (rawPositionEvents_) {
 	offers[1] = notifyRawEvent_.header.fixed_header.event_type;
       }
-      supplier_->addOffers(offers);
+      StructuredPushSupplier::IndexVector eventId = supplier_->addOffers(offers);
+
+      for (unsigned int i = 0; i < eventId.size(); ++i) {
+	eventId_[i] = eventId[i];
+      }
     }
   }
 
@@ -68,7 +72,7 @@ namespace Miro
   {
     notifyEvent_.remainder_of_body <<= _status;
     notifyRawEvent_.remainder_of_body <<= _raw;
-  };
+  }
 
   int
   OdometryDispatcher::svc()
@@ -91,8 +95,16 @@ namespace Miro
   void
   OdometryDispatcher::dispatch()
   {
-    supplier_->sendEvent(notifyEvent_);
-    if (rawPositionEvents_) {
+    // conditionally send if subscribed
+    if (supplier_->subscribed(eventId_[0]))
+      supplier_->sendEvent(notifyEvent_);
+    else {
+      MIRO_DBG(MIRO, LL_PRATTLE, "Skipping odometry event as no one is subscribed.");
+    }
+
+    // conditionally send if offered and subscribed
+    if (rawPositionEvents_ &&
+	supplier_->subscribed(eventId_[1])) {
       supplier_->sendEvent(notifyRawEvent_);
     }
   }
@@ -171,8 +183,8 @@ namespace Miro
   void 
   OdometryImpl::integrateData(const MotionStatusIDL& data)
   {
-    assert(data.position.heading > -M_PI &&
-	   data.position.heading <= M_PI);
+    MIRO_ASSERT(data.position.heading > -M_PI &&
+		data.position.heading <= M_PI);
 
     { // scope for guard
       Guard guard(mutex_);
@@ -360,4 +372,4 @@ namespace Miro
     else if (status_.position.heading > M_PI)
       status_.position.heading -= 2 * M_PI;
   }
-};
+}

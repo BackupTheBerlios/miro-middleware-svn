@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003, 2005
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -19,7 +19,6 @@
 
 #include <orbsvcs/CosNotifyCommC.h>
 
-#include <cmath> 
 
 namespace Miro 
 {
@@ -45,6 +44,8 @@ namespace Miro
     StructuredPushSupplier * supplier_;
     //! True if also RawPosition events shall be emitted.
     bool rawPositionEvents_;
+
+    unsigned long eventId_[2];
 
     //! Lock
     Mutex mutex_;
@@ -156,5 +157,6 @@ namespace Miro
     sinHeading_ = sin(origin_.heading);
     cosHeading_ = cos(origin_.heading);
   }
-};
+}
+
 #endif // OdometryImpl_h

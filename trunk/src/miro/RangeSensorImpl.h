@@ -36,20 +36,22 @@ namespace Miro
 
     //! Set data for dispatching to the event queue.
     /**
-     * The method expects a heap allocated object of type RangeScanEventIDL as parameter,
+     * The method expects a pointer to a heap allocated object of type RangeScanEventIDL as parameter,
      * as it takes ownership of the passed data.
      */
     void setData(RangeScanEventIDL * _data);
     //! Set data for dispatching to the event queue.
     /**
-     * The method expects a heap allocated object of type RangeGroupEventIDL as parameter,
-     * as it takes ownership of the passed data.
+     * The method expects a pointer to a heap allocated object of type
+     * RangeGroupEventIDL as parameter, as it takes ownership of the
+     * passed data.
      */
     void setData(RangeGroupEventIDL * _data);
     //! Set data for dispatching to the event queue.
     /**
-     * The method expects a heap allocated object of type RangeBunchEventIDL as parameter,
-     * as it takes ownership of the passed data.
+     * The method expects a pointer to a heap allocated object of type
+     * RangeBunchEventIDL as parameter, as it takes ownership of the
+     * passed data.
      */
     void setData(RangeBunchEventIDL * _data);
 
@@ -104,20 +106,23 @@ namespace Miro
 
     //! Input from range sensors, that acquire full scans at once.
     /**
-     * The method expects a heap allocated object of type RangeScanEventIDL as parameter,
-     * as it takes ownership of the passed data.
+     * The method expects a pointer to a heap allocated object of type
+     * RangeScanEventIDL as parameter, as it takes ownership of the
+     * passed data.
      */
     virtual void integrateData(RangeScanEventIDL * _data);
     //! Input from range sensors, that acquire scans groupwise.
     /**
-     * The method expects a heap allocated object of type RangeGroupEventIDL as parameter,
-     * as it takes ownership of the passed data.
+     * The method expects a pointer to a heap allocated object of type
+     * RangeGroupEventIDL as parameter, as it takes ownership of the
+     * passed data.
      */
     virtual void integrateData(RangeGroupEventIDL * _data);
     //! Input from range sensors, that acquire scans in unordered bunchs.
     /**
-     * The method expects a heap allocated object of type RangeBunchEventIDL as parameter,
-     * as it takes ownership of the passed data.
+     * The method expects a pointer to a heap allocated object of type
+     * RangeBunchEventIDL as parameter, as it takes ownership of the
+     * passed data.
      */
     virtual void integrateData(RangeBunchEventIDL * _data);
 
