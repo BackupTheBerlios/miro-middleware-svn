@@ -158,7 +158,6 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 					   NULL :
 					   &odometry),
 					   &infrared,
-					   NULL,
 					   pFaulhaber->pConsumer,
 					   aCollector);
 
@@ -297,7 +296,6 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 					   NULL :
 					   &odometry),
 					 &infrared,
-					 NULL,
 					 pFaulhaber->pConsumer,
 					 aCollector);
 

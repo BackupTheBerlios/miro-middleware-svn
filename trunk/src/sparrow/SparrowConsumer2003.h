@@ -50,8 +50,7 @@ namespace Sparrow
   public:
     Consumer2003(Connection2003 * _connection,
 	     Miro::OdometryImpl * _pOdometry,
-	     Miro::RangeSensorImpl * _pIR1,
-	     Miro::RangeSensorImpl * _pIR2);
+	     Miro::RangeSensorImpl * _pIR1);
     Consumer2003();
     ~Consumer2003();
 
@@ -59,15 +58,17 @@ namespace Sparrow
     virtual void registerInterfaces(Connection2003 * _connection,
 	     				Miro::OdometryImpl * _pOdometry,
 	     				Miro::RangeSensorImpl * _pIR1,
-					Miro::RangeSensorImpl * _pIR2,
 					FaulMotor::Consumer * _faulConsumer,
 					AliveCollector * _aliveCollector);
 
+    static const int INTEGRATION_NUMBER;
+
   protected:
+    long integrateIrValues(unsigned int group, unsigned int sensor, long value);
+
     Connection2003 * connection;
     Miro::OdometryImpl * pOdometry_;
     Miro::RangeSensorImpl * pIR1_;
-    Miro::RangeSensorImpl * pIR2_;
 
     irvalues_ IrValues;
     timeindex_ TimeIndex;
@@ -80,43 +81,6 @@ namespace Sparrow
     FaulMotor::Consumer * faulConsumer;
 
     AliveCollector * pAliveCollector;
-
-    long integrateIrValues(unsigned int group, unsigned int sensor, long value);
-  public:
-    unsigned char   digital[8];
-    unsigned short  analog[16];
-
-    static const int INTEGRATION_NUMBER;
-
-/*
-    Miro::Mutex     irAliveMutex1;
-    Miro::Condition irAliveCond1;
-
-    Miro::Mutex     irAliveMutex2;
-    Miro::Condition irAliveCond2;
-*/
-
-
-    //Miro::Condition accelCond;
-
-    /*short xPos_;
-    short yPos_;
-    double phi_;
-
-    short xPrev_;
-    short yPrev_;
-    double phiPrev_;
-
-    double x_;
-    double y_;
-
-    short distanceL;
-    short distanceR;*/
-
-  protected:
-    /*int index_;
-    short table1[ACCEL_TABLE_SIZE];
-    short table2[ACCEL_TABLE_SIZE];*/
   };
 }
 #endif

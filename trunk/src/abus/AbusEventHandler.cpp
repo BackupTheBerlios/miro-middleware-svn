@@ -44,18 +44,20 @@ namespace Abus
     // event handler (return 1), but then we also have to shut down the
     // whole server...
     if (count == 0) {
-      cerr << "handle_input called with no data!" << endl;
+      MIRO_LOG(LL_WARNING, "Abus::EventHandler::handle_input() called with no data!" );
       return 0;
     }
 
     if (count != Message::MSG_LEN) {
-      cerr << "abusEventHandler: read() != sizeof(Message): " 
-	   << count << " != " << Message::MSG_LEN << endl;
+      MIRO_LOG_OSTR(LL_WARNING, "Abus::EventHandler::handle_input: read() != sizeof(Message): " <<
+		    count << " != " << Message::MSG_LEN);
       return 0;
     }
  
-    MIRO_DBG_OSTR(ABUS,LL_PRATTLE,"abusEventHandler: major Op: 0x" << hex << (int)msg->majorOp()
-        << " minor op: 0x" << (int)msg->minorOp() << dec );
+    MIRO_DBG_OSTR(ABUS,LL_PRATTLE,
+		  "abusEventHandler: major Op: 0x" << std::hex << 
+		  (int)msg->majorOp() << 
+		  " minor op: 0x" << (int)msg->minorOp() << std::dec );
 
     if (deviceTable[msg->devId()].state == NOT)
       deviceTable[msg->devId()].state = NEW;   // first message of device
@@ -114,7 +116,7 @@ namespace Abus
       MIRO_DBG_OSTR(ABUS,LL_PRATTLE,"libmsp: LINK_REPLY or LONG_ID -"
           << " devId: 0x" <<(int)msg.devId()
           << " devStatus: 0x" << (int)message.longId().devStatus().byte
-          << dec );
+          << std::dec );
     }
     else {
       MIRO_DBG(ABUS,LL_PRATTLE,"LINK_REPLY or LONG_ID: No free devs available at this time.");
@@ -143,7 +145,7 @@ namespace Abus
   void
   EventHandler::disconnect(const Message& msg)
   {
-    MIRO_DBG_OSTR(ABUS,LL_PRATTLE,"abusEventHandler: disconnect" << hex << (int)msg.devId() << dec);
+    MIRO_DBG_OSTR(ABUS,LL_PRATTLE,"abusEventHandler: disconnect" << std::hex << (int)msg.devId() << std::dec);
 
     deviceTable[msg.devId()].state = NOT;
   }
@@ -156,7 +158,7 @@ namespace Abus
   {
     int devId = msg.devId();
 
-    MIRO_DBG_OSTR(ABUS,LL_PRATTLE,"abusEventHandler: linkApproveAck: " << hex << devId << dec);
+    MIRO_DBG_OSTR(ABUS,LL_PRATTLE,"abusEventHandler: linkApproveAck: " << std::hex << devId << std::dec);
 
     if (msg.minorOp() == 0) { // connect
       deviceTable[devId].state = READY;
@@ -169,4 +171,4 @@ namespace Abus
       deviceTable[devId].state = NOT;
     } 
   }
-};
+}
