@@ -14,6 +14,7 @@
 #include "Parameters.h"
 
 #include "faulTty/FaulTtyMessage.h"
+#include "sparrow/Parameters.h"
 
 #include "miro/OdometryImpl.h"
 #include "miro/TimeHelper.h"
@@ -125,8 +126,15 @@ namespace FaulMotor
 
 	  // compose odometry message
 	  Miro::timeA2C(timeStampR_, status_.time);
-	  status_.position.point.x = (long) xPos_;
-	  status_.position.point.y = (long) yPos_;
+
+	  if (!Sparrow::Parameters::instance()->goalie) {
+	    status_.position.point.x = (long) xPos_;
+	    status_.position.point.y = (long) yPos_;
+	  }
+	  else {
+	    status_.position.point.x = (long) yPos_;
+	    status_.position.point.y = (long) -xPos_;
+	  }
 	  status_.velocity.translation = (long)(dist / deltaT);
 	  status_.velocity.rotation = turn / deltaT;
 

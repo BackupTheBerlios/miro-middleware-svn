@@ -397,24 +397,34 @@ SparrowBase::~SparrowBase()
 
   // close channel sharing
   if (mcAdapter_) {
+    DBG(cout << "Closing multicats adapter." << endl);
+
     mcAdapter_->fini();
     delete mcAdapter_;
   }
 
-  sparrowConnection->fini();
-  //  sparrowConnection.readTables();
-  reactorTask.cancel();
-  DBG(cout << "reactor Task canceled." << endl);
-
   odometry.cancel();
   DBG(cout << "Odometry dispatching canceled." << endl);
+
   if(!Sparrow::Parameters::instance()->sparrow2003)
      infrared.cancel();
-
   DBG(cout << "Infrared dispatching canceled." << endl);
+
   if (Sparrow::Parameters::instance()->goalie  && !Sparrow::Parameters::instance()->sparrow2003) {
     pSonar_->cancel();
+    DBG(cout << "Sonar dispatching canceled." << endl);
   }
+
+  DBG(cout << "Shutting down sparrow board." << endl);
+  //  sparrowConnection.readTables();
+  sparrowConnection->fini();
+  if (pPioneer) {
+    DBG(cout << "Shutting down pioneer board." << endl);
+    delete pPioneer;
+  }
+
+  reactorTask.cancel();
+  DBG(cout << "reactor Task canceled." << endl);
 
   DBG(cout << "removing objects from POA" << endl);
 
