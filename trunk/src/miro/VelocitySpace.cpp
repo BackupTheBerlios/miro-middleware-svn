@@ -79,7 +79,7 @@ namespace Miro
 	  cos(_prefDir - M_PI_4) * right;
 
         left*left + right*right;
-	if (left*left + right*right <= _maxSpeed2){
+	if (fabs(left) < _maxSpeed && fabs(right) < _maxSpeed){//left*left + right*right <= _maxSpeed2){
             velocitySpace_[l_index][r_index] =
 	    (int)rint(255. * ((1. +
 			      atan(fabs(l_value /r_value)) / M_PI_2) / 2.));
@@ -115,9 +115,9 @@ namespace Miro
 	  cos(_prefDir - M_PI_4) * right;
 
         v_dist = sqrt(left*left + right*right);
-	if (v_dist <= _maxSpeed){
+	if (fabs(left) < _maxSpeed && fabs(right) < _maxSpeed){//v_dist <= _maxSpeed){
             axis_direction = (fabs(atan2(r_value, l_value)) > M_PI_2)?-1.0:1.0;
-            axis_value = ((axis_direction*v_dist)/abs(maxVelocity_) + 1.0)/2.0;
+            axis_value = ((axis_direction*v_dist)/(abs(maxVelocity_)/sqrt(2.0)) + 1.0)/2.0;
             velocitySpace_[l_index][r_index] =
 	    (int)rint(255. * (((1. +
 			      atan(fabs(l_value /r_value)) / M_PI_2) / 2.)*axis_value));
