@@ -1,0 +1,53 @@
+<!DOCTYPE MiroConfigDocument>
+<config>
+ <section name="Video" >
+  <parameter name="Video" >
+   <parameter value="rgb" name="Palette" />
+   <parameter value="384" name="Width" />
+   <parameter value="288" name="Height" />
+    <parameter name="Filter">
+     <parameter value="DeviceDummy" name="Name" />
+     <parameter value="DeviceDummy" name="Type" />
+     <parameter name="Successor" >
+      <parameter name="Filter" >
+       <parameter value="FilterCopy" name="Name" />
+       <parameter value="FilterCopy" name="Type" />
+      </parameter>
+      <parameter name="Filter" >
+       <parameter value="FilterGray" name="Name" />
+       <parameter value="FilterGray" name="Type" />
+       <parameter name="Successor" >
+         <parameter name="Filter" >
+         <parameter value="FilterDiff" name="Name" />
+         <parameter value="FilterDiff" name="Type" />
+         <parameter name="BackLink" >
+          <parameter value="FilterGray" />
+         </parameter>
+        </parameter>
+       </parameter>
+      </parameter>
+     </parameter>
+   </parameter>
+  </parameter>
+  <parameter name="DeviceDummy" >
+   <parameter name="Device" value="./timeSeries/" />
+   <parameter name="Buffers" value="4" />
+   <parameter name="Cyclic" value="true" />
+  </parameter>
+  <parameter name="FilterCopy">
+   <parameter value="true" name="InterfaceInstance" />
+  </parameter>
+  <parameter name="FilterGray">
+   <parameter value="true" name="InterfaceInstance" />
+   <parameter name="Interface" >
+    <parameter value="GrayImage" name="Name" />
+   </parameter>
+  </parameter>
+  <parameter name="FilterDiff">
+   <parameter value="true" name="InterfaceInstance" />
+   <parameter name="Interface" >
+    <parameter value="DiffImage" name="Name" />
+   </parameter>
+  </parameter>
+ </section>
+</config>

@@ -1,0 +1,16 @@
+Parameters.cpp
+Parameters.h
+libmiroBehavioursSimple.so
+Makefile.in
+Makefile
+.deps
+.libs
+BehavioursFactory.lo
+MoveToPoint.lo
+Parameters.lo
+Straight.lo
+TactileStop.lo
+Timer.lo
+Wander.lo
+libmiroBehavioursSimple.la
+

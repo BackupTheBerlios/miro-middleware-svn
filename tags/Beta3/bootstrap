@@ -1,0 +1,11 @@
+#! /bin/sh
+
+if ! test -h config/ltmain.sh
+then
+  ln -s /usr/share/libtool/ltmain.sh config/
+fi
+aclocal -I config  && \
+autoheader && \
+automake  --add-missing && \
+autoconf
+

@@ -1,0 +1,113 @@
+## -*- Makefile -*- ##########################################################
+##
+## This file is part of Miro (The Middleware For Robots)
+##
+## (c) 2003
+## Department of Neural Information Processing, University of Ulm, Germany
+##
+## $Id$
+##
+## Miro/config/Make-rules
+##
+##############################################################################
+
+# includes 
+
+AM_CXXFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/ -I$(top_builddir)/src -I$(top_builddir)/
+AM_CXXFLAGS += $(ACE_CFLAGS) $(TAO_CFLAGS) $(QT_CFLAGS)
+AM_CXXFLAGS += $(INHERITED_CPPFLAGS) $(INHERITED_SYMBOLS)
+# $(INHERITED_WARNINGS)
+AM_CXXFLAGS += -Woverloaded-virtual -DDEBUG -DQT_GENUINE_STR
+
+# lib search path
+
+# AM_LDFLAGS = -L$(top_builddir)/lib
+# AM_LDFLAGS += $(ACE_LDFLAGS) $(TAO_LDFLAGS) $(QT_LDFLAGS)
+# AM_LDFLAGS += $(INHERITED_LDFLAGS)
+
+# I know, I know. But older versions didn't recognize AM_LDFLAGS
+# overriding this variable by a user should work nevertheless.
+LDFLAGS = -L$(top_builddir)/lib $(ACE_LDFLAGS) $(TAO_LDFLAGS) $(QT_LDFLAGS) $(INHERITED_LDFLAGS) -version-info `echo $(VERSION) | sed 's/\./:/g'`
+
+
+# header include dirs
+
+idl_includedir         = $(includedir)/idl
+params_includedir      = $(includedir)/params
+abus_includedir        = $(includedir)/abus
+b21Base_includedir     = $(includedir)/b21Base
+base_includedir        = $(includedir)/base
+buttons_includedir     = $(includedir)/buttons
+can_includedir         = $(includedir)/can
+faulMotor_includedir   = $(includedir)/faulMotor
+faulTty_includedir     = $(includedir)/faulTty
+image_includedir       = $(includedir)/image
+laser_includedir       = $(includedir)/laser
+mcp_includedir         = $(includedir)/mcp
+miro_includedir        = $(includedir)/miro
+msp_includedir         = $(includedir)/msp
+panTilt_includedir     = $(includedir)/panTilt
+pioneer_includedir     = $(includedir)/pioneer
+pioneerBase_includedir = $(includedir)/pioneerBase
+psos_includedir        = $(includedir)/psos
+sparrow_includedir     = $(includedir)/sparrow
+sparrowBase_includedir = $(includedir)/sparrowBase
+speech_includedir      = $(includedir)/speech
+sphinx_includedir      = $(includedir)/sphinx
+video_includedir       = $(includedir)/video
+
+# idl_includedir         = $(includedir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/idl
+# params_includedir      = $(includedir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/params
+# abus_includedir        = $(includedir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/abus
+# b21Base_includedir     = $(includedir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/b21Base
+# base_includedir        = $(includedir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/base
+# buttons_includedir     = $(includedir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/buttons
+# can_includedir         = $(includedir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/can
+# faulMotor_includedir   = $(includedir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/faulMotor
+# faulTty_includedir     = $(includedir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/faulTty
+# image_includedir       = $(includedir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/image
+# laser_includedir       = $(includedir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/laser
+# mcp_includedir         = $(includedir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/mcp
+# miro_includedir        = $(includedir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/miro
+# msp_includedir         = $(includedir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/msp
+# panTilt_includedir     = $(includedir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/panTilt
+# pioneer_includedir     = $(includedir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/pioneer
+# pioneerBase_includedir = $(includedir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/pioneerBase
+# psos_includedir        = $(includedir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/psos
+# sparrow_includedir     = $(includedir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/sparrow
+# sparrowBase_includedir = $(includedir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/sparrowBase
+# speech_includedir      = $(includedir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/speech
+# sphinx_includedir      = $(includedir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/sphinx
+# video_includedir       = $(includedir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/video
+
+# common build rules
+
+.xml.cpp:
+	$(top_builddir)/src/makeParams/MakeParams -f $< -n $(@:.cpp=) -s cpp -h h
+
+# these rules do the trick of local install/cleaning the libraries and programs
+
+# .a.link:
+# 	if test -L $(top_builddir)/lib/$<; then rm $(top_builddir)/lib/$<; fi
+# 	$(LN_S) $(PWD)/$< $(top_builddir)/lib/
+
+# .la.link:
+# 	if ! test -d $(top_builddir)/lib/.libs; then mkdir $(top_builddir)/lib/.libs; fi
+# 	if test -L $(top_builddir)/lib/$<; then rm $(top_builddir)/lib/$<; fi
+# 	for libs in $(top_builddir)/lib/.libs/$(<:.la=).*; do if test -L $$libs; then rm $$libs; fi; done
+# 	$(LN_S) $(PWD)/$< $(top_builddir)/lib/
+# 	$(LN_S) $(PWD)/.libs/$(<:.la=).* $(top_builddir)/lib/.libs/
+
+INSTALLLTLIBRARIES=for i in $(lib_LTLIBRARIES); do if test $$i -nt $(PWD)/$(top_builddir)/lib/$$i || ! test -e $(PWD)/$(top_builddir)/lib/$$i; then /bin/sh $(top_builddir)/libtool --mode=install /usr/bin/install $$i $(PWD)/$(top_builddir)/lib/$$i; fi; done
+
+INSTALLLIBRARIES=for i in $(lib_LIBRARIES); do if test $$i -nt $(PWD)/$(top_builddir)/lib/$$i || ! test -e $(PWD)/$(top_builddir)/lib/$$i; then /bin/sh $(top_builddir)/libtool --mode=install /usr/bin/install $$i $(PWD)/$(top_builddir)/lib/$$i; fi; done
+
+INSTALLPROGRAMS=for i in $(bin_PROGRAMS); do if test $$i -nt $(PWD)/$(top_builddir)/bin/$$i || ! test -e $(PWD)/$(top_builddir)/bin/$$i; then /bin/sh $(top_builddir)/libtool --mode=install /usr/bin/install $$i $(PWD)/$(top_builddir)/bin/$$i; fi; done
+
+
+CLEANLTLIBRARIES=for i in $(lib_LTLIBRARIES); do if test -f $(top_builddir)/lib/$$i; then rm -f $(top_builddir)/lib/`basename $$i .la`.*; fi; done
+
+CLEANLIBRARIES=for i in $(lib_LIBRARIES); do if test -f $(top_builddir)/lib/$$i; then rm -f $(top_builddir)/lib/$$i; fi; done
+
+CLEANPROGRAMS=for i in $(bin_PROGRAMS); do if test -f $(top_builddir)/bin/$$i; then rm -f $(top_builddir)/bin/$$i; fi; done
+

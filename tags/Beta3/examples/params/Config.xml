@@ -1,0 +1,20 @@
+<config>
+  <section name="test">
+    <parameter name="Test">
+      <parameter name="Test1" value="false" />
+      <parameter name="Test4" value="my test" />
+      <parameter name="TestVector">
+        <parameter value="2" />
+        <parameter value="4" />
+        <parameter value="2" />
+        <parameter value="5" />
+      </parameter>
+      <parameter name="TestSet">
+        <parameter value="2" />
+        <parameter value="4" />
+        <parameter value="2" />
+        <parameter value="5" />
+      </parameter>
+    </parameter>
+  </section>
+</config>

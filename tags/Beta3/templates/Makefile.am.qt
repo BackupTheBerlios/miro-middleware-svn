@@ -1,0 +1,40 @@
+## -*- Makefile -*- ##########################################################
+##
+## This file is part of Miro (The Middleware For Robots)
+##
+## (c) 1999, 2000, 2001, 2002, 2003
+## Department of Neural Information Processing, University of Ulm, Germany
+##
+## Miro/templates/Makefile.am.qt
+##
+##############################################################################
+
+include $(top_srcdir)/config/Make-rules
+
+SUFFIXES = .h .moc.cpp
+
+.h.moc.cpp:
+	$(QT_MOC)/moc $< -o $@
+
+
+## program to be built
+bin_PROGRAMS = myBinary
+
+## sourcefiles needed for the binary to be built
+sources = mySourceFile.cpp mySourceFile.h
+## sourcefiles that need to be compiled with qt's moc compiler also
+tomocsources = myQtFile.cpp myQtFile.h
+
+## the prefix of the two following macros must have the same name as the respective binary
+myBinary_SOURCES = $(sources) $(tomocsources) $(tomocsources:.cpp=.moc.cpp)
+## you may add libraries to be linked here
+myBinary_LDADD = -lmyLibrary
+
+BUILT_SOURCES = $(tomocsources:.cpp=.moc.cpp)
+CLEANFILES = $(tomocsources:.cpp=.moc.cpp)
+
+all-local:
+	$(INSTALLPROGRAMS)
+
+clean-local:
+	$(CLEANPROGRAMS)

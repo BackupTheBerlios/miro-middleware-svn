@@ -1,0 +1,33 @@
+<!DOCTYPE xml SYSTEM "PolicyEditor_behaviour.dtd">
+<config> 
+  <!-- some namespace for illustration -->
+  <config_global name="namespace" value="Test" />
+
+  <!-- include for the Miro::Parameters base class -->
+  <config_global name="include" value="miro/Parameters.h" />
+  <config_global name="Include" value="vector" />
+  <config_global name="Include" value="set" />
+
+  <!-- group names can be freely choosen -->
+  <!-- except for behaviours and arbiters -->
+  <config_group name="test">
+    
+    <!-- MyParameters are derived from Miro::ConfigParameters -->
+    <config_item name="My" parent="Miro::Config" instance="true" >
+      Some test data.
+      Some more test data
+      <config_parameter name="test1" type="bool" default="true" />
+
+      And even more text!
+      <config_parameter name="test2" type="char" default="a" />
+      <config_parameter name="test3" type="int" default="3" measure="mm" />
+      <config_parameter name="Test4" type="std::string" default="test" />
+      <config_parameter name="Tty" type="ACE_TTY_IO::Serial_Params" />
+      <config_parameter name="Motion" type="Miro::MotionParameters" />
+      <config_parameter name="TestVector" type="std::vector&lt;int&gt;" />
+      <config_parameter name="TestSet" type="std::set&lt;int&gt;" />
+    </config_item>
+
+  </config_group>
+
+</config>

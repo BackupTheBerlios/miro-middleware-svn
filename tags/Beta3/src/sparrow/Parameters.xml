@@ -1,0 +1,131 @@
+<!DOCTYPE xml SYSTEM "PolicyEditor_behaviour.dtd">
+<config>
+  <config_global name="namespace" value="Sparrow" />
+  <config_global name="include" value="can/Parameters.h" />
+
+  <config_group name="Sparrow">
+    <config_item name="IrScaling">
+      <config_parameter name="offset" type="int" default="0" measure="mm" />
+      <config_parameter name="scaling" type="double" default="1"/>
+      <config_parameter name="minDistance" type="int" default="30" measure="mm" />
+      <config_parameter name="maxDistance" type="int" default="400" measure="mm" />
+    </config_item>
+
+    <config_item parent="Can::" instance="true">
+      <config_parameter name="motion" type="Miro::DifferentialMotionParameters" />
+      <constructor>
+        motion.minTranslation = -1000;
+        motion.maxTranslation = 1000;
+
+        motion.minLTranslation = -1000;
+        motion.maxLTranslation = 1000;
+        motion.minRTranslation = -1000;
+        motion.maxRTranslation = 1000;
+        motion.wheelBase = 450;
+      </constructor>
+
+      <config_parameter name="channelSharing" type="bool" default="true" />
+
+      <config_parameter name="goalie" type="bool" default="false" />
+      <config_parameter name="faulhaber" type="bool" default="true" />
+      <config_parameter name="newCanModule" type="bool" default="false" />
+      <config_parameter name="sparrow2003" type="bool" default="false" />
+
+      <config_parameter name="ticksL" type="int" default="30" />
+      <config_parameter name="ticksR" type="int" default="30" />
+      <config_parameter name="diameter" type="int" default="2310" measure="mm" />
+
+      <config_parameter name="maxAccel" type="int" default="200" measure="power" />
+      <config_parameter name="maxPower" type="int" default="30720" />
+
+      <config_parameter name="stallThreshold" type="int" default="14" />
+      <config_parameter name="stallA2" type="int" default="1" />
+      <config_parameter name="stallA1" type="int" default="100" />
+      <config_parameter name="stallA0" type="int" default="5000" />
+
+      <config_parameter name="initialX" type="int" default="0" measure="mm" />
+      <config_parameter name="initialY" type="int" default="0" measure="mm" />
+      <config_parameter name="initialHeading" type="Angle" default="0" measure="&deg;" />
+
+      <config_parameter name="watchdogTimeout" type="ACE_Time_Value" default="1" measure="sec" />
+      <config_parameter name="buttonsPollInterval" type="ACE_Time_Value" default="0, 50000" measure="sec" />
+
+      <config_parameter name="servo0MidPulse" type="unsigned long" default="3600"/>
+      <config_parameter name="servo1MidPulse" type="unsigned long" default="3600"/>
+      <config_parameter name="deg2ServoTicksL" type="double" default="28.2"/>
+      <config_parameter name="deg2ServoTicksR" type="double" default="28.2"/>
+
+      <config_parameter name="panLatency" type="ACE_Time_Value" default="0, 50000" measure="sec" />
+      <config_parameter name="panSwing" type="ACE_Time_Value" default="0, 500000" measure="sec" />
+      <config_parameter name="panRadPerSec" type="angle" default="180" measure="&deg;" />
+      <config_parameter name="panAccuracy" type="angle" default="2.5" measure="&deg;" />
+      <config_parameter name="panSwingAccuracy" type="angle" default="10." measure="&deg;" />
+
+      <config_parameter name="transFactor" type="double" default="1.0776"/>
+
+      <config_parameter name="irScaling" type="std::vector&lt;IrScalingParameters&gt;" />
+      <constructor>
+        irScaling.resize(8);
+      </constructor>
+
+      <config_parameter name="infraredPulse" type="ACE_Time_Value" default="0, 40000" measure="sec" />
+      <config_parameter name="odometryPulse" type="ACE_Time_Value" default="0, 40000" measure="sec" />
+
+      <config_parameter name="infraredDescription" type="Miro::ScanDescriptionIDL" />
+      <constructor>
+        static const int distance[8] = { 226, 159, 75, 159, 226, 183, 183, 250 };
+        static const int alpha[8] = { 95,  62, 0, -62, -96,  79, -79, -154 };
+        static const int beta[8] =  { -5, -62, 0,  62,   6, -34,  34,  154 };
+
+        infraredDescription.scanType = ::Miro::RangeSensor::GROUPWISE;
+        infraredDescription.eventName = &quot;Infrared&quot;;
+        infraredDescription.group.length(1);
+        infraredDescription.group[0].description.minRange = 0;
+        infraredDescription.group[0].description.maxRange = 800;
+        infraredDescription.group[0].description.focus = Miro::deg2Rad(1);
+        infraredDescription.group[0].sensor.length(8);
+        for (unsigned int i = 0; i &lt; 8; ++i) {
+          infraredDescription.group[0].sensor[i].height = 150;
+          infraredDescription.group[0].sensor[i].distance = distance[i];
+          infraredDescription.group[0].sensor[i].alpha = Miro::deg2Rad(alpha[i]);
+          infraredDescription.group[0].sensor[i].beta = Miro::deg2Rad(beta[i]);
+          infraredDescription.group[0].sensor[i].gamma = 0;
+        }
+      </constructor>
+
+      <config_parameter name="infraredDescription2003" type="Miro::ScanDescriptionIDL" />
+      <constructor>
+        static const int distance2003[16] = { 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210 };
+        static const int alpha2003[16] = { -34, -11, 11, 34, 56, 79, 101, 124, 146, 169, -169, -146, -124, -101,  -79, -56 };
+        static const int beta2003[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+        infraredDescription2003.scanType = ::Miro::RangeSensor::GROUPWISE;
+        infraredDescription2003.eventName = &quot;Infrared&quot;;
+        infraredDescription2003.group.length(2);
+        infraredDescription2003.group[0].description.minRange = 0;
+        infraredDescription2003.group[0].description.maxRange = 800;
+        infraredDescription2003.group[0].description.focus = Miro::deg2Rad(1);
+        infraredDescription2003.group[0].sensor.length(8);
+        for (unsigned int i = 0; i &lt; 8; ++i) {
+          infraredDescription2003.group[0].sensor[i].height = 150;
+          infraredDescription2003.group[0].sensor[i].distance = distance2003[i];
+          infraredDescription2003.group[0].sensor[i].alpha = Miro::deg2Rad(alpha2003[i]);
+          infraredDescription2003.group[0].sensor[i].beta = Miro::deg2Rad(beta2003[i]);
+          infraredDescription2003.group[0].sensor[i].gamma = 0;
+        }
+        infraredDescription2003.group[1].description.minRange = 0;
+        infraredDescription2003.group[1].description.maxRange = 800;
+        infraredDescription2003.group[1].description.focus = Miro::deg2Rad(1);
+        infraredDescription2003.group[1].sensor.length(8);
+        for (unsigned int i = 0; i &lt; 8; ++i) {
+          infraredDescription2003.group[1].sensor[i].height = 150;
+          infraredDescription2003.group[1].sensor[i].distance = distance2003[i+8];
+          infraredDescription2003.group[1].sensor[i].alpha = Miro::deg2Rad(alpha2003[i+8]);
+          infraredDescription2003.group[1].sensor[i].beta = Miro::deg2Rad(beta2003[i+8]);
+          infraredDescription2003.group[1].sensor[i].gamma = 0;
+        }
+      </constructor>
+
+    </config_item>
+  </config_group>
+</config>

@@ -1,0 +1,61 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef SphinxSpeech_idl
+#define SphinxSpeech_idl
+
+#include "Exception.idl"
+#include "Speech.idl"
+#include "Time.idl"
+
+module Miro
+{
+  struct WordIDL 
+  {
+    long startFrame;
+    long endFrame;       //start and end frame within utterance for this word
+    long aScore;
+    long lScore; //acoustic and LM scores (not always used!)
+    float confidence;    // confidence measure (roughly prob(correct)) for this word
+                         // NOT FILLED IN BY THE RECOGNIZER at the moment (sphinx2)
+    long latticeDensity; // Average lattice density in segment. 
+                            // Larger values imply more confusion and 
+                            // less certainty about the result.
+                            // To use it for rejection, cutoffs must be found independently
+    double phonePerplexity; // Average phone perplexity in segment
+                            // Larger values imply more confusion and 
+                            // less certainty about the result.
+                            // To use it for rejection, cutoffs must be found independently
+    string word;
+  };
+
+  struct SentenceIDL 
+  {
+    TimeIDL timestamp;
+    boolean valid;
+    sequence<WordIDL> sentence;
+  };
+
+
+  //! Interface to the Sphinx speech recognition services
+  /**
+   * It registers as "Speech" at the naming service
+   * within the selected naming context.
+   * It includes the Festival speech production module
+   *
+   * @author Guillem Pages Gassull 
+   */
+  interface SphinxSpeech : Speech
+  {
+    //! Returns the last recognized sentence.
+    SentenceIDL getLastSentence() raises(EDevIO);
+  };
+};
+#endif // Speech_idl

@@ -1,0 +1,12 @@
+ConfigDialog.moc.cpp
+PolicyView.moc.cpp
+PatternWidget.moc.cpp
+BehaviourWidget.moc.cpp
+ArbiterWidget.moc.cpp
+ParameterDialog.moc.cpp
+PolicyEditor.moc.cpp
+PolicyEditor
+Makefile.in
+Makefile
+.deps
+.libs

@@ -1,0 +1,61 @@
+<!DOCTYPE xml SYSTEM "PolicyEditor_behaviour.dtd">
+<config> 
+  <config_global name="namespace" value="Laser" />
+  <config_global name="include" value="miro/Parameters.h" />
+
+  <config_group name="Sick">
+    <config_item parent="Miro::Tty" instance="true">
+      <constructor>
+        ttyParams.baudrate = 500000;
+      </constructor>
+      <config_parameter name="device" type="string" inherited="true" default="/dev/laser" />
+      <!--
+        true for any usual tty, that produces the baudrates it is programmed to
+        (it is a 14.something MHz crystal)
+        false for card with crystal of 16.0MHz, like ours
+       500000 baud are only possible with a 16.0MHz crystal installed
+     -->
+      <config_parameter name="stdCrystal" type="bool" default="false" />
+     <!--
+       this is the number of seconds we want to pass between two
+       consecutive polls from the laser 
+       an ACE_Time_Value has microsecond resolution
+     -->
+      <config_parameter name="pollInterval" type="ACE_Time_Value" default="0, 100000" measure="sec" />
+     <!-- 
+        the sick laser scanner provides a continous mode, in that it
+        sends about 40 scans per second to the host. This provides the fastest
+        access to data, but may provide problems when the FIFO of the receiver is too
+        small. set this to true for using it, false uses active polling of laserscans 
+        every 1/10th of a second
+     -->
+      <config_parameter name="continousMode" type="bool" default="false" />
+      <config_parameter name="notify" type="bool" default="false" />
+      <config_parameter name="positionStamps" type="bool" default="false" />
+      <config_parameter name="statistics" type="bool" default="true" />
+    <!--
+       this contains the physical description of the laser sensor,
+       i.e. installtion and other characteristics needed for a
+       adaptive, interpretation, that can handle different range
+       sensors uniformly
+     -->
+      <config_parameter name="laserDescription" type="Miro::ScanDescriptionIDL" />
+      <constructor>
+        laserDescription.scanType = Miro::RangeSensor::GROUPWISE;
+        laserDescription.eventName = &quot;Laser&quot;;
+        laserDescription.group.length(1);
+        laserDescription.group[0].description.minRange = 50;
+        laserDescription.group[0].description.maxRange = 8000;
+        laserDescription.group[0].description.focus = 0.00435;
+        laserDescription.group[0].sensor.length(361);
+        for (unsigned int i = 0; i &lt; 361; ++i) {
+          laserDescription.group[0].sensor[i].height = 300;
+          laserDescription.group[0].sensor[i].distance = 0;
+          laserDescription.group[0].sensor[i].alpha = Miro::deg2Rad(-90. + (double)i * 0.5);
+          laserDescription.group[0].sensor[i].beta = 0;
+          laserDescription.group[0].sensor[i].gamma = 0;
+        }
+      </constructor>
+    </config_item>
+  </config_group>
+</config>

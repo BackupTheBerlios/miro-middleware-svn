@@ -1,0 +1,448 @@
+<!DOCTYPE MiroConfigDocument>
+  <config>
+ <section name="Robot" >
+  <parameter name="Robot" >
+   <parameter value="haeltnix" name="Name" />
+   <parameter value="Sparrow99" name="Type" />
+  </parameter>
+ </section>
+ <section name="Sparrow99" >
+  <parameter name="SparrowBoard" >
+   <parameter value="/dev/can/0" name="Device" />
+   <parameter value="false" name="Faulhaber" />
+   <parameter value="0.060000" name="PanLatency" />
+   <parameter value="false" name="Faulhaber" />
+   <parameter value="0.200000" name="PanSwing" />
+   <parameter value="10" name="PanSwingAccuracy" />
+   <parameter value="300" name="PanRadPerSec" />
+   <parameter value="5." name="PanAccuracy" />
+   <parameter name="InfraredDescription" >
+    <parameter value="2" name="ScanType" />
+    <parameter value="Infrared" name="EventName" />
+    <parameter name="Group" >
+     <parameter>
+      <parameter name="Description" >
+       <parameter value="1" name="Focus" />
+       <parameter value="800" name="MaxRange" />
+       <parameter value="40" name="MinRange" />
+      </parameter>
+      <parameter name="Sensor" >
+       <parameter>
+        <parameter value="180" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="248" name="Distance" />
+        <parameter value="150" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="150" name="Alpha" />
+        <parameter value="-15" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="248" name="Distance" />
+        <parameter value="150" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="120" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="248" name="Distance" />
+        <parameter value="150" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="90" name="Alpha" />
+        <parameter value="15" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="248" name="Distance" />
+        <parameter value="150" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="60" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="248" name="Distance" />
+        <parameter value="150" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="30" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="248" name="Distance" />
+        <parameter value="150" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="0" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="248" name="Distance" />
+        <parameter value="150" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="-90" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="248" name="Distance" />
+        <parameter value="150" name="Height" />
+       </parameter>
+      </parameter>
+     </parameter>
+    </parameter>
+   </parameter>
+   <parameter value="0.040000" name="InfraredPulse" />
+   <parameter value="0.040000" name="OdometryPulse" />
+   <parameter name="IrScaling" >
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="1.0" name="Scaling" />
+     <parameter value="0" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="1.133" name="Scaling" />
+     <parameter value="0" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="1.148" name="Scaling" />
+     <parameter value="0" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="0.944" name="Scaling" />
+     <parameter value="0" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="1.104" name="Scaling" />
+     <parameter value="0" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="800" name="MaxDistance" />
+     <parameter value="90" name="MinDistance" />
+     <parameter value="1.243" name="Scaling" />
+     <parameter value="0" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="1.018" name="Scaling" />
+     <parameter value="0" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="800" name="MaxDistance" />
+     <parameter value="90" name="MinDistance" />
+     <parameter value="1.281" name="Scaling" />
+     <parameter value="0" name="Offset" />
+    </parameter>
+   </parameter>
+   <parameter value="0.050000" name="ButtonsPollInterval" />
+   <parameter value="1.0776" name="TransFactor" />
+   <parameter value="26.0" name="Deg2ServoTicksL" />
+   <parameter value="26.0" name="Deg2ServoTicksR" />
+   <parameter value="1.000000" name="WatchdogTimeout" />
+   <parameter value="3875" name="Servo0MidPulse" />
+   <parameter value="13" name="MaxAccel" /><!-- SollDistanz zum Torrueckwand 13 -->
+   <parameter value="1555" name="Diameter" />
+   <parameter value="15" name="MaxPower" /><!-- Vorfaktor turnfehler 15 -->
+   <parameter value="22" name="TicksL" />
+   <parameter value="22" name="TicksR" />
+   <parameter value="true" name="Goalie" />
+   <parameter value="true" name="ChannelSharing" />
+   <parameter name="Motion" >
+    <parameter value="180" name="MaxRotation" />
+    <parameter value="-180" name="MinRotation" /><!-- Unterreichweite fue  Turndoubler 9 (6) -->
+    <parameter value="1000" name="MaxTranslation" /><!-- Vorfaktor Distanzefehler 300 -->
+    <parameter value="-1000" name="MinTranslation" />
+    <parameter value="450" name="WheelBase" />
+    <parameter value="1000" name="MaxLTranslation" />
+    <parameter value="1000" name="MaxRTranslation" />
+    <parameter value="-1000" name="MinLTranslation" />
+    <parameter value="-1000" name="MinRTranslation" />
+   </parameter>
+  </parameter>
+ </section>
+ <section name="ActiveMedia" >
+  <parameter name="PioneerBoard">
+   <parameter value="/dev/tts/0" name="Device" />
+   <parameter name="TtyParams" >
+    <parameter value="9600" name="Baudrate" />
+    <parameter value="0" name="Parityenb" />
+    <parameter value="8" name="Databits" />
+    <parameter value="1" name="Stopbits" />
+    <parameter value="0" name="Readtimeoutmsec" />
+    <parameter value="0" name="Modem" />
+    <parameter value="1" name="Rcvenb" />
+    <parameter value="0" name="Ctsenb" />
+    <parameter value="0" name="Rtsenb" />
+    <parameter value="0" name="Xinenb" />
+    <parameter value="0" name="Xoutenb" />
+   </parameter>
+   <parameter value="0.0061359" name="AngleConvFactor" />
+   <parameter value="0.003333" name="DiffConvFactor" />
+   <parameter value="0.07979" name="DistConvFactor" />
+   <parameter value="0.1734" name="RangeConvFactor" />
+   <parameter value="4.000000" name="Vel2Divisor" />
+   <parameter value="0.079790" name="VelConvFactor" />
+   <parameter name="SonarDescription" >
+    <parameter value="3" name="ScanType" />
+    <parameter value="Sonar" name="EventName" />
+    <parameter name="Group" >
+     <parameter>
+      <parameter name="Description" >
+       <parameter value="30" name="Focus" />
+       <parameter value="3000" name="MaxRange" />
+       <parameter value="100" name="MinRange" />
+      </parameter>
+      <parameter name="Sensor" >
+       <parameter>
+        <parameter value="180" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="248" name="Distance" />
+        <parameter value="400" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="150" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="248" name="Distance" />
+        <parameter value="400" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="120" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="248" name="Distance" />
+        <parameter value="400" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="90" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="248" name="Distance" />
+        <parameter value="400" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="60" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="248" name="Distance" />
+        <parameter value="400" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="30" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="248" name="Distance" />
+        <parameter value="400" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="0" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="248" name="Distance" />
+        <parameter value="400" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="-90" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="248" name="Distance" />
+        <parameter value="400" name="Height" />
+       </parameter>
+      </parameter>
+     </parameter>
+    </parameter>
+   </parameter>
+   <parameter value="false" name="Tactile" />
+   <parameter value="true" name="Sonar" />
+  </parameter>
+ </section>
+
+<!--
+  <parameter name="Video" >
+   <parameter value="bgr" name="Palette" />
+   <parameter value="384" name="Width" />
+   <parameter value="288" name="Height" />
+   <parameter name="Filter">
+     <parameter value="DeviceBTTV" name="Name" />
+     <parameter value="DeviceBTTV" name="Type" />
+     <parameter name="Successor" >
+      <parameter name="Filter" >
+       <parameter value="FilterCopy" name="Name" />
+       <parameter value="FilterCopy" name="Type" />
+      </parameter>
+      <parameter name="Filter" >
+       <parameter value="FilterSwap3" name="Name" />
+       <parameter value="FilterSwap3" name="Type" />
+      </parameter> 
+    </parameter>
+   </parameter>
+  </parameter>
+  <parameter name="DeviceBTTV">
+   <parameter value="/dev/video0" name="Device" />
+  </parameter>
+  <parameter name="FilterCopy">
+   <parameter value="true" name="InterfaceInstance" />
+  </parameter> 
+  <parameter name="FilterSwap3">
+   <parameter value="true" name="InterfaceInstance" />
+   <parameter name="Interface">
+    <parameter value="RGB" name="Name" />
+   </parameter>
+  </parameter>
+-->
+
+ <section name="Video" >
+  <parameter name="Video" >
+   <parameter value="bgr" name="Palette" />
+   <parameter value="384" name="Width" />
+   <parameter value="288" name="Height" />
+    <parameter name="Filter">
+     <parameter value="DeviceBTTV" name="Name" />
+     <parameter value="DeviceBTTV" name="Type" />
+     <parameter name="Successor" >
+      <parameter name="Filter" >
+       <parameter value="FilterSwap3" name="Name" />
+       <parameter value="FilterSwap3" name="Type" />
+       <parameter name="Successor" >
+         <parameter name="Filter" >
+          <parameter value="FilterRGBtoGray" name="Name" />
+          <parameter value="FilterRGBtoGray" name="Type" />
+          <parameter name="Successor" >
+           <parameter name="Filter" >
+            <parameter value="FilterGraytoCanny" name="Name" />
+            <parameter value="FilterGraytoCanny" name="Type" />
+           </parameter>
+         </parameter>
+        </parameter>
+        <parameter name="Filter" >
+         <parameter value="FilterRGBtoIndex" name="Name" />
+         <parameter value="FilterRGBtoIndex" name="Type" />
+         <parameter name="Successor" >
+          <parameter name="Filter" >
+           <parameter value="FilterIndextoIndex" name="Name" />
+           <parameter value="FilterIndextoIndex" name="Type" />
+          </parameter>
+         </parameter>
+        </parameter>
+       </parameter>
+      </parameter>
+     </parameter>
+    </parameter>
+  </parameter>
+
+  <parameter name="DeviceBTTV">
+   <parameter value="/dev/video0" name="Device" />
+  </parameter>
+
+ <parameter name="FilterSwap3">
+   <parameter value="true" name="InterfaceInstance" />
+  </parameter>
+
+  <parameter name="FilterRGBtoGray">
+   <parameter value="true" name="InterfaceInstance" />
+   <parameter name="Interface" >
+    <parameter value="VideoGray" name="Name" />
+   </parameter>
+  </parameter>
+
+  <parameter name="FilterGraytoCanny">
+   <parameter value="true" name="InterfaceInstance" />
+   <parameter name="Interface" >
+    <parameter value="VideoCanny" name="Name" />
+   </parameter>
+  </parameter>
+
+  <parameter name="FilterRGBtoIndex">
+   <parameter value="true" name="InterfaceInstance" />
+   <parameter name="Interface" >
+    <parameter value="VideoIndex" name="Name" />
+   </parameter>
+  </parameter>
+
+  <parameter name="FilterIndextoIndex">
+   <parameter value="true" name="InterfaceInstance" />
+   <parameter name="Interface" >
+    <parameter value="VideoIndexDebug" name="Name" />
+   </parameter>
+  </parameter>
+
+<!-- alte kamera die jetzt auf siehtnix ist
+  <parameter name="Camera" >
+   <parameter value="0.060000" name="Latency" />
+   <parameter value="31.0" name="Alpha" />
+   <parameter value="600" name="Height" />
+   <parameter value="197.159465" name="Cx" />
+   <parameter value="139.645856" name="Cy" />
+   <parameter value="4.043536" name="F" />
+   <parameter value="2.980936e-02" name="Kappa" />
+   <parameter value="1" name="Sx" />
+   <parameter value="0.00625" name="Dx" />
+   <parameter value="0.0125" name="Dy" />
+   <parameter value="384" name="Nfx" />
+   <parameter value="768" name="Ncx" />
+  </parameter>
+-->
+<!-- werte fuer neue (labcam-version) -->
+  <parameter name="Camera" >
+   <parameter value="0.060000" name="Latency" />
+   <parameter value="28.5" name="Alpha" />
+   <parameter value="550" name="Height" />
+   <parameter value="192.368407" name="Cx" />
+   <parameter value="142.367206" name="Cy" />
+   <parameter value="4.411363" name="F" />
+   <parameter value="2.614732e-02" name="Kappa" />
+   <parameter value="1" name="Sx" />
+   <parameter value="0.00625" name="Dx" />
+   <parameter value="0.0125" name="Dy" />
+   <parameter value="384" name="Nfx" />
+   <parameter value="768" name="Ncx" />
+  </parameter>
+ </section>
+ <section name="Notification" >
+  <parameter name="Logging" >
+   <parameter name="TypeName">
+    <parameter value="Infrared" />
+    <parameter value="Odometry" />
+    <parameter value="RawPosition" />
+    <parameter value="VisionData" />
+    <parameter value="LineSamples" />
+    <parameter value="GoalPosition" />
+    <parameter value="BallPosition" />
+    <parameter value="PatternChange" />
+    <parameter value="ArbitrateChange" />
+    <parameter value="SharedWorld" />
+   </parameter>
+   <parameter value="157286400" name="MaxFileSize" />
+  </parameter>
+  <parameter name="NotifyMulticast" >
+   <parameter value="225.2.2.1:41006" name="Multicastgroup" />
+   <parameter value="500" name="Messagetimeout" />
+   <parameter name="Subscription">
+     <parameter value="BallPosition" />
+     <parameter value="SharedWorld" />
+   </parameter>
+  </parameter>
+ </section>
+</config>

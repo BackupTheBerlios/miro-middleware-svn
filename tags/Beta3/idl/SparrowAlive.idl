@@ -1,0 +1,23 @@
+#ifndef SparrowAlive_idl
+#define SparrowAlive_idl
+
+module Miro
+{
+
+  struct SparrowAliveIDL
+  {
+
+    boolean MotorAlive;
+    boolean Infrared1Alive;
+    boolean Infrared2Alive;
+    boolean PanAlive;
+    boolean KickerAlive;
+
+  };
+};
+
+#endif // Sparrow_idl
+
+
+
+

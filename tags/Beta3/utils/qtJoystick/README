@@ -1,0 +1,4 @@
+Utility for robot remote motion control.
+
+QtJoystick is missleading. It's a small X-Dialog with some buttons,
+but anyways.

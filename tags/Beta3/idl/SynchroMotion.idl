@@ -1,0 +1,83 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef SynchroMotion_idl
+#define SynchroMotion_idl
+
+#include "Motion.idl"
+
+module Miro
+{
+  //! The specialized motion interface for synchro drive robots.
+  /**
+   * The B21 is has a synchro drive mobile base.
+   *
+   * @author Hans Utz
+   */
+  interface SynchroMotion : Motion
+  {
+    //-------------------------------------------------------------------------
+    // rotational movement methods
+    //-------------------------------------------------------------------------
+
+    //! Limp rotational motor.
+    /**
+     * Passive halt of the rotational motor.
+     * The mobile base doesn't rotate afterwards, but can be turned around.
+     *
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    void rotateLimp() raises(EDevIO);
+
+    //! Set the rotational velocity.
+    /**
+     * Sets the rotational velocity of the mobile base and starts moving. 
+     * Counter clock wise rotation is specified by negative velocity.
+     *
+     * @param velocity The rotational velocity in rad/s.
+     *
+     * @throw EOutOfBounds is thrown if the requested velocitiy
+     * exceeds the maximum rotational velocity of the robot.
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void rotate(in double velocity) raises(EOutOfBounds, EDevIO);
+
+    //-------------------------------------------------------------------------
+    // translational movement methods
+    //-------------------------------------------------------------------------
+
+    //! Limp translational motor.
+    /**
+     * Passive halt of the translational motor.
+     * The mobile base doesn't translate afterwards, but can be pushed around.
+     *
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    void translateLimp() raises(EDevIO);
+    //! Set the translational velocity.
+    /**
+     * Sets the translational velocity of the mobile base and starts moving. 
+     * Backward translation is specified by negative velocity.
+     *
+     * @param velocity The translational velocity in mm/s.
+     *
+     * @throw EOutOfBounds is thrown if the requested velocitiy
+     * exceeds the maximum translational velocity of the robot.
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void translate(in long velocity) raises(EOutOfBounds, EDevIO);
+  };
+};
+
+#endif // SynchroMotion_idl
+
+
