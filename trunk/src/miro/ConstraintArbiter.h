@@ -58,6 +58,10 @@ namespace Miro
     virtual int handle_timeout(const ACE_Time_Value&, const void*);
 
   protected:
+    //--------------------------------------------------------------------------
+    // protected methods
+    //--------------------------------------------------------------------------
+
     //! Pass the arbitration message to the actuators.
     virtual void setActuators(const ArbiterMessage& _message);
     //! Limp all actuators.
@@ -79,9 +83,12 @@ namespace Miro
 
     VelocityIDL currentVelocity_;
 
-    ConstraintArbiterViewerTask * conArbViewTask_;
+    CosNotification::StructuredEvent notifyEvent_;
+    unsigned int offerIndex_;
 
-    CosNotification::StructuredEvent notifyEvent;
+    //--------------------------------------------------------------------------
+    // protected static data
+    //--------------------------------------------------------------------------
 
     static const std::string name_;
   };

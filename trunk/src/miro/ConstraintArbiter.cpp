@@ -19,6 +19,8 @@
 #include "TimeHelper.h"
 #include "Log.h"
 
+#include "idl/ArbiterEventC.h"
+
 #include <complex>
 #include <cmath>
 
@@ -32,8 +34,7 @@ namespace Miro
     pMotion_(DifferentialMotion::_duplicate(_pMotion)),
     pSupplier_(_pSupplier),
     reactor(ar_),
-    timerId(-1),
-    conArbViewTask_(NULL)
+    timerId(-1)
   {
     MIRO_LOG_CTOR("Miro::ConstraintArbiter");
     
@@ -42,21 +43,24 @@ namespace Miro
 
     if (pSupplier_) {
       // Status Notify Event initialization
-      notifyEvent.header.fixed_header.event_type.domain_name =
+      notifyEvent_.header.fixed_header.event_type.domain_name =
       CORBA::string_dup(pSupplier_->domainName().c_str());
-        notifyEvent.header.fixed_header.event_type.type_name =
-      CORBA::string_dup("ArbitrateChange");
-      notifyEvent.header.fixed_header.event_name = CORBA::string_dup("");
-      notifyEvent.header.variable_header.length(0);   // put nothing here
-      notifyEvent.filterable_data.length(0);          // put nothing here
+        notifyEvent_.header.fixed_header.event_type.type_name =
+      CORBA::string_dup("ConstraintArbiter");
+      notifyEvent_.header.fixed_header.event_name = CORBA::string_dup("");
+      notifyEvent_.header.variable_header.length(0);   // put nothing here
+      notifyEvent_.filterable_data.length(0);          // put nothing here
 
       // offer declaration
       CosNotification::EventTypeSeq offers;
       offers.length(1);
-      offers[0] = notifyEvent.header.fixed_header.event_type;
-      pSupplier_->addOffers(offers);
-    }
+      offers[0] = notifyEvent_.header.fixed_header.event_type;
 
+      StructuredPushSupplier::IndexVector v =
+	pSupplier_->addOffers(offers);
+
+      offerIndex_ = v[0];
+    }
   }
 
   ConstraintArbiter::~ConstraintArbiter()
@@ -102,15 +106,6 @@ namespace Miro
 
     MIRO_ASSERT(params != NULL);
 
-    // create task for viewing velocity space
-    if(params->viewerTask) {
-      if (conArbViewTask_ != NULL) {
-	conArbViewTask_->cancel();
-	delete conArbViewTask_;
-      }
-      conArbViewTask_ = new ConstraintArbiterViewerTask(&params->velocitySpace);
-      conArbViewTask_->open();
-    }
     if (timerId != -1)
       reactor.reset_timer_interval(timerId, params->pace);
   }
@@ -140,10 +135,6 @@ namespace Miro
   {
     // debug message
     MIRO_DBG_OSTR(MIRO,LL_CTOR_DTOR, "ConstraintArbiter.cpp : close()" << std::endl);
-
-    conArbViewTask_->cancel();
-    delete conArbViewTask_;
-    conArbViewTask_ = NULL;
 
     // release timer
     if (timerId != -1) {
@@ -208,6 +199,28 @@ namespace Miro
 //	}
 //    }
 //    fclose(logFile1);
+
+    if (pSupplier_ &&
+	pSupplier_->subscribed(offerIndex_)) {
+
+      unsigned int const headerSize = 12;
+      unsigned int dataSize = params->velocitySpace.dynamicWindowSize();
+
+      unsigned char * buffer = new unsigned char[headerSize + dataSize];
+      short * h = reinterpret_cast<short *>(buffer);
+      h[0] = 0; // protocol id
+      h[1] = params->velocitySpace.size();
+      params->velocitySpace.windowBounds(h[2], h[3], h[4], h[5]);
+      
+      unsigned char * p = buffer + headerSize;
+      params->velocitySpace.dumpDynamicWindow(p);
+      Miro::VelocitySpaceIDL * dynamicWindow = 
+	new Miro::VelocitySpaceIDL(headerSize + dataSize,
+				   headerSize + dataSize, buffer, 1);
+
+      notifyEvent_.remainder_of_body <<= dynamicWindow;
+      pSupplier_->sendEvent(notifyEvent_);
+    }
 
     return 0;
   }

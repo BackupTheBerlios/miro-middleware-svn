@@ -121,6 +121,24 @@ namespace Miro
     setNewVelocity(Vector2d(0., 0.));
   }
 
+  void 
+  VelocitySpace::dumpDynamicWindow(unsigned char * buffer) const
+  {
+    float maxWeight = 0.;
+    for(int l_index = minDynWinLeft_; l_index <= maxDynWinLeft_; ++l_index) {
+      for(int r_index = minDynWinRight_; r_index <= maxDynWinRight_; ++r_index) {
+	if (velocitySpace_[l_index][r_index] < maxWeight)
+	  maxWeight = velocitySpace_[l_index][r_index];
+      }
+    }
+    for(int l_index = minDynWinLeft_; l_index <= maxDynWinLeft_; ++l_index) {
+      for(int r_index = minDynWinRight_; r_index <= maxDynWinRight_; ++r_index) {
+	*buffer++ = 
+	  (unsigned char)rint(255. * velocitySpace_[l_index][r_index] / maxWeight);
+      }
+    }
+  }
+
   // add evaluation for preferred direction
   //
   void

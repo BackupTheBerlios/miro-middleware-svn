@@ -43,6 +43,20 @@ namespace Miro
     void init(int _maxVelocity, int _spaceResolution,
 	      int _maxAccel, int _maxDecel, int _pace);
 
+    //! Size of axis the velocity space.
+    short size() const;
+    //! Report the bounds of the dynamic window.
+    void windowBounds(short& _x, short& _y,
+		      short& _dx, short& _dy) const;
+    //! Report the size of the dynamic windw.
+    unsigned int dynamicWindowSize() const;
+    //! Dummp the dynamic window into a memory buffer.
+    /**
+     * The callee has to make sure, the buffer is big enough.
+     * The required size is reported by @dynamicWindowSize().
+     */
+    void dumpDynamicWindow(unsigned char * buffer) const;
+
     /**
      * add evaluations for given, preferred direction with given,
      * maximum speed to velocity space
@@ -64,7 +78,6 @@ namespace Miro
     void clearCurvatureConstraints();
     void addPositiveCurvatureConstraint(double, double);
     void addNegativeCurvatureConstraint(double, double);
-
 
   protected:
     // set new VelocitySpace
@@ -128,6 +141,30 @@ namespace Miro
     friend class ConstraintArbiterViewer;
   };
 
+  inline
+  short
+  VelocitySpace::size() const {
+    return 2 * (maxVelocity_/spaceResolution_) + 1;
+  }
+
+  inline
+  void
+  VelocitySpace::windowBounds(short& _r, short& _l,
+			      short& _dr, short& _dl) const {
+    _r = minDynWinRight_;
+    _l = minDynWinLeft_;
+    _dr = maxDynWinRight_ - minDynWinRight_ + 1;
+    _dl = maxDynWinLeft_ - minDynWinLeft_ + 1;
+  }
+
+  inline
+  unsigned int 
+  VelocitySpace::dynamicWindowSize() const {
+    return 
+      (maxDynWinLeft_ - minDynWinLeft_ + 1) * 
+      (maxDynWinRight_ - minDynWinRight_ + 1);
+  }
+  
   // calculate index of velocity space array for given velocity
   //
   inline
