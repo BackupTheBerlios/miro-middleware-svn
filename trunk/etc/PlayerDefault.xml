@@ -14,8 +14,6 @@
    <parameter value="1" name="RangeConvFactor" />
    <parameter value="20" name="Vel2Divisor" />
    <parameter value="4" name="VelConvFactor" />
-   <parameter value="true" name="Camera" />
-   <parameter value="false" name="CameraUpsideDown" />
    <parameter value="true" name="Infrared" />
    <parameter name="Motion" >
     <parameter value="500" name="MaxRotation" />
@@ -244,9 +242,24 @@
    <parameter value="true" name="Sonar" />
 
    <parameter value="true" name="Camera" />
-   <parameter value="false" name="CameraUpsideDown" />
-   <parameter value="gazebo" name="cameraVendor"/>
-   <parameter value="openGL" name="cameraModel" />
+   <parameter name="CameraParams" >
+    <parameter name="UpsideDown" value="false" />
+    <parameter name="Zoom">
+     <parameter name="Present" value="true"/>
+     <parameter name="RangeMin" value="-135"/>
+     <parameter name="RangeMax" value="135"/>
+    </parameter>
+   </parameter>
+   <parameter name="PanTiltParams">
+    <parameter name="Pan">
+     <parameter name="RangeMin" value="-90"/>
+     <parameter name="RangeMax" value="90"/>
+    </parameter>
+    <parameter name="Tilt">
+     <parameter name="RangeMin" value="-90"/>
+     <parameter name="RangeMax" value="90"/>
+    </parameter>
+   </parameter>
   </parameter>
  </section>
 
@@ -264,23 +277,6 @@
    <parameter value="false" name="StdCrystal" />
   </parameter>
  </section>
-
- <section name="Camera">
-  <parameter name="Miro::ZoomParameters">
-   <parameter name="Present" value="true"/>
-   <parameter name="RangeMin" value="80"/>
-   <parameter name="RangeMax" value="135"/>
-  </parameter>
-  <parameter name="Miro::PanParameters">
-   <parameter name="RangeMin" value="-90"/>
-   <parameter name="RangeMax" value="90"/>
-  </parameter>
-  <parameter name="Miro::TiltParameters">
-   <parameter name="RangeMin" value="-90"/>
-   <parameter name="RangeMax" value="90"/>
-  </parameter>
- </section>
-
 
  <section name="Video" >
 

@@ -20,8 +20,6 @@
    <parameter value="1" name="RangeConvFactor" />
    <parameter value="20" name="Vel2Divisor" />
    <parameter value="4" name="VelConvFactor" />
-   <parameter value="true" name="Camera" />
-   <parameter value="true" name="CameraUpsideDown" />
    <parameter value="true" name="Infrared" />
    <parameter name="Motion" >
     <parameter value="500" name="MaxRotation" />
@@ -253,37 +251,38 @@
    <parameter value="true" name="Tactile" />
    <parameter value="true" name="Sonar" />
    <parameter value="true" name="Camera" />
-   <parameter value="true" name="CameraUpsideDown" />
-   <parameter value="canon" name="CameraVendor" />
-   <parameter value="vc-c4" name="CameraModel" />
-   <parameter value="pal" name="Format" />
-  </parameter>
- </section>
-
- <section name="Camera">
-  <parameter name="Miro::ZoomParameters">
-   <parameter name="Present" value="true"/>
-   <parameter name="RangeMin" value="80"/>
-   <parameter name="RangeMax" value="135"/>
-  </parameter>
-  <parameter name="Miro::FocusParameters">
-   <parameter name="Present" value="true"/>
-   <parameter name="AutoFocus" value="false"/>
-   <parameter name="RangeMin" value="1"/>
-   <parameter name="RangeMax" value="100"/>
-  </parameter>
-  <parameter name="Miro::ShutterParameters">
-   <parameter name="Present" value="true"/>
-   <parameter name="RangeMin" value="0, 100"/>
-   <parameter name="RangeMax" value="0, 20000"/>
-  </parameter>
-  <parameter name="Miro::PanParameters">
-   <parameter name="RangeMin" value="-100"/>
-   <parameter name="RangeMax" value="100"/>
-  </parameter>
-  <parameter name="Miro::TiltParameters">
-   <parameter name="RangeMin" value="-90"/>
-   <parameter name="RangeMax" value="30"/>
+   <parameter name="CameraParams" >
+    <parameter value="canon" name="Vendor" />
+    <parameter value="vc-c4" name="Model" />
+    <parameter value="pal" name="Format" />
+    <parameter value="true" name="UpsideDown" />
+    <parameter name="Zoom">
+     <parameter name="Present" value="true"/>
+     <parameter name="RangeMin" value="80"/>
+     <parameter name="RangeMax" value="135"/>
+    </parameter>
+    <parameter name="Focus">
+     <parameter name="Present" value="true"/>
+     <parameter name="AutoFocus" value="true"/>
+     <parameter name="RangeMin" value="1"/>
+     <parameter name="RangeMax" value="100"/>
+    </parameter>
+    <parameter name="Shutter">
+     <parameter name="Present" value="true"/>
+     <parameter name="RangeMin" value="0, 100"/>
+     <parameter name="RangeMax" value="0, 20000"/>
+    </parameter>
+   </parameter>
+   <parameter name="PanTiltParams">
+    <parameter name="Pan">
+     <parameter name="RangeMin" value="-100"/>
+     <parameter name="RangeMax" value="100"/>
+    </parameter>
+    <parameter name="Tilt">
+     <parameter name="RangeMin" value="-90"/>
+     <parameter name="RangeMax" value="30"/>
+    </parameter>
+   </parameter>
   </parameter>
  </section>
 
