@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2000, 2001, 2002, 2003
+// (c) 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -14,7 +14,6 @@
 
 #include "FaulMotorConnection.h"
 #include "FaulMotorConsumer.h"
-//#include "CanonPanTiltImpl.h"
 #include "Parameters.h"
 
 #include "faulTty/FaulTtyMessage.h"
@@ -27,12 +26,12 @@
 #define CSDBG(x)
 #endif
 
-using namespace FaulTty;
-
-using Miro::Guard;
 
 namespace FaulMotor
 {
+  using namespace FaulTty;
+  using Miro::Guard;
+
   //------------------------//
   //----- constructors -----//
   //------------------------//
@@ -42,8 +41,6 @@ namespace FaulMotor
 			 Consumer * _consumer) : 
     Super(_reactor, _eventHandler, *Parameters::instance()),
     consumer(_consumer),
-    servoMidPulse(129),    // default for servo middle position pulse (org 800)
-                           // 129 getestet 19.12.2001 TODO: make it a parameter...
     params_(Parameters::instance())
   { 
     DBG(cout << "Constructing FaulMotorConnection." << endl);
@@ -57,9 +54,6 @@ namespace FaulMotor
   Connection::~Connection()
   { 
     DBG(cout << "Destructing FaulMotorConnection." << endl);
-
-    //if there is a camera, close the connection
-    //if (consumer->pCanonPanTilt!=NULL) consumer->pCanonPanTilt->done();
   }
 
   //-------------------//
@@ -68,24 +62,12 @@ namespace FaulMotor
 
   //----------- commands ----------- //
 
-  // stop,
-  // motors remain enabled
-  /*void
-  Connection::stop() {
-    char* test;
-    Message stopMessage(123);
-   //strcpy(test,"HALLO");
-    writeMessage(stopMessage);
-  }*/
-
-  // set absolute speed in mm/sec,
-  // positive values are forward, negatives backward
-
   void
   Connection::setSpeed(short speed)
   {
     char strbuff[20];
     char buffer[20];
+
     if (speed<10) {       // zum bremsen grosse beschl.
 	strcpy(buffer,"ac90\r\n\0");
 	Message speedMessage(buffer); // build speed packet
@@ -96,6 +78,7 @@ namespace FaulMotor
     sprintf(strbuff, "%d", speed);
     strcat(buffer, strbuff);
     strcat(buffer, "\r\n");
+
     Message speedMessageL(buffer); // build speed packet
     writeMessage(speedMessageL);
 
@@ -104,11 +87,10 @@ namespace FaulMotor
     sprintf(strbuff, "%d", speed);
     strcat(buffer, strbuff);
     strcat(buffer, "\r\n");
+
     Message speedMessageR(buffer); // build speed packet
     writeMessage(speedMessageR);             // send it
   }
-
-
 
   void
   Connection::setSpeed(short speedL, short speedR)
@@ -150,7 +132,6 @@ namespace FaulMotor
   void
   Connection::getTicks()
   {
-
     char buffer[10];
 
     strcpy(buffer,"0pos\r\n\0");
@@ -161,6 +142,7 @@ namespace FaulMotor
     Message speedMessageR(buffer); // build speed packet
     writeMessage(speedMessageR);
   }
+
   void
   Connection::setBefehl(char* befehl)
   {

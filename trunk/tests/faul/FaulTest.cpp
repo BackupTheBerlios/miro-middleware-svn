@@ -83,7 +83,7 @@ Service::Service() :
   //pRangeSensorImpl(new Miro::RangeSensorImpl(FaulMotor::Parameters::instance()->sonarDescription)),
   pOdometryImpl(new Miro::OdometryImpl(NULL)),
   //pBatteryImpl(new Miro::BatteryImpl()),
-  pConsumer(new FaulMotor::Consumer(NULL, pOdometryImpl)), //&canonPanTiltImpl)),
+  pConsumer(new FaulMotor::Consumer(pOdometryImpl)), //&canonPanTiltImpl)),
   //pStallImpl(new FaulMotor::StallImpl()),
   //canonPanTiltImpl(connection, FaulMotor::Parameters::instance()->cameraUpsideDown),
   //canonCamera(connection, canonPanTiltImpl.getAnswer()),
@@ -307,8 +307,11 @@ int main(int argc, char* argv[])
 	     break;
 	   }
 	 case 'X':
-	 case 'x' : loop=false;break;
-	 default: cout << "gibts doch gar net!!!" << endl;
+	 case 'x' : 
+	   loop = false;
+	   break;
+	 default: 
+	   cout << "gibts doch gar net!!!" << endl;
 
 	 }//switch(c)
 

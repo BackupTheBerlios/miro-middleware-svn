@@ -2,15 +2,14 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-#ifndef motionImpl_hh
-#define motionImpl_hh
+#ifndef faulMotionImpl_hh
+#define faulMotionImpl_hh
 
 #include "miro/MotionS.h"
 #include "miro/OdometryC.h"
@@ -52,8 +51,7 @@ namespace FaulMotor
     void setLRVelocity(CORBA::Long left, CORBA::Long right)
       throw(Miro::EOutOfBounds, Miro::EDevIO);
 
-
-    // protected:
+  protected:
     const Parameters *  params_;
     Connection&         connection; // encapsulating communication to hardware
     Consumer&		consumer;

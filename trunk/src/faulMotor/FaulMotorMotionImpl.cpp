@@ -2,14 +2,12 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2000, 2001, 2003
+// (c) 2003
 // Department of Neural Information Processing, University of Ulm, Germany
-//
 //
 // $Id$
 //
 //////////////////////////////////////////////////////////////////////////////
-
 
 #include "FaulMotorMotionImpl.h"
 #include "FaulMotorConnection.h"
@@ -83,7 +81,6 @@ namespace FaulMotor
     //connection.setSpeedRot(targetVelocity_.translation, rad2ticks(targetVelocity_.rotation));
   }
 
-
   void
   MotionImpl::setLRVelocity(CORBA::Long left, CORBA::Long right)  throw(EOutOfBounds, EDevIO)
   {
@@ -92,6 +89,4 @@ namespace FaulMotor
     setTargetVelocity(left, right);
     connection.setSpeed(left_, right_);
   };
-
-
 };
