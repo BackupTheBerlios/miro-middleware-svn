@@ -104,6 +104,92 @@ module Miro
     SubImageDataIDL exportWaitSubImage(inout unsigned long x, inout unsigned long y) 
       raises(EOutOfBounds, EDevIO, ETimeOut);
   };
+
+  //! STruct encapsulating connection data.
+  struct VideoConnectionIDL 
+  {
+    //! Connection identifier.
+    unsigned long id;
+    //! Filter name.
+    string filter;
+  };
+
+  //! A set of connections.
+  /** No duplicates are allowed. */
+  typedef sequence<VideoConnectionIDL> ConnectionSetIDL;
+  //! A set of buffer indexes.
+  typedef sequence<unsigned long> BufferSetIDL;
+
+  //! Struct holding timing statistics.
+  struct TimeStatsIDL
+  {
+    //! Minimum processing time.
+    TimeIDL min;
+    //! Maximum processing time.
+    TimeIDL max;
+    //! Average processing time.
+    TimeIDL mean;
+    //! Variance of the processing time.
+    TimeIDL var;
+  };
+
+  //! Struct describing a filter interface.
+  struct FilterInterfaceIDL
+  {
+    //! IOR of its the video interface.
+    /** Video::_nil if no interface is provided for this filter. */
+    Video ior;
+    //! Number of client connections to the filter.
+    unsigned long connections;
+    //! Name of the filters Video interface.
+    string name;
+  };
+
+  //! Struct holding a set of linked filters. */
+  typedef sequence<string> FilterLinkVector;
+
+  //! Struct describing the filter tree.
+  struct FilterTreeIDL
+  {
+    //! Number of active successors in the filter tree.
+    unsigned long connections;
+    //! Timing statistics of the filter.
+    TimeStatsIDL timeFilter;
+    //! Timing statistics of the filter subtree.
+    TimeStatsIDL timeSubtree;
+    //! Description of the filters video interface.
+    FilterInterfaceIDL videoInterface;
+
+    //! Filter name.
+    /** Note that this can differ from its Video interface name. */
+    string name;
+    //! Successor filter descriptions.
+    sequence<FilterTreeIDL> successors;
+    //! Names of the linked successor filters.
+    FilterLinkVector successorLinks;
+  };
+
+  //! Meta interface for video filter trees.
+  /**
+   * This interface offers methods that work on the filter tree
+   * provided by the VideoService, instead of an individual filter
+   * like the Video interface.
+   *
+   * It offers synchronised acces to multiple filters as well as
+   * statistical meta data of the filter tree.
+   */
+  interface VideoBroker
+  {
+    //! Acquire a synchronised set of images from multiple interfaces.
+    TimeIDL acquireNextImageSet(in ConnectionSetIDL connections, out BufferSetIDL buffers)
+      raises(EOutOfBounds, EDevIO, ETimeOut);
+    //! Release an image set.
+    void releaseImageSet(in ConnectionSetIDL connections, in BufferSetIDL buffers)
+      raises(EOutOfBounds);
+
+    //! Collect statistical information of the filter tree.
+    FilterTreeIDL filterTreeStats();
+  };
 };
 
 #endif // Video_idl
