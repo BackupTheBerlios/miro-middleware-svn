@@ -34,6 +34,9 @@ class VideoImpl :  public virtual POA_Miro::Video	//	, public Log
     virtual void getImage (Miro::ImageHandleIDL & img) throw();
     virtual void getWaitImage (Miro::ImageHandleIDL & img) throw();
 
+    virtual ::Miro::SubImageDataIDL * exportSubImage (CORBA::Long x, CORBA::Long y)
+      ACE_THROW_SPEC ((CORBA::SystemException, Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut));
+
   protected:
 	 void checkImageHandle(const Miro::ImageHandleIDL & img);
 

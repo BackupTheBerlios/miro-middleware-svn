@@ -126,4 +126,18 @@ void VideoImpl::checkImageHandle(const Miro::ImageHandleIDL & img)
 	    (img.key != pHandleArray[img.handle].key) || (pShmDataArray[img.handle] == NULL))
 		throw Miro::EOutOfBounds();
 	}
+
+  SubImageDataIDL * 
+  VideoImpl::exportSubImage (CORBA::Long x, CORBA::Long y)
+    ACE_THROW_SPEC ((CORBA::SystemException, Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut))
+  {
+    unsigned char * buffer = new unsigned char[x * y]; // groesse des buffers in []
+
+    // hier kopieren wir alles in den buffer
+
+    SubImageDataIDL * subImage = new  SubImageDataIDL(x * y, x * y, buffer, 1);
+    // parameter:
+    // max groese, derzeitige groesse, ptr, memory ownership von buffer geht an subImage
+    return subImage;
+  }
 };
