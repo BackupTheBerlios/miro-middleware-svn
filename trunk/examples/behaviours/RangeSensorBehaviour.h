@@ -17,7 +17,7 @@
 #include "RangeSensorBehaviourParameters.h"
 
 #include <complex>
-#include <deque>
+#include <list>
 #include <map>
 
 namespace Miro
@@ -42,7 +42,7 @@ protected:
       point(_point)
     {}
   };
-  typedef std::deque<SensorReading> SensorScan;
+  typedef std::list<SensorReading> SensorScan;
   typedef std::multimap<double, Vector2d> EgoMap;
 
 public:
