@@ -17,6 +17,9 @@ AC_DEFUN(AC_FEATURES_COMPILE_ACE,
 	AC_MSG_CHECKING(for options in ACE/TAO)
 
 # empty program (nothing needed)
+TAO_CONFIG=$TAO_ROOT/tao-config.GNU
+if ! test -f $TAO_CONFIG; then TAO_CONFIG=$TAO_ROOT/rules.tao.GNU; fi
+export TAO_CONFIG
 cat << \EOF > conftest.cpp
 int main() {}
 EOF
@@ -30,7 +33,7 @@ LSRC  = conftest.cpp
 default: all
 include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
 include $(ACE_ROOT)/include/makeinclude/macros.GNU
-include $(TAO_ROOT)/rules.tao.GNU
+include $(TAO_CONFIG)
 include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.nonested.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.lib.GNU
@@ -50,7 +53,7 @@ LSRC  = conftest.bin.cpp
 default: all
 include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
 include $(ACE_ROOT)/include/makeinclude/macros.GNU
-include $(TAO_ROOT)/rules.tao.GNU
+include $(TAO_CONFIG)
 include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.nonested.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.bin.GNU
