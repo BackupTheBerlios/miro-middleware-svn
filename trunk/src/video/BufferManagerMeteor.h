@@ -36,6 +36,8 @@ namespace Video
     int getCurrentErrorCount() const;
 
     int fd_;
+    //! Pointer to the camera parameters of this device
+    const Miro::CameraParameters * camParams_;
   };
 }
 

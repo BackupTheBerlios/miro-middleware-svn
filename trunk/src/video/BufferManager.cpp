@@ -45,9 +45,6 @@ namespace Video
       first->params = _filter->getImageParametersInstance();
       offset += bufferSize_;
     }
-    const Video::DeviceParameters * devParams = dynamic_cast<DeviceParameters const *>(_filter->parameters());
-    camParams_ = &devParams->camera;
-    MIRO_LOG_OSTR(LL_NOTICE, "\n  camera parameters:\n" << *camParams_);
   }
 
   /**
@@ -74,9 +71,6 @@ namespace Video
       first->params = _filter->getImageParametersInstance();
       ++index;
     }
-    const Video::DeviceParameters * devParams = dynamic_cast<DeviceParameters const *>(_filter->parameters());
-    camParams_ = &devParams->camera;
-    MIRO_LOG_OSTR(LL_NOTICE, "\n  camera parameters:\n" << *camParams_);
   }
 
   /** Deleting memory_ if it is its own_. */

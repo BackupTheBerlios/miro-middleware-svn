@@ -10,6 +10,9 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "BufferManagerBTTV.h"
+#include "Parameters.h"
+#include "VideoFilter.h"
+
 #include <ace/OS.h>
 
 namespace Video
@@ -27,6 +30,11 @@ namespace Video
     leaderBuffer_(0),
     followerBuffer_(0)
   {
+    const Video::DeviceParameters * devParams =
+      dynamic_cast<DeviceParameters const *>(_filter->parameters());
+    camParams_ = &devParams->camera;
+    MIRO_LOG_OSTR(LL_NOTICE, "\n  camera parameters:\n" << *camParams_);
+
     // initialize
     for (unsigned long i = 0; i < _buffers; ++i) {
       gb_[i].width  = _width;

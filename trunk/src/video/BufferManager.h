@@ -140,8 +140,6 @@ namespace Video
     unsigned int currentBuffer_;
     //! The status of each managed buffer in the buffer array.
     BufferVector bufferStatus_;
-    //! Pointer to the camera parameters of this device
-    const Miro::CameraParameters * camParams_;
   };
 
   inline

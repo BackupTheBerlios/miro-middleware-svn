@@ -10,6 +10,8 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "BufferManager1394.h"
+#include "Parameters.h"
+#include "VideoFilter.h"
 
 #include <ace/OS.h>
 
@@ -26,6 +28,10 @@ namespace Video
     Super(_filter, 1, b),
     pCamera_(_pCamera)
   {
+    const Video::DeviceParameters * devParams =
+      dynamic_cast<DeviceParameters const *>(_filter->parameters());
+    camParams_ = &devParams->camera;
+    MIRO_LOG_OSTR(LL_NOTICE, "\n  camera parameters:\n" << *camParams_);
   }
 
   unsigned int 

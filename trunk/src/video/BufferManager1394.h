@@ -41,6 +41,8 @@ namespace Video
 
     //! Camera capture data structure.
     dc1394_cameracapture *  pCamera_;
+    //! Pointer to the camera parameters of this device
+    const Miro::CameraParameters * camParams_;
   };
 }
 

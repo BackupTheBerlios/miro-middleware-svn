@@ -44,6 +44,8 @@ namespace Video
 
     unsigned int leaderBuffer_;
     unsigned int followerBuffer_;
+    //! Pointer to the camera parameters of this device
+    const Miro::CameraParameters * camParams_;
   };
 }
 
