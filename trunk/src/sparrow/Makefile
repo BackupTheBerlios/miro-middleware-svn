@@ -2,19 +2,14 @@
 ##
 ## This file is part of Miro (The Middleware For Robots)
 ##
-## (c) 1999, 2000, 2001
+## (c) 1999, 2000, 2001, 2003
 ## Department of Neural Information Processing, University of Ulm, Germany
 ##
 ## $Id$
-## $Date$
-## 
 ##
 ## Miro/src/sparrow/Makefile
 ##
 ##############################################################################
-
-# a makefile example
-# for a directory, wich has one library to be built
 
 ## this is the name of the resulting library
 NAME     = sparrow
