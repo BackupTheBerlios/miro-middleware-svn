@@ -29,7 +29,8 @@ namespace
 RangeSensorWidget::RangeSensorWidget(Miro::RangeSensor_ptr _sensor, CORBA::UShort _group) : 
   QWidget(), 
   sensor_(Miro::RangeSensor::_duplicate(_sensor)),
-  group_(_group)
+  group_(_group),
+  drawCones_(false)
 {
   scanDescription_ = sensor_->getScanDescription();
   scan_ = sensor_->getGroup(group_);
@@ -38,14 +39,18 @@ RangeSensorWidget::RangeSensorWidget(Miro::RangeSensor_ptr _sensor, CORBA::UShor
   resize(400, 400);
 
   // init menu
-  QMenuBar* menuBar    = new QMenuBar(this);
-  QPopupMenu* MenuFile = new QPopupMenu(this);
+  QMenuBar*   menuBar    = new QMenuBar(this);
+  QPopupMenu* menuFile = new QPopupMenu(this);
+  QPopupMenu* menuView = new QPopupMenu(this);
 
-  menuBar->insertItem("&File", MenuFile);
+  menuBar->insertItem("&File", menuFile);
+  menuBar->insertItem("&View", menuView);
 
-  MenuFile->insertSeparator();
-  MenuFile->insertItem("Quit", qApp, SLOT(quit()));
+  menuFile->insertSeparator();
+  menuFile->insertItem("Quit", qApp, SLOT(quit()));
 
+  menuView->insertItem("Draw Cone", this, SLOT(toggleCone));
+  
   calcSize();
 
   // call timer event as often as possible //
@@ -54,6 +59,12 @@ RangeSensorWidget::RangeSensorWidget(Miro::RangeSensor_ptr _sensor, CORBA::UShor
 
 RangeSensorWidget::~RangeSensorWidget()
 {
+}
+
+void
+RangeSensorWidget::toggleCone()
+{
+  drawCones_ = !drawCones_;
 }
 
 
@@ -78,37 +89,38 @@ void RangeSensorWidget::paintEvent(QPaintEvent*)
     
     if (scan_->range[j] >= 0) {
 
-#ifndef DRAW_AS_PIE      
-      Vector2d a(scanDescription_->group[group_].sensor[j].distance);
-      a *= Vector2d(-sin(scanDescription_->group[group_].sensor[j].alpha),
-		    cos(scanDescription_->group[group_].sensor[j].alpha));
+      if (drawCones_) {
+	Vector2d a(scanDescription_->group[group_].sensor[j].distance);
+	a *= Vector2d(-sin(scanDescription_->group[group_].sensor[j].alpha),
+		      cos(scanDescription_->group[group_].sensor[j].alpha));
       
-      Vector2d b(scan_->range[j], 0.);
-      b *= Vector2d(-sin(scanDescription_->group[group_].sensor[j].alpha +
-			 scanDescription_->group[group_].sensor[j].beta),
-		    cos(scanDescription_->group[group_].sensor[j].alpha +
-			 scanDescription_->group[group_].sensor[j].beta));
+	Vector2d b(scan_->range[j], 0.);
+	b *= Vector2d(-sin(scanDescription_->group[group_].sensor[j].alpha +
+			   scanDescription_->group[group_].sensor[j].beta),
+		      cos(scanDescription_->group[group_].sensor[j].alpha +
+			  scanDescription_->group[group_].sensor[j].beta));
       
-      Vector2d c(a + b);
+	Vector2d c(a + b);
       
-      p.drawLine(x0_ + (int) rint(a.real() * scaling_), y0_ - (int) rint(a.imag() * scaling_), 
-		 x0_ + (int) rint(c.real() * scaling_), y0_ - (int) rint(c.imag() * scaling_));
-#else
-      int delta = (int) rint(scan_->range[j] * scaling_);
-      int angle = (int) rint( ((double) (scanDescription_->group[group_].sensor[j].alpha +
-					 scanDescription_->group[group_].sensor[j].beta) *
-			       180. / M_PI + 90.) 
-			      * 16. );
-      int apex = (int) rint( ( (double) (scanDescription_->group[group_].description.focus) *
-			       16. * 180. / M_PI) 
-			     / 2.);
+	p.drawLine(x0_ + (int) rint(a.real() * scaling_), y0_ - (int) rint(a.imag() * scaling_), 
+		   x0_ + (int) rint(c.real() * scaling_), y0_ - (int) rint(c.imag() * scaling_));
+      }
+      else {
+	int delta = (int) rint(scan_->range[j] * scaling_);
+	int angle = (int) rint( ((double) (scanDescription_->group[group_].sensor[j].alpha +
+					   scanDescription_->group[group_].sensor[j].beta) *
+				 180. / M_PI + 90.) 
+				* 16. );
+	int apex = (int) rint( ( (double) (scanDescription_->group[group_].description.focus) *
+				 16. * 180. / M_PI) 
+			       / 2.);
 			      
       
-      p.drawPie(x0_ - delta, y0_ - delta,
-		2 * delta, 2 * delta,
-		angle - apex, 
-		2 * apex);
-#endif		
+	p.drawPie(x0_ - delta, y0_ - delta,
+		  2 * delta, 2 * delta,
+		  angle - apex, 
+		  2 * apex);
+      }
     }
   }
 

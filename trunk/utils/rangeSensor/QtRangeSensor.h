@@ -35,6 +35,9 @@ public:
   /** Destructor */
   virtual ~RangeSensorWidget();
 
+public slots:
+  void toggleCone();
+
 protected:
   void timerEvent(QTimerEvent*);
   void paintEvent(QPaintEvent*);
@@ -50,6 +53,7 @@ protected:
   int y0_;
 
   double scaling_;
+  bool drawCones_;
 };
 
 #endif

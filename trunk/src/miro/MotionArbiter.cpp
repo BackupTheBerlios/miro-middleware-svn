@@ -44,6 +44,13 @@ namespace Miro
   }
 
   void
+  MotionArbiter::close()
+  {
+    Super::close();
+    pMotion_->limp();
+  }
+
+  void
   MotionArbiter::setActuators(const ArbiterMessage& _message)
   {
     const MotionArbiterMessage& message = dynamic_cast<const MotionArbiterMessage&>(_message);
@@ -79,9 +86,9 @@ namespace Miro
   MotionArbiter::limpActuators()
   {
     if (currentBehaviour_ != NULL) {
-      pMotion_->limp();
       currentVelocity_.translation = 0;
       currentVelocity_.rotation = 0.;
+      pMotion_->setVelocity(currentVelocity_);
      
       // send arbitrate change debug output
       if (pSupplier_) {

@@ -37,6 +37,7 @@ namespace Miro
     //! Factory method for ArbiterMessage
     MotionArbiterMessage * getMessageInstance();
 
+    virtual void close();
     virtual const std::string& getName() const;
 
   protected:
