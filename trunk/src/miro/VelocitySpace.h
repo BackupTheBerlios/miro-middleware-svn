@@ -57,17 +57,23 @@ namespace Miro
     // obtain new velocity, by applying objective function to evaluations in velocity space
     Vector2d applyObjectiveFunctionToEval();
 
+
+    void clearCurvatureConstraints();
+    void addPositiveCurvatureConstraint(double, double);
+    void addNegativeCurvatureConstraint(double, double);
+
+
   protected:
     // set new VelocitySpace
     void setNewVelocity(Vector2d const& _velocity);
     // get signed distance between point and line
-    double getSignedDistanceBetweenPointAndLine(Vector2d const& _p1, 
+    double getSignedDistanceBetweenPointAndLine(Vector2d const& _p1,
 						Vector2d const& _l1,
 						Vector2d const& _l2);
     // get distance between two lines
-    double getDistanceBetweenLineAndLine(Vector2d const& _l1, 
-					 Vector2d const& _l2, 
-					 Vector2d const& _l3, 
+    double getDistanceBetweenLineAndLine(Vector2d const& _l1,
+					 Vector2d const& _l2,
+					 Vector2d const& _l3,
 					 Vector2d const& _l4);
     // get distance between two mounted polygons
     double getDistanceBetweenPolygonAndPolygon(Polygon const& _polygon1,
@@ -109,6 +115,12 @@ namespace Miro
     //! The velocity space column index.
     int** velocitySpace_;
 
+    double posCurvConstrB_;
+    double posCurvConstrE_;
+    double negCurvConstrB_;
+    double negCurvConstrE_;
+
+
     //! My really good friend the graphical monitoring frontend.
     friend class ConstraintArbiterViewer;
   };
@@ -119,18 +131,18 @@ namespace Miro
   int
   VelocitySpace::getIndexByVelocity(double _velocity) {
     return (std::max(0,
-		     std::min(2 * maxVelocity_, 
+		     std::min(2 * maxVelocity_,
 			      maxVelocity_ + (int)_velocity)) / spaceResolution_);
   }
 
-	
+
   // calculate velocity for given index of velocity space array
   //
   inline
-  double 
+  double
   VelocitySpace::getVelocityByIndex(int _index) {
     return (std::max(-maxVelocity_,
-		     std::min(maxVelocity_, 
+		     std::min(maxVelocity_,
 			      (_index * spaceResolution_) - maxVelocity_)));
   }
 
@@ -138,7 +150,7 @@ namespace Miro
   void
   VelocitySpace::lr2velocity(double _left, double _right, Vector2d& _velocity)
   {
-    _velocity = Vector2d((_left + _right) / 2., 
+    _velocity = Vector2d((_left + _right) / 2.,
 			 (_right - _left) / wheelBase_);
   }
 
