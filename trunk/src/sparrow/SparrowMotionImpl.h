@@ -48,6 +48,7 @@ namespace Sparrow
       throw(Miro::EOutOfBounds, Miro::EDevIO);
     void setLRPower(CORBA::Long left, CORBA::Long right)
       throw(Miro::EOutOfBounds, Miro::EDevIO);
+    void initMax(short maxAcc, short maxPower, short maxSpeed, double maxTurn);
 
     // protected:
     const Parameters *  params_; 

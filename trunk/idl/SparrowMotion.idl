@@ -38,6 +38,9 @@ module Miro
      * @throw EDevIO is thrown to indicate low level device problems.
      */
     void setLRPower(in long left, in long right) raises(EOutOfBounds, EDevIO);
+
+    //! Goalie hack
+    void initMax(in short maxAcc, in short maxPower, in short maxSpeed, in double maxTurn);
   };
 };
 

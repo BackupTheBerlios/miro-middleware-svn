@@ -95,4 +95,10 @@ namespace FaulMotor
   {
     std::cerr << "set power not implemented" << endl;
   };
+
+  void
+  MotionImpl::initMax(short maxAcc, short maxPower, short maxSpeed, double maxTurn)
+  {
+    std::cerr << "init max  not implemented" << endl;
+  };
 };
