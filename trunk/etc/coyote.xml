@@ -300,12 +300,12 @@
 	<parameter value="0.050000" name="ButtonsPollInterval" />
 	<parameter value="1.0776" name="TransFactor" />
 	<parameter value="1.000000" name="WatchdogTimeout" />
-	<parameter value="3140" name="Servo0MidPulse" />
+	<parameter value="3090" name="Servo0MidPulse" />
 	<parameter value="200" name="MaxAccel" />
 	<parameter value="2350" name="Diameter" />
 	<parameter value="30720" name="MaxPower" />
 	<parameter value="29" name="TicksL" />
-	<parameter value="329" name="TicksR" />
+	<parameter value="32" name="TicksR" />
 	<parameter value="true" name="Goalie" />
 	<parameter value="20.5" name="Deg2ServoTicksL"/>
 	<parameter value="21.8" name="Deg2ServoTicksR"/>
