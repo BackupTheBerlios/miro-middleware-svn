@@ -308,7 +308,7 @@ namespace Miro {
                 CosNotification::StructuredEvent event;
 
                 /* Decode datagram */
-                entry->int_id_->decode(event ACE_ENV_ARG_PARAMETER);
+                entry->int_id_->decode(event);
                 ACE_TRY_CHECK;
 
                 /* Drop packet if it's too old */
@@ -318,7 +318,7 @@ namespace Miro {
                 }
 
                 /* Send event to event channel */
-                sendEvent(event ACE_ENV_ARG_PARAMETER);
+                sendEvent(event);
                 ACE_TRY_CHECK;
 
             } ACE_CATCHANY {

@@ -20,7 +20,7 @@
 # INSTALL = $(VBIN:%=$(INSBIN)/%)
 
 ## dynamic libraries if needed
-LDLIBS += -lmiro -lTAO_CosNotification -lTAO_CosNaming -lTAO
+LDLIBS += -lmiro 
 
 ## program to be built
 BIN 	= Joystick JoystickService

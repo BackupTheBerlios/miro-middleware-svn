@@ -50,7 +50,7 @@ NotifyLogPlayer::NotifyLogPlayer(int argc, char *argv[], bool _colocated) :
   colocated_(_colocated),
   // Notification Channel
   notifyFactory_((colocated_)? 
-		 TAO_Notify_EventChannelFactory_i::create(poa.in()) :
+		 TAO_Notify_EventChannelFactory_i::create(poa.in() ACE_ENV_ARG_PARAMETER) :
 		 resolveName<EventChannelFactory>(channelFactoryName))
 {
   CosNaming::Name n(1);

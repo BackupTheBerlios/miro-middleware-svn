@@ -37,6 +37,32 @@
 #include <orbsvcs/CosNotifyChannelAdminS.h>
 #include <orbsvcs/CosNotifyCommC.h>
 
+// Hack for TAO <= x.2.1 compability
+
+#ifndef ACE_ENV_ARG_DECL_WITH_DEFAULTS
+#define ACE_ENV_ARG_DECL_WITH_DEFAULTS \
+ , CORBA::Environment &ACE_TRY_ENV = TAO_default_environment ()
+#endif
+#ifndef ACE_ENV_SINGLE_ARG_DECL_WITH_DEFAULTS
+#define ACE_ENV_SINGLE_ARG_DECL_WITH_DEFAULTS \
+ CORBA::Environment &ACE_TRY_ENV = TAO_default_environment ()
+#endif
+#ifndef ACE_ENV_ARG_DECL
+#define ACE_ENV_ARG_DECL \
+ , CORBA::Environment & _ACE_CORBA_Environment_variable
+#endif
+#ifndef ACE_ENV_SINGLE_ARG_DECL
+#define ACE_ENV_SINGLE_ARG_DECL \
+ CORBA::Environment & _ACE_CORBA_Environment_variable
+#endif
+#ifndef ACE_ENV_ARG_DECL_NOT_USED
+#define ACE_ENV_ARG_DECL_NOT_USED \
+ , CORBA::Environment & 
+#endif
+#ifndef ACE_ENV_SINGLE_ARG_DECL_NOT_USED
+#define ACE_ENV_SINGLE_ARG_DECL_NOT_USED \
+ CORBA::Environment &
+#endif
 
 namespace Miro {
 

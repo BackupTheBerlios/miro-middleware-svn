@@ -2,17 +2,9 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999,2000
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
@@ -20,6 +12,29 @@
 #define miroSynch_hh
 
 #include <ace/Synch.h>
+// Hack for TAO <= x.2.1 compability
+#include <ace/CORBA_macros.h>
+
+#ifndef ACE_ENV_ARG_DECL_WITH_DEFAULTS
+#define ACE_ENV_ARG_DECL_WITH_DEFAULTS \
+ , CORBA::Environment &ACE_TRY_ENV = TAO_default_environment ()
+#endif
+#ifndef ACE_ENV_SINGLE_ARG_DECL_WITH_DEFAULTS
+#define ACE_ENV_SINGLE_ARG_DECL_WITH_DEFAULTS \
+ CORBA::Environment &ACE_TRY_ENV = TAO_default_environment ()
+#endif
+#ifndef ACE_ENV_ARG_DECL_NOT_USED
+#define ACE_ENV_ARG_DECL_NOT_USED \
+ , CORBA::Environment &
+#endif
+#ifndef ACE_ENV_SINGLE_ARG_DECL_NOT_USED
+#define ACE_ENV_SINGLE_ARG_DECL_NOT_USED \
+ CORBA::Environment &
+#endif
+#ifndef ACE_ENV_ARG_PARAMETER
+#define ACE_ENV_ARG_PARAMETER \
+  ,  TAO_default_environment ()
+#endif
 
 // These are just some simple typedefs to some ACE_Synch templates
 // to shorten declerations. Read the ACE documentation for details

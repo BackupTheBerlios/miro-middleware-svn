@@ -5,7 +5,6 @@
 // (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////

@@ -270,8 +270,7 @@ namespace Miro {
                                  fragmentCount,
                                  timestamp,
                                  iov,
-                                 iovcnt
-                                 ACE_ENV_ARG_PARAMETER);
+                                 iovcnt);
                     ACE_CHECK;
 
                     fragmentId++;
@@ -297,8 +296,7 @@ namespace Miro {
                                  fragmentCount,
                                  timestamp,
                                  iov,
-                                 iovcnt
-                                 ACE_ENV_ARG_PARAMETER);
+                                 iovcnt);
                     ACE_CHECK;
 
                     fragmentId++;
@@ -318,8 +316,7 @@ namespace Miro {
                                  fragmentCount,
                                  timestamp,
                                  iov,
-                                 iovcnt
-                                 ACE_ENV_ARG_PARAMETER);
+                                 iovcnt);
                     ACE_CHECK;
 
                     fragmentId++;
@@ -340,8 +337,7 @@ namespace Miro {
                              fragmentCount,
                              timestamp,
                              iov,
-                             iovcnt
-                             ACE_ENV_ARG_PARAMETER);
+                             iovcnt);
                 ACE_CHECK;
 
                 fragmentId++;
@@ -476,12 +472,12 @@ namespace Miro {
             switch (sendData(_iov, _iovcnt)) {
             case -1:
                 PRINT_DBG(DBG_INFO, "send_fragment: send failed");
-                ACE_THROW(CORBA::COMM_FAILURE());
+                throw CORBA::COMM_FAILURE();
                 break;
 
             case 0:
                 PRINT_DBG(DBG_INFO, "send_fragment: EOF on send");
-                ACE_THROW(CORBA::COMM_FAILURE());
+                throw CORBA::COMM_FAILURE();
                 break;
 
             default:

@@ -378,7 +378,7 @@ int main( int argc, char *argv[] )
     if (colocated) {
       // Channel factory
       notifyFactory =
-	TAO_Notify_EventChannelFactory_i::create(server.poa.in());
+	TAO_Notify_EventChannelFactory_i::create(server.poa.in() ACE_ENV_ARG_PARAMETER);
 
       if (server.rebind_) {
 	// Force binding of references to make

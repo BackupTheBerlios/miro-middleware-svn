@@ -44,7 +44,7 @@ SparrowBase::SparrowBase(int argc, char *argv[],
   reactorTask(this),
 
   // Notification Channel
-  notifyFactory_(TAO_Notify_EventChannelFactory_i::create(poa.in())),
+  notifyFactory_(TAO_Notify_EventChannelFactory_i::create(poa.in() ACE_ENV_ARG_PARAMETER)),
   id_(),
   ec_(notifyFactory_->create_channel(initialQos_, initialAdmin_, id_)),
   structuredPushSupplier_(ec_.in(), namingContextName),
@@ -93,7 +93,7 @@ SparrowBase::SparrowBase(Server& _server) :
   reactorTask(this),
 
   // Notification Channel
-  notifyFactory_(TAO_Notify_EventChannelFactory_i::create(poa.in())),
+  notifyFactory_(TAO_Notify_EventChannelFactory_i::create(poa.in() ACE_ENV_ARG_PARAMETER)),
   id_(),
   ec_(notifyFactory_->create_channel(initialQos_, initialAdmin_, id_)),
   structuredPushSupplier_(ec_.in(), namingContextName),
