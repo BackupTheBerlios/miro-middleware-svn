@@ -17,6 +17,8 @@ namespace Miro
 {
   namespace NMC
   {
+    using ::operator <<;
+
     SH::SH(Sender *_sender, Receiver *_receiver, Config *_config) :
       sender_( _sender),
       receiver_(_receiver),
