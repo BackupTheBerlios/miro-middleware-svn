@@ -75,7 +75,7 @@ Service::Service() :
   reactorTask(),
   pRangeSensorImpl(new Miro::RangeSensorImpl(Pioneer::Parameters::instance()->sonarDescription)),
   pOdometryImpl(new Miro::OdometryImpl(NULL)),
-  pConsumer(new Pioneer::Consumer(pRangeSensorImpl, pOdometryImpl)),
+  pConsumer(new Pioneer::Consumer(pRangeSensorImpl, NULL, pOdometryImpl)),
   pStallImpl(new Pioneer::StallImpl()),
   pEventHandler(new Psos::EventHandler(pConsumer, connection)),
   connection(reactorTask.reactor(), pEventHandler, pConsumer)
