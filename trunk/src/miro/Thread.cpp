@@ -73,9 +73,11 @@ namespace Miro
   Thread::cancel(bool _wait) 
   {
     DBG(cout << "[Miro::Thread] shutdown." << endl);
-    canceled_ = true;
-    if (_wait)
-      wait();
+    if (!canceled_) {
+      canceled_ = true;
+      if (_wait)
+	wait();
+    }
   }
 
   int

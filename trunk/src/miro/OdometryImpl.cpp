@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 1999, 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -18,44 +18,17 @@
 
 namespace Miro
 {
-  /** Maximum wait time for cond_.wait calls. */
-  ACE_Time_Value OdometryImpl::maxWait_(1, 0);
 
-  /**
-   * Implementation skeleton constructor.
-   *
-   * @param _supplier A pointer to the StructuredPushSupplier to use
-   * for event emittion. If a NULL pointer is passed, the OdometryImpl
-   * will not emit any events.
-   *
-   * @param _rawPositionEvents When set to true the OdometryImpl will
-   * also emit RawPosition events.
-   */
-  OdometryImpl::OdometryImpl(StructuredPushSupplier * _supplier,
-			     bool _rawPositionEvents) :
+  /** Maximum wait time for cond_.wait calls. */
+  ACE_Time_Value OdometryDispatcher::maxWait_(0, 100000);
+
+  OdometryDispatcher::OdometryDispatcher(StructuredPushSupplier * _supplier,
+					 bool _rawPositionEvents) :
     supplier_(_supplier),
     rawPositionEvents_(_rawPositionEvents),
     mutex_(),
-    cond_(mutex_),
-    sinHeading_(0.0),
-    cosHeading_(1.0)
+    cond_(mutex_)
   {
-    position_.point.x = 0.;
-    position_.point.y = 0.;
-    position_.heading = 0.;
-
-    origin_.point.x = 0.;
-    origin_.point.y = 0.;
-    origin_.heading = 0.;
-
-    status_.time.sec = 0;
-    status_.time.usec = 0;
-    status_.position.point.x = 0.;
-    status_.position.point.y = 0.;
-    status_.position.heading = 0.;
-    status_.velocity.translation = 0;
-    status_.velocity.rotation = 0.;
-
     if (supplier_) {
       // Status Notify Event initialization
       notifyEvent_.header.fixed_header.event_type.domain_name = 
@@ -78,12 +51,94 @@ namespace Miro
       }
     }
   }
+
+  void
+  OdometryDispatcher::setData(const MotionStatusIDL& _status,
+			const RawPositionIDL& _raw)
+  {
+    notifyEvent_.remainder_of_body <<= _status;
+    notifyRawEvent_.remainder_of_body <<= _raw;
+  };
+
+  int
+  OdometryDispatcher::svc()
+  {
+    while(!canceled()) {
+      Guard guard(mutex_);
+      ACE_Time_Value timeout(ACE_OS::gettimeofday());
+      timeout += maxWait_;
+      if (cond_.wait(&timeout) != -1 &&
+	  !canceled()) {
+	dispatch();
+      }
+    }
+
+    return 0;
+  }
+
+  void
+  OdometryDispatcher::dispatch()
+  {
+    supplier_->sendEvent(notifyEvent_);
+    if (rawPositionEvents_) {
+      supplier_->sendEvent(notifyRawEvent_);
+    }
+  }
+
+  void
+  OdometryDispatcher::cancel(bool _wait)
+  {
+    canceled_ = true;
+    cond_.broadcast();
+    Super::cancel(_wait);
+  }
+
+
+  /** Maximum wait time for cond_.wait calls. */
+  ACE_Time_Value OdometryImpl::maxWait_(1, 0);
+
+  /**
+   * Implementation skeleton constructor.
+   *
+   * @param _supplier A pointer to the StructuredPushSupplier to use
+   * for event emittion. If a NULL pointer is passed, the OdometryImpl
+   * will not emit any events.
+   *
+   * @param _rawPositionEvents When set to true the OdometryImpl will
+   * also emit RawPosition events.
+   */
+  OdometryImpl::OdometryImpl(StructuredPushSupplier * _supplier,
+			     bool _rawPositionEvents,
+			     bool _asychDispatching) :
+    supplier_(_supplier),
+    mutex_(),
+    cond_(mutex_),
+    asynchDispatching_(_asychDispatching),
+    dispatcherThread_(_supplier, _rawPositionEvents),
+    sinHeading_(0.0),
+    cosHeading_(1.0)
+  {
+    position_.point.x = 0.;
+    position_.point.y = 0.;
+    position_.heading = 0.;
+
+    origin_.point.x = 0.;
+    origin_.point.y = 0.;
+    origin_.heading = 0.;
+
+    status_.time.sec = 0;
+    status_.time.usec = 0;
+    status_.position.point.x = 0.;
+    status_.position.point.y = 0.;
+    status_.position.heading = 0.;
+    status_.velocity.translation = 0;
+    status_.velocity.rotation = 0.;
+  }
   
   // Implementation skeleton destructor
   OdometryImpl::~OdometryImpl()
   {
-    // try to unblock all waiting threads.
-    cond_.broadcast();
+    dispatcherThread_.cancel();
   }
   
   /**
@@ -132,15 +187,18 @@ namespace Miro
 
     // send events
     if (supplier_) {
-      notifyEvent_.remainder_of_body <<= status_;
-      supplier_->sendEvent(notifyEvent_);
+      RawPositionIDL raw;
+      raw.time = data.time;
+      raw.position = data.position;
 
-      if (rawPositionEvents_) {
-	RawPositionIDL raw;
-	raw.time = data.time;
-	raw.position = data.position;
-	notifyRawEvent_.remainder_of_body <<= raw;
-	supplier_->sendEvent(notifyRawEvent_);
+      if (asynchDispatching_) {
+	Guard guard(dispatcherThread_.mutex_);
+	dispatcherThread_.setData(status_, raw);
+	dispatcherThread_.cond_.broadcast();
+      }
+      else {
+	dispatcherThread_.setData(status_, raw);
+	dispatcherThread_.dispatch();
       }
     }
   }

@@ -14,6 +14,7 @@
 #include "OdometryS.h"
 
 #include "Synch.h"
+#include "Thread.h"
 #include <cmath>
 
 #include <orbsvcs/CosNotifyCommC.h>
@@ -24,6 +25,47 @@ namespace Miro
 {
   // forward decleration
   class StructuredPushSupplier;
+  class OdometryImpl;
+
+  class OdometryDispatcher : public Thread
+  {
+    typedef Thread Super;
+  public:
+    OdometryDispatcher(Miro::StructuredPushSupplier * _supplier,
+		       bool _rawPositionEvents = true);
+    int svc();
+    void cancel(bool _wait = true);
+
+    void setData(const MotionStatusIDL& _status,
+		 const RawPositionIDL& _raw);
+    void dispatch();
+    void broadcast();
+
+  protected:
+    //! Supplier for events.
+    StructuredPushSupplier * supplier_;
+    //! True if also RawPosition events shall be emitted.
+    bool rawPositionEvents_;
+
+    //! Lock
+    Mutex mutex_;
+    //! Condition for getWaitPosition etc.
+    Condition cond_;
+    //! Preinitialized data structure for Odometry event.
+    CosNotification::StructuredEvent notifyEvent_;
+    //! Preinitialized data structure for RawPosition events.
+    CosNotification::StructuredEvent notifyRawEvent_;
+    
+    //! Timeout for dispatching thread condition.
+    static ACE_Time_Value maxWait_;
+
+    friend OdometryImpl;
+  };
+
+  void
+  OdometryDispatcher::broadcast() {
+    cond_.broadcast();
+  }
 
   //! Implementation of the Odometry interface.
   /**
@@ -39,7 +81,8 @@ namespace Miro
   public:
     //! Initializing constructor.
     OdometryImpl(Miro::StructuredPushSupplier * _supplier,
-		 bool _rawPositionEvents = true);
+		 bool _rawPositionEvents = true,
+		 bool _asychDispatching = false);
     virtual ~OdometryImpl();
 
     //! Method to pass raw odometry data from the device into the OdometryImpl class.
@@ -82,8 +125,6 @@ namespace Miro
 
     //! Supplier for events.
     StructuredPushSupplier * supplier_;
-    //! True if also RawPosition events shall be emitted.
-    bool rawPositionEvents_;
 
     //! Lock
     Mutex mutex_;
@@ -91,10 +132,11 @@ namespace Miro
     Condition cond_;
     //! Current motion status.
     MotionStatusIDL status_;
-    //! Preinitialized data structure for Odometry event.
-    CosNotification::StructuredEvent notifyEvent_;
-    //! Preinitialized data structure for RawPosition events.
-    CosNotification::StructuredEvent notifyRawEvent_;
+
+    //! Flag to indicate the we dispatch events asynchrnously.
+    bool asynchDispatching_;
+    //! Thread for asynchronous dispatching of events.
+    OdometryDispatcher dispatcherThread_;
 
     //! Origin of the coordinate frame.
     PositionIDL origin_;
