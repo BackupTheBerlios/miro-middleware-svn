@@ -67,6 +67,7 @@ IDL_FILES =	Time \
 		Tilt \
 		PanTilt \
 		CanonPanTilt \
+		CanonCamera \
 		\
 		Buttons \
 		Video \
