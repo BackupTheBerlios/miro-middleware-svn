@@ -70,7 +70,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 depend: $(MOC_SRC)
 
 realclean: clean
-	-$(RM) $(MOC_SRC))
+	-$(RM) $(MOC_SRC)
 
 # DO NOT DELETE THIS LINE -- g++dep uses it.
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
