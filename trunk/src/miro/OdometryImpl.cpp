@@ -13,6 +13,7 @@
 
 #include "TimeHelper.h"
 #include "StructuredPushSupplier.h"
+#include "Angle.h"
 
 #include <cmath>
 
@@ -340,5 +341,22 @@ namespace Miro
     // the requested robot position
     origin_.point.x = position_.point.x - (xR * cosHeading_ + yR * sinHeading_);
     origin_.point.y = position_.point.y - (-xR * sinHeading_ + yR * cosHeading_);
+    // adapt new world position
+
+    // get position from status report
+    // compute new world position of robot
+    double x = position_.point.x - origin_.point.x;
+    double y = position_.point.y - origin_.point.y;
+    
+    // rotate position by heading of origin 
+    status_.position.point.x = x * cosHeading_ - y * sinHeading_;
+    status_.position.point.y = x * sinHeading_ + y * cosHeading_;
+    status_.position.heading = position_.heading + origin_.heading;
+    
+    // normalize data
+    if (status_.position.heading <= -M_PI)
+      status_.position.heading += 2 * M_PI;
+    else if (status_.position.heading > M_PI)
+      status_.position.heading -= 2 * M_PI;
   }
 };
