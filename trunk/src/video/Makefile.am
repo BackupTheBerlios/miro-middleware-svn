@@ -22,9 +22,6 @@ bin_PROGRAMS = VideoService
 sources = \
 	Parameters.xml \
 	BufferManager.cpp \
-	BufferManager1394.cpp \
-	BufferManagerBTTV.cpp \
-	BufferManagerMeteor.cpp \
 	VideoFilter.cpp \
 	VideoFilterBasic.cpp \
 	VideoFilterRepository.cpp \
@@ -38,16 +35,19 @@ sources = \
 
 if COND_BTTV
 bttvsources = \
+	BufferManagerBTTV.cpp \
 	VideoDeviceBTTV.cpp
 endif
 
 if COND_METEOR
 meteorsources = \
+	BufferManagerMeteor.cpp \
 	VideoDeviceMeteor.cpp
 endif
 
 if COND_IEEE1394
 1394sources = \
+	BufferManager1394.cpp \
 	VideoDevice1394.cpp \
 	VideoFilterYUVbase.cpp \
 	VideoFilterYUV411toRGB.cpp \

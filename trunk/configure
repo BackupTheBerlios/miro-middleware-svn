@@ -18416,9 +18416,9 @@ fi
 echo "$as_me:$LINENO: result: $ac_cv_lib_raw1394_raw1394_get_libversion" >&5
 echo "${ECHO_T}$ac_cv_lib_raw1394_raw1394_get_libversion" >&6
 if test $ac_cv_lib_raw1394_raw1394_get_libversion = yes; then
-  ac_have_libraw1394=yes; echo "RAW"
+  ac_have_libraw1394=yes
 else
-  ac_have_libraw1394=no; echo "NORAW"
+  ac_have_libraw1394=no
 fi
 
 echo "$as_me:$LINENO: checking for dc1394_print_feature_set in -ldc1394_control" >&5
@@ -18476,9 +18476,9 @@ fi
 echo "$as_me:$LINENO: result: $ac_cv_lib_dc1394_control_dc1394_print_feature_set" >&5
 echo "${ECHO_T}$ac_cv_lib_dc1394_control_dc1394_print_feature_set" >&6
 if test $ac_cv_lib_dc1394_control_dc1394_print_feature_set = yes; then
-  ac_have_libdc1394=yes; echo "DC"
+  ac_have_libdc1394=yes
 else
-  ac_have_libdc1394=no; echo "NODC"
+  ac_have_libdc1394=no
 fi
 
 
@@ -23243,7 +23243,6 @@ if test "x$ac_request_ieee1394" = xyes &&
 _ACEOF
 
 	ac_miro_has_1394=yes
-	echo "YESYESYES"
 fi
 
 

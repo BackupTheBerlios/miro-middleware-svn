@@ -267,9 +267,6 @@ bin_PROGRAMS = VideoService
 sources = \
 	Parameters.xml \
 	BufferManager.cpp \
-	BufferManager1394.cpp \
-	BufferManagerBTTV.cpp \
-	BufferManagerMeteor.cpp \
 	VideoFilter.cpp \
 	VideoFilterBasic.cpp \
 	VideoFilterRepository.cpp \
@@ -283,14 +280,17 @@ sources = \
 
 
 @COND_BTTV_TRUE@bttvsources = \
+@COND_BTTV_TRUE@	BufferManagerBTTV.cpp \
 @COND_BTTV_TRUE@	VideoDeviceBTTV.cpp
 
 
 @COND_METEOR_TRUE@meteorsources = \
+@COND_METEOR_TRUE@	BufferManagerMeteor.cpp \
 @COND_METEOR_TRUE@	VideoDeviceMeteor.cpp
 
 
 @COND_IEEE1394_TRUE@1394sources = \
+@COND_IEEE1394_TRUE@	BufferManager1394.cpp \
 @COND_IEEE1394_TRUE@	VideoDevice1394.cpp \
 @COND_IEEE1394_TRUE@	VideoFilterYUVbase.cpp \
 @COND_IEEE1394_TRUE@	VideoFilterYUV411toRGB.cpp \
@@ -344,24 +344,24 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 libmiroVideo_la_LDFLAGS =
 libmiroVideo_la_LIBADD =
 am__libmiroVideo_la_SOURCES_DIST = Parameters.xml BufferManager.cpp \
-	BufferManager1394.cpp BufferManagerBTTV.cpp \
-	BufferManagerMeteor.cpp VideoFilter.cpp VideoFilterBasic.cpp \
-	VideoFilterRepository.cpp VideoDevice.cpp VideoAVDevice.cpp \
-	VideoDeviceDummy.cpp VideoConsumer.cpp VideoImpl.cpp \
-	VideoBrokerImpl.cpp VideoServer.cpp VideoDeviceBTTV.cpp \
-	VideoDeviceMeteor.cpp VideoDevice1394.cpp \
+	VideoFilter.cpp VideoFilterBasic.cpp VideoFilterRepository.cpp \
+	VideoDevice.cpp VideoAVDevice.cpp VideoDeviceDummy.cpp \
+	VideoConsumer.cpp VideoImpl.cpp VideoBrokerImpl.cpp \
+	VideoServer.cpp BufferManagerBTTV.cpp VideoDeviceBTTV.cpp \
+	BufferManagerMeteor.cpp VideoDeviceMeteor.cpp \
+	BufferManager1394.cpp VideoDevice1394.cpp \
 	VideoFilterYUVbase.cpp VideoFilterYUV411toRGB.cpp \
 	VideoFilterYUV411toYUV.cpp VideoFilterYUV422toRGB.cpp \
 	VideoFilterYUV422toYUV.cpp
-am__objects_1 = Parameters.lo BufferManager.lo BufferManager1394.lo \
-	BufferManagerBTTV.lo BufferManagerMeteor.lo VideoFilter.lo \
+am__objects_1 = Parameters.lo BufferManager.lo VideoFilter.lo \
 	VideoFilterBasic.lo VideoFilterRepository.lo VideoDevice.lo \
 	VideoAVDevice.lo VideoDeviceDummy.lo VideoConsumer.lo \
 	VideoImpl.lo VideoBrokerImpl.lo VideoServer.lo
-@COND_BTTV_TRUE@am__objects_2 = VideoDeviceBTTV.lo
-@COND_METEOR_TRUE@am__objects_3 = VideoDeviceMeteor.lo
-@COND_IEEE1394_TRUE@am__objects_4 = VideoDevice1394.lo \
-@COND_IEEE1394_TRUE@	VideoFilterYUVbase.lo \
+@COND_BTTV_TRUE@am__objects_2 = BufferManagerBTTV.lo VideoDeviceBTTV.lo
+@COND_METEOR_TRUE@am__objects_3 = BufferManagerMeteor.lo \
+@COND_METEOR_TRUE@	VideoDeviceMeteor.lo
+@COND_IEEE1394_TRUE@am__objects_4 = BufferManager1394.lo \
+@COND_IEEE1394_TRUE@	VideoDevice1394.lo VideoFilterYUVbase.lo \
 @COND_IEEE1394_TRUE@	VideoFilterYUV411toRGB.lo \
 @COND_IEEE1394_TRUE@	VideoFilterYUV411toYUV.lo \
 @COND_IEEE1394_TRUE@	VideoFilterYUV422toRGB.lo \

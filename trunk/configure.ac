@@ -29,8 +29,8 @@ AC_ENABLE_SHARED
 AC_PROG_LIBTOOL
 
 # Checks for libraries.
-AC_CHECK_LIB(raw1394, raw1394_get_libversion, [ac_have_libraw1394=yes; echo "RAW"], [ac_have_libraw1394=no; echo "NORAW"])
-AC_CHECK_LIB(dc1394_control, dc1394_print_feature_set, [ac_have_libdc1394=yes; echo "DC"], [ac_have_libdc1394=no; echo "NODC"], [-lraw1394])
+AC_CHECK_LIB(raw1394, raw1394_get_libversion, [ac_have_libraw1394=yes], [ac_have_libraw1394=no])
+AC_CHECK_LIB(dc1394_control, dc1394_print_feature_set, [ac_have_libdc1394=yes], [ac_have_libdc1394=no], [-lraw1394])
 
 # Checks for header files.
 AC_HEADER_STDC
@@ -103,7 +103,6 @@ if test "x$ac_request_ieee1394" = xyes &&
 	test "x$ac_have_libdc1394" = xyes; then 
 	AC_DEFINE(MIRO_HAS_1394)
 	ac_miro_has_1394=yes
-	echo "YESYESYES"
 fi
 
 AM_CONDITIONAL([COND_BTTV], [test "x$ac_miro_has_bttv" = xyes])
