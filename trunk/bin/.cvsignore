@@ -50,6 +50,7 @@ OdometryStream
 OdometryTest
 PanLatency
 PanPosition
+PanTest
 PanTiltTest
 ParameterExample
 PioneerBase
