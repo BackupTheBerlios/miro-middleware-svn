@@ -37,6 +37,9 @@
  <section name="Sparrow99" >
   <parameter name="SparrowBoard" >
    <parameter value="true" name="Faulhaber" />
+   <parameter value="true" name="Sparrow2003" />
+   <parameter value="/dev/pcan24" name="Device" />
+   <parameter value="pcan" name="Module" />
    <parameter value="0.050000" name="PanLatency" />
    <parameter value="0.300000" name="PanSwing" />
    <parameter value="245" name="PanRadPerSec" />
@@ -152,7 +155,7 @@
    <parameter value="29" name="TicksR" />
    <parameter value="21.7" name="Deg2ServoTicksL"/>
    <parameter value="22.0" name="Deg2ServoTicksR"/>
-   <parameter value="true" name="ChannelSharing" />
+   <parameter value="false" name="ChannelSharing" />
    <parameter name="Motion" >
     <parameter value="180" name="MaxRotation" />
     <parameter value="-180" name="MinRotation" />
