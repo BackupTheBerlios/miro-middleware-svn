@@ -195,8 +195,9 @@ ItemXML::deleteItem()
   // as he will not be able to ask us about it anymore
   ItemXML * p = 
     dynamic_cast<ItemXML *>(parent());
-  MIRO_ASSERT(p != NULL);
-  p->setModified();
+  if (p != NULL) {
+    p->setModified();
+  }
 }
 
 void 

@@ -77,6 +77,8 @@ protected:
 
   //! Type information on the parameter.
   EditType type_;
+  //! Type information of vector/set parameter.
+  QString nestedType_;
   //! Flag indicating if the dialog is modified.
   bool modified_;
 

@@ -27,7 +27,8 @@ MyIntValidator::validate( QString & input, int & pos) const
 {
   QValidator::State s = Super::validate(input, pos);
   bool accept = input.isEmpty() || (s == Acceptable);
-  if (accept != accepted_) {
+  if (s != Invalid &&
+      accept != accepted_) {
     accepted_ = accept;
     emit const_cast<MyIntValidator *>(this)->acceptable(accept);
   }
@@ -50,7 +51,8 @@ MyDoubleValidator::validate( QString & input, int & pos) const
 {
   QValidator::State s = Super::validate(input, pos);
   bool accept = input.isEmpty() || (s == Acceptable);
-  if (accept != accepted_) {
+  if (s != Invalid &&
+      accept != accepted_) {
     accepted_ = accept;
     emit const_cast<MyDoubleValidator *>(this)->acceptable(accept);
   }
@@ -76,7 +78,8 @@ MyBoolValidator::validate( QString & input, int &) const
     s = Intermediate;
  
   bool accept = (s == Acceptable);
-  if (accept != accepted_) {
+  if (s != Invalid &&
+      accept != accepted_) {
     accepted_ = accept;
     emit const_cast<MyBoolValidator *>(this)->acceptable(accept);
   }

@@ -119,15 +119,22 @@ DocumentView::openDocument(const QString& _name)
   if (_name.isEmpty())
     return;
 
-  // load selected XML file
-  document_->loadXML(_name);
-  document_->parse();
-
-  // set new caption and status bar
-  setTitle(document_->name());
-  QString message(_name + " opened.");
-  setMessage(message, 3000);
-  update();
+  try {
+    // load selected XML file
+    document_->loadXML(_name);
+    document_->parse();
+    
+    // set new caption and status bar
+    setTitle(document_->name());
+    QString message(_name + " opened.");
+    setMessage(message, 3000);
+    update();
+  }
+  catch (QString const& e) {
+    QMessageBox::warning(this, 
+			 "Error loading Config file", e,
+			     QMessageBox::Ok, QMessageBox::NoButton);
+  }
 }
 
 bool

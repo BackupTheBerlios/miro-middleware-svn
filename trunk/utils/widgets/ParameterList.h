@@ -80,13 +80,6 @@ protected:
   Type type_;
   //! std::vector<int> -> int
   QString nestedTypeName_;
-
-  //! A temporary document, holding a copy of the XML node.
-  QDomDocument tmpDocument_;
-  //! The parent node in the temporary document.
-  QDomNode tmpParentNode_;
-  //! The temporary dublicate of the node.
-  QDomNode tmpNode_;
 };
 
 #endif

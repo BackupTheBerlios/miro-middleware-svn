@@ -104,6 +104,6 @@ DocumentXML::saveXML()
     throw QString("DocumentXML::loadXML: Error: file error!");
   }
   QTextStream ts(&f);
-  document_.save(ts, 0);
+  document_.save(ts, 2);
   setModified(false, true);
 }

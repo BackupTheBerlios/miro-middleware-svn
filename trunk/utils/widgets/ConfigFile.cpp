@@ -182,7 +182,5 @@ ConfigFile::parseDescriptionFiles()
     }
     // parsing successfull
     okay = true;
-
-    // std::cout << *generator_ << endl;
   }
 }

@@ -54,8 +54,7 @@ ParameterList::ParameterList(Miro::CFG::Parameter const& _param,
 			     QObject * _parent, const char * _name) :
   Super(_node, _parentItem, _pre, _parent, _name),
   param_(_param),
-  type_(typeFromName(_param.type_)),
-  tmpDocument_("MiroConfigDocument")
+  type_(typeFromName(_param.type_))
 {
   MIRO_ASSERT(type_ != NONE);
 
@@ -80,8 +79,7 @@ ParameterList::ParameterList(Miro::CFG::Parameter const& _param,
 			     QObject * _parent, const char * _name) :
   Super(_node, _list, _pre, _parent, _name),
   param_(_param),
-  type_(typeFromName(_param.type_)),
-  tmpDocument_("MiroConfigDocument")
+  type_(typeFromName(_param.type_))
 {
   MIRO_ASSERT(type_ != NONE);
 
@@ -165,17 +163,6 @@ ParameterList::init()
     }
     n = n.nextSibling();
   }
-
-  // create a copy of the parameters xml tree
-  tmpParentNode_ = tmpDocument_.createElement("section");
-  tmpDocument_.appendChild(tmpParentNode_);
-
-  QDomElement e = tmpDocument_.createElement("parameter");
-  e.setAttribute("name", param_.name_);
-  tmpNode_ = e;
-  if (!node_.isNull())
-    tmpNode_ = node_.cloneNode();
-  tmpParentNode_.appendChild(tmpNode_);
 }
 
 void
@@ -198,7 +185,7 @@ ParameterList::setParameters()
 
   ParameterListDialog dialog(type_,
 			     nestedParameter,
-			     tmpParentNode_, tmpNode_,
+			     node_.parentNode(), node_,
 			     parentItem, this,
 			     NULL, nestedParameter.name_);
   int rc = dialog.exec();

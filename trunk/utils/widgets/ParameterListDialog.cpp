@@ -213,17 +213,38 @@ ParameterListDialog::setXML()
 
   // delete the current content
   delete item_;
+
   // replace the xml subtree
   QDomNode node = tmpNode_.cloneNode();
-  node_.parentNode().replaceChild(node, node_);
-  node_ = node;
+  QDomNode oldNode = node_.parentNode().replaceChild(node, node_);
+
+  MIRO_ASSERT(!oldNode.isNull());
+
   // reconstruct the listview if available
   if (parentItem_) {
-    item_ = new ParameterList(parameter_,
+    // generate original parameter
+    Miro::CFG::Parameter parameter;
+
+    MIRO_ASSERT(type_ != ParameterList::NONE);
+    if (type_ == ParameterList::VECTOR) {
+      parameter.type_ = "std::vector<" + parameter_.type_ + ">";
+    }
+    else if (type_ == ParameterList::SET) {
+      parameter.type_ = "std::set<" + parameter_.type_ + ">";
+    }
+
+    parameter.name_ = parameter_.name_;
+    parameter.default_ = "";
+    parameter.fullDefault_ = "";
+    parameter.measure_ = parameter_.measure_;
+    parameter.description_ = parameter_.description_;
+
+    QString p = node.toElement().attribute(ParameterXML::XML_ATTRIBUTE_KEY);
+    item_ = new ParameterList(parameter,
 			      node,
 			      parentItem_->listViewItem(), pre,
-			      parentItem_, name());
-    dynamic_cast<CompoundParameter *>(item_)->init();
+			      parentItem_, p);
+    dynamic_cast<ParameterXML *>(item_)->init();
   }
 }
 
@@ -244,28 +265,32 @@ ParameterListDialog::add()
 {
   ParameterXML * newParam = NULL;
   QListViewItem * pre = list_->selectedItem();
-  while (pre->parent())
-    pre = pre->parent();
+  ItemXML * preItem = NULL;
+
+  if (pre != NULL) {
+    while (pre->parent()) {
+      pre = pre->parent();
+    }
+
+    Item::ItemMap::const_iterator i = Item::itemMap().find(pre);
+    if (i != Item::itemMap().end())
+      preItem = dynamic_cast<ItemXML * >(i->second);
+  }
 
   //----------------------------------------------------------------------------
   // insert element into document
-  Item::ItemMap::const_iterator i = Item::itemMap().find(pre);
-  ItemXML * preItem = NULL;
+  // it will be deleted afterwards, if nothing was enteres.
+  QDomElement e = tmpDocument_.createElement(ParameterXML::XML_TAG);
 
-  if (i != Item::itemMap().end())
-    preItem = dynamic_cast<ItemXML * >(i->second);
-  
-  QDomDocument document = item_->node().ownerDocument();
-  QDomElement e = document.createElement(ParameterXML::XML_TAG);
-
-  QDomNode n = node_.firstChild();
-  if (preItem) // is no direct child of item_->node()
+  // determine where to put it
+  QDomNode n = tmpNode_.firstChild();
+  if (preItem != NULL) { // is no direct child of item_->node()
     n = preItem->node();
-  QDomNode newChild = node_.insertBefore(e, n);
-    
-  MIRO_ASSERT(!item_->node().isNull());
-  MIRO_ASSERT(!document.isNull());
-  MIRO_ASSERT(!n.isNull());
+    MIRO_ASSERT(!n.isNull());
+  }
+
+  QDomNode newChild = tmpNode_.insertAfter(e, n);
+
   MIRO_ASSERT(!e.isNull());
   MIRO_ASSERT(!newChild.isNull());
 
@@ -280,9 +305,8 @@ ParameterListDialog::add()
   }
   else {
     dialog = new ParameterDialog(*nestedType_,
-				 item_->node(), newChild, 
-				 item_, NULL,
-				 NULL, name());
+				 newChild.parentNode(), newChild, 
+				 item_, NULL, NULL, name());
   }
   int rc = dialog->exec();
   if (rc == QDialog::Accepted) {
@@ -292,13 +316,14 @@ ParameterListDialog::add()
   }
   delete dialog;
 
-  // if nothing is entered, remove the node
-  // (that is: no value tag and no childs)
   e = newChild.toElement();
   MIRO_ASSERT(!e.isNull());
+
+  // if nothing is entered, remove the node
+  // (that is: no value tag and no childs)
   if (!e.hasAttribute(SimpleParameter::XML_ATTRIBUTE_VALUE) &&
       e.firstChild().isNull()) {
-    item_->node().removeChild(newChild);
+    tmpNode_.removeChild(newChild);
     return;
   }
 
@@ -329,6 +354,7 @@ ParameterListDialog::add()
   setModified(true);
   list_->setSelected(newParam->listViewItem(), true);
   selectListItem();
+  renumberEntries();
 }
 
 void 
@@ -339,7 +365,9 @@ ParameterListDialog::del()
     Item::ItemMap::const_iterator i = Item::itemMap().find(item);
     MIRO_ASSERT(i != Item::itemMap().end());
 
-    delete i->second;
+
+    ItemXML * ix = dynamic_cast<ItemXML * > (i->second);
+    ix->deleteItem();
     setModified(true);
   }
  
@@ -395,4 +423,19 @@ ParameterListDialog::contextMenu(QListViewItem * _item, const QPoint& pos, int)
   i->second->contextMenu(menu);
 
   menu.exec(pos);
+}
+
+void
+ParameterListDialog::renumberEntries() 
+{
+  int counter = 0;
+  QString number;
+  QListViewItem * item = list_->firstChild();
+  while (item != NULL) {
+    number.setNum(counter);
+    item->setText(0, number);
+
+    item = item->nextSibling();
+    ++counter;
+  }
 }

@@ -26,6 +26,14 @@
 #include <qmessagebox.h>
 #include <qscrollview.h>
 
+/**
+ * @param parameter, the parameter description of the type
+ * @param node, the qdom node in the document, containing the node
+ * @param parentItem, the parent item in the list view
+ * @param item, the item itself in the list view
+ * @param parent, the parent widget of the dialog
+ * @param name, the name of the dialog
+ */
 SingleParameterDialog::
 SingleParameterDialog(Miro::CFG::Parameter const& _parameter,
 		      QDomNode const& _node,

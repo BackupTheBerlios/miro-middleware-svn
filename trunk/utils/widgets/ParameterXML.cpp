@@ -47,6 +47,9 @@ ParameterXML::contextMenu(QPopupMenu& _menu)
 {
   _menu.insertItem("Set Parameters", this, SLOT(slotSetParameters()));
   _menu.insertSeparator();
+  _menu.insertItem("Up", this, SLOT(up()));
+  _menu.insertItem("Down", this, SLOT(down()));
+  _menu.insertSeparator();
   _menu.insertItem("Delete", this, SLOT(slotDelete()));
 }
 
