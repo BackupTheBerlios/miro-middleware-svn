@@ -11,9 +11,9 @@ namespace Miro {
 
   WindowArbiterViewer::WindowArbiterViewer(DynamicWindow * _dynamicWindow, QWidget *parent, const char *name)
     : QWidget(parent, name), dynamicWindow_(_dynamicWindow) {
-    
-    startTimer(500);
-    
+
+    startTimer(100);
+
     resize(221,221);
     pixmap_.resize(201, 201);
   }
@@ -35,9 +35,9 @@ namespace Miro {
         pointValue = dynamicWindow_->velocitySpace_[left+100][right+100];
 	if(pointValue==0)
 	  color.setRgb(255, 0, 0);
-	else	      
+	else
 	  color.setRgb(255 - pointValue, pointValue, 0);
-		
+
 	painter_.setPen(color);
 	painter_.drawPoint(100 + right, 100 - left);
 

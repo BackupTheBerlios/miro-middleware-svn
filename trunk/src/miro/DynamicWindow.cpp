@@ -83,31 +83,31 @@ namespace Miro
 
   void DynamicWindow::collisionCheckDeluxe(std::vector<Vector2d> &_robot, std::vector<Vector2d> &_obstacle) {
 
-    const int CURV_CNT = 6; // count
-    const int CURV_RES = 6; // count
+    const int CURV_CNT = 6; // count (6)
+    const int CURV_RES = 6; // count (6)
     const int CURV_LEN = 700; // mm
     const int CURV_SMOOTH_LEN = 10; // mm
     const int CURV_DELAY = 6; // count
-    const double WHEEL_DISTANCE  = 390.; // mm
+    const double WHEEL_DISTANCE  = 330.; // mm
     const double BREAK_ACCEL = 2000.; // in mm/sec2
 
     int CURV[2*CURV_CNT+1][2*CURV_RES+1]; // curvature space
-    
+
     int count, seg, left, right, curv, target, front, back;
     bool frontObstacle, backObstacle;
     double fLeft, fRight, offset, angle, rel, break_dist, left_break, right_break;
-    
+
     std::FILE *logFile1;
-    
+
     for(count = 0; count < 2*CURV_CNT+1; count++) {
 
       // CALCULATING CURVATURE SPACE
       //
-      
+
       // relation between left and right wheel (-inf...0...+inf)
-      
+
       rel = tan( (M_PI * count / (2*CURV_CNT)) - (M_PI/2) );
-      
+
       // calculate speed for left and right wheel using 'rel'
       if(fabs(rel) >= 1) {
     	fLeft = (double)CURV_LEN / (double)CURV_RES;
@@ -118,16 +118,16 @@ namespace Miro
 	fLeft = fRight * rel;
       }
 
-      // check for collisions along the curvature given by left and right speed   
+      // check for collisions along the curvature given by left and right speed
       if(rel != 1) {  // aka left!=right ==> real curvature
-	
+
 	// calculate offset and angle for rotation
         offset = (WHEEL_DISTANCE / 2.) * ((fLeft + fRight) / (fLeft - fRight));
         angle = (180. * (fLeft - fRight)) / (WHEEL_DISTANCE * M_PI);
-	
+
 	// rotate completely backwards
 	rotateMountedPolygon(_robot, Vector2d(offset, 0.), angle * (CURV_RES + 1));
-	
+
 	// rotate stepwise forwards and check for collisions
 	for(seg = 0; seg < 2*CURV_RES+1; seg++) {
 	  rotateMountedPolygon(_robot, Vector2d(offset, 0.), -angle);
@@ -138,20 +138,20 @@ namespace Miro
 	    CURV[count][seg] = 250;
 	  }
 	}
-	
+
 	// rotate backwards to middle position
 	rotateMountedPolygon(_robot, Vector2d(offset, 0.), angle * CURV_RES);
-	
+
       }
       else { // left==right ==> robot moves straight forward/backward
 	for(seg = 0; seg < 2*CURV_RES+1 ; seg++) {
 	  CURV[count][seg] = 0;
 	}
       }
-     
+
       // CLEANING AND SMOOTHING CURVATURE SPACE
       //
-    
+
       // cleaning curvature space
       front = CURV_RES;
       frontObstacle = false;
@@ -176,7 +176,7 @@ namespace Miro
 	}
 	back--;
       }
-  
+
 
       // search curvature space for obstacles (obstacle = 0)
       front = CURV_RES;
@@ -190,43 +190,42 @@ namespace Miro
       (front == 2*CURV_RES+1) ? frontObstacle = false : frontObstacle = true; // true = obstacle found
       (back == -1) ? backObstacle = false : backObstacle = true; // true = obstacle found
       backObstacle = false;
-      
+
       while((frontObstacle && (front > 0)) || (backObstacle && (back < 2*CURV_RES+1))) {
 	if(frontObstacle && (front > 0)) {
 	  CURV[count][front-1] = std::min(CURV[count][front-1],std::min(250, CURV[count][front] + (int)(250 * CURV_LEN / (CURV_SMOOTH_LEN * CURV_RES))));
 	  front--;
-	} 
+	}
 	if(backObstacle && (back < 2*CURV_RES+1)) {
 	  CURV[count][back+1] = std::min(CURV[count][back+1],std::min(250, CURV[count][back] + (int)(250 * CURV_LEN / (CURV_SMOOTH_LEN * CURV_RES))));
 	  back++;
 	}
-	
+
       }
-      
-      
+
     }
-    
+
     // CALCULATING VELOCITY SPACE (BASED ON CURVATURE SPACE)
     //
-    
+
     for(left = minLeft_; left <= maxLeft_; left++) {
       for(right = minRight_; right <= maxRight_; right++) {
-	
+
 	// calculating actual curvature
 	curv = (int)((atan((double)left / (double)right) + (M_PI / 2.)) * 2 * CURV_CNT / M_PI);
 	// calculating breaking distance
-	left_break = ((10. * fabs((double)left)) / BREAK_ACCEL) * 10. * (double)left;	
+	left_break = ((10. * fabs((double)left)) / BREAK_ACCEL) * 10. * (double)left;
 	right_break = ((10. * fabs((double)right)) / BREAK_ACCEL) * 10. * (double)right;
 	if(fabs(left_break) >= fabs(right_break))
 	  break_dist = left_break;
 	else
 	  break_dist = right_break;
-	
+
 	if((left+right)>0)
 	  target = CURV_RES  + CURV_DELAY + (int)(break_dist  * (double)CURV_RES / (double)CURV_LEN);
 	else
 	  target = CURV_RES - CURV_DELAY + (int)(break_dist * (double)CURV_RES / (double)CURV_LEN);
-	
+
 	velocitySpace_[left+100][right+100] = (double)CURV[std::max(0,std::min(2*CURV_CNT,curv))][std::max(0,std::min(2*CURV_RES,target))] * (double)velocitySpace_[left+100][right+100] / 250.;
 
       }
@@ -240,7 +239,7 @@ namespace Miro
       }
     }
     fclose(logFile1);
-    
+
   }
 
 
@@ -248,7 +247,7 @@ namespace Miro
   //
   void DynamicWindow::collisionCheck(std::vector<Vector2d> &_robot, std::vector<Vector2d> &_obstacle) {
 
-    const double WHEEL_DISTANCE  = 390.;  // in mm
+    const double WHEEL_DISTANCE  = 330.;  // in mm
     const double MAX_POLYGON_DISTANCE = 500.;  // in mm
     const double BREAK_ACCELERATION = 2000.;  // in mm/sec2
     const double MIN_DISTANCE = 100.;
@@ -333,21 +332,21 @@ namespace Miro
     bool found = false;
     int temp_left, temp_right;
     double angle;
-    const double WHEEL_DISTANCE = 390.;
+    const double WHEEL_DISTANCE = 330.;
 
     for(int left = minLeft_; left < maxLeft_; left++) {
       for(int right = minRight_; right < maxRight_; right++) {
 
 	angle = fabs((180. * (double)(left - right)) / (WHEEL_DISTANCE * M_PI));
 
-        if((angle < 45.) && ((velocitySpace_[left+100][right+100] > biggestVelocitySpaceValue) || 
+        if((angle < 45.) && ((velocitySpace_[left+100][right+100] > biggestVelocitySpaceValue) ||
 	   ((velocitySpace_[left+100][right+100] == biggestVelocitySpaceValue) && ((left * left) + (right * right)) > biggestVelocitySpaceRadius) ))
         {
           biggestVelocitySpaceValue = velocitySpace_[left+100][right+100];
 	  biggestVelocitySpaceRadius = (left * left) + (right * right);
 	  biggestVelocitySpaceValueVelocity = Vector2d(left,right);
 	  found = true;
-	  
+
         }
       }
     }
@@ -379,7 +378,7 @@ namespace Miro
       biggestVelocitySpaceValueVelocity = Vector2d(temp_left, temp_right);
 
     }
-          
+
     setNewDynamicWindow(biggestVelocitySpaceValueVelocity);
 
     return biggestVelocitySpaceValueVelocity;

@@ -57,7 +57,7 @@ namespace Miro
     
     VelocityIDL currentVelocity_;
 
-    DynamicWindow dynWindow_;
+    DynamicWindow dynWindow_, dynWindowPaint_;
 
     WindowArbiterViewerTask * winArbViewTask_;
     bool winArbViewTaskCreated;

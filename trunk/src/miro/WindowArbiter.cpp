@@ -24,7 +24,7 @@ namespace Miro
 {
   const std::string WindowArbiter::name_ = "WindowArbiter";
 
-  WindowArbiter::WindowArbiter(ACE_Reactor &ar_, 
+  WindowArbiter::WindowArbiter(ACE_Reactor &ar_,
 			       DifferentialMotion_ptr _pMotion,
 			       StructuredPushSupplier * _pSupplier) :
     pMotion_(DifferentialMotion::_duplicate(_pMotion)),
@@ -32,17 +32,18 @@ namespace Miro
     reactor(ar_),
     timerId(0),
     dynWindow_(std::complex<double>(0., 0.), 700, 2000),
+    dynWindowPaint_(std::complex<double>(0., 0.), 700, 2000),
     winArbViewTask_(NULL),
-    winArbViewTaskCreated(true)
+    winArbViewTaskCreated(false)
   {
     currentVelocity_.translation = 0;
     currentVelocity_.rotation = 0.;
 
     if (pSupplier_) {
       // Status Notify Event initialization
-      notifyEvent.header.fixed_header.event_type.domain_name = 
+      notifyEvent.header.fixed_header.event_type.domain_name =
       CORBA::string_dup(pSupplier_->domainName().c_str());
-        notifyEvent.header.fixed_header.event_type.type_name = 
+        notifyEvent.header.fixed_header.event_type.type_name =
       CORBA::string_dup("ArbitrateChange");
       notifyEvent.header.fixed_header.event_name = CORBA::string_dup("");
       notifyEvent.header.variable_header.length(0);   // put nothing here
@@ -54,7 +55,7 @@ namespace Miro
   WindowArbiter::~WindowArbiter() {
     if(winArbViewTaskCreated) {
       delete winArbViewTask_;
-      winArbViewTaskCreated = false; 
+      winArbViewTaskCreated = false;
     }
   }
 
@@ -88,38 +89,51 @@ namespace Miro
 
   void
   WindowArbiter::open()
-  {	
-    // super class open
+  {
+    // open arbiter
     Arbiter::open();
 
+    // create task for viewing dynamic window
     if(!winArbViewTaskCreated) {
-      winArbViewTask_ = new WindowArbiterViewerTask(&dynWindow_);
+      winArbViewTask_ = new WindowArbiterViewerTask(&dynWindowPaint_);
       winArbViewTask_->open();
-      winArbViewTaskCreated = true; 
+      winArbViewTaskCreated = true;
     }
-      
+
+    // init timer for calculating dynamic window every 50000usecs
     timerId = reactor.schedule_timer(this, 0, ACE_Time_Value(0,0),
-	ACE_Time_Value(0, 100000));
-    std::cout << "WindowArbiter.cpp : Open!" << std::endl;
+	ACE_Time_Value(0, 50000));
+
+    // debug message
+    std::cout << "WindowArbiter.cpp : open()" << std::endl;
   }
 
   void
   WindowArbiter::close()
   {
+    // release timer
     reactor.cancel_timer(timerId);
     timerId = 0;
-    std::cout << "WindowArbiter.cpp : Close!" << std::endl;
+
+    // stop robot
+    pMotion_->setLRVelocity(0, 0);
+
+    // debug message
+    std::cout << "WindowArbiter.cpp : close()" << std::endl;
+
+    // close arbiter
     Arbiter::close();
-  }	
-  
+  }
+
   int
   WindowArbiter::handle_timeout(const ACE_Time_Value &, const void*)
   {
     Miro::VelocityIDL  velocity;
     std::complex<double> newVelocity;
 
-    std::cout << "WindowArbiter.cpp : TimeOutHandler started!" << std::endl;
-    
+    // debug message
+    // std::cout << "WindowArbiter.cpp : handle_timeout() started" << std::endl;
+
     // let each behaviour calculate its dynamicWindow ascend by priority
     typedef std::vector<Behaviour *> BehaviourVector;
     BehaviourVector bv(params_->priorities.size());
@@ -132,20 +146,20 @@ namespace Miro
       (*k)->calcDynamicWindow(&dynWindow_);
     }
 
-    // calculate new velocity using the content of the dynamicWindow    
+    // calculate new velocity using the content of the dynamicWindow
     newVelocity = dynWindow_.calcNewVelocity();
+
+    // copy dynWindow for WindowArbiterViewer
+    dynWindow_.getCopy(&dynWindowPaint_);
 
     // set motion
     pMotion_->setLRVelocity((int)(10. * newVelocity.real()), (int)(10. * newVelocity.imag()));
     currentVelocity_ = velocity;
 
-    std::cout << "WindowArbiter.cpp : TimeOutHandler finished!" << std::endl;
+    // std::cout << "WindowArbiter.cpp : handle_timeout() finished" << std::endl;
 
     return 0;
   }
-  
-  // florian: bei close sollten wir anhalten. - oder so
-  // florian: eventuell mit priority-Arbiter und arbitrate() verheiraten
 
   const std::string&
   WindowArbiter::getName() const
