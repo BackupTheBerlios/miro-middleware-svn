@@ -80,8 +80,10 @@ namespace Miro
       const ACE_TCHAR *current_arg = arg_shifter.get_current ();
 
       const char configFileOpt[] = "-MiroConfigFile";
+      const char shortFileOpt[] = "-MCF";
       const int optLen = sizeof(configFileOpt) - 1;
-      if (ACE_OS::strcasecmp(current_arg, configFileOpt) == 0) {
+      if ((ACE_OS::strcasecmp(current_arg, configFileOpt) == 0) || 
+	  (ACE_OS::strcasecmp(current_arg, shortFileOpt) == 0)) {
 	arg_shifter.consume_arg();
 	if (arg_shifter.is_parameter_next()) {
 	  name = arg_shifter.get_current ();
