@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -14,8 +14,8 @@
 #include "miro/RangeSensorC.h"
 #include "miro/RangeEventC.h"
 #include "miro/Client.h"
-#include "miro/MotionArbiterMessage.h"
 #include "miro/Angle.h"
+#include "miro/TimeHelper.h"
 
 #include "miro/StructuredPushSupplier.h"
 //#include "nix/LineSamplesC.h"
@@ -33,7 +33,6 @@ using CosNotification::StructuredEvent;
 using Miro::RangeSensor;
 using Miro::RangeSensor_ptr;
 using Miro::ScanDescriptionIDL_var;
-using Miro::MotionArbiterMessage;
 
 int counter = 0;
 
@@ -44,6 +43,7 @@ RangeSensorBehaviour::RangeSensorBehaviour(Miro::Client& _client,
 					   Miro::StructuredPushSupplier * _pSupplier) :
   Super(_ec),
   client_(_client),
+  initialized_(false),
   name_(_name),
   domainName_(_domainName),
   sensorName_(),
@@ -102,40 +102,60 @@ RangeSensorBehaviour::init(const Miro::BehaviourParameters * _params)
 void
 RangeSensorBehaviour::action()
 {
+  const Miro::RawPositionIDL * pPosition;
   const Miro::RangeBunchEventIDL * pBunchScan;
   const Miro::RangeGroupEventIDL * pGroupScan;
   const Miro::RangeScanEventIDL * pScan;
-  const Miro::RawPositionIDL * pPosition;
+
+  const RangeSensorBehaviourParameters * params =
+    dynamic_cast<const RangeSensorBehaviourParameters *>(params_);
+
+  ACE_Time_Value timeStamp;
 
   cout << name_ << ": integrating data" << endl;
 
-  if (event->remainder_of_body >>= pBunchScan) {
-    for (int i = pBunchScan->sensor.length() - 1; i >= 0; --i) {
-      evalSensor(pBunchScan->sensor[i].group,
-		 pBunchScan->sensor[i].index,
-		 pBunchScan->sensor[i].range);
-    }
-  }
-  else if (event->remainder_of_body >>= pGroupScan) {
-    for (int i = pGroupScan->range.length() - 1; i >= 0; --i) {
-      evalSensor(pGroupScan->group,
-		 i,
-		 pGroupScan->range[i]);
-    }
-  }
-  else if (event->remainder_of_body >>= pScan) {
-    for (int j = pScan->range.length() - 1; j >= 0; --j) {
-      for (int i = pScan->range[j].length() - 1; i >= 0; --i) {
-	evalSensor(j, i, pScan->range[j][i]);
-      }
-    }
-  }
-  else if (event->remainder_of_body >>= pPosition) {
+  if (event->remainder_of_body >>= pPosition) {
     position_ = Vector2d(pPosition->position.point.x, pPosition->position.point.y);
     heading_ = pPosition->position.heading;
+    initialized_ = true;
   }
-  else {
-    std::cerr << name_ << ": Unhandled Event!" << endl; 
+  else if (initialized_) {
+
+    ACE_Time_Value now = ACE_OS::gettimeofday();
+    ACE_Time_Value integrationTime;
+    integrationTime.msec(params->historyMSec);
+    
+    truncateBuffer(now - integrationTime);
+
+    if (event->remainder_of_body >>= pBunchScan) {
+      Miro::timeC2A(pBunchScan->time, timeStamp);
+      for (int i = pBunchScan->sensor.length() - 1; i >= 0; --i) {
+	evalSensor(timeStamp,
+		   pBunchScan->sensor[i].group,
+		   pBunchScan->sensor[i].index,
+		   pBunchScan->sensor[i].range);
+      }
+    }
+    else if (event->remainder_of_body >>= pGroupScan) {
+      Miro::timeC2A(pGroupScan->time, timeStamp);
+      for (int i = pGroupScan->range.length() - 1; i >= 0; --i) {
+	evalSensor(timeStamp,
+		   pGroupScan->group,
+		   i,
+		   pGroupScan->range[i]);
+      }
+    }
+    else if (event->remainder_of_body >>= pScan) {
+      Miro::timeC2A(pScan->time, timeStamp);
+      for (int j = pScan->range.length() - 1; j >= 0; --j) {
+	for (int i = pScan->range[j].length() - 1; i >= 0; --i) {
+	  evalSensor(timeStamp, j, i, pScan->range[j][i]);
+	}
+      }
+    }
+    else {
+      std::cerr << name_ << ": Unhandled Event!" << endl; 
+    }
   }
 
 #ifdef SADF
@@ -192,10 +212,10 @@ RangeSensorBehaviour::getBehaviourName() const
 }
 
 void
-RangeSensorBehaviour::addBuffer(SensorScan& _scan, const Vector2d& _p)
+RangeSensorBehaviour::addBuffer(const ACE_Time_Value& _time, const Vector2d& _p)
 {
-  const RangeSensorBehaviourParameters * params =
-    dynamic_cast<const RangeSensorBehaviourParameters *>(params_);
+//   const RangeSensorBehaviourParameters * params =
+//     dynamic_cast<const RangeSensorBehaviourParameters *>(params_);
 
   // transform into a global coordinate frame
   // to integrate data over multiple robot positions
@@ -204,20 +224,29 @@ RangeSensorBehaviour::addBuffer(SensorScan& _scan, const Vector2d& _p)
   p *= Vector2d(cos(heading_), sin(heading_));
   p += position_;
 
-  if (_scan.size() > params->historySize) {
-    _scan.pop_back();
-  }
-  _scan.push_front(p);
+  scan_.push_back(SensorReading(_time, p));
+}
+
+void
+RangeSensorBehaviour::truncateBuffer(const ACE_Time_Value& _time)
+{
+  SensorScan::iterator first, last = scan_.end();
+  for (first = scan_.begin(); first != last; ++first)
+    if (first->time < _time)
+      break;
+
+  scan_.erase(scan_.begin(), first);
 }
 
 void 
-RangeSensorBehaviour::evalSensor(unsigned long group, unsigned long index, long range)
+RangeSensorBehaviour::evalSensor(const ACE_Time_Value& _time,
+				 unsigned long group, unsigned long index, long range)
 {
   if (range == Miro::RangeSensor::INVALID_RANGE)
     return;
 
-  const RangeSensorBehaviourParameters * params =
-    dynamic_cast<const RangeSensorBehaviourParameters *>(params_);
+//   const RangeSensorBehaviourParameters * params =
+//     dynamic_cast<const RangeSensorBehaviourParameters *>(params_);
 
   bool ignore = false;
   if (range == Miro::RangeSensor::HORIZON_RANGE)
@@ -236,42 +265,27 @@ RangeSensorBehaviour::evalSensor(unsigned long group, unsigned long index, long 
   // calc egocentric range end point;
   p += q;
 
-  //  cout << "abs(p)=" << abs(p) << "\targ(p)=" << Miro::rad2Deg(arg(p)) << "°" << endl;
 
-  // left sensors
-  if (a >= Miro::deg2Rad(90) - params->apexAngle && 
-      a <= Miro::deg2Rad(90) +  params->apexAngle)
-    if (!ignore)
-      addBuffer(left_, p);
-    else if (left_.size() > 0)
-      left_.pop_back();
-  // front left sensors
-  if (a >= Miro::deg2Rad(45) - params->apexAngle && 
-      a <= Miro::deg2Rad(45) +  params->apexAngle)
-    if (!ignore)
-      addBuffer(leftFront_, p);
-    else if (leftFront_.size() > 0)
-      leftFront_.pop_back();
-  // front sensors
-  if (a >= Miro::deg2Rad(0) - params->apexAngle && 
-      a <= Miro::deg2Rad(0) +  params->apexAngle)
-    if (!ignore)
-      addBuffer(front_, p);
-    else if (front_.size() > 0)
-      front_.pop_back();
-  // front right sensors
-  if (a >= Miro::deg2Rad(-45) - params->apexAngle &&
-      a <= Miro::deg2Rad(-45) +  params->apexAngle)
-    if (!ignore)
-      addBuffer(rightFront_, p);
-    else if (rightFront_.size() > 0)
-      rightFront_.pop_back();
-  // right sensors
-  if (a >= Miro::deg2Rad(-90) - params->apexAngle && 
-      a <= Miro::deg2Rad(-90) +  params->apexAngle)
-    if (!ignore)
-      addBuffer(right_, p);
-    else if (right_.size() > 0)
-      right_.pop_back();
+  addBuffer(_time,p);
+  //  cout << "abs(p)=" << abs(p) << "\targ(p)=" << Miro::rad2Deg(arg(p)) << "°" << endl;
+}
+
+void
+RangeSensorBehaviour::evalScan()
+{
+  egoMap_.clear();
+
+  // transform the global coordinate frame
+  // to the egocentric mapping
+
+  Vector2d alpha(cos(-heading_), sin(-heading_));
+
+  SensorScan::const_iterator first, last = scan_.begin();
+  for (first = scan_.begin(); first != last; ++first) {
+    Vector2d p(first->point);
+    p -= position_;
+    p *= alpha;
+    egoMap_.insert(std::make_pair(arg(first->point), first->point));
+  }
 }
 

@@ -33,6 +33,12 @@ WallFollowParameters::operator <<= (const KeyValueList& _params)
   str = _params.getValue("MaxDistane");
   if (str.length() != 0)
     maxDistance = str.toInt();
+  str = _params.getValue("Translation");
+  if (str.length() != 0)
+    translation = str.toInt();
+  str = _params.getValue("Rotation");
+  if (str.length() != 0)
+    rotation = str.toInt();
 }
 
 void

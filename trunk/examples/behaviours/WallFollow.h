@@ -31,7 +31,7 @@ public:
   void action();
 
 protected:
-  bool regressionsGerade(const SensorScan& _scan, double delta,
+  bool regressionsGerade(double _alpha, double _beta, double _delta,
 			 double& m, double& b) const;
 };
 #endif

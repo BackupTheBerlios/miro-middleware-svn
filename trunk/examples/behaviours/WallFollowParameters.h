@@ -18,6 +18,9 @@ struct WallFollowParameters : public RangeSensorBehaviourParameters
   int minDistance;
   int maxDistance;
 
+  int translation;
+  double rotation;
+
   WallFollowParameters();
   virtual void operator <<= (const Miro::KeyValueList& _params);
 

@@ -18,10 +18,7 @@
 using Miro::KeyValueList;
 
 RangeSensorBehaviourParameters::RangeSensorBehaviourParameters() :
-  historySize(50),
-  apexAngle(Miro::deg2Rad(30)),
-  translation(400),
-  rotation(Miro::deg2Rad(45)),
+  historyMSec(1000),
   sensorName("Sonar")
 {}
 
@@ -30,15 +27,9 @@ RangeSensorBehaviourParameters::operator <<= (const KeyValueList& _params)
 {
   Super::operator <<= (_params);
 
-  QString str = _params.getValue("HistorySize");
+  QString str = _params.getValue("HistoryMSec");
   if (str.length() != 0)
-    historySize = str.toInt();
-  str = _params.getValue("Translation");
-  if (str.length() != 0)
-    translation = str.toInt();
-  str = _params.getValue("Rotation");
-  if (str.length() != 0)
-    rotation = Miro::deg2Rad(str.toDouble());
+    historyMSec = str.toInt();
   str = _params.getValue("SensorName");
   if (str.length() != 0)
     sensorName = str;
@@ -48,8 +39,6 @@ void
 RangeSensorBehaviourParameters::printToStream(std::ostream& ostr) const
 {
   Super::printToStream(ostr);
-  ostr << "history size: " << historySize << endl
-       << "translation: " << translation << "mm/s" << endl
-       << "rotation:" << Miro::rad2Deg(rotation) << "°/s" << endl 
+  ostr << "history: " << historyMSec << "msec" << endl
        << "sensor name: " << sensorName << endl;
 }

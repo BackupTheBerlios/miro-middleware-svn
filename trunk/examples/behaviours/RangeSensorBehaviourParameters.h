@@ -17,12 +17,7 @@
 
 struct RangeSensorBehaviourParameters : public Miro::EventBehaviourParameters
 {
-  unsigned int historySize;
-  double apexAngle;
-
-  int translation;
-  double rotation;
-
+  unsigned int historyMSec;
   std::string sensorName;
 
   RangeSensorBehaviourParameters();

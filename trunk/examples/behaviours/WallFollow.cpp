@@ -74,10 +74,10 @@ WallFollow::action()
 
   //  cout << name_ << ": Regressionsgeraden" << endl;
   // left wall 
-  rL = regressionsGerade(left_, Miro::deg2Rad(90), mL, bL);
+  rL = regressionsGerade(Miro::deg2Rad(30), Miro::deg2Rad(150), Miro::deg2Rad(90), mL, bL);
   //    rL = regressionsGerade(leftFront_, Miro::deg2Rad(45), mL, bL);
 
-  rR = regressionsGerade(right_, Miro::deg2Rad(-90), mR, bR);
+  rR = regressionsGerade(Miro::deg2Rad(-150), Miro::deg2Rad(-300), Miro::deg2Rad(-90), mR, bR);
   //    rR = regressionsGerade(rightFront_, Miro::deg2Rad(-45), mR, bR);
 
   //  cout << name_ << ": selecting action" << endl;
@@ -134,25 +134,26 @@ WallFollow::action()
 }
 
 bool
-WallFollow::regressionsGerade(const SensorScan& _scan, double delta,
+WallFollow::regressionsGerade(double _alpha, double _beta, double delta,
 			      double& a, double& b) const
 {
-  if (_scan.size() < 5) // too litle data
-    return false;
-
   // correction angle
-  delta += heading_ - M_PI / 2.;
   Vector2d alpha(cos(-delta), sin(-delta));
 
   // build vector of egocentric sensor readings
-  SensorScan scan(_scan);
-  SensorScan::iterator first, last = scan.end();
-  for (first = scan.begin(); first != last; ++first) {
-    (*first) -= position_;
-    (*first) *= alpha;
+  std::vector<Vector2d> scan;
+  scan.reserve(scan_.size());
+
+  EgoMap::const_iterator first, last = egoMap_.upper_bound(_beta);
+  for (first = egoMap_.lower_bound(_alpha); first != last; ++first) {
+
+    scan.push_back(first->second * alpha);
 
     //    cout << "x =" << first->real() << "\t y=" << first->imag() << endl;
   }
+
+  if (scan.size() < 5) // too litle data
+    return false;
 
   // Geradengleichung y = m*x + b
   Vector2d sum = std::accumulate(scan.begin(), scan.end(), Vector2d());
@@ -165,9 +166,11 @@ WallFollow::regressionsGerade(const SensorScan& _scan, double delta,
   double sxy = 0.;
   double ssqx = 0.;
 
-  for (first = scan.begin(); first != last; ++first) {
-    ssqx += first->real() * first->real();
-    sxy += first->real() * first->imag();
+
+  std::vector<Vector2d>::const_iterator i, iEnd = scan.end();
+  for (i = scan.begin(); i != iEnd; ++i) {
+    ssqx += i->real() * i->real();
+    sxy += i->real() * i->imag();
   }
 
   double d = ssqx - n * xmean * xmean;
