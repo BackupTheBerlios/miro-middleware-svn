@@ -11,6 +11,8 @@
 #ifndef SparrowButtonsImpl_h
 #define SparrowButtonsImpl_h
 
+#include "SparrowDevice.h"
+
 #include "miro/ButtonsS.h"
 
 #include <orbsvcs/CosNotifyCommC.h>
@@ -48,6 +50,8 @@ namespace Sparrow
     Consumer& consumer;
     Miro::StructuredPushSupplier * pSupplier;
     CosNotification::StructuredEvent notifyEvent;
+
+    CORBA::Boolean button_[NUMBER_OF_BUTTONS];
   };
 };
 

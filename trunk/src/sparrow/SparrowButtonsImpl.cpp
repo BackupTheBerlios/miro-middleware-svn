@@ -12,7 +12,6 @@
 
 #include "SparrowButtonsImpl.h"
 #include "SparrowConsumer.h"
-#include "SparrowDevice.h"
 
 #include "miro/ExceptionC.h"
 #include "miro/StructuredPushSupplier.h"
@@ -54,6 +53,8 @@ namespace Sparrow
   void
   ButtonsImpl::pushEvent(Miro::ButtonStatusIDL * pEvent)
   {
+    button_[pEvent->number] = (pEvent->event == Miro::Button::ON_PRESS);
+
     if (pSupplier) {
       notifyEvent.remainder_of_body <<= pEvent;
       pSupplier->sendEvent(notifyEvent);
@@ -68,8 +69,7 @@ namespace Sparrow
     if (id >= NUMBER_OF_BUTTONS)
       throw Miro::EOutOfBounds();
 
-    Miro::Guard guard(consumer.digitalMutex);
-    return !consumer.digital[id];
+    return button_[id];
   }
 
   CORBA::ULong
