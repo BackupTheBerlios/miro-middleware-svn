@@ -6,19 +6,14 @@
    <parameter value="Sparrow99" name="Type" />
   </parameter>
  </section>
- <section name="ActiveMedia" >
-  <parameter name="FaulMotorBoard" >
-   <parameter value="/dev/ttyS0" name="Device" />
-   <parameter name="TtyParams" >
-    <parameter value="19200" name="Baudrate" />
-   </parameter>
-   </parameter>
-  
+ <section name="Fauhaber" >
+  <parameter name="FaulMotor" >
+  </parameter>
  </section>
 
  <section name="Sparrow99" >
   <parameter name="SparrowBoard" >
-   <parameter value="false" name="Faulhaber" />
+   <parameter value="true" name="Faulhaber" />
    <parameter value="/dev/can/0" name="Device" />
    <parameter value="0.050000" name="PanLatency" />
    <parameter value="0.500000" name="PanSwing" />
