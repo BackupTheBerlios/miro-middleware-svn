@@ -34,7 +34,7 @@ LogNotify::LogNotify(Miro::Server& _server,
 		     const string& domainName,
 		     const string& _fileName,
 		     bool _keepAlive) :
-  Super(_ec),
+  Super(_ec, false),
   server_(_server),
   parameters_(*LogNotifyParameters::instance()),
   fileName_(_fileName),
@@ -62,6 +62,7 @@ LogNotify::LogNotify(Miro::Server& _server,
   removed[0].type_name = CORBA::string_dup("*");
 
   consumerAdmin_->subscription_change(added, removed);
+  connect();
 }
 
 LogNotify::~LogNotify()

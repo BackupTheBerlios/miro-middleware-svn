@@ -53,13 +53,18 @@ namespace Miro
     CosNotifyChannelAdmin::ConsumerAdmin_var consumerAdmin_;
     
   protected:
+    /** Init the connection */
+    void init ();
+
     /** The proxy that we are connected to. */
     CosNotifyChannelAdmin::StructuredProxyPushSupplier_var proxySupplier_;
     /** The proxy_supplier id. */
     CosNotifyChannelAdmin::ProxyID proxySupplierId_;
+    /** Our own object id. */
+    CosNotifyComm::StructuredPushConsumer_ptr objref_;
 
     Mutex connectedMutex_;
-    bool connected_;
+    int connected_;
 
     // inherited IDL interface
 

@@ -26,7 +26,7 @@ using CosNotifyChannelAdmin::EventChannel_var;
 
 OdometryStream::OdometryStream(EventChannel_ptr _ec,
 			       const std::string& domainName) :
-  Super(_ec)
+  Super(_ec, false)
 {
   EventTypeSeq added(1);
   EventTypeSeq removed(1);
@@ -40,6 +40,8 @@ OdometryStream::OdometryStream(EventChannel_ptr _ec,
   removed[0].type_name = CORBA::string_dup("*");
 
   consumerAdmin_->subscription_change(added, removed);
+
+  connect();
 }
 
 OdometryStream::~OdometryStream()
@@ -79,6 +81,8 @@ main(int argc, char *argv[])
     cerr << "Loop forever handling events." << endl;
     server.run();
     cerr << "Server stoped, exiting." << endl;
+
+    pushConsumer.disconnect();
   }
   catch (const CORBA::Exception & e) {
     cerr << "Uncaught CORBA exception: " << e << endl;

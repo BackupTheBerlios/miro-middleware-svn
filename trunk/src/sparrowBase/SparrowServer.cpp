@@ -82,14 +82,14 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 	     0)
 {
 
-  init();
+  init(true);
 
   DBG(cout << "SparrowBase initialized.." << endl);
 }
 
-SparrowBase::SparrowBase(Server& _server) :
+SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
   Super(_server),
-  reactorTask(this),
+  reactorTask(&_server),
 
   // Notification Channel
   notifyFactory_(TAO_Notify_EventChannelFactory_i::create(poa.in() ACE_ENV_ARG_PARAMETER)),
@@ -129,13 +129,13 @@ SparrowBase::SparrowBase(Server& _server) :
              new Miro::NotifyMulticast::Adapter(0, NULL, this, ec_.in()) :
 	     0)
 {
-  init();
+  init(_startReactorTastk);
 
   DBG(cout << "SparrowBase initialized.." << endl);
 }
 
 void
-SparrowBase::init()
+SparrowBase::init(bool _startReactorTastk)
 {
   pOdometry = odometry._this();
   pMotion = sparrowMotion._this();
@@ -158,7 +158,8 @@ SparrowBase::init()
   addToNameService(pInfrared.in(), "Infrared");
 
   // start the asychronous consumer listening for the hardware
-  reactorTask.open(0);
+  if (_startReactorTastk)
+    reactorTask.open(0);
 }
 
 SparrowBase::~SparrowBase()

@@ -12,7 +12,7 @@
 
 #include "StructuredPushConsumer.h"
 
-#undef DEBUG
+// #undef DEBUG
 #ifdef DEBUG
 #define DBG(x) x
 #else
@@ -34,10 +34,11 @@ namespace Miro
     consumerAdminId_(),
     consumerAdmin_(),
     connectedMutex_(),
-    connected_(false)
+    connected_(-1)
   {
     DBG(cout << "Constructing StructuredPushConsumer." << endl);
 
+    init();
     if (_connect)
       connect();
   }
@@ -49,15 +50,12 @@ namespace Miro
   }
 
   void
-  StructuredPushConsumer::connect()
+  StructuredPushConsumer::init()
   {
-    DBG(cout << "Connecting StructuredPushConsumer." << endl);
+    DBG(cout << "Init StructuredPushConsumer." << endl);
 
     Guard guard(connectedMutex_);
-    if (!connected_) {
-      // Activate the consumer with the default_POA_
-      CosNotifyComm::StructuredPushConsumer_var objref = this->_this();
-
+    if (connected_ == -1) {
       consumerAdmin_ = ec_->new_for_consumers(ifgop_, consumerAdminId_);
       ProxySupplier_var proxySupplier =
 	consumerAdmin_->obtain_notification_push_supplier(CosNotifyChannelAdmin::STRUCTURED_EVENT, 
@@ -68,8 +66,26 @@ namespace Miro
       proxySupplier_ = StructuredProxyPushSupplier::_narrow(proxySupplier.in());
       assert(!CORBA::is_nil (proxySupplier_.in()));
 
-      proxySupplier_->connect_structured_push_consumer(objref.in());
-      connected_ = true;
+      connected_ = 0;
+    }
+  }
+
+  void
+  StructuredPushConsumer::connect()
+  {
+    DBG(cout << "Connecting StructuredPushConsumer." << endl);
+
+    Guard guard(connectedMutex_);
+    if (connected_ == -1) {
+      init();
+    }
+
+    if (connected_ == 0) {
+      // Activate the consumer with the default_POA_
+      objref_ = this->_this();
+
+      proxySupplier_->connect_structured_push_consumer(objref_);
+      connected_ = 1;
 
 #ifdef DEBUG
       cout << "currently offered messages:" << endl;
@@ -87,12 +103,24 @@ namespace Miro
   StructuredPushConsumer::disconnect()
   {
     Guard guard(connectedMutex_);
-    if (connected_) {
+    if (connected_ == 1) {
       DBG(cout << "Disconnecting StructuredPushConsumer." << endl);
-      connected_ = false;
+      connected_ = -1;
       try {
 	proxySupplier_->disconnect_structured_push_supplier();
 	consumerAdmin_->destroy();
+	  
+	// Get reference to Root POA.
+	PortableServer::POA_var poa = _default_POA();
+
+	// Deactivate.
+	PortableServer::ObjectId_var oid =
+	  poa->reference_to_id (objref_);
+
+	CORBA::release(objref_);
+    
+	// deactivate from the poa.
+	poa->deactivate_object (oid.in ());
       }
       catch (const CORBA::Exception & e) {
 	cerr << "StructuredPushConsumer::disconnect() CORBA exception on: " << endl
@@ -146,7 +174,7 @@ namespace Miro
   {
     DBG(cout << "StructuredPushConsumer: disconnect consumer" << endl);
 
-    connected_ = false;
+    connected_ = -1;
   }
 
   CosNotifyChannelAdmin::StructuredProxyPushSupplier_ptr

@@ -46,7 +46,7 @@ public:
   // Initialization and Termination methods.
   SparrowBase(int argc, char *argv[]);
 
-  SparrowBase(Server& _server);
+  SparrowBase(Server& _server, bool startReactorTask = true);
 
   // Constructor.
 
@@ -54,7 +54,7 @@ public:
   // Destructor.
 
 
-  void init();
+  void init(bool startReactorTask);
 
   Miro::NotifyMulticast::Adapter * notifyMulticast();
 

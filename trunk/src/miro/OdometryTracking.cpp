@@ -32,7 +32,7 @@ namespace Miro
    */
   OdometryTracking::OdometryTracking(CosNotifyChannelAdmin::EventChannel_ptr _ec,
 				     const std::string& _domainName) :
-    Super(_ec),
+    Super(_ec, false),
     odoTruncate_(false),
     rawTruncate_(false)
   {
@@ -52,6 +52,7 @@ namespace Miro
     removed[0].domain_name =  CORBA::string_dup("*");
     removed[0].type_name = CORBA::string_dup("*");
     consumerAdmin_->subscription_change(added, removed);
+    connect();
 
     DBG(std::cout << "finished" << std::endl);
   }
