@@ -30,6 +30,7 @@
 #include "miro/TimeHelper.h"
 #include "miro/RangeSensorImpl.h"
 #include "miro/OdometryImpl.h"
+#include "miro/BatteryImpl.h"
 
 #include <iostream>
 #include <stdio.h>
@@ -62,6 +63,7 @@ struct Service
   Miro::ReactorTask reactorTask;
   Miro::RangeSensorImpl * pRangeSensorImpl;
   Miro::OdometryImpl * pOdometryImpl;
+  Miro::BatteryImpl * pBatteryImpl;
   Pioneer::Consumer * pConsumer;
   Pioneer::StallImpl * pStallImpl;
   Psos::EventHandler * pEventHandler;
@@ -75,6 +77,7 @@ Service::Service() :
   reactorTask(),
   pRangeSensorImpl(new Miro::RangeSensorImpl(Pioneer::Parameters::instance()->sonarDescription)),
   pOdometryImpl(new Miro::OdometryImpl(NULL)),
+  pBatteryImpl(new Miro::BatteryImpl()),
   pConsumer(new Pioneer::Consumer(pRangeSensorImpl, NULL, pOdometryImpl)),
   pStallImpl(new Pioneer::StallImpl()),
   pEventHandler(new Psos::EventHandler(pConsumer, connection)),
@@ -230,7 +233,7 @@ int main(int argc, char* argv[])
 		    if (k==1) cout <<"only left wheel stalled! " << endl;
 		    if (k==2) cout <<"only right wheel stalled! " << endl;
 		    if (k==3) cout <<"left and right wheel stalled!!! " << endl;
-		    cout << "Battery (tenths of volts):  " << service.pStallImpl->getBattery() << endl; 
+		    cout << "Battery (volt):  " << service.pBatteryImpl->getVoltage() << endl; 
 		    break;
 		  }
 		
