@@ -41,6 +41,7 @@ BUILD 	= $(VBIN)
 #----------------------------------------------------------------------------
 #	Include macros and targets
 #----------------------------------------------------------------------------
+all:
 
 ## you can toggle the debug and optimize flags at this point
 # debug = 1
