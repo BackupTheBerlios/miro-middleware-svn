@@ -45,6 +45,8 @@ namespace FaulMotor
     rightWheel_(_reactor, 
 		new FaulTty::EventHandler(_consumer, OdometryMessage::RIGHT), 
 	       params_->rightWheel),
+    prevSpeedL(0),
+    prevSpeedR(0),
     consumer(_consumer)
   { 
     DBG(cout << "Constructing FaulMotorConnection." << endl);
@@ -78,11 +80,26 @@ namespace FaulMotor
     }
 
     int speed = (short) (_speed * params_->speedConvFactor);//* 112;
-
+    int accL, accR;
+    				// maxPosAccel,  maxNegAccel parameter setzen
+    accL = speed / prevSpeedL;
+    accR = speed / prevSpeedR;
+    if (accL <= accR)
+    {
+	accL = (accL / accR * params_-> maxPosAccel) * 90 / 320;
+	accR = (params_-> maxPosAccel) * 90 / 320;
+    }else
+    {
+	accR = (accR / accL * params_-> maxPosAccel) * 90 / 320;
+	accL = (params_-> maxPosAccel) * 90 / 320;
+    }
+    cout << "AccR: " << accR << " AccL: " << accL << endl;
     sprintf(speedMessageL, "v%d\r\n", -speed); // build speed message
     sprintf(speedMessageR, "v%d\r\n", speed); // build speed message
     leftWheel_.writeMessage(speedMessageL);
     rightWheel_.writeMessage(speedMessageR);             // send it
+    prevSpeedL = speed;
+    prevSpeedR = speed;
   }
 
   void
@@ -98,6 +115,8 @@ namespace FaulMotor
     sprintf(speedMessageR, "v%d\r\n", speedR); // build speed message
     leftWheel_.writeMessage(speedMessageL);
     rightWheel_.writeMessage(speedMessageR);             // send it
+    prevSpeedL = speedL;
+    prevSpeedR = speedR;
   }
 
   void
@@ -153,5 +172,23 @@ namespace FaulMotor
 
     leftWheel_.writeMessage(commandL);
     rightWheel_.writeMessage(commandR);
+  }
+
+  void
+  Connection::enable()
+  {
+    char const * const getSpeedMessage = "en\r\n\0";
+
+    leftWheel_.writeMessage(getSpeedMessage);             // send it
+    rightWheel_.writeMessage(getSpeedMessage);
+  }
+
+  void
+  Connection::disable()
+  {
+    char const * const getSpeedMessage = "di\r\n\0";
+
+    leftWheel_.writeMessage(getSpeedMessage);             // send it
+    rightWheel_.writeMessage(getSpeedMessage);
   }
 };

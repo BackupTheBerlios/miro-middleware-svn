@@ -10,7 +10,7 @@
       <config_parameter name="leftTicksPerMM" type="double" default="112" />
       <config_parameter name="rightTicksPerMM" type="double" default="112" />
       <config_parameter name="maxPosAccel" type="double" default="2000" measure="mm/s*s" />
-      <config_parameter name="maxNegAccel" type="double" default="4000" measure="mm/s*s" />
+      <config_parameter name="maxNegAccel" type="double" default="3000" measure="mm/s*s" />
       <config_parameter name="speedConvFactor" type="double" default="4.2" />
       <config_parameter name="motion" type="Miro::DifferentialMotionParameters" />
       <constructor>

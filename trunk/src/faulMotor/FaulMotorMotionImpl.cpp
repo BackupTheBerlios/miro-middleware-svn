@@ -67,7 +67,7 @@ namespace FaulMotor
 
     Miro::Guard guard(mutex_);
     setTargetVelocity(v);
-    connection.setSpeed(0);
+    connection.disable();
   }
 
   void

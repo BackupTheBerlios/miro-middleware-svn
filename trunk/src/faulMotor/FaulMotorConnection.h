@@ -43,6 +43,8 @@ namespace FaulMotor
     void getTicks();
     void setBefehl(char const * const befehl);
     void setPosition(int left, int right);
+    void enable();
+    void disable();
 
   protected:
     const Parameters * params_;
@@ -52,6 +54,7 @@ namespace FaulMotor
 
     Consumer * consumer;
 
+    int prevSpeedL,prevSpeedR;
     Miro::Mutex mutex_;
   };
 
