@@ -48,6 +48,9 @@ namespace Sparrow
     void writeLeftWheel(const char * buffer, int length);
     void writeRightWheel(const char * buffer, int length);
 
+    void setInfrared1WaitTime(unsigned char waittime);
+    void setInfrared2WaitTime(unsigned char waittime);
+
 
     void alivetimeout();
 

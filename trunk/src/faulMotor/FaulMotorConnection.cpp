@@ -103,19 +103,30 @@ namespace FaulMotor
 
     int speedL = (short) (-_speedL * params_->speedConvFactor);//* 112;
     int speedR = (short) (_speedR * params_->speedConvFactor);//* 112;
-    double accL, accR;
+    double accL, accR, accEffL, accEffR;
 
     double dSpeedL, dSpeedR;
     dSpeedL = -speedL - prevSpeedL;
     dSpeedR = speedR - prevSpeedR;
-    accR = ( params_-> maxPosAccel) * 9. / 320.;
-    accL = ( params_-> maxPosAccel) * 9. / 320.;
+
+    if ((dSpeedR+dSpeedL)/2 <= 0 ) {
+       accEffL = params_-> maxNegAccel;
+       accEffR = params_-> maxNegAccel;
+    }
+    else {
+       accEffL = params_-> maxPosAccel;
+       accEffR = params_-> maxPosAccel;
+    }
+
+
+    accR =  accEffR * 9. / 320.;
+    accL =  accEffL * 9. / 320.;
     if ((dSpeedL != 0) && (dSpeedR != 0)) {
       if (abs(dSpeedL) > abs(dSpeedR)) {
-	accR = (dSpeedR / dSpeedL *params_-> maxPosAccel) * 9. / 320.;
+	accR = (dSpeedR / dSpeedL * accEffR) * 9. / 320.;
       }
       else {
-	accL = ( dSpeedL / dSpeedR * params_-> maxPosAccel) * 9. / 320.;
+	accL = ( dSpeedL / dSpeedR * accEffL) * 9. / 320.;
       }
     }
 
@@ -283,10 +294,7 @@ namespace FaulMotor
 	connection2003->writeLeftWheel(getSpeedMessage, 2);             // send it
 	connection2003->writeRightWheel(getSpeedMessage, 2);
 
-        char const * const posOn = "jmp2\0";						//Odo Anschalten
-	connection2003->writeLeftWheel(posOn, strlen(posOn));             // send it
-	connection2003->writeRightWheel(posOn, strlen(posOn));
-
+        jmp2();
     }
     else{
 	char const * const getSpeedMessage = "en\r\n\0";
@@ -306,9 +314,7 @@ namespace FaulMotor
     connection2003->writeLeftWheel(getSpeedMessage, 2);             // send it
     connection2003->writeRightWheel(getSpeedMessage, 2);
 
-    char const * const posOff = "jmp1\0";                                           // odo ausschalten
-    connection2003->writeLeftWheel(posOff, strlen(posOff));             // send it
-    connection2003->writeRightWheel(posOff, strlen(posOff));
+    jmp1();
 
 
     }
@@ -325,7 +331,9 @@ namespace FaulMotor
   {
 
     if(Sparrow::Parameters::instance()->sparrow2003){
-       //
+       char const * const posOff = "jmp1\0";                                           // odo ausschalten
+       connection2003->writeLeftWheel(posOff, strlen(posOff));             // send it
+       connection2003->writeRightWheel(posOff, strlen(posOff));
     }
     else{
        char const * const getSpeedMessage = "jmp1\r\n\0";
@@ -339,7 +347,9 @@ namespace FaulMotor
   Connection::jmp2()					// ododaten so schnell wie möglich
   {
     if(Sparrow::Parameters::instance()->sparrow2003){
-        //
+        char const * const posOff = "jmp2\0";                                           // odo ausschalten
+        connection2003->writeLeftWheel(posOff, strlen(posOff));             // send it
+        connection2003->writeRightWheel(posOff, strlen(posOff));
     }
     else{
        char const * const getSpeedMessage = "jmp2\r\n\0";
@@ -353,7 +363,9 @@ namespace FaulMotor
   Connection::jmp3()					// notaus keine Ododaten und v0
   {
     if(Sparrow::Parameters::instance()->sparrow2003){
-       //
+       char const * const posOff = "jmp3\0";                                           // odo ausschalten
+       connection2003->writeLeftWheel(posOff, strlen(posOff));             // send it
+       connection2003->writeRightWheel(posOff, strlen(posOff));
     }
     else{
        char const * const getSpeedMessage = "jmp3\r\n\0";

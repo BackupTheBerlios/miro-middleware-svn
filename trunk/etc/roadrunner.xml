@@ -29,7 +29,7 @@
    </parameter>
   <parameter name="SpeedConvFactor" value="2.2" />
   <parameter name="MaxPosAccel" value="2500" />
-  <parameter name="MaxNegAccel" value="3000" />
+  <parameter name="MaxNegAccel" value="2500" />
 
   </parameter>
  </section>
@@ -144,14 +144,14 @@
    <parameter value="0.050000" name="ButtonsPollInterval" />
    <parameter value="1.0776" name="TransFactor" />
    <parameter value="1.000000" name="WatchdogTimeout" />
-   <parameter value="3145" name="Servo0MidPulse" />
+   <parameter value="2895" name="Servo0MidPulse" />
    <parameter value="28.8" name="Deg2ServoTicks" />
    <parameter value="200" name="MaxAccel" />
    <parameter value="2350" name="Diameter" />
    <parameter value="30720" name="MaxPower" />
    <parameter value="29" name="TicksL" />
    <parameter value="29" name="TicksR" />
-   <parameter value="21.8" name="Deg2ServoTicksL"/>
+   <parameter value="50.8" name="Deg2ServoTicksL"/>
    <parameter value="20.8" name="Deg2ServoTicksR"/>
    <parameter value="true" name="ChannelSharing" />
    <parameter name="Motion" >
@@ -210,40 +210,37 @@
 
   <parameter name="Camera" >
    <parameter value="0.060000" name="Latency" />
-   <parameter value="22.5" name="Alpha" />
+   <parameter value="32.5" name="Alpha" />
    <parameter value="600" name="Height" />
 
-   <parameter value="480" name="Nfx" />
-   <parameter value="640" name="Ncx" />
+   <parameter value="320" name="Nfx" />
+   <parameter value="480" name="Ncx" />
    <parameter value="0.0074" name="Dx" />
    <parameter value="0.0074" name="Dy" />
-   <parameter value="0.0098666666666667" name="Dpx" />
-   <parameter value="0.0074" name="Dpy" />
-   <parameter value="1134.457604" name="Cx" />
-   <parameter value="127.618924" name="Cy" />
+   <parameter value="4.9333333333e-03" name="Dpx" />
+   <parameter value="7.4000000000e-03" name="Dpy" />
+   <parameter value="342.103274" name="Cx" />
+   <parameter value="278.475116" name="Cy" />
    <parameter value="1" name="Sx" />
-
-   <parameter value="10.102971" name="F" />
-   <parameter value="8.644095e-05" name="Kappa" />
-<!--
-   <parameter value="" name="P1" />
-   <parameter value="" name="P2" />
--->
-   <parameter value="-425.321985" name="Tx" />
-   <parameter value="-0.798815" name="Ty" />
-   <parameter value="420.540746" name="Tz" />
-   <parameter value="-16.092345" name="Rx" />
-   <parameter value="-62.385578" name="Ry" />
-   <parameter value="1.600797" name="Rz" />
-   <parameter value="0.463338" name="R1" />
-   <parameter value="0.218674" name="R2" />
-   <parameter value="-0.858778" name="R3" />
-   <parameter value="0.012949" name="R4" />
-   <parameter value="0.967302" name="R5" />
-   <parameter value="0.253295" name="R6" />
-   <parameter value="0.886087" name="R7" />
-   <parameter value="-0.128481" name="R8" />
-   <parameter value="0.445357" name="R9" />
+   <parameter value="8.886231" name="F" />
+   <parameter value="1.617006e-02" name="Kappa" />
+   <parameter value="0" name="P1" />
+   <parameter value="0" name="P2" />
+   <parameter value="-50.616452" name="Tx" />
+   <parameter value="-73.075400" name="Ty" />
+   <parameter value="361.653139" name="Tz" />
+   <parameter value="6.289732" name="Rx" />
+   <parameter value="-54.165032" name="Ry" />
+   <parameter value="-8.421530" name="Rz" />
+   <parameter value="0.579140" name="R1" />
+   <parameter value="0.057713" name="R2" />
+   <parameter value="-0.813183" name="R3" />
+   <parameter value="-0.085742" name="R4" />
+   <parameter value="0.996271" name="R5" />
+   <parameter value="0.009642" name="R6" />
+   <parameter value="0.810707" name="R7" />
+   <parameter value="0.064140" name="R8" />
+   <parameter value="0.581928" name="R9" />
   </parameter>
 
   <parameter name="Device1394" >

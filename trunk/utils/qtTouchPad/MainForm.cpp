@@ -50,7 +50,15 @@ void MainForm::mousePressEvent(QMouseEvent * mouse)
 void MainForm::mouseReleaseEvent(QMouseEvent * mouse)
 {
   mouseMoving=false;
-  motion->limp();
+
+  Miro::VelocityIDL speed;
+
+  speed.translation=0;
+  speed.rotation=0;
+
+  motion->setVelocity(speed);
+
+  //motion->limp();
   mouse=mouse; // remove warning ;-)
 }
 

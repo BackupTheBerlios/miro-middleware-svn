@@ -83,6 +83,8 @@ namespace Sparrow
   void
   Connection2003::init()
   {
+     setInfrared1WaitTime(50);
+     setInfrared2WaitTime(50);
 
   }
 
@@ -179,5 +181,31 @@ namespace Sparrow
     message.byteData(0,0);
     write(message);
   }
+
+  void
+  Connection2003::setInfrared1WaitTime(unsigned char waittime)
+  {
+    Message message;
+    message.length(2);
+    message.id(CAN_IR_SET_FREQ1);
+    message.byteData(0, 1);
+    message.byteData(1, waittime);
+
+    write(message);
+
+  }
+
+  void
+  Connection2003::setInfrared2WaitTime(unsigned char waittime)
+  {
+    Message message;
+    message.length(2);
+    message.id(CAN_IR_SET_FREQ2);
+    message.byteData(0, 1);
+    message.byteData(1, waittime);
+    write(message);
+
+  }
+
 
 };

@@ -90,10 +90,11 @@ namespace Sparrow
     if(pIR1_){
     description_ = pIR1_->getScanDescription();
     IrValues.resize(3);
+    TimeIndex.resize(description_->group.length());
 
     for(int k = 0; k < 3; k++){
     IrValues[k].resize(description_->group.length());
-    TimeIndex.resize(description_->group.length());
+
 
     for(unsigned int i = 0; i < description_->group.length(); i++){
        IrValues[k][i].resize(description_->group[i].sensor.length());
@@ -189,10 +190,11 @@ namespace Sparrow
     description_ = pIR1_->getScanDescription();
 
     IrValues.resize(3);
+    TimeIndex.resize(description_->group.length());
 
     for(int k = 0; k < 3; k++){
     IrValues[k].resize(description_->group.length());
-    TimeIndex.resize(description_->group.length());
+
     for(unsigned int i = 0; i < description_->group.length(); i++){
        IrValues[k][i].resize(description_->group[i].sensor.length());
        TimeIndex[i] = 0;
@@ -410,15 +412,23 @@ namespace Sparrow
 
      IrValues[TimeIndex[group]][group][sensor] = value;
      int counter = 0;
+     long sum = 0;
      for(int i = 0; i < 3; i++){
-        if(IrValues[i][group][sensor] == -1)
+        if(IrValues[i][group][sensor] == -1){
 	   counter++;
+
+	}
+	sum += IrValues[i][group][sensor];
      }
+
      TimeIndex[group] = (TimeIndex[group] + 1) % 3;
-     if(counter >= 1)
+
+     if(counter >= 1){
         return -1;
-     else
-        return value;
+     }
+     else{
+        return sum/3;
+     }
 
   }
 };
