@@ -38,6 +38,23 @@
     return new X ## Parameters(p); \
   }
 
+#define IMAGE_PARAMETERS_FACTORY(X) \
+    virtual X ## ImageParameters * getImageParametersInstance() const; \
+    virtual X ## ImageParameters * getImageParametersInstance(const ::Video::FilterImageParameters& _p) const
+
+#define IMAGE_PARAMETERS_FACTORY_IMPL(X) \
+  X ## ImageParameters * \
+  X::getImageParametersInstance() const \
+  { \
+    return new X ## ImageParameters(); \
+  } \
+  X ## ImageParameters * \
+  X::getImageParametersInstance(const ::Video::FilterImageParameters& _p) const \
+  { \
+    X ## ImageParameters const& p= dynamic_cast<X ## ImageParameters const&>(_p); \
+    return new X ## ImageParameters(p); \
+  }
+
 // forward declarations
 namespace Miro
 {
@@ -87,6 +104,7 @@ namespace Video
 
     // Factory method specification for parameters.
     FILTER_PARAMETERS_FACTORY(Filter);
+    IMAGE_PARAMETERS_FACTORY(Filter);
 
     //! Flag indicating whether setting up an instance of the Video interface for the filter is allowed.
     virtual bool interfaceAllowed() const throw ();
@@ -179,15 +197,25 @@ namespace Video
 
     //! Get address of input buffer.
     unsigned char const * inputBuffer() const;
-    //! Set address of input buffer
-    void inputBuffer(unsigned long _index, unsigned char const * _buffer);
+    //! Get address of input buffer parameters.
+    FilterImageParameters const * inputBufferParameters() const;
+    //! Set address of input buffer and its parameters
+    void inputBuffer(unsigned long _index, 
+		     unsigned char const * _buffer,
+		     FilterImageParameters const * _parms);
     //! Get address of output buffer.
     unsigned char * outputBuffer();
+    //! Get address of output parameters parameters.
+    FilterImageParameters * outputBufferParameters();
     //! Get address of linked input buffer.
     unsigned char const * inputBufferLink(unsigned long _index) const;
-    //! Get address of linked input buffer.
+    //! Get address of linked input parameters.
+    FilterImageParameters const * inputBufferParametersLink(unsigned long _index) const;
+    //! Get address of linked input buffer and its parameters.
     void inputBufferLink(unsigned long _linkIndex,
-			 unsigned long _bufferIndex, unsigned char const * _buffer);
+			 unsigned long _bufferIndex, 
+			 unsigned char const * _buffer,
+			 FilterImageParameters const * _params);
     //! Set the image index of the pending video broker getNextImageSet requests.
     virtual void setBrokerRequests();
 
@@ -253,8 +281,10 @@ namespace Video
 
     unsigned long inputBufferIndex_;
     unsigned char const * inputBuffer_;
+    FilterImageParameters const * inputParameters_;
     unsigned long outputBufferIndex_;
     unsigned char * outputBuffer_;
+    FilterImageParameters * outputParameters_;
     Miro::VideoImpl * interface_;
 
     //! Filter predecessor.
@@ -361,16 +391,33 @@ namespace Video
   }
 
   inline
+  FilterImageParameters const *
+  Filter::inputBufferParameters() const {
+    assert(pre_ != NULL);
+    return inputParameters_;
+  }
+
+  inline
   unsigned char *
   Filter::outputBuffer() {
+    assert(pre_ != NULL);
     return outputBuffer_;
   }
 
   inline
+  FilterImageParameters *
+  Filter::outputBufferParameters() {
+    return outputParameters_;
+  }
+
+  inline
   void 
-  Filter::inputBuffer(unsigned long _index, unsigned char const * _buffer) {
+  Filter::inputBuffer(unsigned long _index, 
+		      unsigned char const * _buffer,
+		      FilterImageParameters const * _params) {
     inputBufferIndex_ = _index;
     inputBuffer_ = _buffer;
+    inputParameters_ = _params;
   }
 
   inline
@@ -380,11 +427,18 @@ namespace Video
   }
 
   inline
+  FilterImageParameters const * 
+  Filter::inputBufferParametersLink(unsigned long _index) const {
+    return preLink_[_index].params();
+  }
+
+  inline
   void 
   Filter::inputBufferLink(unsigned long _linkIndex,
 			  unsigned long _bufferIndex, 
-			  unsigned char const * _buffer) {
-    preLink_[_linkIndex].buffer(_bufferIndex, _buffer);
+			  unsigned char const * _buffer,
+			  FilterImageParameters const * _params) {
+    preLink_[_linkIndex].buffer(_bufferIndex, _buffer, _params);
   }
 
   inline

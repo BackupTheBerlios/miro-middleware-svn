@@ -20,16 +20,22 @@
 
 namespace Video
 {
+  // forward declarations
+  class Filter;
+  class FilterImageParameters;
+
   //! Class for managing an array of memory buffers.
   class BufferManager
   {
   public:
     //! Initializing constructor.
-    BufferManager(unsigned int _buffers, 
+    BufferManager(Filter const * const _filter,
+		  unsigned int _buffers, 
 		  unsigned int _bufferSize, 
 		  unsigned char * _memory = NULL) throw (std::bad_alloc);
     //! Initializing constructor.
-    BufferManager(unsigned int _buffers,
+    BufferManager(Filter const * const _filter,
+		  unsigned int _buffers,
 		  unsigned char * _bufferAddr[]);
     //! Cleaning up.
     virtual ~BufferManager();
@@ -93,6 +99,8 @@ namespace Video
       unsigned int readers;
       //! Pointer to the manged buffer.
       unsigned char * buffer;
+      //! Pointer to the filter image parameters.
+      FilterImageParameters * params;
 
       //! Default constructor.
       /** 

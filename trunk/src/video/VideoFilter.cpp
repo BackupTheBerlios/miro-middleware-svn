@@ -23,7 +23,7 @@ namespace Video
   Miro::Mutex Filter::connectionMutex_;
 
   FILTER_PARAMETERS_FACTORY_IMPL(Filter);
-
+  IMAGE_PARAMETERS_FACTORY_IMPL(Filter);
 
   /**
    * The constructor of the derived filter is responsible for
@@ -86,7 +86,9 @@ namespace Video
   BufferManager * 
   Filter::bufferManagerInstance() const 
   {
-    return new BufferManager(params_->buffers, getImageSize(outputFormat()));
+    return new BufferManager(this, 
+			     params_->buffers, 
+			     getImageSize(outputFormat()));
   }
 
   /**
@@ -260,7 +262,9 @@ namespace Video
       FilterVector::const_iterator first, last = succ_.end();
       for (first = succ_.begin(); first != last; ++first) {
 	if ((*first)->active()) {
-	  (*first)->inputBuffer(outputBufferIndex_, outputBuffer_);
+	  (*first)->inputBuffer(outputBufferIndex_, 
+				outputBuffer_,
+				outputParameters_);
 	}
       }
     }
@@ -272,7 +276,8 @@ namespace Video
 	if (first->filter()->active()) {
 	  first->filter()->inputBufferLink(first->index(), 
 					   outputBufferIndex_,
-					   outputBuffer_);
+					   outputBuffer_,
+					   outputParameters_);
 	}
       }
     }

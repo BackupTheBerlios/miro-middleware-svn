@@ -22,7 +22,8 @@ namespace Video
 
   public:
     //! Initializing constructor.
-    BufferManagerMeteor(int _fd, unsigned int _size, unsigned char * _buffer)
+    BufferManagerMeteor(Filter const * const _filter, 
+			int _fd, unsigned int _size, unsigned char * _buffer)
       throw (std::bad_alloc);
 
   protected:

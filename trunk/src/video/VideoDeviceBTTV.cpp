@@ -102,7 +102,8 @@ namespace Video
     for (int i = 0; i < gb_buffers.frames; ++i)
       bufferAddr[i] = map_ + gb_buffers.offsets[i];
 
-    return new BufferManagerBTTV(ioBuffer_.get_handle(),
+    return new BufferManagerBTTV(this,
+				 ioBuffer_.get_handle(),
 				 outputFormat_.width,
 				 outputFormat_.height,
 				 paletteLookup[outputFormat_.palette],

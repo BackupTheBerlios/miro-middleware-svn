@@ -24,7 +24,8 @@ namespace Video
 
   public:
     //! Initializing constructor.
-    BufferManager1394(dc1394_cameracapture *  _pCamera) throw (std::bad_alloc);
+    BufferManager1394(Filter const * const _filter,
+		      dc1394_cameracapture *  _pCamera) throw (std::bad_alloc);
 
    protected:
 

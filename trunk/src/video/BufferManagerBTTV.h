@@ -26,7 +26,8 @@ namespace Video
 
   public:
     //! Initializing constructor.
-    BufferManagerBTTV(int _fd,
+    BufferManagerBTTV(Filter const * const _filter,
+		      int _fd,
 		      int _width,
 		      int _height,
 		      int _format,

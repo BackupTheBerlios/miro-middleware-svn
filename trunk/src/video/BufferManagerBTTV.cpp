@@ -13,13 +13,14 @@
 
 namespace Video
 {
-  BufferManagerBTTV::BufferManagerBTTV(int _fd,
+  BufferManagerBTTV::BufferManagerBTTV(Filter const * const _filter,
+				       int _fd,
 				       int _width,
 				       int _height,
 				       int _format,
 				       unsigned int _buffers, 
 				       unsigned char * _bufferAddr[]) :
-    Super(_buffers, _bufferAddr),
+    Super(_filter, _buffers, _bufferAddr),
     fd_(_fd),
     gb_(new struct video_mmap[_buffers]),
     leaderBuffer_(0),

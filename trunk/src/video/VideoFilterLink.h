@@ -15,6 +15,7 @@ namespace Video
 {
   // forward declarations
   class Filter;
+  class FilterImageParameters;
 
   class FilterPreLink
   {
@@ -25,8 +26,11 @@ namespace Video
     Filter * const filter();
     void id(unsigned long _id);
     unsigned long id() const;
-    void buffer(unsigned long _index, unsigned char const * _buffer);
+    void buffer(unsigned long _index, 
+		unsigned char const * _buffer,
+		FilterImageParameters const * _params);
     unsigned char const * buffer() const;
+    FilterImageParameters const * params() const;
     unsigned long index() const;
     bool bufferAvailable() const;
 
@@ -35,6 +39,7 @@ namespace Video
     unsigned long id_;
     unsigned long index_;
     unsigned char const * buffer_;
+    FilterImageParameters const * params_;
   };
 
   class FilterSuccLink
@@ -83,16 +88,25 @@ namespace Video
 
   inline
   void 
-  FilterPreLink::buffer(unsigned long _index, unsigned char const * _buffer)
+  FilterPreLink::buffer(unsigned long _index, 
+			unsigned char const * _buffer,
+			FilterImageParameters const * _params)
   {
     index_ = _index;
     buffer_ = _buffer;
+    params_ = _params;
   }
 
   inline
   unsigned char const *
   FilterPreLink::buffer() const {
     return buffer_;
+  }
+
+  inline
+  FilterImageParameters const *
+  FilterPreLink::params() const {
+    return params_;
   }
 
   inline

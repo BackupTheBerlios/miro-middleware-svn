@@ -15,6 +15,9 @@
       <config_parameter name="name" type="string" default="Video" />
     </config_item>
 
+    <config_item name="FilterImage" parent="" final="false">
+    </config_item>
+
     <config_item name="Filter" parent="Miro::Config" final="false">
       <config_parameter name="name" type="string" default="Filter" />
       <config_parameter name="buffers" type="unsigned int" default="4" />

@@ -59,7 +59,8 @@ namespace Miro
       imageHandle_.offset[i] = i * getImageSize(filter_->outputFormat());
     }
 
-    pBufferManager_ = new BufferManager(filter_->outputBuffers(),
+    pBufferManager_ = new BufferManager(_filter,
+					filter_->outputBuffers(),
 					getImageSize(filter_->outputFormat()),
 					pBufferArray_);
 

@@ -17,11 +17,12 @@
 
 namespace Video
 {
-  BufferManagerMeteor::BufferManagerMeteor(int _fd,
+  BufferManagerMeteor::BufferManagerMeteor(Filter const * const _filter,
+					   int _fd,
 					   unsigned int _bufferSize,
 					   unsigned char * _memory) 
     throw (std::bad_alloc) :
-    Super(1, _bufferSize, _memory),
+    Super(_filter, 1, _bufferSize, _memory),
     fd_(_fd)
   {
   }

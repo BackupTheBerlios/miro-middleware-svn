@@ -70,7 +70,8 @@ namespace Video
   BufferManager * 
   DeviceMeteor::bufferManagerInstance() const 
   {
-    return new BufferManagerMeteor(ioBuffer_.get_handle(),
+    return new BufferManagerMeteor(this,
+				   ioBuffer_.get_handle(),
 				   Miro::getImageSize(outputFormat_), 
 				   buffer_);
   }

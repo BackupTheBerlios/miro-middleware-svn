@@ -18,9 +18,10 @@ namespace
 
 namespace Video
 {
-  BufferManager1394::BufferManager1394(dc1394_cameracapture *  _pCamera) 
+  BufferManager1394::BufferManager1394(Filter const * const _filter,
+				       dc1394_cameracapture *  _pCamera) 
     throw (std::bad_alloc) :
-    Super(1, b),
+    Super(_filter, 1, b),
     pCamera_(_pCamera)
   {
   }

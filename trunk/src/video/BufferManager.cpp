@@ -10,6 +10,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "BufferManager.h"
+#include "VideoFilter.h"
 
 namespace Video
 {
@@ -20,7 +21,8 @@ namespace Video
    * NULL, the BufferManager will allocate and manage the memory by
    * himself.
    */
-  BufferManager::BufferManager(unsigned int _buffers, 
+  BufferManager::BufferManager(Filter const * const _filter,
+			       unsigned int _buffers, 
 			       unsigned int _bufferSize,
 			       unsigned char * _memory)  throw (std::bad_alloc) :
     buffers_(_buffers),
@@ -41,6 +43,7 @@ namespace Video
     for (first = bufferStatus_.begin(); first != last; ++first) {
       first->buffer = memory_ + offset;
       offset += bufferSize_;
+      first->params = _filter->getImageParametersInstance();
     }
   }
 
@@ -50,7 +53,8 @@ namespace Video
    *  address for each of the buffers.
    * @param memory Base address of the memory area, holding space for all buffers.
    */
-  BufferManager::BufferManager(unsigned int _buffers, 
+  BufferManager::BufferManager(Filter const * const _filter,
+			       unsigned int _buffers, 
 			       unsigned char * _bufferAddr[]) :
     buffers_(_buffers),
     bufferSize_(0),
@@ -65,6 +69,7 @@ namespace Video
     for (first = bufferStatus_.begin(); first != last; ++first) {
       first->buffer = _bufferAddr[index];
       ++index;
+      first->params = _filter->getImageParametersInstance();
     }
   }
 
@@ -74,6 +79,11 @@ namespace Video
     cond_.broadcast();
     if (owner_)
       delete[] memory_;
+    
+    BufferVector::iterator first, last = bufferStatus_.end();
+    for (first = bufferStatus_.begin(); first != last; ++first) {
+      delete first->params;
+    }
   }
 
   /** 
