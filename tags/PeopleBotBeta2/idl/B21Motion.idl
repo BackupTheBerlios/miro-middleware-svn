@@ -1,0 +1,256 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef base_idl
+#define base_idl
+
+#include "SynchroMotion.idl"
+#include "ClosedMotion.idl"
+#include "Odometry.idl"
+
+module Miro
+{
+  //! The specialized motion interface of the B21 robot.
+  /** 
+   * @author Hans Utz
+   */
+  interface B21Motion : SynchroMotion, ClosedMotion
+  {
+    //-------------------------------------------------------------------------
+    // generalized movement methods
+    //-------------------------------------------------------------------------
+
+    //! Halt all motors.
+    /**
+     * Active halt: The mobile base doesn't move afterwards nor can it
+     * be pushed and turned around.
+     *
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void halt() raises(EDevIO);   
+
+    //-------------------------------------------------------------------------
+    // rotational movement methods
+    //-------------------------------------------------------------------------
+
+    //! Halt rotational motors.
+    /**
+     * Active halt: The mobile base doesn't rotate afterwards and
+     * can't be turned around.
+     *
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void rotateHalt() raises(EDevIO);
+    //! Wait for halt of rotation of the moblie base.
+    /**
+     * Wait for the mobile base to no longer rotate.  This call is
+     * especially useful, to wait for the end of a @ref rotateRelative
+     * call. It returns immediately, if the base isn't rotating at the
+     * moment.
+     */
+    void waitRotateHalt();
+    //! Turn left.
+    /**
+     * The base starts turning counter clock wise with the selected
+     * acceleration (@ref setRotateAcceleration) until it reaches the
+     * selected rotational velocity (@ref setRotateVelocity) and then
+     * rotates at that constant velocity.
+     *
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void rotateLeft() raises(EDevIO);
+    //! Turn right.
+    /**
+     * The base starts turning clock wise with the selected
+     * acceleration (@ref setRotateAcceleration) until it reaches the
+     * selected rotational velocity (@ref setRotateVelocity) and then
+     * rotates at that constant velocity.
+     *
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void rotateRight() raises(EDevIO);
+    //! Rotate with constant torque.
+    /**
+     * Warnig: Untested!
+     *
+     * @param relative 
+     *        in percent - positive values indicate counter clockwise rotation
+     *        negative values indicate clockwise rotatition.
+     * @throw EOutOfBounds is thrown if: relative > 100 or relative < -100.
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void rotateTorque(in long relative) raises(EOutOfBounds, EDevIO);
+    //! Rotate with constant power.
+    /**
+     * Warnig: Untested!
+     *
+     * @param relative 
+     *        in percent - positive values indicate counter clockwise rotation
+     *        negative values indicate clockwise rotatition.
+     * @throw EOutOfBounds is thrown if: relative > 100 or relative < -100.
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void rotatePower(in long relative) raises(EOutOfBounds, EDevIO);
+    //! Set rotational velocity.
+    /**
+     * Preset the rotational velocity of the mobile base, but do not
+     * start movement yet. This method is used in combination
+     * with: @ref rotateLeft, @ref rotateRight, @ref rotateHalt and
+     * @ref rotateLimp.
+     *
+     * @param velocity Rotational velocity in rad/s.
+     * @throw EOutOfBounds
+     *        is thrown if velocity < 0 or velocity > maxRotation.
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void setRotateVelocity(in double velocity) raises(EOutOfBounds, EDevIO);
+    //! Set the rotational acceleration.
+    /**
+     * Warnig: Untested!
+     *
+     * @param accel Rotational acceleration in rad/(s*s).
+     * @throw EOutOfBounds
+     *        is thrown if accel < 0 or accel > maxRotAccel.
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void setRotateAcceleration(in double accel) raises(EOutOfBounds, EDevIO);
+    void setRotateTorque(in unsigned long torque) raises(EOutOfBounds, EDevIO);
+
+    //-------------------------------------------------------------------------
+    // translational movement methods
+    //-------------------------------------------------------------------------
+
+    //! Halt translational motors.
+    /**
+     * Active halt: The mobile base doesn't translate afterwards an
+     * can't be pushed around.
+     *
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void translateHalt() raises(EDevIO);
+    //! Wait for halt of translation of the mobile base.
+    /**
+     * Wait for the mobile base to no longer translate.  This call is
+     * especially useful, to wait for the end of a @ref
+     * translateRelative call. It returns emediately, if the base
+     * isn't translating at the moment.
+     */
+    void waitTranslateHalt();
+    //! Translate forward.
+    /**
+     * The base starts moving forward with the selected acceleration
+     * (@ref setTranslateAcceleration) until it reaches the selected
+     * translational velocity (@ref setTranslateVelocity) and then
+     * translates at that constant velocity.
+     *
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void translateForward() raises(EDevIO);
+    //! Translate backward.
+    /**
+     * The base starts moving backward with the selected acceleration
+     * (@ref setTranslateAcceleration) until it reaches the selected
+     * translational velocity (@ref setTranslateVelocity) and then
+     * translates at that constant velocity.
+     *
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void translateBackward() raises(EDevIO);
+    //! Translate to absolute position.
+    /**
+     * ???
+     */
+    void translateToPosition(in unsigned long position) raises(EDevIO);
+    //! Translate with constant torque.
+    /**
+     * Warnig: Untested!
+     *
+     * @param relative 
+     *        in percent - positive values indicate forward translation
+     *        negative values indicate backward translation.
+     * @throw EOutOfBounds is thrown if: relative > 100 or relative < -100.
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void translateTorque(in long relative) raises(EOutOfBounds, EDevIO);
+    //! Translate with constant power.
+    /**
+     * Warnig: Untested!
+     *
+     * @param relative 
+     *        in percent - positive values indicate forward translation
+     *        negative values indicate backward translation.
+     * @throw EOutOfBounds is thrown if: relative > 100 or relative < -100.
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void translatePower(in long relative) raises(EOutOfBounds, EDevIO);
+    //! Set translational velocity.
+    /**
+     * Preset the translational velocity of the mobile base, but do not
+     * start movement yet. This method is used in combination
+     * with: @ref translateForward, @ref translateBackward, @ref translateHalt and
+     * @ref translateLimp.
+     *
+     * @param velocity Translational velocity in mm/s.
+     * @throw EOutOfBounds
+     *        is thrown if velocity > maxTranslation.
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void setTranslateVelocity(in unsigned long velocity) 
+      raises(EOutOfBounds, EDevIO);
+    //! Set translational acceleration.
+    /**
+     * Warnig: Untested!
+     *
+     * @param accel Translational acceleration in mm/(s*s).
+     * @throw EOutOfBounds
+     *        is thrown if accel > maxTransAccel.
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void setTranslateAcceleration(in unsigned long accel) 
+      raises(EOutOfBounds, EDevIO);
+    void setTranslateTorque(in unsigned long torque) 
+      raises(EOutOfBounds, EDevIO);
+
+    //-------------------------------------------------------------------------
+    // miscelanious
+    //-------------------------------------------------------------------------
+
+    //! Angle between base and enclosure.
+    /**
+     * Warnig: Untested!
+     *
+     * Heaving a synchro drive the base of the B21 can move into any
+     * direction. But the enclosure (the upper part of the robots
+     * torso) always points into the direction of the robots wheels,
+     * so it allway drives forward.
+     *
+     * This method returns the current angle of the distortion between
+     * the base and the enclosure (in rad).
+     */
+    double getDistortion();
+
+    //-------------------------------------------------------------------------
+    // battery and current queries methods
+    //-------------------------------------------------------------------------
+
+    //! Query the momentary rotational current.
+    double getWaitRotateCurrent() raises(ETimeOut, EDevIO);
+    //! Query the momentary translational current.
+    double getWaitTranslateCurrent() raises(ETimeOut, EDevIO);
+    //! Query the battery voltage.
+    double getWaitBatteryVoltage() raises(ETimeOut, EDevIO);
+  };
+};
+
+#endif
+
+
+
+

@@ -1,0 +1,15 @@
+<!DOCTYPE xml SYSTEM "MiroParametersDescriptionDocument.dtd">
+<config> 
+  <config_global name="namespace" value="Miro" />
+  <config_global name="namespace" value="NotifyMulticast" />
+  <config_global name="include" value="Parameters.h" />
+  <config_global name="Include" value="ace/INET_Addr.h" />
+
+  <config_group name="config">
+    <config_item parent="Config" instance="true">
+      <config_parameter name="Subscription" type="std::set&lt;std::string&gt;" />
+      <config_parameter name="Messagetimeout" type="unsigned int" default="500" measure="msec"/>
+      <config_parameter name="Multicastgroup" type="ACE_INET_Addr" default="225.2.2.1:41006"/>
+    </config_item>
+  </config_group>
+</config>

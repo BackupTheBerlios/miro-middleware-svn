@@ -1,0 +1,136 @@
+<!DOCTYPE MiroConfigDocument>
+<config>
+ <section name="Robot" >
+  <parameter name="Robot" >
+   <parameter value="passtnix" name="Name" />
+   <parameter value="Sparow99" name="Type" />
+  </parameter>
+ </section>
+ <section name="Sparrow99" >
+  <parameter name="SparrowBoard" >
+   <parameter value="/dev/can/0" name="Device" />
+   <parameter value="0.040000" name="InfraredPulse" />
+   <parameter value="0.040000" name="OdometryPulse" />
+   <parameter name="IrScaling" >
+    <parameter>
+     <parameter value="380" name="MaxDistance" />
+     <parameter value="40" name="MinDistance" />
+     <parameter value="1" name="Scaling" />
+     <parameter value="0" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="0.956" name="Scaling" />
+     <parameter value="0" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="1" name="Scaling" />
+     <parameter value="0" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="1.222" name="Scaling" />
+     <parameter value="0" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="1" name="Scaling" />
+     <parameter value="0" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="0.956" name="Scaling" />
+     <parameter value="0" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="1.157" name="Scaling" />
+     <parameter value="0" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="1" name="Scaling" />
+     <parameter value="0" name="Offset" />
+    </parameter>
+   </parameter>
+   <parameter value="0.000000" name="PanLatency" />
+   <parameter value="0.050000" name="ButtonsPollInterval" />
+   <parameter value="1.0776" name="TransFactor" />
+   <parameter value="27.5" name="Deg2ServoTicks" />
+   <parameter value="1.000000" name="WatchdogTimeout" />
+   <parameter value="400" name="PanMSecPerRad" />
+   <parameter value="200" name="PanSwing" />
+   <parameter value="3300" name="Servo0MidPulse" />
+   <parameter value="200" name="MaxAccel" />
+   <parameter value="2310" name="Diameter" />
+   <parameter value="30720" name="MaxPower" />
+   <parameter value="30" name="TicksL" />
+   <parameter value="30" name="TicksR" />
+   <parameter value="true" name="ChannelSharing" />
+   <parameter name="Motion" >
+    <parameter value="180" name="MaxRotation" />
+    <parameter value="-180" name="MinRotation" />
+    <parameter value="1000" name="MaxTranslation" />
+    <parameter value="-1000" name="MinTranslation" />
+    <parameter value="450" name="WheelBase" />
+    <parameter value="1000" name="MaxLTranslation" />
+    <parameter value="1000" name="MaxRTranslation" />
+    <parameter value="-1000" name="MinLTranslation" />
+    <parameter value="-1000" name="MinRTranslation" />
+   </parameter>
+  </parameter>
+ </section>
+ <section name="Video" >
+  <parameter name="Video" >
+   <parameter value="odd" name="Subfield" />
+   <parameter value="bgr" name="Palette" />
+  </parameter>
+  <parameter name="Camera" >
+   <parameter value="0.120000" name="Latency" />
+   <parameter value="34.0" name="Alpha" />
+   <parameter value="570" name="Height" />
+   <parameter value="193.711293" name="Cx" />
+   <parameter value="136.058825" name="Cy" />
+   <parameter value="4.098558" name="F" />
+   <parameter value="1.703137e-02" name="Kappa" />
+   <parameter value="1" name="Sx" />
+   <parameter value="0.00625" name="Dx" />
+   <parameter value="0.0125" name="Dy" />
+   <parameter value="384" name="Nfx" />
+   <parameter value="786" name="Ncx" />
+  </parameter>
+ </section>
+ <section name="Notification" >
+  <parameter name="Logging" >
+   <parameter name="TypeName">
+     <parameter value="Infrared" />
+     <parameter value="Odometry" />
+     <parameter value="RawPosition" />
+     <parameter value="VisionData" />
+     <parameter value="LineSamples" />
+     <parameter value="GoalPosition" />
+     <parameter value="BallPosition" />
+     <parameter value="PatternChange" />
+     <parameter value="ArbitrateChange" />
+     <parameter value="PositionHypothesis" />
+   </parameter>
+   <parameter value="157286400" name="MaxFileSize" />
+  </parameter>
+  <parameter name="NotifyMulticast" >
+   <parameter value="225.2.2.1:41006" name="Multicastgroup" />
+   <parameter value="500" name="Messagetimeout" />
+   <parameter name="Subscription">
+     <parameter value="BallPosition" />
+     <parameter value="LocalizedPosition" />
+   </parameter>
+  </parameter>
+ </section>
+</config>

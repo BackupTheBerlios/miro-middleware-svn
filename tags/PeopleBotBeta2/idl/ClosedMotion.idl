@@ -1,0 +1,63 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef ClosedMotion_idl
+#define ClosedMotion_idl
+
+#include "Exception.idl"
+
+module Miro
+{
+  //! The closed motion interface.
+  /**
+   * A closed motion in Miro is a motion that is specified in distance
+   * and angle of the motion instead of its velocity. 
+   * 
+   * @author Hans Utz
+   */
+  interface ClosedMotion
+  {
+    //! Rotate to absolute heading.
+    /**
+     * Note that the coordinate system of the odometry is used. 
+     *
+     * @param angle
+     * It is specified in rad.
+     * @throw EOutOfBounds
+     * The allowed values for the angle are: -PI < angle <= PI.
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    void rotateToPosition(in double angle) raises(EOutOfBounds, EDevIO);
+    //! Rotate relative to the current heading.
+    /**
+     * @param angle
+     * It is specified in rad.
+     * @throw EOutOfBounds
+     * The allowed values for the angle are: -2 * PI < angle <= 2 * PI.
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    void rotateRelative(in double angle) raises(EOutOfBounds, EDevIO);
+    //! Translate relative to the current position.
+    /**
+     * @param distance 
+     * It is specified in mm.
+     * @throw EOutOfBounds
+     * Most motion controllers will only allow to move in
+     * closed motion for a limited distance - e.g. 5000mm.
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    void translateRelative(in long distance) raises(EOutOfBounds, EDevIO);
+  };
+};
+
+#endif // closedMotion_idl

@@ -1,0 +1,13 @@
+<!DOCTYPE xml SYSTEM "PolicyEditor_behaviour.dtd">
+<config> 
+  <config_global name="namespace" value="Mcp" />
+  <config_global name="include" value="miro/Parameters.h" />
+
+  <config_group name="mcp">
+    <config_item parent="Miro::Tty">
+      <constructor>ttyParams.baudrate = 38400;
+      </constructor>
+      <config_parameter name="watchdogTimeout" type="ACE_Time_Value" default="20" measure="sec" />
+    </config_item>
+  </config_group>
+</config>

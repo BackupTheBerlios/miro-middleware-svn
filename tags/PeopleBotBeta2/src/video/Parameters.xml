@@ -1,0 +1,26 @@
+<!DOCTYPE xml SYSTEM "MiroParameterDescription.dtd">
+<config> 
+  <config_global name="namespace" value="Video" />
+  <config_global name="include" value="miro/Parameters.h" />
+
+  <config_group name="video">
+    <config_item parent="Miro::Dev" instance="true">
+      <config_parameter name="device" type="string" inherited="true" default="/dev/v4l/video0" />
+
+      <config_parameter name="grabber" type="string" default="bttv" />
+      <config_parameter name="format" type="string" default="pal" />
+      <config_parameter name="source" type="string" default="composite1" />
+      <config_parameter name="palette" type="string" default="rgb" />
+      <config_parameter name="subfield" type="string" default="all" />
+
+      <config_parameter name="width" type="int" default="384" measure="pixel" />
+      <config_parameter name="height" type="int" default="288" measure="pixel" />
+      <config_parameter name="connections" type="int" default="16" />
+      <config_parameter name="buffers" type="int" default="16" />
+      <config_parameter name="byteorder" type="int" default="1" />
+      <config_parameter name="upsideDown" type="bool" default="false" />
+      <config_parameter name="pixelSize" type="int" default="3" measure="bytes" />
+
+    </config_item>
+  </config_group>
+</config>

@@ -1,0 +1,81 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef RangeEvent_idl
+#define RangeEvent_idl
+
+#include "Time.idl"
+
+module Miro
+{
+  //! A vector of sensor readings.
+  typedef sequence<long> RangeGroupIDL;
+  //! A vector of sensor groups.
+  typedef sequence<RangeGroupIDL> RangeScanIDL;
+
+  //! Range scan notification.
+  /**
+   * The data of a range sensor that acquires data in a contiuous scan
+   * pushes its data within this struct. 
+   */
+  struct RangeScanEventIDL
+  {
+    //! The time the scan was accquired.
+    TimeIDL time;
+    //! The full scan of all sensor groups.
+    RangeScanIDL range;
+  };
+
+  //! Range group notification.
+  /**
+   * The data of a range sensor that acquires data group wise
+   * pushes its data within this struct.
+   *
+   * An example of this sensor configuration are the Sparrow99 infrared sensors.
+   */
+  struct RangeGroupEventIDL
+  {
+    //! The time the scan was accquired.
+    TimeIDL time;
+    //! The group the sensors belong to.
+    unsigned short group;
+    //! The distance measurements of the scan group.
+    RangeGroupIDL range;
+  };
+
+  //! Range data of a single sensor.
+  struct RangeSensorIDL
+  {
+    //! The group the sensor belongs to.
+    unsigned short group;
+    //! The index of the sensor within the group.
+    unsigned short index;
+    //! The measured distance.
+    long range;
+  };
+
+  //! Range sensor bunch notification.
+  /**
+   * The data of a range sensor that acquires data in a discontiuous
+   * fashion pushes its data within this struct. Each sensor contains
+   * its own group id as well as its index.
+   *
+   * An example of this sensor configuration are the sonar sensors of
+   * the B21 and the Pioneer1.
+   */
+  struct RangeBunchEventIDL
+  {
+    //! The time the scan was accquired.
+    TimeIDL time;
+    //! The vector of sensor readings.
+    sequence<RangeSensorIDL> sensor;
+  };
+};
+#endif // rangeEvent_idl

@@ -1,0 +1,17 @@
+Tools for low level Sparrow99 robot testing.
+
+- SparrowTest: Accesses directly the sparrow board without using the
+  CORBA based interfaces. Usefull to narrow the cause of failure, in
+  case the robot does not work properly.
+
+   Offers a simple text interface for all of the sparrow board
+   interface methods.
+
+- KickerTest: Small test program for kicker testing. Provide the kicking
+  time as first command line parameter and the robot will kick each time
+  you press button 0 on the robot.
+
+- PanPosition: Small test program to verify the pan timings.
+
+Note that the tests have to be run on the box, the sparrow board is
+attached to.
