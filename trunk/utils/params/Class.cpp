@@ -233,7 +233,13 @@ Class::generateSource(std::ostream& ostr, unsigned long _indent) const
 	  
 	    ostr << "\"" << name;
 	  }
-	  ostr << ": \" << " << j->name_;
+	  ostr << ": \" << ";
+
+	  if (j->type_ != "angle")
+	    ostr << j->name_;
+	  else
+	    ostr << "Miro::rad2Deg(" << j->name_ << ")" << std::endl;
+
 	  if (!j->measure_.isEmpty())
 	    ostr << " << \"" << j->measure_ << "\"";
 	  ostr << " << std::endl";

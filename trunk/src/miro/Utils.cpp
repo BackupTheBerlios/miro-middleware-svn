@@ -163,17 +163,17 @@ namespace Miro
     while(!n1.isNull()) {
       QDomElement e1 = n1.toElement();
       if (!e1.isNull() &&
-	  (n1.nodeName() == "section" &&
-	   e1.attribute("name") == section) ||
-	  (n1.nodeName() == section)) {
+	  ( (n1.nodeName() == "section" &&
+	     e1.attribute("name") == section) ||
+	    (n1.nodeName() == section))) {
 
 	QDomNode n2 = n1.firstChild();
 	while (!n2.isNull()) {
 	  QDomElement e2 = n2.toElement();
 	  if (!e2.isNull() &&
-	      (n2.nodeName() == "parameter" &&
-	       e2.attribute("name") == category) ||
-	      (n2.nodeName() == category)) {
+	      ( (n2.nodeName() == "parameter" &&
+		 e2.attribute("name") == category) ||
+		(n2.nodeName() == category))) {
 	    parameters <<= n2;
 	  }
 	  n2 = n2.nextSibling();

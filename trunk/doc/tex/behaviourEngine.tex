@@ -284,7 +284,7 @@ the above mentioned wander behaviour - which doesn't use any sensory
 information would be best implemented as a child of the
 {\tt Miro::TimedBehaviour} class.
 
-See {\tt \$MIRO\_ROOT/examples/b21Behaviours/Wander.cpp|h} for a
+See {\tt \$MIRO\_ROOT/examples/behaviours/simple/Wander.cpp|h} for a
 complete source code example.
 
 \subsection{Miro::EventBehaviour}
@@ -302,7 +302,7 @@ have to poll excessively as a timed behaviour in order to minimize the
 latency between a bumper pressing a the actual stop, while it would
 only need to call an arbitration method in very rare occasions.
 
-See {\tt \$MIRO\_ROOT/examples/b21Behaviours/TactileStop.cpp|h} for a
+See {\tt \$MIRO\_ROOT/examples/behaviours/simple/TactileStop.cpp|h} for a
 complete source code example.
 
 \subsection{Miro::TaskBehaviour}
@@ -527,10 +527,10 @@ of the Policy class can be done within the main function of your
 program. This task consists mostly of obtaining the needed object
 references, instancing the behaviours and arbiters, instancing
 behaviours and arbiters and registering them at their respective
-repositories.  This can be bundled within a so called behaviour engine
+repositories.  This can be bundled within a so called behaviour factory
 class as can be seen in the behaviour example at:
 
-{\tt \$MIRO\_ROOT/examples/b21Behaviours/BehaviourEngine.cpp|h}
+{\tt \$MIRO\_ROOT/examples/behaviours/simple/BehaviourFactory.cpp|h}
 
 \section{The Policy Editor}
 \label{SEC:POLICY_EDITOR}
