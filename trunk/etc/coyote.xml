@@ -380,7 +380,7 @@
 	<parameter value="184" name="WhiteBalance1" />
       </parameter>
 
-      <parameter name="Video" >
+<parameter name="Video" >
 	<parameter value="640" name="Width" />
 	<parameter value="480" name="Height" />
 	<parameter value="yuv422" name="Palette" />
@@ -644,11 +644,11 @@
       <parameter name="ROIVisual">
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
-	  <parameter value="ROI" name="Name" />
+ 	  <parameter value="ROI" name="Name" />
 	</parameter>
       </parameter>
 
-    </section>
+   </section>
 
 
     <section name="Notification" >
