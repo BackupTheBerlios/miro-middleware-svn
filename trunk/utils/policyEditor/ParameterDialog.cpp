@@ -87,7 +87,8 @@ MyBoolValidator::validate( QString & input, int &) const
   QValidator::State s = Invalid;
 
   if (input == "true" ||
-      input == "false")
+      input == "false" ||
+      input.length() == 0)
     s = Acceptable;
   else if (input.length() <= 5)
     s = Intermediate;
