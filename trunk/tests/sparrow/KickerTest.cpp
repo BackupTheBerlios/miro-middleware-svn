@@ -2,114 +2,67 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2001, 2002, 2003
+// (c) 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "sparrow/SparrowConnection.h"
-#include "sparrow/Parameters.h"
-#include "sparrow/SparrowConsumer.h"
+#include "idl/KickerC.h"
+#include "miro/Client.h"
 
-#include "can/CanEventHandler.h"
-
-#include "miro/ReactorTask.h"
-#include "miro/Utils.h"
-
-#include "miro/TimeHelper.h"
-
+#include <string>
 #include <iostream>
 
 using namespace Miro;
+using namespace std;
 
-using std::cout;
-using std::cerr;
-using std::endl;
-using std::flush;
-using std::cin;
-
-struct Service
-{
-  ReactorTask reactorTask;
-  Sparrow::Consumer * pSparrowConsumer;
-  Can::EventHandler * pCanEventHandler;
-  Sparrow::Connection connection;
-
-  Service();
-};
-
-Service::Service() :
-  reactorTask(),
-  pSparrowConsumer(new Sparrow::Consumer(&connection, NULL, NULL, NULL, NULL)),
-  pCanEventHandler(new Can::EventHandler(pSparrowConsumer, Sparrow::Parameters::instance())),
-  connection(reactorTask.reactor(), pCanEventHandler, pSparrowConsumer)
-{
-
-}
 
 int main(int argc, char * argv[])
 {
-  // Parameters to be passed to the services
-  Sparrow::Parameters * parameters = Sparrow::Parameters::instance();
+  Client client(argc, argv);
 
-  // Config file processing
-  Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
-  config->setSection("Sparrow99");
-  config->getParameters("sparrowBoard", *parameters);
-  delete config;
-
-#ifdef DEBUG
-    cout << "  sparrow paramters:" << endl << *parameters << endl;
-#endif
-
-  // Initialize server daemon.
-  Service service;
-
-  cout << "initialized" << endl;
-
-  int time;
-
-  service.reactorTask.open(NULL);
-
-  ACE_OS::sleep(ACE_Time_Value(2));
-
-  if (argc > 1)
-    time = atoi(argv[1]);
-  else {
-    cerr << "usage: kickerTest <kick msec>" << endl;
-    return 1;
-  }
-  
   try {
-    int digital = 1;
+    Kicker_var kicker = client.resolveName<Kicker>("Kicker");
 
     while (true) {
-      Miro::Guard guard(service.pSparrowConsumer->digitalMutex);
-      service.pSparrowConsumer->digitalCond.wait();
+      cout << "Kicker interface test: " << endl
+	   << " 0 - kick" << endl
+	   << " q - quit" << endl
+	   << "Choice: " << flush;
+      
+      string input;
+      if (! (cin >> input))
+	break;
 
-      cout << "button" << endl;
+      if (input[0] == 'q')
+	break;
+      
+      if (input[0] == '0') {
+	cout << "Kick duration (ms): " << flush;
+	int msec;
+	cin >> msec;
+	Miro::TimeIDL t;
+	t.sec = msec / 1000;
+	t.usec = (msec % 1000) * 1000;
 
-      if ((service.pSparrowConsumer->digital[1] & 0x01) && digital == 0) {
+	cout << t.sec << ".";
+	cout.width(6);
+	cout.fill('0');
+	cout << t.usec << endl;
 
-	cout << "time (msec): " << time << endl;
-	service.connection.kick(time);
+	kicker->kick(t);
       }
-      digital = service.pSparrowConsumer->digital[1] & (0x01);
-
+      else {
+	cout << "wrong choice!" << endl;
+      }
     }
   }
-  catch (const Miro::Exception & e) {
-    cerr << "Miro exception thrown:" << e << endl;
+  catch (CORBA::Exception const& e) {
+    cerr << "CORBA exception thrown:" << e << endl;
     return 1;
   }
-  catch (...) {
-    cerr << "Uncaught exception: " << endl;
-    return 1;
-  }
-
-  service.reactorTask.cancel();
   return 0;
 }
 
