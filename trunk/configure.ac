@@ -36,12 +36,6 @@ AC_DISABLE_STATIC
 AC_ENABLE_SHARED
 AC_PROG_LIBTOOL
 
-# Checks for libraries.
-AC_CHECK_LIB(raw1394, raw1394_get_libversion, [ac_have_libraw1394=yes], [ac_have_libraw1394=no])
-AC_CHECK_LIB(dc1394_control, dc1394_print_feature_set, [ac_have_libdc1394=yes], [ac_have_libdc1394=no], [-lraw1394])
-
-AC_DETERMINE_LIBDC_VERSION
-
 # Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS([errno.h fcntl.h netinet/in.h stdlib.h string.h sys/ioctl.h sys/time.h termios.h unistd.h])
@@ -114,11 +108,20 @@ if test "x$ac_request_meteor" = xyes; then
 	ac_miro_has_meteor=yes
 fi
 
-if test "x$ac_request_ieee1394" = xyes &&
-	test "x$ac_have_libraw1394" = xyes &&
-	test "x$ac_have_libdc1394" = xyes; then
-	AC_DEFINE(MIRO_HAS_1394)
-	ac_miro_has_1394=yes
+if test "x$ac_request_ieee1394" = xyes; then
+	AC_CHECK_LIB(raw1394, raw1394_get_libversion, [ac_have_libraw1394=yes], [ac_have_libraw1394=no])
+	AC_CHECK_LIB(dc1394_control, dc1394_print_feature_set, [ac_have_libdc1394=yes], [ac_have_libdc1394=no], [-lraw1394])
+	AC_DETERMINE_LIBDC_VERSION
+fi
+
+if test "x$ac_request_ieee1394" = xyes; then
+	AC_CHECK_LIB(raw1394, raw1394_get_libversion, [ac_have_libraw1394=yes], [ac_have_libraw1394=no])
+	AC_CHECK_LIB(dc1394_control, dc1394_print_feature_set, [ac_have_libdc1394=yes], [ac_have_libdc1394=no], [-lraw1394])
+	AC_DETERMINE_LIBDC_VERSION
+	if test "x$ac_have_libraw1394" = xyes && test "x$ac_have_libdc1394" = xyes; then
+		AC_DEFINE(MIRO_HAS_1394)
+		ac_miro_has_1394=yes
+	fi
 fi
 
 if test "x$ac_request_quickcam" = xyes; then
