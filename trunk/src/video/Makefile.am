@@ -87,6 +87,7 @@ VideoService_LDADD = \
 extraheader = \
 	VideoFilterFactory.h \
 	VideoFilterLink.h \
+	VideoBrokerLink.h \
 	ioctl_meteor.h
 
 BUILT_SOURCES = Parameters.cpp Parameters.h

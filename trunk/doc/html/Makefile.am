@@ -23,9 +23,9 @@ CLEANFILES = \
 
 all-local:
 	doxygen doxygen.idl
-	(cd idl && installdox -lACE.tag@http://doc.ece.uci.edu/Doxygen/Current/html/ace/ -lTAO.tag@http://doc.ece.uci.edu/Doxygen/Current/html/tao/)
+	(cd idl && ./installdox -lACE.tag@http://doc.ece.uci.edu/Doxygen/Current/html/ace/ -lTAO.tag@http://doc.ece.uci.edu/Doxygen/Current/html/tao/)
 	doxygen doxygen.cpp
-	(cd cpp && installdox -lMiroIDL.tag@../idl/ -lACE.tag@http://doc.ece.uci.edu/Doxygen/Current/html/ace/ -lTAO.tag@http://doc.ece.uci.edu/Doxygen/Current/html/tao/)
+	(cd cpp && ./installdox -lMiroIDL.tag@../idl/ -lACE.tag@http://doc.ece.uci.edu/Doxygen/Current/html/ace/ -lTAO.tag@http://doc.ece.uci.edu/Doxygen/Current/html/tao/)
 
 install-data-local:
 	AS_MKDIR_P $(datadir)/html/idl $(datadir)/html/cpp

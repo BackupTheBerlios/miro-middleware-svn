@@ -13,7 +13,7 @@
 
 #include "Parameters.h"
 
-#include "miro/VideoS.h"
+#include "idl/VideoS.h"
 #include "miro/Synch.h"
 
 #include <set>
