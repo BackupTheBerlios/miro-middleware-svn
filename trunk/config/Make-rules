@@ -24,13 +24,9 @@ AM_CXXFLAGS += -Woverloaded-virtual -DDEBUG -DQT_GENUINE_STR
 # AM_LDFLAGS += $(ACE_LDFLAGS) $(TAO_LDFLAGS) $(QT_LDFLAGS)
 # AM_LDFLAGS += $(INHERITED_LDFLAGS)
 
-LDADD = -L$(top_builddir)/lib
-LDADD += $(ACE_LDFLAGS) $(TAO_LDFLAGS) $(QT_LDFLAGS)
-LDADD += $(INHERITED_LDFLAGS)
-
 # I know, I know. But older versions didn't recognize AM_LDFLAGS
 # overriding this variable by a user should work nevertheless.
-LDFLAGS = -version-info `echo $(VERSION) | sed 's/\./:/g'`
+LDFLAGS = -L$(top_builddir)/lib $(ACE_LDFLAGS) $(TAO_LDFLAGS) $(QT_LDFLAGS) $(INHERITED_LDFLAGS) -version-info `echo $(VERSION) | sed 's/\./:/g'`
 
 
 # header include dirs
