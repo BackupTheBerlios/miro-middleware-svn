@@ -153,8 +153,8 @@
 	<parameter value="30720" name="MaxPower" />
 	<parameter value="29" name="TicksL" />
 	<parameter value="29" name="TicksR" />
-	<parameter value="21.7" name="Deg2ServoTicksL"/>
-	<parameter value="22.0" name="Deg2ServoTicksR"/>
+	<parameter value="21.3" name="Deg2ServoTicksL"/>
+	<parameter value="21.0" name="Deg2ServoTicksR"/>
 	<parameter value="true" name="ChannelSharing" />
 	<parameter name="Motion" >
 	  <parameter value="180" name="MaxRotation" />
@@ -305,9 +305,9 @@
       </parameter>
 
       <parameter name="FilterYUV422Save" >
-	<parameter value="false" name="Activate" />
-	<parameter value="10" name="Interval" />
-	<parameter value="SchnulliBulli_" name="Basename" />
+	<parameter value="true" name="Activate" />
+	<parameter value="50" name="Interval" />
+	<parameter value="roadrunner_" name="Basename" />
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
 	  <parameter value="VideoBla" name="Name" />
@@ -350,16 +350,20 @@
     <section name="Notification" >
       <parameter name="Logging" >
 	<parameter name="TypeName">
-          <parameter value="Pan" />
+	  <parameter value="Pan" />
 	  <parameter value="Infrared" />
 	  <parameter value="Odometry" />
 	  <parameter value="RawPosition" />
+	  <parameter value="VisionData" />
+	  <parameter value="LineSamples" />
 	  <parameter value="GoalPosition" />
 	  <parameter value="BallPosition" />
 	  <parameter value="PatternChange" />
 	  <parameter value="ArbitrateChange" />
-	  <parameter value="LocalizedPosition" />
 	  <parameter value="PositionHypothesis" />
+	  <parameter value="LocalizedPosition" />
+	  <parameter value="LocalizeStatistics" />
+	  <parameter value="SharedWorld" />
 	</parameter>
 	<parameter value="157286400" name="MaxFileSize" />
       </parameter>
