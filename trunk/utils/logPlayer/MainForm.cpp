@@ -18,6 +18,8 @@
 
 #include "miro/Exception.h"
 
+#include <ace/OS.h>
+
 #define INCLUDE_MENUITEM_DEF
 #include <qapplication.h>
 #include <qpopupmenu.h>

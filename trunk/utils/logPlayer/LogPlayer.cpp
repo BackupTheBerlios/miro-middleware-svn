@@ -17,6 +17,7 @@
 #include "miro/Exception.h"
 #include "idl/ExceptionC.h"
 
+#include <ace/OS.h>
 #include <ace/Arg_Shifter.h>
 
 #include <orbsvcs/Notify/Notify_Default_CO_Factory.h>

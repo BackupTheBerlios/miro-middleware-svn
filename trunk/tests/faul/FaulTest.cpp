@@ -33,8 +33,10 @@
 #include "miro/BatteryImpl.h"
 #include "miro/Exception.h"
 
+#include <ace/Signal.h>
+
 #include <iostream>
-#include <stdio.h>
+#include <cstdio>
 
 using std::cout;
 using std::cerr;

@@ -11,6 +11,7 @@
 
 #include <ace/Date_Time.h>
 #include <ace/Get_Opt.h>
+#include <ace/OS.h>
 
 #include <iostream>
 #include <sstream>

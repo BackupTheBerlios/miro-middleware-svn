@@ -15,6 +15,7 @@
 #include "miro/VideoHelper.h"
 
 #include <ace/Get_Opt.h>
+#include <ace/Signal.h>
 
 #include <iostream>
 #include <fstream>

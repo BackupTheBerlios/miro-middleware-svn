@@ -13,6 +13,8 @@
 #include "miro/Client.h"
 #include "miro/IO.h"
 
+#include <ace/OS.h>
+
 #include <iostream>
 
 using std::cout;

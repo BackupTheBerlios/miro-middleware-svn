@@ -17,6 +17,8 @@
 #include "miro/Client.h"
 #include "miro/IO.h"
 
+#include <ace/OS.h>
+
 using namespace Miro;
 
 using std::cout;

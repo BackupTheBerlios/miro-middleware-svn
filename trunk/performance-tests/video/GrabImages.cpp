@@ -17,6 +17,8 @@
 #include "idl/VideoC.h"
 #include "miro/Client.h"
 
+#include <ace/OS.h>
+
 using namespace Miro;
 
 using std::cout;

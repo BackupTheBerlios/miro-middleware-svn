@@ -124,10 +124,10 @@ int main (int argc, char * argv[])
       case 'a': {
 	Miro::FilterTreeIDL_var stats = broker->filterTreeStats();
 	Miro::ConnectionSetIDL connections;
-	connectToFilters(stats, connections);
+	connectToFilters(stats.in(), connections);
 	Miro::BufferSetIDL_var buffers = new Miro::BufferSetIDL;
 	broker->acquireNextImageSet(connections, buffers);
-	broker->releaseImageSet(connections, buffers);
+	broker->releaseImageSet(connections, buffers.in());
 	disconnectFromFilters(client, connections);
 	break;
       }

@@ -30,8 +30,10 @@
 #include "miro/OdometryImpl.h"
 #include "miro/BatteryImpl.h"
 
+#include <ace/Signal.h>
+
 #include <iostream>
-#include <stdio.h>
+#include <cstdio>
  
 using std::cout;
 using std::cerr;

@@ -11,6 +11,8 @@
 
 #include "Timer.h"
 
+#include <ace/OS.h>
+
 // this is a polling implementation
 // TODO: make it use the ACE_Reactor stuff
 
