@@ -16,6 +16,8 @@
 
 #include <ace/Event_Handler.h>
 
+#include <map>
+
 namespace Miro 
 {
   namespace NMC
