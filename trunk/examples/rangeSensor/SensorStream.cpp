@@ -38,21 +38,15 @@ bool group_en;
 SensorStream::SensorStream(EventChannel_ptr _ec,
 			 const std::string& domainName,
 			 const std::string& sensorName) :
-  Super(_ec, false)
+  Super(_ec)
 {
-  EventTypeSeq added(1);
-  EventTypeSeq removed(1);
+  EventTypeSeq added;
   added.length(1);
-  removed.length(1);
 
   added[0].domain_name =  CORBA::string_dup(domainName.c_str());
   added[0].type_name = CORBA::string_dup(sensorName.c_str());
 
-  removed[0].domain_name =  CORBA::string_dup("*");
-  removed[0].type_name = CORBA::string_dup("*");
-
-  consumerAdmin_->subscription_change(added, removed);
-  connect();
+  setSubscriptions(added);
 }
 
 SensorStream::~SensorStream()

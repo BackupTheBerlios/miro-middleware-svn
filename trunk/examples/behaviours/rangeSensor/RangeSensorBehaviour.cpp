@@ -55,19 +55,6 @@ RangeSensorBehaviour::RangeSensorBehaviour(Miro::Client& _client,
   pSupplier_(_pSupplier)
 {
   cout << "Constructing RangeSensorBehaviour behaviour." << endl;
-
-  EventTypeSeq added(0);
-  EventTypeSeq removed(1);
-  added.length(1);
-  removed.length(1);
-
-  added[0].domain_name =  CORBA::string_dup(domainName_.c_str());
-  added[0].type_name = CORBA::string_dup("RawPosition");
-
-  removed[0].domain_name =  CORBA::string_dup("*");
-  removed[0].type_name = CORBA::string_dup("*");
-
-  consumer.consumerAdmin_->subscription_change(added, removed);
 }
 
 void
@@ -85,20 +72,15 @@ RangeSensorBehaviour::init(const Miro::BehaviourParameters * _params)
 
   cout << name_ << ": subscribing for " << description_->eventName << endl;
 
-  EventTypeSeq added(1);
-  EventTypeSeq removed(1);
-  added.length(1);
+  EventTypeSeq newSubscriptions;
+  newSubscriptions.length(2);
 
-  added[0].domain_name =  CORBA::string_dup(domainName_.c_str());
-  added[0].type_name = CORBA::string_dup(description_->eventName);
+  newSubscriptions[0].domain_name =  CORBA::string_dup(domainName_.c_str());
+  newSubscriptions[0].type_name = CORBA::string_dup("RawPosition");
+  newSubscriptions[1].domain_name =  CORBA::string_dup(domainName_.c_str());
+  newSubscriptions[2].type_name = CORBA::string_dup(description_->eventName);
 
-  if (sensorName_.length() > 0) {
-    removed.length(1);
-    removed[0].domain_name =  CORBA::string_dup(domainName_.c_str());
-    removed[0].type_name = CORBA::string_dup(sensorName_.c_str());
-  }
-  
-  consumer.consumerAdmin_->subscription_change(added, removed);
+  setSubscriptions(newSubscriptions);
 
   Super::init(_params);
 }

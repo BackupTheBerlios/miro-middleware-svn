@@ -21,7 +21,6 @@ SonarAvoid::SonarAvoid(Miro::RangeSensor_ptr _rangeSensor,
 		       CosNotifyChannelAdmin::EventChannel_ptr _ec,
 		       const std::string& _domainName) :
   Super(_ec),
-  domainName_(_domainName),
   sensor_()
 {
   std::cout << "Constructing SonarAvoid behaviour." << std::endl;
@@ -32,19 +31,7 @@ SonarAvoid::SonarAvoid(Miro::RangeSensor_ptr _rangeSensor,
   if (scanDescription->group.length() > 0)
     sensor_.resize(scanDescription->group[0].sensor.length());
 
-  // subscribe for sonar events
-  CosNotification::EventTypeSeq added;
-  CosNotification::EventTypeSeq removed;
-  added.length(1);
-  removed.length(1);
-
-  added[0].domain_name =  CORBA::string_dup(domainName_.c_str());
-  added[0].type_name = CORBA::string_dup("Sonar");
-
-  removed[0].domain_name =  CORBA::string_dup("*");
-  removed[0].type_name = CORBA::string_dup("*");
-
-  consumer.consumerAdmin_->subscription_change(added, removed);
+  setSingleSubscription(_domainName, "Sonar");
 }
 
 void

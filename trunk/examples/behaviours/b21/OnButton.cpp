@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2000, 2001, 2002, 2003
+// (c) 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -21,19 +21,7 @@ OnButton::OnButton(CosNotifyChannelAdmin::EventChannel_ptr _ec,
 		   const std::string& _domainName) :
   Super(_ec)
 {
-  // subscribe for Button events
-  CosNotification::EventTypeSeq added;
-  CosNotification::EventTypeSeq removed;
-  added.length(1);
-  removed.length(1);
-
-  added[0].domain_name =  CORBA::string_dup(_domainName.c_str());
-  added[0].type_name = CORBA::string_dup("Button");
-
-  removed[0].domain_name =  CORBA::string_dup("*");
-  removed[0].type_name = CORBA::string_dup("*");
-
-  consumer.consumerAdmin_->subscription_change(added, removed);
+  setSingleSubscription(_domainName, "Button");
 }
 
 void

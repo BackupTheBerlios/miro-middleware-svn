@@ -28,18 +28,13 @@ GenericNotify::GenericNotify(EventChannel_ptr _consumerAdmin,
 			     const char * domainName, const char * eventType) :
   Super(_consumerAdmin)
 {
-  EventTypeSeq added(1);
-  EventTypeSeq removed(1);
+  EventTypeSeq added;
   added.length(1);
-  removed.length(1);
 
   added[0].domain_name =  CORBA::string_dup(domainName);
   added[0].type_name = CORBA::string_dup(eventType);
 
-  removed[0].domain_name =  CORBA::string_dup("*");
-  removed[0].type_name = CORBA::string_dup("*");
-
-  consumerAdmin_->subscription_change(added, removed);
+  setSubscriptions(added);
 }
 
 GenericNotify::~GenericNotify()

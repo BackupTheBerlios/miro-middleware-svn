@@ -30,12 +30,11 @@ struct SonarNotify : public StructuredPushConsumer
     StructuredPushConsumer(_ec)
   {
     EventTypeSeq added, removed;
-
     added.length(1);
     added[0].domain_name =  CORBA::string_dup(domainName.c_str());
     added[0].type_name = CORBA::string_dup("Sonar");
 
-    consumerAdmin_->subscription_change(added, removed);
+    setSubscriptions(added);
   }
 
   // Inherited IDL interface.

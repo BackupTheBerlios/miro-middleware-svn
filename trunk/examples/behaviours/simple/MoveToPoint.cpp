@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (Midddleware for Robots)
 // 
-// (c) 2001, 2002, 2003
+// (c) 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -31,18 +31,7 @@ MoveToPoint::MoveToPoint(EventChannel_ptr _ec, const std::string& _domainName) :
 {
   std::cout << "Constructing MoveToPoint behaviour." << endl;
 
-  EventTypeSeq added(1);
-  EventTypeSeq removed(1);
-  added.length(1);
-  removed.length(1);
-
-  added[0].domain_name =  CORBA::string_dup(_domainName.c_str());
-  added[0].type_name = CORBA::string_dup("Odometry");
-
-  removed[0].domain_name =  CORBA::string_dup("*");
-  removed[0].type_name = CORBA::string_dup("*");
-
-  consumer.consumerAdmin_->subscription_change(added, removed);
+  setSingleSubscription(_domainName, "Odometry");
 }
 
 MoveToPoint::~MoveToPoint()
