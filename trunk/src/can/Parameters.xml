@@ -5,8 +5,8 @@
 
   <config_group name="can">
     <config_item parent="Miro::Dev">
-      <config_parameter name="device" type="string" inherited="true" default="/dev/pcan24" />
-      <config_parameter name="module" type="string" default="pcan" />
+      <config_parameter name="device" type="string" inherited="true" default="/dev/can/0" />
+      <config_parameter name="module" type="string" default="Can" />
     </config_item>
   </config_group>
 </config>
