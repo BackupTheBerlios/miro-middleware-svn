@@ -141,7 +141,8 @@ namespace Pioneer
   operator << (std::ostream& ostr, const Parameters& desc) 
   {
     ostr << static_cast<const Parameters::Super&>(desc) << endl
-	 << "sonar" << desc.sonarDescription;
+	 << "sonar" << desc.sonarDescription << endl
+         << "motion " << endl << desc.motion << endl;
 
     return ostr;
   }

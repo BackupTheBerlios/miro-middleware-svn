@@ -23,17 +23,17 @@
       <Vel2Divisor>20.000000</Vel2Divisor>
 
       <Motion>
-        <MinTranslation>-2200</MinTranslation>
-        <MaxTranslation>2200</MaxTranslation>
-        <MinRotation>-500</MinRotation>
-        <MaxRotation>500</MaxRotation>
+        <parameter name="MinTranslation">-2200</parameter>
+        <parameter name="MaxTranslation">2200</parameter>
+        <parameter name="MinRotation">-500</parameter>
+        <parameter name="MaxRotation">500</parameter>
 
-        <MinLTranslation>-2200</MinLTranslation>
-        <MinRTranslation>-2200</MinRTranslation>
-        <MaxLTranslation>2200</MaxLTranslation>
-        <MaxRTranslation>2200</MaxRTranslation>
+        <parameter name="MinLTranslation">-2200</parameter>
+        <parameter name="MinRTranslation">-2200</parameter>
+        <parameter name="MaxLTranslation">2200</parameter>
+        <parameter name="MaxRTranslation">2200</parameter>
 
-        <WheelBase>340</WheelBase>
+        <parameter name="WheelBase">340</parameter>
       </Motion>
       
       <!-- The layout of the sonar sensors of the ppb -->

@@ -71,9 +71,9 @@ int main(int argc, char *argv[])
     
     // optain references
     cout << "Resolving sensor and actuator services." << endl;
-    RangeSensor_var infrared = server.resolveName<RangeSensor>("Infrared");
+    // RangeSensor_var infrared = server.resolveName<RangeSensor>("Infrared");
     Motion_var motion = server.resolveName<Motion>("Motion");
-    Odometry_var odometry = server.resolveName<Odometry>("Odometry");
+    // Odometry_var odometry = server.resolveName<Odometry>("Odometry");
 
     // construct all available behaviours
     cout << "Constructing Behaviours and Arbiters." << endl;
@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
     task->open(NULL);
 
     cout << "open policy" << endl;
-    policy.open();
+    // policy.open();
     
     cout << "Loop forever handling events." << endl;
     server.run(5);
