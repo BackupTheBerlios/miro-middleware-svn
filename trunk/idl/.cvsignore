@@ -386,6 +386,14 @@ ObjectVectorS.cpp
 ObjectVectorS.h
 ObjectVectorS.i.h
 ObjectVectorS.lo
+WorldPoint3DC.cpp
+WorldPoint3DC.h
+WorldPoint3DC.i.h
+WorldPoint3DC.lo
+WorldPoint3DS.cpp
+WorldPoint3DS.h
+WorldPoint3DS.i.h
+WorldPoint3DS.lo
 
 
 libmiroIDL.la
