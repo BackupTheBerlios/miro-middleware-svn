@@ -104,7 +104,7 @@ Generator::generateHeader(ostream& ostr) const
   int indent = 0;
 
   QFileInfo fileName(fileName_);
-  QString includeGuard(fileName.baseName(false) + "_" + extensionName_);
+  QString includeGuard(fileName.baseName() + "_" + extensionName_);
 
   ostr << head << endl;
   ostr << "#ifndef " << includeGuard
