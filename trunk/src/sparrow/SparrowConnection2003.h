@@ -59,6 +59,8 @@ namespace Sparrow
     void setPanPosition(float _pos);
     float getPanPosition();
 
+    int getPanTicksPerDegree() const { return params_->pan.ticksPerDegree; }
+
     //! Kick
     void kick(unsigned char ventilatetime, unsigned char kicktime);
 
@@ -72,16 +74,12 @@ namespace Sparrow
     void setInfrared1WaitTime(unsigned char waittime);
     void setInfrared2WaitTime(unsigned char waittime);
     
-    void setPanTicksPerDegree(unsigned int ticks);
-    unsigned int getPanTicksPerDegree();
-
     void alivetimeout();
 
   protected:
     Consumer2003 * consumer;
     EventHandler2003 * eventHandler;
     
-    unsigned int panTicksPerDegree_;
     float currentPanPos_;			// Pan position as rad
 
     short rad2servo0Ticks(double rad) const;

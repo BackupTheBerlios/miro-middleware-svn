@@ -252,7 +252,7 @@ namespace Sparrow
     *******************************/
 
     case CAN_R_KICK_RESET_2003:
-       MIRO_LOG_OSTR(LL_WARNING, "Kicker board rebooted (FW ver.  " << message.byteData(0) << ")" );
+       MIRO_LOG_OSTR(LL_WARNING, "Kicker board rebooted (FW ver.  " << (int)message.byteData(0) << ")" );
        break;
 
     
@@ -351,7 +351,6 @@ namespace Sparrow
       // Pan 2005 messages
     case CAN_R_PAN_TICKSPERDEG_2005:
       MIRO_LOG_OSTR(LL_NOTICE, "SparrowConsumer2003: Received Pan2005 calibration message - Ticks per degree: " << message.longData(0));
-      connection_->setPanTicksPerDegree(message.longData(0));
       break;
 
     case CAN_R_PAN_POSITION_2005: {

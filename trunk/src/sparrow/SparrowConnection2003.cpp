@@ -37,7 +37,6 @@ namespace Sparrow
     Super(_reactor, _devEventHandler),
     consumer(_consumer),
     eventHandler(new EventHandler2003(*this)),
-    panTicksPerDegree_(0),
     currentPanPos_(NAN),
     boardReply(-1)
   {
@@ -73,7 +72,7 @@ namespace Sparrow
   {
     setInfrared1WaitTime(params_->infraredPulse.msec());
     setInfrared2WaitTime(params_->infraredPulse.msec());
-    panReset();
+    // panReset();
   }
 
   void
@@ -120,9 +119,6 @@ namespace Sparrow
   void
   Connection2003::setPan(double _rad)
   {
-    if (panTicksPerDegree_ == 0)
-      return;
-
     CanMessage message;
 
     if (params_->pan.servo) {
@@ -135,7 +131,7 @@ namespace Sparrow
       message.length(5);
       message.id(CAN_PAN_GO_2005);
       message.byteData(0, 0); // servo number
-      message.longData(1, (long)((double)getPanTicksPerDegree()*Miro::rad2Deg(-_rad)) );
+      message.longData(1, (long)((double)params_->pan.ticksPerDegree * Miro::rad2Deg(-_rad)) );
     }
     write(message);
   }
@@ -147,8 +143,8 @@ namespace Sparrow
     message.length(7);
     message.id(CAN_PAN_GO_2005);
     message.byteData(0, 0);// servo number
-    message.longData(1, (long)((double)getPanTicksPerDegree()*Miro::rad2Deg(-_rad)) );
-    message.shortData(5, (short)((double)getPanTicksPerDegree()*Miro::rad2Deg(_vel)) );  
+    message.longData(1, (long)((double)params_->pan.ticksPerDegree * Miro::rad2Deg(-_rad)) );
+    message.shortData(5, (short)((double)params_->pan.ticksPerDegree * Miro::rad2Deg(_vel)) );  
   }
 
   void
@@ -179,7 +175,6 @@ namespace Sparrow
     message.length(0);
     message.id(CAN_PAN_RESET_2005);
     write(message);
-    panTicksPerDegree_ = 0;
   }
 
 
@@ -229,20 +224,6 @@ namespace Sparrow
     message.byteData(1, waittime);
     write(message);
   }
-
-  void 
-  Connection2003::setPanTicksPerDegree(unsigned int ticks)
-  {
-    panTicksPerDegree_ = ticks;
-  }
-
-  unsigned int 
-  Connection2003::getPanTicksPerDegree()
-  {
-    return panTicksPerDegree_;
-  }
-
-
   void
   Connection2003::writeFloodPing(unsigned short fnumber)
   {
