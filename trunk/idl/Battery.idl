@@ -1,0 +1,25 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef Battery_idl
+#define Battery_idl
+
+#include "Exception.idl"
+
+module Miro
+{
+  //! Interface for battery montoring.
+  interface Battery
+  {
+    //! Get the current battery voltage (in volt).
+    double getVoltage();
+  };
+};
+#endif // kicker_idl
