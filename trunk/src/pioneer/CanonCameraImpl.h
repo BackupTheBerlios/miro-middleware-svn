@@ -68,6 +68,11 @@ namespace Canon
     void setAGCGain(short value);
     void setShutterSpeed(short value);
 
+    void setWBauto();
+    void setWBmanual();
+    void setWBlock();
+    void setWBvalue(short value);
+
     Answer * getAnswer();
     void checkAnswer() throw(Miro::EDevIO,Miro::EOutOfBounds, Miro::ETimeOut);
 

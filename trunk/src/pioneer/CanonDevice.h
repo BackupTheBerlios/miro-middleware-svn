@@ -133,6 +133,8 @@ namespace Canon
   static const unsigned short LIGHT_AGC_GAIN        = 0x00A5;
   static const unsigned short LIGHT_IRIS            = 0x00A5;
 
+  static const unsigned short WHITE_BALANCE         = 0x00A7;
+
 
   //...
   

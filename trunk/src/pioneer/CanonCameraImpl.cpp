@@ -375,7 +375,7 @@ cout << "error" << pAnswer->errorCode()<< endl;
   }
 
   void
-  CanonCameraImpl::setShutterSpeed(short value) 
+  CanonCameraImpl::setShutterSpeed(short value)
   {
     bool done=false;
     char tmp[4];
@@ -399,6 +399,74 @@ cout << "error" <<pAnswer->errorCode()<< endl;
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
     }*/
   }
+
+  void CanonCameraImpl::setWBauto()
+  {
+    bool done=false;
+    if (!initialized) initialize();
+
+    Message aeLock(WHITE_BALANCE,0x30);
+
+    while (!done) {
+      Miro::Guard guard(pAnswer->mutex);
+      pAnswer->init();
+      connection.sendCamera(aeLock);
+      checkAnswer();
+      //keep trying...
+      if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
+    }
+  }
+
+  void CanonCameraImpl::setWBmanual()
+  {
+    bool done=false;
+    if (!initialized) initialize();
+
+    Message aeLock(WHITE_BALANCE,0x32);
+
+    while (!done) {
+      Miro::Guard guard(pAnswer->mutex);
+      pAnswer->init();
+      connection.sendCamera(aeLock);
+      checkAnswer();
+      //keep trying...
+      if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
+    }
+  }
+  void CanonCameraImpl::setWBlock()
+  {
+    bool done=false;
+    if (!initialized) initialize();
+
+    Message wbLock(WHITE_BALANCE,0x31);
+
+    while (!done) {
+      Miro::Guard guard(pAnswer->mutex);
+      pAnswer->init();
+      connection.sendCamera(wbLock);
+      checkAnswer();
+      //keep trying...
+      if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
+    }
+  }
+
+  void CanonCameraImpl::setWBvalue(short value)
+  {
+    bool done=false;
+    char tmp[4];
+    char fixChar[4];
+
+    strcpy(fixChar , "4");   // set preparameter 34h
+    if (!initialized) initialize();
+    if (value < 0) value = 0;
+    if (value > 255) value = 255;
+    Message wbValue(WHITE_BALANCE,strcat(fixChar, int2str(tmp,value,2)));
+cout << wbValue<< endl;
+connection.sendCamera(wbValue);
+checkAnswer();
+cout << " error" << pAnswer->errorCode() << endl;
+  }
+
 
 
   //-------------------------------------------------------------------
