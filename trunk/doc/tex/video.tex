@@ -70,6 +70,12 @@ the image $f_0$ and then performing some color indexing $f_2$. So the
 filtering function producing the output image $M_o$ from the input
 image $M_i$ could be expressed as:  $$M_o = f_2(f_1(M_i))$$
 
+\begin{figure}[!ht]
+  \begin{center}
+    \includegraphics[width=8cm]{filterchain}
+  \end{center}
+\end{figure}
+
 More complex vision processing could also include the computation of
 an edge image $M_e$ in addition to the color indexing above. This can
 be done i.e. by producing a grey image $f_3$ and applying a canny
@@ -79,7 +85,23 @@ $$M_e = f_4(f_3(f_1(M_i)))$$
 To avoid computing the undistorted image twice, a filter tree should
 be used instead of two separate filter chains.
 
-% TODO: filter tree image.
+\begin{figure}[!ht]
+  \begin{center}
+    \includegraphics[width=8cm]{filtertree}
+  \end{center}
+\end{figure}
+
+As an additional complication, many sophisticated filters use more
+then one input filter. For instance the Canny filter computes first
+two images of the Zobel operator (one for the x axis $z_x$ and one for the y
+axis $z_y$). So the above described filter tree is actually an acyclic
+directed graph of filters.
+
+\begin{figure}[!ht]
+  \begin{center}
+    \includegraphics[width=8cm]{filtergraph}
+  \end{center}
+\end{figure}
 
 \section{VideoService}
 
@@ -114,7 +136,7 @@ video service has the following parameters:
   It has to be supported directly by the used video device.
 \item[Height] The height of the input image (unsigned int).
   It has to be supported directly by the used video device.
-\item[Palette] The palette of the input image (std::string).
+\item[Palette] The palette of the input image (string).
   It has to be supported directly by the used video device.
   The recognized palettes of the video service are:
   \begin{description}
@@ -131,9 +153,9 @@ video service has the following parameters:
 \item[Filter] The root of the filter tree. The filter parameter
   has three entries:
   \begin{description}
-  \item[Type] The filter type name (std::string).
+  \item[Type] The filter type name (string).
   \item[Name] The name of the corresponding configuration file
-    parameter entry (std::string).
+    parameter entry (string).
     \item[Successor] The list of successor filters (Filter).
   \end{description}
 \end{description}
@@ -147,7 +169,7 @@ filter tree. Those are also located within the section Video.
 The base parameter set of each filter is as follows:
 
 \begin{description}
-\item[Name] The name of the filter (std::string).
+\item[Name] The name of the filter (string).
   Somehow redundant. --- Will have to check.
 \item[InterfaceInstance] Whether the filter has an instance of the
   video interface associated with it (bool).
@@ -157,17 +179,17 @@ The base parameter set of each filter is as follows:
   the following parameters can be specified:
   \begin{description}
   \item[Name] The name under which the interface is registered at the
-    naming service (std::string). The default is Video. Note that if
+    naming service (string). The default is Video. Note that if
     you have more than one Video object, you have to specify a unique
     name for each instance.
-  \item[Buffers] The number of memory buffers, reserved by the interface
-    (unsigned int). The default is 4. While a client is accessing an
-    image, the video service guarantees, that it does not become
-    overridden with a new image from the video stream. If clients hold
-    multiple images (i.e. for temporal integration) it has to be made
-    sure, that there is still a buffer left, to put the next image from
-    the video stream into.
   \end{description}
+\item[Buffers] The number of memory buffers, reserved by the buffer
+  (unsigned int). The default is 4. While a client is accessing an
+  image, the video service guarantees, that it does not become
+  overridden with a new image from the video stream. If clients hold
+  multiple images (i.e. for temporal integration) it has to be made
+  sure, that there is still a buffer left, to put the next image from
+  the video stream into.
 \end{description}
 
 \subsection{Video Device Parameters}
@@ -180,7 +202,7 @@ want to go into that, yet. The common DeviceFilter parameters are:
 
 \begin{description}
 \item[Device] The fully qualified path of the video device
-  (std::string). The individual device filters set this parameter to
+  (string). The individual device filters set this parameter to
   a common default (like /dev/video/0 for bttv and /dev/video1394/0 for
   firewire).
 \end{description}
@@ -191,7 +213,7 @@ The available video device filters are (listed by type name):
 \item[VideoDeviceBttv] The bttv device filter defines the following
   additional parameter:
   \begin{description}
-  \item[Subfield] The subfield chosen (std::string). As the PAL and
+  \item[Subfield] The subfield chosen (string). As the PAL and
     NTSC images are interleaved, the bttv frame grabbers can select,
     which of the half images to scan, if the height of the output
     image is half the height of the full image (384). Possible values

@@ -32,6 +32,9 @@ figures = \
 	client_server_low_level.fig \
 	grid_coords.fig \
 	Miro_behaviours.fig \
+	filterchain.fig \
+	filtertree.fig \
+	filtergraph.fig \
 	signature.ps \
 	pincolla.ps
 
