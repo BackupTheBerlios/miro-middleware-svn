@@ -55,7 +55,7 @@ WallFollow::action()
   const WallFollowParameters * params =
     dynamic_cast<const WallFollowParameters *>(params_); 
 
-  cout << name_ << ": evaluating data" << endl;
+  //  cout << name_ << ": evaluating data" << endl;
 
   // build default message;
   MotionArbiterMessage message;
@@ -70,7 +70,7 @@ WallFollow::action()
   double mR = 0.;
   double bR = 0.;
 
-  cout << name_ << ": Regressionsgeraden" << endl;
+  //  cout << name_ << ": Regressionsgeraden" << endl;
 
   // left wall 
   if (!(rL = regressionsGerade(left_, Miro::deg2Rad(90), mL, bL)))
@@ -80,7 +80,7 @@ WallFollow::action()
     rR = regressionsGerade(rightFront_, Miro::deg2Rad(-45), mR, bR);
 
 
-  cout << name_ << ": selecting action" << endl;
+  //  cout << name_ << ": selecting action" << endl;
  
   // follow left wall
   if ( rL && 
@@ -104,7 +104,7 @@ WallFollow::action()
   else if (rR) {
     double alpha = atan2(mR, 1.);
 
-    cout << name_ << " right: alpha=" << Miro::rad2Deg(alpha)
+    cout << name_ << " right: m=" << mR << "\talpha=" << Miro::rad2Deg(alpha)
 	 << "°\t b=" << bR << "mm" << endl;
 
     message.active = true;
@@ -117,7 +117,7 @@ WallFollow::action()
     message.velocity.rotation = max(-params->rotation, mR);
   }
 
-  cout << name_ << ": action." << endl;
+  //  cout << name_ << ": action." << endl;
   arbitrate(message);
 }
 
@@ -133,30 +133,31 @@ WallFollow::regressionsGerade(const SensorScan& _scan, double delta,
   Vector2d alpha(cos(-delta), sin(-delta));
 
   // build vector of egocentric sensor readings
-  cout << name_ << ": local scan copy" << _scan.size() << endl;
   SensorScan scan(_scan);
-  cout << name_ << ": egocentric mapping" << endl;
   SensorScan::iterator first, last = scan.end();
   for (first = scan.begin(); first != last; ++first) {
     (*first) -= position_;
     (*first) *= alpha;
   }
 
-  cout << name_ << ": accumulate" << endl;
   // Geradengleichung y = m*x + b
   Vector2d sum = std::accumulate(scan.begin(), scan.end(), Vector2d());
+
+  //  cout << "sum: " << sum.real() << ", " << sum.imag() << endl;
 
   double n = scan.size();
   double productSum = 0.;
   double xSquareSum = 0.;
 
-  cout << name_ << ": summing up" << endl;
   for (first = scan.begin(); first != last; ++first) {
     xSquareSum += first->real() * first->real();
     productSum += first->real() * first->imag();
   }
 
   double d = n * xSquareSum - sum.real() * sum.real();
+
+  cout << "x*x Sum=" << xSquareSum << " \tpSum=" << productSum 
+       << "\td=" << d << endl;
 
   if (fabs(d) < 0.0001)
     return false;

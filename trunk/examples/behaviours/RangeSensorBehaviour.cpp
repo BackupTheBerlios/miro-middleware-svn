@@ -10,7 +10,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include "RangeSensorBehaviour.h"
 
-#include "miro/PositionC.h"
+#include "miro/MotionStatusC.h"
 #include "miro/RangeSensorC.h"
 #include "miro/RangeEventC.h"
 #include "miro/Client.h"
@@ -98,7 +98,7 @@ RangeSensorBehaviour::action()
   const Miro::RangeBunchEventIDL * pBunchScan;
   const Miro::RangeGroupEventIDL * pGroupScan;
   const Miro::RangeScanEventIDL * pScan;
-  const Miro::PositionIDL * pPosition;
+  const Miro::RawPositionIDL * pPosition;
 
   cout << name_ << ": integrating data" << endl;
 
@@ -123,9 +123,9 @@ RangeSensorBehaviour::action()
       }
     }
   }
-  if (event->remainder_of_body >>= pPosition) {
-    position_ = Vector2d(pPosition->point.x, pPosition->point.y);
-    heading_ = pPosition->heading;
+  else if (event->remainder_of_body >>= pPosition) {
+    position_ = Vector2d(pPosition->position.point.x, pPosition->position.point.y);
+    heading_ = pPosition->position.heading;
   }
   else {
     std::cerr << name_ << ": Unhandled Event!" << endl; 

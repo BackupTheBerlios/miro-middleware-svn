@@ -17,7 +17,7 @@
 #include "RangeSensorBehaviourParameters.h"
 
 #include <complex>
-#include <list>
+#include <deque>
 
 namespace Miro
 {
@@ -29,7 +29,7 @@ class RangeSensorBehaviour : public Miro::EventBehaviour
   typedef Miro::EventBehaviour Super;
 protected:
   typedef std::complex<double> Vector2d;
-  typedef std::list<Vector2d> SensorScan;
+  typedef std::deque<Vector2d> SensorScan;
 
 public:
   RangeSensorBehaviour(Miro::Client& _client,
