@@ -14,6 +14,7 @@
 #include "Parameters.h"
 #include "VideoFilterLink.h"
 #include "VideoBrokerLink.h"
+#include "BufferManager.h"
 
 #include "miro/TimeSeries.h"
 #include "miro/Log.h"
@@ -86,7 +87,6 @@ namespace Video
   // forward declarations
   class FilterParameters;
   class VideoInterfaceParameters;
-  class BufferManager;
 
   //! Base class of all video filters.
   /**
@@ -299,6 +299,9 @@ namespace Video
     bool inplace_;
     //! The filter instances parameters.
     FilterParameters const * params_;
+
+    //! Image recording timestamp
+    const ACE_Time_Value& imageTimeStamp();
 
     //! Filter processing time statistics.
     /**
@@ -529,6 +532,13 @@ namespace Video
   Filter::height() const throw() {
     return inputFormat_.height;
   }
+
+  inline 
+  const ACE_Time_Value& 
+  Filter::imageTimeStamp() {
+    return bufferManager()->bufferTimeStamp(outputBufferIndex_);
+  }
+  
 
 }
 
