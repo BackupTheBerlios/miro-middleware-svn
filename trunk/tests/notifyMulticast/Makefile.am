@@ -1,0 +1,33 @@
+## -*- Makefile -*- ##########################################################
+##
+## This file is part of Miro (The Middleware For Robots)
+##
+## (c) 1999, 2000, 2001
+## Department of Neural Information Processing, University of Ulm, Germany
+##
+## $Id$
+## $Date$
+## 
+##
+## Miro/test/notify/Makefile
+##
+##############################################################################
+
+include $(top_srcdir)/config/Make-rules
+
+
+bin_PROGRAMS = NotifyMulticastTest
+
+
+NotifyMulticastTest_SOURCES = \
+	NotifyMulticastTest.cpp \
+	NotifyMulticastTest.h
+
+NotifyMulticastTest_LDADD = \
+	-lmiro
+
+all-local:
+	$(INSTALLPROGRAMS)
+
+clean-local:
+	$(CLEANPROGRAMS)
