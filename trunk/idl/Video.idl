@@ -97,6 +97,10 @@ module Miro
       raises(EOutOfBounds);
 
     //! Get all the pixels of the current image, downsized to width=x height=y
+    SubImageDataIDL exportSubImage(inout unsigned long x, inout unsigned long y) 
+      raises(EOutOfBounds, EDevIO);
+
+    //! Get all the pixels of the next image, downsized to width=x height=y
     SubImageDataIDL exportWaitSubImage(inout unsigned long x, inout unsigned long y) 
       raises(EOutOfBounds, EDevIO, ETimeOut);
   };
