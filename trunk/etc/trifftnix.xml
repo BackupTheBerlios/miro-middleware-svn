@@ -1,21 +1,23 @@
 <!DOCTYPE MiroConfigDocument>
 <config>
- <section name="Robot">
-  <parameter name="Robot">
+ <section name="Robot" >
+  <parameter name="Robot" >
    <parameter value="trifftnix" name="Name" />
    <parameter value="Sparrow99" name="Type" />
   </parameter>
  </section>
- <section name="Faulhaber" >
+<section name="Faulhaber" >
   <parameter name="FaulMotor" >
    <parameter name="LeftWheel">
      <parameter value="/dev/tts/2" name="Device" />
+
    </parameter>
    <parameter name="RightWheel">
      <parameter value="/dev/tts/0" name="Device" />
+
    </parameter>
-   <parameter name="LeftTicksPerMM" value="115.3" />
-   <parameter name="RightTicksPerMM" value="115.3" />
+   <parameter name="LeftTicksPerMM" value="113.6" />
+   <parameter name="RightTicksPerMM" value="113.6" />
    <parameter name="Motion">
     <parameter name="WheelBase" value="385" />
    </parameter>
@@ -29,7 +31,7 @@
    <parameter value="/dev/can/0" name="Device" />
    <parameter value="0.050000" name="PanLatency" />
    <parameter value="0.0800000" name="PanSwing" />
-   <parameter value="245" name="PanRadPerSec" />
+   <parameter value="250" name="PanRadPerSec" />
    <parameter value="3." name="PanAccuracy" />
    <parameter value="0.040000" name="InfraredPulse" />
    <parameter value="0.040000" name="OdometryPulse" />
@@ -37,7 +39,7 @@
     <parameter>
      <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1" name="Scaling" />
+     <parameter value="1.133" name="Scaling" />
      <parameter value="0" name="Offset" />
     </parameter>
     <parameter>
@@ -49,19 +51,19 @@
     <parameter>
      <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.047" name="Scaling" />
+     <parameter value="1.075" name="Scaling" />
      <parameter value="0" name="Offset" />
     </parameter>
     <parameter>
      <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.1" name="Scaling" />
+     <parameter value="1.156" name="Scaling" />
      <parameter value="0" name="Offset" />
     </parameter>
     <parameter>
      <parameter value="350" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.047" name="Scaling" />
+     <parameter value="1.075" name="Scaling" />
      <parameter value="0" name="Offset" />
     </parameter>
     <parameter>
@@ -73,28 +75,28 @@
     <parameter>
      <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.157" name="Scaling" />
+     <parameter value="0.829" name="Scaling" />
      <parameter value="0" name="Offset" />
     </parameter>
     <parameter>
      <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1" name="Scaling" />
+     <parameter value="1.062" name="Scaling" />
      <parameter value="0" name="Offset" />
     </parameter>
    </parameter>
    <parameter value="0.050000" name="ButtonsPollInterval" />
    <parameter value="1.0776" name="TransFactor" />
+   <parameter value="27" name="Deg2ServoTicksL" />
+   <parameter value="27" name="Deg2ServoTicksR" />
    <parameter value="1.000000" name="WatchdogTimeout" />
-   <parameter value="3975" name="Servo0MidPulse" />
-   <parameter value="26" name="Deg2ServoTicksL" />
-   <parameter value="26" name="Deg2ServoTicksR" />
+   <parameter value="3835" name="Servo0MidPulse" />
    <parameter value="200" name="MaxAccel" />
-   <parameter value="2350" name="Diameter" />
+   <parameter value="2310" name="Diameter" />
    <parameter value="30720" name="MaxPower" />
    <parameter value="29" name="TicksL" />
    <parameter value="29" name="TicksR" />
-   <parameter value="true" name="ChannelSharing" />
+   <parameter value="false" name="ChannelSharing" />
    <parameter name="Motion" >
     <parameter value="180" name="MaxRotation" />
     <parameter value="-180" name="MinRotation" />
@@ -108,9 +110,9 @@
    </parameter>
   </parameter>
  </section>
- <section name="Video" >
 
 <!--
+ <section name="Video" >
   <parameter name="Video" >
    <parameter value="bgr" name="Palette" />
    <parameter value="384" name="Width" />
@@ -154,22 +156,28 @@
     <parameter value="DeviceBTTV" name="Type" />
     <parameter name="Successor" >
      <parameter name="Filter" >
-      <parameter value="FilterRGBtoGray" name="Name" />
-      <parameter value="FilterRGBtoGray" name="Type" />
+      <parameter value="FilterSwap3" name="Name" />
+      <parameter value="FilterSwap3" name="Type" />
       <parameter name="Successor" >
-       <parameter name="Filter" >
-        <parameter value="FilterGraytoCanny" name="Name" />
-        <parameter value="FilterGraytoCanny" name="Type" />
+        <parameter name="Filter" >
+         <parameter value="FilterRGBtoGray" name="Name" />
+         <parameter value="FilterRGBtoGray" name="Type" />
+         <parameter name="Successor" >
+          <parameter name="Filter" >
+           <parameter value="FilterGraytoCanny" name="Name" />
+           <parameter value="FilterGraytoCanny" name="Type" />
+          </parameter>
+        </parameter>
        </parameter>
-      </parameter>
-     </parameter>
-     <parameter name="Filter" >
-      <parameter value="FilterRGBtoIndex" name="Name" />
-      <parameter value="FilterRGBtoIndex" name="Type" />
-      <parameter name="Successor" >
        <parameter name="Filter" >
-        <parameter value="FilterIndextoIndex" name="Name" />
-        <parameter value="FilterIndextoIndex" name="Type" />
+        <parameter value="FilterRGBtoIndex" name="Name" />
+        <parameter value="FilterRGBtoIndex" name="Type" />
+        <parameter name="Successor" >
+         <parameter name="Filter" >
+          <parameter value="FilterIndextoIndex" name="Name" />
+          <parameter value="FilterIndextoIndex" name="Type" />
+         </parameter>
+        </parameter>
        </parameter>
       </parameter>
      </parameter>
@@ -179,6 +187,10 @@
 
   <parameter name="DeviceBTTV">
    <parameter value="/dev/video0" name="Device" />
+  </parameter>
+
+  <parameter name="FilterSwap3">
+   <parameter value="true" name="InterfaceInstance" />
   </parameter>
 
   <parameter name="FilterRGBtoGray">
@@ -209,19 +221,36 @@
    </parameter>
   </parameter>
 
+<!-- parameter fuer alte (kaputte) camera 
   <parameter name="Camera" >
    <parameter value="0.060000" name="Latency" />
-   <parameter value="32.00" name="Alpha" />
-   <parameter value="530" name="Height" />
-   <parameter value="1.82316246e+02" name="Cx" />
-   <parameter value="1.36687831e+02" name="Cy" />
-   <parameter value="3.986038" name="F" />
-   <parameter value="1.850948e-02" name="Kappa" />
+   <parameter value="35.5" name="Alpha" />
+   <parameter value="540" name="Height" />
+   <parameter value="2.05152493e+02" name="Cx" />
+   <parameter value="1.33894215e+02" name="Cy" />
+   <parameter value="4.245162" name="F" />
+   <parameter value="1.608197e-02" name="Kappa" />
    <parameter value="1" name="Sx" />
    <parameter value="0.00625" name="Dx" />
    <parameter value="0.0125" name="Dy" />
    <parameter value="384" name="Nfx" />
    <parameter value="786" name="Ncx" />
+  </parameter>
+-->
+<!-- parameter fuer neue (haeltnix) camera -->
+  <parameter name="Camera" >
+   <parameter value="0.060000" name="Latency" />
+   <parameter value="33.5" name="Alpha" />
+   <parameter value="550" name="Height" />
+   <parameter value="197.159465" name="Cx" />
+   <parameter value="139.645856" name="Cy" />
+   <parameter value="4.043536" name="F" />
+   <parameter value="2.980936e-02" name="Kappa" />
+   <parameter value="1" name="Sx" />
+   <parameter value="0.00625" name="Dx" />
+   <parameter value="0.0125" name="Dy" />
+   <parameter value="384" name="Nfx" />
+   <parameter value="768" name="Ncx" />
   </parameter>
  </section>
  <section name="Notification" >
