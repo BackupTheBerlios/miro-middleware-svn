@@ -79,7 +79,7 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
   notifyFactory_(TAO_Notify_EventChannelFactory_i::create(poa.in() ACE_ENV_ARG_PARAMETER)),
   id_(),
   ec_(notifyFactory_->create_channel(initialQos_, initialAdmin_, id_)),
-  structuredPushSupplier_(ec_.in(), namingContextName),
+  structuredPushSupplier_(ec_, namingContextName),
 
   odometry(&structuredPushSupplier_, true, true),
   pSonar_((Sparrow::Parameters::instance()->goalie)? 
@@ -121,7 +121,7 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
   sparrowPanTilt(sparrowConnection),
 
   mcAdapter_((Sparrow::Parameters::instance()->channelSharing)?
-             new Miro::NotifyMulticast::Adapter(argc, argv, this, ec_.in()) :
+             new Miro::NotifyMulticast::Adapter(argc, argv, this, ec_) :
 	     0)
 {
 
@@ -139,7 +139,7 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
   notifyFactory_(TAO_Notify_EventChannelFactory_i::create(poa.in() ACE_ENV_ARG_PARAMETER)),
   id_(),
   ec_(notifyFactory_->create_channel(initialQos_, initialAdmin_, id_)),
-  structuredPushSupplier_(ec_.in(), namingContextName),
+  structuredPushSupplier_(ec_, namingContextName),
 
   odometry(&structuredPushSupplier_, true, true),
   pSonar_((Sparrow::Parameters::instance()->goalie)? 
@@ -181,7 +181,7 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
   sparrowPanTilt(sparrowConnection),
 
   mcAdapter_((Sparrow::Parameters::instance()->channelSharing)?
-             new Miro::NotifyMulticast::Adapter(0, NULL, this, ec_.in()) :
+             new Miro::NotifyMulticast::Adapter(0, NULL, this, ec_) :
 	     NULL)
 {
   init(_startReactorTastk);
@@ -200,18 +200,18 @@ SparrowBase::init(bool _startReactorTastk)
   pPanTilt = sparrowPanTilt._this();
   pInfrared = infrared._this();
   
-  addToNameService(ec_.in(), "EventChannel");
-  addToNameService(pOdometry.in(), "Odometry");
-  addToNameService(pMotion.in(), "Motion");
-  addToNameService(pKicker.in(), "Kicker");
-  addToNameService(pButtons.in(), "Buttons");
-  addToNameService(pStall.in(), "Stall");
-  addToNameService(pPanTilt.in(), "PanTilt");
-  addToNameService(pInfrared.in(), "Infrared");
+  addToNameService(ec_, "EventChannel");
+  addToNameService(pOdometry, "Odometry");
+  addToNameService(pMotion, "Motion");
+  addToNameService(pKicker, "Kicker");
+  addToNameService(pButtons, "Buttons");
+  addToNameService(pStall, "Stall");
+  addToNameService(pPanTilt, "PanTilt");
+  addToNameService(pInfrared, "Infrared");
 
   if (pSonar_.get() != NULL) {
     pSonar = pSonar_->_this();
-    addToNameService(pSonar.in(), "Sonar");
+    addToNameService(pSonar, "Sonar");
   }
 
   // start the asychronous consumer listening for the hardware
@@ -228,20 +228,41 @@ SparrowBase::~SparrowBase()
 
   //  sparrowConnection.readTables();
   reactorTask.cancel();
+  DBG(cout << "reactor Task canceled." << endl);
 
   odometry.cancel();
+  DBG(cout << "Odometry dispatching canceled." << endl);
   infrared.cancel();
+  DBG(cout << "Infrared dispatching canceled." << endl);
   if (pSonar_.get() != NULL) {
     pSonar_->cancel();
   }
 
-  // Deactivate.
-  PortableServer::ObjectId_var oid =
-    poa->reference_to_id (notifyFactory_.in());
+  // Deactivate the interfaces.
+  // we have to do this manually for none owned orbs,
+  // as the class goes out of scope before
+  // the orb is shut down
+  PortableServer::ObjectId_var oid;
+  oid =  poa->reference_to_id (pOdometry);
+  poa->deactivate_object (oid.in());
+  oid =  poa->reference_to_id (pMotion);
+  poa->deactivate_object (oid.in());
+  oid =  poa->reference_to_id (pKicker);
+  poa->deactivate_object (oid.in());
+  oid =  poa->reference_to_id (pButtons);
+  poa->deactivate_object (oid.in());
+  oid = poa->reference_to_id ( pStall);
+  poa->deactivate_object (oid.in());
+  oid =  poa->reference_to_id (pPanTilt);
+  poa->deactivate_object (oid.in());
+  oid =  poa->reference_to_id (pInfrared);
+  poa->deactivate_object (oid.in());
+  if (pSonar_.get() != NULL) {
+    oid = poa->reference_to_id (pSonar);
+    poa->deactivate_object(oid.in()); 
+  }
+  oid = poa->reference_to_id (notifyFactory_);
+  poa->deactivate_object (oid.in());
 
-  // deactivate from the poa.
-  poa->deactivate_object (oid.in ());
-
-
-  DBG(cout << "reactor Task ended" << endl);
+  DBG(cout << "Destructing SparrowBase members." << endl);
 }

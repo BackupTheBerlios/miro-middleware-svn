@@ -102,7 +102,7 @@ public:
   // Notification Service
 
   /** Channel factory. */
-  CosNotifyChannelAdmin::EventChannelFactory_var notifyFactory_;
+  CosNotifyChannelAdmin::EventChannelFactory_ptr notifyFactory_;
  /** Channel identifer. */
   CosNotifyChannelAdmin::ChannelID id_;
   /** Initial qos specified to the factory when creating the EC. */
@@ -110,7 +110,7 @@ public:
   /** Initial admin props specified to the factory when creating the EC. */
   CosNotification::AdminProperties initialAdmin_;
   /** The one channel that we create using the factory. */
-  CosNotifyChannelAdmin::EventChannel_var ec_;
+  CosNotifyChannelAdmin::EventChannel_ptr ec_;
   
   Miro::StructuredPushSupplier structuredPushSupplier_;
 
@@ -136,15 +136,15 @@ public:
   Sparrow::StallImpl   sparrowStall;
   Sparrow::PanTiltImpl sparrowPanTilt;
 
-  Miro::Odometry_var pOdometry;
-  Miro::Motion_var pMotion;
-  Miro::Kicker_var pKicker;
-  Miro::Buttons_var pButtons;
-  Miro::Stall_var pStall;
-  Miro::SparrowPanTilt_var pPanTilt;
-  Miro::RangeSensor_var pInfrared;
+  Miro::Odometry_ptr pOdometry;
+  Miro::Motion_ptr pMotion;
+  Miro::Kicker_ptr pKicker;
+  Miro::Buttons_ptr pButtons;
+  Miro::Stall_ptr pStall;
+  Miro::SparrowPanTilt_ptr pPanTilt;
+  Miro::RangeSensor_ptr pInfrared;
   
-  Miro::RangeSensor_var pSonar;
+  Miro::RangeSensor_ptr pSonar;
 
   /* NotifyMulticast */
   Miro::NotifyMulticast::Adapter *mcAdapter_;
