@@ -24,9 +24,9 @@ globaldirs = \
 	qtTouchPad \
 	qtJoystick \
 	policyEditor \
-	policyController \
-	makeConfig
+	policyController
 
+#	makeConfig
 #	sparrowBoard
 
 if COND_SPARROW99
