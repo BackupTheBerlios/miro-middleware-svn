@@ -29,7 +29,7 @@
    <parameter value="/dev/can/0" name="Device" />
    <parameter value="0.110000" name="PanLatency" />
    <parameter value="0.0800000" name="PanSwing" />
-   <parameter value="225" name="PanRadPerSecSwing" />
+   <parameter value="225" name="PanRadPerSec" />
    <parameter value="3." name="PanAccuracy" />
    <parameter value="0.040000" name="InfraredPulse" />
    <parameter value="0.040000" name="OdometryPulse" />
