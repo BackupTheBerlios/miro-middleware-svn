@@ -56,6 +56,22 @@
     return new X ## ImageParameters(p); \
   }
 
+/* In contrast to the IMAGE_PARAMETERS_FACTORY_IMPL version above, this one uses the
+   name Y to assign the method to the right class. */
+#define IMAGE_PARAMETERS_FACTORY_IMPL_2(X, Y) \
+  X ## ImageParameters * \
+  Y::getImageParametersInstance() const \
+  { \
+    return new X ## ImageParameters(); \
+  } \
+  X ## ImageParameters * \
+  Y::getImageParametersInstance(const ::Video::FilterImageParameters& _p) const \
+  { \
+    X ## ImageParameters const& p= dynamic_cast<X ## ImageParameters const&>(_p); \
+    return new X ## ImageParameters(p); \
+  }
+
+
 // forward declarations
 namespace Miro
 {

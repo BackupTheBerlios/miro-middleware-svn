@@ -14,6 +14,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.11  2004/05/11 16:37:50  gmayer
+ * add another helper macro (used by libVideoFilters)
+ *
  * Revision 1.10  2004/03/09 16:28:58  roadrunner
  * Ouch! entrys->entries
  *
@@ -215,7 +218,7 @@ namespace Video
       std::cout << "Done." << std::endl;
     }
     else {
-      std::cout << "No more images. " << endl;
+      throw Miro::Exception("No more images.");
     }
 
     ACE_Time_Value diff = ACE_OS::gettimeofday() - now;

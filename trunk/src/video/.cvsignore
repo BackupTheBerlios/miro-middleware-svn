@@ -29,4 +29,12 @@ VideoFilterYUVbase.lo
 VideoImpl.lo
 VideoServer.lo
 VideoControlImpl.lo
+BufferManagerQuickCam.lo
+VideoDeviceQuickCam.lo
+VideoFilterDistanceScan.lo
+VideoFilterOmni2Pan.lo
+VideoFilterRGBtoSeg.lo
+VideoFilterService.lo
+VideoFilterYUV420PtoRGB.lo
+
 libmiroVideo.la
