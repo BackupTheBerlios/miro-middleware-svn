@@ -173,58 +173,7 @@
 
     <section name="Video" >
 
-      <parameter name="Camera" >
-	<parameter value="0.060000" name="Latency" />
-	<parameter value="34.0" name="Alpha" />
-	<parameter value="595" name="Height" />
-
-	<parameter value=" 6.4000000000e+02" name="Ncx" />
-	<parameter value=" 6.4000000000e+02" name="Nfx" />
-	<parameter value=" 7.4000000000e-03" name="Dx" />
-	<parameter value=" 7.4000000000e-03" name="Dy" />
-	<parameter value=" 7.4000000000e-03" name="Dpx" />
-	<parameter value=" 7.4000000000e-03" name="Dpy" />
-	<parameter value=" 3.1458946442e+02" name="Cx" />
-	<parameter value=" 2.3325182529e+02" name="Cy" />
-	<parameter value=" 1.0000000000e+00" name="Sx" />
-	<parameter value=" 2.8379931108e+00" name="F" />
-	<parameter value=" 3.3646352107e-02" name="Kappa" />
-	<parameter value="-5.6952478324e+01" name="Tx" />
-	<parameter value="-2.6903496465e+01" name="Ty" />
-	<parameter value=" 1.0914246726e+02" name="Tz" />
-	<parameter value="-5.1352218184e-01" name="Rx" />
-	<parameter value="-1.3500297485e-01" name="Ry" />
-	<parameter value="-5.1928845436e-02" name="Rz" />
-	<parameter value=" 0.0000000000e+00" name="P1" />
-	<parameter value=" 0.0000000000e+00" name="P2" />
-	<parameter value=" 9.8956519682e-01" name="R1" />
-	<parameter value=" 1.1124028416e-01" name="R2" />
-	<parameter value="-9.1576855280e-02" name="R3" />
-	<parameter value="-5.1433218159e-02" name="R4" />
-	<parameter value=" 8.6641359008e-01" name="R5" />
-	<parameter value=" 4.9667103298e-01" name="R6" />
-	<parameter value=" 1.3459325879e-01" name="R7" />
-	<parameter value="-4.8677827613e-01" name="R8" />
-	<parameter value=" 8.6309418060e-01" name="R9" />
-      </parameter>
-
-      <parameter name="Device1394" >
-	<parameter value="-1" name="Focus" />
-	<parameter value="128" name="Hue" />
-	<parameter value="-1" name="Iris" />
-	<parameter value="-1" name="Trigger" />
-	<parameter value="2048" name="Shutter" />
-	<parameter value="128" name="Gamma" />
-	<parameter value="128" name="Sharpness" />
-	<parameter value="-1" name="Temperature" />
-	<parameter value="0" name="Gain" />
-	<parameter value="30" name="Framerate" />
-	<parameter value="128" name="Brightness" />
-	<parameter value="128" name="Exposure" />
-	<parameter value="128" name="Saturation" />
-	<parameter value="162" name="WhiteBalance0" />
-	<parameter value="184" name="WhiteBalance1" />
-      </parameter>
+      <!-- OmniCam -->
 
       <parameter name="VideoOmniCam" >
         <parameter value="yuv420p" name="Palette" />
@@ -260,37 +209,25 @@
         </parameter>
       </parameter>
 
+      <!-- OmniCam Parameters -->
+
       <parameter name="DeviceQuickCam" >
         <parameter value="20" name="Framerate" />
         <parameter name="Contrast" value="27648" />
         <parameter name="Brightness" value="-20992" />
         <parameter name="Hue" value="-1"/>
-
-        <!-- pwc centric -->
-        <!-- indoor = 0, outdoor = 1, flourecence = 2, manual = 3, auto = 4 -->
-        <parameter name="Whitebalance" value="2" />
-        <!-- BEGIN only available in whitebalance=manual -->
-        <parameter name="WhitebalanceRed" value="0" />
-        <parameter name="WhitebalanceBlue" value="0" />
-        <!-- END -->
-        <!-- BEGIN only available in writebalance=auto -->
-        <parameter name="WhitebalanceSpeed" value="2032" />
-        <parameter name="WhitebalanceDelay" value="0" />
-        <!-- END -->
-        <!-- autoGainControl < 0 ? auto : fixed (0..65535) -->
-        <parameter name="AutoGainControl" value="31744" />
-        <!-- shutterSpeed < 0 ? auto : fixed (0..65535) -->
-        <parameter name="ShutterSpeed" value="0" />
-        <!-- sharpness < 0 ? auto : fixed (0..65535) -->
-        <parameter name="Sharpness" value="-1" />
-        <!-- backlightCompensation == 0 ? off : on -->
-        <parameter name="BacklightCompensation" value="0" />
-        <!-- flickerlessMode == 0 ? off : on -->
-        <parameter name="FlickerlessMode" value="0" />
-        <!-- dynamicNoiseReduction == 0 ? off : fixed (1..3) -->
-        <parameter name="DynamicNoiseReduction" value="1" />
-        <!-- compression == 0 ? off : fixed (1..3) -->
-        <parameter name="Compression" value="0" />
+        <parameter name="Whitebalance" value="2" />          <!-- indoor = 0, outdoor = 1, flourecence = 2, manual = 3, auto = 4 -->
+        <parameter name="WhitebalanceRed" value="0" />       <!-- only available in whitebalance=manual -->
+        <parameter name="WhitebalanceBlue" value="0" />      <!-- only available in whitebalance=manual -->
+        <parameter name="WhitebalanceSpeed" value="2032" />  <!-- only available in writebalance=auto -->
+        <parameter name="WhitebalanceDelay" value="0" />     <!-- only available in writebalance=auto -->
+        <parameter name="AutoGainControl" value="31744" />   <!-- autoGainControl < 0 ? auto : fixed (0..65535) -->
+        <parameter name="ShutterSpeed" value="0" />          <!-- shutterSpeed < 0 ? auto : fixed (0..65535) -->
+        <parameter name="Sharpness" value="-1" />            <!-- sharpness < 0 ? auto : fixed (0..65535) -->
+        <parameter name="BacklightCompensation" value="0" /> <!-- backlightCompensation == 0 ? off : on -->
+        <parameter name="FlickerlessMode" value="0" />       <!-- flickerlessMode == 0 ? off : on -->
+        <parameter name="DynamicNoiseReduction" value="1" /> <!-- dynamicNoiseReduction == 0 ? off : fixed (1..3) -->
+        <parameter name="Compression" value="0" />           <!-- compression == 0 ? off : fixed (1..3) -->
       </parameter>
 
       <parameter name="FilterYUV420PtoRGB">
@@ -321,12 +258,12 @@
 	</parameter>
       </parameter>
 
+      <!-- Directed Camera -->
 
       <parameter name="Video" >
 	<parameter value="640" name="Width" />
 	<parameter value="480" name="Height" />
 	<parameter value="yuv422" name="Palette" />
-
 	<parameter name="Filter">
 	  <parameter value="Device1394" name="Name" />
 	  <parameter value="Device1394" name="Type" />
@@ -389,6 +326,10 @@
 		<parameter name="Filter" >
 		  <parameter value="AttentionGoalCornerPoles" name="Name" />
 		  <parameter value="AttentionGoalCornerPoles" name="Type" />
+		</parameter>
+		<parameter name="Filter" >
+		  <parameter value="AttentionRobots" name="Name" />
+		  <parameter value="AttentionRobots" name="Type" />
 		</parameter>
 
 		<parameter name="Filter" >
@@ -454,6 +395,41 @@
 		    </parameter>
 		  </parameter>
 		</parameter>
+
+		<!-- (scaled) binary mask for robot detection -->
+		<parameter name="Filter" >
+		  <parameter value="ScaleROIForRobots" name="Name" /> <!-- scale the rois back down to this image format -->
+		  <parameter value="ScaleROI" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="AttentionRobots" />
+		  </parameter>
+		</parameter>
+		<parameter name="Filter" >
+		  <parameter value="ResizeROIForRobots" name="Name" /> <!-- wide the roi a specific amount not to miss lines -->
+		  <parameter value="ResizeROI" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="ScaleROIForRobots" />
+		  </parameter>
+		</parameter>
+		<parameter name="Filter" >
+		  <parameter value="MaskByColorForRobots" name="Name" />
+		  <parameter value="MaskByColor" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="ResizeROIForRobots" />
+		  </parameter>
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="ShrinkImagePartsMaskForRobots" name="Name" />
+		      <parameter value="ShrinkImageParts" name="Type" />
+		      <parameter name="Successor" >
+			<parameter name="Filter" >
+			  <parameter value="Enlarge2ForRobots" name="Name" />
+			  <parameter value="Enlarge2" name="Type" />
+			</parameter>
+		      </parameter>
+		    </parameter>
+		  </parameter>
+		</parameter>
 	      </parameter>
 	    </parameter>
 
@@ -507,6 +483,56 @@
 	      </parameter>
 	    </parameter>
 
+	    <!-- Neural Network and Feature Extraction for Robots -->
+	    <parameter name="Filter" >
+	      <parameter value="ResizeROI2ForRobots" name="Name" /> <!-- wide the roi a specific amount not to miss lines -->
+	      <parameter value="ResizeROI" name="Type" />
+	      <parameter name="BackLink" >
+		<parameter value="AttentionRobots" />
+	      </parameter>
+	    </parameter>
+	    <parameter name="Filter" >
+	      <parameter value="YUV422toGrayForRobots" name="Name" />
+	      <parameter value="YUV422toGray" name="Type" />
+	      <parameter name="BackLink" >
+		<parameter value="ResizeROI2ForRobots" />
+	      </parameter>
+	      <parameter name="Successor" >
+		<parameter name="Filter" >
+		  <parameter value="ShrinkImagePartsGrayForRobots" name="Name" />
+		  <parameter value="ShrinkImageParts" name="Type" />
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="SobelVerticalForRobots" name="Name" />
+		      <parameter value="Sobel" name="Type" />
+		    </parameter>
+		    <parameter name="Filter" >
+		      <parameter value="SobelHorizontalForRobots" name="Name" />
+		      <parameter value="Sobel" name="Type" />
+		    </parameter>
+		  </parameter>
+		</parameter>
+		<parameter name="Filter" >
+		  <parameter value="OrientHistMaskForRobots" name="Name" />
+		  <parameter value="OrientHistMask" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="SobelVerticalForRobots" />
+		    <parameter value="SobelHorizontalForRobots" />
+		    <parameter value="ShrinkImagePartsGrayForRobots" />
+		    <parameter value="Enlarge2ForRobots" />
+		  </parameter>
+		</parameter>
+	      </parameter>
+	    </parameter>
+	    <parameter name="Filter" >
+	      <parameter value="NeuralNetRobots" name="Name" />
+	      <parameter value="NeuralNetRobots" name="Type" />
+	      <parameter name="BackLink" >
+		<parameter value="OrientHistMaskForRobots" />
+		<parameter value="AttentionRobots" />
+	      </parameter>
+	    </parameter>
+
 	    <!-- Collect Basic Features -->
 	    <parameter name="Filter" >
 	      <parameter value="CollectAllFeatures2Basic" name="Name" />
@@ -524,6 +550,7 @@
 	      <parameter value="CollectAllFeatures2Full" name="Name" />
 	      <parameter name="BackLink" >
 		<parameter value="NeuralNetBall" />
+		<!-- <parameter value="NeuralNetRobots" /> -->
 		<parameter value="AttentionGoalCornerPoles" />
 		<parameter value="BlueLeftPost" />
 		<parameter value="BlueRightPost" />
@@ -531,6 +558,7 @@
 		<parameter value="YellowRightPost" />
 		<parameter value="AttentionLines" />
 		<parameter value="ColorCount" />
+		<parameter value="YUV422toIndexShrink2" />
 	      </parameter>
 	    </parameter>
 
@@ -560,6 +588,13 @@
 		    <parameter value="AttentionBall" />
 		  </parameter>
 		</parameter>
+		<parameter name="Filter" >
+		  <parameter value="ROIVisualRobot" name="Name" />
+		  <parameter value="ROIVisual" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="ScaleROIForRobots" />
+		  </parameter>
+		</parameter>
 	      </parameter>
 	    </parameter>
 
@@ -567,6 +602,59 @@
 	</parameter>
       </parameter>
 
+      <!-- Directed Camera Parameters -->
+
+      <parameter name="Camera" >
+	<parameter value="0.060000" name="Latency" />
+	<parameter value="34.0" name="Alpha" />
+	<parameter value="595" name="Height" />
+	<parameter value=" 6.4000000000e+02" name="Ncx" />
+	<parameter value=" 6.4000000000e+02" name="Nfx" />
+	<parameter value=" 7.4000000000e-03" name="Dx" />
+	<parameter value=" 7.4000000000e-03" name="Dy" />
+	<parameter value=" 7.4000000000e-03" name="Dpx" />
+	<parameter value=" 7.4000000000e-03" name="Dpy" />
+	<parameter value=" 3.1458946442e+02" name="Cx" />
+	<parameter value=" 2.3325182529e+02" name="Cy" />
+	<parameter value=" 1.0000000000e+00" name="Sx" />
+	<parameter value=" 2.8379931108e+00" name="F" />
+	<parameter value=" 3.3646352107e-02" name="Kappa" />
+	<parameter value="-5.6952478324e+01" name="Tx" />
+	<parameter value="-2.6903496465e+01" name="Ty" />
+	<parameter value=" 1.0914246726e+02" name="Tz" />
+	<parameter value="-5.1352218184e-01" name="Rx" />
+	<parameter value="-1.3500297485e-01" name="Ry" />
+	<parameter value="-5.1928845436e-02" name="Rz" />
+	<parameter value=" 0.0000000000e+00" name="P1" />
+	<parameter value=" 0.0000000000e+00" name="P2" />
+	<parameter value=" 9.8956519682e-01" name="R1" />
+	<parameter value=" 1.1124028416e-01" name="R2" />
+	<parameter value="-9.1576855280e-02" name="R3" />
+	<parameter value="-5.1433218159e-02" name="R4" />
+	<parameter value=" 8.6641359008e-01" name="R5" />
+	<parameter value=" 4.9667103298e-01" name="R6" />
+	<parameter value=" 1.3459325879e-01" name="R7" />
+	<parameter value="-4.8677827613e-01" name="R8" />
+	<parameter value=" 8.6309418060e-01" name="R9" />
+      </parameter>
+
+      <parameter name="Device1394" >
+	<parameter value="-1" name="Focus" />
+	<parameter value="128" name="Hue" />
+	<parameter value="-1" name="Iris" />
+	<parameter value="-1" name="Trigger" />
+	<parameter value="2048" name="Shutter" />
+	<parameter value="128" name="Gamma" />
+	<parameter value="128" name="Sharpness" />
+	<parameter value="-1" name="Temperature" />
+	<parameter value="0" name="Gain" />
+	<parameter value="30" name="Framerate" />
+	<parameter value="128" name="Brightness" />
+	<parameter value="128" name="Exposure" />
+	<parameter value="128" name="Saturation" />
+	<parameter value="162" name="WhiteBalance0" />
+	<parameter value="184" name="WhiteBalance1" />
+      </parameter>
 
       <!-- edges of original image -->
       <parameter name="ROIListDummy">
@@ -656,6 +744,29 @@
         <parameter value="2" name="UseROIFrom" />
       </parameter>
 
+      <!-- Color mask for robot detection -->
+      <parameter name="ResizeROIForRobots" >
+	<parameter value="0.05" name="Percentage" />
+	<parameter value="1" name="UseROIFrom" />
+      </parameter>
+      <parameter name="ScaleROIForRobots" >
+	<parameter value="0.5" name="Factor" />
+	<parameter value="1" name="UseROIFrom" />
+      </parameter>
+      <parameter name="MaskByColorForRobots">
+	<parameter value="BLACK CYAN MAGENTA" name="Colors" />
+	<parameter value="5" name="DilateRectSize" />
+	<parameter value="1" name="UseROIFrom" />
+      </parameter>
+      <parameter name="ShrinkImagePartsMaskForRobots">
+	<parameter value="50" name="MaxX" />
+	<parameter value="50" name="MaxY" />
+	<parameter value="NN" name="Interpolation" />
+      </parameter>
+      <parameter name="Enlarge2ForRobots">
+	<parameter value="NN" name="Interpolation" />
+      </parameter>
+
       <!-- Neural Network and Feature Extraction for Ball -->
       <parameter name="YUV422toGrayForBall" >
 	<parameter value="1" name="UseROIFrom" />
@@ -693,6 +804,43 @@
 	<parameter value="3" name="UseROIFrom" />
       </parameter>
 
+      <!-- Neural Network and Feature Extraction for Robots -->
+      <parameter name="ResizeROI2ForRobots" >
+	<parameter value="0.05" name="Percentage" />
+	<parameter value="1" name="UseROIFrom" />
+      </parameter>
+      <parameter name="YUV422toGrayForRobots" >
+	<parameter value="1" name="UseROIFrom" />
+      </parameter>
+      <parameter name="ShrinkImagePartsGrayForRobots">
+	<parameter value="100" name="MaxX" />
+	<parameter value="100" name="MaxY" />
+	<parameter value="SUPER" name="Interpolation" />
+      </parameter>
+      <parameter name="SobelVerticalForRobots">
+        <parameter value="VERTICAL" name="Orientation" />
+      </parameter>
+      <parameter name="SobelHorizontalForRobots">
+        <parameter value="HORIZONTAL" name="Orientation" />
+      </parameter>
+      <parameter name="OrientHistMaskForRobots">
+        <parameter value="3" name="UseROIFrom" />
+        <parameter value="4" name="UseMaskFrom" />
+        <parameter value="false" name="AbsGradient" />
+        <parameter value="true" name="Weighted" />
+	<parameter value="0.2" name="XOverlap" />
+	<parameter value="0.2" name="YOverlap" />
+	<parameter value="4" name="XSubwin" />
+	<parameter value="4" name="YSubwin" />
+	<parameter value="10" name="Discrete" />
+      </parameter>
+      <parameter name="NeuralNetRobots" >
+	<parameter value="RobotDetection_OHist.net" name="FileOrientFeatures" />
+	<parameter value="RobotDetection_Simple.net" name="FileSimpleFeatures" />
+	<parameter value="1" name="UseOrientHistFrom" />
+	<parameter value="2" name="UseROIFrom" />
+      </parameter>
+
       <!-- Collect Basic Features -->
       <parameter name="CollectAllFeatures2Basic" >
 	<parameter value="3" name="NumberBackLinks" />
@@ -709,6 +857,9 @@
 	<parameter value="8" name="NumberBackLinks" />
 	<parameter value="true" name="DynamicConnection" />
 	<parameter value="VisionCollectorFull" name="InterfaceName" />
+	<parameter value="2" name="ScaleFactorRunLength" />
+	<parameter value="9" name="UseIndexFrom" />
+	<parameter value="true" name="Save" />
         <parameter value="true" name="InterfaceInstance" />
         <parameter name="Interface" >
           <parameter value="CollectFull" name="Name" />
@@ -734,14 +885,21 @@
           <parameter value="Ball" name="Name" />
         </parameter>
       </parameter>
+      <parameter name="ROIVisualRobot">
+        <parameter value="true" name="InterfaceInstance" />
+        <parameter name="Interface" >
+          <parameter value="Robot" name="Name" />
+        </parameter>
+      </parameter>
+
       <parameter name="IndextoIndex">
         <parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
 	  <parameter value="Index" name="Name" />
 	</parameter>
       </parameter>
-
     </section>
+
 
     <section name="Notification" >
       <parameter name="Logging" >
