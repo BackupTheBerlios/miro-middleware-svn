@@ -27,6 +27,8 @@
 
 #include "Log.h"
 
+#include <tao/CDR.h>
+
 namespace Miro 
 {
   namespace NMC 

@@ -30,6 +30,8 @@
 #include "TimeHelper.h"
 #include "Log.h"
 
+#include <tao/CDR.h>
+
 /* ACE includes */
 #include <ace/Message_Block.h>
 #include <ace/OS.h>

@@ -34,6 +34,8 @@
 #include <iostream>
 #include <ace/OS.h>
 
+#include <tao/CDR.h>
+
 #include <cstdlib>
 
 namespace Miro 
