@@ -22,7 +22,7 @@
     </config_item>
     
     <config_item name="Timer" parent="Miro::TimedBehaviour">
-      <config_parameter  name="Time" type="ACE_Time_Value" default="10.0" measure="sec" />
+      <config_parameter  name="Time" type="ACE_Time_Value" default="10,0" measure="sec" />
     </config_item>
     
   </config_group>
