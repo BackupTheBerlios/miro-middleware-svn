@@ -324,11 +324,14 @@
     </section>
 
     <section name="Video" >
-      <!-- OmniCam -->    <instance type="Video::Parameters" name="OmniCam" >
-	<parameter value="yuv420p" name="Palette" />
+
+      <!-- OmniCam -->
+
+      <instance type="Video::Parameters" name="OmniCam" >
 	<parameter value="320" name="Width" />
 	<parameter value="240" name="Height" />
-	<parameter name="Filter" >
+	<parameter value="yuv420p" name="Palette" />
+	<parameter name="Filter">
 	  <parameter value="DeviceQuickCam" name="Name" />
 	  <parameter value="DeviceQuickCam" name="Type" />
 	  <parameter name="Successor" >
@@ -341,13 +344,94 @@
 		  <parameter value="FilterOmni2Pan" name="Type" />
 		  <parameter name="Successor" >
 		    <parameter name="Filter" >
-		      <parameter value="FilterRGBtoSeg" name="Name" />
-		      <parameter value="FilterRGBtoSeg" name="Type" />
+		      <parameter value="RGBtoIndexVer2" name="Name" />
+		      <parameter value="RGBtoIndexVer2" name="Type" />
 		      <parameter name="Successor" >
 			<parameter name="Filter" >
-			  <parameter value="FilterDistanceScan" name="Name" />
-			  <parameter value="FilterDistanceScan" name="Type" />
+			  <parameter value="AttentionBallOmni" name="Name" />
+			  <parameter value="AttentionBallOmni" name="Type" />
 			</parameter>
+			<parameter name="Filter" >
+			  <parameter value="DilateOmni" name="Name" />
+			  <parameter value="Dilate" name="Type" />
+			  <parameter name="Successor" >
+			    <parameter name="Filter" >
+			      <parameter value="ErodeOmni" name="Name" />
+			      <parameter value="Erode" name="Type" />
+			      <!-- MACHT DAS DIE SEITEN GRAU ????? -->
+			      <parameter name="Successor" >
+				<parameter name="Filter" >
+				  <parameter value="IndextoDistHighRes" name="Name" />
+				  <parameter value="IndextoDist" name="Type" />
+				  <!-- ENABLED FOR GOALIE -->
+				  <parameter name="Successor" >
+				    <parameter name="Filter" >
+				      <parameter value="ConnectionFake_HighRes" name="Name" />
+				      <parameter value="ConnectionFake" name="Type" />
+				    </parameter>
+				  </parameter>
+				  <!-- -->
+				</parameter>				  
+				<parameter name="Filter" >
+				  <parameter value="IndextoDistLowRes" name="Name" />
+				  <parameter value="IndextoDist" name="Type" />
+				  <parameter name="Successor" >
+				    <parameter name="Filter" >
+				      <parameter value="ConnectionFake_LowRes" name="Name" />
+				      <parameter value="ConnectionFake" name="Type" />
+				    </parameter>
+				  </parameter>
+				</parameter>
+			      </parameter>
+			    </parameter>
+			  </parameter>
+			</parameter>
+			<parameter name="Filter" >
+			  <parameter value="IndextoIndexOmni" name="Name" />
+			  <parameter value="IndextoIndex" name="Type" />
+			</parameter>
+		      </parameter>
+		    </parameter>
+		    <parameter name="Filter" >
+		      <parameter value="ROIVisual_BallOmni" name="Name" />
+		      <parameter value="ROIVisual" name="Type" />
+		      <parameter name="BackLink" >
+			<parameter value="AttentionBallOmni" />
+		      </parameter>
+		    </parameter>
+		  </parameter>
+		</parameter>
+	      </parameter>
+	    </parameter>
+
+	    <parameter name="Filter" >
+	      <parameter value="CollectRoboCupFeaturesOmni" name="Name" />
+	      <parameter value="CollectRoboCupFeaturesOmni" name="Type" />
+	      <parameter name="BackLink" >
+		<parameter value="AttentionBallOmni" />
+		<parameter value="RGBtoIndexVer2" />
+	      </parameter>
+	      <parameter name="Successor" >
+		<parameter name="Filter" >
+		  <parameter value="ConnectionFake_FeaturesOmni" name="Name" />
+		  <parameter value="ConnectionFake" name="Type" />
+		</parameter>
+	      </parameter>
+	    </parameter>
+	    <!-- DEBUG -->
+	    <parameter name="Filter" >
+	      <parameter value="FilterYUV420PtoRGB_Debug" name="Name" />
+	      <parameter value="FilterYUV420PtoRGB" name="Type" />
+	      <parameter name="Successor" >
+		<parameter name="Filter" >
+		  <parameter value="FilterOmni2Pan_Debug" name="Name" />
+		  <parameter value="FilterOmni2Pan" name="Type" />
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="ROIVisual_CollectOmni" name="Name" />
+		      <parameter value="ROIVisual" name="Type" />
+		      <parameter name="BackLink" >
+			<parameter value="CollectRoboCupFeaturesOmni" />
 		      </parameter>
 		    </parameter>
 		  </parameter>
@@ -357,48 +441,102 @@
 	  </parameter>
 	</parameter>
       </instance>
-      <!-- OmniCam Parameters -->    <instance type="Video::DeviceQuickCam" name="DeviceQuickCam" >
-	<parameter value="20" name="Framerate" />
-	<parameter value="27648" name="Contrast" />
-	<parameter value="-20992" name="Brightness" />
-	<parameter value="-1" name="Hue" />
+
+      <!-- OmniCam Parameters -->
+
+      <instance type="Video::FilterYUV420PtoRGB" name="FilterYUV420PtoRGB">
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="Omni" name="Name" />
+	</parameter>
+      </instance>
+
+      <instance type="Video::FilterOmni2Pan" name="FilterOmni2Pan">
+	<parameter value="166" name="CenterX" />
+	<parameter value="120" name="CenterY" />
+	<parameter value="120" name="Radius" />
+	<!-- roadrunner: x=160 y=122 r=124 -->
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="Pan" name="Name" />
+	</parameter>
+      </instance>
+
+      <instance type="LVF::IndextoIndex" name="IndextoIndexOmni">
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="IndexOmni" name="Name" />
+	</parameter>
+      </instance>
+
+      <instance type="LVF::AttentionBallOmni" name="AttentionBallOmni">
+	<parameter value="10" name="MinBlobWidth" />
+	<parameter value="10" name="MinBlobHeight" />
+	<parameter value="40" name="MinBlobPixels" />
+	<parameter value="0.4" name="MinBlobFill" />
+	<parameter value="true" name="LimitToOneBall" />
+      </instance>
+
+      <instance type="LVF::IndextoDist" name="IndextoDistHighRes">
+	<parameter value="true" name="EnableHighRes" />
+	<parameter value="BLUE YELLOW" name="Colors" />
+	<parameter value="true" name="TheseColorsAreObstacles" />
+      </instance>
+
+      <instance type="LVF::IndextoDist" name="IndextoDistLowRes">
+	<parameter value="false" name="EnableHighRes" />
+	<parameter value="GREEN WHITE RED" name="Colors" />
+	<parameter value="false" name="TheseColorsAreObstacles" />
+      </instance>
+
+      <instance type="LVF::ROIVisual" name="ROIVisual_BallOmni">
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="BallOmni" name="Name" />
+	</parameter>
+      </instance>
+
+      <instance type="LVF::CollectRoboCupFeaturesOmni" name="CollectRoboCupFeaturesOmni" >
+	<parameter value="1" name="NumberBackLinks" />
+	<parameter value="false" name="DynamicConnection" />
+	<parameter value="VisionCollectorOmni" name="InterfaceName" />
+	<parameter value="1" name="ScaleFactorRunLength" />
+	<parameter value="2" name="UseIndexFrom" />
+	<parameter value="false" name="Save" />
+      </instance>
+
+      <instance type="Video::FilterOmni2Pan" name="FilterOmni2Pan_Debug">
+	<parameter value="166" name="CenterX" />
+	<parameter value="120" name="CenterY" />
+	<parameter value="120" name="Radius" />
+      </instance>
+
+      <instance type="LVF::ROIVisual" name="ROIVisual_CollectOmni" >
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="CollectOmni" name="Name" />
+	</parameter>
+      </instance>
+
+      <instance type="Video::DeviceQuickCam" name="DeviceQuickCam" >
+        <parameter value="32767" name="Contrast" />
+        <parameter value="32767" name="Brightness" />
+        <parameter value="32767" name="Hue" />
+        <parameter value="30" name="Framerate" />
+        <parameter value="0" name="DynamicNoiseReduction" />
+	<parameter value="0" name="FlickerlessMode" />
+        <parameter value="0" name="BacklightCompensation" />
+	<parameter value="-1" name="Sharpness" />
+	<parameter value="0" name="WhitebalanceSpeed" />
+	<parameter value="0" name="WhitebalanceDelay" />
 	<parameter value="2" name="Whitebalance" />
-	<!-- indoor = 0, outdoor = 1, flourecence = 2, manual = 3, auto = 4 -->      <parameter value="0" name="WhitebalanceRed" />
-	<!-- only available in whitebalance=manual -->      <parameter value="0" name="WhitebalanceBlue" />
-	<!-- only available in whitebalance=manual -->      <parameter value="2032" name="WhitebalanceSpeed" />
-	<!-- only available in writebalance=auto -->      <parameter value="0" name="WhitebalanceDelay" />
-	<!-- only available in writebalance=auto -->      <parameter value="31744" name="AutoGainControl" />
-	<!-- autoGainControl < 0 ? auto : fixed (0..65535) -->      <parameter value="0" name="ShutterSpeed" />
-	<!-- shutterSpeed < 0 ? auto : fixed (0..65535) -->      <parameter value="-1" name="Sharpness" />
-	<!-- sharpness < 0 ? auto : fixed (0..65535) -->      <parameter value="0" name="BacklightCompensation" />
-	<!-- backlightCompensation == 0 ? off : on -->      <parameter value="0" name="FlickerlessMode" />
-	<!-- flickerlessMode == 0 ? off : on -->      <parameter value="1" name="DynamicNoiseReduction" />
-	<!-- dynamicNoiseReduction == 0 ? off : fixed (1..3) -->      <parameter value="0" name="Compression" />
-	<!-- compression == 0 ? off : fixed (1..3) -->    </instance>
-      <instance type="Video::FilterYUV420PtoRGB" name="FilterYUV420PtoRGB" >
-	<parameter value="true" name="InterfaceInstance" />
-	<parameter name="Interface" >
-	  <parameter value="VideoOmniCam" name="Name" />
-	</parameter>
+	<parameter value="-1" name="ShutterSpeed" />
+        <parameter value="32767" name="AutoGainControl" />
+        <parameter value="0" name="Compression" />
       </instance>
-      <instance type="Video::FilterOmni2Pan" name="FilterOmni2Pan" >
-	<parameter value="true" name="InterfaceInstance" />
-	<parameter name="Interface" >
-	  <parameter value="VideoPanorama" name="Name" />
-	</parameter>
-      </instance>
-      <instance type="Video::FilterRGBtoSeg" name="FilterRGBtoSeg" >
-	<parameter value="true" name="InterfaceInstance" />
-	<parameter name="Interface" >
-	  <parameter value="VideoSeg" name="Name" />
-	</parameter>
-      </instance>
-      <instance type="Video::FilterDistanceScan" name="FilterDistanceScan" >
-	<parameter value="true" name="InterfaceInstance" />
-	<parameter name="Interface" >
-	  <parameter value="DistanceScan" name="Name" />
-	</parameter>
-      </instance>
+
+      <!-- SONY CAM -->
+
       <instance type="Video::Parameters" name="SonyCam" >
 	<parameter value="640" name="Width" />
 	<parameter value="480" name="Height" />
