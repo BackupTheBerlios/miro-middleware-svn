@@ -25,7 +25,7 @@
 
 #include <iostream>
 
-#undef DEBUG
+// #undef DEBUG
  
 #ifdef DEBUG
 #define DBG(x) x

@@ -20,8 +20,9 @@
 #include "miro/TimeHelper.h"
 
 #include "psos/PsosMessage.h"
-#include <math.h>
-// #undef DEBUG
+#include <cmath>
+
+#undef DEBUG
 
 #ifdef DEBUG
 #define DBG(x) x

@@ -133,6 +133,13 @@ namespace Psos
 
 	msg->length(thisChar);
 	writePtr = msg->data();
+
+        if (thisChar == 0) {
+          msg->time() = ACE_OS::gettimeofday();
+          dispatchMessage();
+          // reset base output parsing
+          state = NO_STARTS;
+        }
 	break;
       case IN_PROGRESS:
 	DBG(cout << " - IN_PROGRESS" << endl);
@@ -162,7 +169,7 @@ namespace Psos
     Message* msg = (Message*) message_;
     
     if (msg->validChecksum()) {
-      if (synch == 3) {
+      if (synch >= 3) {
 	Super::dispatchMessage();
       }
       else {
@@ -177,7 +184,6 @@ namespace Psos
 	    connection.writeMessage(MSG_SYNC_1);
 	    break;
 	  }
-	  connection.writeMessage(MSG_COMCLOSE);
 	  synch = -1;
 	  break; 
 	case SF_SYNC_1 : 
@@ -187,23 +193,21 @@ namespace Psos
 	    connection.writeMessage(MSG_SYNC_2);
 	    break;
 	  }
-	  connection.writeMessage(MSG_COMCLOSE);
 	  synch = -1;
 	  break; 
 	case SF_SYNC_2 :
 	  DBG(cout << "PSOS synch state:" << synch << " - got sync3/connected" << endl);
 	  if (synch == 2) {
+            parseSynchMessage(*msg);
 	    synch = 3;
 	    connection.writeMessage(MSG_COMOPEN);
 	    synchCondition.broadcast();
 	    break;
 	  }
-	  connection.writeMessage(MSG_COMCLOSE);
 	  synch = -1;
 	  break; 
 	default:
 	  DBG(cout << "non synch message within synch mode:" << endl);
-	  connection.writeMessage(MSG_COMCLOSE);
 	  synch = -1;
 	}
       }
@@ -219,12 +223,19 @@ namespace Psos
   {
     DBG(cout << "PSOSEventHandler: handle timer event." << endl);
 
+    Miro::Guard guard(synchMutex);
     switch ((const int)arg) {
     case SYNCH_TIMER:
       DBG(cout << "Synch status: " << synch << endl);
-      if (synch != 3) {
+      if (synch < 3) {
+        DBG(cout << "Resynching" << endl);
 	synch = 0;
 	connection.writeMessage(MSG_SYNC_0);    // start synching
+      }
+      if (false /*synch == 3*/) {
+        cout << "cancelling connection" << endl;
+        synch = 4;
+        connection.writeMessage(MSG_COMCLOSE);
       }
       break;
     case PING_TIMER:
@@ -257,9 +268,9 @@ namespace Psos
       strncpy(tmp, (char *)&_message.data()[len], 128);
       subclass = tmp;
 
-      DBG(cout << "PSOS Synch Name: " << name << endl;)
-      DBG(cout << "PSOS Synch ClassName: " << classname << endl;)
-      DBG(cout << "PSOS Synch Subclass: " << subclass << endl;)
+      cout << "PSOS Synch Name: " << name << endl;
+      cout << "PSOS Synch ClassName: " << classname << endl;
+      cout << "PSOS Synch Subclass: " << subclass << endl;
     }
   }
 };
