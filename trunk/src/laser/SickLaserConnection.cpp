@@ -85,8 +85,6 @@ namespace Miro
   {
     MIRO_LOG_DTOR("LaserConnection");
 
-    reactor_->remove_handler(laserEvent_, ACE_Event_Handler::READ_MASK);
-      
     // before this destructor is called
     // do not delete this thread manager of ACE needs it
     //delete laserTask;
@@ -112,8 +110,7 @@ namespace Miro
 
     // Stop hardware triggered communication
     // no more calls to event, and therefore task
-    if (selectHandlerId != -1)
-      reactor_->remove_handler(selectHandlerId);
+    reactor_->remove_handler(laserEvent_, ACE_Event_Handler::READ_MASK);
     MIRO_DBG(SICK, LL_DEBUG, "removed fd handler.");
 
 #ifdef THREADEDWORKING
