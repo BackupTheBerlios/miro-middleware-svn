@@ -31,6 +31,8 @@
 
 #include <ace/OS.h>
 
+#include <cstdlib>
+
 #define DBG_CLASSNAME "NotifyMulticast::Receiver"
 
 namespace Miro {
@@ -395,8 +397,9 @@ namespace Miro {
                     sh_->handleSubscriptions(*ets);
                     
                 } else {
-                    if (time - _eventData.timestamp > configuration_->getEventMaxAge()) {
-                        PRINT_DBG(DBG_VERBOSE, "Packet " << _eventData.requestId << " dropped because it was too old");
+		  int delta = abs((int)time - (int)_eventData.timestamp);
+                    if (delta > configuration_->getEventMaxAge()) {
+		      PRINT_DBG(DBG_VERBOSE, "Packet " << _eventData.requestId << " dropped because it was too old: " << delta);
                         LOG(configuration_, "Receiver::handle_event(): message too old (" << time - _eventData.timestamp << ", dropped message");
                         return 0;
                     }
