@@ -64,9 +64,6 @@ struct Service
   //Miro::BatteryImpl * pBatteryImpl;
   FaulMotor::Consumer * pConsumer;
   //FaulMotor::StallImpl * pStallImpl;
-  //Canon::CanonPanTiltImpl canonPanTiltImpl;
-  //Canon::CanonCameraImpl canonCamera;
-  //Miro::GripperImpl gripper;
   FaulMotor::TimerEventHandler * pTimerEventHandler;
   FaulMotor::Connection connection;
 
@@ -126,206 +123,168 @@ int main(int argc, char* argv[])
   if (service.reactorTask.reactor()->register_handler(sigs, &event) == -1) {
     throw Miro::ACE_Exception(errno, "failed to register signal handler");
   }
-  cout << "updaterate? (usec) " << endl;
-  cin >> uptimer;
-  ACE_Time_Value tv(0,uptimer);
-  ACE_Time_Value t0(0,0);
 
-   //ACE_Time_Value tv(0,15000);
 
-//  service.reactorTask.reactor()->schedule_timer(service.pTimerEventHandler, NULL, tv ,tv);
-/*
+  // adding a handler for odometry polling
+
+  ACE_Time_Value tv(0, 100000);
+  service.reactorTask.reactor()->schedule_timer(service.pTimerEventHandler, NULL, tv ,tv);
+
+
+  // adding a handler for stall detection
+  /*
+    ACE_Time_Value t0(0,0);
     stallId = service.reactorTask.reactor()->schedule_Timer(service.pTimerEventHandler, NULL, t0, t0);
-
-
-
-    */
+  */
+  // service.connection.setStallId(stallId);
 
   service.reactorTask.open(NULL);
 
- /*do {
-    cout << "waiting for synch" << endl;
-  }
-  while (!canceled && !service.connection.waitSynch(ACE_Time_Value(2)));
-*/
   try
+  {
+    Miro::RangeGroupEventIDL_var  pSonarEvent;
+    Miro::PositionIDL odoData;
+
+    while(loop && !canceled)
     {
-      Miro::RangeGroupEventIDL_var  pSonarEvent;
-      Miro::PositionIDL odoData;
-      //cout << "hier1" << endl;
-      /*pSonarEvent = service.pRangeSensorImpl->getGroup(0);
-      service.pOdometryImpl->setPosition(odoData);
-      odoData = service.pOdometryImpl->getWaitPosition();
-      k=100;
-      //odoData = service.pOdometryImpl->getWaitPosition();
-      cout << "Odo:__" << odoData << endl;
-      */
-      //service.connection.setSpeed(0);
+      cout << endl
+	   << "*****  Menu:  *****"<< endl
+	   << "1 - motor on (L/R)! " << endl
+	   << "2 - motor on " << endl
+	   << "3 - Befehl!!!" << endl
+	   << "8 - Odo status" << endl
+	/*<< "4 - turn and drive" << endl
+	  << "6 - set servo" << endl
+	  << "7 - status (Sonar and Stall infos)" << endl
+	  << "8 - Odo status" << endl
+	  << "9 - set rotation velocity" << endl*/
+	   << "0 - all motors off!!!" << endl
+	   << "g - get vel" << endl
+	   << "p - get pos" << endl
+	   << "t - test endlosschleife" << endl
+	   << "x - Program end!!!" << endl;
+      cin >> str;
+      c = str[0];
+      //printf("\033[2J");             // clear screen
+      //printf("\033[0;0f");           // set cursor
 
-      //service.connection.setStallId(stallId);
-      while(loop)
+      switch (c)
+      {
+      case '1' :
 	{
-	  cout << endl
-	       << "*****  Menu:  *****"<< endl
-	       << "1 - motor on (L/R)! " << endl
-	       << "2 - motor on " << endl
-	       << "3 - Befehl!!!" << endl
-	       << "8 - Odo status" << endl
-	       /*<< "4 - turn and drive" << endl
-	       << "6 - set servo" << endl
-	       << "7 - status (Sonar and Stall infos)" << endl
-	       << "8 - Odo status" << endl
-	       << "9 - set rotation velocity" << endl*/
-	       << "0 - all motors off!!!" << endl
-	       << "g - get vel" << endl
-	       << "p - get pos" << endl
-               << "t - test endlosschleife" << endl
-	       << "x - Program end!!!" << endl;
-	  cin >> str;
-          c = str[0];
-	  //printf("\033[2J");             // clear screen
-	  //printf("\033[0;0f");           // set cursor
+	  cout << "what speed links? (mm/sec) " << endl;
+	  cin >> k;
+	  cout << "what speed rechts? (mm/sec) " << endl;
+	  cin >> l;
+	  service.connection.setSpeed(k, l);
+	  break;
+	}
 
-	 switch (c)
-	 {
-	 case '1' :
-	   {
-	     cout << "what speed links? (mm/sec) " << endl;
-	     cin >> k;
-	     cout << "what speed rechts? (mm/sec) " << endl;
-	     cin >> l;
-	     service.connection.setSpeed(k, l);
-	     break;
-	   }
+      case '2' :
+	{
+	  cout << "what speed? (mm/sec) " << endl;
+	  cin >> k;
+	  service.connection.setSpeed(k);break;
+	  /*
+	    cout << "how long?  (mmsec)" << endl;
+	    cin >> i;
+	    ace_time.msec(i);
+	    cout << "what speed? (mm/sec)  " << endl;
+	    cin >> k;
+	    service.connection.setSpeed(k);
+	    ACE_OS::sleep(ace_time);
+	    service.connection.setSpeed(0);break;*/
+	}
 
-	 case '2' :
-	   {
-	     cout << "what speed? (mm/sec) " << endl;
-	     cin >> k;
-	     service.connection.setSpeed(k);break;
-	     /*
-	     cout << "how long?  (mmsec)" << endl;
-	     cin >> i;
-	     ace_time.msec(i);
-	     cout << "what speed? (mm/sec)  " << endl;
-	     cin >> k;
-	     service.connection.setSpeed(k);
-	     ACE_OS::sleep(ace_time);
-	     service.connection.setSpeed(0);break;*/
-	   }
+      case '3' :
+	{
+	  cout << "Befehleingeben: " << endl;
+	  cin >> eing;
+	  service.connection.setBefehl(eing);
+	  break;
+	}
 
-	 case '3' :
-	   {
-	     cout << "Befehleingeben: " << endl;
-	     cin >> eing;
-	     service.connection.setBefehl(eing);
-	     //service.connection.turn(k);
-	     break;
-	   }
+      case '4' :
+	{
+	  cout << "what speed? (mm/sec):  " << endl;
+	  cin >> k;
+	  cout << "degrees ?  " << endl;
+	  cin >> i;
+	  //service.connection.setSpeedRot(k, i);break;
+	}
 
-	 case '4' :
-	   {
-	     cout << "what speed? (mm/sec):  " << endl;
-	     cin >> k;
-	     cout << "degrees ?  " << endl;
-	     cin >> i;
-	     //service.connection.setSpeedRot(k, i);break;
-	   }
+      case '5' :                                 // muss ich noch testen
+	{
+	  break;
+	}
 
-	 case '5' :                                 // muss ich noch testen
-	   {
-	     cout << "Enter Servo middle pules! (initial 129) " << endl;
-	     cin >> k;
-	     //service.connection.setServoMidPulse((unsigned short)k);
-	     cout << "Servo auf null gestellt mit: " << k << endl;
-	     break;
-	   }
+      case '6' :
+	{
+	  break;
+	}
 
-	 case '6' :
-	   {
-	     cout << "Servosetting:" << endl
-		  << "  0: middle Setting " << endl
-		  << "  +/- 90° " << endl;
-	     cin >> k;
-	     //service.connection.setServo(k);
-	     break;
-	   }
+      case '7' :
+	{
+	  break;
+	}
 
-	 case '7' :
-	   {
-	     /*pSonarEvent = service.pRangeSensorImpl->getGroup(0);
-	     for (i=0;i<=7;i++)
-	       {  cout << "Sonar"  << i << ":__" << pSonarEvent->range[i] << endl; }
-	     k= service.pStallImpl->getStalledWheels();
-	     if (k==1) cout <<"only left wheel stalled! " << endl;
-	     if (k==2) cout <<"only right wheel stalled! " << endl;
-	     if (k==3) cout <<"left and right wheel stalled!!! " << endl;
-	     cout << "Battery (volt):  " << service.pBatteryImpl->getVoltage() << endl;*/
-	     break;
-	   }
+      case '8' :
+	{
+	  odoData = service.pOdometryImpl->getPosition();
+	  cout << "Odo: " << odoData << endl;
+	  break;
+	}
 
-	 case '8' :
-	   {
-	     odoData = service.pOdometryImpl->getPosition();
-	     cout << "Odo:__" << odoData << endl;break;
-	   }
+      case '9' :
+	{
+	  break;
+	}
 
-	 case '9' :
-	   {
-	     //cout << pOdometryImpl->getPosition() << endl;
+      case '0' :
+	{
+	  service.connection.setSpeed(0);
+	  break;
+	}
+      case 'a' :
+	{
 
-	     //service.connection.setRotVel(k);break;
-	     break;
-	   }
+	  break;
+	}
+      case 't' :
+	{
+	  cout << "how long?  (msec)" << endl;
+	  cin >> i;
+	  ace_time.msec(i);
 
-	 case '0' :
-	   {
-	     service.connection.setSpeed(0);
-	     //service.connection.setSpeed(0);
-	     //service.connection.stop();
-	     break;
-	   }
-	 case 'a' :
-	   {
-
-	     break;
-	   }
-	 case 't' :
-	   {
-             cout << "how long?  (msec)" << endl;
-             cin >> i;
-             ace_time.msec(i);
-
-	     while(true)
-	     {
-		service.connection.setSpeed(100);
-                ACE_OS::sleep(ace_time);
-                service.connection.setSpeed(0);
-                ACE_OS::sleep(ace_time);
+	  while(!canceled) {
+	    service.connection.setSpeed(100);
+	    ACE_OS::sleep(ace_time);
+	    service.connection.setSpeed(0);
+	    ACE_OS::sleep(ace_time);
                 
-             }
-	     break;
-	   }
-	  case 'g' :
-	   {
-	     service.connection.getSpeed();
-	     break;
-	   }
-	 case 'p' :
-	   {
-	     service.connection.getTicks();
-	     break;
-	   }
-	 case 'X':
-	 case 'x' : 
-	   loop = false;
-	   break;
-	 default: 
-	   cout << "gibts doch gar net!!!" << endl;
+	  }
+	  break;
+	}
+      case 'g' :
+	{
+	  service.connection.getSpeed();
+	  break;
+	}
+      case 'p' :
+	{
+	  service.connection.getTicks();
+	  break;
+	}
+      case 'X':
+      case 'x' : 
+	loop = false;
+	break;
+      default: 
+	cout << "gibts doch gar net!!!" << endl;
 
-	 }//switch(c)
+      }//switch(c)
 
-       } //while(loop)
+    } //while(loop)
   }
   catch(const CORBA::Exception& e) {
     cerr << "CORBA exception thrown:" << e << endl;
