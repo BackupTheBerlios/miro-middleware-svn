@@ -106,12 +106,15 @@ namespace FaulMotor
 	  //if ((pFaulMsg->RPos < 3000) or (pFaulMsg->RPos > 10000) pConnection->setPos0(0);
 
 	  // calculate new orientation
-	  double turn = -(dL - dR) / wheelBase_;
-	  status_.position.heading = (status_.position.heading + turn);
-	  if (status_.position.heading <= -M_PI)
-	    status_.position.heading += 2. * M_PI;
-	  else if (status_.position.heading > M_PI)
-	    status_.position.heading -= 2. * M_PI;
+	  double turn = (dR - dL) / wheelBase_;
+	  status_.position.heading += turn;
+
+	  Miro::Angle::normalize(status_.position.heading);
+
+// 	  if (status_.position.heading <= -M_PI)
+// 	    status_.position.heading += 2. * M_PI;
+// 	  else if (status_.position.heading > M_PI)
+// 	    status_.position.heading -= 2. * M_PI;
 
 	  double dist = (dL + dR) / 2.;
 	  xPos_ += cos(status_.position.heading) * dist;

@@ -73,6 +73,8 @@ namespace FaulMotor
   void
   Connection::setSpeed(short _speed)
   {
+    Miro::Guard guard(mutex_);
+
     if (disabled_)
       enable();
 
@@ -101,6 +103,7 @@ namespace FaulMotor
   void
   Connection::setSpeed(short _speedL, short _speedR)
   {
+    Miro::Guard guard(mutex_);
     if (disabled_)
       enable();
     
@@ -182,8 +185,10 @@ namespace FaulMotor
   {
     char const * const getSpeedMessage = "gn\r\n\0";
 
+    Miro::Guard guard(mutex_);
     leftWheel_.writeMessage(getSpeedMessage);             // send it
     rightWheel_.writeMessage(getSpeedMessage);
+    ACE_OS::sleep(ACE_Time_Value(0, 20000));
   }
 
   void
@@ -191,14 +196,18 @@ namespace FaulMotor
   {
     char const * const getTicksMessage = "pos\r\n\0";
 
+    Miro::Guard guard(mutex_);
     leftWheel_.writeMessage(getTicksMessage);            // send it
     rightWheel_.writeMessage(getTicksMessage);
+    ACE_OS::sleep(ACE_Time_Value(0, 20000));
   }
 
   void
   Connection::setBefehl(char const * const befehl)
   {
     char buffer[256];
+
+    Miro::Guard guard(mutex_);
     strncpy(buffer, befehl, 253);
     strcat(buffer,"\r\n\0");
     leftWheel_.writeMessage(buffer);
