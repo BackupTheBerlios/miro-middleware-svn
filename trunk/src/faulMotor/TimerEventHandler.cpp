@@ -41,11 +41,12 @@ namespace FaulMotor
   int
   TimerEventHandler::handle_timeout(const ACE_Time_Value &, const void *)
   {
+    //sollte der controller selber schicken
+
     if (Connection::gotTicks_ < 2) {
       std::cerr << "odometry stalled" << endl;
       abort();
     }
-    
     connection_.getTicks();
     
     return 0;

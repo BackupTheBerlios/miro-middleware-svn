@@ -45,6 +45,9 @@ namespace FaulMotor
     void setPosition(int left, int right);
     void enable();
     void disable();
+    void jmp1();
+    void jmp2();
+    void jmp3();
 
   protected:
     const Parameters * params_;
@@ -56,6 +59,8 @@ namespace FaulMotor
 
     double prevSpeedL;
     double prevSpeedR;
+    double prevAccL;
+    double prevAccR;
     bool disabled_;
 
     Miro::Mutex mutex_;

@@ -49,7 +49,9 @@ namespace FaulMotor
 	       params_->rightWheel),
     consumer(_consumer),
     prevSpeedL(0),
-    prevSpeedR(0)
+    prevSpeedR(0),
+    prevAccL(0),
+    prevAccR(0)
   { 
     DBG(cout << "Constructing FaulMotorConnection." << endl);
 
@@ -168,11 +170,18 @@ namespace FaulMotor
     acctestR = abs((short)accR);
     cout << "maxPosAcc: " << params_-> maxPosAccel <<" AccR: " << acctestR ;
     cout << " AccL: " << acctestL << endl;
-    sprintf(speedMessageL, "ac%d\r\n", acctestL); // build speed message
-    sprintf(speedMessageR, "ac%d\r\n", acctestR); // build speed message
-    leftWheel_.writeMessage(speedMessageL);
-    rightWheel_.writeMessage(speedMessageR);    
-    
+    if (abs(acctestL-prevAccL)>2){			//zur datenverringerung
+    	sprintf(speedMessageL, "ac%d\r\n", acctestL); // build speed message
+	leftWheel_.writeMessage(speedMessageL);
+	prevAccL=acctestL;
+    }
+    if (abs(acctestR-prevAccR)>2){
+    	sprintf(speedMessageR, "ac%d\r\n", acctestR); // build speed message
+	rightWheel_.writeMessage(speedMessageR);
+    	prevAccR=acctestR;
+    }
+
+
    // ACE_OS::sleep(ACE_Time_Value(2));
     sprintf(speedMessageL, "v%d\r\n", speedL); // build speed message
     sprintf(speedMessageR, "v%d\r\n", speedR); // build speed message
@@ -258,6 +267,8 @@ namespace FaulMotor
     disabled_ = false;
     leftWheel_.writeMessage(getSpeedMessage);             // send it
     rightWheel_.writeMessage(getSpeedMessage);
+    jmp2();
+
   }
 
   void
@@ -266,6 +277,34 @@ namespace FaulMotor
     char const * const getSpeedMessage = "di\r\n\0";
 
     disabled_ = true;
+    leftWheel_.writeMessage(getSpeedMessage);             // send it
+    rightWheel_.writeMessage(getSpeedMessage);
+    jmp1();
+  }
+
+  void
+  Connection::jmp1()					// keine Ododaten
+  {
+    char const * const getSpeedMessage = "jmp1\r\n\0";
+
+    leftWheel_.writeMessage(getSpeedMessage);             // send it
+    rightWheel_.writeMessage(getSpeedMessage);
+  }
+
+  void
+  Connection::jmp2()					// ododaten so schnell wie möglich
+  {
+    char const * const getSpeedMessage = "jmp2\r\n\0";
+
+    leftWheel_.writeMessage(getSpeedMessage);             // send it
+    rightWheel_.writeMessage(getSpeedMessage);
+  }
+
+  void
+  Connection::jmp3()					// notaus keine Ododaten und v0
+  {
+    char const * const getSpeedMessage = "jmp3\r\n\0";
+
     leftWheel_.writeMessage(getSpeedMessage);             // send it
     rightWheel_.writeMessage(getSpeedMessage);
   }
