@@ -56,7 +56,7 @@ namespace Video
     unsigned char const * srcImg = inputBuffer();
     unsigned char * tgtImg = outputBuffer();
     unsigned char * tgtImgEnd = tgtImg + IMAGE_WIDTH * IMAGE_HEIGHT * 3;
-    short * srcOffset = srcOffset_;
+    int * srcOffset = srcOffset_;
 
     for (; tgtImg != tgtImgEnd; ++tgtImg, ++srcOffset) {
       *tgtImg = *(srcImg + *srcOffset);
@@ -71,7 +71,7 @@ namespace Video
       sinLookup_[i] = sin(M_PI * i / 180.0);
     }
 
-    short * srcOffset = srcOffset_;
+    int * srcOffset = srcOffset_;
     for (unsigned int dist = 0; dist < outputFormat_.height; dist++) {
       for (unsigned int angle = 0; angle < outputFormat_.width; angle++) {
 	for(int color = 0; color < 3; color++) {
