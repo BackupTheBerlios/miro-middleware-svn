@@ -38,7 +38,7 @@ CLEANFILES = $(BUILT_SOURCES)
 
 includefiles1 = $(sources:.xml=.h) $(extraheader)
 includefiles2 = $(includefiles1:.cpp=.h)
-can_include_HEADERS = $(includefiles2)
+msp_include_HEADERS = $(includefiles2)
 
 all-local:
 	$(INSTALLLIBRARIES)
