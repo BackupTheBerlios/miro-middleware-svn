@@ -70,9 +70,6 @@ namespace Pioneer
   // reads incoming packets from the psos connection and stores the values
   // in the local (class internal) variables.
 
-  // well, since we only use the sonar readings for the soccer robots
-  // we ignore the rest of the information for now
-
   void 
   Consumer::handleMessage(const Miro::DevMessage * _message)
   {
@@ -87,6 +84,10 @@ namespace Pioneer
 	
 	const ServerInfoMessage * message = static_cast<const ServerInfoMessage *>(_message);
 	
+	//------------------------------
+	// evaluating odometry data
+	//------------------------------
+
 	if (pOdometry) {
 	  short x, y, x0, y0, dX, dY;
 	  double velL, velR, weelDist;
@@ -143,6 +144,10 @@ namespace Pioneer
 	  //cout << "Battery: " << bat << endl;
 	}
 
+	//------------------------------
+	// evaluating sonar data
+	//------------------------------
+
 	if (pSonar && message->sonarReadings() > 0) {
 	  //  DBG(cout << "Sonar readings: " << message->sonarReadings() << endl);
 
@@ -172,8 +177,20 @@ namespace Pioneer
 
 	  //cout << "sonarReadings  " << message->sonarReadings() << endl;  
 	  pSonar->integrateData(pSonarEvent);
-	  break;
 	}
+
+	//------------------------------
+	// evaluating stall and bumper data
+	//------------------------------
+
+	cout << "Bumpers: ";
+	unsigned short flags = message->flags();
+	for (unsigned int i = 0; i < 16; ++i) {
+	  cout << ((flags >> i) & 1) << " ";
+	}
+	cout << endl;
+	
+	break;
       }
     default:
       std::cerr << "Unkown message header: " << hex << pPsosMsg->header() << dec << endl;

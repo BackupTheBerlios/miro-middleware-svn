@@ -81,6 +81,7 @@ namespace Psos
     unsigned char rBumper() const { return buffer_[16]; }
     short control() const { return *(short *)(&buffer_[17]); }
     unsigned short PTU() const { return *(unsigned short *)(&buffer_[19]); }
+    unsigned short flags() const { return *(unsigned short *)(&buffer_[19]); }
     unsigned char say() const { return buffer_[21]; }
 
     int sonarReadings() const { return buffer_[22]; }
