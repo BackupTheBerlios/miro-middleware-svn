@@ -45,8 +45,6 @@ include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
 include $(ACE_ROOT)/include/makeinclude/macros.GNU
 include $(MIRO_ROOT)/include/makeinclude/macros.miro.GNU
 
-depend: $(MOC_SRC)
-
 include $(TAO_ROOT)/rules.tao.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.nonested.GNU
@@ -59,6 +57,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 #----------------------------------------------------------------------------
 
 .PRECIOUS: $(MOC_SRC)
+
+depend: $(MOC_SRC)
 
 realclean: clean
 	-$(RM) $(MOC_SRC))

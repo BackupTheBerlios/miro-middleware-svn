@@ -26,13 +26,13 @@ namespace
   double deg90 = M_PI_2;
 };
 
-RangeSensorWidget::RangeSensorWidget(Miro::RangeSensor_ptr _sensor) : 
+RangeSensorWidget::RangeSensorWidget(Miro::RangeSensor_ptr _sensor, CORBA::UShort _group) : 
   QWidget(), 
   sensor_(Miro::RangeSensor::_duplicate(_sensor)),
-  group_(0)
+  group_(_group)
 {
   scanDescription_ = sensor_->getScanDescription();
-  scan_ = sensor_->getGroup(0);
+  scan_ = sensor_->getGroup(group_);
 
   // set widget size
   resize(400, 400);
@@ -59,7 +59,7 @@ RangeSensorWidget::~RangeSensorWidget()
 
 void RangeSensorWidget::timerEvent(QTimerEvent*) 
 {
-  scan_ = sensor_->getGroup(0);
+  scan_ = sensor_->getGroup(group_);
   update();
 }
 
@@ -172,6 +172,8 @@ void RangeSensorWidget::calcSize()
 
 int main(int argc, char *argv[])
 {
+  int group = 0;
+
   // Initialize ORB.
   Miro::Client client(argc, argv);
 
@@ -179,14 +181,17 @@ int main(int argc, char *argv[])
   QApplication App(argc, argv);
 
   if (argc < 2) {
-    std::cerr << "Usage: " << argv[0] << " <sensor name>" << std::endl;
+    std::cerr << "Usage: " << argv[0] << " <sensor name> <group number>" << std::endl;
     return 1;
   }
+
+  if (argc >= 2) 
+    group = atoi(argv[2]);
 
   // server proxy //
   Miro::RangeSensor_var sensor = client.resolveName<Miro::RangeSensor>(argv[1]);
 
-  RangeSensorWidget sensorWidget(sensor.in());
+  RangeSensorWidget sensorWidget(sensor.in(), group);
   
   App.setMainWidget(&sensorWidget);
   sensorWidget.show();

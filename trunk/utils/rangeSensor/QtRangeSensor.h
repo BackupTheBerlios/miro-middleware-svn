@@ -30,7 +30,7 @@ class RangeSensorWidget : public QWidget
   
 public:
   /** Constructor */
-  RangeSensorWidget(Miro::RangeSensor_ptr _sensor);
+  RangeSensorWidget(Miro::RangeSensor_ptr _sensor, CORBA::UShort _group);
 
   /** Destructor */
   virtual ~RangeSensorWidget();
@@ -43,7 +43,7 @@ protected:
 
   Miro::RangeSensor_var sensor_;
   Miro::ScanDescriptionIDL_var scanDescription_;
-  CORBA::Long group_;
+  CORBA::UShort group_;
   Miro::RangeGroupEventIDL_var scan_;
 
   int x0_;
