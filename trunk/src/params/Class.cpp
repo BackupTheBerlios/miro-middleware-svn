@@ -96,10 +96,9 @@ Class::generateHeader(std::ostream& ostr, unsigned long _indent) const
     ostr << spaces.left(indent) << "virtual ~"<< name_ << "Parameters();" << std::endl;
   // parsing operator
   ostr << std::endl;
-  if (parameter_.size() > 0 || parent_.isEmpty()) {
-    ostr << spaces.left(indent) << "virtual void operator <<= (const QDomNode&);" << std::endl;
-    ostr << spaces.left(indent) << "virtual QDomElement operator >>= (QDomNode&) const;" << std::endl;
-  }
+  ostr << spaces.left(indent) << "virtual void operator <<= (const QDomNode&);" << std::endl;
+  ostr << spaces.left(indent) << "virtual QDomElement operator >>= (QDomNode&) const;" << std::endl;
+  
   // debug output operator
   if (parameter_.size() > 0 || parent_.isEmpty()) {
     ostr << spaces.left(indent - STEP) << "protected:" << std::endl
@@ -188,22 +187,22 @@ Class::generateSource(std::ostream& ostr, unsigned long _indent) const
 	   << spaces.left(indent) << "{}" << std::endl
 	   << std::endl;
   
+    // operator <<=
+    ostr << spaces.left(indent) << "void" << std::endl
+	 << spaces.left(indent) << name_ << "Parameters::operator <<= (const QDomNode&";
+    if (parameter_.size() > 0 || !parent_.isEmpty()) 
+      ostr <<" _node";
+    ostr << ")" << std::endl;
+    
+    generateQDomOutOperator(ostr, "this->", indent);
+    
+    // operator >>=
+    ostr << spaces.left(indent) << "QDomElement" << std::endl
+	 << spaces.left(indent) << name_ << "Parameters::operator >>= (QDomNode& _node) const" << std::endl;
+    generateQDomInOperator(ostr, "this->", indent);
+    
     if (parameter_.size() > 0 || parent_.isEmpty()) {
 
-      // operator <<=
-      ostr << spaces.left(indent) << "void" << std::endl
-	   << spaces.left(indent) << name_ << "Parameters::operator <<= (const QDomNode&";
-      if (parameter_.size() > 0 || !parent_.isEmpty()) 
-	ostr <<" _node";
-      ostr << ")" << std::endl;
-    
-      generateQDomOutOperator(ostr, "this->", indent);
-    
-      // operator >>=
-      ostr << spaces.left(indent) << "QDomElement" << std::endl
-	   << spaces.left(indent) << name_ << "Parameters::operator >>= (QDomNode& _node) const" << std::endl;
-      generateQDomInOperator(ostr, "this->", indent);
-    
       // stream output
       ostr << std::endl
 	   << spaces.left(indent) << "void" << std::endl
