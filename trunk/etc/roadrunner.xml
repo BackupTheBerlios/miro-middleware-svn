@@ -349,12 +349,6 @@
 				  <parameter value="AttentionGoalPosts" name="Type" />
 				  <parameter value="BlueLeftPost" name="Name" />
 				</parameter>
-			      </parameter>
-			    </parameter>
-			    <parameter name="Filter" >
-			      <parameter value="IndextoEdge" name="Type" />
-			      <parameter value="IndextoEdgeBlueWhite" name="Name" />
-			      <parameter name="Successor" >
 				<parameter name="Filter" >
 				  <parameter value="AttentionGoalPosts" name="Type" />
 				  <parameter value="BlueRightPost" name="Name" />
@@ -369,12 +363,6 @@
 				  <parameter value="AttentionGoalPosts" name="Type" />
 				  <parameter value="YellowLeftPost" name="Name" />
 				</parameter>
-			      </parameter>
-			    </parameter>
-			    <parameter name="Filter" >
-			      <parameter value="IndextoEdge" name="Type" />
-			      <parameter value="IndextoEdgeYellowWhite" name="Name" />
-			      <parameter name="Successor" >
 				<parameter name="Filter" >
 				  <parameter value="AttentionGoalPosts" name="Type" />
 				  <parameter value="YellowRightPost" name="Name" />
@@ -447,14 +435,6 @@
 		      </parameter>
 		    </parameter>
 
-		    <parameter name="Filter" >
-		      <parameter value="ROIVisual" name="Type" />
-		      <parameter value="ROIVisualGoal" name="Name" />
-		      <parameter name="BackLink" >
-			<parameter value="AttentionGoal" />
-		      </parameter>
-		    </parameter>
-
 		  </parameter>
 		</parameter>
 	      </parameter>
@@ -502,25 +482,14 @@
         <parameter value="true" name="SelectOrient" />
         <parameter value="-30" name="LowAngle" />
         <parameter value="30" name="HighAngle" />
-        <parameter value="false" name="OppositeDirection" />
+        <parameter value="true" name="OppositeDirection" />
       </parameter>
       <parameter name="BlueLeftPost">
-        <parameter value="false" name="Rotate" />
-        <parameter value="false" name="Random" />
+	<parameter value="128" name="Color" />
         <parameter value="BLUELEFTGOALPOST" name="Type" />
       </parameter>
-
-      <parameter name="IndextoEdgeBlueWhite">
-        <parameter value="BLUE" name="ColorOne" />
-        <parameter value="WHITE" name="ColorTwo" />
-        <parameter value="true" name="SelectOrient" />
-        <parameter value="-30" name="LowAngle" />
-        <parameter value="30" name="HighAngle" />
-        <parameter value="false" name="OppositeDirection" />
-      </parameter>
       <parameter name="BlueRightPost">
-        <parameter value="false" name="Rotate" />
-        <parameter value="false" name="Random" />
+	<parameter value="255" name="Color" />
         <parameter value="BLUERIGHTGOALPOST" name="Type" />
       </parameter>
 
@@ -530,29 +499,14 @@
         <parameter value="true" name="SelectOrient" />
         <parameter value="-30" name="LowAngle" />
         <parameter value="30" name="HighAngle" />
-        <parameter value="false" name="OppositeDirection" />
+        <parameter value="true" name="OppositeDirection" />
       </parameter>
       <parameter name="YellowLeftPost">
-        <parameter value="false" name="Rotate" />
-        <parameter value="false" name="Random" />
+	<parameter value="128" name="Color" />
         <parameter value="YELLOWLEFTGOALPOST" name="Type" />
       </parameter>
-
-      <parameter name="IndextoEdgeYellowWhite">
-        <parameter value="YELLOW" name="ColorOne" />
-        <parameter value="WHITE" name="ColorTwo" />
-        <parameter value="true" name="SelectOrient" />
-        <parameter value="-30" name="LowAngle" />
-        <parameter value="30" name="HighAngle" />
-        <parameter value="false" name="OppositeDirection" />
-        <parameter value="true" name="InterfaceInstance" />
-        <parameter name="Interface" >
-          <parameter value="YRG" name="Name" />
-        </parameter>
-      </parameter>
       <parameter name="YellowRightPost">
-        <parameter value="false" name="Rotate" />
-        <parameter value="false" name="Random" />
+	<parameter value="255" name="Color" />
         <parameter value="YELLOWRIGHTGOALPOST" name="Type" />
       </parameter>
 
@@ -578,13 +532,6 @@
 	<parameter name="Interface" >
 	  <parameter value="Lines" name="Name" />
 	</parameter>
-      </parameter>
-
-      <parameter name="ROIVisualGoal">
-        <parameter value="true" name="InterfaceInstance" />
-        <parameter name="Interface" >
-          <parameter value="Goal" name="Name" />
-        </parameter>
       </parameter>
 
       <parameter name="DeviceQuickCam" >
