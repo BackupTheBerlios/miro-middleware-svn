@@ -214,6 +214,8 @@ void cameraMenu(Service& service)
 	 << "9 - set Focus position" << endl
 	 << "0 - get Focus position" << endl
 	 << "a - set AutoFocus" << endl
+	 << "b - set AF Lock OFF" << endl
+	 << "c - set AF Lock ON" << endl
 	 << endl << "x - back" << endl;
     cin >> str;
     c = str[0];
@@ -329,6 +331,16 @@ void cameraMenu(Service& service)
       case 'a':
 	{
 	  service.canonCamera.autoFocus();
+	  break;
+	}
+      case 'b':
+	{
+	  service.canonCamera.setAEoff();
+	  break;
+	}
+      case 'c':
+	{
+	  service.canonCamera.setAEon();
 	  break;
 	}
       case 'X':
