@@ -238,10 +238,8 @@ int main(int argc, char *argv[])
       // wait for key
       if (first || !streaming) {
 	first = false;
-	if (false) {
-	  cout << "Press key to grab next image: " << flush;
-	  getchar();
-	}
+	cout << "Press key to grab next image: " << flush;
+	getchar();
 	start = ACE_OS::gettimeofday();
       }
     
