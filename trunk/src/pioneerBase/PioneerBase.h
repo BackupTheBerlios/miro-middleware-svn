@@ -26,6 +26,7 @@
 #include "pioneer/CanonPanTiltImpl.h"
 #include "pioneer/CanonCameraImpl.h"
 #include "pioneer/GripperImpl.h"
+#include "pioneer/TCM2Impl.h"
 #include "miro/RangeSensorImpl.h"
 #include "miro/ObjectVectorImpl.h"
 //#include "miro/CortexImpl.h"
@@ -88,6 +89,7 @@ private:
 
   Pioneer::MotionImpl motion;
   Pioneer::StallImpl  stall;
+  Pioneer::TCM2Impl tcm2;
   Miro::RangeSensorImpl sonar;
   Miro::RangeSensorImpl tactile;
   Miro::RangeSensorImpl infrared;
@@ -100,6 +102,7 @@ private:
   Miro::Odometry_var pOdometry;
   Miro::Motion_var pMotion;
   Miro::Stall_var pStall;
+  Miro::TCM2_var pTCM2;
   Miro::RangeSensor_var pSonar;
   Miro::RangeSensor_var pTactile;
   Miro::RangeSensor_var pInfrared;

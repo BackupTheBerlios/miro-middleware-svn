@@ -49,6 +49,7 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
 					 &odometry,
 					 &battery,
 					 NULL, //stall
+					 (Pioneer::Parameters::instance()->tcm2?&tcm2:NULL),
 					 //only add the camera if really present
 					 (Pioneer::Parameters::instance()->camera?&canonPanTilt:NULL))),
   pPsosEventHandler(new Psos::EventHandler(pPioneerConsumer, 
@@ -59,6 +60,7 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   // Service initialization
   motion(pioneerConnection),
   stall(/*pioneerConnection*/),
+  tcm2(Pioneer::Parameters::instance()->tcm2Params, &structuredPushSupplier_),
   sonar(Pioneer::Parameters::instance()->sonarDescription, &structuredPushSupplier_),
   tactile(Pioneer::Parameters::instance()->tactileDescription, &structuredPushSupplier_),
   infrared(Pioneer::Parameters::instance()->infraredDescription, &structuredPushSupplier_),
@@ -75,6 +77,7 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   pTactile = tactile._this();
   pInfrared = infrared._this();
   pBattery = battery._this();
+  pTCM2 = tcm2._this();
   pCanonPanTilt = canonPanTilt._this();
   pCanonCamera = canonCamera._this();
   pGripper = gripper._this();
@@ -88,6 +91,8 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   addToNameService(pTactile.in(), "Tactile");
   addToNameService(pInfrared.in(), "Infrared");
   addToNameService(pBattery.in(), "Battery");
+  if (Pioneer::Parameters::instance()->tcm2)
+    addToNameService(pTCM2.in(), "TCM2");
   addToNameService(ec_.in(), "EventChannel");
   addToNameService(pObjectVector.in(), "ObjectVector");
   //addToNameService(pCortex.in(), "Cortex");
@@ -102,9 +107,16 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
 
   // start the asychronous consumer listening for the hardware
   reactorTask.open(0);
+  // wait for synchronization
+  pioneerConnection.waitSynch(ACE_Time_Value(10));
 
   if (mcAdapter_)
     mcAdapter_->init();
+
+  // Switch TCM2 into continuous mode
+  if (Pioneer::Parameters::instance()->tcm2 &&
+      !(Pioneer::Parameters::instance()->tcm2Params.compassOnly))
+    pioneerConnection.setTCMMode(3);
 
   MIRO_LOG_CTOR("PioneerBase");
 }
