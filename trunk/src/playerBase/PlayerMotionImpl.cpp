@@ -48,6 +48,8 @@ namespace Miro
   {
     Guard guard(mutex_);
 
+    std::cout << _velocity.rotation << " " << playerPositionProxy->TurnRate() << std::endl;
+
     try {
       testVelocityBounds(_velocity);
     }
@@ -57,8 +59,10 @@ namespace Miro
     }
     setTargetVelocity(_velocity);
     if (playerPositionProxy) {
-      playerPositionProxy->SetSpeed(_velocity.translation,_velocity.rotation);
-    }
+      playerPositionProxy->SetSpeed(double(_velocity.translation)/1000.0,_velocity.rotation);
+    } else {
+      std::cerr << "How did this NULL get here?" << std::endl;
+   }
   }
 
 };

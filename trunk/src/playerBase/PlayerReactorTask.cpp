@@ -7,8 +7,6 @@
 #include "miro/OdometryImpl.h"
 #include "miro/BatteryImpl.h"
 #include "idl/TimeC.h"
-//#include "idl/Position3DC.h"
-//#include "miro/Position3DHelper.h"
 #include "miro/TimeHelper.h"
 #include "miro/Server.h"
 
@@ -67,11 +65,9 @@ namespace Miro {
   }
 
     if (!playerPosition || playerPosition->GetAccess() != 'a') {
-      throw (Miro::EDevIO("Could not get reference to Player Position"));
+      throw (Miro::Exception("Could not get reference to Player Position"));
     }
 
-    pMotion->setPlayerPositionProxy(playerPosition);
-    
     status.position.point.x=0;
     status.position.point.y=0;
     status.position.heading=0;
@@ -91,6 +87,9 @@ namespace Miro {
   int PlayerReactorTask::svc() throw (CORBA::Exception) {
     int sonarReadings=8;
     string robotName="Robot";
+
+   
+    pMotion->setPlayerPositionProxy(playerPosition);
 
     while (!done) {
     
@@ -157,6 +156,9 @@ namespace Miro {
 	  pOdometry->integrateData(status);
 
 	} // odometry end
+	if ((pBattery!=NULL) && (playerPower != NULL)) {
+	  pBattery->integrateData(playerPower->Charge());
+	} // battery end
       }
     }
 
