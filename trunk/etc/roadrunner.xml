@@ -403,7 +403,17 @@
 
 		    <parameter name="Filter" >
 		      <parameter value="CollectAllFeatures" name="Type" />
-		      <parameter value="CollectAllFeatures" name="Name" />
+		      <parameter value="CollectAllFeaturesBasic" name="Name" />
+		      <parameter name="BackLink" >
+			<parameter value="AttentionBall" />
+			<parameter value="AttentionGoal" />
+			<parameter value="AttentionCornerPoles" />
+		      </parameter>
+		    </parameter>
+
+		    <parameter name="Filter" >
+		      <parameter value="CollectAllFeatures" name="Type" />
+		      <parameter value="CollectAllFeaturesFull" name="Name" />
 		      <parameter name="BackLink" >
 			<parameter value="AttentionBall" />
 			<parameter value="AttentionGoal" />
@@ -427,46 +437,40 @@
 		      </parameter>
 		    </parameter>
 
+		    <!--
 		    <parameter name="Filter" >
-		      <parameter value="ROIVisual" name="Type" />
-		      <parameter value="ROIVisualLines" name="Name" />
+		      <parameter value="ColorHist" name="Name" />
+		      <parameter value="ColorHist" name="Type" />
 		      <parameter name="BackLink" >
-			<parameter value="AttentionLines" />
+			<parameter value="AttentionCornerPoles" />
 		      </parameter>
 		    </parameter>
-
-		<parameter name="Filter" >
-		  <parameter value="ColorHist" name="Name" />
-		  <parameter value="ColorHist" name="Type" />
-		  <parameter name="BackLink" >
-		    <parameter value="AttentionCornerPoles" />
-		  </parameter>
-		</parameter>
-		<parameter name="Filter" >
-		  <parameter value="OrientHist" name="Name" />
-		  <parameter value="OrientHist" name="Type" />
-		  <parameter name="BackLink" >
-		    <parameter value="SobelVertical" />
-		    <parameter value="SobelHorizontal" />
-		    <parameter value="AttentionCornerPoles" />
-		  </parameter>
-		</parameter>
-		<parameter name="Filter" >
-		  <parameter value="NeuralNetCornerPoles" name="Type" />
-		  <parameter value="NeuralNetCornerPoles" name="Name" />
-		  <parameter name="BackLink" >
-		    <parameter value="ColorHist" />
-		    <parameter value="OrientHist" />
-		    <parameter value="AttentionCornerPoles" />
-		  </parameter>
-		</parameter>
-		<parameter name="Filter" >
-		  <parameter value="ROIVisual" name="Type" />
-		  <parameter value="ROIVisualCornerPoles" name="Name" />
-		  <parameter name="BackLink" >
-		    <parameter value="NeuralNetCornerPoles" />
-		  </parameter>
-		</parameter>
+		    <parameter name="Filter" >
+		      <parameter value="OrientHist" name="Name" />
+		      <parameter value="OrientHist" name="Type" />
+		      <parameter name="BackLink" >
+			<parameter value="SobelVertical" />
+			<parameter value="SobelHorizontal" />
+			<parameter value="AttentionCornerPoles" />
+		      </parameter>
+		    </parameter>
+		    <parameter name="Filter" >
+		      <parameter value="NeuralNetCornerPoles" name="Type" />
+		      <parameter value="NeuralNetCornerPoles" name="Name" />
+		      <parameter name="BackLink" >
+			<parameter value="ColorHist" />
+			<parameter value="OrientHist" />
+			<parameter value="AttentionCornerPoles" />
+		      </parameter>
+		    </parameter>
+		    <parameter name="Filter" >
+		      <parameter value="ROIVisual" name="Type" />
+		      <parameter value="ROIVisualCornerPoles" name="Name" />
+		      <parameter name="BackLink" >
+			<parameter value="NeuralNetCornerPoles" />
+		      </parameter>
+		    </parameter>
+		    -->
 
 		  </parameter>
 		</parameter>
@@ -482,7 +486,7 @@
 	  <parameter value="RGB" name="Name" />
 	</parameter>
       </parameter>
-		    
+      
       <parameter name="SobelVertical">
         <parameter value="VERTICAL" name="Orientation" />
       </parameter>
@@ -557,9 +561,16 @@
         <parameter value="180" name="HighThresh" />
       </parameter>
 
-      <parameter name="CollectAllFeatures" >
+      <parameter name="CollectAllFeaturesBasic" >
+	<parameter value="3" name="NumberBackLinks" />
+	<parameter value="false" name="DynamicConnection" />
+	<parameter value="VisionCollectorBasic" name="InterfaceName" />
+      </parameter>
+
+      <parameter name="CollectAllFeaturesFull" >
 	<parameter value="8" name="NumberBackLinks" />
 	<parameter value="true" name="DynamicConnection" />
+	<parameter value="VisionCollectorFull" name="InterfaceName" />
       </parameter>
 
       <parameter name="ROIVisual">
@@ -569,13 +580,7 @@
 	</parameter>
       </parameter>
 
-      <parameter name="ROIVisualLines">
-	<parameter value="true" name="InterfaceInstance" />
-	<parameter name="Interface" >
-	  <parameter value="Lines" name="Name" />
-	</parameter>
-      </parameter>
-
+      <!--
       <parameter name="OrientHist">
         <parameter value="3" name="UseROIFrom" />
         <parameter value="0.2" name="wideROI" />
@@ -597,6 +602,7 @@
           <parameter value="NN" name="Name" />
         </parameter>
       </parameter>
+      -->
 
       <parameter name="DeviceQuickCam" >
         <parameter value="20" name="Framerate" />
@@ -632,31 +638,31 @@
       </parameter>
 
       <parameter name="FilterYUV420PtoRGB">
-       <parameter value="true" name="InterfaceInstance" />
-       <parameter name="Interface" >
-        <parameter value="VideoOmniCam" name="Name" />
-       </parameter>
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="VideoOmniCam" name="Name" />
+	</parameter>
       </parameter>
 
       <parameter name="FilterOmni2Pan">
-       <parameter value="true" name="InterfaceInstance" />
-       <parameter name="Interface" >
-        <parameter value="VideoPanorama" name="Name" />
-       </parameter>
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="VideoPanorama" name="Name" />
+	</parameter>
       </parameter>
 
       <parameter name="FilterRGBtoSeg">
-       <parameter value="true" name="InterfaceInstance" />
-       <parameter name="Interface" >
-        <parameter value="VideoSeg" name="Name" />
-       </parameter>
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="VideoSeg" name="Name" />
+	</parameter>
       </parameter>
 
       <parameter name="FilterDistanceScan">
-       <parameter value="true" name="InterfaceInstance" />
-       <parameter name="Interface" >
-        <parameter value="DistanceScan" name="Name" />
-       </parameter>
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="DistanceScan" name="Name" />
+	</parameter>
       </parameter>
 
     </section>
