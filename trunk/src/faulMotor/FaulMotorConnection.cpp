@@ -107,17 +107,20 @@ namespace FaulMotor
     	if (prevSpeedL != 0) accL = -speedL / prevSpeedL;
 	accR = speedR;
 	if (prevSpeedR != 0) accR = speedR/ prevSpeedR;
-	if ((accR != 0) && (accL != 0))
-	{	
-	  if (((accL <= accR) && (accL > 0)) || ((accL >=  accR) &&(accL<0)))
-	   {
-	     accL = (accL / accR * params_-> maxPosAccel) * 9. / 320.;
-	     accR = (params_-> maxPosAccel) * 9. / 320.;
-	   }
-	  if (((accR < accL) && (accR > 0)) || ((accR >= accL) && (accR<0)))
+
+	if ((accL <= accR) && (accR != 0))
+	{
+		accL = (accL / accR * params_-> maxPosAccel) * 9. / 320.;
+		accR = (params_-> maxPosAccel) * 90. / 320.;
+	}else
+	{
+		if (accL != 0)
+
 		{
-		  accR = (accR / accL * params_-> maxPosAccel) * 9. / 320.;
-		  accL = (params_-> maxPosAccel) * 9. / 320.;
+
+		accR = (accR / accL * params_-> maxPosAccel) * 9. / 320.;
+		accL = (params_-> maxPosAccel) * 90. / 320.;
+
 		}
 	}
 	//cout << "maxPosAcc: " << params_-> maxPosAccel <<" AccR: " << accR << " AccL: " << accL << endl;
