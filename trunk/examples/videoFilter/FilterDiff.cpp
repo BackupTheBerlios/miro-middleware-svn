@@ -25,8 +25,8 @@ FILTER_PARAMETERS_FACTORY_IMPL(FilterDiff);
 FilterDiff::FilterDiff(Miro::ImageFormatIDL const& _inputFormat) :
   Super(_inputFormat)
 {
-  if (inputFormat_.palette != Miro::RGB_24)
-    throw Miro::Exception("FilterDiff: unsupported input format (RGB required).");
+//   if (inputFormat_.palette != Miro::RGB_24)
+//     throw Miro::Exception("FilterDiff: unsupported input format (RGB required).");
   outputFormat_.palette = Miro::GREY_8;
 
   outputSize_ = Miro::getImageSize(outputFormat_);
