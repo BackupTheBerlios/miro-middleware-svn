@@ -47,7 +47,7 @@ namespace Sparrow
     if (reactor->schedule_timer(eventHandler,
 				(void *)INIT_TIMER, // timer id
 				startReports,       // delay
-				ACE_Time_Value(5)) // interval
+				ACE_Time_Value::zero) // interval
 	== -1)
       throw Miro::ACE_Exception(errno, "Failed to register timer for status report startup.");
 
