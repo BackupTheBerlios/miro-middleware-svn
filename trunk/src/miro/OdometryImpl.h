@@ -39,7 +39,6 @@ namespace Miro
     void setData(const MotionStatusIDL& _status,
 		 const RawPositionIDL& _raw);
     void dispatch();
-    void broadcast();
 
   protected:
     //! Supplier for events.
@@ -61,11 +60,6 @@ namespace Miro
 
     friend OdometryImpl;
   };
-
-  void
-  OdometryDispatcher::broadcast() {
-    cond_.broadcast();
-  }
 
   //! Implementation of the Odometry interface.
   /**
