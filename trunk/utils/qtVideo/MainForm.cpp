@@ -101,11 +101,6 @@ MainForm::MainForm(Miro::Client& _client,
     cerr << "CORBA Exception: " << e <<endl;;
     exit(-1);
   }
-  catch (...)
-  {
-    cerr << "Error Somewere" << endl;;
-    exit(-1);
-  }
 }
 
 MainForm::~MainForm()

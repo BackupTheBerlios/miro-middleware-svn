@@ -5,7 +5,7 @@
 // for details copyright, usage and credits to other groups see Miro/COPYRIGHT
 // for documentation see Miro/doc
 // 
-// (c) 1999, 2000, 2003
+// (c) 1999, 2000, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // Authors: 
@@ -18,6 +18,8 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "MainForm.h"
+
+#include "miro/Log.h"
 
 #include <ace/Get_Opt.h>
 
@@ -70,6 +72,8 @@ int parseArgs(int& argc, char* argv[])
 
 int main(int argc, char *argv[])
 {
+  Miro::Log::init(argc, argv);
+	  
   QApplication a(argc, argv);
   Miro::Client client(argc, argv);
 
