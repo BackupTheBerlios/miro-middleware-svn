@@ -74,7 +74,7 @@ namespace Miro
   }
 
   VideoConnection::VideoConnection(Video_ptr _video) :
-    video(Video::_duplicate(_video)),
+    video(_video/*Video::_duplicate(_video)*/),
     id(0),
     memory(NULL)
   {

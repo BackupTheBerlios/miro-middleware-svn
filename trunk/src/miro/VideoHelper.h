@@ -27,7 +27,7 @@ namespace Miro
     ~VideoConnection();
 
   public:
-    Miro::Video_var video;
+    Miro::Video_ptr video;
     ImageHandleIDL_var handle;
     CORBA::ULong id;
 
