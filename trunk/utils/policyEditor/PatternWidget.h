@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2002
+// (c) 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -11,49 +11,49 @@
 #ifndef PatternWidget_h
 #define PatternWidget_h
 
-#include "PolicyView.h"
-#include "PolicyDocument.h"
-
-#include <qwidget.h>
 #include <qframe.h>
+#include <qvbox.h>
 #include <qlabel.h>
-#include <qpoint.h>
-
-#include <list>
 
 // forward declarations
 class BehaviourWidget;
 class ArbiterWidget;
-class QPopupMenu;
-
+class PatternXML;
+class PolicyView;
+class TransitionContainer;
 
 /**
  * This class views the contents of a pattern description in the document. 
  */
-class PatternWidgetClass : public QFrame
+class PatternWidget : public QLabel //QVBox
 {
   Q_OBJECT
 
-  typedef QFrame Super;
+  typedef QLabel Super;
 
   static const int PATTERN_NAME_HEIGHT   = 18;
   static const int BEHAVIOUR_NAME_HEIGHT = 11;
   static const int ARBITER_NAME_HEIGHT   = 18;
 
-private:
-  QString patternName;
+public:
+  PatternWidget(PatternXML * _pattern,
+		PolicyView * _view, char const * name = NULL);
+  virtual ~PatternWidget();
 
-private slots:
-  void onAddBehaviour(int);
-  void onDelete();
-  void onAddTransition();
-  void onSetStart();
-  void onRenamePattern();
-  void onRenameTransition();
+  PatternXML * pattern();
+
+  /** updates internal representation and calls repaint(). (called by
+   *  BehaviourWidget) */
+  void init();
+
+  void drawArrows(QPainter * p);
+
+  static void drawArrow(QPainter * p, int x1, int y1, int x2, int y2, int size);
+
+  void removeTransitionContainer();
 
 protected:
   void paintEvent(QPaintEvent* event);
-  void drawArrow(QPainter * p, int x1, int y1, int x2, int y2, int size);
   void mousePressEvent(QMouseEvent*);
   void mouseReleaseEvent(QMouseEvent* event);
   void mouseMoveEvent(QMouseEvent* event);
@@ -62,49 +62,26 @@ protected:
   void renamePattern(const QString& oldName);
   void renameTransition(const QString& pattern);
 
-public:
-  PatternWidgetClass(PolicyViewClass * view, QWidget* parent, const QString& name);
-  virtual ~PatternWidgetClass();
+  int numBehaviours();
+  int numArbiters();
 
-  /** returns the name of the associated pattern */
-  const QString& getPatternName() const;
+  PatternXML * pattern_;
+  PolicyView * view_;
+  QLabel * title_;
+  TransitionContainer * transitions_;
 
-  /** returns a reference of the document. (called by BehaviourWidget) */
-  PolicyDocumentClass& getDocument();
-
-  /** updates internal representation and calls repaint(). (called by
-   *  BehaviourWidget) */
-  void init();
-
-  /** returns a reference of the main view. (called by BehaviourWidget) */
-  PolicyViewClass& getView();
-
-  void drawArrows(QPainter * p);
-
-  PolicyViewClass * view_;
-  QPopupMenu * menuAddBehaviour_;
-
-  QPoint pickedPos;
+  QPoint pickedPos_;
 };
 
 inline
-PolicyViewClass&
-PatternWidgetClass::getView() {
-  return *view_;
+void
+PatternWidget::removeTransitionContainer() {
+  transitions_ = NULL;
 }
 
 inline
-const QString& 
-PatternWidgetClass::getPatternName() const    
-{
-  return patternName; 
+PatternXML *
+PatternWidget::pattern() {
+  return pattern_;
 }
-
-inline
-PolicyDocumentClass&
-PatternWidgetClass::getDocument()
-{
-  return getView().getDocument(); 
-}
-
 #endif

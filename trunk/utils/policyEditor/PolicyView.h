@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2002
+// (c) 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -11,59 +11,53 @@
 #ifndef PolicyView_h
 #define PolicyView_h
 
-#include "PolicyDocument.h"
-
 #include <qstring.h>
 #include <qscrollview.h>
 
 // forward declarations
-class PatternWidgetClass;
+class PolicyXML;
+class PatternXML;
+class PatternWidget;
 
-class PolicyViewClass : public QScrollView
+class PolicyView : public QScrollView
 {
   Q_OBJECT
   typedef QScrollView Super;
 
 public:
-  PolicyViewClass(QWidget * _parent, PolicyDocumentClass& _document);
+  PolicyView(QWidget * _parent);
+  virtual ~PolicyView();
 
-  void                 init();
-  PolicyDocumentClass& getDocument();
-  void                 startAddTransition(PatternWidgetClass* patternWidget);
-  void                 endAddTransition(PatternWidgetClass* patternWidget);
-  bool                 isAddTransitionMode() const;
+  void init(PolicyXML * _policy);
+  void startAddTransition(PatternWidget* patternWidget);
+  void endAddTransition(PatternWidget* patternWidget);
+  bool isAddTransitionMode() const;
 
-protected slots:
-  void onAddPattern();
-
+  void addPatternWidget(PatternXML * _pattern);
+  
 protected:
-  void drawContents(QPainter * p, int clipx, int clipy, int clipw, int cliph);
+  //  using QScrollView::drawContents;
+  virtual void drawContents(QPainter * p, int clipx, int clipy, int clipw, int cliph);
+  void drawArrows(QPainter * p);
   void contentsMousePressEvent(QMouseEvent* event);
   void contentsMouseMoveEvent(QMouseEvent* event);
 
-  PolicyDocumentClass& document;
+  PolicyXML * policy_;
 
-  int                 picked_x;
-  int                 picked_y;
+  int pickedX_;
+  int pickedY_;
 
-  PatternWidgetClass* pickedPatternPtr;
-  QString             pickedPattern;
+  PatternWidget * pickedPattern_;
 
-  bool addTransitionMode;  // true while a signal arrow is dragged to destination
+  bool addTransitionMode_;  // true while a signal arrow is dragged to destination
 
   QPoint arrowFrom_;
   QPoint arrowTo_;
 };
 
 inline
-PolicyDocumentClass&
-PolicyViewClass::getDocument() {
-  return document; 
-}
-
-inline
 bool  
-PolicyViewClass::isAddTransitionMode() const { 
-  return addTransitionMode;
+PolicyView::isAddTransitionMode() const { 
+  return addTransitionMode_;
 }
 #endif

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2002
+// (c) 2002, 2003, 2004, 2005
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -10,12 +10,23 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "PatternWidget.h"
-
 #include "BehaviourWidget.h"
 #include "ArbiterWidget.h"
+#include "Transition.h"
+#include "PolicyView.h"
+#include "TransitionContainer.h"
+#include "TransitionXML.h"
+#include "TransitionWidget.h"
 
-#include "PolicyConfig.h"
+#include "PatternXML.h"
+#include "ArbiterXML.h"
+#include "BehaviourXML.h"
+
+#include "utils/widgets/ConfigFile.h"
+
 #include "params/Generator.h"
+
+#include "miro/Log.h"
 
 #include <qpainter.h>
 #include <qpopupmenu.h>
@@ -29,91 +40,193 @@
 #include <qinputdialog.h>
 #include <qmessagebox.h>
 #include <qobjectlist.h>
+#include <qpoint.h>
+#include <qlistview.h>
+#include <qlayout.h>
 
+#include <algorithm>
 #include <cmath>
 
-using namespace Miro::CFG;
 
-PatternWidgetClass::PatternWidgetClass(PolicyViewClass * view,
-				       QWidget* parent, const QString& name) :
-  Super(parent, "patternwidget"), 
-  patternName(name),
-  view_(view)
+PatternWidget::PatternWidget(PatternXML * _pattern,
+			     PolicyView * _view, char const * _name) :
+  Super(_view->viewport(), _name), 
+  pattern_(_pattern),
+  view_(_view),
+  title_(NULL),
+  transitions_(NULL)
 {
+  QSizePolicy sp(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+  //  setSizePolicy(sp);
   setFrameStyle(QFrame::WinPanel | QFrame::Raised);
   setBackgroundColor(red);
-
   setMouseTracking(true);    // enable mouse tracking for highlighting
 
+  //  layout()->setResizeMode(QLayout::Fixed);
+
+  pattern_->setWidget(this);
   init();
 }
 
 
-PatternWidgetClass::~PatternWidgetClass()
+PatternWidget::~PatternWidget()
 {
+  if (pattern_ != NULL)
+    pattern_->setWidget(NULL);
+
+  if (parent()) {
+
+    QWidget * p = dynamic_cast<QWidget *>(parent());
+    MIRO_ASSERT(p != NULL);
+    p->update();
+  }
+}
+
+int
+PatternWidget::numArbiters()
+{
+  // get the number of arbiters (0/1)
+  // for calculating the size of the widget
+
+  int arbiters = 0;
+  QListViewItem * i = pattern_->listViewItem()->firstChild();
+  while (i != NULL) {
+    Item * item = Item::itemFromListViewItem(i);
+    ArbiterXML * arbiter = dynamic_cast<ArbiterXML *>(item);
+    if (arbiter != NULL) {
+      ++arbiters;
+    } 
+    i = i->nextSibling();
+  }
+
+  return arbiters;
+}
+
+int
+PatternWidget::numBehaviours()
+{
+  // get the number of behaviours (0...n)
+  // for calculating the size of the widget
+
+  int behaviours = 0;
+  QListViewItem * i = pattern_->listViewItem()->firstChild();
+  while (i != NULL) {
+    Item * item = Item::itemFromListViewItem(i);
+    BehaviourXML * behaviour = dynamic_cast<BehaviourXML *>(item);
+    if (behaviour != NULL) {
+      ++behaviours;
+    }
+    i = i->nextSibling();
+  }
+
+  return behaviours;
 }
 
 void 
-PatternWidgetClass::init()
+PatternWidget::init()
 {
   // delete all childs
-  QObjectList * childs;
-  while((childs =  const_cast<QObjectList *>(this->children())) != NULL && 
-	!childs->isEmpty()) {
-    delete childs->first();
+  QObjectList const * childs = children();
+  if (childs != NULL) {
+    QObjectList l(*childs);
+    while (l.count() > 0) {
+      if (dynamic_cast<QLabel *>(l.first()) != NULL) {
+	delete l.first();
+      }
+      l.removeFirst();
+    }
   }
 
+  // object title
+
+#ifdef QLAYOUT_USED
+  title_ = new QLabel(this);
+  title_->setAlignment(title_->alignment() | Qt::AlignHCenter);
+  title_->setBackgroundColor(red);
+  QString patternText = pattern_->name();
+  // if start pattern -> add "*" to name
+  if (pattern_->startPattern()) 
+    patternText = QString("* ") + pattern_->name() + " *";
+  title_->setText(patternText);
+#endif
+
+  int behaviours = numBehaviours();
+  int arbiters = numArbiters();
+ 
+  // FIXME: use qlayout instead
+  
   // resize widget //
-  int numBehaviours = getDocument().getNumBehaviours(patternName);
   setFixedSize(100,
-	       PATTERN_NAME_HEIGHT + 
-	       BEHAVIOUR_NAME_HEIGHT * numBehaviours + 
-	       ARBITER_NAME_HEIGHT +
-	       2*frameWidth());
+  	       PATTERN_NAME_HEIGHT + 
+	       BEHAVIOUR_NAME_HEIGHT * behaviours + 
+  	       ARBITER_NAME_HEIGHT * arbiters+
+  	       2 * frameWidth());
 
   // get internal rect dimensions (inside the frame) //
   QRect cr = contentsRect();
-
 
   //----------------//
   // behaviour list //
   //----------------//
 
-   // get string list with behaviour names //
-   QStringList list = getDocument().getBehaviourNames(patternName);
+  behaviours = 0;
+  QListViewItem * i = pattern_->listViewItem()->firstChild();
+  while (i != NULL) {
+    QWidget * widget = 0;
+    Item * item = Item::itemFromListViewItem(i);
+    BehaviourXML * behaviour = dynamic_cast<BehaviourXML *>(item);
 
-   // show all behaviour names //
-   int i = 0;
-   for (QStringList::Iterator it = list.begin(); it != list.end(); ++it ) {
-     QString behName = (*it);
+    //--------------------------------------------------------------------------
+    // add behaviours
+    if (behaviour != NULL) {
+      widget = new BehaviourWidget(behaviour, this, behaviour->name());
+      widget->setGeometry(cr.x(), 
+  			  cr.y() + PATTERN_NAME_HEIGHT +
+  			  behaviours * BEHAVIOUR_NAME_HEIGHT,
+  			  cr.width(), BEHAVIOUR_NAME_HEIGHT);  
+      ++behaviours;
+    }
+    else {
+      //------------------------------------------------------------------------
+      // add arbiter
+      ArbiterXML * arbiter = dynamic_cast<ArbiterXML *>(item);
+      if (arbiter != NULL) {
+	widget = new ArbiterWidget(arbiter, this, arbiter->name());
+  	widget->setGeometry(cr.x(), cr.y() + cr.height() - ARBITER_NAME_HEIGHT, 
+  			    cr.width(), ARBITER_NAME_HEIGHT);  
+      }
+      //#define ASDF
+#ifdef ASDF
+      else {
+	//----------------------------------------------------------------------
+	// add transition
+	TransitionXML * transition = dynamic_cast<TransitionXML *>(item);
+	if (transition != NULL) {
+	  if (transitions_ == NULL) {
+	    transitions_ = new TransitionContainer(this,
+						   parentWidget(), "transition container");
+	    transitions_->show();
+	    view_->addChild(transitions_, 10, 10);
+	  }
+	  widget = new TransitionWidget(transition,
+					transitions_, "transition");
+	}
+      }
+#endif
+    }
+    if (widget != NULL)
+      widget->show();
+    i = i->nextSibling();
+  }
 
-     // create new label //
-     BehaviourWidget* behWidget = new BehaviourWidget(this, behName);
-     behWidget->setGeometry(cr.x(), 
-			    cr.y()+PATTERN_NAME_HEIGHT+i*BEHAVIOUR_NAME_HEIGHT,
-			    cr.width(), BEHAVIOUR_NAME_HEIGHT);  
-     behWidget->show();
-
-     i++;
-   }
-
-
-  //---------//
-  // arbiter //
-  //---------//
-
-  ArbiterWidget * arbiterWidget = 
-    new ArbiterWidget(this, getDocument().getArbiter(patternName));
-  arbiterWidget->setGeometry(cr.x(), cr.y()+cr.height()-ARBITER_NAME_HEIGHT, 
-			     cr.width(), ARBITER_NAME_HEIGHT);  
-  arbiterWidget->show();
-
-  update();
+  updateGeometry();
+  view_->viewport()->update();
 }
 
 
 void 
-PatternWidgetClass::paintEvent(QPaintEvent* event)
+PatternWidget::paintEvent(QPaintEvent* event)
 {
   // draw the frame etc. //
   Super::paintEvent(event);
@@ -127,70 +240,67 @@ PatternWidgetClass::paintEvent(QPaintEvent* event)
   // get internal rect dimensions (inside the frame) //
   QRect cr = contentsRect();
 
-  QString patternText = patternName;   // default
-  // if start pattern -> add "*" to name //
-  if (getDocument().isStartPattern(patternName)) 
-    patternText = QString("* ") + patternText + " *";
+  QString patternText = pattern_->name();
+  // if start pattern -> add "*" to name
+  if (pattern_->startPattern()) 
+    patternText = QString("* ") + pattern_->name() + " *";
 
   p.drawText(cr.x(), cr.y(), cr.width(), PATTERN_NAME_HEIGHT,
 	     AlignHCenter | AlignVCenter, patternText);
 }
 
 void
-PatternWidgetClass::drawArrows(QPainter * p)
+PatternWidget::drawArrows(QPainter * p)
 {
-  PolicyViewClass& daddy = getView();
+  int behaviours = numBehaviours();
 
   p->setPen(darkGreen);
   
   // get list with transitions //
-  TransitionList transitionList = getDocument().getTransitions(patternName);
+  TransitionVector transitions = pattern()->transitions();
+  std::sort(transitions.begin(), transitions.end());
 
   const int Zeilenabstand=10;
-  int DrawX1, DrawX2, DrawY1, DrawY2,OldDrawX1, OldDrawX2, OldDrawY1, OldDrawY2,i;
+  int DrawX1, DrawX2, DrawY1, DrawY2;
+  int i;
   // show all transitions //
-  OldDrawX1=-1;
-  OldDrawX2=-1;
-  OldDrawY1=-1;
-  OldDrawY2=-1;
-  
-  QMap<QString, int> map;
-  for (TransitionList::iterator it = transitionList.begin(); 
-       it != transitionList.end(); ++it ) {
-    QString message = it->getMessage();
-    QString target  = it->getTarget();
+  QMap<PatternXML *, int> map;
+  TransitionVector::iterator first, last = transitions.end(); 
+  for (first = transitions.begin(); first != last; ++first ) {
+    QString message = first->getMessage();
+    PatternXML * target  = first->getTarget();
     map[target] = map[target] + 1;
     
-    int x2 = getDocument().getX(target);
-    int y2 = getDocument().getY(target);
+    int x2 = target->x();
+    int y2 = target->y();
 
-    if (daddy.childX(this) < x2) { 
-      DrawX1 = daddy.childX(this)+width(); 
-      DrawY1 = daddy.childY(this);  
+    if (view_->childX(this) < x2) { 
+      DrawX1 = view_->childX(this) + width(); 
+      DrawY1 = view_->childY(this);  
       DrawX2 = x2;  
       DrawY2 = y2; 
     }
 
     else { 
-      DrawX1 = daddy.childX(this);
-      DrawY1 = daddy.childY(this)+height(); 
-      DrawX2 = x2+width();    
-      DrawY2 = y2+PATTERN_NAME_HEIGHT +
-	BEHAVIOUR_NAME_HEIGHT * getDocument().getNumBehaviours(target) +
-	2*frameWidth(); 
+      DrawX1 = view_->childX(this);
+      DrawY1 = view_->childY(this)+height(); 
+      DrawX2 = x2 + width();    
+      DrawY2 = y2 + PATTERN_NAME_HEIGHT +
+	BEHAVIOUR_NAME_HEIGHT * behaviours +
+	2 * frameWidth(); 
     } 
-    
+
     drawArrow(p, DrawX1, DrawY1, DrawX2, DrawY2, 10);
-    i=map[target]-1;
-    p->drawText( (DrawX1+DrawX2)/2, (DrawY1+DrawY2)/2+i*Zeilenabstand, message);
-    
+    i = map[target]-1;
+    p->drawText((DrawX1 + DrawX2) / 2,
+		(DrawY1 + DrawY2) /2 + i * Zeilenabstand, message);
   }
 }
 
 void
-PatternWidgetClass::drawArrow(QPainter * p,
-			      int x1, int y1, 
-			      int x2, int y2, int size)
+PatternWidget::drawArrow(QPainter * p,
+			 int x1, int y1, 
+			 int x2, int y2, int size)
 {
   p->drawLine(x1, y1, x2, y2);
 
@@ -198,100 +308,79 @@ PatternWidgetClass::drawArrow(QPainter * p,
   float a1=a-0.3;
   float a2=a+0.3;
 
-  p->drawLine(x2, y2, int(x2-size*sin(a1)), int(y2-size*cos(a1)));
-  p->drawLine(x2, y2, int(x2-size*sin(a2)), int(y2-size*cos(a2)));
+  p->drawLine(x2, y2, int(x2 - size * sin(a1)), int(y2 - size * cos(a1)));
+  p->drawLine(x2, y2, int(x2 - size * sin(a2)), int(y2 - size * cos(a2)));
 }
 
 void
-PatternWidgetClass::mouseReleaseEvent(QMouseEvent *)
+PatternWidget::mouseReleaseEvent(QMouseEvent *)
 {
-  getView().updateContents(getView().contentsX(), 
-			   getView().contentsY(),
-			   getView().contentsWidth(),
-			   getView().contentsHeight());
+  view_->updateContents(view_->contentsX(), 
+			view_->contentsY(),
+			view_->contentsWidth(),
+			view_->contentsHeight());
 
 }
 
 void
-PatternWidgetClass::mousePressEvent(QMouseEvent* event) 
+PatternWidget::mousePressEvent(QMouseEvent* event) 
 {
   // left button //
   if (event->button() == LeftButton) {
 
     // are we in the addTransitionMode ? //
-    if (getView().isAddTransitionMode()) {
-      getView().endAddTransition(this);
+    if (view_->isAddTransitionMode()) {
+      view_->endAddTransition(this);
     }
 
     // else, save the click position for a possible move //
     else {
-      pickedPos = event->pos();
+      pickedPos_ = event->pos();
     }
   }
 
 
   // right button -> popup menu //
   else if (event->button() == RightButton) {
-
-    // popup menu //
+    // create popup menu
     QPopupMenu menu;
-    menuAddBehaviour_ = new QPopupMenu(&menu);
-
-    menu.insertItem("Start pattern",  this, SLOT(onSetStart()));
-    menu.insertSeparator();
-    menu.insertItem("Add behaviour",  menuAddBehaviour_);
-    menu.insertItem("Add transition", this, SLOT(onAddTransition()));
-    menu.insertSeparator();
-    menu.insertItem("Rename pattern", this, SLOT(onRenamePattern()));
-    menu.insertItem("Rename transition", this, SLOT(onRenameTransition()));
-    menu.insertItem("Delete pattern", this, SLOT(onDelete()));
-
-    // submenu: add all behaviour names //
-    Generator::GroupMap::const_iterator first, last;
-    PolicyConfigClass::instance()->description().getGroupedTypes("Behaviour", first, last);
-    for (; first != last; ++first) {
-      if (first->second.isFinal() &&
-	  !getDocument().hasBehaviour(patternName, first->second.name())) {
-        menuAddBehaviour_->insertItem(first->second.name());
-      }
-    }
-    connect(menuAddBehaviour_, SIGNAL(activated(int)), this, SLOT(onAddBehaviour(int)));
-
+    // populate menu
+    pattern_->contextMenu(menu);
     // show popup menu
     menu.exec(QCursor::pos());
   }
 }
 
 void
-PatternWidgetClass::mouseMoveEvent(QMouseEvent* event)
+PatternWidget::mouseMoveEvent(QMouseEvent* event)
 {
   // if left key is pressed -> move widget //
   if (event->state() & LeftButton) {
 
     // map to parent:
-    QPoint newPos(getView().childX(this), getView().childY(this));
+    QPoint newPos(view_->childX(this), view_->childY(this));
     newPos += event->pos();
-    newPos -= pickedPos;
+    newPos -= pickedPos_;
 
     if (newPos.x() < 0)
       newPos.setX(0);
     if (newPos.y() < 0)
       newPos.setY(0);
 
-    getView().moveChild(this, newPos.x(), newPos.y());
-    getDocument().setX(patternName, newPos.x());
-    getDocument().setY(patternName, newPos.y());
+    view_->moveChild(this, newPos.x(), newPos.y());
+    pattern_->setX(newPos.x());
+    pattern_->setY(newPos.y());
 
-    QRect r = getView().viewport()->childrenRect();
-    QPoint s = getView().viewportToContents(r.bottomRight());
+    QRect r = view_->viewport()->childrenRect();
+    QPoint s = view_->viewportToContents(r.bottomRight());
 
-    getView().resizeContents(s.x(), s.y());
-    getView().ensureVisible(newPos.x(), newPos.y());
+    view_->resizeContents(s.x(), s.y());
+    view_->ensureVisible(newPos.x(), newPos.y());
   }
 }
 
 void
-PatternWidgetClass::enterEvent(QEvent*)
+PatternWidget::enterEvent(QEvent*)
 {
   setBackgroundColor(yellow);
   repaint();
@@ -299,7 +388,7 @@ PatternWidgetClass::enterEvent(QEvent*)
 
 
 void
-PatternWidgetClass::leaveEvent(QEvent*)
+PatternWidget::leaveEvent(QEvent*)
 {
   setBackgroundColor(red);
   repaint();
@@ -307,124 +396,10 @@ PatternWidgetClass::leaveEvent(QEvent*)
 
 //------------------------------------------------
 
-
-
+#ifdef ASFASF
 void 
-PatternWidgetClass::onAddBehaviour(int n)
+PatternWidget::onAddTransition()
 {
-  // add a behaviour to the current pattern //
-  getDocument().addBehaviour(patternName, menuAddBehaviour_->text(n));
-  init();
+  view_->startAddTransition(this);
 }
-
-
-void 
-PatternWidgetClass::onDelete()
-{
-  // remove the current pattern //
-  getDocument().delPattern(patternName);
-  delete this;
-}
-
-
-void 
-PatternWidgetClass::onAddTransition()
-{
-  getView().startAddTransition(this);
-}
-
-
-void 
-PatternWidgetClass::onSetStart()
-{
-  // set pattern to start pattern //
-  getDocument().setStartPattern(patternName);
-}
-
-void 
-PatternWidgetClass::onRenamePattern()
-{
-  renamePattern(patternName);
-}
-
-void 
-PatternWidgetClass::onRenameTransition()
-{
-  renameTransition(patternName);
-}
-
-//-------------------------------------------------
-void 
-PatternWidgetClass::renamePattern(const QString& oldName)
-{
-  bool ok = false;
-  QString name = QInputDialog::getText(tr( "Rename Pattern" ),
-					    tr( "Pattern name:" ),
-					    QLineEdit::Normal, oldName, &ok, this );
-  if ( ok && !name.isEmpty() && name != oldName) {
-    if (getDocument().renamePattern(oldName, name)) {
-      patternName = name;
-      init();
-    }
-    else {
-      QMessageBox::warning(this, 
-			   "Rename Pattern", 
-			   "Pattern name " + name + " allready exists.\n" + 
-			   "Pattern not renamed.");
-
-    }
-  }  
-}
-
-void
-PatternWidgetClass::renameTransition(const QString& nameOfPattern)
-{
-  QDialog dialog(this, "RenameTransitionDialog", true);
-  dialog.setCaption("Rename Transition");
-  TransitionList transitionList=getDocument().getTransitions(nameOfPattern);
-
-  QTable table(transitionList.size(),2,&dialog);
-  table.horizontalHeader()->setLabel(0,"Message",-1);
-  table.horizontalHeader()->setLabel(1,"Target",-1);
-
-  int i=0;
-  TransitionList::iterator first, last = transitionList.end();
-  for (first = transitionList.begin(); first != last; ++first, ++i ) 
-  {
-     table.setText(i, 1, first->getTarget());
-     table.setText(i, 0, first->getMessage());
-  }
-  table.setGeometry(10,10,400,200);
-  // cancel button //
-  QPushButton cancelButton("Cancel", &dialog);
-  cancelButton.setGeometry(40,210,60,25);
-  connect(&cancelButton, SIGNAL(clicked()), &dialog, SLOT(reject()));
-
-  // OK button //
-  QPushButton okButton("OK", &dialog);
-  okButton.setGeometry(130,210,60,25);  
-  connect(&okButton,     SIGNAL(clicked()), &dialog, SLOT(accept()));
-
-  // OK pressed in dialog ? //
-  if (dialog.exec()) {
-    getDocument().delTransitionsFrom(nameOfPattern);
-    for (int j = 0; j < table.numRows(); ++j)
-    {
-      QString message  = table.text(j, 0);
-      QString target = table.text(j, 1);
-      if (!message.isEmpty() && 
-	  !target.isEmpty()) {
-	if (!getDocument().addTransition(nameOfPattern, message, target))
-	  QMessageBox::warning(this, 
-			   "Rename Transition", 
-			   "Target " + target + " does not exist.\n" + 
-			   "Transition " + message + " dropped.");
-      }
-    }
-    getView().updateContents(getView().contentsX(), 
-			     getView().contentsY(),
-			     getView().contentsWidth(), 
-			     getView().contentsHeight());
-
-  } 
-} 
+#endif

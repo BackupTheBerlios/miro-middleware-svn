@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2002
+// (c) 2002, 2003, 2004, 2005
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -11,6 +11,9 @@
 
 #include "PolicyView.h"
 #include "PatternWidget.h"
+#include "PolicyXML.h"
+
+#include "miro/Log.h"
 
 #include "miro/Log.h"
 
@@ -28,48 +31,56 @@
 #include <qinputdialog.h>
 #include <qmessagebox.h>
 #include <qobjectlist.h>
+#include <qlistview.h>
 
 #include <algorithm>
+#include <iostream>
 
-PolicyViewClass::PolicyViewClass(QWidget * _parent, 
-				 PolicyDocumentClass& _document) :
-  Super(_parent, "view"), 
-  document(_document),
-  addTransitionMode(false)
+using namespace std;
+
+PolicyView::PolicyView(QWidget * _parent) :
+  Super(_parent, "policy view"), 
+  policy_(NULL),
+  addTransitionMode_(false)
 {
   enableClipper(true);
   viewport()->setBackgroundMode(NoBackground);
   // viewport()->setBackgroundColor(white);
+}
 
-  // update the view //
-  init(); 
+PolicyView::~PolicyView()
+{
+  if (policy_ != NULL)
+    policy_->setWidget(NULL);
 }
 
 void 
-PolicyViewClass::contentsMousePressEvent(QMouseEvent* event) 
+PolicyView::contentsMousePressEvent(QMouseEvent* event) 
 {
   // jump out of add transition mode
-  if (addTransitionMode) {
+  if (addTransitionMode_) {
     // repaint last arrow
     QRect rect(arrowFrom_, arrowTo_);
     rect = rect.normalize();
     repaintContents(rect);
-    addTransitionMode = false;
+    addTransitionMode_ = false;
   }
 
-  // right button -> popup menu //
-  if (event->button() == RightButton) {
-    picked_x = event->pos().x();               // save this for onAddPattern
-    picked_y = event->pos().y();
+  // right button -> popup menu
+  if (policy_ != NULL &&
+      event->button() == RightButton) {
+    pickedX_ = event->pos().x();               // save this for onAddPattern
+    pickedY_ = event->pos().y();
+
     // popup menu //
     QPopupMenu menu;
-    menu.insertItem("Add pattern", this, SLOT(onAddPattern()));
+    policy_->contextMenu(menu);
     menu.exec(QCursor::pos());
   }
 }
 
 void 
-PolicyViewClass::contentsMouseMoveEvent(QMouseEvent* event)
+PolicyView::contentsMouseMoveEvent(QMouseEvent* event)
 {
   if (isAddTransitionMode()) {
     
@@ -88,8 +99,22 @@ PolicyViewClass::contentsMouseMoveEvent(QMouseEvent* event)
 }
 
 void 
-PolicyViewClass::init()
+PolicyView::addPatternWidget(PatternXML * _pattern)
 {
+    PatternWidget * widget = new PatternWidget(_pattern, this, _pattern->name());
+    widget->show();
+    int x = std::max(0, _pattern->x());
+    int y = std::max(0, _pattern->y());
+    addChild(widget, x, y);
+    viewport()->update();
+}
+
+void 
+PolicyView::init(PolicyXML * _policy)
+{
+  if (policy_ == _policy)
+    return;
+
   // delete all childs
   QObjectList * childs;
   while((childs =  const_cast<QObjectList *>(viewport()->children())) != NULL && 
@@ -97,24 +122,24 @@ PolicyViewClass::init()
     delete childs->first();
   }
 
-  //-------------------------//
-  // rebuild the widget list //
-  //-------------------------//
+  policy_ = _policy;
 
-  QStringList list = document.getPatternNames();
+  if (policy_ == NULL)
+    return;
 
-  QStringList::Iterator patternIter = list.begin();
-  while (patternIter !=list.end()) {
-    // generate pattern widget //
-    QString patternName = *patternIter;
+  policy_->setWidget(this);
 
-    PatternWidgetClass* patternWidget = new PatternWidgetClass(this, viewport(), patternName);
-    patternWidget->show(); 
-    int x = std::max(0, document.getX(patternName));
-    int y = std::max(0, document.getY(patternName));
-    addChild(patternWidget, x, y);
+  //-------------------------
+  // rebuild the widget list
 
-    patternIter++;
+  QListViewItem * i = policy_->listViewItem()->firstChild();
+  while (i != NULL) {
+    Item * item = policy_->itemFromListViewItem(i);
+    PatternXML * pattern = dynamic_cast<PatternXML *>(item);
+    if (pattern != NULL)
+      addPatternWidget(pattern);
+
+    i = i->nextSibling();
   }
 
   QRect r = viewport()->childrenRect();
@@ -125,7 +150,7 @@ PolicyViewClass::init()
 }
 
 void 
-PolicyViewClass::drawContents(QPainter * p, int clipx, int clipy, int clipw, int cliph)
+PolicyView::drawContents(QPainter * p, int clipx, int clipy, int clipw, int cliph)
 {
   p->fillRect(clipx, clipy, clipw, cliph, white);
 
@@ -134,76 +159,79 @@ PolicyViewClass::drawContents(QPainter * p, int clipx, int clipy, int clipw, int
   if (childs) {
     QObjectListIt iter(*childs);
     while (iter.current() != NULL) {
-      PatternWidgetClass * pattern = 
-	dynamic_cast<PatternWidgetClass *>(iter.current());
+      PatternWidget * pattern = 
+	dynamic_cast<PatternWidget *>(iter.current());
 
-      MIRO_ASSERT (pattern != NULL);
-
-      pattern->drawArrows(p);
-      ++iter;
+      if (pattern != NULL) {
+	pattern->drawArrows(p);
+      }
+	++iter;
     }
+    this->drawArrows(p);
   }
   Super::drawContents(p, clipx, clipy, clipw, cliph);
 }
 
-void 
-PolicyViewClass::onAddPattern()
+void
+PolicyView::drawArrows(QPainter * p)
 {
-  bool ok = false;
-  QString text = QInputDialog::getText(
-                    tr( "Add Pattern" ),
-                    tr( "Pattern name:" ),
-                    QLineEdit::Normal, QString::null, &ok, this );
-  if ( ok && !text.isEmpty() ) {
-    if (document.addPattern(text, picked_x, picked_y)) {
-      PatternWidgetClass* patternWidget = new PatternWidgetClass(this, viewport(), text);
-      addChild(patternWidget, picked_x, picked_y);
-      patternWidget->show();  
-      
-      QRect r = viewport()->childrenRect();
-      QPoint s = viewportToContents(r.bottomRight());
+  p->setPen(darkGreen);
+  
+  // get list with transitions //
+  TransitionVector transitions = policy_->transitions();
 
-      resizeContents(s.x(), s.y());
-      ensureVisible(picked_x, picked_y);
+  const int Zeilenabstand=10;
+  int DrawX1 = std::max(contentsWidth(), visibleWidth());
+  int DrawY1 = 0;
+  int i;
 
-    }
-    else
-      QMessageBox::warning(this, 
-			   "Add Pattern", 
-			   "Pattern " + text + " allready exists.\n" + 
-			   "No pattern added.");
+  // show all transitions //
+  QMap<PatternXML *, int> map;
+  TransitionVector::iterator first, last = transitions.end(); 
+  for (first = transitions.begin(); first != last; ++first ) {
+    QString message = first->getMessage();
+    PatternXML * target  = first->getTarget();
+    map[target] = map[target] + 1;
+    
+    int DrawX2 = childX(target->widget()) + target->widget()->width();
+    int DrawY2 = childY(target->widget());
 
+    cout << "x1: " << DrawX1 << " y1: " << DrawY1 << endl;
+    cout << "x2: " << DrawX2 << " y2: " << DrawY2 << endl;
+
+    PatternWidget::drawArrow(p, DrawX1, DrawY1, DrawX2, DrawY2, 10);
+    i = map[target]-1;
+    p->drawText((DrawX1 + DrawX2) / 2,
+		(DrawY1 + DrawY2) /2 + i * Zeilenabstand, message);
   }
 }
 
 void 
-PolicyViewClass::startAddTransition(PatternWidgetClass* patternWidget)
+PolicyView::startAddTransition(PatternWidget * _pattern)
 {
-  pickedPatternPtr = patternWidget;
-  pickedPattern    = patternWidget->getPatternName();
-  addTransitionMode = true;
-  arrowFrom_.setX(childX(pickedPatternPtr));
-  arrowFrom_.setY(childY(pickedPatternPtr));
+  pickedPattern_ = _pattern;
+  arrowFrom_.setX(childX(pickedPattern_));
+  arrowFrom_.setY(childY(pickedPattern_));
 
+  addTransitionMode_ = true;
   viewport()->setMouseTracking(true);
 }
 
 // this is called from the clicked PatternWidget when in signal mode //
 void 
-PolicyViewClass::endAddTransition(PatternWidgetClass* patternWidget)
+PolicyView::endAddTransition(PatternWidget * _target)
 {
   // if addTransition mode is on, finish it and add the signal //
   if (isAddTransitionMode()) {
     viewport()->setMouseTracking(false);
-    addTransitionMode = false;
+    addTransitionMode_ = false;
 
     bool ok = false;
     QString message = QInputDialog::getText(tr( "Add Transition" ),
 					    tr( "Transition name:" ),
 					    QLineEdit::Normal, QString::null, &ok, this );
     if ( ok && !message.isEmpty() ) {
-      QString target  = patternWidget->getPatternName();
-      if (document.addTransition(pickedPattern, message, target))
+      if (pickedPattern_->pattern()->tryAddTransition(message, _target->pattern()))
 	updateContents(contentsX(), contentsY(),
 		       contentsWidth(), contentsHeight());
       else

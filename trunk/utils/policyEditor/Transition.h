@@ -13,8 +13,10 @@
 
 #include <qstring.h>
 
-#include <list>
+#include <vector>
 
+// forward declarations
+class PatternXML;
 
 //-----------------------------------------------------------------
 
@@ -22,26 +24,28 @@ class Transition
 {
 private:
   QString  message;         // message name
-  QString  target;          // target pattern name
+  PatternXML *  target;          // target pattern name
 
 public:
   Transition() { }
-  Transition(const QString& msg, const QString& tar);
+  Transition(const QString& msg, PatternXML * tar);
 
-  const QString& getTarget() const;
+  PatternXML * getTarget() const;
   const QString& getMessage() const;
+
+  bool operator < (Transition const& _rhs) const;
 };
 
-typedef std::list<Transition> TransitionList;
+typedef std::vector<Transition> TransitionVector;
 
 inline
-Transition::Transition(const QString& msg, const QString& tar) :
+Transition::Transition(const QString& msg, PatternXML * tar) :
   message(msg),
   target(tar) 
 {}
 
 inline
-const QString& 
+PatternXML * 
 Transition::getTarget() const
 {
   return target; 
@@ -52,5 +56,11 @@ const QString&
 Transition::getMessage() const 
 {
   return message; 
+}
+
+inline
+bool
+Transition::operator < (Transition const& _rhs) const {
+  return message < _rhs.message;
 }
 #endif

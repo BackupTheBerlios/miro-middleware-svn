@@ -7,7 +7,7 @@
 ##
 ## $Id$
 ##
-## Miro/utils/policyEditor/Makefile
+## Miro/botsvcs/utils/policyEditor/Makefile
 ##
 ##############################################################################
 
@@ -27,30 +27,47 @@ bin_PROGRAMS = PolicyEditor
 
 
 sources = \
-	PolicyDocument.cpp \
-	PolicyDocument.h \
-	PolicyPattern.cpp \
-	PolicyPattern.h \
-	PolicyBehaviour.cpp \
-	PolicyBehaviour.h \
-	PolicyConfig.cpp \
-	PolicyConfig.h \
-	PatternWidget.h \
+	PolicyEditor.cpp \
+	PolicyDocumentXML.h \
+	PatternXML.h \
+	PolicyXML.h \
+	SubpolicyXML.h \
+	ActionPatternXML.h \
+	BehaviourXML.h \
+	ArbiterXML.h \
+	TransitionXML.h \
+	DownTransitionXML.h \
+	ExternalTransitionXML.h \
+	MainWindow.h \
+	ParameterWidget.h \
 	BehaviourWidget.h \
 	ArbiterWidget.h \
-	ParameterDialog.h \
-	PolicyEditor.h \
+	PatternWidget.h \
 	PolicyView.h \
-	PolicyArbiter.h \
+	TransitionContainer.h \
+	TransitionWidget.h \
 	Transition.h
 
 tomocsources = \
-	PolicyView.cpp \
-	PatternWidget.cpp \
+	PolicyDocumentXML.cpp \
+	PatternXML.cpp \
+	PolicyXML.cpp \
+	SubpolicyXML.cpp \
+	ActionPatternXML.cpp \
+	BehaviourXML.cpp \
+	ArbiterXML.cpp \
+	TransitionXML.cpp \
+	DownTransitionXML.cpp \
+	ExternalTransitionXML.cpp \
+	MainWindow.cpp \
+	ParameterWidget.cpp \
 	BehaviourWidget.cpp \
 	ArbiterWidget.cpp \
-	ParameterDialog.cpp \
-	PolicyEditor.cpp
+	PatternWidget.cpp \
+	PolicyView.cpp \
+	TransitionContainer.cpp \
+	TransitionWidget.cpp
+
 
 PolicyEditor_SOURCES = $(sources) $(tomocsources) $(tomocsources:.cpp=.moc.cpp)
 
@@ -68,3 +85,4 @@ all-local: PolicyEditor
 
 clean-local:
 	$(CLEANPROGRAMS)
+
