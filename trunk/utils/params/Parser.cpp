@@ -213,7 +213,12 @@ bool Parser::startElement( const QString&,
 	  def = "";
 
 	QString fullDef;
-	if (type == "std::string")
+	if (type == "ACE_Time_Value" &&
+	    def.find('.') != -1) {
+	    error_ = "ACE_Time_Value format is (x, y), no dot.";
+	    break;
+	}
+	else if (type == "std::string")
 	  fullDef = "\"" + def + "\"";
  	else if (type == "angle")
 	  fullDef = "Miro::deg2Rad(" + def + ")";

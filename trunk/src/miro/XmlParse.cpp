@@ -16,6 +16,8 @@
 
 #include <qstring.h>
 
+#include <algorithm>
+
 #define XML_PARSE_QSTRING_IMPL(type, qstringmethod) \
   void operator <<= (type & _lhs, const QDomNode& _node) \
   { \
@@ -142,6 +144,7 @@ namespace Miro
     bool valid;
     QString value = getAttribute(node, QString("value"));
     int dot = value.find('.');
+
     QString sec = value;
     QString usec = "0";
     if (dot > 0) {
@@ -149,6 +152,10 @@ namespace Miro
       if (dot != ((int)value.length()) - 1)
 	usec = value.mid(dot + 1);
     }
+
+    // bring usec to 6 digits
+    usec += QString("000000").left(std::min(0, 6 - (int)usec.length()));
+    usec = usec.left(6);
 
     lhs.sec(sec.toULong(&valid));
     if (!valid)
