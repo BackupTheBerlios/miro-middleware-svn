@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // 
@@ -40,9 +40,8 @@ namespace Pioneer
 
   Connection::Connection(ACE_Reactor* _reactor, 
 			 EventHandler* _eventHandler,
-			 Consumer * _consumer,
-			 const Parameters& _parameters) : 
-    Super(_reactor, _eventHandler, _parameters),
+			 Consumer * _consumer) : 
+    Super(_reactor, _eventHandler, *Parameters::instance()),
     consumer(_consumer),
     servoMidPulse(129)     // default for servo middle position pulse (org 800)
                            // 129 getestet 19.12.2001

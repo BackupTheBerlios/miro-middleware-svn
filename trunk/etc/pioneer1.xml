@@ -15,6 +15,27 @@
       <databits>8</databits>
       <stopbits>1</stopbits>
       <parityenb>0</parityenb>
+      <AngleConvFactor>0.0061359</AngleConvFactor>
+      <DistConvFactor>0.07979</DistConvFactor>
+      <VelConvFactor>0.079790</VelConvFactor>
+      <RangeConvFactor>0.1734</RangeConvFactor>
+      <DiffConvFactor>0.003333</DiffConvFactor>
+      <Vel2Divisor>4.000000</Vel2Divisor>
+
+      <Motion>
+        <MinTranslation>-400</MinTranslation>
+        <MaxTranslation>400</MaxTranslation>
+        <MinRotation>-100</MinRotation>
+        <MaxRotation>100</MaxRotation>
+
+        <MinLTranslation>-400</MinLTranslation>
+        <MinRTranslation>-400</MinRTranslation>
+        <MaxLTranslation>400</MaxLTranslation>
+        <MaxRTranslation>400</MaxRTranslation>
+
+        <WheelBase>340</WheelBase>
+      </Motion>
+      
       <sonar>
          <scandescription>
            <scantype>3</scantype>
@@ -24,7 +45,7 @@
                <maxrange>3000</maxrange>
                <focus>15</focus>
              </description>
-             <sensor><alpha>180</alpha></sensor>
+             <sensor><alpha>170</alpha></sensor>
              <sensor><alpha>150</alpha></sensor>
              <sensor><alpha>120</alpha></sensor>
              <sensor><alpha>90</alpha></sensor>

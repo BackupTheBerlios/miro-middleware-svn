@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -21,7 +21,7 @@ class QDomNode;
 namespace Miro
 {
   // forward declarations
-  struct ScanDescriptionIDL;
+  //  struct ScanDescriptionIDL;
 
   void operator <<= (bool& lhs, const QDomNode& node);
   void operator <<= (char& lhs, const QDomNode& node);
@@ -31,6 +31,6 @@ namespace Miro
   void operator <<= (std::string& lhs, const QDomNode& node);
   void operator <<= (ACE_Time_Value& lhs, const QDomNode& node);
   void operator <<= (ACE_TTY_IO::Serial_Params& lhs, const QDomNode& node);
-//  void operator <<= (ScanDescriptionIDL& lhs, const QDomNode& node);
+  //  void operator <<= (ScanDescriptionIDL& lhs, const QDomNode& node);
 };
 #endif // xmlParse_hh

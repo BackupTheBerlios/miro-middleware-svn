@@ -13,6 +13,7 @@
 
 #include "PioneerConsumer.h"
 #include "PioneerStallImpl.h"
+#include "PioneerParameters.h"
 
 #include "miro/RangeEventC.h"
 #include "miro/RangeSensorImpl.h"
@@ -39,13 +40,14 @@ namespace Pioneer
   //------------------------//
   Consumer::Consumer(Miro::RangeSensorImpl * _pSonar,
 		     Miro::OdometryImpl * _pOdometry,
-		     Pioneer::StallImpl * _pStall):
+		     Pioneer::StallImpl * _pStall) :
     pSonar(_pSonar),
     pOdometry(_pOdometry),
     pStall(_pStall),
     prevX(0),
     prevY(0),
-    prevTheta(0.)
+    prevTheta(0.),
+    params_(Parameters::instance())
   { 
     DBG(cout << "Constructing PioneerConsumer." << endl);
 
@@ -114,13 +116,13 @@ namespace Pioneer
       
       // fill motion status data struct
       Miro::timeA2C(message.time(), status_.time);
-      status_.position.point.x += (double)dX * Psos::DIST_CONV_FACTOR;
-      status_.position.point.y += (double)dY * Psos::DIST_CONV_FACTOR;
+      status_.position.point.x += (double)dX * params_->distConvFactor;
+      status_.position.point.y += (double)dY * params_->distConvFactor;
 
       // these aren't calculated yet
-      velL = message.lVel() * Psos::VEL_CONV_FACTOR;
-      velR = message.rVel() * Psos::VEL_CONV_FACTOR;
-      status_.position.heading = message.theta() * Psos::ANGLE_CONV_FACTOR;
+      velL = message.lVel() * params_->velConvFactor;
+      velR = message.rVel() * params_->velConvFactor;
+      status_.position.heading = message.theta() * params_->angleConvFactor;
       status_.velocity.translation = (long) rint((velL + velR)/2);
       status_.velocity.rotation = (velL - velR)*360/(2*M_PI*(-weelDist));
 
@@ -144,22 +146,23 @@ namespace Pioneer
 
       // iterate through new data
 
-      for (int i = message.sonarReadings() - 1; i >= 0; --i) 
-	{
-          int group = 0;
-	  int index = message.sonarNumber(i);
-
-          // peoplebot sonars
-          if (index >= 8) {
-            if (index < 16)
-              ++group;
-            index -= 8;
-          }
-
-	  pSonarEvent->sensor[i].group = group;
-	  pSonarEvent->sensor[i].index = index;
-	  pSonarEvent->sensor[i].range = message.sonarValue(i);
+      for (int i = message.sonarReadings() - 1; i >= 0; --i) {
+	int group = 0;
+	int index = message.sonarNumber(i);
+	
+	// peoplebot sonars
+	if (index >= 8) {
+	  if (index < 16)
+	    ++group;
+	  index -= 8;
 	}
+
+	pSonarEvent->sensor[i].group = group;
+	pSonarEvent->sensor[i].index = index;
+	  pSonarEvent->sensor[i].range = 
+	    (CORBA::Long) ((double)message.sonarValue(i) * params_->rangeConvFactor);
+      }
+
       //cout << "sonarReadings  " << message.sonarReadings() << endl;  
       pSonar->integrateData(pSonarEvent);
     }

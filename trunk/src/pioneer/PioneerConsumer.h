@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // 
@@ -28,6 +28,9 @@ namespace Miro
 
 namespace Pioneer
 {
+  // forward declarations
+  class Parameters;
+
   static const int NUM_SONARS = 8;
 
   /**
@@ -54,6 +57,8 @@ namespace Pioneer
 
     short prevX, prevY;
     double prevTheta;
+
+    Pioneer::Parameters * params_;
   };
 };
 #endif

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // 
@@ -19,12 +19,6 @@ namespace Psos
 
   // types of timers registerd for Mcp::EventHandler
   typedef enum { PING_TIMER, SYNCH_TIMER } TimerType;
-
-  // factors for Info packet metric translations
-  const double RANGE_CONV_FACTOR = 1.0; // <- people bot, pioneer 1 : 0.1734;
-  const double DIST_CONV_FACTOR  = 0.07979;    // 5in*PI/5000  => mm
-  const double VEL_CONV_FACTOR 	 = 3.9898;     //mm/sec per encoder count per 1/50 sec
-  const double ANGLE_CONV_FACTOR = 0.0061359;
 
   // values indicating beginning of a psos message
   static const char START_1 = 0xfa;

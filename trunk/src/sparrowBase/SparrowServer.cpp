@@ -39,8 +39,7 @@ using std::cout;
 using std::cerr;
 
 SparrowBase::SparrowBase(int argc, char *argv[],
-			 const Miro::RobotParameters& _robotParameters,
-			 const Pioneer::Parameters& _pioneerParms) :
+			 const Miro::RobotParameters& _robotParameters) :
   Super(argc, argv, _robotParameters),
   reactorTask(this),
 
@@ -68,7 +67,7 @@ SparrowBase::SparrowBase(int argc, char *argv[],
   pPioneerConsumer(new Pioneer::Consumer(&sonar)),
   pPsosEventHandler(new Psos::EventHandler(pPioneerConsumer, pioneerConnection)),
   pioneerConnection(reactorTask.reactor(), 
-		    pPsosEventHandler, pPioneerConsumer, _pioneerParms),
+		    pPsosEventHandler, pPioneerConsumer),
 
   // Service initialization
   sparrowKicker(sparrowConnection),
@@ -76,7 +75,7 @@ SparrowBase::SparrowBase(int argc, char *argv[],
   sparrowStall(sparrowConnection, &structuredPushSupplier_),
   sparrowPanTilt(sparrowConnection),
 
-  sonar(_pioneerParms.sonarDescription, &structuredPushSupplier_),
+  sonar(Pioneer::Parameters::instance()->sonarDescription, &structuredPushSupplier_),
   infrared(Sparrow::Parameters::instance()->infraredDescription, 
            &structuredPushSupplier_),
   mcAdapter_((Sparrow::Parameters::instance()->channelSharing)?
@@ -89,8 +88,7 @@ SparrowBase::SparrowBase(int argc, char *argv[],
   DBG(cout << "SparrowBase initialized.." << endl);
 }
 
-SparrowBase::SparrowBase(Server& _server,
-			 const Pioneer::Parameters& _pioneerParms) :
+SparrowBase::SparrowBase(Server& _server) :
   Super(_server),
   reactorTask(this),
 
@@ -117,7 +115,7 @@ SparrowBase::SparrowBase(Server& _server,
   // Pioneer board initialization
   pPioneerConsumer(new Pioneer::Consumer(&sonar)),
   pPsosEventHandler(new Psos::EventHandler(pPioneerConsumer, pioneerConnection)),
-  pioneerConnection(reactorTask.reactor(), pPsosEventHandler, pPioneerConsumer, _pioneerParms),
+  pioneerConnection(reactorTask.reactor(), pPsosEventHandler, pPioneerConsumer),
 
   // Service initialization
   sparrowKicker(sparrowConnection),
@@ -125,7 +123,7 @@ SparrowBase::SparrowBase(Server& _server,
   sparrowStall(sparrowConnection, &structuredPushSupplier_),
   sparrowPanTilt(sparrowConnection),
 
-  sonar(_pioneerParms.sonarDescription, &structuredPushSupplier_),
+  sonar(Pioneer::Parameters::instance()->sonarDescription, &structuredPushSupplier_),
   infrared(Sparrow::Parameters::instance()->infraredDescription,
 	   &structuredPushSupplier_),
   mcAdapter_((Sparrow::Parameters::instance()->channelSharing)?

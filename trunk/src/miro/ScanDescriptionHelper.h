@@ -17,6 +17,7 @@ class QDomNode;
 
 namespace Miro
 {
+  // forward declarations
   class SensorDescriptionIDL;
   class SensorPositionIDL;
   class SensorGroupIDL;

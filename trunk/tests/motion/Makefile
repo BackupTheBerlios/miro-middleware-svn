@@ -61,27 +61,39 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 
 .obj/MotionInterface.o .obj/MotionInterface.so .shobj/MotionInterface.o .shobj/MotionInterface.so: MotionInterface.cpp MotionInterface.h \
- $(MIRO_ROOT)/src/miro/MotionC.h $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i $(MIRO_ROOT)/src/miro/VelocityC.h \
- $(MIRO_ROOT)/src/miro/VelocityC.i $(MIRO_ROOT)/src/miro/MotionC.i \
- $(MIRO_ROOT)/src/miro/Angle.h $(MIRO_ROOT)/src/miro/IO.h
+ $(MIRO_ROOT)/src/miro/MotionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i \
+ $(MIRO_ROOT)/src/miro/MotionC.i \
+ $(MIRO_ROOT)/src/miro/Angle.h \
+ $(MIRO_ROOT)/src/miro/IO.h
 
 .obj/DifferentialMotionInterface.o .obj/DifferentialMotionInterface.so .shobj/DifferentialMotionInterface.o .shobj/DifferentialMotionInterface.so: DifferentialMotionInterface.cpp \
  DifferentialMotionInterface.h MotionInterface.h \
- $(MIRO_ROOT)/src/miro/MotionC.h $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i $(MIRO_ROOT)/src/miro/VelocityC.h \
- $(MIRO_ROOT)/src/miro/VelocityC.i $(MIRO_ROOT)/src/miro/MotionC.i \
+ $(MIRO_ROOT)/src/miro/MotionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i \
+ $(MIRO_ROOT)/src/miro/MotionC.i \
  $(MIRO_ROOT)/src/miro/DifferentialMotionC.h \
- $(MIRO_ROOT)/src/miro/DifferentialMotionC.i $(MIRO_ROOT)/src/miro/Angle.h \
+ $(MIRO_ROOT)/src/miro/DifferentialMotionC.i \
+ $(MIRO_ROOT)/src/miro/Angle.h \
  $(MIRO_ROOT)/src/miro/IO.h
 
 .obj/SynchroMotionInterface.o .obj/SynchroMotionInterface.so .shobj/SynchroMotionInterface.o .shobj/SynchroMotionInterface.so: SynchroMotionInterface.cpp \
  SynchroMotionInterface.h MotionInterface.h \
- $(MIRO_ROOT)/src/miro/MotionC.h $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i $(MIRO_ROOT)/src/miro/VelocityC.h \
- $(MIRO_ROOT)/src/miro/VelocityC.i $(MIRO_ROOT)/src/miro/MotionC.i \
+ $(MIRO_ROOT)/src/miro/MotionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i \
+ $(MIRO_ROOT)/src/miro/MotionC.i \
  $(MIRO_ROOT)/src/miro/SynchroMotionC.h \
- $(MIRO_ROOT)/src/miro/SynchroMotionC.i $(MIRO_ROOT)/src/miro/Angle.h \
+ $(MIRO_ROOT)/src/miro/SynchroMotionC.i \
+ $(MIRO_ROOT)/src/miro/Angle.h \
  $(MIRO_ROOT)/src/miro/IO.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

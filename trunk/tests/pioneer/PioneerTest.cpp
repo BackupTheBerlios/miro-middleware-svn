@@ -67,33 +67,33 @@ struct Service
   Psos::EventHandler * pEventHandler;
   Pioneer::Connection connection;
 
-  Service(const Pioneer::Parameters& parameters);
+  Service();
 };
 
 
-Service::Service(const Pioneer::Parameters& parameters) :
+Service::Service() :
   reactorTask(),
-  pRangeSensorImpl(new Miro::RangeSensorImpl(parameters.sonarDescription)),
+  pRangeSensorImpl(new Miro::RangeSensorImpl(Pioneer::Parameters::instance()->sonarDescription)),
   pOdometryImpl(new Miro::OdometryImpl(NULL)),
   pConsumer(new Pioneer::Consumer(pRangeSensorImpl, pOdometryImpl)),
   pStallImpl(new Pioneer::StallImpl()),
   pEventHandler(new Psos::EventHandler(pConsumer, connection)),
-  connection(reactorTask.reactor(), pEventHandler, pConsumer, parameters)
+  connection(reactorTask.reactor(), pEventHandler, pConsumer)
 {}
 
 int main(int argc, char* argv[])
 {
   // Parameters to be passed to the services
-  Pioneer::Parameters params;
+  Pioneer::Parameters * pParams = Pioneer::Parameters::instance();
 
   // Config file processing
   Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
   config->setRobotType("Pioneer1");
-  config->getParameters("pioneerBoard", params);
+  config->getParameters("pioneerBoard", *pParams);
   delete config;
 
 #ifdef DEBUG
-  cout << "  pioneer parameters:" << endl << params << endl;
+  cout << "  pioneer parameters:" << endl << *pParams << endl;
 #endif
 
 
@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
 
 
   // Initialize server daemon.
-  Service service(params);
+  Service service;
   Event event;
 
   // Signal set to be handled by the event handler.

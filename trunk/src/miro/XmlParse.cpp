@@ -2,16 +2,16 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "XmlParse.h"
-#include "ScanDescriptionC.h"
+// #include "Exception.h"
+//#include "ScanDescriptionC.h"
 
 #include <ace/Time_Value.h>
 
@@ -83,14 +83,27 @@ namespace Miro
 
   void operator <<= (double& lhs, const QDomNode& node)
   {
-    QString value = getAttribute(node, QString("value"));
+#ifdef AASDF
     bool valid;
 
-    value.toDouble(&valid);
-    if (!valid)
-      throw std::string("Parse exception");
-
-    lhs = value.toDouble();
+    if (!node.isNull()) {
+      QDomNode n1 = node.firstChild();
+      while(!n1.isNull() ) {
+	QDomText t = n1.toText(); // try to convert the node to a text
+	if(!t.isNull() ) {        // the node was really a text element.
+	  t.data().toDouble(&valid);
+	  if (!valid)
+	    throw Miro::Exception("Parse exception");
+	  
+	  lhs = t.data().toDouble();
+	  break;
+	}
+	n1 = n1.nextSibling();
+      }
+    }
+    else
+      throw Exception("Parse exception");
+#endif
   }
 
   void operator <<= (std::string& lhs, const QDomNode& node)
@@ -151,8 +164,8 @@ namespace Miro
     }
   }
 
-//  void operator <<= (ScanDescriptionIDL& lhs, const QDomNode& node)
-//  {
-//  }
- 
+  //  void operator <<= (ScanDescriptionIDL& lhs, const QDomNode& node)
+  //  {
+  //  }
+
 };

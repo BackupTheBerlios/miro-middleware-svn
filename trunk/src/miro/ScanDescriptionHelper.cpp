@@ -138,6 +138,9 @@ namespace Miro
   void
   operator <<= (ScanDescriptionIDL& description, const QDomNode& node)
   {
+
+    cout << "entering scan description parser" << endl;
+
     description.group.length(0);
 
     if (!node.isNull()) {

@@ -86,7 +86,7 @@ namespace Psos
     int sonarReadings() const { return buffer_[22]; }
     int sonarNumber(int index) const { return buffer_[23 + index * 3]; }
     short sonarValue(int index) const { 
-      return (short) rint((*(unsigned short*)&buffer_[24 + index * 3]) * RANGE_CONV_FACTOR);
+      return (short) rint((*(unsigned short*)&buffer_[24 + index * 3]));
     }
   };
   

@@ -53,7 +53,7 @@ main(int argc, char *argv[])
   // Parameters to be passed to the services
   Miro::RobotParameters robotParameters;
   Sparrow::Parameters * pSparrowParameters = Sparrow::Parameters::instance();
-  Pioneer::Parameters pioneerParameters;
+  Pioneer::Parameters * pPioneerParameters = Pioneer::Parameters::instance();
   Miro::NotifyMulticast::Parameters * notifyMulticastParameters = Miro::NotifyMulticast::Parameters::instance();
 
   try {
@@ -62,8 +62,8 @@ main(int argc, char *argv[])
     config->setRobotType("Robot");
     config->getParameters("robot", robotParameters);
     config->setRobotType("Sparrow99");
-    config->getParameters("sparrowBoard",*pSparrowParameters);
-    config->getParameters("pioneerBoard", pioneerParameters);
+    config->getParameters("sparrowBoard", *pSparrowParameters);
+    config->getParameters("pioneerBoard", *pPioneerParameters);
     config->setRobotType("Notification");
     config->getParameters("NotifyMulticast", *notifyMulticastParameters);
     delete config;
@@ -71,14 +71,13 @@ main(int argc, char *argv[])
 #ifdef DEBUG
     cout << "  robot paramters:" << endl << robotParameters << endl;
     cout << "  sparrow paramters:" << endl << *pSparrowParameters << endl;
-    cout << "  pioneer paramters:" << endl << pioneerParameters << endl;
+    cout << "  pioneer paramters:" << endl << *pPioneerParameters << endl;
     cout << "  NotifyMulticast parameters: " << endl << *notifyMulticastParameters << endl;
 #endif
 
     DBG(cout << "Initialize server daemon." << endl);
     SparrowBase sparrowBase(argc, argv, 
-			    robotParameters, 
-			    pioneerParameters);
+			    robotParameters);
     try {
       DBG(cout << "Loop forever handling events." << endl);
       sparrowBase.run(8);

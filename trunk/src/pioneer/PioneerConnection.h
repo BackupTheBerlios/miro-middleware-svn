@@ -32,8 +32,7 @@ namespace Pioneer
   public:
     Connection(ACE_Reactor * _reactor, 
 	       Psos::EventHandler * _eventHandler,
-	       Consumer * _consumer,
-	       const Parameters& _parameters);
+	       Consumer * _consumer);
     virtual ~Connection();
 
     //-----------------//

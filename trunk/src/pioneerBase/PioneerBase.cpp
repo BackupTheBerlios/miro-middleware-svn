@@ -2,14 +2,12 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
-//
 // 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-
 
 #include "PioneerBase.h"
 
@@ -35,8 +33,7 @@
 using std::cout;
 using std::cerr;
 
-PioneerBase::PioneerBase(int argc, char *argv[],
-			 const Pioneer::Parameters& _pioneerParms) :
+PioneerBase::PioneerBase(int argc, char *argv[]) :
   Super(argc, argv),
   reactorTask(this),
 
@@ -49,14 +46,14 @@ PioneerBase::PioneerBase(int argc, char *argv[],
   odometry(&structuredPushSupplier_),
 
   // Pioneer board initialization
-  pPioneerConsumer(new Pioneer::Consumer(&sonar /*, &motion*/ )),
+  pPioneerConsumer(new Pioneer::Consumer(&sonar , &odometry)),
   pPsosEventHandler(new Psos::EventHandler(pPioneerConsumer, pioneerConnection)),
-  pioneerConnection(reactorTask.reactor(), pPsosEventHandler, pPioneerConsumer, _pioneerParms),
+  pioneerConnection(reactorTask.reactor(), pPsosEventHandler, pPioneerConsumer),
 
   // Service initialization
   motion(pioneerConnection, *pPioneerConsumer),
   stall(/*pioneerConnection*/),
-  sonar(_pioneerParms.sonarDescription, &structuredPushSupplier_)
+  sonar(Pioneer::Parameters::instance()->sonarDescription, &structuredPushSupplier_)
 {
   pOdometry = odometry._this();
   pMotion = motion._this();
@@ -102,13 +99,13 @@ main(int argc, char *argv[])
   TAO_Notify_Default_EMO_Factory::init_svc();
 
   // Parameters to be passed to the services
-  Pioneer::Parameters pioneerParameters;
+  Pioneer::Parameters * pioneerParameters = Pioneer::Parameters::instance();
 
   try {
     // Config file processing
     Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
     config->setRobotType("Pioneer1");
-    config->getParameters("pioneerBoard", pioneerParameters);
+    config->getParameters("pioneerBoard", *pioneerParameters);
     delete config;
     
 #ifdef DEBUG
@@ -116,7 +113,7 @@ main(int argc, char *argv[])
 #endif
     
     DBG(cout << "Initialize server daemon." << endl);
-    PioneerBase pioneerBase(argc, argv, pioneerParameters);
+    PioneerBase pioneerBase(argc, argv);
     try {
       DBG(cout << "Loop forever handling events." << endl);
       pioneerBase.run(8);

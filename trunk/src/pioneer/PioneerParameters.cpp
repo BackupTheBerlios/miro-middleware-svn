@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // 
@@ -10,8 +10,8 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "PioneerParameters.h"
+
 #include "miro/RangeSensorC.h"
 #include "miro/ScanDescriptionHelper.h"
 #include "miro/Angle.h"
@@ -70,15 +70,17 @@ namespace Pioneer
     if (!node.isNull()) {
       QDomNode n1 = node.firstChild();
       while(!n1.isNull()) {
-	if (n1.nodeName() == "DifferentialMotion")
+	if (n1.nodeName() == "Motion")
 	  motion <<= n1;
 	else {
 	  QDomNode n2 = n1.firstChild();
 	  if (!n2.isNull()) {
 	    if (n1.nodeName() == "sonar") {
 	      while (!n2.isNull()) {
-		if (n2.nodeName() == "scandescription") 
-		  sonarDescription <<= n2;
+		if (n2.nodeName() == "scandescription") {
+		  cout << "parsing scandescription" << endl;
+		  Miro::operator <<= (sonarDescription, n2);
+		}
 		n2 = n2.nextSibling();
 	      }
 	    }

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // 
@@ -40,8 +40,7 @@ class PioneerBase : public Miro::Server
 
 public:
   // Initialization and Termination methods.
-  PioneerBase(int argc, char *argv[],
-  	      const Pioneer::Parameters& _pioneerParameters);
+  PioneerBase(int argc, char *argv[]);
   // Constructor.
 
   ~PioneerBase();

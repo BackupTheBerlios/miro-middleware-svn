@@ -1,7 +1,8 @@
 <!DOCTYPE UlmSparrowsConfig >
 <xml>
   <robot>
-    <type>Pioneer1</type>      <!-- B21, Pioneer1, Sparrow99 -->
+    <type>PeopleBot</type>      <!-- B21, Pioneer1, Sparrow99 -->
+    <name>ppb</name>
     <speech>none</speech>
     <pantilt>none</pantilt> <!-- none or dpPanTilt -->
     <laser>none</laser> <!-- none or SICK -->
@@ -15,6 +16,31 @@
       <databits>8</databits>
       <stopbits>1</stopbits>
       <parityenb>0</parityenb>
+
+      <!-- Defaults
+
+        <AngleConvFactor>0.001534</AngleConvFactor>
+        <DistConvFactor>0.485000</DistConvFactor>
+        <VelConvFactor>1.000000</VelConvFactor>
+        <RangeConvFactor>1.000000</RangeConvFactor>
+        <DiffConvFactor>0.006000</DiffConvFactor>
+        <Vel2Divisor>20.000000</Vel2Divisor>
+      -->
+
+      <Motion>
+        <MinTranslation>-2200</MinTranslation>
+        <MaxTranslation>2200</MaxTranslation>
+        <MinRotation>-500</MinRotation>
+        <MaxRotation>500</MaxRotation>
+
+        <MinLTranslation>-2200</MinLTranslation>
+        <MinRTranslation>-2200</MinRTranslation>
+        <MaxLTranslation>2200</MaxLTranslation>
+        <MaxRTranslation>2200</MaxRTranslation>
+
+        <WheelBase>340</WheelBase>
+      </Motion>
+      
       <sonar>
          <scandescription>
            <scantype>3</scantype>

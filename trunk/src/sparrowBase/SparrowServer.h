@@ -2,9 +2,8 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
-//
 // 
 // $Id$
 // 
@@ -49,11 +48,9 @@ class SparrowBase : public Miro::Server
 public:
   // Initialization and Termination methods.
   SparrowBase(int argc, char *argv[],
-	      const Miro::RobotParameters& _robotParameters,
-  	      const Pioneer::Parameters& _pioneerParameters);
+	      const Miro::RobotParameters& _robotParameters);
 
-  SparrowBase(Server& _server,
-	      const Pioneer::Parameters& _pioneerParameters);
+  SparrowBase(Server& _server);
 
   // Constructor.
 

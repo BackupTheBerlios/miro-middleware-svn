@@ -198,6 +198,9 @@ void MyWidget::send() {
     if (*i == eventName)
       return;
 
+  if (eventName == "LineSamples")
+    event.header.fixed_header.event_type.type_name = CORBA::string_dup( "RawPosition" );
+
   event.header.fixed_header.event_type.domain_name = CORBA::string_dup( context.c_str() );
 
   cout << timeVector[ timeVectorPos ].first.sec() << ":" 

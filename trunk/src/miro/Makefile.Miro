@@ -311,53 +311,75 @@ realclean: clean
 
 .obj/Exception.o .obj/Exception.so .shobj/Exception.o .shobj/Exception.so: Exception.cpp Exception.h
 
-.obj/Angle.o .obj/Angle.so .shobj/Angle.o .shobj/Angle.so: Angle.cpp Angle.h
+.obj/Angle.o .obj/Angle.so .shobj/Angle.o .shobj/Angle.so: Angle.cpp $(MIRO_ROOT)/src/miro/Angle.h
 
-.obj/Utils.o .obj/Utils.so .shobj/Utils.o .shobj/Utils.so: Utils.cpp Utils.h \
- Exception.h DevParameters.h \
- Parameters.h
+.obj/Utils.o .obj/Utils.so .shobj/Utils.o .shobj/Utils.so: Utils.cpp $(MIRO_ROOT)/src/miro/Utils.h \
+ $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/DevParameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h
 
-.obj/Log.o .obj/Log.so .shobj/Log.o .shobj/Log.so: Log.cpp Exception.h \
- Log.h
+.obj/Log.o .obj/Log.so .shobj/Log.o .shobj/Log.so: Log.cpp $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/Log.h
 
-.obj/Thread.o .obj/Thread.so .shobj/Thread.o .shobj/Thread.so: Thread.cpp Thread.h \
- Exception.h
+.obj/Thread.o .obj/Thread.so .shobj/Thread.o .shobj/Thread.so: Thread.cpp $(MIRO_ROOT)/src/miro/Thread.h \
+ $(MIRO_ROOT)/src/miro/Exception.h
 
-.obj/Task.o .obj/Task.so .shobj/Task.o .shobj/Task.so: Task.cpp Task.h
+.obj/Task.o .obj/Task.so .shobj/Task.o .shobj/Task.so: Task.cpp $(MIRO_ROOT)/src/miro/Task.h
 
-.obj/ReactorTask.o .obj/ReactorTask.so .shobj/ReactorTask.o .shobj/ReactorTask.so: ReactorTask.cpp ExceptionC.h \
- ExceptionC.i Server.h \
- Client.h Exception.h \
- RobotParameters.h \
- Parameters.h Singleton.h \
- Synch.h ReactorTask.h
+.obj/ReactorTask.o .obj/ReactorTask.so .shobj/ReactorTask.o .shobj/ReactorTask.so: ReactorTask.cpp \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/Server.h \
+ $(MIRO_ROOT)/src/miro/Client.h \
+ $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/RobotParameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/Singleton.h \
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/ReactorTask.h
 
 .obj/RobotParameters.o .obj/RobotParameters.so .shobj/RobotParameters.o .shobj/RobotParameters.so: RobotParameters.cpp RobotParameters.h Parameters.h
 
-.obj/Client.o .obj/Client.so .shobj/Client.o .shobj/Client.so: Client.cpp Client.h \
- Exception.h RobotParameters.h \
- Parameters.h
+.obj/Client.o .obj/Client.so .shobj/Client.o .shobj/Client.so: Client.cpp $(MIRO_ROOT)/src/miro/Client.h \
+ $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/RobotParameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h
 
-.obj/Server.o .obj/Server.so .shobj/Server.o .shobj/Server.so: Server.cpp Server.h \
- Client.h Exception.h \
- RobotParameters.h \
- Parameters.h Singleton.h \
- Synch.h
+.obj/Server.o .obj/Server.so .shobj/Server.o .shobj/Server.so: Server.cpp $(MIRO_ROOT)/src/miro/Server.h \
+ $(MIRO_ROOT)/src/miro/Client.h \
+ $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/RobotParameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/Singleton.h \
+ $(MIRO_ROOT)/src/miro/Synch.h
 
-.obj/IO.o .obj/IO.so .shobj/IO.o .shobj/IO.so: IO.cpp IO.h ExceptionC.h \
- ExceptionC.i TimeC.h \
- TimeC.i WorldPointC.h \
- WorldPointC.i PositionC.h \
- PositionC.i VelocityC.h \
- VelocityC.i MotionStatusC.h \
- MotionStatusC.i RangeEventC.h \
- RangeEventC.i PanTiltC.h \
- TiltC.h TiltC.i \
- PanC.h PanC.i \
- PanTiltC.i Angle.h
+.obj/IO.o .obj/IO.so .shobj/IO.o .shobj/IO.so: IO.cpp $(MIRO_ROOT)/src/miro/IO.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i \
+ $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/PositionC.i \
+ $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.i \
+ $(MIRO_ROOT)/src/miro/RangeEventC.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.i \
+ $(MIRO_ROOT)/src/miro/PanTiltC.h \
+ $(MIRO_ROOT)/src/miro/TiltC.h \
+ $(MIRO_ROOT)/src/miro/TiltC.i \
+ $(MIRO_ROOT)/src/miro/PanC.h \
+ $(MIRO_ROOT)/src/miro/PanC.i \
+ $(MIRO_ROOT)/src/miro/PanTiltC.i \
+ $(MIRO_ROOT)/src/miro/Angle.h
 
-.obj/TimeHelper.o .obj/TimeHelper.so .shobj/TimeHelper.o .shobj/TimeHelper.so: TimeHelper.cpp TimeHelper.h \
- TimeC.h TimeC.i
+.obj/TimeHelper.o .obj/TimeHelper.so .shobj/TimeHelper.o .shobj/TimeHelper.so: TimeHelper.cpp \
+ $(MIRO_ROOT)/src/miro/TimeHelper.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i
 
 .obj/ScanDescriptionHelper.o .obj/ScanDescriptionHelper.so .shobj/ScanDescriptionHelper.o .shobj/ScanDescriptionHelper.so: ScanDescriptionHelper.cpp \
  ScanDescriptionHelper.h ScanDescriptionC.h ScanDescriptionC.i Angle.h
@@ -372,12 +394,12 @@ realclean: clean
  MotionStatusC.h TimeC.h TimeC.i PositionC.h WorldPointC.h \
  WorldPointC.i PositionC.i VelocityC.h VelocityC.i MotionStatusC.i \
  StructuredPushConsumer.h Synch.h TimeHelper.h \
- TimeC.h
+ $(MIRO_ROOT)/src/miro/TimeC.h
 
 .obj/ActionPattern.o .obj/ActionPattern.so .shobj/ActionPattern.o .shobj/ActionPattern.so: ActionPattern.cpp ActionPattern.h Synch.h \
  ArbiterParameters.h BehaviourEngineC.h BehaviourEngineC.i Behaviour.h \
  DynamicWindow.h Arbiter.h BehaviourParameters.h BehaviourRepository.h \
- Singleton.h Synch.h Exception.h \
+ Singleton.h $(MIRO_ROOT)/src/miro/Synch.h Exception.h \
  ArbiterRepository.h KeyValueList.h StructuredPushSupplier.h
 
 .obj/Arbiter.o .obj/Arbiter.so .shobj/Arbiter.o .shobj/Arbiter.so: Arbiter.cpp Arbiter.h Synch.h ArbiterParameters.h \
@@ -389,7 +411,8 @@ realclean: clean
 .obj/ArbiterMessage.o .obj/ArbiterMessage.so .shobj/ArbiterMessage.o .shobj/ArbiterMessage.so: ArbiterMessage.cpp ArbiterMessage.h
 
 .obj/ArbiterRepository.o .obj/ArbiterRepository.so .shobj/ArbiterRepository.o .shobj/ArbiterRepository.so: ArbiterRepository.cpp ArbiterRepository.h \
- Singleton.h Synch.h Exception.h Arbiter.h Synch.h
+ Singleton.h $(MIRO_ROOT)/src/miro/Synch.h Exception.h \
+ Arbiter.h Synch.h
 
 .obj/PriorityArbiter.o .obj/PriorityArbiter.so .shobj/PriorityArbiter.o .shobj/PriorityArbiter.so: PriorityArbiter.cpp PriorityArbiter.h Arbiter.h \
  Synch.h ArbiterMessage.h
@@ -436,8 +459,9 @@ realclean: clean
  KeyValueList.h
 
 .obj/BehaviourRepository.o .obj/BehaviourRepository.so .shobj/BehaviourRepository.o .shobj/BehaviourRepository.so: BehaviourRepository.cpp BehaviourRepository.h \
- Singleton.h Synch.h Exception.h Behaviour.h \
- DynamicWindow.h ActionPattern.h Synch.h ArbiterParameters.h Arbiter.h
+ Singleton.h $(MIRO_ROOT)/src/miro/Synch.h Exception.h \
+ Behaviour.h DynamicWindow.h ActionPattern.h Synch.h \
+ ArbiterParameters.h Arbiter.h
 
 .obj/EventBehaviour.o .obj/EventBehaviour.so .shobj/EventBehaviour.o .shobj/EventBehaviour.so: EventBehaviour.cpp EventBehaviour.h Behaviour.h \
  DynamicWindow.h ActionPattern.h Synch.h ArbiterParameters.h Arbiter.h \
@@ -449,23 +473,25 @@ realclean: clean
 .obj/TimedBehaviour.o .obj/TimedBehaviour.so .shobj/TimedBehaviour.o .shobj/TimedBehaviour.so: TimedBehaviour.cpp TimedBehaviour.h Behaviour.h \
  DynamicWindow.h ActionPattern.h Synch.h ArbiterParameters.h Arbiter.h \
  TimedBehaviourParameters.h BehaviourParameters.h TimeHelper.h \
- TimeC.h TimeC.i
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i
 
 .obj/TimedBehaviourParameters.o .obj/TimedBehaviourParameters.so .shobj/TimedBehaviourParameters.o .shobj/TimedBehaviourParameters.so: TimedBehaviourParameters.cpp \
  TimedBehaviourParameters.h BehaviourParameters.h TimeHelper.h \
- TimeC.h TimeC.i \
- KeyValueList.h
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i KeyValueList.h
 
 .obj/Policy.o .obj/Policy.so .shobj/Policy.o .shobj/Policy.so: Policy.cpp BehaviourEngineC.h BehaviourEngineC.i Policy.h \
  ActionPattern.h Synch.h ArbiterParameters.h ArbiterRepository.h \
- Singleton.h Synch.h Exception.h Arbiter.h \
- Behaviour.h DynamicWindow.h BehaviourRepository.h \
+ Singleton.h $(MIRO_ROOT)/src/miro/Synch.h Exception.h \
+ Arbiter.h Behaviour.h DynamicWindow.h BehaviourRepository.h \
  BehaviourParameters.h
 
 .obj/DynamicWindow.o .obj/DynamicWindow.so .shobj/DynamicWindow.o .shobj/DynamicWindow.so: DynamicWindow.cpp DynamicWindow.h
 
 .obj/CameraParameters.o .obj/CameraParameters.so .shobj/CameraParameters.o .shobj/CameraParameters.so: CameraParameters.cpp CameraParameters.h \
- Parameters.h Singleton.h Synch.h Angle.h
+ Parameters.h Singleton.h $(MIRO_ROOT)/src/miro/Synch.h \
+ Angle.h
 
 .obj/NotifyMulticastRequestEntry.o .obj/NotifyMulticastRequestEntry.so .shobj/NotifyMulticastRequestEntry.o .shobj/NotifyMulticastRequestEntry.so: NotifyMulticastRequestEntry.cpp \
  NotifyMulticastRequestEntry.h NotifyMulticastRequestIndex.h
@@ -497,7 +523,7 @@ realclean: clean
 
 .obj/NotifyMulticastParameters.o .obj/NotifyMulticastParameters.so .shobj/NotifyMulticastParameters.o .shobj/NotifyMulticastParameters.so: NotifyMulticastParameters.cpp \
  NotifyMulticastParameters.h Parameters.h Singleton.h \
- Synch.h Angle.h
+ $(MIRO_ROOT)/src/miro/Synch.h Angle.h
 
 .obj/NotifyMulticastAdapter.o .obj/NotifyMulticastAdapter.so .shobj/NotifyMulticastAdapter.o .shobj/NotifyMulticastAdapter.so: NotifyMulticastAdapter.cpp \
  NotifyMulticastDefines.h NotifyMulticastAdapter.h Exception.h \
