@@ -10,8 +10,8 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "FilterGray.h"                      // Custom filter declaration.
-
 #include "FilterDiff.h"                      // Custom filter declaration.
+#include "FilterBusy.h"                      // Custom filter declaration.
 
 #include "video/VideoServer.h"               // VideoServer declaration.
 #include "video/VideoDeviceDummy.h"          // Dummy device declaration.
@@ -51,6 +51,7 @@ main(int argc, char *argv[])
     repo->registerFilter<Video::FilterCopy>("FilterCopy");
     repo->registerFilter<FilterGray>("FilterGray");
     repo->registerFilter<FilterDiff>("FilterDiff");
+    repo->registerFilter<FilterBusy>("FilterBusy");
 
     MIRO_LOG(LL_NOTICE, "Config file processing.");
     

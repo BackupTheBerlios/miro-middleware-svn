@@ -12,6 +12,7 @@
 #include "FilterDiff.h"       // Class declaration.
 #include "miro/VideoHelper.h" // Global helper functions.
 #include "miro/Exception.h"   // Exception declarations.
+#include "miro/Log.h"
 #include "video/BufferManager.h" 
 
 
@@ -74,6 +75,12 @@ FilterDiff::process()
   unsigned char * dest = outputBuffer();
   // Past the end pointer of the output image for termination condition.
   unsigned char * last = dest + outputSize_;
+
+  MIRO_LOG_OSTR(LL_NOTICE, 
+		"linked image time: " <<
+		preLink_[0].filter()->bufferManager()->bufferTimeStamp(preLink_[0].index()) <<
+		std::endl);
+
 
   while (dest < last) {
     *(dest) = (*src1 >= *src2)? *src1 - *src2 : *src2 - *src1;

@@ -61,6 +61,7 @@
    <parameter name="Interface" >
     <parameter value="BusyImage" name="Name" />
    </parameter>
+   <parameter value="10000" name="Counting" />
   </instance>
  </section>
 </config>

@@ -23,6 +23,8 @@ GrayVideoService_SOURCES = \
 	FilterGray.h \
 	FilterDiff.cpp \
 	FilterDiff.h \
+	FilterBusy.cpp \
+	FilterBusy.h \
 	Parameters.xml
 
 if COND_IEEE1394
