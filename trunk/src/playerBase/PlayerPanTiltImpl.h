@@ -23,7 +23,7 @@ class ACE_Reactor;
 namespace Miro
 {
   class Exception;
-};
+}
 
 namespace Player
 {
@@ -40,17 +40,17 @@ namespace Player
     //-------------------------------------------------------------------------
     // from pan.idl
     //-------------------------------------------------------------------------
-    virtual void setPan(double angle)
+    virtual void setPan(CORBA::Float angle)
       throw(Miro::EOutOfBounds, Miro::EDevIO);
-    virtual double getPan()
+    virtual CORBA::Float getPan()
       throw(Miro::EDevIO);
 
     //-------------------------------------------------------------------------
     // from tilt.idl
     //-------------------------------------------------------------------------
-    virtual void setTilt(double angle)
+    virtual void setTilt(CORBA::Float angle)
       throw(Miro::EOutOfBounds, Miro::EDevIO);
-    virtual double getTilt()
+    virtual CORBA::Float getTilt()
       throw(Miro::EDevIO);
 
     //-------------------------------------------------------------------------
@@ -83,8 +83,7 @@ namespace Player
     bool upsideDown;
 
   };
-
-};
+}
 
 #endif
 

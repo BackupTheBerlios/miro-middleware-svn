@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2002, 2003
+// (c) 2002, 2003, 2004, 2005
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // 
@@ -73,7 +73,7 @@ namespace Player
   // from pan.idl
   //-------------------------------------------------------------------------
   void
-  PlayerPanTiltImpl::setPan(double angle) throw(Miro::EOutOfBounds, Miro::EDevIO)
+  PlayerPanTiltImpl::setPan(CORBA::Float angle) throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
     Miro::PanTiltPositionIDL dest;
 
@@ -89,7 +89,7 @@ namespace Player
     setPosition(dest);
   }
   
-  double
+  CORBA::Float
   PlayerPanTiltImpl::getPan() throw(Miro::EDevIO)
   {
     Miro::PanTiltPositionIDL pos = getPosition();
@@ -101,7 +101,7 @@ namespace Player
   // from tilt.idl
   //-------------------------------------------------------------------------
   void 
-  PlayerPanTiltImpl::setTilt(double angle) throw(Miro::EOutOfBounds, Miro::EDevIO)
+  PlayerPanTiltImpl::setTilt(CORBA::Float angle) throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
     Miro::PanTiltPositionIDL dest;
 
@@ -117,7 +117,7 @@ namespace Player
     setPosition(dest);
   }
 
-  double 
+  CORBA::Float 
   PlayerPanTiltImpl::getTilt() throw(Miro::EDevIO)
   {
     Miro::PanTiltPositionIDL pos = getPosition();
