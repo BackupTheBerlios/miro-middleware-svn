@@ -242,6 +242,11 @@
    </parameter>
    <parameter value="true" name="Tactile" />
    <parameter value="true" name="Sonar" />
+
+   <parameter value="true" name="Camera" />
+   <parameter value="false" name="CameraUpsideDown" />
+   <parameter value="gazebo" name="cameraVendor"/>
+   <parameter value="openGL" name="cameraModel" />
   </parameter>
  </section>
 
@@ -259,6 +264,23 @@
    <parameter value="false" name="StdCrystal" />
   </parameter>
  </section>
+
+ <section name="Camera">
+  <parameter name="Miro::ZoomParameters">
+   <parameter name="Present" value="true"/>
+   <parameter name="RangeMin" value="80"/>
+   <parameter name="RangeMax" value="135"/>
+  </parameter>
+  <parameter name="Miro::PanParameters">
+   <parameter name="RangeMin" value="-90"/>
+   <parameter name="RangeMax" value="90"/>
+  </parameter>
+  <parameter name="Miro::TiltParameters">
+   <parameter name="RangeMin" value="-90"/>
+   <parameter name="RangeMax" value="90"/>
+  </parameter>
+ </section>
+
 
  <section name="Video" >
 
