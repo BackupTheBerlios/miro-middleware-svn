@@ -13,10 +13,15 @@
 #define CanonPanTiltMessage_h
 
 #include "miro/DevMessage.h"
+#include "miro/Synch.h"
 
 #include "CanonDevice.h"
 
 #include <cmath>
+/*namespace Miro
+  {
+  class Mutex;
+  }*/
 
 namespace Canon
 {
@@ -100,11 +105,17 @@ namespace Canon
     
     bool isValid() const;
 
+    //initializes and sets the mutex
     void init();
+
+    //used to release the mutex
+    void done();
 
     //    Answer& operator+=(unsigned char val);
     //    friend Answer* operator +=(Answer* out, unsigned char val);
     void add(unsigned char val);
+
+    Miro::Mutex mutex;
 
   protected:
     static const int MAX_ANSWER_SIZE=128;

@@ -82,12 +82,16 @@ namespace Canon
     if (!initialized) initialize();
 
     Message zoom(SET_ZOOM_POSITION1,int2str(tmp,value,2));
+    Miro::Guard guard(pAnswer->mutex); //to force release at the end
+    pAnswer->mutex.release();
+
     while (!done) {
       pAnswer->init();
       connection.sendCamera(zoom);
       checkAnswer();
       //keep trying...
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
+      pAnswer->done();
     }
   }
   
@@ -95,10 +99,13 @@ namespace Canon
   CanonCameraImpl::getZoom() throw(Miro::EDevIO)
   {
     bool done=false;
-
+    short result=0;
+    
     if (!initialized) initialize();
 
     Message zoom=Message(GET_ZOOM_POSITION1);
+    Miro::Guard guard(pAnswer->mutex); //to force release at the end
+    pAnswer->mutex.release();
 
     while (!done) {
       pAnswer->init();
@@ -106,13 +113,20 @@ namespace Canon
       while (!pAnswer->errorCode()) usleep(1000);
       
       //if busy, keep trying...
-      if (pAnswer->errorCode()==ERROR_BUSY) continue;
+      if (pAnswer->errorCode()==ERROR_BUSY) {
+	pAnswer->done();
+	continue;
+      }
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(2);
       checkAnswer();
-      if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
+      if (pAnswer->errorCode()==ERROR_NO_ERROR) {
+	result=str2int(pAnswer->parameter(),2);
+	done=true;
+      }
+      pAnswer->done();
     }
 
-    return 100*str2int(pAnswer->parameter(),2)/128;
+    return 100*result/128;
   }
   
   void 
@@ -126,6 +140,9 @@ namespace Canon
     Miro::FocusRangeIDL range;    
     range=getFocusRange();
     factor=factor*(range.max-range.min)/100+range.min;
+
+    Miro::Guard guard(pAnswer->mutex); //to force release at the end
+    pAnswer->mutex.release();
     
     Message focus(SET_FOCUS_POSITION,int2str(tmp,factor,4));
     while (!done) {
@@ -134,6 +151,7 @@ namespace Canon
       checkAnswer();
       //keep trying...
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
+      pAnswer->done();
     }
   }
 
@@ -141,6 +159,7 @@ namespace Canon
   CanonCameraImpl::getFocus() throw(Miro::EDevIO)
   {
     bool done=false;
+    short result=0;
 
     if (!initialized) initialize();
 
@@ -148,19 +167,29 @@ namespace Canon
 
     Message focus=Message(GET_FOCUS_POSITION,0x30);
 
+    Miro::Guard guard(pAnswer->mutex); //to force release at the end
+    pAnswer->mutex.release();
+
     while (!done) {
       pAnswer->init();
       connection.sendCamera(focus);
       while (!pAnswer->errorCode()) usleep(1000);
       
       //if busy, keep trying...
-      if (pAnswer->errorCode()==ERROR_BUSY) continue;
+      if (pAnswer->errorCode()==ERROR_BUSY) {
+	pAnswer->done();
+	continue;
+      }
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
       checkAnswer();
-      if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
+      if (pAnswer->errorCode()==ERROR_NO_ERROR) {
+	done=true;
+	result=str2int(pAnswer->parameter(),4);
+      }
+      pAnswer->done();
     }
 
-    return 100*(str2int(pAnswer->parameter(),4)-range.min)/(range.max-range.min);
+    return 100*(result-range.min)/(range.max-range.min);
   }
   
   void
@@ -170,12 +199,17 @@ namespace Canon
     if (!initialized) initialize();
 
     Message focus(FOCUS_AUTO,0x30);
+
+    Miro::Guard guard(pAnswer->mutex); //to force release at the end
+    pAnswer->mutex.release();
+
     while (!done) {
       pAnswer->init();
       connection.sendCamera(focus);
       checkAnswer();
       //keep trying...
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
+      pAnswer->done();
     }
   }
 
@@ -189,115 +223,32 @@ namespace Canon
 
     Message focus(GET_FOCUS_RANGE,0x32);
 
+    Miro::Guard guard(pAnswer->mutex); //to force release at the end
+    pAnswer->mutex.release();
+
     while (!done) {
       pAnswer->init();
       connection.sendCamera(focus);
       while (!pAnswer->errorCode()) usleep(1000);
       
       //if busy, keep trying...
-      if (pAnswer->errorCode()==ERROR_BUSY) continue;
+      if (pAnswer->errorCode()==ERROR_BUSY) {
+	pAnswer->done();
+	continue;
+      }
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(8);
       checkAnswer();
-      if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
+      if (pAnswer->errorCode()==ERROR_NO_ERROR) {
+	result.min=str2int(pAnswer->parameter(),4);
+	result.max=str2int(pAnswer->parameter()+4,4);
+	done=true;
+      }
+      pAnswer->done();
     }
-    result.min=str2int(pAnswer->parameter(),4);
-    result.max=str2int(pAnswer->parameter()+4,4);
     
     return result;
   }
 
-  /*
-    CanonCameraImpl::waitCompletion() throw(Miro::EDevIO)
-    {
-    Miro::PanTiltPositionIDL goal,dest;
-    
-    goal.panvalue=currentPan;
-    goal.tiltvalue=currentTilt;
-    
-    //if the camera is inverse mounted, must change the sign
-    if (upsideDown) {
-    goal.panvalue=-goal.panvalue;
-    goal.tiltvalue=-goal.tiltvalue;
-    }
-    
-    do {
-    //test if finished
-    dest=getPosition();
-    } while ((fabs(goal.panvalue-dest.panvalue)>0.01)||(fabs(goal.tiltvalue-dest.tiltvalue)>0.01));
-    //0.01 rad tolerance (aprox 0.6 deg)
-    }
-  */
-
-  /*
-    CanonCameraLimitsIDL 
-    CanonCameraImpl::getLimits() throw(Miro::EDevIO, Miro::ETimeOut)
-    {
-    CanonCameraLimitsIDL result;
-    if (!initialized) initialize();
-    
-    Message getMinPan(GET_ANGLE_LIMITS,0x30);
-    Message getMaxPan(GET_ANGLE_LIMITS,0x31);
-    Message getMinTilt(GET_ANGLE_LIMITS,0x32);
-    Message getMaxTilt(GET_ANGLE_LIMITS,0x33);
-
-    if (minPan<=-1e10) {
-    //if not initialized, get it from the camera;
-    pAnswer->init();
-    connection.sendCamera(getMinPan);
-    //wait for error code completion
-    while (!pAnswer->errorCode()) usleep(1000);
-    //get the rest
-    if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
-    checkAnswer(); //wait for completion
-    minPan=deg2Rad(double(str2int(pAnswer->parameter(),4)-0x8000)*panPulseRatio);
-    }
-    
-    if (minTilt<=-1e10) {
-    //if not initialized, get it from the camera
-    pAnswer->init();
-    connection.sendCamera(getMinTilt);
-    //wait for error code completion
-    while (!pAnswer->errorCode()) usleep(1000);
-    //get the rest
-    if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
-    checkAnswer(); //wait for completion
-    minTilt=deg2Rad(double(str2int(pAnswer->parameter(),4)-0x8000)*tiltPulseRatio);
-    }
-    
-    if (maxPan<=-1e10) {
-    //if not initialized, get it from the camera
-    pAnswer->init();
-    connection.sendCamera(getMaxPan);
-    //wait for error code completion
-    while (!pAnswer->errorCode()) usleep(1000);
-    //get the rest
-    if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
-    checkAnswer(); //wait for completion
-    maxPan=deg2Rad(double(str2int(pAnswer->parameter(),4)-0x8000)*panPulseRatio);
-    }
-    
-    if (maxTilt<=-1e10) {
-    //if not initialized, get it from the camera
-    pAnswer->init();
-    connection.sendCamera(getMaxTilt);
-    //wait for error code completion
-    while (!pAnswer->errorCode()) usleep(1000);
-    //get the rest
-    if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
-    checkAnswer(); //wait for completion
-    maxTilt=deg2Rad(double(str2int(pAnswer->parameter(),4)-0x8000)*tiltPulseRatio);
-    }
-    
-    //if in inverse mounting, the max and min values must be switched
-    result.minpanposition=(upsideDown?-maxPan:minPan);
-    result.maxpanposition=(upsideDown?-minPan:maxPan);
-    result.mintiltposition=(upsideDown?-maxTilt:minTilt);
-    result.maxtiltposition=(upsideDown?-minTilt:maxTilt);
-    
-    waitInitialize(false,true); //don't force reinit but wait
-    return result;
-    }
-  */
 
   //-------------------------------------------------------------------
   // auxiliary functions
@@ -306,11 +257,15 @@ namespace Canon
   void
   CanonCameraImpl::initialize()
   {
+    Miro::Guard guard(pAnswer->mutex); //to force release at the end
+    pAnswer->mutex.release();
+
     if (!initialized) {
       Canon::Message msg(HOST_CONTROL_MODE,0x30);
       pAnswer->init();
       connection.sendCamera(msg);
       checkAnswer();
+      pAnswer->done();
     }
     initialized=true;
   }

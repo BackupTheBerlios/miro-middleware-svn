@@ -12,7 +12,7 @@
 
 
 #include "CanonMessage.h"
-//#include "CanonDevice.h"
+//#include "miro/Synch.h"
 
 #include <iostream>
 
@@ -193,9 +193,15 @@ namespace Canon
 
   void
   Answer::init() {
+    mutex.acquire();
     index_=0;
     header(0x3132);
     valid=false;
+  }
+
+  void 
+  Answer::done() {
+    mutex.release();
   }
 
   void
