@@ -8,6 +8,9 @@
  <section name="Sparrow99" >
   <parameter name="SparrowBoard" >
    <parameter value="/dev/can/0" name="Device" />
+   <parameter value="0.050000" name="PanLatency" />
+   <parameter value="0.500000" name="PanSwing" />
+   <parameter value="3." name="PanAccuracy" />
    <parameter name="InfraredDescription" >
     <parameter value="2" name="ScanType" />
     <parameter value="Infrared" name="EventName" />
@@ -139,13 +142,10 @@
      <parameter value="0" name="Offset" />
     </parameter>
    </parameter>
-   <parameter value="0.000000" name="PanLatency" />
    <parameter value="0.050000" name="ButtonsPollInterval" />
    <parameter value="1.0776" name="TransFactor" />
    <parameter value="28.2" name="Deg2ServoTicks" />
    <parameter value="1.000000" name="WatchdogTimeout" />
-   <parameter value="100" name="PanMSecPerRad" />
-   <parameter value="200" name="PanSwing" />
    <parameter value="3700" name="Servo0MidPulse" />
    <parameter value="15" name="MaxAccel" /><!-- SollDistanz zum Torrueckwand 10 -->
    <parameter value="1555" name="Diameter" />
