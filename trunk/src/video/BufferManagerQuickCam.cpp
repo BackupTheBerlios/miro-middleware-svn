@@ -72,7 +72,7 @@ namespace Video
     }
 
     // set time stamp
-    bufferStatus_[leaderBuffer_].time = ACE_OS::gettimeofday();
+    bufferStatus_[leaderBuffer_].time = ACE_OS::gettimeofday() - camParams_->latency;
 
     // update the leader/follower buffer index
     int index = leaderBuffer_;

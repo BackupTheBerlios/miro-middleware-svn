@@ -68,7 +68,7 @@ namespace Video
     if (!done)
       throw Miro::Exception("DeviceMeteor::grabImage");
 
-    bufferStatus_[_index].time = ACE_OS::gettimeofday();
+    bufferStatus_[_index].time = ACE_OS::gettimeofday() - camParams_->latency;
 
   }
 

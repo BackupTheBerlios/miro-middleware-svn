@@ -14,6 +14,7 @@
 #include "miro/Synch.h"
 #include "miro/Exception.h"
 #include "miro/Log.h"
+#include "miro/Parameters.h"
 #include "idl/ExceptionC.h"
 
 #include <vector>
@@ -139,6 +140,8 @@ namespace Video
     unsigned int currentBuffer_;
     //! The status of each managed buffer in the buffer array.
     BufferVector bufferStatus_;
+    //! Pointer to the camera parameters of this device
+    const Miro::CameraParameters * camParams_;
   };
 
   inline

@@ -61,7 +61,7 @@ namespace Video
   {
     dc1394_dma_single_capture(pCamera_);
 
-    bufferStatus_[_index].time = ACE_OS::gettimeofday();
+    bufferStatus_[_index].time = ACE_OS::gettimeofday() - camParams_->latency;
     bufferStatus_[_index].buffer = 
       reinterpret_cast<unsigned char *>(pCamera_->capture_buffer);
   }

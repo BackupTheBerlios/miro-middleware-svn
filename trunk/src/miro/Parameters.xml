@@ -20,7 +20,7 @@
   </config_group>
 
   <config_group name="Video">
-    <config_item name="Camera" parent="Config" instance="true">
+    <config_item name="Camera" parent="Config" final="true">
       <config_parameter name="ncx" type="double" default="768.0" />
       <config_parameter name="nfx" type="double" default="384.0" />
       <config_parameter name="dx" type="double" default="0.00625" />
@@ -30,7 +30,6 @@
       <config_parameter name="cx" type="double" default="0." />
       <config_parameter name="cy" type="double" default="0." />
       <config_parameter name="sx" type="double" default="0." />
-
       <config_parameter name="f" type="double" default="0." />
       <config_parameter name="kappa" type="double" default="0." />
       <config_parameter name="p1" type="double" default="0." />

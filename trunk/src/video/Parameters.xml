@@ -30,6 +30,7 @@
 
     <config_item name="Device" parent="Filter" final="false">
       <config_parameter name="device" type="string" default="/dev/v4l/video0" />
+      <config_parameter name="camera" type="Miro::CameraParameters" />
     </config_item>
 
     <config_item name="DeviceDummy" parent="Device" final="true">
