@@ -435,7 +435,8 @@ couple of other targets, that may be of interest:
   from the xml files and the client and server stubs generated from
   the idl files.
 \item[distclean:] Removes all of the above files and the automatically
-  generated files generated from the autotools.
+  generated \texttt{Makfiles} generated from the autotools. So you
+  have to reconfigure the packet after this.
 \item[dist:] Generates a gzipped tar-file containing a snapshot of the
   actual \miro directory, including all the necessary source files to
   configure and build \miro.
@@ -444,7 +445,7 @@ couple of other targets, that may be of interest:
   distribution is self-contained. You can change the configure options
   that are used for this make run within the toplevel
   \texttt{Makefile.am} by changing the
-  \texttt{DISTCHECK_CONFIGURE_FLAGS} variable.
+  \texttt{DISTCHECK\_CONFIGURE\_FLAGS} variable.
 \end{description}
 
 \subsubsection{Developer information}
@@ -508,11 +509,12 @@ versions:
 \end{itemize}
 
 Normally, it should be enough, to use the available examples within
-\miro to add some small additions to the build process, but sometimes
-a deeper understanding of the used tools might be necessary. Please
-have a look at the manuals, available e.g.\ directly from the GNU
-homepage: \texttt{http://www.gnu.org/manual/} or read the freely
-available book on \texttt{http://sources.redhat.com/autobook/}.
+\miro (see section \ref{sec:makefile}) to add some small additions to
+the build process, but sometimes a deeper understanding of the used
+tools might be necessary. Please have a look at the manuals, available
+e.g.\ directly from the GNU homepage:
+\texttt{http://www.gnu.org/manual/} or read the freely available book
+on \texttt{http://sources.redhat.com/autobook/}.
 
 \section{\miro Directory Structure}
 
