@@ -12,6 +12,9 @@
 #include "FileSet.h"
 #include "ChannelManager.h"
 
+#define QT_NO_TEXTSTREAM
+#include <qtl.h>
+
 namespace
 {
   struct LFLess : public std::binary_function<LogFile const *, LogFile const *, bool>
@@ -148,7 +151,7 @@ FileSet::files() const
   QStringList l;
   FileVector::const_iterator first, last = file_.end();
   for (first = file_.begin(); first != last; ++first)
-    l.push_back((*first)->name());
+    l.append((*first)->name());
   qHeapSort(l);
 
   return l;

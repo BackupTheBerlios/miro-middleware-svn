@@ -18,6 +18,7 @@
 
 #include "miro/Exception.h"
 
+#define INCLUDE_MENUITEM_DEF
 #include <qapplication.h>
 #include <qpopupmenu.h>
 #include <qmenubar.h>
@@ -225,7 +226,7 @@ MainForm::files()
       fileListDialog_->modified()) {
     QStringList newFiles = fileListDialog_->result();
 
-    QStringList::iterator first, last = oldFiles.end();
+    QStringList::Iterator first, last = oldFiles.end();
     for (first = oldFiles.begin(); first != last; ++first) {
       if (newFiles.find(*first) == newFiles.end())
 	fileSet_.delFile(*first);
