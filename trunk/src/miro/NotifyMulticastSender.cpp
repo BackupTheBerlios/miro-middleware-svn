@@ -27,6 +27,7 @@
 #include "NotifyMulticastParameters.h"
 #include "NotifyMulticastDomainEventFilter.h"
 
+#include "TimeHelper.h"
 #include "Log.h"
 
 /* ACE includes */
@@ -541,7 +542,11 @@ namespace Miro
     int 
     Sender::sendData(iovec *_iov, size_t _iovLen) 
     {
+      ACE_Time_Value start = ACE_OS::gettimeofday();
       return configuration_->getSocket()->send(_iov, (int)_iovLen);
+      ACE_Time_Value stop = ACE_OS::gettimeofday();
+
+      MIRO_DBG_OSTR(NMC, LL_PRATTLE, "Sender: time for sending=" << (stop - start));
     }
 	
     /** Set an Object for event filtering.

@@ -209,7 +209,7 @@ namespace Miro
 	  if (!e2.isNull() &&
 	      ( (n2.nodeName() == "parameter" &&
 	         e2.attribute("name") == category) ||
-	      (n2.nodeName() == category))) {
+		(n2.nodeName() == category))) {
 	    parameters <<= n2;
 	  }
 	  n2 = n2.nextSibling();
