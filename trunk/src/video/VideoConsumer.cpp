@@ -59,11 +59,11 @@ namespace Video
     while (!canceled())
     {
       try {
-	clock_t start = clock();
+	// clock_t start = clock();
 	videoDevice.setBrokerRequestQueue();
 	videoDevice.calcConnectivity();
 	videoDevice.processFilterTree();
-	std::cout << "TIME " << (double)(clock() - start)/CLOCKS_PER_SEC  << std::endl;
+	// std::cout << "TIME " << (double)(clock() - start)/CLOCKS_PER_SEC  << std::endl;
 
       }
       catch(Miro::CException& e) {
