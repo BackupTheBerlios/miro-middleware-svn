@@ -195,6 +195,9 @@ namespace Video
      */
     unsigned int outputBuffers() const throw();
 
+    //! Accessor method for the filters paramters.
+    FilterParameters const * parameters() const throw();
+
   protected:
     //--------------------------------------------------------------------------
     // protected methods
@@ -238,6 +241,11 @@ namespace Video
 			 FilterImageParameters const * _params);
     //! Set the image index of the pending video broker getNextImageSet requests.
     virtual void setBrokerRequests();
+
+    //! Return parent node of the filter tree.
+    Filter * parentNode() throw();
+    //! Return the root node of the filter tree.
+    Filter * rootNode() throw();
 
   public:
     //! Add a broker request for the next image.
@@ -334,7 +342,6 @@ namespace Video
     FilterSuccVector succLink_;
     //! VideoBroker request queue.
     BrokerLinkVector brokerLink_;
-
 
     // Connection management.
 
@@ -492,6 +499,18 @@ namespace Video
   Filter::interfaceAllowed() const throw()
   {
     return interfaceAllowed_;
+  }
+
+  inline
+  FilterParameters const *
+  Filter::parameters() const throw() {
+    return params_;
+  }
+
+  inline
+  Filter *
+  Filter::parentNode() throw() {
+    return pre_;
   }
 }
 

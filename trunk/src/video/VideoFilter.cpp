@@ -133,7 +133,7 @@ namespace Video
     FilterParameters * params = this->getParametersInstance();
 
     // initialize the parameter instance from the config file
-    _config.getParameters(this->name(), *params);
+    _config.getInstance(this->name(), *params);
 
     // debug output
     std::cout << name() << std::endl;
@@ -519,5 +519,15 @@ namespace Video
     // std::cout << __PRETTY_FUNCTION__ << std::endl;
 
     brokerLink_.push_back(_brokerRequest);
+  }
+
+  Filter * 
+  Filter::rootNode() throw() 
+  {
+    if (pre_ != NULL) {
+      MIRO_ASSERT(pre_ != this);
+      return pre_->rootNode();
+    }
+    return this;
   }
 }
