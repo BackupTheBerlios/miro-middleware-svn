@@ -56,7 +56,7 @@ PatternWidget::PatternWidget(PatternXML * _pattern,
   title_(NULL),
   transitions_(NULL)
 {
-  QSizePolicy sp(QSizePolicy::Fixed, QSizePolicy::Fixed);
+  //  QSizePolicy sp(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
   //  setSizePolicy(sp);
   setFrameStyle(QFrame::WinPanel | QFrame::Raised);
@@ -252,8 +252,6 @@ PatternWidget::paintEvent(QPaintEvent* event)
 void
 PatternWidget::drawArrows(QPainter * p)
 {
-  int behaviours = numBehaviours();
-
   p->setPen(darkGreen);
   
   // get list with transitions //
