@@ -76,7 +76,7 @@ namespace Sparrow
     buttonsPollInterval(0, 50000),
     servo0MidPulse(3600),
     servo1MidPulse(3300),
-    deg2servoTicks(27.),
+    deg2servoTicks(28.2),
     panLatency(0),
     panMSecPerRad(100),
     panSwing(200),
