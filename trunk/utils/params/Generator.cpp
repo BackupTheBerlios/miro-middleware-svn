@@ -229,6 +229,10 @@ Generator::getClass(const QString& _name) const
   ClassVector::const_iterator first, last = class_.end();
   for (first = class_.begin(); first != last; ++first)
     if (first->name() == _name)
+#if __GNUC__ > 2 \
       return first.base();
+#else
+      return first;
+#endif
   return NULL;
 }
