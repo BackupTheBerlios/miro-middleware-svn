@@ -34,7 +34,6 @@ sources1 = \
 	Client.cpp \
 	Server.cpp \
 	IO.cpp \
-	ObjectVector.cpp \
 	TimeHelper.cpp \
 	TimeSeries.cpp \
 	VideoHelper.cpp \
@@ -114,13 +113,13 @@ sources2 = \
 	LogTypeRepository.cpp \
 	LogReader.cpp \
 	LogWriter.cpp \
+	ObjectVectorImpl.cpp \
 	RangeSensorImpl.cpp \
 	OdometryImpl.cpp \
 	MotionImpl.cpp \
 	DifferentialMotionImpl.cpp \
 	BatteryImpl.cpp \
-	BehaviourEngineImpl.cpp \
-	ObstImpl.cpp
+	BehaviourEngineImpl.cpp 
 
 libmiroSvc_a_SOURCES = $(sources2)
 

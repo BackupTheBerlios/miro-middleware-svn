@@ -217,7 +217,7 @@ namespace Miro
 	      // write number of events
 	      // direct writing is allowed, 
 	      // as the alignement is correct and we write in host byte order
-	      *reinterpret_cast<CORBA::ULONG*>(numEventsSlot_) = ++numEvents_;
+	      *reinterpret_cast<ACE_INT32 *>(numEventsSlot_) = ++numEvents_;
 
 	      totalLength_ = ostr_.total_length();
 	      return true;
