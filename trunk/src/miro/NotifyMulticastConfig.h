@@ -56,6 +56,7 @@
 
 /* g++lib includes */
 #include <string>
+#include <fstream>
 
 
 namespace Miro {
