@@ -135,8 +135,14 @@ namespace FaulMotor
 	    status_.position.point.y = (long) yPos_;
 	  }
 	  else {
-	    status_.position.point.x = (long) yPos_;
-	    status_.position.point.y = (long) -xPos_;
+	    if (Sparrow::Parameters::instance()->sparrow2003){
+               status_.position.point.x = (long) -yPos_;
+	       status_.position.point.y = (long) xPos_;
+	    }
+	    else{
+	       status_.position.point.x = (long) yPos_;
+	       status_.position.point.y = (long) -xPos_;
+	    }
 	  }
 	  status_.velocity.translation = (long)(dist / deltaT);
 	  status_.velocity.rotation = turn / deltaT;
