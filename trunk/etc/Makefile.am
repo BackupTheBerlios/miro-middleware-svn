@@ -21,10 +21,10 @@ data = \
 	barney.xml \
 	coyote.xml \
 	eve.xml \
-	haeltnix.xml \
 	passtnix.xml \
 	roadrunner.xml \
-	siehtnix.xml \
+	rosita.xml \
+	speedy.xml \
 	sphinx.dic \
 	sphinx.lm \
 	stanleft.xml \

@@ -1,13 +1,13 @@
 <!DOCTYPE MiroConfigDocument>
 <config>
  <section name="Robot" >
-  <parameter name="Robot" >
+  <parameter name="Miro::RobotParameters" >
    <parameter value="stan" name="Name" />
    <parameter value="B21" name="Type" />
   </parameter>
  </section>
  <section name="B21" >
-  <parameter name="Base" >
+  <parameter name="Base::Parameters" >
    <parameter value="/dev/cur0" name="Device" />
    <parameter name="TtyParams" >
     <parameter value="38400" name="Baudrate" />
@@ -24,12 +24,12 @@
     <parameter value="-950" name="MinTranslation" />
    </parameter>
   </parameter>
-  <parameter name="Msp" >
+  <parameter name="Msp::Parameters" >
    <parameter value="/dev/abus" name="Device" />
   </parameter>
  </section>
  <section name="Sick" >
-  <parameter name="Laser" >
+  <parameter name="Laser::Parameters" >
    <parameter value="/dev/laser" name="Device" />
    <parameter name="TtyParams" >
     <parameter value="500000" name="Baudrate" />
@@ -43,13 +43,13 @@
   </parameter>
  </section>
  <section name="Notification" >
-  <parameter name="Logging" >
-   <parameter name="TypeName" />
+  <parameter name="Miro::LogNotifyParameters" >
+   <parameter name="TypeName">
      <parameter value="Sonar" />
      <parameter value="Odometry" />
      <parameter value="ArbitrateChange" />
      <parameter value="PatternChange" />
-   <parameter value="157286400" name="MaxFileSize" />
+   </parameter>
   </parameter>
  </section>
 </config>

@@ -1,13 +1,13 @@
 <!DOCTYPE MiroConfigDocument>
   <config>
  <section name="Robot" >
-  <parameter name="Robot" >
+  <parameter name="Miro::RobotParameters" >
    <parameter value="eve" name="Name" />
    <parameter value="PerformancePeoplebot" name="Type" />
   </parameter>
  </section>
  <section name="ActiveMedia" >
-  <parameter name="PioneerBoard" >
+  <parameter name="Pioneer::Parameters" >
    <parameter value="/dev/ttyS0" name="Device" />
    <parameter name="TtyParams" >
     <parameter value="9600" name="Baudrate" />
@@ -256,7 +256,7 @@
  </section>
 
  <section name="Video" >
-  <parameter name="Video" >
+  <parameter name="Video::Parameters" >
    <parameter value="bgr" name="Palette" />
    <parameter value="384" name="Width" />
    <parameter value="288" name="Height" />
@@ -278,26 +278,27 @@
     </parameter>
    </parameter>
 
-  <parameter name="DeviceBTTV">
+  <instance type="Video::DeviceBTTV" name="DeviceBTTV">
    <parameter value="/dev/video0" name="Device" />
    <parameter value="2" name="Buffers" />
    <parameter value="tuner" name="Source" />
    <parameter value="ntsc" name="Format" />
-  </parameter>
+  </instance>
 
-  <parameter name="FilterFlip">
+  <instance type="Video::FilterFlip" name="FilterFlip">
    <parameter value="true" name="InterfaceInstance" />
    <parameter name="Interface">
     <parameter value="BGR" name="Name" />
    </parameter>
-  </parameter>
+  </instance>
  
-  <parameter name="FilterSwap3">
+  <instance type="Video::FilterSwap3" name="FilterSwap3">
    <parameter value="true" name="InterfaceInstance" />
-  </parameter>
+  </instance>
  </section>
+
  <section name="Notification" >
-  <parameter name="Logging" >
+  <parameter name="Miro::LogNotifyParameters" >
    <parameter name="TypeName" />
    <parameter value="157286400" name="MaxFileSize" />
   </parameter>

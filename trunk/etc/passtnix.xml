@@ -1,13 +1,13 @@
 <!DOCTYPE MiroConfigDocument>
   <config>
  <section name="Robot" >
-  <parameter name="Robot" >
+  <parameter name="Miro::RobotParameters" >
    <parameter value="passtnix" name="Name" />
    <parameter value="Sparrow99" name="Type" />
   </parameter>
  </section>
  <section name="Faulhaber" >
-  <parameter name="FaulMotor" >
+  <parameter name="FaulMotor::Parameters" >
    <parameter name="LeftWheel">
      <parameter value="/dev/tts/2" name="Device" />
    </parameter>
@@ -25,8 +25,8 @@
   </parameter>
  </section>
 
- <section name="Sparrow99" >
-  <parameter name="SparrowBoard" >
+ <section name="Sparrow" >
+  <parameter name="Sparrow::Parameters" >
    <parameter value="true" name="Faulhaber" />
    <parameter value="/dev/can/0" name="Device" />
    <parameter value="0.060000" name="PanLatency" />
@@ -111,120 +111,9 @@
   </parameter>
  </section>
 
- <section name="Video" >
-  <parameter name="Video" >
-   <parameter value="bgr" name="Palette" />
-   <parameter value="384" name="Width" />
-   <parameter value="288" name="Height" />
-   <parameter name="Filter">
-     <parameter value="DeviceBTTV" name="Name" />
-     <parameter value="DeviceBTTV" name="Type" />
-     <parameter name="Successor" >
-      <parameter name="Filter" >
-       <parameter value="FilterHalfImage" name="Name" />
-       <parameter value="FilterHalfImage" name="Type" />
-       <parameter name="Successor" >
-        <parameter name="Filter" >
-         <parameter value="FilterSwap3" name="Name" />
-         <parameter value="FilterSwap3" name="Type" />
-         <parameter name="Successor" >
 
-	   <parameter name="Filter" >
-	     <parameter value="FilterYUV422Save" name="Name" />
-	     <parameter value="FilterYUV422Save" name="Type" />
-	   </parameter>
-
-          <parameter name="Filter" >
-           <parameter value="FilterRGBtoGray" name="Name" />
-           <parameter value="FilterRGBtoGray" name="Type" />
-           <parameter name="Successor" >
-            <parameter name="Filter" >
-             <parameter value="FilterGraytoCanny" name="Name" />
-             <parameter value="FilterGraytoCanny" name="Type" />
-            </parameter>
-           </parameter>
-          </parameter>
-          <parameter name="Filter" >
-          <parameter value="FilterRGBtoIndex" name="Name" />
-          <parameter value="FilterRGBtoIndex" name="Type" />
-          <parameter name="Successor" >
-           <parameter name="Filter" >
-            <parameter value="FilterIndextoIndex" name="Name" />
-            <parameter value="FilterIndextoIndex" name="Type" />
-           </parameter>
-          </parameter>
-         </parameter>
-        </parameter>
-       </parameter>
-      </parameter>
-     </parameter>
-    </parameter>
-   </parameter>
-  </parameter>
-
-  <parameter name="DeviceBTTV">
-   <parameter value="/dev/video0" name="Device" />
-  </parameter>
-
-  <parameter name="FilterSwap3">
-   <parameter value="true" name="InterfaceInstance" />
-  </parameter>
-
-      <parameter name="FilterYUV422Save" >
-	<parameter value="false" name="Activate" />
-	<parameter value="10" name="Interval" />
-	<parameter value="passtnix_" name="Basename" />
-	<parameter value="true" name="InterfaceInstance" />
-	<parameter name="Interface" >
-	  <parameter value="VideoBla" name="Name" />
-	</parameter>
-      </parameter>
-
-  <parameter name="FilterRGBtoGray">
-   <parameter value="true" name="InterfaceInstance" />
-   <parameter name="Interface" >
-    <parameter value="VideoGray" name="Name" />
-   </parameter>
-  </parameter>
-
-  <parameter name="FilterGraytoCanny">
-   <parameter value="true" name="InterfaceInstance" />
-   <parameter name="Interface" >
-    <parameter value="VideoCanny" name="Name" />
-   </parameter>
-  </parameter>
-
-  <parameter name="FilterRGBtoIndex">
-   <parameter value="true" name="InterfaceInstance" />
-   <parameter name="Interface" >
-    <parameter value="VideoIndex" name="Name" />
-   </parameter>
-  </parameter>
-
-  <parameter name="FilterIndextoIndex">
-   <parameter value="true" name="InterfaceInstance" />
-   <parameter name="Interface" >
-    <parameter value="VideoIndexDebug" name="Name" />
-   </parameter>
-  </parameter>
-
-  <parameter name="Camera" >
-   <parameter value="0.060000" name="Latency" />
-   <parameter value="34.0" name="Alpha" />
-   <parameter value="570" name="Height" />
-   <parameter value="193.711293" name="Cx" />
-   <parameter value="136.058825" name="Cy" />
-   <parameter value="4.098558" name="F" />
-   <parameter value="1.703137e-02" name="Kappa" />
-   <parameter value="1" name="Sx" />
-   <parameter value="0.00625" name="Dx" />
-   <parameter value="0.0125" name="Dy" />
-   <parameter value="384" name="Nfx" />
-   <parameter value="786" name="Ncx" />
-  </parameter>
- </section>
  <section name="Notification" >
-  <parameter name="Logging" >
+  <parameter name="LogNotifyParameters" >
    <parameter name="TypeName">
      <parameter value="Pan" />
      <parameter value="Infrared" />
@@ -243,16 +132,12 @@
    </parameter>
    <parameter value="157286400" name="MaxFileSize" />
   </parameter>
-  <parameter name="NotifyMulticast" >
-   <parameter value="225.2.2.1:41006" name="Multicastgroup" />
-   <parameter value="500" name="Messagetimeout" />
+  <parameter name="Miro::NMC::Parameters" >
+   <parameter value="225.2.2.1:41006" name="MulticastGroup" />
+   <parameter value="0.50000" name="MessageTimeout" />
    <parameter name="Subscription">
-     <parameter value="BallPosition" />
-     <parameter value="GoalPosition" />
-     <parameter value="LocalizedPosition" />
      <parameter value="SharedWorld" />
    </parameter>
-   <parameter name="Logfile" value="/home/passtnix/NMC.log" />
   </parameter>
  </section>
 </config>
