@@ -61,8 +61,8 @@ The \miro developers are (in alphabetical order):
 
 \begin{itemize}
   \item The Linux-kernel must be compiled with multicast enabled.
-  \item ACE 5.1.x and TAO 1.1.x (we currently recommend the latest beta)
-  \item gcc 2.95.3 
+  \item ACE 5.2.x and TAO 1.2.x (we currently recommend the latest beta)
+  \item gcc 2.95.3 (and above)
   \item QT 2.3 (and above)
   \item doxygen / LaTeX (for documentation)
   \item {\tt /soft/ACE\_wrappers/ace} must be part of {\tt LD\_LIBRARY\_PATH}
@@ -76,29 +76,51 @@ The \miro developers are (in alphabetical order):
 Miro
   |
   +--- idl                        all idl descriptions
-  +--- include (*)                all include files
+  +--- include                    includes (empty)
   |      |
-  |      +-- auto_idl (*)        header files automatically produced by the idl compiler
+  |      +-- make_includes        includes for make
   +--- src
   |      |
   |      +-- abus                 abus utilities
-  |      +-- miro                 miro utilities
-  |      +-- c1lib                c1  utilities  (RENAME!)
-  |      +-- mcp                  mcp utilities
-  |      +-- msp                  msp utilities
-  |      +-- base                 base server (sonar, IR, tactile servers)
-  |      +-- laser                laser server
-  |      +-- auto_idl (*)        source files automatically produced by the idl compiler
-  +--- bin (*)                    all binaries (except demos)
-  +--- demo                       
+  |      +-- buttons              B21 button interface implementation
+  |      +-- mcp                  mcp utilities (b21 mobile base)
+  |      +-- miro                 miro class framework and auto-generated idl files
+  |      +-- msp                  msp utilities (sonar, infrared tactile)
+  |      +-- base                 B21 interface implementations (sonar, IR, tactile, ...)
+  |      +-- b21Base              B21 base services binary
+  |      +-- laser                SICK laser service
+  |      +-- speech               speech service (DoubleTalk cards)
+  |      +-- psos                 psos utilities
+  |      +-- pioneer              Pioneer1 interface implementations (sonar, motion, ...)
+  |      +-- pioneerBase          Pioneer1 base services binary
+  |      +-- can                  can bus utilities
+  |      +-- sparrow              Sparrow99 interface implementations (infrared, motion, ...)
+  |      +-- sparrowBase          Sparrow99 base services binary
+  |      +-- video                Frame grabber interface
+  |      +-- image                Frame grabber interface (deprecated)
+  +--- bin                        all binaries
+  +--- tests                      test suite
+  +--- performance-tests          test suite for service/hardware performance
+  +--- examples                   set of examples
+  +--- utils                       
   |      |
-  |      +-- qtLaser              a simple graphical laser client
-  |      +-- qtSonar              a simple graphical sonar client
+  |      +-- qtRangeSensor        GUI range sensor visualization
+  |      +-- qtTouchPad           GUI remote motion control by mouse
+  |      +-- qtJoyStick           GUI remote motion control by joystick
+  |      +-- notify               generic logging utilities
+  |      +-- policyEditor         GUI PolicyEditor for behaviour programming
+  |      +-- logPlayer            GUI player for log files
+  |      +-- nsIOR                CORBA Naming Service IOR retrival utility
+  |      +-- sparrow              Sparrow99 utilities
+  |      +-- makeParams           Parameter file auto code generation (soon to come)
   +--- doc
   |      |
-  |      +-- html                 html documentation (miro.html)
-  |      +-- tex                  TeX documentation (miro.ps)
-  +--- lib (*)                    all libraries
+  |      +-- html                 html documentation (doxygen)
+  |      |     |
+  |      |     +-- idl (*)        documentation of idl interfaces (index.html)
+  |      |     +-- cpp (*)        documentation of c++ class framework
+  |      +-- tex                  TeX documentation (miro_manual.ps, miro_reference.ps)
+  +--- lib                        all libraries
 \end{verbatim}
 
 Note: \\ 
@@ -112,48 +134,15 @@ repository but are dynamically built when calling
 
 The following targets can be called in the main Makefile:
 \begin{itemize}
-  \item all
-  \item clean 
-  \item distclean 
-  \item depclean 
+  \item all (default)
+  \item depend (dont call before first complete build!)
+  \item clean (remove object files)
+  \item distclean (remove all generated files)
 \end{itemize}
 
-Simply typing {\tt make} calls the target {\em all}.
-
-
-\section{Target: build}
-
-The main {\tt Makefile} calls 
-\begin{itemize}
-  \item {\tt idl/Makefile}
-  \item {\tt src/Makefile}
-  \item {\tt doc/Makefile}
-\end{itemize}
-
-
-{\tt idl/Makefile} creates the directories
-{\tt include/auto\_idl} and {\tt src/auto\_idl}. Then it calls
-the idl-compiler in order to translate all idl-files. The generated
-.hh- and .cc-files are moved to the created directories.
-
-{\tt src/Makefile} calls make in all subdirectories.
-
-{\tt doc/Makefile} generates both HTML and \TeX documentation by
-invoking {\em doxygen} and \LaTeX.
-
-
-\section{Target: clean}
-
-- *.o 
-
-
-\section{Target: distclean}
-
-- dependency files
-
-- libs
-
-- binaries
+Simply typing {\tt make} calls the target {\em all}.  To get the
+documentation built, change into the directory \$(MIRO\_ROOT)/doc and
+call make. Note that doxygen has to be installed.
 
 %% =============================================================================
 
@@ -169,6 +158,7 @@ doxygen is used
 Example:
 
 \begin{lstlisting}[frame=tb]{}
+//! Brief online description of the class
 /**
  * Some comments about this class are written here.
  * You can use multiple lines.

@@ -2,6 +2,7 @@
 
 \section{Files}
 
+All files start with a leading upper case character.
 
 \subsection{Header Files vs.\ Source Files}
 
@@ -13,62 +14,53 @@
   definitions. This is important, because each header file is included in
   all source files that need the declarations and so it may only contain
   declarations that may be duplicated.
+
 \item[Source files:]
-  These files contain the {\em definitions} of
-  methods, functions, and variables.
+  These files contain the {\em implementations} of
+  methods, functions, and variables, declared in the corresponding header file.
 \end{description}
 
 Exceptions: 
 
 \begin{description}
-\item[Inline code:]
-  Methods and functions that are very small or
-  mainly used in loops are often implemented as inline code. The function is
-  not called, but the function body is directly substituted in
-  the code.
+\item[Inline code:] Methods and functions that are very small or
+  mainly used in loops are often implemented as inline code. The
+  function is not called, but the function body is directly
+  substituted in the code.
 \item[Template definitions:]
   These are generic class or function
   definitions, eg.\ a generic vector. The exact type (eg.\ vector of strings)
   is given at compile time. Template are mostly used in general class
-  libraries.
+  libraries. Those also are to be located at the end of the header file.
 \end{description}
 
 Both exceptions must be known at compile time. This means that they can not be
 implemented in a source file ({\tt .c}-file), then compiled to an object
-file, and later linked to the application. In order to make it explicit that
-the header file contains code, inline code and template definitions are
-written into separate header files ({\tt .ih} and {\tt .th}). These
-files are included by the standard header file ({\tt .hh}, see section
-\ref{SEC_FILE_STRUCTURE} item \ref{ITEM_IH_TH} and the example in
-\ref{SEC_GENERIC_HEADER}).
-
+file, and later linked to the application. 
+Therefore they are to be located at the end of the
+header file. Please do not inline inline function within the class
+declarations.
 
 \subsection{File Extensions}
 
 \begin{tabular}{ll}
-  {\tt .cc}  & C++ file \\
+  {\tt .cpp}  & C++ file \\
   {\tt .c}   & C file \\
-  {\tt .hh}  & C++ header file\\
-  {\tt .h}   & C header file \\
+  {\tt .h}   & C header file
 \end{tabular}
+
+Note that especially the build rules for libraries and dependcies will
+fail, if other extensions are used.
 
 
 \subsection{File Names}
 
 \begin{enumerate}
-\item File names begin with a lowercase letter.
+\item File names begin with a uppercase letter.
 \item In names which consist of more than one word the words are
   written together and each word that follows the first is begun with an
   uppercase letter. \\ 
-  Example: {\tt laserClientGlobals.cc}
-\item Client and server modules are implemented in files named
-  {\tt moduleServer.cc/hh} and {\tt moduleClient.cc/hh}. The header
-  files are included by the user. \\ 
-  Example: {\tt laserClient.hh}, {\tt sonarClient.hh}
-\item Internal files used by a client or server module are named
-  {\tt moduleServerSubfile.cc/hh} or {\tt moduleClientSubfile.cc/hh}.
-  These header files are not included by the user. \\
-  Example: {\tt laserClientGlobals.hh}, {\tt laserClientTypedefs.hh}
+  Example: {\tt SickLaserService.cc}
 \end{enumerate}
 
 
@@ -78,9 +70,8 @@ files are included by the standard header file ({\tt .hh}, see section
 \begin{enumerate}
 \item In C files, {\tt \#ifdef c\_plus\_plus extern "C"} must be
   used in order to compile the files with a C++ compiler. \\
-  Remark: See the example in \ref{SEC_GENERIC_HEADER}. \\
-  {\em Not implemented yet !!    Exact implementation !!}
-\item The directive {\tt \#include "filename.hh"} is used for
+  Remark: See the example in \ref{SEC_GENERIC_HEADER}.
+\item The directive {\tt \#include "Filename.h"} is used for
   user-prepared include files.
 \item The directive {\tt \#include <filename.hh>} is used for
   include files from libraries.
