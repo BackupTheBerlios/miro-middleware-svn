@@ -99,6 +99,7 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 	   &structuredPushSupplier_, true),
 
   // Sparrow board initialization
+  sparrowConnection(NULL),
   /*pSparrowConsumer(new Sparrow::Consumer(*sparrowConnection,
 					 ( (Sparrow::Parameters::instance()->faulhaber)?
 					   NULL :
@@ -233,6 +234,7 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 	   &structuredPushSupplier_, true),
 
   // Sparrow board initialization
+  sparrowConnection(NULL),
   /*pSparrowConsumer(new Sparrow::Consumer(*sparrowConnection,
 					 ( (Sparrow::Parameters::instance()->faulhaber)?
 					   NULL :
@@ -421,12 +423,15 @@ SparrowBase::~SparrowBase()
 
   DBG(cout << "Shutting down sparrow board." << endl);
   //  sparrowConnection.readTables();
-  sparrowConnection->fini();
+  if (sparrowConnection)
+    sparrowConnection->fini();
+  std::cout << "success" << endl;
+
   if (pPioneer) {
     DBG(cout << "Shutting down pioneer board." << endl);
     delete pPioneer;
   }
-
+  std::cout << "reactor task" << endl;
   reactorTask.cancel();
   DBG(cout << "reactor Task canceled." << endl);
 
