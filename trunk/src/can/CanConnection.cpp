@@ -121,6 +121,8 @@ namespace Can
   {
     static string errorMessage = "SparrowBoard write failed." \
       "\nThe SparrowBoard probably crashed.";
+    std::cerr << endl << endl << errorMessage << endl << endl;
+    abort();
     throw Miro::Exception(errorMessage);
   }
 };
