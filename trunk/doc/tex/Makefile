@@ -34,7 +34,8 @@ FIGDIR = ../fig
 FIGS = \
 	$(FIGDIR)/client_server \
 	$(FIGDIR)/client_server_low_level \
-	$(FIGDIR)/grid_coords
+	$(FIGDIR)/grid_coords \
+	$(FIGDIR)/Miro_behaviours
 
 # tex-files the manual is build from
 MANUAL_FILES = \
@@ -44,6 +45,7 @@ MANUAL_FILES = \
 	servers.tex \
 	clients.tex \
 	writing_a_client.tex \
+	behaviourEngine.tex \
 	writing_a_server.tex
 
 # examples used in the manual
