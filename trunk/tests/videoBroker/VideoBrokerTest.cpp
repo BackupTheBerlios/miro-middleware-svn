@@ -79,6 +79,30 @@ std::ostream& operator << (std::ostream& _ostr, const Miro::FilterTreeIDL& _rhs)
   return _ostr;
 }
 
+void connectToFilters(Miro::FilterTreeIDL const& _tree, 
+		      Miro::ConnectionSetIDL& _connections)
+{
+  if (!CORBA::is_nil(_tree.videoInterface.ior )) {
+    CORBA::ULong index = _connections.length();
+    _connections.length(index + 1);
+    _tree.videoInterface.ior->connect(_connections[index].id);
+    _connections[index].filter = CORBA::string_dup(_tree.videoInterface.name);
+  }
+
+  for (CORBA::ULong i = 0; i < _tree.successors.length(); ++i) {
+    connectToFilters(_tree.successors[i], _connections);
+  }
+}
+
+void disconnectFromFilters(Miro::Client& _client, 
+			   Miro::ConnectionSetIDL& _connections)
+{
+  for (CORBA::ULong i = 0; i < _connections.length(); ++i) {
+    Miro::Video_var video = _client.resolveName<Miro::Video>(_connections[i].filter);
+    video->disconnect(_connections[i].id);
+  }
+}
+
 int main (int argc, char * argv[])
 {
   Miro::Client client(argc, argv);
@@ -88,7 +112,9 @@ int main (int argc, char * argv[])
     char c;
     std::string in;
     do {
-      std::cout << "Possible Commands:" << endl << endl
+      std::cout << "Possible Commands:" << std::endl << std::endl
+		<< " a - Acquire (and release) images from" << std::endl
+		<< "     all video interfaces." << std::endl
 		<< " s - Print filter tree status." << std:: endl
 		<< " q - Quit" << std::endl 
 		<< std::endl;
@@ -97,6 +123,16 @@ int main (int argc, char * argv[])
       c = in[0];
       
       switch (c) {
+      case 'a': {
+	Miro::FilterTreeIDL_var stats = broker->filterTreeStats();
+	Miro::ConnectionSetIDL connections;
+	connectToFilters(stats, connections);
+	Miro::BufferSetIDL_var buffers = new Miro::BufferSetIDL;
+	broker->acquireNextImageSet(connections, buffers);
+	broker->releaseImageSet(connections, buffers);
+	disconnectFromFilters(client, connections);
+	break;
+      }
       case 's': {
 	Miro::FilterTreeIDL_var stats = broker->filterTreeStats();
 	std::cout << "Filter tree status: " << std::endl
@@ -110,8 +146,8 @@ int main (int argc, char * argv[])
     while(c != 'q');
   }
   catch (const CORBA::Exception& e) {
-    std::cerr << "CORBA exception occured: " << endl
-	      << e << endl;
+    std::cerr << "CORBA exception occured: " << std::endl
+	      << e << std::endl;
     return 1;
   }
 
