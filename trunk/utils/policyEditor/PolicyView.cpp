@@ -21,12 +21,12 @@
 #include <qstatusbar.h>
 #include <qcursor.h>
 
-PolicyViewClass::PolicyViewClass(QWidget *parent, 
+PolicyViewClass::PolicyViewClass(QWidget * _parent, 
 				 PolicyDocumentClass& _document) :
-  QWidget(parent, "view"), 
-  document(_document)
+  QWidget(_parent, "view"), 
+  document(_document),
+  parent(_parent)
 {
-  this->parent=parent;
   scrollBar=new QScrollBar(-1000,1000,1,20,0,QScrollBar::Horizontal,this,"Scrollbar");
   scrollBar->setGeometry(0, parent->height()-70,parent->width()-20,20);
   connect (scrollBar, SIGNAL(valueChanged(int)),this,

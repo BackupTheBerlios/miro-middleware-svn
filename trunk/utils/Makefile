@@ -38,6 +38,7 @@ DIRS =		\
 		qtTouchPad \
 		qtJoystick \
 		policyEditor \
+		policyController \
 		Joystick 
 ifneq (,$(findstring Sparrow99,$(MIRO_COMPONENTS)))
   DIRS +=	sparrowBoard

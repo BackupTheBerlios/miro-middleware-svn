@@ -21,28 +21,25 @@ using std::ofstream;
 using std::cout;
 using std::endl;
 
+PolicyDocumentClass::PolicyDocumentClass() :
+  xModificator(0),
+  yModificator(0)
+{
+}
+
 PolicyDocumentClass::~PolicyDocumentClass() 
 {
 }
 
-void PolicyDocumentClass::setWindowSize(int width, int height)
+void 
+PolicyDocumentClass::setWindowSize(int width, int height)
 {
-  halfWindowWidth=width/2;
-  halfWindowHeight=height/2;
-}
-
-PolicyDocumentClass::PolicyDocumentClass(){
-  xModificator=0;
-  yModificator=0;
-}
-
-PolicyConfigClass PolicyDocumentClass::getPolicyConfig()
-{
-  return policyConfig;
+  halfWindowWidth = width/2;
+  halfWindowHeight = height/2;
 }
 
 //------------------------------------------------------------------//
-//---------------------- private methods ---------------------------//
+//---------------------- protected methods ---------------------------//
 //------------------------------------------------------------------//
 
 
@@ -149,10 +146,9 @@ QDomNode PolicyDocumentClass::getNextBehaviourNode(const QString& patternName,
 //---------------------- document methods ---------------------------//
 
 
-void PolicyDocumentClass::loadXML(const QString& filename) 
+void 
+PolicyDocumentClass::loadXML(const QString& filename) 
 {
-  //policyFile = filename;                      // save filename for export
-
   QFile f(filename);
   if (!f.open(IO_ReadOnly))  
     throw std::string("PolicyDocumentClass::loadXML: Error: file not found!");
@@ -165,31 +161,36 @@ void PolicyDocumentClass::loadXML(const QString& filename)
 }
 
 
-void PolicyDocumentClass::saveXML(const QString& filename) const
+void
+PolicyDocumentClass::saveXML(const QString& filename) const
 {
   ofstream outStream(filename.ascii());
   outStream << domDocument.toString() << endl;
 }
 
 
-void PolicyDocumentClass::loadDatabase(const std::string& filename) 
+void 
+PolicyDocumentClass::loadDatabase(const std::string& filename) 
 { 
-  DatabaseVector=policyConfig.getBehaviours();
-  arbiterVector=policyConfig.getArbiters();
+  databaseVector_ = policyConfig.getBehaviours();
+  arbiterVector = policyConfig.getArbiters();
 }
 
-void PolicyDocumentClass::setModified(bool wert)
+void 
+PolicyDocumentClass::setModified(bool wert)
 {
   modified=wert;
 }
 
-bool PolicyDocumentClass::getModified()
+bool
+PolicyDocumentClass::getModified()
 {
   return modified;
 }
 
 
-void PolicyDocumentClass::setNewBehaviourDescriptionFileName(QString file)
+void 
+PolicyDocumentClass::setNewBehaviourDescriptionFileName(const QString& file)
 {
   policyConfig.setNewBehaviourDescriptionFileName(file);
 }
@@ -201,7 +202,8 @@ QString PolicyDocumentClass::getBehaviourDescriptionFileName()
 
 //---------------------- pattern methods ---------------------------//
 
-void PolicyDocumentClass::addPattern(const QString& name, int x, int y)
+void 
+PolicyDocumentClass::addPattern(const QString& name, int x, int y)
 {
   // create new DOM element //
   QDomElement element = domDocument.createElement(XML_TAG_PATTERN);
@@ -238,7 +240,8 @@ void PolicyDocumentClass::addPattern(const QString& name, int x, int y)
 
 
 
-void PolicyDocumentClass::delPattern(const QString& name)
+void 
+PolicyDocumentClass::delPattern(const QString& name)
 {
   // get DOM node of the given pattern //
   QDomNode patternNode = getPatternNode(name);
@@ -252,7 +255,8 @@ void PolicyDocumentClass::delPattern(const QString& name)
 
 
 
-void PolicyDocumentClass::renamePattern(const QString& oldName, const QString& newName)
+void 
+PolicyDocumentClass::renamePattern(const QString& oldName, const QString& newName)
 {
  QDomNode patternNode = getPatternNode(oldName);
  patternNode.toElement().setAttribute("name", newName);
@@ -317,56 +321,65 @@ QStringList PolicyDocumentClass::getPatternNames() const
 }
 
 
-int PolicyDocumentClass::getX(const QString& patternName) const
+int 
+PolicyDocumentClass::getX(const QString& patternName) const
 {
   return (getPatternNode(patternName).toElement().attribute("x",
-  "0").toInt()-xModificator+halfWindowWidth);
+  "0").toInt() - xModificator + halfWindowWidth);
 }
 
 
-int PolicyDocumentClass::getY(const QString& patternName) const
+int 
+PolicyDocumentClass::getY(const QString& patternName) const
 {
   return (getPatternNode(patternName).toElement().attribute("y",
       "0").toInt()-yModificator+halfWindowHeight);
 }
 
 
-void PolicyDocumentClass::setX(const QString& patternName, int x)
+void 
+PolicyDocumentClass::setX(const QString& patternName, int x)
 {
   getPatternNode(patternName).toElement().setAttribute("x",
       x+xModificator-halfWindowWidth);
 }
 
 
-void PolicyDocumentClass::setY(const QString& patternName, int y)
+void 
+PolicyDocumentClass::setY(const QString& patternName, int y)
 {
   getPatternNode(patternName).toElement().setAttribute("y",
       y+yModificator-halfWindowHeight);
 }
 
-void PolicyDocumentClass::setxModificator(int value)
+void 
+PolicyDocumentClass::setxModificator(int value)
 {
   xModificator=value;
 }
     
 
-int PolicyDocumentClass::getxModificator()
+int 
+PolicyDocumentClass::getxModificator()
 {
   return xModificator;
 }
 
-void PolicyDocumentClass::setyModificator(int value)
+void
+PolicyDocumentClass::setyModificator(int value)
 {
   yModificator=value;
 }
     
 
-int PolicyDocumentClass::getyModificator()
+int 
+PolicyDocumentClass::getyModificator()
 {
   return yModificator;
 }
 
-void PolicyDocumentClass::setStartPattern(const QString& patternName)
+void
+PolicyDocumentClass::setStartPattern(const QString& patternName)
 {
   //  for all patterns: set "start" attributes to "false" //
   QDomElement docElem = domDocument.documentElement();
@@ -389,7 +402,8 @@ void PolicyDocumentClass::setStartPattern(const QString& patternName)
 }
 
 
-bool PolicyDocumentClass::isStartPattern(const QString& patternName) const
+bool 
+PolicyDocumentClass::isStartPattern(const QString& patternName) const
 {
   return 
     (getPatternNode(patternName).toElement().attribute("start") == "true");
@@ -398,7 +412,8 @@ bool PolicyDocumentClass::isStartPattern(const QString& patternName) const
 //---------------------- behaviour methods ---------------------------//
 
 
-void PolicyDocumentClass::addBehaviour(const QString& patternName, int n)
+void
+PolicyDocumentClass::addBehaviour(const QString& patternName, int n)
 {
   // get DOM node of the given pattern //
   QDomNode patternNode = getPatternNode(patternName);
@@ -407,31 +422,33 @@ void PolicyDocumentClass::addBehaviour(const QString& patternName, int n)
   QDomElement element = domDocument.createElement(XML_TAG_BEHAVIOUR);
 
   // set attributes //
-  element.setAttribute("name", DatabaseVector[n].getName());
+  element.setAttribute("name", databaseVector_[n].getName());
 
   // append element to pattern node //
   patternNode.appendChild(element);
 }
 
-bool PolicyDocumentClass::hasBehaviour(const QString& patternName, 
-    const QString& behaviourName)
+bool 
+PolicyDocumentClass::hasBehaviour(const QString& patternName, 
+				  const QString& behaviourName)
 {
  QDomNode patternNode = getPatternNode(patternName);
  QDomNode node = patternNode.firstChild();
- while (!node.isNull())
- {
-   if (node.toElement().tagName()==XML_TAG_BEHAVIOUR)
-   {
-     if (node.toElement().attribute("name")==behaviourName) return true;
+
+ while (!node.isNull()) {
+   if (node.toElement().tagName()==XML_TAG_BEHAVIOUR) {
+     if (node.toElement().attribute("name")==behaviourName) 
+       return true;
    }
-   node=node.nextSibling();
+   node = node.nextSibling();
  }
+
  return false;
 }
 
-
 // deletes a given behaviour //
-void PolicyDocumentClass::delBehaviour(const QString& patternName, 
+void 
+PolicyDocumentClass::delBehaviour(const QString& patternName, 
 				       const QString& behaviourName)
 {
   // get DOM node of the given pattern and behaviour //
@@ -443,7 +460,8 @@ void PolicyDocumentClass::delBehaviour(const QString& patternName,
 }
 
 
-int PolicyDocumentClass::getNumBehaviours(const QString& patternName) const
+int 
+PolicyDocumentClass::getNumBehaviours(const QString& patternName) const
 {
   // get DOM node of the given pattern //
   QDomNode patternNode = getPatternNode(patternName);
@@ -466,7 +484,8 @@ int PolicyDocumentClass::getNumBehaviours(const QString& patternName) const
 }
 
 
-QStringList PolicyDocumentClass::getBehaviourNames(const QString& patternName) const
+QStringList 
+PolicyDocumentClass::getBehaviourNames(const QString& patternName) const
 {
   QStringList list;
 
@@ -489,7 +508,8 @@ QStringList PolicyDocumentClass::getBehaviourNames(const QString& patternName) c
 }
 
 
-void PolicyDocumentClass::behaviourUp(const QString& patternName, 
+void
+PolicyDocumentClass::behaviourUp(const QString& patternName, 
 				      const QString& behaviourName)
 {
   // get DOM node of the given pattern and behaviour //
@@ -497,14 +517,16 @@ void PolicyDocumentClass::behaviourUp(const QString& patternName,
   QDomNode behaviourNode     = getBehaviourNode(patternName, behaviourName);
   QDomNode prevBehaviourNode = getPrevBehaviourNode(patternName,behaviourName);
 
-  if (prevBehaviourNode.isNull()) return;
+  if (prevBehaviourNode.isNull()) 
+    return;
 
   // remove DOM node //
   patternNode.insertBefore(behaviourNode, prevBehaviourNode);
 }
 
 
-void PolicyDocumentClass::behaviourDown(const QString& patternName, 
+void
+PolicyDocumentClass::behaviourDown(const QString& patternName, 
 				      const QString& behaviourName)
 {
   // get DOM node of the given pattern and behaviour //
@@ -512,7 +534,8 @@ void PolicyDocumentClass::behaviourDown(const QString& patternName,
   QDomNode behaviourNode     = getBehaviourNode(patternName, behaviourName);
   QDomNode nextBehaviourNode = getNextBehaviourNode(patternName,behaviourName);
 
-  if (nextBehaviourNode.isNull()) return;
+  if (nextBehaviourNode.isNull()) 
+    return;
 
   // remove DOM node //
   patternNode.insertAfter(behaviourNode, nextBehaviourNode);
@@ -522,9 +545,8 @@ void PolicyDocumentClass::behaviourDown(const QString& patternName,
 
 //---------------------- transition functions ---------------------------//
 
-
-
-TransitionList PolicyDocumentClass::getTransitions(const QString& patternName) const
+TransitionList 
+PolicyDocumentClass::getTransitions(const QString& patternName) const
 {
   TransitionList list;
 
@@ -552,9 +574,10 @@ TransitionList PolicyDocumentClass::getTransitions(const QString& patternName) c
 }
 
 
-void PolicyDocumentClass::addTransition(const QString& patternName, 
-					const QString& message,  
-					const QString& target)
+void 
+PolicyDocumentClass::addTransition(const QString& patternName, 
+				   const QString& message,  
+				   const QString& target)
 {
   // get DOM node of the given pattern //
   QDomNode patternNode = getPatternNode(patternName);
@@ -570,28 +593,29 @@ void PolicyDocumentClass::addTransition(const QString& patternName,
   patternNode.appendChild(element);
 }
 
-void PolicyDocumentClass::delTransitionsFrom(const QString& name)
+void 
+PolicyDocumentClass::delTransitionsFrom(const QString& name)
 {
+  /// ???
+
   QDomNode patternNode=getPatternNode(name);
-  if (!patternNode.isNull())
-  {
+  if (!patternNode.isNull()) {
     QDomNode node=patternNode.firstChild();
-    while(!node.isNull())
-    {
-      if (node.toElement().tagName()==XML_TAG_TRANSITION)
-      {
-         patternNode.removeChild(node);
-	 node=patternNode.firstChild();
+    while(!node.isNull()) {
+      if (node.toElement().tagName() == XML_TAG_TRANSITION) {
+	patternNode.removeChild(node);
+	node = patternNode.firstChild();
       }
       else {
-        node=node.nextSibling();
+        node = node.nextSibling();
       }
     }
   }
 }
 
 
-void PolicyDocumentClass::delTransitionsTo(const QString& name)
+void 
+PolicyDocumentClass::delTransitionsTo(const QString& name)
 {
   QDomElement docElem = domDocument.documentElement();
 
@@ -625,36 +649,37 @@ void PolicyDocumentClass::delTransitionsTo(const QString& name)
 
 //---------------------- arbiter functions ---------------------------//
 
-
-
-void PolicyDocumentClass::setArbiter(const QString& patternName, 
-				     int arbiterIndex)
+void 
+PolicyDocumentClass::setArbiter(const QString& patternName, 
+				int arbiterIndex)
 {
   setArbiter(patternName, arbiterVector[arbiterIndex]);
 }
 
 
-void PolicyDocumentClass::setArbiter(const QString& patternName, 
-				     const QString& arbiter)
+void 
+PolicyDocumentClass::setArbiter(const QString& patternName, 
+				const QString& arbiter)
 {
-  // deletes current arbiter //
+  // deletes current arbiter
   delArbiter(patternName);
 
-  // get DOM node of the given pattern //
+  // get DOM node of the given pattern
   QDomNode patternNode = getPatternNode(patternName);
 
-  // create new DOM element for the behaviour //
+  // create new DOM element for the behaviour
   QDomElement element = domDocument.createElement(XML_TAG_ARBITER);
 
-  // set attributes //
+  // set attributes
   element.setAttribute("name", arbiter);
 
-  // append element to pattern node //
+  // append element to pattern node
   patternNode.appendChild(element);
 }
 
 
-QString PolicyDocumentClass::getArbiter(const QString& patternName) const
+QString 
+PolicyDocumentClass::getArbiter(const QString& patternName) const
 {
   // get DOM node of the given pattern //
   QDomNode patternNode = getPatternNode(patternName);
@@ -675,7 +700,8 @@ QString PolicyDocumentClass::getArbiter(const QString& patternName) const
 }
 
 
-void PolicyDocumentClass::delArbiter(const QString& patternName)
+void 
+PolicyDocumentClass::delArbiter(const QString& patternName)
 {
   // COMMENT: this removes ALL arbiters (although only one should be set!)
 
@@ -701,9 +727,9 @@ void PolicyDocumentClass::delArbiter(const QString& patternName)
 
 // returns a stringmap with all parameters of the given behaviour in
 // the given pattern.
-QMap<QString, QString> PolicyDocumentClass::getParameters(
-			      const QString& patternName,
-			      const QString& behaviourName) const
+QMap<QString, QString>
+PolicyDocumentClass::getParameters(const QString& patternName,
+				   const QString& behaviourName) const
 {
   QMap<QString, QString> stringMap;
 
@@ -733,9 +759,10 @@ QMap<QString, QString> PolicyDocumentClass::getParameters(
 
 // sets a new set of parameters for the given behaviour in the given //
 // pattern. All existing parameters are deleted!                     //
-void PolicyDocumentClass::setParameters(const QString& patternName,
-					const QString& behaviourName, 
-					const QMap<QString, QString>& paramMap)
+void 
+PolicyDocumentClass::setParameters(const QString& patternName,
+				   const QString& behaviourName, 
+				   const QMap<QString, QString>& paramMap)
 {
   // delete current parameters //
   delParameters(patternName, behaviourName);
@@ -749,10 +776,11 @@ void PolicyDocumentClass::setParameters(const QString& patternName,
 
 
 // adds a parameter to the given behaviour in the given pattern //
-void PolicyDocumentClass::addParameter(const QString& patternName, 
-				       const QString& behaviourName,
-				       const QString& key,
-				       const QString& value)
+void 
+PolicyDocumentClass::addParameter(const QString& patternName, 
+				  const QString& behaviourName,
+				  const QString& key,
+				  const QString& value)
 {
   // get DOM node of the given behaviour //
   QDomNode behaviourNode = getBehaviourNode(patternName, behaviourName);
@@ -770,9 +798,12 @@ void PolicyDocumentClass::addParameter(const QString& patternName,
 
 
 // deletes all parameters of the given behaviour in the given pattern //
-void PolicyDocumentClass::delParameters(const QString& patternName, 
-					const QString& behaviourName)
+void
+PolicyDocumentClass::delParameters(const QString& patternName, 
+				   const QString& behaviourName)
 {
+  // ???
+
   // get DOM node of the given behaviour //
   QDomNode behaviourNode = getBehaviourNode(patternName, behaviourName);
 

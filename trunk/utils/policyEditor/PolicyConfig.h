@@ -25,16 +25,6 @@ class PolicyConfigClass
 public:
   PolicyConfigClass();
   
-private:
-  /**contains the path of the config-file*/
-  QString configFile;
-  QString behaviourFile;
-
-  /**the main document structure containing the config-Params*/
-  QDomDocument domDocument_behaviours;
-  QDomDocument domDocument_config;
-  
-public:
   //**returns all behaviours that are known*/
   
   std::vector<BehaviourDescription> getBehaviours() const;
@@ -49,6 +39,22 @@ public:
   void getBehaviourDescription();  //reads the behaviour-Description-File
   
   void setConfiguration(QWidget *parent);
+
+protected:
+  /**contains the path of the config-file*/
+  QString configFile;
+  QString behaviourFile;
+
+  /**the main document structure containing the config-Params*/
+  QDomDocument domDocument_behaviours;
+  QDomDocument domDocument_config;
+
+  // typedef std::vector<BehaviourParam> BehaviourDescription;
+  // typedef std::map<QString, BehaviourDescription >BehaviouConfig;
+  // BehaviourConfig behaviourConfig;
+  
+  // typedef std::vector<QString> ArbiterConfig;
+  // ArbiterConfig arbiterConfig;
 };
 
 #endif

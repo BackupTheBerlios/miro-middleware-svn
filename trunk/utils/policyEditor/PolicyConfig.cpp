@@ -22,8 +22,8 @@
 PolicyConfigClass::PolicyConfigClass()
 {
   /*
-    char *nixRoot=getenv("NIX_ROOT");
-    configFile=QString(nixRoot)+"/etc/PolicyEditor_Nix.xml";
+    char *miroRoot=getenv("MIRO_ROOT");
+    configFile=QString(miroRoot)+"/etc/PolicyEditor_Nix.xml";
     QFile f(behaviourFile);
     if (!f.open(IO_ReadOnly))
     {
@@ -35,22 +35,24 @@ PolicyConfigClass::PolicyConfigClass()
   QString infoText;
   char *home=getenv("HOME");
   configFile=QString(home)+"/.PolicyEditorConfig.xml";
+
   QFile f(configFile);
   if (!f.open(IO_ReadOnly))
   {
     infoText=QString(".PolicyEditorConfig.xml couldn't be found in your Home-Directory\n") + 
       QString("Try to create the configuration file");
     QMessageBox::information(0, "Policy Editor",  infoText,"OK",0);
-    char *nR=getenv("NIX_ROOT");
-    QString nixRoot=QString(nR);
-    if (nixRoot.compare("")==0){
+    char *nR=getenv("MIRO_ROOT");
+    QString miroRoot=QString(nR);
+    if (miroRoot.compare("")==0){
       infoText=QString("Couldn't create configuration-file '~/.PolicyEditorConfig.xml'!\n")+
-	QString("Ensure that NIX_ROOT was set to the correct path of the Nix-Project!\n")+
+	QString("Ensure that MIRO_ROOT was set to the correct path of the Nix-Project!\n")+
 	QString("Closing PolicyEditor!"); 
       QMessageBox::information(0,"Policy Editor", infoText );
       throw std::string("PolicyConfigClass(): Error: Couldn't create configuration-file '~/.PolicyEditorConfig.xml'");
     }
-    QFile df(nixRoot+"/etc/DefaultPolicyEditorConfig.xml");
+
+    QFile df(miroRoot+"/etc/DefaultPolicyEditorConfig.xml");
     if (!df.open(IO_ReadOnly)){
       infoText=QString("Couldn't create configuration-file '~/.PolicyEditorConfig.xml'") + 
 	QString("Default-config-file couldn't be loaded")+
@@ -76,20 +78,20 @@ PolicyConfigClass::PolicyConfigClass()
   behaviourFile=getBehaviourDescriptionFileName();
   if (behaviourFile.compare("")==0){
     infoText=QString("No Behaviour-Description-File was specified!\n")+
-      QString("Opining an empty Behaviour-Description-File.\n")+
+      QString("Opening an empty Behaviour-Description-File.\n")+
       QString("Choose  \"Load Behaviour-Description-Filename...\" in Menu \"Options\"")+
       QString("to specify your own Behaviour-Description-File");
     QMessageBox::information(0, "Policy Editor", infoText);
-    char *nR=getenv("NIX_ROOT");
-    QString nixRoot=QString(nR);
-    if (nixRoot.compare("")==0){
+    char *nR=getenv("MIRO_ROOT");
+    QString miroRoot=QString(nR);
+    if (miroRoot.compare("")==0){
       infoText=QString("Error in loading the empty Behaviour-Description-File!\n")+
-	QString("Ensure that NIX_ROOT was set to the correct path of the Nix-Project!\n")+
+	QString("Ensure that MIRO_ROOT was set to the correct path of the Nix-Project!\n")+
 	QString("Closing PolicyEditor!"); 
       QMessageBox::information(0, "Policy Editor", infoText);
       throw std::string("PolicyConfigClass(): Error: Couldn't load empty Behaviour-Description-File");
     }
-    behaviourFile=nixRoot+"/etc/emptyBehaviourDescriptionFile.xml";
+    behaviourFile=miroRoot+"/etc/BehaviourDescriptionFile.xml";
   }
 	
   getBehaviourDescription();  
@@ -203,8 +205,10 @@ PolicyConfigClass::getBehaviourParams(const QString& behaviourName) const
 void 
 PolicyConfigClass::setNewBehaviourDescriptionFileName(const QString& file)
 {
-  behaviourFile=file;
+  behaviourFile = file;
+
   std::cout << behaviourFile << std::endl;
+
   getBehaviourDescription();
   setBehaviourDescriptionFileName();
 } 	
@@ -294,20 +298,20 @@ PolicyConfigClass::getBehaviourDescription()
   {
     ff.close();	
     QString infoText=QString("Can't find/read specified Behaviour-Description-File\n")+
-      QString("Opining an empty Behaviour-Description-File.\n")+
+      QString("Opening an empty Behaviour-Description-File.\n")+
       QString("Choose  \"Load Behaviour-Description-Filename...\" in Menu \"Options\"")+
       QString("to specify your own Behaviour-Description-File");
     QMessageBox::information(0, "Policy Editor", infoText);
-    char *nR=getenv("NIX_ROOT");
-    QString nixRoot=QString(nR);
-    if (nixRoot.compare("")==0){
+    char *nR=getenv("MIRO_ROOT");
+    QString miroRoot=QString(nR);
+    if (miroRoot.compare("")==0){
       infoText=QString("Error in loading the empty Behaviour-Description-File!\n")+
-	QString("Ensure that NIX_ROOT was set to the correct path of the Nix-Project!\n")+
+	QString("Ensure that MIRO_ROOT was set to the correct path of the Nix-Project!\n")+
 	QString("Closing PolicyEditor!"); 
       QMessageBox::information(0, "Policy Editor", infoText);
       throw std::string("[PolicyConfigClass.getBehaviourDescription()]: Error: Couldn't load empty Behaviour-Description-File");
     }
-    behaviourFile=nixRoot+"/etc/emptyBehaviourDescriptionFile.xml";
+    behaviourFile=miroRoot+"/etc/BehaviourDescriptionFile.xml";
     QFile emptyFile(behaviourFile);
     if (!emptyFile.open(IO_ReadOnly)){
       emptyFile.close();

@@ -11,25 +11,22 @@
 #ifndef PolicyEditor_h
 #define PolicyEditor_h
 
-#include "miro/Client.h"
-
 #include "PolicyDocument.h"
 #include "PolicyView.h"
 
+#include "miro/Client.h"
+
 #include <qmainwindow.h>
 
-/** main class of the PolicyEditor application */
+//! Main class of the PolicyEditor application 
 class PolicyEditorClass : public QMainWindow
 {
   Q_OBJECT
-private:
-  Miro::Client&       client_;
-  PolicyDocumentClass Document;
-  PolicyViewClass*    View;
-  QString             policyFileName;
-  QString robot_;
+  
+public:
+  PolicyEditorClass(int argc, char** argv, Miro::Client& _client);
 
-private slots:
+protected slots:
   void slotNew();
   void slotLoad();
   void slotSave();
@@ -41,12 +38,16 @@ private slots:
   void getBehaviourDescriptionFileName();
   void setBehaviourDescriptionFileName();
   void quit();
-  
+
 protected:
   void closeEvent(QCloseEvent *e);
 
-public:
-  PolicyEditorClass(int argc, char** argv, Miro::Client& _client);
+  Miro::Client&       client_;
+  PolicyDocumentClass document_;
+  PolicyViewClass*    view_;
+  QString             miroRoot_;
+  QString             policyFileName_;
+  QString             robot_;
 };
 
 #endif

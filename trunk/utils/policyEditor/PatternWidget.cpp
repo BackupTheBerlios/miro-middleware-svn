@@ -264,18 +264,17 @@ void PatternWidgetClass::mousePressEvent(QMouseEvent* event)
     Menu.insertItem("Delete pattern", this, SLOT(onDelete()));
 
     // submenu: add all behaviour names //
-    for (unsigned int id=0; id<getDocument().DatabaseVector.size(); id++) 
-    {
-      if (!getDocument().hasBehaviour(patternName,
-          getDocument().DatabaseVector[id].getName()))
-      {
-        menuAddBehaviour.insertItem(getDocument().DatabaseVector[id].getName(),id);
+    const PolicyDocumentClass::DatabaseVector& databaseVector = getDocument().databaseVector();
+    for (unsigned int id=0; id < databaseVector.size(); ++id) {
+      if (!getDocument().hasBehaviour(patternName, databaseVector[id].getName())) {
+        menuAddBehaviour.insertItem(databaseVector[id].getName(),id);
       }
     }
-    connect(&menuAddBehaviour, SIGNAL(activated(int)), 
+    connect(&menuAddBehaviour, 
+	    SIGNAL(activated(int)),
 	    this, SLOT(onAddBehaviour(int)));
 
-    // show popup menu //
+    // show popup menu
     Menu.exec(QCursor::pos());
   }
 }

@@ -37,46 +37,20 @@ const QString XML_PARAM_VALUE    = "value";
 /** This class represents all internal data of the PolicyEditor */
 class PolicyDocumentClass
 {
-private:
-  bool modified;
-  int xModificator;
-  int yModificator;
-  int halfWindowWidth, halfWindowHeight;
-
 public:
-  std::vector<BehaviourDescription>  DatabaseVector;
+  typedef std::vector<BehaviourDescription> DatabaseVector;
+
+  const DatabaseVector& databaseVector() const;
+
   std::vector<QString>               arbiterVector;
   
-private:
-  /** current file name, held for a later save */
-  
-  PolicyConfigClass policyConfig;
-  
-  
-  /** the main document structure containing all patterns and behaviours */
-  QDomDocument domDocument;
-
-  /** returns the DOM node of the given pattern */
-  QDomNode getPatternNode(const QString& patternName) const;
-
-  /** returns the DOM node of the given behaviour in a pattern */
-  QDomNode getBehaviourNode(const QString& patternName, 
-			    const QString& behaviourName) const;
-
-  /** returns the DOM node of the next behaviour in a pattern */
-  QDomNode getNextBehaviourNode(const QString& patternName, 
-				const QString& behaviourName) const;
-
-  /** returns the DOM node of the previous behaviour in a pattern */
-  QDomNode getPrevBehaviourNode(const QString& patternName, 
-				const QString& behaviourName) const;
-
 public:
   PolicyDocumentClass();
   ~PolicyDocumentClass();
   
   /** returns policyConfig*/
-  PolicyConfigClass getPolicyConfig();
+  PolicyConfigClass& getPolicyConfig();
+  const PolicyConfigClass& getPolicyConfig() const;
 
   //------------------//
   // document methods //
@@ -99,7 +73,7 @@ public:
 
   QDomDocument& getDomDocument()  { return domDocument; }
   
-  void setNewBehaviourDescriptionFileName(QString file);
+  void setNewBehaviourDescriptionFileName(const QString& file);
   
   QString getBehaviourDescriptionFileName();
 
@@ -245,7 +219,58 @@ public:
   /** deletes all arbiters of the given pattern */
   void delArbiter(const QString& patternName);
   
+protected:
+  // returns the DOM node of the given pattern
+  QDomNode getPatternNode(const QString& patternName) const;
+
+  // returns the DOM node of the given behaviour in a pattern
+  QDomNode getBehaviourNode(const QString& patternName, 
+			    const QString& behaviourName) const;
+
+  // returns the DOM node of the next behaviour in a pattern
+  QDomNode getNextBehaviourNode(const QString& patternName, 
+				const QString& behaviourName) const;
+
+  // returns the DOM node of the previous behaviour in a pattern
+  QDomNode getPrevBehaviourNode(const QString& patternName, 
+				const QString& behaviourName) const;
+
+protected:
+  PolicyConfigClass policyConfig;
+  
+  
+  //! The main document structure containing all patterns and behaviours
+  QDomDocument domDocument;
+
+  DatabaseVector databaseVector_;
+
+  bool modified;
+
+  int xModificator;
+  int yModificator;
+
+  int halfWindowWidth;
+  int halfWindowHeight;
 };
+
+inline
+const PolicyDocumentClass::DatabaseVector& 
+PolicyDocumentClass::databaseVector() const {
+  return databaseVector_;
+}
+
+
+inline
+PolicyConfigClass&
+PolicyDocumentClass::getPolicyConfig() {
+  return policyConfig;
+}
+
+inline
+const PolicyConfigClass&
+PolicyDocumentClass::getPolicyConfig() const {
+  return policyConfig;
+}
 
 
 #endif

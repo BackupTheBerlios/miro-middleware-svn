@@ -13,7 +13,6 @@
 
 #include <qstring.h>
 
-
 //-----------------------------------------------------------------
 
 class BehaviourDescription
@@ -28,8 +27,8 @@ public:
 };
 
 inline
-BehaviourDescription::BehaviourDescription(const QString& Name) : 
-  name(Name)
+BehaviourDescription::BehaviourDescription(const QString& _name) : 
+  name(_name)
 { }
 
 inline

@@ -1,0 +1,23 @@
+Utility for behaviour/arbiter/actionpattern/policy editing.
+
+Uses X.
+
+This graphical editor lets you edit your behaviour configuration and
+parameterization by a graphical frontend. Policies are specified by an
+XML-file. As XML-Editing is not our favorite task, we build this
+editor.
+
+To use your own behaviours within the editor, you have to specify them
+and their parameters in a PolicyEditor config file. An example is in 
+the directory MIRO_ROOT/examples/behaviour.
+
+Isn't it uncool, that you have to specify you behaviour parameters in
+C++ as well as in XML? - Yes! We are working on it. The idea is, that
+you specify it just in XML and the C++ code is auto generated. 
+
+Note that as we do not have a plugin-architectur for the behaviour
+stuff, you have to make sure, that all needed behaviours and arbiters
+get instanciated and registered at the respective repositories. - Yes,
+we are looking for voluteers to change that...
+
+
