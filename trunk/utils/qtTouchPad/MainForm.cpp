@@ -13,6 +13,7 @@
 #include "MainForm.h"
 #include <unistd.h>
 #include <qpainter.h>
+#include <iostream>
 
 MainForm::MainForm(int argc, char* argv[], QWidget *parent, const char *name) : 
   QDialog(parent,name,false,WDestructiveClose),
@@ -42,12 +43,13 @@ void MainForm::initDialog()
 
 }
 
-void MainForm::mousePressEvent(QMouseEvent * mouse)
+void MainForm::mousePressEvent(QMouseEvent * /*mouse*/)
 {
   mouseMoving=true;
-  mouse=mouse; // remove warning ;-)
+//  mouse=mouse; // remove warning ;-)
 }
-void MainForm::mouseReleaseEvent(QMouseEvent * mouse)
+
+void MainForm::mouseReleaseEvent(QMouseEvent * /*mouse*/)
 {
   mouseMoving=false;
 
@@ -56,10 +58,14 @@ void MainForm::mouseReleaseEvent(QMouseEvent * mouse)
   speed.translation=0;
   speed.rotation=0;
 
-  motion->setVelocity(speed);
+  try {
+    motion->setVelocity(speed);
+  } catch (const Miro::EDevIO& e) {
+    std::cout << e << e.what << std::endl;
+  }
 
   //motion->limp();
-  mouse=mouse; // remove warning ;-)
+//  mouse=mouse; // remove warning ;-)
 }
 
 void MainForm::mouseMoveEvent(QMouseEvent * mouse)
@@ -71,6 +77,7 @@ void MainForm::mouseMoveEvent(QMouseEvent * mouse)
 
   x=x-125; //center
   y=y-125;
+  std::cout << "(" << x << ", " << y << ")" << "   "; //std::endl;
 
   if (abs(x)<10) x=0;
   if (x>100) x=100;
@@ -86,15 +93,24 @@ void MainForm::mouseMoveEvent(QMouseEvent * mouse)
 
   motion->getMinMaxVelocity(mint,maxt,minr,maxr);
 
-  speed.translation=-(y*maxt)/125;
+//  speed.translation=-(y*maxt)/125;
+  speed.translation=-(y*maxt)/100;
   
   //  speed.translation=-(y*20); //950)/200;
-  speed.rotation=-double(x)*3.1415927/200;
+//  speed.rotation=-double(x)*3.1415927/200;
+  speed.rotation=-double(x)*maxr/100;
 
-  motion->setVelocity(speed);
+  std::cout << "Transvel: " << speed.translation << " Rotvel: " << speed.rotation << std::endl;
+  try {
+    motion->setVelocity(speed);
+  } catch (const Miro::EDevIO& e) {
+    std::cout << e << e.what << std::endl;
+  } catch (const Miro::EOutOfBounds& e) {
+    std::cout << e << e.what << std::endl;
+  }
 }
 
-void MainForm::paintEvent(QPaintEvent * pe)
+void MainForm::paintEvent(QPaintEvent * /*pe*/)
 {
   QPainter p(this);
 
@@ -102,5 +118,5 @@ void MainForm::paintEvent(QPaintEvent * pe)
   p.drawEllipse(115,115,20,20);
   p.drawRect(25,25,200,200);
 
-  pe=pe; //warning off ;-)
+//  pe=pe; //warning off ;-)
 }
