@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
     Wander wander(*task->reactor());
     OnButton onButton(ec.in(), server.namingContextName);
 
-    MotionArbiter ma(motion.in());
+    MotionArbiter ma(motion.in(), &supplier);
   
     // polpulating the repositories
     BehaviourRepository * bf = BehaviourRepository::instance();

@@ -158,6 +158,7 @@ RangeSensorBehaviour::action()
     }
   }
 
+  // #define SADF
 #ifdef SADF
   if (pSupplier_ && !(++counter % 5)) {
     Nix::VisionFeaturesIDL * features = new Nix::VisionFeaturesIDL();
