@@ -352,27 +352,6 @@ main(int argc, char** argv)
   Miro::Client client(argc, argv);
   QApplication app(argc, argv);
 
-//   Type::ParameterSet s;
-
-//   s.insert(Parameter("std::string", "name", "Hans Utz", "Guy", "" ));
-//   s.insert(Parameter("bool", "truth", "false", "", "" ));
-//   s.insert(Parameter("char", "first initial", "H", "", "" ));
-//   s.insert(Parameter("short", "short", "-3", "mm", "" ));
-//   s.insert(Parameter("unsigned short", "unsigned short", "3", "mm", "" ));
-//   s.insert(Parameter("long", "long", "", "", "" ));
-//   s.insert(Parameter("unsigned long", "unsigned long", "", "", "" ));
-//   s.insert(Parameter("int", "int", "", "", "" ));
-//   s.insert(Parameter("unsigned int", "unsigned int", "", "", "" ));
-//   s.insert(Parameter("double", "double", "", "", "" ));
-//   s.insert(Parameter("angle", "angle", "2", "°", "" ));
-//   s.insert(Parameter("Angle", "Angle", "3", "°", "" ));
-//   s.insert(Parameter("ACE_Time_Value", "time", ".0003", "sec", "" ));
-
-//   ParameterDialog d(s, "MyBehaviour", NULL);
-//   d.exec();
-//   return 0;
-  
-
   try {
     PolicyEditorClass policyEditor(client);
     

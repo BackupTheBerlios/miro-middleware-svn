@@ -121,22 +121,7 @@ ParameterDialog::ParameterDialog(const QString& _name,
 		  _name +
 		  " not found.\nCheck whether the relevant description file is loaded.");
   }
-  params_ = class_->parameterSet();
-
-  const Type * parent = class_;
-  while (!parent->parent().isEmpty()) {
-    const Type * tmp = config_->description().getType(parent->parent());
-    if (tmp == NULL) {
-      QMessageBox::warning(this, 
-			   "Error constructing parameter dialog:",
-			   QString("Parameter description for " + 
-				   parent->parent() +
-				   " not found.\nCheck whether the relevant description file is loaded."));
-      break;
-    }
-    parent = tmp;
-    params_.insert(parent->parameterSet().begin(), parent->parameterSet().end());
-  }
+  params_ = config_->description().getFullParameterSet(*class_);
 
   setCaption(_name);
 
@@ -153,7 +138,7 @@ ParameterDialog::ParameterDialog(const QString& _name,
   
   // add parameter structs:
   QMap<QString, QString>::ConstIterator iter;
-  Type::ParameterSet::const_iterator first, last = params_.end();
+  ParameterVector::const_iterator first, last = params_.end();
   unsigned long i = 0;
   for (first = params_.begin(); first != last; ++first, ++i) {
 

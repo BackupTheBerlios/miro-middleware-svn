@@ -107,7 +107,7 @@ signals:
 protected:
   PolicyConfigClass * config_;
   const Miro::CFG::Type * class_;
-  Miro::CFG::Type::ParameterSet params_;
+  Miro::CFG::ParameterVector params_;
   bool modified_;
   int accept_;
   
