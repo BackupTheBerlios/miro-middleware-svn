@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // 
@@ -18,7 +18,7 @@ namespace FaulTty
   class Message;
 
   // types of timers registerd for Mcp::EventHandler
-  typedef enum { PING_TIMER, SYNCH_TIMER } TimerType;
+  enum TimerType { PING_TIMER, SYNCH_TIMER };
 
   // values indicating beginning of a FaulTty message
   static const char START_1 = 0xfa;

@@ -127,6 +127,8 @@ namespace Sparrow
   void
   Connection2003::writeLeftWheel(const char * buffer, int length)
   {
+    // Roland: was machen wir wenn lengh > 8 ???
+
     Message message;
     message.length(length);
     message.id(CAN_WRITE_MOTOR_LEFT);
@@ -137,6 +139,8 @@ namespace Sparrow
   void
   Connection2003::writeRightWheel(const char * buffer, int length)
   {
+    // Roland: was machen wir wenn lengh > 8 ???
+
     Message message;
     message.length(length);
     message.id(CAN_WRITE_MOTOR_RIGHT);

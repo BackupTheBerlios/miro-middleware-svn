@@ -5,13 +5,8 @@
 // for details copyright, usage and credits to other groups see Miro/COPYRIGHT
 // for documentation see Miro/doc
 //
-// (c) 1999,2000
+// (c) 1999,2000, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
-//
-// Authors:
-//   Stefan Enderle,
-//   Stefan Sablatnoeg,
-//   Hans Utz
 //
 // $Id$
 //
@@ -81,7 +76,7 @@ namespace Can
 
        Message::driver=OLD;
 
-    // can_ClearStatus(fd);
+       // can_ClearStatus(fd);
        if(ioctl(ioBuffer.get_handle(), CAN_CLEARSTAT, 0L))
          throw Miro::Exception("can_ClearStatus() ioctl error");
 
@@ -103,6 +98,8 @@ namespace Can
        if(ioctl(ioBuffer.get_handle(), CAN_SETCONFIG, (void*)&cfg))
          throw Miro::Exception("can_SetConfig() ioctl error\n");
     }
+
+    // Roland: kann das raus ???
    /* if(parameters_.module == "sja1000"){
 
        unsigned long baud_rate = B250;
@@ -126,31 +123,28 @@ namespace Can
     }*/
 
     /* PCAN Driver by peak-system  http://www.peak-system.com */
-    if(parameters_.module == "pcan"){
+    if(parameters_.module == "pcan") {
 	TPCANInit caninit;
-	caninit.wBTR0BTR1=CAN_BAUD_250K; // Hier evtl. noch SJW1 und SJW0 setzen, d. h. Synchronization Jump Width
-	caninit.ucCANMsgType=MSGTYPE_EXTENDED;
-	caninit.ucListenOnly=0;          // kein Listen only
+	caninit.wBTR0BTR1 = CAN_BAUD_250K; // Hier evtl. noch SJW1 und SJW0 setzen,
+	                                   // d. h. Synchronization Jump Width
+	caninit.ucCANMsgType = MSGTYPE_EXTENDED;
+	caninit.ucListenOnly = 0;          // kein Listen only
 
         Message::driver = PCAN;
 	if(ioctl(ioBuffer.get_handle(), PCAN_INIT , &caninit))
-		         throw Miro::Exception("can PCAN_INIT() ioctl error");
-
-
+	  throw Miro::Exception("can PCAN_INIT() ioctl error");
     }
   }
 
   void
   Connection::write(Message& message)
   {
-
-
-
     ACE_Time_Value av(ACE_OS::gettimeofday() + ACE_Time_Value(1));
 
     if (writeMutex.acquire(av) == -1)
       throw Miro::CException(errno, "Error writing can device.");
-    //    Miro::Guard guard(writeMutex);
+
+    // Roland: Is this sleep necessary for Sparrow2003 can ???
 
     ACE_Time_Value time = ACE_OS::gettimeofday();
     ACE_Time_Value delta = time - lastWrite;
@@ -164,35 +158,21 @@ namespace Can
 
     // will definitely choke if base is off
     int rc;
-    if(parameters_.module == "pcan"){
-     //  std::cout << "First" << endl;
+    if (parameters_.module == "pcan") {
        pcanmsg * msgp;
        message.canMessage(&msgp);
-     //  std::cout << "Second" << endl;
        msgp->Msg.MSGTYPE = MSGTYPE_EXTENDED;
-    //   std::cout << "Vor ioctl" << endl;
-       std::cout << "CanMessage ";
        for(int i = 0; i < msgp->Msg.LEN; i++)
           std::cout << msgp->Msg.DATA[i];
-       std::cout << " " << endl;
        rc = ioctl(ioBuffer.get_handle(), PCAN_WRITE_MSG, msgp);
-
     }
-    else{
+    else {
        canmsg * msg;
        message.canMessage(&msg);
-       /*if(parameters_.module == "sja1000"){
-          msg->type = EXTENDED;
-       }*/
        rc = ioBuffer.send_n(msg, sizeof(canmsg));
-     //  std::cout << "message " << msg->d[0] << msg->d[1] << endl;
     }
 
-
-
-
     lastWrite = time;
-    //    ACE_OS::sleep(canTimeOut);
 
     writeMutex.release();
     if (rc == -1)
@@ -206,6 +186,6 @@ namespace Can
       "\nThe SparrowBoard probably crashed.";
     std::cerr << endl << endl << errorMessage << endl << endl;
     abort();
-    throw Miro::Exception(errorMessage);
+    //    throw Miro::Exception(errorMessage);
   }
 };

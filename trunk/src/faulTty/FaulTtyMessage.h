@@ -19,13 +19,13 @@ namespace FaulTty
   class OdometryMessage : public Miro::DevMessage
   {
   public:
-    typedef enum { LEFT, RIGHT } Wheel;
+    enum Wheel { LEFT, RIGHT };
 
     OdometryMessage(Wheel _wheel);
+    void setTimestamp(ACE_Time_Value timestamp);
 
     Wheel wheel_;
     long ticks_;
-    void setTimestamp(ACE_Time_Value timestamp);
   };
 
   inline
@@ -35,9 +35,9 @@ namespace FaulTty
   {}
 
   inline
-  void OdometryMessage::setTimestamp(ACE_Time_Value timestamp){
+  void 
+  OdometryMessage::setTimestamp(ACE_Time_Value timestamp) {
      time_ = timestamp;
-
   }
 };
 #endif 

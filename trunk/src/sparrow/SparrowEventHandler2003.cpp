@@ -23,6 +23,18 @@
 #define DBG(x)
 #endif
 
+
+// Roland: Mittelfristig sollte sich das aber auch mit
+// Sparrow::EventHander unifizieren lassen
+//
+// Sparrow::Connection
+//   \---> SparrowConnection99
+//   \---> SparrowConnection2003
+// Sparrow::Consumer
+//   \---> SparrowConsumer99
+//   \---> SparrowConsumer2003
+// ...
+
 namespace Sparrow
 {
   using std::cout;

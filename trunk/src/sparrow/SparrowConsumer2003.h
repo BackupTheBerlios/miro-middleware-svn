@@ -35,6 +35,14 @@ namespace Sparrow
   class Consumer2003 : public Miro::DevConsumer
   {
     typedef Miro::DevConsumer Super;
+
+    // Roland: nach Miro-Konvention beginnen Typen
+    // (auch Typedefs) mit einem Grossbuchsten.
+    // methoden und membervariablen beginnen mit
+    // Kleinbuchstaben
+    // Und nur Member-Variablen haben einen _ am Ende
+    // ausserdem wuerde ich diese Definitionen
+    // als protected deklarieren.
     typedef std::vector<long> sensorv_;
     typedef std::vector<sensorv_> groupv_;
     typedef std::vector<groupv_> irvalues_;
@@ -55,9 +63,6 @@ namespace Sparrow
 					Miro::RangeSensorImpl * _pIR2,
 					FaulMotor::Consumer * _faulConsumer,
 					AliveCollector * _aliveCollector);
-
-    short * getTable1();
-    short * getTable2();
 
   protected:
     Connection2003 * connection;

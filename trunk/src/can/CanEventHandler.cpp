@@ -17,7 +17,6 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include <ace/Message_Block.h>
 
 #include "CanEventHandler.h"
@@ -88,10 +87,17 @@ namespace Can
     // but just return on error. - We could return and deregister the
     // event handler (return 1), but then we also have to shut down the
     // whole server...
+
+    // Roland: sollte das nicht wieder rein ???
+
     /*if (count == 0) {
       cerr << "handle_input called with no data!" << endl;
       return 0;
     }
+
+    // Roland: kann das weg oder wieder rein ???
+    // event.: coutn != canmsg.length() + HEADER_SIZE
+
     if (count != sizeof(canmsg)) {
       cerr << "canEventHandler: read() != sizeof(canmsg): "
 	   << count << " != " << sizeof(canmsg) << endl;

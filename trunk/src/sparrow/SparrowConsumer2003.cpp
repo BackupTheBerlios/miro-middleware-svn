@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -397,17 +397,11 @@ namespace Sparrow
     }
   }
 
-  /*short *
-  Consumer::getTable1()
-  {
-    return table1;
-  }
+  // Roland:
+  // mach aus den Konstaten static const KONSTANTE = ...
+  // members
+  // vielleicht klappts dann auch für andere Werte...
 
-  short *
-  Consumer::getTable2()
-  {
-    return table2;
-  }*/
   long Consumer2003::integrateIrValues(unsigned int group, unsigned int sensor, long value){
 
      IrValues[TimeIndex[group]][group][sensor] = value;

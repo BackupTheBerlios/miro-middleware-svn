@@ -14,6 +14,10 @@
 #include "miro/Angle.h"
 #include <cmath>
 
+// Roland:
+// laesst sich diese Datei mit SparrowDevice.h mergen ???
+// ansonsten sind hier ein haufen definitionen dupliziert ...
+
 namespace Sparrow
 {
   // types of timers registerd for Sparrow::EventHandler

@@ -27,6 +27,15 @@
 #define CSDBG(x)
 #endif
 
+// Roland: Mittelfristig waere mir folgende Loesung lieber
+// anstatt bei jedem write zu unterscheiden, ob wir einen neuen oder alten
+// roboter haben:
+// FaulTty::write -> FaulController::virtual write
+// class FaulTty : public FaulController
+// class FaulTtyCanProxy : public FaulController
+// write jeweils implementieren.
+
+// if (sparrow2003) nur im constructor
 
 namespace FaulMotor
 {

@@ -29,10 +29,6 @@ SHLIB    = lib$(NAME).$(SOEXT)
 FILES = 	FaulTtyConnection \
 		FaulTtyEventHandler
 
-OTHERS =	Parameters \
-		FaulTtyMessage \
-		FaulTtyDevice \
-		TimerEventHandler
 
 DEFS  = $(addsuffix .h,$(FILES))
 LSRC  = $(addsuffix .cpp,$(FILES))

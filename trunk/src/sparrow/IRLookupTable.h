@@ -1,3 +1,5 @@
+// Roland: Miro/templates/header...
+
 #ifndef IRLookupTable_h
 #define IRLookupTable_h
 

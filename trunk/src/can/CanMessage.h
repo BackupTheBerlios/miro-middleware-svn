@@ -5,13 +5,8 @@
 // for details copyright, usage and credits to other groups see Miro/COPYRIGHT
 // for documentation see Miro/doc
 //
-// (c) 1999,2000
+// (c) 1999, 2000, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
-//
-// Authors:
-//   Stefan Enderle,
-//   Stefan Sablatnoeg,
-//   Hans Utz
 //
 // $Id$
 //
@@ -28,10 +23,11 @@
 
 namespace Can
 {
-  typedef enum 
-  {
-	OLD,PCAN,UNINITIALIZED
-  }drivertype;
+  enum drivertype { OLD, PCAN, UNINITIALIZED };
+
+  // Roland: sind die irgendwo anders definiert ???
+  // ansonsten waere eine Miro-konforme Variablenbenennung schön
+  // struct TPCANMsg { CanId id .... };
 
   typedef struct
   {
@@ -51,6 +47,15 @@ namespace Can
   class Message;
 
   std::ostream& operator<< (std::ostream& ostr, const Message& rhs);
+
+  // Roland: Mittelfristig sollten wir
+  // die ganzen Methoden virtualisieren, daraus eine
+  // Interface-Klasse bauen und
+  // zwei Implementierungen anbieten für die beiden
+  // treiber.
+  // Dann braucht man nur noch eine factory-methode, die
+  // aufgrund der Parameter eine Instanz von dem einen
+  // oder anderen zurückgibt
 
   class Message : public Miro::DevMessage
   {
@@ -77,6 +82,7 @@ namespace Can
 
     void canMessage(canmsg ** msg_ )  { *msg_= message_; }
     void canMessage(pcanmsg ** msg_)  { *msg_=messagep_; }
+
   protected:
     canmsg * message_;
     pcanmsg * messagep_;
@@ -85,111 +91,111 @@ namespace Can
   inline
   CanId
   Message::id() const { 
-	  if(driver==OLD)
-	  	return message_->id; 
-	  else
-		return messagep_->Msg.ID;
+    if(driver == OLD)
+      return message_->id; 
+    else
+      return messagep_->Msg.ID;
   }
 
   inline
   void
   Message::id(CanId _id) { 
-	  if(driver==OLD)
-	  	message_->id = _id; 
-	  else
-		messagep_->Msg.ID=_id;  
+    if(driver == OLD)
+      message_->id = _id; 
+    else
+      messagep_->Msg.ID=_id;  
   }
 
   inline
   int
   Message::length() const {
-	  if(driver==OLD)
-		return message_->len;
-	  else
-		return messagep_->Msg.LEN;
+    if(driver == OLD)
+      return message_->len;
+    else
+      return messagep_->Msg.LEN;
   }
 
   inline
   void 
   Message::length(int _len) { 
-	if(driver==OLD)
-		message_->len = _len; 
-	else
-		messagep_->Msg.LEN=_len;
+    if(driver == OLD)
+      message_->len = _len; 
+    else
+      messagep_->Msg.LEN=_len;
   }
 
   inline
   char
   Message::charData(int i) const { 
-	if(driver==OLD)
-		return message_->d[i]; 
-	else
-		return messagep_->Msg.DATA[i];
+    if(driver == OLD)
+      return message_->d[i]; 
+    else
+      return messagep_->Msg.DATA[i];
   }
 
   inline
   void
   Message::charData(int i, char d) { 
-	if(driver==OLD)
-		  message_->d[i] = d; 
-	else
-		  messagep_->Msg.DATA[i]=d;
+    if(driver == OLD)
+      message_->d[i] = d; 
+    else
+      messagep_->Msg.DATA[i]=d;
   }
 
   inline
   unsigned char
   Message::byteData(int i) const { 
-	if(driver==OLD)
-		return message_->d[i]; 
-	else
-		return messagep_->Msg.DATA[i];
+    if(driver == OLD)
+      return message_->d[i]; 
+    else
+      return messagep_->Msg.DATA[i];
   }
 
   inline
   void
   Message::byteData(int i, unsigned char d) { 
-	if(driver==OLD)
-		message_->d[i] = d; 
-	else
-		messagep_->Msg.DATA[i]=d;
+    if(driver == OLD)
+      message_->d[i] = d; 
+    else
+      messagep_->Msg.DATA[i]=d;
   }
 
   inline
   short
   Message::shortData(int i) const { 
-	if(driver==OLD)
-		return (short) ACE_NTOHS(*((const unsigned short *) (&(message_->d[i]))));
-	else
-		return (short) ACE_NTOHS(*((const unsigned short *) (&(messagep_->Msg.DATA[i]))));
+    if(driver == OLD)
+      return (short) ACE_NTOHS(*((const unsigned short *) (&(message_->d[i]))));
+    else
+      return (short) ACE_NTOHS(*((const unsigned short *) (&(messagep_->Msg.DATA[i]))));
   }
   
   inline
   void 
   Message::shortData(int i, unsigned short d) 
   { 
-	if(driver==OLD)
-		*((unsigned short *) (&(message_->d[i]))) = ACE_HTONS(d);
-	else
-		*((unsigned short *) (&(messagep_->Msg.DATA[i]))) = ACE_HTONS(d);
+    if(driver == OLD)
+      *((unsigned short *) (&(message_->d[i]))) = ACE_HTONS(d);
+    else
+      *((unsigned short *) (&(messagep_->Msg.DATA[i]))) = ACE_HTONS(d);
   }
 
   inline
   long
   Message::longData(int i) const { 
-	if(driver==OLD)
-		return (long) ACE_NTOHL(*((const unsigned long *) (&(message_->d[i]))));
-	else
-		return (long) ACE_NTOHL(*((const unsigned long *) (&(messagep_->Msg.DATA[i]))));
+    if(driver== OLD)
+      return (long) ACE_NTOHL(*((const unsigned long *) (&(message_->d[i]))));
+    else
+      return (long) ACE_NTOHL(*((const unsigned long *) (&(messagep_->Msg.DATA[i]))));
   }
 
   inline
   void 
   Message::longData(int i, unsigned long d) 
   { 
-	if(driver==OLD)
-		*((unsigned long *) (&(message_->d[i]))) = ACE_HTONL(d);
-	else
-		*((unsigned long *) (&(messagep_->Msg.DATA[i]))) = ACE_HTONL(d);
+    if(driver == OLD)
+      *((unsigned long *) (&(message_->d[i]))) = ACE_HTONL(d);
+    else
+      *((unsigned long *) (&(messagep_->Msg.DATA[i]))) = ACE_HTONL(d);
   }
 };
 #endif 
