@@ -32,7 +32,7 @@ static Miro::Server * pServer;
 extern "C" void handler (int signum)
 {
   // check of sigint
-  if (signum == SIGINT) {
+  if (signum == SIGINT || signum == SIGTERM) {
     pServer->shutdown();
   }
 }
