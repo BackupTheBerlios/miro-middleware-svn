@@ -12,12 +12,7 @@
 #include "Exception.h"
 #include "idl/ExceptionC.h"
 #include "StructuredPushSupplier.h"
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
+#include "miro/Log.h"
 
 namespace Miro
 {
@@ -84,10 +79,8 @@ namespace Miro
       Guard guard(mutex_);
       ACE_Time_Value timeout(ACE_OS::gettimeofday());
       timeout += maxWait_;
-      //cout << "Asynchronous RangeSensor dispatching **************************" << endl;
       if (cond_.wait(&timeout) != -1 &&
 	  !canceled()) {
-        //cout << "Asynchronous RangeSensor dispatching ++++++++++++++++++++++" << endl;
 	dispatch();
       }
     }
@@ -143,7 +136,7 @@ namespace Miro
     asynchDispatching_(_asynchDispatching),
     dispatcherThread_(_description, _supplier)
   {
-    DBG(std::cout << "Constructing Miro::RangeSensorImpl." << std::endl);
+    MIRO_DBG_OSTR(MIRO,LL_CTOR_DTOR,"Constructing Miro::RangeSensorImpl." << std::endl);
 
     if (_description.group.length() == 0)
       throw Exception("RangeSensorImpl: Empty Scan Description");
@@ -164,7 +157,7 @@ namespace Miro
 
   RangeSensorImpl::~RangeSensorImpl()
   {
-    DBG(std::cout << "Destructing RangeSensorImpl." << std::endl);
+    MIRO_DBG_OSTR(MIRO,LL_CTOR_DTOR,"Destructing Miro::RangeSensorImpl." << std::endl);
 
     if (asynchDispatching_)
       dispatcherThread_.cancel();
@@ -241,8 +234,8 @@ namespace Miro
 	  scan_.range[group][index] = _data->sensor[i].range;
 	}
 	else
-	  std::cout << "RangeSensor: integrated data beyond buffer boundaries: "
-		    << group << " " << index << std::endl;
+          MIRO_LOG_OSTR(LL_WARNING,"RangeSensor: integrated data beyond buffer boundaries: " 
+		    << group << " " << index << std::endl);
       }
       condition_.broadcast();
     }

@@ -279,7 +279,7 @@ namespace Miro
       arbiter_->close();
     }
 
-    std::cout << "Disabling done." << std::endl;
+    MIRO_LOG_OSTR(LL_NOTICE, "Disabling done." << std::endl);
   }
 
   /**

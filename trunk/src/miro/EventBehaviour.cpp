@@ -11,12 +11,7 @@
 
 
 #include "EventBehaviour.h"
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
+#include "Log.h"
 
 namespace Miro
 {
@@ -26,8 +21,7 @@ namespace Miro
     Super(_ec),
     behaviour_(_behaviour)
   {
-    DBG(std::cout << "Constructing BehaviourEventConsumer" << std::endl);
-    // proxySupplier_->suspend_connection();
+    MIRO_DBG(MIRO,LL_CTOR_DTOR,"Constructing BehaviourEventConsumer\n");
   }
 
   void
@@ -53,12 +47,12 @@ namespace Miro
     consumer(*this, _ec),
     event(NULL)
   {
-    DBG(std::cout << "Constructing EventBehaviour" << std::endl);
+    MIRO_DBG(MIRO,LL_CTOR_DTOR, "Constructing EventBehaviour\n");
   }
 
   EventBehaviour::~EventBehaviour()
   {
-    DBG(std::cout << "Destructing EventBehaviour" << std::endl);
+    MIRO_DBG(MIRO,LL_CTOR_DTOR, "Destructing EventBehaviour\n");
   }
 
   void

@@ -16,6 +16,7 @@
 #include "ConstraintArbiterViewer.h"
 #include "Behaviour.h"
 #include "StructuredPushSupplier.h"
+#include "Log.h"
 
 #include <complex>
 #include <cmath>
@@ -105,7 +106,7 @@ namespace Miro
 	ACE_Time_Value(0, 50000));
 
     // debug message
-    std::cout << "ConstraintArbiter.cpp : open()" << std::endl;
+    MIRO_DBG_OSTR(MIRO,LL_NOTICE, "ConstraintArbiter.cpp : open()" << std::endl);
   }
 
   void
@@ -119,7 +120,7 @@ namespace Miro
     pMotion_->setLRVelocity(0, 0);
 
     // debug message
-    std::cout << "ConstraintArbiter.cpp : close()" << std::endl;
+    MIRO_DBG_OSTR(MIRO,LL_CTOR_DTOR, "ConstraintArbiter.cpp : close()" << std::endl);
 
     // close arbiter
     Arbiter::close();
@@ -132,9 +133,6 @@ namespace Miro
     std::complex<double> newVelocity;
 
     std::FILE *logFile1;
-
-    // debug message
-    // std::cout << "ConstraintArbiter.cpp : handle_timeout() started" << std::endl;
 
     // let each behaviour calculate its velocity space ascend by priority
     typedef std::vector<Behaviour *> BehaviourVector;
@@ -157,8 +155,6 @@ namespace Miro
     // set motion
     pMotion_->setLRVelocity(std::max(-400, std::min(400, (int)(10. * newVelocity.real()))), std::max(-400, std::min(400, (int)(10. * newVelocity.imag()))));
     currentVelocity_ = velocity;
-
-    // std::cout << "ConstraintArbiter.cpp : handle_timeout() finished" << std::endl;
 
     logFile1 = std::fopen("velocityspace.log","a");
     for(int right = 0; right <= 200; right += 10) {

@@ -11,6 +11,7 @@
 
 #include "ArbiterRepository.h"
 #include "Arbiter.h"
+#include "Log.h"
 
 namespace Miro
 {
@@ -27,8 +28,8 @@ namespace Miro
   void 
   ArbiterRepository::registerArbiter(Arbiter * _arbiter) throw(Exception)
   {
-    std::cout << "ArbiterRepository: Registering " 
-	 << _arbiter->getName() << std::endl;
+    MIRO_LOG_OSTR(LL_NOTICE, "ArbiterRepository: Registering " 
+	 << _arbiter->getName() << std::endl);
     if (arbiters_.find(_arbiter->getName()) != arbiters_.end())
       throw Exception("Arbiter " + _arbiter->getName() + " already registered at the Repository.");
       

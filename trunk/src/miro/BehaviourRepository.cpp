@@ -11,6 +11,7 @@
 
 #include "BehaviourRepository.h"
 #include "Behaviour.h"
+#include "Log.h"
 
 namespace Miro
 {
@@ -26,7 +27,7 @@ namespace Miro
   void
   BehaviourRepository::registerBehaviour(Behaviour * _behaviour)  throw(Exception)
   {
-    std::cout << "BehaviourRepository: Registering " << _behaviour->getBehaviourName() << std::endl;
+    MIRO_LOG_OSTR(LL_NOTICE, "BehaviourRepository: Registering " << _behaviour->getBehaviourName() << std::endl);
     if (behaviours_.find(_behaviour->getBehaviourName()) != behaviours_.end())
       throw Exception("Behaviour " + _behaviour->getBehaviourName() + " already registered at the Repository.");
       
