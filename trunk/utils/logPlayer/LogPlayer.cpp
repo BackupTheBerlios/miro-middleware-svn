@@ -30,6 +30,7 @@
 #include <map>
 
 #include <qfiledialog.h>
+#include <qlayout.h>
 
 #include "LogPlayer.h"
 
@@ -61,53 +62,61 @@ MyWidget::MyWidget( EventChannel_ptr _ec,
   supplier(_ec, _context),
   context( _context ) 
 {
-  setMinimumSize( 310, 170 );
-  //    setMaximumSize( 200, 130 );
-  
+  QBoxLayout *topLayout = new QHBoxLayout(this, 5);
+
+  // the menu
   QPopupMenu *fileMenu = new QPopupMenu( this );
   fileMenu->insertItem( "&Load", this, SLOT( load() ) );
   fileMenu->insertItem( "&Quit", qApp, SLOT( quit() ) );
-  
+
   menuBar = new QMenuBar( this );
   menuBar->insertItem( "&File", fileMenu );    
-  
-  //    quitButton = new QPushButton( "Quit", this, "quit" );
-  //    quitButton->setGeometry( 210, 130, 90, 30 );
-  
+
+  // ... add to layout
+  topLayout->setMenuBar(menuBar);
+
+  // the widgets
   playButton = new QPushButton( "Play", this, "play" );
-  playButton->setGeometry( 10, 40, 90, 30 );
-  
+  playButton->setMinimumSize(90, 30);
   stopButton = new QPushButton( "Stop", this, "stop" );
-  stopButton->setGeometry( 110, 40, 90, 30 );
-  
+  stopButton->setMinimumSize(90, 30);
   pauseButton = new QPushButton( "Pause", this, "pause" );
-  pauseButton->setGeometry( 210, 40, 90, 30 );
-  
+  pauseButton->setMinimumSize(90, 30);
+
   nextButton = new QPushButton( "Next", this, "next" );
-  nextButton->setGeometry( 210, 80, 90, 30 );
-  
+  nextButton->setMinimumSize(90, 30);
   prevButton = new QPushButton( "Prev", this, "prev" );
-  prevButton->setGeometry( 10, 80, 90, 30 );
+  prevButton->setMinimumSize(90, 30);
   
   secLabel = new QLCDNumber( 3, this, "sec" );
-  secLabel->setGeometry( 110, 80, 40, 30 );
-  
   centiSecLabel = new QLCDNumber( 2, this, "sec" );
-  centiSecLabel->setGeometry( 160, 80, 40, 30 );
   
   timeSlider = new QSlider( Horizontal, this, "time" );
-  timeSlider->setGeometry( 10, 120, 290, 30 );
-  timeSlider->setRange( 0, 1000 );
-  timeSlider->setValue( 0 );
+  timeSlider->setRange(0, 1000);
+  timeSlider->setValue(0);
 
-  speedDial = new QDial( 10, 100, 10, 10, this, "speed" );
-  speedDial->setGeometry( 310, 40, 70, 70 );
-  
-  
-  //    connect( quitButton, SIGNAL(clicked()), qApp, SLOT(quit()) );
-  
-  //    connect( timeSlider, SIGNAL(valueChanged(int)),
-  //             timeLabel, SLOT(display(int)) );
+  speedDial = new QDial( 10, 200, 10, 10, this, "speed" );
+  speedDial->setWrapping(false);
+
+  // ... add to the layout 
+  QBoxLayout *layout1 = new QVBoxLayout(topLayout, 5);
+  QGridLayout *layout2 = new QGridLayout(layout1, 2, 3, 5);
+
+  layout2->addWidget(playButton, 0, 0);
+  layout2->addWidget(stopButton, 0, 1);
+  layout2->addWidget(pauseButton, 0, 2);
+  layout2->addWidget(prevButton, 1, 0);
+  QBoxLayout *layout3 = new QHBoxLayout(layout2);
+  layout2->addWidget(nextButton, 1, 2);
+
+  layout3->addWidget(secLabel);
+  layout3->addWidget(centiSecLabel);
+
+  layout1->addSpacing(10);
+  layout1->addWidget(timeSlider);
+  topLayout->addWidget(speedDial);
+
+  // signals n slots
   connect( timeSlider, SIGNAL( valueChanged(int) ),
 	   (MyWidget *)this, SLOT( changed(int) ) );
   connect( timeSlider, SIGNAL( sliderPressed() ),
