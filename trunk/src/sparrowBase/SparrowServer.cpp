@@ -72,7 +72,8 @@ PioneerHardware::~PioneerHardware()
 
 SparrowBase::SparrowBase(int argc, char *argv[]) :
   Super(argc, argv),
-  reactorTask(this),
+  schedparams_(ACE_SCHED_FIFO, 10),
+  reactorTask( this, 20, &schedparams_),
 
   // Notification Channel
   notifyFactory_(TAO_Notify_EventChannelFactory_i::create(poa.in() ACE_ENV_ARG_PARAMETER)),
@@ -131,7 +132,8 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 
 SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
   Super(_server),
-  reactorTask(&_server),
+  schedparams_(ACE_SCHED_FIFO, 10),
+  reactorTask( &_server, 20, &schedparams_),
 
   // Notification Channel
   notifyFactory_(TAO_Notify_EventChannelFactory_i::create(poa.in() ACE_ENV_ARG_PARAMETER)),

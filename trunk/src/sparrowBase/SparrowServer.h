@@ -93,6 +93,8 @@ public:
   Miro::NotifyMulticast::Adapter * notifyMulticast();
 
   // protected:
+  /** Sceduling parameters for a realtime thread */
+  ACE_Sched_Params schedparams_;
   // since TAO is using the main thread, we need our own reactor
   // actually its worse: Due to deadlocks otherwise, we need a concurrent reactor!
   Miro::ReactorTask reactorTask;
