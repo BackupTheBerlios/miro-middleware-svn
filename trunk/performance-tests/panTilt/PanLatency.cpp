@@ -275,6 +275,8 @@ int main(int argc, char *argv[])
 	    if (verbose)
 	      cout << "Save image to buffer." << endl;
 	    v.push_back(image);
+
+	    video->releaseImage(id, imgOffset);
 	  }
 	  // write images to disc
 	  if (verbose)
