@@ -138,19 +138,19 @@ namespace FaulMotor
     double dSpeedR = speedR - prevSpeedR;
 
     double accEffL, accEffR;
-    if ((dSpeedR + dSpeedL) / 2. <= 0 ) {
+    /*if ((dSpeedR + dSpeedL) / 2. <= 0 ) {
        accEffL = params_-> maxNegAccel;
        accEffR = params_-> maxNegAccel;
     }
-    else {
+    else {*/
        accEffL = params_-> maxPosAccel;
        accEffR = params_-> maxPosAccel;
-    }
+    //}
 
     double accR =  accEffR * 9. / 320.;
     double accL =  accEffL * 9. / 320.;
     if ((dSpeedL != 0) && (dSpeedR != 0)) {
-      if (abs(dSpeedL) > abs(dSpeedR)) {
+      if (fabs(dSpeedL) > fabs(dSpeedR)) {
 	accR = (dSpeedR / dSpeedL * accEffR) * 9. / 320.;
       }
       else {
@@ -163,7 +163,7 @@ namespace FaulMotor
 //    cout << "maxPosAcc: " << params_-> maxPosAccel <<" AccR: " << acctestR ;
 //    cout << " AccL: " << acctestL << endl;
 
-    if (abs(acctestL - prevAccL) > 2) {         //zur datenverringerung
+    if (fabs(acctestL - prevAccL) > 2) {         //zur datenverringerung
       sprintf(speedMessageL, "ac%d", acctestL); // build acc message
       prevAccL = acctestL;
     }
@@ -172,7 +172,7 @@ namespace FaulMotor
       messageL[1] = NULL;
     }
 
-    if (abs(acctestR - prevAccR) > 2) {
+    if (fabs(acctestR - prevAccR) > 2) {
       sprintf(speedMessageR, "ac%d", acctestR); // build acc message
       prevAccR = acctestR;
     }
