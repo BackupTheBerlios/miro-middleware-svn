@@ -54,8 +54,8 @@ int main(int argc, char *argv[])
   Sparrow::Parameters * parameters = Sparrow::Parameters::instance();
   // Config file processing
   Miro::ConfigDocument config(argc, argv);
-  config.setSection("Sparrow99");
-  config.getParameters("sparrowBoard", *parameters);
+  config.setSection("Sparrow");
+  config.getParameters("Sparrow::Parameters", *parameters);
 
 #ifdef DEBUG
   cout << "  sparrow paramters:" << endl << *parameters << endl;
