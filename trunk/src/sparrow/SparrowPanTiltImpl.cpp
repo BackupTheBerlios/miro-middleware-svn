@@ -157,7 +157,7 @@ namespace Sparrow
 
       // estimated pan angle
       double alpha = t.usec();
-      alpha /= 1000000;
+      alpha /= 1000000.;
       alpha += t.sec();
       alpha *= params_.panRadPerSec;
 
