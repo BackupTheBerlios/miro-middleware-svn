@@ -97,7 +97,13 @@
     <config_item name="FilterYUV422toRGB" parent="Filter" final="true" />
     <config_item name="FilterYUV422toYUV" parent="Filter" final="true" />
     <config_item name="FilterYUV420PtoRGB" parent="Filter" final="true" />
-    <config_item name="FilterOmni2Pan" parent="Filter" final="true" />
+
+    <config_item name="FilterOmni2Pan" parent="Filter" final="true" >
+       <config_parameter name="centerX" type="int" default="160" />
+       <config_parameter name="centerY" type="int" default="120" />
+       <config_parameter name="radius" type="int" default="120" />
+    </config_item>
+
     <config_item name="FilterDistanceScan" parent="Filter" final="true" />
     <config_item name="FilterRGBtoSeg" parent="Filter" final="true">
        <config_parameter name="threshold" type="double" default="80.0" />

@@ -21,6 +21,10 @@
 namespace Video
 {
   //! Lookup table driven conversion from omni to panoramic view
+  /** The center and the radius of the circle that should be "unrolled" can be
+      assigned. In case, that parts of the circle are outside of the image, these pixels
+      are filled with the value of the nearest pixel inside the image (relativ to the
+      center of the circle). */
   class FilterOmni2Pan : public Filter
   {
     typedef Filter Super;
@@ -29,6 +33,7 @@ namespace Video
     FilterOmni2Pan(Miro::ImageFormatIDL const& _inputFormat);
     virtual ~FilterOmni2Pan();
     virtual void process();
+    virtual void init(Miro::Server& _server, Video::FilterParameters const *);
 
     FILTER_PARAMETERS_FACTORY(FilterOmni2Pan);
 
@@ -40,6 +45,7 @@ namespace Video
 
     int middleX_;
     int middleY_;
+    int radius_;
 
     int srcOffset_[IMAGE_WIDTH * IMAGE_HEIGHT];
 

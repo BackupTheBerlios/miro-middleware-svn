@@ -22,6 +22,9 @@
 #include <algorithm>
 #include <cmath>
 
+using std::endl;
+using std::cout;
+
 namespace Video
 {
   double FilterOmni2Pan::cosLookup_[360];
@@ -39,11 +42,6 @@ namespace Video
     outputFormat_.palette = Miro::RGB_24;
     outputFormat_.width = IMAGE_WIDTH;
     outputFormat_.height = IMAGE_HEIGHT;
-
-    middleX_ = inputFormat_.width / 2;
-    middleY_ = inputFormat_.height / 2;
-
-    buildLookupTables();
   }
 
   //---------------------------------------------------------------
@@ -75,13 +73,35 @@ namespace Video
       sinLookup_[i] = sin(M_PI * i / 180.0);
     }
 
+    double scaleFactor = (double)radius_/(double)outputFormat_.height;
+
     int * srcOffset = srcOffset_;
     for (unsigned int dist = 0; dist < outputFormat_.height; dist++) {
       for (unsigned int angle = 0; angle < outputFormat_.width; angle++) {
 	*(srcOffset++) = 
-	  (middleX_ + (int)floor(dist * cosLookup_[angle])) * 3 +
-	  (middleY_ + (int)floor(dist * sinLookup_[angle])) * 3 * inputFormat_.width;
+	  std::min((int)inputFormat_.width-1,
+		   std::max(0,
+			    (middleX_ + (int)floor((double)dist*scaleFactor*cosLookup_[angle])))) * 3 +
+	  std::min((int)inputFormat_.height-1,
+		   std::max(0,
+			    (middleY_ + (int)floor((double)dist*scaleFactor*sinLookup_[angle])))) * 3 * inputFormat_.width;
       }
     }
+  }
+
+
+  void FilterOmni2Pan::init(Miro::Server& _server, Video::FilterParameters const * _params)
+  {
+    Super::init(_server, _params);
+
+    FilterOmni2PanParameters const * params = 
+      dynamic_cast<FilterOmni2PanParameters const *>(_params);
+    assert(params != NULL);
+
+    middleX_ = params->centerX;
+    middleY_ = params->centerY;
+    radius_ = params->radius;
+
+    buildLookupTables();
   }
 }
