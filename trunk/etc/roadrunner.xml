@@ -148,7 +148,7 @@
 	<parameter value="0.050000" name="ButtonsPollInterval" />
 	<parameter value="1.0776" name="TransFactor" />
 	<parameter value="1.000000" name="WatchdogTimeout" />
-	<parameter value="2650" name="Servo0MidPulse" />
+	<parameter value="2720" name="Servo0MidPulse" />
 	<parameter value="200" name="MaxAccel" />
 	<parameter value="2350" name="Diameter" />
 	<parameter value="30720" name="MaxPower" />
@@ -423,9 +423,6 @@
 			<parameter value="YellowLeftPost" />
 			<parameter value="YellowRightPost" />
 			<parameter value="AttentionLines" />
-			<!--
-			<parameter value="AttentionRobots" />
-			-->
 		      </parameter>
 		    </parameter>
 
@@ -433,44 +430,9 @@
 		      <parameter value="ROIVisual" name="Type" />
 		      <parameter value="ROIVisual" name="Name" />
 		      <parameter name="BackLink" >
-			<parameter value="CollectAllFeatures" />
+			<parameter value="CollectAllFeaturesFull" />
 		      </parameter>
 		    </parameter>
-
-		    <!--
-		    <parameter name="Filter" >
-		      <parameter value="ColorHist" name="Name" />
-		      <parameter value="ColorHist" name="Type" />
-		      <parameter name="BackLink" >
-			<parameter value="AttentionCornerPoles" />
-		      </parameter>
-		    </parameter>
-		    <parameter name="Filter" >
-		      <parameter value="OrientHist" name="Name" />
-		      <parameter value="OrientHist" name="Type" />
-		      <parameter name="BackLink" >
-			<parameter value="SobelVertical" />
-			<parameter value="SobelHorizontal" />
-			<parameter value="AttentionCornerPoles" />
-		      </parameter>
-		    </parameter>
-		    <parameter name="Filter" >
-		      <parameter value="NeuralNetCornerPoles" name="Type" />
-		      <parameter value="NeuralNetCornerPoles" name="Name" />
-		      <parameter name="BackLink" >
-			<parameter value="ColorHist" />
-			<parameter value="OrientHist" />
-			<parameter value="AttentionCornerPoles" />
-		      </parameter>
-		    </parameter>
-		    <parameter name="Filter" >
-		      <parameter value="ROIVisual" name="Type" />
-		      <parameter value="ROIVisualCornerPoles" name="Name" />
-		      <parameter name="BackLink" >
-			<parameter value="NeuralNetCornerPoles" />
-		      </parameter>
-		    </parameter>
-		    -->
 
 		  </parameter>
 		</parameter>
@@ -579,30 +541,6 @@
 	  <parameter value="ROI" name="Name" />
 	</parameter>
       </parameter>
-
-      <!--
-      <parameter name="OrientHist">
-        <parameter value="3" name="UseROIFrom" />
-        <parameter value="0.2" name="wideROI" />
-      </parameter>
-      <parameter name="ColorHist">
-        <parameter value="1" name="UseROIFrom" />
-        <parameter value="0.0" name="wideROI" />
-      </parameter>
-      <parameter name="NeuralNetCornerPoles">
-	<parameter value="YBYCornerPoles.net" name="File" />
-	<parameter value="1" name="UseColorHistFrom" />
-	<parameter value="2" name="UseOrientHistFrom" />
-	<parameter value="3" name="UseROIFrom" />
-      </parameter>
-      <parameter name="ROIVisualCornerPoles">
-	<parameter value="true" name="VisText" />
-        <parameter value="true" name="InterfaceInstance" />
-        <parameter name="Interface" >
-          <parameter value="NN" name="Name" />
-        </parameter>
-      </parameter>
-      -->
 
       <parameter name="DeviceQuickCam" >
         <parameter value="20" name="Framerate" />
