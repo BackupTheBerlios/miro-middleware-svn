@@ -206,6 +206,7 @@ namespace Miro
     { // scope for guard
       Guard guard(mutex_);
       scan_.range[_data->group] = _data->range;
+      scan_.time = _data->time;
       condition_.broadcast();
     }
 
