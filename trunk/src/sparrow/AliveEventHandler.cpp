@@ -15,32 +15,85 @@
 
 #include "miro/StructuredPushSupplier.h"
 
-#include <idl/SparrowAliveC.h>
-
 namespace Sparrow
 {
+  /** Maximum wait time for cond_.wait calls. */
+  ACE_Time_Value AliveDispatcher::maxWait_(1);
+
+  AliveDispatcher::AliveDispatcher(Miro::StructuredPushSupplier * _supplier) :
+    supplier_(_supplier),
+    mutex_(),
+    cond_(mutex_)
+  {
+    if (supplier_) {
+      // Status Notify Event initialization
+      notifyEvent_.header.fixed_header.event_type.domain_name = 
+	CORBA::string_dup(supplier_->domainName().c_str());
+      notifyEvent_.header.fixed_header.event_type.type_name = 
+	CORBA::string_dup("SparrowAlive");
+
+      CosNotification::EventTypeSeq offers;
+      offers.length(1);
+      offers[0] = notifyEvent_.header.fixed_header.event_type;
+      supplier_->addOffers(offers);
+    }
+  }
+
+  void
+  AliveDispatcher::setData(Miro::SparrowAliveIDL const& _data)
+  {
+    notifyEvent_.remainder_of_body <<= _data;
+  };
+
+  int
+  AliveDispatcher::svc()
+  {
+    MIRO_LOG(LL_NOTICE, "Asynchronous SparrowAlive dispatching");
+
+    while(!canceled()) {
+      Miro::Guard guard(mutex_);
+      ACE_Time_Value timeout(ACE_OS::gettimeofday());
+      timeout += maxWait_;
+      if (cond_.wait(&timeout) != -1 &&
+	  !canceled()) {
+	dispatch();
+      }
+    }
+
+    return 0;
+  }
+
+  void
+  AliveDispatcher::dispatch()
+  {
+    supplier_->sendEvent(notifyEvent_);
+  }
+
+  void
+  AliveDispatcher::cancel(bool _wait)
+  {
+    canceled_ = true;
+    {
+      Miro::Guard guard(mutex_);
+      cond_.broadcast();
+    }
+    Super::cancel(_wait);
+  }
+
   AliveEventHandler::AliveEventHandler(AliveCollector * _collector, 
 				       Connection2003 * _connection,
 				       Miro::StructuredPushSupplier * _pSupplier) :
     Super(),
     connection_(_connection),
     collector_(_collector),
-    pSupplier_(_pSupplier)
+    dispatcher_(_pSupplier)
   {
-    if (pSupplier_) {
-      notifyEvent_.header.fixed_header.event_type.domain_name =
-        CORBA::string_dup(pSupplier_->domainName().c_str());
-      notifyEvent_.header.fixed_header.event_type.type_name =
-	CORBA::string_dup("SparrowAlive");
-      notifyEvent_.header.fixed_header.event_name = CORBA::string_dup("");
-      notifyEvent_.header.variable_header.length(0);   // put nothing here
-      notifyEvent_.filterable_data.length(0);          // put nothing here
+    dispatcher_.detach(1);
+  }
 
-      CosNotification::EventTypeSeq offers;
-      offers.length(1);
-      offers[0] = notifyEvent_.header.fixed_header.event_type;
-      pSupplier_->addOffers(offers);
-    }
+  AliveEventHandler::~AliveEventHandler()
+  {
+    dispatcher_.cancel();
   }
 
   int 
@@ -57,10 +110,10 @@ namespace Sparrow
 
     connection_->writeHostAlive();
     
-    notifyEvent_.remainder_of_body <<= aliveIDL;
-    if(pSupplier_)
-      pSupplier_->sendEvent(notifyEvent_);
-    
+    Miro::Guard guard(dispatcher_.mutex_);
+    dispatcher_.setData(aliveIDL);
+    dispatcher_.cond_.broadcast();
+
     return 0;
   }
 }
