@@ -213,7 +213,7 @@ int main(int argc, char *argv[])
 	  cout << "new pan angle (deg): " << flush;
 	  cin >> angle;
 	  
-	  istringstream istr(angle);
+	  std::istringstream istr(angle);
 	  istr >> alpha;
 	  alpha = Miro::deg2Rad(alpha);
 	  

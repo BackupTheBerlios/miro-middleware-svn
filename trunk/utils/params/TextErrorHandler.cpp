@@ -38,10 +38,10 @@ TextErrorHandler::createErrorMessage(const QString& type, const QXmlParseExcepti
   std::stringstream ostr;
   ostr << type 
        << " in line " << exception.lineNumber() << " "
-       << ", column " << exception.columnNumber() << endl
+       << ", column " << exception.columnNumber() << std::endl
     //       << "public id: " << exception.publicId() << endl
     //       << "system id: " << exception.systemId() << endl
-       << exception.message() << endl;
+       << exception.message() << std::endl;
 
   error_ = ostr.str().c_str();
 }

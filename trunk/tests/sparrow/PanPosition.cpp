@@ -12,6 +12,7 @@
 #include "miro/SparrowPanTiltC.h"
 #include "miro/Client.h"
 #include "miro/Angle.h"
+#include "miro/TimeHelper.h"
 
 using Miro::Client;
 using Miro::SparrowPanTilt;
@@ -32,7 +33,10 @@ int main (int argc, char * argv[])
   SparrowPanTilt_var pan = client.resolveName<SparrowPanTilt>("PanTilt");
 
   while(true) {
-    PanPositionIDL position = pan->currentPan();
+    ACE_Time_Value a = ACE_OS::gettimeofday();
+    Miro::TimeIDL c;
+    Miro::timeA2C(a, c);
+    PanPositionIDL position = pan->currentPan(c);
     cout << "pan position: " << position << endl;
 
     ACE_OS::sleep(ACE_Time_Value(0, 50000));

@@ -23,7 +23,7 @@ public:
   DummyArbiter(const std::string& _name);
   
   // factory method for ArbiterParameters
-  DummyArbiterMessage * getMessageInstance();
+  DummyArbiterMessage * getMessageInstance() const;
   
   virtual const std::string& getName() const;
 

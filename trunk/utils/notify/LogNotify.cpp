@@ -17,12 +17,12 @@
 
 #include <ace/Date_Time.h>
 
-#include <strstream>
+#include <sstream>
 
 using std::cout;
 using std::cerr;
 using std::string;
-using std::ostrstream;
+using std::ostringstream;
 
 using CosNotification::EventTypeSeq;
 using CosNotification::StructuredEvent;
@@ -50,9 +50,7 @@ namespace
   {
     ACE_Date_Time dt;
 
-    char buffer[256];
-    memset(buffer, 0, 256);
-    ostrstream ostr(buffer, 255);
+    ostringstream ostr;
 
     ostr << dt.year() << ".";
     ostr.width(2);
@@ -69,7 +67,7 @@ namespace
     ostr << dt.minute()
 	 << ".log";
 
-    return string(buffer);
+    return ostr.str();
   }
 };
 

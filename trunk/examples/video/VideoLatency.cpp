@@ -13,9 +13,9 @@
 #include <ace/Get_Opt.h>
 
 #include <iostream>
-#include <strstream>
+#include <sstream>
 
-using std::ostrstream;
+using std::ostringstream;
 
 // This is an attempt to determine the latency between vidoe capture
 // of the camera and video capture of the device driver.  When it is
@@ -32,9 +32,7 @@ int main (int, char**)
     ACE_Date_Time dt;
     dt.microsec(ACE_OS::gettimeofday().usec());
   
-    char buffer[256];
-    memset(buffer, 0, 256);
-    ostrstream ostr(buffer, 255);
+    ostringstream ostr;
   
     ostr << dt.year() << ".";
     ostr.width(2);
@@ -57,7 +55,7 @@ int main (int, char**)
     ostr << (dt.microsec() / 10000)
 	 << ".ppm";
   
-    cout << buffer << endl;
+    cout << ostr.str() << endl;
 
     ACE_OS::sleep(ACE_Time_Value(0, 1));
   }

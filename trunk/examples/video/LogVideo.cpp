@@ -2,17 +2,9 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999,2000
+// (c) 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 //
 //////////////////////////////////////////////////////////////////////////////
@@ -27,7 +19,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <strstream>
+#include <sstream>
 #include <vector>
 
 #include <stdio.h>
@@ -35,7 +27,7 @@
 namespace 
 {
   using std::string;
-  using std::ostrstream;
+  using std::ostringstream;
 
   using Miro::Client;
   using Miro::Video;
@@ -71,9 +63,7 @@ namespace
     ACE_Date_Time dt;
     dt.microsec(ACE_OS::gettimeofday().usec());
 
-    char buffer[256];
-    memset(buffer, 0, 256);
-    ostrstream ostr(buffer, 255);
+    ostringstream ostr;
 
     ostr << dt.year() << ".";
     ostr.width(2);
@@ -96,7 +86,7 @@ namespace
     ostr << (dt.microsec() / 10000)
 	 << ".ppm";
 
-    return string(buffer);
+    return ostr.str();
   }
 
   int parseArgs(int& argc, char* argv[])

@@ -19,7 +19,7 @@ DummyArbiter::DummyArbiter(const std::string& _name) :
 }
 
 DummyArbiterMessage * 
-DummyArbiter::getMessageInstance()
+DummyArbiter::getMessageInstance() const
 {
   return new DummyArbiterMessage();
 }

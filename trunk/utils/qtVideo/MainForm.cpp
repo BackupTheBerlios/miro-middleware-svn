@@ -19,11 +19,11 @@
 
 #include <unistd.h>
 
-#include <strstream>
+#include <sstream>
 
 using namespace Video;
 using std::string;
-using std::ostrstream;
+using std::ostringstream;
 
   string path()
   {
@@ -44,9 +44,7 @@ using std::ostrstream;
     ACE_Date_Time dt;
     dt.microsec(ACE_OS::gettimeofday().usec());
 
-    char buffer[256];
-    memset(buffer, 0, 256);
-    ostrstream ostr(buffer, 255);
+    ostringstream ostr;
 
     ostr << dt.year() << ".";
     ostr.width(2);
@@ -69,7 +67,7 @@ using std::ostrstream;
     ostr << (dt.microsec() / 10000)
 	 << ".ppm";
 
-    return string(buffer);
+    return ostr.str();
   }
 
 
