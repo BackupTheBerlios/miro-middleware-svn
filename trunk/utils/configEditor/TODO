@@ -1,3 +1,4 @@
-- List Parameters setXML
-- Sparrow99::SparrowBoard::IrScaling (Vector dialog)
-  + add
+- std::set<> check for dublicates
+- default value managemen
+- verbose comments
+- up and down

@@ -29,6 +29,14 @@ public:
   ParameterSingleton(QListViewItem * _listViewItem, QListViewItem * _pre,
 		     QDomNode const& _node,
 		     QObject * _parent, const char * _name);
+  //----------------------------------------------------------------------------
+  // public inherited methods
+  //----------------------------------------------------------------------------
+
+  //! Inherited method.
+  virtual void moveUp();
+  //! Inherited method.
+  virtual void moveDown();
 };
 
 #endif

@@ -84,7 +84,6 @@ MainWindow::MainWindow() :
 
 MainWindow::~MainWindow()
 {
-  //  std::cout << "deleting main window" << std::endl;
 }
 
 void

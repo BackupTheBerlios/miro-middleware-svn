@@ -28,9 +28,6 @@
 #include <algorithm>
 #include <iostream>
 
-using std::cout;
-using std::endl;
-
 const QString Section::XML_TAG("section");
 
 Section::Section(QDomNode const& _node,
@@ -63,16 +60,14 @@ Section::contextMenu(QPopupMenu& _menu)
 
     if (e.tagName() == ParameterXML::XML_TAG) {
       childParameters.push_back(item->text(0));
-      cout << childParameters.back() << endl;
     }
     item = item->nextSibling();
   }
 
+  typedef std::vector<QString> QStringVector;
 
-  // create a new parameter selection menu
-  menuAddParameter_ = new QPopupMenu(&_menu);
-  // create a new instance selection menu
-  menuAddInstance_ = new QPopupMenu(&_menu);
+  QStringVector paramsList;
+  QStringVector instanceList;
 
   QString section = listViewItem()->text(0);
 
@@ -82,16 +77,38 @@ Section::contextMenu(QPopupMenu& _menu)
   for (; first != last; ++first) {
     if (first->second.isFinal()) {
       QString name = first->second.fullName();
-      menuAddInstance_->insertItem(name);
       if (first->second.instance()) {
 	Miro::CFG::Generator::QStringVector::const_iterator i =
 	  std::find(childParameters.begin(), childParameters.end(), name);
 	if (i == childParameters.end()) {
-	  menuAddParameter_->insertItem(first->second.fullName());
+	  paramsList.push_back(name);
 	}
+      }
+      else {
+	instanceList.push_back(name);
       }
     }
   }
+
+  // create a new parameter selection menu
+  menuAddParameter_ = new QPopupMenu(&_menu);
+  // create a new instance selection menu
+  menuAddInstance_ = new QPopupMenu(&_menu);
+
+  {
+    std::sort(paramsList.begin(), paramsList.end());
+    std::sort(instanceList.begin(), instanceList.end());
+    QStringVector::const_iterator first, last = paramsList.end();
+    for (first = paramsList.begin(); first != last; ++first) {
+      menuAddParameter_->insertItem(*first);
+    }
+    last = instanceList.end();
+    for (first = instanceList.begin(); first != last; ++first) {
+      menuAddInstance_->insertItem(*first);
+    }
+  }
+
+
   connect(menuAddInstance_, SIGNAL(activated(int)), 
 	  this, SLOT(onAddInstance(int)));
   connect(menuAddParameter_, SIGNAL(activated(int)), 

@@ -31,6 +31,17 @@ public:
 		    QObject * _parent, const char * _name);
 
   //----------------------------------------------------------------------------
+  // public inherited methods
+  //----------------------------------------------------------------------------
+
+  //! Inherited method.
+  virtual void moveUp();
+  //! Inherited method.
+  virtual void moveDown();
+  //! Inherited method.
+  virtual void contextMenu(QPopupMenu& _menu);
+
+  //----------------------------------------------------------------------------
   // public constants
   //----------------------------------------------------------------------------
   static QString const XML_TAG;

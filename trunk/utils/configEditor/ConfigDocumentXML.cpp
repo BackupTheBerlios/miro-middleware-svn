@@ -31,9 +31,6 @@ const QString ConfigDocumentXML::XML_DOCTYPE("MiroConfigDocument");
 const QString ConfigDocumentXML::XML_TAG("config");
 
 
-using std::cout;
-using std::endl;
-
 //------------------------------------------------------------------------------
 // public methods
 
@@ -71,11 +68,28 @@ ConfigDocumentXML::contextMenu(QPopupMenu& _menu)
     ConfigFile::instance()->description().groups();
   Miro::CFG::Generator::QStringVector::const_iterator first, last = sections.end();
   for (first = sections.begin(); first != last; ++first) {
+
+    // if this section already exists, don't add it
     Miro::CFG::Generator::QStringVector::const_iterator i = 
       std::find(childSections.begin(), childSections.end(), *first);
-    if (i == childSections.end()) {
-      menuAddSection_->insertItem(*first);
+    if (i != childSections.end())
+      continue;
+
+    // count the final parameter classes in the section
+    int itemCount = 0;
+    Miro::CFG::Generator::GroupMap::const_iterator f, l;
+    ConfigFile::instance()->description().getGroupedTypes(*first, f, l);
+    for (; f != l; ++f) {
+      if (f->second.isFinal()) {
+	++itemCount;
+      }
     }
+
+    // if this section is empty, don't add it
+    if (itemCount == 0)
+      continue;
+
+    menuAddSection_->insertItem(*first);
   }
   connect(menuAddSection_, SIGNAL(activated(int)),
 	  this, SLOT(onAddSection(int)));
@@ -88,15 +102,13 @@ void
 ConfigDocumentXML::onAddSection(int _n)
 {
   QDomElement config = document_.documentElement();
-  cout << config.tagName() << endl;
   QDomElement e = document_.createElement(Section::XML_TAG);
   e.setAttribute(Section::XML_ATTRIBUTE_KEY, menuAddSection_->text(_n));
 
   QDomNode n = config.firstChild();
-  if (!n.isNull())
-    cout << n.toElement().tagName() << endl;
   QDomNode newChild; 
-  if (true || config.firstChild().isNull())
+
+  if (config.firstChild().isNull())
     newChild = config.appendChild(e);
   else
     newChild = config.insertBefore(e, n);
