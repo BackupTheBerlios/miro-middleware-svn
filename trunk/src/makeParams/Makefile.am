@@ -20,8 +20,6 @@ bin_PROGRAMS = MakeParams
 MakeParams_SOURCES = MakeParams.cpp
 
 MakeParams_LDADD = \
-	-lACE \
-	$(QT_LIBS) \
 	-lmiroParams
 
 all-local:
