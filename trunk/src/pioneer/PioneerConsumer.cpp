@@ -2,14 +2,12 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
-//
 // 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-
 
 #include "PioneerConsumer.h"
 #include "PioneerStallImpl.h"
@@ -18,6 +16,7 @@
 #include "miro/RangeEventC.h"
 #include "miro/RangeSensorImpl.h"
 #include "miro/OdometryImpl.h"
+#include "miro/BatteryImpl.h"
 #include "miro/TimeHelper.h"
 
 #include "psos/PsosMessage.h"
@@ -30,23 +29,28 @@
 #define DBG(x)
 #endif
 
-using Psos::ServerInfoMessage;
-using Miro::RangeBunchEventIDL;
-
 namespace Pioneer
 {
+  using Psos::ServerInfoMessage;
+  using Miro::RangeBunchEventIDL;
+
   //------------------------//
   //----- constructors -----//
   //------------------------//
   Consumer::Consumer(Miro::RangeSensorImpl * _pSonar,
+		     Miro::RangeSensorImpl * _pTactile,
 		     Miro::OdometryImpl * _pOdometry,
+		     Miro::BatteryImpl * _pBattery,
 		     Pioneer::StallImpl * _pStall) :
     pSonar(_pSonar),
+    pTactile(_pTactile),
     pOdometry(_pOdometry),
+    pBattery(_pBattery),
     pStall(_pStall),
     prevX(0),
     prevY(0),
     prevTheta(0.),
+    bumpers_(0),
     params_(Parameters::instance())
   { 
     DBG(cout << "Constructing PioneerConsumer." << endl);
@@ -91,7 +95,6 @@ namespace Pioneer
 	if (pOdometry) {
 	  short x, y, x0, y0, dX, dY;
 	  double velL, velR, weelDist;
-	  short bat, rBump, lBump;
 	
 	  weelDist = 320;  // nur zum test muss noch allgemein gemacht werden
 	  // the odometry data is 15bit unsigned
@@ -136,12 +139,6 @@ namespace Pioneer
 
 	  pOdometry->integrateData(status_);
      
-	  rBump = message->rBumper();
-	  lBump = message->lBumper();
-	  bat = message->battery();
-	  pStall->integrateData(rBump,lBump,bat);
-	  //cout << "Stall: " << lBump << "--" << rBump << endl;
-	  //cout << "Battery: " << bat << endl;
 	}
 
 	//------------------------------
@@ -183,13 +180,54 @@ namespace Pioneer
 	// evaluating stall and bumper data
 	//------------------------------
 
-	cout << "Bumpers: ";
-	unsigned short bumpers = message->bumpers();
-	for (unsigned int i = 0; i < 16; ++i) {
-	  cout << ((bumpers >> i) & 1) << " ";
+	if (pStall) {
+	  unsigned short rBump = message->rBumper();
+	  unsigned short lBump = message->lBumper();
+	  pStall->integrateData(rBump,lBump);
+	  //cout << "Stall: " << lBump << "--" << rBump << endl;
 	}
-	cout << endl;
-	
+
+	if (pTactile) {
+	  RangeBunchEventIDL * pTactileEvent = new RangeBunchEventIDL();
+	  Miro::timeA2C(message->time(), pTactileEvent->time);
+	  pTactileEvent->sensor.length(10);
+
+	  unsigned long counter = 0;
+	  unsigned long index = 0;
+	  unsigned short bumpers = message->bumpers();
+	  unsigned long mask = bumpers_ ^ bumpers & 0x3e3e;
+
+	  for (unsigned int i = 9; i < 14; ++i, ++index) {
+	    if (mask & (1 << i)) {
+	      pTactileEvent->sensor[counter].group = 0;
+	      pTactileEvent->sensor[counter].index = index;
+	      pTactileEvent->sensor[counter].range = 
+		(bumpers & (1 << i))? 0 : Miro::RangeSensor::HORIZON_RANGE;
+
+	      ++counter;
+	    }
+	  }
+	  for (unsigned int i = 1; i < 6; ++i, ++index) {
+	    if (mask & (1 << i)) {
+	      pTactileEvent->sensor[counter].group = 0;
+	      pTactileEvent->sensor[counter].index = index;
+	      pTactileEvent->sensor[counter].range = 
+		(bumpers & (1 << i))? 0 : Miro::RangeSensor::HORIZON_RANGE;
+
+	      ++counter;
+	    }
+	  }
+	  bumpers_ = bumpers;
+	  pTactile->integrateData(pTactileEvent);
+	}
+
+	//----------------------------------------------------------------------
+	// evaluating battery
+	//----------------------------------------------------------------------
+	if (pBattery) {
+	  pBattery->integrateData(message->battery());
+	  //cout << "Battery: " << bat << endl;
+	}
 	break;
       }
     default:

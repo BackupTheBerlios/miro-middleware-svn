@@ -44,26 +44,32 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   structuredPushSupplier_(ec_.in(), namingContextName),
 
   odometry(&structuredPushSupplier_),
+  battery(),
 
   // Pioneer board initialization
-  pPioneerConsumer(new Pioneer::Consumer(&sonar , &odometry)),
+  pPioneerConsumer(new Pioneer::Consumer(&sonar, &tactile, &odometry, &battery)),
   pPsosEventHandler(new Psos::EventHandler(pPioneerConsumer, pioneerConnection)),
   pioneerConnection(reactorTask.reactor(), pPsosEventHandler, pPioneerConsumer),
 
   // Service initialization
   motion(pioneerConnection, *pPioneerConsumer),
   stall(/*pioneerConnection*/),
-  sonar(Pioneer::Parameters::instance()->sonarDescription, &structuredPushSupplier_)
+  sonar(Pioneer::Parameters::instance()->sonarDescription, &structuredPushSupplier_),
+  tactile(Pioneer::Parameters::instance()->tactileDescription, &structuredPushSupplier_)
 {
   pOdometry = odometry._this();
   pMotion = motion._this();
   pStall = stall._this();
   pSonar = sonar._this();
+  pTactile = tactile._this();
+  pBattery = battery._this();
 
   addToNameService(pOdometry.in(), "Odometry");
   addToNameService(pMotion.in(), "Motion");
   addToNameService(pStall.in(), "Stall");
   addToNameService(pSonar.in(), "Sonar");
+  addToNameService(pTactile.in(), "Tactile");
+  addToNameService(pBattery.in(), "Battery");
   addToNameService(ec_.in(), "EventChannel");
 
   // start the asychronous consumer listening for the hardware
@@ -109,7 +115,7 @@ main(int argc, char *argv[])
     delete config;
     
 #ifdef DEBUG
-    cout << "  pioneer paramters:" << endl << pioneerParameters << endl;
+    cout << "  pioneer paramters:" << endl << *pioneerParameters << endl;
 #endif
     
     DBG(cout << "Initialize server daemon." << endl);

@@ -19,6 +19,7 @@
 #include "miro/ReactorTask.h"
 #include "miro/StructuredPushSupplier.h"
 #include "miro/OdometryImpl.h"
+#include "miro/BatteryImpl.h"
 
 #include "psos/PsosEventHandler.h"
 #include "pioneer/PioneerConnection.h"
@@ -67,6 +68,7 @@ private:
   Miro::StructuredPushSupplier structuredPushSupplier_;
 
   Miro::OdometryImpl odometry;
+  Miro::BatteryImpl battery;
 
   Pioneer::Consumer * pPioneerConsumer;
   Psos::EventHandler * pPsosEventHandler;
@@ -75,11 +77,14 @@ private:
   Pioneer::MotionImpl motion;
   Pioneer::StallImpl  stall;
   Miro::RangeSensorImpl sonar;
+  Miro::RangeSensorImpl tactile;
 
   Miro::Odometry_var pOdometry;
   Miro::Motion_var pMotion;
   Miro::Stall_var pStall;
   Miro::RangeSensor_var pSonar;
+  Miro::RangeSensor_var pTactile;
+  Miro::Battery_var pBattery;
 };
 #endif
 

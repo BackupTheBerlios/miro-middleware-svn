@@ -59,6 +59,7 @@ IDL_FILES =	Time \
 		SynchroMotion \
 		DifferentialMotion \
 		Stall \
+		Battery \
 		\
 		ScanDescription \
 		RangeEvent \
@@ -116,6 +117,7 @@ FILES =	\
 	OdometryImpl \
 	MotionImpl \
 	DifferentialMotionImpl \
+	BatteryImpl \
 	BehaviourEngineImpl \
 	MotionParameters
 

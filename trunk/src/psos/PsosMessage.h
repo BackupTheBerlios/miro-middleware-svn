@@ -76,10 +76,10 @@ namespace Psos
     short theta() const { return *(short *)(&buffer_[8]); }
     short lVel() const { return *(short *)(&buffer_[10]); }
     short rVel() const { return *(short *)(&buffer_[12]); }
-    unsigned char battery() const { return buffer_[14]; }
+    double battery() const { return (double)buffer_[14] / 10.; }
     unsigned short bumpers() const { return *(unsigned short *)(&buffer_[15]); }
-    unsigned char lBumper() const { return buffer_[15]; }
-    unsigned char rBumper() const { return buffer_[16]; }
+    unsigned char lBumper() const { return buffer_[15] & 1; }
+    unsigned char rBumper() const { return buffer_[16] & 1; }
     short control() const { return *(short *)(&buffer_[17]); }
     unsigned short PTU() const { return *(unsigned short *)(&buffer_[19]); }
     unsigned short flags() const { return *(unsigned short *)(&buffer_[19]); }

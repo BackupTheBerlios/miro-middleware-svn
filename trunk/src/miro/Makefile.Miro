@@ -57,6 +57,7 @@ IDL_FILES =	Time \
 		SynchroMotion \
 		DifferentialMotion \
 		Stall \
+		Battery \
 		\
 		ScanDescription \
 		RangeEvent \

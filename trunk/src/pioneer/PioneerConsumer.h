@@ -24,6 +24,7 @@ namespace Miro
 {
   class OdometryImpl;
   class RangeSensorImpl;
+  class BatteryImpl;
 };
 
 namespace Pioneer
@@ -43,7 +44,9 @@ namespace Pioneer
     typedef Miro::DevConsumer Super;
   public:
     Consumer(Miro::RangeSensorImpl * _pSonar,
+	     Miro::RangeSensorImpl * _pTactile = NULL,
 	     Miro::OdometryImpl * _pOdometry = NULL,
+	     Miro::BatteryImpl * _pBattery = NULL,
 	     Pioneer::StallImpl * _pStall = NULL);
     ~Consumer();
 
@@ -51,12 +54,15 @@ namespace Pioneer
 
     // protected:
     Miro::RangeSensorImpl * pSonar;
+    Miro::RangeSensorImpl * pTactile;
     Miro::OdometryImpl * pOdometry;
-    Miro::MotionStatusIDL status_;
-    Pioneer::StallImpl * pStall;                          // test
+    Miro::BatteryImpl * pBattery;
+    Pioneer::StallImpl * pStall;
 
+    Miro::MotionStatusIDL status_;
     short prevX, prevY;
     double prevTheta;
+    bool bumpers_;
 
     Pioneer::Parameters * params_;
   };

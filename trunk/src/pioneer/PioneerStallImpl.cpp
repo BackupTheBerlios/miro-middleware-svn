@@ -14,7 +14,7 @@
 
 namespace Pioneer
 {
-  short rStall, lStall, batteryVol;
+  short rStall, lStall;
 
   // Implementation skeleton constructor
   StallImpl::StallImpl()
@@ -29,11 +29,10 @@ namespace Pioneer
   }
   
   void
-  StallImpl::integrateData(short rStalled, short lStalled, short bat)
+  StallImpl::integrateData(short rStalled, short lStalled)
   {
     rStall = rStalled;
     lStall = lStalled;
-    batteryVol = bat;
   }
 
   CORBA::Short 
@@ -55,12 +54,6 @@ namespace Pioneer
       return false;
   }
   
-  CORBA::Short 
-  StallImpl::getBattery() throw ()
-  {
-    return batteryVol;
-  }
-
   void 
   StallImpl::unstall() throw ()
   {
