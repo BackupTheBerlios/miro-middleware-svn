@@ -85,7 +85,7 @@ namespace Canon
 
     Answer * getAnswer();
     void addAnswer(unsigned char val);
-    void checkAnswer() throw(Miro::EDevIO,Miro::EOutOfBounds);
+    void checkAnswer() throw(Miro::EDevIO,Miro::EOutOfBounds, Miro::ETimeOut);
 
     //closes the connection and returns control to Remote Controller
     void done();

@@ -46,27 +46,22 @@ namespace Canon
     virtual ~CanonCameraImpl();
 
     virtual void setZoom(short factor)
-      throw(Miro::EOutOfBounds, Miro::EDevIO);
+      throw(Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut);
     virtual short getZoom()
-      throw(Miro::EDevIO);
+      throw(Miro::EDevIO, Miro::ETimeOut);
 
     virtual void setFocus(short factor)
-      throw(Miro::EOutOfBounds, Miro::EDevIO);
+      throw(Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut);
     virtual short getFocus()
-      throw(Miro::EDevIO);
+      throw(Miro::EDevIO, Miro::ETimeOut);
     virtual void autoFocus()
-      throw(Miro::EDevIO);
+      throw(Miro::EDevIO, Miro::ETimeOut);
     virtual Miro::FocusRangeIDL getFocusRange()
-      throw(Miro::EDevIO);
-
-    //    virtual void waitCompletion()
-    //      throw(Miro::EDevIO);
-    //    virtual Miro::CanonPanTiltLimitsIDL getLimits()
-    //      throw(Miro::EDevIO, Miro::ETimeOut);
+      throw(Miro::EDevIO, Miro::ETimeOut);
 
     Answer * getAnswer();
     void addAnswer(unsigned char val);
-    void checkAnswer() throw(Miro::EDevIO,Miro::EOutOfBounds);
+    void checkAnswer() throw(Miro::EDevIO,Miro::EOutOfBounds, Miro::ETimeOut);
 
     //closes the connection and returns control to Remote Controller
     void done();
@@ -80,23 +75,8 @@ namespace Canon
     
     static ACE_Time_Value maxWait;
     bool initialized;
-    /*    double panPulseRatio;
-	  double tiltPulseRatio;
-	  double currentPan;
-	  double currentTilt;
-	  double panMinSpeed;
-	  double panMaxSpeed;
-	  double tiltMinSpeed;
-	  double tiltMaxSpeed;
-	  double minPan;
-	  double maxPan;
-	  double minTilt;
-	  double maxTilt;
-    */
 
     void initialize();
-    void waitInitialize(bool force=false,bool forceWait=false);
-
   };
 
   inline Answer* CanonCameraImpl::getAnswer() {return pAnswer;}

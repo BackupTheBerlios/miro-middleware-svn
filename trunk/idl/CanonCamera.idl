@@ -37,14 +37,14 @@ module Miro
      * @throw EDevIO
      * is thrown to indicate low level device problems.
      */
-    void setZoom(in short value) raises(EDevIO, EOutOfBounds);
+    void setZoom(in short value) raises(EDevIO, EOutOfBounds, ETimeOut);
     //! Get the current zoom factor.
     /**
      * @return The zoom factor, specified in percentage.
      * @throw EDevIO
      * is thrown to indicate low level device problems.
      */
-    short getZoom() raises(EDevIO);
+    short getZoom() raises(EDevIO, ETimeOut);
 
     //! Set the focus factor.
     /**
@@ -54,27 +54,27 @@ module Miro
      * @throw EDevIO
      * is thrown to indicate low level device problems.
      */
-    void setFocus(in short value) raises (EDevIO, EOutOfBounds);
+    void setFocus(in short value) raises (EDevIO, EOutOfBounds, ETimeOut);
     //! Get the current focus factor.
     /**
      * @return The focus factor, specified in percentage (0 - far / 100 - near).
      * @throw EDevIO
      * is thrown to indicate low level device problems.
      */
-    short getFocus() raises(EDevIO);
+    short getFocus() raises(EDevIO, ETimeOut);
     //! Set the camera to autoFocus mode
     /*
      * @throw EDevIO
      * is thrown to indicate low level device problems.
      */
-    void autoFocus() raises(EDevIO);
+    void autoFocus() raises(EDevIO, ETimeOut);
     //! get the focusing range for the current zoom position
     /*
      * @return The focusing range for the current position
      * @throw EDevIO
      * is thrown to indicate low level device problems.
      */
-    FocusRangeIDL getFocusRange() raises(EDevIO);
+    FocusRangeIDL getFocusRange() raises(EDevIO, ETimeOut);
 
   };
 };

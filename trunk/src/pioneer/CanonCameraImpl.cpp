@@ -73,7 +73,7 @@ namespace Canon
   // from pan.idl
   //-------------------------------------------------------------------------
   void
-  CanonCameraImpl::setZoom(short value) throw(Miro::EOutOfBounds, Miro::EDevIO)
+  CanonCameraImpl::setZoom(short value) throw(Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut)
   {
     value=value*128/100; //change to camera coordinates
     bool done=false;
@@ -96,7 +96,7 @@ namespace Canon
   }
   
   short
-  CanonCameraImpl::getZoom() throw(Miro::EDevIO)
+  CanonCameraImpl::getZoom() throw(Miro::EDevIO, Miro::ETimeOut)
   {
     bool done=false;
     short result=0;
@@ -108,9 +108,13 @@ namespace Canon
     pAnswer->mutex.release();
 
     while (!done) {
+      Timer timer(500000); //wait 0.5 sec max for an answer
       pAnswer->init();
       connection.sendCamera(zoom);
-      while (!pAnswer->errorCode()) usleep(1000);
+      while (!pAnswer->errorCode()) 
+	if (timer.usleep(5000)) {
+	  throw Miro::ETimeOut();
+	}
       
       //if busy, keep trying...
       if (pAnswer->errorCode()==ERROR_BUSY) {
@@ -130,7 +134,7 @@ namespace Canon
   }
   
   void 
-  CanonCameraImpl::setFocus(short factor) throw(Miro::EOutOfBounds, Miro::EDevIO)
+  CanonCameraImpl::setFocus(short factor) throw(Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut)
   {
     bool done=false;
     char tmp[3];
@@ -156,7 +160,7 @@ namespace Canon
   }
 
   short
-  CanonCameraImpl::getFocus() throw(Miro::EDevIO)
+  CanonCameraImpl::getFocus() throw(Miro::EDevIO, Miro::ETimeOut)
   {
     bool done=false;
     short result=0;
@@ -171,9 +175,13 @@ namespace Canon
     pAnswer->mutex.release();
 
     while (!done) {
+      Timer timer(500000);
       pAnswer->init();
       connection.sendCamera(focus);
-      while (!pAnswer->errorCode()) usleep(1000);
+      while (!pAnswer->errorCode()) 
+	if (timer.usleep(5000)) {
+	  throw Miro::ETimeOut();
+	}
       
       //if busy, keep trying...
       if (pAnswer->errorCode()==ERROR_BUSY) {
@@ -193,7 +201,7 @@ namespace Canon
   }
   
   void
-  CanonCameraImpl::autoFocus() throw(Miro::EDevIO)
+  CanonCameraImpl::autoFocus() throw(Miro::EDevIO, Miro::ETimeOut)
   {
     bool done=false;
     if (!initialized) initialize();
@@ -214,7 +222,7 @@ namespace Canon
   }
 
   Miro::FocusRangeIDL 
-  CanonCameraImpl::getFocusRange() throw(Miro::EDevIO)
+  CanonCameraImpl::getFocusRange() throw(Miro::EDevIO, Miro::ETimeOut)
   {
     Miro::FocusRangeIDL result;
     bool done=false;
@@ -227,9 +235,13 @@ namespace Canon
     pAnswer->mutex.release();
 
     while (!done) {
+      Timer timer(500000);
       pAnswer->init();
       connection.sendCamera(focus);
-      while (!pAnswer->errorCode()) usleep(1000);
+      while (!pAnswer->errorCode()) 
+	if (timer.usleep(5000)) {
+	  throw Miro::ETimeOut();
+	}
       
       //if busy, keep trying...
       if (pAnswer->errorCode()==ERROR_BUSY) {
@@ -270,42 +282,18 @@ namespace Canon
     initialized=true;
   }
   
-  void
-  CanonCameraImpl::waitInitialize(bool force,bool forceWait)
-  {
-    bool done;
-    
-    //if it is already initialized,
-    //   no reinitialization asked
-    //   and no need to wait
-    // then exit
-    if (!forceWait&&!force&&initialized) return;
-
-    //initialize only if not initialized
-    //or asked for initialization
-    if (force||!initialized) initialize();
-    do {
-      done=true;
-      try {
-	usleep(1000);
-	//	waitCompletion(); //wait until initialization is done
-      }
-      catch (Miro::EDevIO & e) {
-	// avoid "mode" errors
-	done=false;
-      }
-    } while(!done);
-  }
-
   void 
   CanonCameraImpl::addAnswer(unsigned char val)
   {
     pAnswer->add(val);
   }
 
-  void CanonCameraImpl::checkAnswer() throw (Miro::EDevIO,Miro::EOutOfBounds)
+  void CanonCameraImpl::checkAnswer() throw (Miro::EDevIO,Miro::EOutOfBounds, Miro::ETimeOut)
   {
-    while (!pAnswer->isValid()) usleep(1000); // wait to get the whole answer
+    Timer timer(500000); //0.5 sec maxwait
+    while (!pAnswer->isValid()) 
+      if (timer.usleep(1000)) // wait to get the whole answer
+	throw Miro::ETimeOut();
     if (pAnswer->header()!=ANSWER_HEADER) throw Miro::EDevIO("[CanonCameraImpl] Erroneous header in answer");
     if (pAnswer->errorCode()==ERROR_PARAMETER) throw Miro::EOutOfBounds("[CanonCameraImpl] Parameter Error");
     if (pAnswer->errorCode()==ERROR_MODE) throw Miro::EDevIO("[CanonCameraImpl] Mode Error");

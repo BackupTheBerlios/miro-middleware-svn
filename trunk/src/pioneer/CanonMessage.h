@@ -123,6 +123,21 @@ namespace Canon
     int index_;
     bool valid;
   };
+
+  class Timer
+  {
+  public:
+    //count is the maximum time in usecs to sleep
+    Timer(int count_=500000);
+
+    //sleep usec microseconds and return true if has slept count or more usec
+    bool usleep(int usec=10000);
+    // (re)set count
+    void reset(int count_=500000);
+
+  protected:
+    int count;
+  };
  
 
  // inline functions
@@ -239,6 +254,19 @@ namespace Canon
   bool 
   Answer::isValid() const {
     return valid;
+  }
+
+  inline 
+  bool
+  Timer::usleep(int usec) {
+    ::usleep(usec);
+    count-=usec;
+    return (count<=0);
+  }
+  inline 
+  void
+  Timer::reset(int count_) {
+    count=count_;
   }
 
 };

@@ -209,7 +209,11 @@ namespace Canon
     buffer_[index_]=val;
     index_++;
     valid|=(val==END_MARK); //if the ending mark came, the message is complete
-    //    return *this;
+  }
+
+  Timer::Timer(int count_) :
+    count(count_)
+  {
   }
 
 };
