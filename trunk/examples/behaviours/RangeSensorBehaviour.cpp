@@ -18,7 +18,7 @@
 #include "miro/Angle.h"
 
 #include "miro/StructuredPushSupplier.h"
-#include "nix/LineSamplesC.h"
+//#include "nix/LineSamplesC.h"
 
 #include <algorithm>
 

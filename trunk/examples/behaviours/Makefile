@@ -23,7 +23,7 @@ LDFLAGS +=  -L$(NIX_ROOT)/lib
 LDFLAGS +=  -L$(IPP_ROOT)/lib
 
 ## dynamic libraries if needed
-LDLIBS += -lnix -lippi20 -lippcv20 -lmiro -lTAO_CosNaming -lTAO
+LDLIBS += -lmiro -lTAO_CosNaming -lTAO
 
 ## program to be built
 BIN 	= Behaviours
