@@ -307,8 +307,6 @@ grouped together in less binaries:
 
 \section{Pioneer}
 
-%% control this section - gerd
-
 Due to the limited variety of sensors and actuators on the Pioneer robots, there exists only
 the most fundamental services for this robot.
 
@@ -336,13 +334,66 @@ the most fundamental services for this robot.
 
 \section{Frame Grabbers}
 
+The {\tt videoService} provides an interface to several frame grabber
+cards. All BTTV cards that are supported by the video for linux
+project are also supported here (namely the Bt848/849/878/879 based
+frame grabbers). The Matrox Meteor frame grabbers cards are also
+supported, but note that kernel drivers are only available for the
+older 2.2.x kernel series.
+
+The idl-interface that is used by the {\tt videoService} is {\tt
+  Miro::Video}. The Server registers itself as {\tt Video} in the
+Naming Service. You can get the last grabbed image immediately by use
+of the {\tt getImage()} method or wait for the next available image
+with the {\tt getWaitImage()}. What you get is a handle to the image
+that simply points to a memory range, where the color values for the
+image (or the intensity value for each pixel if it is a grayscale
+image) are listed for each single pixel. Additionally you get the
+image dimensions, an associated time stamp and the robots position at
+the moment of recording the picture.
+
+As always there is a configuration section in the xml-file called {\tt
+  video}, where the following parameters can be used:
+
+\begin{description}
+\item[device:] This section describes, which device-name the frame
+  grabber card uses. The default value is {\tt /dev/v4l/video0}.
+\item[grabber:] Determine which card your robot uses, either a {\tt
+    bttv} based card or a matrox {\tt meteor} card.
+\item[format:] With the format parameter you can choose, which
+  standard you camera uses. Either the (european) {\tt pal} format,
+  the (american) {\tt ntsc} format or the (asiatic) {\tt secam}
+  format. With the {\tt auto} option, the format is choosen
+  automatically.
+\item[source:] This parameter define, from which input source the
+  server should read. Possible choises are: {\tt composite1}, {\tt
+    composite2}, {\tt composite3}, {\tt svideo} and {\tt tuner}.
+  %%{\tt usb} or {\tt 1394}.
+\item[palette:] Palette can be one of the following: {\tt gray}, {\tt
+    rgb}, {\tt rgba}, {\tt bgr} or {\tt bgra}. \\
+  {\tt rgb} or {\tt bgr} indicates the 24-Bit mode, whereas {\tt rgba} and
+  {\tt bgra} are 32-Bit modes.
+\item[subfield:] With this parameter you can choose which subfields to
+  use: {\tt odd}, {\tt even} or {\tt all}.
+\item[width:] The {\tt width} that the image should have.
+\item[height:] The {\tt height} that the image should have.
+\item[connections:]
+\item[buffers:]
+\item[byteorder:] %%0 == native/1 == rgb
+\end{description}
+
+Note, that not each card support each option and that not every
+combination of options can be used for each card. If in doubt, refer
+to the technical manual of your frame grabber card.
+
 
 \section{SICK Laser Scanner}
 
 The {\tt sickLaserService} provides an interface to a laser range
-finder of type Sick pls200 (TODO: check this?). This sensor is
-connected to the controlling PC via a serial line. It is delivered
-either with a RS-232 or a RS-422 compliant interface. 
+finder of type Sick PLS.
+%%pls200 (TODO: check this?).
+This sensor is connected to the controlling PC via a serial line. It
+is delivered either with a RS-232 or a RS-422 compliant interface.
 
 The idl-interface implemented by the {\tt sickLaserService} is
 {\tt Miro::Laser}, which is derived from
