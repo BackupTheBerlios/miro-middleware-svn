@@ -94,8 +94,10 @@ SparrowBase::SparrowBase(Miro::Server& _server, bool _startReactorTastk) :
   mcAdapter_(( (Sparrow::Parameters::instance()->channelSharing)?
 	       new Miro::NotifyMulticast::Adapter(0, NULL, &server_, ec_) :
 	       NULL) ),
+  aEventHandler_(NULL),
   delay(0,0),
-  interval(0, 500000)
+  interval(0, 500000),
+  aEventHandlerId_(-1)
 {
   if(Sparrow::Parameters::instance()->sparrow2003) {
     
@@ -129,11 +131,11 @@ SparrowBase::SparrowBase(Miro::Server& _server, bool _startReactorTastk) :
       static_cast<POA_Miro::Motion *>
       (new FaulMotor::MotionImpl(pFaulhaber->connection));
     
-    aEventHandler = new Sparrow::AliveEventHandler(aCollector, 
+    aEventHandler_ = new Sparrow::AliveEventHandler(aCollector, 
 						   sparrowConnection2003, 
 						   &structuredPushSupplier_);
     
-    reactorTask.reactor()->schedule_timer(aEventHandler, NULL, delay,interval);
+    aEventHandlerId_ = reactorTask.reactor()->schedule_timer(aEventHandler_, NULL, delay,interval);
   }
   else {
     pSparrowConsumer = new Sparrow::Consumer();
@@ -206,6 +208,11 @@ SparrowBase::~SparrowBase()
 {
   DBG(cout << "Destructing SparrowBase." << endl);
 
+  if (aEventHandlerId_ != -1)
+    reactorTask.reactor()->cancel_timer(aEventHandlerId_);
+  
+  delete aEventHandler_;
+  
   // close channel sharing
   if (mcAdapter_) {
     DBG(cout << "Closing multicats adapter." << endl);
@@ -217,18 +224,20 @@ SparrowBase::~SparrowBase()
   odometry.cancel();
   DBG(cout << "Odometry dispatching canceled." << endl);
 
-  if (!Sparrow::Parameters::instance()->sparrow2003)
-     infrared.cancel();
+  infrared.cancel();
   DBG(cout << "Infrared dispatching canceled." << endl);
 
   DBG(cout << "Shutting down sparrow board." << endl);
   if (sparrowConnection)
     sparrowConnection->fini();
-  std::cout << "success" << endl;
 
-  std::cout << "reactor task" << endl;
   reactorTask.cancel();
   DBG(cout << "reactor Task canceled." << endl);
+
+
+  delete pFaulhaber;
+  delete sparrowConnection;
+  delete sparrowConnection2003;
 
   DBG(cout << "removing objects from POA" << endl);
 
@@ -239,6 +248,7 @@ SparrowBase::~SparrowBase()
   PortableServer::ObjectId_var oid;
   oid =  server_.poa->reference_to_id (pOdometry);
   server_.poa->deactivate_object (oid.in());
+
   oid =  server_.poa->reference_to_id (pMotion);
   server_.poa->deactivate_object (oid.in());
   oid =  server_.poa->reference_to_id (pInfrared);
@@ -255,8 +265,8 @@ SparrowBase::~SparrowBase()
     server_.poa->deactivate_object (oid.in());
 
   //}
-  oid = server_.poa->reference_to_id (notifyFactory_);
-  server_.poa->deactivate_object (oid.in());
+//  oid = server_.poa->reference_to_id (notifyFactory_);
+//  server_.poa->deactivate_object (oid.in());
 
-  DBG(cout << "Destructing SparrowBase members." << endl);
+  cout << "Destructing SparrowBase members." << endl;
 }

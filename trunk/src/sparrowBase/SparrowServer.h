@@ -135,9 +135,10 @@ public:
   Miro::NotifyMulticast::Adapter *mcAdapter_;
 
   Sparrow::AliveCollector * aCollector;
-  Sparrow::AliveEventHandler * aEventHandler;
+  Sparrow::AliveEventHandler * aEventHandler_;
   ACE_Time_Value delay;
   ACE_Time_Value interval;
+  int aEventHandlerId_;
 };
 
 inline
