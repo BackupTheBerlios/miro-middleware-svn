@@ -21,7 +21,7 @@ namespace Miro
   ConstraintArbiterParameters::ConstraintArbiterParameters() :
     pace(0, 50000),
     maxAccel(2000),
-    maxDecel(500),
+    maxDecel(2000),
     spaceResolution(20),
     maxVelocity(1500),
     viewerTask(false),

@@ -68,8 +68,8 @@ namespace Miro
 
     // set up velocity space
     int size = 2 * (maxVelocity_/spaceResolution_) + 1;
-    space_ = new int[size * size];
-    velocitySpace_ = new int*[size];
+    space_ = new float[size * size];
+    velocitySpace_ = new float*[size];
     for(int i = 0; i < size; i++) {
       velocitySpace_[i] = space_ + i * size;
     }
@@ -111,8 +111,8 @@ namespace Miro
 
     // set up velocity space
     int size = 2 * (maxVelocity_/spaceResolution_) + 1;
-    space_ = new int[size * size];
-    velocitySpace_ = new int*[size];
+    space_ = new float[size * size];
+    velocitySpace_ = new float*[size];
     for(int i = 0; i < size; i++) {
       velocitySpace_[i] = space_ + i * size;
     }
@@ -149,12 +149,12 @@ namespace Miro
 
 	if (fabs(left) < _maxSpeed && fabs(right) < _maxSpeed){
             velocitySpace_[l_index][r_index] =
-	    (int)rint(255. * ((1. +
+	    (255. * ((1. +
 			      atan2(l_value, fabs(r_value)) / M_PI_2) / 2.));
 
         }
 	else
-	  velocitySpace_[l_index][r_index] = 0;
+	  velocitySpace_[l_index][r_index] = 0.0;
       }
     }
     std::cout << "addEvalForPrefferedDingens end" << std::endl;
@@ -198,24 +198,24 @@ namespace Miro
                axis_direction = (fabs(atan2(r_value, l_value)) > M_PI_2)?-1.0:1.0;
                axis_value = ((axis_direction*v_dist)/(abs(maxVelocity_)/sqrt(2.0)) + 1.0)/2.0;
                velocitySpace_[l_index][r_index] =
-	       (int)rint(255. * (((1. +
+	       (255. * (((1. +
 			      atan2(fabs(l_value), fabs(r_value)) / M_PI_2) / 2.)*axis_value));
 
            }
 	   else
-	     velocitySpace_[l_index][r_index] = 0;
+	     velocitySpace_[l_index][r_index] = 0.0;
  //       }
  //       else
- //          velocitySpace_[l_index][r_index] = 0;
+ //          velocitySpace_[l_index][r_index] = 0.0;
       }
     }
   }
 
   /**
    * velocity.real() = translation, velocity.imag() = rotation
-   */  
+   */
   void
-  VelocitySpace::addEvalForVelocity(Vector2d const& _velocity) 
+  VelocitySpace::addEvalForVelocity(Vector2d const& _velocity)
   {
 #ifdef ASDF
     for(int l_index = minDynWinLeft_; l_index <= maxDynWinLeft_; l_index++) {
@@ -223,7 +223,7 @@ namespace Miro
 
 	double left = getVelocityByIndex(l_index);
 	double right = getVelocityByIndex(r_index);
-	double l_value = 
+	double l_value =
 	  cos(_prefDir - M_PI_4) * left -
 	  sin(_prefDir - M_PI_4) * right;
 	double r_value =
@@ -240,7 +240,7 @@ namespace Miro
 
         }
 	else
-	  velocitySpace_[l_index][r_index] = 0;
+	  velocitySpace_[l_index][r_index] = 0.0;
       }
     }
 #endif
@@ -251,7 +251,7 @@ namespace Miro
   void VelocitySpace::clearAllEvals(void) {
     for(int l_index = 0; l_index < 2*(maxVelocity_/spaceResolution_)+1; l_index++) {
       for(int r_index = 0; r_index < 2*(maxVelocity_/spaceResolution_)+1; r_index++) {
-        velocitySpace_[l_index][r_index] = 0;
+        velocitySpace_[l_index][r_index] = 0.0;
       }
     }
   }
@@ -269,7 +269,7 @@ namespace Miro
     const int CURV_RES = 6; // count (6)
     const int CURV_LEN = 700; // mm
     const int CURV_SMOOTH_LEN = 10; // mm
-    const int CURV_DELAY = 6; // count
+    const int CURV_DELAY = 3; // count
     const double WHEEL_DISTANCE  = 330.; // mm
     const double BREAK_ACCEL = 2000.; // in mm/sec2
 
@@ -308,11 +308,11 @@ namespace Miro
         angle = (180. * (fLeft - fRight)) / (WHEEL_DISTANCE * M_PI);
 
 	// rotate completely backwards
-	rotateMountedPolygon(_robot, Vector2d(0., offset), angle * (CURV_RES + 1));
+	rotateMountedPolygon(_robot, Vector2d(0., -offset), angle * (CURV_RES + 1));
 
 	// rotate stepwise forwards and check for collisions
 	for(seg = 0; seg < 2*CURV_RES+1; seg++) {
-	  rotateMountedPolygon(_robot, Vector2d(0., offset), -angle);
+	  rotateMountedPolygon(_robot, Vector2d(0., -offset), -angle);
           if(getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) == 0) {
 	    CURV[count][seg] = 0;
 	  }
@@ -322,7 +322,7 @@ namespace Miro
 	}
 
 	// rotate backwards to middle position
-	rotateMountedPolygon(_robot, Vector2d(0., offset), angle * CURV_RES);
+	rotateMountedPolygon(_robot, Vector2d(0., -offset), angle * CURV_RES);
 
       }
       else { // left==right ==> robot moves straight forward/backward
@@ -411,8 +411,8 @@ namespace Miro
 	else
 	  target = CURV_RES - CURV_DELAY + (int)(break_dist * (double)CURV_RES / (double)CURV_LEN);
 
-	velocitySpace_[l_index][r_index] = (int)((double)CURV[std::max(0,std::min(2*CURV_CNT,curv))][std::max(0,std::min(2*CURV_RES,target))]
-	    * (double)velocitySpace_[l_index][r_index] / 250.);
+	velocitySpace_[l_index][r_index] = ((double)CURV[std::max(0,std::min(2*CURV_CNT,curv))][std::max(0,std::min(2*CURV_RES,target))]
+	    * velocitySpace_[l_index][r_index] / 250.);
 
       }
     }
@@ -434,7 +434,7 @@ namespace Miro
   Vector2d
   VelocitySpace::applyObjectiveFunctionToEval()
   {
-    int biggestEval = 10;		// start with a threshold of 10
+    float biggestEval = 10.0;		// start with a threshold of 10
     double biggestRad = 0.;
     Vector2d biggestValueVelocity(0., 0.);
     bool found = false;
@@ -620,7 +620,7 @@ namespace Miro
 
   // move the given mounted polygon by given distance
   //
-  void 
+  void
   VelocitySpace::moveMountedPolygon(Polygon &_polygon, Vector2d const& _distance) 
   {
     Polygon::iterator i;

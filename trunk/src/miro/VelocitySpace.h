@@ -114,9 +114,9 @@ namespace Miro
     //! The space between the two wheels.
     double wheelBase_;
     //! Raw velocity space.
-    int * space_;
+    float * space_;
     //! The velocity space column index.
-    int** velocitySpace_;
+    float** velocitySpace_;
 
     double posCurvConstrB_;
     double posCurvConstrE_;
