@@ -183,6 +183,17 @@ namespace Video
       if ((*first)->active()) {
 	(*first)->acquireWriteBuffer();
 	(*first)->process();
+      }
+    }
+
+    // process succerssors trees
+    for (first = succ_.begin(); first != last; ++first)
+      if ((*first)->active()) {
+	(*first)->processFilterTree();
+      }
+
+    for (first = succ_.begin(); first != last; ++first) {
+      if ((*first)->active()) {
 	(*first)->releaseWriteBuffer();
       }
     }
@@ -190,10 +201,5 @@ namespace Video
     // release read buffer
     releaseOutputBuffer();
 
-    // process succerssors trees
-    for (first = succ_.begin(); first != last; ++first)
-      if ((*first)->active()) {
-	(*first)->processFilterTree();
-      }
   }
 };
