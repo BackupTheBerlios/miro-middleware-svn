@@ -138,7 +138,7 @@ namespace Video
 	bytesPerPixel = 4;
 	break;
       default:
-	std::cout << "cannot handle YUV" << endl;
+	std::cout << "cannot handle YUV" << std::endl;
 	exit(-1);
       }
   }
