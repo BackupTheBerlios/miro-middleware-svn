@@ -98,7 +98,7 @@ namespace Miro
     }
       
     timerId = reactor.schedule_timer(this, 0, ACE_Time_Value(0,0),
-	ACE_Time_Value(0, 100000));
+	ACE_Time_Value(0, 50000));
     cout << "WindowArbiter Open." << endl;
   }
 

@@ -1,5 +1,14 @@
-// florian: Miro header einfügen
-// dynamicWindow.h
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+
 #ifndef DynamicWindow_h
 #define DynamicWindow_h
 
@@ -40,18 +49,21 @@ namespace Miro
     // set a prefferedDirection and prefferedTranslation
     // and calculate the new content of the velocitySpace
     void setPreferredDirection(double);
-    // get distance between two given polygons
-
-    // florian: const vector , const ?
-    double getPolygonDistance(std::vector<Vector2d>&, std::vector<Vector2d>&);
     // rotate the given polygon around the given point by the given angle
     void rotateMountedPolygon(std::vector<Vector2d>&, Vector2d, double);
     // move the given polygon by the given distance
     void moveMountedPolygon(std::vector<Vector2d>&, Vector2d);
     // get mathematical directed angle between two vectors (0..2*pi)
     double getAngleBetweenVectors(Vector2d, Vector2d);
-    // get distance between point and line
-    double getDistanceBetweenPointAndLine(Vector2d, Vector2d, Vector2d);	
+    // get signed distance between point and line
+    double getSignedDistanceBetweenPointAndLine(Vector2d, Vector2d, Vector2d);	
+    // get distance between line and line
+    double getDistanceBetweenLineAndLine(Vector2d, Vector2d, Vector2d, Vector2d);
+    // florian: const vector , const ?
+    // get distance between two given polygons
+    double getDistanceBetweenPolygonAndPolygon(std::vector<Vector2d>&, std::vector<Vector2d>&);
+
+
     
     // 		protected:
     // uncommented for debugging only

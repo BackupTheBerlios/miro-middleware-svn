@@ -1,5 +1,14 @@
-// florian: Miro header
-// dynamicWindow.cc
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+
 #include "DynamicWindow.h"
 #include <iostream>
 #include <complex>
@@ -148,7 +157,7 @@ namespace Miro
 	angle = (180. * (fLeft - (fRight + hack))) / (390. * M_PI);
 	
 	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), angle * SCALE_ANGLE);
-	pointValue = min(MAX_POL_DIST, getPolygonDistance(_robot, _obstacle));
+	pointValue = min(MAX_POL_DIST, getDistanceBetweenPolygonAndPolygon(_robot, _obstacle));
 	if(pointValue < 10.) {
 	  for(int x = 0; x < RES; x++) {
 	    for(int y = 0; y < RES; y++) {
@@ -206,67 +215,17 @@ namespace Miro
     }	
     
   } 
-
   
-  double DynamicWindow::getPolygonDistance(std::vector<Vector2d> &_polygon1,
-					   std::vector<Vector2d> &_polygon2) {
+  double DynamicWindow::getDistanceBetweenPolygonAndPolygon(std::vector<Vector2d> &_polygon1, std::vector<Vector2d> &_polygon2) {
     
     std::vector<Vector2d>::iterator a1, a2, b1, b2;
-    Vector2d a, b, c, d;
-    
-    double beta, distance, minDistance, b_y, c_y;
-    bool found;
+    double distance, minDistance;
     
     for(a1 = _polygon1.begin(), a2 = _polygon1.begin() + 1; a2 < _polygon1.end(); a1++, a2++) {
       for(b1 = _polygon2.begin(), b2 = _polygon2.begin() + 1; b2 < _polygon2.end(); b1++, b2++) {
 	
-	// check for possible intersections and calculate parameter beta
-	a = *a2 - *a1; b = *b1 - *b2; c = *a1 - *b1;
-	found = false;  // no intersection found yet
-	if(a.real() != 0) {
-	  if(a.imag() != 0) {
-	    b_y = b.real() - ((a.real() / a.imag()) * b.imag());
-	    c_y = c.real() - ((a.real() / a.imag()) * c.imag());
-	  }
-	  else {
-	    b_y = b.imag();
-	    c_y = c.imag();
-	  }
-	  if(b_y != 0) {
-	    beta = -1. * c_y / b_y;
-	    found = true;	// found possible solution
-	  }
-	}
-	else {	// a.x() == 0
-	  if(a.imag() != 0) {
-	    if(b.real() != 0) {
-	      beta = -1. * c.real() / b.real();
-	      found = true; // found possible solution
-	    }
-	  }
-	}
+	distance = getDistanceBetweenLineAndLine(*a1, *a2, *b1, *b2);
 	
-	// calculate point of intersection d and...
-	if(found==true) {  // ...check, if intersection is in the line boundaries...
-	  d = *b1 + ((*b2 - *b1) * beta);
-	  if((d.real() >= min(a1->real(), a2->real())) && (d.real() <= max(a1->real(), a2->real())) &&
-	     (d.real() >= min(b1->real(), b2->real())) && (d.real() <= max(b1->real(), b2->real())) &&
-	     (d.imag() >= min(a1->imag(), a2->imag())) && (d.imag() <= max(a1->imag(), a2->imag())) &&
-	     (d.imag() >= min(b1->imag(), b2->imag())) && (d.imag() <= max(b1->imag(), b2->imag()))) {
-	    return 0.;  // ...and if so, return distance 0.
-	  }
-	}
-	
-	// lines definitely don't intersect beyond this point, so calculate line distance
-	
-	distance = min(getDistanceBetweenPointAndLine(*b1, *a1, *a2),
-		       getDistanceBetweenPointAndLine(*b2, *a1, *a2));
-	distance = min(distance, getDistanceBetweenPointAndLine(*a1, *b1, *b2));
-	distance = min(distance, getDistanceBetweenPointAndLine(*a2, *b1, *b2));
-	
-	
-	
-	// minDistance = distance, in the first run and everytime when distance < minDistance
 	if(((a1 == _polygon1.begin()) && (b1 == _polygon2.begin())) || (distance < minDistance)) {
 	  minDistance = distance;
 	}
@@ -274,11 +233,9 @@ namespace Miro
       }
     }
     return minDistance;
-  }
+  }  
   
-  
-  void DynamicWindow::rotateMountedPolygon(std::vector<Vector2d> &_polygon, Vector2d _point,
-					   double _angle) {
+  void DynamicWindow::rotateMountedPolygon(std::vector<Vector2d> &_polygon, Vector2d _point, double _angle) {
     
     std::vector<Vector2d>::iterator i;
     
@@ -307,21 +264,26 @@ namespace Miro
   double DynamicWindow::getAngleBetweenVectors(Vector2d _v1, Vector2d _v2) {
 
     double a1 = atan(_v1.imag() / _v1.real());
-    // florian: nach if () bitte newline
-    if(_v1.real() < 0) a1 += M_PI;
-    if(_v1.real() >= 0 && _v1.imag() < 0) a1 += 2 * M_PI;
+
+    if(_v1.real() < 0)
+      a1 += M_PI;
+    if(_v1.real() >= 0 && _v1.imag() < 0)
+      a1 += 2 * M_PI;
     
     double a2 = atan(_v2.imag() / _v2.real());
-    if(_v2.real() < 0) a2 += M_PI;
-    if(_v2.real() >= 0 && _v2.imag() < 0) a2 += 2 * M_PI;
+    if(_v2.real() < 0)
+      a2 += M_PI;
+    if(_v2.real() >= 0 && _v2.imag() < 0)
+      a2 += 2 * M_PI;
     
-    if(a2 < a1) a2 += 2 * M_PI;
+    if(a2 < a1)
+      a2 += 2 * M_PI;
     
     return  a2 - a1;
     
   }
   
-  double DynamicWindow::getDistanceBetweenPointAndLine(Vector2d _p1, Vector2d _l1, Vector2d _l2) {
+  double DynamicWindow::getSignedDistanceBetweenPointAndLine(Vector2d _p1, Vector2d _l1, Vector2d _l2) {
 
     Vector2d l1_l2, l1_p1, l2_p1;
 
@@ -329,17 +291,33 @@ namespace Miro
     l1_p1 = _p1 - _l1;
 
     if(l1_l2.real() * l1_p1.real() + l1_l2.imag() * l1_p1.imag() < 0) {
-      return fabs(sqrt(l1_p1.real() * l1_p1.real() + l1_p1.imag() * l1_p1.imag()));
+      return sqrt(l1_p1.real() * l1_p1.real() + l1_p1.imag() * l1_p1.imag());
     }
 
     l2_p1 = _p1 - _l2;
 
     if(-l1_l2.real() * l2_p1.real() + -l1_l2.imag() * l2_p1.imag() < 0) {
-      return fabs(sqrt(l2_p1.real() * l2_p1.real() + l2_p1.imag() * l2_p1.imag()));
+      return sqrt(l2_p1.real() * l2_p1.real() + l2_p1.imag() * l2_p1.imag());
     }
 
-    return fabs((l1_l2.real() * l1_p1.imag() - l1_l2.imag() * l1_p1.real())
-      / sqrt(l1_l2.real() * l1_l2.real() + l1_l2.imag() * l1_l2.imag()));
+    return (l1_l2.real() * l1_p1.imag() - l1_l2.imag() * l1_p1.real())
+      / sqrt(l1_l2.real() * l1_l2.real() + l1_l2.imag() * l1_l2.imag());
+
+  }
+
+  double DynamicWindow::getDistanceBetweenLineAndLine(Vector2d _l1, Vector2d _l2, Vector2d _l3, Vector2d _l4) {
+
+    double l1_to_l3_l4, l2_to_l3_l4, l3_to_l1_l2, l4_to_l1_l2;
+    
+    l1_to_l3_l4 = getSignedDistanceBetweenPointAndLine(_l1, _l3, _l4);
+    l2_to_l3_l4 = getSignedDistanceBetweenPointAndLine(_l2, _l3, _l4);
+    l3_to_l1_l2 = getSignedDistanceBetweenPointAndLine(_l3, _l1, _l2);
+    l4_to_l1_l2 = getSignedDistanceBetweenPointAndLine(_l4, _l1, _l2);
+
+    if( ((l1_to_l3_l4 * l2_to_l3_l4) < 0) && ((l3_to_l1_l2 * l4_to_l1_l2) < 0) )
+      return 0;
+
+    return fabs(min(min(l1_to_l3_l4, l2_to_l3_l4), min(l3_to_l1_l2, l4_to_l1_l2)));
 
   }
   
