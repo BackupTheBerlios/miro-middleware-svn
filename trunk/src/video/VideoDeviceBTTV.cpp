@@ -248,7 +248,6 @@ namespace Video
     // synch current image
     int err = ioctl(videoFd, VIDIOCSYNC, &currentBuffer_);
     if (err == -1) {
-      cerr << currentBuffer_ << endl;
       throw Miro::CException(errno, "VideoDeviceBTTV::grabImage() - VIDIOCSYNC");
     }
 
@@ -261,9 +260,9 @@ namespace Video
 
     // grab next image
     err = ioctl(videoFd, VIDIOCMCAPTURE, &(gb[nextBuffer_]));
-    if (err == -1)
+    if (err == -1) {
       throw Miro::CException(errno, "VideoDeviceBTTV::grabImage() - VIDIOCMCAPTURE");
-    ++iNFramesCaptured;
+    }
 
     // update the leader buffer pointer
     ++nextBuffer_;
@@ -271,6 +270,8 @@ namespace Video
       nextBuffer_ = 0;
     
     // runtime statistics II
+    ++iNFramesCaptured;
+
     ACE_Time_Value endTime = ACE_OS::gettimeofday();
     msec += (endTime - beginTime).msec();
     if ((iNFramesCaptured % 100) == 0) {
