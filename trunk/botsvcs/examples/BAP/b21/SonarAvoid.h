@@ -2,11 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-<<<<<<< SonarAvoid.h
-// (c) 2001, 2002, 2003, 2004
-=======
 // (c) 2000, 2001, 2002, 2003, 2004
->>>>>>> 1.4
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -43,4 +39,4 @@ protected:
 
   static const std::string name_;
 };
-#endif
+#endif // SonarAvoid_h
