@@ -27,6 +27,7 @@ LogFile::LogFile(QString const& _name,
   coursor_(timeVector_.end()),
   currentDomainName_(""),
   logReader_(name_.latin1()),
+  counter_(0),
   parsed_(false)
 {
 }
@@ -62,8 +63,13 @@ LogFile::parse()
   CosNotification::FixedEventHeader header;
 
   bool notEof = true;
-  while ((notEof = logReader_.parseTimeStamp(timeStamp))) {
+  while (( logReader_.version() >= 3 && 
+	   ++counter_ <= logReader_.events() &&
+	   ( notEof = logReader_.parseTimeStamp(timeStamp) ) ) ||
+	 ( logReader_.version() < 3 &&
+	   ( notEof = logReader_.parseTimeStamp(timeStamp) ) ) ) {
 
+    std::cout << "." << std::flush;
     timeVector_.push_back(std::make_pair(timeStamp, logReader_.rdPtr()));
     
     logReader_.parseEventHeader(header);
@@ -94,12 +100,14 @@ LogFile::parse()
     if (!(timeVector_.size() % 2048))
       break;
   }
+  std::cout << std::endl;
 
   if (timeVector_.size() == 0)
     throw Miro::Exception("Logfile contains no data.");
 
   // EOF
-  if (!notEof) {
+  if (!notEof ||
+      ( logReader_.version() >= 3 && counter_ >= logReader_.events()) ) {
     coursor_ = timeVector_.begin();
     
     suppliers_.reserve(eventTypes_.size());

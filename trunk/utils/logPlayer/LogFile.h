@@ -140,6 +140,7 @@ protected:
   CStringMap exclude_;
 
   Miro::LogReader logReader_;
+  unsigned int counter_;
   bool parsed_;
 };
 
