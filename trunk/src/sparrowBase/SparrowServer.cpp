@@ -116,6 +116,7 @@ SparrowBase::SparrowBase(Miro::Server& _server, Miro::PanParameters _panParamete
 			   &odometry),
 			 &infrared,
 			 pFaulhaber->pConsumer,
+			 sparrowPanTilt,
 			 aCollector);
     
     pSparrowMotion = 
