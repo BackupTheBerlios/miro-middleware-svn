@@ -58,7 +58,7 @@ public:
 
   Consumer * consumer;
 
-  Miro::NotifyMulticast::Adapter *nmcAdapter;
+  Miro::NMC::Adapter *nmcAdapter;
   
   CosNotification::EventTypeSeq ets;
 
