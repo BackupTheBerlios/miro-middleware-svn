@@ -97,9 +97,9 @@ fi
 
 AC_DETERMINE_VIDEODEVICES
 
-AH_TEMPLATE([MIRO_HAS_BTTV], [build with 1394 support.])
+AH_TEMPLATE([MIRO_HAS_BTTV], [build with BTTV support.])
 AH_TEMPLATE([MIRO_HAS_METEOR], [build with Meteor support.])
-AH_TEMPLATE([MIRO_HAS_1394], [build with BTTV support.])
+AH_TEMPLATE([MIRO_HAS_1394], [build with 1394 support.])
 AH_TEMPLATE([MIRO_HAS_QUICKCAM], [build with QuickCam support.])
 
 if test "x$ac_request_bttv" = xyes; then
@@ -173,8 +173,11 @@ fi
 
 AM_CONDITIONAL(COND_SPEECH, [test "x$ac_compile_speech" = xyes])
 
+AH_TEMPLATE([MIRO_HAS_PLAYER], [build with Player Simulator support.])
+
 if test "x$ac_request_player" = xyes &&
 	test "x$ac_has_player" = xyes; then
+	AC_DEFINE(MIRO_HAS_PLAYER)
 	ac_compile_player=yes
 fi
 
