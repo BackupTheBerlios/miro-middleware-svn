@@ -67,7 +67,7 @@
       <config_parameter name="deg2ServoTicksL" type="double" default="28.2"/>
       <config_parameter name="deg2ServoTicksR" type="double" default="28.2"/>
 
-      <config_parameter name="pan" type="PanParameters" />
+      <config_parameter name="pan" type="Sparrow::PanParameters" />
 
       <config_parameter name="transFactor" type="double" default="1.0776"/>
 
