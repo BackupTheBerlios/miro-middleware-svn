@@ -127,8 +127,6 @@ namespace Miro
 
   void operator <<= (std::string& lhs, const QDomNode& node)
   {
-    QString attrib = getAttribute(node, QString("value"));
-    cout << attrib << endl;
     lhs = getAttribute(node, QString("value")).latin1();
   }
 
