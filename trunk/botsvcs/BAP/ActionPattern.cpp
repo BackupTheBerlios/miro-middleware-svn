@@ -394,6 +394,7 @@ namespace Miro
       if (currentPattern() == this) {
 	MIRO_DBG_OSTR(MIRO, LL_DEBUG, 
 		      "ActionPattern: Transition " << _message);
+	// std::cout << "send transition from " << getName() << ": " << _message << std::endl;
 	Super::sendTransitionMessage(_message);
       }
       else {

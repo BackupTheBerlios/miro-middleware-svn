@@ -234,6 +234,7 @@ namespace Miro
     inline
     void
     Policy::currentPattern(Pattern * const _pattern) {
+      // std::cout << "policy: " << getName() << " current pattern " << _pattern->getName() << std::endl;
       currentPattern_ = _pattern;
     }
   }

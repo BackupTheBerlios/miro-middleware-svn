@@ -88,7 +88,6 @@ namespace Miro
 
       // clone transition table
       for (first = _rhs.patterns_.begin(); first != last; ++first) {
-	std::cout << first->first << std::endl;
 	PatternMap::iterator i = patterns_.find(first->first);
 	MIRO_ASSERT(i != patterns_.end());
 	Pattern * pattern = i->second;
@@ -361,6 +360,8 @@ namespace Miro
       if (startPattern_) {
 	startPattern_->open(_predecessor, _transition);
 	currentPattern_ = startPattern_;
+	if (parent_)
+	  parent_->currentPattern(this);
       }
       else
 	throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup("No start pattern specified."));
@@ -398,6 +399,7 @@ namespace Miro
     void 
     Policy::close(ActionPattern * const _successor)
     {
+// std::cout << "closign policy " << getName() << std::endl;
       if (currentPattern_ != NULL) {
 	currentPattern_->close(_successor);
 	currentPattern_ = NULL;
@@ -433,8 +435,8 @@ namespace Miro
     void
     Policy::registerPattern(Pattern * _pattern) 
     {
-      std::cout << "Policy " << getName() << ": Registering " 
-		<< _pattern->getName() << std::endl;
+      // std::cout << "Policy " << getName() << ": Registering " 
+//		<< _pattern->getName() << std::endl;
       if (!patterns_.insert(std::make_pair(_pattern->getName(),
 					   _pattern)).second) {
 	std::string error("Action pattern " +
@@ -507,7 +509,7 @@ namespace Miro
 
       if (ap != currentPattern()) { // self transitions are noops
 	if (ap != NULL) {           // real transitions trigger the transition protocol
-	  ap->open(this, _message);
+	  ap->open(currentPattern(), _message);
 	}
 	else {                      // unbound transitions are 
 	  if (parent_ != NULL) {    // passed to the parent
@@ -544,7 +546,7 @@ namespace Miro
 
       Pattern const * const pattern = getPattern(first);
       if (pattern != NULL) {
-	return getBehaviourParameters(rest, _behaviour);
+	return pattern->getBehaviourParameters(rest, _behaviour);
       }
 
       throw BehaviourEngine::EUnknownActionPattern(CORBA::string_dup(first.c_str()));
@@ -571,9 +573,9 @@ namespace Miro
       std::string first, rest;
       splitPath(_pattern, first, rest);
 
-      Pattern const * const pattern = getPattern(first);
+      Pattern * pattern = getPattern(first);
       if (pattern != 0) {
-	return setBehaviourParameters(rest, _behaviour, _parameters);
+	return pattern->setBehaviourParameters(rest, _behaviour, _parameters);
       }
 
       throw BehaviourEngine::EUnknownActionPattern(CORBA::string_dup(first.c_str()));
