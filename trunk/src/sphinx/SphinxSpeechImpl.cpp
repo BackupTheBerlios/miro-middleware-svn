@@ -5,13 +5,16 @@
 
 #include <string>
 
+#include <iostream>
+
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::string;
+
 namespace Miro 
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-  using std::string;
-
   /**
      @param dictFileName Name (with full path) of the dictionary file for Sphinx
      
