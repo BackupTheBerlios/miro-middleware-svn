@@ -19,12 +19,13 @@
 using CosNotifyChannelAdmin::EventChannel;
 using CosNotifyChannelAdmin::EventChannel_var;
 
+using std::cout;
+using std::cerr;
+using std::endl;
+
+
 namespace Miro
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-
   using ::operator<<;
 
   SphinxSpeechServer::SphinxSpeechServer(int argc, char *argv[], 
