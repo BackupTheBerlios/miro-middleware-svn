@@ -9,7 +9,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 #ifndef B21_BehavioursFactory_h
-#define B21_BEhavioursFactory_h
+#define B21_BehavioursFactory_h
 
 #include "miro/Server.h"
 #include "miro/RangeSensorC.h"
