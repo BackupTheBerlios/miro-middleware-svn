@@ -119,7 +119,7 @@ int main(int argc, char* argv[])
   // Signal set to be handled by the event handler.
   ACE_Sig_Set sigs;
 
-  ACE_Time_Value ace_time;
+  //ACE_Time_Value ace_time;
 
   bool loop = true;
   char c;
@@ -138,8 +138,9 @@ int main(int argc, char* argv[])
     throw Miro::ACE_Exception(errno, "failed to register signal handler");
   }
   cout << "updaterate? (msec) " << endl;
-	     cin >> uptimer;
-  ACE_Time_Value tv(0,uptimer);
+	     //cin >> uptimer;
+  //ACE_Time_Value tv(0,uptimer);
+   ACE_Time_Value tv(0,90000);
 
   service.reactorTask.reactor()->schedule_timer(service.pTimerEventHandler, NULL, tv ,tv);
 
@@ -171,6 +172,7 @@ int main(int argc, char* argv[])
 	       << "1 - motor on (L/R)! " << endl
 	       << "2 - motor on " << endl
 	       << "3 - Befehl!!!" << endl
+	       << "8 - Odo status" << endl
 	       /*<< "4 - turn and drive" << endl
 	       << "6 - set servo" << endl
 	       << "7 - status (Sonar and Stall infos)" << endl
@@ -271,9 +273,10 @@ int main(int argc, char* argv[])
 
 	 case '9' :
 	   {
-	     cout << "set rotation Velocity: " << endl;
-	     cin >> k;
+	     //cout << pOdometryImpl->getPosition() << endl;
+
 	     //service.connection.setRotVel(k);break;
+	     break;
 	   }
 
 	 case '0' :
