@@ -1,0 +1,39 @@
+<!DOCTYPE xml SYSTEM "PolicyEditor_behaviour.dtd">
+<config> 
+  <config_global name="namespace" value="Test">
+  <config_global name="Include" value="miro/EventBehaviourParameters.h">
+  <config_global name="include" value="miro/TimedBehaviourParameters.h">
+
+  <config_group name="device">
+    
+    <config_item name="Base" instance="true">
+      <config_parameter name="device" type="string" />
+    </config_item>
+
+  </config_group>
+
+  <config_group name="behaviour">
+    
+    <config_item name="Avoid" parent="Miro::EventBehaviour" namespace="" parent="Miro::EventBehaviour">
+      <config_parameter name="NormalTranslation" type="int" measure="mm/s"/>
+      <config_parameter name="SlowTranslation" type="int" measure="mm/s"/>
+      <config_parameter name="BackwardTranslation" type="int" measure="mm/s"/>
+      <config_parameter name="NormalRotation" type="double" measure="°/s"/>
+      <config_parameter name="SlowRotation" type="double" measure="°/s"/>
+      <config_parameter name="FrontDistance" type="int" measure="mm"/>
+      <config_parameter name="BackOutDistance" type="int" measure="mm"/>
+      <config_parameter name="LeftRightDelta" type="int" measure="mm"/>
+      <config_parameter name="LateralDistance" type="int" measure="mm"/>
+      <config_parameter name="SideDistance" type="int" measure="mm"/>
+    </config_item>
+    
+    <config_item name="AvoidGoalArea" parent="Miro::TimedBehaviour">
+      <config_parameter name="Pace" type="int" default="10000" inherited="true"/>
+      <config_parameter name="MSec" type="int" measure="msec"/>
+      <config_parameter name="GoalDistance" type="int" measure="mm"/>
+      <config_parameter name="MoveGoalMaxSpeed" type="int" measure="mm/s"/>
+      <config_parameter name="MaxTrunAwayGoal" type="double" measure="°/s"/>
+    </config_item>
+
+  </config_group>
+</config>

@@ -2,7 +2,7 @@
 ##
 ## This file is part of Miro (The Middleware For Robots)
 ##
-## (c) 1999, 2000, 2001
+## (c) 2001, 2002
 ## Department of Neural Information Processing, University of Ulm, Germany
 ##
 ## $Id$
@@ -20,14 +20,15 @@
 INSTALL = $(VBIN:%=$(INSBIN)/%)
 
 ## dynamic libraries if needed
-LDLIBS += 
+LDLIBS += -lmiro
 
 ## program to be built
 ## there has to exist a source file with the same name (mybinary.cc)
 BIN 	= MakeParams
 
 ## additional files
-FILES	= Parameter \
+FILES	= Class \
+	  Parameter \
 	  Generator \
 	  Parser
 
