@@ -23,10 +23,11 @@
 #include <orbsvcs/Notify/Notify_Default_Collection_Factory.h>
 #include <orbsvcs/Notify/Notify_Default_EMO_Factory.h>
 
-#include "ace/Get_Opt.h"
+#include <ace/Get_Opt.h>
 #include <ace/Stats.h>
 #include <ace/Sample_History.h>
 #include <ace/High_Res_Timer.h>
+#include <ace/Sched_Params.h>
 
 
 #include <iostream>
@@ -42,8 +43,8 @@ enum PayloadID {
 const unsigned int NUM_PAYLOADS = 6;
 char const * const payloadName[NUM_PAYLOADS] = {
   "None",
-  "OctedStream1K",
-  "OctedStream100K",
+  "OctetStream1K",
+  "OctetStream100K",
   "IntArray1K",
   "IntArray10K",
   "SharedBeliefState01"
@@ -143,7 +144,7 @@ producePayload(CosNotifyChannelAdmin::EventChannel_ptr _ec)
   ACE_UINT32 gsf = ACE_High_Res_Timer::global_scale_factor ();
   ACE_DEBUG ((LM_DEBUG, "done\n"));
   
-  history.dump_samples ("HISTORY", gsf);
+  //  history.dump_samples ("HISTORY", gsf);
   
   ACE_Basic_Stats stats;
   history.collect_basic_stats (stats);
@@ -222,6 +223,10 @@ main (int argc, char * argv[])
     
     try {
 
+      ACE_Sched_Params schedp(ACE_SCHED_RR, 10, ACE_SCOPE_PROCESS);
+      if (ACE_OS::sched_params(schedp) == -1)
+	std::cout << "Warning: Could not set rt scheduler." << std::endl;
+
       // start server thread in the background
       server.detach(1);
 
@@ -245,8 +250,11 @@ main (int argc, char * argv[])
       params.event[0].domain = "Miro";
       params.event[0].type = "Log";
       Miro::LogNotifyConsumer consumer(server, ec, server.namingContextName, fileName, params);
-      
+      consumer.measureTiming(iterations);
+
       producePayload(ec);
+
+      consumer.evaluateTiming();
 
       server.shutdown();
       server.wait();
