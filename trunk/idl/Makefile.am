@@ -134,8 +134,7 @@ EXTRA_DIST = \
 	$(globalsources) \
 	$(b21sources) \
 	$(pioneersources) \
-	$(sparrowsources1) \
-	$(sparrowsources2) \
+	$(sparrowsources) \
 	$(deprecatedsources)
 
 all-local:
