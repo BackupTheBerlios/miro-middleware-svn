@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -16,7 +16,9 @@
 #include <sys/mman.h>
 #include <miro/Exception.h>
 #include <ace/OS.h>
+
 #include "VideoDeviceMeteor.h"
+#include "VideoConfig.h"
 
 #undef DEBUG
 
@@ -42,6 +44,7 @@ namespace Video
     formatLookup[formatSECAM] = METEOR_FMT_SECAM;
 
     paletteLookup[paletteGrey] = METEOR_GEO_YUV_PLANAR;
+    paletteLookup[paletteYUV] = -1;
     paletteLookup[paletteRGB] = METEOR_GEO_RGB24;
     paletteLookup[paletteRGBA] = METEOR_GEO_RGB24;
     paletteLookup[paletteBGR] = METEOR_GEO_RGB24;
@@ -61,22 +64,23 @@ namespace Video
     handleDisconnect();
   }
 
-  void VideoDeviceMeteor::handleConnect(int fd, int /*buffers*/, int fmt, int src, int pal, int /* sub */, int w, int h)
+  void VideoDeviceMeteor::handleConnect(int fd, const Parameters& params)
   {
     DBG(cout << "Connecting VideoDeviceMeteor." << endl);
 
     videoFd = fd;
 
-    fcntl(videoFd,F_SETFD,FD_CLOEXEC);
+    fcntl(videoFd,F_SETFD, FD_CLOEXEC);
 
-    setPalette(pal);
-    setSize(w,h);
+    setPalette(getPalette(params.palette));
+    setSize(params.width, params.height);
+
     meteorGeometry.frames = 1;
     if (::ioctl(videoFd, METEORSETGEO, &meteorGeometry) < 0)
       throw Miro::Exception("METEORSETGEO");
 
-    setSource(src);
-    setFormat(fmt);
+    setSource(Video::getSource(params.source));
+    setFormat(Video::getFormat(params.format));
 
     map = (char*)mmap(0,getDeviceImageSize(),PROT_READ,MAP_SHARED,videoFd,0);
     if (map == (char*)-1)

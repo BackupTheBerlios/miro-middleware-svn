@@ -8,12 +8,14 @@
 // $Id$
 //
 //////////////////////////////////////////////////////////////////////////////
-#include <sys/ipc.h>
-#include <sys/shm.h>
+#include "VideoImpl.h"
+#include "VideoDevice.h"
+#include "VideoConfig.h"
 
 #include <miro/Exception.h>
-#include "video/VideoImpl.h"
-#include "video/VideoDevice.h"
+
+#include <sys/ipc.h>
+#include <sys/shm.h>
 
 using namespace Video;
 
@@ -35,15 +37,17 @@ namespace Miro
       pHandleArray[i].width = parameters.width;
       pHandleArray[i].height = parameters.height;
       if (parameters.palette=="gray") {
-	pHandleArray[i].palette = paletteGrey;
+	pHandleArray[i].palette = ::Video::paletteGrey;
+      } else if (parameters.palette=="yuv") {
+	pHandleArray[i].palette = ::Video::paletteYUV;
       } else if (parameters.palette=="rgb") {
-	pHandleArray[i].palette = paletteRGB;
+	pHandleArray[i].palette = ::Video::paletteRGB;
       } else if (parameters.palette=="bgr") {
-	pHandleArray[i].palette = paletteBGR;
+	pHandleArray[i].palette = ::Video::paletteBGR;
       } else if (parameters.palette=="rgba") {
-	pHandleArray[i].palette = paletteRGBA;
+	pHandleArray[i].palette = ::Video::paletteRGBA;
       } else if (parameters.palette=="abgr") {
-	pHandleArray[i].palette = paletteABGR;
+	pHandleArray[i].palette = ::Video::paletteABGR;
       }
       //	pHandleArray[i].source = parameters.source;
       pHandleArray[i].key = -1;

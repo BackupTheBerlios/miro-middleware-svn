@@ -11,6 +11,7 @@
 #include <ace/OS.h>
 
 #include "VideoDeviceBTTV.h"
+#include "VideoConfig.h"
 
 #include "miro/Exception.h"
 
@@ -74,9 +75,10 @@ namespace Video
   }
 
 
-  void VideoDeviceBTTV::handleConnect(int fd, int, int fmt, int src, int pal, int sub, int w, int h)
+  void 
+  VideoDeviceBTTV::handleConnect(const int fd, const Parameters& params)
   {
-    int	err = 0;
+    int	err;
 
     DBG(std::cout << "Connecting VideoDeviceBTTV." << std::endl);
 
@@ -89,12 +91,11 @@ namespace Video
     getChannels();
 
     if (capability.type & VID_TYPE_CAPTURE) {
-      err = ioctl(videoFd, VIDIOCGMBUF, &gb_buffers);
+      err = ioctl(videoFd,VIDIOCGMBUF,&gb_buffers);
       if (err == -1)
 	throw Miro::CException(errno, "VideoDeviceBTTV::handleConnect() - VIDIOCGMBUF");
-
-      map_ = (char*)mmap(0,gb_buffers.size,PROT_READ,MAP_SHARED,videoFd,0);
-      if (map_ == (char *)-1)
+      map_ = (char*)mmap(0,gb_buffers.size, PROT_READ,MAP_SHARED, videoFd, 0);
+      if (map_ == (char*)-1)
 	throw Miro::CException(errno, "VideoDeviceBTTV::handleConnect() - mmap()");
     }
 
@@ -106,10 +107,10 @@ namespace Video
 
     probeAllFormats();
 
-    setFormat(fmt);
-    setSource(src);
-    setPalette(pal);
-    setSize(w, h);
+    setFormat(Video::getFormat(params.format));
+    setSource(Video::getSource(params.source));
+    setPalette(Video::getPalette(params.palette));
+    setSize(params.width, params.height);
 
     iNFramesCaptured = 0;
 
@@ -125,7 +126,7 @@ namespace Video
       gb[i].frame = i;
     }
 
-    requestedSubfieldID = sub;
+    requestedSubfieldID = Video::getSubfield(params.subfield);
 
     if (requestedSubfieldID != subfieldAll) {
       for (int i = 0; i < gb_buffers.frames; ++i) {

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -14,14 +14,14 @@
 // extern "C" {
 #include "ioctl_meteor.h"
 // }
-#include "VideoDevice.h"
+#include "VideoDeviceBase.h"
 
 namespace Video
 {
   //--------------------------------------------------------------------------
   // Hardware specifica
   //--------------------------------------------------------------------------
-  class VideoDeviceMeteor  :public VideoDevice
+  class VideoDeviceMeteor  :public VideoDeviceBase
   {
   public:
     VideoDeviceMeteor();
@@ -29,10 +29,10 @@ namespace Video
 
     virtual	void*	grabImage(ACE_Time_Value& _timeStamp) const;
 
-  protected:
-    virtual	void	handleConnect(int fd, int buffers, int fmt, int src, int pal, int sub, int w, int h);
+    virtual	void	handleConnect(int fd, const Parameters& params);
     virtual	void	handleDisconnect();
 
+  protected:
     virtual	void	setFormat(int);
     virtual	void	setSource(int);
     virtual	void	setPalette(int);
@@ -47,3 +47,4 @@ namespace Video
   };
 };
 #endif
+

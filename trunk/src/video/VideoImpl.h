@@ -11,8 +11,9 @@
 #ifndef VideoImpl_h
 #define VideoImpl_h
 
-#include "video/VideoConsumer.h"
-#include "video/Parameters.h"
+#include "VideoConsumer.h"
+#include "Parameters.h"
+
 #include "miro/VideoS.h"
 
 //------------------------ VideoImpl ---------------------------//

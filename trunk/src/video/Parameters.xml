@@ -4,6 +4,26 @@
   <config_global name="include" value="miro/Parameters.h" />
 
   <config_group name="video">
+    <config_item name="FireWire" parent="Miro::Config" final="false">
+
+      <config_parameter name="brightness" type="int" default="324" />
+      <config_parameter name="exposure" type="int" default="511" />
+      <config_parameter name="focus" type="int" default="-1" />
+      <config_parameter name="framerate" type="int" default="30" />
+      <config_parameter name="gain" type="int" default="140" />
+      <config_parameter name="gamma" type="int" default="1" />
+      <config_parameter name="hue" type="int" default="-1" />
+      <config_parameter name="iris" type="int" default="-1" />
+      <config_parameter name="saturation" type="int" default="78" />
+      <config_parameter name="sharpness" type="int" default="104" />
+      <config_parameter name="shutter" type="int" default="0" />
+      <config_parameter name="temperature" type="int" default="130" />
+      <config_parameter name="trigger" type="int" default="-1" />
+      <config_parameter name="whiteBalance0" type="int" default="90" />
+      <config_parameter name="whiteBalance1" type="int" default="90" />
+
+    </config_item>
+
     <config_item parent="Miro::Dev" instance="true">
       <config_parameter name="device" type="string" inherited="true" default="/dev/v4l/video0" />
 
@@ -21,6 +41,7 @@
       <config_parameter name="upsideDown" type="bool" default="false" />
       <config_parameter name="pixelSize" type="int" default="3" measure="bytes" />
 
+      <config_parameter name="fireWire" type="FireWireParameters" />
     </config_item>
   </config_group>
 </config>

@@ -9,7 +9,6 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "VideoConnection.h"
 #include "VideoConsumer.h"
 #include "VideoDevice.h"
@@ -49,8 +48,7 @@ namespace Video
       throw Miro::CException(errno, std::strerror(errno));
     }
 
-    videoDevice.connect(ioBuffer.get_handle(), parameters.buffers, parameters.format, parameters.source,
-			parameters.palette, parameters.subfield, parameters.width, parameters.height);
+    videoDevice.connect(ioBuffer.get_handle(), parameters);
 
     consumer->open(NULL);
   }

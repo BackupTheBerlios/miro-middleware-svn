@@ -14,6 +14,7 @@
 #include "VideoConnection.h"
 #include "VideoDevice.h"
 #include "VideoImpl.h"
+#include "VideoConfig.h"
 
 #include "miro/Exception.h"
 #include "miro/TimeHelper.h"
