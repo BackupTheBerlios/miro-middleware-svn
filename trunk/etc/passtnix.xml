@@ -128,6 +128,12 @@
          <parameter value="FilterSwap3" name="Name" />
          <parameter value="FilterSwap3" name="Type" />
          <parameter name="Successor" >
+
+	   <parameter name="Filter" >
+	     <parameter value="FilterYUV422Save" name="Name" />
+	     <parameter value="FilterYUV422Save" name="Type" />
+	   </parameter>
+
           <parameter name="Filter" >
            <parameter value="FilterRGBtoGray" name="Name" />
            <parameter value="FilterRGBtoGray" name="Type" />
@@ -163,6 +169,16 @@
   <parameter name="FilterSwap3">
    <parameter value="true" name="InterfaceInstance" />
   </parameter>
+
+      <parameter name="FilterYUV422Save" >
+	<parameter value="false" name="Activate" />
+	<parameter value="10" name="Interval" />
+	<parameter value="passtnix_" name="Basename" />
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="VideoBla" name="Name" />
+	</parameter>
+      </parameter>
 
   <parameter name="FilterRGBtoGray">
    <parameter value="true" name="InterfaceInstance" />
