@@ -147,7 +147,8 @@ extraheader = \
 
 BUILT_SOURCES = \
 	Parameters.cpp Parameters.h \
-	NotifyMulticastParameters.cpp NotifyMulticastParameters.h
+	NotifyMulticastParameters.cpp NotifyMulticastParameters.h \
+	SvcParameters.cpp SvcParameters.h
 CLEANFILES = $(BUILT_SOURCES)
 
 includefiles1 = \
