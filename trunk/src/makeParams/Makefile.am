@@ -2,7 +2,7 @@
 ##
 ## This file is part of Miro (The Middleware For Robots)
 ##
-## (c) 2001, 2002
+## (c) 2002, 2003, 2004
 ## Department of Neural Information Processing, University of Ulm, Germany
 ##
 ## $Id$
@@ -21,9 +21,8 @@ MakeParams_SOURCES = MakeParams.cpp
 
 MakeParams_LDADD = \
 	-lACE \
-	$(INHERITED_LIBS) \
 	$(QT_LIBS) \
-	-L$(top_srcdir)/src/params/ -lmiroParams
+	-lmiroParams
 
 all-local:
 	$(INSTALLPROGRAMS)

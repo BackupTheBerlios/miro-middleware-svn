@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2002, 2003
+// (c) 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -13,9 +13,9 @@
 
 #include <ace/Get_Opt.h>
 
-#include "../params/Parser.h"
-#include "../params/Generator.h"
-#include "../params/TextErrorHandler.h"
+#include "params/Parser.h"
+#include "params/Generator.h"
+#include "params/TextErrorHandler.h"
 
 #include <qstring.h>
 #include <qfile.h>
@@ -27,6 +27,8 @@
 using std::cout;
 using std::cerr;
 using std::ofstream;
+
+using namespace Miro::CFG;
 
 bool verbose = false;
 
