@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2001, 2002
+// (c) 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -24,67 +24,55 @@ int main(int argc, char *argv[])
   Client client(argc, argv);
 
   int count = 10;
-  int offset = 0;
-  int height, width;
+  CORBA::ULong height, width;
 
   try {
     Video_var	video = client.resolveName<Video>("Video");
-    ImageHandleIDL imageIDL;
-	
-    imageIDL = video->connect();
-
+    ImageHandleIDL_var imageIDL;
+    CORBA::ULong id;
+    imageIDL = video->connect(id);
+    
     if  (argc == 1) {
-        fprintf (stderr, "%s                   ..gets  10 images of original size\n", argv[0]);
-        fprintf (stderr, "%s num               ..gets num images of original size\n", argv[0]);
-        fprintf (stderr, "%s width height      ..gets  10 images of size width*height\n", argv[0]);
-        fprintf (stderr, "%s width height num  ..gets num images of size width*height\n", argv[0]);
+      fprintf (stderr, "%s                   ..gets  10 images of original size\n", argv[0]);
+      fprintf (stderr, "%s num               ..gets num images of original size\n", argv[0]);
+      fprintf (stderr, "%s width height      ..gets  10 images of size width*height\n", argv[0]);
+      fprintf (stderr, "%s width height num  ..gets num images of size width*height\n", argv[0]);
+    }
+    
+    if  (argc > 2) {
+      width  = atoi(argv[1]);
+      height = atoi(argv[2]);
+    } 
+    else {
+      width = imageIDL->format.width;
+      height = imageIDL->format.height;
     }
 
-    if  (argc > 2) {
-        width  = atoi(argv[1]);
-	height = atoi(argv[2]);
-    } else {
-        width = imageIDL.width;
-        height = imageIDL.height;
-    }
     if ((argc == 4) || (argc == 2))
        count = atoi(argv[argc - 1]);
 
     fprintf (stderr, " width = %d, height = %d, count = %d  ",
 	     width, height, count);
 
-    for (int j=offset; j < offset+count; j++) {
+    for (int j=0; j < count; j++) {
 
-        unsigned char * buffer = new unsigned char[3 * width * height];
+      unsigned char * buffer = new unsigned char[3 * width * height];
+      
+      SubImageDataIDL_var totake = video->exportWaitSubImage(width, height);
 
-        SubImageDataIDL_var totake = new SubImageDataIDL
-                           (3 * width * height, 3 * width * height, buffer, 1);
+      buffer = totake->get_buffer();
 
-        totake = video->exportWaitSubImage(width, height);
-
-        buffer = totake->get_buffer();
-
-	//int w = width;
-	//int h= height;
-	//unsigned char * p = buffer;
-	//for (int x=0; x<w*h; x++,p+=3 ){
-	//        char tmp = *(p+2);
-	//        *(p+2) = *p;
-	//	  *p = tmp;
-	//}
-
-        char	fname[128];
-        std::sprintf(fname, "video%.5d.ppm", j);
-        FILE*	imgFile = std::fopen(fname, "wb");
-        if (imgFile)
-	    {
-      	    std::fprintf(imgFile, "P6\n");
-      	    std::fprintf(imgFile, "%d %d\n255\n", width, height);
-            std::fwrite(buffer, 3*sizeof(char), width * height, imgFile);
-	    std::fclose(imgFile);
-	    }
+      char fname[128];
+      std::sprintf(fname, "video%.5d.ppm", j);
+      FILE*	imgFile = std::fopen(fname, "wb");
+      if (imgFile) {
+	std::fprintf(imgFile, "P6\n");
+	std::fprintf(imgFile, "%d %d\n255\n", width, height);
+	std::fwrite(buffer, 3*sizeof(char), width * height, imgFile);
+	std::fclose(imgFile);
+      }
     }
-    video->release(imageIDL);
+    video->disconnect(id);
     cout << endl;
   }
   catch (const Miro::ETimeOut& e) {

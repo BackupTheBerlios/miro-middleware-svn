@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2001, 2002
+// (c) 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -24,51 +24,51 @@ int main(int argc, char *argv[])
   Client client(argc, argv);
 
   int count = 10;
-  int offset = 0;
 
   if (argc > 1)
     count = atoi(argv[1]);
-  if (argc > 2)
-    count = atoi(argv[2]);
 
   try {
     Video_var	video = client.resolveName<Video>("Video");
-    ImageHandleIDL imageIDL;
-    char*		imageData;
+    ImageHandleIDL_var imageIDL;
+    unsigned char * imageData;
 	
-	imageIDL = video->connect();
-	imageData = (char*)::shmat(imageIDL.key, NULL, 0);
-	if ((int)imageData == -1)
-		throw Miro::EDevIO();
+    CORBA::ULong id;
+    CORBA::ULong offset;
+    imageIDL = video->connect(id);
+    imageData = (unsigned char*)::shmat(imageIDL->key, NULL, 0);
+    if ((int)imageData == -1)
+      throw Miro::EDevIO();
 
-    for (int j=offset; j < offset+count; j++) {
-      video->getWaitImage(imageIDL);
+    for (int j = 0; j < count; ++j) {
+      video->acquireNextImage(id, offset);
 	
 
-      int w = (int)imageIDL.width;
-	int h= (int)imageIDL.height;
+     int w = (int)imageIDL->format.width;
 
-	char* p = imageData;
-	for (int x=0; x<w*h; x++,p+=3 ){
-		char tmp = *(p+2);
-		*(p+2) = *p;
-		*p = tmp;
-	}
+      unsigned char* p = imageData + offset;
+      for (int x = 0; x < w; ++x, p += 3 ) {
+	char tmp = *(p+2);
+	*(p+2) = *p;
+	*p = tmp;
+      }
 
       char	fname[128];
 
       std::sprintf(fname, "video%.5d.ppm", j);
-      FILE*	imgFile = std::fopen(fname, "wb");
-      if (imgFile)
-      	{
+      FILE * imgFile = std::fopen(fname, "wb");
+      if (imgFile) {
       	std::fprintf(imgFile, "P6\n");
-      	std::fprintf(imgFile, "%d %d 255\n", (int)imageIDL.width, (int)imageIDL.height);
-      	std::fwrite(imageData, 3*sizeof(char), (int)imageIDL.width * (int)imageIDL.height, imgFile);
+      	std::fprintf(imgFile, "%d %d 255\n", (int)imageIDL->format.width, (int)imageIDL->format.height);
+      	std::fwrite(imageData + offset, 3*sizeof(char), (int)imageIDL->format.width * (int)imageIDL->format.height, imgFile);
       	std::fclose(imgFile);
-      	}
+      }
+
+      video->releaseImage(id, offset);
     }
-	::shmdt((void*)imageData);
-    video->release(imageIDL);
+
+    ::shmdt((void*)imageData);
+    video->disconnect(id);
     cout << endl;
   }
   catch (const Miro::ETimeOut& e) {
