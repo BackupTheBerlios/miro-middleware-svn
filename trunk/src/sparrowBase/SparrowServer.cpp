@@ -89,8 +89,10 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 	   &structuredPushSupplier_),
 
   // Sparrow board initialization
-  pSparrowConsumer(new Sparrow::Consumer(sparrowConnection, 
-					 &odometry,
+  pSparrowConsumer(new Sparrow::Consumer(sparrowConnection,
+					 ( (Sparrow::Parameters::instance()->faulhaber)? 
+					   NULL :
+					   &odometry),
 					 &sparrowStall,
 					 &sparrowButtons,
 					 &infrared)),
@@ -147,7 +149,9 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 
   // Sparrow board initialization
   pSparrowConsumer(new Sparrow::Consumer(sparrowConnection, 
-					 &odometry,
+					 ( (Sparrow::Parameters::instance()->faulhaber)? 
+					   NULL :
+					   &odometry),
 					 &sparrowStall,
 					 &sparrowButtons,
 					 &infrared)),
