@@ -33,6 +33,9 @@ bin_PROGRAMS = LogPerformance
 
 LogPerformance_DEPENDENCIES = $(sources)
 
+BUILT_SOURCES = $(builtsources)
+CLEANFILES = $(builtsources)
+
 ## sourcefiles needed for the different binaries to be built
 ## the prefix of the following macros must have the same name as the respective binary
 LogPerformance_SOURCES  = $(builtsources) LogPerformance.cpp
