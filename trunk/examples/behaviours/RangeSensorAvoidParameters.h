@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -11,11 +11,11 @@
 #ifndef RangeSensorAvoidParameters_h
 #define RangeSensorAvoidParameters_h
 
-#include "miro/EventBehaviourParameters.h"
+#include "RangeSensorBehaviourParameters.h"
 
 #include <string>
 
-struct RangeSensorAvoidParameters : public Miro::EventBehaviourParameters
+struct RangeSensorAvoidParameters : public RangeSensorBehaviourParameters
 {
   unsigned int historySize;
   double apexAngle;
@@ -35,6 +35,6 @@ protected:
   void printToStream(std::ostream& ostr) const;
 
 private:
-  typedef Miro::EventBehaviourParameters Super;
+  typedef RangeSensorBehaviourParameters Super;
 };
 #endif

@@ -73,6 +73,13 @@ MotionInterface::evalCommand(char c)
 
     t.msec(msec);
     ACE_OS::sleep(t);
+
+    velocity.translation = 0;
+    velocity.rotation = 0.;
+
+    motion_->setVelocity(velocity);
+    break;
+
   case '3':
     motion_->limp();
     break;

@@ -50,10 +50,12 @@ DifferentialMotionInterface::evalCommand(char c)
 	      << "Left wheel:  " << minLTrans << "mm/s to " << maxLTrans << "mm/s" << endl
 	      << "Right wheel: " << minRTrans << "mm/s to " << maxRTrans << "mm/s" << endl;
     break;
+
   case '5':
     diffMotion_->getTargetLRVelocity(lTrans, rTrans);
     std::cout << "Current target velocity: left - " << lTrans << "mm/s right - " << rTrans << "mm/s" << endl;
     break;
+
   case '6':
     std::cout << "Set wheel velocity: " << endl
 	      << "left translation (mm/s) : " << flush;
@@ -67,8 +69,10 @@ DifferentialMotionInterface::evalCommand(char c)
 
     t.msec(msec);
     ACE_OS::sleep(t);
-    motion_->limp();
+
+    diffMotion_->setLRVelocity(0, 0);
     break;
+
   default:
     rc = Super::evalCommand(c);
     break;

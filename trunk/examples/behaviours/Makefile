@@ -22,8 +22,17 @@ INCLDIRS += -I$(NIX_ROOT)/src
 LDFLAGS +=  -L$(NIX_ROOT)/lib
 LDFLAGS +=  -L$(IPP_ROOT)/lib
 
+## static libraries
+
+STATIC_LIBS = miroSvc
+
+## performing the magic
+
+STATIC_DEPS = $(addprefix $(MIRO_ROOT)/lib/lib, $(addsuffix .a,$(STATIC_LIBS)))
+LDLIBS += $(addprefix -l, $(STATIC_LIBS))
+
 ## dynamic libraries if needed
-LDLIBS += -lmiroSvc -lmiro -lTAO_CosNaming -lTAO
+LDLIBS += -lmiro
 
 ## program to be built
 BIN 	= Behaviours BehaviourControler
@@ -71,6 +80,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 #	Local targets
 #----------------------------------------------------------------------------
 
+$(BIN): $(STATIC_DEPS)
 
 # DO NOT DELETE THIS LINE -- g++dep uses it.
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
