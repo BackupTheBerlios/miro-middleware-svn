@@ -30,7 +30,7 @@
 #include <string>
 
 #define HEADER_SIZE 32
-#define DEFAULT_MTU 1024
+#define DEFAULT_MTU 1500
 
 /* Debug output macros */
 #define DEBUG_LEVEL 32
