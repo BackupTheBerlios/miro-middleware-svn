@@ -276,6 +276,9 @@ namespace Miro
     friend std::ostream& operator << (class std::ostream& ostr, Angle alpha);
     friend std::istream& operator >> (class std::istream& istr,  Angle& alpha);
  
+    static void normalize(double& _alpha);
+    static void normalize1(double& _alpha);
+
   protected:
     void normalize();
     void normalize1();
@@ -283,6 +286,24 @@ namespace Miro
   private:
     double angle;
   };
+
+  inline
+  void 
+  Angle::normalize(double& _alpha) { 
+    while (_alpha > M_PI) 
+      _alpha -= 2. * M_PI;
+    while (_alpha <= -M_PI) 
+      _alpha += 2. * M_PI;
+  }  
+
+  inline
+  void 
+  Angle::normalize1(double& _alpha) { 
+    if (_alpha > M_PI) 
+      _alpha -= 2. * M_PI;
+    else if (_alpha <= -M_PI) 
+      _alpha += 2. * M_PI;
+  }  
 
   inline
   void 
