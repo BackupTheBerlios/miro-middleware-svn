@@ -20,16 +20,6 @@
 #include <miro/Log.h>
 #include <unistd.h>
 
-#undef DEBUG
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
-
-using std::cout;
-using std::cerr;
 using std::endl;
 using std::string;
 
