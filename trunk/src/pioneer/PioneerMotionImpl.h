@@ -28,6 +28,7 @@ namespace Pioneer
   // forward declerations
   class Connection;
   class Consumer;
+  class Parameters;
 
   class MotionImpl :  public virtual POA_Miro::Motion,
 		      public virtual ::Miro::DifferentialMotionImpl
@@ -68,6 +69,7 @@ namespace Pioneer
     // protected:
     Connection&         connection; // encapsulating communication to hardware
     Consumer&           consumer;   // asynchronous processing of pioneer output
+    const Parameters *  params_;    // parameter struct
 
     static ACE_Time_Value maxWait;
   };

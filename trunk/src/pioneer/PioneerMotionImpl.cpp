@@ -44,7 +44,8 @@ namespace Pioneer
 			 Consumer& _consumer) throw(Exception) :
     Miro::DifferentialMotionImpl(Parameters::instance()->motion),
     connection(_connection),
-    consumer(_consumer)
+    consumer(_consumer),
+    params_(Parameters::instance())
   {
    DBG(cout << "Constructing PioneerMotionImpl" << endl);
   }
@@ -80,7 +81,8 @@ namespace Pioneer
 
     Miro::Guard guard(mutex_);
     setTargetVelocity(vel);
-    connection.setSpeedRot(targetVelocity_.translation, targetVelocity_.rotation);
+    connection.setSpeedRot(targetVelocity_.translation,
+			   targetVelocity_.rotation);
   }
 
   //--------------------------------------------------------------------------
@@ -96,7 +98,8 @@ namespace Pioneer
 
     Miro::Guard guard(mutex_);
     setTargetVelocity(left, right);
-    connection.setSpeed2(left, right);
+    connection.setSpeed2((short)(left / params_->vel2Divisor), 
+			 (short)(right / params_->vel2Divisor));
   }
   
   //--------------------------------------------------------------------------
