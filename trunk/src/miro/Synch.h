@@ -49,10 +49,10 @@ namespace Miro
   typedef ACE_Condition_Thread_Mutex  Condition;
   typedef ACE_Guard<ACE_Thread_Mutex> Guard;
 
-  typedef ACE_RW_Thread_Mutex         RWMutex;
-  typedef ACE_Read_Guard<RWMutex>     ReadGuard;
-  typedef ACE_Write_Guard<RWMutex>    WriteGuard;
-};
+  typedef ACE_RW_Thread_Mutex                  RWMutex;
+  typedef ACE_Read_Guard<ACE_RW_Thread_Mutex>  ReadGuard;
+  typedef ACE_Write_Guard<ACE_RW_Thread_Mutex> WriteGuard;
+}
 
 #endif
 
