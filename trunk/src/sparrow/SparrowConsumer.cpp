@@ -2,43 +2,30 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 //
 //////////////////////////////////////////////////////////////////////////////
 
-
-#include "idl/ButtonsC.h"
-
 #include "SparrowConsumer.h"
 #include "SparrowConnection.h"
 #include "SparrowStallImpl.h"
 #include "SparrowButtonsImpl.h"
-#include "miro/RangeSensorImpl.h"
-#include "miro/TimeHelper.h"
-#include "can/Parameters.h"
 
+#include "can/Parameters.h"
 #include "can/CanMessage.h"
 
-#include <miro/Exception.h>
-#include <algorithm>
+#include "miro/RangeSensorImpl.h"
+#include "miro/TimeHelper.h"
+#include "miro/Exception.h"
+#include "miro/Log.h"
 
-#undef DEBUG
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
+#include "idl/ButtonsC.h"
 
 namespace Sparrow
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-
   using Miro::ButtonStatusIDL;
 
   //------------------------//
@@ -84,7 +71,7 @@ namespace Sparrow
     y_(0.),
     index_(0)
   {
-    cout << "Constructing SparrowConsumer." << endl;
+    MIRO_LOG_CTOR("Sparrow::Consumer");
 
     status_.position.point.x = 0.;
     status_.position.point.y = 0.;
@@ -137,7 +124,7 @@ namespace Sparrow
     y_(0.),
     index_(0)
   {
-    cout << "Constructing SparrowConsumer." << endl;
+    MIRO_LOG_CTOR("Sparrow::Consumer");
 
     status_.position.point.x = 0.;
     status_.position.point.y = 0.;
@@ -154,7 +141,7 @@ namespace Sparrow
   //----------------------//
   Consumer::~Consumer()
   {
-    cout << "Destructing SparrowConsumer." << endl;
+    MIRO_LOG_DTOR("Sparrow::Consumer");
 
     motorAliveCond.broadcast();
     odoAliveCond.broadcast();
@@ -222,7 +209,7 @@ namespace Sparrow
 
     CanId msgID = message.id();
 
-    if(CanParams->module == "pcan")
+    if (CanParams->module == "pcan")
        msgID = (msgID | 0x80000000);
 
     switch (msgID) {
@@ -230,28 +217,33 @@ namespace Sparrow
       // Motor Messages
 
     case CAN_R_MOTOR_ALIVE: {
-      DBG(cout << "Consumer::receiveThread:  received message: MOTOR_ALIVE" << endl);
+      MIRO_DBG(SPARROW, LL_PRATTLE, 
+	       "Consumer::receiveThread:  received message: MOTOR_ALIVE");
 
       versSub = message.shortData(0);
       versNr = versSub >> 4;
       versSub = versSub & 0x0F; // versNr loeschen mit AND 00001111
-      cout << "MOTOR_ALIVE_VERSION: "<< versNr << "." << versSub << endl;
-      cout <<"MOTOR_TIME_STAMP (sec): " << message.shortData(2) << endl;
+      MIRO_DBG_OSTR(SPARROW, LL_PRATTLE,
+		    "MOTOR_ALIVE_VERSION: "<< versNr << "." << versSub);
+      MIRO_DBG_OSTR(SPARROW, LL_PRATTLE,
+		    "MOTOR_TIME_STAMP (sec): " << message.shortData(2));
       Miro::Guard guard(motorAliveMutex);
       motorAliveCond.broadcast();
       break;
     }
 
     case CAN_R_GET_ACCELS: {
-      cout << "Consumer::receiveThread:  received message: GET_ACCELS" << endl;
+      MIRO_DBG_OSTR(SPARROW, LL_PRATTLE,
+		    "Consumer::receiveThread:  received message: GET_ACCELS");
 
       Miro::Guard guard(accelMutex);
 
       tmp = index_;
       if (message.shortData(0) != index_) {
-	cerr << "GET_ACCELS lost entries: " << endl
-	     << "expected entry: " << index_
-	     << "recieved entry: " << message.shortData(0);
+	MIRO_LOG_OSTR(LL_ERROR, 
+		      "GET_ACCELS lost entries: " << endl
+		      << "expected entry: " << index_
+		      << "recieved entry: " << message.shortData(0));
       }
 
       index_ = message.shortData(0);
@@ -273,7 +265,6 @@ namespace Sparrow
 	xPos_ = message.shortData(0);
 	yPos_ = message.shortData(2);
 	phi_ = ticks2rad(message.shortData(4));
-	//cout << message << endl;  //debug uli 4.8.02
 
 	// the goalie is special
 	if (params_->goalie) {
@@ -310,9 +301,10 @@ namespace Sparrow
       }
 
     case 0x82820201: { // DISTANCE LR
-      DBG(cout << "Consumer::receiveThread:  received message: DISTANCE LR "
-	  << message.shortData(0) << "  "
-	  << message.shortData(2) << endl);
+      MIRO_DBG_OSTR(SPARROW, LL_PRATTLE, 
+		    "Consumer::receiveThread:  received message: DISTANCE LR "
+		    << message.shortData(0) << "  "
+		    << message.shortData(2));
 
       Miro::Guard guard(distanceLRMutex);
       distanceL = message.shortData(0);
@@ -322,13 +314,16 @@ namespace Sparrow
     }
 
     case CAN_R_ODO_ALIVE: {
-      DBG(cout << "Consumer::receiveThread:  received message: ODO_ALIVE" << endl);
+      MIRO_DBG(SPARROW, LL_PRATTLE, 
+	       "Consumer::receiveThread:  received message: ODO_ALIVE");
 
       versSub = message.shortData(0);
       versNr = versSub >> 4;
       versSub = versSub & 0x0F; // versNr loeschen mit AND 00001111
-      cout << "ODO_ALIVE_VERSION: "<< versNr << "." << versSub << endl;
-      cout <<"ODO_TIME_STAMP (sec): " << message.shortData(2) << endl;
+      MIRO_DBG_OSTR(SPARROW, LL_PRATTLE,
+		    "ODO_ALIVE_VERSION: "<< versNr << "." << versSub);
+      MIRO_DBG_OSTR(SPARROW, LL_PRATTLE,
+		    "ODO_TIME_STAMP (sec): " << message.shortData(2));
       Miro::Guard guard(odoAliveMutex);
       odoAliveCond.broadcast();
       break;
@@ -336,7 +331,8 @@ namespace Sparrow
       // Port Messages
 
     case CAN_R_READ_PORTS: { // DIGITAL
-      DBG(cout << "Consumer::receiveThread:  received message: DIGITAL ");
+      MIRO_DBG(SPARROW, LL_PRATTLE,
+	       "Consumer::receiveThread:  received message: DIGITAL ");
 
       Miro::Guard guard(digitalMutex);
       for (int i = 1; i >= 0; --i) {
@@ -353,11 +349,6 @@ namespace Sparrow
       }
 
       for (int i = 7; i >= 0; --i) {
-#ifdef DEBUG
-	if (message.byteData(i) ^ digital[i]) {
-	  cout << "Digital " << i << ": 0x" << hex << (int)message.byteData(i) << dec << endl;
-	}
-#endif
 	digital[i] = message.byteData(i);
       }
 
@@ -366,9 +357,10 @@ namespace Sparrow
     }
 
     case CAN_R_READ_ANALOG: {
-      DBG(cout << "Consumer::receiveThread:  received message: ANALOG "
-	  << message.shortData(0) << "  "
-	  << message.shortData(2) << endl);
+      MIRO_DBG_OSTR(SPARROW, LL_PRATTLE,
+		    "Consumer::receiveThread:  received message: ANALOG "
+		    << message.shortData(0) << "  "
+		    << message.shortData(2));
 
       Miro::Guard guard(analogMutex);
       analog[message.shortData(0)]= message.shortData(2);
@@ -377,13 +369,16 @@ namespace Sparrow
     }
 
     case CAN_R_PORTS_ALIVE: {
-      DBG(cout << "Consumer::receiveThread:  received message: PORTS_ALIVE" << endl);
+      MIRO_DBG(SPARROW, LL_PRATTLE, 
+	       "Consumer::receiveThread:  received message: PORTS_ALIVE");
 
       versSub = message.shortData(0);
       versNr = versSub >> 4;
       versSub = versSub & 0x0F; // versNr loeschen mit AND 00001111
-      cout << "PORTS_ALIVE_VERSION: "<< versNr << "." << versSub << endl;
-      cout <<"PORT_TIME_STAMP (sec): " << message.shortData(2) << endl;
+      MIRO_DBG_OSTR(SPARROW, LL_PRATTLE,
+		    "PORTS_ALIVE_VERSION: "<< versNr << "." << versSub);
+      MIRO_DBG_OSTR(SPARROW, LL_PRATTLE,
+		    "PORTS_TIME_STAMP (sec): " << message.shortData(2));
       Miro::Guard guard(portsAliveMutex);
       portsAliveCond.broadcast();
       break;
@@ -399,13 +394,16 @@ namespace Sparrow
       break;
 
     case CAN_R_STALL_ALIVE: {
-      DBG(cout << "Consumer::receiveThread:  received message: STALL_ALIVE" << endl);
+      MIRO_DBG(SPARROW, LL_PRATTLE,
+	       "Consumer::receiveThread:  received message: STALL_ALIVE");
 
       versSub = message.shortData(0);
       versNr = versSub >> 4;
       versSub = versSub & 0x0F; // versNr loeschen mit AND 00001111
-      cout << "STALL_ALIVE_VERSION: "<< versNr << "." << versSub << endl;
-      cout << "STALL_TIME_STAMP (sec):" << message.shortData(2) << endl;
+      MIRO_DBG_OSTR(SPARROW, LL_PRATTLE,
+		    "STALL_ALIVE_VERSION: "<< versNr << "." << versSub);
+      MIRO_DBG_OSTR(SPARROW, LL_PRATTLE,
+		    "STALL_TIME_STAMP (sec): " << message.shortData(2));
       Miro::Guard guard(stallAliveMutex);
       stallAliveCond.broadcast();
       break;
@@ -414,13 +412,16 @@ namespace Sparrow
       // Kicker Messages
 
     case CAN_R_KICK_ALIVE: {
-      DBG(cout << "Consumer::receiveThread:  received message: KICK_ALIVE" << endl);
+      MIRO_DBG(SPARROW, LL_PRATTLE,
+	       "Consumer::receiveThread:  received message: KICK_ALIVE");
 
       versSub = message.shortData(0);
       versNr = versSub >> 4;
       versSub = versSub & 0x0F; // versNr loeschen mit AND 00001111
-      cout << "KICK_ALIVE_VERSION: "<< versNr << "." << versSub << endl;
-      cout << "KICK_TIME_STAMP (sec):" << message.shortData(2) << endl;
+      MIRO_DBG_OSTR(SPARROW, LL_PRATTLE,
+		    "KICK_ALIVE_VERSION: "<< versNr << "." << versSub);
+      MIRO_DBG_OSTR(SPARROW, LL_PRATTLE,
+		    "KICK_TIME_STAMP (sec): " << message.shortData(2));
       Miro::Guard guard(kickerAliveMutex);
       kickerAliveCond.broadcast();
       break;
@@ -429,13 +430,16 @@ namespace Sparrow
       // Servo Messages
 
     case CAN_R_SERVO_ALIVE: {
-      DBG(cout << "Consumer::receiveThread:  received message: SERVO_ALIVE" << endl);
+      MIRO_DBG(SPARROW, LL_PRATTLE, 
+	       "Consumer::receiveThread:  received message: SERVO_ALIVE");
 
       versSub = message.shortData(0);
       versNr = versSub >> 4;
       versSub = versSub & 0x0F; // versNr loeschen mit AND 00001111
-      cout << "SERVO_ALIVE_VERSION: "<< versNr << "." << versSub << endl;
-      cout << "SERVO_TIME_STAMP (sec):" << message.shortData(2) << endl;
+      MIRO_DBG_OSTR(SPARROW, LL_PRATTLE,
+		    "SERVO_ALIVE_VERSION: "<< versNr << "." << versSub);
+      MIRO_DBG_OSTR(SPARROW, LL_PRATTLE,
+		    "SERVO_TIME_STAMP (sec): " << message.shortData(2));
       Miro::Guard guard(servoAliveMutex);
       servoAliveCond.broadcast();
       break;
@@ -444,7 +448,8 @@ namespace Sparrow
       // Infrared Messages:
 
     case CAN_R_IR_GET_CONT:
-      DBG(cout << "Consumer::receiveThread: receiveThread message: IR_CONT" << endl);
+      MIRO_DBG(SPARROW, LL_PRATTLE,
+	       "Consumer::receiveThread: receiveThread message: IR_CONT");
 
       if (pIR_) {
 	Sparrow::Parameters * param = Sparrow::Parameters::instance(); //uli
@@ -475,13 +480,16 @@ namespace Sparrow
       break;
 
     case CAN_R_IR_ALIVE: {
-      DBG(cout << "Consumer::receiveThread:  received message: IR_ALIVE" << endl);
+      MIRO_DBG(SPARROW, LL_PRATTLE,
+	       "Consumer::receiveThread:  received message: IR_ALIVE");
 
       versSub = message.shortData(0);
       versNr = versSub >> 4;
       versSub = versSub & 0x0F; // versNr loeschen mit AND 00001111
-      cout << "IR_ALIVE_VERSION: "<< versNr << "." << versSub << endl;
-      cout << "IR_TIME_STAMP (sec):" << message.shortData(2) << endl;
+      MIRO_DBG_OSTR(SPARROW, LL_PRATTLE,
+		    "IR_ALIVE_VERSION: "<< versNr << "." << versSub);
+      MIRO_DBG_OSTR(SPARROW, LL_PRATTLE,
+		    "IR_TIME_STAMP (sec): " << message.shortData(2));
       Miro::Guard guard(irAliveMutex);
       irAliveCond.broadcast();
       break;
@@ -495,34 +503,24 @@ namespace Sparrow
       break;
 
     case CAN_R_DBG_ALIVE: {
-      DBG(cout << "Consumer::receiveThread:  received message: DBG_ALIVE" << endl);
+      MIRO_DBG(SPARROW, LL_PRATTLE,
+	       "Consumer::receiveThread:  received message: DBG_ALIVE");
 
       versSub = message.shortData(0);
       versNr = versSub >> 4;
       versSub = versSub & 0x0F; // versNr loeschen mit AND 00001111
-      cout << "DBG_ALIVE_VERSION: "<< versNr << "." << versSub << endl;
-      cout << "DBG_TIME_STAMP (sec):" << message.shortData(2) << endl;
+      MIRO_DBG_OSTR(SPARROW, LL_PRATTLE,
+		    "DBG_ALIVE_VERSION: "<< versNr << "." << versSub);
+      MIRO_DBG_OSTR(SPARROW, LL_PRATTLE,
+		    "DBG_TIME_STAMP (sec): " << message.shortData(2));
       Miro::Guard guard(dbgAliveMutex);
       dbgAliveCond.broadcast();
       break;
     }
 
     default:
-      cerr << "SparrowConsumer: Unhandled can bus message: "
-	   << message << endl;
+      MIRO_LOG_OSTR(LL_ERROR, 
+		    "SparrowConsumer: Unhandled can bus message: " << message);
     }
   }
-
-  short *
-  Consumer::getTable1()
-  {
-    return table1;
-  }
-
-  short *
-  Consumer::getTable2()
-  {
-    return table2;
-  }
-
-};
+}

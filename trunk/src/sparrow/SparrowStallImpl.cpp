@@ -11,37 +11,22 @@
 
 
 #include "SparrowStallImpl.h"
-#include "SparrowConnection.h"
-
-#include "miro/Exception.h"
-#include "miro/StructuredPushSupplier.h"
+#include "SparrowBaseConnection.h"
 #include "SparrowConnection.h"
 #include "SparrowConnection2003.h"
 #include "Parameters.h"
 
-#include <iostream>
-
-// #undef DEBUG
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
+#include "miro/StructuredPushSupplier.h"
+#include "miro/Log.h"
 
 namespace Sparrow
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-
   StallImpl::StallImpl(BaseConnection * _connection,
-		       Miro::StructuredPushSupplier * _pSupplier)
-    throw(Miro::Exception) :
-    connection(_connection),
+		       Miro::StructuredPushSupplier * _pSupplier) :
+    connection_(_connection),
     pSupplier(_pSupplier)
   {
-    DBG(cout << "Constructing SparrowStallImpl" << endl);
+    MIRO_LOG_CTOR("Sparrow::StallImpl");
 
     // Stall Notify Event initialization
     if (pSupplier) {
@@ -62,7 +47,7 @@ namespace Sparrow
 
   StallImpl::~StallImpl()
   {
-    DBG(cout << "Destructing SparrowStallImpl" << endl);
+    MIRO_LOG_DTOR("Sparrow::StallImpl");
   }
 
   void
@@ -84,9 +69,14 @@ namespace Sparrow
   {
     CORBA::Boolean rvalue;
     if(Parameters::instance()->sparrow2003)
-       rvalue = false;//((Connection2003 *) connection)->isStalled();
-    else
-       rvalue = ((Connection *) connection)->isStalled();
+       rvalue = false;
+    else {
+      Connection * connection = 
+	dynamic_cast<Connection *> (connection_);
+      MIRO_ASSERT(connection != NULL);
+
+      rvalue = connection->isStalled();
+    }
 
     return rvalue;
   }
@@ -94,8 +84,12 @@ namespace Sparrow
   void
   StallImpl::unstall() throw()
   {
-    //connection.unstall();
-    if(!Parameters::instance()->sparrow2003)
-           ((Connection *) connection)->unstall();
+    if(!Parameters::instance()->sparrow2003) {
+      Connection * connection = 
+	dynamic_cast<Connection *> (connection_);
+      MIRO_ASSERT(connection != NULL);
+
+      connection->unstall();
+    }
   }
-};
+}

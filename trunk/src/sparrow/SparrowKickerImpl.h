@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -12,13 +12,11 @@
 #define SparrowKickerImpl_h
 
 #include "idl/KickerS.h"
-#include "SparrowBaseConnection.h"
-
 
 namespace Sparrow
 {
   // forward declerations
-
+  class BaseConnection;
 
   class KickerImpl :  public virtual POA_Miro::Kicker
   {
@@ -36,11 +34,11 @@ namespace Sparrow
     void kick(const Miro::TimeIDL& time) throw();
 
   protected:
-    BaseConnection *         connection; // encapsulating communication to hardware
+    BaseConnection * connection_; // encapsulating communication to hardware
   };
-};
+}
 
-#endif
+#endif // SparrowKickerImpl_h
 
 
 

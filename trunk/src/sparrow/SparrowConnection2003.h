@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002, 2003
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -41,9 +41,6 @@ namespace Sparrow
 
     void init();
 
-    void infraredGet(unsigned short msec, unsigned short times);
-    bool infraredAlive();
-
     void setServo(unsigned char servo, double rad);
     void kick(unsigned char ventilatetime, unsigned char kicktime);
 
@@ -52,16 +49,12 @@ namespace Sparrow
     void writeHostAlive();
     void writeAccVel(short accL, short accR, short velL, short velR);
 
-
     void setInfrared1WaitTime(unsigned char waittime);
     void setInfrared2WaitTime(unsigned char waittime);
 
-
     void alivetimeout();
 
-
   protected:
-
     Consumer2003 * consumer;
     EventHandler2003 * eventHandler;
 
@@ -73,8 +66,6 @@ namespace Sparrow
 
     static const int LEFT_MOTOR;
     static const int RIGHT_MOTOR;
-
-
   };
 
   inline
@@ -96,7 +87,7 @@ namespace Sparrow
     return params_->servo1MidPulse +
       static_cast<short>(rint(rad * params_->deg2ServoTicksL * 180. / M_PI));
   }
-};
+}
 
-#endif
+#endif // SparrowConnection2003_h
 

@@ -2,41 +2,26 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "SparrowButtonsImpl.h"
 #include "SparrowConsumer.h"
 
 #include "idl/ExceptionC.h"
 #include "miro/StructuredPushSupplier.h"
-
-#include <iostream>
-
-// #undef DEBUG
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
+#include "miro/Log.h"
 
 namespace Sparrow
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-
   ButtonsImpl::ButtonsImpl(Miro::StructuredPushSupplier * _pSupplier) :
-//    consumer(_consumer),
     pSupplier(_pSupplier)
   {
-    DBG(cout << "Constructing SparrowButtonsImpl" << endl);
+    MIRO_LOG_CTOR("ButtonsImpl");
 
     // initialize button state
     for (unsigned long i = 0; i < NUMBER_OF_BUTTONS; ++i)
@@ -61,7 +46,7 @@ namespace Sparrow
     
   ButtonsImpl::~ButtonsImpl()
   {
-    DBG(cout << "Destructing SparrowButtonsImpl" << endl);
+    MIRO_LOG_DTOR("ButtonsImpl");
   }
 
   void
@@ -91,4 +76,4 @@ namespace Sparrow
   {
     return NUMBER_OF_BUTTONS;
   }
-};
+}

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002, 2003
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -17,28 +17,17 @@
 #include "Parameters.h"
 
 #include "miro/Exception.h"
+#include "miro/Log.h"
 
 #include <ace/Reactor.h>
-
-#ifdef DEBUG
-#define DBG(x) x
-#define CSDBG(x) x
-#else
-#define DBG(x)
-#define CSDBG(x)
-#endif
 
 namespace
 {
   ACE_Time_Value stallReset(2, 0);
-};
+}
 
 namespace Sparrow
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-
   using Can::Message;
 
   ACE_Time_Value maxTimeout(0, 500000);
@@ -49,7 +38,6 @@ namespace Sparrow
 
   Connection::Connection(ACE_Reactor* _reactor,
 			 Miro::DevEventHandler* _devEventHandler,
-			 //			 EventHandler _eventHandler,
 			 Consumer * _consumer) :
     Super(_reactor, _devEventHandler),
     consumer(_consumer),
@@ -65,7 +53,7 @@ namespace Sparrow
     rightPower(0),
     boardReply(-1)
   {
-    DBG(cout << "Constructing SparrowConnection." << endl);
+    MIRO_LOG_CTOR("Sparrow::Connection");
 
     // init odometry
     setPosition(0, 0, 0.);
@@ -81,7 +69,8 @@ namespace Sparrow
       throw Miro::ACE_Exception(errno, "Failed to register timer for status report startup.");
 
 
-    DBG(cout << "polling buttons every " << params_->buttonsPollInterval << "sec" << endl);
+    MIRO_DBG_OSTR(SPARROW, LL_DEBUG,
+		  "Polling buttons every " << params_->buttonsPollInterval << "sec");
     if ( (buttonsPollTimerId = reactor->schedule_timer(eventHandler,
 				(void *)BUTTONS_TIMER, // timer id
 				params_->buttonsPollInterval, // delay
@@ -106,9 +95,6 @@ namespace Sparrow
 	      params_->stallA2,
 	      params_->stallA1,
 	      params_->stallA0);
-
-    // init motor control tables
-    // writeTables();
   }
 
 
@@ -118,7 +104,7 @@ namespace Sparrow
 
   Connection::~Connection()
   {
-    DBG(cout << "Destructing SparrowConnection." << endl);
+    MIRO_LOG_DTOR("Sparrow::Connection");
 
     delete eventHandler;
   }
@@ -141,59 +127,6 @@ namespace Sparrow
   //-------------------//
   //----- methods -----//
   //-------------------//
-
-#ifdef DEPRECATED_SPARROW_FEATURE
-  void
-  Connection::writeTables()
-  {
-    if (params_->writeTables) {
-      int minimum = std::min(params_->table1.size(),
-			     params_->table2.size());
-      cout << "writing tables of size: " << minimum << " " << flush;
-      for (int j = 0; j < minimum; ++j) {
-	if (!(j % 30))
-	  cout << "." << flush;
-	setAccelValues(j, params_->table1[j], params_->table2[j]);
-      }
-      cout << endl;
-    }
-  }
-
-  void
-  Connection::readTables()
-  {
-    if(params_->writeTables) {
-      cout << "receiving tables:" << endl;
-      consumer->accelMutex.acquire();
-      cout << "got mutex" << endl;
-      getAccelValues();
-      cout << "wait on condition" << endl;
-      consumer->accelCond.wait();
-      consumer->accelMutex.release();
-
-      cout << "table 1" << endl;
-      short * table1 = consumer->getTable1();
-      for (int i = 0; i < Sparrow::ACCEL_TABLE_SIZE; ++i) {
-	cout.width(7);
-	cout.fill(' ');
-	cout << table1[i];
-	if ( ((i+1) % 8) == 0)
-	  cout << endl;
-      }
-
-      cout << endl << endl << "table 2" << endl;
-
-      short * table2 = consumer->getTable2();
-      for (int i = 0; i < Sparrow::ACCEL_TABLE_SIZE; ++i) {
-	cout.width(7);
-	cout.fill(' ');
-	cout << table2[i];
-	if ( ( (i+1) % 8) == 0)
-	  cout << endl;
-      }
-    }
-  }
-#endif
 
   //----------- commands ----------- //
 
@@ -541,7 +474,7 @@ namespace Sparrow
 
       // send unstall to sparrowBoard - look in documentation
     }
-  };
+  }
 
   bool
   Connection::stallAlive()
@@ -738,4 +671,4 @@ namespace Sparrow
 
     write(message);
   }
-};
+}

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -20,7 +20,7 @@
 namespace Miro
 {
   class StructuredPushSupplier;
-};
+}
 
 namespace Sparrow
 {
@@ -46,12 +46,11 @@ namespace Sparrow
     virtual CORBA::ULong numberOfButtons() throw();
 
   protected:
-    //Consumer& consumer;
     Miro::StructuredPushSupplier * pSupplier;
     CosNotification::StructuredEvent notifyEvent;
 
     CORBA::Boolean button_[NUMBER_OF_BUTTONS];
   };
-};
+}
 
-#endif
+#endif // SparrowButtonsImpl_h

@@ -2,26 +2,17 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "SparrowEventHandler.h"
 #include "SparrowConnection.h"
 
-#include <iostream>
-
-// #undef DEBUG
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
+#include "miro/Log.h"
 
 namespace Sparrow
 {
@@ -35,12 +26,12 @@ namespace Sparrow
     connection(connection_),
     stallTimerId(0)
   {
-    DBG(cout << "Constructing SparrowEventHandler." << endl);
+    MIRO_LOG_CTOR("Sparrow::EventHandler");
   }
 
   EventHandler::~EventHandler()
   {
-    DBG(cout << "Destructing SparrowEventHandler." << endl);
+    MIRO_LOG_CTOR("Sparrow::EventHandler");
   }
 
   int 
@@ -51,7 +42,6 @@ namespace Sparrow
       connection.readDigital();
       break;
     case STALL_TIMER:
-      DBG(cout << "Sparrow stall clear." << endl);
       stallTimerId = 0;
       break;
     case INIT_TIMER: {
@@ -78,8 +68,6 @@ namespace Sparrow
   void
   EventHandler::initSparrowBoard() const
   {
-    DBG(cout << "Sparrow startup event." << endl);
-
     // initialize can connection
     connection.Can::Connection::init();
     connection.init();
@@ -91,7 +79,5 @@ namespace Sparrow
     if (!params->faulhaber)
       connection.getPosition(params->odometryPulse.msec(), 0);
     connection.infraredGet(params->infraredPulse.msec(), 0);
-
-    DBG(cout << "Sparrow startup successfull." << endl);
   }
-};
+}

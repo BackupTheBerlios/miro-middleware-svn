@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -13,8 +13,6 @@
 
 #include "idl/SparrowMotionS.h"
 #include "miro/DifferentialMotionImpl.h"
-#include "miro/Exception.h"
-
 
 // forward declerations
 class ACE_Reactor;
@@ -33,7 +31,7 @@ namespace Sparrow
     //-------------------------------------------------------------------------
   public:
     // Constructor/Destructor
-    MotionImpl(Connection& _connection) throw(Miro::Exception);
+    MotionImpl(Connection& _connection);
     virtual ~MotionImpl();
 
     //-------------------------------------------------------------------------
@@ -54,9 +52,9 @@ namespace Sparrow
     Connection&         connection; // encapsulating communication to hardware
     
   };
-};
-
-#endif
+}
+ 
+#endif // SparrowMotionImpl_h
 
 
 

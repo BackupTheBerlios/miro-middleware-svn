@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -12,13 +12,10 @@
 #define SparrowStallImpl_h
 
 #include "idl/StallS.h"
-#include "miro/Exception.h"
-#include "SparrowBaseConnection.h"
 
 #include <orbsvcs/CosNotifyCommC.h>
 
 // forward declerations
-class ACE_Reactor;
 namespace Miro
 {
   class StructuredPushSupplier;
@@ -28,7 +25,7 @@ namespace Sparrow
 {
   // forward declerations
 
-  class Consumer;
+  class BaseConnection;
 
   class StallImpl :  public virtual POA_Miro::Stall
   {
@@ -38,8 +35,7 @@ namespace Sparrow
   public:
     // Constructor/Destructor
     StallImpl(BaseConnection * _connection,
-	      Miro::StructuredPushSupplier * _pSupplier)
-      throw(Miro::Exception);
+	      Miro::StructuredPushSupplier * _pSupplier);
     virtual ~StallImpl();
 
     void pushEvent() const;
@@ -51,12 +47,12 @@ namespace Sparrow
     virtual void unstall() throw();
 
   protected:
-    BaseConnection * connection; // encapsulating communication to hardware
+    BaseConnection * connection_; // encapsulating communication to hardware
     Miro::StructuredPushSupplier * pSupplier;
     CosNotification::StructuredEvent notifyEvent;
   };
-};
+}
 
-#endif
+#endif // SparrowStallImpl_h
 
 

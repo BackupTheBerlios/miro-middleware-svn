@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -22,7 +22,7 @@
 namespace Miro
 {
   class RangeSensorImpl;
-};
+}
 
 namespace Sparrow
 {
@@ -53,9 +53,6 @@ namespace Sparrow
                                     StallImpl * _pStall,
                                     ButtonsImpl * _pButtons,
                                     Miro::RangeSensorImpl * _pIR);
-
-    short * getTable1();
-    short * getTable2();
 
   protected:
     Connection * connection;
@@ -121,6 +118,6 @@ namespace Sparrow
     short table1[ACCEL_TABLE_SIZE];
     short table2[ACCEL_TABLE_SIZE];
   };
-}
+} // SparrowConsumer_h
 #endif
 

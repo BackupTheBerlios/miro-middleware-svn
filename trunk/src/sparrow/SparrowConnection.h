@@ -42,11 +42,6 @@ namespace Sparrow
     void init();
     void fini();
 
-#ifdef DEPRECATED_SPARROW_FEATURE
-    void writeTables();
-    void readTables();
-#endif
-
     //------------------------------------------------------------------------
     // motor methods
     //------------------------------------------------------------------------
@@ -163,8 +158,7 @@ namespace Sparrow
 
   inline
   short
-  Connection::rad2servo0Ticks(double rad) const
-  {
+  Connection::rad2servo0Ticks(double rad) const {
     short pulse = params_->servo0MidPulse;
     if (rad > 0.)
       pulse += static_cast<short>(rint(rad * params_->deg2ServoTicksL * 180. / M_PI));
@@ -175,13 +169,11 @@ namespace Sparrow
 
   inline
   short
-  Connection::rad2servo1Ticks(double rad) const
-  {
+  Connection::rad2servo1Ticks(double rad) const {
     return params_->servo1MidPulse +
       static_cast<short>(rint(rad * params_->deg2ServoTicksL * 180. / M_PI));
   }
+}
 
-};
-
-#endif
+#endif // SparrowConnection_h
 

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -13,15 +13,7 @@
 #include "SparrowEventHandler2003.h"
 #include "SparrowConnection2003.h"
 
-#include <iostream>
-
-// #undef DEBUG
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
+#include "miro/Log.h"
 
 
 // Roland: Mittelfristig sollte sich das aber auch mit
@@ -37,23 +29,15 @@
 
 namespace Sparrow
 {
-  using std::cerr;
-  using std::endl;
-  using std::cout;
-
-  //  Parameters* EventHandler::sparrowParam; // sparrow parameters
-
   EventHandler2003::EventHandler2003(Connection2003& connection_) :
     connection(connection_)
-
   {
-    DBG(cout << "Constructing SparrowEventHandler." << endl);
-    initCanConnection();
+    MIRO_LOG_CTOR("Sparrow:EventHandler2003");
   }
 
   EventHandler2003::~EventHandler2003()
   {
-    DBG(cout << "Destructing SparrowEventHandler." << endl);
+    MIRO_LOG_DTOR("Sparrow:EventHandler2003");
   }
 
   int
@@ -65,12 +49,12 @@ namespace Sparrow
   void
   EventHandler2003::initCanConnection() const
   {
-    DBG(cout << "Sparrow startup event." << endl);
+    MIRO_DBG(SPARROW, LL_DEBUG, "Sparrow::EventHandler2003 startup event.");
 
     // initialize can connection
     connection.Can::Connection::init();
     connection.init();
 
-    DBG(cout << "Sparrow startup successfull." << endl);
+    MIRO_DBG(SPARROW, LL_DEBUG, "Sparrow::EventHandler2003 startup successfull.");
   }
-};
+}
