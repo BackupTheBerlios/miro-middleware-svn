@@ -363,6 +363,8 @@ namespace Sparrow
 	  
 	  unsigned int clockL = ACE_NTOHL(message.longData(0));//*(reinterpret_cast<long *>(msg_->d));
 	  int deltaL = clockL & 0x00ffffff;
+	  deltaL <<= 8;
+	  deltaL >>= 8;
 	  clockL >>= 24;
 	  
 	  odoLeft.setTicks(deltaL);
@@ -374,6 +376,8 @@ namespace Sparrow
 	{
 	  unsigned int clockR = ACE_NTOHL(message.longData(4)); //*(reinterpret_cast<long *>(msg_->d + 4));
 	  int deltaR = clockR & 0x00ffffff;
+	  deltaR <<= 8;
+	  deltaR >>= 8;
 	  clockR >>= 24;
 	  
 	  odoRight.setTicks(deltaR);
