@@ -49,7 +49,7 @@ namespace Psos
     if (msgLength==0) msgLength=strlen(msg);
     length(msgLength + 5);
     id(cmd);
-    type(SF_ARGSTR);
+    argType(SF_ARGSTR);
     *userData()=(unsigned char)msgLength;
     memcpy((char *)userData()+1, msg, msgLength);
     checksum(calcChecksum());
@@ -60,7 +60,7 @@ namespace Psos
     header(START_12);
     length( 2+ 2 + 2);
     id(cmd);
-    type((val >= 0)? SF_ARGINT : SF_ARGNINT);
+    argType((val >= 0)? SF_ARGINT : SF_ARGNINT);
     *(short*)userData() = ((val >= 0)? val : -val);
     checksum(calcChecksum());
   }
@@ -71,7 +71,7 @@ namespace Psos
     header(START_12);
     length(2 + 2 + 2);
     id(cmd);
-    type(SF_ARGINT);
+    argType(SF_ARGINT);
     *(unsigned short*)userData() = val;
     checksum(calcChecksum());
   }
@@ -81,7 +81,7 @@ namespace Psos
     header(START_12);
     length(2 + 2 + 2); // cmd/arg + 2 byte integer + 2 byte checksum
     id(cmd);
-    type(SF_ARGINT);
+    argType(SF_ARGINT);
     userData()[0] = byte1;
     userData()[1] = byte2;
     checksum(calcChecksum());

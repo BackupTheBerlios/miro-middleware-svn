@@ -46,8 +46,8 @@ namespace Psos
     unsigned char id() const;
     void id(char cmd);
 
-    unsigned char type() const;
-    void type(char _type);
+    unsigned char argType() const;
+    void argType(char _type);
 
     const unsigned char * userData() const;
     unsigned char * userData();
@@ -89,6 +89,21 @@ namespace Psos
     short sonarValue(int index) const { 
       return (short) rint((*(unsigned short*)&buffer_[24 + index * 3]));
     }
+  };
+
+  class IOpacMessage : public Message
+  {
+  public:
+    unsigned char digin() const { return buffer_[5]; }
+    unsigned char frontbump() const { return buffer_[6]; }
+    unsigned char rearbump() const { return buffer_[7]; }
+    unsigned char ir() const  { return buffer_[8]; }
+
+    unsigned char digout() const  { return buffer_[10]; }
+    unsigned char an() const { return buffer_[11]; }
+//     unsigned short const * ad() const  { 
+//       (unsigned short const *)(&buffer_[12]); 
+//    }
   };
   
   // inline functions
@@ -134,12 +149,12 @@ namespace Psos
   }
   inline
   unsigned char
-  Message::type() const {
+  Message::argType() const {
     return buffer_[4]; 
   }
   inline
   void
-  Message::type(char _type) { 
+  Message::argType(char _type) { 
     buffer_[4] = _type; 
   }
   inline
