@@ -33,6 +33,8 @@ public:
   void connectToRobot(const QString& _robot, bool _silent = false);
   void sendPolicy(const QString& _policy);
   void loadPolicy(const QString& _policy);
+  void sendTransition(const QString& _transition);
+  void sendGlobalTransition(const QString& _pattern);
 
 protected slots:
   void robot();
@@ -43,6 +45,7 @@ protected slots:
   void closePolicy();
 
   void sendTransition();
+  void sendGlobalTransition();
 
 protected:
   void setItemsEnable(bool toggle);
@@ -53,6 +56,8 @@ protected:
   QString robotName_;
   QString policyName_;
   QString policyPath_;
+  QString transition_;
+  QString pattern_;
 
   bool start_;
 
@@ -66,6 +71,7 @@ protected:
   int iLoad_;
   int iSend_;
   int iTransition_;
+  int iGlobalTransition_;
 };
 
 #endif

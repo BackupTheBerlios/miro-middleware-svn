@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -33,6 +33,8 @@ using Miro::RangeSensor_ptr;
 using Miro::ScanDescriptionIDL_var;
 using Miro::MotionArbiterMessage;
 
+BEHAVIOUR_PARAMETERS_FACTORY_IMPL(WallFollow, WallFollowParameters)
+
 WallFollow::WallFollow(Miro::Client& _client,
 		       EventChannel_ptr _ec,
 		       const string& _name,
@@ -41,12 +43,6 @@ WallFollow::WallFollow(Miro::Client& _client,
   Super(_client, _ec, _name, _domainName, NULL)
 {
   cout << "Constructing " << _name << endl;
-}
-
-WallFollowParameters *
-WallFollow::getParametersInstance()
-{
-  return new WallFollowParameters();
 }
 
 void

@@ -18,6 +18,7 @@ namespace Miro
   // forward declarations
   class KeyValueList;
   class BehaviourParameters;
+  class ActionPattern;
 
   //! Ostream operator for debug purposes.
   std::ostream& operator << (std::ostream& ostr, const BehaviourParameters&);
@@ -25,6 +26,8 @@ namespace Miro
   //! Base class for all parameter classes for derived Behaviours.
   struct BehaviourParameters
   {
+    //! Default constructor.
+    BehaviourParameters();
     //! Virtual destructor.
     virtual ~BehaviourParameters();
 
@@ -37,6 +40,12 @@ namespace Miro
 
     friend
     std::ostream& operator << (std::ostream& ostr, const BehaviourParameters&);
+
+  private:
+    ActionPattern * pattern;
+
+    friend class Behaviour;
+    friend class ActionPattern;
   };
 };
 #endif

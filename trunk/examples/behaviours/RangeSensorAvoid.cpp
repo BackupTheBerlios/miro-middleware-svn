@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -32,6 +32,8 @@ using Miro::ScanDescriptionIDL_var;
 using Miro::MotionArbiterMessage;
 using Miro::deg2Rad;
 
+BEHAVIOUR_PARAMETERS_FACTORY_IMPL(RangeSensorAvoid, RangeSensorAvoidParameters)
+
 RangeSensorAvoid::RangeSensorAvoid(Miro::Client& _client,
 				   EventChannel_ptr _ec,
 				   const string& _name,
@@ -40,12 +42,6 @@ RangeSensorAvoid::RangeSensorAvoid(Miro::Client& _client,
   Super(_client, _ec, _name, _domainName, _pSupplier)
 {
   cout << "Constructing " << _name << endl;
-}
-
-RangeSensorAvoidParameters *
-RangeSensorAvoid::getParametersInstance()
-{
-  return new RangeSensorAvoidParameters();
 }
 
 void

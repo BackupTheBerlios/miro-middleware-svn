@@ -46,6 +46,7 @@ ControllerWidget::ControllerWidget(Miro::Client& _client, bool _start,
   // the edit menu
   editMenu = new QPopupMenu( this );
   iTransition_ = editMenu->insertItem( "&Send transition", this, SLOT( sendTransition() ) );
+  iGlobalTransition_ = editMenu->insertItem( "&Send global transition", this, SLOT( sendGlobalTransition() ) );
 
   menuBar = new QMenuBar( this );
   menuBar->insertItem( "&File", fileMenu );    
@@ -194,6 +195,58 @@ ControllerWidget::loadPolicy(const QString& _policy)
     QMessageBox::warning(this, "Error loading policy:", error);
 }
 
+void
+ControllerWidget::sendTransition(const QString& _transition)
+{
+  bool ok = true;
+  QString error;
+
+  try {
+    engine_->sendTransition(_transition.latin1());
+    transition_ = _transition;
+  }
+  catch(const CORBA::Exception& e) {
+    ok = false;
+    setItemsEnable(false);
+    std::ostringstream sstr;
+    sstr << "Communication Failed." << endl
+	 << "CORBA exception: " << endl
+	 << e;
+    error = sstr.str().c_str();
+  }
+
+  if (!ok)
+    QMessageBox::warning(this, "Error sending transition:", error);
+}
+
+void
+ControllerWidget::sendGlobalTransition(const QString& _pattern)
+{
+  bool ok = true;
+  QString error;
+
+  try {
+    engine_->openActionPattern(_pattern.latin1());
+    pattern_ = _pattern;
+  }
+  catch(const Miro::BehaviourEngine::EUnknownActionPattern& ) {
+    ok = false;
+    error = "Action pattern not registered within policy:\n" + _pattern;
+  }
+  catch(const CORBA::Exception& e) {
+    ok = false;
+    setItemsEnable(false);
+    std::ostringstream sstr;
+    sstr << "Communication Failed." << endl
+	 << "CORBA exception: " << endl
+	 << e;
+    error = sstr.str().c_str();
+  }
+
+  if (!ok)
+    QMessageBox::warning(this, "Error sending global transition:", error);
+}
+
 
 void
 ControllerWidget::setItemsEnable(bool toggle)
@@ -201,6 +254,7 @@ ControllerWidget::setItemsEnable(bool toggle)
   fileMenu->setItemEnabled(iLoad_, toggle);
   fileMenu->setItemEnabled(iSend_, toggle);
   editMenu->setItemEnabled(iTransition_, toggle);
+  editMenu->setItemEnabled(iGlobalTransition_, toggle);
 
   playButton->setEnabled(toggle);
   stopButton->setEnabled(toggle);
@@ -305,10 +359,23 @@ ControllerWidget::sendTransition()
   bool ok = false;
   QString tmp = QInputDialog::getText(tr( "Send transtition:" ),
 				      tr( "Transition name" ),
-				      QLineEdit::Normal, robotName_, &ok, this );
+				      QLineEdit::Normal, transition_, &ok, this );
   
   if ( ok && !tmp.isEmpty() ) {
-//	engine->sendTransition(tmp.latin1());
+    sendTransition(tmp);
+  }
+}
+
+void 
+ControllerWidget::sendGlobalTransition() 
+{
+  bool ok = false;
+  QString tmp = QInputDialog::getText(tr( "Send global transtition:" ),
+				      tr( "Action pattern name" ),
+				      QLineEdit::Normal, pattern_, &ok, this );
+  
+  if ( ok && !tmp.isEmpty() ) {
+   sendGlobalTransition(tmp);
   }
 }
 

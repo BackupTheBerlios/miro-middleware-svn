@@ -44,8 +44,10 @@ namespace Sparrow
 
   inline
   double ticks2rad(unsigned short ticks) { 
-    return ((double)(ticks % 1024)) * M_PI / 512.;
-
+    long h = ticks % 1024;
+    if (h > 512)
+      h -= 1024;
+    return M_PI/512. * (double) h;
   }
 
   //--------------------------------------------------------------------------

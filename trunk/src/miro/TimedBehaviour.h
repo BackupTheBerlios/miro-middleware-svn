@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -26,8 +26,7 @@ namespace Miro
   public:
     TimedBehaviour (ACE_Reactor &);
 
-    // factory method for BehaviourParameters
-    TimedBehaviourParameters * getParametersInstance();
+    BEHAVIOUR_PARAMETERS_FACTORY(TimedBehaviourParameters);
 
     void open();
     void close();

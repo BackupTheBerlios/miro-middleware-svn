@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -22,8 +22,7 @@ class Straight : public Miro::TimedBehaviour
 public:
   Straight(ACE_Reactor &);
 
-  // factory method for BehaviourParameters
-  StraightParameters * getParametersInstance();
+  BEHAVIOUR_PARAMETERS_FACTORY(StraightParameters);
 
   void action();
   const std::string& getBehaviourName() const;

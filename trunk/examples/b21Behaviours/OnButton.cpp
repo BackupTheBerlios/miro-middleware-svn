@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -26,6 +26,9 @@ using Miro::StructuredPushConsumer;
 
 string OnButton::name_ = "OnButton";
 
+BEHAVIOUR_PARAMETERS_FACTORY_IMPL(OnButton, OnButtonParameters)
+
+
 OnButton::OnButton(CosNotifyChannelAdmin::EventChannel_ptr _ec,
 		   const string& _domainName) :
   Super(_ec),
@@ -45,12 +48,6 @@ OnButton::OnButton(CosNotifyChannelAdmin::EventChannel_ptr _ec,
   removed[0].type_name = CORBA::string_dup("*");
 
   consumer.consumerAdmin_->subscription_change(added, removed);
-}
-
-OnButtonParameters *
-OnButton::getParametersInstance()
-{
-  return new OnButtonParameters();
 }
 
 void

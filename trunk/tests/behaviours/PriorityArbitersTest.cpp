@@ -15,8 +15,9 @@
 #include "miro/BehaviourRepository.h"
 #include "miro/ArbiterRepository.h"
 #include "miro/ActionPattern.h"
-// #include "miro/Policy.h"
+#include "miro/Policy.h"
 
+#include <iostream>
 
 int
 main(int, char**)
@@ -86,7 +87,7 @@ main(int, char**)
 
   pattern1.arbiter(&arbiter0, arbiter0.getParametersInstance());
   pattern1.addBehaviour(&behaviour1, parameters10);
-  pattern1.addBehaviour(&behaviour0, parameters10);
+  pattern1.addBehaviour(&behaviour0, parameters11);
   pattern1.addBehaviour(&behaviourB, parameters1B);
   pattern1.addTransition("Transition", &pattern2);
 
@@ -104,8 +105,6 @@ main(int, char**)
   pattern3.addBehaviour(&behaviourB, parameters3B);
   pattern3.addTransition("Transition", &pattern1);
   
-
-#ifdef ASDF
   Miro::Policy policy;
   policy.registerActionPattern(&pattern0);
   policy.registerActionPattern(&pattern1);
@@ -113,14 +112,14 @@ main(int, char**)
   policy.registerActionPattern(&pattern3);
 
   policy.setStartPattern(&pattern0);
+  // force the policy to be valid
+  policy.valid(true);
 
-  cout << "Policy: " << endl 
-       << policy;
+  std::cout << "Policy: " << endl 
+	    << policy;
 
   policy.open();
-#endif
 
-  pattern0.open();
   ACE_Reactor::run_event_loop ();
 
   return 0;

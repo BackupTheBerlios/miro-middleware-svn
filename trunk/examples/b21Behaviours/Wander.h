@@ -23,8 +23,7 @@ class Wander : public Miro::TimedBehaviour
 public:
   Wander(ACE_Reactor &);
 
-  // factory method for BehaviourParameters
-  WanderParameters * getParametersInstance();
+  BEHAVIOUR_PARAMETERS_FACTORY(WanderParameters);
 
   void action();
   const std::string& getBehaviourName() const;

@@ -20,6 +20,10 @@
 
 namespace Miro
 {
+  BehaviourParameters::BehaviourParameters() :
+    pattern(NULL)
+  {}
+
   BehaviourParameters::~BehaviourParameters()
   {}
 

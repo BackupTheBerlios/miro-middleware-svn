@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -25,8 +25,7 @@ public:
 		   const std::string& _domainName,
 		   Miro::StructuredPushSupplier * _pSupplier = NULL);
 
-  // factory method for BehaviourParameters
-  RangeSensorAvoidParameters * getParametersInstance();
+  BEHAVIOUR_PARAMETERS_FACTORY(RangeSensorAvoidParameters);
   void action();
 
 protected:

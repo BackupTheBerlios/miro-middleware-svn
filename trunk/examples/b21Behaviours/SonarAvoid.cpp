@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -28,6 +28,8 @@ using Miro::ScanDescriptionIDL_var;
 using Miro::MotionArbiterMessage;
 
 const string SonarAvoid::name_ = "SonarAvoid";
+
+BEHAVIOUR_PARAMETERS_FACTORY_IMPL(SonarAvoid, SonarAvoidParameters)
 
 SonarAvoid::SonarAvoid(RangeSensor_ptr _rangeSensor,
 		       EventChannel_ptr _ec,
@@ -56,12 +58,6 @@ SonarAvoid::SonarAvoid(RangeSensor_ptr _rangeSensor,
   removed[0].type_name = CORBA::string_dup("*");
 
   consumer.consumerAdmin_->subscription_change(added, removed);
-}
-
-SonarAvoidParameters *
-SonarAvoid::getParametersInstance()
-{
-  return new SonarAvoidParameters();
 }
 
 void

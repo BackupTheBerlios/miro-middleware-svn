@@ -2,15 +2,15 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "TaskBehaviour.h"
+#include "BehaviourParameters.h"
 
 namespace Miro
 {
@@ -33,8 +33,14 @@ namespace Miro
   int 
   TaskBehaviour::svc() 
   {
-    while (active_)
+    while (active_) {
+      // clean up dangling behaviour parameters
+      // left over from ActionPattern::setBehaviourParameters()    
+      delete oldParams_;
+      oldParams_ = NULL;
+
       action();
+    }
     return 0;
   }
 };

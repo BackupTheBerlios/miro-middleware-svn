@@ -12,6 +12,8 @@
 #include "DummyBehaviour.h"
 #include "DummyArbiterMessage.h"
 
+BEHAVIOUR_PARAMETERS_FACTORY_IMPL(DummyBehaviour, DummyBehaviourParameters)
+
 DummyBehaviour::DummyBehaviour(const std::string& _name) :
   Super(*ACE_Reactor::instance()),
   active_(false),
@@ -28,7 +30,13 @@ DummyBehaviour::~DummyBehaviour()
 void
 DummyBehaviour::action()
 {
+  DummyBehaviourParameters const * params =
+    dynamic_cast<DummyBehaviourParameters const * >(params_);
+
   std::cout << name_ << " action: " << active_ << endl;
+
+  if (params->dummy != 0)
+    std::cout << name_ << " dummy: " << params->dummy << endl;
 
   DummyArbiterMessage message;
   message.id = this;

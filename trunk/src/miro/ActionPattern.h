@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -12,6 +12,7 @@
 #define ActionPattern_h
 
 #include "Synch.h"
+#include "Policy.h"
 #include "ArbiterParameters.h"
 
 #include <orbsvcs/CosNotifyCommC.h>
@@ -26,6 +27,7 @@ namespace Miro
 {
 
   // forward declarations
+  class Policy;
   class KeyValueList;
   class Behaviour;
   class BehaviourParameters;
@@ -33,80 +35,114 @@ namespace Miro
   class ActionPattern;
   class StructuredPushSupplier;
 
+  //! Ostream operator for debug purposes.
   std::ostream& operator << (std::ostream& ostr, const ActionPattern&);
 
-  /** This class represents an action pattern, which consists of a set of 
-   * behaviours, arbiters and their configuration
+  /** 
+   * This class represents an action pattern, which consists of a set of 
+   * behaviours, an arbiters and their parameters
    * @author Ingmar Baetge
    */
   class ActionPattern 
   {
   public:
+    //! A pair of a behaviour and its parameter set.
     typedef std::pair<Behaviour *, BehaviourParameters *> BehaviourPair;
+    //! A map matching behaviours by name.
     typedef std::map<std::string, BehaviourPair> BehaviourMap;
+    //! A map matching transitions to the following ActionPattern.
     typedef std::map<std::string, ActionPattern*> TransitionMap;
+    //! A map of existing action pattern to link transitions to.
+    /** Should go back into Policy. With the second parsing run. */
     typedef std::map<std::string, ActionPattern*> ActionPatternMap;
 
-    ActionPattern(const std::string& _name, StructuredPushSupplier * _pSupplier = NULL);
+    //! Initializing constructor.
+    ActionPattern(const std::string& _name, 
+		  StructuredPushSupplier * _pSupplier = NULL);
+    //! Virtual destructor.
     virtual ~ActionPattern();
 
+    //! Initialize the action pattern from an XML description.
     void xmlInit(const QDomNode& _node, const ActionPatternMap& apMap);
-
-    void open();
-    void close(ActionPattern * nextPattern);
-
+    //! Query the name of the action pattern.
     const std::string& getActionPatternName() const;
-
-    void addBehaviour(Behaviour * _behaviour, BehaviourParameters * _parameters);
+    //! Add a behaviour and its parameter set to the action pattern.
+    void addBehaviour(Behaviour * _behaviour, 
+		      BehaviourParameters * _parameters);
+    //! Get the parameters of an existing behaviour.
+    BehaviourParameters * const getBehaviourParameters(const std::string& _behaviour) const;
+    //! Set the parameters of an existing behaviour.
+    void setBehaviourParameters(const std::string& _behaviour,
+				BehaviourParameters * _parameters);
+    //! Add a transition to another action pattern.
     void addTransition(const std::string&, ActionPattern *);
-
+    //! Set the arbiter of the action pattern.
     void arbiter(Arbiter * _a, ArbiterParameters * _p);
     Arbiter * arbiter();
-  
-    Behaviour * getBehaviour(const std::string &);	
+    //! Lookup a behaviour of the action pattern by name.
+    Behaviour * getBehaviour(const std::string &);
     const BehaviourMap& behaviourMap() const;
   
-    void sendMessage(Behaviour const * const sender, const std::string& message);
+    //! Send a transition message, switching to another action pattern.
+    void sendMessage(Behaviour const * const sender, 
+		     const std::string& message);
 
-    // static methods
-
-    static void sendTransitionMessage(const std::string& message);
-    static ActionPattern * currentActionPattern();
-    static void closeCurrentActionPattern();
-
-  protected:
     ActionPattern * getTransitionPattern(const std::string &);
 
-    virtual void printToStream(std::ostream& ostr) const;
+    //! Send a transition message, switching to another action pattern.
+    void sendTransitionMessage(const std::string& message);
 
+  protected:
+    //! Retrieve the current action pattern.
+    ActionPattern * const currentActionPattern();
+
+    //! Activate the action pattern.
+    void open();
+    //! Deactivate the action pattern.
+    void close(ActionPattern * nextPattern);
+    //! Get the action pattern the transition is linked to.
+    //! Dump action pattern configuration to ostream for debugging.
+    virtual void printToStream(std::ostream& ostr) const;
 
     // class data
 
+    //! Policy the action pattern belongs to.
+    Policy * policy_;
+    //! Event supplier for online output.
+    /** Default is the NULL pointer. */
     StructuredPushSupplier * pSupplier_;
+    //! The arbiter of the action pattern.
+    /** Initialized to NULL */
     Arbiter * arbiter_;
+    //! The parameters of the arbiter of the action pattern.
+    /** Initialized to NULL */
     ArbiterParameters * arbiterParameters_;
 
+    //! Map of the behaviours and their parameters.
     BehaviourMap behaviourMap_;
+    //! Map of the transitions and the follow up action patterns.
     TransitionMap transitionTable_;
-
+    //! The name of the action pattern.
     std::string actionPatternName_;
+    //! Preconfigured event to send to the notification service.
     CosNotification::StructuredEvent notifyEvent;
 
-    // protected static methods
-
-    static void setCurrentActionPattern(ActionPattern *);
-
-    // static data
-
-    static Mutex transitionMutex_;
-    static ActionPattern* currentActionPattern_;
-
     friend std::ostream& operator << (std::ostream& ostr, const ActionPattern&);
+
+    friend class Policy;
   };
+
+  inline
+  const std::string&
+  ActionPattern::getActionPatternName() const {
+    return actionPatternName_;
+  }
 
   inline 
   void
   ActionPattern::arbiter(Arbiter * _a, ArbiterParameters * _p) {
+    _p->pattern = this;
+
     arbiter_ = _a;
     arbiterParameters_ = _p;
   }
@@ -123,15 +159,9 @@ namespace Miro
   }
 
   inline
-  ActionPattern *
+  ActionPattern * const
   ActionPattern::currentActionPattern() {
-    return currentActionPattern_;
+    return policy_->currentActionPattern();
   }
-
-  inline
-  void 
-  ActionPattern::setCurrentActionPattern(ActionPattern* ap) {
-    currentActionPattern_ = ap;
-  };
 };
 #endif

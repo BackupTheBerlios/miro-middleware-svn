@@ -38,6 +38,11 @@ namespace Miro
     if (!behaviour_.active_) 
       return;
 
+    // clean up dangling behaviour parameters
+    // left over from ActionPattern::setBehaviourParameters()    
+    //    delete behaviour_.oldParams_;
+    //    behaviour_.oldParams_ = NULL;
+
     behaviour_.event = &notification;
     behaviour_.action();
   }

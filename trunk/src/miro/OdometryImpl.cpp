@@ -97,6 +97,9 @@ namespace Miro
   void 
   OdometryImpl::integrateData(const MotionStatusIDL& data)
   {
+    assert(data.position.heading > -M_PI &&
+	   data.position.heading <= M_PI);
+
     { // scope for guard
       Guard guard(mutex_);
       
@@ -117,6 +120,12 @@ namespace Miro
       status_.position.point.x = x * cosHeading_ - y * sinHeading_;
       status_.position.point.y = x * sinHeading_ + y * cosHeading_;
       status_.position.heading = data.position.heading + origin_.heading;
+
+      // normalize data
+      if (status_.position.heading <= -M_PI)
+	status_.position.heading += 2 * M_PI;
+      else if (status_.position.heading > M_PI)
+	status_.position.heading -= 2 * M_PI;
 
       cond_.broadcast();
     }

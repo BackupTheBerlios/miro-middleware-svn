@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -19,6 +19,8 @@ using Miro::MotionArbiterMessage;
 
 const string Wander::name_ = "Wander";
 
+BEHAVIOUR_PARAMETERS_FACTORY_IMPL(Wander, WanderParameters)
+
 Wander::Wander(ACE_Reactor &ar_) : 
   Super(ar_)
 {
@@ -32,12 +34,6 @@ Wander::Wander(ACE_Reactor &ar_) :
 
   // initialise pseudo random numbers generator
   srand(ACE_OS::gettimeofday().usec());
-}
-
-WanderParameters *
-Wander::getParametersInstance()
-{
-  return new WanderParameters();
 }
 
 void 

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -13,19 +13,116 @@
 
 module Miro
 {
+  //! The interface to the behaviour engine.
+  /**
+   * The behaviour engine consists of a set of behaviours and a set of
+   * arbiters.  Those can be grouped into actionpatterns which form
+   * subsets of behaviours combined with an arbiter. Arbiters and
+   * Behaviours can have different parameter sets for every
+   * actionpattern.
+   *
+   * There is allways only one actionpattern active. Switches between
+   * actionpatterns can be initiated by named transitions (descrete
+   * events). The transitions are registered at an actionpattern and
+   * can target a different actionpattern for each actionpattern they
+   * are registered at. This forms a finite state automata.
+   *
+   * Actionpatterns also can be activated directly, this is also
+   * called a global transition.
+   *
+   * A configuration of actionpatterns, parameter sets and transitions
+   * forms a policy. Policies can be edited graphically, resulting in
+   * an XML based description file, that is loadable by the behaviour
+   * engine.
+   */
   interface BehaviourEngine
   {
+    //! Exception indicating an XML parsing error.
     exception EMalformedXML {};
+    //! Exception indicating a policy parsing error.
+    /**
+     * The string what describes what went wrong.
+     */
     exception EMalformedPolicy { string what; };
 
+    //! Exception indicating a file error.
     exception EFile {};
+    //! Exception indicating that no policy is present.
     exception ENoPolicy {};
+    //! Exception indicating that the transition is not registered for the actionpattern.
+    exception EUnregisteredTransition {};
+    //! Exception indicating that the actionpattern is not present in the policy.
+    exception EUnknownActionPattern {};
 
+    //! Load a policy from a string.
+    /**
+     * The string has to contain a valid XML description of the policy.
+     *
+     * @param policy The policy to be loaded.
+     * @throw  EMalformedXML is thrown, to indicate an XML parsing error.
+     * @throw  EMalformedPolicy is thrown, to indicate a policy parsing error.
+     */
     void loadPolicy(in string policy) raises(EMalformedXML, EMalformedPolicy);
-    void loadPolicyFile(in string fileName) raises(EMalformedXML, EMalformedPolicy, EFile);
+    //! Load a policy from a file.
+    /**
+     * The policy file has to describe a file (or fully qualified
+     * path) on the file system locally accessible by process running
+     * the BehaviourEngine.
+     *
+     * @param policy The name of the policy file to be loaded.
+     * @throw EMalformedXML is thrown, to indicate an XML parsing error.
+     * @throw EMalformedPolicy is thrown, to indicate a policy parsing error.
+     * @throw EFile is thrown, when a file error occured.
+     */
+    void loadPolicyFile(in string fileName) 
+      raises(EMalformedXML, EMalformedPolicy, EFile);
 
+    //! Open the current policy.
+    /**
+     * The policy will begin by activating the start pattern
+     * specified in the policy configuration.
+     *
+     * @throw is thrown, when no policy is currently loaded,
+     *        or the previous attempt to do so failed.
+     */
     void openPolicy() raises(ENoPolicy);
+    //! Close the current policy.
+    /**
+     *
+     * @throw is thrown, when no policy is currently active.
+     */
     void closePolicy() raises(ENoPolicy);
+
+    //! Initiate a global transition.
+    /**
+     * @param pattern The name of the pattern to activate.
+     * @throw EUnknownActionPattern is thrown, when the actionpattern
+     *        does not exist within the current policy.
+     */
+    void openActionPattern(in string pattern) raises(EUnknownActionPattern);
+    //! Send a transition
+    /**
+     * This is for debug purposes only, as it will only succeede if
+     * the transition is registred for the current actionpattern.
+     *
+     * @param transition The name of the transition.
+     */
+    void sendTransition(in string transition);
+    //! Send a transition for an actionpattern.
+    /**
+     * This is for debug purposes mainly, as it will only succede if
+     * the actionpattern is currently active.
+     *
+     * @param pattern The name of the pattern for which the transition is intedet.
+     * @param transition The name of the transition.
+     * @throw EUnknownActionPattern is thrown, when the actionpattern
+     *        does not exist within the current policy.
+     * @throw EUnregisteredTransition is thrown, when the transition
+     *        is not registered at the specified actionpattern.
+     */
+    void sendTransitionFromActionPattern(in string pattern, 
+					 in string transition)
+      raises(EUnknownActionPattern, EUnregisteredTransition);
   };
 };
 

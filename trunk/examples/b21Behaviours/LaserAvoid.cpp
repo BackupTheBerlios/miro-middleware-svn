@@ -27,17 +27,13 @@ using Miro::MotionArbiterMessage;
 
 const string LaserAvoid::name_ = "LaserAvoid";
 
+BEHAVIOUR_PARAMETERS_FACTORY_IMPL(LaserAvoid, LaserAvoidParameters)
+
 LaserAvoid::LaserAvoid(ACE_Reactor& _reactor, RangeSensor_ptr _laser) :
   Super(_reactor),
   laser_(RangeSensor::_duplicate(_laser))
 {
   cout << "Constructing LaserAvoid behaviour." << endl;
-}
-
-LaserAvoidParameters *
-LaserAvoid::getParametersInstance()
-{
-  return new LaserAvoidParameters();
 }
 
 void

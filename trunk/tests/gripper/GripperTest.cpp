@@ -83,8 +83,10 @@ int main(int argc, char *argv[])
 	cout << "time (ms): " << flush;
 	cin >> time;
 	gripper->moveGrip(time);
+	break;
       case 'q':
 	quit = true;
+	break;
       default:
 	cout << "unknown option" << endl;
       }

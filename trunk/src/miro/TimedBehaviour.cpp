@@ -2,30 +2,25 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "TimedBehaviour.h"
 #include "TimeHelper.h"
 
 namespace Miro
 {
+  BEHAVIOUR_PARAMETERS_FACTORY_IMPL(TimedBehaviour, TimedBehaviourParameters)
+
   TimedBehaviour::TimedBehaviour(ACE_Reactor &ar_):
     // store the ace reactor
     reactor(ar_), 
     timerId(0)
   {
-  }
-
-  TimedBehaviourParameters *
-  TimedBehaviour::getParametersInstance()
-  {
-    return new TimedBehaviourParameters();
   }
 
   void
@@ -66,6 +61,11 @@ namespace Miro
   int
   TimedBehaviour::handle_timeout (const ACE_Time_Value &, const void*) 
   {
+    // clean up dangling behaviour parameters
+    // left over from ActionPattern::setBehaviourParameters()    
+    delete oldParams_;
+    oldParams_ = NULL;
+
     action();
     return 0;
   }

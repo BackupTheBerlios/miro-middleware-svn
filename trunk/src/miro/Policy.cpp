@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -28,9 +28,19 @@ namespace Miro
 {
   using std::string;
 
+  /**
+   * This crates an unconfigured policy object. That is,
+   * @ref valid() will return false.
+   *
+   * @param _pSupplier Pointer to a structured push supplier to send
+   * transition events to the notification channel for online
+   * supervision of the behaviour engine. If the pointer is NULL, no
+   * events will be generated.
+   */
   Policy::Policy(StructuredPushSupplier * _pSupplier) :
     pSupplier_(_pSupplier),
     startPattern_(NULL),
+    currentPattern_(NULL),
     valid_(false)
   {}
 
@@ -39,13 +49,15 @@ namespace Miro
    *
    * @param _parameterFile File name.
    * @param _pSupplier Pointer to a structured push supplier to send
-   * events to for online supervision of the behaviour engine. If the
-   * pointer is NULL, no events will be generated.
+   * transition events to the notification channel for online
+   * supervision of the behaviour engine. If the pointer is NULL, no
+   * events will be generated.
    */
   Policy::Policy(const char * _parameterFile, 
 		 StructuredPushSupplier * _pSupplier) :
     pSupplier_(_pSupplier),
     startPattern_(NULL),
+    currentPattern_(NULL),
     valid_(false)
   {
     loadPolicyFile(_parameterFile);
@@ -55,12 +67,15 @@ namespace Miro
   {
     close();
   }
-		
+	
+  /** 
+   * @param _filename The name of the file to load.
+   */
   void 
-  Policy::loadPolicyFile(const char* filename) 
+  Policy::loadPolicyFile(const char* _filename) 
   {
     QDomDocument doc( "MiroPolicyConfigFile" );
-    QFile f(filename);
+    QFile f(_filename);
     if ( !f.open( IO_ReadOnly ) )
       throw BehaviourEngine::EFile();
     if ( !doc.setContent( &f ) ) {
@@ -72,6 +87,10 @@ namespace Miro
     parsePolicy(doc);
   }
 
+  /**
+   * @param _policy The string has to contain a valid XML description
+   * of the policy.
+   */
   void 
   Policy::loadPolicy(const char * _policy) 
   {
@@ -157,24 +176,60 @@ namespace Miro
     cout << *this;
   }
 
+  /**
+   * This will activate the actionpattern indicated as
+   * start pattern within the policy configuration.
+   * 
+   */
   void
   Policy::open()
   {
     if (!valid())
       throw BehaviourEngine::ENoPolicy();
 
-    if (startPattern_)
+    if (startPattern_) {
+      Guard guard(transitionMutex_);
       startPattern_->open();
+    }
     else
       throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup("No start pattern specified."));
   }
+  
+  /**
+   * This will activate an actionpattern within the policy,
+   * deactivating any previously active pattern (if any).
+   */
+  void 
+  Policy::openActionPattern(const std::string& _pattern)
+  {
+    ActionPattern * pattern = getActionPattern(_pattern);
+    if (pattern) {
+      Guard guard(transitionMutex_);
+      pattern->open();
+    }
+    else
+      throw BehaviourEngine::EUnknownActionPattern();
+  }
 
+  /**
+   * Closes the currently running action pattern
+   */
   void 
   Policy::close()
   {
-    ActionPattern::closeCurrentActionPattern();
+    Guard guard(transitionMutex_);
+    if (currentPattern_) {
+      currentPattern_->close(NULL);
+      currentPattern_ = NULL;
+    }
   }
 
+  /**
+   * Clears the configuration of the policy.
+   * No action pattern will run afterwards, and
+   * the object is in unconfigured state. That is,
+   * valid() will return false.
+   */
   void
   Policy::clear()
   {
@@ -193,17 +248,23 @@ namespace Miro
   {
     cout << "Policy: Registering " 
 	 << _actionPattern->getActionPatternName() << endl;
-    if (actionPatterns_.find(_actionPattern->getActionPatternName()) != 
-	actionPatterns_.end()) {
+    if (!actionPatterns_.insert(std::make_pair(_actionPattern->getActionPatternName(),
+					       _actionPattern)).second) {
       std::string error("Action pattern " +
 			_actionPattern->getActionPatternName() +
 			"already registered.");
       throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup(error.c_str()));
     }
-    actionPatterns_[_actionPattern->getActionPatternName()] = _actionPattern;	
+    _actionPattern->policy_ = this;
   }
-
-  ActionPattern* Policy::getActionPattern(const string& _name) 
+  
+  /**
+   * @ param _name The name of the action pattern.
+   * @return A pointer to the action pattern or NULL
+   * if it does not exist.
+   */
+  ActionPattern * 
+  Policy::getActionPattern(const string& _name) 
   {
     ActionPatternMap::const_iterator i = actionPatterns_.find(_name);
     if (i != actionPatterns_.end())
@@ -211,11 +272,74 @@ namespace Miro
     else
       return NULL;
   }
+  
+  /**
+   * @ param _name The name of the action pattern.
+   * @return A pointer to the action pattern or NULL
+   * if it does not exist.
+   */
+  ActionPattern const * const 
+  Policy::getActionPattern(const string& _name) const
+  {
+    ActionPatternMap::const_iterator i = actionPatterns_.find(_name);
+    if (i != actionPatterns_.end())
+      return i->second;
+    else
+      return NULL;
+  }
+  
+  /**
+   * This can be done, while the policy is open, and an action pattern
+   * is active. And is a first step into dynamic policy configuration.
+   *
+   * @param _pattern The name of the action pattern.
+   * @param _behaviour The name of the behaviour within the action pattern.
+   * @return A parameter struct for the behaviour. Note that the type
+   * of the parameter struct is the type of the behaviours parameter
+   * struct. The calller takes ownership of the BehaviourParameters
+   * object.
+   */
+  BehaviourParameters * const
+  Policy::getBehaviourParameters(const std::string& _pattern,
+				 const std::string& _behaviour) const
+  {
+    ActionPattern const * const pattern = getActionPattern(_pattern);
+
+    if (pattern) 
+      return pattern->getBehaviourParameters(_behaviour);
+    
+    throw BehaviourEngine::EUnknownActionPattern();
+  }
+
+  /**
+   * This can be done, while the policy is open, and an action pattern
+   * is active. And is a first step into dynamic policy configuration.
+   *
+   * @param _pattern The name of the action pattern.
+   * @param _behaviour The name of the behaviour within the action pattern.
+   * @param _parameters A parameter struct for the behaviour. Note
+   * that the type of the parameter struct has to match the type
+   * expected by the behaviour. The policy takes ownership of the
+   * BehaviourParameters object.
+   */
+  void
+  Policy::setBehaviourParameters(const std::string& _pattern,
+				 const std::string& _behaviour, 
+				 BehaviourParameters * _parameters) 
+  {
+    ActionPattern * pattern = getActionPattern(_pattern);
+
+    if (pattern) {
+      pattern->setBehaviourParameters(_behaviour, _parameters);
+    }
+    else 
+      throw BehaviourEngine::EUnknownActionPattern();
+  }
 
   void 
   Policy::printToStream(std::ostream& ostr) const
   {
-    cout << "Printing policy. Patterns: " << actionPatterns_.size() << endl; 
+    ostr << "Printing policy. Patterns: " << actionPatterns_.size() << endl; 
     ActionPatternMap::const_iterator i;
     for(i = actionPatterns_.begin(); i != actionPatterns_.end(); ++i) {
       ostr << *(i->second);

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -27,8 +27,7 @@ public:
 	     CosNotifyChannelAdmin::EventChannel_ptr _ec,
 	     const std::string& _domainName);
 
-  // factory method for BehaviourParameters
-  SonarAvoidParameters * getParametersInstance();
+  BEHAVIOUR_PARAMETERS_FACTORY(SonarAvoidParameters);
 
   void action();
   const std::string& getBehaviourName() const;

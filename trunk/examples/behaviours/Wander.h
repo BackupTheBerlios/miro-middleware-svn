@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -23,8 +23,7 @@ class Wander : public Miro::TimedBehaviour
 public:
   Wander(ACE_Reactor &);
 
-  // factory method for BehaviourParameters
-  WanderParameters * getParametersInstance();
+  BEHAVIOUR_PARAMETERS_FACTORY(WanderParameters);
 
   void action();
   const std::string& getBehaviourName() const;

@@ -2,16 +2,18 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
+#include "BehaviourEngineC.h"
 #include "Behaviour.h"
 #include "BehaviourParameters.h"
 #include "ActionPattern.h"
+
 
 namespace Miro 
 {
@@ -20,7 +22,8 @@ namespace Miro
    */
   Behaviour::Behaviour() :
     active_(false),
-    params_(NULL)
+    params_(NULL),
+    oldParams_(NULL)
   {}
 
   /**
@@ -28,17 +31,33 @@ namespace Miro
    * Provided to avoid errors in derived classes.
    */
   Behaviour::~Behaviour()
-  {}
+  {
+    // clean up dangling behaviour parameters
+    // left over from ActionPattern::setBehaviourParameters()    
+    delete oldParams_;
+    oldParams_ = NULL;
+  }
 
   /**
-   * Returns a pointer to a newly created instance of some derived
+   * Returns a pointer to a default constructed instance of some derived
    * BehaviourParameters class. The caller takes ownership of the 
    * object.
    */
   BehaviourParameters * 
-  Behaviour::getParametersInstance()
+  Behaviour::getParametersInstance() const
   {
     return new BehaviourParameters();
+  }
+
+  /**
+   * Returns a pointer to a copy constructed instance of some derived
+   * BehaviourParameters class. The caller takes ownership of the 
+   * object.
+   */
+  BehaviourParameters * 
+  Behaviour::getParametersInstance(const BehaviourParameters& _p) const
+  {
+    return new BehaviourParameters(_p);
   }
 
   /**
@@ -82,12 +101,60 @@ namespace Miro
   void 
   Behaviour::sendMessage(const std::string& message) 
   {
-    ActionPattern * pattern = ActionPattern::currentActionPattern();
-    if (pattern)
-      pattern->sendMessage(this, message);
+    params_->pattern->sendMessage(this, message);
   }
   
   void
   Behaviour::calcDynamicWindow(DynamicWindow *) {
+  }
+
+  /**
+   * This can be done, while the policy is open, and an action pattern
+   * is active. And is a first step into dynamic policy configuration.
+   *
+   * @param _pattern The name of the action pattern.
+   * @param _behaviour The name of the behaviour within the action pattern.
+   * @return A parameter struct for the behaviour. Note that the type
+   * of the parameter struct is the type of the behaviours parameter
+   * struct. The calller takes ownership of the BehaviourParameters
+   * object.
+   */
+  BehaviourParameters * const
+  Behaviour::getSuccessorBehaviourParameters(const std::string& _transition,
+					     const std::string& _behaviour) const
+  {
+    ActionPattern const * const pattern = 
+      params_->pattern->getTransitionPattern(_transition);
+
+    if (pattern) 
+      return pattern->getBehaviourParameters(_behaviour);
+    
+    throw BehaviourEngine::EUnknownActionPattern();
+  }
+
+  /**
+   * This can be done, while the policy is open, and an action pattern
+   * is active. And is a first step into dynamic policy configuration.
+   *
+   * @param _pattern The name of the action pattern.
+   * @param _behaviour The name of the behaviour within the action pattern.
+   * @param _parameters A parameter struct for the behaviour. Note
+   * that the type of the parameter struct has to match the type
+   * expected by the behaviour. The policy takes ownership of the
+   * BehaviourParameters object.
+   */
+  void
+  Behaviour::setSuccessorBehaviourParameters(const std::string& _transition,
+					     const std::string& _behaviour, 
+					     BehaviourParameters * _parameters) 
+  {
+    ActionPattern * const pattern = 
+      params_->pattern->getTransitionPattern(_transition);
+
+    if (pattern) {
+      pattern->setBehaviourParameters(_behaviour, _parameters);
+    }
+    else 
+      throw BehaviourEngine::EUnknownActionPattern();
   }
 };

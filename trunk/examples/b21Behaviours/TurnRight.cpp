@@ -32,17 +32,13 @@ namespace
 };
 
 
+BEHAVIOUR_PARAMETERS_FACTORY_IMPL(TurnRight, TurnRightParameters)
+
 TurnRight::TurnRight(ACE_Reactor& _reactor, RangeSensor_ptr _laser) :
   Super(_reactor),
   laser_(RangeSensor::_duplicate(_laser))
 {
   cout << "Constructing TurnRight behaviour." << endl;
-}
-
-TurnRightParameters *
-TurnRight::getParametersInstance()
-{
-  return new TurnRightParameters();
 }
 
 void

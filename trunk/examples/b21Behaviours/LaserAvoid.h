@@ -23,8 +23,7 @@ class LaserAvoid : public Miro::TimedBehaviour
 public:
   LaserAvoid(ACE_Reactor& _reactor, Miro::RangeSensor_ptr _laser);
 
-  // factory method for BehaviourParameters
-  LaserAvoidParameters * getParametersInstance();
+  BEHAVIOUR_PARAMETERS_FACTORY(LaserAvoidParameters);
 
   void action();
   const std::string& getBehaviourName() const;

@@ -23,8 +23,7 @@ public:
   OnButton(CosNotifyChannelAdmin::EventChannel_ptr _ec,
 	   const std::string& _domainName);
 
-  // factory method for BehaviourParameters
-  OnButtonParameters * getParametersInstance();
+  BEHAVIOUR_PARAMETERS_FACTORY(OnButtonParameters);
 
   void action();
   const std::string& getBehaviourName() const;

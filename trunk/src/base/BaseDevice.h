@@ -62,7 +62,7 @@ namespace Base
   static const unsigned long TICS_PER_2_PI = 1024;
 
   // helper functions to convert radiant in base metrics
-  double base2rad(long base);
+  double base2rad(unsigned long base);
   int rad2base(double rad);
   unsigned long convertMMToEncoders(unsigned long arg);
 
@@ -242,8 +242,11 @@ namespace Base
 
   inline
   double
-  base2rad(long base) {
-    return M_PI/512. * (double) (base % 1024);
+  base2rad(unsigned long base) {
+    long h = base % 1024;
+    if (h > 512)
+      h -= 1024;
+    return M_PI/512. * (double) h;
   }
 
   inline

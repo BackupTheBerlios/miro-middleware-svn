@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -21,6 +21,8 @@ namespace Miro
 {
   // forward declarations
   class Behaviour;
+  class ActionPattern;
+  class Arbiter;
   class ArbiterParameters;
 
   //! Output stream operator for debug purposes.
@@ -57,6 +59,12 @@ namespace Miro
 
     //!  to assign for the next registered behaviour
     unsigned int nextNumber_;
+
+  private:
+    ActionPattern * pattern;
+
+    friend class Arbiter;
+    friend class ActionPattern;
 
     friend
     std::ostream&

@@ -19,6 +19,8 @@ using Miro::MotionArbiterMessage;
 
 const string Wander::name_ = "Wander";
 
+BEHAVIOUR_PARAMETERS_FACTORY_IMPL(Wander, WanderParameters)
+
 Wander::Wander(ACE_Reactor &ar_) : 
   Super(ar_)
 {
@@ -32,12 +34,6 @@ Wander::Wander(ACE_Reactor &ar_) :
 
   // initialise pseudo random numbers generator
   srand(ACE_OS::gettimeofday().usec());
-}
-
-WanderParameters *
-Wander::getParametersInstance()
-{
-  return new WanderParameters();
 }
 
 void 

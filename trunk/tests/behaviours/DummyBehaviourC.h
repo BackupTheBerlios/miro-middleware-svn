@@ -2,32 +2,35 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c)  2000, 2001, 2002
+// (c) 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-#ifndef Straight_h
-#define Straight_h
+#ifndef DummyBehaviourC_h
+#define DummyBehaviourC_h
 
 #include "miro/TimedBehaviour.h"
 
-#include "StraightParameters.h"
-
-class Straight : public Miro::TimedBehaviour 
+class DummyBehaviourC : public Miro::TimedBehaviour
 {
-  typedef Miro::TimedBehaviour Super;
-
 public:
-  Straight(ACE_Reactor &);
-
-  BEHAVIOUR_PARAMETERS_FACTORY(StraightParameters);
+  DummyBehaviourC(const std::string& _transition = "Transition");
+  ~DummyBehaviourC();
 
   void action();
   const std::string& getBehaviourName() const;
 
+protected:
+  std::string transition_;
+
+  static unsigned long counter_;
+  
+private:
   static const std::string name_;
+
+  typedef Miro::TimedBehaviour Super;
 };
 
 #endif

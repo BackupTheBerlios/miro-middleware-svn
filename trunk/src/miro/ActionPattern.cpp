@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2001, 2002
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -22,14 +22,17 @@
 
 #include <qdom.h>
 
-using std::string;
-
 namespace Miro
 {
-  Mutex    ActionPattern::transitionMutex_;
-  ActionPattern* ActionPattern::currentActionPattern_ = 0;
-
-  ActionPattern::ActionPattern(const string& _name, StructuredPushSupplier * _pSupplier) :
+  /**
+   * @param _name The name of the action pattern.
+   * @param _pSupplier Pointer to a structured push supplier to send
+   * transition events to the notification channel for online
+   * supervision of the behaviour engine. If the pointer is NULL, no
+   * events will be generated.
+   */
+  ActionPattern::ActionPattern(const std::string& _name, 
+			       StructuredPushSupplier * _pSupplier) :
     pSupplier_(_pSupplier),
     arbiter_(NULL),
     arbiterParameters_(NULL),
@@ -50,9 +53,19 @@ namespace Miro
 
   ActionPattern::~ActionPattern()
   {
+    // Clean up the behaviour parameters
+    // to prevent memory leaks.
+    BehaviourMap::iterator b, bEnd = behaviourMap_.end();
+    for (b = behaviourMap_.begin(); b != bEnd; ++b)
+      delete b->second.second;
+    delete arbiterParameters_;
   }
 
-
+  /**
+   * Init the action pattern from the XML description of the policy.
+   *
+   * @param _node Node within the XML-Tree containing the behaviour.
+   */
   void
   ActionPattern::xmlInit(const QDomNode& _node, const ActionPatternMap& _apMap) 
   {
@@ -75,7 +88,7 @@ namespace Miro
 	if (e.tagName()=="arbiter") {
 	  if (arbiter_ == NULL) {
 	    if (!attribute.isNull() && !attribute.value().isEmpty()) {
-	      string name(attribute.value());
+	      std::string name(attribute.value());
 	      Arbiter* a;
 	      if ((a = ar->getArbiter(name)) != 0) {
 		ArbiterParameters * params = a->getParametersInstance();
@@ -84,7 +97,7 @@ namespace Miro
 	      } 
 	      else {
 		std::string error("Arbiter not registered: " + name);
-		throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup(error.c_str()));
+		throw BehaviourEngine:: EMalformedPolicy(CORBA::string_dup(error.c_str()));
 	      }
 	    } 
 	    else {
@@ -97,7 +110,7 @@ namespace Miro
 	}
 	// syntax checking 
 	else if (e.tagName() != "behaviour" && e.tagName() != "transition") {
-	  std::string error("Unknown tag name: " + string(e.tagName()));
+	  std::string error("Unknown tag name: " + std::string(e.tagName()));
 	  throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup(error.c_str()));
 	}
       }
@@ -123,11 +136,11 @@ namespace Miro
 	// retrieve behaviours
 	if (e.tagName() == "behaviour") {
 	  if (!attribute.isNull() && !attribute.value().isEmpty()) {
-	    string name(attribute.value());
+	    std::string name(attribute.value());
 
 	    Behaviour * behaviour;
 	    BehaviourParameters * parameters;
-	    if ((behaviour = br->getBehaviour(name)) != 0) {
+	    if ((behaviour = br->getBehaviour(name)) != NULL) {
 	      parameters = behaviour->getParametersInstance();
 
 	      KeyValueList params;
@@ -149,10 +162,10 @@ namespace Miro
 	// retrieve transitions
 	else if (e.tagName() == "transition") {
 	  QDomAttr attrMessage = e.attributeNode("message");
-	  string message;
+	  std::string message;
 
 	  if (!attrMessage.isNull() && !attrMessage.value().isEmpty()) {
-	    message = string(attrMessage.value());
+	    message = std::string(attrMessage.value());
 	  } 
 	  else {
 	    throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup("Transition without message."));
@@ -160,7 +173,7 @@ namespace Miro
 	  
 	  QDomAttr attrPattern = e.attributeNode("target");
 	  if (!attrPattern.isNull() && !attrPattern.value().isEmpty()) {
-	    string patternname = string(attrPattern.value());
+	    std::string patternname(attrPattern.value());
 	    ActionPatternMap::const_iterator iter = _apMap.find(patternname);
 
 	    if (iter != _apMap.end())
@@ -179,19 +192,34 @@ namespace Miro
     }
   }
 
-  void ActionPattern::open() 
+  /**
+   * Activate the action pattern by 
+   *
+   * - Disabling all behaviours present within the current action
+   *   pattern but not in this one.
+   * - Init the arbiter of this action pattern.
+   * - Set the current action pattern pointer to this.
+   * - Activate the arbiter of this action pattern.
+   * - Init all behaviours of this action pattern.
+   * - Enabling all behaviours not present within the last action
+   *   pattern.
+   *
+   * Send the transition message to the notification channel if available.
+   */
+  void
+  ActionPattern::open() 
   {
     cout << "ActionPattern: New Pattern: " << getActionPatternName() << endl;
 
-    if (ActionPattern::currentActionPattern() != 0) {
+    if (currentActionPattern() != NULL) {
       // disable behaviours which are not needed anymore
-      ActionPattern::currentActionPattern()->close(this);
+      currentActionPattern()->close(this);
     }
 
     cout << "ActionPattern: Init arbiter." << endl;
     arbiter_->init(arbiterParameters_);
 
-    setCurrentActionPattern(this);
+    policy_->currentActionPattern(this);
     
     if (!(arbiter_->isActive())) {
       cout << "ActionPattern: Activate arbiter: " << arbiter_->getName() << endl;
@@ -216,6 +244,17 @@ namespace Miro
     }
   }
 
+  /**
+   * Deactivate the action pattern by 
+   *
+   * - Disabling all behaviours present within this action 
+   *   pattern but not in the next one.
+   * - Disable the arbiter if not present within the next
+   *   action pattern.
+   *
+   * @param nextPattern The action pattern that will be active 
+   * next.
+   */
   void
   ActionPattern::close(ActionPattern * nextPattern)
   {
@@ -226,14 +265,16 @@ namespace Miro
       // if a behaviour is active, check for disabling
       if (i->second.first->isActive()) {
 	// if the next actionpattern doesn't need this behaviour...
-	if (nextPattern == NULL || nextPattern->getBehaviour(i->first) == 0) {
+	if (nextPattern == NULL || 
+	    nextPattern->getBehaviour(i->first) == NULL) {
 	  //disable behaviour
 	  cout << "Disabling Behaviour: " << i->second.first->getBehaviourName() << endl;
 	  i->second.first->close();			
 	}
       }
     }
-    if (nextPattern == 0 || nextPattern->arbiter() != arbiter_) {
+    if (nextPattern == NULL || 
+	nextPattern->arbiter() != arbiter_) {
       cout << "Disabling arbiter: " << arbiter_->getName() << endl;
       arbiter_->close();
     }
@@ -241,32 +282,72 @@ namespace Miro
     cout << "Disabling done." << endl;
   }
 
-  const string&
-  ActionPattern::getActionPatternName() const {
-    return actionPatternName_;
-  }
-
   void
-  ActionPattern::addBehaviour(Behaviour * _behaviour, BehaviourParameters * _parameters) 
+  ActionPattern::addBehaviour(Behaviour * _behaviour,
+			      BehaviourParameters * _parameters) 
   {
-     behaviourMap_[_behaviour->getBehaviourName()] = std::make_pair(_behaviour, _parameters);	
+    _parameters->pattern = this;
+
+    behaviourMap_[_behaviour->getBehaviourName()] = 
+      std::make_pair(_behaviour, _parameters);	
     arbiterParameters_->registerBehaviour(_behaviour);
   }
 
+  BehaviourParameters * const
+  ActionPattern::getBehaviourParameters(const std::string& _behaviour) const
+  {
+    BehaviourMap::const_iterator b = behaviourMap_.find(_behaviour);
+    if (b != behaviourMap_.end()) {
+      Guard guard(policy_->transitionMutex_);
+      return b->second.first->getParametersInstance(*(b->second.second));
+    }
+
+    throw BehaviourEngine::EUnknownActionPattern();
+  }
+
+  void
+  ActionPattern::setBehaviourParameters(const std::string& _behaviour, 
+					BehaviourParameters * _parameters) 
+  {
+    _parameters->pattern = this;
+
+    BehaviourMap::iterator b = behaviourMap_.find(_behaviour);
+    if (b != behaviourMap_.end()) {
+      Guard guard(policy_->transitionMutex_);
+      BehaviourParameters * p = b->second.second;
+      b->second.second = _parameters;
+
+      // the action pattern is currently running
+      if (currentActionPattern() == this) {
+	// delegate deletion of parameters to the behaviour
+	b->second.first->deleteParametersOnTransition();
+	// init the behaviour with new parameters
+	b->second.first->init(b->second.second);
+      }
+      else
+	delete p;
+    }
+    else 
+      throw BehaviourEngine::EUnknownActionPattern();
+  }
+
   void 
-  ActionPattern::addTransition(const string& _patternName, ActionPattern* _actionPattern) 
+  ActionPattern::addTransition(const std::string& _patternName, 
+			       ActionPattern* _actionPattern) 
   {
     transitionTable_[_patternName] = _actionPattern;	
   }
 
   Behaviour* 
-  ActionPattern::getBehaviour(const string& _behaviourName) {
+  ActionPattern::getBehaviour(const std::string& _behaviourName)
+  {
     BehaviourMap::const_iterator i = behaviourMap_.find(_behaviourName);
     return (i != behaviourMap_.end())? i->second.first : NULL;
   }
 
   ActionPattern* 
-  ActionPattern::getTransitionPattern(const string& _patternName) {
+  ActionPattern::getTransitionPattern(const std::string& _patternName) 
+  {
     TransitionMap::const_iterator i = transitionTable_.find(_patternName);
     return (i != transitionTable_.end())? i->second : NULL;
   }
@@ -277,16 +358,17 @@ namespace Miro
     ACE_Time_Value t(0, 100000);
     t += ACE_OS::gettimeofday();
 
-    if (transitionMutex_.acquire(t) == -1) {
+    if (policy_->transitionMutex_.acquire(t) == -1) {
+      // this can happen due to Reactor/Timed-Behaviour upcalls.
       std::cerr << "Transition mutex blocked!" << endl;
       return;
     }
     // make sure this is still the current action pattern
-    if (currentActionPattern_ == this) {
+    if (currentActionPattern() == this) {
       cout << "ActionPattern: Transition " << message << endl;
 
       ActionPattern* ap = getTransitionPattern(message);
-      if (ap != currentActionPattern_) { 
+      if (ap != currentActionPattern()) { 
 	if (ap != NULL)
 	  ap->open();
 	else {
@@ -295,7 +377,7 @@ namespace Miro
 	}
       }
     }
-    transitionMutex_.release();
+    policy_->transitionMutex_.release();
   }
 
   void 
@@ -321,16 +403,6 @@ namespace Miro
     }
   }
 
-  void
-  ActionPattern::closeCurrentActionPattern()
-  {
-    Miro::Guard guard(transitionMutex_);
-    if (currentActionPattern_) {
-      currentActionPattern_->close(NULL);
-      currentActionPattern_ = NULL;
-    }
-  }
-
   void 
   ActionPattern::sendTransitionMessage(const std::string& message) 
   {
@@ -339,13 +411,10 @@ namespace Miro
       pattern->sendMessage(NULL, message);
   }
   
-
-
   std::ostream&
   operator << (std::ostream& ostr, const ActionPattern& _pattern)
   {
     _pattern.printToStream(ostr);
-
     return ostr;
   }
 };

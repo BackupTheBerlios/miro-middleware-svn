@@ -11,6 +11,7 @@
 #ifndef DummyBehaviour_h
 #define DummyBehaviour_h
 
+#include "DummyBehaviourParameters.h"
 #include "miro/TimedBehaviour.h"
 
 class DummyBehaviour : public Miro::TimedBehaviour
@@ -19,6 +20,7 @@ public:
   DummyBehaviour(const std::string& _name);
   ~DummyBehaviour();
 
+  BEHAVIOUR_PARAMETERS_FACTORY(DummyBehaviourParameters);
   void action();
   const std::string& getBehaviourName() const;
 

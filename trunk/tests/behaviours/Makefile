@@ -22,11 +22,17 @@ LDLIBS +=  -lmiroSvc -lmiro
 
 ## program to be built
 ## there has to exist a source file with the same name (mybinary.cc)
-BIN 	= PriorityArbitersTest PolicyParsingTest BehaviourEngineTest
+BIN 	= \
+	PriorityArbitersTest \
+	PolicyParsingTest \
+	BehaviourEngineTest \
+	DynamicPolicyTest
 
 ## additional files
 FILES = DummyBehaviour \
+	DummyBehaviourParameters \
 	DummyBehaviourB \
+	DummyBehaviourC \
 	DummyArbiter \
 	DummyArbiterMessage
 
