@@ -35,6 +35,10 @@ namespace Sparrow
   {
     DBG(cout << "Constructing SparrowButtonsImpl" << endl);
 
+    // initialize button state
+    for (unsigned long i = 0; i < NUMBER_OF_BUTTONS; ++i)
+      button_[i] = false;
+
     // Stall Notify Event initialization
     notifyEvent.header.fixed_header.event_type.domain_name = 
       CORBA::string_dup(pSupplier->domainName().c_str());
