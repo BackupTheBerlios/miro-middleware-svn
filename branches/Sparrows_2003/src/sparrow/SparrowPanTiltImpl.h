@@ -20,28 +20,28 @@
 namespace Sparrow
 {
   // forward declaration
-  class Connection;
+  class BaseConnection;
   class Parameters;
 
   class  PanTiltImpl : public virtual POA_Miro::SparrowPanTilt
   {
   public:
-    //Constructor 
-    PanTiltImpl(Connection& _connection);
-  
-    //Destructor 
+    //Constructor
+    PanTiltImpl(BaseConnection * _connection);
+
+    //Destructor
     virtual ~PanTiltImpl();
-  
-    //  virtual Miro::PanTiltPositionIDL getPosition() 
+
+    //  virtual Miro::PanTiltPositionIDL getPosition()
     //    throw (Miro::EDevIO, Miro::ETimeOut);
     //  virtual void setPosition(const Miro::PanTiltPositionIDL& dest)
     //    throw (Miro::EOutOfBounds,Miro::EDevIO);
 
-    virtual void setPan(CORBA::Double value) 
+    virtual void setPan(CORBA::Double value)
       throw (Miro::EDevIO, Miro::EOutOfBounds);
     virtual CORBA::Double getPan() throw (Miro::EDevIO);
 
-    //  virtual void setTilt(CORBA::Double value) 
+    //  virtual void setTilt(CORBA::Double value)
     //    throw (Miro::EDevIO, Miro::EOutOfBounds);
     //  virtual CORBA::Double getTilt() throw (Miro::EDevIO);
 
@@ -54,7 +54,7 @@ namespace Sparrow
     bool prvPanning(const ACE_Time_Value& _t);
     Miro::PanPositionIDL currentPosition(const ACE_Time_Value& _t);
 
-    Connection&              connection;
+    BaseConnection *         connection;
     const Parameters&        params_;
     Miro::Mutex              mutex;
 
@@ -63,10 +63,11 @@ namespace Sparrow
     ACE_Time_Value timeLastSet;
 
     ACE_Time_Value totalLatency;
+    bool sparrow2003_;
   };
 
   inline
-  bool 
+  bool
   PanTiltImpl::prvPanning(const ACE_Time_Value& _t)
   {
     if (timeLastSet < _t) {

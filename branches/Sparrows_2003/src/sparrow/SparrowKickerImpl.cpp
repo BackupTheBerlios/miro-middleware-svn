@@ -55,7 +55,8 @@ namespace Sparrow
   KickerImpl::kick(const Miro::TimeIDL& time) throw()
   {
      if(Sparrow::Parameters::instance()->sparrow2003){
-     //to do
+
+        ((Sparrow::Connection2003 *)connection)->kick(50, (unsigned char)(time.usec/1000));
 
      }
      else{

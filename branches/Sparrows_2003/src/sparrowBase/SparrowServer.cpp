@@ -165,7 +165,7 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
    sparrowKicker = new Sparrow::KickerImpl(sparrowConnection);
    sparrowButtons = new Sparrow::ButtonsImpl(*pSparrowConsumer, &structuredPushSupplier_);
    sparrowStall = new Sparrow::StallImpl(*sparrowConnection, &structuredPushSupplier_);
-   sparrowPanTilt = new Sparrow::PanTiltImpl(*sparrowConnection);
+   sparrowPanTilt = new Sparrow::PanTiltImpl(sparrowConnection);
 
    pSparrowConsumer->registerInterfaces(sparrowConnection,
 					( (Sparrow::Parameters::instance()->faulhaber)?
@@ -287,7 +287,7 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
    sparrowKicker = new Sparrow::KickerImpl(sparrowConnection);
    sparrowButtons = new Sparrow::ButtonsImpl(*pSparrowConsumer, &structuredPushSupplier_);
    sparrowStall = new Sparrow::StallImpl(*sparrowConnection, &structuredPushSupplier_);
-   sparrowPanTilt = new Sparrow::PanTiltImpl(*sparrowConnection);
+   sparrowPanTilt = new Sparrow::PanTiltImpl(sparrowConnection);
 
 
    pSparrowConsumer->registerInterfaces(sparrowConnection,
