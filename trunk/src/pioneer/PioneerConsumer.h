@@ -22,6 +22,7 @@
 // forward declarations
 namespace Miro
 {
+  class DifferentialMotionImpl;
   class OdometryImpl;
   class RangeSensorImpl;
   class BatteryImpl;
@@ -52,6 +53,7 @@ namespace Pioneer
     Consumer(Miro::RangeSensorImpl * _pSonar,
 	     Miro::RangeSensorImpl * _pTactile = NULL,
 	     Miro::RangeSensorImpl * _pInfrared = NULL,
+	     Miro::DifferentialMotionImpl * _pMotion = NULL,
 	     Miro::OdometryImpl * _pOdometry = NULL,
 	     Miro::BatteryImpl * _pBattery = NULL,
 	     Pioneer::StallImpl * _pStall = NULL,
@@ -64,6 +66,7 @@ namespace Pioneer
     Miro::RangeSensorImpl * pSonar;
     Miro::RangeSensorImpl * pTactile;
     Miro::RangeSensorImpl * pInfrared;
+    Miro::DifferentialMotionImpl * pMotion;
     Miro::OdometryImpl * pOdometry;
     Miro::BatteryImpl * pBattery;
     Pioneer::StallImpl * pStall;
@@ -76,7 +79,6 @@ namespace Pioneer
 
     Miro::MotionStatusIDL status_;
     short prevX, prevY;
-    double prevTheta;
     unsigned short bumpers_;
     int infrared_;
 

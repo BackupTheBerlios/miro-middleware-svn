@@ -1,14 +1,30 @@
-We are pleased to announce our first public beta of Miro.
+We are pleased to announce our second public beta of Miro.
 
-It is the PeopleBot beta 1. The tag in the cvs repository is
-PeopleBotBeta1. You can update to it by a simple:
+It is the PeopleBot beta 2. The tag in the cvs repository is
+PeopleBotBeta2. You can update to it by a simple:
 
-cvs update -r PeopleBotBeta1
+cvs update -r PeopleBotBeta2
 
 Tar archives are also available at our web site.
 
-This beta introduces support for the performance people bot platform
-by active media. The things that should work are:
+With this beta, Miro now supports all sensors and actuators of
+the performance people bot of activeMedia. The binary infrared sensors
+are modeled as normal range sensors.
+
+This beta introduces the parameter framework of Miro. Miro now supports
+auto code generation for parameter files of its services as well as for
+behaviours. Read the Miro manual for more details.
+
+The PolicyEditor was renovated and should now show better perfomance 
+as well as less segmentation faults.
+
+The Behaviour/Action Pattern/Policy framework was enhanced. It now 
+supports global transitions and an interface to change parameter sets
+within a running policy. Read the Miro manual for more details.
+The example behaviours moved to examples/behaviours and its 
+subdirectories. Also a bunch of trivial behaviours was added.
+The instanciation of Behaviours/Arbiters etc. was cleaned up 
+into factory classes.
 
 The Ppb-Services are all collected within the PioneerBase binary. - We
 are pretty sure we temporarily broke the Pioneer1 support on the
@@ -30,12 +46,12 @@ together nicely.
   Known issues:
   The reported velocity wrong.
 
-- RangeSensor interfaces for Sonar and Tactile sensors
+- RangeSensor interfaces for Sonar, Tactile and Infrared sensors
   Try RangSensorTest or QtRangeSenor.
 
   Known issues:
   QtRangeSensor does only display pressed tactiles (bumpers)
-  by now.
+  and infrareds by now, as it ignores out of range values.
 
 - VideoService
 
@@ -76,19 +92,16 @@ together nicely.
   available in our Robot Soccer software project. We are about to
   separate them for inclusion into Miro. Sorry for the inconvenience.
 
-- PanTilt (experimental)
+- PanTilt
   as can be tested for instance by the PanTiltTest
 
   Known Issues:
   Afer using, the remote control may be disfunctional. Simple switch
   the camera off and on one time by removing the power cable.
 
-- Gripper (experimental)
+- Gripper
   as can be tested for instance by the GripperTest
 
   Know Issues:
   For a list of implemented gripper commands, please see the
   appropriate idl-file.
-
-One last note: The command line option -MiroRebindIOR is enabled by
-default for now.

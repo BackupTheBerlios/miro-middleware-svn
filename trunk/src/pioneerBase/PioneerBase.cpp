@@ -51,6 +51,7 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   pPioneerConsumer(new Pioneer::Consumer(&sonar, 
 					 &tactile,
 					 &infrared,
+					 &motion,
 					 &odometry, 
 					 &battery,
 					 NULL, //stall

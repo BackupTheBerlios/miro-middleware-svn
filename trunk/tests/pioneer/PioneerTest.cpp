@@ -81,7 +81,7 @@ Service::Service() :
   pRangeSensorImpl(new Miro::RangeSensorImpl(Pioneer::Parameters::instance()->sonarDescription)),
   pOdometryImpl(new Miro::OdometryImpl(NULL)),
   pBatteryImpl(new Miro::BatteryImpl()),
-  pConsumer(new Pioneer::Consumer(pRangeSensorImpl, NULL, NULL, pOdometryImpl, NULL, NULL, &canonPanTiltImpl)),
+  pConsumer(new Pioneer::Consumer(pRangeSensorImpl, NULL, NULL, NULL, pOdometryImpl, NULL, NULL, &canonPanTiltImpl)),
   pStallImpl(new Pioneer::StallImpl()),
   canonPanTiltImpl(connection, Pioneer::Parameters::instance()->cameraUpsideDown),
   canonCamera(connection, canonPanTiltImpl.getAnswer()),

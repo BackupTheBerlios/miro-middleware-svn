@@ -18,6 +18,7 @@
 
 #include "miro/RangeEventC.h"
 #include "miro/RangeSensorImpl.h"
+#include "miro/DifferentialMotionImpl.h"
 #include "miro/OdometryImpl.h"
 #include "miro/BatteryImpl.h"
 #include "miro/TimeHelper.h"
@@ -44,6 +45,7 @@ namespace Pioneer
   Consumer::Consumer(Miro::RangeSensorImpl * _pSonar,
 		     Miro::RangeSensorImpl * _pTactile,
 		     Miro::RangeSensorImpl * _pInfrared,
+		     Miro::DifferentialMotionImpl * _pMotion,
 		     Miro::OdometryImpl * _pOdometry,
 		     Miro::BatteryImpl * _pBattery,
 		     Pioneer::StallImpl * _pStall,
@@ -51,13 +53,13 @@ namespace Pioneer
     pSonar(_pSonar),
     pTactile(_pTactile),
     pInfrared(_pInfrared),
+    pMotion(_pMotion),
     pOdometry(_pOdometry),
     pBattery(_pBattery),
     pStall(_pStall),
     pCanonPanTilt(_pCanonPanTilt),
     prevX(0),
     prevY(0),
-    prevTheta(0.),
     bumpers_(0x3e3e),
     params_(Parameters::instance())
   { 
@@ -141,11 +143,10 @@ namespace Pioneer
 	  velL = message->lVel() * params_->velConvFactor;
 	  velR = message->rVel() * params_->velConvFactor;
 	  status_.position.heading = message->theta() * params_->angleConvFactor;
-	  status_.velocity.translation = (long) rint((velL + velR)/2.);
-	  status_.velocity.rotation = 2. * (velR - velL) / (double)weelDist;
-	    
-	  pOdometry->integrateData(status_);
-	    
+	  
+	  if (pMotion)
+	    pMotion->lr2velocity(velL, velR, status_.velocity);
+	  pOdometry->integrateData(status_);   
 	}
 	  
 	//------------------------------

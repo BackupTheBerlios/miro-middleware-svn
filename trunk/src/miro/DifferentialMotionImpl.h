@@ -44,6 +44,11 @@ namespace Miro
     //! DifferentialMotion interface method implementation.
     virtual void getTargetLRVelocity(CORBA::Long& left, CORBA::Long& right) throw();
 
+    //! Convert per wheel velocities in translation/rotation.
+    void lr2velocity(CORBA::Long left, CORBA::Long right, VelocityIDL& velocity);
+    //! Convert translation/rotation into per wheel velocities.
+    void velocity2lr(const VelocityIDL& _velocity, CORBA::Long& _left, CORBA::Long& _right);
+
   protected:
     //! Memorize target velocity.
     virtual void setTargetVelocity(const VelocityIDL& _velocity);
@@ -52,10 +57,6 @@ namespace Miro
 
     //! Generalized test for wheel velocity parameter correctness.
     void testVelocityLRBounds(CORBA::Long _left, CORBA::Long _right) throw (EOutOfBounds);
-    //! Convert per wheel velocities in translation/rotation.
-    void lr2velocity(CORBA::Long left, CORBA::Long right, VelocityIDL& velocity);
-    //! Convert translation/rotation into per wheel velocities.
-    void velocity2lr(const VelocityIDL& _velocity, CORBA::Long& _left, CORBA::Long& _right);
 
     //! Reference to DifferentialMotion parameters
     const DifferentialMotionParameters& params_;
