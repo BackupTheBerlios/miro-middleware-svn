@@ -217,6 +217,42 @@
    <parameter value="32.5" name="Alpha" />
    <parameter value="600" name="Height" />
 
+   <parameter value="640" name="Nfx" />
+   <parameter value="640" name="Ncx" />
+   <parameter value="0.0074" name="Dx" />
+   <parameter value="0.0074" name="Dy" />
+   <parameter value="0.0074" name="Dpx" />
+   <parameter value="0.0074" name="Dpy" />
+   <parameter value="314.220872" name="Cx" />
+   <parameter value="236.765342" name="Cy" />
+   <parameter value="1" name="Sx" />
+   <parameter value="4.907339" name="F" />
+   <parameter value="1.034753e-02" name="Kappa" />
+   <parameter value="0" name="P1" />
+   <parameter value="0" name="P2" />
+   <parameter value="-123.461165" name="Tx" />
+   <parameter value="1.472170" name="Ty" />
+   <parameter value="357.369807" name="Tz" />
+   <parameter value="-44.810556" name="Rx" />
+   <parameter value="-13.709717" name="Ry" />
+   <parameter value="-3.980549" name="Rz" />
+   <parameter value="0.969165" name="R1" />
+   <parameter value="0.215876" name="R2" />
+   <parameter value="-0.118811" name="R3" />
+   <parameter value="-0.067440" name="R4" />
+   <parameter value="0.696135" name="R5" />
+   <parameter value="0.714737" name="R6" />
+   <parameter value="0.237003" name="R7" />
+   <parameter value="-0.684685" name="R8" />
+   <parameter value="0.689228" name="R9" />
+  </parameter>
+
+<!--
+  <parameter name="Camera" >
+   <parameter value="0.060000" name="Latency" />
+   <parameter value="32.5" name="Alpha" />
+   <parameter value="600" name="Height" />
+
    <parameter value="320" name="Nfx" />
    <parameter value="480" name="Ncx" />
    <parameter value="0.0074" name="Dx" />
@@ -246,6 +282,7 @@
    <parameter value="0.064140" name="R8" />
    <parameter value="0.581928" name="R9" />
   </parameter>
+-->
 
   <parameter name="Device1394" >
    <parameter value="-1" name="Focus" />
