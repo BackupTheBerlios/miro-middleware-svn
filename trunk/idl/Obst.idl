@@ -48,9 +48,9 @@ module Miro
 
   interface Obst
   {
-    mirrorObject getObst(in ObjectType objectType);
+    mirrorObject getObst(in ObjectType objType);
     //mirrorMoves getAktion();
-    void setObst(in mirrorObject ObstArt, in ObjectType objectType);
+    void setObst(in mirrorObject ObstArt, in ObjectType objType);
   };
 };
 #endif // Obst_idl
