@@ -143,10 +143,13 @@ namespace Pioneer
 	  velL = message->lVel() * params_->velConvFactor;
 	  velR = message->rVel() * params_->velConvFactor;
 	  status_.position.heading = message->theta() * params_->angleConvFactor;
-	  
+          if (status_.position.heading > M_PI)
+            status_.position.heading -= 2 * M_PI;
 	  if (pMotion)
-	    pMotion->lr2velocity(velL, velR, status_.velocity);
+	    pMotion->lr2velocity((CORBA::Long)velL, (CORBA::Long)velR, status_.velocity);
 	  pOdometry->integrateData(status_);   
+
+cout << velL << "\t" << velR << endl;
 	}
 	  
 	//------------------------------

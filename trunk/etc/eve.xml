@@ -256,7 +256,7 @@
  </section>
  <section name="Video" >
   <parameter name="Video" >
-   <parameter value="/dev/v4l/video0" name="Device" />
+   <parameter value="/dev/video0" name="Device" />
    <parameter value="3" name="PixelSize" />
    <parameter value="true" name="UpsideDown" />
    <parameter value="1" name="Byteorder" />
