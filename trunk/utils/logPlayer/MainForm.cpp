@@ -2,7 +2,7 @@
 //
 // This file is part of Nix (Nix Is eXtreme)
 // 
-// (c) 2001, 2002, 2003
+// (c) 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -36,6 +36,7 @@
 #include <qprogressdialog.h>
 #include <qmessagebox.h>
 #include <qinputdialog.h>
+#include <qfiledialog.h>
 
 #include <cstring>
 
@@ -537,7 +538,43 @@ MainForm::setHistory()
 void
 MainForm::saveAs()
 {
+  QString filename;
 
+  bool selected = false;
+  while (!selected) {
+    // show file dialog
+    filename = QFileDialog::getSaveFileName(QString::null, "*.log", this);
+	
+    if (filename.isEmpty()) {
+      break;
+    }
+
+    // append file extension if none is given
+    QFileInfo file(filename);
+    if (file.extension(false).isEmpty()) {
+      filename.append(".log");
+      file.setFile(filename);
+    }
+
+    // warn if file exists
+    if (!file.exists()) {
+      selected = true;
+    } 
+    else {
+      int button = QMessageBox::warning(this, 
+					"LogPlayer", 
+					"The file " + filename + " alread exists!\n" +
+					"Do you want to overwrite the existing file?",
+					"&Yes", "&No", QString::null, 1);
+      
+      if (button == 0)
+	selected = true;
+    }
+  }
+
+  if (!filename.isEmpty()) {
+    fileSet_.saveCut(filename);
+  }
 }
 
 void

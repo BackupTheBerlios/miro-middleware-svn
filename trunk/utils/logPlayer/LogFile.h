@@ -12,6 +12,7 @@
 #define LogFile_h
 
 #include "miro/Log.h"
+#include "miro/LogReader.h"
 
 #include <orbsvcs/CosNotifyChannelAdminC.h>
 
@@ -46,7 +47,7 @@ private:
   typedef QObject Super;
 
 protected:
-  typedef std::pair< ACE_Time_Value, char * > TimePair;
+  typedef std::pair< ACE_Time_Value, char const * > TimePair;
   typedef std::vector< TimePair > TimeVector;
   typedef std::vector< QString > QStringVector;
   typedef std::pair< char const *, Miro::StructuredPushSupplier *> SupplierPair;
@@ -93,6 +94,7 @@ public:
   bool nextEvent();
   bool prevEvent();
   bool getCurrentEvent();
+  CosNotification::StructuredEvent const& currentEvent() const;
 
   unsigned int parse();
   bool parsed() const;
@@ -108,17 +110,16 @@ public:
   bool assertBefore(ACE_Time_Value const& _t);
   bool assertAfter(ACE_Time_Value const& _t);
 
+
 signals:
   void notifyEvent(QString const&);
   void newEvent(QString const&,QString const&,QString const&,QString const&);
 
 protected:
-  bool validEvent() const;
+  bool validEvent();
 
   QString name_;
   ChannelManager * const channelManager_;
-
-  ACE_Mem_Map memoryMap_;
 
   CosNotification::StructuredEvent event_;
   QString stamp_;
@@ -138,7 +139,7 @@ protected:
 
   CStringMap exclude_;
 
-  TAO_InputCDR * istr_;    
+  Miro::LogReader logReader_;
   bool parsed_;
 };
 
@@ -197,5 +198,11 @@ inline
 void
 LogFile::setTimeOffset(ACE_Time_Value const& _offset) {
   timeOffset_ = _offset;
+}
+
+inline
+CosNotification::StructuredEvent const&
+LogFile::currentEvent() const {
+  return event_;
 }
 #endif

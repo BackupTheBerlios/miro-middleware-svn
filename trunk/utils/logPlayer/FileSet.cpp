@@ -12,8 +12,9 @@
 #include "FileSet.h"
 #include "ChannelManager.h"
 
-#include <miro/TimeHelper.h>
-#include <miro/Log.h>
+#include "miro/TimeHelper.h"
+#include "miro/Log.h"
+#include "miro/LogWriter.h"
 
 #define QT_NO_TEXTSTREAM
 #include <qtl.h>
@@ -236,6 +237,28 @@ FileSet::getEvents(ACE_Time_Value const& _time, unsigned int _num)
   }
 
   // restor coursor time
+  coursorTime(now);
+}
+
+void
+FileSet::saveCut(QString const& _fileName)
+{
+  // create the new log file
+  Miro::LogWriter writer(std::string(_fileName.latin1()));
+
+  // save the current coursor position
+  ACE_Time_Value now = coursorTime();
+    
+  coursorTime(cutStartTime());
+    
+  while (file_.front()->coursorTime() <= endCut_) {
+    writer.logEvent(file_.front()->coursorTime(), file_.front()->currentEvent());
+    std::pop_heap(file_.begin(), file_.end(), LFMore());
+    file_.back()->nextEvent();
+    std::push_heap(file_.begin(), file_.end(), LFMore());
+  }
+
+  // restore coursor position
   coursorTime(now);
 }
 

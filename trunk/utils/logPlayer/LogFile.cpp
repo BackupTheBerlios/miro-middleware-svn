@@ -26,14 +26,9 @@ LogFile::LogFile(QString const& _name,
   channelManager_(_channelManager),
   coursor_(timeVector_.end()),
   currentDomainName_(""),
-  istr_(NULL),
+  logReader_(name_.latin1()),
   parsed_(false)
 {
-  memoryMap_.map(_name, -1, O_RDONLY);
-  if (0 == memoryMap_.handle())
-    throw Miro::CException(errno, std::strerror(errno));    
-
-  istr_= new TAO_InputCDR((char*)memoryMap_.addr(), memoryMap_.size());    
 }
 
 LogFile::~LogFile()
@@ -57,47 +52,43 @@ LogFile::~LogFile()
       delete first->second;
     }
   }
-  delete istr_;
-
-  memoryMap_.close();
 }
 
 unsigned int 
 LogFile::parse()
 {
   unsigned int rc = 0;
-  Miro::TimeIDL timeIDL;
   ACE_Time_Value timeStamp;
-  CosNotification::StructuredEvent event;
+  CosNotification::FixedEventHeader header;
 
-  while (istr_->length() != 0) {
+  bool notEof = true;
+  while ((notEof = logReader_.parseTimeStamp(timeStamp))) {
 
-    (*istr_) >> timeIDL;
-    Miro::timeC2A(timeIDL, timeStamp);
-    if (timeStamp == ACE_Time_Value::zero) {
-      break;
-    }
-    timeVector_.push_back( TimePair( timeStamp, (char*)istr_->rd_ptr() ) );
+    timeVector_.push_back(std::make_pair(timeStamp, logReader_.rdPtr()));
     
-    // skip event
-    (*istr_) >> event;
+    logReader_.parseEventHeader(header);
 
     // get domain name slot
     if (strcmp(currentDomainName_, 
-	       (char const *)event.header.fixed_header.event_type.domain_name) != 0) {
+	       (char const *)header.event_type.domain_name) != 0) {
       currentDomainEvents_ = 
-	eventTypes_.find((char const *)event.header.fixed_header.event_type.domain_name);
+	eventTypes_.find((char const *)header.event_type.domain_name);
       if (currentDomainEvents_ == eventTypes_.end()) {
 	currentDomainEvents_ =
-	  eventTypes_.insert(std::make_pair((char const *)CORBA::string_dup(event.header.fixed_header.event_type.domain_name),
+	  eventTypes_.insert(std::make_pair((char const *)
+					    CORBA::string_dup(header.event_type.domain_name),
 					    CStringSet())).first;
       }
       currentDomainName_ = currentDomainEvents_->first;
     }
-    if (currentDomainEvents_->second.find(event.header.fixed_header.event_type.type_name) ==
+    if (currentDomainEvents_->second.find(header.event_type.type_name) ==
 	currentDomainEvents_->second.end())
 
-    currentDomainEvents_->second.insert(CORBA::string_dup(event.header.fixed_header.event_type.type_name));
+    currentDomainEvents_->second.insert(CORBA::string_dup(header.event_type.type_name));
+
+    // skip event
+    logReader_.skipEventBody();
+
 
     // break parsing up to advance status bar
     if (!(timeVector_.size() % 2048))
@@ -108,7 +99,7 @@ LogFile::parse()
     throw Miro::Exception("Logfile contains no data.");
 
   // EOF
-  if (istr_->length() == 0 || timeStamp == ACE_Time_Value::zero) {
+  if (!notEof) {
     coursor_ = timeVector_.begin();
     
     suppliers_.reserve(eventTypes_.size());
@@ -131,16 +122,14 @@ LogFile::parse()
       supplier->setOffers(offers);
     }
 
-    delete istr_;
-    istr_ = NULL;
     rc = 100;
     parsed_ = true;
+
+    std::cout << "good bit" << logReader_.istr()->good_bit() << std::endl;
   }
   // End Of Work Packet
   else 
-    rc = (unsigned int)((double) ((char *) istr_->rd_ptr() - 
-				  (char *) memoryMap_.addr()) * 100. / 
-			(double) memoryMap_.size());
+    rc = logReader_.progress();
   return rc;
 }
 
@@ -176,9 +165,8 @@ LogFile::nextEvent()
       return false;
     }
 
-    TAO_InputCDR istr(coursor_->second, 
-		      memoryMap_.size() - (coursor_->second - (char *)memoryMap_.addr()));
-    istr >> event_;
+    logReader_.rdPtr(coursor_->second);
+    logReader_.parseEventHeader(event_.header.fixed_header);
   }
   while (!validEvent());
 
@@ -191,18 +179,16 @@ LogFile::getCurrentEvent()
   if (coursor_ == timeVector_.end())
     return false;
 
-  TAO_InputCDR istr(coursor_->second, 
-		    memoryMap_.size() - (coursor_->second - (char *)memoryMap_.addr()));
-  istr >> event_;
+  logReader_.rdPtr(coursor_->second);
+  logReader_.parseEventHeader(event_.header.fixed_header);
   while (!validEvent()) {
     ++coursor_;
     if (coursor_ == timeVector_.end()) {
       return false;
     }
     
-    TAO_InputCDR istr(coursor_->second, 
-		      memoryMap_.size() - (coursor_->second - (char *)memoryMap_.addr()));
-    istr >> event_;
+    logReader_.rdPtr(coursor_->second);
+    logReader_.parseEventHeader(event_.header.fixed_header);
   }
 
   parseEvent();
@@ -218,9 +204,8 @@ LogFile::prevEvent()
       return false;
     --coursor_;
 
-    TAO_InputCDR istr(coursor_->second, 
-		      memoryMap_.size() - (coursor_->second - (char *)memoryMap_.addr()));
-    istr >> event_;
+    logReader_.rdPtr(coursor_->second);
+    logReader_.parseEventHeader(event_.header.fixed_header);
   }
   while (!validEvent());
   
@@ -288,22 +273,29 @@ LogFile::delExclude(QString const& _domainName, QString const& _typeName)
 }
 
 bool
-LogFile::validEvent() const
+LogFile::validEvent()
 {
   // skip excluded events
   CStringMap::const_iterator eDomain =
     exclude_.find(event_.header.fixed_header.event_type.domain_name);
   if (eDomain != exclude_.end()) {
-    return 
-      eDomain->second.find(event_.header.fixed_header.event_type.type_name) == 
-      eDomain->second.end();
+    if (eDomain->second.find(event_.header.fixed_header.event_type.type_name) != 
+	eDomain->second.end()) {
+      std::cout << "invalid event" << std::endl;
+      logReader_.skipEventBody();
+      return false;
+    }
   }
+  logReader_.parseEventBody(event_);
   return true;
 }
 
 void
 LogFile::parseEvent()
 {
+  if (coursor_ == timeVector_.end())
+    return;
+
   // localize debug hack
   //  if (channelManager_->debugLocalize() && typeName_ == "LineSamples")
   //   event_.header.fixed_header.event_type.type_name = CORBA::string_dup( "RawLineSamples" );

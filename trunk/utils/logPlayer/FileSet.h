@@ -61,6 +61,9 @@ public:
   void cutUndo();
 
 
+  //! Save the current cut to one file.
+  void saveCut(QString const& _fileName);
+
   //! Play events till specified time
   void playEvents(ACE_Time_Value const& _t);
   void playBackwards();
