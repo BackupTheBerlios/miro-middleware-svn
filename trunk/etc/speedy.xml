@@ -291,7 +291,37 @@
       </parameter>
 
       <parameter name="DeviceQuickCam" >
-        <parameter value="20" name="Fps" />
+        <parameter value="15" name="Framerate" />
+        <parameter name="Contrast" value="27648" />
+        <parameter name="Brightness" value="-20992" />
+        <parameter name="Hue" value="-1"/>
+
+        <!-- pwc centric -->
+        <!-- indoor = 0, outdoor = 1, flourecence = 2, manual = 3, auto = 4 -->
+        <parameter name="Whitebalance" value="2" />
+        <!-- BEGIN only available in whitebalance=manual -->
+        <parameter name="WhitebalanceRed" value="0" />
+        <parameter name="WhitebalanceBlue" value="0" />
+        <!-- END -->
+        <!-- BEGIN only available in writebalance=auto -->
+        <parameter name="WhitebalanceSpeed" value="2032" />
+        <parameter name="WhitebalanceDelay" value="0" />
+        <!-- END -->
+        <!-- autoGainControl < 0 ? auto : fixed (0..65535) -->
+        <parameter name="AutoGainControl" value="31744" />
+        <!-- shutterSpeed < 0 ? auto : fixed (0..65535) -->
+        <parameter name="ShutterSpeed" value="0" />
+        <!-- sharpness < 0 ? auto : fixed (0..65535) -->
+        <parameter name="Sharpness" value="-1" />
+        <!-- backlightCompensation == 0 ? off : on -->
+        <parameter name="BacklightCompensation" value="0" />
+        <!-- flickerlessMode == 0 ? off : on -->
+        <parameter name="FlickerlessMode" value="0" />
+        <!-- dynamicNoiseReduction == 0 ? off : fixed (1..3) -->
+        <parameter name="DynamicNoiseReduction" value="1" />
+        <!-- compression == 0 ? off : fixed (1..3) -->
+        <parameter name="Compression" value="0" /> 
+
       </parameter>
       
       <parameter name="FilterYUV420PtoRGB">
