@@ -22,6 +22,8 @@
 using std::cout;
 using std::cerr;
 using std::string;
+using std::ostrstream;
+
 using CosNotification::EventTypeSeq;
 using CosNotification::StructuredEvent;
 using CosNotifyChannelAdmin::EventChannel;

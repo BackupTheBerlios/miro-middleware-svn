@@ -23,6 +23,7 @@
 
 using namespace Video;
 using std::string;
+using std::ostrstream;
 
   string path()
   {

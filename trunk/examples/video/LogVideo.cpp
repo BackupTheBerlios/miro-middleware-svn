@@ -35,6 +35,7 @@
 namespace 
 {
   using std::string;
+  using std::ostrstream;
 
   using Miro::Client;
   using Miro::Video;

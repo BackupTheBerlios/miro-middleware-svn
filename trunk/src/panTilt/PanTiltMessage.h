@@ -56,7 +56,7 @@ namespace DpPanTilt
     bool getErrorState()                 const { return error; }
     long getLong( int offset ) const { 
       std::string s(data, offset, data.length()-offset);
-      istrstream sstr(s.c_str(),s.length());
+      std::istrstream sstr(s.c_str(),s.length());
       long result;
       sstr >> result;
       return result;

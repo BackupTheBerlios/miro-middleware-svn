@@ -15,6 +15,8 @@
 #include <iostream>
 #include <strstream>
 
+using std::ostrstream;
+
 // This is an attempt to determine the latency between vidoe capture
 // of the camera and video capture of the device driver.  When it is
 // started it just prints the current time on the screen.  Recording

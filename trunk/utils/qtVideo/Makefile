@@ -77,28 +77,15 @@ realclean: clean
  \
  \
  \
- /home/hutz/Miro/src/miro/ExceptionC.i \
- /home/hutz/Miro/src/miro/TimeC.i \
+ \
+ /private/hutz/3.1/Miro/src/miro/ExceptionC.i \
+ \
+ /private/hutz/3.1/Miro/src/miro/TimeC.i \
  \
  \
- /home/hutz/Miro/src/miro/WorldPointC.i \
- /home/hutz/Miro/src/miro/PositionC.i \
- /home/hutz/Miro/src/miro/VideoC.i \
+ /private/hutz/3.1/Miro/src/miro/WorldPointC.i \
+ /private/hutz/3.1/Miro/src/miro/PositionC.i \
+ /private/hutz/3.1/Miro/src/miro/VideoC.i \
 
-
-.obj/MainForm.moc.o .obj/MainForm.moc.so .shobj/MainForm.moc.o .shobj/MainForm.moc.so: MainForm.moc.cpp MainForm.h \
- \
- \
- \
- \
- \
- \
- /home/hutz/Miro/src/miro/ExceptionC.i \
- /home/hutz/Miro/src/miro/TimeC.i \
- \
- \
- /home/hutz/Miro/src/miro/WorldPointC.i \
- /home/hutz/Miro/src/miro/PositionC.i \
- /home/hutz/Miro/src/miro/VideoC.i
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY
