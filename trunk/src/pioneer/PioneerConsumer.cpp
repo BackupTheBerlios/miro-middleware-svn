@@ -188,17 +188,19 @@ namespace Pioneer
 	}
 
 	if (pTactile) {
-	  RangeBunchEventIDL * pTactileEvent = new RangeBunchEventIDL();
-	  Miro::timeA2C(message->time(), pTactileEvent->time);
-	  pTactileEvent->sensor.length(10);
+	  RangeBunchEventIDL * pTactileEvent = NULL;
 
 	  unsigned long counter = 0;
 	  unsigned long index = 0;
 	  unsigned short bumpers = message->bumpers();
-	  unsigned long mask = bumpers_ ^ bumpers & 0x3e3e;
+	  unsigned long mask = bumpers_ ~ bumpers ^ 0x3e3e;
 
 	  for (unsigned int i = 9; i < 14; ++i, ++index) {
 	    if (mask & (1 << i)) {
+	      if (!pTactileEvent) {
+		pTactileEvent = new RangeBunchEventIDL();
+		pTactileEvent->sensor.length(10);
+	      }
 	      pTactileEvent->sensor[counter].group = 0;
 	      pTactileEvent->sensor[counter].index = index;
 	      pTactileEvent->sensor[counter].range = 
@@ -209,6 +211,10 @@ namespace Pioneer
 	  }
 	  for (unsigned int i = 1; i < 6; ++i, ++index) {
 	    if (mask & (1 << i)) {
+	      if (!pTactileEvent) {
+		pTactileEvent = new RangeBunchEventIDL();
+		pTactileEvent->sensor.length(10);
+	      }
 	      pTactileEvent->sensor[counter].group = 0;
 	      pTactileEvent->sensor[counter].index = index;
 	      pTactileEvent->sensor[counter].range = 
@@ -218,7 +224,12 @@ namespace Pioneer
 	    }
 	  }
 	  bumpers_ = bumpers;
-	  pTactile->integrateData(pTactileEvent);
+
+	  if (pTactileEvent) {
+	    Miro::timeA2C(message->time(), pTactileEvent->time);
+	    pTactileEvent->sensor.length(counter);
+	    pTactile->integrateData(pTactileEvent);
+	  }
 	}
 
 	//----------------------------------------------------------------------
