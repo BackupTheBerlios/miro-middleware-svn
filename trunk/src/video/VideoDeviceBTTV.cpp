@@ -267,7 +267,7 @@ namespace Video
     // runtime statistics II
     ACE_Time_Value endTime = ACE_OS::gettimeofday();
     msec += (endTime - beginTime).msec();
-    if (iNFramesCaptured % 100) {
+    if ((iNFramesCaptured % 100) == 0) {
       std::cout << "time for grabbing: " << msec / 100 << "msec" << std::endl;
       msec = 0;
     }
