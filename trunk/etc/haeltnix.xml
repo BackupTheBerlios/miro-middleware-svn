@@ -318,14 +318,18 @@
    <parameter value="bgr" name="Palette" />
    <parameter value="384" name="Width" />
    <parameter value="288" name="Height" />
-    <parameter name="Filter">
-     <parameter value="DeviceBTTV" name="Name" />
-     <parameter value="DeviceBTTV" name="Type" />
-     <parameter name="Successor" >
-      <parameter name="Filter" >
-       <parameter value="FilterSwap3" name="Name" />
-       <parameter value="FilterSwap3" name="Type" />
-       <parameter name="Successor" >
+   <parameter name="Filter">
+    <parameter value="DeviceBTTV" name="Name" />
+    <parameter value="DeviceBTTV" name="Type" />
+    <parameter name="Successor" >
+     <parameter name="Filter" >
+      <parameter value="FilterHalfImage" name="Name" />
+      <parameter value="FilterHalfImage" name="Type" />
+      <parameter name="Successor" >
+       <parameter name="Filter" >
+        <parameter value="FilterSwap3" name="Name" />
+        <parameter value="FilterSwap3" name="Type" />
+        <parameter name="Successor" >
          <parameter name="Filter" >
           <parameter value="FilterRGBtoGray" name="Name" />
           <parameter value="FilterRGBtoGray" name="Type" />
@@ -334,15 +338,16 @@
             <parameter value="FilterGraytoCanny" name="Name" />
             <parameter value="FilterGraytoCanny" name="Type" />
            </parameter>
+          </parameter>
          </parameter>
-        </parameter>
-        <parameter name="Filter" >
-         <parameter value="FilterRGBtoIndex" name="Name" />
-         <parameter value="FilterRGBtoIndex" name="Type" />
-         <parameter name="Successor" >
-          <parameter name="Filter" >
-           <parameter value="FilterIndextoIndex" name="Name" />
-           <parameter value="FilterIndextoIndex" name="Type" />
+         <parameter name="Filter" >
+          <parameter value="FilterRGBtoIndex" name="Name" />
+          <parameter value="FilterRGBtoIndex" name="Type" />
+          <parameter name="Successor" >
+           <parameter name="Filter" >
+            <parameter value="FilterIndextoIndex" name="Name" />
+            <parameter value="FilterIndextoIndex" name="Type" />
+           </parameter>
           </parameter>
          </parameter>
         </parameter>
@@ -350,6 +355,7 @@
       </parameter>
      </parameter>
     </parameter>
+   </parameter>
   </parameter>
 
   <parameter name="DeviceBTTV">
