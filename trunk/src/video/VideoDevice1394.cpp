@@ -15,6 +15,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.16  2004/09/29 16:23:23  hutz
+ * minor include cleanup
+ *
  * Revision 1.15  2004/05/25 13:04:04  gmayer
  * oehm, compiler directives seems to have problems if they are defined with strings instead of numbers. changed this.
  *
@@ -120,8 +123,6 @@
 #include <config.h>
 #endif
  
-#include <ace/OS.h>
-
 #include "VideoDevice1394.h"
 #include "BufferManager1394.h"
 #include "VideoControlImpl.h"
@@ -129,6 +130,8 @@
 #include <miro/Exception.h>
 #include <miro/Server.h>
 #include <miro/Log.h>
+
+#include <ace/OS.h>
 
 #define NUM_BUFFERS 4
 #define DROP_FRAMES 1
