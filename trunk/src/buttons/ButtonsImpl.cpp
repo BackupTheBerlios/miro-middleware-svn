@@ -62,11 +62,11 @@ namespace B21Buttons
   {
     unsigned char pressed = connection.getButtonStatus();
     for (int i = 0; i < 3; ++i) {
-      for (int j = 0; j < NUM_BUTTONS; ++j) {
+      for (unsigned long j = 0; j < NUM_BUTTONS; ++j) {
 	setButtonMode(j, Miro::B21Button::TOGGLE_ON);
 	ACE_OS::sleep(oneSecond);
       }
-      for (int k = 0; k < NUM_BUTTONS; ++k) {
+      for (unsigned long k = 0; k < NUM_BUTTONS; ++k) {
 	setButtonMode(k, Miro::B21Button::TOGGLE_OFF);
 	ACE_OS::sleep(oneSecond);
       }

@@ -26,10 +26,6 @@ int main(int argc, char *argv[])
     cerr << "Exception on sonar query:" << endl << e << endl;
     return 1;
   }
-  catch (...) {                         // Catch all other exceptions. 
-    cerr << "Uncaught exception!" << endl;
-    return 1;
-  }
   
   return 0;
 }

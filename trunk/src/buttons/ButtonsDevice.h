@@ -22,7 +22,7 @@ namespace B21Buttons
   // Number of Buttons
   // There are four individually coloured buttons
   // and two red kill buttons
-  static const int NUM_BUTTONS = 6;
+  static const unsigned long NUM_BUTTONS = 6;
 
   // Timer Ids
   static const int POLLING = 1;

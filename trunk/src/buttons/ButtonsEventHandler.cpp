@@ -43,7 +43,7 @@ namespace B21Buttons
     DBG(cout << "Constructing B21Buttons::EventHandler" << endl);
 
     // init button states
-    for (int i = 0; i < NUM_BUTTONS; ++i) {
+    for (unsigned long i = 0; i < NUM_BUTTONS; ++i) {
       button[i].number = i;
       button[i].event = Miro::Button::ON_RELEASE;
       button[i].mode = Miro::B21Button::TOGGLE_OFF;
@@ -183,7 +183,7 @@ namespace B21Buttons
     unsigned char light = RED_BIT;
 
     blinkOn = !blinkOn;
-    for (int i = 0; i < NUM_BUTTONS; ++i, light <<= 1) {
+    for (unsigned long i = 0; i < NUM_BUTTONS; ++i, light <<= 1) {
       if (button[i].mode == Miro::B21Button::FLASHING ||
 	  button[i].mode == Miro::B21Button::FLASHING_TILL_PRESSED) {
 	if (blinkOn) 
