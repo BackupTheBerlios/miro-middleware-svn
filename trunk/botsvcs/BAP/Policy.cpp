@@ -416,11 +416,18 @@ namespace Miro
       close();
       startPattern_ = NULL;
 
+
       PatternMap::iterator first, last = patterns_.end();
       for (first = patterns_.begin(); first != last; ++first)
 	delete first->second;
       patterns_.clear();
+      transitionPatternTable_.clear();
+      transitions_.clear();
+      transitionPatterns_.clear();
+
       valid_ = false;
+
+      Super::clear();
     }
 
     void

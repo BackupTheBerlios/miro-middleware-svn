@@ -72,6 +72,14 @@ namespace Miro
     {
     }
 
+    void
+    Pattern::clear() 
+    {
+      parent_ = NULL;
+      patternName_ = "";
+      transitionTable_.clear();
+    }
+
     void 
     Pattern::xmlAddTransition(QDomElement _element)
     {
@@ -183,7 +191,7 @@ namespace Miro
     Pattern::getFullName() const {
       if (!parent_)
 	return patternName_;
-      return parent_->getName() + "/" + patternName_;
+      return parent_->getFullName() + "/" + patternName_;
     }
     /*
 

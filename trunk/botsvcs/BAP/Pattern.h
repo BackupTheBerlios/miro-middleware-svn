@@ -64,6 +64,8 @@ namespace Miro
       virtual ~Pattern();
       //! Virtual copy constructor.
       virtual Pattern * clone() const = NULL;
+      //! Clear the policy.
+      virtual void clear();
 
       //! Parse DOM node
       //! Parse DOM transition node
