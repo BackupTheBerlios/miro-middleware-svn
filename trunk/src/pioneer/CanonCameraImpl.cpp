@@ -287,6 +287,27 @@ namespace Canon
     }
   }
 
+  void
+  CanonCameraImpl::setAE(short value) throw(Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut)
+  {
+    bool done=false;
+    char tmp[4];
+    char fixChar[4];
+
+    strcpy(fixChar , ";");
+    if (!initialized) initialize();
+    Message aeValue(LIGHT_AE,strcat(fixChar, int2str(tmp,value,2)));
+
+    while (!done) {
+      Miro::Guard guard(pAnswer->mutex);
+      pAnswer->init();
+      connection.sendCamera(aeValue);
+      checkAnswer();
+      //keep trying...
+      if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
+    }
+  }
+
 
   //-------------------------------------------------------------------
   // auxiliary functions
