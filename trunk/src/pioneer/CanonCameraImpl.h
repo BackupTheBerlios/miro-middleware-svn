@@ -25,7 +25,7 @@ namespace Miro
 
 namespace Pioneer
 {
-  // forward declerations
+  // forward declarations
   class Connection;
   class Consumer;
 };

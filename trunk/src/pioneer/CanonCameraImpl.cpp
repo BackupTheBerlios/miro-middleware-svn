@@ -37,8 +37,6 @@ namespace Canon
   using Miro::ETimeOut;
   using Miro::EOutOfBounds;
   using Miro::Exception;
-  //  using Miro::rad2Deg;
-  //  using Miro::deg2Rad;
 
   // maximum wait time for cond.wait calls
   ACE_Time_Value CanonCameraImpl::maxWait = ACE_Time_Value(0, 500000);
@@ -70,7 +68,7 @@ namespace Canon
 
 
   //-------------------------------------------------------------------------
-  // from pan.idl
+  // from CanonCamera.idl
   //-------------------------------------------------------------------------
   void
   CanonCameraImpl::setZoom(short value) throw(Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut)
