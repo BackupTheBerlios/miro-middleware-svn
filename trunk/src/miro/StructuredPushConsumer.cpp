@@ -73,11 +73,8 @@ namespace Miro
 
     if (connected_ == 0) {
       // Activate the consumer with the default_POA_
-      std::cout << "." << std::endl;
       objref_ = this->_this();
 
-      std::cout << "." << (void*)objref_ <<  std::endl;
-      std::cout << "." << (void*)proxySupplier_.in() <<  std::endl;
 	proxySupplier_->connect_structured_push_consumer(objref_);
       connected_ = 1;
 
@@ -85,7 +82,6 @@ namespace Miro
 
       CosNotification::EventTypeSeq_var events = 
 	proxySupplier_->obtain_offered_types(CosNotifyChannelAdmin::ALL_NOW_UPDATES_ON);
-      std::cout << "." << std::flush;
       for (unsigned long i = 0; i < events->length(); ++i) {
 	for (unsigned long j = 0; j < subscriptions_.length(); ++j) {
 	  if (strcmp (events[i].type_name, subscriptions_[j].type_name) == 0 &&
