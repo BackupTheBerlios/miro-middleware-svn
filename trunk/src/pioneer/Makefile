@@ -62,186 +62,186 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 
 .obj/PioneerConnection.o .obj/PioneerConnection.o .obj/PioneerConnection.o .obj/PioneerConnection.o: PioneerConnection.cpp PioneerConnection.h \
- \
- \
- \
- PioneerConsumer.h \
- PioneerStatus.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- PioneerParameters.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/psos/PsosConnection.h \
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/TtyConnection.h PioneerConsumer.h \
+ $(MIRO_ROOT)/src/miro/DevConsumer.h PioneerStatus.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.i.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.i.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/Angle.h PioneerParameters.h \
+ $(MIRO_ROOT)/src/psos/PsosParameters.h \
+ $(MIRO_ROOT)/src/miro/TtyParameters.h \
+ $(MIRO_ROOT)/src/miro/DevParameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/MotionParameters.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.i.h \
+ $(MIRO_ROOT)/src/miro/Singleton.h \
+ $(MIRO_ROOT)/src/psos/PsosMessage.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h \
+ $(MIRO_ROOT)/src/psos/PsosDevice.h
 
 .obj/PioneerConsumer.o .obj/PioneerConsumer.o .obj/PioneerConsumer.o .obj/PioneerConsumer.o: PioneerConsumer.cpp PioneerConsumer.h \
- \
- PioneerStatus.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- PioneerStallImpl.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/DevConsumer.h PioneerStatus.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.i.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.i.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/Angle.h PioneerStallImpl.h \
+ $(MIRO_ROOT)/src/miro/PioneerStallS.h \
+ $(MIRO_ROOT)/src/miro/StallS.h \
+ $(MIRO_ROOT)/src/miro/StallC.h \
+ $(MIRO_ROOT)/src/miro/StallC.i.h \
+ $(MIRO_ROOT)/src/miro/StallS.i.h \
+ $(MIRO_ROOT)/src/miro/PioneerStallC.h \
+ $(MIRO_ROOT)/src/miro/PioneerStallC.i.h \
+ $(MIRO_ROOT)/src/miro/PioneerStallS.i.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.i.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorImpl.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionS.i.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionS.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.i.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionS.i.h \
+ $(MIRO_ROOT)/src/miro/RangeEventS.h \
+ $(MIRO_ROOT)/src/miro/TimeS.h \
+ $(MIRO_ROOT)/src/miro/TimeS.i.h \
+ $(MIRO_ROOT)/src/miro/RangeEventS.i.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.i.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorS.i.h \
+ $(MIRO_ROOT)/src/miro/OdometryImpl.h \
+ $(MIRO_ROOT)/src/miro/OdometryS.h \
+ $(MIRO_ROOT)/src/miro/PositionS.h \
+ $(MIRO_ROOT)/src/miro/WorldPointS.h \
+ $(MIRO_ROOT)/src/miro/WorldPointS.i.h \
+ $(MIRO_ROOT)/src/miro/PositionS.i.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusS.h \
+ $(MIRO_ROOT)/src/miro/VelocityS.h \
+ $(MIRO_ROOT)/src/miro/VelocityS.i.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusS.i.h \
+ $(MIRO_ROOT)/src/miro/OdometryC.h \
+ $(MIRO_ROOT)/src/miro/OdometryC.i.h \
+ $(MIRO_ROOT)/src/miro/OdometryS.i.h \
+ $(MIRO_ROOT)/src/miro/TimeHelper.h \
+ $(MIRO_ROOT)/src/psos/PsosMessage.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h \
+ $(MIRO_ROOT)/src/psos/PsosDevice.h
 
 .obj/PioneerStatus.o .obj/PioneerStatus.o .obj/PioneerStatus.o .obj/PioneerStatus.o: PioneerStatus.cpp \
- \
- \
- PioneerStatus.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/TimeHelper.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i.h PioneerStatus.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.h \
+ $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.i.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.i.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/Angle.h \
+ $(MIRO_ROOT)/src/psos/PsosMessage.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h \
+ $(MIRO_ROOT)/src/psos/PsosDevice.h
 
 .obj/PioneerMotionImpl.o .obj/PioneerMotionImpl.o .obj/PioneerMotionImpl.o .obj/PioneerMotionImpl.o: PioneerMotionImpl.cpp PioneerMotionImpl.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- PioneerConnection.h \
- \
- PioneerConsumer.h \
- PioneerStatus.h \
- \
- \
- \
- \
- \
- \
- \
- \
- PioneerParameters.h \
- \
- \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/MotionS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/ExceptionS.i.h \
+ $(MIRO_ROOT)/src/miro/VelocityS.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i.h \
+ $(MIRO_ROOT)/src/miro/VelocityS.i.h \
+ $(MIRO_ROOT)/src/miro/MotionC.h \
+ $(MIRO_ROOT)/src/miro/MotionC.i.h \
+ $(MIRO_ROOT)/src/miro/MotionS.i.h \
+ $(MIRO_ROOT)/src/miro/DifferentialMotionImpl.h \
+ $(MIRO_ROOT)/src/miro/DifferentialMotionS.h \
+ $(MIRO_ROOT)/src/miro/DifferentialMotionC.h \
+ $(MIRO_ROOT)/src/miro/DifferentialMotionC.i.h \
+ $(MIRO_ROOT)/src/miro/DifferentialMotionS.i.h \
+ $(MIRO_ROOT)/src/miro/MotionImpl.h \
+ $(MIRO_ROOT)/src/miro/MotionParameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/Exception.h PioneerConnection.h \
+ $(MIRO_ROOT)/src/psos/PsosConnection.h \
+ $(MIRO_ROOT)/src/miro/TtyConnection.h PioneerConsumer.h \
+ $(MIRO_ROOT)/src/miro/DevConsumer.h PioneerStatus.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.i.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.i.h \
+ $(MIRO_ROOT)/src/miro/Angle.h PioneerParameters.h \
+ $(MIRO_ROOT)/src/psos/PsosParameters.h \
+ $(MIRO_ROOT)/src/miro/TtyParameters.h \
+ $(MIRO_ROOT)/src/miro/DevParameters.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.i.h \
+ $(MIRO_ROOT)/src/miro/Singleton.h
 
 .obj/PioneerStallImpl.o .obj/PioneerStallImpl.o .obj/PioneerStallImpl.o .obj/PioneerStallImpl.o: PioneerStallImpl.cpp PioneerStallImpl.h \
- \
- \
- \
- \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/PioneerStallS.h \
+ $(MIRO_ROOT)/src/miro/StallS.h \
+ $(MIRO_ROOT)/src/miro/StallC.h \
+ $(MIRO_ROOT)/src/miro/StallC.i.h \
+ $(MIRO_ROOT)/src/miro/StallS.i.h \
+ $(MIRO_ROOT)/src/miro/PioneerStallC.h \
+ $(MIRO_ROOT)/src/miro/PioneerStallC.i.h \
+ $(MIRO_ROOT)/src/miro/PioneerStallS.i.h
 
 .obj/PioneerParameters.o .obj/PioneerParameters.o .obj/PioneerParameters.o .obj/PioneerParameters.o: PioneerParameters.cpp PioneerParameters.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/psos/PsosParameters.h \
+ $(MIRO_ROOT)/src/miro/TtyParameters.h \
+ $(MIRO_ROOT)/src/miro/DevParameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/MotionParameters.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.i.h \
+ $(MIRO_ROOT)/src/miro/Singleton.h \
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.i.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.i.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionHelper.h \
+ $(MIRO_ROOT)/src/miro/Angle.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

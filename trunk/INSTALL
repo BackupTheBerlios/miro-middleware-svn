@@ -6,8 +6,8 @@ installation instructions are simmilar to that package. If you already
 installed ACE and TAO, the installing instructions should sound
 familiar to you.
 
-The libraries Miro depends on are ACE (>= 5.1.7), TAO (>= 1.1.7) and
-qt (>= 2.2.4). These should be installed first. The environment
+The libraries Miro depends on are ACE (>= 5.2), TAO (>= 1.2) and
+qt (>= 2.3). These should be installed first. The environment
 variables ACE_ROOT, TAO_ROOT, QTDIR and LD_LIBRARY_PATH should be set
 accoringly.
 
@@ -32,3 +32,18 @@ ifeq (,$(optimize))
   optimize = 1
 endif
 
+The documentation is not built automatically. To do so, switch to
+$MIRO_ROOT/doc and call make again. Note that to build the
+documentation, doxygen, latex and fig2dev are needed.
+
+If not all robot platforms need to be supported, the relevant
+platforms can be specified in the build variable
+
+MIRO_COMPONENTS
+
+the component names are:
+
+B21 Pioneer1 Sparrow99
+
+Set the variable in $MIRO_ROOT/include/makeinclude/miro.macros.GNU or
+simple in the $ACE_ROOT/include/makeinclude/platform_macros.GNU file.

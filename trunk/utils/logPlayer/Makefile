@@ -62,18 +62,19 @@ realclean: clean
 
 
 .obj/LogPlayer.o .obj/LogPlayer.so .shobj/LogPlayer.o .shobj/LogPlayer.so: LogPlayer.cpp \
- \
- \
- \
- \
- \
- \
- \
- \
- LogPlayer.h
+ $(MIRO_ROOT)/src/miro/Server.h \
+ $(MIRO_ROOT)/src/miro/Client.h \
+ $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/RobotParameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/StructuredPushSupplier.h \
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/TimeHelper.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i.h LogPlayer.h
 
 .obj/LogPlayer.moc.o .obj/LogPlayer.moc.so .shobj/LogPlayer.moc.o .shobj/LogPlayer.moc.so: LogPlayer.moc.cpp LogPlayer.h \
- \
-
+ $(MIRO_ROOT)/src/miro/StructuredPushSupplier.h \
+ $(MIRO_ROOT)/src/miro/Synch.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

@@ -77,263 +77,263 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 
 .obj/OnButton.o .obj/OnButton.so .shobj/OnButton.o .shobj/OnButton.so: OnButton.cpp OnButton.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
+ $(MIRO_ROOT)/src/miro/EventBehaviour.h \
+ $(MIRO_ROOT)/src/miro/Behaviour.h \
+ $(MIRO_ROOT)/src/miro/DynamicWindow.h \
+ $(MIRO_ROOT)/src/miro/ActionPattern.h \
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/MotionArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/Arbiter.h \
+ $(MIRO_ROOT)/src/miro/StructuredPushConsumer.h \
  OnButtonParameters.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/EventBehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/B21ButtonsC.h \
+ $(MIRO_ROOT)/src/miro/ButtonsC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i.h \
+ $(MIRO_ROOT)/src/miro/ButtonsC.i.h \
+ $(MIRO_ROOT)/src/miro/B21ButtonsC.i.h \
+ $(MIRO_ROOT)/src/miro/IO.h
 
 .obj/OnButtonParameters.o .obj/OnButtonParameters.so .shobj/OnButtonParameters.o .shobj/OnButtonParameters.so: OnButtonParameters.cpp OnButtonParameters.h \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/EventBehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/KeyValueList.h
 
 .obj/TactileStop.o .obj/TactileStop.so .shobj/TactileStop.o .shobj/TactileStop.so: TactileStop.cpp TactileStop.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/MotionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i.h \
+ $(MIRO_ROOT)/src/miro/MotionC.i.h \
+ $(MIRO_ROOT)/src/miro/EventBehaviour.h \
+ $(MIRO_ROOT)/src/miro/Behaviour.h \
+ $(MIRO_ROOT)/src/miro/DynamicWindow.h \
+ $(MIRO_ROOT)/src/miro/ActionPattern.h \
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/MotionArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/Arbiter.h \
+ $(MIRO_ROOT)/src/miro/StructuredPushConsumer.h \
+ $(MIRO_ROOT)/src/miro/MotionArbiterMessage.h \
+ $(MIRO_ROOT)/src/miro/ArbiterMessage.h
 
 .obj/SonarAvoid.o .obj/SonarAvoid.so .shobj/SonarAvoid.o .shobj/SonarAvoid.so: SonarAvoid.cpp SonarAvoid.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.i.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.i.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.i.h \
+ $(MIRO_ROOT)/src/miro/EventBehaviour.h \
+ $(MIRO_ROOT)/src/miro/Behaviour.h \
+ $(MIRO_ROOT)/src/miro/DynamicWindow.h \
+ $(MIRO_ROOT)/src/miro/ActionPattern.h \
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/MotionArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/Arbiter.h \
+ $(MIRO_ROOT)/src/miro/StructuredPushConsumer.h \
  SonarAvoidParameters.h \
- \
- \
- \
- \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/EventBehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/MotionArbiterMessage.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i.h \
+ $(MIRO_ROOT)/src/miro/ArbiterMessage.h \
+ $(MIRO_ROOT)/src/miro/MotionC.h \
+ $(MIRO_ROOT)/src/miro/MotionC.i.h
 
 .obj/SonarAvoidParameters.o .obj/SonarAvoidParameters.so .shobj/SonarAvoidParameters.o .shobj/SonarAvoidParameters.so: SonarAvoidParameters.cpp \
  SonarAvoidParameters.h \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/EventBehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/KeyValueList.h \
+ $(MIRO_ROOT)/src/miro/Angle.h
 
 .obj/LaserAvoid.o .obj/LaserAvoid.so .shobj/LaserAvoid.o .shobj/LaserAvoid.so: LaserAvoid.cpp \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- LaserAvoid.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
+ $(MIRO_ROOT)/src/miro/ActionPattern.h \
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/MotionArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/Arbiter.h \
+ $(MIRO_ROOT)/src/miro/MotionArbiterMessage.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i.h \
+ $(MIRO_ROOT)/src/miro/ArbiterMessage.h \
+ $(MIRO_ROOT)/src/miro/MotionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/MotionC.i.h LaserAvoid.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.i.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.i.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.i.h \
+ $(MIRO_ROOT)/src/miro/TimedBehaviour.h \
+ $(MIRO_ROOT)/src/miro/Behaviour.h \
+ $(MIRO_ROOT)/src/miro/DynamicWindow.h \
+ $(MIRO_ROOT)/src/miro/TimedBehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
  LaserAvoidParameters.h
 
 .obj/LaserAvoidParameters.o .obj/LaserAvoidParameters.so .shobj/LaserAvoidParameters.o .shobj/LaserAvoidParameters.so: LaserAvoidParameters.cpp \
  LaserAvoidParameters.h \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/TimedBehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/KeyValueList.h \
+ $(MIRO_ROOT)/src/miro/Angle.h
 
 .obj/Straight.o .obj/Straight.so .shobj/Straight.o .shobj/Straight.so: Straight.cpp Straight.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
+ $(MIRO_ROOT)/src/miro/TimedBehaviour.h \
+ $(MIRO_ROOT)/src/miro/Behaviour.h \
+ $(MIRO_ROOT)/src/miro/DynamicWindow.h \
+ $(MIRO_ROOT)/src/miro/ActionPattern.h \
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/MotionArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/Arbiter.h \
+ $(MIRO_ROOT)/src/miro/TimedBehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
  StraightParameters.h \
- \
- \
- \
- \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/MotionArbiterMessage.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i.h \
+ $(MIRO_ROOT)/src/miro/ArbiterMessage.h \
+ $(MIRO_ROOT)/src/miro/MotionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/MotionC.i.h
 
 .obj/StraightParameters.o .obj/StraightParameters.so .shobj/StraightParameters.o .shobj/StraightParameters.so: StraightParameters.cpp StraightParameters.h \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/TimedBehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/KeyValueList.h
 
 .obj/Wander.o .obj/Wander.so .shobj/Wander.o .shobj/Wander.so: Wander.cpp Wander.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- WanderParameters.h
+ $(MIRO_ROOT)/src/miro/TimedBehaviour.h \
+ $(MIRO_ROOT)/src/miro/Behaviour.h \
+ $(MIRO_ROOT)/src/miro/DynamicWindow.h \
+ $(MIRO_ROOT)/src/miro/ActionPattern.h \
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/MotionArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/Arbiter.h \
+ $(MIRO_ROOT)/src/miro/TimedBehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/MotionArbiterMessage.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i.h \
+ $(MIRO_ROOT)/src/miro/ArbiterMessage.h \
+ $(MIRO_ROOT)/src/miro/MotionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/MotionC.i.h WanderParameters.h
 
 .obj/WanderParameters.o .obj/WanderParameters.so .shobj/WanderParameters.o .shobj/WanderParameters.so: WanderParameters.cpp WanderParameters.h \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/TimedBehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/KeyValueList.h \
+ $(MIRO_ROOT)/src/miro/Angle.h
 
 .obj/BehaviourEngine.o .obj/BehaviourEngine.so .shobj/BehaviourEngine.o .shobj/BehaviourEngine.so: BehaviourEngine.cpp BehaviourEngine.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- OnButton.h \
- \
- \
- \
- \
+ $(MIRO_ROOT)/src/miro/Server.h \
+ $(MIRO_ROOT)/src/miro/Client.h \
+ $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/RobotParameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.i.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.i.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.i.h \
+ $(MIRO_ROOT)/src/miro/MotionC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i.h \
+ $(MIRO_ROOT)/src/miro/MotionC.i.h \
+ $(MIRO_ROOT)/src/miro/OdometryC.h \
+ $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.i.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.i.h \
+ $(MIRO_ROOT)/src/miro/OdometryC.i.h \
+ $(MIRO_ROOT)/src/miro/StructuredPushConsumer.h \
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/MotionArbiter.h \
+ $(MIRO_ROOT)/src/miro/Arbiter.h \
+ $(MIRO_ROOT)/src/miro/MotionArbiterMessage.h \
+ $(MIRO_ROOT)/src/miro/ArbiterMessage.h \
+ $(MIRO_ROOT)/src/miro/MotionArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h OnButton.h \
+ $(MIRO_ROOT)/src/miro/EventBehaviour.h \
+ $(MIRO_ROOT)/src/miro/Behaviour.h \
+ $(MIRO_ROOT)/src/miro/DynamicWindow.h \
+ $(MIRO_ROOT)/src/miro/ActionPattern.h \
  OnButtonParameters.h \
- \
- \
+ $(MIRO_ROOT)/src/miro/EventBehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
  TactileStop.h SonarAvoid.h SonarAvoidParameters.h LaserAvoid.h \
- \
- \
+ $(MIRO_ROOT)/src/miro/TimedBehaviour.h \
+ $(MIRO_ROOT)/src/miro/TimedBehaviourParameters.h \
  LaserAvoidParameters.h TurnRight.h TurnRightParameters.h Straight.h \
  StraightParameters.h Wander.h WanderParameters.h \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/BehaviourRepository.h \
+ $(MIRO_ROOT)/src/miro/Singleton.h \
+ $(MIRO_ROOT)/src/miro/ArbiterRepository.h \
+ $(MIRO_ROOT)/src/miro/Policy.h
 
 .obj/TurnRight.o .obj/TurnRight.so .shobj/TurnRight.o .shobj/TurnRight.so: TurnRight.cpp \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- TurnRight.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
+ $(MIRO_ROOT)/src/miro/ActionPattern.h \
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/MotionArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/Arbiter.h \
+ $(MIRO_ROOT)/src/miro/MotionArbiterMessage.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i.h \
+ $(MIRO_ROOT)/src/miro/ArbiterMessage.h \
+ $(MIRO_ROOT)/src/miro/MotionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/MotionC.i.h TurnRight.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.i.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.i.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.i.h \
+ $(MIRO_ROOT)/src/miro/TimedBehaviour.h \
+ $(MIRO_ROOT)/src/miro/Behaviour.h \
+ $(MIRO_ROOT)/src/miro/DynamicWindow.h \
+ $(MIRO_ROOT)/src/miro/TimedBehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
  TurnRightParameters.h
 
 .obj/TurnRightParameters.o .obj/TurnRightParameters.so .shobj/TurnRightParameters.o .shobj/TurnRightParameters.so: TurnRightParameters.cpp TurnRightParameters.h \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/TimedBehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/KeyValueList.h \
+ $(MIRO_ROOT)/src/miro/Angle.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY
