@@ -5,17 +5,19 @@
    <parameter value="rgb" name="Palette" />
    <parameter value="634" name="Width" />
    <parameter value="480" name="Height" />
-   <parameter name="Filter">
-    <parameter value="DeviceDummy" name="Name" />
-    <parameter value="DeviceDummy" name="Type" />
-    <parameter name="Successor" >
-     <parameter name="Filter" >
-      <parameter value="FilterCopy" name="Name" />
-      <parameter value="FilterCopy" name="Type" />
-      <parameter name="Successor" >
-       <parameter name="Filter" >
-        <parameter value="FilterGray" name="Name" />
-        <parameter value="FilterGray" name="Type" />
+   <parameter name="Filters">
+    <parameter name="Filter">
+     <parameter value="DeviceDummy" name="Name" />
+     <parameter value="DeviceDummy" name="Type" />
+     <parameter name="Successor" >
+      <parameter name="Filter" >
+       <parameter value="FilterCopy" name="Name" />
+       <parameter value="FilterCopy" name="Type" />
+       <parameter name="Successor" >
+        <parameter name="Filter" >
+         <parameter value="FilterGray" name="Name" />
+         <parameter value="FilterGray" name="Type" />
+        </parameter>
        </parameter>
       </parameter>
      </parameter>

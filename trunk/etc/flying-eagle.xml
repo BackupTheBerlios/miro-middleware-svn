@@ -36,6 +36,7 @@
     <parameter value="Device1394" name="Name" />
     <parameter value="Device1394" name="Type" />
     <parameter name="Successor" >
+     <parameter name="Filters" >
      <parameter name="Filter" >
       <parameter value="FilterYUV422toRGB" name="Name" />
       <parameter value="FilterYUV422toRGB" name="Type" />
@@ -79,6 +80,7 @@
      </parameter>
     </parameter>
    </parameter>
+  </parameter>
   </parameter>
 
   <parameter name="FilterYUV422toRGB">

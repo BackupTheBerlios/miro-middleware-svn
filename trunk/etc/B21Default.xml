@@ -52,19 +52,38 @@
  </section>
  <section name="Video" >
   <parameter name="Video" >
-   <parameter value="/dev/v4l/video0" name="Device" />
-   <parameter value="3" name="PixelSize" />
-   <parameter value="false" name="UpsideDown" />
-   <parameter value="1" name="Byteorder" />
-   <parameter value="16" name="Buffers" />
-   <parameter value="16" name="Connections" />
-   <parameter value="288" name="Height" />
+   <parameter value="bgr" name="Palette" />
    <parameter value="384" name="Width" />
-   <parameter value="all" name="Subfield" />
-   <parameter value="pal" name="Format" />
-   <parameter value="bttv" name="Grabber" />
-   <parameter value="rgb" name="Palette" />
-   <parameter value="composite1" name="Source" />
+   <parameter value="288" name="Height" />
+   <parameter name="Filters">
+    <parameter name="Filter">
+      <parameter value="DeviceBTTV" name="Name" />
+      <parameter value="DeviceBTTV" name="Type" />
+      <parameter name="Successor" >
+       <parameter name="Filter" >
+        <parameter value="FilterFlip" name="Name" />
+        <parameter value="FilterFlip" name="Type" />
+        <parameter name="Filter" >
+         <parameter value="FilterSwap3" name="Name" />
+         <parameter value="FilterSwap3" name="Type" />
+        </parameter> 
+       </parameter>
+     </parameter>
+    </parameter>
+   </parameter>
+
+  </parameter>
+  <parameter name="DeviceBTTV">
+   <parameter value="/dev/video0" name="Device" />
+  </parameter>
+  <parameter name="FilterFlip">
+   <parameter value="true" name="InterfaceInstance" />
+   <parameter name="Interface">
+    <parameter value="BGR" name="Name" />
+   </parameter>
+  </parameter> 
+  <parameter name="FilterSwap3">
+   <parameter value="true" name="InterfaceInstance" />
   </parameter>
  </section>
  <section name="Notification" >

@@ -176,35 +176,37 @@
    <parameter value="640" name="Width" />
    <parameter value="480" name="Height" />
 
-   <parameter name="Filter">
-    <parameter value="Device1394" name="Name" />
-    <parameter value="Device1394" name="Type" />
-    <parameter name="Successor" >
-     <parameter name="Filter" >
-      <parameter value="FilterYUV422Save" name="Name" />
-      <parameter value="FilterYUV422Save" name="Type" />
-     </parameter>
-     <parameter name="Filter" >
-      <parameter value="FilterYUV422toRGBIpp" name="Name" />
-      <parameter value="FilterYUV422toRGBIpp" name="Type" />
-      <parameter name="Successor" >
-       <parameter name="Filter" >
-        <parameter value="FilterRGBtoGray" name="Name" />
-        <parameter value="FilterRGBtoGray" name="Type" />
-        <parameter name="Successor" >
-         <parameter name="Filter" >
-          <parameter value="FilterGraytoCanny" name="Name" />
-          <parameter value="FilterGraytoCanny" name="Type" />
-         </parameter>
-	</parameter>
-       </parameter>
-       <parameter name="Filter" >
-        <parameter value="FilterRGBtoIndex" name="Name" />
-        <parameter value="FilterRGBtoIndex" name="Type" />
-        <parameter name="Successor" >
-         <parameter name="Filter" >
-          <parameter value="FilterIndextoIndex" name="Name" />
-          <parameter value="FilterIndextoIndex" name="Type" />
+   <parameter name="Filters">
+    <parameter name="Filter">
+     <parameter value="Device1394" name="Name" />
+     <parameter value="Device1394" name="Type" />
+     <parameter name="Successor" >
+      <parameter name="Filter" >
+       <parameter value="FilterYUV422Save" name="Name" />
+       <parameter value="FilterYUV422Save" name="Type" />
+      </parameter>
+      <parameter name="Filter" >
+       <parameter value="FilterYUV422toRGBIpp" name="Name" />
+       <parameter value="FilterYUV422toRGBIpp" name="Type" />
+       <parameter name="Successor" >
+        <parameter name="Filter" >
+         <parameter value="FilterRGBtoGray" name="Name" />
+         <parameter value="FilterRGBtoGray" name="Type" />
+         <parameter name="Successor" >
+          <parameter name="Filter" >
+           <parameter value="FilterGraytoCanny" name="Name" />
+           <parameter value="FilterGraytoCanny" name="Type" />
+          </parameter>
+	 </parameter>
+        </parameter>
+        <parameter name="Filter" >
+         <parameter value="FilterRGBtoIndex" name="Name" />
+         <parameter value="FilterRGBtoIndex" name="Type" />
+         <parameter name="Successor" >
+          <parameter name="Filter" >
+           <parameter value="FilterIndextoIndex" name="Name" />
+           <parameter value="FilterIndextoIndex" name="Type" />
+          </parameter>
          </parameter>
 	</parameter>
        </parameter>

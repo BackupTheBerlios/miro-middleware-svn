@@ -8,6 +8,7 @@ Makefile
 BufferManager.lo
 BufferManager1394.lo
 BufferManagerBTTV.lo
+BufferManagerMeteor.lo
 Parameters.lo
 VideoAVDevice.lo
 VideoBrokerImpl.lo
@@ -15,6 +16,7 @@ VideoConsumer.lo
 VideoDevice.lo
 VideoDevice1394.lo
 VideoDeviceBTTV.lo
+VideoDeviceMeteor.lo
 VideoDeviceDummy.lo
 VideoFilter.lo
 VideoFilterBasic.lo
