@@ -10,7 +10,6 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "miro/Client.h"
-#include "miro/Debug.h"
 
 #include <ace/Arg_Shifter.h>
 
@@ -53,7 +52,7 @@ namespace Miro
     noNaming_(false),
     namingContextName(params_.name)
   {
-    MIRO_LOG_CTOR("Miro::Client\n");
+    // MIRO_LOG_CTOR("Miro::Client\n");
 
     // resolve the used naming context
     ACE_Arg_Shifter arg_shifter (argc, argv);
@@ -109,12 +108,12 @@ namespace Miro
     namingContext(_client.namingContext),
     namingContextName(_client.namingContextName)
   {
-    MIRO_LOG_CTOR("Miro::Client copy ctor\n");
+    // MIRO_LOG_CTOR("Miro::Client copy ctor\n");
   }
 
   Client::~Client()
   {
-    MIRO_LOG_DTOR("Miro::Client\n");
+    // MIRO_LOG_DTOR("Miro::Client\n");
   }
   
   // Return the corba orb reference.
