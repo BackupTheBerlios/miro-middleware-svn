@@ -98,11 +98,11 @@ video_includedir       = $(includedir)/video
 # 	$(LN_S) $(PWD)/$< $(top_builddir)/lib/
 # 	$(LN_S) $(PWD)/.libs/$(<:.la=).* $(top_builddir)/lib/.libs/
 
-INSTALLLTLIBRARIES=for i in $(lib_LTLIBRARIES); do if test $$i -nt $(PWD)/$(top_builddir)/lib/$$i; then /bin/sh $(top_builddir)/libtool --mode=install /usr/bin/install $$i $(PWD)/$(top_builddir)/lib/$$i; fi; done
+INSTALLLTLIBRARIES=for i in $(lib_LTLIBRARIES); do if test $$i -nt $(PWD)/$(top_builddir)/lib/$$i || ! test -e $(PWD)/$(top_builddir)/lib/$$i; then /bin/sh $(top_builddir)/libtool --mode=install /usr/bin/install $$i $(PWD)/$(top_builddir)/lib/$$i; fi; done
 
-INSTALLLIBRARIES=for i in $(lib_LIBRARIES); do if test $$i -nt $(PWD)/$(top_builddir)/lib/$$i; then /bin/sh $(top_builddir)/libtool --mode=install /usr/bin/install $$i $(PWD)/$(top_builddir)/lib/$$i; fi; done
+INSTALLLIBRARIES=for i in $(lib_LIBRARIES); do if test $$i -nt $(PWD)/$(top_builddir)/lib/$$i || ! test -e $(PWD)/$(top_builddir)/lib/$$i; then /bin/sh $(top_builddir)/libtool --mode=install /usr/bin/install $$i $(PWD)/$(top_builddir)/lib/$$i; fi; done
 
-INSTALLPROGRAMS=for i in $(bin_PROGRAMS); do if test $$i -nt $(PWD)/$(top_builddir)/bin/$$i; then /bin/sh $(top_builddir)/libtool --mode=install /usr/bin/install $$i $(PWD)/$(top_builddir)/bin/$$i; fi; done
+INSTALLPROGRAMS=for i in $(bin_PROGRAMS); do if test $$i -nt $(PWD)/$(top_builddir)/bin/$$i || ! test -e $(PWD)/$(top_builddir)/bin/$$i; then /bin/sh $(top_builddir)/libtool --mode=install /usr/bin/install $$i $(PWD)/$(top_builddir)/bin/$$i; fi; done
 
 
 CLEANLTLIBRARIES=for i in $(lib_LTLIBRARIES); do if test -f $(top_builddir)/lib/$$i; then rm -f $(top_builddir)/lib/`basename $$i .la`.*; fi; done
