@@ -84,7 +84,7 @@ namespace Miro
      */
     virtual CORBA::Boolean hasAutoFocus() throw();
     //! CameraControl interface method implementation.
-    virtual void setAutoFocus(unsigned char value) throw(Miro::EDevIO, Miro::ETimeOut);
+    virtual void setAutoFocus(CORBA::Boolean value) throw(Miro::EDevIO, Miro::ETimeOut);
     //! CameraControl interface method implementation.
     /**
      * @return The target focus as set by setTargetFocus

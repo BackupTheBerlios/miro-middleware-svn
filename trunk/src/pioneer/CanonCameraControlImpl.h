@@ -59,7 +59,7 @@ namespace Canon
     //! CameraControl interface method implementation.
     virtual Miro::FocusRangeIDL getFocusRange() throw(Miro::EDevIO, Miro::ETimeOut);
     //! CameraControl interface method implementation.
-    virtual void setAutoFocus(unsigned char value) throw(Miro::EDevIO, Miro::ETimeOut);
+    virtual void setAutoFocus(CORBA::Boolean value) throw(Miro::EDevIO, Miro::ETimeOut);
 
     //! CameraControl interface method implementation.
     virtual void setShutter(Miro::TimeIDL & value) throw(Miro::EDevIO, Miro::EOutOfBounds,Miro::ETimeOut);
@@ -67,7 +67,7 @@ namespace Canon
     virtual Miro::TimeIDL getShutter() throw(Miro::EDevIO, Miro::ETimeOut);
 
     //! CameraControl interface method implementation.
-    virtual void setAELock(unsigned char value) throw(Miro::EDevIO, Miro::ETimeOut);
+    virtual void setAELock(CORBA::Boolean value) throw(Miro::EDevIO, Miro::ETimeOut);
 
     /*    virtual void setAEoff()
       throw(Miro::EDevIO, Miro::ETimeOut);

@@ -90,7 +90,7 @@ namespace Miro
     return focusParameters_.autoFocus;
   }
 
-  void CameraControlImpl::setAutoFocus(unsigned char value) throw(Miro::EDevIO, Miro::ETimeOut) {
+  void CameraControlImpl::setAutoFocus(CORBA::Boolean value) throw(Miro::EDevIO, Miro::ETimeOut) {
     if (!focusParameters_.autoFocus) {
       throw Miro::EDevIO("Autofocus not supported");
     }

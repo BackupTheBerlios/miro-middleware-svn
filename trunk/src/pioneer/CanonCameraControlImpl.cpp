@@ -239,7 +239,7 @@ namespace Canon
   }
 
 
-  void CanonCameraControlImpl::setAutoFocus(unsigned char value) throw(Miro::EDevIO, Miro::ETimeOut) {
+  void CanonCameraControlImpl::setAutoFocus(CORBA::Boolean value) throw(Miro::EDevIO, Miro::ETimeOut) {
     if (!focusParameters_.autoFocus) {
       throw Miro::EDevIO("Autofocus not supported");
     }
@@ -484,7 +484,7 @@ namespace Canon
   }
 
   void
-  CanonCameraControlImpl::setAELock(unsigned char value) throw(Miro::EDevIO, Miro::ETimeOut)
+  CanonCameraControlImpl::setAELock(CORBA::Boolean value) throw(Miro::EDevIO, Miro::ETimeOut)
   {
     bool done=false;
     char tmp[3];
