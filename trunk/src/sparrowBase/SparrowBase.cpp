@@ -52,7 +52,7 @@ main(int argc, char *argv[])
   // Parameters to be passed to the services
   Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
   Sparrow::Parameters * pSparrowParameters = Sparrow::Parameters::instance();
-  Pioneer::Parameters * pPioneerParameters = Pioneer::Parameters::instance();
+  Pioneer::Parameters * pPioneerParameters = NULL;
   Miro::NotifyMulticast::Parameters * notifyMulticastParameters = Miro::NotifyMulticast::Parameters::instance();
 
   try {
@@ -62,8 +62,11 @@ main(int argc, char *argv[])
     config->getParameters("Robot", *robotParameters);
     config->setSection("Sparrow99");
     config->getParameters("SparrowBoard", *pSparrowParameters);
-    config->setSection("ActiveMedia");
-    config->getParameters("PioneerBoard", *pPioneerParameters);
+    if (pSparrowParameters->goalie) {
+      pPioneerParameters = Pioneer::Parameters::instance();
+      config->setSection("ActiveMedia");
+      config->getParameters("PioneerBoard", *pPioneerParameters);
+    }
     config->setSection("Notification");
     config->getParameters("NotifyMulticast", *notifyMulticastParameters);
     delete config;
@@ -71,7 +74,8 @@ main(int argc, char *argv[])
 #ifdef DEBUG
     cout << "  robot paramters:" << endl << robotParameters << endl;
     cout << "  sparrow paramters:" << endl << *pSparrowParameters << endl;
-    cout << "  pioneer paramters:" << endl << *pPioneerParameters << endl;
+    if (pPioneerParameters)
+      cout << "  pioneer paramters:" << endl << *pPioneerParameters << endl;
     cout << "  NotifyMulticast parameters: " << endl << *notifyMulticastParameters << endl;
 #endif
 

@@ -223,7 +223,7 @@ int main(int argc, char * argv[])
 	  service.connection.setSpeed(trans, trans);
 	}
 	else {
-	  service.connection.setPower(-trans, -trans);
+	  service.connection.setSpeed(-trans, -trans);
 	  distance = -distance;
 	}
 

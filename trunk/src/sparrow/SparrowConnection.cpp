@@ -122,8 +122,11 @@ namespace Sparrow
 
     getPosition(params_->odometryPulse.msec(), 1);
     infraredGet(params_->infraredPulse.msec(), 1);
-    setPower(0, 0);
-
+    if (!params_->goalie) {
+      setPower(0, 0);
+    }
+    else 
+      setSpeed(0, 0);
     reactor->cancel_timer(buttonsPollTimerId);
     delete eventHandler;
   }
