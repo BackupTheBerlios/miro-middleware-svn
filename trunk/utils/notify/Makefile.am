@@ -6,10 +6,8 @@
 ## Department of Neural Information Processing, University of Ulm, Germany
 ##
 ## $Id$
-## $Date$
-## 
 ##
-## Miro/utils/notify/Makefile.bin
+## Miro/utils/notify/Makefile
 ##
 ##############################################################################
 
