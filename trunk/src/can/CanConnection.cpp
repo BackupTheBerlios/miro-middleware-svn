@@ -87,9 +87,6 @@ namespace Can
   void 
   Connection::write(const Message& message)
   {
-    // is this sleep necessary ???
-    // well, yes
-
     ACE_Time_Value av(ACE_OS::gettimeofday() + ACE_Time_Value(1));
 
     if (writeMutex.acquire(av) == -1)
@@ -99,22 +96,15 @@ namespace Can
     ACE_Time_Value time = ACE_OS::gettimeofday();
     ACE_Time_Value delta = time - lastWrite;
     if (delta < canTimeOut) {
+      // is this sleep necessary ???
+      // well, yes
+
       ACE_OS::sleep(canTimeOut - delta); // this is at least 10usec thanks to linux
       time = ACE_OS::gettimeofday();
     }
 
-    // In case base is hosed. SIGALRM will be thrown. If we catch it,
-    // MCP did not respond in time.  If not, cancel alarm 
-    // Since the reactor isn't running yet, we have to do this native
-//    ACE_OS::signal(SIGALRM, &deadHandler); 
-//    ACE_OS::alarm(INITIAL_WAIT_TIME);
-
     // will definitely choke if base is off
     int rc = ioBuffer.send_n(message.canMessage(), sizeof(canmsg));
-
-    // if we made it back, cancel alarm 
-//    ACE_OS::alarm(0);
-//    ACE_OS::signal(SIGALRM, SIG_DFL);
 
     lastWrite = time;
     ACE_OS::sleep(canTimeOut);

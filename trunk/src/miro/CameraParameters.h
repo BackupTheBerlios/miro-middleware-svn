@@ -2,17 +2,9 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999,2000
+// (c) 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
@@ -21,6 +13,8 @@
 
 #include "Parameters.h"
 #include "Singleton.h"
+
+#include <ace/OS.h>
 
 namespace Miro
 {
@@ -42,6 +36,8 @@ namespace Miro
 
     double height;
     double alpha;
+
+    ACE_Time_Value latency;
 
     CameraParameters();
     virtual void operator <<= (const QDomNode& node);

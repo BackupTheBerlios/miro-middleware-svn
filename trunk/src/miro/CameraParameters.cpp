@@ -2,30 +2,19 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999,2000
+// (c) 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "CameraParameters.h"
 #include "Angle.h"
+#include "TimeHelper.h"
 
 #include <qdom.h>
 #include <iostream>
-
-using std::ostream;
-using std::string;
 
 namespace Miro
 {
@@ -42,7 +31,8 @@ namespace Miro
     f(0.),
     kappa(0.),
     height(0.),
-    alpha(0.)
+    alpha(0.),
+    latency(1, 200000)
   {}
 
   void
@@ -128,13 +118,22 @@ namespace Miro
 	    alpha = deg2Rad(t.data().toDouble());
 	  }
 	}
+	else if (n1.nodeName() == "latency") {
+	  QDomNode n2 = n1.firstChild();
+	  QDomText t = n2.toText(); // try to convert the node to a text
+	  if(!t.isNull() ) { // the node was really an element.
+	    double d = t.data().toDouble();
+	    latency.sec((int)floor(d));
+	    latency.usec((int)floor((d - floor(d)) * 1000000.));
+	  }
+	}
 	n1 = n1.nextSibling();
       }
     }
   }
 
-  ostream&
-  operator << (ostream& ostr, const CameraParameters& desc) 
+  std::ostream&
+  operator << (std::ostream& ostr, const CameraParameters& desc) 
   {
     ostr << "ncx = " << desc.ncx << endl
 	 << "nfx = " << desc.nfx << endl
@@ -146,7 +145,8 @@ namespace Miro
 	 << "f = " << desc.f << endl
 	 << "kappa = " << desc.kappa << endl
 	 << "height = " << desc.height << endl
-	 << "alpha = " << rad2Deg(desc.alpha) << endl;
+	 << "alpha = " << rad2Deg(desc.alpha) << endl
+	 << "latency = " << desc.latency << endl;
     
     return ostr;
   }
