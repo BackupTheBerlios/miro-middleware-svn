@@ -52,18 +52,18 @@ namespace Miro
 
     if (left_ < params_.minLTranslation) {
       left_ = params_.minLTranslation;
-      right_ = params_.minLTranslation + _velocity.rotation * params_.wheelBase * .5;
+      right_ = (CORBA::Long) (params_.minLTranslation + _velocity.rotation * params_.wheelBase * .5);
     }
     else if (left_ > params_.maxLTranslation) {
       left_ = params_.maxLTranslation;
-      right_ = params_.maxLTranslation + _velocity.rotation * params_.wheelBase * .5;
+      right_ = (CORBA::Long) (params_.maxLTranslation + _velocity.rotation * params_.wheelBase * .5);
     }
     if (right_ < params_.minRTranslation) {
-      left_ = params_.minRTranslation - _velocity.rotation * params_.wheelBase * .5;
+      left_ = (CORBA::Long) (params_.minRTranslation - _velocity.rotation * params_.wheelBase * .5);
       right_ = params_.minRTranslation;
     }
     else if (right_ > params_.maxRTranslation) {
-      left_ = params_.maxRTranslation - _velocity.rotation * params_.wheelBase * .5;
+      left_ = (CORBA::Long) (params_.maxRTranslation - _velocity.rotation * params_.wheelBase * .5);
       right_ = params_.maxRTranslation;
     }
 
