@@ -2,17 +2,9 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999,2000
+// (c) 1999, 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
@@ -22,6 +14,7 @@
 #include "miro/TimeC.h"
 
 #include <iostream>
+#include <string>
 
 std::ostream& operator << (std::ostream& ostr, const ACE_Time_Value& rhs);
 std::istream& operator >> (std::istream& istr, ACE_Time_Value& rhs);
@@ -38,6 +31,8 @@ namespace Miro
     out.sec = in.sec();
     out.usec = in.usec();
   }
+
+  std::string timeString(ACE_Time_Value const& _stamp = ACE_OS::gettimeofday());
 };
 
 #endif

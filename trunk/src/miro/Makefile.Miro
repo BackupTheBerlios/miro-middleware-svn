@@ -125,6 +125,7 @@ FILES +=	\
 	Server \
 	IO \
 	TimeHelper \
+	VideoHelper \
 	ScanDescriptionHelper \
 	StructuredPushSupplier \
 	StructuredPushConsumer \
