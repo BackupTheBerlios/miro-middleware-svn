@@ -51,8 +51,6 @@ namespace Miro
     // get mathematical directed angle between two vectors (0..2*pi)
     double getAngleBetweenVectors(Vector2d, Vector2d);
     // get distance between point and line
-    double getBetterDistanceBetweenPointAndLine(Vector2d, Vector2d, Vector2d);	
-    // get distance between point and line
     double getDistanceBetweenPointAndLine(Vector2d, Vector2d, Vector2d);	
     
     // 		protected:

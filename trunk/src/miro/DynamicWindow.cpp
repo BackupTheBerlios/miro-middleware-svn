@@ -200,7 +200,7 @@ namespace Miro
 	posTrans = (trans + 100.) / 2.;
 	
 	// set the corresponding value in the velocitySpace
-	velocitySpace_[left+100][right+100] = (int)(2.0 *  rotDist + 0.5 * posTrans);
+	velocitySpace_[left+100][right+100] = (int)(1.0 *  rotDist + 1.5 * posTrans);
 	
       }
     }	
@@ -259,10 +259,12 @@ namespace Miro
 	
 	// lines definitely don't intersect beyond this point, so calculate line distance
 	
-	distance = min(getBetterDistanceBetweenPointAndLine(*b1, *a1, *a2),
-		       getBetterDistanceBetweenPointAndLine(*b2, *a1, *a2));
-	distance = min(distance, getBetterDistanceBetweenPointAndLine(*a1, *b1, *b2));
-	distance = min(distance, getBetterDistanceBetweenPointAndLine(*a2, *b1, *b2));
+	distance = min(getDistanceBetweenPointAndLine(*b1, *a1, *a2),
+		       getDistanceBetweenPointAndLine(*b2, *a1, *a2));
+	distance = min(distance, getDistanceBetweenPointAndLine(*a1, *b1, *b2));
+	distance = min(distance, getDistanceBetweenPointAndLine(*a2, *b1, *b2));
+	
+	
 	
 	// minDistance = distance, in the first run and everytime when distance < minDistance
 	if(((a1 == _polygon1.begin()) && (b1 == _polygon2.begin())) || (distance < minDistance)) {
@@ -319,7 +321,7 @@ namespace Miro
     
   }
   
-  double getBetterDistanceBetweenPointAndLine(Vector2d &_l1, Vector2d &_l2, const Vector2d &_p1) {
+  double DynamicWindow::getDistanceBetweenPointAndLine(Vector2d _p1, Vector2d _l1, Vector2d _l2) {
 
     Vector2d l1_l2, l1_p1, l2_p1;
 
@@ -327,71 +329,18 @@ namespace Miro
     l1_p1 = _p1 - _l1;
 
     if(l1_l2.real() * l1_p1.real() + l1_l2.imag() * l1_p1.imag() < 0) {
-      return sqrt(l1_p1.real() * l1_p1.real() + l1_p1.imag() * l1_p1.imag());
+      return fabs(sqrt(l1_p1.real() * l1_p1.real() + l1_p1.imag() * l1_p1.imag()));
     }
 
     l2_p1 = _p1 - _l2;
 
     if(-l1_l2.real() * l2_p1.real() + -l1_l2.imag() * l2_p1.imag() < 0) {
-      return sqrt(l2_p1.real() * l2_p1.real() + l2_p1.imag() * l2_p1.imag());
+      return fabs(sqrt(l2_p1.real() * l2_p1.real() + l2_p1.imag() * l2_p1.imag()));
     }
 
-    return (l1_l2.real() * l1_p1.imag() - l1_l2.imag() * l1_p1.real())
-      / sqrt(l1_l2.real() * l1_l2.real() + l1_l2.imag() * l1_l2.imag());
+    return fabs((l1_l2.real() * l1_p1.imag() - l1_l2.imag() * l1_p1.real())
+      / sqrt(l1_l2.real() * l1_l2.real() + l1_l2.imag() * l1_l2.imag()));
 
-  }
-
-  double DynamicWindow::getDistanceBetweenPointAndLine(Vector2d _p1, Vector2d _l1, Vector2d _l2) {		
-    
-    Vector2d a, b, c, d, e, f, g;
-    double beta, b_y, c_y;
-    bool found;
-    
-    // check for possible intersections and calculate parameter beta
-    a = _l2 - _l1; b = Vector2d(-a.imag(), a.real()); c = _l1 - _p1;
-    found = false;  // no intersection found yet
-    if(a.real() != 0) {
-      if(a.imag() != 0) {
-	b_y = b.real() - ((a.real() / a.imag()) * b.imag());
-	c_y = c.real() - ((a.real() / a.imag()) * c.imag());
-      }
-      else {
-	b_y = b.imag();
-	c_y = c.imag();
-      }
-      if(b_y != 0) {
-	beta = -1. * c_y / b_y;
-	found = true;	// found possible solution
-      }
-    }
-    else {	// a.x() == 0
-      if(a.imag() != 0) {
-	if(b.real() != 0) {
-	  beta = -1. * c.real() / b.real();
-	  found = true; // found possible solution
-	}
-      }
-    }
-    
-    // calculate point of intersection d and...
-    // florian: found bool -> found == true<==> found
-    if(found==true) {  // ...check, if intersection is in the line boundaries...
-      d = _p1 - (b * beta);
-      if((d.real() >= min(_l1.real(), _l2.real())) && (d.real() <= max(_l1.real(), _l2.real())) &&
-	 (d.imag() >= min(_l1.imag(), _l2.imag())) && (d.imag() <= max(_l1.imag(), _l2.imag()))) {
-	e = d - _p1;
-	return sqrt((e.real() * e.real()) + (e.imag() * e.imag()));
-      }
-      else {
-	f = _l1 - _p1;
-	g = _l2 - _p1;
-	return min(sqrt((f.real() * f.real()) + (f.imag() * f.imag())),
-		   sqrt((g.real() * g.real()) + (g.imag() * g.imag())));
-      }
-    }
-    else {
-      return 0.;
-    }
   }
   
 };
