@@ -27,6 +27,9 @@ namespace Miro
     viewerTask(false),
     velocitySpace()
   {
+    double p = (double)pace.sec() + (double)pace.usec() / 1000000.;
+    velocitySpace.init(maxVelocity, spaceResolution,
+		       maxAccel, maxDecel, 1/p);
   }
 
   void

@@ -102,6 +102,7 @@ namespace Miro
 	      Arbiter* a;
 	      if ((a = ar->getArbiter(name)) != 0) {
 		ArbiterParameters * params = a->getParametersInstance();
+		*params <<= e;
 		arbiter(a, params);
 		
 	      } 
@@ -415,6 +416,10 @@ namespace Miro
 	   << *(j->second.second)
 	   << std::endl;
     }
+
+    ostr << "Arbiter: " << arbiter_->getName() << std::endl
+	 << "Parameters: " << std::endl
+	 << *arbiterParameters_ << std::endl;
   }
 
   void 
