@@ -65,44 +65,34 @@ sections.
 
 \begin{description}
 \item[Odometry:]
-  Exceptions first:
-  There does not exist a dedicated odometry service. This interface is
-  the base class of the motion service (see next item). It encapsulates
-  the odometry (dead reckoning) sensor, where as the motion interface
-  contains methods for controlling actuatory side of the motors.
+  The motion service registers the {\tt Miro::Odometry} interface as
+  {\tt Odometry}. It encapsulates
+  the odometry (dead reckoning) sensor.
 \item[Motion:]
   The motion service registers the {\tt Miro::Motion} interface as
-  {\tt Motion}. It inherits the Odometry interface and enriches it
-  witch general movement commands.
-\item[RangeSensor:]
-  The range sensor interface is the general abstraction of all range
-  sensor devices, such as sonar, laser range finders etc. It offers a
-  method for querying the sensors physical configuration as well as
-  the latest sensor reading. 
-  %% See the {\tt qtRangeSensor} program in the demo
-  %% directory for an example on how to use this information. 
-  The range sensor interface becomes
+  {\tt Motion}.
+\item[RangeSensor:] The range sensor interface is the general
+  abstraction of all range sensor devices, such as sonar, laser range
+  finders etc. It offers a method for querying the sensors physical
+  configuration as well as the latest sensor reading.  See the {\tt
+    QtRangeSensor} program in the utils directory for an example on
+  how to use this information.  The range sensor interface becomes
   registered at the naming service under the name of the actual
   sensory device.
   \begin{description}
-  \item[Sonar:] The sonar service registers the {\tt Miro::Sonar}
-    interface as {\tt Sonar}.  It provides an interface to the very
-    common ultrasonic sensors for robots. The interface is derived from
-    the {\tt Miro::RangeSensor} interface.
-  \item[Infrared:] It registers the {\tt Miro::Infrared} interface as
-    {\tt Infrared}. As a range sensor, it is derived
-    from the {\tt Miro::RangeSensor}, too.  Since this service is
-    wildly untested at the moment, there does not exist a generalized
-    message data format at the moment.
+  \item[Sonar:] The sonar service registers as {\tt Sonar}.  It
+    provides an interface to the very common ultrasonic sensors for
+    robots.
+  \item[Infrared:] It registers as
+    {\tt Infrared}.
   \item[Tactile:] Some robots have bumpers as some sort of ''it's too
     late'' sensors.  Still it is better to stop when you crashed than
-    just moving on. The {\tt Miro::Tactile} interface is registered
-    as {\tt Tactile}.  Since it can be interpreted as a (very
-    limited) range sensor, it is also derived from the {\tt Miro::RangeSensor}.
-  \item[Laser:] The laser scanner service registers the
-    {\tt Miro::Laser} as {\tt Laser}. It provides very accurate
-    180° distance measurements, with up to 48Hz. As a range sensor, it
-    is derived from the {\tt Miro::RangeSensor}, too.
+    just moving on. It is registered as {\tt Tactile}.  Since it can
+    be interpreted as a (very limited) range sensor, it is also a {\tt
+      Miro::RangeSensor}.
+  \item[Laser:] The laser scanner service registers as {\tt Laser}. It
+    provides very accurate 180° distance measurements, with up to
+    48Hz.
   \end{description}
 \item[Stall:]
   Similar to the bumpers, the stall detection monitors the robots
@@ -116,7 +106,7 @@ sections.
   by {\em video for linux} (bttv8).  Since the bandwidth needed for
   uncompressed image data transportation exceeds the capabilities of
   most todays network devices and even memory copying can introduce
-  excessive overhead, the video service also enables access
+  excessive overhead, the video service enables access
   to the grabbed images via shared memory keys.
 \item[PanTilt:] Cameras often are mounted on top of a pan-tilt unit,
   allowing the robot to look sideway while moving on in another
@@ -158,9 +148,8 @@ In the following the type names of the events and the data contained
 in the event are listed for the individual services:
 
 \begin{description}
-\item[Odometry:]
-  The odometry servant and all derived services generates periodical
-  {\tt Miro::MotionStatusIDL} events (normally at 10Hz), that
+\item[Odometry:] The odometry servant and all derived services
+  generates periodical {\tt Miro::MotionStatusIDL} events), that
   propagate the robots current position and velocities. The event type
   name is {\tt Odometry}.
 \item[RangeSensor:] The range sensor servant and all derived services
@@ -187,8 +176,9 @@ in the event are listed for the individual services:
     are organized that way, since neighbouring sensor mustn't be
     fired simultaneously to minimize crosstalk.
   \end{description}
-  The event type name is that of the actual sensor: {\tt Sonar},
-  {\tt Laser}, {\tt Tactile}, etc.
+  The event type name is that of the actual sensor: {\tt Sonar}, {\tt
+    Laser}, {\tt Tactile}, etc. as also specified within {\tt
+    Miro::SensorDescriptionIDL}.
   
 \item[Sonar:] The sonar service generates range sensor events with the
   type name {\tt Sonar}. Note that the sonar sensors are fired
@@ -208,10 +198,9 @@ in the event are listed for the individual services:
   robots descriptions.  Due to the hopefully rare occasions at which
   those events occur it might be better to listen to these events,
   instead of polling the stall interface.
-\item[Buttons:]
-  They also provide the event triggered
-  communications model that uses the event type {\tt Button}. For
-  the event data see the individual robots descriptions.
+\item[Buttons:] They also provide the event triggered communications
+  model that uses the event type {\tt Button}. The events payload is
+  of type {\tt ButtonStatusIDL}.
 \end{description}
 
 
@@ -221,7 +210,7 @@ The \bXXI robot has a large number of available sensors and actuators. The
 relevant binaries for its specialized services are:
 
 \begin{description}
-\item[b21Base:] This is a collection of the robots main services. This
+\item[B21Base:] This is a collection of the robots main services. This
   binary incorporates the motion service as well as the sonar, tactile
   and infrared services. Furthermore it gives access to the four
   colored buttons, that are mounted on top of the robot. The
@@ -234,45 +223,41 @@ relevant binaries for its specialized services are:
     ancestors name {\tt Motion}.
   \item {\tt Miro::Sonar} \\
     The derived {\tt Miro::RangeSensor} interface registers itself
-    as {\tt Sonar}. The specializations of this interface are {\em
-      deprecated}.
+    as {\tt Sonar}.
   \item {\tt Miro::Infrared} \\
     The derived {\tt Miro::RangeSensor} interface registers itself
-    as {\tt Infrared}. The specializations of this interface are {\em
-      deprecated}.
+    as {\tt Infrared}.
   \item {\tt Miro::Tactile} \\
     The derived {\tt Miro::RangeSensor} interface registers itself
-    as {\tt Tactile}. The specializations of this interface are {\em
-      deprecated}.
+    as {\tt Tactile}.
   \item {\tt Miro::B21Buttons} \\
-    The B21 has four buttons, that can be used as a simple
-    user interface. The {\tt Miro::B21Buttons} interface is
-    supported by this service. It sends
-    {\tt Miro::B21ButtonStatusIDL} events, if a button is pressed
-    or released.
+    The B21 has four buttons, that can be used as a simple user
+    interface. The {\tt Miro::B21Buttons} interface is supported by
+    this service. It sends {\tt Miro::ButtonStatusIDL} events, if a
+    button is pressed or released.
   \end{itemize}
 
-\item[sickLaserService:]
+\item[DickLaserService:]
   This is the service to access the SICK laser scanner. It supports
-  the {\tt Miro::Laser} interface.
-\item[dtlkSpeech:]
+  the {\tt Miro::RangeSensor} interface.
+\item[DtlkSpeech:]
   This service lets you control the DoubleTalk Speech cards. The
   interface is named {\tt Miro::Speech}
-\item[videoService:]
+\item[VideoService:]
   It gives you access to the two frame grabbers of the robot. It
   supports the {\tt Miro::Video} interface.
-\item[dpPantilt:]
+\item[DpPantilt:]
   It supports the {\tt Miro::DirectedPerceptionPanTilt} interface,
   which is derived from {\tt Miro::PanTilt}. It therefore registers
-  itself as {\tt Pantilit}
+  itself as {\tt PanTilt}
 \end{description}
 
 Note that the B21 has two internal computers, to which the different
 sensors and actuators are attached. You have to start the relevant
 binaries at the correct computer. The sensory/actuatory distribution
-in our laboratory is as follows: Start b21Base, laserService and
-b21Buttons on the left computer, imageService and dpPantilt and
-dtlkSpeeck on the right.
+in our laboratory is as follows: Start B21Base and LaserService
+on the left computer, VideoService and DpPantilt and
+DtlkSpeeck on the right.
 
 
 \section{\sparrow}
@@ -282,9 +267,9 @@ actuators, but for efficiency and internal design reasons, they are
 grouped together in less binaries:
 
 \begin{description}
-\item[sparrowBase:]
+\item[SparrowBase:]
   Within this file the following services are grouped together:
-  motion, stall, kicker, buttons, sonar, infrared and pantilt. The
+  Motion, Stall, Kicker, Buttons, Sonar, Infrared and Pantilt. The
   corresponding interfaces are: 
   \begin{itemize}
   \item {\tt Miro::SparrowMotion} \\
@@ -308,14 +293,13 @@ grouped together in less binaries:
     The {\tt Miro::RangeSensor} interface registers itself
     as {\tt Infrared}.
   \item {\tt Miro::PanTilt} \\
-    The standard {\tt Miro::Pan} interface is registered as
+    The {\tt Miro::SparrowPanTilt} interface is registered as
     {\tt PanTilt}.
   \end{itemize}
 
   Note that the
-  stall service sends {\tt Miro::SparrowStallIDL} events and
-  the buttons service {\tt Miro::SparrowButtonStatusIDL} events.
-\item[videoService:]
+  stall service sends {\tt Miro::SparrowStallIDL} events.
+\item[VideoService:]
   It gives you access to the frame grabber of the robot. It supports
   the {\tt Miro::Video} interface.
 \end{description}
@@ -329,8 +313,8 @@ Due to the limited variety of sensors and actuators on the Pioneer robots, there
 the most fundamental services for this robot.
 
 \begin{description}
-\item[pioneerBase:]
-  The following services are grouped together: motion, stall and sonar.
+\item[PioneerBase:]
+  The following services are grouped together: Motion, Stall and Sonar.
   The corresponding interfaces are: 
   \begin{itemize}
   \item {\tt Miro::PioneerMotion} \\
@@ -339,7 +323,8 @@ the most fundamental services for this robot.
     specialized movement commands of the Pioneer robot. It registers
     under it ancestors name {\tt Motion}.
   \item {\tt Miro::PioneerStall} \\
-    The {\tt Miro::PioneerStall} interface (derived from {\tt Miro::Stall}) is registered as {\tt Stall}.
+    The {\tt Miro::PioneerStall} interface (derived from {\tt
+      Miro::Stall}) is registered as {\tt Stall}.
   \item {\tt Miro::Sonar} \\
     The {\tt Miro::RangeSensor} interface registers itself
     as {\tt Sonar}.
@@ -437,7 +422,7 @@ solution could be using {\em irqtune} to give the serial irq a higher
 priority, or using {\em RT-Linux}.
 
 \textbf{Due to the adaptions of the divisor for the serial line, the
-  {\tt sickLaserService} has to be suid root. If you use a standard
+  {\tt SickLaserService} has to be suid root. If you use a standard
   crystal, and you do not use 500000~baud, this is not necessary.}
 
 
@@ -445,146 +430,6 @@ priority, or using {\em RT-Linux}.
 
 
 \section{Directed Perception Pantilt}
-
-
-%In the \miro framework, there are two different kinds of services:
-%\begin{description}
-%\item[Low-level Services] are services that belong to a hardware device
-%  (e.g.\ laser scanner, camera, etc.) and perform the hardware
-%  abstraction for this device. These services mostly have to be run on
-%  the specific machine to which the device is attached to.
-%\item[High-level Services] are services that are not linked to a
-%  hardware device but provide software services. It depends on the
-%  resources and transfer capacities where these services have to be
-%  run.
-%\end{description}
-
-%\newpage
-%\section{Low-level Services}
-
-%The following sections show the main commands of the current services
-%with a short description. For a more detailed description, see the
-%class reference in Chapter \ref{SEC_CLASS_REFERENCE}.
-
-%\subsection{BaseServer}
-
-%\begin{verbatim}
-%    // compound commands for movement
-
-%    void limp();
-%    void halt();
-
-%    // set the speed
-%    void setVelocity(in Velocity vel);
-%    VelocityData getVelocity();
-%    VelocityData getWaitVelocity();
-
-%    // position estimation
-
-%    // tell robot to see his current position as
-%    // the given coordinates and heading
-%    void initPosition( in Position pos );
-%    void updatePosition( in Position dPos);
-%    PositionData getPosition();
-%    PositionData getWaitPosition();
-
-%    // Rotation Commands
-
-%    void rotateLimp();
-%    void rotateHalt();
-%    void rotateLeft();
-%    void rotateRight();
-%    void rotateToPosition(in unsigned long position);
-%    void rotateRelative(in long relative);
-%    void rotateTorque(in long relative);
-%    void rotatePower(in long relative);
-
-%    void setRotateVelocity(in unsigned long velocity);
-%    void setRotateAcceleration(in unsigned long accel);
-%    void setRotateTorque(in unsigned long tork);
-
-%    // Translation Commands
-
-%    void translateLimp();
-%    void translateHalt();
-%    void translateForward();
-%    void translateBackward();
-%    void translateToPosition(in unsigned long position);
-%    void translateRelative(in long relative);
-%    void translateTorque(in long relative);
-%    void translatePower(in long relative);
-
-%    void setTranslateVelocity(in unsigned long velocity);
-%    void setTranslateAcceleration(in unsigned long accel);
-%    void setTranslateTorque(in unsigned long tork);
-
-%    // Queries
-
-%    double getWaitRotateCurrent();
-%    double getWaitTranslateCurrent();
-%    double getWaitBatteryVoltage();
-  
-%    // ensuring to be the only one commanding the base:
-
-%    void  requestWaitOdometryLock(in unsigned long priority);
-%    void  releaseOdometryLock();
-%\end{verbatim}
-
-
-
-%\subsection{LaserServer}
-
-%\begin{verbatim}
-%    LaserScan            getScan();
-%    LaserScan            getWaitScan();
-
-%    void                 setContinousMode();
-%    void                 setPollingMode();
-
-%    LaserScanDescription getScanDescription();
-%\end{verbatim}
-
-
-
-%\subsection{SonarServer}
-
-%\begin{verbatim}
-%    SonarData getData();
-%    SonarData getWaitData();
-
-%    SonarScanDescription  getDataDescription();
-%\end{verbatim}
-
-
-%\subsection{IRServer}
-
-%\begin{verbatim}
-%    SonarData getData();
-%    SonarData getWaitData();
-
-%    SonarScanDescription  getDataDescription();
-%\end{verbatim}
-
-
-%\subsection{TactileServer}
-
-%\subsection{ButtonServer}
-
-%The ButtonServer is not available yet.
-
-%\subsection{ImageServer}
-
-%The ButtonServer is not available yet.
-
-%\subsection{CameraServer}
-
-%The ButtonServer is not available yet.
-
-%\subsection{PTUServer}
-
-%The ButtonServer is not available yet.
-
-
 
 %\section{Higher-level Servers}
 
