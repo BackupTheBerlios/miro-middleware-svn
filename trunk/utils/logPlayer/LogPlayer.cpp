@@ -110,7 +110,7 @@ main(int argc, char *argv[])
       std::cout << "Initialize server daemon." << std::endl;
     
     ChannelManager channelManager(argc, argv, shared, unified);
-    channelManager.setDebugLoclaize(localizeDebug);
+    //    channelManager.setDebugLoclaize(localizeDebug);
     try {
       QApplication app(argc, argv);     // Create Qt application  
       FileSet fileSet(&channelManager);
