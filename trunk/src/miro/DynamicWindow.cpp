@@ -192,7 +192,7 @@ namespace Miro
 	posTrans = (trans + 100.) / 2.;
 	
 	// set the corresponding value in the velocitySpace
-	velocitySpace_[left+100][right+100] = (int)(0.0 * rotDist + 2.0 * posTrans);
+	velocitySpace_[left+100][right+100] = (int)(1.5 * rotDist + 1.0 * posTrans);
 	
       }
     }	

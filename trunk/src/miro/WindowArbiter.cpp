@@ -135,7 +135,7 @@ namespace Miro
 
     // Calculate new velocity using the content of the dynamicWindow    
     newVelocity = dynWindow_.calcNewVelocity();
-    newVelocity = std::complex<double>(std::max(std::min(20., newVelocity.real()),-20.), std::max(std::min(20.,newVelocity.imag()),-20.));
+    newVelocity = std::complex<double>(std::max(std::min(40., newVelocity.real()),-40.), std::max(std::min(40.,newVelocity.imag()),-40.));
     dynWindow_.setNewDynamicWindow(newVelocity);
     
     // print velocity for debugging
