@@ -22,7 +22,7 @@
 #include <sstream>
 #include <vector>
 
-#include <stdio.h>
+#include <cstdio>
 
 namespace 
 {
@@ -268,23 +268,19 @@ int main(int argc, char *argv[])
     }
   }
   catch (const Miro::ETimeOut& e) {
-    cerr << "Miro Timeout Exception: " << endl;
+    cerr << "Miro Timeout Exception: " << e << endl;
     rc = 1;
   }
   catch (const Miro::EDevIO & e) {
-    cerr << "Miro Device I/O exception: " << endl;
+    cerr << "Miro Device I/O exception: " << e << endl;
     rc = 1;
   }
   catch (const Miro::EOutOfBounds & e) {
-    cerr << "Miro out of bounds exception: " << endl;
+    cerr << "Miro out of bounds exception: " << e << endl;
     rc = 1;
   }
   catch (const CORBA::Exception & e) {
     cerr << "Uncaught CORBA exception: " << e << endl;
-    rc = 1;
-  }
-  catch (...) {
-    cerr << "Uncaught local exception. " << endl;
     rc = 1;
   }
   return rc;

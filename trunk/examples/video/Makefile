@@ -2,12 +2,10 @@
 ##
 ## This file is part of Miro (The Middleware For Robots)
 ##
-## (c) 1999, 2000, 2001
+## (c) 1999, 2000, 2001, 2002, 2003
 ## Department of Neural Information Processing, University of Ulm, Germany
 ##
 ## $Id$
-## $Date$
-## 
 ##
 ## Miro/examples/video/Makefile
 ##
@@ -26,6 +24,7 @@ LDLIBS += -lmiro -lTAO_CosNaming -lTAO
 ## there has to exist a source file with the same name (mybinary.cc)
 BIN 	= \
 	LogVideo \
+	VideoExample \
 	VideoLatency
 
 ## additional files
