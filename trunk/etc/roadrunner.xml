@@ -148,7 +148,7 @@
 	<parameter value="0.050000" name="ButtonsPollInterval" />
 	<parameter value="1.0776" name="TransFactor" />
 	<parameter value="1.000000" name="WatchdogTimeout" />
-	<parameter value="2750" name="Servo0MidPulse" />
+	<parameter value="2650" name="Servo0MidPulse" />
 	<parameter value="200" name="MaxAccel" />
 	<parameter value="2350" name="Diameter" />
 	<parameter value="30720" name="MaxPower" />
@@ -175,7 +175,7 @@
 
       <parameter name="Camera" >
 	<parameter value="0.060000" name="Latency" />
-	<parameter value="32.5" name="Alpha" />
+	<parameter value="34.0" name="Alpha" />
 	<parameter value="595" name="Height" />
 
 	<parameter value=" 6.4000000000e+02" name="Ncx" />
@@ -476,6 +476,13 @@
 	</parameter>
       </parameter>
 
+      <parameter name="YUV422toRGBIpp">
+        <parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="RGB" name="Name" />
+	</parameter>
+      </parameter>
+		    
       <parameter name="SobelVertical">
         <parameter value="VERTICAL" name="Orientation" />
       </parameter>
@@ -518,11 +525,11 @@
         <parameter value="true" name="OppositeDirection" />
       </parameter>
       <parameter name="BlueLeftPost">
-	<parameter value="128" name="Color" />
+	<parameter value="255" name="Color" />
         <parameter value="BLUELEFTGOALPOST" name="Type" />
       </parameter>
       <parameter name="BlueRightPost">
-	<parameter value="255" name="Color" />
+	<parameter value="128" name="Color" />
         <parameter value="BLUERIGHTGOALPOST" name="Type" />
       </parameter>
 
@@ -535,11 +542,11 @@
         <parameter value="true" name="OppositeDirection" />
       </parameter>
       <parameter name="YellowLeftPost">
-	<parameter value="128" name="Color" />
+	<parameter value="255" name="Color" />
         <parameter value="YELLOWLEFTGOALPOST" name="Type" />
       </parameter>
       <parameter name="YellowRightPost">
-	<parameter value="255" name="Color" />
+	<parameter value="128" name="Color" />
         <parameter value="YELLOWRIGHTGOALPOST" name="Type" />
       </parameter>
 
