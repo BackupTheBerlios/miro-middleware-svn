@@ -62,7 +62,6 @@ ConfigDocumentXML::contextMenu(QPopupMenu& _menu)
   QListViewItem * item = listViewItem()->firstChild();
   while (item != NULL) {
     childSections.push_back(item->text(0));
-    std::cout << childSections.back() << std::endl;
     item = item->nextSibling();
   }
 
