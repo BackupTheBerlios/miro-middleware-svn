@@ -27,6 +27,7 @@ namespace FaulMotor
 {
   // forward declarations
   class Parameters;
+  class Connection;
 
   //! Class integrating data from the faulhaber controller
   class Consumer : public Miro::DevConsumer
@@ -40,7 +41,8 @@ namespace FaulMotor
     //--------------------------------------------------------------------------
     // public methods
     //--------------------------------------------------------------------------
-    Consumer(Miro::OdometryImpl * _pOdometry = NULL);
+    Consumer(Connection * _pConnection,
+	     Miro::OdometryImpl * _pOdometry = NULL);
     virtual ~Consumer();
 
     //! inherited interface
@@ -58,6 +60,7 @@ namespace FaulMotor
     // protected data
     //--------------------------------------------------------------------------
     FaulMotor::Parameters * params_;
+    FaulMotor::Connection * pConnection_;
     Miro::OdometryImpl * pOdometry_;
     Miro::MotionStatusIDL status_;
 
@@ -71,6 +74,9 @@ namespace FaulMotor
     double ticksR_;
     double prevTicksL_;
     double prevTicksR_;
+
+    double deltaTicksL_;
+    double deltaTicksR_;
     int clockL_;
     int clockR_;
     

@@ -54,7 +54,7 @@ namespace FaulMotor
     void jmp2();
     void jmp3();
 
-    void deferredSetSpeed(ACE_Time_Value const& _now);
+    void deferredSetSpeed();
     
   protected:
     //! mutex protected write

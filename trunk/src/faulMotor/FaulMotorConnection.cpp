@@ -190,7 +190,6 @@ namespace FaulMotor
     // if we don't poll the odometry, we have to write sometimes...
     if (!params_->odometryPolling)
 	protectedDeferredSetSpeed();
-
   }
 
   void
@@ -297,14 +296,32 @@ namespace FaulMotor
    * TimerEventHandler. Everthing else will fail!
    */
   void
-  Connection::deferredSetSpeed(ACE_Time_Value const& _now)
+  Connection::deferredSetSpeed()
   {
+    if(!Sparrow::Parameters::instance()->sparrow2003){
+      leftWheel_->sendAccVelTicks(newAccL, newAccR, newSpeedL, newSpeedR);
+    } 
+    else {
+      leftWheel_->sendAccVelTicks(newAccL, newSpeedL);
+      rightWheel_->sendAccVelTicks(newAccR, newSpeedR);
+    }
+
+    prevAccL = newAccL;
+    prevAccR = newAccR;
+    prevSpeedL = newSpeedL;
+    prevSpeedR = newSpeedR;
+
+    return;
+
+    /*
+
     Miro::Guard guard(mutex_);
 
     nextSceduledQuery_ = _now + Parameters::instance()->odometryPace;
 
     writeThisRound_ = false;
     protectedDeferredSetSpeed();
+    */
   }
 
   void

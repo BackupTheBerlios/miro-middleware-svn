@@ -31,6 +31,7 @@ namespace FaulMotor
 
   protected:
     Connection& connection_;
+    bool firstTime_;
   };
 };
 

@@ -45,8 +45,10 @@ namespace FaulMotor
   //------------------------//
   //----- constructors -----//
   //------------------------//
-  Consumer::Consumer(Miro::OdometryImpl * _pOdometry):
+  Consumer::Consumer(Connection * _pConnection,
+		     Miro::OdometryImpl * _pOdometry):
     params_(Parameters::instance()),
+    pConnection_(_pConnection),
     pOdometry_(_pOdometry),
     init_(2),
     xPos_(0.),
@@ -98,15 +100,38 @@ namespace FaulMotor
       const FaulController::OdometryMessage * pFaulMsg =
 	static_cast<const FaulController::OdometryMessage *>(_message);
 
-      if (pFaulMsg->wheel() == FaulController::OdometryMessage::LEFT) {
+      switch (pFaulMsg->wheel()) {
+      case FaulController::OdometryMessage::LEFT:
+	prevTicksL_ = ticksL_;
 	ticksL_ = pFaulMsg->ticks();
+	deltaTicksL_ = ticksL_ - prevTicksL_;
 	clockL_ = pFaulMsg->clock();
+	prevTimeStampL_ = timeStampL_;
 	timeStampL_ = pFaulMsg->time();
-      }
-      else {
+	break;
+	
+      case FaulController::OdometryMessage::RIGHT:
+	prevTicksR_ = ticksR_;
 	ticksR_ = pFaulMsg->ticks();
+	deltaTicksR_ = ticksR_ - prevTicksR_;
 	clockR_ = pFaulMsg->clock();
+	prevTimeStampR_ = timeStampR_;
 	timeStampR_ = pFaulMsg->time();
+	break;
+	
+      case FaulController::OdometryMessage::DELTA_LEFT:
+	deltaTicksL_ = pFaulMsg->ticks();
+	clockL_ = pFaulMsg->clock();
+	prevTimeStampL_ = timeStampL_;
+	timeStampL_ = pFaulMsg->time();
+	break;
+
+      case FaulController::OdometryMessage::DELTA_RIGHT:
+	deltaTicksR_ = pFaulMsg->ticks();
+	clockR_ = pFaulMsg->clock();
+	prevTimeStampR_ = timeStampR_;
+	timeStampR_ = pFaulMsg->time();
+	break;
       }
 
       ++oddWheel_; 
@@ -118,6 +143,11 @@ namespace FaulMotor
 	   prevTimeStampR_+ ACE_Time_Value(0, 10000) < timeStampL_ &&
 	   prevTimeStampL_ != timeStampL_ &&
 	   prevTimeStampR_ != timeStampR_)) {
+
+	// if polling mode send next request 
+	// along with the current acc/vel set points
+	if (params_->odometryPolling)
+	  pConnection_->deferredSetSpeed();
 
 	if (init_ == 0) {
 	  if (params_->odometryPolling)
@@ -181,23 +211,10 @@ namespace FaulMotor
 	    --counter;
 	  }
 
-
-	  // save current values for next iteration
-	  prevTimeStampL_ = timeStampL_;
-	  prevTimeStampR_ = timeStampR_;
-	  prevTicksL_ = ticksL_;
-	  prevTicksR_ = ticksR_;
-          
 	  pOdometry_->integrateData(status_);
 	  return;
 	}
 	else {
-	  // save current values for next iteration
-	  prevTimeStampL_ = timeStampL_;
-	  prevTimeStampR_ = timeStampR_;
-	  prevTicksL_ = ticksL_;
-	  prevTicksR_ = ticksR_;
-
 	  --init_;
 	}
       }
@@ -207,9 +224,6 @@ namespace FaulMotor
   void
   Consumer::integrateBinary() 
   {
-    double deltaTicksL = ticksL_ - prevTicksL_;
-    double deltaTicksR = ticksR_ - prevTicksR_;
-
     // sanity checking for clock ticks
     // 
     // the faulhaber controller can only count to 9, regarding clock ticks
@@ -246,11 +260,11 @@ namespace FaulMotor
       ticksFile << timeStampL_ << " " 
 		<< (timeStampL_ - prevTimeStampL_) << " " 
 		<< clockL_ << " " 
-		<< ticksL_ << " " << deltaTicksL << "\t"
+		<< ticksL_ << " " << deltaTicksL_ << "\t"
 		<< timeStampR_ << " " 
 		<< (timeStampR_ - prevTimeStampR_) << " " 
 		<< clockR_ << " " 
-		<< ticksR_ << " " << deltaTicksR;
+		<< ticksR_ << " " << deltaTicksR_;
       
       if (overflow)
 	ticksFile << "   !!!!!!!!!!!";
@@ -263,8 +277,8 @@ namespace FaulMotor
 
     
     // okay, lets do business
-    double dL = -(ticksL_ - prevTicksL_) / params_->leftTicksPerMM;
-    double dR = (ticksR_ - prevTicksR_) / params_->rightTicksPerMM;
+    double dL = -(deltaTicksL_) / params_->leftTicksPerMM;
+    double dR = (deltaTicksR_) / params_->rightTicksPerMM;
     
     // correct clock jitter from both wheels
     double mean = ((double)(clockL_ + clockR_)) / 2.;
@@ -282,8 +296,8 @@ namespace FaulMotor
   void
   Consumer::integrateAscii() 
   {
-    double dL = -(ticksL_ - prevTicksL_) / params_->leftTicksPerMM;
-    double dR = (ticksR_ - prevTicksR_) / params_->rightTicksPerMM;
+    double dL = -(deltaTicksL_) / params_->leftTicksPerMM;
+    double dR = (deltaTicksR_) / params_->rightTicksPerMM;
     ACE_Time_Value timeDelta = timeStampR_ - prevTimeStampR_;
     double deltaT = (double)timeDelta.sec() + (double)timeDelta.usec() / 1000000.;
 
