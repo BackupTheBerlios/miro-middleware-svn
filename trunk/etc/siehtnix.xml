@@ -68,7 +68,7 @@
    <parameter value="1.0776" name="TransFactor" />
    <parameter value="25.7" name="Deg2ServoTicks" />
    <parameter value="1.000000" name="WatchdogTimeout" />
-   <parameter value="2950" name="Servo0MidPulse" />
+   <parameter value="3750" name="Servo0MidPulse" />
    <parameter value="200" name="MaxAccel" />
    <parameter value="2310" name="Diameter" />
    <parameter value="30720" name="MaxPower" />
