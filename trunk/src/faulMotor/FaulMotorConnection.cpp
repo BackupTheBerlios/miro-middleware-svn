@@ -80,20 +80,20 @@ namespace FaulMotor
     }
 
     int speed = (short) (_speed * params_->speedConvFactor);//* 112;
-    int accL, accR;
+//    double accL, accR;
     				// maxPosAccel,  maxNegAccel parameter setzen
-    accL = speed / prevSpeedL;
-    accR = speed / prevSpeedR;
-    if (accL <= accR)
-    {
-	accL = (accL / accR * params_-> maxPosAccel) * 90 / 320;
-	accR = (params_-> maxPosAccel) * 90 / 320;
-    }else
-    {
-	accR = (accR / accL * params_-> maxPosAccel) * 90 / 320;
-	accL = (params_-> maxPosAccel) * 90 / 320;
-    }
-    cout << "AccR: " << accR << " AccL: " << accL << endl;
+//    accL = speed / prevSpeedL;
+//    accR = speed / prevSpeedR;
+//    if (accL <= accR)
+//    {
+//	accL = (accL / accR * params_-> maxPosAccel) * 90 / 320;
+//	accR = (params_-> maxPosAccel) * 90 / 320;
+//    }else
+//    {
+//	accR = (accR / accL * params_-> maxPosAccel) * 90 / 320;
+//	accL = (params_-> maxPosAccel) * 90 / 320;
+//    }
+//    cout << "AccR: " << accR << " AccL: " << accL << endl;
     sprintf(speedMessageL, "v%d\r\n", -speed); // build speed message
     sprintf(speedMessageR, "v%d\r\n", speed); // build speed message
     leftWheel_.writeMessage(speedMessageL);
@@ -110,6 +110,21 @@ namespace FaulMotor
 
     int speedL = (short) (-_speedL * params_->speedConvFactor);//* 112;
     int speedR = (short) (_speedR * params_->speedConvFactor);//* 112;
+/*    double accL, accR;
+                                // maxPosAccel,  maxNegAccel paramete
+    accL = speedL / prevSpeedL;
+    accR = speedR / prevSpeedR;
+    if (accL <= accR)
+    {
+        accL = (accL / accR * params_-> maxPosAccel) * 90 / 320;
+        accR = (params_-> maxPosAccel) * 90 / 320;
+    }else
+    {
+        accR = (accR / accL * params_-> maxPosAccel) * 90 / 320;
+        accL = (params_-> maxPosAccel) * 90 / 320;
+    }
+    cout << "AccR: " << accR << " AccL: " << accL << endl;
+*/
 
     sprintf(speedMessageL, "v%d\r\n", speedL); // build speed message
     sprintf(speedMessageR, "v%d\r\n", speedR); // build speed message
