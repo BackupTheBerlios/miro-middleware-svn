@@ -48,6 +48,7 @@ PioneerHardware::PioneerHardware(ACE_Reactor * _reactor,
 
 PioneerHardware::~PioneerHardware()
 {
+  connection.close();
 }
 
 SparrowBase::SparrowBase(int argc, char *argv[]) :
