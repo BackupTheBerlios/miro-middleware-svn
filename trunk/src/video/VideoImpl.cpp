@@ -23,6 +23,8 @@ namespace Miro
     pConsumer(_pconsumer), 
     parameters(*Parameters::instance())
   {
+    cout << "Constructing VideoImpl." << endl;
+
     int	i;
 	
     iMaxConnections = parameters.connections;
@@ -52,6 +54,8 @@ namespace Miro
 
   VideoImpl::~VideoImpl()
   {
+    cout << "Destructing VideoImpl." << endl;
+
     delete[] pShmDataArray;
     delete[] pHandleArray;
   }

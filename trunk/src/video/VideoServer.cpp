@@ -60,12 +60,20 @@ void
 VideoService::init()
 {
   // register the grabber interface at the POA
-  Miro::Video_var pGrabber = grabber._this();
+  pVideo = grabber._this();
 
-  addToNameService(pGrabber.in(), "Video");
+  addToNameService(pVideo, "Video");
 }
 
 VideoService::~VideoService()
 {
   DBG(cout << "Destructing VideoService." << endl);
+
+  // Deactivate the interfaces.
+  // we have to do this manually for none owned orbs,
+  // as the class goes out of scope before
+  // the orb is shut down
+  PortableServer::ObjectId_var oid;
+  oid =  poa->reference_to_id (pVideo);
+  poa->deactivate_object (oid.in());
 }

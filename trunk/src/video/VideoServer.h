@@ -50,6 +50,7 @@ private:
   Video::Consumer consumer;
   Video::Connection connection;
   Miro::VideoImpl grabber;
+  Miro::Video_ptr pVideo;
 };
 #endif
 

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -27,15 +27,8 @@
 #define CSDBG(x)
 #endif
 
-namespace
-{
-  ACE_Time_Value stallReset(2, 0); 
-};
-
 namespace Video
 {
-  ACE_Time_Value maxTimeout(0, 500000);
-
   //------------------------//
   //----- constructors -----//
   //------------------------//
@@ -56,12 +49,8 @@ namespace Video
       throw Miro::CException(errno, std::strerror(errno));
     }
 
-    // steffen:
-
-    // put your device initialization here
-    // the file descriptor is accessed via:
-	videoDevice.connect(ioBuffer.get_handle(), parameters.buffers, parameters.format, parameters.source,
-				parameters.palette, parameters.subfield, parameters.width, parameters.height);
+    videoDevice.connect(ioBuffer.get_handle(), parameters.buffers, parameters.format, parameters.source,
+			parameters.palette, parameters.subfield, parameters.width, parameters.height);
 
     consumer->open(NULL);
   }
@@ -72,12 +61,12 @@ namespace Video
   //----------------------//
 
   Connection::~Connection()
-  	{
-	DBG(cout << "Destructing VideoConnection." << endl);
-
- 	consumer->cancel();
-	videoDevice.disconnect();
-	}
+  {
+    DBG(cout << "Destructing VideoConnection." << endl);
+    
+    consumer->cancel();
+    videoDevice.disconnect();
+  }
 
   //-------------------//
   //----- methods -----//
