@@ -40,15 +40,22 @@ using std::cerr;
 
 FaulhaberHardware::FaulhaberHardware(ACE_Reactor * _reactor,
 				     Miro::OdometryImpl * _pOdometryImpl) :
+  reactor(_reactor),
+  timerId(-1),
   pConsumer(new FaulMotor::Consumer(_pOdometryImpl)),
   pEventHandler(new FaulTty::EventHandler(pConsumer, connection)),
   pTimerEventHandler(new FaulTty::TimerEventHandler(connection)),
   connection(_reactor, pEventHandler, pConsumer)
-{}
+{
+  ACE_Time_Value tv(0,90000);
+
+  timerId = reactor->schedule_timer(pTimerEventHandler, NULL, tv ,tv);
+}
 
 FaulhaberHardware::~FaulhaberHardware()
 {
-
+  reactor->cancel_timer(timerId);
+ 
 }
 
 PioneerHardware::PioneerHardware(ACE_Reactor * _reactor,

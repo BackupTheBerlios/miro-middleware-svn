@@ -45,6 +45,8 @@
 struct FaulhaberHardware
 {
   // Faulhaber hardware abstraction
+  ACE_Reactor * reactor;
+  int timerId;
   FaulMotor::Consumer * pConsumer;
   FaulTty::EventHandler * pEventHandler;
   FaulTty::TimerEventHandler * pTimerEventHandler;
