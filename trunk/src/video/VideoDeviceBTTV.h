@@ -16,7 +16,8 @@ extern "C" {
 }
 
 #include "VideoDevice.h"
-#include <ace/Shared_Memory_MM.h>
+
+#include <ace/Mem_Map.h>
 
 namespace Video
 {
@@ -56,8 +57,11 @@ namespace Video
     //	struct video_picture		pict;
 
     int videoFd;
-    ACE_Shared_Memory_MM shmmap;
-    char * map;
+    ACE_Mem_Map mmap_;
+    char * map_;
+
+    mutable int currentBuffer_;
+    mutable int nextBuffer_;
 
     // static protected data
     //! screen grab

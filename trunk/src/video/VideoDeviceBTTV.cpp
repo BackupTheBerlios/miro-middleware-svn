@@ -35,12 +35,14 @@ namespace Video
 
   VideoDeviceBTTV::VideoDeviceBTTV() :
     gb(NULL),
-    channels(NULL)
+    channels(NULL),
+    videoFd(-1),
+    map_((char*)-1),
+    currentBuffer_(-1),
+    nextBuffer_(-1)
   {
     DBG(std::cout << "Constructing VideoDeviceBTTV." << std::endl);
 
-    videoFd = -1;
-    map = (char*)-1;
     /**
        cleanup supported format lookup table
     */
@@ -93,16 +95,14 @@ namespace Video
       if (err == -1)
 	throw Miro::CException(errno, "VideoDeviceBTTV::handleConnect() - VIDIOCGMBUF");
 
-      shmmap.open(videoFd, gb_buffers.size, PROT_READ, MAP_SHARED);
+      mmap_.map(videoFd, gb_buffers.size, PROT_READ, MAP_SHARED);
 
-      map = (char *) shmmap.malloc();
-//mmap(0, gb_buffers.size, PROT_READ, MAP_SHARED, videoFd, 0);
-      if (map == (char *)-1)
+      map_ = (char *) mmap_.addr();
+      if (map_ == (char *)-1)
 	throw Miro::CException(errno, "VideoDeviceBTTV::handleConnect() - mmap()");
     }
 
     iNBuffers = gb_buffers.frames;
-    iCurrentBuffer = iNBuffers-2;
 
     std::cout << "buffersize: " << gb_buffers.size << std::endl;
     std::cout << "buffersize/frame: " << gb_buffers.size/gb_buffers.frames << std::endl;
@@ -159,10 +159,12 @@ namespace Video
       }
     }
 
-    err = ioctl(videoFd, VIDIOCMCAPTURE, &(gb[iCurrentBuffer]));
-    if (err == -1)
-      throw Miro::CException(errno, "VideoDeviceBTTV::handleConnect() - VIDIOCMCAPTURE");
-    err = ioctl(videoFd, VIDIOCMCAPTURE, &(gb[iCurrentBuffer + 1]));
+    ++nextBuffer_;
+    err = ioctl(videoFd, VIDIOCMCAPTURE, &(gb[nextBuffer_]));
+    if (err != -1 && iNBuffers > 2) {
+      ++nextBuffer_;
+      err = ioctl(videoFd, VIDIOCMCAPTURE, &(gb[nextBuffer_]));
+    }
     if (err == -1)
       throw Miro::CException(errno, "VideoDeviceBTTV::handleConnect() - VIDIOCMCAPTURE");
   }
@@ -174,10 +176,10 @@ namespace Video
     delete[] channels;
     channels = NULL;
 
-    if (map != (char*)-1) {
-      shmmap.close();
+    if (map_ != (char*)-1) {
+      mmap_.unmap();
       // munmap(map, gb_buffers.size);
-      map = (char*)-1;
+      map_ = (char*)-1;
     }
     videoFd = -1;
   }
@@ -228,7 +230,7 @@ namespace Video
   {
     DBG(std::cout << "VideoDeviceBTTV: setSize" << std::endl);
 
-    if ((w>=capability.minwidth) && (w<=capability.maxwidth))
+    if ((w>=capability.minwidth) && (w <= capability.maxwidth))
       imgWidth = w;
     else
       throw Miro::Exception("VideoDeviceBTTV::setSize: illegal width");
@@ -239,45 +241,38 @@ namespace Video
       throw Miro::Exception("VideoDeviceBTTV::setSize: illegal height");
   }
 
-  static int counter = 0;
   static int msec = 0;
-  static int msec2 = 0;
 
   void* VideoDeviceBTTV::grabImage() const
   {
     DBG(std::cout << "VideoDeviceBTTV: grabImage" << std::endl);
 
+    // update the buffer pointers
+    ++currentBuffer_;
+    currentBuffer_ %= iNBuffers;
+    ++nextBuffer_;
+    nextBuffer_ %= iNBuffers;
+
+    // runtime statistics I
     ACE_Time_Value beginTime = ACE_OS::gettimeofday();
 
-    int	err = 0;
-    int	nextBuffer = (iCurrentBuffer + 2) % iNBuffers;
-
-    err = ioctl(videoFd, VIDIOCSYNC, &iCurrentBuffer);
+    int err = ioctl(videoFd, VIDIOCSYNC, &currentBuffer_);
     if (err == -1)
       throw Miro::CException(errno, "VideoDeviceBTTV::grabImage() - VIDIOCSYNC");
-
-    ACE_Time_Value endTime = ACE_OS::gettimeofday();
-    msec2 += (endTime - beginTime).msec();
-
-    err = ioctl(videoFd, VIDIOCMCAPTURE, gb + nextBuffer);
+    err = ioctl(videoFd, VIDIOCMCAPTURE, &(gb[nextBuffer_]));
     if (err == -1)
       throw Miro::CException(errno, "VideoDeviceBTTV::grabImage() - VIDIOCMCAPTURE");
-  
-    endTime = ACE_OS::gettimeofday();
+    ++iNFramesCaptured;
+    
+    // runtime statistics II
+    ACE_Time_Value endTime = ACE_OS::gettimeofday();
     msec += (endTime - beginTime).msec();
-
-    ++counter %= 100;
-    if (!counter) {
-      std::cout << "time for SYNC: " << msec2 / 100 << "msec" << std::endl;
+    if (iNFramesCaptured % 100) {
       std::cout << "time for grabbing: " << msec / 100 << "msec" << std::endl;
-      msec = msec2 = 0;
+      msec = 0;
     }
-	
-    iNFramesCaptured++;
 
-    //	std::cout << "grabbing buffer #" << gb.frame << std::endl;
-    iCurrentBuffer = (iCurrentBuffer + 1) % iNBuffers; 
-    return map + gb_buffers.offsets[iCurrentBuffer];
+    return map_ + gb_buffers.offsets[currentBuffer_];
   }
 
   void VideoDeviceBTTV::getCapabilities()
