@@ -105,7 +105,12 @@ int main (int argc, char * argv[])
 {
   Miro::Client client(argc, argv);
   try {
-    Miro::VideoBroker_var broker = client.resolveName<Miro::VideoBroker>("VideoBroker");
+    std::string videoBroker("VideoBroker");
+    if (argc > 1) {
+      videoBroker = argv[argc-1];
+      std::cout << "using video broker name: " << videoBroker << endl;
+    }
+    Miro::VideoBroker_var broker = client.resolveName<Miro::VideoBroker>(videoBroker.c_str());
     
     char c;
     std::string in;
