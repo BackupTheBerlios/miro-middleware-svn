@@ -90,7 +90,7 @@ libmiroVideo_la_SOURCES = \
 
 VideoService_SOURCES = VideoService.cpp
 
-VideoService_DEPENDENCIES = libmiroVideo.la
+# VideoService_DEPENDENCIES = libmiroVideo.la
 
 if COND_IEEE1394
 1394libraries = \
@@ -101,8 +101,7 @@ endif
 ## local version of libmiroVideo, because it is not installed at this point.
 VideoService_LDADD = \
 	$(top_builddir)/lib/libmiroSvc.a \
-	-L./ \
-	-lmiroVideo \
+	./libmiroVideo.la \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS) \
