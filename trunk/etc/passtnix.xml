@@ -227,6 +227,7 @@
      <parameter value="BallPosition" />
      <parameter value="GoalPosition" />
      <parameter value="LocalizedPosition" />
+     <parameter value="SharedWorld" />
    </parameter>
    <parameter name="Logfile" value="/home/passtnix/NMC.log" />
   </parameter>

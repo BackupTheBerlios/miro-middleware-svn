@@ -279,6 +279,7 @@
      <parameter value="BallPosition" />
      <parameter value="GoalPosition" />
      <parameter value="LocalizedPosition" />
+     <parameter value="SharedWorld" />
    </parameter>
   </parameter>
  </section>
