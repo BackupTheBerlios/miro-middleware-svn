@@ -22,7 +22,7 @@ OdometryTest_SOURCES = OdometryTest.cpp
 OdometryTest_LDADD = \
 	-lmiro
 
-all-local:
+all-local: OdometryTest
 	$(INSTALLPROGRAMS)
 
 clean-local:

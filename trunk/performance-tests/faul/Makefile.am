@@ -22,7 +22,7 @@ SerialPolling_SOURCES  = SerialPolling.cpp
 ## you may add libraries to be linked here
 SerialPolling_LDADD  = -lmiro -lmiroSvc
 
-all-local:
+all-local: SerialPolling
 	$(INSTALLPROGRAMS)
 
 clean-local:

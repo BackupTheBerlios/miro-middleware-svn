@@ -39,7 +39,7 @@ QtRangeSensor_LDADD = \
 BUILT_SOURCES = $(tomocsources:.cpp=.moc.cpp)
 CLEANFILES = $(BUILT_SOURCES)
 
-all-local:
+all-local: QtRangeSensor
 	$(INSTALLPROGRAMS)
 
 clean-local:

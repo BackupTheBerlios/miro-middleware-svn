@@ -59,7 +59,7 @@ PolicyEditor_LDADD = \
 BUILT_SOURCES = $(tomocsources:.cpp=.moc.cpp)
 CLEANFILES = $(BUILT_SOURCES)
 
-all-local:
+all-local: PolicyEditor
 	$(INSTALLPROGRAMS)
 
 clean-local:

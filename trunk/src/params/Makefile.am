@@ -38,7 +38,7 @@ includefiles1 = $(sources:.xml=.h)
 includefiles2 = $(includefiles1:.cpp=.h)
 params_include_HEADERS = $(includefiles2)
 
-all-local:
+all-local: libmiroParams.la
 	$(INSTALLLTLIBRARIES)
 
 clean-local:

@@ -37,7 +37,7 @@ includefiles1 = $(sources:.xml=.h)
 includefiles2 = $(includefiles1:.cpp=.h)
 mcp_include_HEADERS = $(includefiles2)
 
-all-local:
+all-local: libmcp.a
 	$(INSTALLLIBRARIES)
 
 clean-local:

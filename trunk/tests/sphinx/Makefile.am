@@ -24,7 +24,7 @@ SphinxTest_SOURCES = SphinxTest.cpp
 SphinxTest_LDADD = \
 	-lmiro
 
-all-local:
+all-local: SphinxTest
 	$(INSTALLPROGRAMS)
 
 clean-local:

@@ -22,7 +22,7 @@ PanLatency_SOURCES = PanLatency.cpp
 PanLatency_LDADD = \
 	-lmiro
 
-all-local:
+all-local: PanLatency
 	$(INSTALLPROGRAMS)
 
 clean-local:

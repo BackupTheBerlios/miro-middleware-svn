@@ -42,7 +42,7 @@ SparrowTest_LDADD = $(linkwithlibraries)
 PanPosition_LDADD = $(linkwithlibraries)
 KickerTest_LDADD = $(linkwithlibraries)
 
-all-local:
+all-local: SparrowTest2003 SparrowAlive SparrowTest PanPosition KickerTest
 	$(INSTALLPROGRAMS)
 
 clean-local:

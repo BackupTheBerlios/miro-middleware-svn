@@ -33,7 +33,7 @@ MakeConfig_LDADD = \
 	$(QT_LIBS) \
 	../notify/Parameters.o
 
-all-local:
+all-local: MakeConfig
 	$(INSTALLPROGRAMS)
 
 clean-local:

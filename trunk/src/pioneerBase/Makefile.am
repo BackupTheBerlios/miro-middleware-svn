@@ -30,7 +30,7 @@ PioneerBase_LDADD = \
 	-lmiroIDL \
 	-lmiro
 
-all-local:
+all-local: PioneerBase
 	$(INSTALLPROGRAMS)
 
 clean-local:

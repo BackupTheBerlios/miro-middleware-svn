@@ -24,7 +24,7 @@ VideoBrokerTest_SOURCES = VideoBrokerTest.cpp
 VideoBrokerTest_LDADD = \
 	-lmiro
 
-all-local:
+all-local: VideoBrokerTest
 	$(INSTALLPROGRAMS)
 
 clean-local:

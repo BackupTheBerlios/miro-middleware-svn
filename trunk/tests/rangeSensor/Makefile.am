@@ -22,7 +22,7 @@ RangeSensorTest_SOURCES = RangeSensorTest.cpp
 RangeSensorTest_LDADD = \
 	-lmiro
 
-all-local:
+all-local: RangeSensorTest
 	$(INSTALLPROGRAMS)
 
 clean-local:

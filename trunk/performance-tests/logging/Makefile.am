@@ -11,10 +11,20 @@
 
 include $(top_srcdir)/config/Make-rules
 
-SUFFIXES = .idl C.cpp C.h C.i.h S.cpp S.h S.i.h
+SUFFIXES = .cpp .idl C.cpp C.h C.i.h S.cpp S.h S.i.h
 
 .idlC.cpp:
-	$(TAO_IDL) -in -Gt -Ge 0 -hc C.h -cs C.cpp -ci C.i.h -hs S.h -hT S_T.h -ss S.cpp -sT S_T.cpp -si S.i.h -st S_T.i.h -Sc -Wp,-I$(TAO_ROOT) -Wp,-I$(TAO_ROOT)/orbsvcs -I$(TAO_ROOT) -I$(TAO_ROOT)/orbsvcs $<
+	$(TAO_IDL) -in -Gt -Ge 0 -hc C.h -cs C.cpp -ci C.i.h -hs S.h -hT S_T.h -ss S.cpp -sT S_T.cpp -si S.i.h -st S_T.i.h -Sc -Wp,-I$(TAO_ROOT) -I$(TAO_ROOT) -Wp,-I$(TAO_ROOT)/orbsvcs -I$(TAO_ROOT)/orbsvcs $<
+
+C.cppC.h: ;
+
+C.hC.i.h: ;
+
+C.i.hS.cpp: ;
+
+S.cppS.h: ;
+
+S.hS.i.h: ;
 
 sources = \
 	Payload.idl \
@@ -31,7 +41,7 @@ builtsources = \
 ## binaries to be built
 bin_PROGRAMS = LogPerformance
 
-LogPerformance_DEPENDENCIES = $(sources)
+LogPerformance_DEPENDENCIES = $(sources) $(builtsources)
 
 BUILT_SOURCES = $(builtsources)
 CLEANFILES = $(builtsources)
@@ -42,7 +52,8 @@ LogPerformance_SOURCES  = $(builtsources) LogPerformance.cpp
 
 ## you may add libraries to be linked here
 LogPerformance_LDADD  = -lmiroSvc -lmiro 
-all-local:
+
+all-local: LogPerformance
 	$(INSTALLPROGRAMS)
 
 clean-local:

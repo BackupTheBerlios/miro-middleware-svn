@@ -24,7 +24,7 @@ GenericNotify_SOURCES = GenericNotify.cpp GenericNotify.h
 GenericNotify_LDADD = \
 	-lmiro
 
-all-local:
+all-local: GenericNotify
 	$(INSTALLPROGRAMS)
 
 clean-local:

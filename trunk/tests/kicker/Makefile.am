@@ -20,7 +20,7 @@ KickerTest_SOURCES = KickerTest.cpp
 KickerTest_LDADD = \
 	-lmiro
 
-all-local:
+all-local: KickerTest
 	$(INSTALLPROGRAMS)
 
 clean-local:

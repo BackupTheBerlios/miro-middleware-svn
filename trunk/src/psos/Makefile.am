@@ -36,7 +36,7 @@ includefiles1 = $(sources:.xml=.h)
 includefiles2 = $(includefiles1:.cpp=.h)
 psos_include_HEADERS = $(includefiles2)
 
-all-local:
+all-local: libpsos.a
 	$(INSTALLLIBRARIES)
 
 clean-local:

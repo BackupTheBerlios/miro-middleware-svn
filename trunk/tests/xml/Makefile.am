@@ -25,7 +25,7 @@ Xml_parse_LDADD = \
 	-lmiro \
 	$(QT_LIBS)
 
-all-local:
+all-local: Xml-parse
 	$(INSTALLPROGRAMS)
 
 clean-local:

@@ -22,7 +22,7 @@ StallPoll_SOURCES = StallPoll.cpp
 StallPoll_LDADD = \
 	-lmiro
 
-all-local:
+all-local: StallPoll
 	$(INSTALLPROGRAMS)
 
 clean-local:

@@ -30,7 +30,7 @@ linkwithlibraries = \
 ButtonsPoll_LDADD = $(linkwithlibraries)
 ButtonsNotify_LDADD = $(linkwithlibraries)
 
-all-local:
+all-local: ButtonsPoll ButtonsNotify
 	$(INSTALLPROGRAMS)
 
 clean-local:

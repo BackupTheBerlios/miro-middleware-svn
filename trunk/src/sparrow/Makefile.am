@@ -48,7 +48,7 @@ EXTRA_DIST = \
 	IRLookupTable.h \
 	SparrowDevice.h
 
-all-local:
+all-local: libsparrow.a
 	$(INSTALLLIBRARIES)
 
 clean-local:

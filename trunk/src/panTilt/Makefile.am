@@ -42,7 +42,7 @@ DpPanTilt_LDADD = \
 	-lmiroIDL \
 	-lmiro
 
-all-local:
+all-local: DpPanTilt
 	$(INSTALLPROGRAMS)
 
 clean-local:

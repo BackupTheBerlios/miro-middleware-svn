@@ -60,7 +60,7 @@ NotifyObserver_LDADD = -lmiro -lmiroWidgets
 BUILT_SOURCES = $(tomocsources:.cpp=.moc.cpp)
 CLEANFILES = $(BUILT_SOURCES)
 
-all-local:
+all-local: NotifyObserver
 	$(INSTALLPROGRAMS)
 
 clean-local:

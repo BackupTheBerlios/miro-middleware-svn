@@ -34,7 +34,7 @@ includefiles1 = $(sources:.xml=.h)
 includefiles2 = $(includefiles1:.cpp=.h)
 faulMotor_include_HEADERS = $(includefiles2)
 
-all-local:
+all-local: libfaulMotor.a
 	$(INSTALLLIBRARIES)
 
 clean-local:

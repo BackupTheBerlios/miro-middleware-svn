@@ -27,7 +27,7 @@ CanPerformance_LDADD = \
 	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiro
 
-all-local:
+all-local: CanPerformance
 	$(INSTALLPROGRAMS)
 
 clean-local:

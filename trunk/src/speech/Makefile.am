@@ -34,7 +34,7 @@ DtlkSpeech_LDADD = \
 	-lmiroIDL \
 	-lmiro
 
-all-local:
+all-local: DtlkSpeech
 	$(INSTALLPROGRAMS)
 
 clean-local:

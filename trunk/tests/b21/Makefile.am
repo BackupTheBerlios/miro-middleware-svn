@@ -38,7 +38,7 @@ B21StressBase_LDADD = $(linkwithlibraries)
 B21ButtonsTest_LDADD = $(linkwithlibraries)
 B21SelfTest_LDADD = $(linkwithlibraries)
 
-all-local:
+all-local: B21BaseTest B21StressBase B21ButtonsTest B21SelfTest
 	$(INSTALLPROGRAMS)
 
 clean-local:

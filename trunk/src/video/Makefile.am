@@ -90,6 +90,8 @@ libmiroVideo_la_SOURCES = \
 
 VideoService_SOURCES = VideoService.cpp
 
+VideoService_DEPENDENCIES = libmiroVideo.la
+
 if COND_IEEE1394
 1394libraries = \
 	-lraw1394 \
@@ -106,9 +108,6 @@ VideoService_LDADD = \
 	$(QT_LIBS) \
 	$(1394libraries)
 
-
-
-
 extraheader = \
 	VideoFilterFactory.h \
 	VideoFilterLink.h \
@@ -122,7 +121,7 @@ includefiles1 = $(sources:.xml=.h) $(bttvsources:.xml=.h) $(meteorsources:.xml=.
 includefiles2 = $(includefiles1:.cpp=.h)
 video_include_HEADERS = $(includefiles2)
 
-all-local:
+all-local: libmiroVideo.la VideoService
 	$(INSTALLLTLIBRARIES)
 	$(INSTALLPROGRAMS)
 

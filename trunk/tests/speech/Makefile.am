@@ -24,7 +24,7 @@ SpeechTest_SOURCES = SpeechTest.cpp
 SpeechTest_LDADD = \
 	-lmiro
 
-all-local:
+all-local: SpeechTest
 	$(INSTALLPROGRAMS)
 
 clean-local:

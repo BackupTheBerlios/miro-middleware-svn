@@ -24,7 +24,7 @@ GripperTest_SOURCES = GripperTest.cpp
 GripperTest_LDADD = \
 	-lmiro
 
-all-local:
+all-local: GripperTest
 	$(INSTALLPROGRAMS)
 
 clean-local:

@@ -22,7 +22,7 @@ BatteryGet_SOURCES = BatteryGet.cpp
 BatteryGet_LDADD = \
 	-lmiro 
 
-all-local:
+all-local: BatteryGet
 	$(INSTALLPROGRAMS)
 
 clean-local:

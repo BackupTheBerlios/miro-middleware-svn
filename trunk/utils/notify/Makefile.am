@@ -38,7 +38,7 @@ LogNotify_LDADD = $(linkwithlibraries)
 LogTruncate_LDADD = $(linkwithlibraries)
 NotifyLogPlayer_LDADD = $(linkwithlibraries)
 
-all-local:
+all-local: LogNotify LogTruncate NotifyLogPlayer
 	$(INSTALLPROGRAMS)
 
 clean-local:

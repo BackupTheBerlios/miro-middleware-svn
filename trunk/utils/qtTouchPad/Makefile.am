@@ -40,7 +40,7 @@ QtTouchPad_LDADD = \
 BUILT_SOURCES = $(tomocsources:.cpp=.moc.cpp)
 CLEANFILES = $(BUILT_SOURCES)
 
-all-local:
+all-local: QtTouchPad
 	$(INSTALLPROGRAMS)
 
 clean-local:

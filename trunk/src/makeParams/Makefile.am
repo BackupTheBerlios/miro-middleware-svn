@@ -22,7 +22,7 @@ MakeParams_SOURCES = MakeParams.cpp
 MakeParams_LDADD = \
 	-lmiroParams
 
-all-local:
+all-local: MakeParams
 	$(INSTALLPROGRAMS)
 
 clean-local:

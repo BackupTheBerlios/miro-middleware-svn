@@ -38,7 +38,7 @@ includefiles1 = $(sources:.xml=.h) $(extraheader)
 includefiles2 = $(includefiles1:.cpp=.h)
 abus_include_HEADERS = $(includefiles2)
 
-all-local:
+all-local: libabus.a
 	$(INSTALLLIBRARIES)
 
 clean-local:

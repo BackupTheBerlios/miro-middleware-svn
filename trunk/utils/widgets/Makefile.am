@@ -76,7 +76,7 @@ libmiroWidgets_la_LIBADD = \
 BUILT_SOURCES = $(tomocsources:.cpp=.moc.cpp)
 CLEANFILES = $(tomocsources:.cpp=.moc.cpp)
 
-all-local:
+all-local: libmiroWidgets.la
 	$(INSTALLLTLIBRARIES)
 
 clean-local:

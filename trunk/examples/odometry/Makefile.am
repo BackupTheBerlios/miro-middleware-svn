@@ -31,7 +31,7 @@ PollPosition_LDADD = $(linkwithlibraries)
 SetPosition_LDADD = $(linkwithlibraries)
 OdometryStream_LDADD = $(linkwithlibraries)
 
-all-local:
+all-local: PollPosition SetPosition OdometryStream
 	$(INSTALLPROGRAMS)
 
 clean-local:

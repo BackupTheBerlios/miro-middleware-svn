@@ -19,6 +19,15 @@ SUFFIXES = .idl C.cpp C.h C.i.h S.cpp S.h S.i.h
 .idlC.cpp:
 	$(TAO_IDL) -in -Ge 0 -hc C.h -cs C.cpp -ci C.i.h -hs S.h -hT S_T.h -ss S.cpp -sT S_T.cpp -si S.i.h -st S_T.i.h -Sc -Wp,-I$(top_srcdir)/idl -I$(top_srcdir)/idl $<
 
+C.cppC.h: ;
+
+C.hC.i.h: ;
+
+C.i.hS.cpp: ;
+
+S.cppS.h: ;
+
+S.hS.i.h: ;
 
 lib_LTLIBRARIES = libmiroIDL.la
 
@@ -114,8 +123,7 @@ builtsources = \
 	$(sources:.idl=S.cpp) \
 	$(sources:.idl=S.i.h)
 
-libmiroIDL_la_DEPENDENCIES = $(sources)
-nodist_libmiroIDL_la_SOURCES = $(builtsources)
+libmiroIDL_la_SOURCES = $(builtsources)
 
 libmiroIDL_la_LIBADD = \
 	-lTAO \
@@ -124,20 +132,7 @@ libmiroIDL_la_LIBADD = \
 BUILT_SOURCES = $(builtsources)
 CLEANFILES = $(builtsources)
 
-nodist_idl_include_HEADERS = \
-	$(sources:.idl=C.h) \
-	$(sources:.idl=C.i.h) \
-	$(sources:.idl=S.h) \
-	$(sources:.idl=S.i.h)
-
-EXTRA_DIST = \
-	$(globalsources) \
-	$(b21sources) \
-	$(pioneersources) \
-	$(sparrowsources) \
-	$(deprecatedsources)
-
-all-local:
+all-local: libmiroIDL.la
 	$(INSTALLLTLIBRARIES)
 
 clean-local:

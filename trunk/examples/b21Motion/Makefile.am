@@ -24,7 +24,7 @@ SimpleBaseClient_SOURCES = SimpleBaseClient.cpp
 SimpleBaseClient_LDADD = \
 	-lmiro
 
-all-local:
+all-local: SimpleBaseClient
 	$(INSTALLPROGRAMS)
 
 clean-local:

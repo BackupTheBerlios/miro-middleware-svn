@@ -27,7 +27,7 @@ PioneerTest_LDADD = \
 	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiro
 
-all-local:
+all-local: PioneerTest
 	$(INSTALLPROGRAMS)
 
 clean-local:

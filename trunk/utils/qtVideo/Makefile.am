@@ -65,7 +65,7 @@ BUILT_SOURCES = $(video_tomocsources:.cpp=.moc.cpp) $(control_tomocsources:.cpp=
 CLEANFILES = $(BUILT_SOURCES)
 EXTRA_DIST = VideoControlDialog.ui
 
-all-local:
+all-local: QtVideo $(1394programs)
 	$(INSTALLPROGRAMS)
 
 clean-local:

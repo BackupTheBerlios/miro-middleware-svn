@@ -26,7 +26,7 @@ NotifyMulticastTest_SOURCES = \
 NotifyMulticastTest_LDADD = \
 	-lmiro
 
-all-local:
+all-local: NotifyMulticastTest
 	$(INSTALLPROGRAMS)
 
 clean-local:

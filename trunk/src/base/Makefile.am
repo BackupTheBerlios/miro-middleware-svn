@@ -39,7 +39,7 @@ includefiles1 = $(sources:.xml=.h)
 includefiles2 = $(includefiles1:.cpp=.h)
 base_include_HEADERS = $(includefiles2)
 
-all-local:
+all-local: libbase.a
 	$(INSTALLLIBRARIES)
 
 clean-local:

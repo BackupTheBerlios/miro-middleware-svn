@@ -28,7 +28,7 @@ linkwithlibraries = \
 TestVideoClient_LDADD = $(linkwithlibraries)
 TestRemoteVideoClient_LDADD = $(linkwithlibraries)
 
-all-local:
+all-local: TestVideoClient TestRemoteVideoClient
 	$(INSTALLPROGRAMS)
 
 clean-local:

@@ -34,7 +34,7 @@ SparrowBase_LDADD = \
 	-lmiro \
 	$(QT_LIBS)
 
-all-local:
+all-local: SparrowBase
 	$(INSTALLPROGRAMS)
 
 clean-local:

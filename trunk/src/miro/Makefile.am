@@ -161,7 +161,7 @@ includefiles1 = \
 includefiles2 = $(includefiles1:.cpp=.h)
 miro_include_HEADERS = $(includefiles2)
 
-all-local:
+all-local: libmiro.la libmiroSvc.a libmiroSsh.a
 	$(INSTALLLIBRARIES)
 	$(INSTALLLTLIBRARIES)
 

@@ -27,7 +27,7 @@ McpPerformance_LDADD = \
 	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiro
 
-all-local:
+all-local: McpPerformance
 	$(INSTALLPROGRAMS)
 
 clean-local:

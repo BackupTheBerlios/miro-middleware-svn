@@ -36,7 +36,7 @@ SonarPoll2_LDADD = $(linkwithlibraries)
 SonarPoll3_LDADD = $(linkwithlibraries)
 SonarNotify_LDADD = $(linkwithlibraries)
 
-all-local:
+all-local: SonarPoll1 SonarPoll2 SonarPoll3 SonarNotify
 	$(INSTALLPROGRAMS)
 
 clean-local:

@@ -36,7 +36,7 @@ SparrowResponse_LDADD = $(linkwithlibraries)
 PollResponse_LDADD = $(linkwithlibraries)
 NotifyResponse_LDADD = $(linkwithlibraries)
 
-all-local:
+all-local: SparrowResponse PollResponse NotifyResponse
 	$(INSTALLPROGRAMS)
 
 clean-local:

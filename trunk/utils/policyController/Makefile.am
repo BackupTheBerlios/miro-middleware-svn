@@ -37,7 +37,7 @@ PolicyController_LDADD = \
 BUILT_SOURCES = $(tomocsources:.cpp=.moc.cpp)
 CLEANFILES = $(BUILT_SOURCES)
 
-all-local:
+all-local: PolicyController
 	$(INSTALLPROGRAMS)
 
 clean-local:

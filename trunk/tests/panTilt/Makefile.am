@@ -24,7 +24,7 @@ PanTiltTest_SOURCES = PanTiltTest.cpp
 PanTiltTest_LDADD = \
 	-lmiro
 
-all-local:
+all-local: PanTiltTest
 	$(INSTALLPROGRAMS)
 
 clean-local:

@@ -43,7 +43,7 @@ LogVideo_LDADD = $(libraries)
 VideoLatency_LDADD = $(libraries)
 VideoExample_LDADD = $(libraries)
 
-all-local:
+all-local: LogVideo VideoLatency VideoExample
 	$(INSTALLPROGRAMS)
 
 clean-local:

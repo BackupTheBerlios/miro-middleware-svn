@@ -24,7 +24,7 @@ NsIOR_SOURCES = NsIOR.cpp
 NsIOR_LDADD = \
 	-lmiro
 
-all-local:
+all-local: NsIOR
 	$(INSTALLPROGRAMS)
 
 clean-local:

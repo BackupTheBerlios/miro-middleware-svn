@@ -39,7 +39,7 @@ SonarGet_LDADD = $(linkwithlibraries)
 SonarStream_LDADD = $(linkwithlibraries)
 SonarStream2_LDADD = $(linkwithlibraries)
 
-all-local:
+all-local: LaserGet LaserStream SonarGet SonarStream SonarStream2
 	$(INSTALLPROGRAMS)
 
 clean-local:

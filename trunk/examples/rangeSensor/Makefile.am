@@ -31,7 +31,7 @@ ScanDescription_LDADD = $(linkwithlibraries)
 SensorGet_LDADD = $(linkwithlibraries)
 SensorStream_LDADD = $(linkwithlibraries)
 
-all-local:
+all-local: ScanDescription SensorGet SensorStream
 	$(INSTALLPROGRAMS)
 
 clean-local:

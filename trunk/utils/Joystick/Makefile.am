@@ -30,7 +30,7 @@ linkwithlibraries = \
 Joystick_LDADD = $(linkwithlibraries)
 JoystickService_LDADD = $(linkwithlibraries)
 
-all-local:
+all-local: Joystick JoystickService
 	$(INSTALLPROGRAMS)
 
 clean-local:

@@ -43,7 +43,7 @@ includefiles1 = $(sources:.xml=.h) $(extraheader)
 includefiles2 = $(includefiles1:.cpp=.h)
 can_include_HEADERS = $(includefiles2)
 
-all-local:
+all-local: libcan.a
 	$(INSTALLLIBRARIES)
 
 clean-local:

@@ -22,7 +22,7 @@ PollInfrared_SOURCES = PollInfrared.cpp
 PollInfrared_LDADD = \
 	-lmiro
 
-all-local:
+all-local: PollInfrared
 	$(INSTALLPROGRAMS)
 
 clean-local:

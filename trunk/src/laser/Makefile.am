@@ -52,7 +52,7 @@ SickLaserService_LDADD = \
 	-lmiroIDL \
 	-lmiro
 
-all-local:
+all-local: SickLaserService libmiroLaser.a
 	$(INSTALLLIBRARIES)
 	$(INSTALLPROGRAMS)
 

@@ -24,7 +24,7 @@ DpPanTiltTest_SOURCES = DpPanTiltTest.cpp
 DpPanTiltTest_LDADD = \
 	-lmiro
 
-all-local:
+all-local: DpPanTiltTest
 	$(INSTALLPROGRAMS)
 
 clean-local:

@@ -26,7 +26,7 @@ NotifyTest_SOURCES = \
 NotifyTest_LDADD = \
 	-lmiro
 
-all-local:
+all-local: NotifyTest
 	$(INSTALLPROGRAMS)
 
 clean-local:

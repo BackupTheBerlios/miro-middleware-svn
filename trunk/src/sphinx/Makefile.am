@@ -34,7 +34,7 @@ SphinxSpeech_LDADD = \
 	$(SPHINX_LDFLAGS) $(SPHINX_LIBS) \
 	-lmiro -lmiroIDL 
 
-all-local:
+all-local: SphinxSpeech
 	$(INSTALLPROGRAMS)
 
 clean-local:

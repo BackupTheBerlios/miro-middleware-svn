@@ -22,7 +22,7 @@ LogTest_SOURCES = LogTest.cpp
 LogTest_LDADD = \
 	-lmiro
 
-all-local:
+all-local: LogTest
 	$(INSTALLPROGRAMS)
 
 clean-local:

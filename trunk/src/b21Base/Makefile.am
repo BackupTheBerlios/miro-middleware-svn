@@ -36,7 +36,7 @@ linkwithlibraries = \
 B21Base_LDADD = $(linkwithlibraries)
 B21BaseDummy_LDADD = $(linkwithlibraries)
 
-all-local:
+all-local: B21Base B21BaseDummy
 	$(INSTALLPROGRAMS)
 
 clean-local:

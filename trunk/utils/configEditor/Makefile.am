@@ -49,7 +49,7 @@ ConfigEditor_LDADD = \
 BUILT_SOURCES = $(tomocsources:.cpp=.moc.cpp)
 CLEANFILES = $(BUILT_SOURCES)
 
-all-local:
+all-local: ConfigEditor
 	$(INSTALLPROGRAMS)
 
 clean-local:

@@ -39,7 +39,7 @@ GrayVideoService_LDADD = \
 BUILT_SOURCES = Parameters.cpp Parameters.h
 CLEANFILES = $(BUILT_SOURCES)
 
-all-local:
+all-local: GrayVideoService
 	$(INSTALLPROGRAMS)
 
 clean-local:

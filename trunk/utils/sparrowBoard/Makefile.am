@@ -28,7 +28,7 @@ SparrowAccel_LDADD = \
 	-lmiro \
 	$(QT_LIBS)
 
-all-local:
+all-local: SparrowAccel
 	$(INSTALLPROGRAMS)
 
 clean-local:

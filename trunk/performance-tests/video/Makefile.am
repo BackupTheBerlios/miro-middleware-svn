@@ -25,7 +25,7 @@ GrabImages_LDADD = \
 	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiro
 
-all-local:
+all-local: GrabImages
 	$(INSTALLPROGRAMS)
 
 clean-local:

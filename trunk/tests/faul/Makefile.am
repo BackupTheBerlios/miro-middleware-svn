@@ -29,7 +29,7 @@ FaulTest_LDADD = \
 	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiro
 
-all-local:
+all-local: FaulTest
 	$(INSTALLPROGRAMS)
 
 clean-local:

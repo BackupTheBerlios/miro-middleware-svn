@@ -39,7 +39,7 @@ EXTRA_DIST = \
 	FaulTtyDevice.h \
 	FaulTtyMessage.h
 
-all-local:
+all-local: libfaulTty.a
 	$(INSTALLLIBRARIES)
 
 clean-local:

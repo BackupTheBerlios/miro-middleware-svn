@@ -83,7 +83,7 @@ DynamicPolicyTest_LDADD = $(linkwithlibraries)
 BUILT_SOURCES = Parameters.cpp Parameters.h
 CLEANFILES = $(BUILT_SOURCES)
 
-all-local:
+all-local: PriorityArbitersTest PolicyParsingTest BehaviourEngineTest DynamicPolicyTest
 	$(INSTALLPROGRAMS)
 
 clean-local:

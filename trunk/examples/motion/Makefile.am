@@ -30,7 +30,7 @@ linkwithlibraries = \
 MotionStatusPoll_LDADD = $(linkwithlibraries)
 MotionStatusNotify_LDADD = $(linkwithlibraries)
 
-all-local:
+all-local: MotionStatusPoll MotionStatusNotify
 	$(INSTALLPROGRAMS)
 
 clean-local:

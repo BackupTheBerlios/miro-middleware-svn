@@ -24,7 +24,7 @@ DtlkSpeechTest_SOURCES = DtlkSpeechTest.cpp
 DtlkSpeechTest_LDADD = \
 	-lmiro
 
-all-local:
+all-local: DtlkSpeechTest
 	$(INSTALLPROGRAMS)
 
 clean-local:

@@ -24,7 +24,7 @@ SpeechSimple_SOURCES = SpeechSimple.cpp
 SpeechSimple_LDADD = \
 	-lmiro
 
-all-local:
+all-local: SpeechSimple
 	$(INSTALLPROGRAMS)
 
 clean-local:

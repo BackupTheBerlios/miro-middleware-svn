@@ -46,7 +46,7 @@ MotionTest_LDADD = $(linkwithlibraries)
 DifferentialMotionTest_LDADD = $(linkwithlibraries)
 SynchroMotionTest_LDADD = $(linkwithlibraries)
 
-all-local:
+all-local: MotionTest DifferentialMotionTest SynchroMotionTest
 	$(INSTALLPROGRAMS)
 
 clean-local:
