@@ -82,7 +82,7 @@ sparrowsources1_used = $(sparrowsources1)
 endif
 
 pioneersources1 = \
-	ObstImpl.cpp
+
 
 if COND_PIONEER
 pioneersources1_used = $(pioneersources1)
