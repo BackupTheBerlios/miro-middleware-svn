@@ -118,7 +118,8 @@ sources2 = \
 	MotionImpl.cpp \
 	DifferentialMotionImpl.cpp \
 	BatteryImpl.cpp \
-	BehaviourEngineImpl.cpp 
+	BehaviourEngineImpl.cpp \
+	ObstImpl.cpp
 
 libmiroSvc_a_SOURCES = $(sources2)
 
