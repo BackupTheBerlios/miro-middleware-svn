@@ -68,13 +68,13 @@ namespace FaulMotor
     double xPos_;
     double yPos_;
 
-    double ticksL_;
-    double ticksR_;
-    double prevTicksL_;
-    double prevTicksR_;
+    int ticksL_;
+    int ticksR_;
+    int prevTicksL_;
+    int prevTicksR_;
 
-    double deltaTicksL_;
-    double deltaTicksR_;
+    int deltaTicksL_;
+    int deltaTicksR_;
     int clockL_;
     int clockR_;
     

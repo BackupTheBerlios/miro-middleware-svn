@@ -38,7 +38,7 @@ namespace FaulMotor
 
   std::ofstream ticksFile;
 
-  bool const FAUL_LOGGING = false;
+  bool const FAUL_LOGGING = true;
 
   double const Consumer::CLOCK_2_SEC = 0.00933;
 
@@ -51,10 +51,10 @@ namespace FaulMotor
     init_(2),
     xPos_(0.),
     yPos_(0.),
-    ticksL_(0.),
-    ticksR_(0.),
-    prevTicksL_(0.),
-    prevTicksR_(0.),
+    ticksL_(0),
+    ticksR_(0),
+    prevTicksL_(0),
+    prevTicksR_(0),
     wheelBase_(params_->motion.wheelBase),
     oddWheel_(0)
   {
@@ -134,15 +134,12 @@ namespace FaulMotor
 
       ++oddWheel_; 
       oddWheel_ &= 1;
-#ifdef ASDF
       if ((params_->odometryPolling && !oddWheel_) || // new odometry mode
-
+          (!params_->odometryPolling &&
 	  (prevTimeStampL_+ ACE_Time_Value(0, 10000) < timeStampR_ && // old odo
 	   prevTimeStampR_+ ACE_Time_Value(0, 10000) < timeStampL_ &&
 	   prevTimeStampL_ != timeStampL_ &&
-	   prevTimeStampR_ != timeStampR_)) {
-#endif
-if(!oddWheel_) {
+	   prevTimeStampR_ != timeStampR_))) {
 	if (init_ == 0) {
 	  if (params_->odometryPolling)
 	    integrateBinary();
@@ -233,7 +230,7 @@ if(!oddWheel_) {
     ACE_Time_Value jitter(0, 50000); // 1/20 sec
     ACE_Time_Value deltaTimeL = timeStampL_ - prevTimeStampL_;
     
-    if (abs(clockL_ - clockR_) > 4) {
+    if (true || abs(clockL_ - clockR_) > 4) {
       ACE_Time_Value t;
       t.set((double)clockL_ * CLOCK_2_SEC);
       while (deltaTimeL > t + jitter) {
@@ -295,6 +292,17 @@ if(!oddWheel_) {
     double dR = (deltaTicksR_) / params_->rightTicksPerMM;
     ACE_Time_Value timeDelta = timeStampR_ - prevTimeStampR_;
     double deltaT = (double)timeDelta.sec() + (double)timeDelta.usec() / 1000000.;
+    // lowlevel logging hook
+    if (FAUL_LOGGING) {
+      ticksFile << timeStampL_ << " "
+                << (timeStampL_ - prevTimeStampL_) << " "
+                << clockL_ << " "
+                << ticksL_ << " " << deltaTicksL_ << "\t"
+                << timeStampR_ << " "
+                << (timeStampR_ - prevTimeStampR_) << " "
+                << clockR_ << " "
+                << ticksR_ << " " << deltaTicksR_ << std::endl;
+    }
 
     odometryUpdate(dL, dR, deltaT);
   }
@@ -304,9 +312,12 @@ if(!oddWheel_) {
   {
     // sanity check:
     // with 30Hz and 3 m/s we drive at most 100mm per query
-    // if we measure more than 2000mm its better to ignore this
-    if (_dL > 2000 || _dR > 2000 || _dL < -2000 || _dR < -2000)
+    // if we measure more than 6000mm/s its better to ignore this
+    double maxDelta = 6000. * _deltaT;
+    if (_dL > maxDelta || _dR > maxDelta || _dL < -maxDelta || _dR < -maxDelta) {
+      ticksFile << "dropped" << std::endl;	    
       return;
+    }
 
     // calculate new orientation
     double turn = (_dR - _dL) / wheelBase_;
