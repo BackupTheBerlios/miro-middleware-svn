@@ -24,6 +24,8 @@ namespace Miro
     ACE_Time_Value var;
   };
 
+  std::ostream& operator<<(std::ostream& _ostr, TimeStats const& _rhs);
+
   template<unsigned int N = 100UL>
   class TimeSeries
   {
@@ -148,4 +150,4 @@ namespace Miro
   }
 }
 
-#endif /* Miro_TimeSeries_h */
+#endif // Miro_TimeSeries_h

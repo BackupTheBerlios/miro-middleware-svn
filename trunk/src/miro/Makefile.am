@@ -35,6 +35,7 @@ sources1 = \
 	Server.cpp \
 	IO.cpp \
 	TimeHelper.cpp \
+	TimeSeries.cpp \
 	VideoHelper.cpp \
 	ScanDescriptionHelper.cpp \
 	StructuredPushSupplier.cpp \

@@ -134,14 +134,14 @@ namespace Miro
 				     params->pace);
 
     // debug message
-    MIRO_DBG_OSTR(MIRO,LL_NOTICE, "ConstraintArbiter.cpp : open()" << std::endl);
+    MIRO_DBG_OSTR(MIRO,LL_NOTICE, "ConstraintArbiter::open()" << std::endl);
   }
 
   void
   ConstraintArbiter::close()
   {
     // debug message
-    MIRO_DBG_OSTR(MIRO,LL_CTOR_DTOR, "ConstraintArbiter.cpp : close()" << std::endl);
+    MIRO_DBG_OSTR(MIRO,LL_CTOR_DTOR, "ConstraintArbiter::close()" << std::endl);
 
     // release timer
     if (timerId != -1) {
@@ -161,14 +161,14 @@ namespace Miro
   {
     Miro::Guard guard(mutex_);
 
+    timing_.start();
+
     ConstraintArbiterParameters * params =
       const_cast<ConstraintArbiterParameters *>
       ( dynamic_cast<ConstraintArbiterParameters const *>(params_));
     MIRO_ASSERT(params != NULL);
     Vector2d velocity;
     //    std::FILE *logFile1;
-
-    ACE_Time_Value start = ACE_OS::gettimeofday();
 
     typedef std::vector<Behaviour *> BehaviourVector;
 
@@ -188,12 +188,16 @@ namespace Miro
 	 
     //    cout << "LEFT: " << velocity.real() << " ::: " << velocity.imag() << endl;
 
+    timing_.stop();
+
     // set steering commands
     pMotion_->setLRVelocity(velocity.real(), velocity.imag());
 
-    ACE_Time_Value stop = ACE_OS::gettimeofday();
-
-    MIRO_DBG_OSTR(MIRO, LL_PRATTLE, "ConstraintArbiter eval time: " << stop - start);
+    if (Miro::Log::level() >= Miro::Log::LL_PRATTLE) {
+      TimeStats stats;
+      timing_.eval(stats);
+      MIRO_DBG_OSTR(MIRO, LL_PRATTLE, "ConstraintArbiter eval time: " << std::endl << stats);
+    }
 
 //    logFile1 = std::fopen("velocityspace.log","a");
 //    for(int r_index = 0; r_index <= 2*(velocitySpace_.maxVelocity_/velocitySpace_.spaceResolution_)+1; r_index++) {

@@ -17,6 +17,7 @@
 #include "VelocitySpace.h"
 #include "MotionArbiterMessage.h"
 #include "ConstraintArbiterParameters.h"
+#include "TimeSeries.h"
 #include "Synch.h"
 
 #include <ace/Reactor.h>
@@ -90,6 +91,8 @@ namespace Miro
 
     int skipDebug_;
     int skipMax_;
+
+    TimeSeries<> timing_;
 
     //--------------------------------------------------------------------------
     // protected static data
