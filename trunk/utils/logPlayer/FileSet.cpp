@@ -22,10 +22,7 @@ namespace
   struct LFLess : public std::binary_function<LogFile const *, LogFile const *, bool>
   {
     bool operator() (LogFile const * _lhs, LogFile const * _rhs) {
-      if (_lhs->coursorTime() == ACE_Time_Value(0, 0))
-	return false;
-      return (_lhs->coursorTime() < _rhs->coursorTime() ||
-	      _rhs->coursorTime() == ACE_Time_Value(0, 0));
+      return _lhs->coursorTime() < _rhs->coursorTime();
     }
   };
 
@@ -33,16 +30,15 @@ namespace
   struct LFMore : public std::binary_function<LogFile const *, LogFile const *, bool>
   {
     bool operator() (LogFile const * _lhs, LogFile const * _rhs) {
-      if (_lhs->coursorTime() == ACE_Time_Value(0, 0))
-	return true;
-      return (_lhs->coursorTime() > _rhs->coursorTime() &&
-	      _rhs->coursorTime() != ACE_Time_Value(0, 0));
+      return _lhs->coursorTime() > _rhs->coursorTime();
     }
   };
 }
 
 FileSet::FileSet(ChannelManager * _channelManager) :
-  channelManager_(_channelManager)
+  channelManager_(_channelManager),
+  startCut_(ACE_Time_Value::zero),
+  endCut_(ACE_Time_Value::zero)
 {}
 
 FileSet::~FileSet()
@@ -112,6 +108,13 @@ FileSet::calcStartEndTime()
     }
   }
 
+  if (startCut_ < startTime_ ||
+      startCut_ > endTime_)
+    startCut_ = startTime_;
+  if (endCut_ > endTime_ ||
+      endCut_ < startTime_)
+    endCut_ = endTime_;
+
   emit intervalChange();
 }
 
@@ -146,14 +149,16 @@ FileSet::playEvents(ACE_Time_Value const& _time)
 {
   assert(file_.size() != 0);
 
+  if (coursorTime() > endCut_)
+    return;
+
   // correct heap if we change direction
   FileVector::const_iterator first, last = file_.end();
   first = file_.begin();
   for (++first; first != last; ++first)
     (*first)->assertAfter(file_.front()->coursorTime());
 
-  while (file_.front()->coursorTime() != ACE_Time_Value(0, 0) &&
-	 file_.front()->coursorTime() <= _time) {
+  while (file_.front()->coursorTime() <= _time) {
     file_.front()->sendEvent();
     file_.front()->nextEvent();
 
@@ -175,6 +180,8 @@ void
 FileSet::playBackwards()
 {
   assert(file_.size() != 0);
+  if (coursorTime() <= startCut_)
+    return;
 
   // correct heap if we change direction
   FileVector::const_iterator first, last = file_.end();
@@ -204,10 +211,9 @@ FileSet::getEvents(ACE_Time_Value const& _time, unsigned int _num)
   ACE_Time_Value now = coursorTime();
   
   // set new time
-  coursorTimeRel(_time);
+  coursorTime(_time);
 
-  while (file_.front()->coursorTime() != ACE_Time_Value(0, 0) &&
-	 --_num > 0) {
+  while (file_.front()->coursorTime() <= endCut_ && --_num > 0) {
     file_.front()->nextEvent();
     std::make_heap(file_.begin(), file_.end(), LFLess());
     file_.front()->parseEvent();
@@ -273,3 +279,4 @@ FileSet::delExclude(QString const& _domainName, QString const& _typeName)
       (*first)->delExclude(_typeName);
   }
 }
+

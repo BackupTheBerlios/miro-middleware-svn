@@ -18,6 +18,7 @@
 #include "../widgets/FileListDialog.h"
 
 #include "miro/Exception.h"
+#include "miro/TimeHelper.h"
 
 #include <ace/OS.h>
 
@@ -78,12 +79,14 @@ MainForm::MainForm(QApplication& _app, FileSet& _fileSet,
   // the menu
   QPopupMenu *fileMenu = new QPopupMenu( this );
   fileMenu->insertItem( "&Open/Close...", this, SLOT( files() ) );
+  fileMenu->insertItem("Save &as...", this, SLOT(saveAs()));
   fileMenu->insertSeparator();
   fileMenu->insertItem( "&Quit", qApp, SLOT( quit() ) );
 
   QPopupMenu * editMenu = new QPopupMenu(this);
   editMenu->insertItem("Cut Front", this, SLOT(cutFront()));
   editMenu->insertItem("Cut Back", this, SLOT(cutBack()));
+  editMenu->insertItem("Undo all", this, SLOT(cutUndo()));
 
   toolsMenu_ = new QPopupMenu(this);
   toolsMenu_->setCheckable(true);
@@ -92,8 +95,9 @@ MainForm::MainForm(QApplication& _app, FileSet& _fileSet,
   QPopupMenu * settingsMenu = new QPopupMenu(this);
   settingsMenu->insertItem("&History", this, SLOT(setHistory()));
 
-  menuBar()->insertItem("&File", fileMenu);    
-  menuBar()->insertItem("&Events", eventMenu_ );    
+  menuBar()->insertItem("&File", fileMenu);
+  menuBar()->insertItem("&Edit", editMenu);
+  menuBar()->insertItem("E&vents", eventMenu_ );    
   menuBar()->insertItem("&Tools", toolsMenu_);    
   menuBar()->insertItem("&Settings", settingsMenu);    
 
@@ -229,15 +233,16 @@ MainForm::enableButtons(bool _flag)
 void
 MainForm::scaleSlider()
 {
-  ACE_Time_Value d = fileSet_.endTime() - fileSet_.startTime();
+  ACE_Time_Value d = fileSet_.cutEndTime() - fileSet_.cutStartTime();
   timeSlider->setMinValue(0);
   timeSlider->setMaxValue(d.sec() * 100 + d.usec() / 10000);
+  setSlider();
 }
 
 void
 MainForm::setSlider()
 {
-  ACE_Time_Value d = fileSet_.coursorTime() - fileSet_.startTime();
+  ACE_Time_Value d = fileSet_.coursorTime() - fileSet_.cutStartTime();
   timeSlider->setValue(d.sec() * 100 + d.usec() / 10000);
 }
 
@@ -276,7 +281,7 @@ MainForm::calcStartTime()
 void 
 MainForm::changed( int )
 {
-  ACE_Time_Value t = fileSet_.coursorTime() - fileSet_.startTime();
+  ACE_Time_Value t = fileSet_.coursorTime() - fileSet_.cutStartTime();
 
   minLabel->display( int(t.sec() / 60) );
   secLabel->display( int(t.sec() % 60) );
@@ -294,7 +299,7 @@ void
 MainForm::stop() 
 {
   timer_->stop();
-  fileSet_.coursorTime(fileSet_.startTime());
+  fileSet_.coursorTime(fileSet_.cutStartTime());
 }
 
 void MainForm::pause() 
@@ -329,10 +334,13 @@ MainForm::step()
     destTime *= (speed_ > 0)? (double)speed_ : (1. / (double)-speed_);
     destTime += timeCBase_;
     destTime = std::min(destTime, fileSet_.coursorTime() + ACE_Time_Value(0, 200000));
-   
+    destTime = std::min(destTime, fileSet_.cutEndTime());
+
+    std::cout << "play till: " << destTime - fileSet_.cutStartTime() << std::endl;
+
     fileSet_.playEvents(destTime);
 
-    if (fileSet_.coursorTime() != fileSet_.endTime()) {
+    if (fileSet_.coursorTime() < fileSet_.cutEndTime()) {
       // rescedule timer
       ACE_Time_Value nextTime = ACE_OS::gettimeofday() - timeBase_;
       nextTime *= (speed_ > 0)? (double)speed_ : (1. / (double)-speed_);
@@ -367,7 +375,7 @@ void
 MainForm::timeAction(int hsec ) 
 {
   ACE_Time_Value t(hsec / 100, (hsec % 100) * 10000);
-  fileSet_.coursorTime(fileSet_.startTime() + t);
+  fileSet_.coursorTime(fileSet_.cutStartTime() + t);
 }
 
 void
@@ -527,11 +535,25 @@ MainForm::setHistory()
 }  
 
 void
+MainForm::saveAs()
+{
+
+}
+
+void
 MainForm::cutFront()
 {
+  fileSet_.cutStart();
 }
 
 void 
 MainForm::cutBack()
 {
+  fileSet_.cutEnd();
+}
+
+void
+MainForm::cutUndo()
+{
+  fileSet_.cutUndo();
 }

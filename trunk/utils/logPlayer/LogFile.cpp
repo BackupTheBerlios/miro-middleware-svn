@@ -58,7 +58,7 @@ LogFile::parse()
 
     (*istr_) >> timeIDL;
     Miro::timeC2A(timeIDL, timeStamp);
-    if (timeStamp == ACE_Time_Value(0)) {
+    if (timeStamp == ACE_Time_Value::zero) {
       break;
     }
     timeVector_.push_back( TimePair( timeStamp, (char*)istr_->rd_ptr() ) );
@@ -76,7 +76,7 @@ LogFile::parse()
     throw Miro::Exception("Logfile contains no data.");
 
   // EOF
-  if (istr_->length() == 0 || timeStamp == ACE_Time_Value(0)) {
+  if (istr_->length() == 0 || timeStamp == ACE_Time_Value::zero) {
     coursor_ = timeVector_.begin();
     
     domainName_ = event.header.fixed_header.event_type.domain_name;

@@ -59,7 +59,7 @@ EventView::EventView(FileSet * _fileSet, unsigned int _history, char const * _na
   connect(list_, SIGNAL(selectionChanged(QListViewItem *)),
 	  this, SLOT(selectionChanged(QListViewItem *)));
 
-  fileSet_->getEvents(eventTime(list_->selectedItem()), history_);
+  fileSet_->getEvents(fileSet_->coursorTime(), history_);
 
   show();
 }
@@ -256,7 +256,6 @@ EventView::includeEvent(const QString&, const QString&)
 ACE_Time_Value
 EventView::eventTime(QListViewItem * _item)
 {
-  std::cout << "event time: " << (void *) _item << std::endl;
   ACE_Time_Value t = ACE_Time_Value::zero;
   if (_item != NULL) {
     std::istringstream istr((char const *)_item->text(0));

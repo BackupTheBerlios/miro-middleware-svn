@@ -93,8 +93,11 @@ public slots:
   void toggleEventView();
   void eventViewClosed();
 
+  void saveAs();
+
   void cutFront();
   void cutBack();
+  void cutUndo();
 
 signals:
   void excludeEvent(const QString &, const QString&);

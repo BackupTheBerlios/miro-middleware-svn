@@ -159,7 +159,7 @@ inline
 ACE_Time_Value const&
 LogFile::coursorTime() const
 {
-  return (coursor_ != timeVector_.end())? coursor_->first : ACE_Time_Value::zero;
+  return (coursor_ != timeVector_.end())? coursor_->first : ACE_Time_Value::max_time;
 }
 
 inline

@@ -12,6 +12,7 @@
 #define FileManager_h
 
 #include "LogFile.h"
+#include "miro/Log.h"
 
 #include <qstring.h>
 #include <qstringlist.h>
@@ -51,8 +52,13 @@ public:
   QStringList files() const;
 
   void calcStartEndTime();
-  ACE_Time_Value const& startTime() const;
-  ACE_Time_Value const& endTime() const;
+
+  ACE_Time_Value const& cutStartTime() const;
+  ACE_Time_Value const& cutEndTime() const;
+
+  void cutStart();
+  void cutEnd();
+  void cutUndo();
 
 
   //! Play events till specified time
@@ -86,6 +92,14 @@ signals:
   void intervalChange();
   void coursorChange();
 
+protected:
+  //----------------------------------------------------------------------------
+  // protected methods
+  //----------------------------------------------------------------------------
+
+  ACE_Time_Value const& startTime() const;
+  ACE_Time_Value const& endTime() const;
+
   //----------------------------------------------------------------------------
   // private data
   //----------------------------------------------------------------------------
@@ -99,6 +113,11 @@ private:
   ACE_Time_Value startTime_;
   //! The ent time of all log files.
   ACE_Time_Value endTime_;
+
+  //! The start of the log files after cutting.
+  ACE_Time_Value startCut_;
+  //! The end of the log files after cutting.
+  ACE_Time_Value endCut_;
 };
 
 inline
@@ -110,24 +129,61 @@ FileSet::size() const {
 inline
 ACE_Time_Value const&
 FileSet::startTime() const {
-  assert(file_.size() != 0);
+  MIRO_ASSERT(file_.size() != 0);
   return startTime_;
 }
 
 inline
 ACE_Time_Value const&
 FileSet::endTime() const {
-  assert(file_.size() != 0);
+  MIRO_ASSERT(file_.size() != 0);
   return endTime_;
 }
 
 inline
 ACE_Time_Value const&
+FileSet::cutStartTime() const {
+  MIRO_ASSERT(file_.size() != 0);
+  return startCut_;
+}
+
+inline
+ACE_Time_Value const&
+FileSet::cutEndTime() const {
+  MIRO_ASSERT(file_.size() != 0);
+  return endCut_;
+}
+
+inline
+void
+FileSet::cutStart() {
+  MIRO_ASSERT(file_.size() != 0);
+  startCut_ = file_.front()->coursorTime();
+  emit intervalChange();
+}
+
+inline
+void
+FileSet::cutEnd() {
+  MIRO_ASSERT(file_.size() != 0);
+  endCut_ = file_.front()->coursorTime();
+  emit intervalChange();
+}
+
+inline
+void
+FileSet::cutUndo() {
+  startCut_ = startTime_;
+  endCut_ = endTime_;
+  emit intervalChange();
+}
+
+inline
+ACE_Time_Value const&
 FileSet::coursorTime() const {
-  assert(file_.size() != 0);
+  MIRO_ASSERT(file_.size() != 0);
   return (file_.front()->coursorTime() != ACE_Time_Value(0, 0))?
     file_.front()->coursorTime() : endTime_;
 }
-
 
 #endif // FileManager_h
