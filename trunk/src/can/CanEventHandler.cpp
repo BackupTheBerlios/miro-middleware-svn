@@ -22,6 +22,8 @@
 #include "CanEventHandler.h"
 #include "CanConnection.h"
 #include "CanMessage.h"
+#include "PCanMessage.h"
+#include "Can0Message.h"
 #include "Parameters.h"
 #include "pcan.h"
 #include "errno.h"
@@ -54,12 +56,12 @@ namespace Can
      Message * msg;
      if(_params->module == "pcan"){
 
-        msg = new Message();
+        msg = new PCanMessage();
 
      }
      else{
 
-        msg = new Message();
+        msg = new Can0Message();
      }
 
 
