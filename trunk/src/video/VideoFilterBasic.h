@@ -59,6 +59,18 @@ namespace Video
     unsigned int rowSize_;
   };
 
+  class FilterReverse : public Filter
+  {
+    typedef Filter Super;
+  public:
+    FilterReverse(const Miro::ImageFormatIDL& _inputFormat);
+    virtual void process();
+
+  protected:
+    unsigned int rowSize_;
+    int bytesPerPixel;
+  };
+
   class FilterHalfImage : public Filter
   {
     typedef Filter Super;

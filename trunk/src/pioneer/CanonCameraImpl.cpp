@@ -255,11 +255,11 @@ namespace Canon
   CanonCameraImpl::setAEoff() throw(Miro::EDevIO, Miro::ETimeOut)
   {
     bool done=false;
-    char tmp[5];
+    char tmp[3];
     if (!initialized) initialize();
 
     //Message aeLock(LIGHT_AE,0x40);
-    Message aeLock(LIGHT_AE,int2str(tmp,40,4));
+    Message aeLock(LIGHT_AE,int2str(tmp,40,2));
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
@@ -274,10 +274,10 @@ namespace Canon
   CanonCameraImpl::setAEon() throw(Miro::EDevIO, Miro::ETimeOut)
   {
     bool done=false;
-    char tmp[5];
+    char tmp[3];
     if (!initialized) initialize();
 
-    Message aeLock(LIGHT_AE,int2str(tmp,41,4));
+    Message aeLock(LIGHT_AE,int2str(tmp,41,2));
 
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);

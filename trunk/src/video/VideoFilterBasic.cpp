@@ -110,6 +110,54 @@ namespace Video
     }
   }
 
+  FilterReverse::FilterReverse(const Miro::ImageFormatIDL& _format) :
+    Super(_format),
+    rowSize_(getRowSize(_format))
+  {
+    switch(inputFormat_.palette)
+      {
+      case Miro::GREY_8: 
+	bytesPerPixel = 1;
+	break;
+      case Miro::GREY_16:
+	bytesPerPixel = 2;
+	break;
+      case Miro::GREY_32:
+	bytesPerPixel = 3;
+	break;
+      case Miro::RGB_24:
+	bytesPerPixel = 3;
+	break;
+      case Miro::BGR_24:
+	bytesPerPixel = 3;
+	break;
+      case Miro::RGB_32:
+	bytesPerPixel = 4;
+	break;
+      case Miro::BGR_32:
+	bytesPerPixel = 4;
+	break;
+      default:
+	std::cout << "cannot handle YUV" << endl;
+	exit(-1);
+      }
+  }
+
+  void
+  FilterReverse::process()
+  {
+    unsigned char const * src = inputBuffer();
+    unsigned char * dst = outputBuffer() + rowSize_ * (inputFormat_.height - 1);
+    int numberOfPixel = inputFormat_.height * inputFormat_.width;
+
+    for (unsigned int i = numberOfPixel; i != 0; --i) 
+    {
+      memcpy(dst, src, bytesPerPixel);
+      src += bytesPerPixel;
+      dst -= bytesPerPixel;
+    }
+  }
+
   FILTER_PARAMETERS_FACTORY_IMPL(FilterHalfImage);
 
   FilterHalfImage::FilterHalfImage(const Miro::ImageFormatIDL& _format) :
