@@ -67,7 +67,8 @@ b21sources = \
 pioneersources = \
 	PioneerStall.idl \
 	PioneerMotion.idl \
-	Gripper.idl
+	Gripper.idl \
+	Obst.idl
 
 sparrowsources = \
 	Kicker.idl \
