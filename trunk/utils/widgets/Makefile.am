@@ -7,7 +7,7 @@
 ##
 ## $Id$
 ##
-## Miro/templates/Makefile.lib
+## Miro/utils/widgets/Makefile
 ##
 ##############################################################################
 
@@ -26,7 +26,8 @@ lib_LTLIBRARIES = libmiroWidgets.la
 normalsources = 
 
 tomocsources = \
-	FileListDialog.cpp
+	FileListDialog.cpp \
+	Item.cpp
 
 libmiroWidgets_la_SOURCES = \
 	$(normalsources) \
