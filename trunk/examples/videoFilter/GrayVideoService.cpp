@@ -21,7 +21,7 @@
 #include "miro/Server.h"                     // Server declaration.
 #include "idl/ExceptionC.h"                 // CORBA exceptions.
 #include "miro/Exception.h"                  // Miro exceptionss
-#include "miro/Utils.h"                      // ConfigDocumet declaration.
+#include "miro/Configuration.h"              // ConfigDocumet declaration.
 
 #include <iostream>
 
@@ -29,12 +29,15 @@ int
 main(int argc, char *argv[])
 {
   // Return code.
-  int rc = 0;
+  int rc = 1;
+  
+  Miro::Log::init(argc, argv);
+  Miro::Configuration::init(argc, argv);
 
   // Miro::Server parameter.
   Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
   // Video service parameters.
-  Video::Parameters * videoParameters = Video::Parameters::instance();
+  Video::Parameters videoParameters;
 
   try {
     // Building up the filter repository.
@@ -49,29 +52,28 @@ main(int argc, char *argv[])
     // Loading the parameters from the configuration file.
     std::cout << "Config file processing" << std::endl;
     
-    Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
+    Miro::ConfigDocument * config = Miro::Configuration::document();
     config->setSection("Robot");
-    config->getParameters("Robot", * robotParameters);
+    config->getParameters("Miro::RobotParameters", * robotParameters);
     config->setSection("Video");
-    config->getParameters("Video", * videoParameters);
+    config->getInstance("GrayVideoService", videoParameters);
 
     // Debug output of the configuration.
     std::cout << "  robot parameters:" << std::endl << *robotParameters << std::endl;
-    std::cout << "  video paramters:" << std::endl << *videoParameters << std::endl;
+    std::cout << "  video paramters:" << std::endl << videoParameters << std::endl;
     
     std::cout << "Initialize server daemon." << std::endl;
     Miro::Server server(argc, argv);
 
     try {
       // Building the filter tree and initializing the filters.
-      Video::Service videoService(server, config);
+      Video::Service videoService(server, config, &videoParameters);
       
-      // We don't need the config file anymore.
-      delete config;
-
       std::cout << "Loop forever handling events." << std::endl;
       server.run(3);
       std::cout << "videoService ended, exiting." << std::endl;
+
+      rc = 0;
     }
     catch (const Miro::EOutOfBounds& e) {
       std::cerr << "OutOfBounds excetpion: Wrong parameter for device initialization." << std::endl;

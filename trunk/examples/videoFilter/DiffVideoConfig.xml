@@ -1,7 +1,7 @@
 <!DOCTYPE MiroConfigDocument>
 <config>
  <section name="Video" >
-  <parameter name="Video" >
+  <instance type="Video::Parameters" name="GrayVideoService" >
    <parameter value="rgb" name="Palette" />
    <parameter value="384" name="Width" />
    <parameter value="288" name="Height" />
@@ -28,26 +28,27 @@
       </parameter>
      </parameter>
    </parameter>
-  </parameter>
-  <parameter name="DeviceDummy" >
+  </instance>
+  <instance type="Video::DeviceDummy" name="DeviceDummy" >
    <parameter name="Device" value="./timeSeries/" />
    <parameter name="Buffers" value="4" />
    <parameter name="Cyclic" value="true" />
-  </parameter>
-  <parameter name="FilterCopy">
+   <parameter name="Timeout" value="0.04" />
+  </instance>
+  <instance type="Video::FilterCopy" name="FilterCopy">
    <parameter value="true" name="InterfaceInstance" />
-  </parameter>
-  <parameter name="FilterGray">
+  </instance>
+  <instance type="FilterGray" name="FilterGray">
    <parameter value="true" name="InterfaceInstance" />
    <parameter name="Interface" >
     <parameter value="GrayImage" name="Name" />
    </parameter>
-  </parameter>
-  <parameter name="FilterDiff">
+  </instance>
+  <instance type="FilterDiff" name="FilterDiff">
    <parameter value="true" name="InterfaceInstance" />
    <parameter name="Interface" >
     <parameter value="DiffImage" name="Name" />
    </parameter>
-  </parameter>
+  </instance>
  </section>
 </config>
