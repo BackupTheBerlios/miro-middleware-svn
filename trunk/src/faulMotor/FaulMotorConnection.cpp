@@ -163,7 +163,7 @@ namespace FaulMotor
 //    cout << "maxPosAcc: " << params_-> maxPosAccel <<" AccR: " << acctestR ;
 //    cout << " AccL: " << acctestL << endl;
 
-    if (fabs(acctestL - prevAccL) > 2) {         //zur datenverringerung
+    if (true || fabs(acctestL - prevAccL) > 2) {         //zur datenverringerung
       sprintf(accMessageL, "ac%d", acctestL); // build acc message
       prevAccL = acctestL;
     }
@@ -172,7 +172,7 @@ namespace FaulMotor
       messageL[1] = NULL;
     }
 
-    if (fabs(acctestR - prevAccR) > 2) {
+    if (true || fabs(acctestR - prevAccR) > 2) {
       sprintf(accMessageR, "ac%d", acctestR); // build acc message
       prevAccR = acctestR;
     }
