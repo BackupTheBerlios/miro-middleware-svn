@@ -357,7 +357,7 @@ As always there is a configuration section in the xml-file called {\tt
 
 \begin{description}
 \item[device:] This section describes, which device-name the frame
-  grabber card uses. The default value is {\tt /dev/v4l/video0}.
+  grabber card uses.
 \item[grabber:] Determine which card your robot uses, either a {\tt
     bttv} based card or a matrox {\tt meteor} card.
 \item[format:] With the format parameter you can choose, which
@@ -379,12 +379,30 @@ As always there is a configuration section in the xml-file called {\tt
 \item[height:] The {\tt height} that the image should have.
 \item[connections:]
 \item[buffers:]
-\item[byteorder:] %%0 == native/1 == rgb
+\item[byteorder:] {\tt 0} means native mode, {\tt 1} means rgb.
 \end{description}
 
 Note, that not each card support each option and that not every
 combination of options can be used for each card. If in doubt, refer
 to the technical manual of your frame grabber card.
+
+The following example shows the configuration used for our hardware:
+
+\begin{lstlisting}[frame=tb]{}
+<video>
+  <device>/dev/v4l/video0</device>
+  <grabber>bttv</grabber>
+  <format>pal</format>
+  <source>composite1</source>
+  <palette>bgr</palette>
+  <subfield>odd</subfield>
+  <width>384</width>
+  <height>288</height>
+  <connections>16</connections>
+  <buffers>16</buffers>
+  <byteorder>1</byteorder>
+</video>
+\end{lstlisting}
 
 
 \section{SICK Laser Scanner}
