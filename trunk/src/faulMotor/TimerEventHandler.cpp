@@ -26,11 +26,6 @@
 #define DBG(x)
 #endif
 
-namespace
-{
-  int counter = 0;
-}
-
 namespace FaulMotor
 {
   using std::cout;
@@ -52,10 +47,8 @@ namespace FaulMotor
   int
   TimerEventHandler::handle_timeout(const ACE_Time_Value & _now, const void *)
   {
-    ++counter; 
-    if (Connection::gotTicks_ == 0 &&
-        counter > 5) {
-      std::cerr << counter << " odometry stall " << ACE_OS::gettimeofday() << endl;
+    if (Connection::gotTicks_ == 0) {
+      std::cerr << " odometry stall " << ACE_OS::gettimeofday() << endl;
     }
     else {
       // request new odometry update
