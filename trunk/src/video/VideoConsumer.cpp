@@ -87,11 +87,46 @@ namespace Video
     cout << "Image size:" << getImageSize() << endl;
     pCurrentImageData = NULL;
 
+    int pixelSize=connection.parameters.pixelSize;
+
     while (running)
     {
       try {
 	void*	pNextImageData;
 	pNextImageData = connection.videoDevice.grabImage();
+
+	/**************
+	 *
+	 * Flip image if camera is upside-down
+	 * 
+	 */
+	
+	unsigned char* image=(unsigned char *)pNextImageData;
+
+	if (connection.parameters.upsideDown!=0) {
+	  int i=0,j=0;
+	  int imgSize=connection.parameters.width * connection.parameters.height;
+	  for (i=0; i<imgSize/2; i++) {
+	    //	    cout << i << " " << std::flush;
+	    for (j=0; j<pixelSize; j++) {
+	      int index=pixelSize*imgSize-pixelSize-(i*pixelSize)+j;
+	      //save value from end
+	      unsigned char tmp=image[index];
+	      //copy value beginning -> end
+	      image[index]=image[(i*pixelSize)+j];
+	      //copy saved value(end)->beginning
+	      image[(i*pixelSize)+j]=tmp;
+	    }
+	  }
+	}
+
+
+	/****
+	 * 
+	 * End of flipping
+	 * 
+	 */
+
 	// lock();
 	pCurrentImageData = pNextImageData;
 	// release();
@@ -120,7 +155,7 @@ void Consumer::getCurrentImage(void* data)
 	Miro::Guard guard(mutex);
 
 	if (!pCurrentImageData && running)
-	// we where too fast ;-)
+	// we were too fast ;-)
 		{
 		ACE_Time_Value	timeout(ACE_OS::gettimeofday());
 		timeout += maxWait;

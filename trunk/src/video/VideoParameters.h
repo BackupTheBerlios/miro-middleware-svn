@@ -24,17 +24,19 @@ namespace Video
   {
     typedef Miro::DevParameters Super;
   public:
-  	std::string	grabber;
-  	std::string	format;
-  	std::string	source;
-  	std::string	palette;
-  	std::string	subfield;
-
-	int		width;
-	int		height;
-	int		connections;
-	int		buffers;
-	int		byteorder;
+    std::string	grabber;
+    std::string	format;
+    std::string	source;
+    std::string	palette;
+    std::string	subfield;
+    
+    int		width;
+    int		height;
+    int		connections;
+    int		buffers;
+    int		byteorder;
+    int 	upsideDown; //for cameras mounted upside-down
+    int 	pixelSize;  //in bytes
 
     Parameters();
     virtual void operator <<= (const QDomNode& node);

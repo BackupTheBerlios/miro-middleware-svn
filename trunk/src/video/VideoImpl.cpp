@@ -13,6 +13,9 @@
 
 #include <miro/Exception.h>
 #include "video/VideoImpl.h"
+#include "video/VideoDevice.h"
+
+using namespace Video;
 
 namespace Miro {
 
@@ -28,7 +31,17 @@ VideoImpl::VideoImpl(::Video::Consumer* _pconsumer, const ::Video::Parameters& _
 		{
 		pHandleArray[i].width = parameters.width;
 		pHandleArray[i].height = parameters.height;
-		//	pHandleArray[i].palette = parameters.palette;
+		if (parameters.palette=="gray") {
+		  pHandleArray[i].palette = paletteGrey;
+		} else if (parameters.palette=="rgb") {
+		  pHandleArray[i].palette = paletteRGB;
+		} else if (parameters.palette=="bgr") {
+		  pHandleArray[i].palette = paletteBGR;
+		} else if (parameters.palette=="rgba") {
+		  pHandleArray[i].palette = paletteRGBA;
+		} else if (parameters.palette=="abgr") {
+		  pHandleArray[i].palette = paletteABGR;
+		}
 		//	pHandleArray[i].source = parameters.source;
 		pHandleArray[i].key = -1;
 		pHandleArray[i].handle = -1;

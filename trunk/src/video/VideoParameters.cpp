@@ -37,7 +37,9 @@ namespace Video
 	height = 288;
 	connections = 16;
 	buffers = 16;
-	byteorder = 1;	//	0 == native/1 == rgb
+	byteorder = 1;	//	0 == native / 1 == rgb
+	pixelSize = 3;  //      size in bytes
+	upsideDown=0;   //      0 == normal / 1 == 180 deg turn
   }
 
   void
@@ -63,6 +65,13 @@ namespace Video
 	    }
 	    else if (n1.nodeName() == "palette") {
 	      	palette = t.data() ;
+		if ((palette==string("rgb")) ||
+		    (palette==string("bgr"))) pixelSize=3;
+		else if ((palette==string("rgba")) ||
+			 (palette==string("abgr"))) pixelSize=4;
+		else if (palette==string("gray")) 
+		  pixelSize=1;
+
 	    }
 	    else if (n1.nodeName() == "subfield") {
 	      	subfield = t.data() ;
@@ -84,6 +93,12 @@ namespace Video
 	      	byteorder = 0;
 	      else
 	      	byteorder = 1;
+	    }	    
+	    else if (n1.nodeName() == "upsideDown") {
+	      if (t.data() == "yes")
+		upsideDown=true;
+	      else
+	      upsideDown=false;
 	    }
 	  }
 	}
@@ -106,11 +121,16 @@ namespace Video
 	 << "connections = " << desc.connections << endl
 	 << "buffers = " << desc.connections << endl
 	 << "byteorder = ";
- 	 if (desc.byteorder == 0)
+	 if (desc.byteorder == 0)
 	 	ostr << "native" << endl;
 	 else
 	 	ostr << "rgb" << endl;
-
+	 ostr << "upsideDown = ";
+	 if (desc.upsideDown!=0)
+	   ostr << "yes" << endl;
+	 else 
+	 ostr << "no" << endl;
+	 
 	return ostr;
   }
 };
