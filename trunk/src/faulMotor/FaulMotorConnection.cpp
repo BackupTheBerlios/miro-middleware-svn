@@ -45,9 +45,9 @@ namespace FaulMotor
     rightWheel_(_reactor, 
 		new FaulTty::EventHandler(_consumer, OdometryMessage::RIGHT), 
 	       params_->rightWheel),
+    consumer(_consumer),
     prevSpeedL(0),
-    prevSpeedR(0),
-    consumer(_consumer)
+    prevSpeedR(0)
   { 
     DBG(cout << "Constructing FaulMotorConnection." << endl);
 
@@ -80,7 +80,7 @@ namespace FaulMotor
     }
 
     int speed = (short) (_speed * params_->speedConvFactor);//* 112;
-   double accL, accR;
+    double accL, accR;
   
     sprintf(speedMessageL, "v%d\r\n", -speed); // build speed message
     sprintf(speedMessageR, "v%d\r\n", speed); // build speed message
