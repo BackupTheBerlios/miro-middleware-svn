@@ -56,13 +56,13 @@ module Miro
   interface CanonPanTilt : Miro::PanTilt
   {
     //! Wait for the PTU to complete previous movement
-    void waitCompletion() raises(Miro::EDevIO);
+    void waitCompletion() raises(Miro::EDevIO, Miro::ETimeOut);
 
     //! Move the PTU to the specified destination.
     /** The call awaits completion of the movement.
      */
     void setWaitPosition( in Miro::PanTiltPositionIDL dest) 
-      raises(Miro::EOutOfBounds, Miro::EDevIO);
+      raises(Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut);
 
     //! Set the actual speed and acceleration settings.
     void setSpdAcc( in CanonPanTiltSpdAccIDL dest )
