@@ -147,7 +147,7 @@ namespace Sparrow
 
     if (!prvPanning(stamp)) {
       // the pan doesn't move
-      position.angle = nextPosition;
+      position.angle = (stamp < timeLastSet + params_.panLatency)? lastPosition : nextPosition; 
       position.accuracy = params_.panAccuracy;
     }
     else {
