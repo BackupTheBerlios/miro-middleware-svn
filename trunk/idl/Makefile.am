@@ -51,6 +51,7 @@ globalsources = \
 	ScanDescription.idl \
 	RangeEvent.idl \
 	RangeSensor.idl \
+	Laser.idl \
 	Pan.idl \
 	Tilt.idl \
 	PanTilt.idl \
@@ -69,7 +70,6 @@ globalsources = \
 	ObjectVector.idl
 
 b21sources = \
-	Laser.idl \
 	DtlkSpeech.idl \
 	DirectedPerceptionPanTilt.idl \
 	B21Buttons.idl \

@@ -15,7 +15,8 @@ globaldirs = \
 	params \
 	makeParams \
 	miro \
-	video
+	video \
+	laser
 
 if COND_B21
 b21dirs = \
@@ -26,8 +27,7 @@ b21dirs = \
 	buttons \
 	b21Base \
 	panTilt \
-	speech \
-	laser
+	speech
 endif
 
 if COND_SPEECH
