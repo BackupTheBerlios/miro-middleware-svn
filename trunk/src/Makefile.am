@@ -50,9 +50,9 @@ sparrowdirs1 = \
 endif 
 sparrowdirs2 = \
 	can \
+	sparrow \
 	faulTty \
 	faulMotor \
-	sparrow \
 	sparrowBase
 endif
 
