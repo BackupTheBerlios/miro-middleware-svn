@@ -69,12 +69,7 @@ pioneersources = \
 	PioneerMotion.idl \
 	Gripper.idl
 
-sparrowsources1 = \
-	PioneerStall.idl \
-	PioneerMotion.idl \
-	Gripper.idl
-
-sparrowsources2 = \
+sparrowsources = \
 	Kicker.idl \
 	SparrowPanTilt.idl \
 	SparrowStall.idl \
@@ -96,10 +91,7 @@ pioneersources_used = $(pioneersources)
 endif
 
 if COND_SPARROW99
-if !COND_PIONEER
-sparrowsources1_used = $(sparrowsources1)
-endif
-sparrowsources2_used = $(sparrowsources2)
+sparrowsources_used = $(sparrowsources)
 endif
 
 if COND_DEPRECATED
@@ -111,8 +103,7 @@ sources = \
 	$(globalsources) \
 	$(b21sources_used) \
 	$(pioneersources_used) \
-	$(sparrowsources1_used) \
-	$(sparrowsources2_used) \
+	$(sparrowsources_used) \
 	$(deprecatedsources_used)
 
 builtsources = \
