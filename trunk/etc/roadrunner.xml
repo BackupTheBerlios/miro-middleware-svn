@@ -43,6 +43,7 @@
 	  <parameter value="0.300000" name="PanSwing" />
 	  <parameter value="245" name="PanRadPerSec" />
 	  <parameter value="3." name="PanAccuracy" />
+	  <!-- <parameter value="true" name="Servo" /> -->
         </parameter>
 	<parameter value="0.040000" name="InfraredPulse" />
 	<parameter value="0.040000" name="OdometryPulse" />
@@ -579,7 +580,7 @@
 	<parameter value="184" name="WhiteBalance1" />
 	<parameter name="Camera" >
 	  <parameter value="0.060000" name="Latency" />
-	  <parameter value="34.0" name="Alpha" />
+	  <parameter value="33.0" name="Alpha" />
 	  <parameter value="595" name="Height" />
 	  <parameter value=" 6.4000000000e+02" name="Ncx" />
 	  <parameter value=" 6.4000000000e+02" name="Nfx" />
