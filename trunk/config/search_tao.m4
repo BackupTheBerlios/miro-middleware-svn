@@ -46,7 +46,7 @@ AC_DEFUN([AC_SEARCH_TAO_LOCAL],
 
 	if test "$1" ; then
 #		LDFLAGS="$LDFLAGS $ACE_LDFLAGS $ACE_LIBS -L$1/tao -L$1/orbsvcs/orbsvcs -lTAO"
-		LDFLAGS="$LDFLAGS $ACE_LDFLAGS $ACE_LIBS -lTAO"
+		LDFLAGS="$LDFLAGS $ACE_LDFLAGS $ACE_LIBS -L$1/lib -lTAO"
 		CPPFLAGS="$CPPFLAGS $ACE_CPPFLAGS -I$1 -I$1/orbsvcs -D_GNU_SOURCE"
 		CFLAGS="$CFLAGS $ACE_CFLAGS -I$1 -I$1/orbsvcs"
 		PATH="$1/TAO_IDL:$PATH"
@@ -81,7 +81,7 @@ AC_DEFUN([AC_SEARCH_TAO_LOCAL],
 		if test "$1" ; then
 			AC_SUBST(TAO_ROOT, "$1")
 #			AC_SUBST(TAO_LDFLAGS, "-L$1/tao -L$1/orbsvcs/orbsvcs")
-			AC_SUBST(TAO_LDFLAGS, "")
+			AC_SUBST(TAO_LDFLAGS, "-L$1/lib ")
 			AC_SUBST(TAO_CPPFLAGS, "-I$1 -I$1/orbsvcs")
 			AC_SUBST(TAO_CFLAGS, "-I$1 -I$1/orbsvcs")
 		fi
