@@ -13,6 +13,7 @@
 #include "ArbiterParameters.h"
 #include "ArbiterMessage.h"
 #include "Behaviour.h"
+#include "miro/Log.h"
 
 namespace Miro
 {
@@ -159,17 +160,12 @@ namespace Miro
 	  // set actuators according to arbitration message      
 	  calcActivation();
 	}
-	else {
-	   std::cerr << "PriorityArbiter: got message from unregistered behaviour: "
-	       << _message.id->getBehaviourName() << std::endl;
+	else { MIRO_LOG_OSTR(LL_WARNING, "PriorityArbiter: got message from unregistered behaviour: "<< _message.id->getBehaviourName() << std::endl);
 	}
       }
-      else {
-	 std::cerr << "PriorityArbiter: got arbitrate call while not active from behaviour: "
-	     << _message.id->getBehaviourName() << std::endl;
+      else { MIRO_LOG_OSTR(LL_WARNING, "PriorityArbiter: got arbitrate call while not active from behaviour:" << _message.id->getBehaviourName() << std::endl);
       }
     }
-    else
-       std::cerr << "PriorityArbiter: received message without behaviour id." << std::endl;
+    else MIRO_LOG_OSTR(LL_WARNING, "PriorityArbiter: received message without behaviour id." << std::endl);
   }
 };

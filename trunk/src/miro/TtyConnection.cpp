@@ -15,21 +15,12 @@
 #include "DevEventHandler.h"
 #include "Parameters.h"
 #include "Exception.h"
-
-// #undef DEBUG
-
+#include <miro/Log.h>
 #include <iostream>
 
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
 
 namespace Miro
 {
-  using std::cout;
-  using std::cerr;
 
   //
   // Constructors / Destructors
@@ -45,11 +36,11 @@ namespace Miro
     connector(),
     selectHandlerId(-1)
   {
-    DBG(cout << "TtyConnection intizialising" << std::endl);
+    MIRO_DBG(MIRO,LL_NOTICE, "TtyConnection intizialising\n");
 
     if (connector.connect(ioBuffer, ttyName, 0, ACE_Addr::sap_any, 0, O_RDWR) == -1) {
-      cerr << "Failed to open device: " << _parameters.device << std::endl
-	   << "Propably running on the wrong machine?" << std::endl;
+      MIRO_LOG_OSTR(LL_CRITICAL,"Failed to open device: " << _parameters.device << std::endl
+	   << "Propably running on the wrong machine?" << std::endl);
       throw CException(errno, std::strerror(errno));
     }
 
@@ -68,13 +59,13 @@ namespace Miro
 #endif
 
 #if defined(TCGETS) || defined(TCGETA)
-    cout << "new tty status:" << std::endl << std::hex
+    MIRO_DBG_OSTR(MIRO,LL_PRATTLE, "new tty status:" << std::endl << std::hex
 	 << "c_iflag = 0x" << terminfo.c_iflag << std::endl
 	 << "c_oflag = 0x" << terminfo.c_oflag << std::endl
 	 << "c_cflag = 0x" << terminfo.c_cflag << std::endl
 	 << "c_lflag = 0x" << terminfo.c_lflag << std::endl
 	 << "c_cc[4/5] = 0x" << (int)terminfo.c_cc[VTIME] << " " << (int)terminfo.c_cc[VMIN] 
-	 << std::dec << std::endl;
+	 << std::dec << std::endl);
 #endif 
 
 #endif // ACE_HAS_TERM_IOCTLS
@@ -91,7 +82,7 @@ namespace Miro
 
   TtyConnection::~TtyConnection()
   {
-    DBG(cout << "Destructing TtyConnection" << std::endl);
+    MIRO_DBG(MIRO,LL_NOTICE,"Destructing TtyConnection\n");
 
     // Stop hardware triggered communication
     if (selectHandlerId != -1)

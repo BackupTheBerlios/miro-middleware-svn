@@ -11,14 +11,7 @@
 
 #include "OdometryTracking.h"
 #include "TimeHelper.h"
-
-// #undef DEBUG
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
+#include <miro/Log.h>
 
 namespace Miro
 {
@@ -36,10 +29,10 @@ namespace Miro
     odoTruncate_(false),
     rawTruncate_(false)
   {
-    DBG(std::cout << "Constructing OdometryTracking." << std::endl);
+    MIRO_DBG(MIRO,LL_CTOR_DTOR, "Constructing OdometryTracking.\n");
     
     // subscribe for the events we'd like to get
-    DBG(std::cout << "subscribe for events" << std::endl);
+    MIRO_DBG(MIRO,LL_NOTICE, "subscribe for events\n");
     CosNotification::EventTypeSeq added(2);
     CosNotification::EventTypeSeq removed(1);
     added.length(2);
@@ -54,7 +47,7 @@ namespace Miro
     consumerAdmin_->subscription_change(added, removed);
     connect();
 
-    DBG(std::cout << "finished" << std::endl);
+    MIRO_DBG(MIRO,LL_NOTICE, "finished\n");
   }
 
   /**
@@ -86,7 +79,7 @@ namespace Miro
       rawDeque.push_front(*raw);
     }
     else {
-      std::cerr << "OdometryTracking: received message I did not subscribe for." << std::endl;
+      MIRO_LOG(LL_WARNING,"OdometryTracking: received message I did not subscribe for.\n");
     }
   }
 

@@ -23,21 +23,7 @@
 #include "Exception.h"
 
 #include <ace/Reactor.h>
-
-// #undef DEBUG
-
-#ifdef DEBUG
-#include <iostream>
-
-using std::cout;
-using std::cerr;
-#endif
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
+#include <miro/Log.h>
 
 namespace Miro
 {
@@ -56,11 +42,10 @@ namespace Miro
     selectHandlerId(-1),
     tv(0,0)
   {
-    DBG(cout << "DevConnection intizialising" << std::endl);
+    MIRO_DBG(MIRO,LL_NOTICE,"DevConnection intizialising\n");
 
     if (connector.connect(ioBuffer, devName, &tv, ACE_Addr::sap_any, 0, O_RDWR) == -1) {
-      cerr << "Failed to open device." << std::endl
-	   << "Propably running on the wrong machine?" << std::endl;
+      MIRO_LOG(LL_CRITICAL, "Failed to open device.\nPropably running on the wrong machine?\n");
       throw CException(errno, std::strerror(errno));
     }
 
@@ -75,7 +60,7 @@ namespace Miro
 
   DevConnection::~DevConnection()
   {
-    DBG(cout << "Destructing DevConnection" << std::endl);
+    MIRO_DBG(MIRO,LL_NOTICE, "Destructing DevConnection\n");
 
     // Stop hardware triggered communication
     if (selectHandlerId != -1)

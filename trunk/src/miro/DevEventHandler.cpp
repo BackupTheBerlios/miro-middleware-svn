@@ -21,21 +21,7 @@
 #include "DevConsumer.h"
 #include "DevMessage.h"
 #include "Exception.h"
-
-// #undef DEBUG
-
-#ifdef DEBUG
-#include <iostream>
-
-using std::cout;
-using std::cerr;
-#endif
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
+#include <miro/Log.h>
 
 namespace Miro
 {
@@ -45,12 +31,12 @@ namespace Miro
     consumer_(_consumer),
     message_(_message)
   {
-    DBG(cout << "Constructing DevEvent." << std::endl);
+    MIRO_DBG(MIRO,LL_CTOR_DTOR,"Constructing DevEvent.\n");
   }
 
   DevEventHandler::~DevEventHandler()
   {
-    DBG(cout << "Destructing DeviceEvent." << std::endl);
+    MIRO_DBG(MIRO,LL_CTOR_DTOR,"Destructing DevEvent.\n");
 
     delete consumer_;
     delete message_;
@@ -59,7 +45,7 @@ namespace Miro
   int
   DevEventHandler::handle_close(ACE_HANDLE, ACE_Reactor_Mask)
   {
-    DBG(cout << "Device handle_close called." << std::endl);
+    MIRO_DBG(MIRO,LL_NOTICE,"Device handle_close called.\n");
 
     // commit suizide
     delete this;

@@ -22,31 +22,24 @@
 #include "Exception.h"
 
 #include <iostream>
+#include <miro/Log.h>
 
-#undef DEBUG
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
 
 namespace Miro
 {
   DevConsumer::DevConsumer()
   {
-    DBG(std::cout << "Constructing DevConsumer." << std::endl);
+    MIRO_DBG(MIRO, LL_CTOR_DTOR, "Constructing DevConsumer.\n");
   }
 
   DevConsumer::~DevConsumer()
   {
-    DBG(std::cout << "Destructing DevConsumer." << std::endl);
+    MIRO_DBG(MIRO, LL_CTOR_DTOR, "Destructing DevConsumer.\n");
   }
 
   void 
   DevConsumer::handleMessage(const DevMessage *)
   {
-    std::cerr << __FILE__ << ":" << __LINE__ << ":" << __FUNCTION__ 
-	 << "() - Unhandled Message!" << std::endl;
+    MIRO_DBG_OSTR(MIRO,LL_NOTICE,__FILE__ << ":" << __LINE__ << ":" << __FUNCTION__  << "() - Unhandled Message!" << std::endl);
   }
 }

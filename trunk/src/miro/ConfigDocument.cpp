@@ -77,7 +77,6 @@ namespace Miro
 
     ACE_Arg_Shifter arg_shifter (argc, argv);
     while (arg_shifter.is_anything_left ()) {
-//      char *current_arg = arg_shifter.get_current ();
       const ACE_TCHAR *current_arg = arg_shifter.get_current ();
 
       const char configFileOpt[] = "-MiroConfigFile";

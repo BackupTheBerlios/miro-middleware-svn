@@ -26,7 +26,6 @@
 #define DBG(x)
 #endif
 
-using std::cerr;
 using std::string;
 using std::ostream;
 

@@ -16,16 +16,7 @@
 #include <ace/Arg_Shifter.h>
 
 #include <tao/ORB_Core.h>
-
-#include <iostream>
-
-// #undef DEBUG
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
+#include <miro/Log.h>
 
 static Miro::Server * pServer;
 
@@ -33,7 +24,7 @@ extern "C" void handler (int signum)
 {
   // check of sigint and sigterm
   if (signum == SIGINT || signum == SIGTERM) {
-    DBG(std::cerr << "Signal received: " << signum << std::endl);
+    MIRO_LOG_OSTR(LL_CRITICAL, "Signal received: " << signum << std::endl);
     pServer->shutdown();
   }
 }
@@ -74,7 +65,7 @@ namespace Miro
     signals_(),
     worker_(&threadManager_, orb_.in(), shutdown_)
   {
-    DBG(std::cerr << "Constructing Miro::Server." << std::endl);
+    MIRO_DBG(MIRO,LL_CTOR_DTOR,"Constructing Miro::Server.\n");
 
     // parse arguments
     ACE_Arg_Shifter arg_shifter(argc, argv);
@@ -107,7 +98,7 @@ namespace Miro
     // Activate the POA manager.
     poa_mgr->activate();
 
-    DBG(std::cerr << "Miro::Server. constructed" << std::endl);
+    MIRO_DBG(MIRO,LL_CTOR_DTOR, "Miro::Server. constructed\n");
   }
 
   Server::Server(const Server& _server) :
@@ -120,19 +111,17 @@ namespace Miro
     signals_(),
     worker_(&threadManager_, orb_.in(), shutdown_)
   {
-    DBG(std::cerr << "Copy constructing Miro::Server." << std::endl);
+    MIRO_DBG(MIRO,LL_NOTICE, "Copy constructing Miro::Server.\n");
   }
 
   Server::~Server()
   {
-#ifdef DEBUG
     if (own_) {
-      std::cout << "Destructing Miro::Server." << std::endl;
+      MIRO_DBG(MIRO,LL_CTOR_DTOR,"Destructing Miro::Server.\n");
     }
     else {
-      std::cout << "Destructing cloned Miro::Server." << std::endl;
+      MIRO_DBG(MIRO,LL_CTOR_DTOR, "Destructing cloned Miro::Server.\n");
     }
-#endif
 
     if (!noNaming_) {
       CosNaming::Name n(1);
@@ -151,21 +140,21 @@ namespace Miro
 	}
       }
       catch (const CORBA::Exception& e) {
-	std::cerr << "Caught CORBA exception on unbinding: " << n[0].id << std::endl;
-	std::cerr << "Porbably the NameSevice went down while we run:" << std::endl;
-	std::cerr << e << std::endl;
+        MIRO_LOG_OSTR(LL_ERROR,"Caught CORBA exception on unbinding: " << n[0].id << std::endl
+	  << "Probably the NameSevice went down while we run:" << std::endl
+	  << e << std::endl);
       }
     }
 
     if (own_) {
-      std::cout << "Deactivating POA manager." << std::endl;
+      MIRO_LOG(LL_NOTICE, "Deactivating POA manager.\n");
       poa_mgr->deactivate(0, 0);
-      std::cout << "Destroying the POA." << std::endl;
+      MIRO_LOG(LL_NOTICE, "Destroying the POA.\n");
       poa->destroy(0, 0);
-      std::cout << "Performing remaining work in POA" << std::endl;
+      MIRO_LOG(LL_NOTICE, "Performing remaining work in POA\n");
       ACE_Time_Value timeSlice(0, 200000);
       orb_->perform_work(timeSlice);
-      std::cout << "Destroying the ORB." << std::endl;
+      MIRO_LOG(LL_NOTICE, "Destroying the ORB.\n");
       orb_->shutdown(1);
     }
   }
@@ -237,9 +226,8 @@ namespace Miro
 	// sure they are always up-to-date.
 	try {
 	  namingContext->unbind(n);
-
-	  std::cerr << "Object still bound in naming service: " << _name << std::endl
-	       << "Rebinding it." << std::endl;
+          MIRO_LOG_OSTR(LL_ERROR, "Object still bound in naming service: " << _name << std::endl
+	       << "Rebinding it." << std::endl);
 	} catch (...) {
 	}
       }
@@ -248,9 +236,9 @@ namespace Miro
 	namingContext->bind(n, _object);
       }
       catch (CosNaming::NamingContext::AlreadyBound& ) {
-	std::cerr << "Object is already bound in naming service: "
+	MIRO_LOG_OSTR(LL_ERROR, "Object is already bound in naming service: "
 	     << n[0].id << std::endl
-	     << "Use -MiroRebindIOR if you really want to rebind it." << std::endl;
+	     << "Use -MiroRebindIOR if you really want to rebind it." << std::endl);
 	throw(0);
       }
 
@@ -277,9 +265,8 @@ namespace Miro
 	// sure they are always up-to-date.
 	try {
 	  _context->unbind(n);
-
-	  std::cerr << "Object still bound in naming service: " << _name << std::endl
-	       << "Rebinding it." << std::endl;
+	  MIRO_LOG_OSTR(LL_ERROR, "Object still bound in naming service: " << _name << std::endl
+	       << "Rebinding it." << std::endl);
 	} catch (...) {
 	}
       }
@@ -288,9 +275,9 @@ namespace Miro
 	_context->bind(n, _object);
       }
       catch (CosNaming::NamingContext::AlreadyBound& ) {
-	std::cerr << "Object is already bound in naming service: "
+	MIRO_LOG_OSTR(LL_ERROR,  "Object is already bound in naming service: "
 	     << n[0].id << std::endl
-	     << "Use -MiroRebindIOR if you really want to rebind it." << std::endl;
+	     << "Use -MiroRebindIOR if you really want to rebind it." << std::endl);
 	throw(0);
       }
 
