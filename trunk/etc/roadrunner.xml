@@ -435,6 +435,39 @@
 		      </parameter>
 		    </parameter>
 
+		<parameter name="Filter" >
+		  <parameter value="ColorHist" name="Name" />
+		  <parameter value="ColorHist" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="AttentionCornerPoles" />
+		  </parameter>
+		</parameter>
+		<parameter name="Filter" >
+		  <parameter value="OrientHist" name="Name" />
+		  <parameter value="OrientHist" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="SobelVertical" />
+		    <parameter value="SobelHorizontal" />
+		    <parameter value="AttentionCornerPoles" />
+		  </parameter>
+		</parameter>
+		<parameter name="Filter" >
+		  <parameter value="NeuralNetCornerPoles" name="Type" />
+		  <parameter value="NeuralNetCornerPoles" name="Name" />
+		  <parameter name="BackLink" >
+		    <parameter value="ColorHist" />
+		    <parameter value="OrientHist" />
+		    <parameter value="AttentionCornerPoles" />
+		  </parameter>
+		</parameter>
+		<parameter name="Filter" >
+		  <parameter value="ROIVisual" name="Type" />
+		  <parameter value="ROIVisualCornerPoles" name="Name" />
+		  <parameter name="BackLink" >
+		    <parameter value="NeuralNetCornerPoles" />
+		  </parameter>
+		</parameter>
+
 		  </parameter>
 		</parameter>
 	      </parameter>
@@ -532,6 +565,28 @@
 	<parameter name="Interface" >
 	  <parameter value="Lines" name="Name" />
 	</parameter>
+      </parameter>
+
+      <parameter name="OrientHist">
+        <parameter value="3" name="UseROIFrom" />
+        <parameter value="0.2" name="wideROI" />
+      </parameter>
+      <parameter name="ColorHist">
+        <parameter value="1" name="UseROIFrom" />
+        <parameter value="0.0" name="wideROI" />
+      </parameter>
+      <parameter name="NeuralNetCornerPoles">
+	<parameter value="YBYCornerPoles.net" name="File" />
+	<parameter value="1" name="UseColorHistFrom" />
+	<parameter value="2" name="UseOrientHistFrom" />
+	<parameter value="3" name="UseROIFrom" />
+      </parameter>
+      <parameter name="ROIVisualCornerPoles">
+	<parameter value="true" name="VisText" />
+        <parameter value="true" name="InterfaceInstance" />
+        <parameter name="Interface" >
+          <parameter value="NN" name="Name" />
+        </parameter>
       </parameter>
 
       <parameter name="DeviceQuickCam" >
