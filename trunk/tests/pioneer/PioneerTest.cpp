@@ -19,6 +19,7 @@
 #include "pioneer/CanonPanTiltImpl.h"
 #include "pioneer/CanonCameraImpl.h"
 #include "pioneer/GripperImpl.h"
+#include "pioneer/TCM2Impl.h"
 
 #include "psos/PsosEventHandler.h"
 
@@ -74,6 +75,7 @@ struct Service
   Miro::BatteryImpl * pBatteryImpl;
   Pioneer::Consumer * pConsumer;
   Pioneer::StallImpl * pStallImpl;
+  Pioneer::TCM2Impl * pTCM2Impl;
   Canon::CanonPanTiltImpl canonPanTiltImpl;
   Canon::CanonCameraImpl canonCamera;
   Miro::GripperImpl gripper;
@@ -89,8 +91,9 @@ Service::Service() :
   pRangeSensorImpl(new Miro::RangeSensorImpl(Pioneer::Parameters::instance()->sonarDescription)),
   pOdometryImpl(new Miro::OdometryImpl(NULL)),
   pBatteryImpl(new Miro::BatteryImpl()),
-  pConsumer(new Pioneer::Consumer(pRangeSensorImpl, NULL, NULL, NULL, pOdometryImpl, NULL, NULL, &canonPanTiltImpl)),
+  pConsumer(new Pioneer::Consumer(pRangeSensorImpl, NULL, NULL, NULL, pOdometryImpl, NULL, NULL, NULL, &canonPanTiltImpl)),
   pStallImpl(new Pioneer::StallImpl()),
+  pTCM2Impl(new Pioneer::TCM2Impl(Pioneer::Parameters::instance()->tcm2Params, NULL)),
   canonPanTiltImpl(connection, Pioneer::Parameters::instance()->cameraUpsideDown),
   canonCamera(connection, canonPanTiltImpl.getAnswer()),
   gripper(connection),
