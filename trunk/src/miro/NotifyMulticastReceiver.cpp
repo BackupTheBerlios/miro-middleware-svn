@@ -186,7 +186,6 @@ namespace Miro {
                 headerCdr.read_ulong(eventData.fragmentCount);
                 headerCdr.read_ulong(eventData.timestamp);
 
-                cout << "test" << endl;
                 handle_event(eventData, iov);
             }
 
@@ -297,7 +296,7 @@ namespace Miro {
             }
 
             /* Copy the payload into the fragment buffer */
-            char *buffer = (char *)_iov[0].iov_len + HEADER_SIZE;
+            char *buffer = (char *)_iov[0].iov_base + HEADER_SIZE;
             int   bufferLen = _iov[0].iov_len - HEADER_SIZE;
 
             memcpy(entry->int_id_->fragmentBuffer(_eventData.fragmentOffset),
