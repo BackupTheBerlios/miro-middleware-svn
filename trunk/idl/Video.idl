@@ -28,7 +28,8 @@ module Miro
     BGR_32,
     YUV_24,
     YUV_411,
-    YUV_422
+    YUV_422,
+    YUV_420P
   };
 
   //! Struct describing the format of an image.
@@ -40,7 +41,7 @@ module Miro
     unsigned long height;
     //! Image palette (gray,rgb).
     VideoPaletteIDL palette;
-  };    
+  };
 
   //! The image handle, containing all relevant image meta data.
   typedef sequence<unsigned long> OffsetSequenceIDL;
@@ -50,7 +51,7 @@ module Miro
   {
     //! Shared memory key to image data.
     long key;
-    //! Image format 
+    //! Image format
     ImageFormatIDL format;
     //! Sequence of buffer offsets.
     OffsetSequenceIDL offset;
@@ -59,32 +60,32 @@ module Miro
   typedef sequence<octet> SubImageDataIDL;
 
   //! Interface to the frame grabber devices.
-  /** 
+  /**
    * @author Steffen Simon
    * @author Hans Utz
    * @author Arnd Muehlenfeld
    */
   interface Video
   {
-    //! Connect to the service. 
+    //! Connect to the service.
     /**
      * @throw EDevIO is thrown to indicate low level device problems.
      */
     ImageHandleIDL connect(out unsigned long id) raises(EDevIO);
-    //! Disconnect from the service. 
+    //! Disconnect from the service.
     /**
      * @throw EDevIO is thrown to indicate low level device problems.
      */
     void disconnect(in unsigned long id) raises(EOutOfBounds, EDevIO);
-    //! Get the current image. 
+    //! Get the current image.
     /**
      * This call immediately returns the last grabbed image.
      *
      * @throw EDevIO is thrown to indicate low level device problems.
      */
-    TimeIDL acquireCurrentImage(in unsigned long id, out unsigned long buffer) 
+    TimeIDL acquireCurrentImage(in unsigned long id, out unsigned long buffer)
       raises(EOutOfBounds, EDevIO);
-    //! Get the next image. 
+    //! Get the next image.
     /**
      * This call waits and returns the next grabbed image.
      *
@@ -92,22 +93,22 @@ module Miro
      */
     TimeIDL acquireNextImage(in unsigned long id, out unsigned long buffer)
       raises(EOutOfBounds, EDevIO, ETimeOut);
-    
+
     //! Release a previously acquired image.
-    void releaseImage(in unsigned long id, in unsigned long buffer) 
+    void releaseImage(in unsigned long id, in unsigned long buffer)
       raises(EOutOfBounds);
 
     //! Get all the pixels of the current image, downsized to width=x height=y
-    SubImageDataIDL exportSubImage(inout unsigned long x, inout unsigned long y) 
+    SubImageDataIDL exportSubImage(inout unsigned long x, inout unsigned long y)
       raises(EOutOfBounds, EDevIO);
 
     //! Get all the pixels of the next image, downsized to width=x height=y
-    SubImageDataIDL exportWaitSubImage(inout unsigned long x, inout unsigned long y) 
+    SubImageDataIDL exportWaitSubImage(inout unsigned long x, inout unsigned long y)
       raises(EOutOfBounds, EDevIO, ETimeOut);
   };
 
   //! STruct encapsulating connection data.
-  struct VideoConnectionIDL 
+  struct VideoConnectionIDL
   {
     //! Connection identifier.
     unsigned long id;
