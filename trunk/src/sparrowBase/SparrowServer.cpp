@@ -5,9 +5,9 @@
 // (c) 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// 
+//
 // $Id$
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
 
 #include "SparrowServer.h"
@@ -54,7 +54,7 @@ FaulhaberHardware::FaulhaberHardware(ACE_Reactor * _reactor,
 FaulhaberHardware::~FaulhaberHardware()
 {
   reactor->cancel_timer(timerId);
- 
+
 }
 
 PioneerHardware::PioneerHardware(ACE_Reactor * _reactor,
@@ -95,7 +95,7 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 					   &odometry),
 					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:&sparrowStall,
 					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:&sparrowButtons,
-					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:&infrared)),
+					 &infrared)),
   pCanEventHandler(new Can::EventHandler(pSparrowConsumer)),
   sparrowConnection(reactorTask.reactor(),
 		    pCanEventHandler,
@@ -155,7 +155,7 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 					   &odometry),
 					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:&sparrowStall,
 					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:&sparrowButtons,
-					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:&infrared)),
+					 &infrared)),
   pCanEventHandler(new Can::EventHandler(pSparrowConsumer)),
   sparrowConnection(reactorTask.reactor(),
 		    pCanEventHandler,
@@ -194,23 +194,23 @@ SparrowBase::init(bool _startReactorTastk)
 {
   pOdometry = odometry._this();
   pMotion = pSparrowMotion->_this();
+  pInfrared = infrared._this();
   if(!Sparrow::Parameters::instance()->sparrow2003){
     pKicker = sparrowKicker._this();
     pButtons = sparrowButtons._this();
     pStall = sparrowStall._this();
     pPanTilt = sparrowPanTilt._this();
-    pInfrared = infrared._this();
   }
 
   addToNameService(ec_, "EventChannel");
   addToNameService(pOdometry, "Odometry");
   addToNameService(pMotion, "Motion");
+  addToNameService(pInfrared, "Infrared");
   if(!Sparrow::Parameters::instance()->sparrow2003){
     addToNameService(pKicker, "Kicker");
     addToNameService(pButtons, "Buttons");
     addToNameService(pStall, "Stall");
     addToNameService(pPanTilt, "PanTilt");
-    addToNameService(pInfrared, "Infrared");
   }
 
   if (pSonar_.get() != NULL) {
@@ -257,6 +257,8 @@ SparrowBase::~SparrowBase()
   poa->deactivate_object (oid.in());
   oid =  poa->reference_to_id (pMotion);
   poa->deactivate_object (oid.in());
+  oid =  poa->reference_to_id (pInfrared);
+  poa->deactivate_object (oid.in());
   if(!Sparrow::Parameters::instance()->sparrow2003){
     oid =  poa->reference_to_id (pKicker);
     poa->deactivate_object (oid.in());
@@ -265,8 +267,6 @@ SparrowBase::~SparrowBase()
     oid = poa->reference_to_id ( pStall);
     poa->deactivate_object (oid.in());
     oid =  poa->reference_to_id (pPanTilt);
-    poa->deactivate_object (oid.in());
-    oid =  poa->reference_to_id (pInfrared);
     poa->deactivate_object (oid.in());
   }
   if (pSonar_.get() != NULL) {
