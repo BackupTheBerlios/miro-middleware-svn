@@ -15,6 +15,11 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.15  2004/05/25 13:04:04  gmayer
+ * oehm, compiler directives seems to have problems if they are defined with strings instead of numbers. changed this.
+ *
+ * BOOTSTRAP NECESSARY
+ *
  * Revision 1.14  2004/05/19 14:50:26  gmayer
  * YACT -- yet another configure test
  * because there is a change in libdc1394 0.9.4 we need to check which interface we have to use....
@@ -111,6 +116,10 @@
  *
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+ 
 #include <ace/OS.h>
 
 #include "VideoDevice1394.h"
@@ -360,7 +369,22 @@ namespace Video
 		  "ISO channel: " << channel << "    speed: " << speed);
     channel = 1;
 
-#if (LIBDC1394_VERSION == new)
+#if ( LIBDC1394_VERSION == 1 )
+    // old version
+    if (dc1394_dma_setup_capture(handle_,
+				 p_camera_->node,
+				 channel,
+				 FORMAT_VGA_NONCOMPRESSED,
+				 imageFormat_,
+				 SPEED_400,
+				 frameRate_,
+				 NUM_BUFFERS,
+				 DROP_FRAMES,
+				 params_.device.c_str(),
+				 p_camera_) != DC1394_SUCCESS)
+
+#elif ( LIBDC1394_VERSION == 2 )
+    // new version
     if (dc1394_dma_setup_capture(handle_,
 				 p_camera_->node,
 				 channel,
@@ -370,18 +394,6 @@ namespace Video
 				 frameRate_,
 				 NUM_BUFFERS,
 				 1,
-				 DROP_FRAMES,
-				 params_.device.c_str(),
-				 p_camera_) != DC1394_SUCCESS)
-#elif (LIBDC1394_VERSION == old)
-    if (dc1394_dma_setup_capture(handle_,
-				 p_camera_->node,
-				 channel,
-				 FORMAT_VGA_NONCOMPRESSED,
-				 imageFormat_,
-				 SPEED_400,
-				 frameRate_,
-				 NUM_BUFFERS,
 				 DROP_FRAMES,
 				 params_.device.c_str(),
 				 p_camera_) != DC1394_SUCCESS)

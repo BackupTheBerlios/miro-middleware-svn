@@ -152,7 +152,7 @@ AC_DEFUN([AC_DETERMINE_LIBDC_VERSION],
 			"/dev/blabla",
 			(dc1394_cameracapture *)NULL);
 	],[
-	success=new
+	success=2
 	],[
 	])
 	AC_TRY_COMPILE([
@@ -173,7 +173,7 @@ AC_DEFUN([AC_DETERMINE_LIBDC_VERSION],
 			"/dev/blabla",
 			(dc1394_cameracapture *)NULL);
 	],[
-	success=old
+	success=1
 	],[
 	])
 	AC_MSG_RESULT($success)
