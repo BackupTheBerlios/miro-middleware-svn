@@ -38,22 +38,19 @@ namespace Canon
   int str2int(const char * buffer, int digits);
   void str2int(const char* buffer, int &num1, int &num2, int digits);
 
-  inline int str2int(const unsigned char * buffer, int digits) 
-  {return str2int((char*)buffer,digits);}
-  inline void str2int(const unsigned char* buffer, int &num1, int &num2, int digits) 
-  {str2int((char*)buffer,num1,num2,digits);}
+  inline int str2int(const unsigned char * buffer, int digits) {
+    return str2int((char*)buffer,digits);
+  }
+  inline void str2int(const unsigned char* buffer, int &num1, int &num2, int digits) {
+    str2int((char*)buffer,num1,num2,digits);
+  }
   
-  //Answer* operator +=(Answer* out, unsigned char val);
 
 
   class Message : public Miro::DevMessage
   {
   public:
     Message() {} // default get message
-    //    Message(unsigned short cmd);
-    //    Message(char cmd, const char * msg);
-    //    explicit Message(char cmd, short val);
-    //    explicit Message(char cmd, unsigned short val);
     Message(unsigned short cmd, unsigned char byte1=0, unsigned char byte2=0, unsigned char byte3=0);
     Message(unsigned short cmd, char * str);
 
@@ -110,6 +107,8 @@ namespace Canon
     void add(unsigned char val);
 
     Miro::Mutex mutex;
+    Miro::Condition cond;
+    ACE_Time_Value maxWait;
 
   protected:
     static const int MAX_ANSWER_SIZE=128;
@@ -118,7 +117,7 @@ namespace Canon
     bool valid;
   };
 
-  class Timer
+  /*  class Timer
   {
   public:
     //count is the maximum time in usecs to sleep
@@ -133,7 +132,7 @@ namespace Canon
     int count;
   };
  
-
+  */
  // inline functions
   inline
   unsigned char 
@@ -248,19 +247,6 @@ namespace Canon
   bool 
   Answer::isValid() const {
     return valid;
-  }
-
-  inline 
-  bool
-  Timer::usleep(int usec) {
-    ::usleep(usec);
-    count-=usec;
-    return (count<=0);
-  }
-  inline 
-  void
-  Timer::reset(int count_) {
-    count=count_;
   }
 
 };

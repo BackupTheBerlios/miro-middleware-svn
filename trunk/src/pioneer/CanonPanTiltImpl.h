@@ -73,9 +73,9 @@ namespace Canon
     // from canonPanTilt.idl
     //-------------------------------------------------------------------------
     virtual void waitCompletion()
-      throw(Miro::EDevIO);
+      throw(Miro::EDevIO, Miro::ETimeOut);
     virtual void setWaitPosition(const Miro::PanTiltPositionIDL & dest) 
-      throw(Miro::EOutOfBounds, Miro::EDevIO);
+      throw(Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut);
     virtual void setSpdAcc(const Miro::CanonPanTiltSpdAccIDL & dest)
       throw(Miro::ETimeOut, Miro::EDevIO, Miro::EOutOfBounds);
     virtual Miro::CanonPanTiltSpdAccIDL getSpdAcc()
@@ -84,7 +84,6 @@ namespace Canon
       throw(Miro::EDevIO, Miro::ETimeOut);
 
     Answer * getAnswer();
-    void addAnswer(unsigned char val);
     void checkAnswer() throw(Miro::EDevIO,Miro::EOutOfBounds, Miro::ETimeOut);
 
     //closes the connection and returns control to Remote Controller

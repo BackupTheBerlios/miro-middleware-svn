@@ -103,13 +103,15 @@ namespace Canon
 
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
-      Timer timer(500000); //wait 0.5 sec max for an answer
       pAnswer->init();
       connection.sendCamera(zoom);
-      while (!pAnswer->errorCode()) 
-	if (timer.usleep(5000)) {
-	  throw Miro::ETimeOut();
-	}
+      while (!pAnswer->errorCode()) {
+	ACE_Time_Value timeout(ACE_OS::gettimeofday());
+	timeout+=maxWait;
+	
+	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	//wait until the error code is finished or timeout
+      }
       
       //if busy, keep trying...
       if (pAnswer->errorCode()==ERROR_BUSY) {
@@ -163,13 +165,15 @@ namespace Canon
 
     while (!done) {
       Miro::Guard guard(pAnswer->mutex); 
-      Timer timer(500000);
       pAnswer->init();
       connection.sendCamera(focus);
-      while (!pAnswer->errorCode()) 
-	if (timer.usleep(5000)) {
-	  throw Miro::ETimeOut();
-	}
+      while (!pAnswer->errorCode()) {
+	ACE_Time_Value timeout(ACE_OS::gettimeofday());
+	timeout+=maxWait;
+	
+	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	//wait until the error code is finished or timeout
+      }
       
       //if busy, keep trying...
       if (pAnswer->errorCode()==ERROR_BUSY) {
@@ -216,13 +220,15 @@ namespace Canon
 
     while (!done) {
       Miro::Guard guard(pAnswer->mutex); 
-      Timer timer(500000);
       pAnswer->init();
       connection.sendCamera(focus);
-      while (!pAnswer->errorCode()) 
-	if (timer.usleep(5000)) {
-	  throw Miro::ETimeOut();
-	}
+      while (!pAnswer->errorCode()) {
+	ACE_Time_Value timeout(ACE_OS::gettimeofday());
+	timeout+=maxWait;
+	
+	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	//wait until the error code is finished or timeout
+      }
       
       //if busy, keep trying...
       if (pAnswer->errorCode()==ERROR_BUSY) {
@@ -258,18 +264,16 @@ namespace Canon
     initialized=true;
   }
   
-  void 
-  CanonCameraImpl::addAnswer(unsigned char val)
-  {
-    pAnswer->add(val);
-  }
-
   void CanonCameraImpl::checkAnswer() throw (Miro::EDevIO,Miro::EOutOfBounds, Miro::ETimeOut)
   {
-    Timer timer(500000); //0.5 sec maxwait
-    while (!pAnswer->isValid()) 
-      if (timer.usleep(1000)) // wait to get the whole answer
-	throw Miro::ETimeOut();
+    while (!pAnswer->isValid()) {
+	ACE_Time_Value timeout(ACE_OS::gettimeofday());
+	timeout+=maxWait;
+	
+	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	//wait until the answer is finished or timeout
+      }
+
     if (pAnswer->header()!=ANSWER_HEADER) throw Miro::EDevIO("[CanonCameraImpl] Erroneous header in answer");
     if (pAnswer->errorCode()==ERROR_PARAMETER) throw Miro::EOutOfBounds("[CanonCameraImpl] Parameter Error");
     if (pAnswer->errorCode()==ERROR_MODE) throw Miro::EDevIO("[CanonCameraImpl] Mode Error");

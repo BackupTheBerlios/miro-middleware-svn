@@ -242,6 +242,7 @@ namespace Pioneer
 	  }
 	} else if ((int)pPsosMsg->buffer()[3]==0xb0) { //SERAUXpac SIP
 	  if (pAnswer) {
+	    Miro::Guard guard(pAnswer->mutex);
 	    for (int i=4; i<4+pPsosMsg->buffer()[2]-3; i++) 
 	      pAnswer->add(pPsosMsg->buffer()[i]);
 	  }

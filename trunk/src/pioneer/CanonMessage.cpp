@@ -176,6 +176,9 @@ namespace Canon
 
 
   Answer::Answer() :
+    mutex(),
+    cond(mutex),
+    maxWait(0,500000),
     index_(0),
     valid(false)
   {
@@ -197,11 +200,6 @@ namespace Canon
     buffer_[index_]=val;
     index_++;
     valid|=(val==END_MARK); //if the ending mark came, the message is complete
-  }
-
-  Timer::Timer(int count_) :
-    count(count_)
-  {
   }
 
 };

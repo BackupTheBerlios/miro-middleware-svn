@@ -48,7 +48,6 @@ namespace Canon
 
   CanonPanTiltImpl::CanonPanTiltImpl(Pioneer::Connection& _connection,
 			 Pioneer::Consumer& _consumer, bool _upsideDown) throw(Exception) :
-    //    pAnswer(new Answer()),
     answer(),
     pAnswer(&answer),
     connection(_connection),
@@ -70,19 +69,19 @@ namespace Canon
   {
     DBG(cout << "Constructing CanonPanTiltImpl" << endl);
   }
-
+  
   CanonPanTiltImpl::~CanonPanTiltImpl()
   {
     DBG(cout << "Destructing CanonPanTiltImpl" << endl);
-  }
-
+      }
+  
   void
   CanonPanTiltImpl::done() 
   {
     Canon::Message msg(LOCAL_CONTROL_MODE,0x31);
     connection.sendCamera(msg);
   }
-
+  
   // 
   // IDL interface implementation
 
@@ -151,10 +150,13 @@ namespace Canon
       pAnswer->init();
       connection.sendCamera(getPanTilt);
 
-      // guillem: please use a Condition variable here
-      //          btw, usleep is wrapped by ACE_OS::sleep(ACE_Time_Value&)
-      //          if you need it.
-      while (!pAnswer->errorCode()) usleep(1000); //wait until the error code is finished
+      while (!pAnswer->errorCode()) {
+	ACE_Time_Value timeout(ACE_OS::gettimeofday());
+	timeout+=maxWait;
+
+	if (pAnswer->cond.wait(&timeout)==-1) throw ETimeOut(); 
+	    //wait until the error code is finished or timeout
+      }
       //if camera is initializing, wait and try again
       if (pAnswer->errorCode()==ERROR_BUSY) {
 	continue;
@@ -207,13 +209,23 @@ namespace Canon
 	Miro::Guard guard(pAnswer->mutex); 
 	pAnswer->init();
 	connection.sendCamera(panTiltValue);
-	while (!pAnswer->errorCode()) 
-	  usleep(1000); //wait until the error code is finished
-	
-	//check if the format is OK and no errors are returned
-	//if there is an error, an exception will be thrown
 	try {
+	  while (!pAnswer->errorCode()) {
+	    ACE_Time_Value timeout(ACE_OS::gettimeofday());
+	    timeout+=maxWait;
+	    
+	    if (pAnswer->cond.wait(&timeout)==-1) throw ETimeOut(); 
+	    //wait until the error code is finished or timeout
+	  }
+	  
+	  //check if the format is OK and no errors are returned
+	  //if there is an error, an exception will be thrown
 	  checkAnswer();
+	}
+	catch (Miro::ETimeOut& e) {
+	  currentPan=panTmp; //reset old values in case of error
+	  currentTilt=tiltTmp;
+	  throw (e);
 	}
 	catch (Miro::EOutOfBounds& e) {
 	  currentPan=panTmp; //reset old values in case of error
@@ -248,7 +260,7 @@ namespace Canon
   //-------------------------------------------------------------------------
 
   void
-  CanonPanTiltImpl::waitCompletion() throw(Miro::EDevIO)
+  CanonPanTiltImpl::waitCompletion() throw(Miro::EDevIO, Miro::ETimeOut)
   {
     Miro::PanTiltPositionIDL goal,dest;
 
@@ -270,7 +282,7 @@ namespace Canon
   }
   
   void
-  CanonPanTiltImpl::setWaitPosition(const Miro::PanTiltPositionIDL & dest) throw(Miro::EOutOfBounds, Miro::EDevIO)
+  CanonPanTiltImpl::setWaitPosition(const Miro::PanTiltPositionIDL & dest) throw(Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut)
   {
     setPosition(dest);
     waitCompletion();
@@ -322,17 +334,19 @@ namespace Canon
     Message minTiltSpeed(GET_TILT_MIN_SPEED,0x32);
     Message maxTiltSpeed(GET_TILT_MAX_SPEED,0x33);
 
-
-    Timer timer(500000); //.5 sec timeout
     {//scope for mutex
       Miro::Guard guard(pAnswer->mutex); 
 
       pAnswer->init();
       connection.sendCamera(getPanSpeed);
       //wait for error code completion
-      while (!pAnswer->errorCode()) 
-	if (timer.usleep(1000))
-	  throw Miro::ETimeOut();
+      while (!pAnswer->errorCode()) {
+	ACE_Time_Value timeout(ACE_OS::gettimeofday());
+	timeout+=maxWait;
+	
+	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	//wait until the error code is finished or timeout
+      }
       //get the rest
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
       checkAnswer(); //wait for completion
@@ -342,13 +356,17 @@ namespace Canon
     {//Scope for mutex
       Miro::Guard guard(pAnswer->mutex); 
 
-      timer.reset(500000);
       pAnswer->init();
       connection.sendCamera(getTiltSpeed);
       //wait for error code completion
-      while (!pAnswer->errorCode()) 
-	if (timer.usleep(1000))
-	  throw Miro::ETimeOut();
+      while (!pAnswer->errorCode()) {
+	ACE_Time_Value timeout(ACE_OS::gettimeofday());
+	timeout+=maxWait;
+	
+	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	//wait until the error code is finished or timeout
+      }
+
       //get the rest
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
       checkAnswer(); //wait for completion
@@ -360,12 +378,15 @@ namespace Canon
 
       //if not initialized, get it from the camera;
       pAnswer->init();
-      timer.reset(500000);
       connection.sendCamera(minPanSpeed);
       //wait for error code completion
-      while (!pAnswer->errorCode()) 
-	if (timer.usleep(1000))
-	  throw Miro::ETimeOut();
+      while (!pAnswer->errorCode()) {
+	ACE_Time_Value timeout(ACE_OS::gettimeofday());
+	timeout+=maxWait;
+	
+	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	//wait until the error code is finished or timeout
+      }
       //get the rest
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
       checkAnswer(); //wait for completion
@@ -377,12 +398,16 @@ namespace Canon
       Miro::Guard guard(pAnswer->mutex); 
       //if not initialized, get it from the camera
       pAnswer->init();
-      timer.reset(500000);
       connection.sendCamera(minTiltSpeed);
       //wait for error code completion
-      while (!pAnswer->errorCode()) 
-	if (timer.usleep(1000))
-	  throw Miro::ETimeOut();
+      while (!pAnswer->errorCode()) {
+	ACE_Time_Value timeout(ACE_OS::gettimeofday());
+	timeout+=maxWait;
+	
+	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	//wait until the error code is finished or timeout
+      }
+
       //get the rest
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
       checkAnswer(); //wait for completion
@@ -395,12 +420,16 @@ namespace Canon
       Miro::Guard guard(pAnswer->mutex); 
       //if not initialized, get it from the camera
       pAnswer->init();
-      timer.reset(500000);
       connection.sendCamera(maxPanSpeed);
       //wait for error code completion
-      while (!pAnswer->errorCode()) 
-	if (timer.usleep(1000))
-	  throw Miro::ETimeOut();
+      while (!pAnswer->errorCode()) {
+	ACE_Time_Value timeout(ACE_OS::gettimeofday());
+	timeout+=maxWait;
+	
+	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	//wait until the error code is finished or timeout
+      }
+
       //get the rest
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
       checkAnswer(); //wait for completion
@@ -412,12 +441,16 @@ namespace Canon
       Miro::Guard guard(pAnswer->mutex); 
       //if not initialized, get it from the camera
       pAnswer->init();
-      timer.reset(500000);
       connection.sendCamera(maxTiltSpeed);
       //wait for error code completion
-      while (!pAnswer->errorCode()) 
-	if (timer.usleep(1000))
-	  throw Miro::ETimeOut();
+      while (!pAnswer->errorCode()) {
+	ACE_Time_Value timeout(ACE_OS::gettimeofday());
+	timeout+=maxWait;
+	
+	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	//wait until the error code is finished or timeout
+      }
+
       //get the rest
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
       checkAnswer(); //wait for completion
@@ -441,16 +474,19 @@ namespace Canon
     Message getMinTilt(GET_ANGLE_LIMITS,0x32);
     Message getMaxTilt(GET_ANGLE_LIMITS,0x33);
 
-    Timer timer(500000);
     if (minPan<=-1e10) {
       Miro::Guard guard(pAnswer->mutex); 
       //if not initialized, get it from the camera;
       pAnswer->init();
       connection.sendCamera(getMinPan);
       //wait for error code completion
-      while (!pAnswer->errorCode()) 
-	if (timer.usleep(1000))
-	  throw Miro::ETimeOut();
+      while (!pAnswer->errorCode()) {
+	ACE_Time_Value timeout(ACE_OS::gettimeofday());
+	timeout+=maxWait;
+	
+	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	//wait until the error code is finished or timeout
+      }
       //get the rest
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
       checkAnswer(); //wait for completion
@@ -461,12 +497,15 @@ namespace Canon
       Miro::Guard guard(pAnswer->mutex); 
       //if not initialized, get it from the camera
       pAnswer->init();
-      timer.reset(500000);
       connection.sendCamera(getMinTilt);
       //wait for error code completion
-      while (!pAnswer->errorCode()) 
-	if (timer.usleep(1000))
-	  throw Miro::ETimeOut();
+      while (!pAnswer->errorCode()) {
+	ACE_Time_Value timeout(ACE_OS::gettimeofday());
+	timeout+=maxWait;
+	
+	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	//wait until the error code is finished or timeout
+      }
       //get the rest
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
       checkAnswer(); //wait for completion
@@ -477,12 +516,15 @@ namespace Canon
       Miro::Guard guard(pAnswer->mutex); 
       //if not initialized, get it from the camera
       pAnswer->init();
-      timer.reset(500000);
       connection.sendCamera(getMaxPan);
       //wait for error code completion
-      while (!pAnswer->errorCode()) 
-	if (timer.usleep(1000))
-	  throw Miro::ETimeOut();
+      while (!pAnswer->errorCode()) {
+	ACE_Time_Value timeout(ACE_OS::gettimeofday());
+	timeout+=maxWait;
+	
+	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	//wait until the error code is finished or timeout
+      }
       //get the rest
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
       checkAnswer(); //wait for completion
@@ -493,12 +535,15 @@ namespace Canon
       Miro::Guard guard(pAnswer->mutex); 
       //if not initialized, get it from the camera
       pAnswer->init();
-      timer.reset(500000);
       connection.sendCamera(getMaxTilt);
       //wait for error code completion
-      while (!pAnswer->errorCode()) 
-	if (timer.usleep(1000))
-	  throw Miro::ETimeOut();
+      while (!pAnswer->errorCode()) {
+	ACE_Time_Value timeout(ACE_OS::gettimeofday());
+	timeout+=maxWait;
+	
+	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	//wait until the error code is finished or timeout
+      }
       //get the rest
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
       checkAnswer(); //wait for completion
@@ -530,7 +575,7 @@ namespace Canon
    
     pAnswer->init();
     connection.sendCamera(getRatio);
-    while (!pAnswer->errorCode()) usleep(1000); //wait until the error code is finished
+    while (!pAnswer->errorCode()) pAnswer->cond.wait(); //wait until the error code is finished
     
     //if there is no error, read the rest of the parameters
     if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
@@ -555,7 +600,7 @@ namespace Canon
 
     pAnswer->init();
     connection.sendCamera(getRatio);
-    while (!pAnswer->errorCode()) usleep(1000); //wait until the error code is finished
+    while (!pAnswer->errorCode()) pAnswer->cond.wait(); //wait until the error code is finished
     
     //if there is no error, read the rest of the parameters
     if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
@@ -616,23 +661,20 @@ namespace Canon
       }
       catch (Miro::EDevIO & e) {
 	// avoid "mode" errors
-	done=false;
+	     done=false;
       }
     } while(!done);
   }
 
-  void 
-  CanonPanTiltImpl::addAnswer(unsigned char val)
+void CanonPanTiltImpl::checkAnswer() throw (Miro::EDevIO,Miro::EOutOfBounds, Miro::ETimeOut)
   {
-    pAnswer->add(val);
-  }
-
-  void CanonPanTiltImpl::checkAnswer() throw (Miro::EDevIO,Miro::EOutOfBounds, Miro::ETimeOut)
-  {
-    Timer timer(500000); //max timeout: 0.5 sec
-    while (!pAnswer->isValid()) 
-      if (timer.usleep(1000)) // wait to get the whole answer
-	throw Miro::ETimeOut();
+    while (!pAnswer->isValid()) { //try to get the whole answer
+      ACE_Time_Value timeout(ACE_OS::gettimeofday());
+      timeout+=maxWait;
+	  
+      if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+      //wait until the answer is finished or timeout
+    }
     if (pAnswer->header()!=ANSWER_HEADER) throw Miro::EDevIO("[CanonPanTiltImpl] Erroneous header in answer");
     if (pAnswer->errorCode()==ERROR_PARAMETER) throw Miro::EOutOfBounds("[CanonPanTiltImpl] Parameter Error");
     if (pAnswer->errorCode()==ERROR_MODE) throw Miro::EDevIO("[CanonPanTiltImpl] Mode Error");

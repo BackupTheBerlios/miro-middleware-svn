@@ -60,7 +60,6 @@ namespace Canon
       throw(Miro::EDevIO, Miro::ETimeOut);
 
     Answer * getAnswer();
-    void addAnswer(unsigned char val);
     void checkAnswer() throw(Miro::EDevIO,Miro::EOutOfBounds, Miro::ETimeOut);
 
     //closes the connection and returns control to Remote Controller
