@@ -84,7 +84,7 @@ namespace FaulController
       std::ostringstream s;
       std::string wheel = (msg->wheel() == OdometryMessage::LEFT)? "left  " : "right ";
       s << wheel << "length: " << bytes << std::endl << std::hex << wheel;
-      for (int i = 0; i < bytes; ++i) {
+      for (int i = 0; i < 5; ++i) {
 	s.width(2);
 	s.fill('0');
 	s << static_cast<unsigned int>((unsigned char)buff_[i]) << " ";

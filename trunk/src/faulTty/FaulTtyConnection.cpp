@@ -71,7 +71,7 @@ namespace FaulController
     sprintf(message, 
 	    "ac%d\r\nv%d\r\n%c", 
 	    acc, vel, 201);
-    
+  
     Miro::Guard guard(mutex_);
     int rc = ttyConnection_.ioBuffer.send_n(message, strlen(message));
     
