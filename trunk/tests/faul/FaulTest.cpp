@@ -127,8 +127,8 @@ int main(int argc, char* argv[])
 
   // adding a handler for odometry polling
 
-  ACE_Time_Value tv(0, 100000);
-  service.reactorTask.reactor()->schedule_timer(service.pTimerEventHandler, NULL, tv ,tv);
+  ACE_Time_Value tv(0, 50000);
+  // service.reactorTask.reactor()->schedule_timer(service.pTimerEventHandler, NULL, tv ,tv);
 
 
   // adding a handler for stall detection
@@ -184,7 +184,7 @@ int main(int argc, char* argv[])
 	{
 	  cout << "what speed? (mm/sec) " << endl;
 	  cin >> k;
-	  service.connection.setSpeed(k);break;
+	  service.connection.setSpeed(k, k);break;
 	  /*
 	    cout << "how long?  (mmsec)" << endl;
 	    cin >> i;
@@ -242,7 +242,7 @@ int main(int argc, char* argv[])
 
       case '0' :
 	{
-	  service.connection.setSpeed(0);
+	  service.connection.setSpeed(0, 0);
 	  break;
 	}
       case 'a' :
@@ -257,9 +257,9 @@ int main(int argc, char* argv[])
 	  ace_time.msec(i);
 
 	  while(!canceled) {
-	    service.connection.setSpeed(100);
+	    service.connection.setSpeed(300, 300);
 	    ACE_OS::sleep(ace_time);
-	    service.connection.setSpeed(0);
+	    service.connection.setSpeed(0, 0);
 	    ACE_OS::sleep(ace_time);
                 
 	  }
