@@ -16,7 +16,6 @@ globaldirs = \
 	motion \
 	rangeSensor \
 	panTilt \
-	kicker \
 	video \
 	videoBroker \
 	notify \
@@ -49,6 +48,7 @@ endif
 if COND_SPARROW99
 sparrowdirs = \
 	sparrow \
+	kicker \
 	faul
 endif
 

@@ -64,7 +64,7 @@ AC_DEFUN([AC_SEARCH_QT_LOCAL],
 	OLD_PATH=$PATH
 
 	if test "$1"; then
-		LDFLAGS="$LDFLAGS -L$1 -lqt"
+		LDFLAGS="$LDFLAGS -L$1 -lqt-mt"
 	fi
 	if test "$2"; then
 		CPPFLAGS="$CPPFLAGS -I$2"
@@ -95,10 +95,10 @@ AC_DEFUN([AC_SEARCH_QT_LOCAL],
 	if test "x$success" != xyes; then
 
 
-# try with libqt-mt version
-		AC_MSG_WARN([libqt not found, trying libqt-mt])
+# try with libqt version
+		AC_MSG_WARN([libqt-mt not found, trying libqt])
 		if test "$1"; then
-			LDFLAGS="$LDFLAGS -L$1 -lqt-mt"
+			LDFLAGS="$LDFLAGS -L$1 -lqt"
 		fi
 		if test "$2"; then
 			CPPFLAGS="$CPPFLAGS -I$2"
@@ -136,10 +136,10 @@ AC_DEFUN([AC_SEARCH_QT_LOCAL],
 				AC_SUBST(QT_CPPFLAGS, "-I$2")
 				AC_SUBST(QT_CFLAGS, "-I$2")
 			fi
-			AC_SUBST(QT_LIBS, "-lqt-mt")
+			AC_SUBST(QT_LIBS, "-lqt")
 		fi
 	else
-# libqt found
+# libqt-mt found
 		if test "$1"; then
 			AC_SUBST(QT_LDFLAGS, "-L$1")
 		fi
@@ -147,7 +147,7 @@ AC_DEFUN([AC_SEARCH_QT_LOCAL],
 			AC_SUBST(QT_CPPFLAGS, "-I$2")
 			AC_SUBST(QT_CFLAGS, "-I$2")
 		fi
-		AC_SUBST(QT_LIBS, "-lqt")
+		AC_SUBST(QT_LIBS, "-lqt-mt")
 	fi
 
 # moc test
