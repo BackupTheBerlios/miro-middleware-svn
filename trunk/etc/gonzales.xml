@@ -177,8 +177,8 @@
       <!-- OmniCam -->
 
       <instance type="Video::Parameters" name="OmniCam" >
-	<parameter value="320" name="Width" />
-	<parameter value="240" name="Height" />
+	<parameter value="160" name="Width" />
+	<parameter value="120" name="Height" />
 	<parameter value="yuv420p" name="Palette" />
 	<parameter name="Filter">
 	  <parameter value="DeviceQuickCam" name="Name" />
@@ -301,9 +301,9 @@
       </instance>
 
       <instance type="Video::FilterOmni2Pan" name="FilterOmni2Pan">
-	<parameter value="179" name="CenterX" />
-	<parameter value="134" name="CenterY" />
-	<parameter value="125" name="Radius" />
+	<parameter value="90" name="CenterX" />
+	<parameter value="67" name="CenterY" />
+	<parameter value="63" name="Radius" />
 	<!-- roadrunner: x=160 y=122 r=124 -->
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
