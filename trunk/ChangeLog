@@ -1,4 +1,673 @@
+2004-02-25  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/b21Base/B21Base.cpp, src/miro/Log.cpp, src/miro/Server.cpp, src/pioneerBase/PioneerBase.cpp, src/sparrowBase/SparrowBase.cpp, src/video/VideoService.cpp, utils/logPlayer/LogPlayer.cpp:
+	sorry for another scattered commit
+	no header-files touched though, recompile times will be tolerable :-)
+	I enabled the logging framework for all miro servers
+	and debugged some more the logging framework initialization
+
+	* utils/notifyObserver/NotifyObserver.cpp:
+	removing dependency on qt_reactor in ACE/TAO
+	we will need this most likely in the futur, but for now its safe
+	we will have to add a test for this then, though
+
+2004-02-23  mc1  <mc1@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/abus/AbusConnection.cpp: Logging lala
+
+2004-02-19  Guillem Pages  <guillem@achilles.neuro.informatik.uni-ulm.de>
+
+	* idl/.cvsignore:
+	Ignoring the IDL files for the deprecated Image interface
+	(if nobody compiled it, nobody noticed they were there ;-)
+
+	* bin/.cvsignore:
+	Ignoring some binary files (Deprecated executables and Sphinx)
+
+2004-02-19  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* performance-tests/panTilt/PanLatency.cpp, performance-tests/image/PollImages.cpp:
+	missing headers for tests for deprecated interfaces
+
+	* src/miro/IO.cpp, src/miro/ScanDescriptionHelper.cpp, src/miro/StructuredPushConsumer.cpp:
+	° fixes
+	additionally the correlated subscription protocol bug in StructuredPushConsumer
+	needed to be fixed
+
+	* tests/b21/B21BaseTest.cpp, tests/faul/FaulTest.cpp, tests/image/TestImageClient.cpp, tests/motion/MotionInterface.cpp, tests/motion/SynchroMotionInterface.cpp, tests/pioneer/PioneerTest.cpp, tests/sparrow/PanPosition.cpp, tests/sparrow/SparrowTest.cpp:
+	fixing the °-mess produced by xeamcs
+	added some more missing headers for the deprecated interfaces
+
+	* utils/policyEditor/PolicyEditor.cpp:
+	somehow XEmacs managed to replace all ° by escape sequence
+	but vi is cool. he helped correcting the mess.
+
+	sorry, some very similar commits will follow
+
+	* src/miro/StructuredPushSupplier.cpp:
+	fixing a bug in the new supplier offer bookkeeping protocol
+
+	* src/pioneerBase/PioneerBase.cpp: debugging eve
+	well, at least the PioneerBase seems to be working reasonable now
+
+2004-02-18  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* utils/qtVideo/Makefile.am: Okay, I lied. - So what? Can I help it?
+	But see, this is only a little patch.
+	It conditionalises the compile of the 1394-Control panel if 1394 isn't enabled.
+	It makes eve happy.
+
+	* utils/Makefile.am: last commit for today - promised!
+	removed makeConfig from the default make as it is too tricky on the
+	needed miro components
+
+	* bin/.cvsignore, utils/makeConfig/.cvsignore: even more to ignore
+
+	* utils/policyController/Makefile.am, utils/policyEditor/BehaviourWidget.cpp, utils/policyEditor/Makefile.am, utils/policyEditor/ParameterDialog.cpp, utils/policyEditor/PolicyView.cpp, utils/qtJoystick/Makefile.am, utils/qtTouchPad/Makefile.am, utils/qtVideo/MainForm.cpp, utils/qtVideo/Makefile.am, utils/rangeSensor/Makefile.am, utils/sparrowBoard/Makefile.am, utils/widgets/.cvsignore, tests/pioneer/Makefile.am, tests/rangeSensor/Makefile.am, tests/sparrow/Makefile.am, tests/speech/Makefile.am, tests/sphinx/Makefile.am, tests/video/Makefile.am, tests/videoBroker/Makefile.am, tests/xml/Makefile.am, utils/Joystick/Makefile.am, utils/Makefile.am, utils/logPlayer/LogFile.h, utils/logPlayer/Makefile.am, utils/makeConfig/Makefile.am, utils/notify/Makefile.am, utils/notify/NotifyLogPlayer.cpp, utils/notifyObserver/Makefile.am, utils/nsIOR/Makefile.am, src/video/VideoDeviceBTTV.cpp, src/video/VideoFilter.h, tests/b21/Makefile.am, tests/behaviourEngine/Makefile.am, tests/behaviours/Makefile.am, tests/dpPanTilt/Makefile.am, tests/dtlk/Makefile.am, tests/faul/Makefile.am, tests/gripper/Makefile.am, tests/image/Makefile.am, tests/log/Makefile.am, tests/motion/Makefile.am, tests/notify/Makefile.am, tests/notify/NotifyTest.cpp, tests/odometry/Makefile.am, tests/panTilt/Makefile.am, src/mcp/McpMessage.h, src/mcp/Parameters.xml, src/miro/.cvsignore, src/miro/ConfigDocument.h, src/miro/DevConnection.cpp, src/miro/DevConsumer.h, src/miro/DevEventHandler.cpp, src/miro/DevMessage.h, src/miro/DifferentialMotionImpl.h, src/miro/Log.cpp, src/miro/Log.h, src/miro/Makefile.am, src/miro/MotionImpl.h, src/miro/NotifyMulticastParameters.xml, src/miro/Parameters.xml, src/miro/Policy.cpp, src/miro/PositionTracker.h, src/miro/SvcParameters.xml, src/miro/TimeHelper.h, src/miro/TimeSeries.h, src/miro/TtyConnection.cpp, src/miro/VideoHelper.cpp, src/msp/Parameters.xml, src/panTilt/Parameters.xml, src/psos/Parameters.xml, src/video/BufferManager.cpp, src/video/BufferManager.h, performance-tests/panTilt/Makefile.am, performance-tests/panTilt/PanLatency.cpp, performance-tests/response/Makefile.am, performance-tests/video/Makefile.am, src/base/BaseImpl.h, src/can/Parameters.xml, src/faulMotor/FaulMotorConsumer.h, src/faulMotor/Parameters.xml, src/laser/Parameters.xml, src/laser/SickLaserEvent.h, examples/odometry/Makefile.am, examples/params/Makefile.am, examples/params/Parameters.xml, examples/rangeSensor/Makefile.am, examples/robotikI/Makefile.am, examples/sonar/Makefile.am, examples/speechSimple/Makefile.am, examples/stall/Makefile.am, examples/video/Makefile.am, examples/video/VideoLatency.cpp, examples/videoFilter/Makefile.am, idl/Makefile.am, performance-tests/can/Makefile.am, performance-tests/faul/.cvsignore, performance-tests/faul/Makefile.am, performance-tests/image/Makefile.am, performance-tests/mcp/Makefile.am, bin/.cvsignore, doc/Makefile.am, doc/tex/miro_manual.tex, doc/tex/new_project.tex, doc/tex/writing_a_client.tex, examples/b21Motion/Makefile.am, examples/battery/Makefile.am, examples/behaviours/b21/LaserAvoid.cpp, examples/behaviours/simple/Straight.cpp, examples/behaviours/simple/Wander.cpp, examples/buttons/Makefile.am, examples/infrared/Makefile.am, examples/motion/Makefile.am, examples/notify/Makefile.am:
+	okay, this will touch most directories of Miro
+	I just write one message for all of it
+	I compiled everything after a make disclean -
+	so I'm quite positive, that  everything still works
+	anyhow, brace for impact
+
+	Documenting Log.h making it hopfully more usable for other developers
+
+	Trying to properly separate miroSvc.a from miro.so
+	-> It should be possible to link to miro.so without linking miroSvc.a
+	Linking miro.so with miroIDL.so as it is needed anyways.
+	-> It should be possible to link to miro.so without linking miroIDL.so
+	Propagating this change through the sources
+
+	Splitting up Parameters.xml into Parameters.xml and SvcParameters.xml.
+	This way we can skip some classes from inclusion into miro.so
+	Additionally we may need to recompile less on changes in
+	SvcParameters.xml
+	Propagating this change through the souces
+
+	Adding and removing headers for compability with ACE 5.4/TAO 1.4
+	We need to make sure Miro compiles with the current stable release of
+	ACE/TAO. - There is a vired bug in ACE 5.3/TAO 1.4/g++ 3.3.1 witch
+	requires to include cmath before OS.h. So this workaround was
+	propagated through the sources, too.
+
+	added a chapter from Gerd about autoconf and automake to the manual
+	appendix - moved the part from the writing_a_client.tex about
+	Makefiles to this chapter, too.
+
+	silencing cvs by adding even more .cvsignore entries. It's fascitating
+	how mutch you can ignore while building miro...
+
+	removed PositionTracker.h form src/miro as it is actullay substituted
+	by OdometryTracking, which in turn needs to be unified with the
+	version residing in the Nix repository.
+
+	* utils/logPlayer/ChannelManager.cpp, utils/Makefile.am:
+	adding the notifyObserver to the make process
+	registering the eventchannel factory in the naming service
+	for inspection by the NotifyObserver tool
+
+	* configure.ac: adding the notifyObserver to the configuration
+	readded the makeConfig utility to the configuration
+
+	* utils/makeConfig/.cvsignore: added another ignore entry
+
+	* utils/notifyObserver/.cvsignore, utils/notifyObserver/ApplicationWindow.cpp, utils/notifyObserver/ApplicationWindow.h, utils/notifyObserver/ConsumerAdmin.cpp, utils/notifyObserver/ConsumerAdmin.h, utils/notifyObserver/EventChannel.cpp, utils/notifyObserver/EventChannel.h, utils/notifyObserver/EventChannelFactory.cpp, utils/notifyObserver/EventChannelFactory.h, utils/notifyObserver/EventTypeDialog.cpp, utils/notifyObserver/EventTypeDialog.h, utils/notifyObserver/FilterAdmin.cpp, utils/notifyObserver/FilterAdmin.h, utils/notifyObserver/Makefile.am, utils/notifyObserver/NotifyObserver.cpp, utils/notifyObserver/NotifyPublish.cpp, utils/notifyObserver/NotifyPublish.h, utils/notifyObserver/NotifySubscribe.cpp, utils/notifyObserver/NotifySubscribe.h, utils/notifyObserver/ProxyConsumer.cpp, utils/notifyObserver/ProxyConsumer.h, utils/notifyObserver/ProxySupplier.cpp, utils/notifyObserver/ProxySupplier.h, utils/notifyObserver/QoSAdmin.cpp, utils/notifyObserver/QoSAdmin.h, utils/notifyObserver/SupplierAdmin.cpp, utils/notifyObserver/SupplierAdmin.h:
+	adding a utility for examining the NotificationService
+	it is not entirely usefull yet, but helps in understanding the
+	notification service a lot - at least I think so.
+	Start a Notify_Service (or a LogPlayer or any server) and launch the
+	NofityObserver afterwards. It will show you all the channels, consumers
+	and suppliers - as well as the offered and subscribed messages
+
+	* utils/widgets/Item.cpp, utils/widgets/Item.h, utils/widgets/Makefile.am:
+	added a helper class for QListViewItems
+	its used by the upcoming utility NotifyObserver
+
+2004-02-17  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* utils/qtVideo/Makefile.am: fixed, works with make dist now.
+	should be rewritten nevertheless
+
+2004-02-16  Guillem Pages  <guillem@achilles.neuro.informatik.uni-ulm.de>
+
+	* tests/sphinx/SphinxTest.cpp:
+	Changed #include "miro/SphinxSpeechC.h" to #include "idl/SphinxSpeech.h"
+	Somehow that file was forgotten in the autoconf/automake process
+	Also shut up a warning (unsigned comparison)
+
+	* tests/sphinx/Makefile.am:
+	Added libmiroSvc to the Makefile so that it compiles.
+	TODO: It should not be needed! It is just a client, does not need the server part
+
+2004-02-16  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/pioneer/PioneerMotionImpl.h:
+	fix for PionerrMotionImpl - it derived from the wrong super class, missing
+	to export half the interface as IDL type
+
+2004-02-13  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* templates/features_miro.m4, templates/search_miro.m4:
+	added autoconf macros that can be used to check for miro iself and different fuctionalities.
+
+2004-02-13  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* performance-tests/response/NotifyResponse.cpp:
+	using subscription helper methods
+
+	* templates/header-template-cpp, templates/header-template-h:
+	fixing the date in the templates
+
+	* utils/makeConfig/MakeConfig.cpp, utils/makeConfig/Makefile.am, utils/makeConfig/SparrowDefaults:
+	reactivating config file generation tool
+
+	* utils/notify/LogNotifyConsumer.cpp:
+	using subscription management helpers
+
+	* utils/logPlayer/LogFile.cpp: adding offer specifications
+
+	* tests/sparrow/SparrowAlive.cpp:
+	using subscription management helper methods
+
+	* examples/odometry/OdometryStream.cpp, examples/odometry/OdometryStream.h, examples/rangeSensor/SensorStream.cpp, examples/robotikI/SonarStream2.cpp, examples/sonar/SonarNotify.cpp, examples/behaviours/b21/OnButton.cpp, examples/behaviours/b21/OnButton.h, examples/behaviours/b21/SonarAvoid.cpp, examples/behaviours/b21/SonarAvoid.h, examples/behaviours/rangeSensor/RangeSensorBehaviour.cpp, examples/behaviours/rangeSensor/RangeSensorBehaviour.h, examples/behaviours/simple/MoveToPoint.cpp, examples/behaviours/simple/MoveToPoint.h, examples/behaviours/simple/TactileStop.cpp, examples/behaviours/simple/TactileStop.h, examples/buttons/ButtonsNotify.cpp, examples/motion/MotionStatusNotify.cpp, examples/notify/GenericNotify.cpp:
+	using the subscription management methods offered by StructuredPushConsumer
+	and EventBehaviour by their descendands
+
+	* src/buttons/ButtonsEventHandler.cpp, src/sparrow/AliveEventHandler.cpp, src/sparrow/AliveEventHandler.h, src/sparrow/SparrowButtonsImpl.cpp, src/sparrow/SparrowConsumer.h, src/sparrow/SparrowConsumer2003.h, src/sparrow/SparrowPanTiltImpl.cpp, src/sparrow/SparrowStallImpl.cpp, src/sphinx/SphinxSpeech.cpp, src/sphinx/SphinxSpeech.h, src/sphinx/SphinxSpeechImpl.cpp, src/sphinx/SphinxSpeechImpl.h:
+	adding offer specifications for all suppliers
+	supression of events in the case of missing consumers is not used yet.
+
+	* src/miro/ActionPattern.cpp, src/miro/ConstraintArbiter.cpp, src/miro/EventBehaviour.cpp, src/miro/EventBehaviour.h, src/miro/MotionArbiter.cpp, src/miro/OdometryImpl.cpp, src/miro/OdometryTracking.cpp, src/miro/OdometryTracking.h, src/miro/PowerArbiter.cpp, src/miro/RangeSensorImpl.cpp, src/miro/ReactorTask.cpp, src/miro/StructuredPushConsumer.cpp, src/miro/StructuredPushConsumer.h, src/miro/StructuredPushSupplier.cpp, src/miro/StructuredPushSupplier.h:
+	cleanup of the structured push consumer/supplier classes
+	- added bookkeeping on subscriptions/offers
+	- added methods for specifying subscriptions/offers
+	- added methods to query offers/subscriptions
+	- added offer specifications to all suppliers
+	- using subscription handling methods by descendands of StructuredPushConsumer
+
+	temporary removal of all subscriptions as used by the behaviour engine
+	is not implemented yet (the dummy implementation should work, though)
+
+	* src/miro/DevEventHandler.cpp: setting default value for event handler
+
+2004-02-12  Roland Reichle  <rr4@achilles.neuro.informatik.uni-ulm.de>
+
+	* etc/coyote.xml: InfraredDescription for goalie
+
+	* src/faulMotor/FaulMotorConsumer.cpp:
+	Odometry-adaption for our new Sparrow2003 goalie coyote
+
+2004-02-12  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* doc/tex/install.tex: fix docu w.r.t. the changes from yesterday
+
+2004-02-11  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* config/search_qt.m4: should find libqt or libqt-mt automatically
+
+	* doc/fig/.cvsignore, idl/.cvsignore, src/miro/.cvsignore, src/video/.cvsignore, utils/qtVideo/.cvsignore:
+	updated some .cvsignore files
+
+	* Makefile.am:
+	move doc-dir to the end, to not let the make-run stop too early, if doc cannot be build
+
+	* src/miro/ConstraintArbiter.cpp: add std::
+
+	* doc/html/Makefile.am, doc/html/doxygen.cpp, doc/tex/Makefile.am:
+	add src/video/ to doxygen-docu
+	use mkdir -p instead of MKDIRBLABLA
+	pipe dvips output into file
+
+	* config/search_ace.m4, config/search_festival.m4, config/search_qt.m4, config/search_speech.m4, config/search_sphinx.m4, config/search_tao.m4:
+	make the config-error messages more verbose
+	quote them the right (m4-)way
+
+2004-02-09  graz  <graz@achilles.neuro.informatik.uni-ulm.de>
+
+	* config/search_qt.m4, configure.ac, idl/Makefile.am, idl/VideoControl.idl, src/video/Makefile.am, src/video/VideoControlImpl.cpp, src/video/VideoControlImpl.h, src/video/VideoDevice1394.cpp, src/video/VideoDevice1394.h, utils/qtVideo/Makefile.am, utils/qtVideo/QtVideoControl.cpp, utils/qtVideo/VideoControlDialog.ui, utils/qtVideo/VideoControlDialogImp.cpp, utils/qtVideo/VideoControlDialogImp.h, utils/qtVideo/VideoControlTest.cpp, utils/qtVideo/VideoControlTestImpl.cpp, utils/qtVideo/VideoControlTestImpl.h:
+	Added control-interface to VideoDevice1394 & Dialog.
+
+2004-02-09  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/miro/ConstraintArbiter.cpp, performance-tests/faul/SerialPolling.cpp:
+	added some namespace directives
+
+2004-02-04  Guillem Pages  <guillem@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/sphinx/Makefile.am, src/sphinx/SphinxSpeechImpl.h, src/sphinx/SphinxSpeechTask.cpp:
+	Updated to the new MIRO_LOG macros
+	Made it to compile with the new autoconf/automake setup
+
+2004-01-30  roadrunner  <roadrunner@achilles.neuro.informatik.uni-ulm.de>
+
+	* etc/roadrunner.xml: logging data
+
+2004-01-29  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* etc/haeltnix.xml, etc/siehtnix.xml, etc/trifftnix.xml:
+	added video save seciton
+
+	* etc/passtnix.xml: added save section to video stuff
+
+2004-01-29  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* etc/coyote.xml, etc/haeltnix.xml, etc/passtnix.xml, etc/roadrunner.xml, etc/trifftnix.xml, idl/SparrowPanTilt.idl, src/pioneer/CanonCameraImpl.cpp, src/sparrow/SparrowPanTiltImpl.cpp, src/sparrow/SparrowPanTiltImpl.h, src/sparrowBase/SparrowServer.cpp, src/sparrowBase/SparrowServer.h:
+	the sparrow pan now sends an event if a new pan position is set
+	this enables us to link images with the robots pose
+	enabled the event notification for SparrowBase
+	added the Pan event to the list of logged events for all sparrow robots
+
+2004-01-27  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* tests/odometry/OdometryTest.cpp:
+	some xemacs replace ° by an escape sequence...
+
+2004-01-26  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/miro/DevEventHandler.cpp, src/miro/DevEventHandler.h:
+	overriding accessor methods for handle
+
+2004-01-24  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* performance-tests/faul/.cvsignore: ignore the generated files
+
+	* performance-tests/faul/SerialPolling.cpp:
+	added headers needed for ACE 5.4
+	hopefully fixed tty save/restore settings
+	added a rudimentary timing output
+
+2004-01-23  Uli Kaufmann  <uli@achilles.neuro.informatik.uni-ulm.de>
+
+	* performance-tests/faul/SerialPolling.cpp: Mit faulhaber-werten
+
+2004-01-23  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* configure.ac: adding dir entry for performance-tests/faul
+
+	* performance-tests/Makefile.am, performance-tests/faul/Makefile.am, performance-tests/faul/SerialPolling.cpp:
+	added a performance test suite for faulhaber stuff
+
+2004-01-22  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/laser/SickLaserConnection.cpp:
+	followup fixes for ACE/TAO-x.4 changes
+
+2004-01-22  Guillem Pages  <guillem@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/base/BaseConnection.cpp, src/base/BaseStatus.cpp: Corrected typos
+	reactor is now reactor_
+
+2004-01-20  mc1  <mc1@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/panTilt/PanTiltConnection.cpp, src/mcp/McpConnection.cpp, src/abus/AbusConnection.cpp:
+	Bugfix
+
+2004-01-20  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* examples/infrared/PollInfrared.cpp, examples/video/LogVideo.cpp, examples/video/VideoLatency.cpp, performance-tests/video/GrabImages.cpp, tests/faul/FaulTest.cpp, tests/pioneer/PioneerTest.cpp, tests/video/TestVideoClient.cpp, tests/videoBroker/VideoBrokerTest.cpp, utils/logPlayer/LogPlayer.cpp, utils/logPlayer/MainForm.cpp, examples/behaviours/simple/Timer.cpp:
+	more #include <ace/OS.h> for the rest or Miro to compile with ACE/TAO-x.4
+	we can speed up compile time, if we use the specialiced header files
+	instead of the catch-all ace/OS.h - but we'll break backward compability
+	to ACE/TAO < x.4
+	We should wait with such changes for a while
+
+	* src/video/BufferManager1394.cpp, src/video/BufferManagerBTTV.cpp, src/can/CanConnection.cpp, src/laser/SickLaserConnection.cpp, src/laser/SickLaserConnection.h, src/miro/ActionPattern.cpp, src/miro/Client.cpp, src/miro/DevConnection.cpp, src/miro/DevConnection.h, src/miro/Log.cpp, src/miro/NotifyMulticastAdapter.cpp, src/miro/NotifyMulticastReceiver.cpp, src/miro/NotifyMulticastSender.cpp, src/miro/Server.cpp, src/miro/TimeHelper.h, src/miro/TtyConnection.cpp, src/miro/TtyConnection.h, src/psos/PsosConnection.cpp, src/sparrow/AliveCollector.cpp:
+	fixes for ACE/TAO-x.4
+	cleanup of header files in ACE/TAO results in additional includes of ace/OS.h
+	fixes for the handling of reactor file_handle
+
+2004-01-20  roadrunner  <roadrunner@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/miro/ConstraintArbiter.cpp, src/miro/ConstraintArbiter.h, src/miro/ConstraintArbiterViewer.cpp, src/miro/ConstraintArbiterViewerTask.cpp, src/miro/ConstraintArbiterViewerTask.h, src/miro/VelocitySpace.cpp, src/miro/VelocitySpace.h:
+	Size and resolution of velocity space is now parameterizable!
+
+2004-01-18  mc1  <mc1@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/miro/StructuredPushSupplier.cpp: Logging...
+
+	* src/miro/ActionPattern.cpp, src/miro/ArbiterRepository.cpp, src/miro/BehaviourRepository.cpp, src/miro/ConstraintArbiter.cpp, src/miro/EventBehaviour.cpp, src/miro/RangeSensorImpl.cpp:
+	Wad wohl, logging mal wieder....
+
+2003-12-29  roadrunner  <roadrunner@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/miro/Behaviour.cpp, src/miro/Behaviour.h, src/miro/ConstraintArbiter.cpp, src/miro/ConstraintArbiter.h, src/miro/ConstraintArbiterViewer.cpp, src/miro/ConstraintArbiterViewer.h, src/miro/ConstraintArbiterViewerTask.cpp, src/miro/ConstraintArbiterViewerTask.h, src/miro/DynamicWindow.cpp, src/miro/DynamicWindow.h, src/miro/Makefile.am, src/miro/Parameters.xml, src/miro/VelocitySpace.cpp, src/miro/VelocitySpace.h, src/miro/WindowArbiter.cpp, src/miro/WindowArbiter.h, src/miro/WindowArbiterViewer.cpp, src/miro/WindowArbiterViewer.h, src/miro/WindowArbiterViewerTask.cpp, src/miro/WindowArbiterViewerTask.h:
+	Renamed DynamicWindow to VelocitySpace.
+	Renamed WindowArbiter to ConstraintArbiter.
+	Renamed VelocitySpace::setPreferredDirection() to VelocitySpace::addEvalForPreferredDirection().
+	Renamed VelocitySpace::collisionCheckDeluxe() to VelocitySpace::addEvalForObstacle().
+	Removed obsolete VelocitySpace::collisionCheck().
+	Removed obsolete VelocitySpace::getFrontDistanceBetweenPolygonAndPolygon().
+	Renamed VelocitySpace::calcNewVelocity() to VelocitySpace::applyObjectiveFunctionToEval().
+	Renamed Behaviour::calcDynamicWindow() to Behaviour::addEvaluation().
+	Adapted Makefile.am and Parameters.xml.
+
+2003-12-22  mc1  <mc1@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/miro/Arbiter.cpp, src/miro/Client.cpp, src/miro/ConfigDocument.cpp, src/miro/DevConnection.cpp, src/miro/DevConsumer.cpp, src/miro/DevEventHandler.cpp, src/miro/OdometryTracking.cpp, src/miro/ReactorTask.cpp, src/miro/Server.cpp, src/miro/StructuredPushConsumer.cpp, src/miro/TtyConnection.cpp:
+	Switched to new logging facility
+
+2003-12-19  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* idl/Makefile.am: add missing include directive
+
+2003-12-19  mc1  <mc1@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/panTilt/PanTiltConsumer.cpp, src/panTilt/PanTiltOpcodes.h:
+	Symbol VERSION conflicts with declaration newly defined somewhere else!
+
+2003-12-18  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/panTilt/DpPanTilt.cpp: fix std-namespace stuff
+
+	* config/conditionals.m4, configure.ac, src/miro/Log.h, tests/log/LogTest.cpp:
+	add configure flag to enable/disable logging and debuging stuff
+
+2003-12-17  mc1  <mc1@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/miro/Log.cpp, src/miro/Log.h, tests/log/LogTest.cpp, tests/log/Makefile.am:
+	Created Logtester and fixed several bugs in ::Miro::Log
+
+2003-12-17  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* utils/qtJoystick/Makefile.am:
+	fix the makefile (_never_ list a header file in tomocsource-variable, it gets cleaned then)
+
+2003-12-17  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* bin/.cvsignore, tests/log/.cvsignore:
+	cvsignore entries to silence cvs questionmarks
+
+	* src/panTilt/DpPanTilt.cpp, src/miro/Log.h:
+	minor fixes for gcc 3.3 and latest ACE/TAO versions
+
+2003-12-15  mc1  <mc1@achilles.neuro.informatik.uni-ulm.de>
+
+	* tests/Makefile.am, tests/log/LogTest.cpp, tests/log/Makefile.am, configure.ac, src/laser/SickLaserConnection.cpp, src/laser/SickLaserConnection.h, src/laser/SickLaserEvent.cpp, src/laser/SickLaserEvent.h, src/laser/SickLaserPollTask.cpp, src/laser/SickLaserPollTask.h, src/laser/SickLaserService.cpp, src/laser/SickLaserService.h, src/laser/SickLaserTask.cpp, src/laser/SickLaserTask.h, src/miro/Log.h, src/panTilt/DpPanTilt.cpp, src/panTilt/DpPanTilt.h, src/panTilt/PanTiltConsumer.cpp, src/panTilt/PanTiltConsumer.h, src/panTilt/PanTiltImpl.cpp, src/panTilt/PanTiltImpl.h:
+	Fixed B21 LaserScanner and PanTilt for new logging
+
+	* examples/rangeSensor/SensorStream.cpp, src/miro/ActionPattern.cpp, src/miro/Log.cpp, src/miro/Log.h:
+	Neue Log-Output Macros und so
+
+2003-12-12  trifftnix  <trifftnix@achilles.neuro.informatik.uni-ulm.de>
+
+	* etc/trifftnix.xml: fixing video image size parameters
+
+2003-12-10  roadrunner  <roadrunner@achilles.neuro.informatik.uni-ulm.de>
+
+	* tests/sparrow/SparrowTest2003.cpp, etc/roadrunner.xml, src/sparrow/AliveEventHandler.cpp, src/sparrow/SparrowConnection2003.cpp, src/sparrow/SparrowConnection2003.h, src/sparrow/SparrowConsumer2003.cpp, src/sparrow/SparrowDevice.h, src/sparrowBase/SparrowServer.cpp:
+	AliveMessages from Host to MotorController every 0.5 seconds
+	CanMessages for HostAlive, MotorCanFlood and CanFloodResponse in SparrowDevice.h
+	MotorCanFlood-command in SparrowTest2003
+
+	* src/sparrow/Makefile.am, src/sparrow/SparrowConsumer2003.cpp, src/sparrow/SparrowDevice2003.h:
+	SparrowDevice2003.h removed
+
+2003-12-10  trifftnix  <trifftnix@achilles.neuro.informatik.uni-ulm.de>
+
+	* etc/trifftnix.xml: fixing config file
+
+2003-12-10  roadrunner  <roadrunner@achilles.neuro.informatik.uni-ulm.de>
+
+	* etc/roadrunner.xml: the configuration actually used by roadrunner
+
+2003-12-10  haeltnix  <haeltnix@achilles.neuro.informatik.uni-ulm.de>
+
+	* etc/haeltnix.xml: haeltnix parameters also changed over time...
+
+2003-12-10  roadrunner  <roadrunner@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/video/VideoService.cpp:
+	conditionalizing includes of bttv and meteor devices
+
+2003-12-10  trifftnix  <trifftnix@achilles.neuro.informatik.uni-ulm.de>
+
+	* etc/trifftnix.xml: trifftnix parameters changed a bit over time...
+
+2003-12-08  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/video/VideoFilterBasic.cpp: fix bug in bytesPerPixel
+
+	* src/video/VideoFilterBasic.cpp: added std::
+
+2003-12-05  Guillem Pages  <guillem@achilles.neuro.informatik.uni-ulm.de>
+
+	* config/search_festival.m4, config/search_speech.m4, config/search_sphinx.m4:
+	search and find the speech-stuff again
+
+2003-12-05  eve  <eve@achilles.neuro.informatik.uni-ulm.de>
+
+	* configure.ac, tests/pioneer/PioneerTest.cpp:
+	Speechtool path and new options in Pioneertest
+
+2003-12-04  Uli Kaufmann  <uli@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/pioneer/CanonCameraImpl.cpp, src/pioneer/CanonCameraImpl.h, src/pioneer/CanonDevice.h:
+	CanonCamera White Balance
+
+2003-12-04  eve  <eve@achilles.neuro.informatik.uni-ulm.de>
+
+	* idl/CanonCamera.idl, src/pioneer/CanonCameraImpl.cpp, src/pioneer/CanonCameraImpl.h, tests/pioneer/PioneerTest.cpp:
+	CanonCamera Set brightness with AE value
+
+2003-12-04  Uli Kaufmann  <uli@achilles.neuro.informatik.uni-ulm.de>
+
+	* idl/CanonCamera.idl, src/pioneer/CanonCameraImpl.cpp, src/pioneer/CanonCameraImpl.h:
+	anonCamera shutter  and AGC Gain
+
+2003-12-04  eve  <eve@achilles.neuro.informatik.uni-ulm.de>
+
+	* idl/CanonCamera.idl, src/pioneer/CanonCameraImpl.cpp, src/pioneer/CanonCameraImpl.h:
+	CanonCamera path
+
+2003-12-03  Uli Kaufmann  <uli@achilles.neuro.informatik.uni-ulm.de>
+
+	* idl/CanonCamera.idl, src/pioneer/CanonCameraImpl.cpp, src/pioneer/CanonCameraImpl.h:
+	CanonCamera
+
+	* tests/pioneer/PioneerTest.cpp: *** empty log message ***
+
+2003-12-03  eve  <eve@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/pioneer/CanonCameraImpl.cpp, src/video/VideoFilterBasic.cpp, src/video/VideoFilterBasic.h, src/video/VideoService.cpp:
+	FilterReverse for eve added
+
+2003-12-03  Uli Kaufmann  <uli@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/pioneer/CanonCameraImpl.cpp, src/pioneer/CanonCameraImpl.h:
+	CanonCamera
+
+	* idl/CanonCamera.idl, src/pioneer/CanonCameraImpl.cpp, src/pioneer/CanonCameraImpl.h:
+	CanonCamera (set AE value)
+
+2003-12-02  Uli Kaufmann  <uli@achilles.neuro.informatik.uni-ulm.de>
+
+	* tests/pioneer/PioneerTest.cpp: Weitere Camera Opts
+
+	* idl/CanonCamera.idl: AE LOCK camera
+
+	* src/pioneer/CanonCameraImpl.cpp, src/pioneer/CanonCameraImpl.h, src/pioneer/CanonDevice.h:
+	AE Lock OFF / ON
+
+2003-11-28  roadrunner  <roadrunner@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/miro/DynamicWindow.cpp:
+	Fixed "variable might be used uninitialised warnings".
+	No bug, just cosmetics...
+
+2003-11-27  mc1  <mc1@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/miro/Log.h: ganz winziger Bugfix
+
+2003-11-26  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/miro/Server.cpp, src/miro/Server.h, src/miro/StructuredPushConsumer.cpp, src/miro/StructuredPushConsumer.h, src/miro/StructuredPushSupplier.cpp, src/miro/StructuredPushSupplier.h:
+	adding support for registration of CORBA objects to other namespaces
+	to Miro::Server
+	adding subscription/offer interfaces to StructuredPushSupplier and Consumer
+
+	* src/miro/Synch.h: fixing some obscure lookup failure
+
+	* src/sparrow/Parameters.xml: fixing uninitialized parameter: masked
+
+2003-11-25  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* doc/fig/.cvsignore: stopping cvs warnings
+
+	* src/sparrow/SparrowConnection.cpp:
+	fixing remaining message declaration to be a can message
+
+	* src/can/CanMessage.cpp, src/can/CanMessage.h:
+	fixing warnings by declaring methods pure virtual
+
+2003-11-25  roadrunner  <roadrunner@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/can/CanConnection.cpp: CanMessages no debug output
+
+2003-11-18  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/video/BufferManager.cpp, src/video/VideoFilter.cpp:
+	fixing up EOutOfBounds exception on connection to filter with pre links
+
+2003-11-17  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/video/BufferManager.h, src/video/VideoFilter.cpp, src/video/VideoFilter.h:
+	fixing missing outputBuffer_ initialization
+
+2003-11-16  roadrunner  <roadrunner@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/miro/WindowArbiter.cpp: Added logging.
+
+2003-11-15  mc1  <mc1@achilles.neuro.informatik.uni-ulm.de>
+
+	* examples/rangeSensor/SensorStream.cpp, src/miro/Log.h: Logging added
+
+2003-11-14  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* doc/tex/video.tex: fix spelling and function name errors
+
+2003-11-12  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* config/Make-rules: add some more warning flags
+
+2003-11-12  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* etc/coyote.xml, etc/roadrunner.xml: indenting roadrunner config
+	setting coyote vision values to roadrunner values
+
+2003-11-12  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* templates/Makefile.am.qt: no double-moc ;-)
+
+2003-11-11  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* doc/tex/writing_a_client.tex: add important note to docu
+
+	* examples/video/Makefile.am, examples/videoFilter/Makefile.am, src/can/Makefile.am, src/video/Makefile.am, templates/Makefile.am.qt, utils/logPlayer/Makefile.am, utils/policyController/Makefile.am, utils/policyEditor/Makefile.am, utils/qtJoystick/Makefile.am, utils/qtTouchPad/Makefile.am, utils/qtVideo/Makefile.am, utils/rangeSensor/Makefile.am:
+	- it starts to _really_ frustrate me. libmiroVideo is a shared lib again.
+	- fix for all the qt-makefiles to _not_ delete header-files...
+
+	* performance-tests/mcp/Makefile.am, src/b21Base/Makefile.am:
+	fix two Makefiles
+
+	* examples/b21Motion/Makefile.am, examples/battery/Makefile.am, examples/behaviours/engine/Makefile.am, examples/buttons/Makefile.am, examples/infrared/Makefile.am, examples/motion/Makefile.am, examples/notify/Makefile.am, examples/odometry/Makefile.am, examples/params/Makefile.am, examples/rangeSensor/Makefile.am, examples/robotikI/Makefile.am, examples/sonar/Makefile.am, examples/speechSimple/Makefile.am, examples/stall/Makefile.am, examples/video/Makefile.am, examples/videoFilter/Makefile.am, performance-tests/can/Makefile.am, performance-tests/image/Makefile.am, performance-tests/mcp/Makefile.am, performance-tests/panTilt/Makefile.am, performance-tests/response/Makefile.am, performance-tests/video/Makefile.am, src/b21Base/Makefile.am, src/image/Makefile.am, src/laser/Makefile.am, src/panTilt/Makefile.am, src/pioneerBase/Makefile.am, src/sparrowBase/Makefile.am, src/speech/Makefile.am, src/sphinx/Makefile.am, src/video/Makefile.am, tests/b21/Makefile.am, tests/behaviourEngine/Makefile.am, tests/behaviours/Makefile.am, tests/dpPanTilt/Makefile.am, tests/dtlk/Makefile.am, tests/faul/Makefile.am, tests/gripper/Makefile.am, tests/image/Makefile.am, tests/motion/Makefile.am, tests/notify/Makefile.am, tests/odometry/Makefile.am, tests/panTilt/Makefile.am, tests/pioneer/Makefile.am, tests/rangeSensor/Makefile.am, tests/sparrow/Makefile.am, tests/speech/Makefile.am, tests/video/Makefile.am, tests/videoBroker/Makefile.am, tests/xml/Makefile.am, utils/Joystick/Makefile.am, utils/logPlayer/Makefile.am, utils/makeConfig/Makefile.am, utils/notify/Makefile.am, utils/nsIOR/Makefile.am, utils/policyController/Makefile.am, utils/policyEditor/Makefile.am, utils/qtJoystick/Makefile.am, utils/qtTouchPad/Makefile.am, utils/qtVideo/Makefile.am, utils/rangeSensor/Makefile.am, utils/sparrowBoard/Makefile.am:
+	- miroVideo is know a static library
+	- static libraries are now considered as dependencies
+
+	* doc/fig/.cvsignore: add some ignore-files
+
+	* src/miro/ReactorTask.cpp:
+	add ::operator<< to compile with latest ACE beta
+
+2003-11-11  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/miro/VideoHelper.h: fixing missing return statement
+
+	* src/video/VideoDeviceBTTV.cpp, src/video/VideoService.cpp:
+	fixing width/height off by one error for BTTV
+	adding half image filter to the repository
+
+2003-11-10  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* .cvsignore: never got a conflict here :-)
+
+	* src/miro/VideoHelper.h: adding method calculating the buffer address
+	changing buffer/memory pointers to const
+
+2003-11-09  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* etc/haeltnix.xml, etc/passtnix.xml, etc/siehtnix.xml, etc/trifftnix.xml:
+	configuration file with half image encoding
+
+2003-11-09  coyote  <coyote@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/miro/DynamicWindow.cpp, src/miro/WindowArbiter.cpp, src/miro/WindowArbiter.h, src/miro/WindowArbiterViewer.cpp:
+	Increased DynamicWindow DynamicWindow calc rate.
+	Increased WindowArbiterViewer refresh rate.
+	Adapted wheel distance for sparrows2003.
+	Changed some debug messages.
+	Added stop command, when window arbiter closes.
+
+2003-11-06  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/miro/Log.cpp, src/miro/Log.h:
+	pushing back the first logging infrastructure changes,
+	they could be already used in Nix
+
+	* etc/eve.xml: fixing config file for video service of ppb
+
+2003-11-05  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* doc/tex/install.tex:
+	separated the installation instructions into their own file
+	moving them into the apendix
+
+	* doc/fig/Makefile.am, doc/fig/filtergraphillegal.fig, doc/fig/filtergraphilligal.fig, doc/tex/behaviourEngine.tex, doc/tex/miro_manual.tex, doc/tex/miro_reference.tex, doc/tex/tex_definitions.tex, doc/tex/video.tex, src/video/Parameters.xml:
+	fixing typo in figure naming
+	some documentation cleanup
+	remove superfluent parameter from video/Parameters.xml
+
+2003-11-04  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* doc/tex/miro_manual.tex, doc/tex/servers.tex, doc/tex/video.tex:
+	some cleanup on the documentation
+
+2003-11-03  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/miro/Client.h, src/miro/ReactorTask.cpp, src/video/Parameters.xml, src/video/VideoServer.cpp, tests/videoBroker/VideoBrokerTest.cpp, etc/B21Default.xml, etc/PpbDefault.xml, etc/SparrowDefault.xml, etc/barney.xml, etc/coyote.xml, etc/eve.xml, etc/flying-eagle.xml, etc/haeltnix.xml, etc/passtnix.xml, etc/roadrunner.xml, etc/siehtnix.xml, etc/trifftnix.xml, examples/videoFilter/DiffVideoConfig.xml, examples/videoFilter/GrayVideoConfig.xml, src/miro/Client.cpp:
+	reverting the filters-vector parameter for filter roots
+	actually the solution will be a bit more complicated
+	additionally we try to fix the ostream operator for CORBA::Exception lookup
+
+	* src/sphinx/SphinxSpeech.cpp, src/video/VideoConsumer.cpp, RELEASENOTES, src/miro/Client.h, src/miro/IO.cpp, src/miro/NotifyMulticastSender.cpp, src/miro/ReactorTask.cpp, src/miro/Server.cpp, src/miro/StructuredPushConsumer.cpp, src/msp/MspEventHandler.cpp, src/pioneer/CanonPanTiltImpl.cpp:
+	operator << fix for newer ACE/TAO versions.
+
+2003-11-03  trifftnix  <trifftnix@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/video/VideoDevice.cpp, src/video/VideoFilter.cpp:
+	removing debug output
+
+2003-11-03  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* etc/eve.xml: fixing configuration file
+
+	* config/Make-rules: install fix from gerd for old shells
+
 2003-10-31  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* configure.ac: making configure more verbose
+	debug flag is no longer default (sure you can supply it at commandline)
+
+2003-10-31  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* src/video/BufferManagerBTTV.cpp, src/video/VideoDeviceBTTV.cpp:
+	trying to fix BTTV devices with only two buffers
+
+2003-10-31  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* templates/Makefile.am.bin, templates/Makefile.am.dir, templates/Makefile.am.lib.a, templates/Makefile.am.lib.so, templates/Makefile.am.qt:
+	added Makefile.am templates for the new autoconf/make structure
+
+	* ChangeLog: ChangeLog now uptodate
 
 	* doc/tex/miro_manual.tex, doc/tex/writing_a_client.tex: docu update
 
