@@ -33,6 +33,7 @@ DIRS =		odometry \
 		rangeSensor \
 		panTilt \
 		video \
+		videoBroker \
 		notify \
 		speech \
 		behaviours \

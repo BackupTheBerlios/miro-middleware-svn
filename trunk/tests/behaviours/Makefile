@@ -32,7 +32,7 @@ BIN 	= \
 FILES = Parameters \
 	DummyBehaviour \
 	DummyBehaviourB \
-	DummyBehaviourC \
+	DummyBehaviourD \
 	DummyArbiter \
 	DummyArbiterMessage
 
