@@ -75,6 +75,7 @@ namespace Miro
     const int CURV_COUNT = 21; // = 2n+1
     const int CURV_SEGS = 21; // = 2n+1
     const int CURV_SEG_LEN = 50;  // in mm
+    const int CURV_SEG_SMOOTH = 50;
     const double WHEEL_DISTANCE  = 390.;  // in mm
     const double MIN_DISTANCE = 10; // in mm
     const double BREAK_ACCELERATION = 2000.;  // in mm/sec2
@@ -82,6 +83,7 @@ namespace Miro
     int CURV[21][21];	// curvature space
     int count, seg, left, right, curv, target;
     double fLeft, fRight, offset, angle, rel, breaklen, left_break, right_break;
+    int k,l,m;
 
     std::FILE *logFile1, *logFile2;
     logFile1 = std::fopen("Curvature.log","a");
@@ -108,7 +110,7 @@ namespace Miro
 	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -1 * angle * (CURV_SEGS + 1) / 2);
         for(seg = 0; seg < CURV_SEGS; seg++) {  	
 	  rotateMountedPolygon(_robot, Vector2d(-offset, 0.), angle);
-          getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) < MIN_DISTANCE ? CURV[count][seg] = 0 : CURV[count][seg] = 1;
+          getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) < MIN_DISTANCE ? CURV[count][seg] = 0 : CURV[count][seg] = 250;
 	  fprintf(logFile1,"%d\n",CURV[count][seg]);
 	}
 	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -1 * angle * (CURV_SEGS - 1) / 2);
@@ -119,8 +121,20 @@ namespace Miro
 	  fprintf(logFile1,"%d\n",0);
 	}
       }
+
+      k = (CURV_SEGS - 1) / 2;
+      l = 0;
+      while((k <= CURV_SEGS) && (CURV[count][k] != 250))
+	k++;
+      if(k != (CURV_SEGS + 1)) {
+	while(k >= ((CURV_SEGS - 1) / 2)) {
+	  CURV[count][k-1] = std::max(0, CURV[count][k] - CURV_SEG_SMOOTH);
+	  k--;
+	}
+      }
       
     }
+    
 
     for(left = minLeft_; left <= maxLeft_; left++) {
       for(right = minRight_ ; right <= maxRight_; right++) {
@@ -130,12 +144,9 @@ namespace Miro
 	right_break = 100. * (double)(right * abs(right)) / BREAK_ACCELERATION;
 	fabs(left_break) > fabs(right_break) ? breaklen = left_break : breaklen = right_break;
 	target = 10 + (int)(breaklen / CURV_SEG_LEN);
-	fprintf(logFile2,"%d %d\n
-",curv,target);
+	fprintf(logFile2,"%d %d\n",curv,target);
 
-
-	velocitySpace_[left+100][right+100] = 255 * CURV[std::max(0,std::min(CURV_COUNT-1,curv))][std::max(0,std::min(CURV_SEGS-1,target))];
-
+	velocitySpace_[left+100][right+100] = CURV[std::max(0,std::min(CURV_COUNT-1,curv))][std::max(0,std::min(CURV_SEGS-1,target))];
       }
     }
 
