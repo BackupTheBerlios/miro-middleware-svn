@@ -92,6 +92,7 @@ namespace Canon
 
 
   protected:
+    Answer answer;
     Answer * pAnswer;
 
     Pioneer::Connection&         connection; // encapsulating communication to hardware
@@ -120,7 +121,7 @@ namespace Canon
 
   };
 
-  inline Answer* CanonPanTiltImpl::getAnswer() {return pAnswer;}
+  inline Answer* CanonPanTiltImpl::getAnswer() {return &answer;}
 };
 
 #endif

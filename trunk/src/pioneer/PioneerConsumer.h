@@ -19,7 +19,7 @@
 
 #include "PioneerStatus.h"
 
-// forward declerations
+// forward declarations
 namespace Miro
 {
   class OdometryImpl;
@@ -68,9 +68,9 @@ namespace Pioneer
     //public:
     //must be public in order for the connection to close the camera
     Canon::CanonPanTiltImpl * pCanonPanTilt;
-    //protected:
+    //will be used for CanonCamera too
     Canon::Answer *pAnswer;
-    
+    // protected:    
 
     Miro::MotionStatusIDL status_;
     short prevX, prevY;

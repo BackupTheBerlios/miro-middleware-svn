@@ -11,8 +11,8 @@
 //////////////////////////////////////////////////////////////////////////////
 
 
-#include "CanonPanTiltMessage.h"
-#include "CanonPanTiltDevice.h"
+#include "CanonMessage.h"
+//#include "CanonDevice.h"
 
 #include <iostream>
 

@@ -50,7 +50,6 @@ namespace Canon
   //pedestal (PanTilt) command codes
   static const unsigned short SET_PAN_SPEED         = 0x0050;
   static const unsigned short SET_TILT_SPEED        = 0x0051;
-
   static const unsigned short GET_SPEED             = 0x0052; //shared
   static const unsigned short GET_PAN_SPEED         = 0x0052; //shared 0
   static const unsigned short GET_TILT_SPEED        = 0x0052; //shared 1
@@ -90,18 +89,47 @@ namespace Canon
 
   static const unsigned short SET_ANGLE_RANGE       = 0x0064; //shared
   static const unsigned short SET_PAN_RANGE_LIMIT   = 0x0064; //shared 0
-  static const unsigned short SET_TILT_RANGE_LIMIT  = 0x0064; //shared 1
-  
+  static const unsigned short SET_TILT_RANGE_LIMIT  = 0x0064; //shared 1  
   static const unsigned short GET_ANGLE_RANGE       = 0x0065; //shared
   static const unsigned short GET_PAN_RANGE_LIMIT   = 0x0065; //shared 0
   static const unsigned short GET_TILT_RANGE_LIMIT  = 0x0065; //shared 1
 
   //camera command codes
 
-  //...
   static const unsigned short SET_POWER             = 0x00A0; //shared
   static const unsigned short POWER_OFF             = 0x00A0; //shared 0
   static const unsigned short POWER_ON              = 0x00A0; //shared 1
+
+  static const unsigned short FOCUS_OPERATE         = 0x00A1; //shared
+  static const unsigned short FOCUS_AUTO            = 0x00A1; //shared 0
+  static const unsigned short FOCUS_MANUAL          = 0x00A1; //shared 1
+  static const unsigned short FOCUS_NEAR            = 0x00A1; //shared 2
+  static const unsigned short FOCUS_FAR             = 0x00A1; //shared 3
+  static const unsigned short SET_FOCUS_POSITION    = 0x00B0;
+  static const unsigned short FOCUS_REQUEST         = 0x00B1; //shared
+  static const unsigned short GET_FOCUS_POSITION    = 0x00B1; //shared 0
+  static const unsigned short ONE_PUSH_AF           = 0x00B1; //shared 1
+  static const unsigned short GET_FOCUS_RANGE       = 0x00B1; //shared 2
+
+  static const unsigned short ZOOM_OPERATE          = 0x00A2; //shared
+  static const unsigned short ZOOM_STOP             = 0x00A2; //shared 0
+  static const unsigned short ZOOM_WIDE             = 0x00A2; //shared 1
+  static const unsigned short ZOOM_TELE             = 0x00A2; //shared 2
+  static const unsigned short ZOOM_HI_WIDE          = 0x00A2; //shared 3
+  static const unsigned short ZOOM_HI_TELE          = 0x00A2; //shared 4
+  static const unsigned short SET_ZOOM_POSITION1    = 0x00A3;
+  static const unsigned short GET_ZOOM_POSITION1    = 0x00A4;
+  static const unsigned short SET_ZOOM_POSITION2    = 0x00B3;
+  static const unsigned short GET_ZOOM_POSITION2    = 0x00B4; //shared 0
+  static const unsigned short SET_ZOOM_SPEED        = 0x00B4; //shared 1
+  static const unsigned short GET_ZOOM_SPEED        = 0x00B4; //shared 2
+  static const unsigned short GET_ZOOM_MAX          = 0x00B4; //shared 3
+
+  //...
+  
+  static const unsigned short CAMERA_RESET          = 0x00AA;
+  static const unsigned short GET_ZOOM_RATIO        = 0x00AB;
+
   //...
 
   //system command codes

@@ -15,7 +15,7 @@
 #include "pioneer/PioneerConnection.h"
 #include "pioneer/PioneerConsumer.h"
 #include "pioneer/PioneerParameters.h"
-#include "pioneer/CanonPanTiltMessage.h"
+#include "pioneer/CanonMessage.h"
 
 #include "miro/Synch.h"
 #include "miro/Exception.h"
@@ -48,7 +48,9 @@ namespace Canon
 
   CanonPanTiltImpl::CanonPanTiltImpl(Pioneer::Connection& _connection,
 			 Pioneer::Consumer& _consumer, bool _upsideDown) throw(Exception) :
-    pAnswer(new Answer()),
+    //    pAnswer(new Answer()),
+    answer(),
+    pAnswer(&answer),
     connection(_connection),
     consumer(_consumer),
     initialized(false),

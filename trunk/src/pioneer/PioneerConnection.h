@@ -13,7 +13,7 @@
 #define PioneerConnection_h
 
 #include "psos/PsosConnection.h"
-#include "pioneer/CanonPanTiltMessage.h"
+#include "pioneer/CanonMessage.h"
 
 //------------------------ PioneerClass ---------------------------//
 

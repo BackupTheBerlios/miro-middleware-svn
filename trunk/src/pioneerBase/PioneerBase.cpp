@@ -62,7 +62,8 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   stall(/*pioneerConnection*/),
   sonar(Pioneer::Parameters::instance()->sonarDescription, &structuredPushSupplier_),
   tactile(Pioneer::Parameters::instance()->tactileDescription, &structuredPushSupplier_),
-  canonPanTilt(pioneerConnection, *pPioneerConsumer,Pioneer::Parameters::instance()->cameraUpsideDown)
+  canonPanTilt(pioneerConnection, *pPioneerConsumer,Pioneer::Parameters::instance()->cameraUpsideDown),
+  canonCamera(pioneerConnection, *pPioneerConsumer, canonPanTilt.getAnswer())
 {
   pOdometry = odometry._this();
   pMotion = motion._this();
@@ -71,6 +72,7 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   pTactile = tactile._this();
   pBattery = battery._this();
   pCanonPanTilt = canonPanTilt._this();
+  pCanonCamera = canonCamera._this();
 
   addToNameService(pOdometry.in(), "Odometry");
   addToNameService(pMotion.in(), "Motion");
@@ -81,8 +83,10 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   addToNameService(ec_.in(), "EventChannel");
 
   //only add the pantilt if the camera is actually present
-  if (Pioneer::Parameters::instance()->camera)
+  if (Pioneer::Parameters::instance()->camera) {
     addToNameService(pCanonPanTilt.in(), "PanTilt");
+    addToNameService(pCanonPanTilt.in(), "Camera");
+  }
 
   // start the asychronous consumer listening for the hardware
   reactorTask.open(0);

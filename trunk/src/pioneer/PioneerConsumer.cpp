@@ -14,6 +14,7 @@
 #include "PioneerParameters.h"
 
 #include "pioneer/CanonPanTiltImpl.h"
+//#include "pioneer/CanonPanTiltMessage.h"
 
 #include "miro/RangeEventC.h"
 #include "miro/RangeSensorImpl.h"
@@ -65,6 +66,7 @@ namespace Pioneer
     status_.position.heading = 0.;
     status_.velocity.translation = 0;
     status_.velocity.rotation = 0.;
+    pAnswer=pCanonPanTilt->getAnswer();
   }
 
 
@@ -239,10 +241,9 @@ namespace Pioneer
 	    //cout << "Battery: " << bat << endl;
 	  }
 	} else if ((int)pPsosMsg->buffer()[3]==0xb0) { //SERAUXpac SIP
-	  if (pCanonPanTilt) {
-	    for (int i=4; i<4+pPsosMsg->buffer()[2]-3; i++) {
-	      pCanonPanTilt->addAnswer(pPsosMsg->buffer()[i]);
-	    }
+	  if (pAnswer) {
+	    for (int i=4; i<4+pPsosMsg->buffer()[2]-3; i++) 
+	      pAnswer->add(pPsosMsg->buffer()[i]);
 	  }
 	}
 	break;

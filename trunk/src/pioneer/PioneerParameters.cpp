@@ -135,7 +135,6 @@ namespace Pioneer
 	    else if (n1.nodeName() == "Camera") {
 	      QDomText t = n2.toText();
 	      if (!t.isNull()) {
-		cout << "camera" << t.data() << endl;
 		if ((t.data()=="normal")||(t.data()=="yes")) {
 		  camera=true;
 		  cameraUpsideDown=false;

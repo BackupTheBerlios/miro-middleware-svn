@@ -22,6 +22,7 @@
 #include "pioneer/PioneerConsumer.h"
 #include "pioneer/PioneerStallImpl.h"
 #include "pioneer/CanonPanTiltImpl.h"
+#include "pioneer/CanonCameraImpl.h"
 
 #include "psos/PsosEventHandler.h"
 
@@ -70,6 +71,7 @@ struct Service
   Pioneer::Consumer * pConsumer;
   Pioneer::StallImpl * pStallImpl;
   Canon::CanonPanTiltImpl canonPanTiltImpl;
+  Canon::CanonCameraImpl canonCamera;
   Psos::EventHandler * pEventHandler;
   Pioneer::Connection connection;
   
@@ -85,6 +87,7 @@ Service::Service() :
   pConsumer(new Pioneer::Consumer(pRangeSensorImpl, NULL, pOdometryImpl, NULL, NULL, &canonPanTiltImpl)),
   pStallImpl(new Pioneer::StallImpl()),
   canonPanTiltImpl(connection, *pConsumer,Pioneer::Parameters::instance()->cameraUpsideDown),
+  canonCamera(connection, *pConsumer,canonPanTiltImpl.getAnswer()),
   pEventHandler(new Psos::EventHandler(pConsumer, connection)),
   connection(reactorTask.reactor(), pEventHandler, pConsumer)
 {}
@@ -112,6 +115,11 @@ void cameraMenu(Service& service)
 	 << "4 - set Tilt position" << endl
 	 << "5 - get Pan/Tilt position" << endl
 	 << "6 - set Pan/Tilt speeds " << endl
+	 << "7 - set Zoom position" << endl
+	 << "8 - get Zoom position" << endl
+	 << "9 - set Focus position" << endl
+	 << "0 - get Focus position" << endl
+	 << "a - set AutoFocus" << endl
 	 << endl << "x - back" << endl;
     cin >> str;
     c = str[0];
@@ -194,6 +202,39 @@ void cameraMenu(Service& service)
 	  cin >> angle;
 	  spd.targettiltspeed=deg2Rad(angle);
 	  service.canonPanTiltImpl.setSpdAcc(spd);
+	  break;
+	}
+      case '7':
+	{
+	  int zoom;
+	  cout << "New zoom position (0-100%):" << endl;
+	  cin >> zoom;
+	  
+	  service.canonCamera.setZoom(zoom);
+	  break;
+	}
+      case '8':
+	{
+	  cout << "current zoom factor: " << service.canonCamera.getZoom();
+	  break;
+	}
+      case '9':
+	{
+	  int focus;
+	  cout << "New focus position (0-100%):" << endl;
+	  cin >> focus;
+	  
+	  service.canonCamera.setFocus(focus);
+	  break;
+	}
+      case '0':
+	{
+	  cout << "current focus factor: " << service.canonCamera.getFocus();
+	  break;
+	}
+      case 'a':
+	{
+	  service.canonCamera.autoFocus();
 	  break;
 	}
       case 'X':

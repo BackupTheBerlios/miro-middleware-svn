@@ -14,7 +14,7 @@
 
 #include "miro/DevMessage.h"
 
-#include "CanonPanTiltDevice.h"
+#include "CanonDevice.h"
 
 #include <cmath>
 
