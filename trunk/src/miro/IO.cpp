@@ -74,6 +74,8 @@ operator<<(std::ostream &ostr, const ACE_INET_Addr &rhs) {
 }
 namespace Miro
 {
+  using ::operator<<;
+
 //   // output operator for LaserScanIDL
 //   std::ostream &
 //   operator<<(std::ostream &ostr, const LaserScanIDL &rhs) {

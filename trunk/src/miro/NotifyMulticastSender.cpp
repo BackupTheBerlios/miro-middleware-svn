@@ -37,9 +37,12 @@
 
 #define DBG_CLASSNAME "NotifyMulticast::Sender"
 
-namespace Miro {
+namespace Miro 
+{
+  namespace NotifyMulticast 
+  {
 
-    namespace NotifyMulticast {
+      using ::operator<<;
 
         /**
          * Sender::Sender()
@@ -511,6 +514,6 @@ namespace Miro {
         int Sender::sendData(iovec *_iov, size_t _iovLen) {
             return configuration_->getSocket()->send(_iov, (int)_iovLen);
         }
-    };
-};
+  }
+}
 

@@ -28,6 +28,8 @@ using CosNotifyChannelAdmin::StructuredProxyPushSupplier;
 
 namespace Miro
 {
+  using ::operator<<;
+
   StructuredPushConsumer::StructuredPushConsumer(EventChannel_ptr _ec,
 						 bool _connect) :
     ec_(EventChannel::_duplicate(_ec)),

@@ -36,6 +36,8 @@ namespace Video
   using std::cerr;
   using std::endl;
 
+  using ::operator<<;
+
   //------------------------//
   //----- constructors -----//
   //------------------------//
@@ -86,4 +88,4 @@ namespace Video
     cout << "VideoConsumer::svc() exiting." << endl;
     return 0;
   }
-};
+}

@@ -23,6 +23,9 @@
 
 namespace Miro
 {
+  // hack for TAO CORBA::Exception ostream operator
+  using ::operator<<;
+
  // forward declaration
   class Client;
 

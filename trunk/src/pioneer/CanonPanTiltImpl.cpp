@@ -37,6 +37,8 @@ namespace Canon
   using std::cerr;
   using std::endl;
 
+  using ::operator<<;
+
   using Miro::EDevIO;
   using Miro::ETimeOut;
   using Miro::EOutOfBounds;

@@ -41,6 +41,8 @@ extern "C" void handler (int signum)
 
 namespace Miro
 {
+  using ::operator<<;
+
   /**
    * @param orb      The Object request broker.
    * @param shutdown Cooperative shutdown indicator.

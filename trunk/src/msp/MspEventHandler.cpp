@@ -93,4 +93,4 @@ namespace Msp
       cerr << "msp.lingApproveAck() exception: " << e << endl;
     }
   }
-};
+}

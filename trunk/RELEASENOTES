@@ -1,112 +1,27 @@
-We are pleased to announce our second public beta of Miro.
+We are pleased to announce our next snapshot of Miro.
 
-It is the PeopleBot beta 2. The tag in the cvs repository is
-PeopleBotBeta2. You can update to it by a simple:
+It is the third beta. The tag in the cvs repository is
+Beta3. You can update to it by a simple:
 
-cvs update -r PeopleBotBeta2
+cvs update -r Beta3
 
-Tar archives are also available at our web site.
+Tar archives and the manual are also available at our web site.
 
-With this beta, Miro should now support all sensors and actuators of
-the performance people bot of ActiveMedia. The binary infrared sensors
-are modeled as normal range sensors. We hopefully didn't miss any.
+There is lots of new stuff in the current Miro cvs since the last 
+Miro-Ppb-Beta: 
 
-This beta introduces the parameter framework of Miro. Miro now supports
-auto code generation for parameter files of its services as well as for
-behaviours. Read the Miro manual for more details.
+- Lots of small fixes for the new gcc 3.x versions. Miro should now
+compile with the current gcc versions without any problems.
 
-The PolicyEditor was renovated and should now show better performance 
-as well as less segmentation faults.
+- Some fixes for the latest ACE/TAO versions. Miro should now compile
+with current ACE/TAO versions. However, we did not test it extensively
+on the robots.
 
-The Behaviour/Action Pattern/Policy framework was enhanced. It now 
-supports global transitions and an interface to change parameter sets
-within a running policy. Read the Miro manual for more details.
-The example behaviours moved to examples/behaviours and its 
-subdirectories. Also a bunch of trivial behaviours was added.
-The instantiation of Behaviours/Arbiters etc. was cleaned up 
-into factory classes.
+- Support for out new Sparrow2003 robot platform.
 
-The Ppb-Services are all collected within the PioneerBase binary. - We
-are pretty sure we temporarily broke the Pioneer1 support on the
-way. But it's hard to check, as our Pioneer1 isn't functional
-anymore. We will work on the configurability, to make them all work
-together nicely.
+- A new VideoService, adding support for firewire digital cameras and
+providing an infrastructur for advanced image filtering. It is now
+covered by a seperate chapter in the documentation. Unluckily this
+changes the Video interface sligthly.
 
--Motion / DifferentialMotion
-  as can be tested for instance by the MotionTest and
-  DifferentialMotionTest. 
-
-  Known issues:
-  The method limp() does currently not disable the motors, due
-  to bad interaction with the behaviour engine.
-  
-- Odometry
-  as can be tested for instance by the OdometryTest
-
-- RangeSensor interfaces for Sonar, Tactile and Infrared sensors
-  Try RangSensorTest or QtRangeSenor.
-
-  Known issues:
-  QtRangeSensor does only display pressed tactiles (bumpers)
-  and infrareds by now, as it ignores out of range values.
-
-- VideoService
-
-  Knows issues:
-  - After each reboot, please execute the following command on the
-  command line: "v4lctl setnorm NTSC".
-  - If the video radio link is switched on, the internal image may be
-  very dark. This is not a Miro bug, but a technical PeopleBot
-  limitation.
-
-
-- BehaviourEngine
-
-  As our PeopleBot had some hardware problems, we actually
-  didn't too much further behaviour testing.
-
-  The RangeSensorAvoid behaviour demo is working quite well. It drives the
-  robot straight and turns away from obstacles.
-
-  The wallfollow behaviour demo does not really work - do not test it!
-
-  The simple/square.xml policy makes the robot drive a square of
-  3m x 3m. Make sure there is enough space, as it does not do any
-  avoiding... It is a nice policy for testing the accuracy of your
-  robots odometry.
-
-  To test the avoid demo:
-  * Start the 
-    PioneerBase
-  * Start the Behaviours, specifying the policy at the command line:
-    SimpleBehaviourEngine ../examples/behaviours/policies/rangeSensor/PpbStraight.xml
-  * Start the PolicyController, to start and stop the policy.
-  The PioneerBase has to run on the robot. It is also a good idea to
-  run the Behaviours on the robot, to avoid that network latencies
-  stop the control loop.
-  The PolicyController is a GUI-Interface that can be run anywhere.
-
-  WARNING: This demo drives the robot around. It uses only Sonar
-  for obstacle avoidance. So make sure your obstacles are visible
-  by the sonar rings. We take absolutely NO WARRANTY for the 
-  correctness of this behaviour demo. It can damage your robot
-  by driving it against an obstacles or down the next staircase.
-  You have been warned!
-
-  Monitoring tools for the behaviour engine are currently only
-  available in our Robot Soccer software project. We are about to
-  separate them for inclusion into Miro. Sorry for the inconvenience.
-
-- PanTilt
-  as can be tested for instance by the PanTiltTest
-
-  Known Issues:
-  After using, the remote control may be dysfunctional. Simple switch
-  the camera off and on one time by removing the power cable.
-
-- Gripper
-  as can be tested for instance by the GripperTest
-
-  Know Issues:
-  For a list of implemented gripper commands, please see the
-  appropriate idl-file.
+- Autoconf and Automake support. This is also covered in the manual.

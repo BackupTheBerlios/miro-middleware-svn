@@ -17,6 +17,8 @@ namespace Miro
   using std::cerr;
   using std::endl;
 
+  using ::operator<<;
+
   SphinxSpeechServer::SphinxSpeechServer(int argc, char *argv[], Miro::StructuredPushSupplier * _supplier) :
     super(argc,argv),
     miroRoot(getenv("MIRO_ROOT")),
@@ -70,7 +72,7 @@ namespace Miro
       cerr << "Probably the NameSevice went down while we ran." << endl;
     }
   }
-};
+}
 
 
 int main(int argc, char* argv[]) 
