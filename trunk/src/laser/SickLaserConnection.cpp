@@ -76,7 +76,8 @@ namespace Miro
     //
     laserEvent_->set_handle(fd);
     int rc =
-      reactor_->register_handler(laserEvent_, ACE_Event_Handler::READ_MASK);
+      reactor_->register_handler(fd, 
+laserEvent_, ACE_Event_Handler::READ_MASK);
     if (rc == -1)
       throw Miro::Exception("LaserConnection::LaserConnection: Failed to register handler for laser file descriptor.");
   }
