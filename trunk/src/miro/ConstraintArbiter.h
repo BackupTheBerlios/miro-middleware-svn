@@ -27,8 +27,9 @@
 namespace Miro
 {
   class StructuredPushSupplier;
+  class MotionArbiterMessage;
 
-  typedef ArbiterMessage ConstraintArbiterMessage;
+  typedef MotionArbiterMessage ConstraintArbiterMessage;
 
   class ConstraintArbiter :
     public PriorityArbiter,

@@ -11,7 +11,7 @@
 
 //#include "ActionPattern.h"
 #include "ArbiterParameters.h"
-#include "ArbiterMessage.h"
+#include "MotionArbiterMessage.h"
 #include "ConstraintArbiter.h"
 #include "ConstraintArbiterViewer.h"
 #include "Behaviour.h"
