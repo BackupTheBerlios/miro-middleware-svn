@@ -81,7 +81,7 @@
       <config_parameter name="height" type="int" default="288" measure="pixel" />
       <config_parameter name="palette" type="string" default="rgb" />
 
-      <config_parameter name="filters" type="std::vector&lt;FilterTreeParameters&gt;" />
+      <config_parameter name="filter" type="FilterTreeParameters" />
     </config_item>
   </config_group>
 </config>

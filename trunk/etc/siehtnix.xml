@@ -1,5 +1,5 @@
 <!DOCTYPE MiroConfigDocument>
-<config>
+  <config>
  <section name="Robot" >
   <parameter name="Robot" >
    <parameter value="siehtnix" name="Name" />
@@ -159,7 +159,6 @@
    <parameter value="bgr" name="Palette" />
    <parameter value="384" name="Width" />
    <parameter value="288" name="Height" />
-   <parameter name="Filters">
     <parameter name="Filter">
      <parameter value="DeviceBTTV" name="Name" />
      <parameter value="DeviceBTTV" name="Type" />
@@ -187,7 +186,6 @@
            <parameter value="FilterIndextoIndex" name="Type" />
           </parameter>
          </parameter>
-        </parameter>
        </parameter>
       </parameter>
      </parameter>

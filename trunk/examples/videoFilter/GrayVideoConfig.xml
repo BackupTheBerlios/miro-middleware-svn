@@ -1,11 +1,10 @@
 <!DOCTYPE MiroConfigDocument>
-<config>
+  <config>
  <section name="Video" >
   <parameter name="Video" >
    <parameter value="rgb" name="Palette" />
    <parameter value="634" name="Width" />
    <parameter value="480" name="Height" />
-   <parameter name="Filters">
     <parameter name="Filter">
      <parameter value="DeviceDummy" name="Name" />
      <parameter value="DeviceDummy" name="Type" />
@@ -22,7 +21,6 @@
       </parameter>
      </parameter>
     </parameter>
-   </parameter>
   </parameter>
   <parameter name="DeviceDummy" >
    <parameter name="Device" value="./goal.ppm" />

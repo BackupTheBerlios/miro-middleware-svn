@@ -15,8 +15,6 @@
 
 #include <iostream>
 
-using Miro::operator <<;
-
 using std::cout;
 using std::cerr;
 using std::endl;

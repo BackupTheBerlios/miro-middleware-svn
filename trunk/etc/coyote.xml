@@ -1,5 +1,5 @@
 <!DOCTYPE MiroConfigDocument>
-<config>
+  <config>
  <section name="Robot">
   <parameter name="Robot">
    <parameter value="coyote" name="Name" />
@@ -179,7 +179,6 @@
    <parameter value="640" name="Width" />
    <parameter value="480" name="Height" />
 
-   <parameter name="Filters">
     <parameter name="Filter">
      <parameter value="Device1394" name="Name" />
      <parameter value="Device1394" name="Type" />
@@ -217,7 +216,6 @@
      </parameter>
     </parameter>
    </parameter>
-  </parameter>
 
   <parameter name="Camera" >
    <parameter value="0.060000" name="Latency" />

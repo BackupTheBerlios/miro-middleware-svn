@@ -56,7 +56,7 @@ namespace Video
     format.palette = Video::Device::getPalette(videoParameters->palette);
     Filter * filter = buildFilterTree(NULL,
 				      format,
-				      videoParameters->filters[0]);
+				      videoParameters->filter);
 
     pVideoDevice_ = dynamic_cast<Video::Device *>(filter);
     assert (pVideoDevice_ != NULL);
