@@ -27,6 +27,8 @@
 #include "pioneer/CanonCameraImpl.h"
 #include "pioneer/GripperImpl.h"
 #include "miro/RangeSensorImpl.h"
+#include "miro/ObjectVectorImpl.h"
+//#include "miro/CortexImpl.h"
 
 #include <orbsvcs/CosNotifyChannelAdminS.h>
 #include <orbsvcs/CosNotifyCommC.h>
@@ -92,6 +94,8 @@ private:
   Canon::CanonPanTiltImpl canonPanTilt;
   Canon::CanonCameraImpl canonCamera;
   Miro::GripperImpl gripper;
+  Miro::ObjectVectorImpl objectVector;
+  //Miro::CortexImpl cortex;
 
   Miro::Odometry_var pOdometry;
   Miro::Motion_var pMotion;
@@ -103,6 +107,8 @@ private:
   Miro::CanonPanTilt_var pCanonPanTilt;
   Miro::CanonCamera_var pCanonCamera;
   Miro::Gripper_var pGripper;
+  Miro::ObjectVector_var pObjectVector;
+  //Miro::Cortex_var pCortex;
 };
 #endif // PioneerBase
 

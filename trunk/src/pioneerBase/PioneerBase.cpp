@@ -4,9 +4,9 @@
 //
 // (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
-// 
+//
 // $Id$
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
 
 #include "PioneerBase.h"
@@ -53,11 +53,11 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   battery(),
 
   // Pioneer board initialization
-  pPioneerConsumer(new Pioneer::Consumer(&sonar, 
+  pPioneerConsumer(new Pioneer::Consumer(&sonar,
 					 &tactile,
 					 &infrared,
 					 &motion,
-					 &odometry, 
+					 &odometry,
 					 &battery,
 					 NULL, //stall
 					 //only add the camera if really present
@@ -75,7 +75,9 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   infrared(Pioneer::Parameters::instance()->infraredDescription, &structuredPushSupplier_),
   canonPanTilt(pioneerConnection, Pioneer::Parameters::instance()->cameraUpsideDown),
   canonCamera(pioneerConnection, canonPanTilt.getAnswer()),
-  gripper(pioneerConnection)
+  gripper(pioneerConnection),
+  objectVector()
+//       	,  cortex()
 {
   pOdometry = odometry._this();
   pMotion = motion._this();
@@ -87,6 +89,8 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   pCanonPanTilt = canonPanTilt._this();
   pCanonCamera = canonCamera._this();
   pGripper = gripper._this();
+  pObjectVector = objectVector._this();
+ // pCortex = cortex._this();
 
   addToNameService(pOdometry.in(), "Odometry");
   addToNameService(pMotion.in(), "Motion");
@@ -96,6 +100,8 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   addToNameService(pInfrared.in(), "Infrared");
   addToNameService(pBattery.in(), "Battery");
   addToNameService(ec_.in(), "EventChannel");
+  addToNameService(pObjectVector.in(), "ObjectVector");
+  //addToNameService(pCortex.in(), "Cortex");
 
   //only add the pantilt if the camera is actually present
   if (Pioneer::Parameters::instance()->camera) {
