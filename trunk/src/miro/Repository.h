@@ -203,7 +203,7 @@ namespace Miro
   {
     typename InstanceMap::const_iterator first, last = instances_.end();	
     for(first = instances_.begin(); first != last; ++first) {		
-      _ostr << first->first << endl;
+      _ostr << first->first << std::endl;
     }
   }
 
