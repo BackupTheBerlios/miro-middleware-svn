@@ -92,14 +92,12 @@ namespace Canon
   {
     Miro::PanTiltPositionIDL dest;
 
-cout << "setPan" << endl;
     //if camera is inverse mounted, change sign for current saved value
     //as it will be changed again on setPosition
     dest.panvalue = angle;
     dest.tiltvalue = (upsideDown? -currentTilt : currentTilt);
 
     setPosition(dest);
-cout << "position set" << endl;
   }
   
   double
@@ -140,8 +138,6 @@ cout << "position set" << endl;
   Miro::PanTiltPositionIDL 
   CanonPanTiltImpl::getPosition() throw(Miro::EDevIO)
   {
-    cout << "getPosition" << endl;
-
     Miro::PanTiltPositionIDL result;
     bool done = false;
 
@@ -201,8 +197,6 @@ cout << "position set" << endl;
 
     waitInitialize();
 
-cout << "initialized" << endl;
-
     //if camera in inverse position, change sign for pan/tilt
     //Miro's pan works opposite to camera's!!!
     currentPan = dest.panvalue * (!upsideDown? -1 : 1);
@@ -219,9 +213,7 @@ cout << "initialized" << endl;
     while (!done) {
       { //scope for mutex
 	Miro::Guard guard(pAnswer->mutex); 
-cout << "init answer" << endl;
 	pAnswer->init();
-cout << "send camera" << endl;
 	connection.sendCamera(panTiltValue);
 	try {
 	  while (!pAnswer->errorCode()) {
@@ -238,25 +230,21 @@ cout << "send camera" << endl;
 	  checkAnswer();
 	}
 	catch (Miro::ETimeOut& e) {
-cout << "timeout" << endl;
 	  currentPan = panTmp; //reset old values in case of error
 	  currentTilt = tiltTmp;
 	  throw (e);
 	}
 	catch (Miro::EOutOfBounds& e) {
-cout << "out of bounds" << endl;
 	  currentPan = panTmp; //reset old values in case of error
 	  currentTilt = tiltTmp;
 	  throw (e);
 	}
 	catch (Miro::EDevIO& e) {
-cout << "dev IO error" << endl;
 	  currentPan = panTmp; //reset old values in case of error
 	  currentTilt = tiltTmp;
 	  throw (e);
 	}
 	catch (Miro::Exception& e) {
-cout << "miro exception" << endl;
 	  currentPan = panTmp; //reset old values in case of error
 	  currentTilt = tiltTmp;
 	  throw (e);
@@ -297,8 +285,6 @@ cout << "miro exception" << endl;
 
     do {
       //test if finished
-      cout << "waitCompletion getPosition" << endl;
-
       dest = getPosition();
     } 
     while ( (fabs(goal.panvalue-dest.panvalue) > 0.01) || 
@@ -713,13 +699,11 @@ cout << "miro exception" << endl;
     if (!forceWait && !force && initialized)
       return;
 
-    cout << "wait initialize 1" << endl;
     //initialize only if not initialized
     //or asked for initialization
     if (force || !initialized) 
       initialize();
 
-    cout << "wait initialize 2" << endl;
     do {
       done = true;
       try {
@@ -729,8 +713,6 @@ cout << "miro exception" << endl;
       catch (Miro::EDevIO & e) {
 	// avoid "mode" errors
 	done = false;
-	cout << "initialize error" << endl;
-
       }
     } while(!done);
   }
