@@ -53,6 +53,8 @@ namespace Can
 
   protected:
     Miro::Mutex writeMutex;
+
+    static void deadHandler(int);
   };
 
 };

@@ -36,7 +36,13 @@ namespace
   const unsigned char CAN_TSEG1 = 1;
   const unsigned char CAN_TSEG2 = 4;
   const unsigned char CAN_SJW   = 0;
-};
+
+
+  // We set an alarm for this many seconds before attempting to contact
+  // the mcp. If the mcp is off, dead, etc the alarm will expire and
+  // we can bag out.  If not, we reset the alarm and continue
+  static const unsigned int INITIAL_WAIT_TIME = 5;
+  };
 
 namespace Can
 {
@@ -91,10 +97,30 @@ namespace Can
       time = ACE_OS::gettimeofday();
     }
 
+    // In case base is hosed. SIGALRM will be thrown. If we catch it,
+    // MCP did not respond in time.  If not, cancel alarm 
+    // Since the reactor isn't running yet, we have to do this native
+    ACE_OS::signal(SIGALRM, &deadHandler); 
+    ACE_OS::alarm(INITIAL_WAIT_TIME);
+
+    // will definitely choke if base is off
     int rc = ioBuffer.send_n(message.canMessage(), sizeof(canmsg));
+
+    // if we made it back, cancel alarm 
+    ACE_OS::alarm(0);
+    ACE_OS::signal(SIGALRM, SIG_DFL);
+
     lastWrite = time;
     ACE_OS::sleep(canTimeOut);
     if (rc == -1)
       throw Miro::CException(errno, "Error writing can device.");
+  }
+
+  void 
+  Connection::deadHandler(int)
+  {
+    static string errorMessage = "SparrowBoard write failed." \
+      "\nThe SparrowBoard probably crashed.";
+    throw Miro::Exception(errorMessage);
   }
 };
