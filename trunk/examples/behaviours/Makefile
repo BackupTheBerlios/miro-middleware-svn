@@ -91,8 +91,10 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/ButtonsC.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/ButtonsC.i $(MIRO_ROOT)/src/miro/IO.h
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/ButtonsC.i \
+ $(MIRO_ROOT)/src/miro/IO.h
 
 .obj/OnButtonParameters.o .obj/OnButtonParameters.so .shobj/OnButtonParameters.o .shobj/OnButtonParameters.so: OnButtonParameters.cpp OnButtonParameters.h \
  $(MIRO_ROOT)/src/miro/EventBehaviourParameters.h \
@@ -106,7 +108,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
  $(MIRO_ROOT)/src/miro/RangeEventC.h \
- $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i \
  $(MIRO_ROOT)/src/miro/RangeEventC.i \
  $(MIRO_ROOT)/src/miro/RangeSensorC.i \
  $(MIRO_ROOT)/src/miro/EventBehaviour.h \
@@ -134,7 +137,16 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/MotionArbiterMessage.h \
  $(MIRO_ROOT)/src/miro/ArbiterMessage.h \
- $(MIRO_ROOT)/src/miro/Angle.h
+ $(MIRO_ROOT)/src/miro/Angle.h \
+ $(MIRO_ROOT)/src/miro/StructuredPushSupplier.h \
+ $(NIX_ROOT)/src/nix/LineSamplesC.h \
+ $(NIX_ROOT)/src/nix/PolarC.h \
+ $(NIX_ROOT)/src/nix/PolarC.i.h \
+ $(NIX_ROOT)/src/nix/GoalFeatureC.h \
+ $(NIX_ROOT)/src/nix/GoalFeatureC.i.h \
+ $(NIX_ROOT)/src/nix/CornerFeatureC.h \
+ $(NIX_ROOT)/src/nix/CornerFeatureC.i.h \
+ $(NIX_ROOT)/src/nix/LineSamplesC.i.h
 
 .obj/RangeSensorBehaviourParameters.o .obj/RangeSensorBehaviourParameters.so .shobj/RangeSensorBehaviourParameters.o .shobj/RangeSensorBehaviourParameters.so: RangeSensorBehaviourParameters.cpp \
  RangeSensorBehaviourParameters.h \
@@ -150,7 +162,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
  $(MIRO_ROOT)/src/miro/RangeEventC.h \
- $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i \
  $(MIRO_ROOT)/src/miro/RangeEventC.i \
  $(MIRO_ROOT)/src/miro/RangeSensorC.i \
  $(MIRO_ROOT)/src/miro/EventBehaviour.h \
@@ -188,7 +201,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
  $(MIRO_ROOT)/src/miro/RangeEventC.h \
- $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i \
  $(MIRO_ROOT)/src/miro/RangeEventC.i \
  $(MIRO_ROOT)/src/miro/RangeSensorC.i \
  $(MIRO_ROOT)/src/miro/EventBehaviour.h \
@@ -201,8 +215,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/StructuredPushConsumer.h \
  RangeSensorBehaviourParameters.h \
  $(MIRO_ROOT)/src/miro/EventBehaviourParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h WallFollowParameters.h \
- $(MIRO_ROOT)/src/miro/Client.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
+ WallFollowParameters.h $(MIRO_ROOT)/src/miro/Client.h \
  $(MIRO_ROOT)/src/miro/Exception.h \
  $(MIRO_ROOT)/src/miro/RobotParameters.h \
  $(MIRO_ROOT)/src/miro/Parameters.h \
@@ -246,7 +260,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/Arbiter.h \
  $(MIRO_ROOT)/src/miro/TimedBehaviourParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h StraightParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
+ StraightParameters.h \
  $(MIRO_ROOT)/src/miro/MotionArbiterMessage.h \
  $(MIRO_ROOT)/src/miro/VelocityC.h \
  $(MIRO_ROOT)/src/miro/VelocityC.i \

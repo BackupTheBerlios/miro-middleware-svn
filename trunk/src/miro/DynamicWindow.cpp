@@ -116,20 +116,20 @@ namespace Miro
   void DynamicWindow::collisionCheck(std::vector<Vector2d> &_robot, std::vector<Vector2d> &_obstacle) {
 		
     const double WHEEL_DISTANCE  = 390.;  // in mm
-    const double BREAK_ACCEL = 2000.;     // in mm/sec²
+    // const double BREAK_ACCEL = 2000.;     // in mm/sec²
     const double SCALE = 0.5;
-    const int RES = 3;
+    const int RES = 5;
     int hack;
 
     double offset, angle, pointValue;
     
-    for(int left = -100; left <= 100; left+=RES) {
-      for(int right = -100; right <= 100; right+=RES ) {
+    for(int left = minLeft_; left <= maxLeft_; left+=RES) {
+      for(int right = minRight_; right <= maxRight_; right+=RES ) {
 	
 	if((left - right) == 0)
 	  (right<100)?(hack=1):(hack=-1);
 	else
-	  hack == 0;
+	  hack = 0;
 	
 	double fLeft = 10. * (double)left;
 	double fRight = 10. * (double)right;
@@ -199,7 +199,7 @@ namespace Miro
 					   std::vector<Vector2d> &_polygon2) {
     
     std::vector<Vector2d>::iterator a1, a2, b1, b2;
-    Vector2d a, b, c, d, e, f;
+    Vector2d a, b, c, d;
     
     double beta, distance, minDistance, b_y, c_y;
     bool found;
@@ -311,7 +311,7 @@ namespace Miro
   double DynamicWindow::getDistanceBetweenPointAndLine(Vector2d _p1, Vector2d _l1, Vector2d _l2) {		
     
     Vector2d a, b, c, d, e, f, g;
-    double beta, distance, minDistance, b_y, c_y;
+    double beta, b_y, c_y;
     bool found;
     
     // check for possible intersections and calculate parameter beta

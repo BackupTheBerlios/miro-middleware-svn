@@ -70,10 +70,11 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 .obj/PsosConnection.o .obj/PsosConnection.o .obj/PsosConnection.o .obj/PsosConnection.o: PsosConnection.cpp \
  $(MIRO_ROOT)/src/miro/ExceptionC.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/Exception.h $(MIRO_ROOT)/src/miro/Synch.h \
- PsosConnection.h $(MIRO_ROOT)/src/miro/TtyConnection.h \
- PsosEventHandler.h $(MIRO_ROOT)/src/miro/DevEventHandler.h \
- PsosMessage.h $(MIRO_ROOT)/src/miro/DevMessage.h PsosDevice.h \
+ $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/Synch.h PsosConnection.h \
+ $(MIRO_ROOT)/src/miro/TtyConnection.h PsosEventHandler.h \
+ $(MIRO_ROOT)/src/miro/DevEventHandler.h PsosMessage.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h PsosDevice.h \
  PsosParameters.h $(MIRO_ROOT)/src/miro/TtyParameters.h \
  $(MIRO_ROOT)/src/miro/DevParameters.h \
  $(MIRO_ROOT)/src/miro/Parameters.h

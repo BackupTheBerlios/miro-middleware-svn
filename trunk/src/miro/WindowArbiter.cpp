@@ -31,10 +31,10 @@ namespace Miro
     pSupplier_(_pSupplier),
     reactor(ar_),
     timerId(0),
-    dynWindow_(std::complex<double>(0., 0.), 10000, 10000),
-    dynWindowFinished_(std::complex<double>(0.,0. ), 10000, 10000),
+    dynWindow_(std::complex<double>(0., 0.), 2000, 700),
+    dynWindowFinished_(std::complex<double>(0.,0. ), 2000, 700),
     winArbViewTask_(NULL),
-    winArbViewTaskCreated(false)
+    winArbViewTaskCreated(true)
   {
     currentVelocity_.translation = 0;
     currentVelocity_.rotation = 0.;
@@ -99,7 +99,7 @@ namespace Miro
     }
       
     timerId = reactor.schedule_timer(this, 0, ACE_Time_Value(0,0),
-	ACE_Time_Value(30, 0));
+	ACE_Time_Value(0, 100000));
     cout << "WindowArbiter Open." << endl;
   }
 
@@ -127,8 +127,8 @@ namespace Miro
     //    ActionPattern::BehaviourMap bm = ap->behaviourMap();
         
     // Let each behaviour calculate its dynamicWindow-entrys (ascend by priority)
-    ArbiterParameters::RegistrationMap::const_iterator j;
-    for(j = params_->priorities.begin(); j != params_->priorities.end(); j++) {
+    ArbiterParameters::RegistrationMap::const_reverse_iterator j;
+    for(j = params_->priorities.rbegin(); j != params_->priorities.rend(); j++) {
       if (j->first->isActive()) {
         j->first->calcDynamicWindow(&dynWindow_);
       }      
@@ -137,9 +137,9 @@ namespace Miro
     cout << "WindowArbiter All Operations Completed" << endl;
 
     // Calculate new velocity using the content of the dynamicWindow    
-    //    newVelocity = dynWindow_.calcNewVelocity();
-    //    newVelocity = std::complex<double>(std::max(std::min(50., newVelocity.real()),-50.), std::max(std::min(50.,newVelocity.imag()),-50.));
-    //    dynWindow_.setNewDynamicWindow(newVelocity);
+    newVelocity = dynWindow_.calcNewVelocity();
+    newVelocity = std::complex<double>(std::max(std::min(50., newVelocity.real()),-50.), std::max(std::min(50.,newVelocity.imag()),-50.));
+    dynWindow_.setNewDynamicWindow(newVelocity);
 
 
     // Create copy of the finished dynWindow for Debugging

@@ -69,11 +69,12 @@ realclean: clean
  $(MIRO_ROOT)/src/miro/Exception.h \
  $(MIRO_ROOT)/src/miro/RobotParameters.h \
  $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/Singleton.h $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/Singleton.h \
+ $(MIRO_ROOT)/src/miro/Synch.h \
  $(MIRO_ROOT)/src/miro/StructuredPushSupplier.h \
  $(MIRO_ROOT)/src/miro/TimeHelper.h \
- $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
- LogPlayer.h
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i LogPlayer.h
 
 .obj/LogPlayer.moc.o .obj/LogPlayer.moc.so .shobj/LogPlayer.moc.o .shobj/LogPlayer.moc.so: LogPlayer.moc.cpp LogPlayer.h \
  $(MIRO_ROOT)/src/miro/StructuredPushSupplier.h \

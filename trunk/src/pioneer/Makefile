@@ -63,11 +63,13 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 .obj/PioneerConnection.o .obj/PioneerConnection.o .obj/PioneerConnection.o .obj/PioneerConnection.o: PioneerConnection.cpp PioneerConnection.h \
  $(MIRO_ROOT)/src/psos/PsosConnection.h \
- $(MIRO_ROOT)/src/miro/Synch.h $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/Exception.h \
  $(MIRO_ROOT)/src/miro/TtyConnection.h PioneerConsumer.h \
  $(MIRO_ROOT)/src/miro/DevConsumer.h PioneerStatus.h \
  $(MIRO_ROOT)/src/miro/MotionStatusC.h \
- $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i \
  $(MIRO_ROOT)/src/miro/PositionC.h \
  $(MIRO_ROOT)/src/miro/WorldPointC.h \
  $(MIRO_ROOT)/src/miro/WorldPointC.i \
@@ -94,7 +96,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/Synch.h \
  $(MIRO_ROOT)/src/miro/DevConsumer.h PioneerStatus.h \
  $(MIRO_ROOT)/src/miro/MotionStatusC.h \
- $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i \
  $(MIRO_ROOT)/src/miro/PositionC.h \
  $(MIRO_ROOT)/src/miro/WorldPointC.h \
  $(MIRO_ROOT)/src/miro/WorldPointC.i \
@@ -106,8 +109,10 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/ExceptionC.i \
  $(MIRO_ROOT)/src/miro/Angle.h PioneerStallImpl.h \
  $(MIRO_ROOT)/src/miro/PioneerStallS.h \
- $(MIRO_ROOT)/src/miro/StallS.h $(MIRO_ROOT)/src/miro/StallC.h \
- $(MIRO_ROOT)/src/miro/StallC.i $(MIRO_ROOT)/src/miro/StallS.i \
+ $(MIRO_ROOT)/src/miro/StallS.h \
+ $(MIRO_ROOT)/src/miro/StallC.h \
+ $(MIRO_ROOT)/src/miro/StallC.i \
+ $(MIRO_ROOT)/src/miro/StallS.i \
  $(MIRO_ROOT)/src/miro/PioneerStallC.h \
  $(MIRO_ROOT)/src/miro/PioneerStallC.i \
  $(MIRO_ROOT)/src/miro/PioneerStallS.i \
@@ -122,7 +127,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
  $(MIRO_ROOT)/src/miro/ScanDescriptionS.i \
  $(MIRO_ROOT)/src/miro/RangeEventS.h \
- $(MIRO_ROOT)/src/miro/TimeS.h $(MIRO_ROOT)/src/miro/TimeS.i \
+ $(MIRO_ROOT)/src/miro/TimeS.h \
+ $(MIRO_ROOT)/src/miro/TimeS.i \
  $(MIRO_ROOT)/src/miro/RangeEventS.i \
  $(MIRO_ROOT)/src/miro/RangeSensorC.h \
  $(MIRO_ROOT)/src/miro/RangeSensorC.i \
@@ -147,8 +153,9 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 .obj/PioneerStatus.o .obj/PioneerStatus.o .obj/PioneerStatus.o .obj/PioneerStatus.o: PioneerStatus.cpp \
  $(MIRO_ROOT)/src/miro/TimeHelper.h \
- $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
- PioneerStatus.h $(MIRO_ROOT)/src/miro/MotionStatusC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i PioneerStatus.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.h \
  $(MIRO_ROOT)/src/miro/PositionC.h \
  $(MIRO_ROOT)/src/miro/WorldPointC.h \
  $(MIRO_ROOT)/src/miro/WorldPointC.i \
@@ -158,7 +165,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/MotionStatusC.i \
  $(MIRO_ROOT)/src/miro/ExceptionC.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/Synch.h $(MIRO_ROOT)/src/miro/Angle.h \
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/Angle.h \
  $(MIRO_ROOT)/src/psos/PsosMessage.h \
  $(MIRO_ROOT)/src/miro/DevMessage.h \
  $(MIRO_ROOT)/src/psos/PsosDevice.h
@@ -173,7 +181,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/VelocityC.h \
  $(MIRO_ROOT)/src/miro/VelocityC.i \
  $(MIRO_ROOT)/src/miro/VelocityS.i \
- $(MIRO_ROOT)/src/miro/MotionC.h $(MIRO_ROOT)/src/miro/MotionC.i \
+ $(MIRO_ROOT)/src/miro/MotionC.h \
+ $(MIRO_ROOT)/src/miro/MotionC.i \
  $(MIRO_ROOT)/src/miro/MotionS.i \
  $(MIRO_ROOT)/src/miro/DifferentialMotionImpl.h \
  $(MIRO_ROOT)/src/miro/DifferentialMotionS.h \
@@ -183,12 +192,14 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/MotionImpl.h \
  $(MIRO_ROOT)/src/miro/MotionParameters.h \
  $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/Synch.h $(MIRO_ROOT)/src/miro/Exception.h \
- PioneerConnection.h $(MIRO_ROOT)/src/psos/PsosConnection.h \
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/Exception.h PioneerConnection.h \
+ $(MIRO_ROOT)/src/psos/PsosConnection.h \
  $(MIRO_ROOT)/src/miro/TtyConnection.h PioneerConsumer.h \
  $(MIRO_ROOT)/src/miro/DevConsumer.h PioneerStatus.h \
  $(MIRO_ROOT)/src/miro/MotionStatusC.h \
- $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i \
  $(MIRO_ROOT)/src/miro/PositionC.h \
  $(MIRO_ROOT)/src/miro/WorldPointC.h \
  $(MIRO_ROOT)/src/miro/WorldPointC.i \
@@ -204,8 +215,10 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 .obj/PioneerStallImpl.o .obj/PioneerStallImpl.o .obj/PioneerStallImpl.o .obj/PioneerStallImpl.o: PioneerStallImpl.cpp PioneerStallImpl.h \
  $(MIRO_ROOT)/src/miro/PioneerStallS.h \
- $(MIRO_ROOT)/src/miro/StallS.h $(MIRO_ROOT)/src/miro/StallC.h \
- $(MIRO_ROOT)/src/miro/StallC.i $(MIRO_ROOT)/src/miro/StallS.i \
+ $(MIRO_ROOT)/src/miro/StallS.h \
+ $(MIRO_ROOT)/src/miro/StallC.h \
+ $(MIRO_ROOT)/src/miro/StallC.i \
+ $(MIRO_ROOT)/src/miro/StallS.i \
  $(MIRO_ROOT)/src/miro/PioneerStallC.h \
  $(MIRO_ROOT)/src/miro/PioneerStallC.i \
  $(MIRO_ROOT)/src/miro/PioneerStallS.i
@@ -218,12 +231,14 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/MotionParameters.h \
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
- $(MIRO_ROOT)/src/miro/Singleton.h $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/Singleton.h \
+ $(MIRO_ROOT)/src/miro/Synch.h \
  $(MIRO_ROOT)/src/miro/RangeSensorC.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.i \
  $(MIRO_ROOT)/src/miro/RangeEventC.h \
- $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i \
  $(MIRO_ROOT)/src/miro/RangeEventC.i \
  $(MIRO_ROOT)/src/miro/RangeSensorC.i \
  $(MIRO_ROOT)/src/miro/ScanDescriptionHelper.h \

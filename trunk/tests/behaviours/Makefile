@@ -72,8 +72,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/Arbiter.h \
  $(MIRO_ROOT)/src/miro/TimedBehaviourParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h DummyArbiterMessage.h \
- $(MIRO_ROOT)/src/miro/ArbiterMessage.h
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
+ DummyArbiterMessage.h $(MIRO_ROOT)/src/miro/ArbiterMessage.h
 
 .obj/DummyBehaviourB.o .obj/DummyBehaviourB.so .shobj/DummyBehaviourB.o .shobj/DummyBehaviourB.so: DummyBehaviourB.cpp DummyBehaviourB.h \
  $(MIRO_ROOT)/src/miro/TimedBehaviour.h \
@@ -84,13 +84,14 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/Arbiter.h \
  $(MIRO_ROOT)/src/miro/TimedBehaviourParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h DummyArbiterMessage.h \
- $(MIRO_ROOT)/src/miro/ArbiterMessage.h
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
+ DummyArbiterMessage.h $(MIRO_ROOT)/src/miro/ArbiterMessage.h
 
 .obj/DummyArbiter.o .obj/DummyArbiter.so .shobj/DummyArbiter.o .shobj/DummyArbiter.so: DummyArbiter.cpp DummyArbiter.h \
  $(MIRO_ROOT)/src/miro/PriorityArbiter.h \
- $(MIRO_ROOT)/src/miro/Arbiter.h $(MIRO_ROOT)/src/miro/Synch.h \
- DummyArbiterMessage.h $(MIRO_ROOT)/src/miro/ArbiterMessage.h
+ $(MIRO_ROOT)/src/miro/Arbiter.h \
+ $(MIRO_ROOT)/src/miro/Synch.h DummyArbiterMessage.h \
+ $(MIRO_ROOT)/src/miro/ArbiterMessage.h
 
 .obj/DummyArbiterMessage.o .obj/DummyArbiterMessage.so .shobj/DummyArbiterMessage.o .shobj/DummyArbiterMessage.so: DummyArbiterMessage.cpp DummyArbiterMessage.h \
  $(MIRO_ROOT)/src/miro/ArbiterMessage.h

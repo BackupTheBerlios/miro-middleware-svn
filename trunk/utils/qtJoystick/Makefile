@@ -72,7 +72,8 @@ realclean: clean
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
 
-.obj/MainForm.o .obj/MainForm.so .shobj/MainForm.o .shobj/MainForm.so: MainForm.cpp MainForm.h $(MIRO_ROOT)/src/miro/Client.h \
+.obj/MainForm.o .obj/MainForm.so .shobj/MainForm.o .shobj/MainForm.so: MainForm.cpp MainForm.h \
+ $(MIRO_ROOT)/src/miro/Client.h \
  $(MIRO_ROOT)/src/miro/Exception.h \
  $(MIRO_ROOT)/src/miro/RobotParameters.h \
  $(MIRO_ROOT)/src/miro/Parameters.h \
@@ -88,7 +89,8 @@ realclean: clean
  $(MIRO_ROOT)/src/miro/WorldPointC.i \
  $(MIRO_ROOT)/src/miro/PositionC.i \
  $(MIRO_ROOT)/src/miro/MotionStatusC.h \
- $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i \
  $(MIRO_ROOT)/src/miro/MotionStatusC.i \
  $(MIRO_ROOT)/src/miro/OdometryC.i
 
@@ -109,7 +111,8 @@ realclean: clean
  $(MIRO_ROOT)/src/miro/WorldPointC.i \
  $(MIRO_ROOT)/src/miro/PositionC.i \
  $(MIRO_ROOT)/src/miro/MotionStatusC.h \
- $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i \
  $(MIRO_ROOT)/src/miro/MotionStatusC.i \
  $(MIRO_ROOT)/src/miro/OdometryC.i
 

@@ -78,7 +78,8 @@ realclean: clean
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
  $(MIRO_ROOT)/src/miro/RangeEventC.h \
- $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i \
  $(MIRO_ROOT)/src/miro/RangeEventC.i \
  $(MIRO_ROOT)/src/miro/RangeSensorC.i
 
@@ -93,7 +94,8 @@ realclean: clean
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
  $(MIRO_ROOT)/src/miro/RangeEventC.h \
- $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i \
  $(MIRO_ROOT)/src/miro/RangeEventC.i \
  $(MIRO_ROOT)/src/miro/RangeSensorC.i
 

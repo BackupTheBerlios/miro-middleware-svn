@@ -72,7 +72,8 @@ realclean: clean
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
 
-.obj/MainForm.o .obj/MainForm.so .shobj/MainForm.o .shobj/MainForm.so: MainForm.cpp MainForm.h $(MIRO_ROOT)/src/miro/Client.h \
+.obj/MainForm.o .obj/MainForm.so .shobj/MainForm.o .shobj/MainForm.so: MainForm.cpp MainForm.h \
+ $(MIRO_ROOT)/src/miro/Client.h \
  $(MIRO_ROOT)/src/miro/Exception.h \
  $(MIRO_ROOT)/src/miro/RobotParameters.h \
  $(MIRO_ROOT)/src/miro/Parameters.h \
