@@ -145,7 +145,7 @@ namespace Video
       std::stringstream s;
       s << "Failed to open device: " << params_->device << std::endl
 	<< "Propably running on the wrong machine?" << std::endl;
-      throw Miro::CException(errno, s);
+      throw Miro::CException(errno, s.str());
     }
 
     //fcntl(ioBuffer_.get_handle(), F_SETFD, FD_CLOEXEC);
@@ -179,9 +179,9 @@ namespace Video
 
     iNBuffers = gb_buffers.frames;
 
-    MIRO_LOG(LL_NOTICE,
-	     "Buffersize: " << gb_buffers.size << std::endl;
-	     << "Buffersize/Frame: " << gb_buffers.size/gb_buffers.frames << std::endl;
+    MIRO_LOG_OSTR(LL_NOTICE,
+	     "Buffersize: " << gb_buffers.size << std::endl
+	     << "Buffersize/Frame: " << gb_buffers.size/gb_buffers.frames << std::endl
 	     << "frames: " << gb_buffers.frames);
 
     probeAllFormats();
