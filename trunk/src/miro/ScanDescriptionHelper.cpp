@@ -24,7 +24,8 @@ namespace Miro
       QDomNode n = _node.firstChild();
       while(!n.isNull() ) {
         QDomElement e = n.toElement();
-        if( !e.isNull() ) {
+        if( !e.isNull() &&
+            e.tagName() == "parameter" ) {
           QDomAttr a = e.attributeNode("name");
           if (!a.isNull()) {
             QString i = a.value();
@@ -71,7 +72,8 @@ namespace Miro
       QDomNode n = _node.firstChild();
       while(!n.isNull() ) {
         QDomElement e = n.toElement();
-        if( !e.isNull() ) {
+        if( !e.isNull() &&
+            e.tagName() == "parameter" ) {
           QDomAttr a = e.attributeNode("name");
           if (!a.isNull()) {
             QString i = a.value();
@@ -138,7 +140,8 @@ namespace Miro
       QDomNode n = _node.firstChild();
       while(!n.isNull() ) {
         QDomElement e = n.toElement();
-        if( !e.isNull() ) {
+        if( !e.isNull() &&
+            e.tagName() == "parameter" ) {
           QDomAttr a = e.attributeNode("name");
           if (!a.isNull()) {
             QString i = a.value();
@@ -146,8 +149,19 @@ namespace Miro
               _lhs.description <<= n;
             }
             else if (i == "Sensor") {
-	      _lhs.sensor.length(_lhs.sensor.length() + 1);
-	      _lhs.sensor[_lhs.sensor.length() - 1] <<= n;
+              _lhs.sensor.length(0);
+              QDomNode g = n.firstChild();
+              while (!g.isNull()) {
+                e = n.toElement();
+                if ( !e.isNull() &&
+                     e.tagName() == "parameter" ) {
+
+                  unsigned long len = _lhs.sensor.length() + 1;
+                  _lhs.sensor.length(len);
+                  _lhs.sensor[len - 1] <<= g;
+                }
+                g = g.nextSibling();
+              }
             }
           }
         }
@@ -186,7 +200,8 @@ namespace Miro
       QDomNode n = _node.firstChild();
       while(!n.isNull() ) {
         QDomElement e = n.toElement();
-        if( !e.isNull() ) {
+        if( !e.isNull() &&
+            e.tagName() == "parameter") {
           QDomAttr a = e.attributeNode("name");
           if (!a.isNull()) {
             QString i = a.value();
@@ -196,10 +211,20 @@ namespace Miro
               _lhs.eventName = CORBA::string_dup(s.c_str());
             }
             else if (i == "Group") {
-	      unsigned long len = _lhs.group.length() + 1;
-	      _lhs.group.length(len);
-	      _lhs.group[len - 1].sensor.length(0);
-	      _lhs.group[len - 1] <<= n;
+              _lhs.group.length(0);
+              QDomNode g = n.firstChild();
+              while (!g.isNull()) {
+                e = n.toElement();
+                if ( !e.isNull() &&
+                     e.tagName() == "parameter" ) {
+                
+	          unsigned long len = _lhs.group.length() + 1;
+	          _lhs.group.length(len);
+	          _lhs.group[len - 1].sensor.length(0);
+	          _lhs.group[len - 1] <<= g;
+                }
+                g = g.nextSibling();
+              }
             }
             else if (i == "ScanType") {
               _lhs.scanType <<= n;
@@ -238,20 +263,20 @@ namespace Miro
   std::ostream&
   operator << (std::ostream& ostr, const SensorDescriptionIDL& description) 
   {
-    ostr << " minrange=" << description.minRange
-	 << " maxrange=" << description.maxRange
-	 << " focus=" << description.focus;
+    ostr << " minrange=" << description.minRange << "mm"
+	 << " maxrange=" << description.maxRange << "mm"
+	 << " focus=" << rad2Deg(description.focus) << "°";
     return ostr;
   }
 
   std::ostream&
   operator << (std::ostream& ostr, const SensorPositionIDL& position) 
   {
-    ostr << " height=" << position.height
-	 << " distance=" << position.distance
-	 << " alpha=" << rad2Deg(position.alpha)
-	 << " beta=" << rad2Deg(position.beta)
-	 << " gamma=" << rad2Deg(position.gamma)
+    ostr << " height=" << position.height << "mm"
+	 << " distance=" << position.distance << "mm"
+	 << " alpha=" << rad2Deg(position.alpha) << "°"
+	 << " beta=" << rad2Deg(position.beta) << "°"
+	 << " gamma=" << rad2Deg(position.gamma) << "°"
 	 << " masked=" << (position.masked? "true" : "false");
     return ostr;
   }
