@@ -12,7 +12,7 @@
 #ifndef FaulTtyDevice_h
 #define FaulTtyDevice_h
 
-namespace FaulTty
+namespace FaulController
 {
   // forward declarations
   class Message;

@@ -15,7 +15,7 @@
 #include "miro/DevEventHandler.h"
 #include "FaulTtyMessage.h"
 
-namespace FaulTty
+namespace FaulController
 {
   class EventHandler : public Miro::DevEventHandler
   {

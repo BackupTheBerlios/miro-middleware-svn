@@ -31,7 +31,7 @@ using std::cerr;
 #define DBG(x)
 #endif
 
-namespace FaulTty
+namespace FaulController
 {
   EventHandler::EventHandler(Miro::DevConsumer * _consumer, OdometryMessage::Wheel _wheel) :
     Super(_consumer, new OdometryMessage(_wheel)),

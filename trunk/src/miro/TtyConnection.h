@@ -34,7 +34,7 @@ namespace Miro
   /**
    * The base class for a device handler.
    *
-   * This is the 
+   * This is the
    */
   class TtyConnection
   {
@@ -57,7 +57,7 @@ namespace Miro
      * @param deviceName
      *        Name of the device to open.
      */
-    TtyConnection(ACE_Reactor * _reactor, 
+    TtyConnection(ACE_Reactor * _reactor,
 		  DevEventHandler * _eventHandler,
 		  const TtyParameters& _parameters);
     /**
@@ -67,7 +67,8 @@ namespace Miro
      * stops the consumer task and closes the file descriptor.
      */
     virtual ~TtyConnection();
-  
+    ACE_TTY_IO ioBuffer;
+
   protected:
     /** Pointer to the ACE_Reactor the @ref Event is registered to. */
     ACE_Reactor* reactor;   // for event handling (file descriptors)
@@ -77,13 +78,15 @@ namespace Miro
     DevEventHandler * eventHandler;
 
     ACE_DEV_Addr ttyName;
-    ACE_TTY_IO ioBuffer;
+
     ACE_DEV_Connector connector;
 
     /**
      * The Id of the @ref DevEventHandler at the ACE_Reactor.
      */
     int selectHandlerId;
+
+
   };
 };
 

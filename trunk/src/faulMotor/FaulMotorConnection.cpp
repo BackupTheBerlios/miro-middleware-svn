@@ -18,6 +18,8 @@
 #include "sparrow/Parameters.h"
 
 #include "faulTty/FaulTtyEventHandler.h"
+#include "faulTty/FaulCanConnection.h"
+#include "faulTty/FaulTtyConnection.h"
 
 #ifdef DEBUG
 #define DBG(x) x
@@ -39,7 +41,7 @@
 
 namespace FaulMotor
 {
-  using namespace FaulTty;
+  using namespace FaulController;
   using Miro::Guard;
 
   unsigned int Connection::gotTicks_ = 2;
@@ -63,24 +65,30 @@ namespace FaulMotor
   {
     DBG(cout << "Constructing FaulMotorConnection." << endl);
     if(Sparrow::Parameters::instance()->sparrow2003){
-       char const * const accMessage = "ac50\0"; // build acceleration packet
+
+       leftWheel_ = new FaulController::FaulCanConnection(connection2003, Sparrow::Connection2003::LEFT_MOTOR);
+       rightWheel_ = new FaulController::FaulCanConnection(connection2003, Sparrow::Connection2003::RIGHT_MOTOR);
+
+       /*char const * const accMessage = "ac50\0"; // build acceleration packet
        connection2003->writeLeftWheel(accMessage, strlen(accMessage));
-       connection2003->writeRightWheel(accMessage, strlen(accMessage));
+       connection2003->writeRightWheel(accMessage, strlen(accMessage));*/
 
     }
     else {
-    leftWheel_= new FaulTty::Connection(_reactor,
-	       new FaulTty::EventHandler(_consumer, OdometryMessage::LEFT),
+       leftWheel_= new FaulController::FaulTtyConnection(_reactor,
+	       new FaulController::EventHandler(_consumer, OdometryMessage::LEFT),
 	       params_->leftWheel);
-    rightWheel_ = new FaulTty::Connection(_reactor,
-		new FaulTty::EventHandler(_consumer, OdometryMessage::RIGHT),
+       rightWheel_ = new FaulController::FaulTtyConnection(_reactor,
+		new FaulController::EventHandler(_consumer, OdometryMessage::RIGHT),
 	       params_->rightWheel);
 
-    char const * const accMessage = "ac50\r\n\0"; // build acceleration packet
+    }
+
+    char const * const accMessage = "ac50\0"; // build acceleration packet
     leftWheel_->writeMessage(accMessage);
     rightWheel_->writeMessage(accMessage);
 
-    }
+
 
     disable();
     jmp2();
@@ -147,30 +155,30 @@ namespace FaulMotor
     if(Sparrow::Parameters::instance()->sparrow2003){
       sprintf(speedMessageL, "ac%d", acctestL); // build speed message
       sprintf(speedMessageR, "ac%d", acctestR); // build speed message
-      connection2003->writeLeftWheel(speedMessageL, strlen(speedMessageL));
-      connection2003->writeRightWheel(speedMessageR, strlen(speedMessageR));
+      leftWheel_->writeMessage(speedMessageL);
+      rightWheel_->writeMessage(speedMessageR);
 
       //ACE_OS::sleep(ACE_Time_Value(2));
       sprintf(speedMessageL, "v%d", speedL); // build speed message
       sprintf(speedMessageR, "v%d", speedR); // build speed message
-      connection2003->writeLeftWheel(speedMessageL, strlen(speedMessageL));
-      connection2003->writeRightWheel(speedMessageR, strlen(speedMessageR));             // send it
+      leftWheel_->writeMessage(speedMessageL);
+      rightWheel_->writeMessage(speedMessageR);             // send it
 
     }
     else {
       if (false && abs(acctestL-prevAccL)>2){			//zur datenverringerung
-    	sprintf(speedMessageL, "ac%d\r\n", acctestL); // build speed message
+    	sprintf(speedMessageL, "ac%d", acctestL); // build speed message
 	leftWheel_->writeMessage(speedMessageL);
 	prevAccL=acctestL;
       }
       if (false && abs(acctestR-prevAccR)>2){
-    	sprintf(speedMessageR, "ac%d\r\n", acctestR); // build speed message
+    	sprintf(speedMessageR, "ac%d", acctestR); // build speed message
 	rightWheel_->writeMessage(speedMessageR);
     	prevAccR=acctestR;
       }
 
-      sprintf(speedMessageL, "ac%d\r\nv%d\r\n", acctestL, speedL); // build speed message
-      sprintf(speedMessageR, "ac%d\r\nv%d\r\n", acctestR, speedR); // build speed message
+      sprintf(speedMessageL, "ac%d\r\nv%d", acctestL, speedL); // build speed message
+      sprintf(speedMessageR, "ac%d\r\nv%d", acctestR, speedR); // build speed message
       leftWheel_->writeMessage(speedMessageL);
       rightWheel_->writeMessage(speedMessageR);             // send it
     }
@@ -181,29 +189,20 @@ namespace FaulMotor
   void
   Connection::getSpeed()
   {
-  	if(Sparrow::Parameters::instance()->sparrow2003){
-		char const * const getSpeedMessage = "gn\0";
-
-		Miro::Guard guard(mutex_);
-		connection2003->writeLeftWheel(getSpeedMessage, 2);             // send it
-		connection2003->writeRightWheel(getSpeedMessage, 2);
-       }
-       else {
-
-	char const * const getSpeedMessage = "gn\r\n\0";
+   	char const * const getSpeedMessage = "gn\0";
 
 	Miro::Guard guard(mutex_);
 	leftWheel_->writeMessage(getSpeedMessage);             // send it
 	rightWheel_->writeMessage(getSpeedMessage);
-    }
-    ACE_OS::sleep(ACE_Time_Value(0, 20000));
+
+        ACE_OS::sleep(ACE_Time_Value(0, 20000));
 
   }
 
   void
   Connection::getTicks()
   {
-    char const * const getTicksMessage = "pos\r\n\0";
+
 
     Miro::Guard guard(mutex_);
 
@@ -215,17 +214,11 @@ namespace FaulMotor
     ACE_Time_Value nextWrite =  ACE_Time_Value(0, 18000);
 
     if (nextWrite > now)
-      ACE_OS::sleep(nextWrite - now);
-    if(Sparrow::Parameters::instance()->sparrow2003){
-      char const * const getTicksMessage = "pos\0";
-      connection2003->writeLeftWheel(getTicksMessage, 3);            // send it
-      connection2003->writeRightWheel(getTicksMessage, 3);
-    }
-    else {
-      char const * const getTicksMessage = "pos\r\n\0";
-      leftWheel_->writeMessage(getTicksMessage);            // send it
-      rightWheel_->writeMessage(getTicksMessage);
-    }
+       ACE_OS::sleep(nextWrite - now);
+    char const * const getTicksMessage = "pos\0";
+    leftWheel_->writeMessage(getTicksMessage);            // send it
+    rightWheel_->writeMessage(getTicksMessage);
+
   }
 
   void
@@ -235,14 +228,10 @@ namespace FaulMotor
 
     Miro::Guard guard(mutex_);
     strncpy(buffer, befehl, 253);
-    if(Sparrow::Parameters::instance()->sparrow2003){
-	strcat(buffer,"\0");
-   	connection2003->writeLeftWheel(buffer, strlen(buffer));
-    }
-    else {
-       strcat(buffer,"\r\n\0");
-       leftWheel_->writeMessage(buffer);
-    }
+
+    strcat(buffer,"\0");
+    leftWheel_->writeMessage(buffer);
+
 
     // FIXME: we need to specify the wheel to send the command to
   }
@@ -254,133 +243,78 @@ namespace FaulMotor
     char bufferR[20];
     char const * commandL = bufferL;
     char const * commandR = bufferR;
-    if(Sparrow::Parameters::instance()->sparrow2003){
+
 	if (_left == 0) {
-		commandL = "hor";
-		}
-		else {
-		sprintf(bufferL, "ho%d", _left);
-		}
-
-		if (_right == 0) {
-		commandR = "ho";
-		}
-		else {
-		sprintf(bufferR, "ho%d", _right);
-		}
-
-		connection2003->writeLeftWheel(commandL, strlen(commandL));
-		connection2003->writeRightWheel(commandR, strlen(commandR));
-
+		commandL = "ho\0";
 	}
 	else {
-		if (_left == 0) {
-		commandL = "ho\n\r";
-		}
-		else {
-		sprintf(bufferL, "ho%d\r\n", _left);
-		}
+		sprintf(bufferL, "ho%d\0", _left);
+	}
+	if (_right == 0) {
+		commandR = "ho\0";
+	}
+	else {
+		sprintf(bufferR, "ho%d\0", _right);
+	}
 
-		if (_right == 0) {
-		commandR = "ho\n\r";
-		}
-		else {
-		sprintf(bufferR, "ho%d\r\n", _right);
-		}
+	leftWheel_->writeMessage(commandL);
+	rightWheel_->writeMessage(commandR);
 
-		leftWheel_->writeMessage(commandL);
-		rightWheel_->writeMessage(commandR);
-    }
   }
 
   void
   Connection::enable()
   {
-     if(Sparrow::Parameters::instance()->sparrow2003){
+
 	char const * const getSpeedMessage = "en\0";
-
-	disabled_ = false;
-	connection2003->writeLeftWheel(getSpeedMessage, 2);             // send it
-	connection2003->writeRightWheel(getSpeedMessage, 2);
-
-        jmp2();
-    }
-    else{
-	char const * const getSpeedMessage = "en\r\n\0";
 
 	disabled_ = false;
 	leftWheel_->writeMessage(getSpeedMessage);             // send it
 	rightWheel_->writeMessage(getSpeedMessage);
-    }
+
   }
 
   void
   Connection::disable()
   {
-  if(Sparrow::Parameters::instance()->sparrow2003){
     char const * const getSpeedMessage = "di\0";
-    disabled_ = true;
-    connection2003->writeLeftWheel(getSpeedMessage, 2);             // send it
-    connection2003->writeRightWheel(getSpeedMessage, 2);
-
-    jmp1();
-
-
-    }
-    else {
-    char const * const getSpeedMessage = "di\r\n\0";
     disabled_ = true;
     leftWheel_->writeMessage(getSpeedMessage);             // send it
     rightWheel_->writeMessage(getSpeedMessage);
-    }
+
   }
 
   void
   Connection::jmp1()					// keine Ododaten
   {
 
-    if(Sparrow::Parameters::instance()->sparrow2003){
-       char const * const posOff = "jmp1\0";                                           // odo ausschalten
-       connection2003->writeLeftWheel(posOff, strlen(posOff));             // send it
-       connection2003->writeRightWheel(posOff, strlen(posOff));
-    }
-    else{
-       char const * const getSpeedMessage = "jmp1\r\n\0";
+
+       char const * const getSpeedMessage = "jmp1\0";
 
        leftWheel_->writeMessage(getSpeedMessage);             // send it
        rightWheel_->writeMessage(getSpeedMessage);
-    }
+
   }
 
   void
   Connection::jmp2()					// ododaten so schnell wie möglich
   {
-    if(Sparrow::Parameters::instance()->sparrow2003){
-        char const * const posOff = "jmp2\0";                                           // odo ausschalten
-        connection2003->writeLeftWheel(posOff, strlen(posOff));             // send it
-        connection2003->writeRightWheel(posOff, strlen(posOff));
-    }
-    else{
-       char const * const getSpeedMessage = "jmp2\r\n\0";
+
+       char const * const getSpeedMessage = "jmp2\0";
 
        leftWheel_->writeMessage(getSpeedMessage);             // send it
        rightWheel_->writeMessage(getSpeedMessage);
-    }
+
   }
 
   void
   Connection::jmp3()					// notaus keine Ododaten und v0
   {
-    if(Sparrow::Parameters::instance()->sparrow2003){
-       char const * const posOff = "jmp3\0";                                           // odo ausschalten
-       connection2003->writeLeftWheel(posOff, strlen(posOff));             // send it
-       connection2003->writeRightWheel(posOff, strlen(posOff));
-    }
-    else{
-       char const * const getSpeedMessage = "jmp3\r\n\0";
+
+       char const * const getSpeedMessage = "jmp3\0";
 
        leftWheel_->writeMessage(getSpeedMessage);             // send it
        rightWheel_->writeMessage(getSpeedMessage);
-    }
+
   }
 };

@@ -5,14 +5,15 @@
 // (c) 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// 
+//
 // $Id$
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
 #ifndef FaulTtyConnection_h
 #define FaulTtyConnection_h
 
 #include "miro/Synch.h"
+#include "FaulControllerConnection.h"
 #include "miro/TtyConnection.h"
 
 namespace FaulMotor
@@ -20,25 +21,27 @@ namespace FaulMotor
   class Connection;
 };
 
-namespace FaulTty
+namespace FaulController
 {
   // forward declarations
   class EventHandler;
 
-  class Connection : public Miro::TtyConnection
+  class FaulTtyConnection : public Connection
   {
-    typedef Miro::TtyConnection Super;
+    typedef Connection Super;
 
   public:
-    Connection(ACE_Reactor* _reactor,
+    FaulTtyConnection(ACE_Reactor* _reactor,
 	       EventHandler* _eventHandler,
 	       const Miro::TtyParameters& _parameters);
-    virtual ~Connection();
+    virtual ~FaulTtyConnection();
 
     void writeMessage(char const * const _message);
 
   protected:
     EventHandler* eventHandler;
+
+    Miro::TtyConnection * ttyConnection;
 
     Miro::Mutex mutex_;
     ACE_Time_Value lastWrite_;

@@ -1,14 +1,14 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
-// 
+//
 // This file is part of Miro (The Middleware For Robots)
 //
 // (c) 2003
 // Department of Neural Information Processing, University of Ulm, Germany
-// 
+//
 // $Id$
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
-  
+
 #include "FaulMotorConsumer.h"
 #include "FaulMotorConnection.h"
 #include "Parameters.h"
@@ -81,10 +81,10 @@ namespace FaulMotor
 
     if (pOdometry_) {
 
-      const FaulTty::OdometryMessage * pFaulMsg =
-	static_cast<const FaulTty::OdometryMessage *>(_message);
+      const FaulController::OdometryMessage * pFaulMsg =
+	static_cast<const FaulController::OdometryMessage *>(_message);
 
-      if (pFaulMsg->wheel_ == FaulTty::OdometryMessage::LEFT) {
+      if (pFaulMsg->wheel_ == FaulController::OdometryMessage::LEFT) {
 //	cout << "L: " << pFaulMsg->ticks_;
 	ticksL_ = pFaulMsg->ticks_;
 	timeStampL_ = pFaulMsg->time();

@@ -11,7 +11,7 @@
 #ifndef FaulMotorConnection_h
 #define FaulMotorConnection_h
 
-#include "faulTty/FaulTtyConnection.h"
+#include "faulTty/FaulControllerConnection.h"
 #include "sparrow/SparrowConnection2003.h"
 
 #include "miro/Synch.h"
@@ -53,8 +53,8 @@ namespace FaulMotor
   protected:
     const Parameters * params_;
 
-    FaulTty::Connection * leftWheel_;
-    FaulTty::Connection * rightWheel_;
+    FaulController::Connection * leftWheel_;
+    FaulController::Connection * rightWheel_;
 
     Consumer * consumer;
     Sparrow::Connection2003 * connection2003;

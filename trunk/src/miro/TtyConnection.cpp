@@ -38,10 +38,10 @@ namespace Miro
   TtyConnection::TtyConnection(ACE_Reactor * _reactor,
 			       DevEventHandler * _eventHandler,
 			       const TtyParameters& _parameters) :
+    ioBuffer(),
     reactor(_reactor),
     eventHandler(_eventHandler),
     ttyName(_parameters.device.c_str()),
-    ioBuffer(),
     connector(),
     selectHandlerId(-1)
   {

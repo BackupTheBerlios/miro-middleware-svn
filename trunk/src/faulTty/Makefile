@@ -26,7 +26,9 @@ SHLIB    = lib$(NAME).$(SOEXT)
 # ACE_SHLIBS = -lTAO_Svc_Utils -lTAO -lACE
 
 ## specify your library files here
-FILES = 	FaulTtyConnection \
+FILES = 	FaulControllerConnection \
+		FaulTtyConnection \
+		FaulCanConnection \
 		FaulTtyEventHandler
 
 

@@ -13,7 +13,7 @@
 
 #include "miro/DevMessage.h"
 
-namespace FaulTty
+namespace FaulController
 {
   // input message
   class OdometryMessage : public Miro::DevMessage

@@ -31,26 +31,32 @@ namespace
   ACE_Time_Value const TIME_OUT(0, 40000);
 };
 
-namespace FaulTty
+namespace FaulController
 {
-  Connection::Connection(ACE_Reactor * _reactor, 
+  FaulTtyConnection::FaulTtyConnection(ACE_Reactor * _reactor,
 			 EventHandler * _eventHandler,
 			 const Miro::TtyParameters& _parameters) :
-    Super(_reactor, _eventHandler, _parameters),
     eventHandler(_eventHandler)
   {
     DBG(cout << "Constructing FaulTtyConnection" << endl);
+    ttyConnection = new Miro::TtyConnection(_reactor, _eventHandler, _parameters);
   }
 
 
-  Connection::~Connection()
+  FaulTtyConnection::~FaulTtyConnection()
   {
     DBG(cout << "Destructing FaulTtyConnection" << endl);
+    delete ttyConnection;
   }
 
   void
-  Connection::writeMessage(char const * const _message)
+  FaulTtyConnection::writeMessage(char const * const _message)
   {
+    char buffer[256];
+
+    strncpy(buffer, _message, 253);
+    strcat(buffer, "\r\n\0");
+
     ACE_Time_Value av(ACE_OS::gettimeofday() + ACE_Time_Value(1));
 
     if (mutex_.acquire(av) == -1)
@@ -66,7 +72,7 @@ namespace FaulTty
       ACE_OS::sleep(TIME_OUT - delta); // this is at least 10usec thanks to linux
     }
 
-    int rc = ioBuffer.send_n(_message, strlen(_message));
+    int rc = ttyConnection->ioBuffer.send_n(buffer, strlen(buffer));
     lastWrite_ = ACE_OS::gettimeofday();
 
     mutex_.release();

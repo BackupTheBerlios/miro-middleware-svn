@@ -39,6 +39,9 @@ namespace Sparrow
 {
   using Can::Message;
 
+  const int Connection2003::LEFT_MOTOR = 0;
+  const int Connection2003::RIGHT_MOTOR = 1;
+
   //ACE_Time_Value maxTimeout(0, 500000);
 
   //------------------------//
@@ -124,26 +127,18 @@ namespace Sparrow
      return true;
   }
 
+
   void
-  Connection2003::writeLeftWheel(const char * buffer, int length)
+  Connection2003::writeWheel(const char * buffer, int length, int motor)
   {
     // Roland: was machen wir wenn lengh > 8 ???
 
     Message message;
     message.length(length);
-    message.id(CAN_WRITE_MOTOR_LEFT);
-    message.setBuffer(0, buffer, length);
-    write(message);
-  }
-
-  void
-  Connection2003::writeRightWheel(const char * buffer, int length)
-  {
-    // Roland: was machen wir wenn lengh > 8 ???
-
-    Message message;
-    message.length(length);
-    message.id(CAN_WRITE_MOTOR_RIGHT);
+    if(motor == LEFT_MOTOR)
+       message.id(CAN_WRITE_MOTOR_LEFT);
+    if(motor == RIGHT_MOTOR)
+       message.id(CAN_WRITE_MOTOR_RIGHT);
     message.setBuffer(0, buffer, length);
     write(message);
   }

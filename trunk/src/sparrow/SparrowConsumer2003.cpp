@@ -340,7 +340,7 @@ namespace Sparrow
     }
 
     case CAN_MOTOR_TICKS_LEFT:{
-      FaulTty::OdometryMessage odoMessage(FaulTty::OdometryMessage::LEFT);
+      FaulController::OdometryMessage odoMessage(FaulController::OdometryMessage::LEFT);
       if(CanParams->module == "pcan"){
          Can::pcanmsg * msgp_;
 	 long tickTmp;
@@ -364,7 +364,7 @@ namespace Sparrow
 
     case CAN_MOTOR_TICKS_RIGHT:{
 
-       FaulTty::OdometryMessage odoMessage2(FaulTty::OdometryMessage::RIGHT);
+       FaulController::OdometryMessage odoMessage2(FaulController::OdometryMessage::RIGHT);
        if(CanParams->module == "pcan"){
          Can::pcanmsg * msgp_;
 	 message.canMessage(&msgp_);
