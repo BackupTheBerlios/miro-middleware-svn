@@ -77,10 +77,6 @@ namespace Player
     double panMaxSpeed;
     double tiltMinSpeed;
     double tiltMaxSpeed;
-    double minPan;
-    double maxPan;
-    double minTilt;
-    double maxTilt;
     bool upsideDown;
 
   };

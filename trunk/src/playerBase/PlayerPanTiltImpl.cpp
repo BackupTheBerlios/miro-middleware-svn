@@ -44,10 +44,6 @@ namespace Player
     panMaxSpeed(-1),
     tiltMinSpeed(-1),
     tiltMaxSpeed(-1),
-    minPan(-1e10),
-    maxPan(-1e10),
-    minTilt(-1e10),
-    maxTilt(-1e10),
     upsideDown(_upsideDown)
   {
     MIRO_LOG(LL_NOTICE,"Constructing PlayerPanTiltImpl");
