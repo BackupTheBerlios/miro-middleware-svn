@@ -154,6 +154,8 @@ namespace Miro
   int
   ConstraintArbiter::handle_timeout(const ACE_Time_Value &, const void*)
   {
+    Miro::Guard guard(mutex_);
+
     ConstraintArbiterParameters * params =
       const_cast<ConstraintArbiterParameters *>
       ( dynamic_cast<ConstraintArbiterParameters const *>(params_));
@@ -165,21 +167,15 @@ namespace Miro
 
     typedef std::vector<Behaviour *> BehaviourVector;
 
-    // get the registered behaviours ascenting by priority
-    BehaviourVector bv(params_->priorities.size());
-    ArbiterParameters::RegistrationMap::const_iterator j;
-    for(j = params_->priorities.begin(); j != params_->priorities.end(); j++) {
-      bv[j->second] = j->first;
-    }
-	 
     // preinitialize the velocity space
     params->velocitySpace.clearAllEvals();
     params->velocitySpace.clearCurvatureConstraints();
 	 
     // let each behaviour calculate its velocity space
-    BehaviourVector::const_iterator k;
-    for(k = bv.begin(); k != bv.end(); k++) {
-      (*k)->addEvaluation(&params->velocitySpace);
+    MessageVector::const_iterator first, last = message_.end();
+    for(first = message_.begin(); first != last; ++first) {
+      if ((*first)->active)
+	(*first)->id->addEvaluation(&params->velocitySpace);
     }
 	 
     // calculate new velocity using the content of the velocity space
