@@ -1,6 +1,6 @@
 <!DOCTYPE xml SYSTEM "PolicyParametersConfigDocument.dtd">
 <config> 
-  <config_global name="include" value="miro/Parameters.h">
+  <config_global name="include" value="miro/Parameters.h" />
 
   <config_group name="behaviour">
     
