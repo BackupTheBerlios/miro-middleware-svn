@@ -12,8 +12,10 @@
 #include "SimpleParameterEdit.h"
 #include "ParameterDialog.h"
 #include "Validators.h"
+#include "ConfigFile.h"
 
 #include "params/Parameter.h"
+#include "params/Generator.h"
 
 #include "miro/Log.h"
 
@@ -21,6 +23,7 @@
 #include <qlineedit.h>
 #include <qtooltip.h>
 #include <qlistview.h>
+#include <qcombobox.h>
 
 #include <climits>
 
@@ -35,97 +38,108 @@ SimpleParameterEdit::SimpleParameterEdit(SimpleParameter::Type _type,
   Super(_parameter, _parentNode, _node, 
 	_parentItem, _item,
 	_parent, _name),
+  config_(ConfigFile::instance()),
   type_(_type),
-  lineEdit_(new QLineEdit(_parent, "line_edit"))
+  lineEdit_( ( parameter_.type_[parameter_.type_.length() - 1] != '&')? 
+	     new QLineEdit(_parent, "line_edit") : NULL),
+  typeBox_( (parameter_.type_[parameter_.type_.length() - 1] == '&')? 
+	    new QComboBox(_parent, "type_box") : NULL)
 {
   editWidget_ = lineEdit_;
 
   MIRO_ASSERT(!parentNode_.isNull());
 
-  // customize lineEdit for typesafe editing
-  QValidator *  v = NULL;
-  switch (_type) {
-  case SimpleParameter::BOOL:
-    v = new MyBoolValidator(this);
-    lineEdit_->setValidator(v);
-    break;
-  case SimpleParameter::CHAR:
-    lineEdit_->setMaxLength(1);
-    break;
-  case SimpleParameter::SHORT:
-    v = new MyIntValidator(SHRT_MIN, SHRT_MAX, this);
-    lineEdit_->setValidator(v);
-    break;
-  case SimpleParameter::USHORT:
-    v = new MyIntValidator(0, USHRT_MAX, this);
-    lineEdit_->setValidator(v);
-    break;
-  case SimpleParameter::INT:
-    v = new MyIntValidator(INT_MIN + 1, INT_MAX - 1, this);
-    lineEdit_->setValidator(v);
-    break;
-  case SimpleParameter::UINT:
-    v = new MyIntValidator(0, INT_MAX - 1, this);
-    lineEdit_->setValidator(v);
-    break;
-  case SimpleParameter::LONG:
-    v = new MyIntValidator(LONG_MIN + 1, LONG_MAX - 1, this);
-    lineEdit_->setValidator(v);
-    break;
-  case SimpleParameter::ULONG:
-    v = new MyIntValidator(0, LONG_MAX - 1, this);
-    lineEdit_->setValidator(v);
-    break;
-  case SimpleParameter::DOUBLE:
-    v = new MyDoubleValidator(this);
-    lineEdit_->setValidator(v);
-    break;
-  case SimpleParameter::ANGLE:
-    v = new MyDoubleValidator(this);
-    lineEdit_->setValidator(v);
-    break;
-  case SimpleParameter::MIRO_ANGLE:
-    v = new MyDoubleValidator(-180., 180., 6, this);
-    lineEdit_->setValidator(v);
-    break;
-  case SimpleParameter::STRING:
-    break;
-  case SimpleParameter::ACE_TIME_VALUE:
-    v = new MyDoubleValidator(0, ULONG_MAX, 6, this);
-    lineEdit_->setValidator(v);
-    break;
-  case SimpleParameter::ACE_INET_ADDR:
-    break;
-  default:
-    break;
-  }
+  if (lineEdit_ != NULL) {
+    // customize lineEdit for typesafe editing
+    QValidator *  v = NULL;
+    switch (_type) {
+    case SimpleParameter::BOOL:
+      v = new MyBoolValidator(this);
+      lineEdit_->setValidator(v);
+      break;
+    case SimpleParameter::CHAR:
+      lineEdit_->setMaxLength(1);
+      break;
+    case SimpleParameter::SHORT:
+      v = new MyIntValidator(SHRT_MIN, SHRT_MAX, this);
+      lineEdit_->setValidator(v);
+      break;
+    case SimpleParameter::USHORT:
+      v = new MyIntValidator(0, USHRT_MAX, this);
+      lineEdit_->setValidator(v);
+      break;
+    case SimpleParameter::INT:
+      v = new MyIntValidator(INT_MIN + 1, INT_MAX - 1, this);
+      lineEdit_->setValidator(v);
+      break;
+    case SimpleParameter::UINT:
+      v = new MyIntValidator(0, INT_MAX - 1, this);
+      lineEdit_->setValidator(v);
+      break;
+    case SimpleParameter::LONG:
+      v = new MyIntValidator(LONG_MIN + 1, LONG_MAX - 1, this);
+      lineEdit_->setValidator(v);
+      break;
+    case SimpleParameter::ULONG:
+      v = new MyIntValidator(0, LONG_MAX - 1, this);
+      lineEdit_->setValidator(v);
+      break;
+    case SimpleParameter::DOUBLE:
+      v = new MyDoubleValidator(this);
+      lineEdit_->setValidator(v);
+      break;
+    case SimpleParameter::ANGLE:
+      v = new MyDoubleValidator(this);
+      lineEdit_->setValidator(v);
+      break;
+    case SimpleParameter::MIRO_ANGLE:
+      v = new MyDoubleValidator(-180., 180., 6, this);
+      lineEdit_->setValidator(v);
+      break;
+    case SimpleParameter::STRING:
+      break;
+    case SimpleParameter::ACE_TIME_VALUE:
+      v = new MyDoubleValidator(0, ULONG_MAX, 6, this);
+      lineEdit_->setValidator(v);
+      break;
+    case SimpleParameter::ACE_INET_ADDR:
+      break;
+    default:
+      break;
+    }
 
-  // connect validator, if we have one
-  if (v) {
-    QObject * p = _parent;
-    while (p != NULL) {
-      if (dynamic_cast<ParameterDialog *>(p) != NULL) {
-	connect(v, SIGNAL(acceptable(bool)), p, SLOT(accept(bool)));
-	break;
+    // connect validator, if we have one
+    if (v) {
+      QObject * p = _parent;
+      while (p != NULL) {
+	if (dynamic_cast<ParameterDialog *>(p) != NULL) {
+	  connect(v, SIGNAL(acceptable(bool)), p, SLOT(accept(bool)));
+	  break;
+	}
+	p = p->parent();
       }
-      p = p->parent();
     }
-  }
 
-  // add default as tooltip
-  if (parameter_.default_)
-    QToolTip::add(lineEdit_, QString("default: ") + parameter_.default_);
+    // add default as tooltip
+    if (parameter_.default_)
+      QToolTip::add(lineEdit_, QString("default: ") + parameter_.default_);
 
-  // set current value
-  if (!node_.isNull()) {
-    QDomElement e = node_.toElement();
-    if (!e.isNull() && e.hasAttribute("value")) {
-      lineEdit_->setText(e.attribute("value"));
+    // set current value
+    if (!node_.isNull()) {
+      QDomElement e = node_.toElement();
+      if (!e.isNull() && e.hasAttribute("value")) {
+	lineEdit_->setText(e.attribute("value"));
+      }
     }
-  }
 
-  // set lineEdit to unedited
-  lineEdit_->setEdited(false);
+    // set lineEdit to unedited
+    lineEdit_->setEdited(false);
+  }
+  // init combo box
+  else {
+    //    Miro::CFG::Generator::QStringVector descendands =
+    // config_->description().getDescendants(type_);
+  }
 }
 
 void

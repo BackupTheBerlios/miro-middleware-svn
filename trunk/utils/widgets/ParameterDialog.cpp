@@ -30,15 +30,6 @@
 #include <qscrollview.h>
 #include <qobjectlist.h>
 
-#ifdef MAKE_DIALOG
-  if (class_ == NULL) {
-    throw QString("Parameter description for " + 
-		  _caption +
-		  " not found.\nCheck whether the relevant description file is loaded.");
-  }
-#endif
-
-
 ParameterDialog::ParameterDialog(Miro::CFG::Type const& _parameterType,
 				 QDomNode const& _parentNode, 
 				 QDomNode const& _node,
@@ -46,27 +37,11 @@ ParameterDialog::ParameterDialog(Miro::CFG::Type const& _parameterType,
 				 ItemXML * _item,
 				 QWidget * _parent, const char * _name) :
   Super(_parentNode, _node, _parentItem, _item, _parent, _name),
+  config_(ConfigFile::instance()),
   parameterType_(_parameterType),
-  params_(parameterType_.parameterSet())
+  params_(config_->description().getFullParameterSet(parameterType_))
 {
   MIRO_ASSERT(!_node.isNull());
-
-  // add all superclass members to the parameter set
-  Miro::CFG::Type const * parent = &parameterType_;
-  while (!parent->parent().isEmpty()) {
-    Miro::CFG::Type const * tmp = 
-      ConfigFile::instance()->description().getType(parent->parent());
-    if (tmp == NULL) {
-      QMessageBox::warning(this, 
-			   "Error constructing parameter dialog:",
-			   QString("Parameter description for " + 
-				   parent->parent() +
-				   " not found.\nCheck whether the relevant description file is loaded."));
-      break;
-    }
-    parent = tmp;
-    params_.insert(parent->parameterSet().begin(), parent->parameterSet().end());
-  }
 
   initDialog();
 
@@ -113,7 +88,7 @@ ParameterDialog::initDialog()
 
   // add parameter structs:
   unsigned long i = 0;
-  Miro::CFG::Type::ParameterSet::const_iterator first, last = params_.end();
+  Miro::CFG::ParameterVector::const_iterator first, last = params_.end();
   for (first = params_.begin(); first != last; ++first, ++i) {
 
     // name

@@ -17,6 +17,9 @@
 // forward declarations
 class QString;
 class QLineEdit;
+class QComboBox;
+class ConfigFile;
+
 
 class SimpleParameterEdit : public ParameterEdit
 {
@@ -30,19 +33,33 @@ class SimpleParameterEdit : public ParameterEdit
   typedef ParameterEdit Super;
 
 public:
+  //----------------------------------------------------------------------------
+  // public methods
+  //----------------------------------------------------------------------------
+
   SimpleParameterEdit(SimpleParameter::Type _type,
 		      Miro::CFG::Parameter const& _parameter,
 		      QDomNode& _parentNode, QDomNode& _node,
 		      ItemXML * _parentItem, ItemXML * _item,
 		      QWidget * _parent, const char * _name);
 
+  //! Inherited interface.
   virtual void setXML();
+  //! Inherited interface.
   virtual bool modified() const;
 
 protected:
+
+  //----------------------------------------------------------------------------
+  // puprotected members
+  //----------------------------------------------------------------------------
+
+  ConfigFile * config_;
+
   SimpleParameter::Type type_;
 
   QLineEdit * lineEdit_;
+  QComboBox * typeBox_;
 };
 
 #endif // SimpleParameterEdit_h

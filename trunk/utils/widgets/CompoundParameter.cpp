@@ -51,21 +51,8 @@ CompoundParameter::CompoundParameter(Miro::CFG::Type const& _type,
 void
 CompoundParameter::init()
 {
-  // get parameter set
-  Miro::CFG::Type::ParameterSet params = type_.parameterSet();
-  // add all superclass members to the parameter set
-  Miro::CFG::Type const * parent = &type_;
-  while (!parent->parent().isEmpty()) {
-    Miro::CFG::Type const * tmp = config_->description().getType(parent->parent());
-    if (tmp == NULL) {
-      throw QString("Parameter description for " + 
-		    parent->parent() +
-		    " not found.\nCheck whether the relevant description file is loaded.");
-      break;
-    }
-    parent = tmp;
-    params.insert(parent->parameterSet().begin(), parent->parameterSet().end());
-  }
+  // get complete parameter set including super classes
+  Miro::CFG::ParameterVector params = config_->description().getFullParameterSet(type_);
 
   QDomNode n = node().firstChild();
   QListViewItem * pre = NULL;
@@ -83,7 +70,7 @@ CompoundParameter::init()
 
       // we need a lower case first letter version for comparison
       pLower[0] = p[0].lower();
-      Miro::CFG::Type::ParameterSet::const_iterator i, last = params.end();
+      Miro::CFG::ParameterVector::const_iterator i, last = params.end();
       for (i = params.begin(); i != last; ++i) {
 	if (i->name_ == pLower) {
 	  break;

@@ -18,6 +18,7 @@
 
 // forward declarations
 class ParameterEdit;
+class ConfigFile;
 
 //! Parameter edit dialogs of the configuration framework.
 /** 
@@ -59,10 +60,17 @@ protected:
   //! Initialize the dialog.
   void initDialog();
 
+  //----------------------------------------------------------------------------
+  // puprotected members
+  //----------------------------------------------------------------------------
+
+  //! Singleton instance of the config file.
+  ConfigFile * config_;
+
   //! Type description of the underling parameter.
   Miro::CFG::Type parameterType_;
   //! Parameter type elements.
-  Miro::CFG::Type::ParameterSet params_;
+  Miro::CFG::ParameterVector params_;
   
 private:
   //! Vector holding all the edit fields of the nested types.
