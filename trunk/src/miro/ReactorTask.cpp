@@ -51,6 +51,7 @@ namespace Miro
     DBG(cout << "Destructing [Miro::ReactorTask]." << endl);
     reactor_.close();
     reactor(NULL);
+    DBG(cout << "Reactor canceled." << endl);
   }
 
   //

@@ -441,9 +441,8 @@ SparrowBase::~SparrowBase()
     oid = poa->reference_to_id (pSonar);
     poa->deactivate_object(oid.in());
   }
-//  cout << "." << flush;
-//  oid = poa->reference_to_id (notifyFactory_);
-//  poa->deactivate_object (oid.in());
+  oid = poa->reference_to_id (notifyFactory_);
+  poa->deactivate_object (oid.in());
 
   DBG(cout << "Destructing SparrowBase members." << endl);
 }

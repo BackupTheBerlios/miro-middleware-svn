@@ -43,6 +43,9 @@ namespace FaulTty
   EventHandler::~EventHandler()
   {
     DBG(cout << "Destructing FaulTtyEventHandler." << endl);
+    if (static_cast<OdometryMessage *>(message_)->wheel_ == 
+        OdometryMessage::LEFT)
+	          consumer_ = NULL;
   }
 
   // file descriptor callback

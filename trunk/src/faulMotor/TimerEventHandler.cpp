@@ -12,7 +12,7 @@
 #include "TimerEventHandler.h"
 #include "FaulMotorConnection.h"
 
-#undef DEBUG
+//#undef DEBUG
 
 #ifdef DEBUG
 #include <iostream>
