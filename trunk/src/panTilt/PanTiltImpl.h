@@ -38,7 +38,7 @@ namespace DpPanTilt
    * PanTiltImpl
    */
   class PanTiltImpl :  public virtual POA_Miro::DirectedPerceptionPanTilt,
-		       public Miro::PanTiltImpl
+		       public virtual Miro::PanTiltImpl
   {
   public:
     Connection& connection;
@@ -54,7 +54,7 @@ namespace DpPanTilt
      */
     PanTiltImpl(Connection & _connection, 
 		Data & _data,
-		Miro::PanTiltParameters _panTiltParameters
+		Miro::PanTiltParameters const& _panTiltParameters
 		);
 
     /**
@@ -64,8 +64,8 @@ namespace DpPanTilt
 
     // -----------------------------------------------------------------------
     // Pan interface
-    virtual void setPan(double panvalue) throw();
-    virtual double getPan() throw();
+    virtual void setPan(CORBA::Float panvalue) throw();
+    virtual CORBA::Float getPan() throw();
     /**
      * returns the pan angle limits
      */
@@ -73,8 +73,8 @@ namespace DpPanTilt
 
     // -----------------------------------------------------------------------
     // Tilt interface
-    virtual void setTilt(double tiltvalue) throw();
-    virtual double getTilt() throw();
+    virtual void setTilt(CORBA::Float tiltvalue) throw();
+    virtual CORBA::Float getTilt() throw();
     /**
      * returns the tilt angle limits
      */

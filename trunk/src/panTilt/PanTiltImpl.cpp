@@ -39,7 +39,7 @@ namespace DpPanTilt
 
   PanTiltImpl::PanTiltImpl(Connection& _connection, 
 			   Data& _data,
-			   Miro::PanTiltParameters _panTiltParameters
+			   Miro::PanTiltParameters const& _panTiltParameters
 			   ) :
     Miro::PanTiltImpl(_panTiltParameters),
     connection(_connection),
@@ -53,7 +53,7 @@ namespace DpPanTilt
     MIRO_LOG_DTOR("DpPanTilt::PanTiltImpl");
   }
 
-  double
+  CORBA::Float
   PanTiltImpl::getPan() throw ()
   {
     ACE_Time_Value abstimeout;
@@ -78,7 +78,7 @@ namespace DpPanTilt
     return pan2rad( panTiltData.panPosition );
   }
 
-  double
+  CORBA::Float
   PanTiltImpl::getTilt()throw ()
   {
     ACE_Time_Value abstimeout;
@@ -109,21 +109,21 @@ namespace DpPanTilt
 
     MIRO_DBG(B21, LL_DEBUG, "getPosition called.");
 
-    result.panvalue = getPan();
-    result.tiltvalue = getTilt();
+    result.panValue = getPan();
+    result.tiltValue = getTilt();
 
     return result;
   }
 
   void
-  PanTiltImpl::setPan(double panvalue) throw ()
+  PanTiltImpl::setPan(CORBA::Float panValue) throw ()
   {
     ACE_Time_Value abstimeout;
     ACE_Time_Value timeout(5,0); // 5 seconds for data request (far to long, but its just here to return sometime)
     ACE_Guard<ACE_Thread_Mutex> guard(panTiltData.sync);
 
     Message p1( "PP" );
-    p1.addLong( rad2pan( panvalue ) );
+    p1.addLong( rad2pan( panValue ) );
     connection.writeMessage( p1 );
     abstimeout = ACE_OS::gettimeofday();
     abstimeout += timeout;
@@ -131,18 +131,18 @@ namespace DpPanTilt
       throw Miro::ETimeOut();
     if (panTiltData.failed)
       throw Miro::EDevIO("PP<x> Command failed");
-    setTargetPan(panvalue);
+    setTargetPan(panValue);
   }
 
   void
-  PanTiltImpl::setTilt(double tiltvalue) throw ()
+  PanTiltImpl::setTilt(CORBA::Float tiltValue) throw ()
   {
     ACE_Time_Value abstimeout;
     ACE_Time_Value timeout(5,0); // 5 seconds for data request (far to long, but its just here to return sometime)
     ACE_Guard<ACE_Thread_Mutex> guard(panTiltData.sync);
 
     Message p2( "TP" );
-    p2.addLong( rad2tilt( tiltvalue ) );
+    p2.addLong( rad2tilt( tiltValue ) );
     connection.writeMessage( p2 );
     abstimeout = ACE_OS::gettimeofday();
     abstimeout += timeout;
@@ -150,15 +150,15 @@ namespace DpPanTilt
       throw Miro::ETimeOut();
     if (panTiltData.failed)
       throw Miro::EDevIO("TP<X> Command failed");
-    setTargetTilt(tiltvalue);
+    setTargetTilt(tiltValue);
   }
 
   void PanTiltImpl::setPosition(const PanTiltPositionIDL &dest) throw ()
   {
     MIRO_DBG(B21, LL_DEBUG, "setPosition called.");
 
-    PanTiltImpl::setPan(dest.panvalue);
-    PanTiltImpl::setTilt(dest.tiltvalue);
+    PanTiltImpl::setPan(dest.panValue);
+    PanTiltImpl::setTilt(dest.tiltValue);
     
     setTargetPosition(dest);
   }
@@ -168,8 +168,8 @@ namespace DpPanTilt
   {
     MIRO_DBG(B21, LL_DEBUG, "setWaitPosition called.");
 
-    PanTiltImpl::setPan(dest.panvalue);
-    PanTiltImpl::setTilt(dest.tiltvalue);
+    PanTiltImpl::setPan(dest.panValue);
+    PanTiltImpl::setTilt(dest.tiltValue);
 
     ACE_Time_Value abstimeout;
     ACE_Time_Value timeout(10,0); // 10 seconds for data request (far to long, but its just here to return sometime)
@@ -461,10 +461,10 @@ namespace DpPanTilt
     if (panTiltData.failed)
       throw Miro::EDevIO("TX Command failed");
 
-    result.minpanposition = pan2rad( panTiltData.minPanPosition );
-    result.maxpanposition = pan2rad( panTiltData.maxPanPosition );
-    result.mintiltposition = tilt2rad( panTiltData.minTiltPosition );
-    result.maxtiltposition = tilt2rad( panTiltData.maxTiltPosition );
+    result.pan.minAngle = pan2rad( panTiltData.minPanPosition );
+    result.pan.maxAngle = pan2rad( panTiltData.maxPanPosition );
+    result.tilt.minAngle = tilt2rad( panTiltData.minTiltPosition );
+    result.tilt.maxAngle = tilt2rad( panTiltData.maxTiltPosition );
 
     return result;
   }
@@ -478,24 +478,16 @@ namespace DpPanTilt
 
   PanLimitsIDL PanTiltImpl::getPanLimits() throw()
   {
-    PanLimitsIDL result;
-    PanTiltLimitsIDL panTiltLimits=getPanTiltLimits();
+    PanTiltLimitsIDL panTiltLimits = getPanTiltLimits();
 
-    result.minpanposition=panTiltLimits.minpanposition;
-    result.maxpanposition=panTiltLimits.maxpanposition;
-
-    return result;
+    return panTiltLimits.pan;
   }
 
   TiltLimitsIDL PanTiltImpl::getTiltLimits() throw()
   {
-    TiltLimitsIDL result;
-    PanTiltLimitsIDL panTiltLimits=getPanTiltLimits();
+    PanTiltLimitsIDL panTiltLimits = getPanTiltLimits();
 
-    result.mintiltposition=panTiltLimits.mintiltposition;
-    result.maxtiltposition=panTiltLimits.maxtiltposition;
-
-    return result;
+    return panTiltLimits.tilt;
   }
 
   void PanTiltImpl::setPowers( const Miro::PanTiltPowersIDL & dest ) throw ()
