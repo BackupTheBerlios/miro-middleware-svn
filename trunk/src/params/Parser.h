@@ -42,6 +42,8 @@ namespace Miro
       bool characters(QString const& ch);
   
     private:
+      void reset();
+
       Type type_;
       Generator& generator_;
 

@@ -37,6 +37,23 @@ namespace Miro
     {
     }
 
+    void 
+    Parser::reset() 
+    {
+      parsing_ = false;
+      staticConst_ = false;
+      instance_ = false;
+      string_ = false;
+      vector_ = false;
+      set_ = false;
+      angle_ = false;
+      timeValue_ = false;
+      inetAddr_ = false;
+      serialParams_ = false;
+      scanDescription_ = false;
+      schedParams_ = false;
+    }
+
     bool Parser::startDocument()
     {
       return true;
@@ -234,7 +251,7 @@ namespace Miro
 	      error_ = "ACE_Time_Value format is (x, y), no dot.";
 	      break;
 	    }
-	    else if (type == "std::string")
+	    else if (type == "std::string" || type == "Miro::BAP::TransitionMessage")
 	      fullDef = "\"" + def + "\"";
 	    else if (type == "Miro::Angle")
 	      fullDef = "Miro::deg2Rad(" + def + ")";
@@ -251,6 +268,7 @@ namespace Miro
 	    QString staticConst = attributes.value("static_const");
 	    if (staticConst == "true") {
 	      staticConst_ = true;
+
 	      if (def.isEmpty()) {
 		error_ = "Static const declaration without default value for " + type_.name();
 		break;
@@ -355,7 +373,7 @@ namespace Miro
 	  }
 	  generator_.addType(group_, type_);
 
-	  parsing_ = false;
+	  reset();
 	}
 	else if (parameterParsing_ && qName == "config_parameter") {
 	  parameterParsing_ = false;
