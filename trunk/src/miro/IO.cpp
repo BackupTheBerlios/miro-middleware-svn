@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -48,7 +48,7 @@ namespace
 	      _lhs.group == _rhs.group && _lhs.index < _rhs.index);
     }
   };
-};
+}
 
 
 std::ostream &
@@ -72,21 +72,11 @@ operator<<(std::ostream &ostr, const ACE_INET_Addr &rhs) {
   ostr << rhs.get_host_addr() << std::endl;
   return ostr; 
 }
+
 namespace Miro
 {
   using ::operator<<;
 
-//   // output operator for LaserScanIDL
-//   std::ostream &
-//   operator<<(std::ostream &ostr, const LaserScanIDL &rhs) {
-//     ostr << rhs.time << " ";
-//     ostr << rhs.position << " ";
-//     ostr << LASER_NUM << " ";
-//     for (long i=0; i<LASER_NUM; ++i)
-//       ostr << rhs.value[i] << " ";
-
-//     return ostr;
-//   }
   // output operator for TimeIDL
   std::ostream &
   operator<<(std::ostream &ostr, const TimeIDL &rhs) {
@@ -223,37 +213,4 @@ namespace Miro
 	 << rhs. range;
     return ostr;
   }
-};
-
-
-//   // output operator for TactileScanIDL
-//   std::ostream &
-//   operator<<(std::ostream &ostr, const TactileScanIDL &rhs) {
-//     ostr << TACTILE_ROWS << " ";
-//     ostr << TACTILE_COLS << " ";
-//     for (long i=0; i< TACTILE_ROWS; ++i)
-//       for (long j=0; j< TACTILE_COLS; ++j){
-// 	ostr << rhs.value[i][j] << " ";
-//       }
-//     return ostr;
-//   }
-//   // output operator for SonarScanIDL
-//   std::ostream &
-//   operator<<(std::ostream &ostr, const SonarScanIDL &rhs) {
-//     ostr << rhs.length() << " ";
-//     for (unsigned long i = 0; i < rhs.length(); ++i) {
-//       ostr << rhs[i] << " ";
-//     }
-//     return ostr;
-//   }
-//  // output operator for IrScanIDL
-//   std::ostream &
-//   operator<<(std::ostream &ostr, const InfraredScanIDL &rhs) {
-//     ostr << IR_ROWS << " ";
-//     ostr << IR_NUM << " ";
-//     for (long i=0; i< IR_ROWS; ++i)
-//       for (long j=0; j< IR_NUM; ++j){
-// 	ostr << rhs.value[i][j] << " ";
-//       }
-//     return ostr;
-//   }
+}
