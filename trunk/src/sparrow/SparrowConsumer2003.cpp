@@ -348,9 +348,9 @@ namespace Sparrow
       if(faulConsumer) {
       
 	FaulController::OdometryMessage 
-	  odoLeft(FaulController::OdometryMessage::DELTA_RIGHT);
+	  odoLeft(FaulController::OdometryMessage::DELTA_LEFT);
 	FaulController::OdometryMessage 
-	  odoRight(FaulController::OdometryMessage::DELTA_LEFT);
+	  odoRight(FaulController::OdometryMessage::DELTA_RIGHT);
 	
 	MIRO_ASSERT(params_->module == "pcan");
 	
