@@ -62,7 +62,7 @@ namespace Miro
   class VideoImpl;
   class FilterTreeIDL;
   class ConfigDocument;
-};
+}
 
 namespace Video
 {
@@ -476,7 +476,6 @@ namespace Video
   {
     return interfaceAllowed_;
   }
-
 }
 
 #endif

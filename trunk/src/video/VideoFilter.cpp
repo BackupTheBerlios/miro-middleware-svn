@@ -238,6 +238,7 @@ namespace Video
     // std::cout << "aquire output buffer" << std::endl;
     outputBufferIndex_ = bufferManager_->acquireNextWriteBuffer();
     outputBuffer_ = bufferManager_->bufferAddr(outputBufferIndex_);
+    outputParameters_ = bufferManager_->imageParameters(outputBufferIndex_);
 
     // std::cout << "process buffer" << std::endl;
     timeFilter_.start();

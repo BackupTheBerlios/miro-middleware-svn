@@ -51,6 +51,9 @@ namespace Video
     //! Set the time stamp of a buffer.
     /** @param index The index of the buffer in the buffer array. */
     void bufferTimeStamp(unsigned int _index, ACE_Time_Value const& _stamp) throw ();
+    //! Parameters of the filtered image.
+    /** @param index The index of the image in the buffer array. */
+    FilterImageParameters * imageParameters(unsigned int _index) throw ();
 
     //! Acquire a buffer for writing.
     unsigned int acquireNextWriteBuffer() throw (Miro::Exception);
@@ -155,6 +158,12 @@ namespace Video
 				 ACE_Time_Value const& _stamp) throw () {
     assert(_index < buffers_);
     bufferStatus_[_index].time = _stamp;
+  }
+  inline 
+  FilterImageParameters * 
+  BufferManager::imageParameters(unsigned int _index) throw () {
+    assert(_index < buffers_);
+    return bufferStatus_[_index].params;
   }
 }
 
