@@ -34,7 +34,7 @@
   </parameter>
  </section>
 
- 
+
 
  <section name="Sparrow99" >
   <parameter name="SparrowBoard" >
@@ -50,99 +50,99 @@
    <parameter value="0.040000" name="OdometryPulse" />
    <parameter name="IrScaling" >
     <parameter>
-     <parameter value="350" name="MaxDistance" />
+     <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="0.963" name="Scaling" />
-     <parameter value="22" name="Offset" />
-    </parameter>
-    <parameter>
-     <parameter value="350" name="MaxDistance" />
-     <parameter value="30" name="MinDistance" />
-     <parameter value="0.934" name="Scaling" />
+     <parameter value="1.134" name="Scaling" />
      <parameter value="20" name="Offset" />
     </parameter>
     <parameter>
-     <parameter value="350" name="MaxDistance" />
+     <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.037" name="Scaling" />
-     <parameter value="25" name="Offset" />
-    </parameter>
-    <parameter>
-     <parameter value="350" name="MaxDistance" /> 
-     <parameter value="30" name="MinDistance" />
-     <parameter value="0.994" name="Scaling" />
+     <parameter value="0.850" name="Scaling" />
      <parameter value="20" name="Offset" />
     </parameter>
     <parameter>
-     <parameter value="350" name="MaxDistance" />
+     <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.090" name="Scaling" />
-     <parameter value="24" name="Offset" />
-    </parameter>
-    <parameter>
-     <parameter value="350" name="MaxDistance" /> 
-     <parameter value="30" name="MinDistance" />
-     <parameter value="1.024" name="Scaling" />
-     <parameter value="23" name="Offset" />
-    </parameter>
-    <parameter>
-     <parameter value="350" name="MaxDistance" />
-     <parameter value="30" name="MinDistance" />
-     <parameter value="1.118" name="Scaling" />
-     <parameter value="23" name="Offset" />
-    </parameter>
-    <parameter>
-     <parameter value="350" name="MaxDistance" />
-     <parameter value="30" name="MinDistance" />
-     <parameter value="1.063" name="Scaling" />
+     <parameter value="0.850" name="Scaling" />
      <parameter value="20" name="Offset" />
     </parameter>
     <parameter>
-     <parameter value="350" name="MaxDistance" />
+     <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.024" name="Scaling" />
+     <parameter value="0.971" name="Scaling" />
      <parameter value="20" name="Offset" />
     </parameter>
     <parameter>
-     <parameter value="350" name="MaxDistance" />
+     <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.164" name="Scaling" />
-     <parameter value="24" name="Offset" />
-    </parameter>
-    <parameter>
-     <parameter value="350" name="MaxDistance" />
-     <parameter value="30" name="MinDistance" />
-     <parameter value="1.076" name="Scaling" />
+     <parameter value="1.000" name="Scaling" />
      <parameter value="20" name="Offset" />
     </parameter>
     <parameter>
-     <parameter value="350" name="MaxDistance" />  
+     <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.133" name="Scaling" />
+     <parameter value="0.944" name="Scaling" />
      <parameter value="20" name="Offset" />
     </parameter>
     <parameter>
-     <parameter value="350" name="MaxDistance" />
+     <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.012" name="Scaling" />
+     <parameter value="1.134" name="Scaling" />
      <parameter value="20" name="Offset" />
     </parameter>
     <parameter>
-     <parameter value="350" name="MaxDistance" />
+     <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.090" name="Scaling" />
+     <parameter value="1.000" name="Scaling" />
      <parameter value="20" name="Offset" />
     </parameter>
     <parameter>
-     <parameter value="350" name="MaxDistance" /> 
+     <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.049" name="Scaling" />
+     <parameter value="1.000" name="Scaling" />
      <parameter value="20" name="Offset" />
     </parameter>
     <parameter>
-     <parameter value="350" name="MaxDistance" />
+     <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.012" name="Scaling" />
+     <parameter value="1.134" name="Scaling" />
+     <parameter value="20" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="1.134" name="Scaling" />
+     <parameter value="20" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="1.000" name="Scaling" />
+     <parameter value="20" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="0.872" name="Scaling" />
+     <parameter value="20" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="1.134" name="Scaling" />
+     <parameter value="20" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="500" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="0.971" name="Scaling" />
+     <parameter value="20" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="1.000" name="Scaling" />
      <parameter value="20" name="Offset" />
     </parameter>
    </parameter>
@@ -175,37 +175,27 @@
 
  <section name="Video" >
   <parameter name="Video" >
-   <parameter value="yuv422" name="Palette" />
-   <parameter value="640" name="Width" />
-   <parameter value="480" name="Height" />
+   <parameter value="yuv420p" name="Palette" />
+   <parameter value="320" name="Width" />
+   <parameter value="240" name="Height" />
    <parameter name="Filter">
-    <parameter value="Device1394" name="Name" />
-    <parameter value="Device1394" name="Type" />
+    <parameter value="DeviceQuickCam" name="Name" />
+    <parameter value="DeviceQuickCam" name="Type" />
     <parameter name="Successor" >
      <parameter name="Filter" >
-      <parameter value="FilterYUV422toRGBIpp" name="Name" />
-      <parameter value="FilterYUV422toRGBIpp" name="Type" />
+      <parameter value="FilterYUV420PtoRGB" name="Name" />
+      <parameter value="FilterYUV420PtoRGB" name="Type" />
       <parameter name="Successor" >
-       <parameter name="Filter" >
-        <parameter value="FilterRGBtoGray" name="Name" />
-        <parameter value="FilterRGBtoGray" name="Type" />
-        <parameter name="Successor" >
-         <parameter name="Filter" >
-          <parameter value="FilterGraytoCanny" name="Name" />
-          <parameter value="FilterGraytoCanny" name="Type" />
+        <parameter name="Filter" >
+         <parameter value="FilterOmni2Pan" name="Name" />
+         <parameter value="FilterOmni2Pan" name="Type" />
+         <parameter name="Successor" >
+            <parameter name="Filter" >
+              <parameter value="FilterRGBtoSeg" name="Name" />
+              <parameter value="FilterRGBtoSeg" name="Type" />
+            </parameter>
          </parameter>
-        </parameter>
-       </parameter>
-       <parameter name="Filter" >
-        <parameter value="FilterRGBtoIndex" name="Name" />
-        <parameter value="FilterRGBtoIndex" name="Type" />
-        <parameter name="Successor" >
-         <parameter name="Filter" >
-          <parameter value="FilterIndextoIndex" name="Name" />
-          <parameter value="FilterIndextoIndex" name="Type" />
-         </parameter>
-        </parameter>
-       </parameter>
+	</parameter>
       </parameter>
      </parameter>
     </parameter>
@@ -266,6 +256,27 @@
    <parameter value="128" name="Saturation" />
    <parameter value="162" name="WhiteBalance0" />
    <parameter value="184" name="WhiteBalance1" />
+  </parameter>
+
+  <parameter name="FilterYUV420PtoRGB">
+   <parameter value="true" name="InterfaceInstance" />
+   <parameter name="Interface" >
+    <parameter value="VideoOmniCam" name="Name" />
+   </parameter>
+  </parameter>
+
+  <parameter name="FilterOmni2Pan">
+   <parameter value="true" name="InterfaceInstance" />
+   <parameter name="Interface" >
+    <parameter value="VideoPanorama" name="Name" />
+   </parameter>
+  </parameter>
+
+  <parameter name="FilterRGBtoSeg">
+   <parameter value="true" name="InterfaceInstance" />
+   <parameter name="Interface" >
+    <parameter value="VideoSeg" name="Name" />
+   </parameter>
   </parameter>
 
   <parameter name="FilterYUV422toRGBIpp">
