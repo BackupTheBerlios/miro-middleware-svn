@@ -11,6 +11,13 @@
       <config_parameter name="thermometer" type="Miro::ThermometerParameters" />
     </config_item>
 
+    <config_item name="Camera" parent="Miro::CameraControl" final="true" >
+      <config_parameter name="upsideDown" type="bool" default="false" />
+      <config_parameter name="vendor" type="std::string" default="canon" />
+      <config_parameter name="model" type="std::string" default="vc-c4" />
+      <config_parameter name="format" type="std::string" default="pal" />
+    </config_item>
+
     <config_item parent="Psos::" instance="true">
       <config_parameter name="motion" type="Miro::DifferentialMotionParameters" />
       <constructor>
@@ -109,12 +116,10 @@
       </constructor>
 
       <config_parameter name="channelSharing" type="bool" default="false" />
-      <config_parameter name="camera" type="bool" default="false" />
-      <config_parameter name="cameraUpsideDown" type="bool" default="false" />
-      <config_parameter name="cameraVendor" type="std::string" default="canon" />
-      <config_parameter name="cameraModel" type="std::string" default="vc-c4" />
-      <config_parameter name="cameraFormat" type="std::string" default="pal" />
-
+      <config_parameter name="camera" type="bool" default="false"/>
+      <config_parameter name="cameraParams" type="CameraParameters"/>
+      <config_parameter name="panTiltParams" type="Miro::PanTiltParameters"/>
     </config_item>
+
   </config_group>
 </config>

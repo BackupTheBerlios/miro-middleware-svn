@@ -102,7 +102,7 @@ Service::Service(Miro::PanParameters panParameters, Miro::TiltParameters tiltPar
   pConsumer(new Pioneer::Consumer(pRangeSensorImpl, NULL, NULL, NULL, pOdometryImpl, NULL, NULL, NULL, pPanTiltImpl)),
   pStallImpl(new Pioneer::StallImpl()),
   pTCM2Impl(new Pioneer::TCM2Impl(Pioneer::Parameters::instance()->tcm2Params, NULL)),
-  pPanTiltImpl(new Canon::CanonPanTiltImpl(connection, panParameters, tiltParameters, Pioneer::Parameters::instance()->cameraUpsideDown)),
+  pPanTiltImpl(new Canon::CanonPanTiltImpl(connection, panParameters, tiltParameters, Pioneer::Parameters::instance()->cameraParams.upsideDown)),
 #ifdef MIRO_HAS_DEPRECATED
   canonCamera(connection, pPanTiltImpl->getAnswer()),
 #endif

@@ -10,109 +10,126 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "CameraControlImpl.h"
-#include "miro/TimeHelper.h"
 
 namespace Miro
 {
 
-  CameraControlImpl::CameraControlImpl(
-				       Miro::ZoomParameters zoomParameters_, 
-				       Miro::FocusParameters focusParameters_, 
-				       Miro::ShutterParameters shutterParameters_) : 
-    zoomParameters(zoomParameters_),
-    focusParameters(focusParameters_),
-    shutterParameters(shutterParameters_)
-  {}
+  CameraControlImpl::CameraControlImpl(const Miro::CameraControlParameters& _cameraParameters) :
+    zoomParameters_(_cameraParameters.zoom),
+    focusParameters_(_cameraParameters.focus),
+    shutterParameters_(_cameraParameters.shutter)
+  {
+    currentZoom_=(zoomParameters_.rangeMin+zoomParameters_.rangeMax)/2;
+    autoFocusSet_=focusParameters_.autoFocus; 
+    //if the camera has autoFocus, default autoFocus on.
+    //otherwise, autoFocus off.
+
+    currentFocus_=(focusParameters_.rangeMin+focusParameters_.rangeMax)/2;
+    timeA2C(shutterParameters_.rangeMin,currentShutter_); //default fastest setting
+  }
 
   CameraControlImpl::~CameraControlImpl() {}
 
   void CameraControlImpl::setZoom(float value) throw(Miro::EDevIO, Miro::EOutOfBounds,Miro::ETimeOut)
   {
-    if (!zoomParameters.present) {
+    if (!zoomParameters_.present) {
       throw Miro::EDevIO("Zoom not supported");
     }
-    if ((value>zoomParameters.rangeMax) || (value<zoomParameters.rangeMin)) {
+    if (!testZoom(value)) {
       throw Miro::EOutOfBounds();
     }
+    currentZoom_=value;
   }
   
   float CameraControlImpl::getZoom() throw(Miro::EDevIO, Miro::ETimeOut) 
   {
-    return zoomParameters.rangeMin;
+    return currentZoom_;
   }
 
   ZoomRangeIDL CameraControlImpl::getZoomRange() throw(Miro::EDevIO, Miro::ETimeOut) {
     ZoomRangeIDL result;
 
-    result.min=zoomParameters.rangeMin;
-    result.max=zoomParameters.rangeMax;
+    result.min=zoomParameters_.rangeMin;
+    result.max=zoomParameters_.rangeMax;
 
     return result;
+  }
+  
+  float CameraControlImpl::getTargetZoom() throw()
+  {
+    return currentZoom_;
   }
 
   void CameraControlImpl::setFocus(short value) throw(Miro::EDevIO, Miro::EOutOfBounds,Miro::ETimeOut)
   {
-    if (!focusParameters.present) {
+    if (!focusParameters_.present) {
       throw Miro::EDevIO("Focus not supported");
     }
-    if ((value>focusParameters.rangeMax) || (value<focusParameters.rangeMin)) {
+    if (!testFocus(value)) {
       throw Miro::EOutOfBounds();
     }
+    currentFocus_=value;
   }
   
   short CameraControlImpl::getFocus() throw(Miro::EDevIO, Miro::ETimeOut) 
   {
-    return focusParameters.rangeMin;
+    return currentFocus_;
   }
 
   FocusRangeIDL CameraControlImpl::getFocusRange() throw(Miro::EDevIO, Miro::ETimeOut) {
     FocusRangeIDL result;
 
-    result.min=focusParameters.rangeMin;
-    result.max=focusParameters.rangeMax;
+    result.min=focusParameters_.rangeMin;
+    result.max=focusParameters_.rangeMax;
 
     return result;
   }
 
   CORBA::Boolean CameraControlImpl::hasAutoFocus() throw()
   {
-    return focusParameters.autoFocus;
+    return focusParameters_.autoFocus;
   }
 
-  void CameraControlImpl::setAutoFocus(unsigned char) throw(Miro::EDevIO, Miro::ETimeOut) {
-    if (!focusParameters.autoFocus) {
+  void CameraControlImpl::setAutoFocus(unsigned char value) throw(Miro::EDevIO, Miro::ETimeOut) {
+    if (!focusParameters_.autoFocus) {
       throw Miro::EDevIO("Autofocus not supported");
     }
+    autoFocusSet_=value;
+  }
+
+  short CameraControlImpl::getTargetFocus() throw()
+  {
+    return currentFocus_;
   }
 
   void CameraControlImpl::setShutter(TimeIDL& value) throw(Miro::EDevIO, Miro::EOutOfBounds,Miro::ETimeOut)
   {
-    if (!shutterParameters.present) {
+    if (!shutterParameters_.present) {
       throw Miro::EDevIO("Shutter not supported");
     }
-    ACE_Time_Value aceValue;
-    timeC2A(value,aceValue);
-    if ((aceValue>shutterParameters.rangeMax) || 
-	(aceValue<shutterParameters.rangeMin)) {
+    if (!testShutter(value)) {
       throw Miro::EOutOfBounds();
     }
+    currentShutter_=value;
   }
   
   TimeIDL CameraControlImpl::getShutter() throw(Miro::EDevIO, Miro::ETimeOut) 
   {
-    TimeIDL result;
-    timeA2C(shutterParameters.rangeMin,result);
-    return result;
+    return currentShutter_;
   }
 
   ShutterRangeIDL CameraControlImpl::getShutterRange() throw(Miro::EDevIO, Miro::ETimeOut) {
     ShutterRangeIDL result;
 
-    timeA2C(shutterParameters.rangeMin, result.min);
-    timeA2C(shutterParameters.rangeMax, result.max);
+    timeA2C(shutterParameters_.rangeMin, result.min);
+    timeA2C(shutterParameters_.rangeMax, result.max);
 
     return result;
   }
 
+  TimeIDL CameraControlImpl::getTargetShutter() throw() 
+  {
+    return currentShutter_;
+  }
 
 }

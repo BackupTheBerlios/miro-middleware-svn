@@ -80,6 +80,12 @@ module Miro
      */
     ZoomRangeIDL getZoomRange() raises(EDevIO, ETimeOut);
 
+    //! Get the last set zoom angle
+    /**
+     * @return The last set zoom angle (i.e. not the current angle but 
+     *  the target)
+     */
+    float getTargetZoom();
 
     //! Set the focal distance.
     /**
@@ -99,6 +105,13 @@ module Miro
      * is thrown to indicate low level device problems.
      */
     short getFocus() raises(EDevIO, ETimeOut);
+
+    //! Get the last set focal distance
+    /**
+     * @return The last set focal distance (i.e. not the current distance but 
+     *  the target)
+     */
+    short getTargetFocus();
 
     //! Queries whether the camera has autofocus functionality.
     /**
@@ -139,6 +152,13 @@ module Miro
      * is thrown to indicate low level device problems.
      */
     TimeIDL getShutter() raises(EDevIO, ETimeOut);
+
+    //! Get the last set shutter speed factor
+    /**
+     * @return The last set shutter speed factor (i.e. not the current 
+     *  speed but the target)
+     */
+    TimeIDL getTargetShutter();
 
     //! Get the shutter speed range.
     /**

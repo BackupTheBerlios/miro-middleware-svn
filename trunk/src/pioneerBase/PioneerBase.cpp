@@ -51,7 +51,7 @@ PioneerBase::PioneerBase(int argc, char *argv[], Miro::PanParameters panParamete
 					 NULL, //stall
 					 (Pioneer::Parameters::instance()->tcm2?&tcm2:NULL),
 					 //only add the camera if really present
-					 (Pioneer::Parameters::instance()->camera?&canonPanTilt:NULL))),
+					 (Pioneer::Parameters::instance()->camera?(Canon::CanonPanTiltImpl*)pPanTiltImpl:NULL))),
   pPsosEventHandler(new Psos::EventHandler(pPioneerConsumer, 
 					   pioneerConnection,
 					   Pioneer::Parameters::instance())),
@@ -64,9 +64,9 @@ PioneerBase::PioneerBase(int argc, char *argv[], Miro::PanParameters panParamete
   sonar(Pioneer::Parameters::instance()->sonarDescription, &structuredPushSupplier_),
   tactile(Pioneer::Parameters::instance()->tactileDescription, &structuredPushSupplier_),
   infrared(Pioneer::Parameters::instance()->infraredDescription, &structuredPushSupplier_),
-  canonPanTilt(pioneerConnection, panParameters, tiltParameters, Pioneer::Parameters::instance()->cameraUpsideDown),
+  //  pPanTilt(new CanonPanTilt(pioneerConnection, panParameters, tiltParameters, Pioneer::Parameters::instance()->cameraParams.upsideDown)),
 #ifdef MIRO_HAS_DEPRECATED
-  canonCamera(pioneerConnection, canonPanTilt.getAnswer()),
+  canonCamera(pioneerConnection, ((Canon::CanonPanTiltImpl*)pPanTiltImpl)->getAnswer()),
 #endif
   gripper(pioneerConnection),
   objectVector()
@@ -81,18 +81,27 @@ PioneerBase::PioneerBase(int argc, char *argv[], Miro::PanParameters panParamete
   pBattery = battery._this();
   pTCM2 = tcm2._this();
   if (Pioneer::Parameters::instance()->camera) {
-    if (Pioneer::Parameters::instance()->cameraVendor=="canon") {
-      cameraControl=new Canon::CanonCameraControlImpl(Pioneer::Parameters::instance(),zoomParameters, focusParameters, shutterParameters, pioneerConnection, canonPanTilt.getAnswer());
-      pCameraControl = cameraControl->_this();
-      pCanonPanTilt = canonPanTilt._this();
+    if (Pioneer::Parameters::instance()->cameraParams.vendor=="canon") {
+      pCameraControlImpl=new 
+	Canon::CanonCameraControlImpl(Pioneer::Parameters::instance(), 
+				      pioneerConnection, 
+				      ((Canon::CanonPanTiltImpl*)pPanTiltImpl)->getAnswer());
+      pCameraControl = pCameraControlImpl->_this();
+      pPanTiltImpl=new 
+	Canon::CanonPanTiltImpl(pioneerConnection, 
+				panParameters, 
+				tiltParameters, 
+				Pioneer::Parameters::instance()->cameraParams.upsideDown);
+      pPanTilt = pPanTiltImpl->_this();
 #ifdef MIRO_HAS_DEPRECATED
       pCanonCamera = canonCamera._this();
 #endif
     } // camera is canon
   } else {
-    cameraControl=NULL;
+    pCameraControlImpl=NULL;
+    pPanTiltImpl=NULL;
     pCameraControl=NULL;
-    pCanonPanTilt=NULL;
+    pPanTilt=NULL;
   }
   pGripper = gripper._this();
   pObjectVector = objectVector._this();
@@ -113,7 +122,7 @@ PioneerBase::PioneerBase(int argc, char *argv[], Miro::PanParameters panParamete
 
   //only add the pantilt if the camera is actually present
   if (Pioneer::Parameters::instance()->camera) {
-    addToNameService(pCanonPanTilt.in(), "PanTilt");
+    addToNameService(pPanTilt.in(), "PanTilt");
     addToNameService(pCameraControl.in(), "CameraControl");
 #ifdef MIRO_HAS_DEPRECATED
     addToNameService(pCanonCamera.in(), "Camera");

@@ -5,6 +5,10 @@
   <!--config_global name="include" value="laser/Parameters.h" /-->
 
   <config_group name="Player">
+    <config_item name="Camera" parent="Miro::CameraControl" final="true">
+      <config_parameter name="upsideDown" type="bool" default="false"/>
+    </config_item>
+
     <config_item parent="Miro::Dev" instance="true">
       <config_parameter name="motion" type="Miro::DifferentialMotionParameters" />
       <constructor>
@@ -110,9 +114,8 @@
 
       <config_parameter name="channelSharing" type="bool" default="false" />
       <config_parameter name="camera" type="bool" default="false" />
-      <config_parameter name="cameraUpsideDown" type="bool" default="false" />
-      <config_parameter name="cameraType" type="string" default="canon" />
-
+      <config_parameter name="cameraParams" type="Player::CameraParameters"/>
+      <config_parameter name="panTiltParams" type="Miro::PanTiltParameters"/>
     </config_item>
   </config_group>
 </config>

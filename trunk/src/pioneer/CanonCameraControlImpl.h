@@ -40,10 +40,7 @@ namespace Canon
     typedef Miro::CameraControlImpl Super; 
   public:
     //! Initializing constructor.
-    CanonCameraControlImpl(Pioneer::Parameters * parameters, 
-			   Miro::ZoomParameters zoomParameters, 
-			   Miro::FocusParameters focusParameters, 
-			   Miro::ShutterParameters shutterParameters,
+    CanonCameraControlImpl(Pioneer::Parameters * _parameters, 
 			   Pioneer::Connection& connection,
 			   Canon::Answer * _pAnswer
 			   ) throw(Miro::Exception);
@@ -100,7 +97,7 @@ namespace Canon
     //-------------------------------------------------------------------------
     // protected object data
     //-------------------------------------------------------------------------
-    Pioneer::Parameters * parameters;
+    Pioneer::Parameters * parameters_;
 
     Pioneer::Connection&         connection; // encapsulating communication to hardware
     Answer * pAnswer;

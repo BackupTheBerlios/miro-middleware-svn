@@ -100,12 +100,12 @@ private:
   Miro::RangeSensorImpl sonar;
   Miro::RangeSensorImpl tactile;
   Miro::RangeSensorImpl infrared;
-  Canon::CanonPanTiltImpl canonPanTilt;
+  Miro::PanTiltImpl * pPanTiltImpl;
 #ifdef MIRO_HAS_DEPRECATED
   Canon::CanonCameraImpl canonCamera;
 #endif
   //  Miro::PanTiltImpl * panTilt;
-  Miro::CameraControlImpl * cameraControl;
+  Miro::CameraControlImpl * pCameraControlImpl;
   Miro::GripperImpl gripper;
   Miro::ObjectVectorImpl objectVector;
   //Miro::CortexImpl cortex;
@@ -122,15 +122,11 @@ private:
   Miro::CanonCamera_var pCanonCamera;
 #endif
   //  Miro::CanonPanTilt_var pCanonPanTilt;
-  Miro::PanTilt_var pCanonPanTilt;
+  Miro::PanTilt_var pPanTilt;
   Miro::CameraControl_var pCameraControl;
   Miro::Gripper_var pGripper;
   Miro::ObjectVector_var pObjectVector;
   //Miro::Cortex_var pCortex;
-
-  Miro::ZoomParameters zoomParameters;
-  Miro::FocusParameters focusParameters;
-  Miro::ShutterParameters shutterParameters;
 
 };
 #endif // PioneerBase

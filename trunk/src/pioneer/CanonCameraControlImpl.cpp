@@ -40,13 +40,10 @@ namespace Canon
   ACE_Time_Value CanonCameraControlImpl::maxWait = ACE_Time_Value(0, 500000);
 
   CanonCameraControlImpl::CanonCameraControlImpl(Pioneer::Parameters * _parameters, 
-						 Miro::ZoomParameters _zoomParameters, 
-						 Miro::FocusParameters _focusParameters, 
-						 Miro::ShutterParameters _shutterParameters, 
 						 Pioneer::Connection &  _connection,
 						 Canon::Answer * _pAnswer) throw(Miro::Exception) : 
-    Super(_zoomParameters, _focusParameters, _shutterParameters),
-    parameters(_parameters),
+    Super(_parameters->cameraParams),
+    parameters_(_parameters),
     connection(_connection),
     pAnswer(_pAnswer),
     initialized(false)
@@ -56,13 +53,13 @@ namespace Canon
 
   void CanonCameraControlImpl::setZoom(float value) throw(Miro::EDevIO, Miro::EOutOfBounds,Miro::ETimeOut)
   {
-    if (!zoomParameters.present) {
+    if (!zoomParameters_.present) {
       throw Miro::EDevIO("Zoom not supported");
     }
-    if ((value>zoomParameters.rangeMax) || (value<zoomParameters.rangeMin)) {
+    if (!testZoom(value)) {
       throw Miro::EOutOfBounds();
     }
-
+    setTargetZoom(value);
    
     //change to camera coordinates
     //camera: wide = 0
@@ -70,7 +67,7 @@ namespace Canon
     //real: wide   = rangeMax;
     //real: tele   = rangeMin;
     //ranges and value are in radians
-    int cameraValue=int(128-128*(value-zoomParameters.rangeMin)/(zoomParameters.rangeMax-zoomParameters.rangeMin));
+    int cameraValue=int(128-128*(value-zoomParameters_.rangeMin)/(zoomParameters_.rangeMax-zoomParameters_.rangeMin));
 
     bool done=false;
     char tmp[3];
@@ -123,12 +120,12 @@ namespace Canon
       }
     }
 
-    return (zoomParameters.rangeMin+((zoomParameters.rangeMax-zoomParameters.rangeMin)/128)*(128-result));
+    return (zoomParameters_.rangeMin+((zoomParameters_.rangeMax-zoomParameters_.rangeMin)/128)*(128-result));
   }
 
   void CanonCameraControlImpl::setFocus(short value) throw(Miro::EDevIO, Miro::EOutOfBounds,Miro::ETimeOut)
   {
-    if (!focusParameters.present) {
+    if (!focusParameters_.present) {
       throw Miro::EDevIO("Focus not supported");
     }
     Miro::FocusRangeIDL range;    
@@ -136,6 +133,8 @@ namespace Canon
     if ((value>range.max) || (value<range.min)) {
       throw Miro::EOutOfBounds("Focus value outside range for this zoom level");
     }
+    setTargetFocus(value);
+
     bool done=false;
     char tmp[3];
 
@@ -241,9 +240,10 @@ namespace Canon
 
 
   void CanonCameraControlImpl::setAutoFocus(unsigned char value) throw(Miro::EDevIO, Miro::ETimeOut) {
-    if (!focusParameters.autoFocus) {
+    if (!focusParameters_.autoFocus) {
       throw Miro::EDevIO("Autofocus not supported");
     }
+    autoFocusSet_=value;
     bool done=false;
     if (!initialized) initialize();
 
@@ -262,16 +262,13 @@ namespace Canon
 
   void CanonCameraControlImpl::setShutter(TimeIDL& value) throw(Miro::EDevIO, Miro::EOutOfBounds,Miro::ETimeOut)
   {
-    if (!shutterParameters.present) {
+    if (!shutterParameters_.present) {
       throw Miro::EDevIO("Shutter not supported");
     }
-
-    ACE_Time_Value aceValue;
-    timeC2A(value,aceValue);
-    if ((aceValue>shutterParameters.rangeMax) || 
-	(aceValue<shutterParameters.rangeMin)) {
+    if (!testShutter(value)) {
       throw Miro::EOutOfBounds();
     }
+    setTargetShutter(value);
 
     double dValue=value.sec+double(value.usec)/1e6;
     short parameter=0;
@@ -318,23 +315,23 @@ namespace Canon
       parameter=0x06;
     } else if (dValue<1/150) {
       parameter=0x05;
-    } else if (((parameters->cameraFormat=="pal") && (dValue<1/120)) ||
-	       ((parameters->cameraFormat=="ntsc") && (dValue<1/125))) {
+    } else if (((parameters_->cameraParams.format=="pal") && (dValue<1/120)) ||
+	       ((parameters_->cameraParams.format=="ntsc") && (dValue<1/125))) {
       parameter=0x04;
     } else if (dValue<1/100) {
       parameter=0x03;
     } else if (dValue<1/90) {
       parameter=0x02;
-    } else if (((parameters->cameraFormat=="pal") && (dValue<1/60)) ||
-	       ((parameters->cameraFormat=="ntsc") && (dValue<1/75))) {
+    } else if (((parameters_->cameraParams.format=="pal") && (dValue<1/60)) ||
+	       ((parameters_->cameraParams.format=="ntsc") && (dValue<1/75))) {
       parameter=0x01;
-    } else if (((parameters->cameraFormat=="pal") && (dValue<1/50)) ||
-	       ((parameters->cameraFormat=="ntsc") && (dValue<1/60))) {
+    } else if (((parameters_->cameraParams.format=="pal") && (dValue<1/50)) ||
+	       ((parameters_->cameraParams.format=="ntsc") && (dValue<1/60))) {
       parameter=0x00;
     }
 
     //set the value actually used
-    value=shutterCanon2Time(parameter,parameters->cameraFormat);
+    value=shutterCanon2Time(parameter,parameters_->cameraParams.format);
     
     char tmp[4];
     tmp[0]=0x35; //first byte needs to be 0x35.
@@ -479,7 +476,7 @@ namespace Canon
       checkAnswer();
       if (pAnswer->errorCode()==ERROR_NO_ERROR) {
 	done=true;
-	result=shutterCanon2Time(str2int(pAnswer->parameter(),2),parameters->cameraFormat);
+	result=shutterCanon2Time(str2int(pAnswer->parameter(),2),parameters_->cameraParams.format);
       }
     }
     return result;
