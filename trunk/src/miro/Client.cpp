@@ -39,8 +39,6 @@ namespace
   const char * const namingKey = "-MiroNamingContext";
   const char * const shortNamingKey = "-MNC";
   const char * const noNamingKey = "-MiroNoNaming";
-  const char * const debug = "-MiroDbug";
-  const char * const debugLevel = "-MiroDebugLevel";
 }
 
 namespace Miro
