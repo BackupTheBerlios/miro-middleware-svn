@@ -15,6 +15,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.6  2003/10/27 13:19:21  hutz
+ * making DummyDevice capable of playing image series
+ *
  * Revision 1.5  2003/10/17 13:31:42  hutz
  * big video service update
  * we now support filters with multiple input buffers
@@ -59,16 +62,20 @@
  *
  */
 
-#ifndef VIDEODEVICEDUMMY_H
-#define VIDEODEVICEDUMMY_H
+#ifndef VideoDeviceDummy_h
+#define VideoDeviceDummy_h
 
 #include "VideoDevice.h"
 
+#include <vector>
+#include <string>
+
 namespace Video
 {
-  /** Dummy video device for testing the interface
+  /// Dummy video device that reads images from disk.
+  /**
+   * Image or a directory to look for images can be specifed.
    */
-
   class DeviceDummy : public Device
   {
     typedef Device Super;
@@ -82,13 +89,15 @@ namespace Video
   protected:
     virtual void init(Miro::Server& _server, FilterParameters const * _params);
     virtual void process();
-    virtual void fini();
 
-  private:
-    //! connection simulation flag
-    bool is_connected_;
+    //--------------------------------------------------------------------------
+    // protected data
+
+    DeviceDummyParameters const * params_;
+
+    unsigned int counter_;
+    std::vector<std::string> files_;
   };
-};
+}
 
-#endif // VIDEODEVICEDUMMY_H
-
+#endif // VideoDeviceDummy_h

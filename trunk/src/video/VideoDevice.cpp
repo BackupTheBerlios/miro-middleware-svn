@@ -49,6 +49,9 @@ namespace Video
     mutex_(),
     condition_(mutex_)
   {
+    // Forbid instances of the video interface here.
+    interfaceAllowed_ = false;
+
     // clear table of supported palettes
     for (unsigned int i = 0; i < NUM_PALETTE_ENTRIES; ++i)
       paletteLookup[i] = -1;
@@ -81,13 +84,6 @@ namespace Video
       first->filter->addBrokerRequest(first->link);
     }
     brokerRequest_.clear();
-  }
-
-  //--------------------------------------------------------------------
-  bool
-  Device::interfaceAllowed() const throw ()
-  {
-    return false;
   }
 
   //--------------------------------------------------------------------

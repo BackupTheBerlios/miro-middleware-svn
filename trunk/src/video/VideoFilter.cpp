@@ -43,6 +43,7 @@ namespace Video
   Filter::Filter(const Miro::ImageFormatIDL& _inputFormat) :
     inputFormat_(_inputFormat),
     outputFormat_(_inputFormat),
+    interfaceAllowed_(true),
     inplace_(false),
     params_(NULL),
     bufferManager_(NULL),
@@ -72,16 +73,6 @@ namespace Video
     delete bufferManager_;
   }
 
-  /**
-   * This method is virtual to allow overriding it by filters
-   * that can not have an instance of the Video interface.
-   * I.e. video devices.
-   */
-  bool
-  Filter::interfaceAllowed() const throw()
-  {
-    return true;
-  }
 
   BufferManager * 
   Filter::bufferManagerInstance() const 

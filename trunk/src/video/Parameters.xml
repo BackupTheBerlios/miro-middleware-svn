@@ -34,7 +34,10 @@
     </config_item>
 
     <config_item name="DeviceDummy" parent="Device" final="true">
+      <config_parameter name="buffers" type="unsigned int" inherited="true" default="1" />
       <config_parameter name="timeout" type="ACE_Time_Value" default="1, 0" />
+      <config_parameter name="cyclic" type="bool" default="true" />
+
     </config_item>
 
     <config_item name="AVDevice" parent="Device" final="true">

@@ -14,6 +14,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.9  2003/10/27 13:19:21  hutz
+ * making DummyDevice capable of playing image series
+ *
  * Revision 1.8  2003/10/22 16:35:04  hutz
  * tons of fixes for namespace std conformance
  *
@@ -79,56 +82,21 @@
 #include "miro/VideoHelper.h"
 #include "miro/Exception.h"
 
-namespace Video
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <dirent.h>
+
+namespace 
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-
-  FILTER_PARAMETERS_FACTORY_IMPL(DeviceDummy);
-
-
-  //--------------------------------------------------------------------
-  DeviceDummy::DeviceDummy(const Miro::ImageFormatIDL& _inputFormat) :
-    Super(_inputFormat),
-    is_connected_(false)
+  void getPpm(std::string const& _name, 
+	      unsigned int _width,
+	      unsigned int _height,
+	      unsigned char * _buffer)
   {
-  }
-    
-//--------------------------------------------------------------------
-  DeviceDummy::~DeviceDummy()
-  {
-  }
-	
-  //--------------------------------------------------------------------
-  void
-  DeviceDummy::process()
-  {
-    cout << "processing dummy" << endl;
-    if (is_connected_) {
-      ACE_OS::sleep(ACE_Time_Value(0, 100000));
-      cout << "sleeping dummy" << endl;
-    }
-  }
-
-  //--------------------------------------------------------------------
-  void
-  DeviceDummy::init(Miro::Server& _server, FilterParameters const * _params)
-  {
-    Super::init(_server, _params);
-
-    DeviceParameters const * params = dynamic_cast<DeviceParameters const *>(_params);
-    assert(params != NULL);
-
-    is_connected_ = true;
-	
-    cout << "loading file" << endl;;
-
     FILE * file;
-    if ((file = fopen(params->device.c_str(), "r")) != NULL) {
+    if ((file = fopen(_name.c_str(), "r")) != NULL) {
 
-      // copied from Nix
-      
       int rawflag = 0;
       unsigned int xdim;
       unsigned int ydim;
@@ -165,20 +133,15 @@ namespace Video
 
       // read image
 
-      if (xdim != outputFormat_.width ||
-	  ydim != outputFormat_.height)
+      if (xdim != _width ||
+	  ydim != _height)
 	throw Miro::Exception("Image dimensions differ from output format.");
 
-      cout << "get buffer" << endl;
-      unsigned int index = bufferManager_->acquireNextWriteBuffer();
-      cout << "get buffer address" << endl;
-      unsigned char * buffer = bufferManager_->bufferAddr(index);
-      
       if (rawflag) {
 	for (unsigned int i = 0; i < xdim * ydim; ++i) {
-	  buffer[i*3 + 0] = fgetc(file);
-	  buffer[i*3 + 1] = fgetc(file);
-	  buffer[i*3 + 2] = fgetc(file);
+	  _buffer[i*3 + 0] = fgetc(file);
+	  _buffer[i*3 + 1] = fgetc(file);
+	  _buffer[i*3 + 2] = fgetc(file);
 	}
       } 
       else {
@@ -190,35 +153,107 @@ namespace Video
 	    green = int((double)green * 255.0 / (double)colordepth);
 	    blue = int((double)blue * 255.0 / (double)colordepth);
 	  }
-	  buffer[i*3 + 0] = red;
-	  buffer[i*3 + 1] = green;
-	  buffer[i*3 + 2] = blue;
+	  _buffer[i*3 + 0] = red;
+	  _buffer[i*3 + 1] = green;
+	  _buffer[i*3 + 2] = blue;
 	}
 	colordepth = 255;
       }
 
       fclose(file);
-
-      inputFormat_.width = xdim;
-      inputFormat_.height = ydim;
-      inputFormat_.palette = Miro::RGB_24;
-
-      outputFormat_ = inputFormat_;
-
-      cout << "release buffer" << endl;
-      bufferManager_->switchWrite2ReadBuffer(index, 0);
     }
     else {
       throw Miro::CException(errno, "Cannot open file." );
     }
-
-    cout << "DeviceDummy::init end" << endl;
   }
-        
+}
+
+namespace Video
+{
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
+  FILTER_PARAMETERS_FACTORY_IMPL(DeviceDummy);
+
+
+  //--------------------------------------------------------------------
+  DeviceDummy::DeviceDummy(const Miro::ImageFormatIDL& _inputFormat) :
+    Super(_inputFormat),
+    counter_(0)
+  {
+  }
+    
+//--------------------------------------------------------------------
+  DeviceDummy::~DeviceDummy()
+  {
+  }
+	
   //--------------------------------------------------------------------
   void
-  DeviceDummy::fini()
+  DeviceDummy::process()
   {
-    is_connected_ = false;
+    ACE_Time_Value now = ACE_OS::gettimeofday();
+
+    if (params_->cyclic && 
+	counter_ >= files_.size()) {
+      counter_ = 0;
+    }    
+    if (counter_ < files_.size()) {
+      // do work
+      std::cout << "Next image: " << files_[counter_] << std::endl;
+      getPpm(files_[counter_], 
+	     inputFormat_.width,
+	     inputFormat_.height,
+	     outputBuffer());
+      bufferManager_->bufferTimeStamp(outputBufferIndex_, 
+				      ACE_OS::gettimeofday());
+      ++counter_;
+      std::cout << "Done." << std::endl;
+    }
+    else {
+      std::cout << "No more images. " << endl;
+    }
+
+    ACE_Time_Value diff = ACE_OS::gettimeofday() - now;
+    if (diff < params_->timeout) {
+      std::cout << "Sleeping." << std::endl;
+      ACE_OS::sleep(params_->timeout - diff);
+    }
+  }
+
+  //--------------------------------------------------------------------
+  void
+  DeviceDummy::init(Miro::Server& _server, FilterParameters const * _params)
+  {
+    Super::init(_server, _params);
+
+    params_ = dynamic_cast<DeviceDummyParameters const *>(_params);
+    assert(params_ != NULL);
+	
+    cout << "loading file" << endl;;
+    
+    struct stat buf;
+    stat(params_->device.c_str(), &buf);
+    if (S_ISREG(buf.st_mode)) { // if the name is a file just use this
+      files_.push_back(params_->device);
+      cout << "single file: " << params_->device << endl;
+
+    } else if (S_ISDIR(buf.st_mode)) { // if the name is a directory, use each regular file in it
+      DIR * dir;
+      if ((dir = opendir(params_->device.c_str())) != NULL) {
+        struct dirent * entrys;
+        while ((entrys = readdir(dir)) != NULL) {
+	  stat((params_->device + entrys->d_name).c_str(), &buf);
+          if (S_ISREG(buf.st_mode)) {
+            files_.push_back(params_->device + entrys->d_name);
+            cout << "direntry: " << entrys->d_name << endl;
+          }
+        }
+        closedir(dir);
+      }
+    }
+
+    cout << "DeviceDummy::init end" << endl;
   }
 }

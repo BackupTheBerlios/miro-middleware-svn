@@ -107,8 +107,9 @@ namespace Video
     IMAGE_PARAMETERS_FACTORY(Filter);
 
     //! Flag indicating whether setting up an instance of the Video interface for the filter is allowed.
-    virtual bool interfaceAllowed() const throw ();
+    bool interfaceAllowed() const throw ();
     Miro::VideoImpl * interface() const throw();
+    BufferManager * bufferManager() throw();
 
     //! The input format the filter instance is working on.
     const Miro::ImageFormatIDL& inputFormat() const;
@@ -197,6 +198,8 @@ namespace Video
 
     //! Get address of input buffer.
     unsigned char const * inputBuffer() const;
+    //! Get index of input buffer.
+    unsigned long inputBufferIndex() const;
     //! Get address of input buffer parameters.
     FilterImageParameters const * inputBufferParameters() const;
     //! Set address of input buffer and its parameters
@@ -260,6 +263,8 @@ namespace Video
     Miro::ImageFormatIDL inputFormat_;
     //! Specification of the output format the filter instance is processing.
     Miro::ImageFormatIDL outputFormat_;
+    //! TODO: Implementation. Currently allways false.
+    bool interfaceAllowed_;
     //! TODO: Implementation. Currently allways false.
     bool inplace_;
     //! The filter instances parameters.
@@ -391,6 +396,12 @@ namespace Video
   }
 
   inline
+  unsigned long
+  Filter::inputBufferIndex() const {
+    return inputBufferIndex_;
+  }
+
+  inline
   FilterImageParameters const *
   Filter::inputBufferParameters() const {
     assert(pre_ != NULL);
@@ -400,7 +411,6 @@ namespace Video
   inline
   unsigned char *
   Filter::outputBuffer() {
-    assert(pre_ != NULL);
     return outputBuffer_;
   }
 
@@ -453,6 +463,20 @@ namespace Video
   Filter::interface() const throw() {
     return interface_;
   }
+
+  inline
+  BufferManager *
+  Filter::bufferManager() throw() {
+    return bufferManager_;
+  }
+
+  inline
+  bool
+  Filter::interfaceAllowed() const throw()
+  {
+    return interfaceAllowed_;
+  }
+
 }
 
 #endif

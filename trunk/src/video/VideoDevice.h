@@ -40,9 +40,6 @@ namespace Video
 
     FILTER_PARAMETERS_FACTORY(Device);
 
-    //! Forbid instances of the video interface here.
-    virtual bool interfaceAllowed() const throw ();
-
     //    virtual void init(const Video::FilterParameters *);
     //    virtual int svc();
     
