@@ -35,6 +35,9 @@ b21dirs = \
 	b21Motion
 endif
 
+if COND_PIONEER
+pioneerdirs = \
+	tcm2
+endif
 
-
-SUBDIRS = $(globaldirs) $(b21dirs)
+SUBDIRS = $(globaldirs) $(b21dirs) $(pioneerdirs)
