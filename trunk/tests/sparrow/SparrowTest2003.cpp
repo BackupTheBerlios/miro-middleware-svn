@@ -92,8 +92,6 @@ int main(int argc, char * argv[])
 
   cout << "initialized" << endl;
 
-  ACE_Time_Value ace_time;
-
   int num;
 
   unsigned short nMotorflood, counter;
@@ -105,10 +103,6 @@ int main(int argc, char * argv[])
 
   char motor_command[64];
   char motor_id[64];
-
-
-  Miro::Angle alpha, gamma;
-
 
 
   service.reactorTask.open(NULL);
