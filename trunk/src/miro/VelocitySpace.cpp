@@ -537,6 +537,188 @@ namespace Miro
   }
 
 
+  // add evaluation for obstacle
+  //
+
+  void
+  VelocitySpace::addEvalForObstacleForRoundRobot(Polygon &_robot,
+				    Polygon &_obstacle, float _robotRadius)
+  {
+
+    
+    timingObst_.start();
+    const int CURV_CNT = 6; // count (6)
+    const int CURV_RES = 6; // count (6)
+    const int CURV_LEN = 700; // mm
+    const int CURV_SMOOTH_LEN = 10; // mm
+    const int CURV_DELAY = 5;//3; // count
+    const double WHEEL_DISTANCE  = 330.; // mm
+    const double BREAK_ACCEL = 2000.; // in mm/sec2
+
+    int CURV[2*CURV_CNT+1][2*CURV_RES+1]; // curvature space
+
+    int count, seg, left, right, curv, target, front, back;
+    bool frontObstacle, backObstacle;
+    double fLeft, fRight, offset, angle, rel, break_dist, left_break, right_break;
+
+    std::FILE *logFile1;
+
+    for(count = 0; count < 2*CURV_CNT+1; count++) {
+
+      // CALCULATING CURVATURE SPACE
+      //
+
+      // relation between left and right wheel (-inf...0...+inf)
+
+      rel = tan( (M_PI * count / (2*CURV_CNT)) - (M_PI/2) );
+
+      // calculate speed for left and right wheel using 'rel'
+      if(fabs(rel) >= 1) {
+    	fLeft = (double)CURV_LEN / (double)CURV_RES;
+        fRight = fLeft / rel;
+      }
+      else {
+	fRight = (double)CURV_LEN / (double)CURV_RES;
+	fLeft = fRight * rel;
+      }
+
+      // check for collisions along the curvature given by left and right speed
+      if(rel != 1) {  // aka left!=right ==> real curvature
+
+	// calculate offset and angle for rotation
+        offset = (WHEEL_DISTANCE / 2.) * ((fLeft + fRight) / (fLeft - fRight));
+        angle = (180. * (fLeft - fRight)) / (WHEEL_DISTANCE * M_PI);
+
+	// rotate completely backwards
+	rotateMountedPolygon(_robot, Vector2d(0., -offset), angle * (CURV_RES + 1));
+
+	// rotate stepwise forwards and check for collisions
+	for(seg = 0; seg < 2*CURV_RES+1; seg++) {
+	  rotateMountedPolygon(_robot, Vector2d(0., -offset), -angle);
+          if(getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) <= _robotRadius) {
+	    CURV[count][seg] = 0;
+	  }
+          else {
+	    CURV[count][seg] = 250;
+	  }
+	}
+
+	// rotate backwards to middle position
+	rotateMountedPolygon(_robot, Vector2d(0., -offset), angle * CURV_RES);
+
+      }
+      else { // left==right ==> robot moves straight forward/backward
+	for(seg = 0; seg < 2*CURV_RES+1 ; seg++) {
+	  CURV[count][seg] = 0;
+	}
+      }
+
+      // CLEANING AND SMOOTHING CURVATURE SPACE
+      //
+
+      // cleaning curvature space
+      front = CURV_RES;
+      frontObstacle = false;
+      while(front < 2*CURV_RES+1) {
+	if(CURV[count][front] == 0) {
+	  frontObstacle = true;
+	}
+	if(frontObstacle == true) {
+	  CURV[count][front] = 0;
+	}
+	front++;
+      }
+
+      back = CURV_RES;
+      backObstacle = false;
+      while(back > -1) {
+	if(CURV[count][back] == 0) {
+	  backObstacle = true;
+	}
+	if(backObstacle == true) {
+	  CURV[count][back] = 0;
+	}
+	back--;
+      }
+
+
+      // search curvature space for obstacles (obstacle = 0)
+      front = CURV_RES;
+      while((front < 2*CURV_RES+1) && (CURV[count][front] != 0)) {
+	front++;
+      }
+      back = CURV_RES;
+      while((back > 0) && (CURV[count][back] != 0)) {
+        back--;
+      }
+      (front == 2*CURV_RES+1) ? frontObstacle = false : frontObstacle = true; // true = obstacle found
+      (back == -1) ? backObstacle = false : backObstacle = true; // true = obstacle found
+      backObstacle = false;
+
+      while((frontObstacle && (front > 0)) || (backObstacle && (back < 2*CURV_RES+1))) {
+	if(frontObstacle && (front > 0)) {
+	  CURV[count][front-1] = std::min(CURV[count][front-1],std::min(250, CURV[count][front] + (int)(250 * CURV_LEN / (CURV_SMOOTH_LEN * CURV_RES))));
+	  front--;
+	}
+	if(backObstacle && (back < 2*CURV_RES+1)) {
+	  CURV[count][back+1] = std::min(CURV[count][back+1],std::min(250, CURV[count][back] + (int)(250 * CURV_LEN / (CURV_SMOOTH_LEN * CURV_RES))));
+	  back++;
+	}
+
+      }
+
+    }
+
+    // CALCULATING VELOCITY SPACE (BASED ON CURVATURE SPACE)
+    //
+
+    for(int l_index = minDynWinLeft_; l_index <= maxDynWinLeft_; l_index++) {
+      for(int r_index = minDynWinRight_; r_index <= maxDynWinRight_; r_index++) {
+
+	// get left/right velocity from array indices
+	left = getVelocityByIndex(l_index);
+	right = getVelocityByIndex(r_index);
+	// calculating actual curvature
+	curv = (int)((atan((double)left / (double)right) + (M_PI / 2.)) * 2 * CURV_CNT / M_PI);
+	// calculating breaking distance
+	left_break = ((fabs((double)left)) / BREAK_ACCEL) * (double)left;
+	right_break = ((fabs((double)right)) / BREAK_ACCEL) * (double)right;
+	if(fabs(left_break) >= fabs(right_break))
+	  break_dist = left_break;
+	else
+	  break_dist = right_break;
+
+	if((left+right)>0)
+	  target = CURV_RES  + CURV_DELAY + (int)(break_dist  * (double)CURV_RES / (double)CURV_LEN);
+	else
+	  target = CURV_RES - CURV_DELAY + (int)(break_dist * (double)CURV_RES / (double)CURV_LEN);
+
+	velocitySpace_[l_index][r_index] = ((double)CURV[std::max(0,std::min(2*CURV_CNT,curv))][std::max(0,std::min(2*CURV_RES,target))]
+	    * velocitySpace_[l_index][r_index] / 250.);
+
+      }
+    }
+
+    // create logFiles
+    /*logFile1 = std::fopen("curvature.log","a");
+    for(curv = 0; curv <= 2*CURV_CNT; curv++) {
+      for(seg = 0; seg <= 2*CURV_RES; seg++) {
+	fprintf(logFile1,"%d\n",CURV[curv][seg]);
+      }
+    }
+    fclose(logFile1);*/
+
+    timingObst_.stop();
+    if (Miro::Log::level() >= Miro::Log::LL_PRATTLE) {
+       TimeStats stats;
+       timingObst_.eval(stats);
+       MIRO_DBG_OSTR(MIRO, LL_PRATTLE, "VelocitySpace addEvalForObstacle time: " << std::endl << stats);
+    }
+       
+
+  }
+
+  
   // calc new velocity
   //
   Vector2d

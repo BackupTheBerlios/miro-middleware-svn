@@ -159,7 +159,9 @@ namespace Miro
   int
   ConstraintArbiter::handle_timeout(const ACE_Time_Value &, const void*)
   {
+    std::cout << "ConstraintArbiter-handle_timeout before Guard" << std::endl;
     Miro::Guard guard(mutex_);
+    std::cout << "ConstraintArbiter-handle_timeout after Guard" << std::endl;
 
     timing_.start();
 
@@ -179,12 +181,17 @@ namespace Miro
     // let each behaviour calculate its velocity space
     MessageVector::const_iterator first, last = message_.end();
     for(first = message_.begin(); first != last; ++first) {
-      if ((*first)->active)
+      if ((*first)->active){
+	std::cout << "ConstraintArbiter before addEval" << std::endl;
 	(*first)->id->addEvaluation(&params->velocitySpace);
+	std::cout << "ConstraintArbiter after addEval" << std::endl;
+      }
     }
 	 
     // calculate new velocity using the content of the velocity space
+      std::cout << "ConstraintArbiter before applyFunction" << std::endl;
     velocity = params->velocitySpace.applyObjectiveFunctionToEval();
+    std::cout << "ConstraintArbiter after applyFunction" << std::endl;
 	 
     //    cout << "LEFT: " << velocity.real() << " ::: " << velocity.imag() << endl;
 

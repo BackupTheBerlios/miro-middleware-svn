@@ -13,6 +13,7 @@
 
 #include <vector>
 #include <complex>
+#include "TimeSeries.h"
 
 namespace Miro
 {
@@ -73,6 +74,8 @@ namespace Miro
     void clearAllEvals(void);
     // add evaluations for given obstacle to velocity space
     void addEvalForObstacle(Polygon&, Polygon&);
+    // add evaluations for given obstacle to velocity space
+    void addEvalForObstacleForRoundRobot(Polygon&, Polygon&, float);
     // obtain new velocity, by applying objective function to evaluations in velocity space
     Vector2d applyObjectiveFunctionToEval();
 
@@ -137,6 +140,10 @@ namespace Miro
     double posCurvConstrE_;
     double negCurvConstrB_;
     double negCurvConstrE_;
+
+    TimeSeries<> timingEval_;
+    TimeSeries<> timingObst_;
+    TimeSeries<> timingApply_;
 
 
     //! My really good friend the graphical monitoring frontend.
