@@ -25,24 +25,26 @@
 namespace Video
 {
   Service::Service(Miro::Server& _server, 
-		   Miro::ConfigDocument * _config) :
+		   Miro::ConfigDocument * _config,
+		   Parameters * _videoParams) :
     schedparams_(ACE_SCHED_FIFO, 10),
     pVideoDevice_(NULL),
     pConsumer_(NULL),
-    pBroker_(NULL)
+    pBroker_(NULL),
+    videoParameters_(_videoParams)
   {
     MIRO_LOG_CTOR("Video::Service");
 
-    Parameters * videoParameters = Parameters::instance();
+    //Parameters * videoParameters = Parameters::instance();
 
     _config->setSection("Video");
     Miro::ImageFormatIDL format;
-    format.width = videoParameters->width;
-    format.height = videoParameters->height;
-    format.palette = Video::Device::getPalette(videoParameters->palette);
+    format.width = videoParameters_->width;
+    format.height = videoParameters_->height;
+    format.palette = Video::Device::getPalette(videoParameters_->palette);
     Filter * filter = buildFilterTree(NULL,
 				      format,
-				      videoParameters->filter);
+				      videoParameters_->filter);
 
     pVideoDevice_ = dynamic_cast<Video::Device *>(filter);
     assert (pVideoDevice_ != NULL);

@@ -56,9 +56,9 @@
       <config_parameter name="device" type="string" inherited="true" default="/dev/video0" />
       <config_parameter name="framerate" type="int" default="10" />
 
-      <config_parameter name="contrast" type="unsigned short" default="100" />
-      <config_parameter name="brightness" type="unsigned short" default="324" />
-      <config_parameter name="hue" type="unsigned short" default="-1" />
+      <config_parameter name="contrast" type="short" default="100" />
+      <config_parameter name="brightness" type="short" default="324" />
+      <config_parameter name="hue" type="short" default="-1" />
 
       <!-- pwc centric -->
       <!-- indoor = 0, outdoor = 1, flourecence = 2, manual = 3, auto = 4 -->

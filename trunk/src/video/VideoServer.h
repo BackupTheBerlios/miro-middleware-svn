@@ -31,6 +31,7 @@ namespace Video
   class Device;
   class Consumer;
   class FilterTreeParameters;
+  class Parameters;
 
   class Service 
   {
@@ -39,7 +40,8 @@ namespace Video
   public:
     // Constructor
     Service(Miro::Server& _server,
-	    Miro::ConfigDocument * _config);
+	    Miro::ConfigDocument * _config,
+	    Video::Parameters * _videoParams = Video::Parameters::instance());
     // Destructor.
     virtual ~Service();
 
@@ -49,6 +51,7 @@ namespace Video
 			     Miro::ImageFormatIDL const& _format,
 			     Video::FilterTreeParameters const& _tree);
 
+
   private:
     /** Sceduling parameters for a realtime thread */
     ACE_Sched_Params schedparams_;
@@ -56,6 +59,7 @@ namespace Video
     Video::Consumer * pConsumer_;
     Miro::VideoBrokerImpl * pBroker_;
     Miro::VideoBroker_ptr broker_;
+    Video::Parameters * videoParameters_;
   };
 }
 #endif // VideoServer_h

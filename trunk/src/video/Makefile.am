@@ -57,7 +57,8 @@ quickcamsources = \
 	VideoDeviceQuickCam.cpp \
 	VideoFilterYUV420PtoRGB.cpp \
 	VideoFilterOmni2Pan.cpp \
-	VideoFilterRGBtoSeg.cpp
+	VideoFilterRGBtoSeg.cpp \
+	VideoFilterDistanceScan.cpp
 
 if COND_BTTV
 bttvsources_used = $(bttvsources)

@@ -33,7 +33,9 @@
 #include "VideoFilterYUV420PtoRGB.h"
 #include "VideoFilterOmni2Pan.h"
 #include "VideoFilterRGBtoSeg.h"
+#include "VideoFilterDistanceScan.h"
 #endif
+
 #include "VideoDeviceDummy.h"
 #include "VideoFilterBasic.h"
 
@@ -75,6 +77,7 @@ namespace Miro
 	repo->registerFilter< ::Video::FilterYUV420PtoRGB>("FilterYUV420PtoRGB");
 	repo->registerFilter< ::Video::FilterOmni2Pan>("FilterOmni2Pan");
 	repo->registerFilter< ::Video::FilterRGBtoSeg>("FilterRGBtoSeg");
+	repo->registerFilter< ::Video::FilterDistanceScan>("FilterDistanceScan");
 #endif
 
 	repo->registerFilter< ::Video::FilterCopy>("FilterCopy");
@@ -87,13 +90,13 @@ namespace Miro
 	rc = 0;
       }
       catch (const Miro::CException& e) {
-	std::cerr << "Miro exception: " << e << endl;
+	std::cerr << "Miro exception: " << e << std::endl;
       }
       catch (const Miro::Exception& e) {
-	std::cerr << "Miro exception: " << e << endl;
+	std::cerr << "Miro exception: " << e << std::endl;
       }
       catch (...) {
-	std::cerr << "Unknown exception: " << endl;
+	std::cerr << "Unknown exception: " << std::endl;
       }
       return rc;
     }

@@ -18,11 +18,21 @@
 #include "VideoFilterService.h"
 #include "Parameters.h"
 
+#include "VideoFilterRepository.h"
+
 #include "miro/Server.h"
 #include "idl/ExceptionC.h"
 #include "miro/Exception.h"
 #include "miro/Utils.h"
 #include "miro/Log.h"
+
+
+#include <orbsvcs/Notify/Notify_EventChannelFactory_i.h>
+#include <orbsvcs/Notify/Notify_Default_CO_Factory.h>
+#include <orbsvcs/Notify/Notify_Default_POA_Factory.h>
+#include <orbsvcs/Notify/Notify_Default_Collection_Factory.h>
+#include <orbsvcs/Notify/Notify_Default_EMO_Factory.h>
+
 
 int
 main(int argc, char *argv[])
@@ -36,10 +46,18 @@ main(int argc, char *argv[])
 	      << e << std::endl;
     return rc;
   }
+  
+#ifdef MIRO_HAS_QUICKCAM
+  TAO_Notify_Default_CO_Factory::init_svc();
+  TAO_Notify_Default_POA_Factory::init_svc();
+  TAO_Notify_Default_Collection_Factory::init_svc();
+  TAO_Notify_Default_EMO_Factory::init_svc();
+#endif
 
   // Parameters to be passed to the services
   Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
   Video::Parameters * videoParameters = Video::Parameters::instance();
+  Video::Parameters * videoParametersOmniCam = new Video::Parameters();
 
   try {
     // populating the filter repository
@@ -53,6 +71,9 @@ main(int argc, char *argv[])
     config->getParameters("Robot", * robotParameters);
     config->setSection("Video");
     config->getParameters("Video", * videoParameters);
+#ifdef MIRO_HAS_QUICKCAM
+    config->getParameters("VideoOmniCam", *videoParametersOmniCam);
+#endif
 
     if (Miro::Log::level() >= Miro::Log::LL_NOTICE) {
       std::cout << "Robot parameters:" << std::endl 
@@ -64,9 +85,22 @@ main(int argc, char *argv[])
     MIRO_LOG(LL_NOTICE, "Initialize server daemon.");
     Miro::Server server(argc, argv);
 
+#ifdef MIRO_HAS_QUICKCAM    
+    CosNotification::QoSProperties initialQos_;
+    CosNotification::AdminProperties initialAdmin_;
+    
+    CosNotifyChannelAdmin::EventChannelFactory_ptr notifyFactory_(TAO_Notify_EventChannelFactory_i::create(server.poa.in() ACE_ENV_ARG_PARAMETER));
+    CosNotifyChannelAdmin::ChannelID id_;
+    CosNotifyChannelAdmin::EventChannel_ptr ec_(notifyFactory_->create_channel(initialQos_, initialAdmin_, id_));
+//    std::cout << "Hallo hier bin ich noch" << std::endl;
+    server.addToNameService(ec_, "EventChannel");
+#endif
+
     try {
       Video::Service videoService(server, config);
-      
+#ifdef MIRO_HAS_QUICKCAM
+      Video::Service videoServiceOmniCam(server, config, videoParametersOmniCam);
+#endif     
       delete config;
 
       MIRO_LOG(LL_NOTICE, "Loop forever handling events.");
