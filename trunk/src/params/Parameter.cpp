@@ -18,12 +18,12 @@ namespace Miro
     Parameter::Parameter() 
     {}
 
-    Parameter::Parameter(const QString& _type,
-			 const QString& _name,
-			 const QString& _default,
-			 const QString& _fullDefault,
-			 const QString& _measure,
-			 const QString& _description) :
+    Parameter::Parameter(QString const& _type,
+			 QString const& _name,
+			 QString const& _default,
+			 QString const& _fullDefault,
+			 QString const& _measure,
+			 QString const& _description) :
       type_(_type),
       name_(_name),
       default_(_default),
@@ -32,7 +32,7 @@ namespace Miro
       description_(_description)
     {}
 
-    bool operator < (const Parameter& lhs, const Parameter& rhs) 
+    bool operator < (Parameter const& lhs, Parameter const& rhs) 
     {
       return (!(QString::compare(lhs.name_, rhs.name_) >= 0 &&
 		QString::compare(lhs.type_, rhs.type_) >= 0 &&
@@ -41,7 +41,7 @@ namespace Miro
 		QString::compare(lhs.description_, rhs.description_) >= 0));
     }
 
-    bool operator == (const Parameter& lhs, const Parameter& rhs)
+    bool operator == (Parameter const& lhs, Parameter const& rhs)
     {
       return (QString::compare(lhs.name_, rhs.name_) == 0 &&
 	      QString::compare(lhs.type_, rhs.type_) == 0 &&

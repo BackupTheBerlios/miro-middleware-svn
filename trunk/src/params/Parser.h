@@ -34,12 +34,12 @@ namespace Miro
       Parser(Generator& _generator);
 
       bool startDocument();
-      bool startElement( const QString&, const QString&, const QString& , 
-			 const QXmlAttributes& );
-      bool endElement( const QString&, const QString&, const QString& );
+      bool startElement(QString const&, QString const&, QString const& , 
+			QXmlAttributes const&);
+      bool endElement(QString const&, QString const&, QString const&);
 
       QString errorString();
-      bool characters(const QString& ch);
+      bool characters(QString const& ch);
   
     private:
       Type type_;
@@ -52,6 +52,7 @@ namespace Miro
       bool docuParsing_;
       bool ctorParsing_;
 
+      bool staticConst_;
       bool instance_;
       bool string_;
       bool vector_;

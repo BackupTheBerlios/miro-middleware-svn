@@ -31,24 +31,39 @@ namespace Miro
     {}
 
     void
-    Type::addStatic(const QString& _type, const QString& _name)
+    Type::addStatic(QString const& _type, QString const& _name)
     {
       staticData_.push_back(std::make_pair(_type, _name));
     }
 
     void 
-    Type::addToConstructor(const QString& _ctor)
+    Type::addToConstructor(QString const& _ctor)
     {
       ctor_.push_back(_ctor);
     }
 
     void 
-    Type::addParameter(const Parameter& _parameter)
+    Type::addParameter(Parameter const& _parameter)
     {
       ParameterVector::const_iterator i =
 	std::find(parameter_.begin(), parameter_.end(), _parameter);
       if (i == parameter_.end())
 	parameter_.push_back(_parameter);
+      else {
+	throw QString("Parameter multiply defined for type " + 
+		      fullName() + 
+		      ": " + _parameter.name_);
+
+      }
+    }
+
+    void 
+    Type::addStaticConstParameter(Parameter const& _parameter)
+    {
+      ParameterVector::const_iterator i =
+	std::find(parameter_.begin(), parameter_.end(), _parameter);
+      if (i == parameter_.end())
+	staticConstParameter_.push_back(_parameter);
       else {
 	throw QString("Parameter multiply defined for type " + 
 		      fullName() + 
@@ -96,6 +111,23 @@ namespace Miro
 	       << " " << j->name_ << ";" << std::endl;
 	if (parameter_.size() != 0)
 	  ostr << std::endl;
+
+	// const static data members
+	for (j = staticConstParameter_.begin(); j != staticConstParameter_.end(); ++j) {
+	  ostr << spaces.left(indent) 
+	       << "static const "
+	       << ((j->type_ != "angle")? j->type_ : QString("double")) 
+	       << " " << j->name_;
+	  
+	  if (isIntegralType(j->type_)) {
+	    ostr << " = " << j->fullDefault_;
+	  }
+
+	  ostr << ";" << std::endl;
+	}
+	if (staticConstParameter_.size() != 0)
+	  ostr << std::endl;
+
 
 	// static data members
 	QStringPairVector::const_iterator k;
@@ -172,6 +204,21 @@ namespace Miro
 	if (staticData_.size() != 0)
 	  ostr << std::endl;
   
+	// const static data members
+	for (j = staticConstParameter_.begin(); j != staticConstParameter_.end(); ++j) {
+	  ostr << spaces.left(indent) << "const "
+	       << ((j->type_ != "angle")? j->type_ : QString("double")) 
+	       << " " << name_ << "Parameters::" << j->name_;
+	  
+	  if (!isIntegralType(j->type_)) {
+	    ostr << "(" << j->fullDefault_ << ")";
+	  }
+
+	  ostr << ";" << std::endl;
+	}
+	if (staticConstParameter_.size() != 0)
+	  ostr << std::endl;
+
 	// constructor
 	ostr << spaces.left(indent) << name_ << "Parameters::" << name_ << "Parameters()";
 	if (parameter_.size() > 0) {
@@ -283,7 +330,7 @@ namespace Miro
     // operator <<=
     void
     Type::generateQDomOutOperator(std::ostream& ostr, 
-				  const QString& classPrefix, unsigned long indent) const
+				  QString const& classPrefix, unsigned long indent) const
     {
       unsigned long preIndent = indent;
 
@@ -345,7 +392,7 @@ namespace Miro
     // operator >>=
     void
     Type::generateQDomInOperator(std::ostream& ostr, 
-				 const QString& classPrefix, unsigned long indent) const
+				 QString const& classPrefix, unsigned long indent) const
     {
       ostr << spaces.left(indent) << "{" << std::endl;
       indent += STEP;
@@ -378,6 +425,25 @@ namespace Miro
 	   << spaces.left(indent) << "return e;" << std::endl;
       indent -= STEP;
       ostr << spaces.left(indent) << "}" << std::endl;
+    }
+
+    bool
+    Type::isIntegralType(QString const& _type) {
+      static char const * integralType[] = { "char", "unsigned char", "signed char",
+					     "short", "unsigned short", "signed short",
+					     "short int", "unsigned short int", "signed short int",
+					     "int", "unsigned int", "signed short int",
+					     "long", "unsigned long", "signed long",
+					     "long int", "unsigned long int", "signed long int",
+					     NULL };
+      
+      char const ** type = integralType;
+      while (*type != NULL) {
+	if (_type == *type)
+	  return true;
+	++type;
+      }
+      return false;
     }
   }
 }

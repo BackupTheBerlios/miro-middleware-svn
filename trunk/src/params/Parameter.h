@@ -29,16 +29,16 @@ namespace Miro
       QString description_;
       
       Parameter();
-      Parameter(const QString& _type,
-		const QString& _name,
-		const QString& _default,
-		const QString& _fullDefault,
-		const QString& _measure,
-		const QString& _description);
+      Parameter(QString const& _type,
+		QString const& _name,
+		QString const& _default,
+		QString const& _fullDefault,
+		QString const& _measure,
+		QString const& _description);
     };
     
-    bool operator < (const Parameter& lhs, const Parameter& rhs);
-    bool operator == (const Parameter& lhs, const Parameter& rhs);
+    bool operator < (Parameter const & lhs, Parameter const& rhs);
+    bool operator == (Parameter const & lhs, Parameter const& rhs);
 
     typedef std::vector<Parameter> ParameterVector;
   }

@@ -52,34 +52,36 @@ namespace Miro
       void setExtern(bool _extern);
       bool isExtern() const;
       //! Set the name of the type.
-      void setName(const QString& _name);
+      void setName(QString const& _name);
       //! Query the name of the type.
       /** This excludes the namespace as well as the Parameters suffix. */
-      const QString& name() const;
+      QString const& name() const;
       //! Query the fully qualified name of the type.
       /** This includes the namespaces as well as the Parameters suffix. */
       QString fullName() const;
-      void setParent(const QString& _parent);
+      void setParent(QString const& _parent);
       //! Set the parent class.
       /** Parameter types support single public inheritance. */
-      const QString& parent() const;
+      QString const& parent() const;
       //! Set the namespace for the type.
       /** Namespace can be actually a nested namespace. */
-      void setNameSpace(const QString& _nameSpace);
+      void setNameSpace(QString const& _nameSpace);
       //! Query the namespace of the type.
-      const QString& nameSpace() const;
+      QString const& nameSpace() const;
       //! Mark a type as having a singel global instance.
       void setInstance();
       //! Predicate inidcating the type has a single global instance.
       bool instance() const;
 
       //! Add as static member.
-      void addStatic(const QString& _type, const QString& _name);
+      void addStatic(QString const& _type, QString const& _name);
       //! Add as parameter.
-      void addParameter(const Parameter& _parameter);
+      void addParameter(Parameter const& _parameter);
+      //! Add as static const parameter.
+      void addStaticConstParameter(Parameter const& _parameter);
       //! Add to constrctor.
       /** Workaround for specifying defaults for complex types. */
-      void addToConstructor(const QString& _ctor);
+      void addToConstructor(QString const& _ctor);
 
       //! Generate header file code.
       void generateHeader(std::ostream& ostr, unsigned long _indent) const;
@@ -102,16 +104,20 @@ namespace Miro
       // protected methods
       //----------------------------------------------------------------------------
       void generateQDomOutOperator(std::ostream& ostr, 
-				   const QString& classPrefix, 
+				   QString const& classPrefix, 
 				   unsigned long indent) const;
       void generateQDomInOperator(std::ostream& ostr, 
-				  const QString& classPrefix,
+				  QString const& classPrefix,
 				  unsigned long indent) const;
+
+      //----------------------------------------------------------------------------
+      // protected static methods
+      //----------------------------------------------------------------------------
+      static bool isIntegralType(QString const& _type);
 
       //----------------------------------------------------------------------------
       // protected data
       //----------------------------------------------------------------------------
-      QStringPairVector staticData_;
 
       QString name_;
       QString parent_;
@@ -124,6 +130,8 @@ namespace Miro
 
       QStringVector ctor_;
       ParameterVector parameter_;
+      QStringPairVector staticData_;
+      ParameterVector staticConstParameter_;
 
       //----------------------------------------------------------------------------
       // protected static data
@@ -132,7 +140,7 @@ namespace Miro
     };
 
     inline
-    const ParameterVector&
+    ParameterVector const&
     Type::parameterSet() const {
       return parameter_;
     }
@@ -175,12 +183,12 @@ namespace Miro
     
     inline
     void
-    Type::setName(const QString& _name) {
+    Type::setName(QString const& _name) {
       name_ = _name;
     }
     
     inline
-    const QString&
+    QString const&
     Type::name() const {
       return name_;
     }
@@ -196,24 +204,24 @@ namespace Miro
     
     inline
     void
-    Type::setParent(const QString& _parent) {
+    Type::setParent(QString const& _parent) {
       parent_ = _parent;
     }
     
     inline
-    const QString&
+    QString const&
     Type::parent() const {
       return parent_;
     }
     
     inline
     void
-    Type::setNameSpace(const QString& _nameSpace) {
+    Type::setNameSpace(QString const& _nameSpace) {
       nameSpace_ = _nameSpace;
     }
     
     inline
-    const QString&
+    QString const&
     Type::nameSpace() const {
       return nameSpace_;
     }

@@ -23,6 +23,7 @@ namespace Miro
       type_(),
       generator_(_generator),
       parsing_(false),
+      staticConst_(false),
       instance_(false),
       string_(false),
       vector_(false),
@@ -41,10 +42,10 @@ namespace Miro
       return true;
     }
 
-    bool Parser::startElement( const QString&, 
-			       const QString&, 
-			       const QString& qName, 
-			       const QXmlAttributes& attributes)
+    bool Parser::startElement(QString const&, 
+			      QString const&, 
+			      QString const& qName, 
+			      QXmlAttributes const& attributes)
     {
       bool rc = false;
       QString str;
@@ -226,6 +227,7 @@ namespace Miro
 	    if (def.isNull())
 	      def = "";
 
+	    // parse for common ACE_Time_Value default error
 	    QString fullDef;
 	    if (type == "ACE_Time_Value" &&
 		def.find('.') != -1) {
@@ -245,20 +247,39 @@ namespace Miro
 	    else
 	      fullDef = def;
      
+	    // static const parameter parsing
+	    QString staticConst = attributes.value("static_const");
+	    if (staticConst == "true") {
+	      staticConst_ = true;
+	      if (def.isEmpty()) {
+		error_ = "Static const declaration without default value for " + type_.name();
+		break;
+	      }
+	    }
+
+	    // inherited parameter handling
 	    str = attributes.value("inherited");
 	    if (!str.isEmpty() && str == QString("true")) {
 	      if (def.isEmpty())  {
 		error_ = "Parameter taged inherited without default value.";
 		break;
 	      }
-
+	      if (staticConst_)  {
+		error_ = "Static const parameter can't be taged inherited.";
+		break;
+	      }
 
 	      type_.addToConstructor(name + QString(" = ") + fullDef + QString(";"));
 	    }
 	    else {
 	      QString measure = attributes.value("measure");
 	
-	      type_.addParameter(Parameter(type, name, def, fullDef, measure, QString()));
+	      if (!staticConst_) {
+		type_.addParameter(Parameter(type, name, def, fullDef, measure, QString()));
+	      }
+	      else {
+		type_.addStaticConstParameter(Parameter(type, name, def, fullDef, measure, QString()));
+	      }
 	    }
 	  }
 	  else if (qName == "constructor") {
@@ -286,7 +307,7 @@ namespace Miro
     }
 
     bool 
-    Parser::endElement(const QString&, const QString&, const QString& qName)
+    Parser::endElement(QString const&, QString const&, QString const& qName)
     {
       bool rc = false;
       while(true) {
@@ -359,7 +380,7 @@ namespace Miro
     }
 
     bool
-    Parser::characters(const QString& ch)
+    Parser::characters(QString const& ch)
     {
       if (ctorParsing_) {
 	ctor_ += ch;
