@@ -111,6 +111,7 @@ int main(int argc, char* argv[])
   
   bool loop = true;  
   char c;
+  string str;
   short k;
   int i;
     
@@ -157,7 +158,8 @@ int main(int argc, char* argv[])
 	       << "9 - set rotation velocity" << endl
 	       << "0 - all motors off!!!" << endl
 	       << endl << "x - Program end!!!" << endl;
-	  cin >> c;
+	  cin >> str;
+          c = str[0];
 	  printf("\033[2J");             // clear screen
 	  printf("\033[0;0f");           // set cursor
 

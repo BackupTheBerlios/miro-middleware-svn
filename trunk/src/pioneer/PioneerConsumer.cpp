@@ -146,8 +146,18 @@ namespace Pioneer
 
       for (int i = message.sonarReadings() - 1; i >= 0; --i) 
 	{
-	  pSonarEvent->sensor[i].group = 0;
-	  pSonarEvent->sensor[i].index = message.sonarNumber(i);
+          int group = 0;
+	  int index = message.sonarNumber(i);
+
+          // peoplebot sonars
+          if (index >= 8) {
+            index -= 8;
+            if (index < 16)
+              ++group;
+          }
+
+	  pSonarEvent->sensor[i].group = group;
+	  pSonarEvent->sensor[i].index = index;
 	  pSonarEvent->sensor[i].range = message.sonarValue(i);
 	}
       //cout << "sonarReadings  " << message.sonarReadings() << endl;  

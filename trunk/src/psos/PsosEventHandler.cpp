@@ -18,7 +18,7 @@
 
 #include <algorithm>
 
-// #undef DEBUG
+#undef DEBUG
 
 #ifdef DEBUG
 #include <iostream>

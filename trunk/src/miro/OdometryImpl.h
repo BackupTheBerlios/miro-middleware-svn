@@ -18,6 +18,8 @@
 
 #include <orbsvcs/CosNotifyCommC.h>
 
+#include <cmath> 
+
 namespace Miro 
 {
   // forward decleration
