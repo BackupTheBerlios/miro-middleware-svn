@@ -1,0 +1,9 @@
+*C.hh
+*S.hh
+*C.cc
+*S.cc
+*S.i.hh
+*C.i.hh
+libmiro.so
+libmiroSvc.a
+libmiroSsh.a

@@ -1,0 +1,33 @@
+// -*- idl -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
+// for documentation see Miro/doc
+// 
+// (c) 1999, 2000, 2001
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// Authors: 
+//    Stefan Enderle, 
+//    Stefan Sablatnoeg, 
+//    Hans Utz
+// 
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef Stall_idl
+#define Stall_idl
+
+module Miro
+{
+  interface Stall
+  {
+    enum Status { STALLED, UNSTALLED };
+
+    boolean isStalled();
+    void unstall();
+  };
+};
+
+#endif

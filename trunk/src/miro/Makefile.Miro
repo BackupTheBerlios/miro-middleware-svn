@@ -1,0 +1,525 @@
+## -*- Makefile -*- ##########################################################
+##
+## This file is part of Miro (The Middleware For Robots)
+##
+## (c) 1999, 2000,, 2001
+## Department of Neural Information Processing, University of Ulm, Germany
+##
+## $Id$
+## $Date$
+## 
+##
+## Miro/src/miro/Makefile
+##
+##############################################################################
+
+## you can toggle the debug and optimize flags at this point
+# debug = 1
+# optimize = 0
+
+LIBS += -lTAO_CosNotification -lTAO_CosNaming -lTAO -lACE -lqt
+
+## this is the name of the resulting library
+NAME     = miro
+
+MAKEFILE = Makefile.Miro
+LIB      = lib$(NAME).a
+SHLIB    = lib$(NAME).$(SOEXT)
+
+
+## this I didn't understand yet
+# VPATH=.:Naming
+ACE_SHLIBS += -lTAO_Strategies
+
+#----------------------------------------------------------------------------
+#	Include macros
+#----------------------------------------------------------------------------
+
+include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
+include $(MIRO_ROOT)/include/makeinclude/macros.miro.GNU
+include $(ACE_ROOT)/include/makeinclude/macros.GNU
+
+#----------------------------------------------------------------------------
+#	Local macros
+#----------------------------------------------------------------------------
+
+## specify your library files here
+IDL_FILES =	Time \
+		Exception \
+		WorldPoint \
+		Position \
+		Velocity \
+		MotionStatus \
+		Odometry \
+		Motion \
+		ClosedMotion \
+		SynchroMotion \
+		DifferentialMotion \
+		Stall \
+		\
+		ScanDescription \
+		RangeEvent \
+		RangeSensor \
+		\
+		Pan \
+		Tilt \
+		PanTilt \
+		\
+		Buttons \
+		Video
+
+ifneq (,$(findstring Deprecated,$(MIRO_COMPONENTS)))
+  IDL_FILES += 	ImageDefinitions \
+		Image
+endif
+ifneq (,$(findstring Pioneer1,$(MIRO_COMPONENTS)))
+  IDL_FILES += 	PioneerStall \
+		PioneerMotion
+endif
+ifneq (,$(findstring Sparrow99,$(MIRO_COMPONENTS)))
+  ifeq (,$(findstring Pioneer1, $(MIRO_COMPONENTS)))
+    IDL_FILES +=PioneerStall \
+		PioneerMotion
+  endif
+  IDL_FILES +=	Kicker \
+		SparrowPanTilt \
+		SparrowStall \
+		SparrowMotion
+endif
+ifneq (,$(findstring B21,$(MIRO_COMPONENTS)))
+  IDL_FILES +=	Laser \
+		DtlkSpeech \
+		DirectedPerceptionPanTilt \
+		B21Buttons \
+		B21Motion
+endif
+
+
+IDL_SRC = \
+        $(addsuffix C.cpp, $(IDL_FILES))
+
+FILES +=	\
+	Exception \
+	Angle \
+	Utils \
+	Log \
+	Thread \
+	Task \
+	ReactorTask \
+	RobotParameters \
+	Client \
+	Server \
+	IO \
+	TimeHelper \
+	ScanDescriptionHelper \
+	StructuredPushSupplier \
+	StructuredPushConsumer \
+	OdometryTracking \
+	ActionPattern \
+	Arbiter \
+	ArbiterParameters \
+	ArbiterMessage \
+	ArbiterRepository \
+	MotionArbiter \
+	MotionArbiterMessage \
+	MotionArbiterParameters \
+	WindowArbiter \
+	WindowArbiterMessage \
+	WindowArbiterParameters \
+	WindowArbiterViewer \
+	WindowArbiterViewerTask \
+	KeyValueList \
+	Behaviour \
+	BehaviourParameters \
+	BehaviourRepository \
+	EventBehaviour \
+	TaskBehaviour \
+	TimedBehaviour \
+	TimedBehaviourParameters \
+	Policy \
+	DynamicWindow \
+	CameraParameters \
+	NotifyMulticastRequestEntry \
+        NotifyMulticastSender \
+        NotifyMulticastReceiver \
+        NotifyMulticastTimeoutHandler \
+        NotifyMulticastEventHandler \
+        NotifyMulticastConfig \
+	NotifyMulticastParameters \
+	NotifyMulticastAdapter
+
+
+DEFS  = $(addsuffix .h,$(FILES))
+LSRC  =  $(IDL_SRC) $(addsuffix .cpp,$(FILES))
+
+#----------------------------------------------------------------------------
+#	Include targets
+#----------------------------------------------------------------------------
+
+default: all
+
+include $(TAO_ROOT)/rules.tao.GNU
+include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
+include $(ACE_ROOT)/include/makeinclude/rules.nonested.GNU
+include $(ACE_ROOT)/include/makeinclude/rules.lib.GNU
+include $(ACE_ROOT)/include/makeinclude/rules.local.GNU
+include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
+
+#----------------------------------------------------------------------------
+#       Local targets (and local hacks)
+#----------------------------------------------------------------------------
+
+# Extra dependencies not caught by make depend.
+
+.PRECIOUS: $(foreach file, $(IDL_FILES), $(foreach ext, $(IDL_EXT), $(file)$(ext))))
+
+realclean: clean
+	-$(RM) $(foreach file, $(IDL_FILES), $(foreach ext, $(IDL_EXT), $(file)$(ext)))
+
+# DO NOT DELETE THIS LINE -- g++dep uses it.
+# DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
+
+
+.obj/TimeC.o .obj/TimeC.so .shobj/TimeC.o .shobj/TimeC.so: TimeC.cpp TimeC.h TimeC.i.h
+
+.obj/ExceptionC.o .obj/ExceptionC.so .shobj/ExceptionC.o .shobj/ExceptionC.so: ExceptionC.cpp ExceptionC.h ExceptionC.i.h
+
+.obj/WorldPointC.o .obj/WorldPointC.so .shobj/WorldPointC.o .shobj/WorldPointC.so: WorldPointC.cpp WorldPointC.h WorldPointC.i.h
+
+.obj/PositionC.o .obj/PositionC.so .shobj/PositionC.o .shobj/PositionC.so: PositionC.cpp PositionC.h WorldPointC.h WorldPointC.i.h \
+ PositionC.i.h
+
+.obj/VelocityC.o .obj/VelocityC.so .shobj/VelocityC.o .shobj/VelocityC.so: VelocityC.cpp VelocityC.h VelocityC.i.h
+
+.obj/MotionStatusC.o .obj/MotionStatusC.so .shobj/MotionStatusC.o .shobj/MotionStatusC.so: MotionStatusC.cpp MotionStatusC.h TimeC.h TimeC.i.h \
+ PositionC.h WorldPointC.h WorldPointC.i.h PositionC.i.h VelocityC.h \
+ VelocityC.i.h MotionStatusC.i.h
+
+.obj/OdometryC.o .obj/OdometryC.so .shobj/OdometryC.o .shobj/OdometryC.so: OdometryC.cpp OdometryC.h ExceptionC.h ExceptionC.i.h \
+ PositionC.h WorldPointC.h WorldPointC.i.h PositionC.i.h \
+ MotionStatusC.h TimeC.h TimeC.i.h VelocityC.h VelocityC.i.h \
+ MotionStatusC.i.h OdometryC.i.h
+
+.obj/MotionC.o .obj/MotionC.so .shobj/MotionC.o .shobj/MotionC.so: MotionC.cpp MotionC.h ExceptionC.h ExceptionC.i.h \
+ VelocityC.h VelocityC.i.h MotionC.i.h
+
+.obj/ClosedMotionC.o .obj/ClosedMotionC.so .shobj/ClosedMotionC.o .shobj/ClosedMotionC.so: ClosedMotionC.cpp ClosedMotionC.h ExceptionC.h \
+ ExceptionC.i.h ClosedMotionC.i.h
+
+.obj/SynchroMotionC.o .obj/SynchroMotionC.so .shobj/SynchroMotionC.o .shobj/SynchroMotionC.so: SynchroMotionC.cpp SynchroMotionC.h MotionC.h \
+ ExceptionC.h ExceptionC.i.h VelocityC.h VelocityC.i.h MotionC.i.h \
+ SynchroMotionC.i.h
+
+.obj/DifferentialMotionC.o .obj/DifferentialMotionC.so .shobj/DifferentialMotionC.o .shobj/DifferentialMotionC.so: DifferentialMotionC.cpp DifferentialMotionC.h \
+ MotionC.h ExceptionC.h ExceptionC.i.h VelocityC.h VelocityC.i.h \
+ MotionC.i.h DifferentialMotionC.i.h
+
+.obj/StallC.o .obj/StallC.so .shobj/StallC.o .shobj/StallC.so: StallC.cpp StallC.h StallC.i.h
+
+.obj/ScanDescriptionC.o .obj/ScanDescriptionC.so .shobj/ScanDescriptionC.o .shobj/ScanDescriptionC.so: ScanDescriptionC.cpp ScanDescriptionC.h \
+ ScanDescriptionC.i.h
+
+.obj/RangeEventC.o .obj/RangeEventC.so .shobj/RangeEventC.o .shobj/RangeEventC.so: RangeEventC.cpp RangeEventC.h TimeC.h TimeC.i.h \
+ RangeEventC.i.h
+
+.obj/RangeSensorC.o .obj/RangeSensorC.so .shobj/RangeSensorC.o .shobj/RangeSensorC.so: RangeSensorC.cpp RangeSensorC.h ExceptionC.h \
+ ExceptionC.i.h ScanDescriptionC.h ScanDescriptionC.i.h RangeEventC.h \
+ TimeC.h TimeC.i.h RangeEventC.i.h RangeSensorC.i.h
+
+.obj/PanC.o .obj/PanC.so .shobj/PanC.o .shobj/PanC.so: PanC.cpp PanC.h ExceptionC.h ExceptionC.i.h PanC.i.h
+
+.obj/TiltC.o .obj/TiltC.so .shobj/TiltC.o .shobj/TiltC.so: TiltC.cpp TiltC.h ExceptionC.h ExceptionC.i.h TiltC.i.h
+
+.obj/PanTiltC.o .obj/PanTiltC.so .shobj/PanTiltC.o .shobj/PanTiltC.so: PanTiltC.cpp PanTiltC.h TiltC.h ExceptionC.h \
+ ExceptionC.i.h TiltC.i.h PanC.h PanC.i.h PanTiltC.i.h
+
+.obj/ButtonsC.o .obj/ButtonsC.so .shobj/ButtonsC.o .shobj/ButtonsC.so: ButtonsC.cpp ButtonsC.h ExceptionC.h ExceptionC.i.h \
+ TimeC.h TimeC.i.h ButtonsC.i.h
+
+.obj/VideoC.o .obj/VideoC.so .shobj/VideoC.o .shobj/VideoC.so: VideoC.cpp VideoC.h ExceptionC.h ExceptionC.i.h TimeC.h \
+ TimeC.i.h PositionC.h WorldPointC.h WorldPointC.i.h PositionC.i.h \
+ VideoC.i.h
+
+.obj/ImageDefinitionsC.o .obj/ImageDefinitionsC.so .shobj/ImageDefinitionsC.o .shobj/ImageDefinitionsC.so: ImageDefinitionsC.cpp ImageDefinitionsC.h \
+ ExceptionC.h ExceptionC.i.h TimeC.h TimeC.i.h PositionC.h \
+ WorldPointC.h WorldPointC.i.h PositionC.i.h ImageDefinitionsC.i.h
+
+.obj/ImageC.o .obj/ImageC.so .shobj/ImageC.o .shobj/ImageC.so: ImageC.cpp ImageC.h ImageDefinitionsC.h ExceptionC.h \
+ ExceptionC.i.h TimeC.h TimeC.i.h PositionC.h WorldPointC.h \
+ WorldPointC.i.h PositionC.i.h ImageDefinitionsC.i.h ImageC.i.h
+
+.obj/PioneerStallC.o .obj/PioneerStallC.so .shobj/PioneerStallC.o .shobj/PioneerStallC.so: PioneerStallC.cpp PioneerStallC.h StallC.h StallC.i.h \
+ PioneerStallC.i.h
+
+.obj/PioneerMotionC.o .obj/PioneerMotionC.so .shobj/PioneerMotionC.o .shobj/PioneerMotionC.so: PioneerMotionC.cpp PioneerMotionC.h \
+ DifferentialMotionC.h MotionC.h ExceptionC.h ExceptionC.i.h \
+ VelocityC.h VelocityC.i.h MotionC.i.h DifferentialMotionC.i.h \
+ ClosedMotionC.h ClosedMotionC.i.h PioneerMotionC.i.h
+
+.obj/KickerC.o .obj/KickerC.so .shobj/KickerC.o .shobj/KickerC.so: KickerC.cpp KickerC.h TimeC.h TimeC.i.h ExceptionC.h \
+ ExceptionC.i.h KickerC.i.h
+
+.obj/SparrowPanTiltC.o .obj/SparrowPanTiltC.so .shobj/SparrowPanTiltC.o .shobj/SparrowPanTiltC.so: SparrowPanTiltC.cpp SparrowPanTiltC.h PanC.h \
+ ExceptionC.h ExceptionC.i.h PanC.i.h SparrowPanTiltC.i.h
+
+.obj/SparrowStallC.o .obj/SparrowStallC.so .shobj/SparrowStallC.o .shobj/SparrowStallC.so: SparrowStallC.cpp SparrowStallC.h StallC.h StallC.i.h \
+ SparrowStallC.i.h
+
+.obj/SparrowMotionC.o .obj/SparrowMotionC.so .shobj/SparrowMotionC.o .shobj/SparrowMotionC.so: SparrowMotionC.cpp SparrowMotionC.h \
+ DifferentialMotionC.h MotionC.h ExceptionC.h ExceptionC.i.h \
+ VelocityC.h VelocityC.i.h MotionC.i.h DifferentialMotionC.i.h \
+ SparrowMotionC.i.h
+
+.obj/LaserC.o .obj/LaserC.so .shobj/LaserC.o .shobj/LaserC.so: LaserC.cpp LaserC.h ExceptionC.h ExceptionC.i.h TimeC.h \
+ TimeC.i.h PositionC.h WorldPointC.h WorldPointC.i.h PositionC.i.h \
+ RangeSensorC.h ScanDescriptionC.h ScanDescriptionC.i.h RangeEventC.h \
+ RangeEventC.i.h RangeSensorC.i.h LaserC.i.h
+
+.obj/DtlkSpeechC.o .obj/DtlkSpeechC.so .shobj/DtlkSpeechC.o .shobj/DtlkSpeechC.so: DtlkSpeechC.cpp DtlkSpeechC.h ExceptionC.h \
+ ExceptionC.i.h DtlkSpeechC.i.h
+
+.obj/DirectedPerceptionPanTiltC.o .obj/DirectedPerceptionPanTiltC.so .shobj/DirectedPerceptionPanTiltC.o .shobj/DirectedPerceptionPanTiltC.so: DirectedPerceptionPanTiltC.cpp \
+ DirectedPerceptionPanTiltC.h PanTiltC.h TiltC.h ExceptionC.h \
+ ExceptionC.i.h TiltC.i.h PanC.h PanC.i.h PanTiltC.i.h \
+ DirectedPerceptionPanTiltC.i.h
+
+.obj/B21ButtonsC.o .obj/B21ButtonsC.so .shobj/B21ButtonsC.o .shobj/B21ButtonsC.so: B21ButtonsC.cpp B21ButtonsC.h ButtonsC.h ExceptionC.h \
+ ExceptionC.i.h TimeC.h TimeC.i.h ButtonsC.i.h B21ButtonsC.i.h
+
+.obj/B21MotionC.o .obj/B21MotionC.so .shobj/B21MotionC.o .shobj/B21MotionC.so: B21MotionC.cpp B21MotionC.h SynchroMotionC.h MotionC.h \
+ ExceptionC.h ExceptionC.i.h VelocityC.h VelocityC.i.h MotionC.i.h \
+ SynchroMotionC.i.h ClosedMotionC.h ClosedMotionC.i.h OdometryC.h \
+ PositionC.h WorldPointC.h WorldPointC.i.h PositionC.i.h \
+ MotionStatusC.h TimeC.h TimeC.i.h MotionStatusC.i.h OdometryC.i.h \
+ B21MotionC.i.h
+
+.obj/Exception.o .obj/Exception.so .shobj/Exception.o .shobj/Exception.so: Exception.cpp \
+
+
+.obj/Angle.o .obj/Angle.so .shobj/Angle.o .shobj/Angle.so: Angle.cpp
+
+.obj/Utils.o .obj/Utils.so .shobj/Utils.o .shobj/Utils.so: Utils.cpp \
+ \
+ \
+
+
+.obj/Log.o .obj/Log.so .shobj/Log.o .shobj/Log.so: Log.cpp \
+
+
+.obj/Thread.o .obj/Thread.so .shobj/Thread.o .shobj/Thread.so: Thread.cpp \
+
+
+.obj/Task.o .obj/Task.so .shobj/Task.o .shobj/Task.so: Task.cpp
+
+.obj/ReactorTask.o .obj/ReactorTask.so .shobj/ReactorTask.o .shobj/ReactorTask.so: ReactorTask.cpp \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+
+
+.obj/RobotParameters.o .obj/RobotParameters.so .shobj/RobotParameters.o .shobj/RobotParameters.so: RobotParameters.cpp RobotParameters.h Parameters.h
+
+.obj/Client.o .obj/Client.so .shobj/Client.o .shobj/Client.so: Client.cpp \
+ \
+ \
+
+
+.obj/Server.o .obj/Server.so .shobj/Server.o .shobj/Server.so: Server.cpp \
+ \
+ \
+ \
+
+
+.obj/IO.o .obj/IO.so .shobj/IO.o .shobj/IO.so: IO.cpp \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+
+
+.obj/TimeHelper.o .obj/TimeHelper.so .shobj/TimeHelper.o .shobj/TimeHelper.so: TimeHelper.cpp \
+ \
+ \
+
+
+.obj/ScanDescriptionHelper.o .obj/ScanDescriptionHelper.so .shobj/ScanDescriptionHelper.o .shobj/ScanDescriptionHelper.so: ScanDescriptionHelper.cpp \
+ ScanDescriptionHelper.h ScanDescriptionC.h ScanDescriptionC.i.h \
+ Angle.h
+
+.obj/StructuredPushSupplier.o .obj/StructuredPushSupplier.so .shobj/StructuredPushSupplier.o .shobj/StructuredPushSupplier.so: StructuredPushSupplier.cpp \
+ StructuredPushSupplier.h Synch.h
+
+.obj/StructuredPushConsumer.o .obj/StructuredPushConsumer.so .shobj/StructuredPushConsumer.o .shobj/StructuredPushConsumer.so: StructuredPushConsumer.cpp \
+ StructuredPushConsumer.h Synch.h
+
+.obj/OdometryTracking.o .obj/OdometryTracking.so .shobj/OdometryTracking.o .shobj/OdometryTracking.so: OdometryTracking.cpp OdometryTracking.h \
+ MotionStatusC.h TimeC.h TimeC.i.h PositionC.h WorldPointC.h \
+ WorldPointC.i.h PositionC.i.h VelocityC.h VelocityC.i.h \
+ MotionStatusC.i.h StructuredPushConsumer.h Synch.h TimeHelper.h \
+
+
+.obj/ActionPattern.o .obj/ActionPattern.so .shobj/ActionPattern.o .shobj/ActionPattern.so: ActionPattern.cpp ActionPattern.h Synch.h \
+ MotionArbiterParameters.h ArbiterParameters.h Behaviour.h \
+ DynamicWindow.h Arbiter.h BehaviourParameters.h \
+ StructuredPushSupplier.h
+
+.obj/Arbiter.o .obj/Arbiter.so .shobj/Arbiter.o .shobj/Arbiter.so: Arbiter.cpp Arbiter.h ArbiterParameters.h
+
+.obj/ArbiterParameters.o .obj/ArbiterParameters.so .shobj/ArbiterParameters.o .shobj/ArbiterParameters.so: ArbiterParameters.cpp ArbiterParameters.h \
+ Behaviour.h DynamicWindow.h ActionPattern.h Synch.h \
+ MotionArbiterParameters.h Arbiter.h
+
+.obj/ArbiterMessage.o .obj/ArbiterMessage.so .shobj/ArbiterMessage.o .shobj/ArbiterMessage.so: ArbiterMessage.cpp ArbiterMessage.h MotionC.h \
+ ExceptionC.h ExceptionC.i.h VelocityC.h VelocityC.i.h MotionC.i.h
+
+.obj/ArbiterRepository.o .obj/ArbiterRepository.so .shobj/ArbiterRepository.o .shobj/ArbiterRepository.so: ArbiterRepository.cpp ArbiterRepository.h \
+ \
+ Arbiter.h
+
+.obj/MotionArbiter.o .obj/MotionArbiter.so .shobj/MotionArbiter.o .shobj/MotionArbiter.so: MotionArbiter.cpp MotionArbiter.h MotionC.h \
+ ExceptionC.h ExceptionC.i.h VelocityC.h VelocityC.i.h MotionC.i.h \
+ Synch.h Arbiter.h MotionArbiterMessage.h ArbiterMessage.h \
+ MotionArbiterParameters.h ArbiterParameters.h Behaviour.h \
+ DynamicWindow.h ActionPattern.h IO.h StructuredPushSupplier.h
+
+.obj/MotionArbiterMessage.o .obj/MotionArbiterMessage.so .shobj/MotionArbiterMessage.o .shobj/MotionArbiterMessage.so: MotionArbiterMessage.cpp \
+ MotionArbiterMessage.h VelocityC.h VelocityC.i.h ArbiterMessage.h \
+ MotionC.h ExceptionC.h ExceptionC.i.h MotionC.i.h
+
+.obj/MotionArbiterParameters.o .obj/MotionArbiterParameters.so .shobj/MotionArbiterParameters.o .shobj/MotionArbiterParameters.so: MotionArbiterParameters.cpp \
+ MotionArbiterParameters.h ArbiterParameters.h Behaviour.h \
+ DynamicWindow.h ActionPattern.h Synch.h Arbiter.h \
+ BehaviourRepository.h Singleton.h \
+
+
+.obj/WindowArbiter.o .obj/WindowArbiter.so .shobj/WindowArbiter.o .shobj/WindowArbiter.so: WindowArbiter.cpp ActionPattern.h Synch.h \
+ MotionArbiterParameters.h ArbiterParameters.h WindowArbiter.h \
+ MotionC.h ExceptionC.h ExceptionC.i.h VelocityC.h VelocityC.i.h \
+ MotionC.i.h Arbiter.h WindowArbiterMessage.h ArbiterMessage.h \
+ WindowArbiterParameters.h MotionArbiterMessage.h \
+ WindowArbiterViewerTask.h WindowArbiterViewer.h DynamicWindow.h \
+ Behaviour.h IO.h StructuredPushSupplier.h
+
+.obj/WindowArbiterMessage.o .obj/WindowArbiterMessage.so .shobj/WindowArbiterMessage.o .shobj/WindowArbiterMessage.so: WindowArbiterMessage.cpp \
+ WindowArbiterMessage.h VelocityC.h VelocityC.i.h ArbiterMessage.h \
+ MotionC.h ExceptionC.h ExceptionC.i.h MotionC.i.h
+
+.obj/WindowArbiterParameters.o .obj/WindowArbiterParameters.so .shobj/WindowArbiterParameters.o .shobj/WindowArbiterParameters.so: WindowArbiterParameters.cpp \
+ WindowArbiterParameters.h ArbiterParameters.h Behaviour.h \
+ DynamicWindow.h ActionPattern.h Synch.h MotionArbiterParameters.h \
+ Arbiter.h BehaviourRepository.h Singleton.h \
+
+
+.obj/WindowArbiterViewer.o .obj/WindowArbiterViewer.so .shobj/WindowArbiterViewer.o .shobj/WindowArbiterViewer.so: WindowArbiterViewer.cpp WindowArbiterViewer.h \
+ DynamicWindow.h
+
+.obj/WindowArbiterViewerTask.o .obj/WindowArbiterViewerTask.so .shobj/WindowArbiterViewerTask.o .shobj/WindowArbiterViewerTask.so: WindowArbiterViewerTask.cpp \
+ WindowArbiterViewer.h DynamicWindow.h WindowArbiterViewerTask.h
+
+.obj/KeyValueList.o .obj/KeyValueList.so .shobj/KeyValueList.o .shobj/KeyValueList.so: KeyValueList.cpp KeyValueList.h
+
+.obj/Behaviour.o .obj/Behaviour.so .shobj/Behaviour.o .shobj/Behaviour.so: Behaviour.cpp Behaviour.h DynamicWindow.h ActionPattern.h \
+ Synch.h MotionArbiterParameters.h ArbiterParameters.h Arbiter.h \
+ BehaviourParameters.h
+
+.obj/BehaviourParameters.o .obj/BehaviourParameters.so .shobj/BehaviourParameters.o .shobj/BehaviourParameters.so: BehaviourParameters.cpp BehaviourParameters.h \
+ KeyValueList.h
+
+.obj/BehaviourRepository.o .obj/BehaviourRepository.so .shobj/BehaviourRepository.o .shobj/BehaviourRepository.so: BehaviourRepository.cpp BehaviourRepository.h \
+ Singleton.h Behaviour.h \
+ DynamicWindow.h ActionPattern.h Synch.h MotionArbiterParameters.h \
+ ArbiterParameters.h Arbiter.h
+
+.obj/EventBehaviour.o .obj/EventBehaviour.so .shobj/EventBehaviour.o .shobj/EventBehaviour.so: EventBehaviour.cpp EventBehaviour.h Behaviour.h \
+ DynamicWindow.h ActionPattern.h Synch.h MotionArbiterParameters.h \
+ ArbiterParameters.h Arbiter.h StructuredPushConsumer.h
+
+.obj/TaskBehaviour.o .obj/TaskBehaviour.so .shobj/TaskBehaviour.o .shobj/TaskBehaviour.so: TaskBehaviour.cpp TaskBehaviour.h Behaviour.h \
+ DynamicWindow.h ActionPattern.h Synch.h MotionArbiterParameters.h \
+ ArbiterParameters.h Arbiter.h
+
+.obj/TimedBehaviour.o .obj/TimedBehaviour.so .shobj/TimedBehaviour.o .shobj/TimedBehaviour.so: TimedBehaviour.cpp TimedBehaviour.h Behaviour.h \
+ DynamicWindow.h ActionPattern.h Synch.h MotionArbiterParameters.h \
+ ArbiterParameters.h Arbiter.h TimedBehaviourParameters.h \
+ BehaviourParameters.h TimeHelper.h \
+ \
+
+
+.obj/TimedBehaviourParameters.o .obj/TimedBehaviourParameters.so .shobj/TimedBehaviourParameters.o .shobj/TimedBehaviourParameters.so: TimedBehaviourParameters.cpp \
+ TimedBehaviourParameters.h BehaviourParameters.h TimeHelper.h \
+ \
+ KeyValueList.h
+
+.obj/Policy.o .obj/Policy.so .shobj/Policy.o .shobj/Policy.so: Policy.cpp Policy.h ActionPattern.h Synch.h \
+ MotionArbiterParameters.h ArbiterParameters.h ArbiterRepository.h \
+ \
+ Arbiter.h Behaviour.h \
+ DynamicWindow.h BehaviourRepository.h Singleton.h \
+ BehaviourParameters.h KeyValueList.h Exception.h
+
+.obj/DynamicWindow.o .obj/DynamicWindow.so .shobj/DynamicWindow.o .shobj/DynamicWindow.so: DynamicWindow.cpp DynamicWindow.h
+
+.obj/CameraParameters.o .obj/CameraParameters.so .shobj/CameraParameters.o .shobj/CameraParameters.so: CameraParameters.cpp CameraParameters.h \
+ Parameters.h Singleton.h \
+ Angle.h
+
+.obj/NotifyMulticastRequestEntry.o .obj/NotifyMulticastRequestEntry.so .shobj/NotifyMulticastRequestEntry.o .shobj/NotifyMulticastRequestEntry.so: NotifyMulticastRequestEntry.cpp \
+ NotifyMulticastRequestEntry.h NotifyMulticastRequestIndex.h
+
+.obj/NotifyMulticastSender.o .obj/NotifyMulticastSender.so .shobj/NotifyMulticastSender.o .shobj/NotifyMulticastSender.so: NotifyMulticastSender.cpp \
+ NotifyMulticastDefines.h NotifyMulticastSender.h \
+ NotifyMulticastAdapter.h Exception.h Client.h RobotParameters.h \
+ Parameters.h NotifyMulticastParameters.h Singleton.h
+
+.obj/NotifyMulticastReceiver.o .obj/NotifyMulticastReceiver.so .shobj/NotifyMulticastReceiver.o .shobj/NotifyMulticastReceiver.so: NotifyMulticastReceiver.cpp \
+ NotifyMulticastDefines.h NotifyMulticastReceiver.h \
+ NotifyMulticastRequestEntry.h NotifyMulticastRequestIndex.h \
+ NotifyMulticastTimeoutHandler.h NotifyMulticastAdapter.h Exception.h \
+ Client.h RobotParameters.h Parameters.h
+
+.obj/NotifyMulticastTimeoutHandler.o .obj/NotifyMulticastTimeoutHandler.so .shobj/NotifyMulticastTimeoutHandler.o .shobj/NotifyMulticastTimeoutHandler.so: NotifyMulticastTimeoutHandler.cpp \
+ NotifyMulticastDefines.h NotifyMulticastTimeoutHandler.h \
+ NotifyMulticastReceiver.h NotifyMulticastRequestEntry.h \
+ NotifyMulticastRequestIndex.h
+
+.obj/NotifyMulticastEventHandler.o .obj/NotifyMulticastEventHandler.so .shobj/NotifyMulticastEventHandler.o .shobj/NotifyMulticastEventHandler.so: NotifyMulticastEventHandler.cpp \
+ NotifyMulticastDefines.h NotifyMulticastEventHandler.h \
+ NotifyMulticastReceiver.h NotifyMulticastRequestEntry.h \
+ NotifyMulticastRequestIndex.h NotifyMulticastTimeoutHandler.h \
+ NotifyMulticastConfig.h Exception.h
+
+.obj/NotifyMulticastConfig.o .obj/NotifyMulticastConfig.so .shobj/NotifyMulticastConfig.o .shobj/NotifyMulticastConfig.so: NotifyMulticastConfig.cpp \
+ NotifyMulticastDefines.h NotifyMulticastConfig.h Exception.h
+
+.obj/NotifyMulticastParameters.o .obj/NotifyMulticastParameters.so .shobj/NotifyMulticastParameters.o .shobj/NotifyMulticastParameters.so: NotifyMulticastParameters.cpp \
+ NotifyMulticastParameters.h Parameters.h Singleton.h \
+ Angle.h
+
+.obj/NotifyMulticastAdapter.o .obj/NotifyMulticastAdapter.so .shobj/NotifyMulticastAdapter.o .shobj/NotifyMulticastAdapter.so: NotifyMulticastAdapter.cpp \
+ NotifyMulticastDefines.h NotifyMulticastAdapter.h Exception.h \
+ Client.h RobotParameters.h Parameters.h NotifyMulticastSender.h \
+ NotifyMulticastReceiver.h NotifyMulticastRequestEntry.h \
+ NotifyMulticastRequestIndex.h NotifyMulticastTimeoutHandler.h \
+ NotifyMulticastEventHandler.h NotifyMulticastParameters.h Singleton.h
+
+# IF YOU PUT ANYTHING HERE IT WILL GO AWAY

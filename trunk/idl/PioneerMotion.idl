@@ -1,0 +1,33 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef PioneerMotion_idl
+#define PioneerMotion_idl
+
+#include "DifferentialMotion.idl"
+#include "ClosedMotion.idl"
+
+module Miro
+{
+  //! The specialized motion interface of the Pioneer1 robot.
+  /**
+   * There is nothing special about this robot. ;-)
+   * But it supports the closed motion interface, too.
+   */
+  interface PioneerMotion : DifferentialMotion, ClosedMotion
+  {
+  };
+};
+
+#endif
+
+
+
+

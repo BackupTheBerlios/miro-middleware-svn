@@ -1,0 +1,16 @@
+<!DOCTYPE MiroLogConfigDocument >
+<xml>
+  <Notification>
+    <logging>
+      <type_name>Infrared</type_name>
+      <type_name>Sonar</type_name>
+      <type_name>Odometry</type_name>
+      <type_name>VisionData</type_name>
+      <type_name>LineSamples</type_name>
+      <type_name>GoalPosition</type_name>
+      <type_name>BallPosition</type_name>
+      <type_name>PatternChange</type_name>
+      <type_name>ArbitrateChange</type_name>
+    </logging>
+  </Notification>
+</xml>

@@ -1,0 +1,40 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef Tilt_idl
+#define Tilt_idl
+
+#include "Exception.idl"
+
+module Miro
+{
+  //! Basic interface for a tilting unit.
+  interface Tilt 
+  {
+    //! Set the tilting angle.
+    /**
+     * @param angle is specified in radiant.
+     * @throw EOutOfBounds
+     * if the specified tilitng angle is beyond the range of the tilting unit.
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    void setTilt(in double value) raises(EDevIO, EOutOfBounds);
+    //! Get the current tilting angle.
+    /**
+     * @return The tilting angle, specified in radiant.
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    double getTilt() raises(EDevIO);
+  };
+};
+
+#endif /* tilt_idl */

@@ -1,0 +1,56 @@
+// -*- idl -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef MotionStatus_idl
+#define MotionStatus_idl
+
+#include "Time.idl"
+#include "Position.idl"
+#include "Velocity.idl"
+
+module Miro
+{
+  //! The complete status of the mobile base at a discrete time.
+  /**
+   * Struct representing an Odometry event as passed via the 
+   * NotificationService.
+   */
+  struct MotionStatusIDL
+  {
+    //! The Time, the status was collected.
+    TimeIDL time;
+    //! Current position of the robot.
+    PositionIDL position;
+    //! Current velocity of the robot.
+    VelocityIDL velocity;
+  };
+
+  //! The raw position of the robot.
+  /**
+   * Struct representing an RawPosition event as passed via the
+   * NotificationService. 
+   *
+   * See the @ref Odometry interface for
+   * details.  
+   */
+  struct RawPositionIDL
+  {
+    //! The Time, the status was collected.
+    TimeIDL time;
+    //! Current position of the robot.
+    PositionIDL position;
+  };
+};
+
+#endif // motion_Status
+
+
+
+

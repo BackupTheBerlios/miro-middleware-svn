@@ -1,0 +1,39 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef Pan_idl
+#define Pan_idl
+
+#include "Exception.idl"
+
+module Miro
+{
+  //! Basic interface for a panning unit.
+  interface Pan 
+  {
+    //! Set the panning angle.
+    /**
+     * @param angle is specified in radiant.
+     * @throw EOutOfBounds
+     * if the specified panning angle is beyond the range of the panning unit.
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    void setPan(in double value) raises(EDevIO, EOutOfBounds);
+    //! Get the current panning angle.
+    /**
+     * @return The panning angle, specified in radiant.
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    double getPan() raises(EDevIO);
+  };
+};
+#endif /* pan_idl */
