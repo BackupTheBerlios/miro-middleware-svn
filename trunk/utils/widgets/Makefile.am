@@ -2,7 +2,7 @@
 ##
 ## This file is part of Miro (The Middleware For Robots)
 ##
-## (c) 2003
+## (c) 2003, 2004
 ## Department of Neural Information Processing, University of Ulm, Germany
 ##
 ## $Id$
@@ -23,11 +23,44 @@ SUFFIXES = .h .moc.cpp
 lib_LTLIBRARIES = libmiroWidgets.la
 
 
-normalsources = 
+normalsources = \
+	ConfigFile.h \
+	ConfigFile.cpp \
+	Item.h \
+	ItemXML.h \
+	DocumentXML.h \
+	ParameterXML.h \
+	SimpleParameter.h \
+	ParameterList.h \
+	CompoundParameter.h \
+	FileListDialog.h \
+	Validators.h \
+	ParameterEdit.h \
+	SimpleParameterEdit.h \
+	DeferredParameterEdit.h \
+	DialogXML.h \
+	ParameterDialog.h \
+	ParameterListDialog.h \
+	SingleParameterDialog.h
 
 tomocsources = \
+	Item.cpp \
+	ItemXML.cpp \
+	DocumentXML.cpp \
+	DocumentView.cpp \
+	ParameterXML.cpp \
+	SimpleParameter.cpp \
+	ParameterList.cpp \
+	CompoundParameter.cpp \
 	FileListDialog.cpp \
-	Item.cpp
+	Validators.cpp \
+	ParameterEdit.cpp \
+	SimpleParameterEdit.cpp \
+	DeferredParameterEdit.cpp \
+	DialogXML.cpp \
+	ParameterDialog.cpp \
+	ParameterListDialog.cpp \
+	SingleParameterDialog.cpp
 
 libmiroWidgets_la_SOURCES = \
 	$(normalsources) \
@@ -35,6 +68,10 @@ libmiroWidgets_la_SOURCES = \
 	$(tomocsources:.cpp=.moc.cpp) \
 	$(normalsources:.cpp=.h) \
 	$(tomocsources:.cpp=.h)
+
+libmiroWidgets_la_LIBADD = \
+	-lmiroParams \
+	-lmiro
 
 BUILT_SOURCES = $(tomocsources:.cpp=.moc.cpp)
 CLEANFILES = $(tomocsources:.cpp=.moc.cpp)
