@@ -2,28 +2,86 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999,2000
+// (c) 1999, 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-#ifndef miroLog_hh
-#define miroLog_hh
+#ifndef miro_Log_h
+#define miro_Log_h
+
+#include <ace/Log_Msg.h>
 
 #include <string>
+#include <sstream>
 
 //
-// a log facility, providing loglevels and output
+// a log facility, providing loglevels and log filters
 //
+
+#if defined (MIRO_NO_LOGGING)
+
+#define MIRO_LOG(C, X) do {} while (0)
+#define MIRO_LOG_OSTR(C, L, O) do {} while (0)
+#define MIRO_DBG(C, X) do {} while (0)
+#define MIRO_DBG_OSTR(C, L, O) do {} while (0)
+
+#else // !MIRO_NO_LOGGING
+
+#define MIRO_LOG(C, X) \
+  do { \
+    unsigned int n__ = C; \
+    if (::Miro::Log::level() >= n__) { \
+      ACE_Log_Msg *ace___ = ACE_Log_Msg::instance (); \
+      ace___->conditional_set (__FILE__, __LINE__, 0, 0); \
+      ace___->log X; \
+    } \
+  } while (0)
+#define MIRO_LOG_OSTR(C, L, O) \
+  do { \
+    unsigned int n__ = C; \
+    if (::Miro::Log::level() >= n__) { \
+      ACE_Log_Msg *ace___ = ACE_Log_Msg::instance (); \
+      std::ostringstream ostr__; \
+      ostr__ << O; \
+      ace___->conditional_set (__FILE__, __LINE__, 0, 0); \
+      ace___->log (L, "%c", ostr__.str().c_str()); \
+    } \
+  } while (0)
+
+#if defined (MIRO_NO_DEBUG)
+
+#define MIRO_DBG(C, X) do {} while (0)
+#define MIRO_DBG_OSTR(C, L, O) do {} while (0)
+
+#else // !MIRO_NO_DEBUG
+
+#define MIRO_DBG(C, X) \
+  do { \
+    unsigned int n__ = C; \
+    if (::Miro::Log::level() >= n__) { \
+      ACE_Log_Msg *ace___ = ACE_Log_Msg::instance (); \
+      ace___->conditional_set (__FILE__, __LINE__, 0, 0); \
+      ace___->log X; \
+    } \
+  } while (0)
+#define MIRO_DBG_OSTR(C, L, O) \
+  do { \
+    unsigned int n__ = C; \
+    if (::Miro::Log::level() >= n__) { \
+      ACE_Log_Msg *ace___ = ACE_Log_Msg::instance (); \
+      std::ostringstream ostr__; \
+      ostr__ << O; \
+      ace___->conditional_set (__FILE__, __LINE__, 0, 0); \
+      ace___->log (L, "%c", ostr__.str().c_str()); \
+    } \
+  } while (0)
+
+
+#endif // !MIRO_NO_DEBUG
+
+#endif // !MIRO_NO_LOGGING
 
 namespace Miro 
 {
@@ -53,6 +111,11 @@ namespace Miro
     std::string objectName;
 
   public:
+    static unsigned int level() throw();
+    static void level(unsigned int _level) throw();
+    static unsigned int mask() throw();
+    static void mask(unsigned int _mask) throw();
+
     Log(int visibleLoglevel_, std::string objectName_);
     virtual ~Log();
 
@@ -92,10 +155,31 @@ namespace Miro
      */
     virtual
     void log(int logLevel, std::string logmsg, size_t param) const;
+
+  protected:
+    static unsigned int mask_;
+    static unsigned int level_;
   };
-};
-#endif
 
-
-
-
+  inline
+  unsigned int
+  Log::level() throw() {
+    return level_;
+  }
+  inline
+  void
+  Log::level(unsigned int _level) throw() {
+    level_ = _level;
+  }
+  inline
+  unsigned int
+  Log::mask() throw() {
+    mask_;
+  }
+  inline
+  void
+  Log::mask(unsigned int _mask) throw() {
+    mask_ = _mask;
+  }
+}
+#endif // miro_Log_h

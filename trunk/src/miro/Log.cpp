@@ -30,7 +30,11 @@
 
 using std::string;
 
-namespace Miro {
+namespace Miro 
+{
+  unsigned int Log::level_;
+  unsigned int Log::mask_;
+
   Log::Log(int visibleLoglevel_, std::string objectName_) :
     visibleLoglevel(visibleLoglevel_),
     objectName(objectName_)
