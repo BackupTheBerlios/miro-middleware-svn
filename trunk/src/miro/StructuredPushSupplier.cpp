@@ -190,7 +190,7 @@ namespace Miro
       // add new offer to list of offers
       if (j == offersLen) {
 	offers_[newOffersLen] = _added[i];
-	added[newOffersLen] = _added[i];
+	added[newOffersLen - offersLen] = _added[i];
 	indexes[i] = newOffersLen;
 	++newOffersLen;
       }
