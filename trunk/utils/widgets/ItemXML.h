@@ -27,6 +27,8 @@ class ItemXML : public Item
   //----------------------------------------------------------------------------
   // private types
   //----------------------------------------------------------------------------
+
+  //! Base class type.
   typedef Item Super;
 
 public:
@@ -36,14 +38,21 @@ public:
 
   //! Initializing constructor.
   /**
-   * @param node Reference to the  node in the xml document representing the item.
+   * @param node Reference to the node in the xml document
+   * representing the item.
    */
   ItemXML(QDomNode const& _node,
 	  QListViewItem * _parentItem, QListViewItem * _pre = NULL,
 	  QObject * _parent = NULL, const char * _name = NULL);
+  //! Initializing constructor.
+  /**
+   * @param node Reference to the node in the xml document
+   * representing the item.
+   */
   ItemXML(QDomNode const& _node,
 	  QListView * _view, QListViewItem * _pre = NULL,
 	  QObject * _parent = NULL, const char * _name = NULL);
+  //! Virtual destructor.
   virtual ~ItemXML();
 
 
@@ -62,23 +71,29 @@ public:
   //! Report if the node or one of its childs was modified.
   bool modified() const;
 
+  //! Associate a widget with an ItemXML.
+  /** This is usually used to edit the underlying QDomNode. */
   void setWidget(QWidget * _widget);
+  //! Accessor for the associated widget.
+  /** Note that the return value can be NULL. */
   QWidget * widget();
 
   //----------------------------------------------------------------------------
   // inherited public methods
   //----------------------------------------------------------------------------
 
+  //! Provide the context menu.
   virtual void contextMenu(QPopupMenu& _menu);
-  //! Move item up in the document.
+  //! Move item up in the list view and in the document.
   virtual void moveUp();
-  //! Move item down in the document.
+  //! Move item down  in the list view and in the document.
   virtual void moveDown();
 
   //----------------------------------------------------------------------------
   // public constants
   //----------------------------------------------------------------------------
 
+  //! The xml attribute for key values.
   static QString const XML_ATTRIBUTE_KEY;
 
 public slots:
@@ -90,15 +105,27 @@ protected slots:
   void slotRename();
 
 protected:
+  //----------------------------------------------------------------------------
+  // protected methods
+  //----------------------------------------------------------------------------
+
   //! Set the modified bit
   void setModified(bool _modified = true, bool _recurse = false);
+
+  //----------------------------------------------------------------------------
+  // protected data
+  //----------------------------------------------------------------------------
+
   //! Reference to the node in the xml document representing the item.
   QDomNode node_;
-
   //! an associated widget that needs to be updated due to changes here
   QWidget * widget_;
 
 private:
+  //----------------------------------------------------------------------------
+  // private data
+  //----------------------------------------------------------------------------
+
   //! Modification indicator.
   bool modified_;
 

@@ -21,6 +21,12 @@ class QLineEdit;
 class SimpleParameterEdit : public ParameterEdit
 {
   Q_OBJECT;
+
+  //----------------------------------------------------------------------------
+  // private types
+  //----------------------------------------------------------------------------
+
+  //! Base class type.
   typedef ParameterEdit Super;
 
 public:

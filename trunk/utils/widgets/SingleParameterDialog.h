@@ -20,26 +20,41 @@
 class ParameterEdit;
 class ConfigFile;
 
-/**
- * This class shows a dialog for the behaviour parameters.
- */
+//! Dialog for editing a single parameter value.
 class SingleParameterDialog : public DialogXML
 {
   Q_OBJECT
 
+  //----------------------------------------------------------------------------
+  // private types
+  //----------------------------------------------------------------------------
+
+  //! Base class type.
   typedef DialogXML Super;
 
 public:
+  //----------------------------------------------------------------------------
+  // pbulic methods
+  //----------------------------------------------------------------------------
+
+  //! Initializing constructor.
   SingleParameterDialog(Miro::CFG::Parameter const & _parameter,
 			QDomNode const& _node,
 			ItemXML * _parentItem,
 			ItemXML * _item,
 			QWidget * _parent, const char * _name);
 
+  //! Inherited method.
   virtual void setXML();
 
 protected:
+  //----------------------------------------------------------------------------
+  // private types
+  //----------------------------------------------------------------------------
+
+  //! The parameter description.
   Miro::CFG::Parameter parameter_;
+  //! The edit field.
   ParameterEdit * edit_;
 };
 

@@ -22,10 +22,16 @@ class ConfigFile;
 class QListView;
 class QListViewItem;
 
+//! Base class of all parameter objects of the configuration framework.
 class ParameterXML : public ItemXML
 {
   Q_OBJECT
   
+  //----------------------------------------------------------------------------
+  // private types
+  //----------------------------------------------------------------------------
+
+  //! Base class type.
   typedef ItemXML Super;
 public:
 
@@ -33,10 +39,12 @@ public:
   // public methods
   //----------------------------------------------------------------------------
 
+  //! Initializing constructor.
   ParameterXML(QDomNode const& _node,
 	       QListViewItem * _parentItem, QListViewItem * _pre,
 	       QObject * _parent, const char * _name);
 
+  //! Initializing constructor.
   ParameterXML(QDomNode const& _node,
 	       QListView * _view, QListViewItem * _pre,
 	       QObject * _parent, const char * _name);
@@ -45,17 +53,25 @@ public:
   // public inherited methods
   //----------------------------------------------------------------------------
 
+  //! Inherited method.
   virtual void init();
+  //! Inherited method.
   virtual void contextMenu(QPopupMenu& _menu);
+  //! Inherited method.
   virtual void setParameters();
 
   //----------------------------------------------------------------------------
   // public constants
   //----------------------------------------------------------------------------
 
+  //! The parameter tag in the xml tree.
   static QString const XML_TAG;
 
 public slots:
+  //----------------------------------------------------------------------------
+  // public slots
+  //----------------------------------------------------------------------------
+
   void slotSetParameters();
 
 protected:

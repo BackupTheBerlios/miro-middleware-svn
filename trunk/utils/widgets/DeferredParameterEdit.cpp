@@ -61,12 +61,10 @@ DeferredParameterEdit::DeferredParameterEdit(EditType _type,
 	_parent, _name),
   type_(_type),
   modified_(false),
-  config_(ConfigFile::instance()),
-  tmpDocument_("MiroConfigDocument"),
-  button_(new QPushButton(_parameter.type_, _parent, "edit button"))
+  tmpDocument_("MiroConfigDocument")
 {
-  editWidget_ = button_;
-  connect(button_, SIGNAL(clicked()), this, SLOT(deferredEdit()));
+  editWidget_ = new QPushButton(_parameter.type_, _parent, "edit button");
+  connect(editWidget_, SIGNAL(clicked()), this, SLOT(deferredEdit()));
 
   // create a copy of the parameters xml tree
   tmpParentNode_ = tmpDocument_.createElement("section");
@@ -89,7 +87,7 @@ DeferredParameterEdit::deferredEdit()
     QString typeName = parameter_.type_;
     
     Miro::CFG::Type const * const parameterType =
-      config_->description().getType(typeName);
+      ConfigFile::instance()->description().getType(typeName);
     
     if (parameterType == NULL) {
       throw QString("Parameter description for " + typeName +
@@ -201,7 +199,7 @@ DeferredParameterEdit::setXML()
 
     QString typeName = parameter_.type_;
     Miro::CFG::Type const * const parameterType =
-      config_->description().getType(typeName);
+      ConfigFile::instance()->description().getType(typeName);
     
     if (parameterType == NULL) {
       throw QString("Parameter description for " + typeName +

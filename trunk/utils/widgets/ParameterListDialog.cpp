@@ -39,7 +39,6 @@ ParameterListDialog::ParameterListDialog(ParameterList::Type _type,
   Super(_parentNode, _node, 
 	_parentItem, _item,
 	_parent, _name, TRUE),       // TRUE = modal dialog
-  config_(ConfigFile::instance()),
   type_(_type),
   parameter_(_parameter),
   nestedCompound_(true),
@@ -92,7 +91,8 @@ ParameterListDialog::ParameterListDialog(ParameterList::Type _type,
     nestedCompound_ = false;
   }
   else {
-    nestedType_ = config_->description().getType(parameter_.type_);
+    nestedType_ = 
+      ConfigFile::instance()->description().getType(parameter_.type_);
     if (nestedType_ == NULL) {
       throw QString("Parameter description for " + 
 		    parameter_.type_ +

@@ -17,19 +17,24 @@
 class MyIntValidator : public QIntValidator
 {
   Q_OBJECT
-  
+  //! Base class type.
   typedef QIntValidator Super;
+
 public:
-  MyIntValidator(QObject * parent, const char *name = 0 );
+  //! Inherited method.
+  MyIntValidator(QObject * parent, const char *name = 0);
+  //! Inherited method.
   MyIntValidator(int bottom, int top,
-		 QObject * parent, const char *name = 0 );
-		   
-  QValidator::State validate( QString &, int & ) const;
+		 QObject * parent, const char *name = 0);
+  //! Inherited method.
+  QValidator::State validate(QString &, int &) const;
 
 signals:
+  //! Signals, if the input is valid.
   void acceptable(bool);
 
 protected:
+  //! Remember, last state.
   mutable bool accepted_;
 };
 
@@ -37,19 +42,24 @@ protected:
 class MyDoubleValidator : public QDoubleValidator
 {
   Q_OBJECT
-  
+  //! Base class type.
   typedef QDoubleValidator Super;
+
 public:
-  MyDoubleValidator(QObject * parent, const char *name = 0 );
+  //! Inherited method.
+  MyDoubleValidator(QObject * parent, const char *name = 0);
+  //! Inherited method.
   MyDoubleValidator(double bottom, double top, int decimals,
-		    QObject * parent, const char *name = 0 );
-		   
-  QValidator::State validate( QString &, int & ) const;
+		    QObject * parent, const char *name = 0);
+  //! Inherited method.
+  QValidator::State validate(QString &, int &) const;
     
 signals:
+  //! Signals, if the input is valid.
   void acceptable(bool);
 
 protected:
+  //! Remember, last state.
   mutable bool accepted_;
 };
 
@@ -57,17 +67,21 @@ protected:
 class MyBoolValidator : public QValidator
 {
   Q_OBJECT
-  
+  //! Base class type.
   typedef QValidator Super;
+
 public:
-  MyBoolValidator(QObject * parent, const char *name = 0 );
-		   
-  QValidator::State validate( QString &, int & ) const;
+  //! Inherited method.
+  MyBoolValidator(QObject * parent, const char *name = 0);
+  //! Inherited method.
+  QValidator::State validate(QString &, int &) const;
     
 signals:
+  //! Signals, if the input is valid.
   void acceptable(bool);
 
 protected:
+  //! Remember, last state.
   mutable bool accepted_;
 };
 

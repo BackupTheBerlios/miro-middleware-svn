@@ -25,6 +25,11 @@ class SimpleParameter : public ParameterXML
 {
   Q_OBJECT
   
+  //----------------------------------------------------------------------------
+  // private types
+  //----------------------------------------------------------------------------
+
+  //! Base class type.
   typedef ParameterXML Super;
 public:
 

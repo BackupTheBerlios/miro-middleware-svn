@@ -46,7 +46,6 @@ ParameterDialog::ParameterDialog(Miro::CFG::Type const& _parameterType,
 				 ItemXML * _item,
 				 QWidget * _parent, const char * _name) :
   Super(_parentNode, _node, _parentItem, _item, _parent, _name),
-  config_(ConfigFile::instance()),
   parameterType_(_parameterType),
   params_(parameterType_.parameterSet())
 {
@@ -55,7 +54,8 @@ ParameterDialog::ParameterDialog(Miro::CFG::Type const& _parameterType,
   // add all superclass members to the parameter set
   Miro::CFG::Type const * parent = &parameterType_;
   while (!parent->parent().isEmpty()) {
-    Miro::CFG::Type const * tmp = config_->description().getType(parent->parent());
+    Miro::CFG::Type const * tmp = 
+      ConfigFile::instance()->description().getType(parent->parent());
     if (tmp == NULL) {
       QMessageBox::warning(this, 
 			   "Error constructing parameter dialog:",
