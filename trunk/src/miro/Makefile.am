@@ -103,15 +103,7 @@ sources2 = \
 	MotionImpl.cpp \
 	DifferentialMotionImpl.cpp \
 	BatteryImpl.cpp \
-	BehaviourEngineImpl.cpp \
-	NotifyMulticastParameters.xml \
-	NotifyMulticastRequestEntry.cpp \
-	NotifyMulticastSender.cpp \
-        NotifyMulticastReceiver.cpp \
-        NotifyMulticastTimeoutHandler.cpp \
-        NotifyMulticastEventHandler.cpp \
-        NotifyMulticastConfig.cpp \
-	NotifyMulticastAdapter.cpp
+	BehaviourEngineImpl.cpp 
 
 libmiroSvc_a_SOURCES = $(sources2)
 
