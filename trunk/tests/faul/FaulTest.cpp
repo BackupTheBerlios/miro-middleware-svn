@@ -145,7 +145,7 @@ Service::Service() :
 					pConnection2003);
 
 
-    pConsumer2003->registerInterfaces(pConnection2003, NULL, NULL, NULL,
+    pConsumer2003->registerInterfaces(pConnection2003, NULL, NULL,
 				      pFaulhaber->pConsumer, NULL);
   }
   else {
