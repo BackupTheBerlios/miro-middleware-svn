@@ -99,6 +99,7 @@ endif
 IDL_SRC = \
         $(addsuffix C.cpp, $(IDL_FILES))
 
+
 FILES +=	\
 	Exception \
 	Angle \
@@ -179,6 +180,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 # Extra dependencies not caught by make depend.
 
 .PRECIOUS: $(foreach file, $(IDL_FILES), $(foreach ext, $(IDL_EXT), $(file)$(ext))))
+
+%C.cpp: $(IDL_DIR)/$(patsubst %C.cpp, %, $@).idl
 
 realclean: clean
 	-$(RM) $(foreach file, $(IDL_FILES), $(foreach ext, $(IDL_EXT), $(file)$(ext)))

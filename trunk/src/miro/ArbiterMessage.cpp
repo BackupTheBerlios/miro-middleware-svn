@@ -13,6 +13,9 @@
 
 namespace Miro
 {
+  /**
+   * Initializes @ref id to NULL and @ref active to false.
+   */
   ArbiterMessage::ArbiterMessage() :
     id(NULL),
     active(false)

@@ -11,7 +11,8 @@
 #ifndef ArbiterRepository_h
 #define ArbiterRepository_h
 
-#include "miro/Singleton.h"
+#include "Singleton.h"
+#include "Exception.h"
 
 #include <string>
 #include <map>
@@ -23,29 +24,44 @@ namespace Miro
   // forward declaration
   class Arbiter;
   class ArbiterRepository;
+
+  //! Ostream operator for debug purposes.
   std::ostream&
   operator << (std::ostream& ostr, const ArbiterRepository& factory);
 
-  // class declaration
+  //! Repository of all available Abrbiters.
+  /**
+   * Arbiters have to be registered at the repository before
+   * a Policy can be initialized.
+   */
   class ArbiterRepository 
   {
   public:
-    ArbiterRepository();
-    virtual ~ArbiterRepository();
+    //! Register an Arbiter at the repository.
+    void registerArbiter(Arbiter * _arbiter) throw(Exception);
+    //! Lookup an Arbiter by name.
+    Arbiter * getArbiter(const std::string& _name) throw(Exception);
 
-    void registerArbiter(Arbiter * _arbiter);
-    Arbiter * getArbiter(const std::string& _name);
-
+    //! Accessor to the global instance of the ArbiterRepository.
     static Singleton<ArbiterRepository> instance;
 
   protected:
-    virtual void printToStream(std::ostream& ostr) const;
+    //! Dump the ArbiterRepository to the specified output stream.
+    void printToStream(std::ostream& ostr) const;
 
+    //! Map of the registerd Arbiters, sorted by name.
     typedef std::map<std::string, Arbiter *> ArbiterMap;
-
+    //! Map to associate an Arbiter name with an Arbiter instance.
     ArbiterMap arbiters_;
 
     friend std::ostream& operator << (std::ostream&, const ArbiterRepository&);
+
+  private:
+    //! There is only one ArbiterRepository instance.
+    ArbiterRepository();
+    //! Copy construction is prohibited
+    ArbiterRepository(const ArbiterRepository&) {}
+    friend class Singleton<ArbiterRepository>;
   };
 };
 #endif

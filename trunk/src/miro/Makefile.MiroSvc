@@ -142,6 +142,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 .PRECIOUS: $(foreach file, $(IDL_FILES), $(foreach ext, $(IDL_EXT), $(file)$(ext))))
 
+%S.cpp: $(IDL_DIR)/$(patsubst %S.cpp, %, $@).idl
+
 realclean: clean
 	-$(RM) $(foreach file, $(IDL_FILES), $(foreach ext, $(IDL_EXT), $(file)$(ext)))
 

@@ -24,11 +24,10 @@
 #include <qfile.h>
 #include <qstring.h>
 
-using std::string;
-using Miro::Exception;
-
 namespace Miro
 {
+  using std::string;
+
   Policy::Policy(StructuredPushSupplier * _pSupplier) :
     pSupplier_(_pSupplier),
     behaviourRepository_(BehaviourRepository::instance()),
@@ -36,14 +35,22 @@ namespace Miro
     startPattern_(NULL)
   {}
 
-  Policy::Policy(const char* parameterFile, 
+  /**
+   * Loads policy from a file.  
+   *
+   * @param _parameterFile File name.
+   * @param _pSupplier Pointer to a structured push supplier to send
+   * events to for online supervision of the behaviour engine. If the
+   * pointer is NULL, no events will be generated.
+   */
+  Policy::Policy(const char * _parameterFile, 
 		 StructuredPushSupplier * _pSupplier) :
     pSupplier_(_pSupplier),
     behaviourRepository_(BehaviourRepository::instance()),
     arbiterRepository_(ArbiterRepository::instance()),
     startPattern_(NULL)
   {
-    loadActionPatterns(parameterFile);
+    loadActionPatterns(_parameterFile);
   }
 
   Policy::~Policy()
@@ -128,7 +135,10 @@ namespace Miro
   void
   Policy::open()
   {
-    startPattern_->open();
+    if (startPattern_)
+      startPattern_->open();
+    else
+      throw Exception("No start pattern specified.");
   }
 
   void 
@@ -138,8 +148,8 @@ namespace Miro
   }
 
   void 
-  Policy::retrieveBehaviours(ActionPattern &_actionPattern, 
-				    const QDomNode& _domElement) 
+  Policy::retrieveBehaviours(ActionPattern& _actionPattern, 
+			     const QDomNode& _domElement) 
   {
     QDomNode n = _domElement.firstChild();
     while( !n.isNull() ) {
@@ -214,7 +224,7 @@ namespace Miro
 	  if (!parameterName.isNull()) {
 	    name = parameterName.value();
 	  } else {
-	    throw Exception("parameter tag without name");
+	    throw Exception("Parameter tag without name.");
 	  }
 
 	  QDomAttr parameterValue = e.attributeNode("value");
@@ -222,7 +232,7 @@ namespace Miro
 	  if (!parameterValue.isNull()) {
 	    value = parameterValue.value();
 	  } else {
-	    throw Exception("parameter tag without value");
+	    throw Exception("Parameter tag without value.");
 	  }
 
 	  _parameter.addPair(name, value);
@@ -234,7 +244,7 @@ namespace Miro
 
   void 
   Policy::retrieveTransitions(ActionPattern& _actionPattern, 
-				     const QDomNode& _domElement) 
+			      const QDomNode& _domElement) 
   {
     QDomNode n = _domElement.firstChild();
     while( !n.isNull() ) {
@@ -248,7 +258,7 @@ namespace Miro
 	  if (!attrMessage.isNull()) {
 	    message = string(attrMessage.value());
 	  } else {
-	    throw Exception("transition without message");
+	    throw Exception("Transition without message.");
 	  }
 
 	  QDomAttr attrPattern = e.attributeNode("target");
@@ -257,7 +267,7 @@ namespace Miro
 	    actionPattern = getActionPattern(patternname);
 
 	    if (actionPattern == 0) {
-	      throw Exception("ActionPattern not registered: " + patternname);
+	      throw Exception("ActionPattern not registered: " + patternname + ".");
 	    }
 	  }
 		
@@ -273,6 +283,11 @@ namespace Miro
   {
     cout << "Policy: Registering " 
 	 << _actionPattern->getActionPatternName() << endl;
+    if (actionPatterns_.find(_actionPattern->getActionPatternName()) != 
+	actionPatterns_.end())
+      throw Exception(string("Action pattern ") +
+		      _actionPattern->getActionPatternName() +
+		      "already registered.");
     actionPatterns_[_actionPattern->getActionPatternName()] = _actionPattern;	
   }
 
@@ -295,9 +310,9 @@ namespace Miro
   }
 
   std::ostream&
-  operator << (std::ostream& ostr, const Policy& _factory)
+  operator << (std::ostream& ostr, const Policy& _policy)
   {
-    _factory.printToStream(ostr);
+    _policy.printToStream(ostr);
 
     return ostr;
   }

@@ -23,7 +23,9 @@ namespace Miro
 {
   // forward declarations
   class StructuredPushSupplier;
+  class MotionArbiterMessage;
 
+  //! Priority based Arbiter for the generalized Motion interface.
   class MotionArbiter : public PriorityArbiter
   {
     //! Super class type.
@@ -32,7 +34,7 @@ namespace Miro
   public:
     MotionArbiter(Motion_ptr _pMotion, StructuredPushSupplier * _pSupplier = NULL);
 
-    // factory method for ArbiterParameters
+    //! Factory method for ArbiterMessage
     MotionArbiterMessage * getMessageInstance();
 
     virtual const std::string& getName() const;

@@ -27,7 +27,7 @@ namespace Miro
   std::ostream&
   operator << (std::ostream& ostr, const ArbiterParameters& _params);
 
-  //! Base class for parameters for Arbiter class childs.
+  //! Base class for all parameter classes of derived Arbiters.
   struct ArbiterParameters
   {
     //! Mapping of behaviour id's to the registration order.
@@ -61,7 +61,6 @@ namespace Miro
     friend
     std::ostream&
     operator << (std::ostream& ostr, const ArbiterParameters& _params);
-
   };
 };
 #endif

@@ -16,21 +16,23 @@
 
 namespace Miro
 {
+  //! Arbitration message for the MotionArbiter
   class MotionArbiterMessage : public ArbiterMessage
   {
   public:
     //! The requested velocity.
     VelocityIDL velocity;
 
-    //! Default constructor. 
+    //! Default constructor.
     MotionArbiterMessage();
 
     //! Virtual assignement operator.
     virtual void assign(const ArbiterMessage& _lhs);
 
   protected:
-    //! Dump message to the specified output stream.
+    //! Dump arbitration message to the specified output stream.
     void printToConsole(std::ostream& ostr) const;
+
   private:
     //! Type of this class.
     typedef MotionArbiterMessage Self;

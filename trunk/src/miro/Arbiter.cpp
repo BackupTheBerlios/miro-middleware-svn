@@ -27,18 +27,33 @@ namespace Miro
   Arbiter::~Arbiter()
   {}
 
+  /**
+   * Returns a pointer to a newly created instance of some derived
+   * ArbiterParameters class. The caller takes ownership of the 
+   * object.
+   */
   ArbiterParameters * 
   Arbiter::getParametersInstance()
   {
     return new ArbiterParameters();
   }
 
+  /**
+   * Returns a pointer to a newly created instance of some derived
+   * ArbiterMessage class. The caller takes ownership of the 
+   * object.
+   */
   ArbiterMessage * 
   Arbiter::getMessageInstance()
   {
     return new ArbiterMessage();
   }
-
+  
+  /**
+   * Called on transition to a new action pattern. If the arbiter is currently
+   * inactive open is called afterwards. Note that if the arbiter is already
+   * part of the current behaviour, arbitrate can be called concurrently.
+   */
   void
   Arbiter::init(const ArbiterParameters * _params)
   {
@@ -92,12 +107,22 @@ namespace Miro
     calcActivation();
   }
 
+  /**
+   * Called to start an arbiter. Note that arbiters are not closed and reopend
+   * on a transition between action patterns, if they are also part of the 
+   * subsequent action pattern.
+   */
   void
   Arbiter::open()
   {
     active_ = true;
   }
 
+  /**
+   * Called to stop an arbiter. Note that arbiters are not closed and reopend
+   * on a transition between action patterns, if they are also part of the 
+   * subsequent action pattern.
+   */
   void
   Arbiter::close()
   {

@@ -18,22 +18,35 @@ namespace Miro
   // forward declarations
   class Behaviour;
 
+  //! Base class of all arbiter messages.
+  /**
+   * Arbiters can extend their derived message by individual
+   * arbitration parameters.
+   */
   struct ArbiterMessage
   {
+    //! Id of the behaviour
     Behaviour * id;
+    //! True if the behaviour requests to be considered in the arbitration process.
     bool active;
 
+    //! Default contructor.
     ArbiterMessage();
+    //! Virtual destructor.
     virtual ~ArbiterMessage();
+
+    //! Virtual assignement operator replacement.
     virtual void assign(const ArbiterMessage& _lhs);
 
   protected:
+    //! Dump message to the specified output stream.
     virtual void printToConsole(std::ostream& ostr) const;
 
     friend 
     std::ostream& operator << (std::ostream& ostr, const ArbiterMessage& _message);
   };
 
+  //! Ostream opreator for debug purposes.
   std::ostream&
   operator << (std::ostream& ostr, const ArbiterMessage& _message);
 };
