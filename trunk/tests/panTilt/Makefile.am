@@ -16,7 +16,7 @@
 include $(top_srcdir)/config/Make-rules
 
 
-bin_PROGRAMS = PanTiltTest
+bin_PROGRAMS = PanTiltTest PanTest
 
 
 PanTiltTest_SOURCES = PanTiltTest.cpp
@@ -24,7 +24,12 @@ PanTiltTest_SOURCES = PanTiltTest.cpp
 PanTiltTest_LDADD = \
 	-lmiro
 
-all-local: PanTiltTest
+PanTest_SOURCES = PanTest.cpp
+
+PanTest_LDADD = \
+	-lmiro
+
+all-local: PanTiltTest PanTest
 	$(INSTALLPROGRAMS)
 
 clean-local:
