@@ -24,6 +24,8 @@
 
 
     <config_item parent="Can::" instance="true">
+      <config_parameter name="scheduling" type="ACE_Sched_Params" default="ACE_SCHED_FIFO, 100" />
+
       <config_parameter name="motion" type="Miro::DifferentialMotionParameters" />
       <constructor>
         motion.minTranslation = -1000;
@@ -35,6 +37,8 @@
         motion.maxRTranslation = 1000;
         motion.wheelBase = 450;
       </constructor>
+
+      <config_parameter name="pan" type="Sparrow::PanParameters" />
 
       <config_parameter name="channelSharing" type="bool" default="true" />
 
@@ -67,7 +71,6 @@
       <config_parameter name="deg2ServoTicksL" type="double" default="28.2"/>
       <config_parameter name="deg2ServoTicksR" type="double" default="28.2"/>
 
-      <config_parameter name="pan" type="Sparrow::PanParameters" />
 
       <config_parameter name="transFactor" type="double" default="1.0776"/>
 

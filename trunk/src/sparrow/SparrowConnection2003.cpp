@@ -120,7 +120,7 @@ namespace Sparrow
     message.length(5);
     message.id(CAN_PAN_GO_2005);
     message.byteData(0, 0); // servo number
-    message.longData(1, (long)((double)getPanTicksPerDegree()*Miro::rad2Deg(_rad)) );
+    message.longData(1, (long)((double)getPanTicksPerDegree()*Miro::rad2Deg(-_rad)) );
     write(message);
   }
 
