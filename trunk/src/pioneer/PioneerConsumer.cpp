@@ -195,37 +195,34 @@ namespace Pioneer
 	  unsigned short bumpers = message->bumpers();
 	  unsigned long mask = bumpers_ ^ bumpers & 0x3e3e;
 
-	  for (unsigned int i = 9; i < 14; ++i, ++index) {
-	    if (mask & (1 << i)) {
-	      if (!pTactileEvent) {
-		pTactileEvent = new RangeBunchEventIDL();
-		pTactileEvent->sensor.length(10);
+	  if (mask) {
+	    pTactileEvent = new RangeBunchEventIDL();
+	    pTactileEvent->sensor.length(10);
+
+	    for (unsigned int i = 9; i < 14; ++i, ++index) {
+	      if (mask & (1 << i)) {
+		pTactileEvent->sensor[counter].group = 0;
+		pTactileEvent->sensor[counter].index = index;
+		pTactileEvent->sensor[counter].range = 
+		  (bumpers & (1 << i))? 0 : Miro::RangeSensor::HORIZON_RANGE;
+
+		cout << "bumper: " << index << "  state: " << pTactileEvent->sensor[counter].range << endl;
+		++counter;
 	      }
-	      pTactileEvent->sensor[counter].group = 0;
-	      pTactileEvent->sensor[counter].index = index;
-	      pTactileEvent->sensor[counter].range = 
-		(bumpers & (1 << i))? 0 : Miro::RangeSensor::HORIZON_RANGE;
-
-	      ++counter;
 	    }
-	  }
-	  for (unsigned int i = 1; i < 6; ++i, ++index) {
-	    if (mask & (1 << i)) {
-	      if (!pTactileEvent) {
-		pTactileEvent = new RangeBunchEventIDL();
-		pTactileEvent->sensor.length(10);
+	    for (unsigned int i = 1; i < 6; ++i, ++index) {
+	      if (mask & (1 << i)) {
+		pTactileEvent->sensor[counter].group = 0;
+		pTactileEvent->sensor[counter].index = index;
+		pTactileEvent->sensor[counter].range = 
+		  (bumpers & (1 << i))? 0 : Miro::RangeSensor::HORIZON_RANGE;
+		
+		++counter;
+		cout << "bumper: " << index << "  state: " << pTactileEvent->sensor[counter].range << endl;
 	      }
-	      pTactileEvent->sensor[counter].group = 0;
-	      pTactileEvent->sensor[counter].index = index;
-	      pTactileEvent->sensor[counter].range = 
-		(bumpers & (1 << i))? 0 : Miro::RangeSensor::HORIZON_RANGE;
-
-	      ++counter;
 	    }
-	  }
-	  bumpers_ = bumpers;
+	    bumpers_ = bumpers;
 
-	  if (pTactileEvent) {
 	    Miro::timeA2C(message->time(), pTactileEvent->time);
 	    pTactileEvent->sensor.length(counter);
 	    pTactile->integrateData(pTactileEvent);
