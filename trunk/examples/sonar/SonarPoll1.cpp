@@ -1,10 +1,15 @@
 #include <miro/Client.h>
 #include <miro/RangeSensorC.h>
 
+#include <ace/Log_Msg.h>
+
 #include <iostream>
 
 int main(int argc, char *argv[])
 {
+  ACE_LOG_MSG->priority_mask(1024, ACE_Log_Msg::PROCESS);
+  ACE::debug(1);
+
   Miro::Client client(argc, argv);     // Initialize orb.
   Miro::RangeSensor_var sonar =        // Obtain reference to sonar object.
     client.resolveName<Miro::RangeSensor>("Sonar"); 
