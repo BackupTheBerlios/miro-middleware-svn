@@ -14,7 +14,9 @@
       <config_parameter name="speedConvFactor" type="double" default="4.2" />
       <config_parameter name="motion" type="Miro::DifferentialMotionParameters" />
       <config_parameter name="odometryPolling" type="bool" default="true" />
-      <constructor>
+      <!-- the pace has to stay actually fixed !! -->
+      <config_parameter name="odometryPace" type="ACE_Time_Value" default="0,33000" measure="ms" />
+     <constructor>
         leftWheel.device = "/dev/tts/0";
         rightWheel.device = "/dev/tts/1";
 

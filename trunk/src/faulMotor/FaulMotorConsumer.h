@@ -41,8 +41,7 @@ namespace FaulMotor
     //--------------------------------------------------------------------------
     // public methods
     //--------------------------------------------------------------------------
-    Consumer(Connection * _pConnection,
-	     Miro::OdometryImpl * _pOdometry = NULL);
+    Consumer(Miro::OdometryImpl * _pOdometry = NULL);
     virtual ~Consumer();
 
     //! inherited interface
@@ -60,7 +59,6 @@ namespace FaulMotor
     // protected data
     //--------------------------------------------------------------------------
     FaulMotor::Parameters * params_;
-    FaulMotor::Connection * pConnection_;
     Miro::OdometryImpl * pOdometry_;
     Miro::MotionStatusIDL status_;
 

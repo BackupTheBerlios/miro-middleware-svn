@@ -33,8 +33,7 @@ namespace FaulMotor
   using std::endl;
 
   TimerEventHandler::TimerEventHandler(Connection& _connection) :
-    connection_(_connection),
-    firstTime_(true)
+    connection_(_connection)
   {
     DBG(std::cout << "Constructing FaulTty::TimerEventHandler." << endl);
   }
@@ -48,18 +47,14 @@ namespace FaulMotor
   int
   TimerEventHandler::handle_timeout(const ACE_Time_Value &, const void *)
   {
-    if (firstTime_) {
-      // start polling
-      // set new velocities/accelerations
-      connection_.deferredSetSpeed();
-    }
-    else if (Connection::gotTicks_ == 0) {
+    if (Connection::gotTicks_ == 0) {
       std::cerr << " odometry stall " << ACE_OS::gettimeofday() << endl;
-      std::cerr << " restarting odometry polling" << endl;
+    }
+    else {
+      connection_.getTicks();
       connection_.deferredSetSpeed();
     }
 
-    Connection::gotTicks_ = 0;
     return 0;
   }
 }

@@ -45,10 +45,8 @@ namespace FaulMotor
   //------------------------//
   //----- constructors -----//
   //------------------------//
-  Consumer::Consumer(Connection * _pConnection,
-		     Miro::OdometryImpl * _pOdometry):
+  Consumer::Consumer(Miro::OdometryImpl * _pOdometry):
     params_(Parameters::instance()),
-    pConnection_(_pConnection),
     pOdometry_(_pOdometry),
     init_(2),
     xPos_(0.),
@@ -143,11 +141,6 @@ namespace FaulMotor
 	   prevTimeStampR_+ ACE_Time_Value(0, 10000) < timeStampL_ &&
 	   prevTimeStampL_ != timeStampL_ &&
 	   prevTimeStampR_ != timeStampR_)) {
-
-	// if polling mode send next request 
-	// along with the current acc/vel set points
-	if (params_->odometryPolling)
-	  pConnection_->deferredSetSpeed();
 
 	if (init_ == 0) {
 	  if (params_->odometryPolling)

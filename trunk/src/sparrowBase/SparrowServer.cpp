@@ -45,7 +45,7 @@ FaulhaberHardware::FaulhaberHardware(ACE_Reactor * _reactor,
 				     Sparrow::Connection2003 * connection2003_) :
   reactor(_reactor),
   timerId(-1),
-  pConsumer(new FaulMotor::Consumer(&connection, _pOdometryImpl)),
+  pConsumer(new FaulMotor::Consumer(_pOdometryImpl)),
   pTimerEventHandler(new FaulMotor::TimerEventHandler(connection)),
   connection(_reactor, pConsumer, connection2003_)
 {
@@ -54,7 +54,7 @@ FaulhaberHardware::FaulhaberHardware(ACE_Reactor * _reactor,
   if (params->odometryPolling) {
     timerId = reactor->schedule_timer(pTimerEventHandler, NULL, 
 		                      ACE_Time_Value(2),
-				      ACE_Time_Value(2));
+				      params->odometryPace);
   }
 }
 

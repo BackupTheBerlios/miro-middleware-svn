@@ -26,7 +26,6 @@ namespace FaulController
     virtual ~EventHandler();
 
     virtual int handle_input (ACE_HANDLE fd); // fd select
-    virtual int handle_close(ACE_HANDLE _h, ACE_Reactor_Mask _m); // cleanup
 
   protected:
     char buff_[512];

@@ -131,23 +131,4 @@ namespace FaulController
 
     return 0;
   }
-
-  int
-  EventHandler::handle_close(ACE_HANDLE fd, ACE_Reactor_Mask _m) 
-  {
-    // make sure all remaining data arrieved...
-    ACE_OS::sleep(ACE_Time_Value(0, 100000));
-
-
-    char buffer[256];
-    int rc = ACE_OS::read(fd, buffer, 256);
-    if (rc == -1)
-      std::cerr << "FaulTtyEventHandler::handle_close() cleanup read failed: "
-		<< errno << std::endl;
-    else
-      std::cerr << "FaulTtyEventHandler::handle_close() read: " 
-		<< rc << std::endl;
-
-    return Super::handle_close(fd, _m);
-  }
 }

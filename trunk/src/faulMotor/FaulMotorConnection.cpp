@@ -298,30 +298,19 @@ namespace FaulMotor
   void
   Connection::deferredSetSpeed()
   {
-    if(!Sparrow::Parameters::instance()->sparrow2003){
-      leftWheel_->sendAccVelTicks(newAccL, newAccR, newSpeedL, newSpeedR);
-    } 
-    else {
-      leftWheel_->sendAccVelTicks(newAccL, newSpeedL);
-      rightWheel_->sendAccVelTicks(newAccR, newSpeedR);
-    }
-
-    prevAccL = newAccL;
-    prevAccR = newAccR;
-    prevSpeedL = newSpeedL;
-    prevSpeedR = newSpeedR;
-
-    return;
-
-    /*
-
     Miro::Guard guard(mutex_);
 
-    nextSceduledQuery_ = _now + Parameters::instance()->odometryPace;
+    //    nextSceduledQuery_ = _now + Parameters::instance()->odometryPace;
 
     writeThisRound_ = false;
-    protectedDeferredSetSpeed();
-    */
+
+    if (!Sparrow::Parameters::instance()->sparrow2003){
+      leftWheel_->sendAccVelTicks(newAccL, newAccR, newSpeedL, newSpeedR);
+
+    } 
+    else {
+      protectedDeferredSetSpeed();
+    }
   }
 
   void
