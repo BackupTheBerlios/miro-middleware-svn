@@ -16,6 +16,12 @@ WorldPointC.cpp
 WorldPointS.h
 WorldPointS.i.h
 WorldPointS.cpp
+WorldVectorS.cpp
+WorldVectorS.i.h
+WorldVectorS.h
+WorldVectorC.cpp
+WorldVectorC.i.h
+WorldVectorC.h
 PositionC.h
 PositionC.i.h
 PositionC.cpp
