@@ -97,7 +97,7 @@ namespace Miro
   DifferentialMotionImpl::lr2velocity(CORBA::Long left, CORBA::Long right, VelocityIDL& velocity)
   {
     velocity.translation = (left + right) / 2;
-    velocity.rotation = (double)(right - left) / (params_.wheelBase /* * 0.5*/ );
+    velocity.rotation = (double)(right - left) / (params_.wheelBase);
   }
 
   inline
@@ -107,7 +107,7 @@ namespace Miro
     left = velocity.translation;
     right = velocity.translation;
 
-    int delta = (int) rint(velocity.rotation * params_.wheelBase * .5 /*.25*/ );
+    int delta = (int) rint(velocity.rotation * params_.wheelBase * .5);
 
     left -= delta;
     right += delta;
