@@ -16,11 +16,6 @@
 
 #include "VideoServer.h"
 
-#include "miro/Server.h"
-#include "idl/ExceptionC.h"
-#include "miro/Exception.h"
-#include "miro/Utils.h"
-
 #include "Parameters.h"
 
 #include "VideoDevice.h"
@@ -32,6 +27,10 @@
 #endif
 #ifdef MIRO_HAS_1394
 #include "VideoDevice1394.h"
+#include "VideoFilterYUV422toYUV.h"
+#include "VideoFilterYUV422toRGB.h"
+#include "VideoFilterYUV411toRGB.h"
+#include "VideoFilterYUV411toYUV.h"
 #endif
 #ifdef MIRO_HAS_QUICKCAM
 #include "VideoDeviceQuickCam.h"
@@ -43,22 +42,12 @@
 
 #include "VideoFilterRepository.h"
 #include "VideoFilterBasic.h"
-#include "VideoFilterYUV422toYUV.h"
-#include "VideoFilterYUV422toRGB.h"
-#include "VideoFilterYUV411toRGB.h"
-#include "VideoFilterYUV411toYUV.h"
 
-#include <iostream>
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
-
-using std::cout;
-using std::cerr;
-using std::endl;
+#include "miro/Server.h"
+#include "idl/ExceptionC.h"
+#include "miro/Exception.h"
+#include "miro/Utils.h"
+#include "miro/Log.h"
 
 int
 main(int argc, char *argv[])
@@ -78,7 +67,7 @@ main(int argc, char *argv[])
   Video::Parameters * videoParameters = Video::Parameters::instance();
 
   try {
-    std::cout << "registered filters" << endl;
+    MIRO_LOG(LL_NOTICE, "Registered filters.");
 
     Video::FilterRepository * repo = Video::FilterRepository::instance();
     repo->registerFilter<Video::DeviceDummy>("DeviceDummy");
@@ -113,7 +102,7 @@ main(int argc, char *argv[])
     repo->registerFilter<Video::FilterReverse>("FilterReverse");
     repo->registerFilter<Video::FilterHalfImage>("FilterHalfImage");
 
-    std::cout << "Config file processing" << endl;
+    MIRO_LOG(LL_NOTICE, "Config file processing.");
     
     Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
     config->setSection("Robot");
@@ -121,12 +110,14 @@ main(int argc, char *argv[])
     config->setSection("Video");
     config->getParameters("Video", * videoParameters);
 
-#ifdef DEBUG
-    cout << "  robot parameters:" << endl << *robotParameters << endl;
-    cout << "  video paramters:" << endl << *videoParameters << endl;
-#endif
-    
-    DBG(cout << "Initialize server daemon." << endl);
+    if (Miro::Log::level() >= Miro::Log::LL_NOTICE) {
+      std::cout << "Robot parameters:" << std::endl 
+		<< *robotParameters << std::endl;
+      std::cout << "Video paramters:" << std::endl 
+		<< *videoParameters << std::endl;
+    }
+
+    MIRO_LOG(LL_NOTICE, "Initialize server daemon.");
     Miro::Server server(argc, argv);
 
     try {
@@ -134,31 +125,38 @@ main(int argc, char *argv[])
       
       delete config;
 
-      DBG(cout << "Loop forever handling events." << endl);
+      MIRO_LOG(LL_NOTICE, "Loop forever handling events.");
       server.run(3);
-      DBG(cout << "videoService ended, exiting." << endl);
+      MIRO_LOG(LL_NOTICE, "videoService ended, exiting.");
     }
     catch (const Miro::EOutOfBounds& e) {
-      cerr << "OutOfBounds excetpion: Wrong parameter for device initialization." << endl;
+      MIRO_LOG(LL_CRITICAL,
+	       "OutOfBounds excetpion: Wrong parameter for device initialization.");
+      rc = 1;
     }
     catch (const Miro::EDevIO& e) {
-      cerr << "DevIO excetpion: Device access failed." << endl;
+      MIRO_LOG(LL_CRITICAL,
+	       "DevIO excetpion: Device access failed.");
+      rc = 1;
     }
     catch (const CORBA::Exception & e) {
-      cerr << "Uncaught CORBA exception: " << e << endl;
+      MIRO_LOG_OSTR(LL_CRITICAL,
+		    "Uncaught CORBA exception: " << e);
       rc = 1;
     }
   }
   catch (const Miro::CException& e) {
-    cerr << "Miro exception: " << e << endl;
+    MIRO_LOG_OSTR(LL_CRITICAL,
+		  "Miro C exception: " << e);
     rc = 1;
   }
   catch (const Miro::Exception& e) {
-    cerr << "Miro exception: " << e << endl;
+    MIRO_LOG_OSTR(LL_CRITICAL,
+		  "Miro exception: " << e);
     rc = 1;
   }
   catch (...) {
-    cerr << "Uncaught exception: " << endl;
+    MIRO_LOG(LL_CRITICAL, "Uncaught exception.");
     rc = 1;
   }
   return rc;

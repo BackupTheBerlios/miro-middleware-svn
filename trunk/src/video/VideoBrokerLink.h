@@ -68,7 +68,6 @@ namespace Video
   void
   BrokerLink::setIndex(unsigned int _index) {
     Miro::Guard guard(mutex_);
-    std::cout << "setIndex" << std::endl;
     index_ = _index;
     processed_ = true;
     condition_.broadcast();

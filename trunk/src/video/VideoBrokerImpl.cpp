@@ -16,6 +16,7 @@
 #include "BufferManager.h"
 
 #include "miro/TimeHelper.h"
+#include "miro/Log.h"
 
 namespace Miro
 {
@@ -35,7 +36,7 @@ namespace Miro
 				       BufferSetIDL_out buffers)
     ACE_THROW_SPEC ((EOutOfBounds, EDevIO, ETimeOut))
   {
-    std::cout << "start " << __PRETTY_FUNCTION__ << std::endl;
+    MIRO_DBG(VIDEO, LL_PRATTLE, "VideoBroker: start ");
 
     if (connections.length() == 0)
       throw EOutOfBounds("Empty connection set.");
@@ -50,7 +51,7 @@ namespace Miro
     
     ::Video::BrokerRequestVector request;
 	
-    std::cout << "process all filters" << std::endl;
+    MIRO_DBG(VIDEO, LL_PRATTLE, "VideoBroker: process all filters");
 
     for (unsigned int i = 0; i < connections.length(); ++i) {
       std::cout << "find corresponding filter" << std::endl;
@@ -68,14 +69,14 @@ namespace Miro
       assert(filter->interface() != NULL);
       filter->interface()->checkClientId(connections[i].id);
 
-      std::cout << "install a callback for each" << std::endl;
+      MIRO_DBG(VIDEO, LL_PRATTLE, "VideoBroker: install a callback for each");
       ::Video::BrokerLink * link = new ::Video::BrokerLink(mutex, cond, buffers[i]);
       request.push_back(::Video::BrokerRequest(filter, link));
     }
 
     device_->enqueueBrokerRequests(request);
 
-    std::cout << "wait for completion of all filters" << std::endl;
+     MIRO_DBG(VIDEO, LL_PRATTLE, "VideoBroker: wait for completion of all filters");
     ACE_Time_Value maxWait = ACE_OS::gettimeofday() + ACE_Time_Value(10, 100000);
     bool buffersPending;
     do {
@@ -97,7 +98,7 @@ namespace Miro
     while (buffersPending);
 
 
-    std::cout << "get time stamp for images" << std::endl;
+    MIRO_DBG(VIDEO, LL_PRATTLE, "VideoBroker: get time stamp for images");
     CORBA::ULong index = 0;
     ::Video::BrokerRequestVector::const_iterator first = request.begin();
     ::Video::BrokerRequestVector::const_iterator last = request.end();
@@ -105,11 +106,9 @@ namespace Miro
     ACE_Time_Value t = first->filter->
       interface()->bufferManager()->bufferTimeStamp(buffers[index]);
 
-    std::cout << "check for filter synchronisation: " << t << std::endl;
+    MIRO_DBG(VIDEO, LL_PRATTLE, "VideoBroker: check for filter synchronisation.");
 
     for (++index, ++first; first != last; ++first, ++index) {
-      std::cout << "t: " << first->filter->
-	interface()->bufferManager()->bufferTimeStamp(buffers[index]) << std::endl;
       assert(first->filter->
 	     interface()->bufferManager()->bufferTimeStamp(buffers[index])
 	     == t);
@@ -123,8 +122,7 @@ namespace Miro
       delete first->link;
     }
 
-    std::cout << "end " << __PRETTY_FUNCTION__  << std::endl;
-
+    MIRO_DBG(VIDEO, LL_PRATTLE, "VideoBroker: end");
 
     return stamp;
   }

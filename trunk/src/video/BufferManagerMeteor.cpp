@@ -44,10 +44,6 @@ namespace Video
     bool	done = false;
 
     //	capture one frame
-#ifdef DEBUG
-    std::cout << "capture one frame" << std::endl;
-#endif
-
     int	command = METEOR_CAP_SINGLE;
     int	errorCount = getCurrentErrorCount();
 

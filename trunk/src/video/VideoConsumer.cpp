@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002, 2003
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -12,30 +12,12 @@
 
 #include "VideoConsumer.h"
 #include "VideoDevice.h"
-#include "VideoImpl.h"
 
 #include "miro/Exception.h"
-#include "miro/TimeHelper.h"
-
-#include <algorithm>
-
-// #undef DEBUG
-#ifndef DEBUG
-#define DEBUG
-#endif
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
+#include "miro/Log.h"
 
 namespace Video
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-
   using ::operator<<;
 
   //------------------------//
@@ -47,7 +29,7 @@ namespace Video
     schedp_(ACE_SCHED_OTHER, 0)
 
   {
-    DBG(cout << "Constructing VideoConsumer." << endl);
+    MIRO_LOG_CTOR("VideoConsumer");
     if (pschedp) 
       schedp_ = (*pschedp);
   }
@@ -58,16 +40,20 @@ namespace Video
   //----------------------//
   Consumer::~Consumer()
   { 
-    DBG(cout << "Destructing VideoConsumer." << endl);
+    MIRO_LOG_DTOR("VideoConsumer");
   }
 
   int 
   Consumer::svc()
   {
     if (ACE_OS::sched_params(schedp_) == -1) {
-      std::cerr << "[Video::Consumer] Could not set sched parameters." << endl 
-		<< "[Video::Consumer] Maybe suid root is missing." << endl
-		<< "[Video::Consumer] Will work on default sched policy" << endl;
+      MIRO_LOG_OSTR(LL_WARNING,
+		    "[Video::Consumer] Could not set sched parameters." << 
+		    std::endl <<
+		    "[Video::Consumer] Maybe suid root is missing." << 
+		    std::endl <<
+		    "[Video::Consumer] Will work on default sched policy" << 
+		    std::endl);
     }
 
     while (!canceled())
@@ -78,15 +64,19 @@ namespace Video
 	videoDevice.processFilterTree();
       }
       catch(Miro::CException& e) {
-	cout << "VideoConsumer::svc() caught Miro::CException: " << endl
-	     << e << endl;
+	MIRO_LOG_OSTR(LL_ERROR,
+		      "VideoConsumer::svc() caught Miro::CException: " << 
+		      std::endl <<
+		      e << std::endl);
       }
       catch(Miro::Exception& e) {
-	cout << "VideoConsumer::svc() caught Miro::Exception: " << e << endl;
+	MIRO_LOG_OSTR(LL_ERROR,
+		      "VideoConsumer::svc() caught Miro::Exception: " << 
+		      e << std::endl);
       }
     }
 
-    cout << "VideoConsumer::svc() exiting." << endl;
+    MIRO_LOG(LL_NOTICE, "VideoConsumer::svc() exiting.");
     return 0;
   }
 }

@@ -14,23 +14,13 @@
 #include "BufferManagerQuickCam.h"
 
 #include "miro/Exception.h"
+#include "miro/Log.h"
 
-#include <iostream>
 #include <string>
-
-#undef DEBUG
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
-
 
 namespace Video
 {
   FILTER_PARAMETERS_FACTORY_IMPL(DeviceQuickCam);
-
 
   //--------------------------------------------------------------------------
   // Hardware specifica
@@ -42,13 +32,12 @@ namespace Video
     devName_(),
     ioBuffer_(),
     connector_(),
-//    gb(NULL),
     channels(NULL),
     map_(NULL),
     currentBuffer_(0),
     nextBuffer_(0)
   {
-    DBG(std::cout << "Constructing DeviceQuickCam." << std::endl);
+    MIRO_LOG_CTOR("Device::QuickCam");
 
     /**
        cleanup supported format lookup table
@@ -60,12 +49,13 @@ namespace Video
 
   DeviceQuickCam::~DeviceQuickCam()
   {
-//    delete gb;
+    MIRO_LOG_DTOR("Device::QuickCam");
   }
 
 
   bool
-  DeviceQuickCam::setFeatures(const QuickCamFeatureSet &features) {
+  DeviceQuickCam::setFeatures(const QuickCamFeatureSet &features) 
+  {
     setFramerate(features.framerate);
     setVideoWindow();
     
@@ -92,7 +82,8 @@ namespace Video
   }
   
   bool
-  DeviceQuickCam::getFeatures(QuickCamFeatureSet &features) {
+  DeviceQuickCam::getFeatures(QuickCamFeatureSet &features) 
+  {
     getVideoWindow();
     features.framerate = getFramerate();
    
@@ -141,10 +132,9 @@ namespace Video
   void
   DeviceQuickCam::init(Miro::Server& _server, FilterParameters const * _params)
   {
+    MIRO_DBG(VIDEO, LL_DEBUG, "Connecting DeviceQuickCam.");
+   
     int	err = 0;
-
-    DBG(std::cout << "Connecting DeviceQuickCam." << std::endl);
-
     params_ = dynamic_cast<DeviceQuickCamParameters const *>(_params);
     assert(params_ != NULL);
 
@@ -152,16 +142,19 @@ namespace Video
     if (connector_.connect(ioBuffer_,
 			  devName_,
 			  0, ACE_Addr::sap_any, 0, O_RDONLY) == -1) {
-      cerr << "Failed to open device: " << params_->device << endl
-	   << "Propably running on the wrong machine?" << endl;
-      throw Miro::CException(errno, std::strerror(errno));
+      std::stringstream s;
+      s << "Failed to open device: " << params_->device << std::endl
+	<< "Propably running on the wrong machine?" << std::endl;
+      throw Miro::CException(errno, s);
     }
 
     //fcntl(ioBuffer_.get_handle(), F_SETFD, FD_CLOEXEC);
     pwc_probe probe;
     if (ioctl(ioBuffer_.get_handle(), VIDIOCPWCPROBE, &probe) == 0) {
-	std::cout << "Probing Device: " << probe.name << " successfull" << endl;
-    } else{
+      MIRO_LOG_OSTR(LL_NOTICE,
+		    "Probing Device: " << probe.name << " successfull.");
+    } 
+    else {
        throw Miro::CException(errno, "Error Probing Device QuickCam");
     }
 
@@ -175,7 +168,6 @@ namespace Video
 
     setChannel();
 
-
     if (capability.type & VID_TYPE_CAPTURE) {
       err = ioctl(ioBuffer_.get_handle(), VIDIOCGMBUF, &gb_buffers);
       if (err == -1)
@@ -187,9 +179,10 @@ namespace Video
 
     iNBuffers = gb_buffers.frames;
 
-    std::cout << "buffersize: " << gb_buffers.size << std::endl;
-    std::cout << "buffersize/frame: " << gb_buffers.size/gb_buffers.frames << std::endl;
-    std::cout << "frames: " << gb_buffers.frames << std::endl;
+    MIRO_LOG(LL_NOTICE,
+	     "Buffersize: " << gb_buffers.size << std::endl;
+	     << "Buffersize/Frame: " << gb_buffers.size/gb_buffers.frames << std::endl;
+	     << "frames: " << gb_buffers.frames);
 
     probeAllFormats();
 
@@ -206,7 +199,8 @@ namespace Video
     getVideoWindow();
 
     /* set parameters */
-    std::cout << "Retrieving video_picture information" << std::endl;
+    MIRO_DBG(VIDEO, LL_DEBUG, "Retrieving video_picture information.");
+
     getVideoPicture();
 
     setBrightness(params_->brightness);
@@ -215,9 +209,8 @@ namespace Video
 
     setVideoPicture();
 
-
     /* set pwc centric parameters */
-    std::cout << "Retrieving PWC information" << std::endl;
+    MIRO_DBG(VIDEO, LL_DEBUG, "Retrieving PWC information.");
     getPWC();
 
     setWbMode(params_->whitebalance);
@@ -257,7 +250,7 @@ namespace Video
 
   void DeviceQuickCam::fini()
   {
-    DBG(std::cout << "DeviceQuickCam." << std::endl);
+    MIRO_DBG(VIDEO, LL_DEBUG, "Device::QuickCam::fini().");
 
     delete[] channels;
     channels = NULL;
@@ -273,58 +266,17 @@ namespace Video
   }
 
 
-
   void DeviceQuickCam::setPalette()
   {
-    DBG(std::cout << "DeviceQuickCam: setPalette" << std::endl);
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video::DeviceQuickCam::setPalette()");
 
     outputFormat_.palette = Miro::YUV_420P;
 
   }
 
-
-
-/*  void
-  DeviceQuickCam::acquireOutputBuffer()
-  {
-
-
-    // synch current image
-    int err = ioctl(ioBuffer_.get_handle(), VIDIOCSYNC, &currentBuffer_);
-    if (err == -1) {
-      throw Miro::CException(errno, "DeviceQuickCam::grabImage() - VIDIOCSYNC");
-    }
-
-    // set time stamp
-    timeStamp_ = ACE_OS::gettimeofday();
-    // set buffer
-    buffer_ = map_ + gb_buffers.offsets[currentBuffer_];
-
-    // update the follower buffer pointer
-    ++currentBuffer_;
-    if (currentBuffer_ == iNBuffers)
-      currentBuffer_ = 0;
-
-    // grab next image
-    err = ioctl(ioBuffer_.get_handle(), VIDIOCMCAPTURE, &(gb[nextBuffer_]));
-    if (err == -1) {
-      throw Miro::CException(errno, "DeviceQuickCam::grabImage() - VIDIOCMCAPTURE");
-    }
-
-    // update the leader buffer pointer
-    ++nextBuffer_;
-    if (nextBuffer_ == iNBuffers)
-      nextBuffer_ = 0;
-  }*/
-
-/*  void
-  DeviceQuickCam::releaseOutputBuffer()
-  {
-  }*/
-
   void DeviceQuickCam::getCapabilities()
   {
-    DBG(std::cout << "DeviceQuickCam: getCapabilities" << std::endl);
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video::DeviceQuickCam: getCapabilities()");
 
     int	err = ioctl(ioBuffer_.get_handle(), VIDIOCGCAP, &capability);
     if (err == -1)
@@ -334,7 +286,7 @@ namespace Video
 
   void DeviceQuickCam::getChannels()
   {
-    DBG(std::cout << "DeviceQuickCam: getChannels" << std::endl);
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video::DeviceQuickCam::getChannels()");
 
     /* input sources */
     channels = new struct video_channel[capability.channels];
@@ -348,20 +300,17 @@ namespace Video
 
   void DeviceQuickCam::setChannel()
   {
-    DBG(std::cout << "DeviceQuickCam: setChannel" << std::endl);
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video::DeviceQuickCam::setChannel()");
 
     int err = ioctl(ioBuffer_.get_handle(), VIDIOCSCHAN, &(channels[0]));
-
     if (err < 0)
        throw Miro::CException(errno, "DeviceQuickCam::setChannel() - VIDIOCSCHAN");
-
-
   }
 
   bool
   DeviceQuickCam::probeFormat(int format)
   {
-    DBG(std::cout << "DeviceQuickCam: probeFormat" << std::endl);
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video::DeviceQuickCam: probeFormat()");
 
     struct video_mmap gb;
     int	err;
@@ -405,15 +354,17 @@ namespace Video
 
 
   void
-  DeviceQuickCam::getVideoWindow() {
+  DeviceQuickCam::getVideoWindow() 
+  {
     ioctl(ioBuffer_.get_handle(), VIDIOCGWIN, &vidwindow);
-    std::cout << "fps " << (vidwindow.flags >> 16) << endl;
+        MIRO_DBG_OSTR(VIDEO, LL_DEBUG, "fps " << (vidwindow.flags >> 16));
   }
 
   
   void
-  DeviceQuickCam::setVideoWindow() {
-    std::cout << "setting " << (vidwindow.flags >> 16) << " fps" << endl;
+  DeviceQuickCam::setVideoWindow() 
+  {
+    MIRO_DBG_OSTR(VIDEO, LL_DEBUG, "setting " << (vidwindow.flags >> 16));
     ioctl(ioBuffer_.get_handle(), VIDIOCSWIN, &vidwindow);
   }
   
@@ -656,8 +607,5 @@ namespace Video
   void
   DeviceQuickCam::setCompression(int _compression) {
     pwcCompression = _compression;
-  }
-    
-
-};
-
+  } 
+}

@@ -15,6 +15,10 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.13  2004/03/11 12:04:47  hutz
+ * cleaning up debug output for filter framework, firewire and quickcam
+ * BTTV and Meteor are left dirty for now.
+ *
  * Revision 1.12  2004/02/09 17:28:56  graz
  * Added control-interface to VideoDevice1394 & Dialog.
  *
@@ -111,21 +115,10 @@
 
 #include <miro/Exception.h>
 #include <miro/Server.h>
-
-#include <iostream>
-
-// #undef DEBUG
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
+#include <miro/Log.h>
 
 #define NUM_BUFFERS 4
 #define DROP_FRAMES 1
-
-// #define RAW_RGB
 
 namespace
 {
@@ -221,7 +214,7 @@ namespace Video
     p_camera_(new dc1394_cameracapture()),
     frameRate_(FRAMERATE_30)
   {
-    DBG(std::cout << "Constructing Device1394." << std::endl);
+    MIRO_LOG_CTOR("Video::Device1394.");
 
     paletteLookup[Miro::GREY_8] = 1;
     paletteLookup[Miro::GREY_16] = 1;
@@ -233,6 +226,7 @@ namespace Video
   //---------------------------------------------------------------
   Device1394::~Device1394()
   {
+    MIRO_LOG_DTOR("Video::Device1394.");
     delete p_camera_;
   } 
 
@@ -246,7 +240,7 @@ namespace Video
   void
   Device1394::init(Miro::Server& _server, FilterParameters const * _params)
   {
-    DBG(std::cout << "Connecting Device1394." << std::endl);
+    MIRO_DBG(VIDEO, LL_DEBUG, "Device1394::init()");
 
     if (_params)
         params_ = *(dynamic_cast<Device1394Parameters const *>(_params));
@@ -268,11 +262,11 @@ namespace Video
   void
   Device1394::fini()
   {
-    DBG(std::cout << "Device1394:handleDisconnect." << std::endl);
+    MIRO_DBG(VIDEO, LL_DEBUG, "Device1394::fini()");
 	
     if (is_open_)
     {
-      DBG(std::cout << "Device1394::handleDisconnect: close" << std::endl);
+      MIRO_DBG(VIDEO, LL_DEBUG, "Device1394::fini() close");
       dc1394_stop_iso_transmission(handle_, p_camera_->node);
       dc1394_dma_unlisten(handle_, p_camera_);
       dc1394_dma_release_camera(handle_, p_camera_);
@@ -286,7 +280,7 @@ namespace Video
   void
   Device1394::initDevice(int port)
   {
-    DBG(std::cout << "Device1394::initDevice " << port << std::endl);
+    MIRO_DBG(VIDEO, LL_DEBUG, "Device1394::initDevice()");
 
     handle_ = dc1394_create_handle(port);
     if (!handle_) {
@@ -297,12 +291,15 @@ namespace Video
     int camera_count = 0;
     nodeid_t * camera_nodes = dc1394_get_camera_nodes(handle_, &camera_count, 1);
 
-    DBG(std::cout << "Device1394::initDevice: cameracount = " << camera_count << std::endl);
+    MIRO_DBG_OSTR(VIDEO, LL_DEBUG,
+		  "Device1394::initDevice: cameracount = " << camera_count);
     if (camera_count < 1)
       throw Miro::Exception("Device1394::initDevice: no camera found");
 
     p_camera_->node = camera_nodes[0];
-    DBG(std::cout << "Device1394::initDevice: node = " << p_camera_->node << "/" << num_nodes << std::endl);
+    MIRO_DBG_OSTR(VIDEO, LL_DEBUG, 
+		  "Device1394::initDevice: node = " << 
+		  p_camera_->node << "/" << num_nodes);
     if (p_camera_->node == num_nodes - 1)
       throw Miro::Exception("Device1394::initDevice: camera is highest numbered node.");
 
@@ -311,14 +308,15 @@ namespace Video
     if (dc1394_get_camera_feature_set(handle_, p_camera_->node, &features_) != DC1394_SUCCESS)
       throw Miro::Exception("Device1394::initDevice: unable to get camera features");
 	
-    DBG(dc1394_print_feature_set(&features_));
+    if (Miro::Log::level() >= Miro::Log::LL_NOTICE)
+      dc1394_print_feature_set(&features_);
   }
 
   //---------------------------------------------------------------
   void 
   Device1394::cleanupDevice()
   {
-    DBG(std::cout << "Device1394::cleanupDevice " << std::endl);
+    MIRO_DBG(VIDEO, LL_DEBUG, "Device1394::cleanupDevice()");
 
     if (handle_) {
       dc1394_destroy_handle(handle_);
@@ -330,7 +328,7 @@ namespace Video
   void
   Device1394::setImageFormat()
   {
-    DBG(std::cout << "Device1394::setImageFormat" << std::endl);
+    MIRO_DBG(VIDEO, LL_DEBUG, "Device1394::setImageFormat()");
 
     unsigned int i;
     for (i = 0; i < NUM_FORMAT0_MODES; ++i) {
@@ -354,8 +352,8 @@ namespace Video
 
     if (dc1394_get_iso_channel_and_speed(handle_, p_camera_->node, &channel, &speed) != DC1394_SUCCESS)
       throw Miro::Exception("Device1394:initDevice: unable to get iso channel number");
-    std::cout << "ISO channel: " << channel << std::endl;
-    std::cout << "    speed: " << speed << std::endl;
+    MIRO_DBG_OSTR(VIDEO, LL_DEBUG,
+		  "ISO channel: " << channel << "    speed: " << speed);
     channel = 1;
 
     if (dc1394_dma_setup_capture(handle_,
@@ -392,9 +390,10 @@ namespace Video
 	if (first->set_function(handle_,
 				p_camera_->node,
 				(*first->pValue)) != DC1394_SUCCESS) {
-	  std::cout << "WARNING: Feature "
-		    << first->name << " = " << (*first->pValue)
-		    << " not set." << std::endl;
+	  MIRO_LOG_OSTR(LL_WARNING,
+			"Feature " << 
+			first->name << " = " << (*first->pValue) <<
+			" not set.");
 	}
 	dc1394_auto_on_off(handle_, p_camera_->node, first->code, 0);
       }
@@ -411,10 +410,10 @@ namespace Video
 				   p_camera_->node,
 				   params_.whiteBalance0,
 				   params_.whiteBalance1) != DC1394_SUCCESS) {
-	std::cout << "WARNING: Feature "
-		  << "WhiteBalance = " 
-		  << params_.whiteBalance0 << ":" << params_.whiteBalance1
-		  << " not set." << std::endl;
+	  MIRO_LOG_OSTR(LL_WARNING,
+			"Feature WhiteBalance = " <<
+			params_.whiteBalance0 << ":" << params_.whiteBalance1 <<
+			" not set.");
       }
       dc1394_auto_on_off(handle_, p_camera_->node, FEATURE_WHITE_BALANCE, 0);
     }

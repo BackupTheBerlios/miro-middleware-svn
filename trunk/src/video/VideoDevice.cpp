@@ -67,7 +67,7 @@ namespace Video
   void
   Device::enqueueBrokerRequests(BrokerRequestVector const& _request)
   {
-    std::cout << __PRETTY_FUNCTION__ << std::endl;
+    MIRO_DBG(VIDEO, LL_PRATTLE, "Device::enqueueBrokerRequests()");
 
     Miro::Guard guard(mutex_);
     brokerRequest_.reserve(brokerRequest_.size() + _request.size());
@@ -81,7 +81,7 @@ namespace Video
   void
   Device::setBrokerRequestQueue()
   {
-    std::cout << __PRETTY_FUNCTION__ << std::endl;
+    MIRO_DBG(VIDEO, LL_PRATTLE, "Device::setBrokerRequestQueue()");
 
     Miro::Guard guard(mutex_);
     BrokerRequestVector::const_iterator first, last = brokerRequest_.end();

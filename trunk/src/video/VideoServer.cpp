@@ -2,9 +2,8 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002, 2003
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
-//
 // 
 // $Id$
 // 
@@ -21,21 +20,10 @@
 #include "idl/ExceptionC.h"
 #include "miro/Exception.h"
 #include "miro/Utils.h"
-
-#include <iostream>
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
+#include "miro/Log.h"
 
 namespace Video
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-
   Service::Service(Miro::Server& _server, 
 		   Miro::ConfigDocument * _config) :
     schedparams_(ACE_SCHED_FIFO, 10),
@@ -43,12 +31,10 @@ namespace Video
     pConsumer_(NULL),
     pBroker_(NULL)
   {
-    DBG(std::cout << "VideoService initializing.." << endl);
+    MIRO_LOG_CTOR("Video::Service");
 
     Parameters * videoParameters = Parameters::instance();
 
-    std::cout << "Setting up filter tree." << endl;
-    
     _config->setSection("Video");
     Miro::ImageFormatIDL format;
     format.width = videoParameters->width;
@@ -73,20 +59,20 @@ namespace Video
 
   Service::~Service()
   {
-    DBG(std::cout << "Destructing VideoService." << endl);
+    MIRO_LOG_DTOR("Video::Service");
 
     pConsumer_->cancel();
 
-    std::cout << "Video::Device thread canceled." << endl;
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video::Device thread canceled.");
 
     pVideoDevice_->finiTree();
-    std::cout << "Video::FilterTree finished." << endl;
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video::FilterTree finished.");
 
     delete pConsumer_;
-    std::cout << "Video: deleted consumer thread" << endl;
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video: deleted consumer thread.");
 
     delete pVideoDevice_;
-    std::cout << "Video: deleted filter tree." << endl;
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video: deleted filter tree.");
   }
 
   Video::Filter *
@@ -94,16 +80,12 @@ namespace Video
 			   Miro::ImageFormatIDL const& _format,
 			   Video::FilterTreeParameters const& _tree) 
   {
-    cout << "get the filter repository instance" << endl;
     FilterRepository * repo = Video::FilterRepository::instance();
-    cout << " create a new filter instance. " << endl;
     Filter * filter = repo->getInstance( _tree.type, _format);
 
-    cout << "set the filter name " << _tree.name << endl;
     filter->name(_tree.name);
     // set predecessor if available
     if (_pre) {
-      cout << "set predecessor." << endl;
       filter->setPredecessor(_pre);
     }
 
