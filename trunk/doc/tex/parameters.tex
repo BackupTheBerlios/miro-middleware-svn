@@ -121,9 +121,10 @@ computer mounted on the robot will try to load the configuration file:
 {\tt \$MIRO\_ROOT/etc/haeltnix.xml}
 
 The default name and location of the configuration file can be
-overwritten by the command line option {\tt -MiroConfigFile} 
-{\em filename}. The search order of directories stays the same.
-Additionally there can also be an absolute path specified.
+overwritten by the command line option {\tt -MiroConfigFile} {\em
+  filename} or {\tt -MCF} for short. The search order of directories
+stays the same.  Additionally there can also be an absolute path
+specified.
 
 In {\tt \$MIRO\_ROOT/etc} there are sample configuration files for
 every robot model currently supported by \miro. They are named
@@ -178,7 +179,10 @@ $<$!--MiroConfigurationDocument--$>$
       
       Attributes: 
       \begin{itemize}
-      \item \textit{name} Name of the parameter.
+      \item \textit{name} Name of the parameter. On top level, the
+        parameter name attribute of the parameter tag denotes the name
+        of the parameter type. The parameter type definitions are
+        described in section \ref{SEC:PARAMETER_TYPES}.
       \end{itemize}  
       
       \begin{description}
@@ -198,6 +202,20 @@ $<$!--MiroConfigurationDocument--$>$
         be nested. In this case the value attribute is ignored.
         
       \end{description}  
+    \item[instance] As the name of a top level parameter tag denotes
+      the type name of the parameter set, multiple instances of
+      parameters sets in one section become ambiguous. So this tag
+      solves the problem. It has two mandatory attributes:
+      
+      Attributes: 
+      \begin{itemize}
+      \item \textit{name} Name of the parameter. In this case, an arbitrary name.
+      \item \textit{type} The type name of the parameter.
+      \end{itemize}
+      
+      Appart from this, instance tags behave identical, to toplevel
+      parameter tags. That is, the values of the parameter set
+      elements are described in nested parameter tags.
     \end{description}
   \end{description}
 \end{description}
@@ -218,6 +236,7 @@ formal definitions of the components parameter sets, as described
 within the next section.
 
 \section{Parameter Set Generation}
+\label{SEC:PARAMETER_TYPES}
 
 Parameter sets, described as component parameters within a configuration file
 correspond to strictly typed classes within C++. Those structures can
@@ -232,10 +251,11 @@ configuration of the services of \miro but also by other tools within
 the \miro framework. The behaviour framework (sec.\ 
 \ref{SEC:BEHAVIOURS}) uses this functionality for parameterization of
 behaviours and arbiters and the {\tt PolicyEditor} (sec.\ 
-\ref{SEC:POLICY_EDITOR} uses the parameter description files for GUI
+\ref{SEC:POLICY_EDITOR} as well as the {\tt ConfigEditor} (sec.
+\ref{SEC:CONFIG_EDITOR}) use the parameter description files for GUI
 based editing of the behaviour parameters). To facilitate the reuse of
-the parameter descriptions by multiple tools, the syntax of the file is
-somehow obfuscated by additional tags and attributes.
+the parameter descriptions by multiple tools, the syntax of the file
+is somehow obfuscated by additional tags and attributes.
 
 \subsection{Description File Syntax}
 \label{SEC:DESCRIPTION_SYNTAX}
@@ -278,8 +298,9 @@ $<$!--MiroParametersConfigDocument--$>$
         of the parameter class shall be created (sec.\
         \cite{SINGLETON}). Default is {\em false}.
       \item \textit{final} Corresponds to the finalize keyword of
-        java. It is only relevant for the editing tools, not for 
-        code generation. Default is {\em true}.
+        java. It is only relevant for the editing tools, not for code
+        generation. It indicates, that a toplevel instance of this
+        parameter can be created.Default is {\em true}.
       \item \textit{dummy} Sometimes you have to fake a parameter
         class to the editing tools that does not exist as such. No
         code will be generated for such a class. Default is {\em
@@ -382,6 +403,15 @@ from removing the generated files at the end of the task, you have to
 define an additional .PRECIOUS target like this:
 
 .PRECIOUS: MyParameters.cpp MyParameters.h
+
+\section{Config File Editor}
+\ref{SEC:CONFIG_EDITOR}
+
+For advanced config file editing, like filter trees of the video image
+processing framework \ref{SEC:VIDEO_IMAGE_PROCESSING}, a simple text
+editor is a fairly errorprone tool. XML editors do a better job in
+this case, but for real comfort, \miro provides the config file
+editor.
 
 %%% Local Variables: 
 %%% mode: latex

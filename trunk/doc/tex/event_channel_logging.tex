@@ -1,0 +1,42 @@
+\chapter{Event Channel logging}
+\label{sec:ecLogging}
+
+The acquisition of data during the run of a robot application from
+various levels of sensor processing is an essential feature for
+debugging, evaluation and performance assessment. The event based
+communication paradigm of \miro is designed to distribute raw sensor
+data as well as higher level system events, like the latest belief
+state of the robot. The stream of events resembles therefore a quite
+complete trace of the system state during the run of a robot program.
+\miro provides functionalitiy to log such an event stream generically
+to a file. The data can not only be reread into the system, but the
+events can also be redistributed over the event channel, allowing for
+detailed offline analysis. In \cite{Utz+Mayer+Kraetzschmar:04} the
+various configuration and application scenarios are described along
+with a detailed performance analysis of the facility. This chapter is
+concerned with a more technical view, like the setup of the logging
+client, the replay as well as the maintenance of logged data and the
+file format.
+
+\section{Logging Client Class}
+
+\section{Parameters}
+
+\section{Standalone Clients}
+
+\subsection{Command Line Parameters}
+
+\subsection{Event Channel Client}
+
+\subsection{NMC Client}
+
+\section{LogPlayer}
+
+\section{File Format}
+
+\section{Test Programs}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "miro_manual"
+%%% End: 
