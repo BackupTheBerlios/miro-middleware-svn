@@ -59,7 +59,7 @@ RangeSensorWidget::~RangeSensorWidget()
 
 void RangeSensorWidget::timerEvent(QTimerEvent*) 
 {
-  scan_ = sensor_->getWaitGroup(0);
+  scan_ = sensor_->getGroup(0);
   update();
 }
 
