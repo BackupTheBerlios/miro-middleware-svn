@@ -46,7 +46,7 @@ namespace Can
     void init() const;
 
     /** write up to 8 bytes to a 29bits long id */
-    void write(const Message& message);
+    void write(Message& message);
 
     ACE_Time_Value lastWrite;
     static ACE_Time_Value canTimeOut;

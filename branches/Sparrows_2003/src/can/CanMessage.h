@@ -53,7 +53,6 @@ namespace Can
 
     const canmsg* canMessage() const { return &message_; }
     canmsg* canMessage() { return &message_; }
-
   protected:
     canmsg message_;
   };

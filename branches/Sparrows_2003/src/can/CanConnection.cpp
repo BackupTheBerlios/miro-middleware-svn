@@ -115,8 +115,13 @@ namespace Can
   }
 
   void
-  Connection::write(const Message& message)
+  Connection::write(Message& message)
   {
+    
+    if(parameters_.module == "sja1000"){
+       (message.canMessage())->type = EXTENDED;
+
+    }
     ACE_Time_Value av(ACE_OS::gettimeofday() + ACE_Time_Value(1));
 
     if (writeMutex.acquire(av) == -1)

@@ -125,10 +125,10 @@ namespace Sparrow
   static const unsigned long CAN_IR_ALIVE1      = 0x8f050102;
   static const unsigned long CAN_R_IR_ALIVE1    = 0x8f850201;
 
-  static const unsigned long CAN_IR_GET_CONT2   = 0x00000000;    //noch unbekannt
-  static const unsigned long CAN_R_IR_GET_CONT2 = 0x00000000;
-  static const unsigned long CAN_IR_ALIVE2      = 0x00000000;
-  static const unsigned long CAN_R_IR_ALIVE2    = 0x00000000;
+  static const unsigned long CAN_IR_GET_CONT2   = 0x00000001;    //noch unbekannt
+  static const unsigned long CAN_R_IR_GET_CONT2 = 0x00000002;
+  static const unsigned long CAN_IR_ALIVE2      = 0x00000003;
+  static const unsigned long CAN_R_IR_ALIVE2    = 0x00000004;
 
   // debug messages
 

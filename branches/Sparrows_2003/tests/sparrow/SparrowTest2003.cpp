@@ -90,7 +90,7 @@ int main(int argc, char * argv[])
   unsigned short accel, power, speed,
     threshold, a2, a1, a0, ticksL, ticksR,
     radstand;
-  unsigned char num;
+  int num;
   short left, right, trans, distance;
   int ventilatetime, kicktime, delta;
   char c;
@@ -213,7 +213,7 @@ int main(int argc, char * argv[])
 	cin >> ventilatetime;
         cout << "kicktime (msec): " << flush;
 	cin >> kicktime;
-	service.connection.kick(ventilatetime,kicktime);
+	service.connection.kick(ventilatetime, kicktime);
 	break;
       /*case '8':  // drive distance
 	cout << "distance (mm): " << flush;
@@ -310,12 +310,12 @@ int main(int argc, char * argv[])
 	ACE_OS::sleep(ACE_Time_Value(1));
 	break;*/
       case 's':      // setSpeedRot
-	//cout << "servo number (0-1): " << flush;
-	//cin >> num;
+	cout << "servo number (0-1): " << flush;
+	cin >> num;
 	cout << "servo position (deg): " << flush;
 	cin >> rot;
 	rot = deg2Rad(rot);
-	service.connection.setServo(0, rot);
+	service.connection.setServo(num, rot);
 	break;
       case 'q':
 	loop = false;
