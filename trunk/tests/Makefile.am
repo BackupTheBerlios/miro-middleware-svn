@@ -19,6 +19,7 @@ globaldirs = \
 	video \
 	videoBroker \
 	notify \
+	notifyMulticast \
 	speech \
 	behaviours \
 	behaviourEngine \

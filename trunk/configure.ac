@@ -239,6 +239,7 @@ AC_CONFIG_FILES([Makefile
                  tests/image/Makefile
                  tests/motion/Makefile
                  tests/notify/Makefile
+                 tests/notify/Makefile
                  tests/odometry/Makefile
                  tests/panTilt/Makefile
                  tests/pioneer/Makefile
