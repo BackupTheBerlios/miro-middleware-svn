@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2002
+// (c) 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -45,11 +45,21 @@ namespace Miro
     }
   }
 
+  /**
+   * @return A pointer containing an arbiter message.
+   * Note that the caller takes ownership of the message and is
+   * responsible for freeing its memory if the message is no longer
+   * needed, by using delete.
+   *
+   * If no lower priority behaviour is active, the message returned is
+   * a default constructed message with active == false.
+   */
   ArbiterMessage *
   PriorityArbiter::getInferior(Behaviour const * _id)
   {
     ArbiterMessage * message = getMessageInstance();
 
+    Guard guard(mutex_);
     MessageVector::const_iterator first, last = message_.end();
     for (first = message_.begin(); first != last; ++first) {
       // find first calling behaviours

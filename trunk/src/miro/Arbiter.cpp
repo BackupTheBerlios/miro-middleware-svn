@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2000, 2001, 2002
+// (c) 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -168,4 +168,4 @@ namespace Miro
     }
     else MIRO_LOG_OSTR(LL_WARNING, "PriorityArbiter: received message without behaviour id." << std::endl);
   }
-};
+}

@@ -25,53 +25,65 @@ namespace Miro
 
   // constructor
   //
-  VelocitySpace::VelocitySpace(int _maxVelocity, int _spaceResolution, int _maxAccel, int _maxDecel, int _pace) {
-    
+  VelocitySpace::VelocitySpace(int _maxVelocity, 
+			       int _spaceResolution,
+			       int _maxAccel, 
+			       int _maxDecel,
+			       int _pace) :
+    maxVelocity_(_maxVelocity),		// in mm/sec
+    spaceResolution_(_spaceResolution),	// in mm
+    maxAccel_(_maxAccel),		// in mm/sec2
+    maxDecel_(_maxDecel),		// in mm/sec2
+    pace_(_pace)			// in times/sec
+  {
     // init member variables for given parameters
-    maxVelocity_ = _maxVelocity;		// in mm/sec
-    spaceResolution_ = _spaceResolution;	// in mm
-    maxAccel_ = _maxAccel;			// in mm/sec2
-    maxDecel_ = _maxDecel;			// in mm/sec2
-    pace_ = _pace;				// in times/sec
-
+    
     // set up velocity space
-    velocitySpace_ = new int*[2*(maxVelocity_/spaceResolution_)+1];
-    for(int i=0; i<2*(maxVelocity_/spaceResolution_)+1; i++) {
-      velocitySpace_[i] = new int[2*(maxVelocity_/spaceResolution_)+1];
+    int size = 2 * (maxVelocity_/spaceResolution_) + 1;
+    space_ = new int[size * size];
+    velocitySpace_ = new int*[size];
+    for(int i = 0; i < size; i++) {
+      velocitySpace_[i] = space_ + i * size;
     }
     
     // set initial dynamic window
     setNewVelocity(Vector2d(0., 0.));
-	  
   }
 
-  
   // destructor
   //
-  VelocitySpace::~VelocitySpace() {
-
+  VelocitySpace::~VelocitySpace() 
+  {
+    delete[] space_;
   }
-
+  
   
   // add evaluation for preferred direction
   //
-  void VelocitySpace::addEvalForPreferredDirection(double _prefDir, double _maxSpeed) {
-
+  void
+  VelocitySpace::addEvalForPreferredDirection(double _prefDir, double _maxSpeed)
+  {
     double l_value, r_value, left, right;
+    double _maxSpeed2 = _maxSpeed * _maxSpeed;
     
     for(int l_index = minDynWinLeft_; l_index <= maxDynWinLeft_; l_index++) {
       for(int r_index = minDynWinRight_; r_index <= maxDynWinRight_; r_index++) {
         
 	left = getVelocityByIndex(l_index);
 	right = getVelocityByIndex(r_index);
-	l_value = cos(_prefDir - M_PI / 4.) * left - sin(_prefDir - M_PI / 4.) * right;
-	r_value = sin(_prefDir - M_PI / 4.) * left + cos(_prefDir - M_PI / 4.) * right;
+	l_value =
+	  cos(_prefDir - M_PI_4) * left -
+	  sin(_prefDir - M_PI_4) * right;
+	r_value = 
+	  sin(_prefDir - M_PI_4) * left + 
+	  cos(_prefDir - M_PI_4) * right;
 	
-	if(sqrt(left*left+right*right)<=_maxSpeed)
-	  velocitySpace_[l_index][r_index] = (int)(255. * (1. + atan((double)l_value / fabs((double)r_value)) / (M_PI / 2.)) / 2.);
+	if (left*left + right*right <= _maxSpeed2)
+	  velocitySpace_[l_index][r_index] = 
+	    (int)rint(255. * (1. + 
+			      atan(l_value / fabs(r_value)) / M_PI_2) / 2.);
 	else
 	  velocitySpace_[l_index][r_index] = 0;
-
       }
     }
   }
@@ -80,7 +92,10 @@ namespace Miro
   // add evaluation for obstacle
   //
 
-  void VelocitySpace::addEvalForObstacle(std::vector<Vector2d> &_robot, std::vector<Vector2d> &_obstacle) {
+  void 
+  VelocitySpace::addEvalForObstacle(std::vector<Vector2d> &_robot,
+				    std::vector<Vector2d> &_obstacle) 
+  {
 
     const int CURV_CNT = 6; // count (6)
     const int CURV_RES = 6; // count (6)
@@ -248,8 +263,9 @@ namespace Miro
 
   // calc new velocity
   //
-  Vector2d VelocitySpace::applyObjectiveFunctionToEval() {
-
+  Vector2d
+  VelocitySpace::applyObjectiveFunctionToEval() 
+  {
     int biggestEval = 10;		// start with a threshold of 10
     double biggestRad = 0.;
     Vector2d biggestValueVelocity(0., 0.);
@@ -308,21 +324,24 @@ namespace Miro
  
   // set new velocity
   //
-  void VelocitySpace::setNewVelocity(Vector2d _velocity) {
-
+  void 
+  VelocitySpace::setNewVelocity(Vector2d const& _velocity) 
+  {
     velocity_ = _velocity;
     minDynWinLeft_ = getIndexByVelocity((int)velocity_.real() - (maxDecel_ / pace_));
     minDynWinRight_ = getIndexByVelocity((int)velocity_.imag() - (maxDecel_ / pace_));
     maxDynWinLeft_ = getIndexByVelocity((int)velocity_.real() + (maxAccel_ / pace_));
     maxDynWinRight_ = getIndexByVelocity((int)velocity_.imag() + (maxAccel_ / pace_));
-
   }
 
   
   // get signed distance between point and line
   //
-  double VelocitySpace::getSignedDistanceBetweenPointAndLine(Vector2d _p1, Vector2d _l1, Vector2d _l2) {
-
+  double 
+  VelocitySpace::getSignedDistanceBetweenPointAndLine(Vector2d const& _p1,
+						      Vector2d const& _l1,
+						      Vector2d const& _l2) 
+  {
     Vector2d l1_l2, l1_p1, l2_p1;
 
     l1_l2 = _l2 - _l1;
@@ -352,19 +371,23 @@ namespace Miro
 
   // get distance between two lines
   //
-  double VelocitySpace::getDistanceBetweenLineAndLine(Vector2d _l1, Vector2d _l2, Vector2d _l3, Vector2d _l4) {
+  double 
+  VelocitySpace::getDistanceBetweenLineAndLine(Vector2d const& _l1,
+					       Vector2d const& _l2,
+					       Vector2d const& _l3,
+					       Vector2d const& _l4) 
+  {
+    double l1_to_l3_l4 = getSignedDistanceBetweenPointAndLine(_l1, _l3, _l4);
+    double l2_to_l3_l4 = getSignedDistanceBetweenPointAndLine(_l2, _l3, _l4);
+    double l3_to_l1_l2 = getSignedDistanceBetweenPointAndLine(_l3, _l1, _l2);
+    double l4_to_l1_l2 = getSignedDistanceBetweenPointAndLine(_l4, _l1, _l2);
 
-    double l1_to_l3_l4, l2_to_l3_l4, l3_to_l1_l2, l4_to_l1_l2;
-
-    l1_to_l3_l4 = getSignedDistanceBetweenPointAndLine(_l1, _l3, _l4);
-    l2_to_l3_l4 = getSignedDistanceBetweenPointAndLine(_l2, _l3, _l4);
-    l3_to_l1_l2 = getSignedDistanceBetweenPointAndLine(_l3, _l1, _l2);
-    l4_to_l1_l2 = getSignedDistanceBetweenPointAndLine(_l4, _l1, _l2);
-
-    if( ((l1_to_l3_l4 * l2_to_l3_l4) < 0) && ((l3_to_l1_l2 * l4_to_l1_l2) < 0) )
+    if( ((l1_to_l3_l4 * l2_to_l3_l4) < 0) && 
+	((l3_to_l1_l2 * l4_to_l1_l2) < 0) )
       return 0;
 
-    return fabs(std::min(std::min(l1_to_l3_l4, l2_to_l3_l4), std::min(l3_to_l1_l2, l4_to_l1_l2)));
+    return fabs(std::min(std::min(l1_to_l3_l4, l2_to_l3_l4),
+			 std::min(l3_to_l1_l2, l4_to_l1_l2)));
 
   }
 
@@ -446,28 +469,14 @@ namespace Miro
 
   // move the given polygon by given distance
   //
-  void VelocitySpace::movePolygon(std::vector<Vector2d> &_polygon, Vector2d _distance) {
+  void 
+  VelocitySpace::movePolygon(std::vector<Vector2d> &_polygon, Vector2d _distance) 
+  {
 
     std::vector<Vector2d>::iterator i;
 
     for(i = _polygon.begin(); i < _polygon.end(); i++) {
       *i = Vector2d(i->real() + _distance.real(), i->imag() + _distance.imag());
     }
-
   }
-
-
-  // calculate index of velocity space array for given velocity
-  //
-  int VelocitySpace::getIndexByVelocity(double _velocity) {
-    return (std::max(0, std::min(2 * maxVelocity_, maxVelocity_ + (int)_velocity)) / spaceResolution_);
-  }
-
-	
-  // calculate velocity for given index of velocity space array
-  //
-  double VelocitySpace::getVelocityByIndex(int _index) {
-    return (double)(std::max(-maxVelocity_, std::min(maxVelocity_, (_index * spaceResolution_) - maxVelocity_)));
-  }
-  
-};
+}

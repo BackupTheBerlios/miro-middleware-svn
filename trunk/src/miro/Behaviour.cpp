@@ -157,4 +157,4 @@ namespace Miro
     else 
       throw BehaviourEngine::EUnknownActionPattern();
   }
-};
+}

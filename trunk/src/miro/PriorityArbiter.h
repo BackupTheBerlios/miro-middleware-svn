@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2002
+// (c) 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -35,6 +35,7 @@ namespace Miro
     ARBITER_TYPES_FACTORY(PriorityArbiter);
 
     virtual void calcActivation();
+    //! Get the next active arbitration message with lower priority.
     virtual ArbiterMessage * getInferior(Behaviour const * _id);
 
   protected:
@@ -46,5 +47,5 @@ namespace Miro
     //! The behaviour tha has currently control over the actuators.
     const Behaviour * currentBehaviour_;
   };
-};
+}
 #endif
