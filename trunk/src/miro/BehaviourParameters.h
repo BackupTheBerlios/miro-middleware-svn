@@ -14,9 +14,6 @@
 #include <iostream>
 #include <qdom.h>
 
-// forward declarations
-class QDomNode;
-
 namespace Miro
 {
   // forward declarations

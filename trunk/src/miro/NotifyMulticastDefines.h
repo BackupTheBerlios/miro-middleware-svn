@@ -29,9 +29,6 @@
 
 #include <string>
 
-/* needed for QT/ACE compatibility */
-#define QT_GENUINE_STR
-
 #define HEADER_SIZE 32
 #define DEFAULT_MTU 1024
 
