@@ -26,7 +26,14 @@
 #ifndef NotifyMulticastRequestIndex_h
 #define NotifyMulticastRequestIndex_h
 
-#include <tao/Basic_Types.h>
+#include <tao/Version.h>
+
+#if TAO_MAJOR_VERSION > 1 || \
+    TAO_MAJOR_VERSION == 1 && TAO_MINOR_VERSION >= 4
+#  include <tao/Basic_Types.h>
+#else
+#  include <tao/corbafwd.h>
+#endif
 #include <ace/INET_Addr.h>
 
 namespace Miro 
@@ -60,7 +67,8 @@ namespace Miro
     {}
 
     inline
-    RequestIndex::RequestIndex(const ACE_INET_Addr &_from, CORBA::ULong _requestId) : 
+    RequestIndex::RequestIndex(const ACE_INET_Addr &_from,
+			       CORBA::ULong _requestId) : 
       from_(_from), 
       requestId_(_requestId) 
     {}
