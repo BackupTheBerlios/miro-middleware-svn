@@ -54,13 +54,9 @@ RangeSensorBehaviour::RangeSensorBehaviour(Miro::Client& _client,
   description_(),
   pSupplier_(_pSupplier)
 {
-<<<<<<< RangeSensorBehaviour.cpp
   MIRO_LOG_CTOR("RangeSensorBehaviour");
 
   setSingleSubscription(_domainName, "RawPosition");
-=======
-  cout << "Constructing RangeSensorBehaviour behaviour." << endl;
->>>>>>> 1.4
 }
 
 void
@@ -78,17 +74,6 @@ RangeSensorBehaviour::init(const Miro::BAP::BehaviourParameters * _params)
 
   cout << name_ << ": subscribing for " << description_->eventName << endl;
 
-<<<<<<< RangeSensorBehaviour.cpp
-  EventTypeSeq added(2);
-
-  added[0].domain_name =  CORBA::string_dup(domainName_.c_str());
-  added[0].type_name = CORBA::string_dup("RawPosition");
-  added[1].domain_name =  CORBA::string_dup(domainName_.c_str());
-  added[1].type_name = CORBA::string_dup(description_->eventName);
-
-  
-  setSubscriptions(added);
-=======
   EventTypeSeq newSubscriptions;
   newSubscriptions.length(2);
 
@@ -98,7 +83,6 @@ RangeSensorBehaviour::init(const Miro::BAP::BehaviourParameters * _params)
   newSubscriptions[2].type_name = CORBA::string_dup(description_->eventName);
 
   setSubscriptions(newSubscriptions);
->>>>>>> 1.4
 
   Super::init(_params);
 }

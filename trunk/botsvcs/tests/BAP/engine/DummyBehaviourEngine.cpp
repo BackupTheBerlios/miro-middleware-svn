@@ -17,7 +17,6 @@
 #include "botsvcs/BAP/BehaviourEngineImpl.h"
 
 #include "miro/Server.h"
-#include "miro/ReactorTask.h"
 #include "miro/StructuredPushSupplier.h"
 #include "miro/Log.h"
 
@@ -44,7 +43,6 @@ main(int argc, char* argv[])
 
   Miro::Log::init(argc, argv);
   Miro::Server server(argc, argv);
-  Miro::ReactorTask task(ACE_Reactor::instance(), &server);
 
   try {
     CosNotifyChannelAdmin::EventChannelFactory_var notifyFactory =    
@@ -87,9 +85,9 @@ main(int argc, char* argv[])
     }
 
     std::cout << "loop forever handling events" << endl;
-    task.open(NULL);
-    server.run();
-    task.cancel();
+    server.detach();
+    ACE_Reactor::instance()->run_reactor_event_loop();
+    server.shutdown();
     factory.fini();
   }
   catch (const Miro::Exception& e) {

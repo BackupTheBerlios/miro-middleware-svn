@@ -10,12 +10,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #include "Straight.h"
 
-<<<<<<< Straight.cpp
 #include "botsvcs/BAP/MotionArbiterMessage.h"
-=======
-#include "miro/MotionArbiterMessage.h"
 #include "miro/Log.h"
->>>>>>> 1.3
 
 const std::string Straight::name_ = "Straight";
 

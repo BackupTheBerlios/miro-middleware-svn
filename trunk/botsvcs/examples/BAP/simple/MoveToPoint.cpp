@@ -29,15 +29,9 @@ BEHAVIOUR_PARAMETERS_FACTORY_IMPL(MoveToPoint, MoveToPointParameters);
 MoveToPoint::MoveToPoint(EventChannel_ptr _ec, const std::string& _domainName) :
   Super(_ec)
 {
-<<<<<<< MoveToPoint.cpp
   MIRO_LOG_CTOR("MoveToPoint.");
 
   setSingleSubscription(_domainName, "Odometry");
-=======
-  std::cout << "Constructing MoveToPoint behaviour." << endl;
-
-  setSingleSubscription(_domainName, "Odometry");
->>>>>>> 1.4
 }
 
 MoveToPoint::~MoveToPoint()
