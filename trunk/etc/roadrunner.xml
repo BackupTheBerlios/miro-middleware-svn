@@ -213,7 +213,7 @@
 
   <parameter name="Camera" >
    <parameter value="0.060000" name="Latency" />
-   <parameter value="30.5" name="Alpha" />
+   <parameter value="31.0" name="Alpha" />
    <parameter value="595" name="Height" />
 
    <parameter value="640" name="Nfx" />
