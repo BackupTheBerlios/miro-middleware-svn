@@ -76,7 +76,7 @@ namespace Pioneer
     status_.position.heading = 0.;
     status_.velocity.translation = 0;
     status_.velocity.rotation = 0.;
-    pAnswer=pCanonPanTilt->getAnswer();
+    pAnswer=(pCanonPanTilt!=NULL)?pCanonPanTilt->getAnswer():NULL;
   }
 
 
