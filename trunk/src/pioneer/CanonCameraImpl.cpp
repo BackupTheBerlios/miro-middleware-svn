@@ -266,6 +266,7 @@ namespace Canon
       connection.sendCamera(aeLock);
       checkAnswer();
       //keep trying...
+      cout <<"antwort" <<pAnswer->errorCode()<< endl;
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
     }
   }
@@ -296,11 +297,11 @@ namespace Canon
     char tmp[4];
     char fixChar[4];
 
-    strcpy(fixChar , ";");
+    strcpy(fixChar , ";");   // set preparameter 3Bh
     if (!initialized) initialize();
     if (value < 16) value = 16;
     if (value > 255) value = 255;
-    Message aeValue(LIGHT_AE,strcat(fixChar, int2str(tmp,value,2)));
+    Message aeValue(LIGHT_AE,strcat(fixChar, int2str(tmp,value,3)));
 
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
@@ -312,6 +313,28 @@ namespace Canon
     }
   }
 
+  void
+  CanonCameraImpl::setIrisAssignment(short value) throw(Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut)
+  {
+    bool done=false;
+    char tmp[4];
+    char fixChar[4];
+
+    strcpy(fixChar , "9"); // set preparameter 3Bh
+    if (!initialized) initialize();
+    if (value < 2) value = 2;
+    if (value > 10) value = 10;
+    Message aeIris(LIGHT_AE,strcat(fixChar, int2str(tmp,value,3)));
+
+    while (!done) {
+      Miro::Guard guard(pAnswer->mutex);
+      pAnswer->init();
+      connection.sendCamera(aeIris);
+      checkAnswer();
+      //keep trying...
+      if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
+    }
+  }
 
   //-------------------------------------------------------------------
   // auxiliary functions
