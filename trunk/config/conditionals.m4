@@ -70,9 +70,9 @@ AC_ARG_ENABLE(
 
 AC_ARG_ENABLE(
 	QuickCam,
-	AC_HELP_STRING([--enable-QuickCam], [Turn on QuickCam support (default off)]),
+	AC_HELP_STRING([--enable-QuickCam], [Turn on QuickCam support (default on)]),
 	ac_request_quickcam=$enableval,
-	ac_request_quickcam=no)
+	ac_request_quickcam=yes)
 ])
 
 
