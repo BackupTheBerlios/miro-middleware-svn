@@ -24,6 +24,7 @@ VideoDevice1394.lo
 VideoDeviceBTTV.lo
 VideoDeviceMeteor.lo
 VideoDeviceDummy.lo
+VideoDevicePlayer.lo
 VideoFilter.lo
 VideoFilterBasic.lo
 VideoFilterRepository.lo

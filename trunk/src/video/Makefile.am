@@ -13,6 +13,7 @@
 
 include $(top_srcdir)/config/Make-rules
 # AM_LDFLAGS += -version-info `echo $(VERSION) | sed 's/\./:/g'`
+AM_CXXFLAGS += $(PLAYER_CPPFLAGS)
 
 
 lib_LTLIBRARIES = libmiroVideo.la
@@ -40,6 +41,9 @@ sources = \
 	VideoServer.cpp \
 	VideoFilterService.cpp
 
+playersources = \
+	VideoDevicePlayer.cpp
+
 bttvsources = \
 	BufferManagerBTTV.cpp \
 	VideoDeviceBTTV.cpp
@@ -66,6 +70,10 @@ quickcamsources = \
 	VideoFilterRGBtoSeg.cpp \
 	VideoFilterDistanceScan.cpp
 
+if COND_PLAYER
+playersources_used = $(playersources)
+endif
+
 if COND_BTTV
 bttvsources_used = $(bttvsources)
 endif
@@ -89,9 +97,8 @@ libmiroVideo_la_SOURCES = \
 	$(bttvsources_used) \
 	$(meteorsources_used) \
 	$(1394sources_used) \
-	$(quickcamsources_used)
-
-
+	$(quickcamsources_used) \
+	$(playersources_used)
 
 
 VideoService_SOURCES = VideoService.cpp
@@ -104,6 +111,10 @@ if COND_IEEE1394
 	-ldc1394_control
 endif
 
+if COND_PLAYER
+playerlibraries = $(PLAYER_LDFLAGS) $(PLAYER_LIBS)
+endif
+
 ## local version of libmiroVideo, because it is not installed at this point.
 VideoService_LDADD = \
 	$(top_builddir)/lib/libmiroSvc.a \
@@ -111,7 +122,8 @@ VideoService_LDADD = \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS) \
-	$(1394libraries)
+	$(1394libraries) \
+	$(playerlibraries)
 
 extraheader = \
 	VideoFilterFactory.h \

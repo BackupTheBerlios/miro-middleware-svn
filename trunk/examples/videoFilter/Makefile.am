@@ -33,10 +33,16 @@ if COND_IEEE1394
         -ldc1394_control
 endif 
 
+if COND_PLAYER
+playerlibraries = \
+	$(PLAYER_LDFLAGS) $(PLAYER_LIBS)
+endif
+
 GrayVideoService_LDADD = \
 	-lmiroVideo \
 	-lmiro \
-        $(1394libraries)
+        $(1394libraries) \
+	$(playerlibraries)
 
 BUILT_SOURCES = Parameters.cpp Parameters.h
 CLEANFILES = $(BUILT_SOURCES)

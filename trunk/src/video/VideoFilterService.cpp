@@ -36,6 +36,10 @@
 #include "VideoFilterDistanceScan.h"
 #endif
 
+#ifdef MIRO_HAS_PLAYER
+#include "VideoDevicePlayer.h"
+#endif
+
 #include "VideoDeviceDummy.h"
 #include "VideoFilterBasic.h"
 
@@ -78,6 +82,10 @@ namespace Miro
 	repo->registerFilter< ::Video::FilterOmni2Pan>("FilterOmni2Pan");
 	repo->registerFilter< ::Video::FilterRGBtoSeg>("FilterRGBtoSeg");
 	repo->registerFilter< ::Video::FilterDistanceScan>("FilterDistanceScan");
+#endif
+
+#ifdef MIRO_HAS_PLAYER
+	repo->registerFilter< ::Video::DevicePlayer>("DevicePlayer");
 #endif
 
 	repo->registerFilter< ::Video::FilterCopy>("FilterCopy");
