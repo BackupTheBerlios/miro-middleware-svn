@@ -23,8 +23,8 @@ namespace Miro
     
   public:
     WindowArbiterViewer(DynamicWindow *, QWidget *parent=0, const char *name=0);
-  protected:
     void paintDynamicWindow();
+  protected:
     DynamicWindow * dynamicWindow_;
     void paintEvent(QPaintEvent*);
     void timerEvent(QTimerEvent*);

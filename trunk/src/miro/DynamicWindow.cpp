@@ -75,7 +75,7 @@ namespace Miro
 	  }
 	}
 
-	velocitySpace_[left+100][right+100] = (int)(64. * (1.0 * rot + 1.5 * trans));
+	velocitySpace_[left+100][right+100] = (int)(512. * (1.0 * rot + 1.5 * trans));
       }
     }
   }	
@@ -87,8 +87,8 @@ namespace Miro
     
     const double WHEEL_DISTANCE  = 390.;  // in mm
     const double MAX_POLYGON_DISTANCE = 500.;  // in mm
-    const double BREAK_ACCELERATION = 1000.;  // in mm/sec2
-    const int RESOLUTION = 3;
+    const double BREAK_ACCELERATION = 2000.;  // in mm/sec2
+    const int RESOLUTION = 4;
 
     double offset, angle, pointValue, fLeft, fRight;
     
@@ -96,50 +96,47 @@ namespace Miro
       for(int right = minRight_ ; right <= maxRight_; right += RESOLUTION ) {
   
 	if(left == right) {
-	  fLeft = 10. * (double)(left * left) / BREAK_ACCELERATION;
-	  fRight = 10. * (double)(right * right) / BREAK_ACCELERATION;
+	  fLeft = 100. * (double)(left * left) / BREAK_ACCELERATION;
+	  fRight = 100. * (double)(right * right) / BREAK_ACCELERATION;
       	}
       	else {
 	  if(left > right) {
-	    fLeft = 10. * (double)(left * left) / BREAK_ACCELERATION;
+	    fLeft = 100. * (double)(left * left) / BREAK_ACCELERATION;
 	    fRight = ((double)(right) / double(left)) * fLeft;
 	  }
 	  else if(left < right) {
-	    fRight = 10. * (double)(right * right) / BREAK_ACCELERATION;
+	    fRight = 100. * (double)(right * right) / BREAK_ACCELERATION;
 	    fLeft = ((double)(left) / double(right)) * fRight;
 	  }
-      	}
+	}
   
         if(left != right) {
                       
           offset = (WHEEL_DISTANCE / 2.) * ((fLeft + fRight) / (fLeft - fRight));
           angle = (180. * (fLeft - fRight)) / (WHEEL_DISTANCE * M_PI);
           rotateMountedPolygon(_robot, Vector2d(-offset, 0.), angle);       
-          pointValue = min(1., getDistanceBetweenMountedPolygonAndMountedPolygon(_robot, _obstacle) / MAX_POLYGON_DISTANCE);
+          pointValue = std::min(1., getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) / MAX_POLYGON_DISTANCE);
           
-          for(int x = 0; x < RESOLUTION; x++) {
-            for(int y = 0; y < RESOLUTION; y++) {
-              if ((left+100+x < VEL_SPACE_LEFT) && (right+100+y < VEL_SPACE_RIGHT)) {
-                velocitySpace_[left+100+x][right+100+y] = 
-		  (int)(velocitySpace_[left+100+x][right+100+y] * pointValue);
-              }
-            }
-          }
+          for(int x = 0; (x < RESOLUTION) && (x+left <= maxLeft_); x++) {
+            for(int y = 0; (y < RESOLUTION) && (y+right <= maxRight_); y++) {
+	      velocitySpace_[left+100+x][right+100+y] = (int)(velocitySpace_[left+100+x][right+100+y] * pointValue);
+	    }
+	  }
           
           rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -angle);
           
         }
-        else {  // (left - right == 0)
+        else {  // (left == right)
           
           moveMountedPolygon(_robot, Vector2d(0., (fLeft + fRight) / 2.));
-          pointValue = min(1., getDistanceBetweenMountedPolygonAndMountedPolygon(_robot, _obstacle) / MAX_POLYGON_DISTANCE);
+          pointValue = min(1., getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) / MAX_POLYGON_DISTANCE);
 
-          for(int x = 0; x < RESOLUTION; x++) {
-            for(int y = 0; y < RESOLUTION; y++) {
-              if ((left+100+x < VEL_SPACE_LEFT) && (right+100+y < VEL_SPACE_RIGHT)) {
-                velocitySpace_[left+100+x][right+100+y] = 
-		  (int)(velocitySpace_[left+100+x][right+100+y] * pointValue);
-              }
+	  if(left == minLeft_ && right == minRight_)
+	    cout << "POINTVALUE: " << pointValue << " - DISTANCE: " << (fLeft + fRight) / 2. << endl;
+
+          for(int x = 0; (x < RESOLUTION) && (x+left <= maxLeft_); x++) {
+            for(int y = 0; (y < RESOLUTION) && (y+right <= maxRight_); y++) {
+	      velocitySpace_[left+100+x][right+100+y] =	(int)(velocitySpace_[left+100+x][right+100+y] * pointValue);
             }
           }
           
@@ -246,7 +243,7 @@ namespace Miro
   
   // get distance between two mounted polygons
   // 
-  double DynamicWindow::getDistanceBetweenMountedPolygonAndMountedPolygon(std::vector<Vector2d> &_polygon1, std::vector<Vector2d> &_polygon2) {
+  double DynamicWindow::getDistanceBetweenPolygonAndPolygon(std::vector<Vector2d> &_polygon1, std::vector<Vector2d> &_polygon2) {
     
     std::vector<Vector2d>::iterator a1, a2, b1, b2;
     double distance, minDistance;

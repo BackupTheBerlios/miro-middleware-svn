@@ -72,7 +72,7 @@ namespace Miro
     // get distance between two lines
     double getDistanceBetweenLineAndLine(Vector2d, Vector2d, Vector2d, Vector2d);
     // get distance between two mounted polygons
-    double getDistanceBetweenMountedPolygonAndMountedPolygon(std::vector<Vector2d>&, std::vector<Vector2d>&);
+    double getDistanceBetweenPolygonAndPolygon(std::vector<Vector2d>&, std::vector<Vector2d>&);
     // rotate mounted polygon around offset by given angle
     void rotateMountedPolygon(std::vector<Vector2d>&, Vector2d, double);
     // move the given polygon by the given distance
