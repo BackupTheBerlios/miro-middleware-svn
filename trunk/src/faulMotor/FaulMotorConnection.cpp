@@ -39,6 +39,18 @@
 
 // if (sparrow2003) nur im constructor
 
+namespace 
+{
+  char const * const DEF_ACC_MSG[2] = { "ac50", NULL}; // default acceleration
+  char const * const GET_SPPED_MSG[2] = { "gn", NULL };
+  char const * const GET_TICKS_MSG[2] = { "pos", NULL };
+  char const * const MOTOR_ENABLE_MSG[2] = { "en", NULL };
+  char const * const MOTOR_DISABLE_MSG[2] = { "di", NULL };
+  char const * const DISABLE_ODO_MSG[2] = { "jmp1", NULL };
+  char const * const ENABLE_ODO_MSG[2] = { "jmp2", NULL };
+  char const * const STOP_MSG[2] = { "jmp3", NULL };
+};
+
 namespace FaulMotor
 {
   using namespace FaulController;
@@ -84,10 +96,8 @@ namespace FaulMotor
 
     }
 
-    char const * const accMessage = "ac50\0"; // build acceleration packet
-    leftWheel_->writeMessage(accMessage);
-    rightWheel_->writeMessage(accMessage);
-
+    leftWheel_->writeMessage(DEF_ACC_MSG);
+    rightWheel_->writeMessage(DEF_ACC_MSG);
 
 
     disable();
@@ -116,17 +126,19 @@ namespace FaulMotor
 
     char speedMessageL[20];
     char speedMessageR[20];
-    short acctestL, acctestR;
+    char accMessageL[20];
+    char accMessageR[20];
+    char const * messageL[3] = { accMessageL, speedMessageL, NULL };
+    char const * messageR[3] = { accMessageR, speedMessageR, NULL };
 
     int speedL = (short) (-_speedL * params_->speedConvFactor);//* 112;
     int speedR = (short) (_speedR * params_->speedConvFactor);//* 112;
-    double accL, accR, accEffL, accEffR;
 
-    double dSpeedL, dSpeedR;
-    dSpeedL = -speedL - prevSpeedL;
-    dSpeedR = speedR - prevSpeedR;
+    double dSpeedL = -speedL - prevSpeedL;
+    double dSpeedR = speedR - prevSpeedR;
 
-    if ((dSpeedR+dSpeedL)/2 <= 0 ) {
+    double accEffL, accEffR;
+    if ((dSpeedR + dSpeedL) / 2. <= 0 ) {
        accEffL = params_-> maxNegAccel;
        accEffR = params_-> maxNegAccel;
     }
@@ -135,9 +147,8 @@ namespace FaulMotor
        accEffR = params_-> maxPosAccel;
     }
 
-
-    accR =  accEffR * 9. / 320.;
-    accL =  accEffL * 9. / 320.;
+    double accR =  accEffR * 9. / 320.;
+    double accL =  accEffL * 9. / 320.;
     if ((dSpeedL != 0) && (dSpeedR != 0)) {
       if (abs(dSpeedL) > abs(dSpeedR)) {
 	accR = (dSpeedR / dSpeedL * accEffR) * 9. / 320.;
@@ -147,41 +158,34 @@ namespace FaulMotor
       }
     }
 
-    acctestL = abs((short)accL);
-    acctestR = abs((short)accR);
+    short acctestL = abs((short)accL);
+    short acctestR = abs((short)accR);
 //    cout << "maxPosAcc: " << params_-> maxPosAccel <<" AccR: " << acctestR ;
 //    cout << " AccL: " << acctestL << endl;
 
-    if(Sparrow::Parameters::instance()->sparrow2003){
-      sprintf(speedMessageL, "ac%d", acctestL); // build speed message
-      sprintf(speedMessageR, "ac%d", acctestR); // build speed message
-      leftWheel_->writeMessage(speedMessageL);
-      rightWheel_->writeMessage(speedMessageR);
-
-      //ACE_OS::sleep(ACE_Time_Value(2));
-      sprintf(speedMessageL, "v%d", speedL); // build speed message
-      sprintf(speedMessageR, "v%d", speedR); // build speed message
-      leftWheel_->writeMessage(speedMessageL);
-      rightWheel_->writeMessage(speedMessageR);             // send it
-
+    if (abs(acctestL - prevAccL) > 2) {         //zur datenverringerung
+      sprintf(speedMessageL, "ac%d", acctestL); // build acc message
+      prevAccL = acctestL;
     }
     else {
-      if (false && abs(acctestL-prevAccL)>2){			//zur datenverringerung
-    	sprintf(speedMessageL, "ac%d", acctestL); // build speed message
-	leftWheel_->writeMessage(speedMessageL);
-	prevAccL=acctestL;
-      }
-      if (false && abs(acctestR-prevAccR)>2){
-    	sprintf(speedMessageR, "ac%d", acctestR); // build speed message
-	rightWheel_->writeMessage(speedMessageR);
-    	prevAccR=acctestR;
-      }
-
-      sprintf(speedMessageL, "ac%d\r\nv%d", acctestL, speedL); // build speed message
-      sprintf(speedMessageR, "ac%d\r\nv%d", acctestR, speedR); // build speed message
-      leftWheel_->writeMessage(speedMessageL);
-      rightWheel_->writeMessage(speedMessageR);             // send it
+      messageL[0] = speedMessageL;
+      messageL[1] = NULL;
     }
+
+    if (abs(acctestR - prevAccR) > 2) {
+      sprintf(speedMessageR, "ac%d", acctestR); // build acc message
+      prevAccR = acctestR;
+    }
+    else {
+      messageR[0] = speedMessageR;
+      messageR[1] = NULL;
+    }
+
+    sprintf(speedMessageL, "v%d", speedL); // build speed message
+    sprintf(speedMessageR, "v%d", speedR); // build speed message
+
+    leftWheel_->writeMessage(messageL);
+    rightWheel_->writeMessage(messageR);   // send it
     prevSpeedL = -speedL;
     prevSpeedR = speedR;
   }
@@ -189,36 +193,20 @@ namespace FaulMotor
   void
   Connection::getSpeed()
   {
-   	char const * const getSpeedMessage = "gn\0";
-
-	Miro::Guard guard(mutex_);
-	leftWheel_->writeMessage(getSpeedMessage);             // send it
-	rightWheel_->writeMessage(getSpeedMessage);
-
-        ACE_OS::sleep(ACE_Time_Value(0, 20000));
-
+    Miro::Guard guard(mutex_);
+    leftWheel_->writeMessage(GET_SPPED_MSG);             // send it
+    rightWheel_->writeMessage(GET_SPPED_MSG);
   }
 
   void
   Connection::getTicks()
   {
-
-
     Miro::Guard guard(mutex_);
 
     gotTicks_ = 0;
-
-    ACE_Time_Value now = ACE_OS::gettimeofday();
-    //ACE_Time_Value nextWrite = std::min(leftWheel_->lastWrite, rightWheel_->lastWrite)
-    //  + ACE_Time_Value(0, 18000);
-    ACE_Time_Value nextWrite =  ACE_Time_Value(0, 18000);
-
-    if (nextWrite > now)
-       ACE_OS::sleep(nextWrite - now);
-    char const * const getTicksMessage = "pos\0";
-    leftWheel_->writeMessage(getTicksMessage);            // send it
-    rightWheel_->writeMessage(getTicksMessage);
-
+    
+    leftWheel_->writeMessage(GET_TICKS_MSG); // send it
+    rightWheel_->writeMessage(GET_TICKS_MSG);
   }
 
   void
@@ -230,7 +218,7 @@ namespace FaulMotor
     strncpy(buffer, befehl, 253);
 
     strcat(buffer,"\0");
-    leftWheel_->writeMessage(buffer);
+    //    leftWheel_->writeMessage(buffer);
 
 
     // FIXME: we need to specify the wheel to send the command to
@@ -241,80 +229,62 @@ namespace FaulMotor
   {
     char bufferL[20];
     char bufferR[20];
-    char const * commandL = bufferL;
-    char const * commandR = bufferR;
+    char const * messageL[2] = { bufferL, NULL };
+    char const * messageR[2] = { bufferR, NULL };
 
-	if (_left == 0) {
-		commandL = "ho\0";
-	}
-	else {
-		sprintf(bufferL, "ho%d\0", _left);
-	}
-	if (_right == 0) {
-		commandR = "ho\0";
-	}
-	else {
-		sprintf(bufferR, "ho%d\0", _right);
-	}
+    if (_left == 0) {
+      messageL[0] = "ho";
+    }
+    else {
+      sprintf(bufferL, "ho%d", _left);
+    }
 
-	leftWheel_->writeMessage(commandL);
-	rightWheel_->writeMessage(commandR);
-
+    if (_right == 0) {
+      messageR[0] = "ho";
+    }
+    else {
+      sprintf(bufferR, "ho%d", _right);
+    }
+    
+    leftWheel_->writeMessage(messageL);
+    rightWheel_->writeMessage(messageR);
   }
 
   void
   Connection::enable()
   {
-
-	char const * const getSpeedMessage = "en\0";
-
-	disabled_ = false;
-	leftWheel_->writeMessage(getSpeedMessage);             // send it
-	rightWheel_->writeMessage(getSpeedMessage);
-
+    disabled_ = false;
+    leftWheel_->writeMessage(MOTOR_ENABLE_MSG);             // send it
+    rightWheel_->writeMessage(MOTOR_ENABLE_MSG);
   }
 
   void
   Connection::disable()
   {
-    char const * const getSpeedMessage = "di\0";
     disabled_ = true;
-    leftWheel_->writeMessage(getSpeedMessage);             // send it
-    rightWheel_->writeMessage(getSpeedMessage);
+    leftWheel_->writeMessage(MOTOR_DISABLE_MSG);             // send it
+    rightWheel_->writeMessage(MOTOR_DISABLE_MSG);
 
   }
 
   void
   Connection::jmp1()					// keine Ododaten
   {
-
-
-       char const * const getSpeedMessage = "jmp1\0";
-
-       leftWheel_->writeMessage(getSpeedMessage);             // send it
-       rightWheel_->writeMessage(getSpeedMessage);
-
+    leftWheel_->writeMessage(DISABLE_ODO_MSG);             // send it
+    rightWheel_->writeMessage(DISABLE_ODO_MSG);
   }
 
   void
   Connection::jmp2()					// ododaten so schnell wie möglich
   {
-
-       char const * const getSpeedMessage = "jmp2\0";
-
-       leftWheel_->writeMessage(getSpeedMessage);             // send it
-       rightWheel_->writeMessage(getSpeedMessage);
-
+    leftWheel_->writeMessage(ENABLE_ODO_MSG);             // send it
+    rightWheel_->writeMessage(ENABLE_ODO_MSG);
   }
 
   void
   Connection::jmp3()					// notaus keine Ododaten und v0
   {
-
-       char const * const getSpeedMessage = "jmp3\0";
-
-       leftWheel_->writeMessage(getSpeedMessage);             // send it
-       rightWheel_->writeMessage(getSpeedMessage);
-
+    leftWheel_->writeMessage(STOP_MSG);             // send it
+    rightWheel_->writeMessage(STOP_MSG);
   }
 };

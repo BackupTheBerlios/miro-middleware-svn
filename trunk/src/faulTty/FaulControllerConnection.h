@@ -12,21 +12,16 @@
 #ifndef FaulControllerConnection_h
 #define FaulControllerConnection_h
 
-
-
 namespace FaulController
 {
   // forward declarations
   class Connection
   {
-
-
   public:
     Connection();
     virtual ~Connection();
 
-    virtual void writeMessage(char const * const _message);
-
+    virtual void writeMessage(char const * const _message[]) = 0;
   };
 };
 #endif

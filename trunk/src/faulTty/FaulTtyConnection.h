@@ -36,7 +36,7 @@ namespace FaulController
 	       const Miro::TtyParameters& _parameters);
     virtual ~FaulTtyConnection();
 
-    void writeMessage(char const * const _message);
+    void writeMessage(char const * const _message[]);
 
   protected:
     EventHandler* eventHandler;

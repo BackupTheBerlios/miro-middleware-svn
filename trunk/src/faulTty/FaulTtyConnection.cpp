@@ -50,21 +50,15 @@ namespace FaulController
   }
 
   void
-  FaulTtyConnection::writeMessage(char const * const _message)
+  FaulTtyConnection::writeMessage(char const * const _message[])
   {
-    char buffer[256];
-
-    strncpy(buffer, _message, 253);
-    strcat(buffer, "\r\n\0");
+    int rc = 0;
 
     ACE_Time_Value av(ACE_OS::gettimeofday() + ACE_Time_Value(1));
-
     if (mutex_.acquire(av) == -1)
       throw Miro::CException(errno, "Error writing faulTty device.");
 
-    ACE_Time_Value t = ACE_OS::gettimeofday();
-    ACE_Time_Value delta = t - lastWrite_;
-
+    ACE_Time_Value delta = ACE_OS::gettimeofday() - lastWrite_;
     if (delta < TIME_OUT) {
       // is this sleep necessary ???
       // well, yes
@@ -72,8 +66,31 @@ namespace FaulController
       ACE_OS::sleep(TIME_OUT - delta); // this is at least 10usec thanks to linux
     }
 
-    int rc = ttyConnection->ioBuffer.send_n(buffer, strlen(buffer));
-    lastWrite_ = ACE_OS::gettimeofday();
+    // copy the messages 
+    // setting newlines inbetween
+    char buffer[256];
+    char * dest = buffer;
+    char const * const * pMessage = _message;
+    while (*pMessage ) {
+      char const * src = *pMessage;
+      while (*src) {
+	*dest = *src;
+	++dest;
+	++src;
+      }
+      *dest = '\r';
+      ++dest;
+      *dest = '\n';
+      ++dest;
+      ++pMessage;
+    }
+    *dest = 0;
+
+    unsigned int len = dest - buffer;
+    if (len) {
+      rc = ttyConnection->ioBuffer.send_n(buffer, len);
+      lastWrite_ = ACE_OS::gettimeofday();
+    }
 
     mutex_.release();
 

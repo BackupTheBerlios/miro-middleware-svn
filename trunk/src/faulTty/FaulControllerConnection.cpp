@@ -20,25 +20,16 @@
 #define DBG(x)
 #endif
 
-using std::cout;
-using std::endl;
-
 namespace FaulController
 {
   Connection::Connection()
   {
-    DBG(cout << "Constructing FaulControllerConnection" << endl);
+    DBG(std::cout << "Constructing FaulControllerConnection" << endl);
   }
 
 
   Connection::~Connection()
   {
-    DBG(cout << "Destructing FaulControllerConnection" << endl);
-  }
-
-  void
-  Connection::writeMessage(char const * const _message)
-  {
-
+    DBG(std::cout << "Destructing FaulControllerConnection" << endl);
   }
 };

@@ -22,6 +22,11 @@
 #endif
 
 
+namespace
+{
+  ACE_Time_Value const TIME_OUT(0, 40000);
+};
+
 namespace FaulController
 {
   FaulCanConnection::FaulCanConnection(Sparrow::Connection2003 * _connection2003, int _motor) :
@@ -40,8 +45,27 @@ namespace FaulController
   }
 
   void
-  FaulCanConnection::writeMessage(char const * const _message)
+  FaulCanConnection::writeMessage(char const * const _message[])
   {
-     connection2003_->writeWheel(_message, strlen(_message), motor_);
+    ACE_Time_Value av(ACE_OS::gettimeofday() + ACE_Time_Value(1));
+
+    if (mutex_.acquire(av) == -1)
+      throw Miro::CException(errno, "Error writing faulTty device.");
+
+    ACE_Time_Value t = ACE_OS::gettimeofday();
+    ACE_Time_Value delta = t - lastWrite_;
+
+    if (delta < TIME_OUT) {
+      // is this sleep necessary ???
+      // well, yes
+
+      ACE_OS::sleep(TIME_OUT - delta); // this is at least 10usec thanks to linux
+    }
+
+    char const * const * pMessage = _message;
+    while (*pMessage) {
+      connection2003_->writeWheel(*pMessage, strlen(*pMessage), motor_);
+      ++pMessage;
+    }
   }
 };

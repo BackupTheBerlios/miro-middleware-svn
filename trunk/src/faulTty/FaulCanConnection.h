@@ -15,7 +15,7 @@
 #include "FaulControllerConnection.h"
 #include "sparrow/SparrowConnection2003.h"
 
-
+#include <miro/Synch.h>
 
 namespace FaulMotor
 {
@@ -35,11 +35,14 @@ namespace FaulController
     FaulCanConnection(Sparrow::Connection2003 * _connection2003, int _motor);
     virtual ~FaulCanConnection();
 
-    void writeMessage(char const * const _message);
+    void writeMessage(char const * const _message[]);
+
+  protected:
     Sparrow::Connection2003 * connection2003_;
     int motor_;
 
-
+    Miro::Mutex mutex_;
+    ACE_Time_Value lastWrite_;
   };
 };
 #endif

@@ -116,7 +116,7 @@ namespace Sparrow
   // positive values are forward, negatives backward //
 
   void
-  Connection2003::infraredGet(unsigned short msec, unsigned short times)
+  Connection2003::infraredGet(unsigned short /*msec*/ , unsigned short /*times*/)
   {
 
   }
@@ -129,9 +129,9 @@ namespace Sparrow
 
 
   void
-  Connection2003::writeWheel(const char * buffer, int length, int motor)
+  Connection2003::writeWheel(char const * buffer, int length, int motor)
   {
-    // Roland: was machen wir wenn lengh > 8 ???
+    assert(length <= 8);
 
     Message message;
     message.length(length);

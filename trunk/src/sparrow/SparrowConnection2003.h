@@ -45,7 +45,7 @@ namespace Sparrow
     void setServo(unsigned char servo, double rad);
     void kick(unsigned char ventilatetime, unsigned char kicktime);
 
-    void writeWheel(const char * buffer, int length, int motor);
+    void writeWheel(char const * constbuffer, int length, int motor);
     
 
     void setInfrared1WaitTime(unsigned char waittime);
