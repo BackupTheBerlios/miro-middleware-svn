@@ -1,0 +1,10 @@
+Test for the generalized motion interfaces.
+
+Handy to verify the motor controler stuff.
+
+Start the robots motion service. Then you can access the motion
+interfaces directly via these small test programs. They offer a simple
+text interface for each method available within the interfaces.
+
+Don't forget to specify the robots name at the command line
+(-MNC <robotname>), if it is set in the configuration file.

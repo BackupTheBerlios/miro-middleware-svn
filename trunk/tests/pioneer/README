@@ -1,0 +1,9 @@
+Tool for low level pioneer board testing.
+
+Accesses directly the pioneer board without using the CORBA based
+interfaces. Usefull to narrow the cause of failure, in case the robot
+does not work properly.
+
+Offers a simple text interface for most of the pioneer board interface
+methods. - Should actually offer access to all pioneer board interface
+methods...
