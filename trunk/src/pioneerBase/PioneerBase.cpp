@@ -62,7 +62,9 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
 					 NULL, //stall
 					 //only add the camera if really present
 					 (Pioneer::Parameters::instance()->camera?&canonPanTilt:NULL))),
-  pPsosEventHandler(new Psos::EventHandler(pPioneerConsumer, pioneerConnection)),
+  pPsosEventHandler(new Psos::EventHandler(pPioneerConsumer, 
+					   pioneerConnection,
+					   Pioneer::Parameters::instance())),
   pioneerConnection(reactorTask.reactor(), pPsosEventHandler, pPioneerConsumer),
 
   // Service initialization
