@@ -177,7 +177,7 @@ namespace Abus
       throw Exception(std::string("non-existent devId "));
     }
 
-    MIRO_DBG_OSTR(ABUS,LL_PRATTLE,"abus: write() - dev 0x" << hex << (int)msg->devId() << dec << endl);
+    MIRO_DBG_OSTR(ABUS,LL_PRATTLE,"abus: write() - dev 0x" << std::hex << (int)msg->devId() << std::dec << endl);
 
     for (int i = 0; i < 3; ++i) {
       if (ioBuffer_.send_n(msg->buffer(), Message::MSG_LEN) >= 0) {
