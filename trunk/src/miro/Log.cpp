@@ -14,6 +14,7 @@
 
 #include <ace/Arg_Shifter.h>
 #include <ace/Log_Record.h>
+#include <ace/OS.h>
 
 namespace
 {

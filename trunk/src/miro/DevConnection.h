@@ -61,23 +61,17 @@ namespace Miro
   
   protected:
     /** Pointer to the ACE_Reactor the @ref Event is registered to. */
-    ACE_Reactor* reactor;   // for event handling (file descriptors)
+    ACE_Reactor* reactor_;   // for event handling (file descriptors)
     /**
      * The consumer @ref DevEventHandler instance.
      */
-    DevEventHandler* eventHandler;
+    DevEventHandler* eventHandler_;
 
-    ACE_DEV_Addr devName;
-    ACE_DEV_IO ioBuffer;
-    ACE_DEV_Connector connector;
-
-    /**
-     * The Id of the @ref DevEventHandler at the ACE_Reactor.
-     */
-    int selectHandlerId;
-    ACE_Time_Value tv;
+    ACE_DEV_Addr devName_;
+    ACE_DEV_IO ioBuffer_;
+    ACE_DEV_Connector connector_;
   };
-};
+}
 
 #endif
 

@@ -151,13 +151,6 @@ namespace Miro
     int fd;
 
     /**
-     * id of the handler for the filedescriptor, 
-     * when getting registered with the ACE_Reactor
-     *
-     */
-    int selectHandlerId;
-
-    /**
      * termio settings of the laser interface, the old settings are 
      * restored before
      * we exit

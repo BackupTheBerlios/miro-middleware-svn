@@ -47,7 +47,6 @@ namespace Miro
     laserEvent_(new LaserEvent(laserTask_, _laserStatistic)),
     laserPollTask_(new LaserPollTask(*this, *laserEvent_, _laserStatistic)),
     fd(0),
-    selectHandlerId(-1),
     syncLaserScan(),
     syncLaserScanCond(syncLaserScan),
     syncModeChange(),
@@ -75,9 +74,10 @@ namespace Miro
     // of the laser device, this handles single characters and composes
     // messages which it passed on to laserTask
     //
-    selectHandlerId = 
-      reactor_->register_handler(fd, laserEvent_, ACE_Event_Handler::READ_MASK);
-    if (selectHandlerId == -1)
+    laserEvent_->set_handle(fd);
+    int rc =
+      reactor_->register_handler(laserEvent_, ACE_Event_Handler::READ_MASK);
+    if (rc == -1)
       throw Miro::Exception("LaserConnection::LaserConnection: Failed to register handler for laser file descriptor.");
   }
 
@@ -85,6 +85,8 @@ namespace Miro
   {
     MIRO_LOG_DTOR("LaserConnection");
 
+    reactor_->remove_handler(laserEvent_, ACE_Event_Handler::READ_MASK);
+      
     // before this destructor is called
     // do not delete this thread manager of ACE needs it
     //delete laserTask;

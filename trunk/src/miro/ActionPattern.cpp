@@ -19,6 +19,8 @@
 #include "ArbiterRepository.h"
 #include "StructuredPushSupplier.h"
 
+#include <ace/OS.h>
+
 #include <qdom.h>
 #include "miro/Log.h"
 

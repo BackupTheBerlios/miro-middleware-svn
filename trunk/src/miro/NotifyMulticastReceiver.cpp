@@ -27,6 +27,8 @@
 #include "NotifyMulticastReceiver.h"
 #include "NotifyMulticastAdapter.h"
 
+#include <ace/OS.h>
+
 #define DBG_CLASSNAME "NotifyMulticast::Receiver"
 
 namespace Miro {

@@ -17,6 +17,8 @@
 
 #include "idl/TimeC.h"
 
+#include <ace/OS.h>
+
 #include <iostream>
 #include <string>
 

@@ -80,13 +80,13 @@ namespace Can
        //Message::driver=OLD;
 
        // can_ClearStatus(fd);
-       if(ioctl(ioBuffer.get_handle(), CAN_CLEARSTAT, 0L))
+       if(ioctl(ioBuffer_.get_handle(), CAN_CLEARSTAT, 0L))
          throw Miro::Exception("can_ClearStatus() ioctl error");
 
        // configure controller
 
        // can_GetConfig(fd,&cfg);
-       if(ioctl(ioBuffer.get_handle(), CAN_GETCONFIG, (void*)&cfg))
+       if(ioctl(ioBuffer_.get_handle(), CAN_GETCONFIG, (void*)&cfg))
          throw Miro::Exception("can_GetConfig() ioctl error\n");
 
        cfg.gmask = XTID_MASK;
@@ -98,7 +98,7 @@ namespace Can
        cfg.SJW = CAN_SJW;
 
        // can_SetConfig(fd,&cfg);
-       if(ioctl(ioBuffer.get_handle(), CAN_SETCONFIG, (void*)&cfg))
+       if(ioctl(ioBuffer_.get_handle(), CAN_SETCONFIG, (void*)&cfg))
          throw Miro::Exception("can_SetConfig() ioctl error\n");
     }
 
@@ -112,7 +112,7 @@ namespace Can
 	caninit.ucListenOnly = 0;          // kein Listen only
 
         //Message::driver = PCAN;
-	if(ioctl(ioBuffer.get_handle(), PCAN_INIT , &caninit))
+	if(ioctl(ioBuffer_.get_handle(), PCAN_INIT , &caninit))
 	  throw Miro::Exception("can PCAN_INIT() ioctl error");
     }
   }
@@ -138,19 +138,19 @@ namespace Can
     }
 
     // will definitely choke if base is off
-    int rc;
+    int rc = 0;
     if (parameters_.module == "pcan") {
        pcanmsg * msgp;
        message.canMessage((int **) &msgp);
        msgp->msg.msgtype = MSGTYPE_EXTENDED;
        //for(int i = 0; i < msgp->msg.len; i++)
        //   std::cout << msgp->msg.data[i];
-       rc = ioctl(ioBuffer.get_handle(), PCAN_WRITE_MSG, msgp);
+       rc = ioctl(ioBuffer_.get_handle(), PCAN_WRITE_MSG, msgp);
     }
     else {
        canmsg * msg;
        message.canMessage((int **) &msg);
-       rc = ioBuffer.send_n(msg, sizeof(canmsg));
+       rc = ioBuffer_.send_n(msg, sizeof(canmsg));
     }
 
     lastWrite = time;

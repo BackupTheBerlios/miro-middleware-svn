@@ -60,18 +60,18 @@ namespace Psos
     ACE_Time_Value watchdogTimeout(1, 0);
 
     synchTimerId = 
-      reactor->schedule_timer(eventHandler, 
-			      (void *)SYNCH_TIMER, // timer id
-				synchDelay,        // delay
-				synchTimeout);     // respawn every n sec.
+      reactor_->schedule_timer(eventHandler, 
+			       (void *)SYNCH_TIMER, // timer id
+			       synchDelay,        // delay
+			       synchTimeout);     // respawn every n sec.
     if (synchTimerId == -1)
       throw ACE_Exception(errno, "Failed to register timer for synch processing.");
 
     watchdogTimerId = 
-      reactor->schedule_timer(eventHandler, 
-			      (void *)PING_TIMER, // timer id
-			      watchdogTimeout,    // delay
-			      watchdogTimeout);   // respawn
+      reactor_->schedule_timer(eventHandler, 
+			       (void *)PING_TIMER, // timer id
+			       watchdogTimeout,    // delay
+			       watchdogTimeout);   // respawn
     if (watchdogTimerId == -1)
       throw ACE_Exception(errno, "Failed to register timer for ping processing.");
   }
@@ -83,9 +83,9 @@ namespace Psos
 
     // deregister timers
     if (synchTimerId != -1)
-      reactor->cancel_timer(synchTimerId);
+      reactor_->cancel_timer(synchTimerId);
     if (watchdogTimerId != -1)
-      reactor->cancel_timer(watchdogTimerId);
+      reactor_->cancel_timer(watchdogTimerId);
   }
 
   void 

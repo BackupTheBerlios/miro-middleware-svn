@@ -31,6 +31,7 @@
 
 /* ACE includes */
 #include <ace/Message_Block.h>
+#include <ace/OS.h>
 
 /* g++lib includes */
 // #include <stream>

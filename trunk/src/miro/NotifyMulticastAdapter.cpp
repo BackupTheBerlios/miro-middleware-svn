@@ -125,7 +125,7 @@ namespace Miro {
 
 	    /* Install handlers */
 	    if (reactor_ != 0) {
-
+	      
 		eventHandlerId_ = reactor_->register_handler(configuration_.getSocket()->get_handle(), eventHandler_, ACE_Event_Handler::READ_MASK);
 		if (eventHandlerId_ == -1)
 		    throw Exception("Cannot register event handler");

@@ -11,6 +11,8 @@
 
 #include "BufferManager1394.h"
 
+#include <ace/OS.h>
+
 namespace 
 {
   unsigned char * b[1] = { NULL };
