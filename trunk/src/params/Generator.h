@@ -55,6 +55,11 @@ namespace Miro
 			   GroupMap::const_iterator& _last) const;
       const Type * getType(const QString& _name) const;
 
+
+      ParameterVector getFullParameterSet(Type const& _type) const;
+      bool isDerivedType(Type const& _type, Type const& _ancestor) const;
+      QStringVector getDescendants(Type const& _type) const;
+
     protected:
       typedef std::set<QString> QStringSet;
       typedef std::vector<Type> TypeVector;

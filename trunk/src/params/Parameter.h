@@ -13,6 +13,8 @@
 
 #include <qstring.h>
 
+#include <vector>
+
 namespace Miro
 {
   namespace CFG
@@ -36,6 +38,9 @@ namespace Miro
     };
     
     bool operator < (const Parameter& lhs, const Parameter& rhs);
+    bool operator == (const Parameter& lhs, const Parameter& rhs);
+
+    typedef std::vector<Parameter> ParameterVector;
   }
 }
 

@@ -61,6 +61,7 @@ namespace Miro
       bool inetAddr_;
       bool serialParams_;
       bool scanDescription_;
+      bool schedParams_;
 
       QString docu_;
       QString ctor_;

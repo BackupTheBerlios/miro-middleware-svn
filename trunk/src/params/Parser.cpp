@@ -31,7 +31,8 @@ namespace Miro
       timeValue_(false),
       inetAddr_(false),
       serialParams_(false),
-      scanDescription_(false)
+      scanDescription_(false),
+      schedParams_(false)
     {
     }
 
@@ -210,6 +211,9 @@ namespace Miro
 	    else if (type == "ACE_TTY_IO::Serial_Params") {
 	      serialParams_ = true;
 	    }
+	    else if (type == "ACE_Sched_Params") {
+	      schedParams_ = true;
+	    }
 	    else if (type == "ScanDescriptionIDL") {
 	      type = "Miro::" + type;
 	      scanDescription_ = true;
@@ -313,6 +317,10 @@ namespace Miro
 	  }
 	  if (serialParams_) {
 	    generator_.addInclude("ace/TTY_IO.h");
+	    generator_.addSrcInclude("miro/IO.h");
+	  }
+	  if (schedParams_) {
+	    generator_.addInclude("ace/Sched_Params.h");
 	    generator_.addSrcInclude("miro/IO.h");
 	  }
 	  if (instance_) {

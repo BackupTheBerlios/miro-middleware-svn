@@ -32,12 +32,22 @@ namespace Miro
       description_(_description)
     {}
 
-    bool operator < (const Parameter& lhs, const Parameter& rhs){
+    bool operator < (const Parameter& lhs, const Parameter& rhs) 
+    {
       return (!(QString::compare(lhs.name_, rhs.name_) >= 0 &&
 		QString::compare(lhs.type_, rhs.type_) >= 0 &&
 		QString::compare(lhs.default_, rhs.default_) >= 0 &&
 		QString::compare(lhs.measure_, rhs.measure_) >= 0 &&
 		QString::compare(lhs.description_, rhs.description_) >= 0));
+    }
+
+    bool operator == (const Parameter& lhs, const Parameter& rhs)
+    {
+      return (QString::compare(lhs.name_, rhs.name_) == 0 &&
+	      QString::compare(lhs.type_, rhs.type_) == 0 &&
+	      QString::compare(lhs.default_, rhs.default_) == 0 &&
+	      QString::compare(lhs.measure_, rhs.measure_) == 0 &&
+	      QString::compare(lhs.description_, rhs.description_) == 0);
     }
   }
 }

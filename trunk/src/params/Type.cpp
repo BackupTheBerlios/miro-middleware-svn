@@ -12,6 +12,7 @@
 #include "Type.h"
 
 #include <iostream>
+#include <algorithm>
 
 namespace 
 {
@@ -44,7 +45,16 @@ namespace Miro
     void 
     Type::addParameter(const Parameter& _parameter)
     {
-      parameter_.insert(_parameter);
+      ParameterVector::const_iterator i =
+	std::find(parameter_.begin(), parameter_.end(), _parameter);
+      if (i == parameter_.end())
+	parameter_.push_back(_parameter);
+      else {
+	throw QString("Parameter multiply defined for type " + 
+		      fullName() + 
+		      ": " + _parameter.name_);
+
+      }
     }
 
     void
@@ -79,7 +89,7 @@ namespace Miro
 	ostr << spaces.left(indent - STEP) << "public: " << std::endl;
 
 	// data members
-	ParameterSet::const_iterator j;
+	ParameterVector::const_iterator j;
 	for (j = parameter_.begin(); j != parameter_.end(); ++j)
 	  ostr << spaces.left(indent) 
 	       << ((j->type_ != "angle")? j->type_ : QString("double")) 
@@ -140,7 +150,7 @@ namespace Miro
 
       if (!isExtern()) {
 	QStringVector::const_iterator i;
-	ParameterSet::const_iterator j;
+	ParameterVector::const_iterator j;
   
 	// debug ostream operator
 	if (parent_.isEmpty()) {
@@ -300,7 +310,7 @@ namespace Miro
       
 	ostr << spaces.left(indent) << "QString i = a.value();" << std::endl;
       
-	ParameterSet::const_iterator j;
+	ParameterVector::const_iterator j;
 	for (j = parameter_.begin(); j != parameter_.end(); ++j) {
 	  QString name(j->name_);
 	  name[0] = name[0].upper();
@@ -351,7 +361,7 @@ namespace Miro
 
       ostr << spaces.left(indent) << "QDomElement g;" << std::endl << std::endl;
 
-      ParameterSet::const_iterator j;
+      ParameterVector::const_iterator j;
       for (j = parameter_.begin(); j != parameter_.end(); ++j) {
 	QString name(j->name_);
 	name[0] = name[0].upper();

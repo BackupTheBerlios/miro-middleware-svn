@@ -275,6 +275,77 @@ namespace Miro
       namespace_.clear();
     }
 
+    ParameterVector
+    Generator::getFullParameterSet(Type const& _type) const
+    {
+      ParameterVector params;
+
+      // add all superclass members to the parameter set
+      // start with the root parameter set
+      if (_type.parent().isEmpty()) {
+	params = _type.parameterSet();
+      }
+      else {
+	Miro::CFG::Type const * parent = getType(_type.parent());
+	if (parent == NULL) {
+	  throw QString("Parameter description for " + 
+			_type.parent() +
+			" not found.\nCheck whether the relevant description file is loaded.");
+	}
+	params = getFullParameterSet(*parent);
+
+	ParameterVector::const_iterator first, last = _type.parameterSet().end();
+	for (first = _type.parameterSet().begin(); first != last; ++first) {
+	  ParameterVector::iterator i =
+	    std::find(params.begin(), params.end(), *first);
+
+	  // add parameter to set
+	  if (i == params.end()) {
+	    params.push_back(*first);
+	  }
+	  // overwrite default value of inherited parameter
+	  else {
+	    i->default_ = first->default_;
+	  }
+	}
+      }
+
+      return params;
+    }
+
+    bool
+    Generator::isDerivedType(Type const& _type, Type const& _ancestor) const
+    {
+      if (_type.fullName() == _ancestor.fullName())
+	return true;
+
+      if (!_type.parent().isEmpty()) {
+	Miro::CFG::Type const * parent = getType(_type.parent());
+	if (parent != NULL) {
+	  return isDerivedType(*parent, _ancestor);
+	}
+      }
+
+      return false;
+    }
+    
+    Generator::QStringVector
+    Generator::getDescendants(Type const& _type) const
+    {
+      QStringVector descendants;
+      descendants.reserve(type_.size() / 2);
+
+      Generator::TypeVector::const_iterator first, last = type_.end();
+      for (first = type_.begin(); first != last; ++first) {
+	if (isDerivedType(*first, _type)) {
+	  descendants.push_back(first->fullName());
+	}
+      }
+
+      std::sort(descendants.begin(), descendants.end());
+      return descendants;
+    }
+
     std::ostream& operator << (std::ostream& _ostr, const Generator& _rhs)
     {
       Generator::TypeVector::const_iterator first, last = _rhs.type_.end();
