@@ -26,11 +26,7 @@ namespace Can
 {
   //drivertype Message::driver = UNINITIALIZED;
 
-  Message::Message()
-  {
-
-  }
-
+  
   std::ostream& operator<< (std::ostream& ostr, const Message& rhs)
   {
     ostr.setf(ios::hex, ios::basefield);
@@ -42,9 +38,7 @@ namespace Can
     return ostr;
   }
 
-  void Message::setBuffer(int pos, const char * buffer, int length){
-    
-  }
+  
 
 
 };

@@ -38,30 +38,30 @@ namespace Can
   class Message : public Miro::DevMessage
   {
   public:
-    Message();
-    virtual int            length() const;
-    virtual void           length(int _len);
+    Message() {};
+    virtual int            length() const = NULL;
+    virtual void           length(int _len) = NULL;
 
-    virtual char           charData(int i) const;
-    virtual void           charData(int i, char d);
-    virtual unsigned char  byteData(int i) const;
-    virtual void           byteData(int i, unsigned char d);
-    virtual short shortData(int i) const;
-    virtual void           shortData(int i, unsigned short d); // sets two chars !
-    virtual long  longData(int i) const;
-    virtual void           longData(int i, unsigned long d);   // sets four chars !
+    virtual char           charData(int i) const = NULL;
+    virtual void           charData(int i, char d) = NULL;
+    virtual unsigned char  byteData(int i) const = NULL;
+    virtual void           byteData(int i, unsigned char d) = NULL;
+    virtual short shortData(int i) const = NULL;
+    virtual void           shortData(int i, unsigned short d) = NULL; // sets two chars !
+    virtual long  longData(int i) const = NULL;
+    virtual void           longData(int i, unsigned long d) = NULL;   // sets four chars !
 
-    virtual void           setBuffer(int pos, const char * buffer, int length ) ;
+    virtual void           setBuffer(int pos, const char * buffer, int length ) = NULL ;
 
-    virtual CanId          id() const;
-    virtual void           id(CanId _id);
+    virtual CanId          id() const = NULL;
+    virtual void           id(CanId _id) = NULL;
 
     //static drivertype driver;
 
-    virtual void canMessage(int ** msg_) {
+    virtual void canMessage(int ** msg_) = NULL;
 //       std::cout << "normal canMessage" << std::endl;
     
-    };
+    
 
 
 
@@ -69,78 +69,6 @@ namespace Can
 
   };
 
-  inline
-  CanId
-  Message::id() const {
-
-  }
-
-  inline
-  void
-  Message::id(CanId _id) {
-
-  }
-
-  inline
-  int
-  Message::length() const {
-
-  }
-
-  inline
-  void
-  Message::length(int _len) {
-
-  }
-
-  inline
-  char
-  Message::charData(int i) const {
-
-  }
-
-  inline
-  void
-  Message::charData(int i, char d) {
-
-  }
-
-  inline
-  unsigned char
-  Message::byteData(int i) const {
-
-  }
-
-  inline
-  void
-  Message::byteData(int i, unsigned char d) {
-
-  }
-
-  inline
-  short
-  Message::shortData(int i) const {
-
-  }
-
-  inline
-  void
-  Message::shortData(int i, unsigned short d)
-  {
-
-  }
-
-  inline
-  long
-  Message::longData(int i) const {
-
-  }
-
-  inline
-  void
-  Message::longData(int i, unsigned long d)
-  {
-
-  }
+  
 };
 #endif
