@@ -206,7 +206,7 @@ namespace Miro
       // add new offer to list of offers
       if (j == subscriptionsLen) {
 	subscriptions_[newSubscriptionsLen] = _added[i];
-	added[newSubscriptionsLen] = _added[i];
+	added[newSubscriptionsLen - subscriptionsLen] = _added[i];
 	indexes[i] = newSubscriptionsLen;
 	++newSubscriptionsLen;
       }

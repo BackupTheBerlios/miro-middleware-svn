@@ -266,7 +266,7 @@ namespace Miro
   {
     ostr << " minrange=" << description.minRange << "mm"
 	 << " maxrange=" << description.maxRange << "mm"
-	 << " focus=" << rad2Deg(description.focus) << ",A0(B";
+	 << " focus=" << rad2Deg(description.focus) << "°";
     return ostr;
   }
 
@@ -275,9 +275,9 @@ namespace Miro
   {
     ostr << " height=" << position.height << "mm"
 	 << " distance=" << position.distance << "mm"
-	 << " alpha=" << rad2Deg(position.alpha) << ",A0(B"
-	 << " beta=" << rad2Deg(position.beta) << ",A0(B"
-	 << " gamma=" << rad2Deg(position.gamma) << ",A0(B"
+	 << " alpha=" << rad2Deg(position.alpha) << "°"
+	 << " beta=" << rad2Deg(position.beta) << "°"
+	 << " gamma=" << rad2Deg(position.gamma) << "°"
 	 << " masked=" << (position.masked? "true" : "false");
     return ostr;
   }
