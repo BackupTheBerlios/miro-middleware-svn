@@ -1,0 +1,11 @@
+Utilities for notification channel logging.
+
+- LogNotify: Logs the notification channel events to a file.
+
+  The file is named <robot name><time_stamp>.log. It is located
+  in the directory specified by the MIRO_LOG environment variable.
+
+- NotifyLogPlayer: Replays the events via an event channel.
+
+  This is a console based program without user interaction
+  capabilities. Use LogPlayer instead.

@@ -1,0 +1,22 @@
+#ifndef Joystick_idl
+#define Joystick_idl
+
+module Miro
+{
+  //! Struct holding a translational and rotational velocity.
+  struct JoystickIDL
+  {
+    //!Translational velocity in mm/s.
+    long translation;
+    //! Rotational velocity in rad/s.
+    double rotation;
+    //!Buttons pressed, Button 0 rightmost bit and so on
+    unsigned short buttons;
+  };
+};
+
+#endif // Joystick_idl
+
+
+
+

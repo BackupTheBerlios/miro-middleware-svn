@@ -1,0 +1,78 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef Video_idl
+#define Video_idl
+
+#include "Exception.idl"
+#include "Time.idl"
+#include "Position.idl"
+
+module Miro
+{
+  //! The image handle, containing all relevant image meta data.
+  struct ImageHandleIDL
+  {
+    //! Time stamp associated to the image.
+    TimeIDL   time;
+    //! Image width (columns).
+    long		width;
+    //! Image height (rows).
+    long		height;
+    //! Image palette (gray,rgb).
+    long		palette;
+    //! Image source (composite/svideo).
+    long		source;
+    // Shared memory key to image data.
+    long		key;
+    //! Shared memory key to image data
+    long		handle;
+  };
+
+  typedef sequence<octet> SubImageDataIDL;
+
+  //! Interface to the frame grabber devices.
+  /** 
+   * @author Steffen Simon
+   */
+  interface Video
+  {
+    //! Connect to the service. 
+    /**
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    ImageHandleIDL	connect() raises(EDevIO);
+    //! Disconnect from the service. 
+    /**
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void release(in ImageHandleIDL img) raises(EOutOfBounds, EDevIO);
+    /**
+     * Get the current image. This call immediately
+     * returns the last grabbed image.
+     *
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    //! Get the current image. 
+    TimeIDL getImage(inout ImageHandleIDL img) raises(EOutOfBounds, EDevIO);
+    //! Get the next image. 
+    /**
+     * This call waits and returns the next grabbed image.
+     *
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    TimeIDL getWaitImage(inout ImageHandleIDL img) raises(EOutOfBounds, EDevIO, ETimeOut);
+
+    //! Get all the pixels of the current image, downsized to width=x height=y
+    SubImageDataIDL exportWaitSubImage(in long x, in long y) raises(EOutOfBounds, EDevIO, ETimeOut);
+  };
+};
+
+#endif // Video_idl

@@ -1,0 +1,32 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef Battery_idl
+#define Battery_idl
+
+#include "Exception.idl"
+
+module Miro
+{
+  //! Interface for battery montoring.
+  /** 
+   * Currently only the battery voltage can be queried. Further functionality
+   * would be automatic voltage monitoring and the sending of battery low
+   * warning messages etc.
+   *
+   * @author Hans Utz
+   */
+  interface Battery
+  {
+    //! Get the current battery voltage (in volt).
+    double getVoltage();
+  };
+};
+#endif // Bettery_idl

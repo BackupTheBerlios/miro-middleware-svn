@@ -1,0 +1,137 @@
+## -*- Makefile -*- ##########################################################
+##
+## This file is part of Miro (The Middleware For Robots)
+##
+## (c) 1999, 2000, 2001
+## Department of Neural Information Processing, University of Ulm, Germany
+##
+## $Id$
+## $Date$
+## 
+##
+## Miro/src/faulMotor/Makefile
+##
+##############################################################################
+
+## this is the name of the resulting library
+NAME     = faulMotor
+
+MAKEFILE = Makefile
+LIB      = lib$(NAME).a
+SHLIB    = lib$(NAME).$(SOEXT)
+
+
+## this I didn't understand yet
+# VPATH=.:Naming
+# ACE_SHLIBS = -lTAO_Svc_Utils -lTAO -lACE
+
+## specify your library files here
+FILES = 	Parameters \
+		FaulMotorConnection \
+		FaulMotorConsumer \
+		FaulMotorMotionImpl \
+		TimerEventHandler
+
+
+DEFS  = $(addsuffix .h,$(FILES))
+LSRC  = $(addsuffix .cpp,$(FILES))
+
+#----------------------------------------------------------------------------
+#	Include macros and targets
+#----------------------------------------------------------------------------
+
+# Only build static library 
+static_libs_only = 1
+
+include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
+include $(ACE_ROOT)/include/makeinclude/macros.GNU
+include $(MIRO_ROOT)/include/makeinclude/macros.miro.GNU
+include $(TAO_ROOT)/rules.tao.GNU
+include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
+include $(ACE_ROOT)/include/makeinclude/rules.nonested.GNU
+include $(ACE_ROOT)/include/makeinclude/rules.lib.GNU
+include $(ACE_ROOT)/include/makeinclude/rules.local.GNU
+include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
+#----------------------------------------------------------------------------
+#       Local targets (and local hacks)
+#----------------------------------------------------------------------------
+
+.PRECIOUS: Parameters.cpp Parameters.h
+
+# DO NOT DELETE THIS LINE -- g++dep uses it.
+# DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
+
+
+.obj/Parameters.o .obj/Parameters.o .obj/Parameters.o .obj/Parameters.o: Parameters.cpp Parameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h
+
+.obj/FaulMotorConnection.o .obj/FaulMotorConnection.o .obj/FaulMotorConnection.o .obj/FaulMotorConnection.o: FaulMotorConnection.cpp FaulMotorConnection.h \
+ $(MIRO_ROOT)/src/faulTty/FaulTtyConnection.h \
+ $(MIRO_ROOT)/src/miro/TtyConnection.h $(MIRO_ROOT)/src/miro/Synch.h \
+ FaulMotorConsumer.h $(MIRO_ROOT)/src/miro/DevConsumer.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.h $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h $(MIRO_ROOT)/src/miro/WorldPointC.i \
+ $(MIRO_ROOT)/src/miro/PositionC.i $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i $(MIRO_ROOT)/src/miro/MotionStatusC.i \
+ Parameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
+ $(MIRO_ROOT)/src/faulTty/FaulTtyMessage.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h
+
+.obj/FaulMotorConsumer.o .obj/FaulMotorConsumer.o .obj/FaulMotorConsumer.o .obj/FaulMotorConsumer.o: FaulMotorConsumer.cpp FaulMotorConsumer.h \
+ $(MIRO_ROOT)/src/miro/DevConsumer.h $(MIRO_ROOT)/src/miro/MotionStatusC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/PositionC.h $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i $(MIRO_ROOT)/src/miro/PositionC.i \
+ $(MIRO_ROOT)/src/miro/VelocityC.h $(MIRO_ROOT)/src/miro/VelocityC.i \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.i Parameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
+ $(MIRO_ROOT)/src/faulTty/FaulTtyMessage.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h $(MIRO_ROOT)/src/miro/OdometryImpl.h \
+ $(MIRO_ROOT)/src/miro/OdometryS.h $(MIRO_ROOT)/src/miro/ExceptionS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/ExceptionS.i $(MIRO_ROOT)/src/miro/PositionS.h \
+ $(MIRO_ROOT)/src/miro/WorldPointS.h $(MIRO_ROOT)/src/miro/WorldPointS.i \
+ $(MIRO_ROOT)/src/miro/PositionS.i $(MIRO_ROOT)/src/miro/MotionStatusS.h \
+ $(MIRO_ROOT)/src/miro/TimeS.h $(MIRO_ROOT)/src/miro/TimeS.i \
+ $(MIRO_ROOT)/src/miro/VelocityS.h $(MIRO_ROOT)/src/miro/VelocityS.i \
+ $(MIRO_ROOT)/src/miro/MotionStatusS.i $(MIRO_ROOT)/src/miro/OdometryC.h \
+ $(MIRO_ROOT)/src/miro/OdometryC.i $(MIRO_ROOT)/src/miro/OdometryS.i \
+ $(MIRO_ROOT)/src/miro/TimeHelper.h
+
+.obj/FaulMotorMotionImpl.o .obj/FaulMotorMotionImpl.o .obj/FaulMotorMotionImpl.o .obj/FaulMotorMotionImpl.o: FaulMotorMotionImpl.cpp FaulMotorMotionImpl.h \
+ $(MIRO_ROOT)/src/miro/SparrowMotionS.h \
+ $(MIRO_ROOT)/src/miro/DifferentialMotionS.h \
+ $(MIRO_ROOT)/src/miro/MotionS.h $(MIRO_ROOT)/src/miro/ExceptionS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/ExceptionS.i $(MIRO_ROOT)/src/miro/VelocityS.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.h $(MIRO_ROOT)/src/miro/VelocityC.i \
+ $(MIRO_ROOT)/src/miro/VelocityS.i $(MIRO_ROOT)/src/miro/MotionC.h \
+ $(MIRO_ROOT)/src/miro/MotionC.i $(MIRO_ROOT)/src/miro/MotionS.i \
+ $(MIRO_ROOT)/src/miro/DifferentialMotionC.h \
+ $(MIRO_ROOT)/src/miro/DifferentialMotionC.i \
+ $(MIRO_ROOT)/src/miro/DifferentialMotionS.i \
+ $(MIRO_ROOT)/src/miro/SparrowMotionC.h \
+ $(MIRO_ROOT)/src/miro/SparrowMotionC.i \
+ $(MIRO_ROOT)/src/miro/SparrowMotionS.i $(MIRO_ROOT)/src/miro/OdometryC.h \
+ $(MIRO_ROOT)/src/miro/PositionC.h $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i $(MIRO_ROOT)/src/miro/PositionC.i \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.h $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i $(MIRO_ROOT)/src/miro/MotionStatusC.i \
+ $(MIRO_ROOT)/src/miro/OdometryC.i \
+ $(MIRO_ROOT)/src/miro/DifferentialMotionImpl.h \
+ $(MIRO_ROOT)/src/miro/MotionImpl.h $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/Exception.h FaulMotorConnection.h \
+ $(MIRO_ROOT)/src/faulTty/FaulTtyConnection.h \
+ $(MIRO_ROOT)/src/miro/TtyConnection.h FaulMotorConsumer.h \
+ $(MIRO_ROOT)/src/miro/DevConsumer.h Parameters.h
+
+# IF YOU PUT ANYTHING HERE IT WILL GO AWAY

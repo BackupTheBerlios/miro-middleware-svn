@@ -1,0 +1,13 @@
+Example code for the Odometry interface.
+
+- PollPosition queries the odometry interface for the current
+  position. 
+
+- OdometryStream uses the notfication channel for Odometry event
+  delivery.
+
+- SetPosition call's the Odometry interface setPosition method with
+  the parameters specified at the command line.
+
+  Usefull to place the robot somewhere in a global coordinate frame,
+  while the localization module is not yet perfect...

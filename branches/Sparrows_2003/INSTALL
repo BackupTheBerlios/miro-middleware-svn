@@ -1,0 +1,74 @@
+Basic Installation
+==================
+
+This software package depends heavily on ACE and TAO. Therefor its
+installation instructions are similar to that package. If you already
+installed ACE and TAO, the installing instructions should sound
+familiar to you.
+
+The libraries Miro depends on are ACE (>= 5.2), TAO (>= 1.2) and qt
+(>= 2.3). These should be installed first. The environment variables
+ACE_ROOT, TAO_ROOT, QTDIR and LD_LIBRARY_PATH should be set
+accordingly. Qt is installed on most Unix systems anyway, since KDE
+relies on it.
+
+Now. Set the environment variable MIRO_ROOT to the base directory of
+your Miro directory tree (/usr/local/Miro for example) and add
+$MIRO_ROOT/lib to your LD_LIBRARY_PATH.
+
+Switch to the directory $MIRO_ROOT and simply call make.
+
+Note: The build process of Miro recycles the Makefiles of
+ACE. Therefor the options specified in platform-macros.GNU also apply
+to Miro. Some of the submakes of Miro try to override the defaults for
+some ACE build flags like >debug< or >optimize<. If you want to allow
+them to do so, you should write your changes in platform-macros.GNU
+like following. Instead of
+
+debug = 1
+
+write
+
+ifeq (,$(optimize))
+  optimize = 1
+endif
+
+The documentation is not built automatically. To do so, switch to
+$MIRO_ROOT/doc and call make again. Note that to build the
+documentation, doxygen, latex and fig2dev are needed.
+
+If not all robot platforms need to be supported, the relevant
+platforms can be specified in the build variable
+
+MIRO_COMPONENTS
+
+the component names are:
+
+B21 Pioneer1 Sparrow99
+
+Set the variable in $MIRO_ROOT/include/makeinclude/miro.macros.GNU or
+simple in the $ACE_ROOT/include/makeinclude/platform_macros.GNU file.
+
+Supported platforms:
+
+- The B21 port is the oldest one and should therefore be the most
+  stable, regarding the interfaces. All of the robots hardware
+  components are supported by Miro.
+
+- The Sparrow99 robots are our soccer robots. They are our
+  testbed for multi-robot programming. Therefore most new technology
+  is first tested on this platform. - So even as you do not have a
+  Sparrow99 robot (we built them ourselfs), it might be interesting
+  to look at the sources for this robot if you are looking for group
+  communication technology etc.
+
+- The Pioneer1 platform is a complete port for the ActiveMedia robot
+  series, based on the PSOS, P2OS and AROS protocols. But we could only
+  test and extend it to the platforms available to us. 
+
+  * The old Pioneer1 is supported, but lacks maintenance, as our model 
+    is not used at the lab anymore.
+  * The Performance PeopleBot is in active development and already
+    mostly complete. Motors, Sonars, Bumpers and Video are working.
+    PanTilt and Gripper are experimental, Zoom is to come next.
+

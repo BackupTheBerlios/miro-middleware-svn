@@ -1,0 +1,34 @@
+<!DOCTYPE xml SYSTEM "PolicyEditor_behaviour.dtd">
+<config> 
+  <config_global name="namespace" value="FaulMotor" />
+  <config_global name="include" value="miro/Parameters.h" />
+
+  <config_group name="Faulhaber">
+    <config_item parent="Miro::Config" instance="true">
+      <config_parameter name="leftWheel" type="Miro::TtyParameters" />
+      <config_parameter name="rightWheel" type="Miro::TtyParameters" />
+      <config_parameter name="leftTicksPerMM" type="double" default="112" />
+      <config_parameter name="rightTicksPerMM" type="double" default="112" />
+      <config_parameter name="maxPosAccel" type="double" default="2000" measure="mm/s*s" />
+      <config_parameter name="maxNegAccel" type="double" default="3000" measure="mm/s*s" />
+      <config_parameter name="speedConvFactor" type="double" default="4.2" />
+      <config_parameter name="motion" type="Miro::DifferentialMotionParameters" />
+      <constructor>
+        leftWheel.device = "/dev/tts/0";
+        rightWheel.device = "/dev/tts/1";
+
+        leftWheel.ttyParams.baudrate = 19200;
+        rightWheel.ttyParams.baudrate = 19200;
+
+        motion.minTranslation = -1000;
+        motion.maxTranslation = 1000;
+
+        motion.minLTranslation = -1000;
+        motion.maxLTranslation = 1000;
+        motion.minRTranslation = -1000;
+        motion.maxRTranslation = 1000;
+        motion.wheelBase = 385;
+      </constructor>
+    </config_item>
+  </config_group>
+</config>

@@ -1,0 +1,6 @@
+Utility for remote video service usage.
+
+As video streams need lots of bandwidth on the network, the Miro
+VideoService does not distribute the images over the network by
+default. - For debugging purposes it is nevertheless usefull, to be
+able to check, what the robot is currently seeing.

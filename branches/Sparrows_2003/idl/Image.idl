@@ -1,0 +1,97 @@
+// -*- idl -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
+// for documentation see Miro/doc
+// 
+// (c) 1999,2000
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// Authors: 
+//    Stefan Enderle, 
+//    Stefan Sablatnoeg, 
+//    Hans Utz
+// 
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef Image_idl
+#define Image_idl
+
+#include "ImageDefinitions.idl"
+
+module Miro
+{
+  /**
+   * Interface to the frame grabber devices.
+   */
+  interface Image
+    {
+      /**
+       * Prepare a new image. These calls
+       * return an ImageIDL struct describing the next available image.
+       *
+       * @param w Image width (columns) of image requested.
+       * @param h Image height (rows) of image requested.
+       * @param formats Image formats requested: gray, rgb, hsv.
+       * @param source Data source: Video, test pattern, (maybe sometimes ;-)) 3d-rendering.
+       * @param subfields Subfields requested: odd, even, all.
+       *
+       * @raises EOutOfBounds, EDevIO
+       */
+      ImageIDL		requestImage(in long w, in long h, in long formats,
+				     in long tolerance, in long source, in long subfields)
+	raises(EOutOfBounds, EDevIO);
+      ImageIDL		requestLeftImage(in long w, in long h, in long formats,
+					 in long tolerance, in long source, in long subfields)
+	raises(EOutOfBounds, EDevIO);
+      ImageIDL		requestRightImage(in long w, in long h, in long formats,
+					  in long tolerance, in long source, in long subfields)
+	raises(EOutOfBounds, EDevIO);
+      StereoImageIDL	requestStereoImage(in long w, in long h, in long formats,
+					   in long tolerance, in long source, in long subfields)
+	raises(EOutOfBounds, EDevIO);
+
+      /**
+       * Get the current image. This call immediately
+       * returns the last grabbed image.
+       *
+       * @param img ImageIDL struct describing the image.
+       *
+       * @raises EOutOfBounds, EDevIO
+       */
+      void	getImage(inout ImageIDL img) raises(EOutOfBounds, EDevIO);
+      void	getStereoImage(inout StereoImageIDL img) raises(EOutOfBounds, EDevIO);
+
+      /**
+       * Get the next available image.
+       *
+       * @param img ImageIDL struct describing the image.
+       *
+       * @raises EOutOfBounds, EDevIO, ETimeOut
+       */
+      void	getWaitImage(inout ImageIDL img) raises(EOutOfBounds, EDevIO, ETimeOut);
+      void	getWaitStereoImage(inout StereoImageIDL img) raises(EOutOfBounds, EDevIO, ETimeOut);
+
+      /**
+       * Release any server side data attached to the @ref ImageIDL structure.
+       *
+       * An image not known to the server will raise a OutOfBound exception.
+       *
+       * @param img Image to release.
+       * See the @ref ImageIDL structure for details
+       *
+       * @raises EOutOfBounds
+       */
+      void	releaseImage(inout ImageIDL img) raises(EOutOfBounds);
+      void	releaseStereoImage(inout StereoImageIDL img) raises(EOutOfBounds);
+
+      /**
+       * Get description of currently available image
+       */
+      ImageDescriptionIDL getImageDescription();
+    };
+};
+
+#endif

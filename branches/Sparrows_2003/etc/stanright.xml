@@ -1,0 +1,44 @@
+<!DOCTYPE MiroConfigDocument>
+<config>
+ <section name="Robot" >
+  <parameter name="Robot" >
+   <parameter value="stan" name="Name" />
+   <parameter value="B21" name="Type" />
+  </parameter>
+ </section>
+ <section name="Video" >
+  <parameter name="Video" >
+   <parameter value="/dev/v4l/video0" name="Device" />
+   <parameter value="3" name="PixelSize" />
+   <parameter value="false" name="UpsideDown" />
+   <parameter value="1" name="Byteorder" />
+   <parameter value="16" name="Buffers" />
+   <parameter value="16" name="Connections" />
+   <parameter value="288" name="Height" />
+   <parameter value="384" name="Width" />
+   <parameter value="all" name="Subfield" />
+   <parameter value="pal" name="Format" />
+   <parameter value="bttv" name="Grabber" />
+   <parameter value="rgb" name="Palette" />
+   <parameter value="composite1" name="Source" />
+  </parameter>
+ </section>
+ <section name="DirectedPerception" >
+  <parameter name="PanTilt" >
+   <parameter value="/dev/panTilt" name="Device" />
+   <parameter name="TtyParams" >
+    <parameter value="9600" name="Baudrate" />
+   </parameter>
+  </parameter>
+ </section>
+ <section name="Notification" >
+  <parameter name="Logging" >
+   <parameter name="TypeName" />
+     <parameter value="Sonar" />
+     <parameter value="Odometry" />
+     <parameter value="ArbitrateChange" />
+     <parameter value="PatternChange" />
+   <parameter value="157286400" name="MaxFileSize" />
+  </parameter>
+ </section>
+</config>

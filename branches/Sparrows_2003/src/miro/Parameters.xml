@@ -1,0 +1,153 @@
+<!DOCTYPE xml SYSTEM "PolicyEditor_behaviour.dtd">
+<config> 
+  <config_global name="namespace" value="Miro" />
+  <config_global name="include" value="BehaviourParameters.h" />
+  <config_global name="include" value="ArbiterParameters.h" />
+  <config_global name="Include" value="ace/TTY_IO.h" />
+
+  <config_group name="config">
+    
+    <config_item name="Config" />
+    
+    <config_item name="Dev" parent="Config">
+      <config_parameter name="device" type="std::string" />
+    </config_item>
+
+    <config_item name="Tty" parent="Dev">
+      <config_parameter name="device" type="string" inherited="true" default="/dev/tts/0" />
+      <config_parameter name="ttyParams" type="ACE_TTY_IO::Serial_Params" />
+      <constructor>
+        ttyParams.baudrate = 38400;
+        ttyParams.parityenb = 0;
+        ttyParams.paritymode = 0;
+        ttyParams.databits = 8;
+        ttyParams.stopbits = 1; 
+        ttyParams.readtimeoutmsec = 0;
+        ttyParams.modem = 0;
+        ttyParams.rcvenb = 1;
+        ttyParams.ctsenb = 0;
+        ttyParams.rtsenb = 0;
+        ttyParams.xinenb = 0;
+        ttyParams.xoutenb = 0;
+      </constructor>
+    </config_item>
+
+    <config_item name="Robot" parent="Config" instance="true">
+      <config_parameter name="name" type="std::string" default="Miro" />
+      <config_parameter name="type" type="std::string" default="Robot" />
+      <config_parameter name="nameServiceIOR" type="std::string" />
+    </config_item>
+
+    <config_item name="Camera" parent="Config" instance="true">
+      <config_parameter name="ncx" type="double" default="768.0" />
+      <config_parameter name="nfx" type="double" default="384.0" />
+      <config_parameter name="dx" type="double" default="0.00625" />
+      <config_parameter name="dy" type="double" default="0.0125" />
+
+      <config_parameter name="cx" type="double" default="0." />
+      <config_parameter name="cy" type="double" default="0." />
+      <config_parameter name="sx" type="double" default="0." />
+      <config_parameter name="f" type="double" default="0." />
+      <config_parameter name="kappa" type="double" default="0." />
+
+      <config_parameter name="height" type="double" default="0." measure="mm" />
+      <config_parameter name="alpha" type="angle" default="0." measure="&deg;" />
+
+      <config_parameter name="latency" type="ACE_Time_Value" default="0, 120000" measure="sec"/>
+
+    </config_item>
+
+    <config_item name="Motion" parent="Config">
+      <config_parameter name="minTranslation" type="long" default="-1000" measure="mm/s" />
+      <config_parameter name="maxTranslation" type="long" default="1000" measure="mm/s" />
+      <config_parameter name="minRotation" type="angle" default="-180" measure="&deg;/s" />
+      <config_parameter name="maxRotation" type="angle" default="180" measure="&deg;/s" />
+    </config_item>
+
+    <config_item name="DifferentialMotion" parent="Motion">
+      <config_parameter name="minLTranslation" type="long" default="-1000" measure="mm/s" />
+      <config_parameter name="maxLTranslation" type="long" default="1000" measure="mm/s" />
+      <config_parameter name="minRTranslation" type="long" default="-1000" measure="mm/s" />
+      <config_parameter name="maxRTranslation" type="long" default="1000" measure="mm/s" />
+      <config_parameter name="wheelBase" type="long" default="400" measure="mm" />
+    </config_item>
+
+  </config_group>
+
+  <config_group name="scandescription">
+    <config_item name="SensorDescriptionIDL" final="false" dummy="true">
+      <config_parameter name="minRange" type="long" default="" measure="mm" />
+      <config_parameter name="maxRange" type="long" default="" measure="mm" />
+      <config_parameter name="focus" type="angle" default="" measure="&deg;" />
+    </config_item>
+
+    <config_item name="SensorPositionIDL" final="false" dummy="true">
+      <config_parameter name="height" type="long" default="" measure="mm" />
+      <config_parameter name="distance" type="long" default="" measure="mm" />
+      <config_parameter name="alpha" type="angle" default="" measure="&deg;" />
+      <config_parameter name="beta" type="angle" default="" measure="&deg;" />
+      <config_parameter name="gamma" type="angle" default="" measure="&deg;" />
+      <config_parameter name="masked" type="bool" default="" />
+    </config_item>
+
+    <config_item name="SensorGroupIDL" final="false" dummy="true">
+      <config_parameter name="description" type="SensorDescriptionIDL" />
+      <config_parameter name="sensor" type="std::vector&lt;SensorPositionIDL&gt;" />
+    </config_item>
+
+    <config_item name="ScanDescriptionIDL" final="false" dummy="true">
+      <config_parameter name="scanType" type="long" />
+      <config_parameter name="eventName" type="std::string" />
+      <config_parameter name="group" type="std::vector&lt;SensorGroupIDL&gt;" />
+    </config_item>
+  </config_group>
+
+  <config_group name="ACE">
+    <config_item name="ACE_TTY_IO::Serial_Params" final="false" dummy="true">
+      <config_parameter name="baudrate" type="int" />
+      <config_parameter name="parityenb" type="int" />
+      <config_parameter name="paritymode" type="std::string" />
+      <config_parameter name="databits" type="int" />
+      <config_parameter name="stopbits" type="int" />
+      <config_parameter name="readtimeoutmsec" type="int" />
+      <config_parameter name="ctsenb" type="int" />
+      <config_parameter name="rtsenb" type="int" />
+      <config_parameter name="xinenb" type="int" />
+      <config_parameter name="xoutenb" type="int" />
+      <config_parameter name="modem" type="int" />
+      <config_parameter name="rcvenb" type="int" />
+      <config_parameter name="xonlim" type="int" />
+      <config_parameter name="xofflim" type="int" />
+    </config_item>
+
+  </config_group>
+
+  <config_group name="behaviour">
+    
+    <config_item name="Behaviour" final="false" dummy="true">
+    </config_item>
+    
+    <config_item name="EventBehaviour" parent="Behaviour" final="false">
+    </config_item>
+    
+    <config_item name="TimedBehaviour" parent="Behaviour" final="false">
+      <config_parameter name="pace" type="ACE_Time_Value" default="0, 100000" measure="sec" />
+    </config_item>
+
+    <config_item name="TaskBehaviour" parent="Behaviour" final="false">
+    </config_item>
+    
+  </config_group>
+
+  <config_group name="arbiter">
+    
+    <config_item name="PriorityArbiter" parent="Arbiter" final="false" />
+
+    <config_item name="MotionArbiter" parent="PriorityArbiter" />
+    <config_item name="PowerArbiter" parent="PriorityArbiter" />
+    <config_item name="WindowArbiter" parent="Arbiter" dummy="true" />
+    
+  </config_group>
+
+
+</config>
