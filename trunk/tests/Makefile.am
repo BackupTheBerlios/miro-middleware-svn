@@ -16,6 +16,7 @@ globaldirs = \
 	motion \
 	rangeSensor \
 	panTilt \
+	kicker \
 	video \
 	videoBroker \
 	notify \
