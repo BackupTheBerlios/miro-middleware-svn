@@ -15,6 +15,15 @@
 #include <string>
 #include <iostream>
 
+#define MIRO_EXCEPTION_TYPE(N) \
+  class N : public ::Miro::Exception \
+  { \
+    typedef ::Miro::Exception Super; \
+  public: \
+    N() throw(): Super() {}  \
+    N(std::string const& _what) throw() : Super(_what) {} \
+  }
+
 //! The namespace of the Miro project.
 /**
  * To not pollute the global namespace of users of Miro, all classes, structs
@@ -44,15 +53,15 @@ namespace Miro
     //! Default constructor.
     Exception() throw();
     //! Initializing constructor
-    Exception(const std::string& _what) throw();
+    Exception(std::string const& _what) throw();
     //! Virtual dtor.
     ~Exception() throw();
 
     //! Standart information hook.
-    virtual const char* what() const throw();
+    virtual char const * what() const throw();
 
   private:
-    std::string what_;
+    std::string const what_;
   };
 
   //! Output operator.
@@ -89,7 +98,7 @@ namespace Miro
     ACE_Exception(int _errno, const std::string& _what) throw();
     ~ACE_Exception() throw();
   };
-};
+}
 #endif
 
 

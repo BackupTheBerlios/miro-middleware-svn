@@ -13,6 +13,7 @@
 
 namespace Miro
 {
+  /** Noop implementation. */
   Exception::Exception() throw() : 
     Super(),
     what_()
@@ -22,11 +23,12 @@ namespace Miro
    * You can pass this constructor a string, which describes the
    * cause of the exception.
    */
-  Exception::Exception(const std::string& _what)  throw() : 
+  Exception::Exception(const std::string& _what) throw() : 
     Super(),
     what_(_what) 
   {}
 
+  /** Noop implementation. */
   Exception::~Exception() throw()
   {}
 
@@ -34,7 +36,7 @@ namespace Miro
    * @return A pointer to the string describing the exception
    * reason.  This string is set when the exception is thrown.
    */
-  const char* Exception::what () const throw() 
+  char const * Exception::what () const throw() 
   {
     return what_.c_str (); 
   }
@@ -58,6 +60,7 @@ namespace Miro
     error_(_error)
   {}
 
+  /** Noop implementation. */
   CException::~CException() throw()
   {}
 
@@ -89,6 +92,7 @@ namespace Miro
     Super(_errno, _what) 
   {}
 
+  /** Noop implementation. */
   ACE_Exception::~ACE_Exception() throw()
   {}
-};
+}

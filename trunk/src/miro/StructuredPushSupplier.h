@@ -77,6 +77,12 @@ namespace Miro
     //! Accessor method for the domain name.
     std::string const& domainName() const;
 
+    //--------------------------------------------------------------------------
+    // public static methods
+    //--------------------------------------------------------------------------
+    static void initStructuredEvent(CosNotification::StructuredEvent& _event,
+				    std::string const& _domainName,
+				    std::string const& _typeName);
   protected:
     //--------------------------------------------------------------------------
     // protected types

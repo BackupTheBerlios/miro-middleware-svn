@@ -368,5 +368,15 @@ namespace Miro
 
     return offer;
   }
-}
 
+  void
+  StructuredPushSupplier::initStructuredEvent(CosNotification::StructuredEvent& _event,
+					      std::string const& _domainName,
+					      std::string const& _typeName)
+  {
+    _event.header.fixed_header.event_type.domain_name =
+      CORBA::string_dup(_domainName.c_str());
+    _event.header.fixed_header.event_type.type_name = 
+      CORBA::string_dup(_typeName.c_str());
+  }
+}

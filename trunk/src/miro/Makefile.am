@@ -117,6 +117,8 @@ libmiroSsh_a_SOURCES = $(sources3)
 
 extraheader = \
 	Singleton.h \
+	Repository.h \
+	Factory.h \
 	Synch.h \
 	DevMessage.h \
 	NotifyMulticastRequestIndex.h \
