@@ -73,10 +73,10 @@ namespace Player
   {
     Miro::PanTiltPositionIDL dest;
 
-    //if camera is inverse mounted, change sign for current saved value
+    //if camera is not inverse mounted, change sign for current saved value
     //as it will be changed again on setPosition
     dest.panvalue = angle;
-    dest.tiltvalue = (upsideDown? -currentTilt : currentTilt);
+    dest.tiltvalue = (upsideDown? currentTilt : -currentTilt);
 
     setPosition(dest);
   }
@@ -96,11 +96,9 @@ namespace Player
   PlayerPanTiltImpl::setTilt(double angle) throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
     Miro::PanTiltPositionIDL dest;
-    //if camera is not inverse mounted, change sign for current saved value
+    //if camera is inverse mounted, change sign for current saved value
     //as it will be changed again on setPosition
-    //to maintain coherence with other PanTilt implementations it must
-    //work opposite to camera default.
-    dest.panvalue=(!upsideDown?-currentPan:currentPan);
+    dest.panvalue=(upsideDown?-currentPan:currentPan);
     dest.tiltvalue=angle;
     setPosition(dest);
   }
@@ -126,10 +124,10 @@ namespace Player
 
     if (upsideDown) {
       //if inverse mounting, switch directions
-      result.tiltvalue = -result.tiltvalue;
-    } else {
-      //Miro's horitzontal standart is opposite to camera's !!!
       result.panvalue = -result.panvalue;
+    } else {
+      //Miro's vertical standard is opposite to camera's !!!
+      result.tiltvalue = -result.tiltvalue;
     }
 
     return result;
@@ -139,9 +137,9 @@ namespace Player
   PlayerPanTiltImpl::setPosition(const Miro::PanTiltPositionIDL & dest) throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
     //if camera in inverse position, change sign for pan/tilt
-    //Miro's pan works opposite to camera's!!!
-    currentPan = dest.panvalue * (!upsideDown? -1 : 1);
-    currentTilt = dest.tiltvalue* (upsideDown? -1 : 1);
+    //Miro's tilt works opposite to camera's!!!
+    currentPan = dest.panvalue *  (upsideDown? -1 :  1);
+    currentTilt = dest.tiltvalue* (upsideDown?  1 : -1);
     
     playerPTZ->SetCam(currentPan,currentTilt,playerPTZ->zoom);
   }

@@ -76,7 +76,7 @@ private:
   Miro::RangeSensorImpl infrared;
   Miro::LaserImpl laser;
   Player::PlayerPanTiltImpl panTilt;
-  //  Canon::CanonCameraImpl canonCamera;
+  //  Player::PlayerCameraImpl camera;
   //  Miro::GripperImpl gripper;
 
   Miro::Odometry_var pOdometry;
@@ -89,7 +89,7 @@ private:
   Miro::Laser_var pLaser;
   Miro::Battery_var pBattery;
   Miro::PanTilt_var pPanTilt;
-  //  Miro::CanonCamera_var pCanonCamera;
+  //  Miro::Camera_var pCamera;
   //  Miro::Gripper_var pGripper;
 
   PlayerClient* playerClient;

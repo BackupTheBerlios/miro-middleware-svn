@@ -17,6 +17,7 @@
 #include "miro/Configuration.h"
 
 #include "Parameters.h"
+#include "laser/Parameters.h"
 
 #include "miro/OdometryTracking.h"
 
@@ -63,9 +64,9 @@ PlayerBase::PlayerBase(int argc, char *argv[],PlayerClient* client, int playerId
   //TODO: infrared, not sonar description!
   infrared(Player::Parameters::instance()->sonarDescription, &structuredPushSupplier_),
   laser(new Miro::OdometryTracking(ec_.in(), namingContextName),
-	Player::Parameters::instance()->laserDescription, 
+	Laser::Parameters::instance()->laserDescription, 
     	&structuredPushSupplier_),
-  panTilt(false),
+  panTilt(Player::Parameters::instance()->cameraUpsideDown),
   playerClient(client)
 { 
 
@@ -78,7 +79,7 @@ PlayerBase::PlayerBase(int argc, char *argv[],PlayerClient* client, int playerId
   pLaser = laser._this();
   pBattery = battery._this();
   pPanTilt = panTilt._this();
-  //  pCanonCamera = canonCamera._this();
+  //  pCamera = camera._this();
   //  pGripper = gripper._this();
 
   addToNameService(pOdometry.in(), "Odometry");
@@ -99,14 +100,8 @@ PlayerBase::PlayerBase(int argc, char *argv[],PlayerClient* client, int playerId
   if (reactorTask.panTiltBound())
     addToNameService(pPanTilt.in(),"PanTilt");
 
-
-  //only add the pantilt if the camera is actually present
-  //  if (Player::Parameters::instance()->camera) {
-  //    addToNameService(pPlayerPanTilt.in(), "PanTilt");
-  //    addToNameService(pCanonPanTilt.in(), "Camera");
-  //  }
-
-  //  addToNameService(pGripper.in(), "Gripper");
+  //  if (reactorTask.gripperBound())
+  //    addToNameService(pGripper.in(), "Gripper");
 
   // start the asychronous consumer listening for the hardware
   reactorTask.open(0);
@@ -210,6 +205,7 @@ main(int argc, char *argv[])
   // Parameters to be passed to the services
   Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
   Player::Parameters * simBotParameters = Player::Parameters::instance();
+  Laser::Parameters * laserParameters = Laser::Parameters::instance();
 
   PlayerClient * playerClient=NULL;
 
@@ -223,6 +219,8 @@ main(int argc, char *argv[])
     config->getParameters("Miro::RobotParameters", *robotParameters);
     config->setSection("Player");
     config->getParameters("Player::Parameters", *simBotParameters);
+    config->setSection("Sick");
+    config->getParameters("Laser::Parameters", *laserParameters);
     delete config;
     
     DBG(cout << "Initialize server daemon." << endl);

@@ -33,6 +33,7 @@ PlayerBase_LDADD = \
 	-lmiroIDL \
 	-lmiro \
 	-lmiroSvc \
+	-lmiroLaser \
 	$(PLAYER_LDFLAGS) $(PLAYER_LIBS)
 
 all-local: PlayerBase
