@@ -111,7 +111,7 @@ is called {\tt VideoService}.
 \miro comes with a set of basic filters. The term filter is used here
 in a very general way, as almost every processing unit of the video
 service is designed as a filter. Actually the image acquisition from
-the different video devices are implemented as a filter, forming the
+the different video devices is implemented as a filter, forming the
 first set of filters available in \miro. The second set of filters are
 basic image conversions, like byte order swapping, YUV to RGB
 transformations etc. The third set of filters are the classic image
@@ -121,8 +121,20 @@ we have to be careful about. And i.e. for Ipp based filters, we also
 have a licensing problem. How to extend the video service to process
 your own filters is covered in the following subsection.
 
-Filter trees and their individual parameters can be specified within
-the configuration file of the robot. 
+Filter graphs and their individual parameters can be specified within
+the configuration file of the robot. The VideoService actually does
+not support every possible directed acyclic graph. The implications on
+control flow and synchronisation are too cumbersome. Instead the
+filters in the VideoService are organised as follows.
+
+The filters are organised as a filter tree. That is, every filter has
+one predecessor and $n$ successors. The filtertree is processed in
+depth first order. This scheme is extended by so called filter
+links: A filter can specify additional input filters. To guaranty the
+correct order processing the filters, those additional filters have to
+reside before the specifying filter, in terms of the depth first
+evaluation scheme of the filter tree. Figure \ref{fig:legalilligal}
+tries to visualize this constrain.
 
 \subsection{VideoService Parameters}
 
@@ -157,6 +169,8 @@ video service has the following parameters:
   \item[Name] The name of the corresponding configuration file
     parameter entry (string).
     \item[Successor] The list of successor filters (Filter).
+    \item[BackLink] The list of additional predecessor filters,
+      specified by name (string).
   \end{description}
 \end{description}
 
@@ -357,7 +371,7 @@ The {\tt QtVideo} tool accepts the following command line parameters:
 The {\tt Video} interface is used to manage the access of image data
 by client programs. It supports location transparent as well as
 optimized local image access. Additionally connection management is
-used, to switch of filter subtrees that are not accessed by any other
+used, to switch off filter subtrees that are not accessed by any other
 program.
 
 The general access pattern of a client of a {\tt Video} object looks
@@ -430,6 +444,43 @@ two simple helper classes. They are defined in the file {\tt
 
 \lstinputlisting[frame=tb, first=12, caption={examples/video/VideoExample.cpp}]{VideoExample.cpp}
 \label{lst:VideoExample}
+
+\section{Video Broker Interface}
+
+In addition to the Video interfaces of individual filters, the
+VideoService also offers an interface that accesses the whole filter
+tree of the service. It is called VideoBroker and also registers as
+VideoBroker at the NamingService. It offers methods for synchronised
+simultanious access to multiple filters and for inspection of the
+filter tree.
+
+\subsection{Synchronised Image Access}
+
+The client side evaluation of the results of the various filters often
+requires access to multiple filters, that originate from the same
+input image. The following methods are available in the VideoBroker
+interface for this purpose. They work quite like the corresponding
+methods of the Video interface of the  individual filters.
+
+\begin{itemize}
+\item {\tt acquireNextImageSet}
+\item {\tt releaseImageSet}
+\end{itemize}
+
+\subsection{Filter Tree Meta Information}
+
+Statistical information about the filter tree can be optained at the
+VideoBroker interface via the method:
+
+\begin{itemize}
+\item {\tt filterTreeStats}
+\end{itemize}
+
+It returns the number of connections, the processing time of the
+filter as well as the processing time of the corresponding filter
+subtree (not including the processing time of the filter), the name of
+the filter, the ior and the name of its Video interface (if
+available), the filter successors as well as the successor links.
 
 \section{Writing Filters}
 
