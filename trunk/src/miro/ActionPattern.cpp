@@ -274,7 +274,13 @@ namespace Miro
   void 
   ActionPattern::sendMessage(Behaviour const * const, const std::string& message) 
   {
-    Miro::Guard guard(transitionMutex_);
+    ACE_Time_Value t(0, 100000);
+    t += ACE_OS::gettimeofday();
+
+    if (transitionMutex_.acquire(t) == -1) {
+      std::cerr << "Transition mutex blocked!" << endl;
+      return;
+    }
     // make sure this is still the current action pattern
     if (currentActionPattern_ == this) {
       cout << "ActionPattern: Transition " << message << endl;
@@ -289,6 +295,7 @@ namespace Miro
 	}
       }
     }
+    transitionMutex_.release();
   }
 
   void 
