@@ -170,7 +170,8 @@ video service has the following parameters:
     parameter entry (string).
     \item[Successor] The list of successor filters (Filter).
     \item[BackLink] The list of additional predecessor filters,
-      specified by name (string).
+      specified by name (string). Note that this is the name of the
+      filter instance, not the name of the filters video interface.
   \end{description}
 \end{description}
 
@@ -552,10 +553,64 @@ For initialization and cleanup the following two methods exist.
 \item[fini] Called before destruction of the filter tree.
 \end{description}
 
-\subsection{Example Video Filter}
+\subsection{Enabling and disabling features}
+
+The interface also contains some flags that allow the
+derived classes to specify the existens of certain properties for the
+base class. Overwrite their settings in the constructor. Those are namely:
+\begin{description}
+\item[interfaceAllowed] Specifies, whether the filter result can be
+  exported by a video interface. The default for Video::Filter is
+  true. For Video::Device it is false (see section
+  \ref{sec:VideoDevice} for details).
+\item[inplace] Not implemented yet. (Allways false)
+\end{description}
+
+\subsection{Filter Meta Information: FilterImageParameters}
+
+Sophisicated filters may also extract additional information from the
+images, such as a region of interest etc. To hand this information to
+subsequent filters, an additional interface does exist. It is based on
+the same mechanisms as the filter parameters, except that they can't
+be specified within configuration files. The base class is empty.
+
+The factory methods also reside in the corresponding {\tt Filter}
+class and are wrapped by the two macros:
+\begin{description}
+\item[IMAGE\_PARAMETERS\_FACTORY(X)] For usage within the class definition.
+\item[IMAGE\_PARAMETERS\_FACTORY\_IMPL(X)] For usage within the class implementation.
+\end{description}
+Where X is the name of your derived Filter class. The base class is
+named {\tt FilterImageParameters} and the macros expect the name of
+any child class to end on {\tt ImageParameters}.
+
+The {\tt Filter} interface provides accessor methods for the
+parameters of the individual buffers:
+\begin{description}
+\item[inputBufferParameters] Returns a const pointer to the parameters
+  of the input buffer.
+\item[inputBufferLinkParameters] Returns a const pointer to the
+  parameters of the linked input buffer specified by its index.
+\item[outputBufferParameters] Returns a pointer to the parameters of
+  the output buffer. Note that the parameter instances is not
+  initialized with defaults before processing of the filter. That is,
+  the filters {\tt process} method is responsible, that all data
+  members of the image parameters instance contain meaningfull values
+  on return.
+\end{description}
+
+
+\subsection{Example Video Filters}
 
 To illustrate the framework, a simple example filter is provided under
 {\tt \$(MIRO\_ROOT)/examples/videoFilter}.
+
+\subsection{Calculating a Gray Image}
+
+{\tt FilterGray} implements a simple gray
+filter for images in 24 bit rgb format. The gray value is calculated
+as the average of the weighted sum of the three color values. The
+weighting can be specified by the filters parameters.
 
 Start the example service in the directory videoFilter with \\
 {\tt GrayVideoService -MiroConfigFile GrayVideoService.xml}
@@ -563,6 +618,48 @@ Start the example service in the directory videoFilter with \\
 It registers two interfaces at the naming service: {\tt Video} and
 {\tt Gray}. To examine the original and the filtered image, use {\tt
   QtVideo} and {\tt QtVideo -n Gray}.
+
+\subsection{Image time series}
+
+{\tt FilterDiff} illustrates the use of multiple input filters. It
+calculates the difference of two input images. For that purpose it
+locks images of one image source to provide a view into the past. The
+number of images locked can also be specified by the filters
+parameters. Note however, that it has to be less then the number of
+output buffers provided by the input buffer.
+
+Start the example service in the directory videoFilter with \\
+{\tt GrayVideoService -MiroConfigFile DiffVideoService.xml} \\
+Note that the usage of an input filter link is a bit artificial in
+this configuration, as both input filters are the same.
+
+It registers two interfaces at the naming service: {\tt Video} and
+{\tt DiffImage}. To examine the original and the filtered image, use {\tt
+  QtVideo} and {\tt QtVideo -n DiffImage}.
+
+\section{Writing a new Input Device}
+
+The root of a filter tree is a video device. A video device is
+actually not an image filter but an image producer. But as mentioned
+above, it is implemented as as specialization of the video filter
+class. Some additional requirements and features do exist to handle
+this case.
+
+\subsection{BufferManger}
+
+The video framework does use a buffer manager class to organize the
+concurrent acces to the images of a filter by the filters and remote
+clients. Video devices normally aint capable of having directly a
+video interaface instance attached. The video interface uses shared
+memory to allow for zero copy acces to the clients. Video devices
+often use memory mapped io to acquire the images. Combining the two is
+at least tricky, if possible at all. So most video devices just skip
+it.
+
+Instead the buffer manager class is used for synchronising the access
+to the mmaped images between the filters and the hardware.
+
+
 
 %%% Local Variables: 
 %%% mode: latex
