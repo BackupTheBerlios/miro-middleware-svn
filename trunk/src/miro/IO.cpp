@@ -9,6 +9,10 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "IO.h"
 
 // need all types defined in idl, for io operators
@@ -26,7 +30,10 @@
 #include "idl/InclinometerEventC.h"
 #include "idl/MagnetometerEventC.h"
 #include "idl/ThermometerEventC.h"
+
+#ifdef MIRO_HAS_PIONEER
 #include "idl/TCM2EventC.h"
+#endif
 
 #include "Angle.h"
 #include "TimeHelper.h"
@@ -289,6 +296,7 @@ namespace Miro
     return ostr;
   }
 
+#ifdef MIRO_HAS_PIONEER
   std::ostream &
   operator<<(std::ostream &ostr, const TCM2EventIDL &rhs)
   {
@@ -299,4 +307,6 @@ namespace Miro
     ostr << rhs.temperature << "°C";
     return ostr;
   }
+#endif
+
 }

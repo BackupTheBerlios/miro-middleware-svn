@@ -91,6 +91,20 @@ AM_CONDITIONAL(COND_PIONEER,   [test "x$ac_request_pioneer" = xyes])
 AM_CONDITIONAL(COND_B21,       [test "x$ac_request_b21" = xyes])
 AM_CONDITIONAL(COND_DEPRECATED,[test "x$ac_request_deprecated" = xyes])
 
+AH_TEMPLATE([MIRO_HAS_SPARROW99], [build with support for Sparrow99 robots.])
+AH_TEMPLATE([MIRO_HAS_PIONEER], [build with support for pioneer robots.])
+AH_TEMPLATE([MIRO_HAS_B21], [build with support for B21 robots.])
+
+if test "x$ac_request_sparrow99" = xyes; then
+	AC_DEFINE(MIRO_HAS_SPARROW99)
+fi
+if test "x$ac_request_pioneer" = xyes; then
+	AC_DEFINE(MIRO_HAS_PIONEER)
+fi
+if test "x$ac_request_b21" = xyes; then
+	AC_DEFINE(MIRO_HAS_B21)
+fi
+
 if test "x$ac_request_player" = xyes; then
 	AC_SEARCH_PLAYER
 fi

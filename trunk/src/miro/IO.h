@@ -11,6 +11,10 @@
 #ifndef miroIO_h
 #define miroIO_h
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <ace/TTY_IO.h>
 #include <vector>
 #include <set>
@@ -82,7 +86,9 @@ namespace Miro
   OSTR_OPERATOR_DECL(InclinometerEventIDL);
   OSTR_OPERATOR_DECL(MagnetometerEventIDL);
   OSTR_OPERATOR_DECL(ThermometerEventIDL);
+#ifdef MIRO_HAS_PIONEER
   OSTR_OPERATOR_DECL(TCM2EventIDL);
+#endif
 }
 
 #endif
