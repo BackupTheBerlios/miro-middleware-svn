@@ -16,7 +16,7 @@
 #include "FaulMotorConsumer.h"
 #include "Parameters.h"
 
-#include "faulTty/FaulTtyMessage.h"
+#include "faulTty/FaulTtyEventHandler.h"
 
 #ifdef DEBUG
 #define DBG(x) x
@@ -37,23 +37,22 @@ namespace FaulMotor
   //------------------------//
 
   Connection::Connection(ACE_Reactor* _reactor, 
-			 EventHandler* _eventHandler,
 			 Consumer * _consumer) : 
-    Super(_reactor, _eventHandler, *Parameters::instance()),
-    consumer(_consumer),
-    params_(Parameters::instance())
+    params_(Parameters::instance()),
+    leftWheel_(_reactor, 
+	       new FaulTty::EventHandler(_consumer, OdometryMessage::LEFT), 
+	       params_->leftWheel),
+    rightWheel_(_reactor, 
+		new FaulTty::EventHandler(_consumer, OdometryMessage::RIGHT), 
+	       params_->rightWheel),
+    consumer(_consumer)
   { 
     DBG(cout << "Constructing FaulMotorConnection." << endl);
-    char buffer[20];
-    strcpy(buffer,"ac20\r\n\0");
-    Message speedMessage(buffer); // build speed packet
-    writeMessage(speedMessage);
+
+    char const * const accMessage = "ac20\r\n\0"; // build acceleration packet
+    leftWheel_.writeMessage(accMessage);
+    rightWheel_.writeMessage(accMessage);
   }
-
-
-  //----------------------//
-  //----- destructor -----//
-  //----------------------//
 
   Connection::~Connection()
   { 
@@ -67,132 +66,88 @@ namespace FaulMotor
   //----------- commands ----------- //
 
   void
-  Connection::setSpeed(short speed)
+  Connection::setSpeed(short _speed)
   {
-    char strbuff[20];
-    char buffer[20];
+    char speedMessage[20];
 
-    if (speed<10) {       // zum bremsen grosse beschl.
-	strcpy(buffer,"ac20\r\n\0");
-	Message speedMessage(buffer); // build speed packet
-    	writeMessage(speedMessage);
+    if (_speed < 10) {       // zum bremsen grosse beschl.
+      char const * const speedMessage = "ac20\r\n\0";
+      leftWheel_.writeMessage(speedMessage);
+      rightWheel_.writeMessage(speedMessage);
     }
 
-    speed = speed * 4.2;//* 112;
-    strcpy(buffer,"0v\0");
-    sprintf(strbuff, "%d", speed);
-    strcat(buffer, strbuff);
-    strcat(buffer, "\r\n");
+    int speed = (short) (_speed * params_->speedConvFactor);//* 112;
 
-    Message speedMessageL(buffer); // build speed packet
-    writeMessage(speedMessageL);
-
-    strcpy(buffer,"1v\0");
-    speed = -speed;
-    sprintf(strbuff, "%d", speed);
-    strcat(buffer, strbuff);
-    strcat(buffer, "\r\n");
-
-    Message speedMessageR(buffer); // build speed packet
-    writeMessage(speedMessageR);             // send it
+    sprintf(speedMessage, "v%d\r\n", speed); // build speed message
+    leftWheel_.writeMessage(speedMessage);
+    rightWheel_.writeMessage(speedMessage);             // send it
   }
 
   void
-  Connection::setSpeed(short speedL, short speedR)
+  Connection::setSpeed(short _speedL, short _speedR)
   {
-    char strbuff[20];
-    char buffer[20];
+    char speedMessageL[20];
+    char speedMessageR[20];
 
-    speedR = speedR *4.2; //* 112;
-    speedL = speedL *4.2; // * 112;
-    strcpy(buffer,"1v\0");
-    speedL = -speedL;
-    sprintf(strbuff, "%d", speedL);
-    strcat(buffer, strbuff);
-    strcat(buffer, "\r\n");
-    Message speedMessageL(buffer);
-    writeMessage(speedMessageL);
+    int speedL = (short) (_speedL * params_->speedConvFactor);//* 112;
+    int speedR = (short) (_speedR * params_->speedConvFactor);//* 112;
 
-    strcpy(buffer,"0v\0");
-    //speedR = speedR;
-    sprintf(strbuff, "%d", speedR);
-    strcat(buffer, strbuff);
-    strcat(buffer, "\r\n");
-    Message speedMessageR(buffer);
-    writeMessage(speedMessageR);
+    sprintf(speedMessageL, "v%d\r\n", speedL); // build speed message
+    sprintf(speedMessageR, "v%d\r\n", speedR); // build speed message
+    leftWheel_.writeMessage(speedMessageL);
+    rightWheel_.writeMessage(speedMessageR);             // send it
   }
 
   void
   Connection::getSpeed()
   {
+    char const * const getSpeedMessage = "gn\r\n\0";
 
-    char buffer[10];
-
-    strcpy(buffer,"0gn\r\n\0");
-    Message speedMessageL(buffer); // build speed packet
-    writeMessage(speedMessageL);             // send it
-
-    strcpy(buffer,"1gn\r\n\0");
-    Message speedMessageR(buffer); // build speed packet
-    writeMessage(speedMessageR);
+    leftWheel_.writeMessage(getSpeedMessage);             // send it
+    rightWheel_.writeMessage(getSpeedMessage);
   }
 
   void
   Connection::getTicks()
   {
-    char buffer[10];
+    char const * const getTicksMessage = "pos\r\n\0";
 
-    strcpy(buffer,"0pos\r\n\0");
-    Message speedMessageL(buffer); // build speed packet
-    writeMessage(speedMessageL);             // send it
-
-    strcpy(buffer,"1pos\r\n\0");
-    Message speedMessageR(buffer); // build speed packet
-    writeMessage(speedMessageR);
+    leftWheel_.writeMessage(getTicksMessage);            // send it
+    rightWheel_.writeMessage(getTicksMessage);
   }
 
   void
-  Connection::setBefehl(char* befehl)
+  Connection::setBefehl(char const * const befehl)
   {
-
-    strcat(befehl,"\r\n\0");
-    Message speedMessageR(befehl);
-    writeMessage(speedMessageR);
+    char buffer[256];
+    strncpy(buffer, befehl, 253);
+    strcat(buffer,"\r\n\0");
+    leftWheel_.writeMessage(buffer);
   }
 
   void
-  Connection::setPos0(short pos)
+  Connection::setPosition(int _left, int _right)
   {
-    char buffer[10];
-    char strbuff[20];
-    if (pos ==0) {
-    	strcat(buffer,"ho");
-	}else{
-		strcpy(buffer,"0ho\0");
-    		sprintf(strbuff, "%d", pos);
-    		strcat(buffer, strbuff);
-    		strcat(buffer, "\r\n");
-	}
-    Message speedMessageR(buffer);
-    writeMessage(speedMessageR);
+    char bufferL[20];
+    char bufferR[20];
+    char const * commandL = bufferL;
+    char const * commandR = bufferR;
+
+    if (_left == 0) {
+      commandL = "ho\n\r";
+    }
+    else {
+      sprintf(bufferL, "ho%d\r\n", _left);
+    }
+
+    if (_right == 0) {
+      commandR = "ho\n\r";
+    }
+    else {
+      sprintf(bufferR, "ho%d\r\n", _right);
+    }
+
+    leftWheel_.writeMessage(commandL);
+    rightWheel_.writeMessage(commandR);
   }
-
-  void
-  Connection::setPos1(short pos)
-  {
-    char buffer[10];
-    char strbuff[20];
-    if (pos ==0) {
-    	strcat(buffer,"ho");
-	}else{
-		strcpy(buffer,"1ho\0");
-    		sprintf(strbuff, "%d", pos);
-    		strcat(buffer, strbuff);
-    		strcat(buffer, "\r\n");
-	}
-    Message speedMessageR(buffer);
-    writeMessage(speedMessageR);
-  }
-
-
 };

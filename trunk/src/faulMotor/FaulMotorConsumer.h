@@ -47,13 +47,22 @@ namespace FaulMotor
     Miro::OdometryImpl * pOdometry_;
     Miro::MotionStatusIDL status_;
 
-    double prevPosL, prevPosR;
-    double xPos, yPos;
+    int init_;
 
-    //unsigned short bumpers_;
-    //int infrared_;
-    int init;
-    ACE_Time_Value prevTimeStamp;
+    double xPos_;
+    double yPos_;
+
+    double ticksL_;
+    double ticksR_;
+    double prevTicksL_;
+    double prevTicksR_;
+
+    ACE_Time_Value timeStampL_;
+    ACE_Time_Value timeStampR_;
+    ACE_Time_Value prevTimeStampL_;
+    ACE_Time_Value prevTimeStampR_;
+
+    double wheelBase_;
   };
 };
 #endif

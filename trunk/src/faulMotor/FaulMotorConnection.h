@@ -13,6 +13,8 @@
 
 #include "faulTty/FaulTtyConnection.h"
 
+#include "miro/Synch.h"
+
 //------------------------ FaulMotorClass ---------------------------//
 
 namespace FaulMotor
@@ -24,13 +26,10 @@ namespace FaulMotor
   /**
    * Class for using the FaulMotor robot
    */
-  class Connection : public FaulTty::Connection
+  class Connection
   {
-    typedef FaulTty::Connection Super;
-
   public:
     Connection(ACE_Reactor * _reactor,
-	       FaulTty::EventHandler * _eventHandler,
 	       Consumer * _consumer);
     virtual ~Connection();
 
@@ -42,17 +41,18 @@ namespace FaulMotor
     void setSpeed(short speedL, short speedR);
     void getSpeed();
     void getTicks();
-    void setBefehl(char* befehl);
-    void setPos0(short pos);
-   void setPos1(short pos);
+    void setBefehl(char const * const befehl);
+    void setPosition(int left, int right);
 
   protected:
+    const Parameters * params_;
+
+    FaulTty::Connection leftWheel_;
+    FaulTty::Connection rightWheel_;
+
     Consumer * consumer;
 
-    Miro::Mutex       stateMutex;
-    short             rotSpeed;
-
-    const Parameters * params_;
+    Miro::Mutex mutex_;
   };
 
 };
