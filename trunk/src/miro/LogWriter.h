@@ -14,7 +14,7 @@
 #include "LogHeader.h"
 #include "LogTypeRepository.h"
 #include "StructuredPushConsumer.h"
-#include "SvcParameters.h"
+#include "miro/SvcParameters.h"
 
 #include <ace/Mem_Map.h>
 #include <ace/High_Res_Timer.h>

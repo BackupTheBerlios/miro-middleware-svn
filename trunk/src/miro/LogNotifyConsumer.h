@@ -12,7 +12,7 @@
 #define LogNotifyConsumer_h
 
 #include "StructuredPushConsumer.h"
-#include "SvcParameters.h"
+#include "miro/SvcParameters.h"
 
 #include "LogWriter.h"
 

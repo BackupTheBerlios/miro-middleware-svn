@@ -70,7 +70,7 @@
 #include <orbsvcs/CosNotifyCommC.h>
 
 /* Miro includes */
-#include "NotifyMulticastParameters.h"
+#include "miro/NotifyMulticastParameters.h"
 #include "Exception.h"
 #include "Client.h"
 

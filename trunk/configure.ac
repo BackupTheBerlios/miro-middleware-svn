@@ -278,7 +278,6 @@ AC_CONFIG_FILES([Makefile
                  utils/rangeSensor/Makefile
                  utils/widgets/Makefile
 		 utils/notifyObserver/Makefile
-		 utils/makeConfig/Makefile
                  doc/Makefile
                  doc/fig/Makefile
                  doc/tex/Makefile

@@ -12,7 +12,7 @@
 #define TimedBehaviour_h
 
 #include "Behaviour.h"
-#include "Parameters.h"
+#include "miro/Parameters.h"
 
 #include <ace/Reactor.h>
 

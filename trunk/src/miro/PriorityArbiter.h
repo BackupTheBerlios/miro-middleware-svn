@@ -12,7 +12,7 @@
 #define PriorityArbiter_h
 
 #include "Arbiter.h"
-#include "Parameters.h"
+#include "miro/Parameters.h"
 
 #include <orbsvcs/CosNotifyCommC.h>
 

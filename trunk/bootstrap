@@ -1,9 +1,6 @@
 #! /bin/sh
 
-if ! test -h config/ltmain.sh
-then
-  ln -s /usr/share/libtool/ltmain.sh config/
-fi
+libtoolize --copy --force
 aclocal -I config  && \
 autoheader && \
 automake  --add-missing && \

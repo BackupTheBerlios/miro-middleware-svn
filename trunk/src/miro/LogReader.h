@@ -13,7 +13,7 @@
 
 #include "LogHeader.h"
 #include "LogTypeRepository.h"
-#include "SvcParameters.h"
+#include "miro/SvcParameters.h"
 
 #include <orbsvcs/CosNotificationC.h>
 #include <tao/CDR.h>
