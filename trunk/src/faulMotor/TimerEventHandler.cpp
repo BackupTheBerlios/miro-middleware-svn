@@ -12,6 +12,8 @@
 #include "TimerEventHandler.h"
 #include "FaulMotorConnection.h"
 
+#include "miro/TimeHelper.h"
+
 //#undef DEBUG
 
 #ifdef DEBUG
@@ -23,6 +25,11 @@
 #else
 #define DBG(x)
 #endif
+
+namespace
+{
+  int counter = 0;
+}
 
 namespace FaulMotor
 {
@@ -45,14 +52,17 @@ namespace FaulMotor
   int
   TimerEventHandler::handle_timeout(const ACE_Time_Value & _now, const void *)
   {
-    if (Connection::gotTicks_ == 0)
-      std::cerr << "odometry stall" << endl;
-    Connection::gotTicks_ = 0;
-
-    // request new odometry update
-    connection_.getTicks();
-    // set new velocities/accelerations
-    connection_.deferredSetSpeed(_now);
+    ++counter; 
+    if (Connection::gotTicks_ == 0 &&
+        counter > 5) {
+      std::cerr << counter << " odometry stall " << ACE_OS::gettimeofday() << endl;
+    }
+    else {
+      // request new odometry update
+      connection_.getTicks();
+      // set new velocities/accelerations
+      connection_.deferredSetSpeed(_now);
+    }
     return 0;
   }
 }
