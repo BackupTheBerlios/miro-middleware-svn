@@ -66,9 +66,11 @@ namespace Miro
      */
     class Worker : public ACE_Task_Base
     {
+      typedef ACE_Task_Base Super;
     public:
       //! Initializing constructor.
-      Worker(CORBA::ORB_ptr _orb, bool& _shutdown);
+      Worker(ACE_Thread_Manager * _threadManager, 
+	     CORBA::ORB_ptr _orb, bool& _shutdown);
 
       //! The thread entry point.
       virtual int svc();
@@ -135,6 +137,8 @@ namespace Miro
 
     //! Signal set to be handled by the event handler.
     ACE_Sig_Set signals_;
+
+    ACE_Thread_Manager threadManager_;
 
     //! Shared worker thread pool.
     Worker worker_;

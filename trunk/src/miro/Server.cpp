@@ -63,7 +63,9 @@ namespace Miro
    * @param orb      The Object request broker.
    * @param shutdown Cooperative shutdown indicator.
    */
-  Server::Worker::Worker (CORBA::ORB_ptr orb, bool& shutdown) :
+  Server::Worker::Worker (ACE_Thread_Manager * _threadManager,
+			  CORBA::ORB_ptr orb, bool& shutdown) :
+    Super(_threadManager),
     orb_ (CORBA::ORB::_duplicate (orb)),
     shutdown_(shutdown)
   {
@@ -87,7 +89,7 @@ namespace Miro
     shutdown_(false),
     event_(new Event(*this)),
     signals_(),
-    worker_(orb_.in(), shutdown_)
+    worker_(&threadManager_, orb_.in(), shutdown_)
   {
     DBG(cerr << "Constructing Miro::Server." << endl);
 
@@ -134,7 +136,7 @@ namespace Miro
     shutdown_(true),
     event_(NULL),
     signals_(),
-    worker_(orb_.in(), shutdown_)
+    worker_(&threadManager_, orb_.in(), shutdown_)
   {
     DBG(cerr << "Copy constructing Miro::Server." << endl);
   }
