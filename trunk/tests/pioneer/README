@@ -7,3 +7,6 @@ does not work properly.
 Offers a simple text interface for most of the pioneer board interface
 methods. - Should actually offer access to all pioneer board interface
 methods...
+
+Note that the test has to be run on the box, the pioneer board is
+attached to by serial link.

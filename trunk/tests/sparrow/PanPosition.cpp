@@ -2,19 +2,16 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "miro/SparrowPanTiltC.h"
 #include "miro/Client.h"
 #include "miro/Angle.h"
-
-#include <ace/OS.h>
 
 using Miro::Client;
 using Miro::SparrowPanTilt;

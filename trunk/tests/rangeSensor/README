@@ -1,0 +1,13 @@
+Test for the generalized RangeSensor interfaces.
+
+Handy to verify range sensor problems.
+
+Start the individual range sensor service. Then you can access the
+RangeSensor interfaces directly via these small test program. It offers
+a simple text interface for each method available within the
+interface.
+
+Don't forget to specify the robots name at the command line (-MNC
+<robotname>), if it is set in the configuration file. Additionally you
+have to provide the sensor name (Sonar, Laser, Infrared etc.) as the
+first commandline argument.
