@@ -33,6 +33,7 @@ sources = \
 tomocsources = \
 	LogFile.cpp \
 	FileSet.cpp \
+	EventView.cpp \
 	MainForm.cpp
 
 

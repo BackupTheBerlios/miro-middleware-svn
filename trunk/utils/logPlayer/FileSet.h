@@ -26,12 +26,23 @@ class FileSet : public QObject
 {
   Q_OBJECT
 
+  //----------------------------------------------------------------------------
+  // private types
+  //----------------------------------------------------------------------------
   typedef QObject Super;
+
 public:
+  //----------------------------------------------------------------------------
+  // public types
+  //----------------------------------------------------------------------------
+  typedef std::vector<LogFile *> FileVector;
   typedef std::map<QString, LogFile::CStringSet> DNETMap; // domain_name type_came map
 
+  //----------------------------------------------------------------------------
+  // public methods
+  //----------------------------------------------------------------------------
   FileSet(ChannelManager * _channelManager);
-  ~FileSet();
+  virtual ~FileSet();
 
   LogFile * addFile(QString const& _name);
   void delFile(QString const& _name);
@@ -43,28 +54,50 @@ public:
   ACE_Time_Value const& startTime() const;
   ACE_Time_Value const& endTime() const;
 
-  ACE_Time_Value const& coursorTime() const;
-  void coursorTime(ACE_Time_Value const& _t);
 
-  void playEvent(ACE_Time_Value const& _t);
-  void playLast();
+  //! Play events till specified time
+  void playEvents(ACE_Time_Value const& _t);
+  void playBackwards();
+
+  //! Get @ref _num events from specified time.
+  void getEvents(ACE_Time_Value const& _t, unsigned int _num);
 
   DNETMap typeNames() const;
   void clearExclude();
+
+  FileVector& fileVector() { return file_; }
+
+  //! Current coursor event time.
+  ACE_Time_Value const& coursorTime() const;
+  void coursorTime(ACE_Time_Value const& _t);
+  void coursorTimeRel(ACE_Time_Value const& _t);
+
+  //----------------------------------------------------------------------------
+  // public slots
+  //----------------------------------------------------------------------------
+public slots:
   void addExclude(QString const& _domainName, QString const& _typeName);
   void delExclude(QString const& _domainName, QString const& _typeName);
 
+  //----------------------------------------------------------------------------
+  // signals
+  //----------------------------------------------------------------------------
 signals:
   void intervalChange();
   void coursorChange();
 
-protected:
-  typedef std::vector<LogFile *> FileVector;
-
+  //----------------------------------------------------------------------------
+  // private data
+  //----------------------------------------------------------------------------
+private:
+  //! Reference to the channel manager.
   ChannelManager * const channelManager_;
+  //! The set of log files to work on.
   FileVector file_;
 
+  //! The base time of all log files.
   ACE_Time_Value startTime_;
+  //! The ent time of all log files.
   ACE_Time_Value endTime_;
 };
 

@@ -40,10 +40,12 @@ namespace
   bool verbose = false;
   bool shared = false;
   bool unified = false;
+  bool localizeDebug = false;
 
   const char colocatedOpt[] = "-shared_ec";
   const char unifiedOpt[] = "-unified_ec";
   const char verboseOpt[] = "-v";
+  const char localizeOpt[] = "-l";
   const char helpOpt[] = "-?";
 };
 
@@ -66,6 +68,10 @@ main(int argc, char *argv[])
       else if (ACE_OS::strcasecmp(current_arg, unifiedOpt) == 0) {
 	arg_shifter.consume_arg();
 	unified = true;
+      } 
+      else if (ACE_OS::strcasecmp(current_arg, localizeOpt) == 0) {
+	arg_shifter.consume_arg();
+	localizeDebug = true;
       } 
       else if (ACE_OS::strcasecmp(current_arg, verboseOpt) == 0) {
 	arg_shifter.consume_arg();
@@ -111,6 +117,7 @@ main(int argc, char *argv[])
       std::cout << "Initialize server daemon." << endl;
     
     ChannelManager channelManager(argc, argv, shared, unified);
+    channelManager.setDebugLoclaize(localizeDebug);
     try {
       QApplication app(argc, argv);     // Create Qt application  
       FileSet fileSet(&channelManager);

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -79,9 +79,14 @@ public:
   ACE_Time_Value const& coursorTime() const;
   void coursorTime(ACE_Time_Value const& _t);
 
-  void playEvent();
+  void sendEvent();
+  bool nextEvent();
+  bool prevEvent();
+  bool getCurrentEvent();
+
   unsigned int parse();
   bool parsed() const;
+  void parseEvent();
 
   void clearExclude();
   void addExclude(QString const& _typeName);
@@ -90,20 +95,32 @@ public:
   QString const& domainName() const;
   CStringSet const& typeNames() const;
 
+  void setTimeOffset(ACE_Time_Value const& _offset);
+  bool assertBefore(ACE_Time_Value const& _t);
+  bool assertAfter(ACE_Time_Value const& _t);
+
 signals:
-  void notifyEvent(const QString&);
- 
+  void notifyEvent(QString const&);
+  void newEvent(QString const&,QString const&,QString const&,QString const&);
 
 protected:
+  bool validEvent() const;
+
   QString name_;
   ChannelManager * const channelManager_;
 
   ACE_Mem_Map memoryMap_;
 
+  CosNotification::StructuredEvent event_;
+  QString stamp_;
+  QString domainName_;
+  QString typeName_;
+  QString eventName_;
+
+  ACE_Time_Value timeOffset_;
   TimeVector timeVector_;
   TimeVector::const_iterator coursor_;
 
-  QString domainName_;
   CStringSet typeNames_;
 
   CosNotifyChannelAdmin::EventChannel_var ec_;
@@ -113,9 +130,6 @@ protected:
 
   TAO_InputCDR * istr_;    
   bool parsed_;
-
-  static const ACE_Time_Value T_NULL;
-
 };
 
 inline
@@ -145,7 +159,7 @@ inline
 ACE_Time_Value const&
 LogFile::coursorTime() const
 {
-  return (coursor_ != timeVector_.end())? coursor_->first : T_NULL;
+  return (coursor_ != timeVector_.end())? coursor_->first : ACE_Time_Value::zero;
 }
 
 inline
@@ -176,4 +190,9 @@ LogFile::typeNames() const
   return typeNames_;
 }
 
+inline
+void
+LogFile::setTimeOffset(ACE_Time_Value const& _offset) {
+  timeOffset_ = _offset;
+}
 #endif

@@ -19,6 +19,7 @@
 // forward declarations
 class FileSet;
 class FileListDialog;
+class EventView;
 
 class QApplication;
 class QPopupMenu;
@@ -85,8 +86,19 @@ public slots:
 
   void scaleSlider();
   void setSlider();
+  void setHistory();
 
   void toggleExcludeEvent(int, int);
+
+  void toggleEventView();
+  void eventViewClosed();
+
+  void cutFront();
+  void cutBack();
+
+signals:
+  void excludeEvent(const QString &, const QString&);
+  void includeEvent(const QString &, const QString&);
 
 protected:
   void enableButtons(bool _flag);
@@ -95,9 +107,11 @@ protected:
   QApplication& app_;
   FileSet& fileSet_;
   FileListDialog * fileListDialog_;
+  EventView * eventView_;
   QTimer * timer_;
 
   QPopupMenu *eventMenu_;
+  QPopupMenu * toolsMenu_;
 
   QWidget *playButton;
   QWidget *stopButton;
@@ -112,10 +126,12 @@ protected:
 
   bool action_;
   int speed_;
+  int history_;
   ACE_Time_Value timeBase_;
   ACE_Time_Value timeCBase_;
 
   int domainNameMenuId_;
+  int eventViewId_;
 
   static ACE_Time_Value const MIN_TIME;
 };

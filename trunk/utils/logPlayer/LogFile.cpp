@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -11,12 +11,13 @@
 
 #include "LogFile.h"
 #include "ChannelManager.h"
+#include "EventView.h"
 
 #include "miro/StructuredPushSupplier.h"
 #include "idl/TimeC.h"
 #include "miro/TimeHelper.h"
 
-ACE_Time_Value const LogFile::T_NULL(0, 0);
+#include <cstring>
 
 LogFile::LogFile(QString const& _name,
 		 ChannelManager * _channelManager) :
@@ -106,39 +107,95 @@ LogFile::parse()
 }
 
 void 
-LogFile::playEvent() 
+LogFile::sendEvent()
 {
-  assert(coursor_ != timeVector_.end());
+  MIRO_ASSERT(coursor_ != timeVector_.end());
+
+  emit notifyEvent(domainName_ + " - " + typeName_);
+  
+  supplier_->sendEvent(event_);
+}
+
+bool
+LogFile::nextEvent()
+{
+  MIRO_ASSERT (coursor_ != timeVector_.end());
+
+  do {
+    ++coursor_;
+    if (coursor_ == timeVector_.end()) {
+      return false;
+    }
+
+    TAO_InputCDR istr(coursor_->second, 
+		      memoryMap_.size() - (coursor_->second - (char *)memoryMap_.addr()));
+    istr >> event_;
+  }
+  while (!validEvent());
+
+  return true;
+}
+
+bool
+LogFile::getCurrentEvent()
+{
+  if (coursor_ == timeVector_.end())
+    return false;
 
   TAO_InputCDR istr(coursor_->second, 
 		    memoryMap_.size() - (coursor_->second - (char *)memoryMap_.addr()));
-   
-  CosNotification::StructuredEvent event;
-  istr >> event;
-  
-  char const * const s = event.header.fixed_header.event_type.type_name;
-  QString const eventName = s;
-  QStringVector::const_iterator first, last = exclude_.end();
-  for (first = exclude_.begin(); first != last; ++first) {
-    if (*first == eventName) {
-      ++coursor_;
-      return;
+  istr >> event_;
+  while (!validEvent()) {
+    ++coursor_;
+    if (coursor_ == timeVector_.end()) {
+      return false;
     }
+    
+    TAO_InputCDR istr(coursor_->second, 
+		      memoryMap_.size() - (coursor_->second - (char *)memoryMap_.addr()));
+    istr >> event_;
   }
 
-  // #define DEBUG_LOCALIZATION
-#ifdef DEBUG_LOCALIZATION  
-  if (eventName == "LineSamples")
-    event.header.fixed_header.event_type.type_name = CORBA::string_dup( "RawLineSamples" );
-#endif // DEBUG_LOCALIZATION
+  parseEvent();
 
-  emit notifyEvent(QString(event.header.fixed_header.event_type.domain_name) +
-		   QString(" - ") +
-		   QString(event.header.fixed_header.event_type.type_name));
+  return true;
+}
+
+bool
+LogFile::prevEvent()
+{
+  do {
+    if (coursor_ == timeVector_.begin())
+      return false;
+    --coursor_;
+
+    TAO_InputCDR istr(coursor_->second, 
+		      memoryMap_.size() - (coursor_->second - (char *)memoryMap_.addr()));
+    istr >> event_;
+  }
+  while (!validEvent());
   
-  supplier_->sendEvent(event);
+  return true;
+}
 
-  ++coursor_;
+bool
+LogFile::assertBefore(ACE_Time_Value const& _t)
+{
+  bool valid = true;
+  while(valid && coursor_->first >= _t) {
+    valid = prevEvent();
+  }
+  return valid;
+}
+ 
+bool
+LogFile::assertAfter(ACE_Time_Value const& _t)
+{
+  bool valid = true;
+  while (valid && coursor_->first <= _t) {
+    valid = nextEvent();
+  }
+  return valid;
 }
 
 void
@@ -169,4 +226,40 @@ LogFile::delExclude(QString const& _typeName)
   assert(iter != exclude_.end());
 
   exclude_.erase(iter);
+}
+
+bool
+LogFile::validEvent() const
+{
+  // skip excluded events
+  QStringVector::const_iterator first, last = exclude_.end();
+  for (first = exclude_.begin(); first != last; ++first) {
+    if (strcmp(first->latin1(), 
+	       (char const *)event_.header.fixed_header.event_type.type_name) == 0) {
+     return false;
+    }
+  }
+  return true;
+}
+
+void
+LogFile::parseEvent()
+{
+  // localize debug hack
+  //  if (channelManager_->debugLocalize() && typeName_ == "LineSamples")
+  //   event_.header.fixed_header.event_type.type_name = CORBA::string_dup( "RawLineSamples" );
+
+  domainName_ = (char const *)event_.header.fixed_header.event_type.domain_name;
+  typeName_ = (char const *)event_.header.fixed_header.event_type.type_name;
+  eventName_ = (char const *)event_.header.fixed_header.event_name;
+
+  ACE_Time_Value t = coursorTime() - timeOffset_;
+  char const * null = "000000";
+  QString sec;
+  QString usec;
+  sec.setNum(t.sec());
+  usec.setNum(t.usec());
+  stamp_ = (null + sec.length()) + sec + "." + (null + usec.length()) + usec;
+
+  emit newEvent(stamp_, domainName_, typeName_, eventName_);
 }

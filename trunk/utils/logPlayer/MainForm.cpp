@@ -13,6 +13,7 @@
 #include "MainForm.h"
 #include "LogFile.h"
 #include "FileSet.h"
+#include "EventView.h"
 
 #include "../widgets/FileListDialog.h"
 
@@ -33,6 +34,7 @@
 #include <qdial.h>
 #include <qprogressdialog.h>
 #include <qmessagebox.h>
+#include <qinputdialog.h>
 
 #include <cstring>
 
@@ -65,10 +67,12 @@ MainForm::MainForm(QApplication& _app, FileSet& _fileSet,
   app_(_app),
   fileSet_(_fileSet),
   fileListDialog_(new FileListDialog(this, "File list dialog", "Log files", filter)),
+  eventView_(NULL),
   timer_(new QTimer()),
   eventMenu_(new QPopupMenu( this )),
   action_(false),
   speed_(1),
+  history_(100),
   domainNameMenuId_(0)
 {
   // the menu
@@ -77,8 +81,21 @@ MainForm::MainForm(QApplication& _app, FileSet& _fileSet,
   fileMenu->insertSeparator();
   fileMenu->insertItem( "&Quit", qApp, SLOT( quit() ) );
 
-  menuBar()->insertItem( "&File", fileMenu );    
-  menuBar()->insertItem( "&Events", eventMenu_ );    
+  QPopupMenu * editMenu = new QPopupMenu(this);
+  editMenu->insertItem("Cut Front", this, SLOT(cutFront()));
+  editMenu->insertItem("Cut Back", this, SLOT(cutBack()));
+
+  toolsMenu_ = new QPopupMenu(this);
+  toolsMenu_->setCheckable(true);
+  eventViewId_ = toolsMenu_->insertItem("&Event View", this, SLOT(toggleEventView()));
+
+  QPopupMenu * settingsMenu = new QPopupMenu(this);
+  settingsMenu->insertItem("&History", this, SLOT(setHistory()));
+
+  menuBar()->insertItem("&File", fileMenu);    
+  menuBar()->insertItem("&Events", eventMenu_ );    
+  menuBar()->insertItem("&Tools", toolsMenu_);    
+  menuBar()->insertItem("&Settings", settingsMenu);    
 
   // the widgets
   QWidget * cw = new QWidget(this, "central widget");
@@ -171,6 +188,12 @@ MainForm::MainForm(QApplication& _app, FileSet& _fileSet,
 	   (MainForm *)this, SLOT( beginAction() ) );
   connect( speedDial, SIGNAL( dialReleased() ),
 	   (MainForm *)this, SLOT( endAction() ) );
+
+
+  connect (this, SIGNAL(excludeEvent(const QString&, const QString&)),
+	   &fileSet_, SLOT(addExclude(const QString&, const QString&)));	  
+  connect (this, SIGNAL(includeEvent(const QString&, const QString&)),
+	   &fileSet_, SLOT(delExclude(const QString&, const QString&)));	  
 
   enableButtons(fileSet_.size() != 0);
 }
@@ -283,7 +306,7 @@ void
 MainForm::next() 
 {
   if (!timer_->isActive()) {
-    fileSet_.playEvent(fileSet_.coursorTime());
+    fileSet_.playEvents(fileSet_.coursorTime());
   }
 }
 
@@ -292,6 +315,7 @@ void
 MainForm::prev() 
 {
   if (!timer_->isActive()) {
+    fileSet_.playBackwards();
 
   }
 }
@@ -306,7 +330,7 @@ MainForm::step()
     destTime += timeCBase_;
     destTime = std::min(destTime, fileSet_.coursorTime() + ACE_Time_Value(0, 200000));
    
-    fileSet_.playEvent(destTime);
+    fileSet_.playEvents(destTime);
 
     if (fileSet_.coursorTime() != fileSet_.endTime()) {
       // rescedule timer
@@ -383,6 +407,14 @@ MainForm::loadFile(QString const & _name )
 
       connect(file, SIGNAL(notifyEvent(const QString&)), 
 	      statusBar(), SLOT(message(const QString&)));
+      if (eventView_) {
+	connect(this, SIGNAL(excludeEvent(const QString&, const QString&)),
+		eventView_, SLOT(excludeEvent(const QString&, const QString&)));	  
+	connect(this, SIGNAL(includeEvent(const QString&, const QString&)),
+		eventView_, SLOT(includeEvent(const QString&, const QString&)));	  
+	connect(file, SIGNAL(newEvent(const QString&,const QString&,const QString&,const QString&)), 
+		eventView_, SLOT(insertEvent(const QString&,const QString&,const QString&,const QString&)));
+      }
     }
     catch (Miro::Exception const& e) {
       fileSet_.delFile(_name);
@@ -444,10 +476,62 @@ MainForm::toggleExcludeEvent(int _domainNameId, int _eventTypeId)
 				 !domainNameMenu->isItemChecked(_eventTypeId));
   // enable event
   if (domainNameMenu->isItemChecked(_eventTypeId)) {
-    fileSet_.delExclude(domainName, domainNameMenu->text(_eventTypeId));
+    emit includeEvent(domainName, domainNameMenu->text(_eventTypeId));
   }
   // disable event
   else {
-    fileSet_.addExclude(domainName, domainNameMenu->text(_eventTypeId));
+    emit excludeEvent(domainName, domainNameMenu->text(_eventTypeId));
   }
+}
+
+void
+MainForm::toggleEventView() 
+{
+  if (eventView_ == NULL) {
+    eventView_ = new EventView(&fileSet_, history_, "event view");
+
+    toolsMenu_->setItemChecked(eventViewId_, true);
+
+    connect (this, SIGNAL(excludeEvent(const QString&, const QString&)),
+	     eventView_, SLOT(excludeEvent(const QString&, const QString&)));	  
+    connect (this, SIGNAL(includeEvent(const QString&, const QString&)),
+	     eventView_, SLOT(includeEvent(const QString&, const QString&)));	  
+    connect(eventView_, SIGNAL(destroyed()),
+	    this, SLOT( eventViewClosed()));
+  }
+  else {
+    delete eventView_;
+  }
+}
+
+void
+MainForm::eventViewClosed()
+{
+  eventView_ = NULL;
+  toolsMenu_->setItemChecked(eventViewId_, false);
+}
+
+void
+MainForm::setHistory()
+{
+  bool ok = FALSE;
+  int res = QInputDialog::getInteger(
+                tr( "LogPlayer" ),
+                tr( "History Size" ), history_, 1, 10000, 10, &ok, this );
+  if ( ok ) {
+    history_ = res; // user entered something and pressed OK
+    if (eventView_) {
+      eventView_->setHistory(history_);
+    }
+  }
+}  
+
+void
+MainForm::cutFront()
+{
+}
+
+void 
+MainForm::cutBack()
+{
 }

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -11,6 +11,8 @@
 
 #include "FileSet.h"
 #include "ChannelManager.h"
+
+#include <miro/TimeHelper.h>
 
 #define QT_NO_TEXTSTREAM
 #include <qtl.h>
@@ -26,7 +28,18 @@ namespace
 	      _rhs->coursorTime() == ACE_Time_Value(0, 0));
     }
   };
-};
+
+
+  struct LFMore : public std::binary_function<LogFile const *, LogFile const *, bool>
+  {
+    bool operator() (LogFile const * _lhs, LogFile const * _rhs) {
+      if (_lhs->coursorTime() == ACE_Time_Value(0, 0))
+	return true;
+      return (_lhs->coursorTime() > _rhs->coursorTime() &&
+	      _rhs->coursorTime() != ACE_Time_Value(0, 0));
+    }
+  };
+}
 
 FileSet::FileSet(ChannelManager * _channelManager) :
   channelManager_(_channelManager)
@@ -94,6 +107,9 @@ FileSet::calcStartEndTime()
 	endTime_ = (*first)->endTime();
       }
     }
+    for (first = file_.begin(); first != last; ++first ) {
+      (*first)->setTimeOffset(startTime_);
+    }
   }
 
   emit intervalChange();
@@ -107,42 +123,98 @@ FileSet::coursorTime(ACE_Time_Value const& _time)
     (*first)->coursorTime(_time);
   }
 
-  std::sort(file_.begin(), file_.end(), LFLess());
+  std::make_heap(file_.begin(), file_.end(), LFLess());
+  cout << "new time heap: " << endl;
+  for (first = file_.begin(); first != last; ++first) {
+    std::cout << (*first)->coursorTime()  - startTime_ << endl;
+  }
+
+  file_.front()->getCurrentEvent();
 
   emit coursorChange();
 }
 
 void
-FileSet::playEvent(ACE_Time_Value const& _time)
+FileSet::coursorTimeRel(ACE_Time_Value const& _time)
+{
+  ACE_Time_Value t = startTime_ + _time;
+  coursorTime(t);
+}
+
+void
+FileSet::playEvents(ACE_Time_Value const& _time)
 {
   assert(file_.size() != 0);
 
+  // correct heap if we change direction
+  FileVector::const_iterator first, last = file_.end();
+  first = file_.begin();
+  for (++first; first != last; ++first)
+    (*first)->assertAfter(file_.front()->coursorTime());
+
   while (file_.front()->coursorTime() != ACE_Time_Value(0, 0) &&
 	 file_.front()->coursorTime() <= _time) {
-    file_.front()->playEvent();
-    // one pass bubble sort
-    unsigned int const iE = file_.size() - 1;
-    for (unsigned int i = 0; i < iE; ++i) {
-      if (file_[i]->coursorTime() == ACE_Time_Value(0, 0) ||
-	  file_[i]->coursorTime() > file_[i + 1]->coursorTime() &&
-	  file_[i + 1]->coursorTime() != ACE_Time_Value(0, 0)) {
-	std::swap(file_[i], file_[i + 1]);
-      }
-      else {
-	break;
-      }
+    file_.front()->sendEvent();
+    file_.front()->nextEvent();
+
+    // restore heap attibute
+    std::make_heap(file_.begin(), file_.end(), LFLess());
+    cout << "new time heap: " << endl;
+    FileVector::const_iterator first, last = file_.end();
+    for (first = file_.begin(); first != last; ++first) {
+      std::cout << (*first)->coursorTime() - startTime_ << endl;
     }
+
+    file_.front()->parseEvent();
   }
 
   emit coursorChange();
 }
 
 void
-FileSet::playLast()
+FileSet::playBackwards()
 {
   assert(file_.size() != 0);
 
+  // correct heap if we change direction
+  FileVector::const_iterator first, last = file_.end();
+  first = file_.begin();
+  for (++first; first != last; ++first)
+    (*first)->assertBefore(file_.front()->coursorTime());
+
+  file_.front()->sendEvent();
+  file_.front()->prevEvent();
+
+  // restore heap attibute
+  std::make_heap(file_.begin(), file_.end(), LFMore());
+  cout << "new time heap: " << endl;
+  for (first = file_.begin(); first != last; ++first) {
+    std::cout << (*first)->coursorTime()  - startTime_ << endl;
+  }
+
+  file_.front()->parseEvent();
+
   emit coursorChange();
+}
+
+void 
+FileSet::getEvents(ACE_Time_Value const& _time, unsigned int _num)
+{
+  // prepare log file set
+  ACE_Time_Value now = coursorTime();
+  
+  // set new time
+  coursorTimeRel(_time);
+
+  while (file_.front()->coursorTime() != ACE_Time_Value(0, 0) &&
+	 --_num > 0) {
+    file_.front()->nextEvent();
+    std::make_heap(file_.begin(), file_.end(), LFLess());
+    file_.front()->parseEvent();
+  }
+
+  // restor coursor time
+  coursorTime(now);
 }
 
 QStringList
