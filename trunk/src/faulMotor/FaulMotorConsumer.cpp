@@ -73,21 +73,21 @@ namespace FaulMotor
 	static_cast<const FaulTty::OdometryMessage *>(_message);
 
       if (pFaulMsg->wheel_ == FaulTty::OdometryMessage::LEFT) {
-	cout << "L: " << pFaulMsg->ticks_;
+//	cout << "L: " << pFaulMsg->ticks_;
 	ticksL_ = pFaulMsg->ticks_;
 	timeStampL_ = pFaulMsg->time();
       }
       else {
-	cout << "R: " << pFaulMsg->ticks_;
+//	cout << "R: " << pFaulMsg->ticks_;
 	ticksR_ = pFaulMsg->ticks_;
 	timeStampR_ = pFaulMsg->time();
 
 	if (init_ == 0) {
-	  double dL = -(ticksL_ + prevTicksL_) / params_->leftTicksPerMM;
+	  double dL = -(ticksL_ - prevTicksL_) / params_->leftTicksPerMM;
 	  double dR = (ticksR_ - prevTicksR_) / params_->rightTicksPerMM;
 
 
-	  cout << "dL: " << dL << " dR: " << dR << endl;
+//	  cout << "dL: " << dL << " dR: " << dR << endl;
 
 	  // reset tick counters to minimize overhead
 	  //if ((pFaulMsg->lPos < 3000) or (pFaulMsg->lPos > 10000) pConnection->setPos1(0); zur zeit ohne zurücksetzung der pos
@@ -113,8 +113,8 @@ namespace FaulMotor
 	  Miro::timeA2C(timeStampR_, status_.time);
 	  status_.position.point.x = (long) xPos_;
 	  status_.position.point.y = (long) yPos_; 
-	  status_.velocity.translation = (long)(dist * deltaT);
-	  status_.velocity.rotation = turn * deltaT;
+	  status_.velocity.translation = (long)(dist / deltaT);
+	  status_.velocity.rotation = turn / deltaT;
 
 	  //cout << status_.time.sec<< "  " << status_.time.usec <<endl; //(dL+dR) / 2*dtime<<  endl;
 	  

@@ -49,7 +49,7 @@ namespace FaulMotor
   { 
     DBG(cout << "Constructing FaulMotorConnection." << endl);
 
-    char const * const accMessage = "ac20\r\n\0"; // build acceleration packet
+    char const * const accMessage = "ac60\r\n\0"; // build acceleration packet
     leftWheel_.writeMessage(accMessage);
     rightWheel_.writeMessage(accMessage);
   }
