@@ -15,9 +15,19 @@
 
 #include <ace/Mem_Map.h>
 
+using std::cout;
+using std::cerr;
+
 int
 main(int argc, char *argv[])
 {
+  if (argc == 1) {
+    cout << "usage: " << argv[0] << " <list of files>" << endl
+	 << "Deletes trailing zeros from a log file." << endl
+	 << "This happens if logNotify wasn't able to shutdown propperly." << endl;
+    return 1;
+  }
+
   Miro::Client client(argc, argv);
 
   try {
@@ -69,10 +79,6 @@ main(int argc, char *argv[])
   }
   catch (const CORBA::Exception & e) {
     cerr << "Uncaught CORBA exception: " << e << endl;
-    return 1;
-  }
-  catch (...) {
-    cerr << "Uncaught exception." << endl;
     return 1;
   }
   return 0;

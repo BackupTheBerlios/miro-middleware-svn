@@ -32,6 +32,7 @@ include $(ACE_ROOT)/include/makeinclude/macros.GNU
 DIRS =		\
 		nsIOR \
 		notify \
+		logPlayer \
 		rangeSensor \
 		qtTouchPad \
 		qtJoystick \
@@ -39,6 +40,9 @@ DIRS =		\
 ifneq (,$(findstring Sparrow99,$(MIRO_COMPONENTS)))
   DIRS +=	sparrowBoard
 endif
+
+#currently under develpment
+OTHERS = 	makeParams
 
 #----------------------------------------------------------------------------
 #       Include targets
