@@ -57,31 +57,29 @@
 
 #define MIRO_LOG(L, X) do {} while (0)
 #define MIRO_LOG_OSTR(L, O) do {} while (0)
-#define MIRO_DBG(L, C, X) do {} while (0)
-#define MIRO_DBG_OSTR(L, C, O) do {} while (0)
+#define MIRO_DBG(Category, Loglevel, X) do {} while (0)
+#define MIRO_DBG_OSTR(Category, Loglevel, O) do {} while (0)
 #define MIRO_DBG_HEX_DUMP(N, X) do {} while (0)
 #define MIRO_DBG_TRACE(X) do {} while (0)
 
 #else // !MIRO_NO_LOGGING
 
-#define MIRO_LOG(L, X) \
+#define MIRO_LOG(Loglevel, Output) \
   do { \
-    if (::Miro::Log::level() >= ::Miro::Log::L && \
-	::Miro::Log::enabled(::Miro::Log::ll2LM(::Miro::Log::L))) { \
+    if (::Miro::Log::level() >= ::Miro::Log::Loglevel) { \
       ACE_Log_Msg *ace___ = ACE_Log_Msg::instance (); \
       ace___->conditional_set (__FILE__, __LINE__, 0, 0); \
-      ace___->log(::Miro::Log::ll2LM(::Miro::Log::L), \
-                  ::Miro::Log::format(), X); \
+      ace___->log(::Miro::Log::ll2LM(::Miro::Log::Loglevel), \
+                  ::Miro::Log::format(), Output); \
     } \
   } while (0)
-#define MIRO_LOG_OSTR(L, O) \
+#define MIRO_LOG_OSTR(Loglevel, Output) \
   do { \
-    if (::Miro::Log::level() >= ::Miro::Log::L && \
-	::Miro::Log::enabled(::Miro::Log::ll2LM(::Miro::Log::L))) { \
+    if (::Miro::Log::level() >= ::Miro::Log::Loglevel) { \
       ACE_Log_Msg *ace___ = ACE_Log_Msg::instance (); \
       std::ostringstream ostr__; \
-      ostr__ << O; \
-      ace___->log(::Miro::Log::ll2LM(::Miro::Log::L), \
+      ostr__ << Output; \
+      ace___->log(::Miro::Log::ll2LM(::Miro::Log::Loglevel), \
                   ::Miro::Log::format(), ostr__.str().c_str()); \
     } \
   } while (0)
@@ -94,24 +92,23 @@
 
 #else // !MIRO_NO_DEBUG
 
-#define MIRO_DBG(L, C, X) \
+#define MIRO_DBG(Category, Loglevel, X) \
   do { \
-    if (::Miro::Log::level() >= ::Miro::Log::L && \
-	::Miro::Log::enabled(::Miro::Log::ll2LM(::Miro::Log::C))) { \
+    if (::Miro::Log::level() >= ::Miro::Log::Loglevel && \
+	::Miro::Log::enabled(::Miro::Log::Category)) { \
       ACE_Log_Msg *ace___ = ACE_Log_Msg::instance (); \
-      ace___->conditional_set (__FILE__, __LINE__, 0, 0); \
-      ace___->log(static_cast<ACE_Log_Priority>(::Miro::Log::ll2LM(::Miro::Log::C)), \
+      ace___->log(::Miro::Log::ll2LM(::Miro::Log::Loglevel), \
 		  ::Miro::Log::format(), X); \
     } \
   } while (0)
-#define MIRO_DBG_OSTR(L, C, O) \
+#define MIRO_DBG_OSTR(Category, Loglevel, O) \
   do { \
-    if (::Miro::Log::level() >= ::Miro::Log::L && \
-	::Miro::Log::enabled(::Miro::Log::ll2LM(::Miro::Log::C))) { \
+    if (::Miro::Log::level() >= ::Miro::Log::Loglevel && \
+	::Miro::Log::enabled(::Miro::Log::Category)) { \
       ACE_Log_Msg *ace___ = ACE_Log_Msg::instance (); \
       std::ostringstream ostr__; \
       ostr__ << O; \
-      ace___->log(static_cast<ACE_Log_Priority>(::Miro::Log::ll2LM(::Miro::Log::C)), \
+      ace___->log(static_cast<ACE_Log_Priority>(::Miro::Log::ll2LM(::Miro::Log::Loglevel)), \
 		  ::Miro::Log::format(), ostr__.str().c_str()); \
     } \
   } while (0)
@@ -177,14 +174,14 @@ namespace Miro
   {
   public:
     static void init(int& argc, char * argv[]);
-    static unsigned int level() throw();
-    static void level(unsigned int _level) throw();
+    static int level() throw();
+    static void level(int _level) throw();
     static unsigned int mask() throw();
     static void mask(unsigned int _mask) throw();
     static bool enabled(int _prioriy);
     static bool compiledWithLog();
     static bool compiledWithDebug();
-    static ACE_Log_Priority ll2LM(unsigned int _level);
+    static ACE_Log_Priority ll2LM(int _level);
     static void format(char const * _format);
     static char const * format();
 
@@ -205,20 +202,20 @@ namespace Miro
     static unsigned int const B21 =     0x02000000;
 
 
-    static unsigned int const LL_EMERGENCY = 0;
-    static unsigned int const LL_ALERT = 1;
-    static unsigned int const LL_CRITICAL = 2;
-    static unsigned int const LL_ERROR = 3;
-    static unsigned int const LL_WARNING = 4;
-    static unsigned int const LL_NOTICE = 5;
-    static unsigned int const LL_CTOR_DTOR = 6;
-    static unsigned int const LL_DEBUG = 7;
-    static unsigned int const LL_TRACE = 8;
-    static unsigned int const LL_PRATTLE = 9;
+    static signed int const LL_EMERGENCY = 0;
+    static signed int const LL_ALERT = 1;
+    static signed int const LL_CRITICAL = 2;
+    static signed int const LL_ERROR = 3;
+    static signed int const LL_WARNING = 4;
+    static signed int const LL_NOTICE = 5;
+    static signed int const LL_CTOR_DTOR = 6;
+    static signed int const LL_DEBUG = 7;
+    static signed int const LL_TRACE = 8;
+    static signed int const LL_PRATTLE = 9;
 
-    static unsigned int const MAX_LOG_LEVEL = LL_NOTICE;
-    static unsigned int const MIN_DBG_LEVEL = LL_CTOR_DTOR;
-    static unsigned int const MAX_DBG_LEVEL = LL_PRATTLE;
+    static signed int const MAX_LOG_LEVEL = LL_NOTICE;
+    static signed int const MIN_DBG_LEVEL = LL_CTOR_DTOR;
+    static signed int const MAX_DBG_LEVEL = LL_PRATTLE;
 
     class Trace
     {
@@ -238,7 +235,7 @@ namespace Miro
     static unsigned int level_;
     static unsigned int mask_;
     static char const * format_;
-    static ACE_Log_Priority aceLM_[MAX_LOG_LEVEL + 1];
+    static ACE_Log_Priority aceLM_[MAX_DBG_LEVEL + 1];
   };
 
   inline
@@ -254,13 +251,13 @@ namespace Miro
 //    MIRO_DBG(level_, priority_, std::string("Leaving ") + fun_);
   }
   inline
-  unsigned int
+  int
   Log::level() throw() {
     return level_;
   }
   inline
   void
-  Log::level(unsigned int _level) throw() {
+  Log::level(int _level) throw() {
     level_ = _level;
   }
   inline
@@ -296,8 +293,7 @@ namespace Miro
   bool
   Log::enabled(int _priority) {
     return 
-      ACE_Log_Msg::instance()->
-      log_priority_enabled(static_cast<ACE_Log_Priority>(_priority));
+      (mask_ & _priority)>0;
   }
   inline
   char const *
@@ -311,8 +307,8 @@ namespace Miro
   }
   inline
   ACE_Log_Priority
-  Log::ll2LM(unsigned int _level) {
-    assert(_level <= MAX_LOG_LEVEL);
+  Log::ll2LM(int _level) {
+    assert(_level <= MAX_DBG_LEVEL);
     return aceLM_[_level];
   }
 

@@ -60,13 +60,17 @@ namespace Miro
   unsigned int Log::level_;
   unsigned int Log::mask_;
   char const * Log::format_ = "%s\n";
-  ACE_Log_Priority Log::aceLM_[MAX_LOG_LEVEL + 1] = {
+  ACE_Log_Priority Log::aceLM_[MAX_DBG_LEVEL + 1] = {
     LM_EMERGENCY,
     LM_ALERT,
     LM_CRITICAL,
     LM_ERROR,
     LM_WARNING,
-    LM_NOTICE
+    LM_NOTICE,
+    LM_DEBUG,
+    LM_DEBUG,
+    LM_DEBUG,
+    LM_DEBUG
   };
 
   void
