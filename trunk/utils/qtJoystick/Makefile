@@ -73,47 +73,45 @@ realclean: clean
 
 
 .obj/MainForm.o .obj/MainForm.so .shobj/MainForm.o .shobj/MainForm.so: MainForm.cpp MainForm.h \
- $(MIRO_ROOT)/src/miro/Client.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/RobotParameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/MotionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/VelocityC.h \
- $(MIRO_ROOT)/src/miro/VelocityC.i \
- $(MIRO_ROOT)/src/miro/MotionC.i \
- $(MIRO_ROOT)/src/miro/OdometryC.h \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/MotionStatusC.h \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/MotionStatusC.i \
- $(MIRO_ROOT)/src/miro/OdometryC.i
+ \
+ \
+ \
+ \
+ \
+ \
+ /home/gmayer/Miro/src/miro/ExceptionC.i \
+ \
+ /home/gmayer/Miro/src/miro/VelocityC.i \
+ /home/gmayer/Miro/src/miro/MotionC.i \
+ \
+ \
+ \
+ /home/gmayer/Miro/src/miro/WorldPointC.i \
+ /home/gmayer/Miro/src/miro/PositionC.i \
+ \
+ /home/gmayer/Miro/src/miro/TimeC.i \
+ /home/gmayer/Miro/src/miro/MotionStatusC.i \
+ /home/gmayer/Miro/src/miro/OdometryC.i
 
 .obj/MainForm.moc.o .obj/MainForm.moc.so .shobj/MainForm.moc.o .shobj/MainForm.moc.so: MainForm.moc.cpp MainForm.h \
- $(MIRO_ROOT)/src/miro/Client.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/RobotParameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/MotionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/VelocityC.h \
- $(MIRO_ROOT)/src/miro/VelocityC.i \
- $(MIRO_ROOT)/src/miro/MotionC.i \
- $(MIRO_ROOT)/src/miro/OdometryC.h \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/MotionStatusC.h \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/MotionStatusC.i \
- $(MIRO_ROOT)/src/miro/OdometryC.i
+ \
+ \
+ \
+ \
+ \
+ \
+ /home/gmayer/Miro/src/miro/ExceptionC.i \
+ \
+ /home/gmayer/Miro/src/miro/VelocityC.i \
+ /home/gmayer/Miro/src/miro/MotionC.i \
+ \
+ \
+ \
+ /home/gmayer/Miro/src/miro/WorldPointC.i \
+ /home/gmayer/Miro/src/miro/PositionC.i \
+ \
+ /home/gmayer/Miro/src/miro/TimeC.i \
+ /home/gmayer/Miro/src/miro/MotionStatusC.i \
+ /home/gmayer/Miro/src/miro/OdometryC.i
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

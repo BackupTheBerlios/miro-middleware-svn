@@ -70,21 +70,21 @@ $(BIN): $(STATIC_DEPS)
 
 
 .obj/SpeechConnection.o .obj/SpeechConnection.so .shobj/SpeechConnection.o .shobj/SpeechConnection.so: SpeechConnection.cpp SpeechConnection.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i SpeechDevice.h \
+ \
+ \
+ /home/gmayer/Miro/src/miro/ExceptionC.i SpeechDevice.h \
 
 
 .obj/SpeechImpl.o .obj/SpeechImpl.so .shobj/SpeechImpl.o .shobj/SpeechImpl.so: SpeechImpl.cpp SpeechImpl.h \
- $(MIRO_ROOT)/src/miro/DtlkSpeechS.h \
- $(MIRO_ROOT)/src/miro/ExceptionS.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/ExceptionS.i \
- $(MIRO_ROOT)/src/miro/DtlkSpeechC.h \
- $(MIRO_ROOT)/src/miro/DtlkSpeechC.i \
- $(MIRO_ROOT)/src/miro/DtlkSpeechS.i SpeechConnection.h \
- $(MIRO_ROOT)/src/miro/Exception.h SpeechDevice.h \
+ \
+ \
+ \
+ /home/gmayer/Miro/src/miro/ExceptionC.i \
+ /home/gmayer/Miro/src/miro/ExceptionS.i \
+ \
+ /home/gmayer/Miro/src/miro/DtlkSpeechC.i \
+ /home/gmayer/Miro/src/miro/DtlkSpeechS.i SpeechConnection.h \
+ SpeechDevice.h \
 
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY
