@@ -104,10 +104,10 @@ you can pass the configure script some additional options like for
 example \texttt{--with-ACE=<ACE-root-dir>}. For Qt, their are more
 flexible command-line parameters, because Qt is often distributed over
 several directories (like e.g.\ in a standard Debian installation).
-Also some Linux distributions ship a multi-threaded version of the Qt
-library, called \texttt{qt-mt}.  You can specify this with
-\texttt{--with-Qt-lib=qt-mt}. A complete list of command-line options
-are accessible via \texttt{./configure --help}.
+In contrast to older version, the configure script now searches
+automatically for libqt or libqt-mt (the thread-save version).
+A complete list of command-line options are accessible via
+\texttt{./configure --help}.
 
 Another way of telling the configure script where the packages are
 installed is the use of environment variables. For the required
