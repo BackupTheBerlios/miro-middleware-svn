@@ -21,8 +21,7 @@ globaldirs = \
 	notify \
 	speech \
 	behaviours \
-	behaviourEngine \
-	faul
+	behaviourEngine
 
 #	xml
 
@@ -46,7 +45,8 @@ endif
 
 if COND_SPARROW99
 sparrowdirs = \
-	sparrow 
+	sparrow \
+	faul
 endif
 
 if COND_DEPRECATED
