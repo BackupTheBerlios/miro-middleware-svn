@@ -38,4 +38,5 @@ public:
 				     ACE_ENV_ARG_DECL_WITH_DEFAULTS)
     throw(CORBA::SystemException, CosEventComm::Disconnected);
 };
-#endif
+
+#endif // OdometryStream_h

@@ -26,8 +26,7 @@ globaldirs = \
 	notify \
 	infrared \
 	params \
-	speechSimple \
-	behaviours
+	speechSimple 
 
 if COND_B21
 b21dirs = \
