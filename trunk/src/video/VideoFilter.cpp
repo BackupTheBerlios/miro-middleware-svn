@@ -130,19 +130,23 @@ namespace Video
   {
     timeStamp_ = (pre_)? pre_->timeStamp() : ACE_OS::gettimeofday();
 
+#ifdef ASDF
     if (interface_) {
       bufferIndex_ = interface_->bufferManager()->acquireCurrentReadBuffer();
       buffer_ = interface_->bufferManager()->bufferAddr(bufferIndex_);
     }    
+#endif
   }
 
   void
   Filter::releaseOutputBuffer()
   {
+#ifdef ASDF
     if (interface_) {
       interface_->bufferManager()->bufferTimeStamp(bufferIndex_, timeStamp_);
       interface_->bufferManager()->releaseReadBuffer(bufferIndex_);
     }
+#endif
   }
 
   void
@@ -183,6 +187,7 @@ namespace Video
       if ((*first)->active()) {
 	(*first)->acquireWriteBuffer();
 	(*first)->process();
+	(*first)->processFilterTree();
 	(*first)->releaseWriteBuffer();
       }
     }
@@ -191,9 +196,9 @@ namespace Video
     releaseOutputBuffer();
 
     // process succerssors trees
-    for (first = succ_.begin(); first != last; ++first)
-      if ((*first)->active()) {
-	(*first)->processFilterTree();
-      }
+//    for (first = succ_.begin(); first != last; ++first)
+//      if ((*first)->active()) {
+//	(*first)->processFilterTree();
+//      }
   }
 };
