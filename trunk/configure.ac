@@ -227,6 +227,7 @@ AC_CONFIG_FILES([Makefile
                  performance-tests/panTilt/Makefile
                  performance-tests/response/Makefile
                  performance-tests/video/Makefile
+		 performance-tests/faul/Makefile
                  tests/Makefile
                  tests/b21/Makefile
                  tests/behaviourEngine/Makefile
