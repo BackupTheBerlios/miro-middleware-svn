@@ -77,7 +77,8 @@ namespace Video
     if (connector_.connect(ioBuffer_, 
 			  devName_, 
 			  0, ACE_Addr::sap_any, 0, O_RDWR) == -1) {
-      MIRO_DBG_OSTR(LL_ERROR, 
+      MIRO_DBG_OSTR(VIDEO,
+		    LL_ERROR, 
 		    "Video::DeviceMeteor: Failed to open device: " << params_->device <<
 		    "\nPropably running on the wrong machine?");
       throw Miro::CException(errno, std::strerror(errno));
