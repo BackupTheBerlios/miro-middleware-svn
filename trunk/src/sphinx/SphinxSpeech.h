@@ -5,7 +5,7 @@
 #include "miro/ReactorTask.h"
 
 #include "SphinxSpeechImpl.h"
-#include "SphinxSpeechTask.h"
+//#include "SphinxSpeechTask.h"
 
 namespace Miro 
 {
@@ -21,7 +21,7 @@ namespace Miro
   protected:
     string miroRoot;
 
-    SphinxSpeechTask speechTask;
+    //    SphinxSpeechTask speechTask;
     SphinxSpeechImpl speechImpl;
     Miro::Speech_var pSpeech;
   };

@@ -11,12 +11,19 @@
 
 
 #include "SphinxSpeechTask.h"
+#include "SphinxSpeechImpl.h"
 
 #include "miro/Exception.h"
 
 #include "miro/TimeHelper.h"
 
 #include <iostream>
+
+#include <ace/ARGV.h>
+
+extern "C" {
+#include <sphinx2/fbs.h>
+}
 
 //#include <netinet/in.h>
 
@@ -27,9 +34,10 @@ namespace Miro
   //////////////////////////////////////////////////////////////////////
   // SphinxSpeechTask
   //
-  SphinxSpeechTask::SphinxSpeechTask() :
+  SphinxSpeechTask::SphinxSpeechTask(SphinxSpeechImpl * _speechImpl) :
     Super(),
-    Log(INFO,"SphinxSpeechTask")
+    Log(INFO,"SphinxSpeechTask"),
+    speechImpl(_speechImpl)
   {}
 
   //////////////////////////////////////////////////////////////////////
@@ -37,48 +45,6 @@ namespace Miro
   SphinxSpeechTask::~SphinxSpeechTask() 
   {}
 
-  /*  void 
-      SphinxSpeechTask::doPkt(LaserMessage *data) 
-      {
-      // do decoding
-      handleMessage(*data);
-      
-      // keep statistics
-      if (laserStatistic_) {
-      ++(laserStatistic_->packetsProcessed);
-      
-      ACE_Time_Value elapsed = ACE_OS::gettimeofday() - laserStatistic_->startTime ;
-      
-      // show statistic rarely
-      if (!((laserStatistic_->packetsProcessed) % 1000)) {
-      log(INFO,"Statistics:");
-      double mPerPkt = (double)laserStatistic_->recvTime.msec() / 
-      ( laserStatistic_->packetsProcessed + 
-      laserStatistic_->packetsWrongAddress + 
-      laserStatistic_->packetsCRCError +
-      laserStatistic_->packetsToLong );
-      
-      std::cerr << "running since " 
-      << elapsed.sec() << " s, "
-      << mPerPkt << " ms/recvd.pkt, "
-      << laserStatistic_->packetsProcessed / elapsed.sec() 
-      << " pkts/s, "
-      << laserStatistic_->packetsProcessed 
-      << " pkts, " 
-      << laserStatistic_->packetsWrongAddress
-      << " wrong address, " 
-      << laserStatistic_->packetsToLong  
-      << " too long, " 
-      << laserStatistic_->packetsCRCError 
-      << " CRC errors, "
-      << laserStatistic_->timeouts
-      << " timeouts, " 
-      << laserStatistic_->events
-      << " events."  << std::endl;
-      }
-      }
-      }
-  */
   
   ////////////////////////////////////////////////////////////////////////
   // Now the svc() method where everything interesting happens.
@@ -89,16 +55,188 @@ namespace Miro
 #ifdef DEBUG
     ACE_DEBUG ((LM_DEBUG, "(%P|%t) Task 0x%x starts in thread %u\n", (void *) this, ACE_Thread::self ()));
 #endif
+
+    ACE_ARGV args;
+    int error;
+    int16 adbuf[4097];
+    int32 ts;
+    string strtmp;
+    string hmmDir=getenv("SPHINX_ROOT");
+    hmmDir+="/model/hmm/6k";
+
+    char * argvtmp;
+
+    args.add("SphinxSpeech");
+    args.add("-live TRUE");
+    args.add("-ctloffset 0");
+    args.add("-ctlcount 100000000");    
+    args.add("-agcemax TRUE");
+    args.add("-langwt 6.5");
+    args.add("-fwdflatlw 8.5");
+    args.add("-rescorelw 9.5");
+    args.add("-ugwt 0.5");
+    args.add("-fillpen 1e-10");
+    args.add("-silpen 0.005");
+    args.add("-inspen 0.65");
+    args.add("-top 1");
+    args.add("-topsenfrm 3");
+    args.add("-topsenthresh -70000");
+    args.add("-beam 2e-06");
+    args.add("-npbeam 2e-06");
+    args.add("-lpbeam 2e-05");
+    args.add("-lponlybeam 0.0005");
+    args.add("-nwbeam 0.0005");
+    args.add("-fwdflat FALSE");
+    args.add("-fwdflatbeam 1e-08");
+    args.add("-fwdflatnwbeam 0.0003");
+    args.add("-bestpath TRUE");
     
+    args.add("-dictfn");
+    argvtmp=(char*)malloc(255*sizeof(char));
+    sprintf(argvtmp,"%s",speechImpl->dict.c_str());
+    args.add(argvtmp);
+
+    args.add("-noisedict");
+    argvtmp=(char*)malloc(255*sizeof(char));
+    sprintf(argvtmp,"%s/noisedict",hmmDir.c_str());
+    args.add(argvtmp);
+
+    args.add("-phnfn");
+    argvtmp=(char*)malloc(255*sizeof(char));
+    sprintf(argvtmp,"%s/phone",hmmDir.c_str());
+    args.add(argvtmp);
+
+    args.add("-mapfn");
+    argvtmp=(char*)malloc(255*sizeof(char));
+    sprintf(argvtmp,"%s/map",hmmDir.c_str());
+    args.add(argvtmp);
+    
+    args.add("-hmmdir");
+    argvtmp=(char*)malloc(255*sizeof(char));
+    sprintf(argvtmp,"%s/",hmmDir.c_str());
+    args.add(argvtmp);
+    
+    args.add("-hmmdirlist");
+    argvtmp=(char*)malloc(255*sizeof(char));
+    sprintf(argvtmp,"%s",hmmDir.c_str());
+    args.add(argvtmp);
+    
+    args.add("-8bsen TRUE");
+
+    args.add("-sendumpfn");
+    argvtmp=(char*)malloc(255*sizeof(char));
+    sprintf(argvtmp,"%s/sendump",hmmDir.c_str());
+    args.add(argvtmp);
+
+    args.add("-cbdir");
+    argvtmp=(char*)malloc(255*sizeof(char));
+    sprintf(argvtmp,"%s",hmmDir.c_str());
+    args.add(argvtmp);
+    
+    fbs_init(args.argc(), args.argv());
+
+    std::list<std::string>::iterator fit, lmit; //file iterator; lm iterator
+     
+    for (fit = newLmFileNames.begin(), lmit = newLmNames.begin();
+	 fit != newLmFileNames.end();
+	 fit = newLmFileNames.begin(), lmit = newLmNames.begin())
+    {
+      if (lm_read((*fit).c_str(), (*lmit).c_str(), 7.0, .5, 6.5) != 0)
+      {
+	cerr << "[SphinxSpeechTask] Error: Could not read lm file " << (*fit) << endl;
+      } else {
+	lmNames.push_front((*lmit));
+	newLmFileNames.pop_front();
+	newLmNames.pop_front();
+      }
+    }    
+    
+    currentLm=newLm;
+    if (currentLm.size() >0) uttproc_set_lm(currentLm.c_str());
+    newLm="";
+
+    speechImpl->startRec();
+    speechImpl->cont = cont_ad_init(speechImpl->ad, ad_read);
+    cont_ad_calib(speechImpl->cont);
+
+
     while (true) {
+      //test if the LM must be changed
+      if (newLm.size() > 0 && newLm != currentLm)
+      {
+	currentLm=newLm;
+	uttproc_set_lm(currentLm.c_str());
+	newLm="";
+      }
 
+      //TODO? : Test if the sound queue is not empty: speak
+      //May not be a good idea to keep a queue at all
 
+      //Await data for next utterance
+      error = cont_ad_read(speechImpl->cont, adbuf, 4096);
+      if (error==0) {
+	//nothing heard
+	usleep(10000); //sleep 10 msec
+	continue; 
+      } else if (error<0) {
+	cerr << "[SphinxSpeechTask] Error: cont_ad_read failed" << endl;
+	sleep(1); 
+	continue;
+      }
+      
+      //if we got here, there is data to process...
+      uttproc_begin_utt(NULL);
+      uttproc_rawdata(adbuf,error,0);
+
+      //get timestamp
+      //TODO: add ACE timestamp to result
+      ts=speechImpl->cont->read_ts;
+
+      cout << "Listening..." << endl;
     }
     
     log(INFO, "left service.");
     
     return (0);
   }
+
+  /**
+     Adds a new LM to sphinx, all of the words in this LM _MUST_ be in
+     the dict file that was passed to the constructor.  See the overview
+     of this class for more details.
+     
+     @param dictFilename If the file given by this name doesn't exist
+     then it puts the Aria directory at the beginning and hopes that
+     that filename exists.
+  **/
+  void SphinxSpeechTask::addLm(string lmFileName, string lmName)
+  {
+    newLmFileNames.push_front(lmFileName);
+    newLmNames.push_front(lmName);
+  }
+  /**
+     This sets the language model for sphinx to use, only one of these
+     can be active at once (ie each set simply overrides the last).  You
+     will need to call this at the beginning (see the class overview for
+     more details).
+     
+     @param lmName the name of the language model to set as active, this
+     is the name given as lmName in addLm
+  **/
+  void SphinxSpeechTask::setLm(string lmName)
+  {
+    newLm = lmName;
+  }
+
+  /**
+     This gets the language model that sphinx is using at the moment.
+     @return the language model that sphinx is using at the moment
+  **/
+  string SphinxSpeechTask::getLm()
+  {
+    return currentLm;
+  }
+
   
   ////////////////////////////////////////////////////////////////////////
   // handleMessage

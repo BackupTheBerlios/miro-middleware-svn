@@ -18,6 +18,7 @@ namespace Miro {
   **/
   
   SphinxSpeechImpl::SphinxSpeechImpl(string dictFileName, bool _halfDuplex) :
+    speechTask(this),
     dict(dictFileName),
     halfDuplex(_halfDuplex),
     initialized(false),
@@ -25,8 +26,10 @@ namespace Miro {
     rec(false)
   {
     festival = new FestivalSpeechImpl();
+    //    speechTask=new SphinxSpeechTask(this);
+    speechTask.open(NULL);
+    //    startRec();
     cout << "SphinxSpeechImpl initialized" << endl << flush;
-    startRec();
   }
   
   SphinxSpeechImpl::~SphinxSpeechImpl()
@@ -34,6 +37,7 @@ namespace Miro {
     stopRec();
     internalCleanup();
     delete festival;
+    //    delete speechTask;
   }
   
   /**
@@ -45,11 +49,9 @@ namespace Miro {
      then it puts the Aria directory at the beginning and hopes that
      that filename exists.
   **/
-
   void SphinxSpeechImpl::addLm(string lmFileName, string lmName)
   {
-    newLmFileNames.push_front(lmFileName);
-    newLmNames.push_front(lmName);
+    speechTask.addLm(lmFileName,lmName);
   }
   /**
      This sets the language model for sphinx to use, only one of these
@@ -62,7 +64,7 @@ namespace Miro {
   **/
   void SphinxSpeechImpl::setLm(string lmName)
   {
-    newLm = lmName;
+    speechTask.setLm(lmName);
   }
 
   /**
@@ -71,7 +73,7 @@ namespace Miro {
   **/
   string SphinxSpeechImpl::getLm()
   {
-    return currentLm;
+    return speechTask.getLm();
   }
 
 

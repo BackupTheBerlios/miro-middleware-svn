@@ -75,17 +75,33 @@ $(BIN): $(STATIC_DEPS)
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
 
-.obj/SpeechConnection.o .obj/SpeechConnection.so .shobj/SpeechConnection.o .shobj/SpeechConnection.so: SpeechConnection.cpp SpeechConnection.h \
- $(MIRO_ROOT)/src/miro/Exception.h $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i SpeechDevice.h \
+.obj/FestivalSpeech.o .obj/FestivalSpeech.so .shobj/FestivalSpeech.o .shobj/FestivalSpeech.so: FestivalSpeech.cpp FestivalSpeech.h
 
+.obj/SphinxSpeechImpl.o .obj/SphinxSpeechImpl.so .shobj/SphinxSpeechImpl.o .shobj/SphinxSpeechImpl.so: SphinxSpeechImpl.cpp SphinxSpeechImpl.h \
+ $(MIRO_ROOT)/src/miro/SpeechS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/ExceptionS.i \
+ $(MIRO_ROOT)/src/miro/SpeechC.h \
+ $(MIRO_ROOT)/src/miro/SpeechC.i \
+ $(MIRO_ROOT)/src/miro/SpeechS.i SphinxSpeechTask.h \
+ $(MIRO_ROOT)/src/miro/Task.h $(MIRO_ROOT)/src/miro/Log.h \
+ FestivalSpeech.h
 
-.obj/SpeechImpl.o .obj/SpeechImpl.so .shobj/SpeechImpl.o .shobj/SpeechImpl.so: SpeechImpl.cpp SpeechImpl.h \
- $(MIRO_ROOT)/src/miro/DtlkSpeechS.h $(MIRO_ROOT)/src/miro/ExceptionS.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/ExceptionS.i $(MIRO_ROOT)/src/miro/DtlkSpeechC.h \
- $(MIRO_ROOT)/src/miro/DtlkSpeechC.i $(MIRO_ROOT)/src/miro/DtlkSpeechS.i \
- SpeechConnection.h $(MIRO_ROOT)/src/miro/Exception.h SpeechDevice.h \
-
+.obj/SphinxSpeechTask.o .obj/SphinxSpeechTask.so .shobj/SphinxSpeechTask.o .shobj/SphinxSpeechTask.so: SphinxSpeechTask.cpp SphinxSpeechTask.h \
+ $(MIRO_ROOT)/src/miro/Task.h $(MIRO_ROOT)/src/miro/Log.h \
+ SphinxSpeechImpl.h $(MIRO_ROOT)/src/miro/SpeechS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/ExceptionS.i \
+ $(MIRO_ROOT)/src/miro/SpeechC.h \
+ $(MIRO_ROOT)/src/miro/SpeechC.i \
+ $(MIRO_ROOT)/src/miro/SpeechS.i \
+ $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/TimeHelper.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

@@ -10,6 +10,7 @@ extern "C" {
 }
 
 #include "miro/SpeechS.h"
+#include "SphinxSpeechTask.h"
 
 #include <list>
 #include <string>
@@ -54,15 +55,12 @@ namespace Miro
     void internalCleanup();
 
     //sphinx
+    SphinxSpeechTask speechTask;
+    
     std::string dict;
     ad_rec_t * ad;
     cont_ad_t * cont;
-    std::list<std::string> newLmFileNames;
-    std::list<std::string> newLmNames;
-    std::list<std::string> lmNames;
-    
-    std::string currentLm;
-    std::string newLm;
+   
 
     //festival
     std::list<std::string> sounds;
@@ -76,6 +74,8 @@ namespace Miro
     bool initialized;
     bool speaking; 
     bool rec;
+
+    friend class SphinxSpeechTask;
   };
 
 };

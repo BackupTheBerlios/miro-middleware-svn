@@ -14,8 +14,13 @@
 #include "miro/Task.h"
 #include "miro/Log.h"
 
+#include <string>
+#include <list>
+
 namespace Miro 
 {
+
+  class SphinxSpeechImpl;
 
   /**
    * handles complete packages as assembled by laserEvent
@@ -36,7 +41,7 @@ namespace Miro
     /**
      * Constructor
      */
-    SphinxSpeechTask();
+    SphinxSpeechTask(SphinxSpeechImpl * _speechImpl);
 
     /**
      * Destructor
@@ -58,7 +63,24 @@ namespace Miro
      */
     virtual int svc();
 
+    //sphinx
+
+    void addLm(std::string lmFileName, std::string lmName);
+    void setLm(std::string lmName);
+    std::string getLm();
+
+
   protected:
+    SphinxSpeechImpl * speechImpl;
+
+    //sphinx
+    std::list<std::string> newLmFileNames;
+    std::list<std::string> newLmNames;
+    std::list<std::string> lmNames;
+    
+    std::string currentLm;
+    std::string newLm;
+
     /**
      * Laser message interface: the asynchronously called handler
      * does the (hardware specific decoding of the message

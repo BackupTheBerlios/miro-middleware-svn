@@ -9,7 +9,6 @@ namespace Miro
   SphinxSpeech::SphinxSpeech(int argc, char *argv[]) :
     super(argc,argv),
     miroRoot(getenv("MIRO_ROOT")),
-    speechTask(),
     speechImpl((miroRoot+"/etc/sphinx.dic").c_str()),
     pSpeech(speechImpl._this())
   {
@@ -40,7 +39,7 @@ namespace Miro
       
       throw(0);
     }
-    speechTask.open(NULL);
+    //    speechTask.open(NULL);
   }
 
   SphinxSpeech::~SphinxSpeech()
@@ -96,5 +95,6 @@ int main(int argc, char* argv[])
     cerr << "Uncaught exception: " << endl;
     return 1;
   }
+  
   return 0;  
 }
