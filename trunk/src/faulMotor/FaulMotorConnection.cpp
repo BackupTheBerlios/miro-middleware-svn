@@ -102,7 +102,7 @@ namespace FaulMotor
     double accL, accR;
 
     double dSpeedL, dSpeedR;
-    dSpeedL = speedL - prevSpeedL;
+    dSpeedL = -speedL - prevSpeedL;
     dSpeedR = speedR - prevSpeedR;
     accR = ( params_-> maxPosAccel) * 9. / 320.;
     accL = ( params_-> maxPosAccel) * 9. / 320.;
@@ -148,8 +148,8 @@ namespace FaulMotor
 	  accR = params_-> maxNegAccel * 9. / 320;
 	}*/
 
-    acctestL = (short)accL;
-    acctestR = (short)accR;
+    acctestL = abs((short)accL);
+    acctestR = abs((short)accR);
     cout << "maxPosAcc: " << params_-> maxPosAccel <<" AccR: " << acctestR ;
     cout << " AccL: " << acctestL << endl;
     sprintf(speedMessageL, "ac%d\r\n", acctestL); // build speed message
