@@ -88,6 +88,7 @@ namespace FaulController
         }
 
 	dispatchMessage();
+//	cout << msg << endl;  //debug
       }
       else if (*first == '\n') {
 	msg->ticks_ = 0;

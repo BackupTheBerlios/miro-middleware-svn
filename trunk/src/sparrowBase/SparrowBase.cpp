@@ -92,11 +92,14 @@ main(int argc, char *argv[])
 #endif
 
     DBG(cout << "Initialize server daemon." << endl);
-    SparrowBase sparrowBase(argc, argv);
+    Miro::Server server(argc, argv);
     try {
+      SparrowBase sparrowBase(server);
+	     
       DBG(cout << "Loop forever handling events." << endl);
-      sparrowBase.run(4);
+      server.run(4);
       DBG(cout << "sparrowBase ended, exiting." << endl);
+      server.detach(2);
     }
     catch (const Miro::EOutOfBounds& e) {
       cerr << "OutOfBounds excetpion: Wrong parameter for device initialization." << endl;
@@ -110,6 +113,8 @@ main(int argc, char *argv[])
       cerr << "Uncaught CORBA exception: " << e << endl;
       rc = 1;
     }
+    server.shutdown();
+    server.wait();
   }
   catch (const Miro::CException& e) {
     cerr << "Miro exception: " << e << endl;
