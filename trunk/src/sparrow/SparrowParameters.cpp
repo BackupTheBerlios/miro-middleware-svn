@@ -94,7 +94,7 @@ namespace Sparrow
     static int alpha[8] = { 90, 15, 0, -15, -90, 45, -45, 180 };
     static int beta[8] = { 0, -15, 0, 15, 0, 0, 0, 0 };
 
-    infraredDescription.scanType = Miro::GROUPWISE;
+    infraredDescription.scanType = Miro::RangeEvent::GROUPWISE;
     infraredDescription.eventName = "Infrared";
     infraredDescription.group.length(1);
     infraredDescription.group[0].description.minRange = 0;

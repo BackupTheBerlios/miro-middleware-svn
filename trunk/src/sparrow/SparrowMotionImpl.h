@@ -12,7 +12,7 @@
 #define SparrowMotionImpl_h
 
 #include "miro/SparrowMotionS.h"
-#include "miro/MotionImpl.h"
+#include "miro/DifferentialMotionImpl.h"
 #include "miro/Exception.h"
 
 
@@ -27,7 +27,7 @@ namespace Sparrow
   class Parameters;
 
   class MotionImpl :  public virtual POA_Miro::SparrowMotion,
-		      public virtual Miro::MotionImpl
+		      public virtual Miro::DifferentialMotionImpl
   {
     //-------------------------------------------------------------------------
     // public methods

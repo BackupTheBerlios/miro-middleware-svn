@@ -49,6 +49,7 @@ include $(ACE_ROOT)/include/makeinclude/macros.GNU
 IDL_FILES =	Time \
 		Exception \
 		WorldPoint \
+		WorldVector \
 		Position \
 		Velocity \
 		MotionStatus \
@@ -321,30 +322,30 @@ realclean: clean
  Parameters.h
 
 .obj/DevConnection.o .obj/DevConnection.o .obj/DevConnection.o .obj/DevConnection.o: DevConnection.cpp \
- \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/DevConnection.h \
+ $(MIRO_ROOT)/src/miro/DevEventHandler.h \
+ $(MIRO_ROOT)/src/miro/DevParameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/Exception.h
 
 .obj/DevEventHandler.o .obj/DevEventHandler.o .obj/DevEventHandler.o .obj/DevEventHandler.o: DevEventHandler.cpp \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/DevEventHandler.h \
+ $(MIRO_ROOT)/src/miro/DevConsumer.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h \
+ $(MIRO_ROOT)/src/miro/Exception.h
 
 .obj/DevConsumer.o .obj/DevConsumer.o .obj/DevConsumer.o .obj/DevConsumer.o: DevConsumer.cpp \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/DevConsumer.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h
 
 .obj/TtyConnection.o .obj/TtyConnection.o .obj/TtyConnection.o .obj/TtyConnection.o: TtyConnection.cpp \
- \
- \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/TtyConnection.h \
+ $(MIRO_ROOT)/src/miro/DevEventHandler.h \
+ $(MIRO_ROOT)/src/miro/TtyParameters.h \
+ $(MIRO_ROOT)/src/miro/DevParameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/Exception.h
 
 .obj/RangeSensorImpl.o .obj/RangeSensorImpl.o .obj/RangeSensorImpl.o .obj/RangeSensorImpl.o: RangeSensorImpl.cpp RangeSensorImpl.h \
  RangeSensorS.h ExceptionS.h ExceptionC.h ExceptionC.i.h \
@@ -361,7 +362,7 @@ realclean: clean
  TimeC.h TimeC.i.h TimeS.i.h VelocityS.h VelocityC.h VelocityC.i.h \
  VelocityS.i.h MotionStatusC.h MotionStatusC.i.h MotionStatusS.i.h \
  OdometryC.h OdometryC.i.h OdometryS.i.h Synch.h TimeHelper.h \
- StructuredPushSupplier.h
+ $(MIRO_ROOT)/src/miro/TimeC.h StructuredPushSupplier.h
 
 .obj/MotionImpl.o .obj/MotionImpl.o .obj/MotionImpl.o .obj/MotionImpl.o: MotionImpl.cpp MotionImpl.h MotionS.h ExceptionS.h \
  ExceptionC.h ExceptionC.i.h ExceptionS.i.h VelocityS.h VelocityC.h \

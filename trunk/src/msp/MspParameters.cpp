@@ -29,7 +29,7 @@ namespace Msp
     //
     // Sonar scan description
     //
-    sonarDescription.scanType = Miro::BUNCHWISE;
+    sonarDescription.scanType = Miro::RangeEvent::BUNCHWISE;
     sonarDescription.eventName = "Sonar";
     sonarDescription.group.length(1);
     sonarDescription.group[0].description.minRange = 50;
@@ -49,7 +49,7 @@ namespace Msp
     //
     static int infraredHeight[4] = {400, 120, 120};
 
-    infraredDescription.scanType = Miro::BUNCHWISE;
+    infraredDescription.scanType = Miro::RangeEvent::BUNCHWISE;
     infraredDescription.eventName = "Infrared";
     infraredDescription.group.length(3);
     for (unsigned int j = 0; j < 3; ++j) {
@@ -74,7 +74,7 @@ namespace Msp
     //
     static int tactileHeight[4] = {950, 450, 300, 50};
 
-    tactileDescription.scanType = Miro::BUNCHWISE;
+    tactileDescription.scanType = Miro::RangeEvent::BUNCHWISE;
     tactileDescription.eventName = "Tactile";
     tactileDescription.group.length(4);
     for (unsigned int j = 0; j < 4; ++j) {

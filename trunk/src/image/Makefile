@@ -80,168 +80,168 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 .obj/FrameGrabber.o .obj/FrameGrabber.so .shobj/FrameGrabber.o .shobj/FrameGrabber.so: FrameGrabber.cpp Pixels.h MiroImage.h pixels.ih \
  frameGrabber.h ImageFactoryDefinitions.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/ImageDefinitionsC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.i.h \
+ $(MIRO_ROOT)/src/miro/ImageDefinitionsC.i.h
 
 .obj/FrameGrabberMeteor.o .obj/FrameGrabberMeteor.so .shobj/FrameGrabberMeteor.o .shobj/FrameGrabberMeteor.so: FrameGrabberMeteor.cpp frameGrabberMeteor.h \
  ioctl_meteor.h frameGrabber.h ImageFactoryDefinitions.h MiroImage.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- Pixels.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/ImageDefinitionsC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.i.h \
+ $(MIRO_ROOT)/src/miro/ImageDefinitionsC.i.h Pixels.h \
  pixels.ih
 
 .obj/ImageSource.o .obj/ImageSource.so .shobj/ImageSource.o .shobj/ImageSource.so: ImageSource.cpp Pixels.h MiroImage.h pixels.ih \
  imageSource.h ImageFactory.h ImageFactoryDefinitions.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/ImageDefinitionsC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.i.h \
+ $(MIRO_ROOT)/src/miro/ImageDefinitionsC.i.h
 
 .obj/VideoSource.o .obj/VideoSource.so .shobj/VideoSource.o .shobj/VideoSource.so: VideoSource.cpp Pixels.h MiroImage.h pixels.ih \
  videoSource.h imageSource.h ImageFactory.h ImageFactoryDefinitions.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/ImageDefinitionsC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.i.h \
+ $(MIRO_ROOT)/src/miro/ImageDefinitionsC.i.h
 
 .obj/PatternSource.o .obj/PatternSource.so .shobj/PatternSource.o .shobj/PatternSource.so: PatternSource.cpp Pixels.h MiroImage.h pixels.ih \
  patternSource.h imageSource.h ImageFactory.h \
  ImageFactoryDefinitions.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/ImageDefinitionsC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.i.h \
+ $(MIRO_ROOT)/src/miro/ImageDefinitionsC.i.h
 
 .obj/ImageFactoryDefinitions.o .obj/ImageFactoryDefinitions.so .shobj/ImageFactoryDefinitions.o .shobj/ImageFactoryDefinitions.so: ImageFactoryDefinitions.cpp \
  ImageFactoryDefinitions.h MiroImage.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/ImageDefinitionsC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.i.h \
+ $(MIRO_ROOT)/src/miro/ImageDefinitionsC.i.h
 
 .obj/ImageFactory.o .obj/ImageFactory.so .shobj/ImageFactory.o .shobj/ImageFactory.so: ImageFactory.cpp ImageFactory.h \
  ImageFactoryDefinitions.h MiroImage.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/ImageDefinitionsC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.i.h \
+ $(MIRO_ROOT)/src/miro/ImageDefinitionsC.i.h \
  imageSource.h videoSource.h patternSource.h Pixels.h pixels.ih
 
 .obj/ImageServer.o .obj/ImageServer.so .shobj/ImageServer.o .shobj/ImageServer.so: ImageServer.cpp ImageServer.h \
- \
- \
- \
- \
- \
- ImageImpl.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- ImageFactory.h \
+ $(MIRO_ROOT)/src/miro/Server.h \
+ $(MIRO_ROOT)/src/miro/Client.h \
+ $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/RobotParameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/ReactorTask.h ImageImpl.h \
+ $(MIRO_ROOT)/src/miro/OdometryC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.i.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.i.h \
+ $(MIRO_ROOT)/src/miro/OdometryC.i.h \
+ $(MIRO_ROOT)/src/miro/ImageS.h \
+ $(MIRO_ROOT)/src/miro/ImageDefinitionsS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionS.i.h \
+ $(MIRO_ROOT)/src/miro/TimeS.h \
+ $(MIRO_ROOT)/src/miro/TimeS.i.h \
+ $(MIRO_ROOT)/src/miro/PositionS.h \
+ $(MIRO_ROOT)/src/miro/WorldPointS.h \
+ $(MIRO_ROOT)/src/miro/WorldPointS.i.h \
+ $(MIRO_ROOT)/src/miro/PositionS.i.h \
+ $(MIRO_ROOT)/src/miro/ImageDefinitionsC.h \
+ $(MIRO_ROOT)/src/miro/ImageDefinitionsC.i.h \
+ $(MIRO_ROOT)/src/miro/ImageDefinitionsS.i.h \
+ $(MIRO_ROOT)/src/miro/ImageC.h \
+ $(MIRO_ROOT)/src/miro/ImageC.i.h \
+ $(MIRO_ROOT)/src/miro/ImageS.i.h ImageFactory.h \
  ImageFactoryDefinitions.h MiroImage.h
 
 .obj/ImageImpl.o .obj/ImageImpl.so .shobj/ImageImpl.o .shobj/ImageImpl.so: ImageImpl.cpp ImageImpl.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- ImageFactory.h \
+ $(MIRO_ROOT)/src/miro/OdometryC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i.h \
+ $(MIRO_ROOT)/src/miro/PositionC.i.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.i.h \
+ $(MIRO_ROOT)/src/miro/OdometryC.i.h \
+ $(MIRO_ROOT)/src/miro/ImageS.h \
+ $(MIRO_ROOT)/src/miro/ImageDefinitionsS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionS.i.h \
+ $(MIRO_ROOT)/src/miro/TimeS.h \
+ $(MIRO_ROOT)/src/miro/TimeS.i.h \
+ $(MIRO_ROOT)/src/miro/PositionS.h \
+ $(MIRO_ROOT)/src/miro/WorldPointS.h \
+ $(MIRO_ROOT)/src/miro/WorldPointS.i.h \
+ $(MIRO_ROOT)/src/miro/PositionS.i.h \
+ $(MIRO_ROOT)/src/miro/ImageDefinitionsC.h \
+ $(MIRO_ROOT)/src/miro/ImageDefinitionsC.i.h \
+ $(MIRO_ROOT)/src/miro/ImageDefinitionsS.i.h \
+ $(MIRO_ROOT)/src/miro/ImageC.h \
+ $(MIRO_ROOT)/src/miro/ImageC.i.h \
+ $(MIRO_ROOT)/src/miro/ImageS.i.h ImageFactory.h \
  ImageFactoryDefinitions.h MiroImage.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

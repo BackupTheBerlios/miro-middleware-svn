@@ -34,7 +34,7 @@ namespace Laser
     // 9600, 19200, 38400, 500000, for 500000 see also stdcrystal below
     ttyParams.baudrate = 500000;
 
-    laserDescription.scanType = Miro::GROUPWISE;
+    laserDescription.scanType = Miro::RangeEvent::GROUPWISE;
     laserDescription.eventName = "Laser";
     laserDescription.group.length(1);
     laserDescription.group[0].description.minRange = 50;

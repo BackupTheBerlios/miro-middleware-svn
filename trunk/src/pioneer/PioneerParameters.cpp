@@ -34,7 +34,7 @@ namespace Pioneer
     static int alpha[8] = { 90, 60, 15, 0, -15, -60, -90, 180 };
     static int beta[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
-    sonarDescription.scanType = Miro::BUNCHWISE;
+    sonarDescription.scanType = Miro::RangeEvent::GROUPWISE;
     sonarDescription.eventName = "Sonar";
     sonarDescription.group.length(1);
     sonarDescription.group[0].description.minRange = 200;

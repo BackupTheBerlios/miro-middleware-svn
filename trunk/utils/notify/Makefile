@@ -64,18 +64,18 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 .obj/LogNotifyConsumer.o .obj/LogNotifyConsumer.so .shobj/LogNotifyConsumer.o .shobj/LogNotifyConsumer.so: LogNotifyConsumer.cpp LogNotifyConsumer.h \
  LogNotifyParameters.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/StructuredPushConsumer.h \
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/Server.h \
+ $(MIRO_ROOT)/src/miro/Client.h \
+ $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/RobotParameters.h \
+ $(MIRO_ROOT)/src/miro/TimeHelper.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i.h
 
 .obj/LogNotifyParameters.o .obj/LogNotifyParameters.so .shobj/LogNotifyParameters.o .shobj/LogNotifyParameters.so: LogNotifyParameters.cpp LogNotifyParameters.h \
-
+ $(MIRO_ROOT)/src/miro/Parameters.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

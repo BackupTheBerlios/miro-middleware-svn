@@ -16,7 +16,7 @@
 
 module Miro
 {
-  //! Namespace holding type definitions for the B21Buttons interface.
+  //! Namespace holding type definitions  and constants for the B21Buttons interface.
   module B21Button
   {
     //! The identifer of the red button.

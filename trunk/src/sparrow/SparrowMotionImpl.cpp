@@ -41,7 +41,7 @@ namespace Sparrow
 
   MotionImpl::MotionImpl(Connection& _connection,
 			 Consumer& _consumer) throw(Exception) :
-    Miro::MotionImpl(Parameters::instance()->motion),
+    Miro::DifferentialMotionImpl(Parameters::instance()->motion),
     params_(Parameters::instance()),
     connection(_connection),
     consumer(_consumer)

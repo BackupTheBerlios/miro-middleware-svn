@@ -73,10 +73,6 @@ realclean: clean
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
 
-.obj/BehaviourWidget.o .obj/BehaviourWidget.so .shobj/BehaviourWidget.o .shobj/BehaviourWidget.so: BehaviourWidget.cpp BehaviourWidget.h \
- PatternWidget.h PolicyView.h PolicyDocument.h BehaviourDescription.h \
- Transition.h PolicyConfig.h BehaviourParam.h ParamDialog.h
-
 .obj/PolicyDocument.o .obj/PolicyDocument.so .shobj/PolicyDocument.o .shobj/PolicyDocument.so: PolicyDocument.cpp PolicyDocument.h \
  BehaviourDescription.h Transition.h PolicyConfig.h BehaviourParam.h
 
@@ -90,6 +86,10 @@ realclean: clean
 .obj/PatternWidget.o .obj/PatternWidget.so .shobj/PatternWidget.o .shobj/PatternWidget.so: PatternWidget.cpp PatternWidget.h PolicyView.h \
  PolicyDocument.h BehaviourDescription.h Transition.h PolicyConfig.h \
  BehaviourParam.h BehaviourWidget.h ArbiterWidget.h
+
+.obj/BehaviourWidget.o .obj/BehaviourWidget.so .shobj/BehaviourWidget.o .shobj/BehaviourWidget.so: BehaviourWidget.cpp BehaviourWidget.h \
+ PatternWidget.h PolicyView.h PolicyDocument.h BehaviourDescription.h \
+ Transition.h PolicyConfig.h BehaviourParam.h ParamDialog.h
 
 .obj/ArbiterWidget.o .obj/ArbiterWidget.so .shobj/ArbiterWidget.o .shobj/ArbiterWidget.so: ArbiterWidget.cpp ArbiterWidget.h PolicyDocument.h \
  BehaviourDescription.h Transition.h PolicyConfig.h BehaviourParam.h \
@@ -112,6 +112,10 @@ realclean: clean
 .obj/PatternWidget.moc.o .obj/PatternWidget.moc.so .shobj/PatternWidget.moc.o .shobj/PatternWidget.moc.so: PatternWidget.moc.cpp PatternWidget.h \
  PolicyView.h PolicyDocument.h BehaviourDescription.h Transition.h \
  PolicyConfig.h BehaviourParam.h
+
+.obj/BehaviourWidget.moc.o .obj/BehaviourWidget.moc.so .shobj/BehaviourWidget.moc.o .shobj/BehaviourWidget.moc.so: BehaviourWidget.moc.cpp BehaviourWidget.h \
+ PatternWidget.h PolicyView.h PolicyDocument.h BehaviourDescription.h \
+ Transition.h PolicyConfig.h BehaviourParam.h
 
 .obj/ArbiterWidget.moc.o .obj/ArbiterWidget.moc.so .shobj/ArbiterWidget.moc.o .shobj/ArbiterWidget.moc.so: ArbiterWidget.moc.cpp ArbiterWidget.h \
  PolicyDocument.h BehaviourDescription.h Transition.h PolicyConfig.h \

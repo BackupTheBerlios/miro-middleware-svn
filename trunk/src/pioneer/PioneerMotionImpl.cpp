@@ -42,7 +42,7 @@ namespace Pioneer
 
   MotionImpl::MotionImpl(Connection& _connection,
 			 Consumer& _consumer) throw(Exception) :
-    Miro::MotionImpl(Parameters::instance()->motion),
+    Miro::DifferentialMotionImpl(Parameters::instance()->motion),
     connection(_connection),
     consumer(_consumer)
   {

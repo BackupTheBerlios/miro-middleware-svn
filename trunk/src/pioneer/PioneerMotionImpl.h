@@ -13,7 +13,7 @@
 #define motionImpl_hh
 
 #include "miro/MotionS.h"
-#include "miro/MotionImpl.h"
+#include "miro/DifferentialMotionImpl.h"
 #include "miro/Exception.h"
 
 // forward declerations
@@ -30,7 +30,7 @@ namespace Pioneer
   class Consumer;
 
   class MotionImpl :  public virtual POA_Miro::Motion,
-		      public virtual ::Miro::MotionImpl
+		      public virtual ::Miro::DifferentialMotionImpl
   {
     //-------------------------------------------------------------------------
     // public methods

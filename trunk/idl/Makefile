@@ -1,2 +1,2 @@
 all:
-	-ln -sf . miro
+	-ln -s . miro

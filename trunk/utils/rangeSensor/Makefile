@@ -61,35 +61,35 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 
 .obj/QtRangeSensor.o .obj/QtRangeSensor.so .shobj/QtRangeSensor.o .shobj/QtRangeSensor.so: QtRangeSensor.cpp QtRangeSensor.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/Client.h \
+ $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/RobotParameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.i.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.i.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.i.h
 
 .obj/QtRangeSensor.moc.o .obj/QtRangeSensor.moc.so .shobj/QtRangeSensor.moc.o .shobj/QtRangeSensor.moc.so: QtRangeSensor.moc.cpp QtRangeSensor.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/Client.h \
+ $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/RobotParameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.i.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.i.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.i.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

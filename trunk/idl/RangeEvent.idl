@@ -77,26 +77,5 @@ module Miro
     //! The vector of sensor readings.
     sequence<RangeSensorIDL> sensor;
   };
-
-  //! Range sensor notification.
-  /**
-   * The data of a range sensor that acquires data in a sporadic
-   * fashion pushes its data within this struct. Each event contains
-   * its own group id as well as its index within the group.
-   *
-   * An example of this sensor configuration are the tactile sensors of
-   * the B21.
-   */
-  struct RangeSensorEventIDL
-  {
-    //! The time the scan was accquired.
-    TimeIDL time;
-    //! The group the sensor belongs to.
-    short group;
-    //! The index of the sensor within the group.
-    short index;
-    //! The measured distance.
-    long range;
-  };
 };
 #endif // rangeEvent_idl

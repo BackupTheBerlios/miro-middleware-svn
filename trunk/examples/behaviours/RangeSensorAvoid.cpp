@@ -221,7 +221,7 @@ RangeSensorAvoid::addBuffer(SensorScan& _scan, double _range)
 void 
 RangeSensorAvoid::evalSensor(unsigned long group, unsigned long index, long range)
 {
-  if (range == Miro::INVALID_RANGE)
+  if (range == Miro::RangeEvent::INVALID_RANGE)
     return;
 
   const RangeSensorAvoidParameters * params =
