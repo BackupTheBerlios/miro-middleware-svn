@@ -201,7 +201,7 @@ namespace Miro {
             delete sh_;
             delete timeoutHandler_;
             delete eventHandler_;
-            delete sender_;
+            // delete sender_;
             delete receiver_;
 
             LOG(&configuration_, "NotifyMulticast successfully terminated");
