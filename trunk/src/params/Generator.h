@@ -21,14 +21,15 @@ namespace Miro
 {
   namespace CFG
   {
+    typedef std::multimap<QString, Type> GroupMap;
+    typedef std::vector<QString> QStringVector;
+
     class Generator;
     std::ostream& operator << (std::ostream& _ostr, Generator const& _rhs);
 
     class Generator
     {
     public:
-      typedef std::multimap<QString, Type> GroupMap;
-      typedef std::vector<QString> QStringVector;
 
       Generator();
 
@@ -57,6 +58,8 @@ namespace Miro
 
 
       ParameterVector getFullParameterSet(Type const& _type) const;
+      ParameterVector getFullStaticConstParameterSet(Type const& _type) const;
+
       bool isDerivedType(Type const& _type, Type const& _ancestor) const;
       QStringVector getDescendants(Type const& _type) const;
 

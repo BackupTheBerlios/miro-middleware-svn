@@ -90,6 +90,8 @@ namespace Miro
 
       //! Accessor to the parameters of the type.
       ParameterVector const& parameterSet() const;
+      //! Accessor to the parameters of the type.
+      ParameterVector const& staticConstParameterSet() const;
 
     protected:
       //----------------------------------------------------------------------------
@@ -143,6 +145,12 @@ namespace Miro
     ParameterVector const&
     Type::parameterSet() const {
       return parameter_;
+    }
+    
+    inline
+    ParameterVector const&
+    Type::staticConstParameterSet() const {
+      return staticConstParameter_;
     }
     
     inline

@@ -229,7 +229,7 @@ namespace Miro
 
     }
 
-    Generator::QStringVector
+    QStringVector
     Generator::groups() const
     {
       QStringVector result;
@@ -262,12 +262,14 @@ namespace Miro
 	if (first->name() == _name ||
 	    first->name() + "Parameters" == _name ||
 	    first->fullName() == _name ||
-	    first->fullName() == _name + "Parameters")
+	    first->fullName() == _name + "Parameters") {
+
 #if GCC_MAJOR_VERSION > 2
 	  return first.base();
 #else
-      return first;
+	  return first;
 #endif
+	}
       return NULL;
     }
 
@@ -314,6 +316,33 @@ namespace Miro
       return params;
     }
 
+    ParameterVector
+    Generator::getFullStaticConstParameterSet(Type const& _type) const
+    {
+      ParameterVector params;
+
+      // add all superclass members to the parameter set
+      // start with the root parameter set
+      if (_type.parent().isEmpty()) {
+	params = _type.staticConstParameterSet();
+      }
+      else {
+	Miro::CFG::Type const * parent = getType(_type.parent());
+	if (parent == NULL) {
+	  throw QString("Parameter description for " + 
+			_type.parent() +
+			" not found.\nCheck whether the relevant description file is loaded.");
+	}
+
+	params = getFullStaticConstParameterSet(*parent);
+	params.insert(params.end(), 
+		      _type.staticConstParameterSet().begin(), 
+		      _type.staticConstParameterSet().end());
+      }
+
+      return params;
+    }
+
     bool
     Generator::isDerivedType(Type const& _type, Type const& _ancestor) const
     {
@@ -330,7 +359,7 @@ namespace Miro
       return false;
     }
     
-    Generator::QStringVector
+    QStringVector
     Generator::getDescendants(Type const& _type) const
     {
       QStringVector descendants;
@@ -350,8 +379,12 @@ namespace Miro
     std::ostream& operator << (std::ostream& _ostr, const Generator& _rhs)
     {
       Generator::TypeVector::const_iterator first, last = _rhs.type_.end();
-      for (first = _rhs.type_.begin(); first != last; ++first) 
+      for (first = _rhs.type_.begin(); first != last; ++first) {
 	_ostr << first->fullName() << std::endl;
+	for (unsigned int i = 0; i < first->staticConstParameterSet().size(); ++i) {
+	  _ostr << " static const param " << first->staticConstParameterSet()[i].name_ << std::endl;
+	}
+      }
       return _ostr;
     }
   }
