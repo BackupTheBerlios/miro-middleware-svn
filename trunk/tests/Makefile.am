@@ -18,6 +18,7 @@ globaldirs = \
 	panTilt \
 	video \
 	videoBroker \
+	cameraControl \
 	notify \
 	notifyMulticast \
 	speech \

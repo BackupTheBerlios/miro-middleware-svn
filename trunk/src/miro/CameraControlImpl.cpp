@@ -38,7 +38,7 @@ namespace Miro
     if (!testZoom(value)) {
       throw Miro::EOutOfBounds();
     }
-    currentZoom_=value;
+    setTargetZoom(value);
   }
   
   float CameraControlImpl::getZoom() throw(Miro::EDevIO, Miro::ETimeOut) 
@@ -68,7 +68,7 @@ namespace Miro
     if (!testFocus(value)) {
       throw Miro::EOutOfBounds();
     }
-    currentFocus_=value;
+    setTargetFocus(value);
   }
   
   short CameraControlImpl::getFocus() throw(Miro::EDevIO, Miro::ETimeOut) 
@@ -110,7 +110,7 @@ namespace Miro
     if (!testShutter(value)) {
       throw Miro::EOutOfBounds();
     }
-    currentShutter_=value;
+    setTargetShutter(value);
   }
   
   TimeIDL CameraControlImpl::getShutter() throw(Miro::EDevIO, Miro::ETimeOut) 
