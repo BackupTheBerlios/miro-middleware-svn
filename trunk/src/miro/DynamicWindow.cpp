@@ -78,6 +78,7 @@ namespace Miro
     const int CURV_SEG_SMOOTH = 30;
     const double WHEEL_DISTANCE  = 390.;  // in mm
     const double BREAK_ACCELERATION = 1500.;  // in mm/sec2
+    const double BREAK_DELAY = 0.5; // in sec
 
     int CURV[17][17];	// curvature space
     int count, seg, left, right, curv, target, k, l;
@@ -90,18 +91,18 @@ namespace Miro
 
     for(count = 0; count < CURV_COUNT; count++) {
 
-      rel = tan((M_PI * count / CURV_COUNT) - (M_PI/2));
+      rel = tan((M_PI * count / (CURV_COUNT - 1)) - (M_PI/2));
 
-      if(fabs(rel)!=1) {
+      if(fabs(rel)>=1) {
+	fLeft = CURV_SEG_LEN;
+	fRight = fLeft / rel;
+      }
+      else {
+	fRight = CURV_SEG_LEN;
+	fLeft = fRight * rel;
+      }
 
-	if(fabs(rel)>=1) {
-          fLeft = CURV_SEG_LEN;
-          fRight = fLeft / rel;
-        }
-        else {
-          fRight = CURV_SEG_LEN;
-          fLeft = fRight * rel;
-        }
+      if(fLeft!=fRight) {
 
         offset = (WHEEL_DISTANCE / 2.) * ((fLeft + fRight) / (fLeft - fRight));
         angle = (180. * (fLeft - fRight)) / (WHEEL_DISTANCE * M_PI);
@@ -117,9 +118,11 @@ namespace Miro
       }
       else {
 	for(seg = 1; seg <= CURV_SEGS; seg++) {
-	  fprintf(logFile1,"%d\n",0);
+	  fprintf(logFile1,"%d\n",-100);
 	}
       }
+
+     
       k = (CURV_SEGS - 1) / 2;
       while((k < CURV_SEGS) && (CURV[count][k] != 0)) {
 	k++;
@@ -143,19 +146,21 @@ namespace Miro
       }
       
     }
-    
+
 
     for(left = minLeft_; left <= maxLeft_; left++) {
       for(right = minRight_ ; right <= maxRight_; right++) {
 	
-	curv = (int)((atan((double)left / (double)right) + (M_PI / 2.)) * CURV_COUNT / M_PI);
+	curv = (int)((atan((double)left / (double)right) + (M_PI / 2.)) * (CURV_COUNT - 1) / M_PI);
+
+
 	left_break = 100. * (double)(left * abs(left)) / BREAK_ACCELERATION;
 	right_break = 100. * (double)(right * abs(right)) / BREAK_ACCELERATION;
 	fabs(left_break) > fabs(right_break) ? breaklen = left_break : breaklen = right_break;
-	target = 10 + (int)(breaklen / CURV_SEG_LEN);
+	target = ((CURV_SEGS - 1) / 2)  + (int)(breaklen / CURV_SEG_LEN);
 	fprintf(logFile2,"%d %d\n",curv,target);
 
-	velocitySpace_[left+100][right+100] = ((double)CURV[std::max(0,std::min(CURV_COUNT-1,curv))][std::max(0,std::min(CURV_SEGS-1,target))] / 250.) * 250; // velocitySpace_[left+100][right+100];
+	velocitySpace_[left+100][right+100] = ((double)CURV[std::max(0,std::min(CURV_COUNT-1,curv))][std::max(0,std::min(CURV_SEGS-1,target))] / 250.) * velocitySpace_[left+100][right+100];
       }
     }
 
