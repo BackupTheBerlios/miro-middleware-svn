@@ -43,7 +43,7 @@ namespace Miro
   }
 
   std::ostream&
-  operator << (ostream& ostr, const BehaviourParameters& _params)
+  operator << (std::ostream& ostr, const BehaviourParameters& _params)
   {
     _params.printToStream(ostr);
 

@@ -61,7 +61,7 @@ Wander::action()
   arbitrate(message_);
 }
 
-const string&
+const std::string&
 Wander::getBehaviourName() const 
 {
   return name_;

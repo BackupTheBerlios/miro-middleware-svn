@@ -28,6 +28,8 @@ std::ostream &
 operator<<(std::ostream &ostr, const ACE_TTY_IO::Serial_Params &rhs);
 OSTR_OPERATOR_DECL(ACE_INET_Addr);
 
+namespace std
+{
   // set and vector ostream operators
   template<class T>
   std::ostream &
@@ -47,6 +49,8 @@ OSTR_OPERATOR_DECL(ACE_INET_Addr);
     }
     return ostr;
   }
+};
+
 namespace Miro 
 {
   // exceptions

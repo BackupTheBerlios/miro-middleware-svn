@@ -16,7 +16,7 @@
 #include "miro/DevMessage.h"
 #include "miro/Exception.h"
 
-#include <strstream>
+#include <sstream>
 
 namespace DpPanTilt 
 {
@@ -55,8 +55,8 @@ namespace DpPanTilt
     void setErrorState()                 { error = true; }
     bool getErrorState()                 const { return error; }
     long getLong( int offset ) const { 
-      std::string s(data, offset, data.length()-offset);
-      std::istrstream sstr(s.c_str(),s.length());
+      std::string s(data, offset, data.length() - offset);
+      std::istringstream sstr(s);
       long result;
       sstr >> result;
       return result;

@@ -11,9 +11,6 @@
 #ifndef B21Base_h
 #define B21Base_h
 
-/* needed for QT/ACE compatibility */
-#define QT_GENUINE_STR
-
 #include "miro/Server.h"
 #include "miro/ReactorTask.h"
 #include "miro/RangeSensorImpl.h"

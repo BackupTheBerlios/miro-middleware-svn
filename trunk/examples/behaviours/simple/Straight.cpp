@@ -43,7 +43,7 @@ Straight::action()
   arbitrate(message);
 }
 
-const string&
+const std::string&
 Straight::getBehaviourName() const 
 {
   return name_;

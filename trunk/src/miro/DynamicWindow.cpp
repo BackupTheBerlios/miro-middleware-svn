@@ -129,7 +129,7 @@ namespace Miro
         else {  // (left == right)
           
           moveMountedPolygon(_robot, Vector2d(0., (fLeft + fRight) / 2.));
-          pointValue = min(1., getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) / MAX_POLYGON_DISTANCE);
+          pointValue = std::min(1., getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) / MAX_POLYGON_DISTANCE);
 
           for(int x = 0; (x < RESOLUTION) && (x+left <= maxLeft_); x++) {
             for(int y = 0; (y < RESOLUTION) && (y+right <= maxRight_); y++) {
@@ -239,7 +239,7 @@ namespace Miro
     if( ((l1_to_l3_l4 * l2_to_l3_l4) < 0) && ((l3_to_l1_l2 * l4_to_l1_l2) < 0) )
       return 0;
 
-    return fabs(min(min(l1_to_l3_l4, l2_to_l3_l4), min(l3_to_l1_l2, l4_to_l1_l2)));
+    return fabs(std::min(std::min(l1_to_l3_l4, l2_to_l3_l4), std::min(l3_to_l1_l2, l4_to_l1_l2)));
     
   }
   

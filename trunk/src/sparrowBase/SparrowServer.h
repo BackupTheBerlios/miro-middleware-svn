@@ -11,9 +11,6 @@
 #ifndef sparrowBase_hh
 #define sparrowBase_hh
 
-/* needed for QT/ACE compatibility */
-#define QT_GENUINE_STR
-
 #include "miro/Server.h"
 #include "miro/ReactorTask.h"
 #include "miro/StructuredPushSupplier.h"

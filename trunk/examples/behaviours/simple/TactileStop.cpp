@@ -18,7 +18,7 @@ BEHAVIOUR_PARAMETERS_FACTORY_IMPL(TactileStop, TactileStopParameters);
 
 TactileStop::TactileStop(Miro::Motion_ptr _motion,
 			 CosNotifyChannelAdmin::EventChannel_ptr _ec,
-			 const string& _domainName) :
+			 const std::string& _domainName) :
   Super(_ec),
   motion_(Miro::Motion::_duplicate(_motion)),
   domainName_(_domainName)
@@ -59,7 +59,7 @@ TactileStop::action()
   // after rescue we need a global one!
 }
 
-const string&
+const std::string&
 TactileStop::getBehaviourName() const 
 {
   return name_;
