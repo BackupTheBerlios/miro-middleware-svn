@@ -21,7 +21,7 @@ module Miro
     //! Set the tilting angle.
     /**
      * @param angle is specified in radiant.
-     * @throw EOutOfBounds
+     * @throw EOutOfBounds is thrown
      * if the specified tilitng angle is beyond the range of the tilting unit.
      * @throw EDevIO
      * is thrown to indicate low level device problems.

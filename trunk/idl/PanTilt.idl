@@ -29,12 +29,20 @@ module Miro
   interface PanTilt : Pan, Tilt
   {
     //! Get the current panTilt position. 
+    /**
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
     PanTiltPositionIDL getPosition() raises(EDevIO);
 
     //! Set the desired pantilt position.
     /**
-     * Move the PanTiltUnit to destination. The call
-     * returns immediatly.
+     * @param destination The desired panning and tilting angles.
+     * @throw EOutOfBounds
+     * if the thrown when the panning or tilting angle is beyond 
+     * the range of the pantilt unit.
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
      */
     void setPosition(in PanTiltPositionIDL destination) raises(EOutOfBounds, EDevIO);
   };

@@ -77,14 +77,14 @@ namespace B21Buttons
     DBG(cout << "B21Buttons ready." << endl);
   }
 
-  CORBA::Long 
-  B21ButtonsImpl::numberButtons() throw()
+  CORBA::ULong 
+  B21ButtonsImpl::numberOfButtons() throw()
   {
     return NUM_BUTTONS;
   }
 
   CORBA::Boolean
-  B21ButtonsImpl::isPressed(CORBA::Long id) throw(EOutOfBounds)
+  B21ButtonsImpl::isPressed(CORBA::ULong id) throw(EOutOfBounds)
   {
     if (id >= NUM_BUTTONS) 
       throw Miro::EOutOfBounds();
@@ -93,7 +93,7 @@ namespace B21Buttons
   }
 
   void 
-  B21ButtonsImpl::setButtonMode(CORBA::Long id, Miro::B21Button::Mode mode) 
+  B21ButtonsImpl::setButtonMode(CORBA::ULong id, Miro::B21Button::Mode mode) 
     throw(EDevIO, EOutOfBounds)
   {
     if (id >= NUM_BUTTONS) 
@@ -130,7 +130,7 @@ namespace B21Buttons
   }
 
   Miro::B21Button::Mode
-  B21ButtonsImpl::getButtonMode(CORBA::Long id) throw(EOutOfBounds)
+  B21ButtonsImpl::getButtonMode(CORBA::ULong id) throw(EOutOfBounds)
   {
     if (id >= NUM_BUTTONS) 
       throw Miro::EOutOfBounds();

@@ -58,7 +58,7 @@ ButtonsNotify::push_structured_event(const StructuredEvent & notification
 
   if (notification.remainder_of_body >>= pButtonStatus)
     cout << "ButtonStatus - time:" << pButtonStatus->time
-	 << " id:" << pButtonStatus->id 
+	 << " name:" << pButtonStatus->number 
 	 << " event:" << pButtonStatus->event << endl;
   else
     cerr << "No ButtonStatusIDL message." << endl;

@@ -22,7 +22,7 @@ module Miro
     /**
      * @param angle is specified in radiant.
      * @throw EOutOfBounds
-     * if the specified panning angle is beyond the range of the panning unit.
+     * is thrown if the specified panning angle is beyond the range of the panning unit.
      * @throw EDevIO
      * is thrown to indicate low level device problems.
      */

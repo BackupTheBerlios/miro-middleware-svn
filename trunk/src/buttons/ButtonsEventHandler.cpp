@@ -44,7 +44,7 @@ namespace B21Buttons
 
     // init button states
     for (int i = 0; i < NUM_BUTTONS; ++i) {
-      button[i].id = i;
+      button[i].number = i;
       button[i].event = Miro::Button::ON_RELEASE;
       button[i].mode = Miro::B21Button::TOGGLE_OFF;
     }

@@ -24,8 +24,10 @@ module Miro
   {
     //! Rotate to absolute heading.
     /**
+     * Note that the coordinate system of the odometry is used. 
+     *
      * @param angle
-     * I is specified in rad.
+     * It is specified in rad.
      * @throw EOutOfBounds
      * The allowed values for the angle are: -PI < angle <= PI.
      * @throw EDevIO

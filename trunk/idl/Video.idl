@@ -1,18 +1,10 @@
-// -*- idl -*- ///////////////////////////////////////////////////////////////
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999,2000
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//    Stefan Enderle, 
-//    Stefan Sablatnoeg, 
-//    Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
@@ -25,78 +17,54 @@
 
 module Miro
 {
+  //! The image handle, containing all relevant image meta data.
   struct ImageHandleIDL
-	{
-    /**
-     * Time stamp associated to the image.
-     */
+  {
+    //! Time stamp associated to the image.
     TimeIDL   time;
-    /**
-     * @ref Position stamp associated to the image
-     */
-    PositionIDL position;
-    /**
-     * Validity of the positionstamp
-     */
-	long		width;
-	/**
-	 * Image width (columns).
-	 */
-	long		height;
-	/**
-	 * Image height (rows).
-	 */
-	long		palette;
-	/**
-	 * Image palette (gray,rgb).
-	 */
-	long		source;
-	/**
-	 * Image source (composite/svideo).
-	 */
-	long		key;
-	/**
-	 * Shared memory key to image data
-	 */
-	long		handle;
-	/**
-	 * Shared memory key to image data
-	 */
-	};
+    //! Image width (columns).
+    long		width;
+    //! Image height (rows).
+    long		height;
+    //! Image palette (gray,rgb).
+    long		palette;
+    //! Image source (composite/svideo).
+    long		source;
+    // Shared memory key to image data.
+    long		key;
+    //! Shared memory key to image data
+    long		handle;
+  };
 
-/**
-* Interface to the frame grabber devices.
-*/
+  //! Interface to the frame grabber devices.
   interface Video
-	{
-		/**
-		 * Get the current image. This call immediately
-		 * returns the last grabbed image.
-		 *
-		 * @raises EDevIO
-		 */
-		ImageHandleIDL	connect() raises(EOutOfBounds, EDevIO);
-		/**
-		 * Get the current image. This call immediately
-		 * returns the last grabbed image.
-		 *
-		 * @raises EDevIO
-		 */
-		void	release(in ImageHandleIDL img) raises(EOutOfBounds, EDevIO);
-		/**
-		 * Get the current image. This call immediately
-		 * returns the last grabbed image.
-		 *
-		 * @raises EDevIO
-		 */
-		void	getImage(inout ImageHandleIDL img) raises(EOutOfBounds, EDevIO);
-		/**
-		 * Get the next available image.
-		 *
-		 * @raises EDevIO, ETimeOut
-		 */
-		void	getWaitImage(inout ImageHandleIDL img) raises(EOutOfBounds, EDevIO, ETimeOut);
-	};
+  {
+    //! Connect to the service. 
+    /**
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    ImageHandleIDL	connect() raises(EDevIO);
+    //! Disconnect from the service. 
+    /**
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void release(in ImageHandleIDL img) raises(EOutOfBounds, EDevIO);
+    /**
+     * Get the current image. This call immediately
+     * returns the last grabbed image.
+     *
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    //! Get the current image. 
+    void getImage(inout ImageHandleIDL img) raises(EOutOfBounds, EDevIO);
+    //! Get the next image. 
+    /**
+     * This call waits and returns the next grabbed image.
+     *
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void getWaitImage(inout ImageHandleIDL img) raises(EOutOfBounds, EDevIO, ETimeOut);
+  };
 };
 
 #endif

@@ -261,7 +261,7 @@ namespace Sparrow
 	  ButtonStatusIDL * pEvent = new ButtonStatusIDL();
 	  pEvent->time.usec = t.usec();
 	  pEvent->time.sec = t.sec();
-	  pEvent->id = i;
+	  pEvent->number = i;
 	  pEvent->event = (message.byteData(1) & (0x01 << i))?
 	    Button::ON_RELEASE : Button::ON_PRESS;
 	  pButtons_->pushEvent(pEvent);

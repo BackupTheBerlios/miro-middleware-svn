@@ -18,7 +18,7 @@ module Miro
    * This structure is used to annotate a sensor reading with a 
    * time stamp of its sampling time. It is convertible into an
    * ACE_Time_Value object by the global helper functions defined
-   * in <miro/timeHelper.hh>.
+   * in <miro/timeHelper.h>.
    */
   struct TimeIDL
   {

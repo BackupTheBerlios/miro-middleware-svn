@@ -20,30 +20,30 @@ module Miro
   module B21Button
   {
     //! The identifer of the red button.
-    const long RED = 0;
+    const unsigned long RED = 0;
     //! The identifer of the yellow button.
-    const long YELLOW = 1;
+    const unsigned long YELLOW = 1;
     //! The identifer of the green button.
-    const long GREEN = 2;
+    const unsigned long GREEN = 2;
     //! The identifer of the blue button.
-    const long BLUE = 3;
+    const unsigned long BLUE = 3;
     //! The identifer of the right kill button. 
     /**
      * Note that only its light can be set, its button status
      * can not be queried.
      */
-    const long RIGHT_KILL = 4;
+    const unsigned long RIGHT_KILL = 4;
     //! The identifer of the left kill button 
     /**
      * Note that only its light can be set, its button status
      * can not be queried.
      */
-    const long LEFT_KILL = 5;
+    const unsigned long LEFT_KILL = 5;
     
     //! Data type specifying the button mode.
     /**
      * Note the following mode transformations on pressing of a button:
-     * - OFF -> OFF
+     * - OFF -> OFF (default)
      * - ON -> ON
      * - FLASHING -> FLASHING
      * - FLASHING_TILL_PRESSED -> OFF
@@ -67,18 +67,35 @@ module Miro
   
   //! Interface to the B21 button service.
   /**
+   * The B21 has 4 general purpos buttons and 2 emergency stop buttons (kill buttons).
+   * Each button also contains a light, that can operate in various modes.
+   *
    * The state of the buttons is also broadcasted via the notification
-   * service. It is named EventChannel in the selected NamingContext. The
-   * interface is registered under the name "Buttons" at the naming
-   * service.
+   * service as described in the @ref Button interface.
    */
   interface B21Buttons : Buttons
   {
-    //! Get the current state of a single button.
-    B21Button::Mode getButtonMode(in long id) raises(EOutOfBounds);
+    //! Get the current mode of a single button.
+    /**
+     * @param number The id of the button.
+     *
+     * @throw ETOutOfBounds is thrown, when number excedes the
+     * the number of buttons returned by @ref numberOfButtons.
+     *
+     * @return The mode the button currently operating in.
+     */
+    B21Button::Mode getButtonMode(in unsigned long number) raises(EOutOfBounds);
     
-    //! Set the current state of a single button.
-    void setButtonMode(in long id, in B21Button::Mode state) raises(EDevIO, EOutOfBounds);
+    //! Set the current mode of a single button.
+    /**
+     * @param number The id of the button.
+     * @param mode The mode the button shall operate in from now on.
+     *
+     * @throw ETOutOfBounds is thrown, when number excedes the
+     * the number of buttons returned by @ref numberOfButtons.
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void setButtonMode(in unsigned long number, in B21Button::Mode mode) raises(EDevIO, EOutOfBounds);
   };
 };
 #endif

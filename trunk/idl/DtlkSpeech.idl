@@ -37,7 +37,7 @@ module Miro
     //    boolean has_indexing;         //<! nonzero if indexing is implemented
   };
 
-  //! Interface of the DtlkSpeech interface.
+  //! Interface of the DtlkSpeech card.
   /**
    * This interface is desinged for the operation of the DoubleTalk
    * speech card device. It registers as "Speech" at the naming service

@@ -63,7 +63,7 @@ namespace Sparrow
   // 
   // IDL interface implementation
   CORBA::Boolean
-  ButtonsImpl::isPressed(CORBA::Long id) throw(Miro::EOutOfBounds)
+  ButtonsImpl::isPressed(CORBA::ULong id) throw(Miro::EOutOfBounds)
   {
     if (id >= NUMBER_OF_BUTTONS)
       throw Miro::EOutOfBounds();
@@ -72,8 +72,8 @@ namespace Sparrow
     return !consumer.digital[id];
   }
 
-  CORBA::Long
-  ButtonsImpl::numberButtons() throw()
+  CORBA::ULong
+  ButtonsImpl::numberOfButtons() throw()
   {
     return NUMBER_OF_BUTTONS;
   }

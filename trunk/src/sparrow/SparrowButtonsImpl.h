@@ -41,8 +41,8 @@ namespace Sparrow
     //------------------------------------------------------------------------
     // Buttons interface
     //------------------------------------------------------------------------
-    virtual CORBA::Boolean isPressed(CORBA::Long id) throw(Miro::EOutOfBounds);
-    virtual CORBA::Long numberButtons() throw();
+    virtual CORBA::Boolean isPressed(CORBA::ULong id) throw(Miro::EOutOfBounds);
+    virtual CORBA::ULong numberOfButtons() throw();
 
   protected:
     Consumer& consumer;

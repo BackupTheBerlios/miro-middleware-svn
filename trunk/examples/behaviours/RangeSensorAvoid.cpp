@@ -10,6 +10,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include "RangeSensorAvoid.h"
 
+#include "miro/RangeSensorC.h"
 #include "miro/RangeEventC.h"
 #include "miro/Client.h"
 #include "miro/MotionArbiterMessage.h"
@@ -221,7 +222,7 @@ RangeSensorAvoid::addBuffer(SensorScan& _scan, double _range)
 void 
 RangeSensorAvoid::evalSensor(unsigned long group, unsigned long index, long range)
 {
-  if (range == Miro::RangeEvent::INVALID_RANGE)
+  if (range == Miro::RangeSensor::INVALID_RANGE)
     return;
 
   const RangeSensorAvoidParameters * params =

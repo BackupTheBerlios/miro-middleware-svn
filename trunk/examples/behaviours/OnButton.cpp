@@ -62,11 +62,11 @@ OnButton::action()
 
   if (event->remainder_of_body >>= pButtonStatus) {
     cout << "ButtonStatus - time:" << pButtonStatus->time 
-	 << " id:" << pButtonStatus->id 
+	 << " id:" << pButtonStatus->number 
 	 << " event:" << pButtonStatus->event << endl;
     if (pButtonStatus->event == 
 	((params->onPress)? Button::ON_PRESS : Button::ON_RELEASE) &&
-	pButtonStatus->id == params->button) {
+	(long)pButtonStatus->number == params->button) {
 
       cout << "\a" << endl;
       sendMessage("Button");

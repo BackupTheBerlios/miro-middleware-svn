@@ -24,7 +24,7 @@ module Miro
      * The kicking device is kicked once and stays that way for the
      * specified amount of time.
      *
-     * @param time the time to kick
+     * @param time The time to kick.
      * @throw EOutOfBounds is thrown, if the kicking time is higher
      * than the maximum allowed kicking time.
      * @throw EDevIO is thrown to indicate low level device

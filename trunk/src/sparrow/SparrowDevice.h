@@ -30,7 +30,7 @@ namespace Sparrow
   // Hardware specifica
   //--------------------------------------------------------------------------
 
-  static const int NUMBER_OF_BUTTONS = 2;
+  static const unsigned long NUMBER_OF_BUTTONS = 2;
 
   static const int SERVO_FACTOR = 27;
   

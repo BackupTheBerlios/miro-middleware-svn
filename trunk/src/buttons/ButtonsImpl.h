@@ -53,14 +53,14 @@ namespace B21Buttons
     void test() throw(Miro::EDevIO);
 
     /** IDL interface method, see IDL documentation for details. */
-    virtual CORBA::Long numberButtons() throw();
+    virtual CORBA::ULong numberOfButtons() throw();
     /** IDL interface method, see IDL documentation for details. */
-    virtual CORBA::Boolean isPressed(CORBA::Long id) throw(Miro::EOutOfBounds);
+    virtual CORBA::Boolean isPressed(CORBA::ULong id) throw(Miro::EOutOfBounds);
     /** IDL interface method, see IDL documentation for details. */
-    virtual Miro::B21Button::Mode getButtonMode(CORBA::Long name) 
+    virtual Miro::B21Button::Mode getButtonMode(CORBA::ULong name) 
       throw(Miro::EOutOfBounds);
     /** IDL interface method, see IDL documentation for details. */
-    virtual void setButtonMode(CORBA::Long name, Miro::B21Button::Mode mode) 
+    virtual void setButtonMode(CORBA::ULong name, Miro::B21Button::Mode mode) 
       throw(Miro::EDevIO, Miro::EOutOfBounds);
 
   protected:

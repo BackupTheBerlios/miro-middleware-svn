@@ -17,7 +17,7 @@
 
 module Miro
 {
-  //! The specialized interface of the B21 robot.
+  //! The specialized motion interface of the B21 robot.
   interface B21Motion : SynchroMotion, ClosedMotion
   {
     //-------------------------------------------------------------------------
@@ -229,7 +229,7 @@ module Miro
      * so it allway drives forward.
      *
      * This method returns the current angle of the distortion between
-     * the base and the enclosure.
+     * the base and the enclosure (in rad).
      */
     double getDistortion();
 

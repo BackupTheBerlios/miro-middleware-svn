@@ -13,32 +13,6 @@
 
 module Miro
 {
-  //! Namespace holding type definitions and constants for the RangeSensor interface.
-  module RangeEvent
-  {
-    //! Constant indicating an invalid scan value. 
-    /**
-     * The specific sensor is either masked out or didn't provide usefull data. 
-     */
-    const long INVALID_RANGE = -2;
-    //! Constant indicating a range beyond the scope of the sensor.
-    /** 
-     * The scan value is bigger than the maximum distance the range
-     * sensor can measure.
-     */
-    const long HORIZON_RANGE = -1;
-
-    //! The range sensor does not send events
-    const long NONE_PUSHING = 0;
-    //! The range sensor sends a full scan with its events (@ref RangeScanEventIDL).
-    const long FULL = 1;
-    //! The range sensor sends one sensor group scan with its events (@ref RangeGroupEventIDL).
-    const long GROUPWISE = 2;
-    //! The range sensor sends a bunch of sensor readings with its events (@ref RangeBunchEventIDL).
-    const long BUNCHWISE = 3;
-  };
-
-
   //! Struct describing the properties of a range sensor device.
   struct SensorDescriptionIDL
   {

@@ -25,16 +25,14 @@ module Miro
   
   //! Data type holding the button status in case of a button event. 
   /**
-   * This data type is shipped via the event channel named "ButtonsEC"
-   * in the robots naming context on each press status change of a
-   * button. 
+   * This data type is shipped via the event channel.
    */
   struct ButtonStatusIDL 
   {
     //! Time the button event was created.
     TimeIDL time;
     //! The id of the button causing the event.
-    long id;
+    unsigned long number;
     //! The type of event.
     Button::Event event;
   };
@@ -58,10 +56,21 @@ module Miro
   interface Buttons
   {
     //! Get the current state of a single button.
-    boolean isPressed(in long id) raises(EDevIO, EOutOfBounds);
+    /**
+     * @param number The id of the button.
+     *
+     * @throw ETOutOfBounds is thrown, when number excedes the
+     * the number of buttons returned by @ref numberOfButtons.
+     * @throw EDevIO is thrown to indicate low level device problems.
+     * @return The state. True if pressed, false otherwise.
+     */
+    boolean isPressed(in unsigned long number) raises(EDevIO, EOutOfBounds);
 
     //! Get the number of available buttons.
-    long numberButtons();
+    /**
+     * @return The number of buttons available on the specific platform.
+     */
+    unsigned long numberOfButtons();
   };
 };
 #endif

@@ -42,7 +42,7 @@ namespace Miro
     for (unsigned int i = 0; i < scan_.range.length(); ++i) {
       scan_.range[i].length(description_.group[i].sensor.length());
       for (unsigned int j = 0; j < scan_.range[i].length(); ++j) {
-	scan_.range[i][j] = RangeEvent::INVALID_RANGE;
+	scan_.range[i][j] = Miro::RangeSensor::INVALID_RANGE;
 
 	if (description_.group[i].sensor[j].masked)
 	  masking_ = true;
@@ -63,7 +63,7 @@ namespace Miro
 
   RangeSensorImpl::~RangeSensorImpl()
   {
-    DBG(cout << "Destructing RangeEventImpl." << endl);
+    DBG(cout << "Destructing RangeSensorImpl." << endl);
 
     // unlock waiting threads
     condition_.broadcast();
@@ -76,7 +76,7 @@ namespace Miro
       for (int i = _data->range.length() - 1; i >= 0; --i)
 	for (int j = _data->range[i].length() - 1; j >= 0; --j)
 	  if (description_.group[i].sensor[j].masked)
-	    _data->range[i][j] = RangeEvent::INVALID_RANGE;
+	    _data->range[i][j] = Miro::RangeSensor::INVALID_RANGE;
 
     Guard guard(mutex_);
     scan_ = *_data;
@@ -94,7 +94,7 @@ namespace Miro
     if (masking_)
       for (int j = _data->range.length() - 1; j >= 0; --j)
 	if (description_.group[_data->group].sensor[j].masked)
-	  _data->range[j] = RangeEvent::INVALID_RANGE;
+	  _data->range[j] = Miro::RangeSensor::INVALID_RANGE;
 
     Guard guard(mutex_);
     scan_.range[_data->group] = _data->range;
@@ -116,7 +116,7 @@ namespace Miro
 	unsigned int index = _data->sensor[i].index;
 	if (group < scan_.range.length() && index < scan_.range[group].length()) {
 	  if (masking_ && description_.group[group].sensor[index].masked)
-	    _data->sensor[i].range = RangeEvent::INVALID_RANGE;
+	    _data->sensor[i].range = Miro::RangeSensor::INVALID_RANGE;
 	  scan_.range[group][index] = _data->sensor[i].range;
 	}
 	else

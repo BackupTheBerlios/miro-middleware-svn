@@ -34,6 +34,14 @@ module Miro
    * Event declaration:
    * - type name = Odometry
    * - remainder of body = @ref MotionStatusIDL
+   *
+   * Additionally the raw position (see @ref getRawPosition) can be
+   * broadcasted via the notification service.
+   *
+   * Event declaration:
+   * - type name = RawPosition
+   * - remainder of body = @ref RawPositionIDL
+
    */
   interface Odometry
   {
@@ -72,7 +80,7 @@ module Miro
      * received for longer than 5 times of the robots status report
      * period. This usually indicates a crash of the controller board
      * or a too high system load.
-     * @return A timestamp and the current position.
+     * @return The current position.
      */
     PositionIDL getWaitPosition() raises(ETimeOut);
 
@@ -97,7 +105,7 @@ module Miro
      * localization updates, but only are affected by the odometry
      * error over time.
      *
-     * @throw ETimeOut This exception is thrown, when no report is
+     * @throw ETimeOut is thrown, when no report is
      * received for longer than 5 times of the robots status report
      * period. This usually indicates a crash of the controller board
      * or a too high system load.
@@ -118,7 +126,7 @@ module Miro
 
     //! Wait and get the next incoming velocity repot of the robot.
     /**
-     * @throw ETimeOut This exception is thrown, when no report is
+     * @throw ETimeOut is thrown, when no report is
      * received for longer than 5 times of the robots status report
      * period. This usually indicates a crash of the controller board
      * or a too high system load.
@@ -135,7 +143,7 @@ module Miro
     MotionStatusIDL getStatus();
     //! Wait and get the next incoming motion status report of the robot.
     /**
-     * @throw ETimeOut This exception is thrown, when no report is
+     * @throw ETimeOut is thrown, when no report is
      * received for longer than 5 times of the robots status report
      * period. This usually indicates a crash of the controller board
      * or a too high system load.

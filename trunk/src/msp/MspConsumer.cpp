@@ -236,7 +236,7 @@ namespace Msp
 	pTactileEvent->sensor[length].group = row;
 	pTactileEvent->sensor[length].index = col;
 	pTactileEvent->sensor[length].range = (!value)? 
-	  Miro::RangeEvent::HORIZON_RANGE 
+	  Miro::RangeSensor::HORIZON_RANGE 
 	  : 
 	  0;
 	++length;
@@ -330,7 +330,7 @@ namespace Msp
 	  // (int) rint(((value * MM_PER_CLICK) + parameters.radius * 10.0) - 30.0) 
 	  (int) rint(value * MM_PER_CLICK - 30.0) 
 	  :
-	  NO_RETURN - 1; // Miro::RangeEvent::HORIZON_RANGE ?!!
+	  NO_RETURN - 1; // Miro::RangeSensor::HORIZON_RANGE ?!!
 
 	pSonarEvent->sensor[i].range = value;
       }

@@ -28,13 +28,13 @@ main(int argc, char* argv[])
   try {
     Buttons_var buttons = client.resolveName<Buttons>("Buttons");
 
-    int number = buttons->numberButtons();
+    int number = buttons->numberOfButtons();
 
     while(true) {
       cout << "Buttons status: ";
       for (int i = 0; i < number; ++i) {
 	bool pressed = buttons->isPressed(i);
-	cout << i << ": " << ((pressed)? "pressed   " : "unpressed ") << flush;
+	cout << i << ": " << ((pressed)? "pressed   " : "unpressed ") << "\t" << flush;
       }
       cout << endl;
 

@@ -59,10 +59,10 @@ module Miro
 
     //! Get the applicable velocities of the mobile base.
     /**
-     * Returns the range of the accepted translational and rotational
+     * @return The range of the accepted translational and rotational
      * velocities of the mobile base. That is, velocities requested by
-     * @setVelocity that lie outside these limits should result in an
-     * @EOutOfBounds exception.  
+     * @ref setVelocity that lie outside these limits should result in an
+     * @ref EOutOfBounds exception.  
      *
      * Note however, that differential drive robots translational and
      * rotational velocity is not independent from each other. That is
@@ -82,6 +82,13 @@ module Miro
 			    out double maxRotation);
 
     //! Get the current target velocity of the mobile base.
+    /**
+     * @return The target velocity set by the last call to @ref
+     * setVelocity (or corresponding methods in derived
+     * interfaces). If adjustments to the commanded velocities had to
+     * be made (as described in @ref getMinMaxVeclocity), they will be 
+     * reflected in the return value.
+     */
     VelocityIDL getTargetVelocity();
 
   };

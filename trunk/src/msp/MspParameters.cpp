@@ -11,6 +11,7 @@
 
 
 #include "MspParameters.h"
+#include "miro/RangeSensorC.h"
 #include "miro/ScanDescriptionHelper.h"
 #include "miro/Angle.h"
 
@@ -29,7 +30,7 @@ namespace Msp
     //
     // Sonar scan description
     //
-    sonarDescription.scanType = Miro::RangeEvent::BUNCHWISE;
+    sonarDescription.scanType = Miro::RangeSensor::BUNCHWISE;
     sonarDescription.eventName = "Sonar";
     sonarDescription.group.length(1);
     sonarDescription.group[0].description.minRange = 50;
@@ -49,7 +50,7 @@ namespace Msp
     //
     static int infraredHeight[4] = {400, 120, 120};
 
-    infraredDescription.scanType = Miro::RangeEvent::BUNCHWISE;
+    infraredDescription.scanType = Miro::RangeSensor::BUNCHWISE;
     infraredDescription.eventName = "Infrared";
     infraredDescription.group.length(3);
     for (unsigned int j = 0; j < 3; ++j) {
@@ -74,7 +75,7 @@ namespace Msp
     //
     static int tactileHeight[4] = {950, 450, 300, 50};
 
-    tactileDescription.scanType = Miro::RangeEvent::BUNCHWISE;
+    tactileDescription.scanType = Miro::RangeSensor::BUNCHWISE;
     tactileDescription.eventName = "Tactile";
     tactileDescription.group.length(4);
     for (unsigned int j = 0; j < 4; ++j) {

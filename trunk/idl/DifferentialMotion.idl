@@ -37,10 +37,22 @@ module Miro
     void setLRVelocity(in long left, in long right) raises(EDevIO, EOutOfBounds);
 
 
+    //! Get the applicable per wheel velocities of a differential drive robot.
+    /**
+     * @return The range of the accepted per wheel velocities. That is, velocities requested by
+     * @ref setLRVelocity that lie outside these limits should result in an
+     * @ref EOutOfBounds exception.  
+     */
     void getMinMaxLRVeclocity(out long minLTranslation,
 			      out long maxLTranslation,
 			      out long minRTranslation,
 			      out long maxRTranslation);
+
+    //! Get the current target per wheel velocity of a differential drive robot.
+    /**
+     * @return The target velocity set by the last call to @ref
+     * setLRVelocity (or corresponding methods).
+     */
     void getTargetLRVelocity(out long left, out long right);
   };
 };
