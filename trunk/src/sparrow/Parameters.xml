@@ -24,7 +24,7 @@
 
 
     <config_item parent="Can::" instance="true">
-      <config_parameter name="scheduling" type="ACE_Sched_Params" default="ACE_SCHED_FIFO, 100" />
+      <config_parameter name="scheduling" type="ACE_Sched_Params" default="ACE_SCHED_FIFO, 50" />
 
       <config_parameter name="motion" type="Miro::DifferentialMotionParameters" />
       <constructor>

@@ -93,6 +93,7 @@ operator<<(std::ostream &ostr, ACE_Sched_Params const &rhs) {
     break;
   case ACE_SCHED_FIFO:
     p << "ACE_SCHED_FIFO";
+    break;
   case ACE_SCHED_RR:
     p << "ACE_SCHED_RR";
     break;
