@@ -38,6 +38,7 @@ namespace Sparrow
     virtual ~Connection();
 
     void init();
+    void fini();
 
 #ifdef DEPRECATED_SPARROW_FEATURE
     void writeTables();
