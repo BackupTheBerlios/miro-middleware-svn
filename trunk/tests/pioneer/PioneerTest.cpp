@@ -271,6 +271,9 @@ int main(int argc, char* argv[])
   catch (...) {
     cerr << "Uncaught exception: " << endl;
   }
+
+  service.connection.close();
+
   service.reactorTask.cancel();
   return 0;
 }
