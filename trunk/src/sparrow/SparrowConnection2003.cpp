@@ -210,5 +210,30 @@ namespace Sparrow
 
   }
 
+  void
+  Connection2003::writeFloodPing(unsigned short fnumber)
+  {
+
+    CanMessage message;
+    message.length(2);
+    message.id(CAN_MOTOR_FLOOD_2003);
+    message.shortData(0, fnumber);
+    write(message);
+
+
+  }
+
+
+  void
+  Connection2003::writeHostAlive()
+  {
+    CanMessage message;
+    message.length(1);
+    message.id(CAN_HOST_ALIVE_2003);
+    message.byteData(0,0);
+    write(message);
+
+  }
+
 
 };

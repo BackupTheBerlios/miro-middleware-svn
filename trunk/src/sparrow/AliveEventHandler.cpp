@@ -36,6 +36,8 @@ namespace Sparrow{
     aliveIDL.Infrared1Alive = collector->infrared1Alive();
     aliveIDL.Infrared2Alive = collector->infrared2Alive();
     aliveIDL.PanAlive = collector->panAlive();
+
+    connection->writeHostAlive();
     
     notifyEvent.remainder_of_body <<= aliveIDL;
     if(pSupplier)

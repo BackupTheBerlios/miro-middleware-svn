@@ -48,6 +48,8 @@ namespace Sparrow
     void kick(unsigned char ventilatetime, unsigned char kicktime);
 
     void writeWheel(char const * constbuffer, int length, int motor);
+    void writeFloodPing(unsigned short fnumber);
+    void writeHostAlive();
 
 
     void setInfrared1WaitTime(unsigned char waittime);

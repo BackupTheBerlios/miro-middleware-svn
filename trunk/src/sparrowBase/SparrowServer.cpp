@@ -18,7 +18,7 @@
 #include <tao/ORB_Core.h>
 
 #include "sparrow/Parameters.h"
-#include "sparrow/SparrowDevice2003.h"
+#include "sparrow/SparrowDevice.h"
 #include "pioneer/Parameters.h"
 #include "faulMotor/FaulMotorMotionImpl.h"
 

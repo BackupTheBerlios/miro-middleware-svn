@@ -512,6 +512,12 @@ namespace Sparrow
       break;
     }
 
+    case CAN_MOTOR_CANN:{
+      cout << "MotorController received " << message.shortData(0) << " CanFloodPing-Messages!" << endl;
+
+      break;
+    }
+
     case CAN_MOTOR_TICKS_LEFT_2003:{
       FaulController::OdometryMessage odoMessage(FaulController::OdometryMessage::LEFT);
       if(params_->module == "pcan"){
