@@ -24,12 +24,12 @@ namespace FaulController
 {
   Connection::Connection()
   {
-    DBG(std::cout << "Constructing FaulControllerConnection" << endl);
+    DBG(std::cout << "Constructing FaulControllerConnection" << std::endl);
   }
 
 
   Connection::~Connection()
   {
-    DBG(std::cout << "Destructing FaulControllerConnection" << endl);
+    DBG(std::cout << "Destructing FaulControllerConnection" << std::endl);
   }
 };
