@@ -51,7 +51,7 @@ namespace
   bool bgr = false;
   string panName = "PanTilt";
   bool verbose = false;
-  int stop = 2000;
+  unsigned int stop = 2000;
 
   string path()
   {
