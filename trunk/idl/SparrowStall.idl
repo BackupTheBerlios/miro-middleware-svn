@@ -23,7 +23,7 @@
 
 module Miro
 {
-  /** Interface to the stall detection of the Sparrow 99 robot. */
+  //! Interface to the stall detection of the Sparrow 99 robot.
   struct SparrowStallEventIDL
   {
     Stall::Status status;

@@ -65,13 +65,13 @@ module Miro
      */
     short getFocus() raises(EDevIO, ETimeOut);
     //! Set the camera to autoFocus mode
-    /*
+    /**
      * @throw EDevIO
      * is thrown to indicate low level device problems.
      */
     void autoFocus() raises(EDevIO, ETimeOut);
     //! Get the focusing range for the current zoom position
-    /*
+    /**
      * @return The focusing range for the current position
      * @throw EDevIO
      * is thrown to indicate low level device problems.

@@ -99,7 +99,7 @@ namespace Miro {
 
     namespace NotifyMulticast {
 
-        /* forward declarations */
+      // forward declarations
         class TimeoutHandler;
         class EventHandler;
         class Sender;
@@ -118,7 +118,7 @@ namespace Miro {
         class Adapter {
 
         public:
-            /* Default constructor */
+	  //! Initializing constructor.
             Adapter(int                                      _argc,
                     char                                    *_argv[],
                     Miro::Client                            *_client,
@@ -128,14 +128,14 @@ namespace Miro {
                     std::string                              _multicastAddress = "225.2.2.1")
             throw(CORBA::Exception, Miro::Exception);
 
-            /* Default destructor */
+	  //! Destructor 
             ~Adapter() throw(CORBA::Exception, Miro::Exception);
 
-            /* Returns pointer to sender */
+	  //! Returns pointer to sender.
             Sender *getSender();
 
-            /* Returns pointer to receiver */
-            Receiver *getReceiver();
+	  //! Returns pointer to receiver.
+	  Receiver *getReceiver();
 
             /* Fried classes */
             friend class Receiver;
@@ -165,4 +165,4 @@ namespace Miro {
     };
 };
 
-#endif /* notifyForwardAdapter_hh */
+#endif /* NotifyMulticastAdapter_h */

@@ -63,4 +63,4 @@ module Miro
     string what;
   };
 };
-#endif /* exception_idl */
+#endif // Exception_idl

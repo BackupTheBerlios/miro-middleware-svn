@@ -17,7 +17,7 @@
 module Miro
 {
   //! The general motion interface.
-  /*
+  /**
    * Each robot registers its motion interface as "Motion"
    * at the naming service within its own naming context.
    *
