@@ -133,7 +133,7 @@ Task::svc()
   buttonStatus.event = Miro::Button::ON_PRESS;
     
   motionEvent.header.fixed_header.event_type.domain_name = CORBA::string_dup(supplier_->domainName().c_str());
-  motionEvent.header.fixed_header.event_type.type_name = CORBA::string_dup("MotionStatusIDL" /*Miro::SonarEventIDL::_type_id()*/);
+  motionEvent.header.fixed_header.event_type.type_name = CORBA::string_dup("Odometry" /*Miro::SonarEventIDL::_type_id()*/);
   motionEvent.header.fixed_header.event_name = CORBA::string_dup("");
   motionEvent.header.variable_header.length(0); // put nothing here
   motionEvent.filterable_data.length(0);
