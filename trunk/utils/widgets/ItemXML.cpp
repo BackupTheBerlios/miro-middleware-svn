@@ -229,3 +229,18 @@ ItemXML::moveTo(QDomNode& _parent, QDomNode& _predecessor)
   setModified();
 }
 
+void
+ItemXML::updateWidget() 
+{
+  if (widget_ != NULL) {
+    widget_->update();
+  }
+}
+
+void
+ItemXML::updateWidgetGeometry() 
+{
+  if (widget_ != NULL) {
+    widget_->updateGeometry();
+  }
+}

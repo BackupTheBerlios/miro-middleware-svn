@@ -182,5 +182,8 @@ ConfigFile::parseDescriptionFiles()
     }
     // parsing successfull
     okay = true;
+
+    //    cout << "parsing complete. known types: " << endl;
+    //    cout << *generator_ << endl;
   }
 }

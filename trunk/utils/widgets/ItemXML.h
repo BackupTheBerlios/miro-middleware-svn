@@ -16,6 +16,10 @@
 #include <qstring.h>
 #include <qdom.h>
 
+#include <vector>
+
+typedef std::vector<QString> QStringVector;
+
 //! This class represents an item in the XML tree.
 /**
  * It encapsulates the xml processing of the item.
@@ -77,6 +81,9 @@ public:
   //! Accessor for the associated widget.
   /** Note that the return value can be NULL. */
   QWidget * widget();
+  //! Redisplay widget if existing.
+  void updateWidget();
+  void updateWidgetGeometry();
 
   //----------------------------------------------------------------------------
   // inherited public methods
