@@ -241,7 +241,7 @@ namespace Sparrow
       tmp = index_;
       if (message.shortData(0) != index_) {
 	MIRO_LOG_OSTR(LL_ERROR, 
-		      "GET_ACCELS lost entries: " << endl
+		      "GET_ACCELS lost entries: " << std::endl
 		      << "expected entry: " << index_
 		      << "recieved entry: " << message.shortData(0));
       }
@@ -387,7 +387,6 @@ namespace Sparrow
       // Stall Messages
 
     case CAN_R_STALL:
-      cout << "Consumer::receiveThread:  received message: STALL_RETURN" << endl;
       connection->stallTimerStart();
       if (pStall_)
 	pStall_->pushEvent();
