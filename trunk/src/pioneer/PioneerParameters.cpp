@@ -33,6 +33,14 @@ namespace
   const int tactileDistance[10] = { 150, 150, 150, 150, 150, 150, 150, 150, 150, 150 };
   const int tactileAlpha[10] = { 90, 60, 15, 0, -15, -60, -90, 180, -180, -120 };
   const int tactileBeta[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+  // PeopleBot Infrareds
+  
+  const int infraredHeight[4] = { 100, 100, 150, 150 };
+  const int infraredDistance[4] = { 150, 150, 150, 150 };
+  const int infraredAlpha[4] = { 45, -45, 90, -90 };
+  const int infraredBeta[4] = { 0, 0, 0, 0};
+  const int infraredGamma[4] = { 70, 70, 90, 90};
 };
 
 namespace Pioneer
@@ -91,6 +99,25 @@ namespace Pioneer
       tactileDescription.group[0].sensor[i].beta = Miro::deg2Rad(tactileBeta[i]);
       tactileDescription.group[0].sensor[i].gamma = 0;
     }
+
+    //
+    // Tactile description defaults
+    //
+    infraredDescription.scanType = ::Miro::RangeSensor::BUNCHWISE;
+    infraredDescription.eventName = "Tactile";
+    infraredDescription.group.length(1);
+    infraredDescription.group[0].description.minRange = 0;
+    infraredDescription.group[0].description.maxRange = 10;
+    infraredDescription.group[0].description.focus = deg2Rad(5);
+    infraredDescription.group[0].sensor.length(4);
+    for (unsigned int i = 0; i < 4; ++i) {
+      infraredDescription.group[0].sensor[i].height = infraredHeight[i];;
+      infraredDescription.group[0].sensor[i].distance = infraredDistance[i];
+      infraredDescription.group[0].sensor[i].alpha = Miro::deg2Rad(infraredAlpha[i]);
+      infraredDescription.group[0].sensor[i].beta = Miro::deg2Rad(infraredBeta[i]);
+      infraredDescription.group[0].sensor[i].gamma = Miro::deg2Rad(infraredGamma[i]);
+    }
+
     camera=false;
     cameraUpsideDown=false;
   }

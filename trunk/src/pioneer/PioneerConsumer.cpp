@@ -43,12 +43,14 @@ namespace Pioneer
   //------------------------//
   Consumer::Consumer(Miro::RangeSensorImpl * _pSonar,
 		     Miro::RangeSensorImpl * _pTactile,
+		     Miro::RangeSensorImpl * _pInfrared,
 		     Miro::OdometryImpl * _pOdometry,
 		     Miro::BatteryImpl * _pBattery,
 		     Pioneer::StallImpl * _pStall,
 		     Canon::CanonPanTiltImpl * _pCanonPanTilt) :
     pSonar(_pSonar),
     pTactile(_pTactile),
+    pInfrared(_pInfrared),
     pOdometry(_pOdometry),
     pBattery(_pBattery),
     pStall(_pStall),
@@ -256,12 +258,28 @@ namespace Pioneer
       // IOpac SIP
       //-------------------------------------------------------------------
       else if (pPsosMsg->id() == 0xf0) { //OPpac SIP
-	
-	Psos::IOpacMessage const * const message =
-	  static_cast<Psos::IOpacMessage const * const>(_message);
+	if (pInfrared) {
+	  Psos::IOpacMessage const * const message =
+	    static_cast<Psos::IOpacMessage const * const>(_message);
 
-	cout << "IR: " << hex << (int)message->ir() << dec << endl;
+	  int ir = message->ir() & 0x0f; // lower 4 bit represent the ir sensors of the ppb
+	  
+	  if (ir != infrared_) {
 
+	    Miro::RangeGroupEventIDL * pInfraredEvent = new Miro::RangeGroupEventIDL();
+	    pInfraredEvent->time.sec  = message->time().sec();
+	    pInfraredEvent->time.usec = message->time().usec();
+	    pInfraredEvent->group = 0;
+	    pInfraredEvent->range.length(4);
+
+	    for (unsigned int i = 0; i < 4; ++i) {
+	      pInfraredEvent->range[i] = -((ir >> i) & 1);
+	    }
+	    infrared_ = ir;
+
+	    pInfrared->integrateData(pInfraredEvent);
+	  }
+	}
       }
     }
     else {

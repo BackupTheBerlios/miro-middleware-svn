@@ -51,6 +51,7 @@ namespace Pioneer
   public:
     Consumer(Miro::RangeSensorImpl * _pSonar,
 	     Miro::RangeSensorImpl * _pTactile = NULL,
+	     Miro::RangeSensorImpl * _pInfrared = NULL,
 	     Miro::OdometryImpl * _pOdometry = NULL,
 	     Miro::BatteryImpl * _pBattery = NULL,
 	     Pioneer::StallImpl * _pStall = NULL,
@@ -62,6 +63,7 @@ namespace Pioneer
     // protected:
     Miro::RangeSensorImpl * pSonar;
     Miro::RangeSensorImpl * pTactile;
+    Miro::RangeSensorImpl * pInfrared;
     Miro::OdometryImpl * pOdometry;
     Miro::BatteryImpl * pBattery;
     Pioneer::StallImpl * pStall;
@@ -76,6 +78,7 @@ namespace Pioneer
     short prevX, prevY;
     double prevTheta;
     unsigned short bumpers_;
+    int infrared_;
 
     Pioneer::Parameters * params_;
   };

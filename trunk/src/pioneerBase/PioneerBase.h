@@ -81,6 +81,7 @@ private:
   Pioneer::StallImpl  stall;
   Miro::RangeSensorImpl sonar;
   Miro::RangeSensorImpl tactile;
+  Miro::RangeSensorImpl infrared;
   Canon::CanonPanTiltImpl canonPanTilt;
   Canon::CanonCameraImpl canonCamera;
   Miro::GripperImpl gripper;
@@ -90,6 +91,7 @@ private:
   Miro::Stall_var pStall;
   Miro::RangeSensor_var pSonar;
   Miro::RangeSensor_var pTactile;
+  Miro::RangeSensor_var pInfrared;
   Miro::Battery_var pBattery;
   Miro::CanonPanTilt_var pCanonPanTilt;
   Miro::CanonCamera_var pCanonCamera;

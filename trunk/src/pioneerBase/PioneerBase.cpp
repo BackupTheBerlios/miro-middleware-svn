@@ -49,7 +49,8 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
 
   // Pioneer board initialization
   pPioneerConsumer(new Pioneer::Consumer(&sonar, 
-					 &tactile, 
+					 &tactile,
+					 &infrared,
 					 &odometry, 
 					 &battery,
 					 NULL, //stall
@@ -63,6 +64,7 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   stall(/*pioneerConnection*/),
   sonar(Pioneer::Parameters::instance()->sonarDescription, &structuredPushSupplier_),
   tactile(Pioneer::Parameters::instance()->tactileDescription, &structuredPushSupplier_),
+  infrared(Pioneer::Parameters::instance()->infraredDescription, &structuredPushSupplier_),
   canonPanTilt(pioneerConnection, Pioneer::Parameters::instance()->cameraUpsideDown),
   canonCamera(pioneerConnection, canonPanTilt.getAnswer()),
   gripper(pioneerConnection)
@@ -72,6 +74,7 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   pStall = stall._this();
   pSonar = sonar._this();
   pTactile = tactile._this();
+  pInfrared = infrared._this();
   pBattery = battery._this();
   pCanonPanTilt = canonPanTilt._this();
   pCanonCamera = canonCamera._this();
@@ -82,6 +85,7 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   addToNameService(pStall.in(), "Stall");
   addToNameService(pSonar.in(), "Sonar");
   addToNameService(pTactile.in(), "Tactile");
+  addToNameService(pTactile.in(), "Infrared");
   addToNameService(pBattery.in(), "Battery");
   addToNameService(ec_.in(), "EventChannel");
 
