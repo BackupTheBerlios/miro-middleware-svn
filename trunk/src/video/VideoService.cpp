@@ -85,6 +85,7 @@ main(int argc, char *argv[])
     repo->registerFilter<Video::FilterSwap3>("FilterSwap3");
     repo->registerFilter<Video::FilterSwap4>("FilterSwap4");
     repo->registerFilter<Video::FilterFlip>("FilterFlip");
+    repo->registerFilter<Video::FilterHalfImage>("FilterHalfImage");
 
     std::cout << "Config file processing" << endl;
     

@@ -268,12 +268,12 @@ namespace Video
   {
     DBG(std::cout << "DeviceBTTV: setSize" << std::endl);
 
-    if (((int)outputFormat_.width <= capability.minwidth) ||
-	((int)outputFormat_.width >= capability.maxwidth))
+    if (((int)outputFormat_.width < capability.minwidth) ||
+	((int)outputFormat_.width > capability.maxwidth))
       throw Miro::Exception("DeviceBTTV::setSize: illegal width");
 
-    if (((int)outputFormat_.height <= capability.minheight) ||
-	((int)outputFormat_.height >= capability.maxheight))
+    if (((int)outputFormat_.height < capability.minheight) ||
+	((int)outputFormat_.height > capability.maxheight))
       throw Miro::Exception("DeviceBTTV::setSize: illegal height");
   }
 
