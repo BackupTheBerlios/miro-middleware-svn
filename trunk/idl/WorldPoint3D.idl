@@ -1,0 +1,38 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef WorldPoint3D_idl
+#define WorldPoint3D_idl
+
+module Miro
+{
+  //! Struct holding a point, a three dimensional coordinate.
+  /**
+   * When our robots start flying we are really in trouble,
+   *      but we will be ready
+   *
+   * This struct is easily convertible into a WorldPoint object.
+   */
+  struct WorldPoint3DIDL
+  {
+    //! X coordinate in mm.
+    double x;
+    //! Y coordinate in mm.
+    double y;
+    //! Z coordinate in mm.
+    double z;
+  };
+};
+
+#endif // WorldPoint_idl
+
+
+
+

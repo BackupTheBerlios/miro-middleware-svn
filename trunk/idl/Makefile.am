@@ -27,6 +27,7 @@ globalsources = \
 	Time.idl \
 	Exception.idl \
 	WorldPoint.idl \
+	WorldPoint3D.idl \
 	WorldVector.idl \
 	Position.idl \
 	Velocity.idl \
