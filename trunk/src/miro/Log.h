@@ -170,7 +170,7 @@ namespace Miro
   inline
   unsigned int
   Log::mask() throw() {
-    mask_;
+    return mask_;
   }
   inline
   void
