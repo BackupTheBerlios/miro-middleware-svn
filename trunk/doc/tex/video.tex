@@ -100,8 +100,8 @@ fiugre \ref{fig:filterTree}.
 
 As an additional complication, many sophisticated filters use more
 then one input filter. For instance the Canny filter computes first
-two images of the Zobel operator (one for the x axis $z_x$ and one for the y
-axis $z_y$). So the above described filter tree is actually an acyclic
+two images of the Sobel operator (one for the x axis $D_x$ and one for the y
+axis $D_y$). So the above described filter tree is actually an acyclic
 directed graph of filters, as illustrated in figure \ref{fig:filterGraph}.
 
 \begin{figure}[!ht]
@@ -624,7 +624,7 @@ parameters of the individual buffers:
 \begin{description}
 \item[inputBufferParameters] Returns a const pointer to the parameters
   of the input buffer.
-\item[inputBufferLinkParameters] Returns a const pointer to the
+\item[inputBufferParametersLink] Returns a const pointer to the
   parameters of the linked input buffer specified by its index.
 \item[outputBufferParameters] Returns a pointer to the parameters of
   the output buffer. Note that the parameter instances is not
