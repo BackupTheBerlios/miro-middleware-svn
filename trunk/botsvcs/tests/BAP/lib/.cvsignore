@@ -8,6 +8,8 @@ DummyBehaviourD.lo
 DummyFactory.lo
 Makefile
 Makefile.in
+Parameters.cpp
+Parameters.h
 Parameters.lo
 libmiroBAPtests.la
 

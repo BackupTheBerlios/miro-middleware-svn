@@ -17,6 +17,8 @@ Makefile
 Makefile.in
 MotionArbiter.lo
 MotionArbiterMessage.lo
+Parameters.cpp
+Parameters.h
 Parameters.lo
 Pattern.lo
 Policy.lo
