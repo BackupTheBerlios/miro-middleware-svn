@@ -56,7 +56,7 @@ namespace Miro
       for(int l_index=velocitySpace_->minDynWinLeft_; l_index<=velocitySpace_->maxDynWinLeft_; l_index++) {
 	for(int r_index=velocitySpace_->minDynWinRight_; r_index<=velocitySpace_->maxDynWinRight_; r_index++) {
 	  
-	  pointValue = velocitySpace_->velocitySpace_[l_index][r_index];
+	  pointValue = (int)rint(velocitySpace_->velocitySpace_[l_index][r_index]);
 	  if(pointValue==0)
 	    color.setRgb(255, 0, 0);
 	  else

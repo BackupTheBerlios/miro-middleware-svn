@@ -380,7 +380,7 @@ namespace Miro
 	if (rest != "") {
 	  Policy * policy = dynamic_cast<Policy *>(pattern);
 	  if (policy == NULL)
-	    throw BehaviourEngine::EUnknownActionPattern();
+	    throw BehaviourEngine::EUnknownActionPattern(CORBA::string_dup(first.c_str()));
 	  policy->openPattern(rest);
 	}
 	else {
@@ -388,7 +388,7 @@ namespace Miro
 	}
       }
       else
-	throw BehaviourEngine::EUnknownActionPattern();
+	throw BehaviourEngine::EUnknownActionPattern(CORBA::string_dup(first.c_str()));
     }
 
     /**
@@ -535,7 +535,9 @@ namespace Miro
      */
     BehaviourParameters * const
     Policy::getBehaviourParameters(std::string const& _pattern,
-				   std::string const& _behaviour) const
+				   std::string const& _behaviour) const 
+      throw (BehaviourEngine::EUnknownActionPattern,
+	     BehaviourEngine::EUnknownBehaviour)
     {
       std::string first, rest;
       splitPath(_pattern, first, rest);
@@ -545,7 +547,7 @@ namespace Miro
 	return getBehaviourParameters(rest, _behaviour);
       }
 
-      throw BehaviourEngine::EUnknownActionPattern();
+      throw BehaviourEngine::EUnknownActionPattern(CORBA::string_dup(first.c_str()));
     }
 
     /**
@@ -563,6 +565,8 @@ namespace Miro
     Policy::setBehaviourParameters(std::string const& _pattern,
 				   std::string const& _behaviour, 
 				   BehaviourParameters * _parameters) 
+      throw (BehaviourEngine::EUnknownActionPattern,
+	     BehaviourEngine::EUnknownBehaviour)
     {
       std::string first, rest;
       splitPath(_pattern, first, rest);
@@ -572,7 +576,7 @@ namespace Miro
 	return setBehaviourParameters(rest, _behaviour, _parameters);
       }
 
-      throw BehaviourEngine::EUnknownActionPattern();
+      throw BehaviourEngine::EUnknownActionPattern(CORBA::string_dup(first.c_str()));
     }
 
     void 

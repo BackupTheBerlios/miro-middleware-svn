@@ -89,13 +89,19 @@ namespace Miro
       virtual 
       BehaviourParameters * const 
       getBehaviourParameters(std::string const& _pattern,
-			     std::string const& _behaviour) const;
+			     std::string const& _behaviour) const
+	throw (BehaviourEngine::EUnknownActionPattern,
+	       BehaviourEngine::EUnknownBehaviour);
+
       //! Set the parameters of an existing behaviour.
       virtual 
       void
       setBehaviourParameters(std::string const& _pattern,
 			     std::string const& _behaviour,
-			     BehaviourParameters * _parameters);
+			     BehaviourParameters * _parameters)
+	      throw (BehaviourEngine::EUnknownActionPattern,
+		     BehaviourEngine::EUnknownBehaviour);
+
       //! Set the arbiter of the action pattern.
       void arbiter(Arbiter * _a, ArbiterParameters * _p);
       //! Lookup a behaviour of the action pattern by name.

@@ -12,6 +12,7 @@
 #define Pattern_h
 
 #include "miro/Synch.h"
+#include "idl/BehaviourEngineC.h"
 
 #include <map>
 #include <string>
@@ -108,14 +109,18 @@ namespace Miro
       virtual 
       BehaviourParameters * const 
       getBehaviourParameters(const std::string& _pattern,
-			     const std::string& _behaviour) const = 0;
+			     const std::string& _behaviour) const 
+	throw (BehaviourEngine::EUnknownActionPattern,
+	       BehaviourEngine::EUnknownBehaviour) = 0;
       //! Set the parameters of an existing behaviour within an actionpattern.
       /** Nested behaviours are addressed by <Subpolicy>/<Pattern> */
       virtual
       void 
       setBehaviourParameters(const std::string& _pattern,
 			     const std::string& _behaviour, 
-			     BehaviourParameters * _parameters) = 0;
+			     BehaviourParameters * _parameters) 
+	throw (BehaviourEngine::EUnknownActionPattern,
+	       BehaviourEngine::EUnknownBehaviour) = 0;
 
       Miro::Mutex& transitionMutex() const;
 

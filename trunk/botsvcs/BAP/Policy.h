@@ -102,12 +102,16 @@ namespace Miro
       void setStartPattern(Pattern * _pattern);
       //! Get the parameter set of an existing behaviour within an actionpattern.
       BehaviourParameters * const getBehaviourParameters(const std::string& _pattern,
-							 const std::string& _behaviour) const;
+							 const std::string& _behaviour) const
+	throw (BehaviourEngine::EUnknownActionPattern,
+	       BehaviourEngine::EUnknownBehaviour);
       //! Set the parameters of an existing behaviour within an actionpattern.
       /** Nested behaviours are addressed by <Subpolicy>/<Pattern> */
       void setBehaviourParameters(const std::string& _pattern,
 				  const std::string& _behaviour, 
-				  BehaviourParameters * _parameters);
+				  BehaviourParameters * _parameters)
+	throw (BehaviourEngine::EUnknownActionPattern,
+	       BehaviourEngine::EUnknownBehaviour);
 
       //! Retrieve the active pattern of the (sub-)policy.
       Pattern * const currentPattern();

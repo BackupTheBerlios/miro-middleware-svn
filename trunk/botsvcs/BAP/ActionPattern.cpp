@@ -310,6 +310,8 @@ namespace Miro
     BehaviourParameters * const
     ActionPattern::getBehaviourParameters(std::string const& _pattern,
 					  std::string const& _behaviour) const
+      throw (BehaviourEngine::EUnknownActionPattern,
+	     BehaviourEngine::EUnknownBehaviour)
     {
       if (_pattern == "") {
 	BehaviourMap::const_iterator b = behaviourMap_.find(_behaviour);
@@ -317,15 +319,19 @@ namespace Miro
 	  Guard guard(transitionMutex());
 	  return b->second.first->getParametersInstance(*(b->second.second));
 	}
+	else
+	  throw BehaviourEngine::EUnknownBehaviour(CORBA::string_dup(_behaviour.c_str()));
       }
       
-      throw BehaviourEngine::EUnknownActionPattern();
+      throw BehaviourEngine::EUnknownActionPattern(CORBA::string_dup(_pattern.c_str()));
     }
     
     void
     ActionPattern::setBehaviourParameters(std::string const& _pattern,
 					  std::string const& _behaviour, 
 					  BehaviourParameters * _parameters) 
+      throw (BehaviourEngine::EUnknownActionPattern,
+	     BehaviourEngine::EUnknownBehaviour)
     {
       if (_pattern == "") {
 	_parameters->pattern = this;
@@ -348,9 +354,11 @@ namespace Miro
 
 	  return;
 	}
+	else
+	  throw BehaviourEngine::EUnknownBehaviour(CORBA::string_dup(_behaviour.c_str()));
       }
 
-      throw BehaviourEngine::EUnknownActionPattern();
+      throw BehaviourEngine::EUnknownActionPattern(CORBA::string_dup(_pattern.c_str()));
     }
     
     Behaviour * 
