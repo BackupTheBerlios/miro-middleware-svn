@@ -81,7 +81,7 @@ namespace FaulMotor
 
     int speed = (short) (_speed * params_->speedConvFactor);//* 112;
    double accL, accR;
-    				// maxPosAccel,  maxNegAccel parameter setzen
+/*    				// maxPosAccel,  maxNegAccel parameter setzen
     accL = speed;
     accR = speed;
     if (prevSpeedL != 0) accL = speed / prevSpeedL;
@@ -98,8 +98,8 @@ namespace FaulMotor
 		accL = (params_-> maxPosAccel) * 90 / 320;
 	}
     }
-    cout << "AccR: " << (int)accR << " AccL: " << (int)accL << endl;
-    
+    //cout << "AccR: " << (int)accR << " AccL: " << (int)accL << endl;
+  */  
     sprintf(speedMessageL, "v%d\r\n", -speed); // build speed message
     sprintf(speedMessageR, "v%d\r\n", speed); // build speed message
     leftWheel_.writeMessage(speedMessageL);
@@ -116,21 +116,24 @@ namespace FaulMotor
 
     int speedL = (short) (-_speedL * params_->speedConvFactor);//* 112;
     int speedR = (short) (_speedR * params_->speedConvFactor);//* 112;
-/*    double accL, accR;
-                                // maxPosAccel,  maxNegAccel paramete
+    double accL, accR;
+
     accL = speedL / prevSpeedL;
     accR = speedR / prevSpeedR;
-    if (accL <= accR)
+    if ((accL <= accR) && (accR != 0))
     {
-        accL = (accL / accR * params_-> maxPosAccel) * 90 / 320;
-        accR = (params_-> maxPosAccel) * 90 / 320;
+        accL = (accL / accR * params_-> maxPosAccel) * 90. / 320.;
+        accR = (params_-> maxPosAccel) * 90. / 320.;
     }else
     {
-        accR = (accR / accL * params_-> maxPosAccel) * 90 / 320;
-        accL = (params_-> maxPosAccel) * 90 / 320;
+        if (accL != 0)
+	{
+	  accR = (accR / accL * params_-> maxPosAccel) * 90. / 320.;
+	  accL = (params_-> maxPosAccel) * 90. / 320.;
+	}
     }
     cout << "AccR: " << accR << " AccL: " << accL << endl;
-*/
+
 
     sprintf(speedMessageL, "v%d\r\n", speedL); // build speed message
     sprintf(speedMessageR, "v%d\r\n", speedR); // build speed message
