@@ -134,7 +134,7 @@ AC_DEFUN([AC_DETERMINE_LIBDC_VERSION],
 	AC_MSG_CHECKING(how to setup dma capture)
 	success=failed
 	AC_TRY_COMPILE([
-		#include <dc1394_control.h>
+		#include <libdc1394/dc1394_control.h>
 	],[
 		raw1394handle_t handle;
 		nodeid_t node;
@@ -156,7 +156,7 @@ AC_DEFUN([AC_DETERMINE_LIBDC_VERSION],
 	],[
 	])
 	AC_TRY_COMPILE([
-		#include <dc1394_control.h>
+		#include <libdc1394/dc1394_control.h>
 	],[
 		raw1394handle_t handle;
 		nodeid_t node;
