@@ -91,6 +91,7 @@
       <config_parameter name="channelSharing" type="bool" default="false" />
       <config_parameter name="camera" type="bool" default="false" />
       <config_parameter name="cameraUpsideDown" type="bool" default="false" />
+      <config_parameter name="cameraType" type="string" default="canon" />
 
     </config_item>
   </config_group>
