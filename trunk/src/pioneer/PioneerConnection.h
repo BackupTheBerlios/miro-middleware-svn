@@ -80,6 +80,7 @@ namespace Pioneer
     void gripperCommand(unsigned short command); //send a command to the gripper
     void gripperValue(short value); //send a value to the gripper
 
+    void setTCMMode(short value); // send a command to the TCM2 module
   protected:
     Consumer * consumer;
 

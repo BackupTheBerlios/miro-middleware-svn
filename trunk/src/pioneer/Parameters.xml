@@ -4,6 +4,13 @@
   <config_global name="include" value="psos/Parameters.h" />
 
   <config_group name="ActiveMedia">
+    <config_item name="TCM2">
+      <config_parameter name="compassOnly" type="bool" default="false" />
+      <config_parameter name="inclinometer" type="Miro::InclinometerParameters" />
+      <config_parameter name="magnetometer" type="Miro::MagnetometerParameters" />
+      <config_parameter name="thermometer" type="Miro::ThermometerParameters" />
+    </config_item>
+
     <config_item parent="Psos::" instance="true">
       <config_parameter name="motion" type="Miro::DifferentialMotionParameters" />
       <constructor>
@@ -86,6 +93,19 @@
           tactileDescription.group[0].sensor[i].beta = Miro::deg2Rad(tactileBeta[i]);
           tactileDescription.group[0].sensor[i].gamma = 0;
         }
+      </constructor>
+
+      <config_parameter name="tcm2" type="bool" default="false" />
+      <config_parameter name="tcm2Params" type="TCM2Parameters" />
+      <constructor>
+	tcm2Params.inclinometer.minPitch = Miro::deg2Rad(-20);
+	tcm2Params.inclinometer.maxPitch = Miro::deg2Rad(20);
+	tcm2Params.inclinometer.minRoll = Miro::deg2Rad(-20);
+	tcm2Params.inclinometer.maxRoll = Miro::deg2Rad(20);
+	tcm2Params.magnetometer.minFieldStrength = -80;
+	tcm2Params.magnetometer.maxFieldStrength = 80;
+	tcm2Params.thermometer.minTemperature = -20;
+	tcm2Params.thermometer.maxTemperature = 70;
       </constructor>
 
       <config_parameter name="channelSharing" type="bool" default="false" />

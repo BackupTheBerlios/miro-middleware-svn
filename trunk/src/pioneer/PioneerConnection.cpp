@@ -215,4 +215,10 @@ namespace Pioneer
     writeMessage(com);
   }
 
+  void Connection::setTCMMode(short value)
+  {
+    Guard guard(stateMutex);
+    Message com(SF_COMTCM2, value);
+    writeMessage(com);
+  }
 };

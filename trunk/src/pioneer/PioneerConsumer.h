@@ -45,6 +45,8 @@ namespace Pioneer
    */
                                                           // nur zum test
   class StallImpl;
+  class TCM2Impl;
+
   class Consumer : public Miro::DevConsumer
   {
     typedef Miro::DevConsumer Super;
@@ -56,6 +58,7 @@ namespace Pioneer
 	     Miro::OdometryImpl * _pOdometry = NULL,
 	     Miro::BatteryImpl * _pBattery = NULL,
 	     Pioneer::StallImpl * _pStall = NULL,
+	     Pioneer::TCM2Impl * _pTCM2 = NULL,
 	     Canon::CanonPanTiltImpl * _pCanonPanTilt=NULL);
     ~Consumer();
 
@@ -69,6 +72,7 @@ namespace Pioneer
     Miro::OdometryImpl * pOdometry;
     Miro::BatteryImpl * pBattery;
     Pioneer::StallImpl * pStall;
+    Pioneer::TCM2Impl * pTCM2;
     //public:
     //must be public in order for the connection to close the camera
     Canon::CanonPanTiltImpl * pCanonPanTilt;

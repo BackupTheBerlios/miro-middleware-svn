@@ -14,6 +14,8 @@
 #include "Parameters.h"
 
 #include "PioneerMotionImpl.h"
+#include "idl/CompassEventC.h"
+#include "TCM2Impl.h"
 #include "pioneer/CanonPanTiltImpl.h"
 //#include "pioneer/CanonPanTiltMessage.h"
 
@@ -22,6 +24,7 @@
 #include "miro/OdometryImpl.h"
 #include "miro/BatteryImpl.h"
 #include "miro/TimeHelper.h"
+#include "miro/Angle.h"
 
 #include "psos/PsosMessage.h"
 #include <cmath>
@@ -55,6 +58,7 @@ namespace Pioneer
 		     Miro::OdometryImpl * _pOdometry,
 		     Miro::BatteryImpl * _pBattery,
 		     Pioneer::StallImpl * _pStall,
+		     Pioneer::TCM2Impl * _pTCM2,
 		     Canon::CanonPanTiltImpl * _pCanonPanTilt) :
     pSonar(_pSonar),
     pTactile(_pTactile),
@@ -63,6 +67,7 @@ namespace Pioneer
     pOdometry(_pOdometry),
     pBattery(_pBattery),
     pStall(_pStall),
+    pTCM2(_pTCM2),
     pCanonPanTilt(_pCanonPanTilt),
     prevX(0),
     prevY(0),
@@ -250,6 +255,19 @@ namespace Pioneer
 	  pBattery->integrateData(message->battery());
 	  //cout << "Battery: " << bat << endl;
 	}
+
+	//-------------------------------------------------------------------
+	// read compass heading (unless using the TCM2 SIP)
+	//-------------------------------------------------------------------
+	if (pTCM2 && params_->tcm2Params.compassOnly) {
+	  Miro::Angle heading;
+	  Miro::CompassEventIDL data;
+	  heading.setDeg((double)(message->compass()) * 2);
+	  data.time.sec  = message->time().sec();
+	  data.time.usec = message->time().usec();
+	  data.heading = (float)heading;
+	  pTCM2->integrateData(data);
+	}
       }
 
       //-------------------------------------------------------------------
@@ -291,6 +309,43 @@ namespace Pioneer
 	  }
 	}
       }
+
+      //-------------------------------------------------------------------
+      // TCM2 SIP
+      //-------------------------------------------------------------------
+      else if (pPsosMsg->id() == 0xc0) { //TCM2 SIP
+	if (pTCM2) {
+	  Miro::Angle angle;
+	  Miro::TCM2EventIDL data;
+
+	  Psos::TCM2Message const * const message =
+	    static_cast<Psos::TCM2Message const * const>(_message);
+
+	  data.time.sec = message->time().sec();
+	  data.time.usec = message->time().usec();
+
+	  // Compass
+	  angle.setDeg((double)(message->heading()) / 10);
+	  data.heading = (float)angle;
+
+	  // Inclinometer
+	  angle.setDeg((double)(message->pitch()) / 10);
+	  data.inclination.pitch = (float)angle;
+	  angle.setDeg(-(double)(message->roll()) / 10);
+	  data.inclination.roll = (float)angle;
+
+	  // Magnetometer
+	  data.fieldstrength.x = ((float)(message->x()) / 100);
+	  data.fieldstrength.y = ((float)(message->y()) / 100);
+	  data.fieldstrength.z = ((float)(message->z()) / 100);
+
+	  // Thermometer
+	  data.temperature = ((float)(message->temperature()) / 10);
+
+	  pTCM2->integrateData(data);
+	}
+      }
+
       else {
        std::cerr << "Unkown message header: "
 		 << hex << pPsosMsg->header() << dec << endl;

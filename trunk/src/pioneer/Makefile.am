@@ -38,7 +38,9 @@ sources = \
 	CanonMessage.h \
 	GripperImpl.cpp \
 	GripperImpl.h \
-	CanonDevice.h
+	CanonDevice.h \
+	TCM2Impl.cpp \
+	TCM2Impl.h
 
 libpioneer_a_SOURCES = $(sources)
 
