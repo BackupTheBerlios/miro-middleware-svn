@@ -1,0 +1,13 @@
+.deps
+.libs
+DummyArbiter.lo
+DummyArbiterMessage.lo
+DummyBehaviour.lo
+DummyBehaviourB.lo
+DummyBehaviourD.lo
+DummyFactory.lo
+Makefile
+Makefile.in
+Parameters.lo
+libmiroBAPtests.la
+
