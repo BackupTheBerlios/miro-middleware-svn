@@ -88,7 +88,6 @@ namespace Video
 
   DeviceBTTV::~DeviceBTTV()
   {
-    fini();
     delete gb;
   }
 
@@ -198,6 +197,9 @@ namespace Video
       map_ = NULL;
     }
     ioBuffer_.close();
+
+    // removing buffer ptr
+    buffer_ = NULL;
   }
 
 

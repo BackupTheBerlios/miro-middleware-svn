@@ -30,22 +30,39 @@ namespace Video
 
   Filter::~Filter()
   {
-    // delete successors
+    std::cout << "deleting filter " << this->name() << endl;
+    std::cout << "deleting successor filters" << endl;
     FilterVector::const_iterator first, last = succ_.end();
     for (first = succ_.begin(); first != last; ++first) {
       delete (*first);
     }
 
-    if (!interface_)
+    if (interface_ == NULL) {
+      std::cout << "deleting buffer" << endl;
       delete buffer_;
-    else
+    }
+    else {
+      std::cout << "deleting interface" << endl;
       delete interface_;
+    }
   }
+
+  void
+  Filter::finiTree()
+  {
+    // finish successors
+    FilterVector::const_iterator first, last = succ_.end();
+    for (first = succ_.begin(); first != last; ++first) {
+      (*first)->finiTree();
+    }
+    // finish myself
+    fini();
+  };
 
   void
   Filter::setInterface(Miro::Server& _server, VideoInterfaceParameters const & _params)
   {
-    if (!interface_)
+    if (interface_ == NULL)
       delete buffer_;
     else
       delete interface_;

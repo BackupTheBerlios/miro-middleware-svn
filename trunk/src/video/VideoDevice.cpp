@@ -55,9 +55,6 @@ namespace Video
   //--------------------------------------------------------------------
   Device::~Device()
   {
-    FilterVector::iterator first, last = succ_.end();
-    for (first = succ_.begin(); first != last; ++last)
-      delete (*first);
   }
 
   //--------------------------------------------------------------------

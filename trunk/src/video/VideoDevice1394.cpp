@@ -15,6 +15,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.9  2003/06/03 13:36:27  hutz
+ * trying to remove segfaults on shutdown
+ *
  * Revision 1.8  2003/06/03 11:03:36  hutz
  * fixed copy paste error in macros.miro.GNU
  * removed the HAVE_* macros in VideoDevice1394.*
@@ -204,7 +207,6 @@ namespace Video
   //---------------------------------------------------------------
   Device1394::~Device1394()
   {
-    fini();
     delete p_camera_;
   } 
 
@@ -261,6 +263,9 @@ namespace Video
     }
 
     cleanupDevice();
+
+    // removing buffer ptr
+    buffer_ = NULL;
   }
     
   //---------------------------------------------------------------

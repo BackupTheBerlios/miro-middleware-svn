@@ -14,6 +14,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.6  2003/06/03 13:36:27  hutz
+ * trying to remove segfaults on shutdown
+ *
  * Revision 1.5  2003/06/03 10:25:32  hutz
  * complete revamp of the video service
  * the interface changes slightly to allow for better access
@@ -71,7 +74,6 @@ namespace Video
 //--------------------------------------------------------------------
   DeviceDummy::~DeviceDummy()
   {
-    delete buffer_;
   }
 	
   //--------------------------------------------------------------------
@@ -99,8 +101,6 @@ namespace Video
 
     is_connected_ = true;
 	
-    delete buffer_;
-    
     FILE * file;
     if ((file = fopen(params->device.c_str(), "r")) != NULL) {
 

@@ -65,10 +65,18 @@ namespace Video
     DBG(std::cout << "Destructing VideoService." << endl);
 
     pConsumer_->cancel();
-    pVideoDevice_->fini();
+
+    std::cout << "Video::Device thread canceled." << endl;
+    pVideoDevice_->finiTree();
+
+    std::cout << "Video::FilterTree finished." << endl;
 
     delete pConsumer_;
+
+    std::cout << "Video: deleted consumer thread" << endl;
+
     delete pVideoDevice_;
+    std::cout << "Video: deleted filter tree." << endl;
   }
 
   Video::Filter *
@@ -88,7 +96,9 @@ namespace Video
     std::cout << _tree.name << endl;
     std::cout << *params << endl;
 
+    filter->name(_tree.name);
     filter->init(params);
+
     if (_pre) {
       filter->setPredecessor(_pre);
       _pre->addSuccessor(filter);

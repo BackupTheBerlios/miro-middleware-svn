@@ -59,7 +59,6 @@ namespace Video
 
   DeviceMeteor::~DeviceMeteor()
   {
-    fini();
   }
 
   void
@@ -110,6 +109,9 @@ namespace Video
       buffer_ = NULL;
     }
     ioBuffer_.close();
+
+    // removing buffer ptr
+    buffer_ = NULL;
   }
 
   void

@@ -16,6 +16,7 @@
 #include "miro/VideoC.h"
 
 #include <vector>
+#include <string>
 
 #define FILTER_PARAMETERS_FACTORY(X) \
     virtual X ## Parameters * getParametersInstance() const; \
@@ -61,6 +62,9 @@ namespace Video
     bool inplace() const;
     virtual void init(FilterParameters const *);
     virtual void fini();
+    void finiTree();
+    void name(std::string const& _name);
+    std::string const& name() const;
 
     virtual void acquireWriteBuffer();
     virtual void releaseWriteBuffer();
@@ -91,6 +95,8 @@ namespace Video
 
     Filter * pre_;
     FilterVector succ_;
+
+    std::string name_;
   };
 
   inline
@@ -109,6 +115,18 @@ namespace Video
   ACE_Time_Value const&
   Filter::timeStamp() const {
     return timeStamp_;
+  }
+
+  inline
+  void
+  Filter::name(std::string const& _name) {
+    name_ = _name;
+  }
+
+  inline
+  std::string const&
+  Filter::name() const {
+    return name_;
   }
 };
 
