@@ -103,9 +103,8 @@ namespace Pioneer
 	
 	if (pOdometry) {
 	  short x, y, x0, y0, dX, dY;
-	  double velL, velR, weelDist;
+	  double velL, velR;
 	
-	  weelDist = 320;  // nur zum test muss noch allgemein gemacht werden
 	  // the odometry data is 15bit unsigned
 	  // but we interpret it as a signed value 
 	  x = message->xPos();      // x position
@@ -149,7 +148,7 @@ namespace Pioneer
 	    pMotion->lr2velocity((CORBA::Long)velL, (CORBA::Long)velR, status_.velocity);
 	  pOdometry->integrateData(status_);   
 
-cout << velL << "\t" << velR << endl;
+// cout << velL << "\t" << velR << "\t" << Miro::rad2Deg(status_.velocity.rotation) << endl;
 	}
 	  
 	//------------------------------
