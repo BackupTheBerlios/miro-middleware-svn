@@ -167,10 +167,10 @@ namespace FaulMotor
     // adjust the acceleations accordingly
     if ((dSpeedL != 0) && (dSpeedR != 0)) {
       if (fabs(dSpeedL) > fabs(dSpeedR)) {
-	accR = (dSpeedR / dSpeedL * accR) * 9. / 320.;
+	accR *= dSpeedR / dSpeedL;
       }
       else {
-	accL = ( dSpeedL / dSpeedR * accL) * 9. / 320.;
+	accL *= dSpeedL / dSpeedR;
       }
     }
 
