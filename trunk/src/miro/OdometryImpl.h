@@ -81,6 +81,7 @@ namespace Miro
 
     //! Method to pass raw odometry data from the device into the OdometryImpl class.
     void integrateData(const MotionStatusIDL & data);
+    void cancel();
   
     //! Odometry interface method implementation.
     virtual void setPosition(const Miro::PositionIDL & pos) throw();

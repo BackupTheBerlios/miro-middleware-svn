@@ -238,6 +238,12 @@ namespace Miro
     }
   }
 
+  void
+  RangeSensorImpl::cancel() {
+    if (asynchDispatching_)
+      dispatcherThread_.cancel();
+  }
+
   ScanDescriptionIDL *
   RangeSensorImpl::getScanDescription() throw()
   {

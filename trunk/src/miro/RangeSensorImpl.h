@@ -83,6 +83,8 @@ namespace Miro
     //! Input from range sensors, that acquire scans in unordered bunchs.
     virtual void integrateData(RangeBunchEventIDL * _data);
 
+    void cancel();
+
     // IDL interface
 
     //! RangeSensor interface method implementation.

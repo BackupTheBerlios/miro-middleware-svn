@@ -212,6 +212,12 @@ namespace Miro
     }
   }
 
+  void
+  OdometryImpl::cancel() {
+    if (asynchDispatching_)
+      dispatcherThread_.cancel();
+  }
+
   PositionIDL OdometryImpl::getPosition() throw()
   {
     Guard guard(mutex_);

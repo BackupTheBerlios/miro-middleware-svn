@@ -221,6 +221,15 @@ SparrowBase::~SparrowBase()
 {
   DBG(cout << "Destructing SparrowBase." << endl);
 
+  //  sparrowConnection.readTables();
+  reactorTask.cancel();
+
+  odometry.cancel();
+  infrared.cancel();
+  if (pSonar_.get() != NULL) {
+    pSonar_->cancel();
+  }
+
   // Deactivate.
   PortableServer::ObjectId_var oid =
     poa->reference_to_id (notifyFactory_.in());
@@ -228,9 +237,6 @@ SparrowBase::~SparrowBase()
   // deactivate from the poa.
   poa->deactivate_object (oid.in ());
 
-
-  //  sparrowConnection.readTables();
-  reactorTask.cancel();
 
   DBG(cout << "reactor Task ended" << endl);
 }
