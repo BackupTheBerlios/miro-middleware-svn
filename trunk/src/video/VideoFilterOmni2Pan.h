@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -12,32 +12,40 @@
 #define VideoFilterOmni2Pan_h
 
 /*! \file VideoFilterOmni2Pan.h
- *  \brief Image conversion routines YUV411->RGB (interface)
- *  \author Arnd Muehlenfeld
+ *  \brief Image conversion routines for omnidirectional camera
+ *  \author Roland Reichle
  */
 
 #include "VideoFilter.h"
 
 namespace Video
 {
+  //! Lookup table driven conversion from omni to panoramic view
+  class FilterOmni2Pan : public Filter
+  {
+    typedef Filter Super;
+    
+  public:
+    FilterOmni2Pan(Miro::ImageFormatIDL const& _inputFormat);
+    virtual ~FilterOmni2Pan();
+    virtual void process();
 
-    //! Lookup table driven conversion from YUV411 to RGB
-    class FilterOmni2Pan : public Filter
-    {
-      typedef Filter Super;
-      static double cos_lookup[360];
-      static double sin_lookup[360];
-      void buildLookupTables();
+    static unsigned int const IMAGE_WIDTH = 360;
+    static unsigned int const IMAGE_HEIGHT = 120;
 
-    public:
-        FilterOmni2Pan(Miro::ImageFormatIDL const& _inputFormat);
-	virtual ~FilterOmni2Pan();
-	virtual void process();
-    protected:
-    	int middle_x;
-	int middle_y;
-    };
-};
+  protected:
+    void buildLookupTables();
+
+    int middleX_;
+    int middleY_;
+
+    short srcOffset_[IMAGE_WIDTH * IMAGE_HEIGHT];
+
+    static double cosLookup_[360];
+    static double sinLookup_[360];
+
+  };
+}
 
 #endif // VideoFilterOmni2Pan_h
 

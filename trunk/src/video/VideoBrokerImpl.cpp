@@ -79,7 +79,7 @@ namespace Miro
     }
 
     std::cout << "wait for completion of all filters" << std::endl;
-    ACE_Time_Value maxWait = ACE_OS::gettimeofday() + ACE_Time_Value(1, 100000);
+    ACE_Time_Value maxWait = ACE_OS::gettimeofday() + ACE_Time_Value(10, 100000);
     bool buffersPending;
     do {
       if (cond.wait(&maxWait) == -1) {
@@ -103,10 +103,12 @@ namespace Miro
     ACE_Time_Value t;
     CORBA::ULong index = 0;
     first = request.begin();
-    first->filter->
+    t = first->filter->
       interface()->bufferManager()->bufferTimeStamp(buffers[index]);
-    std::cout << "check for filter synchronisation" << std::endl;
+    std::cout << "check for filter synchronisation: " << t << std::endl;
     for (++index, ++first; first != last; ++first, ++index) {
+      std::cout << "t: " << first->filter->
+	interface()->bufferManager()->bufferTimeStamp(buffers[index]) << std::endl;
       assert(first->filter->
 	     interface()->bufferManager()->bufferTimeStamp(buffers[index])
 	     == t);

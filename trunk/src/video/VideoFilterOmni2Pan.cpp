@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -10,8 +10,8 @@
 //////////////////////////////////////////////////////////////////////////////
 
 /*! \file FilterOmni2Pan.cpp
- *  \brief Image conversion routines YUV->RGB
- *  \author Arnd Muehlenfeld
+ *  \brief Image conversion routines from omnicam to panoramic view
+ *  \author Roland Reichle
  */
 
 #include "VideoFilterOmni2Pan.h"
@@ -19,16 +19,13 @@
 #include "miro/VideoHelper.h"
 #include "miro/Exception.h"
 
-#include <iostream>
 #include <algorithm>
 #include <cmath>
 
 namespace Video
 {
-
-  double FilterOmni2Pan::cos_lookup[360];
-  double FilterOmni2Pan::sin_lookup[360];
-
+  double FilterOmni2Pan::cosLookup_[360];
+  double FilterOmni2Pan::sinLookup_[360];
 
   //---------------------------------------------------------------
   FilterOmni2Pan::FilterOmni2Pan(Miro::ImageFormatIDL const& _inputFormat) :
@@ -37,13 +34,13 @@ namespace Video
     if (_inputFormat.palette != Miro::RGB_24)
       throw Miro::Exception("Incompatible input format for FilterOmni2Pan.");
     outputFormat_.palette = Miro::RGB_24;
-    outputFormat_.width = 360;
-    outputFormat_.height = 120;
+    outputFormat_.width = IMAGE_WIDTH;
+    outputFormat_.height = IMAGE_HEIGHT;
 
-    middle_x = inputFormat_.width / 2;
-    middle_y = inputFormat_.height / 2;
+    middleX_ = inputFormat_.width / 2;
+    middleY_ = inputFormat_.height / 2;
+
     buildLookupTables();
-
   }
 
   //---------------------------------------------------------------
@@ -55,37 +52,34 @@ namespace Video
   void
   FilterOmni2Pan::process()
   {
-    unsigned char const * src_img = inputBuffer();
-    unsigned char * tgt_img = outputBuffer();
+    unsigned char const * srcImg = inputBuffer();
+    unsigned char * tgtImg = outputBuffer();
+    unsigned char * tgtImgEnd = tgtImg + IMAGE_WIDTH * IMAGE_HEIGHT;
+    short * srcOffset = srcOffset_;
 
+    for (; tgtImg != tgtImgEnd; ++tgtImg, ++srcOffset) {
+      *tgtImg = *(srcImg + *srcOffset);
+    }
+  }
 
-    for(unsigned int dist = 0; dist < outputFormat_.height - 1; dist++) {
-        for(unsigned int angle = 0; angle < outputFormat_.width; angle++) {
-       	    for(int color = 0; color < 3; color++) {
-		*(tgt_img++) = *(src_img + (middle_x + (int)floor(dist * cos_lookup[angle]))*3 +
-		                         (middle_y + (int)floor(dist * sin_lookup[angle]))*3*inputFormat_.width + color);
-
-	    }
-	}
+  void
+  FilterOmni2Pan::buildLookupTables()
+  {
+    for (unsigned int i = 0; i < 360; ++i) {
+      cosLookup_[i] = cos(M_PI * i / 180.0);
+      sinLookup_[i] = sin(M_PI * i / 180.0);
     }
 
-
-
-
-
-
-  }
-
-  void FilterOmni2Pan::buildLookupTables(){
-
-      for(int i = 0; i < 360; i++){
-         cos_lookup[i] = cos(M_PI * i / 180.0);
-	 sin_lookup[i] = sin(M_PI * i / 180.0);
-
+    short * srcOffset = srcOffset_;
+    for (unsigned int dist = 0; dist < outputFormat_.height; dist++) {
+      for (unsigned int angle = 0; angle < outputFormat_.width; angle++) {
+	for(int color = 0; color < 3; color++) {
+	  *(srcOffset++) = 
+	    (middleX_ + (int)floor(dist * cosLookup_[angle])) * 3 +
+	    (middleY_ + (int)floor(dist * sinLookup_[angle])) * 3 * inputFormat_.width + 
+	    color;
+	}
       }
-
+    }
   }
-
-
-
-};
+}
