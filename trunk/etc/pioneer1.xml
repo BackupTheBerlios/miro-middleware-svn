@@ -22,7 +22,7 @@
              <description>
                <minrange>100</minrange>
                <maxrange>3000</maxrange>
-               <focus>0.26180</focus>
+               <focus>15</focus>
              </description>
              <sensor><alpha>180</alpha></sensor>
              <sensor><alpha>150</alpha></sensor>

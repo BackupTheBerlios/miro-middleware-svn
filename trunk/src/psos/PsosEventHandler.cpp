@@ -167,7 +167,6 @@ namespace Psos
       }
       else {
 	// handle synch messages
-
         Miro::Guard guard(synchMutex);
 
 	switch (msg->id()) {

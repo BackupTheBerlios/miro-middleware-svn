@@ -2,13 +2,12 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-
 
 #include "ScanDescriptionHelper.h"
 #include "ScanDescriptionC.h"
@@ -17,9 +16,6 @@
 
 #include <qdom.h>
 #include <iostream>
-
-using std::ostream;
-using std::string;
 
 namespace Miro
 {
@@ -40,7 +36,7 @@ namespace Miro
 	      sensor.maxRange = t.data().toInt();
 	    }
 	    else if (n1.nodeName() == "focus") {
-	      sensor.focus = t.data().toDouble();
+	      sensor.focus = deg2Rad(t.data().toDouble());
 	    }
 	  }
 	}
@@ -171,8 +167,8 @@ namespace Miro
     }
   }
 
-  ostream&
-  operator << (ostream& ostr, const SensorDescriptionIDL& description) 
+  std::ostream&
+  operator << (std::ostream& ostr, const SensorDescriptionIDL& description) 
   {
     ostr << " minrange=" << description.minRange
 	 << " maxrange=" << description.maxRange
@@ -180,8 +176,8 @@ namespace Miro
     return ostr;
   }
 
-  ostream&
-  operator << (ostream& ostr, const SensorPositionIDL& position) 
+  std::ostream&
+  operator << (std::ostream& ostr, const SensorPositionIDL& position) 
   {
     ostr << " height=" << position.height
 	 << " distance=" << position.distance
@@ -192,8 +188,8 @@ namespace Miro
     return ostr;
   }
 
-  ostream&
-  operator << (ostream& ostr, const SensorGroupIDL& group) 
+  std::ostream&
+  operator << (std::ostream& ostr, const SensorGroupIDL& group) 
   {
     ostr << "description: " << group.description;
     for (unsigned int i = 0; i < group.sensor.length(); ++i) {
@@ -205,8 +201,8 @@ namespace Miro
     return ostr;
   }
 
-  ostream&
-  operator << (ostream& ostr, const ScanDescriptionIDL& description) 
+  std::ostream&
+  operator << (std::ostream& ostr, const ScanDescriptionIDL& description) 
   {
     ostr << "  scan description:" << endl
 	 << "    scan type=" << description.scanType

@@ -6,6 +6,7 @@ miro_reference.idx
 miro_reference.log
 latex_ref
 doxygen.conf
+miro_manual.out
 miro_manual.ilg
 miro_manual.ind
 miro_manual.bbl
