@@ -13,7 +13,9 @@
 
 AC_INIT(Miro, 2.0.0)
 AC_CONFIG_AUX_DIR(config)
-AM_INIT_AUTOMAKE()
+# AM_INIT_AUTOMAKE() # for never automake versions
+AM_INIT_AUTOMAKE(Miro, 2.0.0) 
+
 AM_CONFIG_HEADER(config.h)
 
 AC_PREFIX_DEFAULT($PWD)
@@ -77,10 +79,10 @@ AC_FEATURES_COMPILE_ACE
 
 AC_DETERMINE_PLATFORMS
 
-AM_CONDITIONAL([COND_SPARROW99], [test "x$ac_request_sparrow99" = xyes])
-AM_CONDITIONAL([COND_PIONEER1],  [test "x$ac_request_pioneer1" = xyes])
-AM_CONDITIONAL([COND_B21],       [test "x$ac_request_b21" = xyes])
-AM_CONDITIONAL([COND_DEPRECATED],[test "x$ac_request_deprecated" = xyes])
+AM_CONDITIONAL(COND_SPARROW99, [test "x$ac_request_sparrow99" = xyes])
+AM_CONDITIONAL(COND_PIONEER1,  [test "x$ac_request_pioneer1" = xyes])
+AM_CONDITIONAL(COND_B21,       [test "x$ac_request_b21" = xyes])
+AM_CONDITIONAL(COND_DEPRECATED,[test "x$ac_request_deprecated" = xyes])
 
 AC_DETERMINE_VIDEODEVICES
 
@@ -105,9 +107,9 @@ if test "x$ac_request_ieee1394" = xyes &&
 	ac_miro_has_1394=yes
 fi
 
-AM_CONDITIONAL([COND_BTTV], [test "x$ac_miro_has_bttv" = xyes])
-AM_CONDITIONAL([COND_METEOR], [test "x$ac_miro_has_meteor" = xyes])
-AM_CONDITIONAL([COND_IEEE1394], [test "x$ac_miro_has_1394" = xyes])
+AM_CONDITIONAL(COND_BTTV, [test "x$ac_miro_has_bttv" = xyes])
+AM_CONDITIONAL(COND_METEOR, [test "x$ac_miro_has_meteor" = xyes])
+AM_CONDITIONAL(COND_IEEE1394, [test "x$ac_miro_has_1394" = xyes])
 
 AC_DETERMINE_ADDITIONAL
 
@@ -131,9 +133,9 @@ if test "x$ac_request_docu" = xyes; then
 	fi
 fi
 
-AM_CONDITIONAL([COND_TEXDOC], [test "x$ac_compile_docu" = xyes])
-AM_CONDITIONAL([COND_PDF], [test "x$ac_compile_pdf" = xyes])
-AM_CONDITIONAL([COND_HTMLDOC], [test "x$ac_compile_html" = xyes])
+AM_CONDITIONAL(COND_TEXDOC, [test "x$ac_compile_docu" = xyes])
+AM_CONDITIONAL(COND_PDF, [test "x$ac_compile_pdf" = xyes])
+AM_CONDITIONAL(COND_HTMLDOC, [test "x$ac_compile_html" = xyes])
 
 if test "x$ac_request_speech" = xyes &&
 	test "x$ac_has_sphinx" = xyes &&
@@ -142,7 +144,7 @@ if test "x$ac_request_speech" = xyes &&
 	ac_compile_speech=yes
 fi
 
-AM_CONDITIONAL([COND_SPEECH], [test "x$ac_compile_speech" = xyes])
+AM_CONDITIONAL(COND_SPEECH, [test "x$ac_compile_speech" = xyes])
 
 AC_DETERMINE_GCC_VERSION
 

@@ -21,6 +21,7 @@ module Miro
   enum VideoPaletteIDL {
     GREY_8,
     GREY_16,
+    GREY_32,
     RGB_24,
     BGR_24,
     RGB_32,

@@ -14,7 +14,7 @@
 ##############################################################################
 
 include $(top_srcdir)/config/Make-rules
-AM_LDFLAGS += -version-info `echo $(VERSION) | sed 's/\./:/g'`
+# AM_LDFLAGS += -version-info `echo $(VERSION) | sed 's/\./:/g'`
 AM_CXXFLAGS += $(FESTIVAL_CPPFLAGS) $(SPEECHTOOLS_CPPFLAGS) $(SPHINX_CPPFLAGS)
 
 

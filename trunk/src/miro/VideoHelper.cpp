@@ -29,6 +29,9 @@ namespace Miro
     case GREY_16:	//	gray
       pixelSize = 2;
       break;
+    case GREY_32:	//	gray
+      pixelSize = 4;
+      break;
     case YUV_24:  //      yuv24:
     case RGB_24:	//	rgb24:
     case BGR_24:	//	bgr24:
