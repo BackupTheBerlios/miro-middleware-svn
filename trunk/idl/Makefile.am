@@ -53,7 +53,8 @@ globalsources = \
 	Speech.idl \
 	SphinxSpeech.idl \
 	BehaviourEngine.idl \
-	Joystick.idl
+	Joystick.idl \
+	ArbiterEvent.idl
 
 b21sources = \
 	Laser.idl \
