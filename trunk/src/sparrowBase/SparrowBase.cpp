@@ -84,7 +84,7 @@ main(int argc, char *argv[])
     if (pPioneerParameters)
       cout << "  pioneer paramters:" << endl << *pPioneerParameters << endl;
     if (pFaulMotorParameters)
-      cout << "  pioneer paramters:" << endl << *pFaulMotorParameters << endl;
+      cout << "  faulhaber paramters:" << endl << *pFaulMotorParameters << endl;
     cout << "  NotifyMulticast parameters: " << endl << *notifyMulticastParameters << endl;
 #endif
 
