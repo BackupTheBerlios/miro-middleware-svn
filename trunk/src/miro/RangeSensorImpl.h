@@ -54,7 +54,7 @@ namespace Miro
     //! Timeout for dispatching thread condition.
     static ACE_Time_Value maxWait_;
 
-    friend RangeSensorImpl;
+    friend class RangeSensorImpl;
   };
 
 

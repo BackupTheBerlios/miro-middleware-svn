@@ -58,7 +58,7 @@ namespace Miro
     //! Timeout for dispatching thread condition.
     static ACE_Time_Value maxWait_;
 
-    friend OdometryImpl;
+    friend class OdometryImpl;
   };
 
   //! Implementation of the Odometry interface.
