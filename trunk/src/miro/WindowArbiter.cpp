@@ -121,26 +121,13 @@ namespace Miro
 
     cout << "WindowArbiter TimeOutHandler." << endl;
     
-    //    Miro::DynamicWindow dynWindow(std::complex<double>(leftVelocity_, rightVelocity_), MAX_POS_ACCEL, MAX_NEG_ACCEL);
-    //    ActionPattern * ap = ActionPattern::currentActionPattern();
-    //    ActionPattern::BehaviourMap bm = ap->behaviourMap();
-        
-    // Let each behaviour calculate its dynamicWindow-entrys (ascend by priority)
-    //    ArbiterParameters::RegistrationMap::const_reverse_iterator j;
-    // for(j = params_->priorities.rbegin(); j != params_->priorities.rend(); j++) {
-    //   if (j->first->isActive()) {
-    //     j->first->calcDynamicWindow(&dynWindow_);
-    //   }      
-    // }
-    
+    // Let each behaviour calculate its dynamicWindow ascend by priority
     typedef std::vector<Behaviour *> BehaviourVector;
     BehaviourVector bv(params_->priorities.size());
-
     ArbiterParameters::RegistrationMap::const_iterator j;
     for(j = params_->priorities.begin(); j != params_->priorities.end(); j++) {
       bv[j->second] = j->first;
     }
-
     BehaviourVector::const_iterator k;
     for(k = bv.begin(); k != bv.end(); k++) {
       (*k)->calcDynamicWindow(&dynWindow_);
@@ -153,7 +140,7 @@ namespace Miro
     
     // Set motion
     velocity.translation = 10 * ((int)newVelocity.real() + (int)newVelocity.imag()) / 2;
-    velocity.rotation = 10 * ((int)newVelocity.real() + (int)newVelocity.imag()) / RADSTAND;
+    velocity.rotation = 10 * ((int)newVelocity.real() - (int)newVelocity.imag()) / RADSTAND;
     if (velocity.translation != currentVelocity_.translation || velocity.rotation != currentVelocity_.rotation) {
       pMotion_->setVelocity(velocity);
       currentVelocity_ = velocity;
