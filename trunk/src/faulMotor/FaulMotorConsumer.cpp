@@ -134,14 +134,15 @@ namespace FaulMotor
 
       ++oddWheel_; 
       oddWheel_ &= 1;
-
+#ifdef ASDF
       if ((params_->odometryPolling && !oddWheel_) || // new odometry mode
 
 	  (prevTimeStampL_+ ACE_Time_Value(0, 10000) < timeStampR_ && // old odo
 	   prevTimeStampR_+ ACE_Time_Value(0, 10000) < timeStampL_ &&
 	   prevTimeStampL_ != timeStampL_ &&
 	   prevTimeStampR_ != timeStampR_)) {
-
+#endif
+if(!oddWheel_) {
 	if (init_ == 0) {
 	  if (params_->odometryPolling)
 	    integrateBinary();

@@ -223,10 +223,9 @@ namespace Miro
 
       notifyEvent_.remainder_of_body <<= dynamicWindow;
       pSupplier_->sendEvent(notifyEvent_);
-
-      skipDebug_++;
-      skipDebug_ %= skipMax_;
     }
+    skipDebug_++;
+    skipDebug_ %= skipMax_;
 
     return 0;
   }
