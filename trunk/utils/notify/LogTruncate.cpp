@@ -14,6 +14,7 @@
 #include "miro/TimeHelper.h"
 
 #include <ace/Mem_Map.h>
+#include <tao/CDR.h>
 
 using std::cout;
 using std::cerr;
