@@ -34,9 +34,8 @@ int main(int argc, char *argv[])
   ReactorTask * task = new ReactorTask(&server);
 
   if (argc < 2) {
-    cout << "usage: " << argv[0] << "[ <POLICYFILE> ]" 
+    cout << "usage: " << argv[0] << "[ <POLICYFILE> ]" << endl
 	 << "warning: No policy specified on startup." << endl;
-    return 1;
   }
 
   try {

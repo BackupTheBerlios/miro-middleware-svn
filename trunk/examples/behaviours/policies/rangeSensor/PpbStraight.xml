@@ -1,7 +1,7 @@
 <!DOCTYPE MiroPolicyConfig>
 <policy>
- <actionpattern x="-129" y="-174" start="true" name="Straight" >
-  <behaviour name="AvoidOne" >
+ <actionpattern x="215" y="106" name="Straight" start="true" >
+  <behaviour name="RangeSensorAvoidOne" >
    <parameter value="500" name="HaltDistance" />
    <parameter value="600" name="LateralDistance" />
    <parameter value="700" name="MinDistance" />
@@ -15,4 +15,3 @@
   <arbiter name="MotionArbiter" />
  </actionpattern>
 </policy>
-
