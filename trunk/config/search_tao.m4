@@ -44,14 +44,12 @@ AC_DEFUN([AC_SEARCH_TAO_LOCAL],
 	OLD_CPPFLAGS=$CPPFLAGS
 	OLD_PATH=$PATH
 
+	LDFLAGS="$LDFLAGS $ACE_LDFLAGS $ACE_LIBS -L$ACE_ROOT/lib -lTAO"
 	if test "$1" ; then
-#		LDFLAGS="$LDFLAGS $ACE_LDFLAGS $ACE_LIBS -L$1/tao -L$1/orbsvcs/orbsvcs -lTAO"
-		LDFLAGS="$LDFLAGS $ACE_LDFLAGS $ACE_LIBS -L$1/lib -lTAO"
 		CPPFLAGS="$CPPFLAGS $ACE_CPPFLAGS -I$1 -I$1/orbsvcs -D_GNU_SOURCE"
 		CFLAGS="$CFLAGS $ACE_CFLAGS -I$1 -I$1/orbsvcs"
 		PATH="$1/TAO_IDL:$PATH"
 	else
-		LDFLAGS="$LDFLAGS $ACE_LDFLAGS $ACE_LIBS -lTAO"
 		CPPFLAGS="$CPPFLAGS $ACE_CPPFLAGS -D_GNU_SOURCE"
 		CFLAGS="$CFLAGS $ACE_CFLAGS"
 	fi
@@ -80,15 +78,13 @@ AC_DEFUN([AC_SEARCH_TAO_LOCAL],
 		AC_SUBST(TAO_LIBS, "-lTAO")
 		if test "$1" ; then
 			AC_SUBST(TAO_ROOT, "$1")
-#			AC_SUBST(TAO_LDFLAGS, "-L$1/tao -L$1/orbsvcs/orbsvcs")
-			AC_SUBST(TAO_LDFLAGS, "-L$1/lib ")
+			AC_SUBST(TAO_LDFLAGS, "-L$ACE_ROOT/lib ")
 			AC_SUBST(TAO_CPPFLAGS, "-I$1 -I$1/orbsvcs")
 			AC_SUBST(TAO_CFLAGS, "-I$1 -I$1/orbsvcs")
 		fi
 	fi
 
 # tao_idl test
-	# AC_CHECK_PROG(ac_taobindir, tao_idl, yes)
 	AC_PATH_PROG(ac_taobindir, tao_idl, no)
 	if test "x$ac_taobindir" != xno ; then
 		AC_SUBST(TAO_IDL, "$ac_taobindir")
