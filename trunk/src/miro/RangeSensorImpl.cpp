@@ -29,17 +29,26 @@ namespace Miro
 					       StructuredPushSupplier * _supplier) :
     supplier_(_supplier),
     mutex_(),
-    cond_(mutex_)
+    cond_(mutex_),
+    notifyEvent_(1),
+    eventPending_(1, false)
   {
     if (supplier_) {
-      // Notify Event initialization
-      notifyEvent_.header.fixed_header.event_type.domain_name =
-	CORBA::string_dup(supplier_->domainName().c_str());
-      notifyEvent_.header.fixed_header.event_type.type_name = 
-	CORBA::string_dup(_description.eventName);
-      notifyEvent_.header.fixed_header.event_name = CORBA::string_dup("");
-      notifyEvent_.header.variable_header.length(0);   // put nothing here
-      notifyEvent_.filterable_data.length(0);          // put nothing here
+      if (_description.scanType == RangeSensor::GROUPWISE) {
+	notifyEvent_.resize(_description.group.length());
+	eventPending_.resize(_description.group.length(), false);
+      }
+
+      for (unsigned int i = 0; i < notifyEvent_.size(); ++i) {
+	// Notify Event initialization
+	notifyEvent_[i].header.fixed_header.event_type.domain_name =
+	  CORBA::string_dup(supplier_->domainName().c_str());
+	notifyEvent_[i].header.fixed_header.event_type.type_name = 
+	  CORBA::string_dup(_description.eventName);
+	notifyEvent_[i].header.fixed_header.event_name = CORBA::string_dup("");
+	notifyEvent_[i].header.variable_header.length(0);   // put nothing here
+	notifyEvent_[i].filterable_data.length(0);          // put nothing here
+      }
     }
   }
 
@@ -47,19 +56,23 @@ namespace Miro
   void 
   RangeSensorDispatcher::setData(RangeScanEventIDL * _data)
   {
-    notifyEvent_.remainder_of_body <<= _data;
+    notifyEvent_[0].remainder_of_body <<= _data;
+    eventPending_[0] = true;
   }
 
   void
   RangeSensorDispatcher::setData(RangeGroupEventIDL * _data)
   {
-    notifyEvent_.remainder_of_body <<= _data;
+    unsigned int group = _data->group;
+    notifyEvent_[group].remainder_of_body <<= _data;
+    eventPending_[group] = true;
   }
 
   void
   RangeSensorDispatcher::setData(RangeBunchEventIDL * _data)
   {
-    notifyEvent_.remainder_of_body <<= _data;
+    notifyEvent_[0].remainder_of_body <<= _data;
+    eventPending_[0] = true;
   }
 
   int
@@ -83,7 +96,12 @@ namespace Miro
   void
   RangeSensorDispatcher::dispatch()
   {
-    supplier_->sendEvent(notifyEvent_);
+    for (unsigned int i = 0; i < notifyEvent_.size(); ++i) {
+      if (eventPending_[i]) {
+	supplier_->sendEvent(notifyEvent_[i]);
+	eventPending_[i] = false;
+      }
+    }
   }
 
   void

@@ -15,6 +15,8 @@
 #include "Thread.h"
 #include "Synch.h"
 
+#include <vector>
+
 #include <orbsvcs/CosNotifyCommC.h>
 
 namespace Miro
@@ -39,6 +41,9 @@ namespace Miro
     void dispatch();
 
   protected:
+    typedef std::vector<bool> BoolVector;
+    typedef std::vector<CosNotification::StructuredEvent> EventVector;
+
     //! Supplier for events.
     StructuredPushSupplier * supplier_;
     //! True if also RawPosition events shall be emitted.
@@ -49,7 +54,8 @@ namespace Miro
     //! Condition for getWaitPosition etc.
     Condition cond_;
     //! Preinitialized data structure for RangeSensor event.
-    CosNotification::StructuredEvent notifyEvent_;
+    EventVector notifyEvent_;
+    BoolVector eventPending_;
     
     //! Timeout for dispatching thread condition.
     static ACE_Time_Value maxWait_;
