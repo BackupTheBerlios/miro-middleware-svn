@@ -465,7 +465,6 @@ namespace Miro {
          *     _flags:  FLags for recv()
          */
         int Receiver::receiveData(iovec *_iov, int _iovLen, ACE_INET_Addr &_from, int _flags) {
-		std::cout << "Socket in Receiver: " << configuration_->getSocket()->get_handle() << std::endl;
             return configuration_->getSocket()->recv(_iov, _iovLen, _from, _flags);
         }
 
