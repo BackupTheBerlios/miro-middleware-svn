@@ -27,16 +27,14 @@ namespace Miro
 		  int _maxAccel, int _maxDecel, int _pace);
     // destructor
     ~VelocitySpace();
-    // copy function
-    void getCopy(Miro::VelocitySpace *);
 
-    /**
+    /*
      * add evaluations for given, preferred direction with given,
      * maximum speed to velocity space
      */
     void addEvalForPreferredDirection(double, double);
     // add evaluations for given obstacle to velocity space
-    void addEvalForObstacle(std::vector<Vector2d>&, std::vector<Vector2d>&);
+    void addEvalForObstacle(Polygon&, Polygon&);
     // obtain new velocity, by applying objective function to evaluations in velocity space
     Vector2d applyObjectiveFunctionToEval();
 
@@ -72,15 +70,16 @@ namespace Miro
 					 Vector2d const& _l3, 
 					 Vector2d const& _l4);
     // get distance between two mounted polygons
-    double getDistanceBetweenPolygonAndPolygon(std::vector<Vector2d>&, std::vector<Vector2d>&);
+    double getDistanceBetweenPolygonAndPolygon(Polygon const& _polygon1,
+					       Polygon const& _polygon2);
     // rotate mounted polygon around offset by angle
-    void rotateMountedPolygon(std::vector<Vector2d>&, Vector2d, double);
+    void rotateMountedPolygon(Polygon&, Vector2d const&, double);
     // move mounted polygon by distance
-    void moveMountedPolygon(std::vector<Vector2d>&, Vector2d);
+    void moveMountedPolygon(Polygon&, Vector2d const&);
     // rotate polygon around offset by angle
-    void rotatePolygon(std::vector<Vector2d>&, Vector2d, double);
+    void rotatePolygon(Polygon&, Vector2d const&, double);
     // move polygon by distance
-    void movePolygon(std::vector<Vector2d>&, Vector2d);
+    void movePolygon(Polygon&, Vector2d const&);
     // get index of velocity space array by velocity
     int getIndexByVelocity(double);
     // get velocity by index of velocity space array

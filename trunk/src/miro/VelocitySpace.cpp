@@ -93,8 +93,8 @@ namespace Miro
   //
 
   void 
-  VelocitySpace::addEvalForObstacle(std::vector<Vector2d> &_robot,
-				    std::vector<Vector2d> &_obstacle) 
+  VelocitySpace::addEvalForObstacle(Polygon &_robot,
+				    Polygon &_obstacle) 
   {
 
     const int CURV_CNT = 6; // count (6)
@@ -107,7 +107,7 @@ namespace Miro
 
     int CURV[2*CURV_CNT+1][2*CURV_RES+1]; // curvature space
 
-    int count, seg, left, right, curv, target, front, back, temp_left, temp_right;
+    int count, seg, left, right, curv, target, front, back;
     bool frontObstacle, backObstacle;
     double fLeft, fRight, offset, angle, rel, break_dist, left_break, right_break;
 
@@ -272,7 +272,6 @@ namespace Miro
     bool found = false;
     double left, right, rel;
     double temp_left, temp_right;
-    const double WHEEL_DISTANCE = 330.;
 
     // destinate best entry
     for(int l_index = minDynWinLeft_; l_index <= maxDynWinLeft_; l_index++) {
@@ -394,9 +393,11 @@ namespace Miro
 
   // get distance between two mounted polygons
   //
-  double VelocitySpace::getDistanceBetweenPolygonAndPolygon(std::vector<Vector2d> &_polygon1, std::vector<Vector2d> &_polygon2) {
-
-    std::vector<Vector2d>::iterator a1, a2, b1, b2;
+  double 
+  VelocitySpace::getDistanceBetweenPolygonAndPolygon(Polygon const& _polygon1,
+						     Polygon const& _polygon2) 
+  {
+    Polygon::const_iterator a1, a2, b1, b2;
     double distance, minDistance = 0.0;
 
     for(a1 = _polygon1.begin(), a2 = _polygon1.begin() + 1; a2 < _polygon1.end(); a1++, a2++) {
@@ -404,23 +405,25 @@ namespace Miro
 
         distance = getDistanceBetweenLineAndLine(*a1, *a2, *b1, *b2);
 
-        if(((a1 == _polygon1.begin()) && (b1 == _polygon2.begin())) || (distance < minDistance)) {
+        if(( (a1 == _polygon1.begin()) && 
+	     (b1 == _polygon2.begin()) ) ||
+	   (distance < minDistance)) {
           minDistance = distance;
         }
-
       }
     }
 
     return minDistance;
-
   }
 
 
   // rotate mounted polygon around offset by given angle
   //
-  void VelocitySpace::rotateMountedPolygon(std::vector<Vector2d> &_polygon, Vector2d _point, double _angle) {
-
-    std::vector<Vector2d>::iterator i;
+  void
+  VelocitySpace::rotateMountedPolygon(Polygon &_polygon,
+				      Vector2d const& _point, double _angle) 
+  {
+    Polygon::iterator i;
 
     double cosAngle = cos(M_PI * _angle / 180.);
     double sinAngle = sin(M_PI * _angle / 180.);
@@ -437,22 +440,23 @@ namespace Miro
 
   // move the given mounted polygon by given distance
   //
-  void VelocitySpace::moveMountedPolygon(std::vector<Vector2d> &_polygon, Vector2d _distance) {
-
-    std::vector<Vector2d>::iterator i;
+  void 
+  VelocitySpace::moveMountedPolygon(Polygon &_polygon, Vector2d const& _distance) 
+  {
+    Polygon::iterator i;
 
     for(i = _polygon.begin() + 1; i < _polygon.end(); i++) {
-      *i = Vector2d(i->real() + _distance.real(), i->imag() + _distance.imag());
+      *i += _distance;
     }
-
   }
 
 
   // rotate polygon around offset by given angle
   //
-  void VelocitySpace::rotatePolygon(std::vector<Vector2d> &_polygon, Vector2d _point, double _angle) {
-
-    std::vector<Vector2d>::iterator i;
+  void VelocitySpace::rotatePolygon(Polygon &_polygon, 
+				    Vector2d const&_point, double _angle) 
+  {
+    Polygon::iterator i;
 
     double cosAngle = cos(M_PI * _angle / 180.);
     double sinAngle = sin(M_PI * _angle / 180.);
@@ -463,20 +467,18 @@ namespace Miro
       temp_y = (i->real() - _point.real()) * sinAngle + (i->imag() - _point.imag()) * cosAngle;
       *i = Vector2d(temp_x + _point.real(), temp_y + _point.imag());
     }
-
   }
 
 
   // move the given polygon by given distance
   //
   void 
-  VelocitySpace::movePolygon(std::vector<Vector2d> &_polygon, Vector2d _distance) 
+  VelocitySpace::movePolygon(Polygon &_polygon, Vector2d const& _distance) 
   {
-
-    std::vector<Vector2d>::iterator i;
+    Polygon::iterator i;
 
     for(i = _polygon.begin(); i < _polygon.end(); i++) {
-      *i = Vector2d(i->real() + _distance.real(), i->imag() + _distance.imag());
+      *i += _distance;
     }
   }
 }
