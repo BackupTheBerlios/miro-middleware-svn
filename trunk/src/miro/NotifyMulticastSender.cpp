@@ -176,6 +176,10 @@ namespace Miro
     {
       /* Where is the event coming from? */
       if (event_filter_->isAccepted(_notification)) {
+	MIRO_DBG_OSTR(NMC, LL_PRATTLE,
+		      "Sender: sending event: " <<
+		      _notification.header.fixed_header.event_type.domain_name << " " <<
+		      _notification.header.fixed_header.event_type.type_name);
 	marshalEvent(_notification);
       }
     }

@@ -125,7 +125,7 @@ namespace Miro
       int handle_timeout(ACE_Time_Value const& _tv, void const *_act);
 
       //! Sends an event through the MC-Notification-Channel.
-      void sendEvent(CosNotification::StructuredEvent const &event)
+      void sendEvent(CosNotification::StructuredEvent const & _event)
 	throw(CosEventComm::Disconnected);
 
       //! Receive Data fram MC-Notification-Channel.

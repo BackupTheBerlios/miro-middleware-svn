@@ -132,14 +132,18 @@ namespace Miro
      *     event: Structured event that should be sent
      */
     void 
-    Receiver::sendEvent(const CosNotification::StructuredEvent& event)
+    Receiver::sendEvent(const CosNotification::StructuredEvent& _event)
       throw(CosEventComm::Disconnected) 
     {
       if (connected_) {
 
 	try {
 	  if (!CORBA::is_nil(proxyConsumer_.in()))
-	    proxyConsumer_->push_structured_event(event);
+	    MIRO_DBG_OSTR(NMC, LL_PRATTLE,
+			  "Receiver: received event: " <<
+			  _event.header.fixed_header.event_type.domain_name << " " <<
+			  _event.header.fixed_header.event_type.type_name);
+	    proxyConsumer_->push_structured_event(_event);
 	}
 	catch (CORBA::Exception const&) {
 	  connected_ = false;
