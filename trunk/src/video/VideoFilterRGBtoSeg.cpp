@@ -11,14 +11,14 @@
 
 /*! \file FilterRGBtoSeg.cpp
  *  \brief Image conversion routines YUV->RGB
- *  \author Arnd Muehlenfeld
+ *  \author Roland Reichle 
  */
 
 #include "VideoFilterRGBtoSeg.h"
 
 #include "miro/VideoHelper.h"
 #include "miro/Exception.h"
-
+#include "miro/Log.h"
 #include <iostream>
 #include <algorithm>
 #include <cmath>
@@ -31,6 +31,7 @@ namespace Video
   FilterRGBtoSeg::FilterRGBtoSeg(Miro::ImageFormatIDL const& _inputFormat) :
     Super(_inputFormat)
   {
+    MIRO_LOG_CTOR("Video::FilterRGBtoSeg");
     if (_inputFormat.palette != Miro::RGB_24)
       throw Miro::Exception("Incompatible input format for FilterRGBtoSeg.");
     outputFormat_.palette = Miro::GREY_8;
