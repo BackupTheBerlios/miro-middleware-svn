@@ -2,6 +2,7 @@
 #include "Parameters.h"
 #include "PlayerLaserImpl.h"
 #include "PlayerMotionImpl.h"
+#include "PlayerPanTiltImpl.h"
 
 #include "miro/RangeSensorImpl.h"
 #include "miro/OdometryImpl.h"
@@ -19,11 +20,12 @@ namespace Miro {
   using std::cerr;
   using std::endl;
 
+  using Player::PlayerPanTiltImpl;
+
   bool PlayerReactorTask::done=false;
 
-  PlayerReactorTask::PlayerReactorTask(PlayerClient * client, RangeSensorImpl * _pSonar, LaserImpl * _pLaser, RangeSensorImpl * _pInfrared, RangeSensorImpl * _pTactile, OdometryImpl * _pOdometry, BatteryImpl * _pBattery, PlayerMotionImpl * _pMotion) throw (CORBA::Exception) :
+  PlayerReactorTask::PlayerReactorTask(PlayerClient * client, RangeSensorImpl * _pSonar, LaserImpl * _pLaser, RangeSensorImpl * _pInfrared, RangeSensorImpl * _pTactile, OdometryImpl * _pOdometry, PlayerMotionImpl * _pMotion, BatteryImpl * _pBattery, PlayerPanTiltImpl * _pPanTilt) throw (CORBA::Exception) :
     Super(),
-    objectID(0),
     pSonar(_pSonar),
     pLaser(_pLaser),
     pInfrared(_pInfrared),
@@ -31,6 +33,7 @@ namespace Miro {
     pOdometry(_pOdometry),
     pMotion(_pMotion),
     pBattery(_pBattery),
+    pPanTilt(_pPanTilt),
     params_(::Player::Parameters::instance()),
     playerClient(client),
     playerSonar(NULL),
@@ -38,14 +41,15 @@ namespace Miro {
     playerLaser(NULL),
     playerInfrared(NULL),
     playerPower(NULL),
-    playerBumper(NULL)
+    playerBumper(NULL),
+    playerPTZ(NULL)
   {
 
     playerLaser=new LaserProxy(playerClient,0,'r');
     playerSonar=new SonarProxy(playerClient,0,'r');
     playerPosition=new PositionProxy(playerClient,0,'a');
     playerPower=new PowerProxy(playerClient,0,'r');
-
+    playerPTZ=new PtzProxy(playerClient,0,'a');
 
     if (!playerLaser || playerLaser->GetAccess() != 'r') {
       cerr << "WARNING: Could not get reference to Player Laser. No Laser available" << endl;
@@ -56,12 +60,16 @@ namespace Miro {
       cerr << "WARNING: Could not get reference to Player Sonar. No Sonar available" << endl;
       delete playerSonar;
       playerSonar=NULL;
-  }
-
+    }
     if (!playerPower || playerPower->GetAccess() != 'r') {
       cerr << "WARNING: Could not get reference to Player Power. No Battery available" << endl;
       delete playerPower;
       playerPower=NULL;
+    }
+    if (!playerPTZ || playerPTZ->GetAccess() != 'a') {
+      cerr << "WARNING: Could not get reference to Player PanTilt. No PanTilt available" << endl;
+      delete playerPTZ;
+      playerPTZ=NULL;
   }
 
     if (!playerPosition || playerPosition->GetAccess() != 'a') {
@@ -82,14 +90,18 @@ namespace Miro {
     delete playerSonar;
     delete playerPosition;
     delete playerPower;
+    delete playerPTZ;
   }
 
   int PlayerReactorTask::svc() throw (CORBA::Exception) {
-    int sonarReadings=8;
+    int sonarReadings=16;
     string robotName="Robot";
 
-   
-    pMotion->setPlayerPositionProxy(playerPosition);
+    assert(pMotion!=NULL);
+      pMotion->setPlayerPositionProxy(playerPosition);
+
+    if (pPanTilt) 
+      pPanTilt->setPlayerPTZProxy(playerPTZ);
 
     while (!done) {
     
@@ -105,9 +117,7 @@ namespace Miro {
 	timestamp.usec=playerClient->timestamp.tv_usec;
 
 	if ((pLaser!=NULL) && (playerLaser!=NULL)) {
-	  int laserReadings=0;
-	  for (unsigned int i=0; i<params_->laserDescription.group.length(); i++)
-	    laserReadings+=params_->laserDescription.group[i].sensor.length();
+	  int laserReadings=playerLaser->RangeCount();
 
 	  RangeBunchEventIDL * pLaserEvent = new RangeBunchEventIDL();
 	  pLaserEvent->sensor.length(laserReadings);
@@ -126,7 +136,7 @@ namespace Miro {
 	    pLaserEvent->sensor[i].group = group;
 	    pLaserEvent->sensor[i].index = index;
 	    pLaserEvent->sensor[i].range = 
-	      long(playerLaser->scan[i][0]*1000);
+	      long(playerLaser->scan[i][0]*1000); //Player uses m not mm
 
 	    //check the range
 	    if (pLaserEvent->sensor[i].range>params_->laserDescription.group[group].description.maxRange)
@@ -142,13 +152,46 @@ namespace Miro {
 	  pLaser->integrateData(pLaserEvent);
 	  
 	} // Laser end
+	if ((pSonar!=NULL) && (playerSonar!=NULL)) {
+	  RangeBunchEventIDL * pSonarEvent = new RangeBunchEventIDL();
+
+	  pSonarEvent->sensor.length(sonarReadings);
+
+	  // iterate through new data
+	  
+	  for (int i = sonarReadings - 1; i >= 0; --i) {
+	    int group = 0;
+	    int index = i;
+	    
+	    SensorPositionIDL scanDescription=params_->sonarDescription.group[group].sensor[index];
+	    
+	    pSonarEvent->sensor[i].group = group;
+	    pSonarEvent->sensor[i].index = index;
+	    pSonarEvent->sensor[i].range = long(playerSonar->ranges[i]*1000);
+
+	    //check the range
+	    if (pSonarEvent->sensor[i].range>params_->sonarDescription.group[group].description.maxRange)
+	      //Should return HORIZON_RANGE, but it is ugly ;-)
+	      //	      pSonarEvent->sensor[i].range=Miro::RangeSensor::HORIZON_RANGE;
+	    pSonarEvent->sensor[i].range=params_->sonarDescription.group[group].description.maxRange;
+
+	    else if ((pSonarEvent->sensor[i].range < params_->sonarDescription.group[group].description.minRange) &&
+		     (pSonarEvent->sensor[i].range>=0))
+	      pSonarEvent->sensor[i].range=params_->sonarDescription.group[group].description.minRange;
+	  }
+	  pSonarEvent->time=timestamp;
+	  pSonar->integrateData(pSonarEvent);
+	  
+	}
+	
 	if ((pOdometry!=NULL) && (playerPosition!=NULL)) {
 
-	  status.position.point.x=long(playerPosition->Xpos()*1000);
-	  status.position.point.y=long(playerPosition->Ypos()*1000);
+	  status.position.point.x=long(playerPosition->Xpos()*1000); //m to mm
+	  status.position.point.y=long(playerPosition->Ypos()*1000); //m to mm
 	  status.position.heading=playerPosition->Theta();
 
-	  status.velocity.translation=long(playerPosition->Speed()*1000);
+	  status.velocity.translation=long(playerPosition->Speed()*1000); 
+	                                  // m/s to mm/s
 	  status.velocity.rotation=playerPosition->TurnRate();
 
 	  status.time=timestamp;
@@ -173,48 +216,6 @@ namespace Miro {
 
 	//TODO: check whether the delay between sensor readings is enough
 	if (pSonar!=NULL) {
-	  RangeBunchEventIDL * pSonarEvent = new RangeBunchEventIDL();
-	  pSonarEvent->sensor.length(sonarReadings);
-
-	  // iterate through new data
-	  
-	  for (int i = sonarReadings - 1; i >= 0; --i) {
-	    int group = 0;
-	    int index = i;
-	    
-	    // TODO: peoplebot sonars.   Must be generalized!!!
-	    if (index >= 8) {
-	      if (index < 16)
-		++group;
-	      index -= 8;
-	    }
-	    
-	    //position relative to the robot's center
-	    //	    Position3DIDL pos;
-	    SensorPositionIDL scanDescription=params_->sonarDescription.group[group].sensor[index];
-	    
-	    //	    pos.point.x=scanDescription.distance*cos(scanDescription.alpha);
-	    //	    pos.point.y=scanDescription.distance*sin(scanDescription.alpha);
-	    //	    pos.point.z=scanDescription.height;
-	    //	    pos.heading=scanDescription.alpha+scanDescription.beta; //angle relative to the robot's heading and distance vector
-	    
-	    pSonarEvent->sensor[i].group = group;
-	    pSonarEvent->sensor[i].index = index;
-	    //	    pSonarEvent->sensor[i].range = 
-	    //	      (CORBA::Long) (pSimulator->getDistance(objectID,pos,params_->sonarDescription.group[group].description.maxRange,timestamp));
-
-	    //check the range
-	    if (pSonarEvent->sensor[i].range>params_->sonarDescription.group[group].description.maxRange)
-	      //Should return HORIZON_RANGE, but it is ugly ;-)
-	      //	      pSonarEvent->sensor[i].range=Miro::RangeSensor::HORIZON_RANGE;
-	    pSonarEvent->sensor[i].range=params_->sonarDescription.group[group].description.maxRange;
-
-	    else if ((pSonarEvent->sensor[i].range < params_->sonarDescription.group[group].description.minRange) &&
-		     (pSonarEvent->sensor[i].range>=0))
-	      pSonarEvent->sensor[i].range=params_->sonarDescription.group[group].description.minRange;
-	  }
-	  pSonarEvent->time=timestamp;
-	  pSonar->integrateData(pSonarEvent);
 	  
 	} // Sonar end
 

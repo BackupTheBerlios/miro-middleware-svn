@@ -42,7 +42,7 @@ using std::string;
 
 PlayerBase::PlayerBase(int argc, char *argv[],PlayerClient* client) throw (CORBA::Exception) :
   Super(argc, argv),
-  reactorTask(client,&sonar,&laser,&infrared,&tactile,&odometry,&battery,&motion),
+  reactorTask(client,&sonar,&laser,&infrared,&tactile,&odometry,&motion,&battery,&panTilt),
 
   // Notification Channel
   notifyFactory_(TAO_Notify_EventChannelFactory_i::create(poa.in() ACE_ENV_ARG_PARAMETER)),
@@ -62,6 +62,7 @@ PlayerBase::PlayerBase(int argc, char *argv[],PlayerClient* client) throw (CORBA
   laser(new Miro::OdometryTracking(ec_.in(), namingContextName),
 	Player::Parameters::instance()->laserDescription, 
     	&structuredPushSupplier_),
+  panTilt(false),
   playerClient(client)
 { 
 
@@ -73,7 +74,7 @@ PlayerBase::PlayerBase(int argc, char *argv[],PlayerClient* client) throw (CORBA
   pInfrared = infrared._this();
   pLaser = laser._this();
   pBattery = battery._this();
-  //  pCanonPanTilt = canonPanTilt._this();
+  pPanTilt = panTilt._this();
   //  pCanonCamera = canonCamera._this();
   //  pGripper = gripper._this();
 
@@ -92,10 +93,13 @@ PlayerBase::PlayerBase(int argc, char *argv[],PlayerClient* client) throw (CORBA
   if (reactorTask.batteryBound())
     addToNameService(pBattery.in(), "Battery");
   addToNameService(ec_.in(), "EventChannel");
+  if (reactorTask.panTiltBound())
+    addToNameService(pPanTilt.in(),"PanTilt");
+
 
   //only add the pantilt if the camera is actually present
   //  if (Player::Parameters::instance()->camera) {
-  //    addToNameService(pCanonPanTilt.in(), "PanTilt");
+  //    addToNameService(pPlayerPanTilt.in(), "PanTilt");
   //    addToNameService(pCanonPanTilt.in(), "Camera");
   //  }
 
@@ -129,17 +133,13 @@ PlayerBase::~PlayerBase()
     cout << "string exception: " << e << endl;
   }
   catch (...) {
-    //TODO: find out what the hell is this exception! (Not Miro, not CORBA)
-    cout << "Unknown Exception... MUST be debugged" << endl;
-    //    throw;
+    cout << "Unknown Exception... " << endl;
   }
 
-  //  reactorTask.cancel();
   reactorTask.done = true;
   reactorTask.wait();
 
   DBG(cout << "reactor Task ended" << endl);
-  //  if (reactorTask!=NULL) delete reactorTask;
 }
 
 int
@@ -166,9 +166,9 @@ main(int argc, char *argv[])
     // Config file processing
     Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
     config->setSection("Robot");
-    config->getParameters("Robot", *robotParameters);
+    config->getParameters("Miro::RobotParameters", *robotParameters);
     config->setSection("Player");
-    config->getParameters("PioneerBoard", *simBotParameters);
+    config->getParameters("Player::Parameters", *simBotParameters);
     delete config;
     
     DBG(cout << "Initialize server daemon." << endl);
@@ -193,10 +193,6 @@ main(int argc, char *argv[])
       rc = 1;
     }
   }
-  //  catch (const Miro::CException& e) {
-  //    cerr << "Miro exception: " << e << endl;
-  //    rc = 1;
-  //  }
   catch (const Miro::Exception& e) {
     cerr << "Miro exception: " << e << endl;
     rc = 1;

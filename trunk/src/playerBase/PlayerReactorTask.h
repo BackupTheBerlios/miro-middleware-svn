@@ -16,9 +16,11 @@ class LaserProxy;
 class PowerProxy;
 class BumperProxy;
 class IRProxy;
+class PtzProxy;
 
 namespace Player {
   class Parameters;
+  class PlayerPanTiltImpl;
 }
 
 namespace Miro {
@@ -39,8 +41,10 @@ namespace Miro {
 		      RangeSensorImpl * _pInfrared=NULL,
 		      RangeSensorImpl * _pTactile=NULL,
 		      OdometryImpl * _pOdometry=NULL, 
+		      PlayerMotionImpl * _pMotion=NULL,
 		      BatteryImpl * _pBattery=NULL,
-		      PlayerMotionImpl * _pMotion=NULL) throw (CORBA::Exception);
+		      Player::PlayerPanTiltImpl * _pPanTilt=NULL
+		      ) throw (CORBA::Exception);
 
     virtual ~PlayerReactorTask();
 
@@ -61,11 +65,11 @@ namespace Miro {
     bool motionBound();
     bool stallBound();
     bool batteryBound();
+    bool panTiltBound();
 
     static bool done;
 
   private:
-    int objectID; //ID on the simulator
 
     RangeSensorImpl * pSonar;
     LaserImpl * pLaser;
@@ -74,16 +78,13 @@ namespace Miro {
     OdometryImpl * pOdometry;
     PlayerMotionImpl * pMotion;
     BatteryImpl * pBattery;
-
+    Player::PlayerPanTiltImpl * pPanTilt;
 
     PositionIDL position;
     VelocityIDL velocity;
     MotionStatusIDL status;
 
     ::Player::Parameters * params_;
-
-    std::string playerHost;
-    int playerPort;
 
     PlayerClient* playerClient;
     SonarProxy* playerSonar;
@@ -92,6 +93,7 @@ namespace Miro {
     IRProxy* playerInfrared;
     PowerProxy* playerPower;
     BumperProxy* playerBumper;
+    PtzProxy* playerPTZ;
     
   };
   
@@ -106,9 +108,9 @@ namespace Miro {
   inline bool PlayerReactorTask::laserBound() { return (pLaser !=NULL ) && (playerLaser != NULL); }
   inline bool PlayerReactorTask::infraredBound() { return (pInfrared !=NULL ) && (playerInfrared != NULL); }
   inline bool PlayerReactorTask::tactileBound() { return (pTactile !=NULL ) && (playerBumper != NULL); }
-  inline bool PlayerReactorTask::batteryBound() { return (pBattery != NULL) && (playerPower !=NULL); }
+  inline bool PlayerReactorTask::batteryBound() { return (pBattery != NULL) && (playerPower != NULL); }
   inline bool PlayerReactorTask::stallBound() { return false; } //(pStall != NULL ) && (playerPosition != NULL); }
-
+  inline bool PlayerReactorTask::panTiltBound() { return (pPanTilt != NULL) && (playerPTZ != NULL); }
 };
 
 #endif
