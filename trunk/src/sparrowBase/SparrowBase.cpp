@@ -16,7 +16,6 @@
 #include "miro/Utils.h"
 
 #include "sparrow/Parameters.h"
-#include "pioneer/Parameters.h"
 #include "faulMotor/Parameters.h"
 #include "miro/NotifyMulticastParameters.h"
 
@@ -56,7 +55,6 @@ main(int argc, char *argv[])
     // Parameters to be passed to the services
     Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
     Sparrow::Parameters * pSparrowParameters = Sparrow::Parameters::instance();
-    Pioneer::Parameters * pPioneerParameters = NULL;
     FaulMotor::Parameters * pFaulMotorParameters = NULL;
     Miro::NotifyMulticast::Parameters * notifyMulticastParameters = Miro::NotifyMulticast::Parameters::instance();
     
@@ -68,12 +66,6 @@ main(int argc, char *argv[])
     config->setSection("Sparrow99");
     config->getParameters("SparrowBoard", *pSparrowParameters);
 
-
-    if (pSparrowParameters->goalie) {
-      pPioneerParameters = Pioneer::Parameters::instance();
-      config->setSection("ActiveMedia");
-      config->getParameters("PioneerBoard", *pPioneerParameters);
-    }
     if (pSparrowParameters->faulhaber) {
       pFaulMotorParameters = FaulMotor::Parameters::instance();
       config->setSection("Faulhaber");
@@ -86,8 +78,6 @@ main(int argc, char *argv[])
 #ifdef DEBUG
     cout << "  robot paramters:" << endl << robotParameters << endl;
     cout << "  sparrow paramters:" << endl << *pSparrowParameters << endl;
-    if (pPioneerParameters)
-      cout << "  pioneer paramters:" << endl << *pPioneerParameters << endl;
     if (pFaulMotorParameters)
       cout << "  faulhaber paramters:" << endl << *pFaulMotorParameters << endl;
     cout << "  NotifyMulticast parameters: " << endl << *notifyMulticastParameters << endl;

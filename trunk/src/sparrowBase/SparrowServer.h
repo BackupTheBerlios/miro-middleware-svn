@@ -31,9 +31,6 @@
 #include "sparrow/SparrowStallImpl.h"
 #include "sparrow/SparrowPanTiltImpl.h"
 #include "sparrow/AliveEventHandler.h"
-#include "psos/PsosEventHandler.h"
-#include "pioneer/PioneerConnection.h"
-#include "pioneer/PioneerConsumer.h"
 
 #include "faulMotor/FaulMotorConnection.h"
 #include "faulMotor/Parameters.h"
@@ -60,32 +57,15 @@ struct FaulhaberHardware
   ~FaulhaberHardware();
 };
 
-struct PioneerHardware
+class SparrowBase
 {
-  // Pioneer board hardware abstraction
-  Pioneer::Consumer * pConsumer;
-  Psos::EventHandler * pEventHandler;
-  Pioneer::Connection connection;
-
-  PioneerHardware(ACE_Reactor * _reactor,
-		  Miro::RangeSensorImpl * _sonar);
-  ~PioneerHardware();
-};
-
-
-class SparrowBase : public Miro::Server
-{
-  typedef Miro::Server Super;
 
   // = DESCRIPTION
   //    This class starts up the BaseImpl registers it at the
   //    naming service and runs the orb
 
 public:
-  // Initialization and Termination methods.
-  SparrowBase(int argc, char *argv[]);
-
-  SparrowBase(Server& _server, bool startReactorTask = true);
+  SparrowBase(Miro::Server& _server, bool startReactorTask = true);
 
   // Constructor.
 
@@ -98,6 +78,8 @@ public:
   Miro::NotifyMulticast::Adapter * notifyMulticast();
 
   // protected:
+  Miro::Server& server_;
+
   /** Sceduling parameters for a realtime thread */
   ACE_Sched_Params schedparams_;
   // since TAO is using the main thread, we need our own reactor
@@ -121,7 +103,6 @@ public:
   Miro::StructuredPushSupplier panPushSupplier_;
 
   Miro::OdometryImpl odometry;
-  Miro::RangeSensorImpl * pSonar_;
   Miro::RangeSensorImpl infrared;
   //Miro::RangeSensorImpl * infrared2;
 
@@ -131,9 +112,6 @@ public:
   Can::EventHandler * pCanEventHandler;
   Sparrow::Connection * sparrowConnection;
   Sparrow::Connection2003 * sparrowConnection2003;
-
-  // Pioneer board hardware abstraction
-  PioneerHardware * pPioneer;
 
   // Faulhaber board hardware abstraction
   FaulhaberHardware * pFaulhaber;
@@ -152,8 +130,6 @@ public:
   Miro::Stall_ptr pStall;
   Miro::SparrowPanTilt_ptr pPanTilt;
   Miro::RangeSensor_ptr pInfrared;
-
-  Miro::RangeSensor_ptr pSonar;
 
   /* NotifyMulticast */
   Miro::NotifyMulticast::Adapter *mcAdapter_;
