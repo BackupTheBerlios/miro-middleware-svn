@@ -39,51 +39,7 @@ sources1 = \
 	ScanDescriptionHelper.cpp \
 	StructuredPushSupplier.cpp \
 	StructuredPushConsumer.cpp \
-	OdometryTracking.cpp \
-	ActionPattern.cpp \
-	Arbiter.cpp \
-	ArbiterParameters.cpp \
-	ArbiterMessage.cpp \
-	ArbiterRepository.cpp \
-	PriorityArbiter.cpp \
-	MotionArbiter.cpp \
-	MotionArbiterMessage.cpp \
-	ConstraintArbiter.cpp \
-	ConstraintArbiterParameters.cpp \
-	ConstraintArbiterViewer.cpp \
-	ConstraintArbiterViewerTask.cpp \
-	Behaviour.cpp \
-	BehaviourParameters.cpp \
-	BehaviourRepository.cpp \
-	BAFactory.cpp \
-	EventBehaviour.cpp \
-	TaskBehaviour.cpp \
-	TimedBehaviour.cpp \
-	Policy.cpp \
-	VelocitySpace.cpp \
-	NotifyMulticastParameters.cpp \
-	NotifyMulticastRequestEntry.cpp \
-	NotifyMulticastSender.cpp \
-	NotifyMulticastReceiver.cpp \
-	NotifyMulticastTimeoutHandler.cpp \
-	NotifyMulticastEventHandler.cpp \
-	NotifyMulticastAdapter.cpp \
-	NotifyMulticastSH.cpp \
-	NotifyMulticastDomainEventFilter.cpp
-
-sparrowsources1 = \
-	PowerArbiter.cpp \
-	PowerArbiterMessage.cpp
-
-if COND_SPARROW99
-sparrowsources1_used = $(sparrowsources1)
-endif
-
-pioneersources1 = 
-
-if COND_PIONEER
-pioneersources1_used = $(pioneersources1)
-endif
+	OdometryTracking.cpp 
 
 Parameters.cpp: Parameters.xml
 NotifyMulticastParameters.cpp: NotifyMulticastParameters.xml
@@ -118,7 +74,6 @@ sources2 = \
 	MotionImpl.cpp \
 	DifferentialMotionImpl.cpp \
 	BatteryImpl.cpp \
-	BehaviourEngineImpl.cpp \
 	CompassImpl.cpp \
 	InclinometerImpl.cpp \
 	MagnetometerImpl.cpp \
@@ -126,7 +81,16 @@ sources2 = \
 	PanImpl.cpp \
 	TiltImpl.cpp \
 	PanTiltImpl.cpp \
-	CameraControlImpl.cpp
+	CameraControlImpl.cpp \
+	NotifyMulticastParameters.cpp \
+        NotifyMulticastRequestEntry.cpp \
+        NotifyMulticastSender.cpp \
+        NotifyMulticastReceiver.cpp \
+        NotifyMulticastTimeoutHandler.cpp \
+        NotifyMulticastEventHandler.cpp \
+        NotifyMulticastAdapter.cpp \
+        NotifyMulticastSH.cpp \
+        NotifyMulticastDomainEventFilter.cpp
 
 SvcParameters.cpp: SvcParameters.xml
 
@@ -145,6 +109,8 @@ libmiroSsh_a_CPPFLAGS = -include $(top_builddir)/pch/all_static.h $(CPPFLAGS) $(
 endif
 
 extraheader = \
+	Repository.h \
+	Factory.h \
 	Singleton.h \
 	Repository.h \
 	Factory.h \
@@ -153,9 +119,7 @@ extraheader = \
 	NotifyMulticastRequestIndex.h \
 	NotifyMulticastDefines.h \
 	NotifyMulticast.h \
-	NotifyMulticastEventFilter.h \
-	Utils.h \
-	TimeSeries.h
+	Utils.h 
 
 BUILT_SOURCES = \
 	Parameters.cpp Parameters.h \
@@ -166,8 +130,6 @@ CLEANFILES = $(BUILT_SOURCES)
 
 includefiles1 = \
 	$(sources1:.xml=.h) \
-	$(sparrowsources1:.xml=.h) \
-	$(pioneersources1:.xml=.h) \
 	$(sources2:.xml=.h) \
 	$(sources3:.xml=.h) \
 	$(extraheader)
