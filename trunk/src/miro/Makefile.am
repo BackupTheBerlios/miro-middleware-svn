@@ -62,7 +62,6 @@ sources1 = \
 	TimedBehaviour.cpp \
 	Policy.cpp \
 	VelocitySpace.cpp \
-	ObstImpl.cpp \
 	NotifyMulticastParameters.xml \
 	NotifyMulticastRequestEntry.cpp \
 	NotifyMulticastSender.cpp \
@@ -82,7 +81,14 @@ if COND_SPARROW99
 sparrowsources1_used = $(sparrowsources1)
 endif
 
-libmiro_la_SOURCES = $(sources1) $(sparrowsources1_used)
+pioneersources1 = \
+	ObstImpl.cpp
+
+if COND_PIONEER
+pioneersources1_used = $(pioneersources1)
+endif
+
+libmiro_la_SOURCES = $(sources1) $(sparrowsources1_used) $(pioneersources1_used)
 
 libmiro_la_LIBADD = \
 	-lTAO_CosNotification \
@@ -141,6 +147,7 @@ CLEANFILES = $(BUILT_SOURCES)
 includefiles1 = \
 	$(sources1:.xml=.h) \
 	$(sparrowsources1:.xml=.h) \
+	$(pioneersources1:.xml=.h) \
 	$(sources2:.xml=.h) \
 	$(sources3:.xml=.h) \
 	$(extraheader)
