@@ -136,6 +136,8 @@ namespace Miro {
 	    //! Destructor
             ~Adapter() throw(CORBA::Exception, Miro::Exception);
 
+	    void init();
+	    
 	    //! Returns pointer to sender.
             Sender *getSender();
 

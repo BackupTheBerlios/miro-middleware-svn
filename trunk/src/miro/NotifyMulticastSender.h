@@ -74,6 +74,8 @@ namespace Miro {
             /* Default destructor */
             ~Sender();
 
+	    void init();
+	    
             friend class Adapter;
 
             int sendData(iovec *_iov, size_t _iovLen);

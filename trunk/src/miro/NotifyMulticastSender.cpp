@@ -60,31 +60,6 @@ namespace Miro {
         {
             PRINT_DBG(DBG_INFO, "Initializing");
 
-	    try {
-		Parameters *parameters = Parameters::instance();
-
-                // TODO: Subscription changing
-
-		for (std::set<std::string>::iterator itr = parameters->subscription.begin();
-		     itr != parameters->subscription.end();
-		     itr++)
-                    subscribe(configuration_->getDomain(), *itr);
-		//subscribe(configuration_->getDomain(), "BallPosition");
-                //subscribe(configuration_->getDomain(), "LocalizedPosition");
-            } catch (const CORBA::SystemException &e) {
-		LOG(configuration_, "Sender: Unable to subscribe to events");
-		PRINT_ERR("Unable to subscribe events: " << e);
-                PRINT_ERR("No events will be sent to the peers");
-            } catch (const CosNotifyComm::InvalidEventType &e) {
-		LOG(configuration_, "Sender: Unable to subscribe to events");
-                PRINT_ERR("Unable to subscribe events: " << e);
-                PRINT_ERR("No events will be sent to the peers");
-            } catch (...) {
-		LOG(configuration_, "Sender: Unable to subscribe to events, uncaught exception");
-                PRINT_ERR("Unable to subscribe events: uncaught exception");
-                PRINT_ERR("No events will be sent to the peers");
-            }
-
             PRINT_DBG(DBG_MORE, "Initialized");
         }
 
@@ -101,6 +76,35 @@ namespace Miro {
             PRINT_DBG(DBG_MORE, "Cleaned up");
         }
 
+
+	void Sender::init() {
+		
+	    try {
+		Parameters *parameters = Parameters::instance();
+
+                // TODO: Subscription changing
+
+		for (std::set<std::string>::iterator itr = parameters->subscription.begin();
+		     itr != parameters->subscription.end();
+		     itr++)
+                    subscribe(configuration_->getDomain(), *itr);
+
+		//subscribe(configuration_->getDomain(), "BallPosition");
+                //subscribe(configuration_->getDomain(), "LocalizedPosition");
+            } catch (const CORBA::SystemException &e) {
+		LOG(configuration_, "Sender: Unable to subscribe to events");
+		PRINT_ERR("Unable to subscribe events: " << e);
+                PRINT_ERR("No events will be sent to the peers");
+            } catch (const CosNotifyComm::InvalidEventType &e) {
+		LOG(configuration_, "Sender: Unable to subscribe to events");
+                PRINT_ERR("Unable to subscribe events: " << e);
+                PRINT_ERR("No events will be sent to the peers");
+            } catch (...) {
+		LOG(configuration_, "Sender: Unable to subscribe to events, uncaught exception");
+                PRINT_ERR("Unable to subscribe events: uncaught exception");
+                PRINT_ERR("No events will be sent to the peers");
+            } 
+	}
 
         /**
          * Sender::subscribe()
@@ -119,12 +123,11 @@ namespace Miro {
             CosNotification::EventTypeSeq added(1);
             CosNotification::EventTypeSeq removed(0);
             added.length(1);
-            removed.length(1);
             added[0].domain_name = CORBA::string_dup(_domain.c_str());
             added[0].type_name   = CORBA::string_dup(_type.c_str());
-            removed[0].domain_name = CORBA::string_dup("*");
-            removed[0].type_name   = CORBA::string_dup("*");
-	    consumerAdmin_->subscription_change(added, removed);
+            //removed[0].domain_name = CORBA::string_dup("*");
+            //removed[0].type_name   = CORBA::string_dup("*");
+	    consumerAdmin_->subscription_change(added, removed ACE_ENV_ARG_PARAMETER);
 	    LOG(configuration_, "Sender: Subscribed to domain=" << _domain << ", type=" << _type);
         }
 
@@ -145,11 +148,10 @@ namespace Miro {
             /* change subscription */
             CosNotification::EventTypeSeq added(0);
             CosNotification::EventTypeSeq removed(1);
-            added.length(0);
             removed.length(1);
             removed[0].domain_name = CORBA::string_dup(_domain.c_str());
             removed[0].type_name   = CORBA::string_dup(_type.c_str());
-            consumerAdmin_->subscription_change(added, removed);
+            consumerAdmin_->subscription_change(added, removed ACE_ENV_ARG_PARAMETER);
 	    LOG(configuration_, "Sender: Unsubscribed from domain=" << _domain << ", type=" << _type);
         }
 

@@ -181,6 +181,12 @@ namespace Miro {
         }
 
 
+	void Adapter::init() {
+	    PRINT_DBG(DBG_MORE, "Initializing subscriptions");
+	    sender_->init();
+	}
+	
+	
         /**
          * Adapter::getSender()
          *
