@@ -13,6 +13,7 @@
 #define motionImpl_hh
 
 #include "miro/MotionS.h"
+#include "miro/OdometryC.h"
 #include "miro/DifferentialMotionImpl.h"
 #include "miro/Exception.h"
 
@@ -39,7 +40,9 @@ namespace Pioneer
   public:
     // Constructor/Destructor
     MotionImpl(Connection& _connection,
-	       Consumer& _consumer) throw(Miro::Exception);
+	       Consumer& _consumer,
+	       Miro::Odometry_ptr _pOdometry =  Miro::Odometry::_nil())
+      throw(Miro::Exception);
     virtual ~MotionImpl();
 
     //-------------------------------------------------------------------------
@@ -69,6 +72,7 @@ namespace Pioneer
     // protected:
     Connection&         connection; // encapsulating communication to hardware
     Consumer&           consumer;   // asynchronous processing of pioneer output
+    Miro::Odometry_var  pOdometry;  // odometry for absulute turning
     const Parameters *  params_;    // parameter struct
 
     static ACE_Time_Value maxWait;

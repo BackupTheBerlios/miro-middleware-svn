@@ -41,10 +41,12 @@ namespace Pioneer
   ACE_Time_Value MotionImpl::maxWait = ACE_Time_Value(0, 500000);
 
   MotionImpl::MotionImpl(Connection& _connection,
-			 Consumer& _consumer) throw(Exception) :
+			 Consumer& _consumer,
+			 Miro::Odometry_ptr _pOdometry) throw(Exception) :
     Miro::DifferentialMotionImpl(Parameters::instance()->motion),
     connection(_connection),
     consumer(_consumer),
+    pOdometry(Miro::Odometry::_duplicate(_pOdometry)),
     params_(Parameters::instance())
   {
    DBG(cout << "Constructing PioneerMotionImpl" << endl);
@@ -81,8 +83,8 @@ namespace Pioneer
 
     Miro::Guard guard(mutex_);
     setTargetVelocity(vel);
-    connection.setSpeedRot(targetVelocity_.translation,
-			   targetVelocity_.rotation);
+    connection.setSpeedRot((short)targetVelocity_.translation,
+			   (short)Miro::rad2Deg(targetVelocity_.rotation));
   }
 
   //--------------------------------------------------------------------------
@@ -107,17 +109,15 @@ namespace Pioneer
   //--------------------------------------------------------------------------
 
   void 
-  MotionImpl::rotateToPosition(CORBA::Double /* heading*/)
+  MotionImpl::rotateToPosition(CORBA::Double heading)
     throw(EOutOfBounds, EDevIO)
   {
-    Miro::VelocityIDL v;
-    v.translation = 0;
-    v.rotation = 0.;
+    if (pOdometry.in()) {
+      Miro::PositionIDL position = pOdometry->getPosition();
+      Miro::Angle angle(position.heading - heading);
 
-    Miro::Guard guard(mutex_);
-    setTargetVelocity(v);
-
-    //Add your implementation here
+      rotateRelative(angle.rad());
+    }
   }
   
   void 
@@ -130,20 +130,15 @@ namespace Pioneer
 
     Miro::Guard guard(mutex_);
     setTargetVelocity(v);
-    connection.turn(relative * 180 / M_PI);
+    connection.turn((short)Miro::rad2Deg(relative));
   }
 
-  void MotionImpl::translateRelative(CORBA::Long /* distance*/)
+  void MotionImpl::translateRelative(CORBA::Long distance)
     throw(EOutOfBounds, EDevIO)
   {
-    Miro::VelocityIDL v;
-    v.translation = 0;
-    v.rotation = 0.;
-
-    Miro::Guard guard(mutex_);
-    setTargetVelocity(v);
-
-    //Add your implementation here
+    if (distance > 5000)
+      throw EOutOfBounds();
+    connection.translate((short) distance);
   }
   
 };

@@ -44,6 +44,7 @@ namespace Pioneer
     void setSpeedRot(short speed, short rot); // set 
     void setHeading(short head);              // turn to absolute position
     void turn(short turn_deg);                // turn about turn_deg degrees
+    void translate(short trans_mm);           // translate +/- mm forward/back
 
     //-----------------//
     // servo functions //

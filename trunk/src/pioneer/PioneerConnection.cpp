@@ -111,12 +111,20 @@ namespace Pioneer
     writeMessage(headMessage);               // send it
   }
 
-  // turns about relhead in rad
+  // turns about relhead in deg
   void
   Connection::turn(short relhead)
   {
     Message relheadMessage(SF_COMDHEAD, relhead); // build rel. heading packet
     writeMessage(relheadMessage);        // send it
+  }
+
+  // translate about reltrans in mm
+  void
+  Connection::translate(short reltrans)
+  {
+    Message reltransMessage(SF_COMMOVE, reltrans); // build rel. trans packet
+    writeMessage(reltransMessage);        // send it
   }
 
   void
