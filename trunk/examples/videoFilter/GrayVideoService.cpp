@@ -25,80 +25,122 @@
 
 #include <iostream>
 
+
 int
 main(int argc, char *argv[])
 {
-  // Return code.
   int rc = 1;
+  try {
+    Miro::Log::init(argc, argv);
+    Miro::Configuration::init(argc, argv);
+  }
+  catch (Miro::Exception const & e) {
+    std::cerr << "Initialization of logging failed: " << std::endl
+	      << e << std::endl;
+    return rc;
+  }
   
-  Miro::Log::init(argc, argv);
-  Miro::Configuration::init(argc, argv);
-
-  // Miro::Server parameter.
+  // Parameters to be passed to the services
   Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
-  // Video service parameters.
-  Video::Parameters videoParameters;
+  std::vector<Video::Parameters> params;
 
   try {
-    // Building up the filter repository.
-    std::cout << "registered filters" << std::endl;
-    
+    // populating the filter repository
     Video::FilterRepository * repo = Video::FilterRepository::instance();
     repo->registerFilter<Video::DeviceDummy>("DeviceDummy");
     repo->registerFilter<Video::FilterCopy>("FilterCopy");
     repo->registerFilter<FilterGray>("FilterGray");
     repo->registerFilter<FilterDiff>("FilterDiff");
 
-    // Loading the parameters from the configuration file.
-    std::cout << "Config file processing" << std::endl;
+    MIRO_LOG(LL_NOTICE, "Config file processing.");
     
     Miro::ConfigDocument * config = Miro::Configuration::document();
     config->setSection("Robot");
     config->getParameters("Miro::RobotParameters", * robotParameters);
     config->setSection("Video");
-    config->getInstance("GrayVideoService", videoParameters);
 
-    // Debug output of the configuration.
-    std::cout << "  robot parameters:" << std::endl << *robotParameters << std::endl;
-    std::cout << "  video paramters:" << std::endl << videoParameters << std::endl;
-    
-    std::cout << "Initialize server daemon." << std::endl;
+    Miro::ConfigDocument::StringVector interfaces = 
+      config->getInstances("Video::Parameters");
+
+    Miro::ConfigDocument::StringVector::const_iterator first, last = interfaces.end();
+    params.reserve(interfaces.size());
+    for (first = interfaces.begin(); first != last; ++first) {
+      Video::Parameters videoParameters;
+      config->getType("Video::Parameters", *first, videoParameters);
+      params.push_back(videoParameters);
+    }
+
+    MIRO_LOG_OSTR(LL_NOTICE,
+		  "Robot parameters:" << std::endl <<
+		  *robotParameters);
+    if (Miro::Log::level() >= Miro::Log::LL_NOTICE) {
+      for (unsigned i = 0; i < params.size(); ++i) {
+	MIRO_LOG_OSTR(LL_NOTICE,
+		      "Video interface: " << interfaces[i] << std::endl <<
+		      params[i]);
+      }
+    }
+
+    MIRO_LOG(LL_NOTICE, "Initialize server daemon.");
     Miro::Server server(argc, argv);
 
+    std::vector<Video::Service *> service;
     try {
-      // Building the filter tree and initializing the filters.
-      Video::Service videoService(server, config, &videoParameters);
-      
-      std::cout << "Loop forever handling events." << std::endl;
-      server.run(3);
-      std::cout << "videoService ended, exiting." << std::endl;
+      service.reserve(params.size());
+      for (unsigned i = 0; i < params.size(); ++i) {
+	try {
+	  service.push_back(new Video::Service(server, config, &params[i]));
+	}
+	catch (Miro::Exception const& e) {
+	  MIRO_LOG_OSTR(LL_ERROR, 
+			"Failed to set up video service " << interfaces[i] << ":\n" << e);
+	}
+	catch (CORBA::Exception const& e) {
+	  MIRO_LOG_OSTR(LL_ERROR, 
+			"CORBA exception while initializing video service " << interfaces[i] << ":\n" << e);
+	}
+      }
 
-      rc = 0;
+      if (service.size() > 0) {
+	MIRO_LOG(LL_NOTICE, "Loop forever handling events.");
+	server.run(3);
+	MIRO_LOG(LL_NOTICE, "Video::Service ended, exiting.");
+
+	for (unsigned i = 0; i < service.size(); ++i) {
+	  delete service[i];
+	}
+      }
+      else {
+	MIRO_LOG(LL_CRITICAL, "No video service successfully initialized.");
+      }
     }
     catch (const Miro::EOutOfBounds& e) {
-      std::cerr << "OutOfBounds excetpion: Wrong parameter for device initialization." << std::endl;
-      rc = 1;
+      MIRO_LOG(LL_CRITICAL,
+	       "OutOfBounds excetpion: Wrong parameter for device initialization.");
     }
     catch (const Miro::EDevIO& e) {
-      std::cerr << "DevIO excetpion: Device access failed." << std::endl;
-      rc = 1;
+      MIRO_LOG(LL_CRITICAL,
+	       "DevIO excetpion: Device access failed.");
     }
     catch (const CORBA::Exception & e) {
-      std::cerr << "Uncaught CORBA exception: " << e << std::endl;
-      rc = 1;
+      MIRO_LOG_OSTR(LL_CRITICAL,
+		    "Uncaught CORBA exception: " << e);
     }
+
+    rc = 0;
+  }
+  catch (const Miro::CException& e) {
+    MIRO_LOG_OSTR(LL_CRITICAL,
+		  "Miro C exception: " << e);
   }
   catch (const Miro::Exception& e) {
-    std::cerr << "Miro exception: " << e << std::endl;
-    rc = 1;
+    MIRO_LOG_OSTR(LL_CRITICAL,
+		  "Miro exception: " << e);
   }
   catch (...) {
-    std::cerr << "Uncaught exception: " << std::endl;
-    rc = 1;
+    MIRO_LOG(LL_CRITICAL, "Uncaught exception.");
   }
   return rc;
 }
-
-
 
 
