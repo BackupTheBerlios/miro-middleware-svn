@@ -21,19 +21,15 @@ namespace Miro {
         int SH::handle_timeout(
             const ACE_Time_Value & /*_tv*/,
             const void * /*_act*/) {
-            std::cout << "NotifyMulticast: sending offered/subscribed events" << std::endl;
             CosNotification::StructuredEvent oe;
             CosNotification::StructuredEvent se;
             ::CosNotification::EventTypeSeq_var oets = sender_->proxySupplier_->obtain_offered_types(CosNotifyChannelAdmin::ALL_NOW_UPDATES_OFF);
             ::CosNotification::EventTypeSeq_var sets = receiver_->proxyConsumer_->obtain_subscription_types(CosNotifyChannelAdmin::ALL_NOW_UPDATES_OFF);
 
             /* only take non-local types for subscription list */
-            std::string domain;
             std::vector<CosNotification::EventType *> sublist;
-            std::cout << "NotifyMulticast: Subscription list:" << std::endl;
             for (unsigned int i = 0; i < sets->length(); i++) {
                 if (strcmp((*sets)[i].domain_name, receiver_->domainName().c_str())) {
-                    std::cout << "NotifyMulticast: + " << (*sets)[i].domain_name << "/" << (*sets)[i].type_name << std::endl;
                     sublist.push_back(&(*sets)[i]);
                 }
             }
@@ -43,12 +39,6 @@ namespace Miro {
                 (*sets)[i] = *sublist[i];
             }
 
-            /* print offerd list */
-            std::cout << "NotifyMulticast: Offered list:" << std::endl;
-            for (unsigned int i = 0; i < oets->length(); i++) {
-                std::cout << "NotifyMulticast: + " << (*oets)[i].domain_name << "/" << (*oets)[i].type_name << std::endl;
-            }
-            
             oe.header.fixed_header.event_type.domain_name = CORBA::string_dup(receiver_->domainName().c_str());
             oe.header.fixed_header.event_type.type_name = CORBA::string_dup("NotifyMulticast::offered");
             oe.remainder_of_body <<= oets._retn();
@@ -68,7 +58,6 @@ namespace Miro {
 
                 /* check for outdated entry */
                 if (itr->second == 0) {
-                    std::cout << "NotifyMulticast: Outdated subscription found for " << itr->first << std::endl;
 
                     try {
                         sender_->unsubscribe(receiver_->domainName().c_str(), itr->first);
@@ -88,8 +77,6 @@ namespace Miro {
 
                 /* check for outdated entry */
                 if (itr->second == 0) {
-                    std::cout << "NotifyMulticast: Outdated offer found for " << itr->first.first << "/" << itr->first.second << std::endl;
-
                     offerMap.erase(itr);
                     invalidated++;
                 }
@@ -111,8 +98,6 @@ namespace Miro {
         }
         
         void SH::handleOffers(CosNotification::EventTypeSeq &ets) {
-            std::cout << "NotifyMulticast: DEBUG SH::handleOffers" << std::endl;
-
             for (unsigned int i = 0; i < ets.length(); i++) {
                 std::pair<std::string, std::string> val;
                 
@@ -126,17 +111,12 @@ namespace Miro {
         }
 
         void SH::handleSubscriptions(CosNotification::EventTypeSeq &ets) {
-            std::cout << "NotifyMulticast: DEBUG SH::handleSubscriptions" << std::endl;
-
-	    std::cout << ets.length() << std::endl;
             for (unsigned int i = 0; i < ets.length(); i++) {
-		    std::cout << ets[i].domain_name << "/" << ets[i].type_name << " " << receiver_->domainName() << std::endl;
                 if (!strcmp(ets[i].domain_name, receiver_->domainName().c_str())) {
                     SubscribedMap::iterator itr = subscribedMap.find((const char *)ets[i].type_name);
 
                     /* not yet subscribed */
                     if (itr == subscribedMap.end()) {
-                        std::cout << "NotifyMulticast: subscription for " << ets[i].type_name << " requested" << std::endl;
                     
                         try {
                             sender_->subscribe(receiver_->domainName().c_str(), (const char *)ets[i].type_name);

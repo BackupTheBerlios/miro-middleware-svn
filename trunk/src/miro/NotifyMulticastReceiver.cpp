@@ -383,7 +383,6 @@ namespace Miro {
                 /* Drop packet if it's too old */
                 unsigned int time = ACE_OS::gettimeofday().msec();
 
-                std::cout << "NMC: " << event.header.fixed_header.event_type.domain_name << "/" << event.header.fixed_header.event_type.type_name << std::endl;
                 /* pub/sub protocol hook */
                 if (!strcmp(event.header.fixed_header.event_type.type_name, "NotifyMulticast::offered")) {
                     CosNotification::EventTypeSeq *ets;

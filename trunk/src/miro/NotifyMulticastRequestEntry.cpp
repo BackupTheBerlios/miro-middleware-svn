@@ -225,7 +225,6 @@ namespace Miro {
             TAO_InputCDR cdr(&payload_, ACE_static_cast(int, byteOrder_));
 
             if (!(cdr >> event)) {
-                std::cout << "Unable to demarshal" << std::endl;
                 ACE_THROW(CORBA::MARSHAL());
             }
         }
