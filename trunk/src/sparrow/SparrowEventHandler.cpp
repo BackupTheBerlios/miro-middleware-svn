@@ -81,7 +81,10 @@ namespace Sparrow
 
     Parameters * params = Parameters::instance();
 
-    connection.getPosition(params->odometryPulse.msec(), 0);
+    // get odometry only if this is not taken care of by the
+    // faulhaber motor controller
+    if (!params->faulhaber)
+      connection.getPosition(params->odometryPulse.msec(), 0);
     connection.infraredGet(params->infraredPulse.msec(), 0);
 
     DBG(cout << "Sparrow startup successfull." << endl);
