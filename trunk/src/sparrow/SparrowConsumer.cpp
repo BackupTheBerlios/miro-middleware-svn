@@ -148,12 +148,12 @@ namespace Sparrow
 
     case CAN_R_MOTOR_ALIVE: {
       DBG(cout << "Consumer::receiveThread:  received message: MOTOR_ALIVE" << endl);
-
+      
       versSub = message.shortData(0);
       versNr = versSub >> 4;
       versSub = versSub & 0x0F; // versNr loeschen mit AND 00001111
       cout << "MOTOR_ALIVE_VERSION: "<< versNr << "." << versSub << endl;
-      cout <<"MOTOR_TIME_STAMP: " << message.shortData(1) << endl;
+      cout <<"MOTOR_TIME_STAMP (sec): " << message.shortData(2) << endl;
       Miro::Guard guard(motorAliveMutex);
       motorAliveCond.broadcast();
       break;
@@ -190,7 +190,8 @@ namespace Sparrow
 	xPos_ = message.shortData(0);
 	yPos_ = message.shortData(2);
 	phi_ = ticks2rad(message.shortData(4));
-	
+	//cout << message << endl;  //debug uli 4.8.02	
+
 	// the goalie is special
 	if (params_->goalie) {
 	  std::swap(xPos_, yPos_);
@@ -244,7 +245,7 @@ namespace Sparrow
       versNr = versSub >> 4;
       versSub = versSub & 0x0F; // versNr loeschen mit AND 00001111
       cout << "ODO_ALIVE_VERSION: "<< versNr << "." << versSub << endl;
-       cout <<"ODO_TIME_STAMP: " << message.shortData(1) << endl;
+      cout <<"ODO_TIME_STAMP (sec): " << message.shortData(2) << endl;
       Miro::Guard guard(odoAliveMutex);
       odoAliveCond.broadcast();
       break;
@@ -299,7 +300,7 @@ namespace Sparrow
       versNr = versSub >> 4;
       versSub = versSub & 0x0F; // versNr loeschen mit AND 00001111
       cout << "PORTS_ALIVE_VERSION: "<< versNr << "." << versSub << endl;
-      cout <<"PORT_TIME_STAMP: " << message.shortData(1) << endl;
+      cout <<"PORT_TIME_STAMP (sec): " << message.shortData(2) << endl;
       Miro::Guard guard(portsAliveMutex);
       portsAliveCond.broadcast();
       break;
@@ -321,6 +322,7 @@ namespace Sparrow
       versNr = versSub >> 4;
       versSub = versSub & 0x0F; // versNr loeschen mit AND 00001111
       cout << "STALL_ALIVE_VERSION: "<< versNr << "." << versSub << endl;
+      cout << "STALL_TIME_STAMP (sec):" << message.shortData(2) << endl;
       Miro::Guard guard(stallAliveMutex);
       stallAliveCond.broadcast();
       break;
@@ -335,6 +337,7 @@ namespace Sparrow
       versNr = versSub >> 4;
       versSub = versSub & 0x0F; // versNr loeschen mit AND 00001111
       cout << "KICK_ALIVE_VERSION: "<< versNr << "." << versSub << endl;
+      cout << "KICK_TIME_STAMP (sec):" << message.shortData(2) << endl;
       Miro::Guard guard(kickerAliveMutex);
       kickerAliveCond.broadcast();
       break;
@@ -349,6 +352,7 @@ namespace Sparrow
       versNr = versSub >> 4;
       versSub = versSub & 0x0F; // versNr loeschen mit AND 00001111
       cout << "SERVO_ALIVE_VERSION: "<< versNr << "." << versSub << endl;
+      cout << "SERVO_TIME_STAMP (sec):" << message.shortData(2) << endl;
       Miro::Guard guard(servoAliveMutex);
       servoAliveCond.broadcast();
       break;
@@ -397,6 +401,7 @@ namespace Sparrow
       versNr = versSub >> 4;
       versSub = versSub & 0x0F; // versNr loeschen mit AND 00001111
       cout << "IR_ALIVE_VERSION: "<< versNr << "." << versSub << endl;
+      cout << "IR_TIME_STAMP (sec):" << message.shortData(2) << endl;
       Miro::Guard guard(irAliveMutex);
       irAliveCond.broadcast();
       break;
@@ -416,6 +421,7 @@ namespace Sparrow
       versNr = versSub >> 4;
       versSub = versSub & 0x0F; // versNr loeschen mit AND 00001111
       cout << "DBG_ALIVE_VERSION: "<< versNr << "." << versSub << endl;
+      cout << "DBG_TIME_STAMP (sec):" << message.shortData(2) << endl;
       Miro::Guard guard(dbgAliveMutex);
       dbgAliveCond.broadcast();
       break;
