@@ -286,7 +286,7 @@ namespace Miro {
                 return 0;
             }
             /* Already received this fragment */
-            if (entry->int_id_->testReceived(_eventData.fragmentId) == 1) {
+            if (false && entry->int_id_->testReceived(_eventData.fragmentId) == 1) {
                 PRINT_DBG(DBG_VERBOSE, "Duplicate Fragment, dropping");
 
                 return 0;

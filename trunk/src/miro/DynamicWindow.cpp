@@ -200,7 +200,7 @@ namespace Miro
 	posTrans = (trans + 100.) / 2.;
 	
 	// set the corresponding value in the velocitySpace
-	velocitySpace_[left+100][right+100] = (int)(1.5 * rotDist + 1.0 * posTrans);
+	velocitySpace_[left+100][right+100] = (int)(2.0 *  rotDist + 0.5 * posTrans);
 	
       }
     }	
@@ -321,6 +321,30 @@ namespace Miro
     
   }
   
+
+  double DynamicWindow::getBetterDistanceBetweenPointAndLine(Vector2d _p1, Vector2d _l1, Vector2d _l2) {
+    
+    double distance, l1_l2_length, l1_p1_length, l2_p1_length;
+    Vector2d l1_l2, l1_p1, l2_p1;
+    
+    l1_l2 = _l2 - _l1;
+    l1_l2_length = sqrt(l1_l2.real() * l1_l2.real() + l1_l2.imag() * l1_l2.imag());
+    l1_p1 = _p1 - _l1;
+    l1_p1_length = sqrt(l1_p1.real() * l1_p1.real() + l1_p1.imag() * l1_p1.imag());
+    l2_p1 = _p1 - _l2;
+    l2_p1_length = sqrt(l2_p1.real() * l2_p1.real() + l2_p1.imag() * l2_p1.imag());
+    
+    distance = (l1_l2.real() * l1_p1.imag() - l1_l2.imag() * l1_p1.real()) / l1_l2_length;
+
+    if(std::acos((l1_l2.real() * l1_p1.real() + l1_l2.imag() * l1_p1.imag()) / (l1_l2_length * l1_p1_length)) > M_PI)
+      distance = l1_p1_length;
+
+    if(std::acos((-l1_l2.real() * l2_p1.real() + -l1_l2.imag() * l2_p1.imag()) / (l1_l2_length * l2_p1_length)) > M_PI)
+      distance = l2_p1_length;
+
+    return distance;
+
+  }
   
   double DynamicWindow::getDistanceBetweenPointAndLine(Vector2d _p1, Vector2d _l1, Vector2d _l2) {		
     
