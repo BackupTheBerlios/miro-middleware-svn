@@ -754,14 +754,12 @@
 	  <parameter value="Odometry" />
 	  <parameter value="RawPosition" />
 	  <parameter value="VisionData" />
-	  <parameter value="LineSamples" />
-	  <parameter value="GoalPosition" />
-	  <parameter value="BallPosition" />
+	  <parameter value="LineSamples2" />
+	  <parameter value="SharedBelief" />
 	  <parameter value="PatternChange" />
 	  <parameter value="ArbitrateChange" />
-	  <parameter value="PositionHypothesis" />
-	  <parameter value="LocalizedPosition" />
 	  <parameter value="LocalizeStatistics" />
+	  <parameter value="PositionHypothesis" />
 	  <parameter value="SharedWorld" />
 	</parameter>
 	<parameter value="157286400" name="MaxFileSize" />
@@ -770,10 +768,7 @@
 	<parameter value="225.2.2.1:41006" name="Multicastgroup" />
 	<parameter value="500" name="Messagetimeout" />
 	<parameter name="Subscription">
-	  <parameter value="BallPosition" />
-	  <parameter value="GoalPosition" />
-	  <parameter value="LocalizedPosition" />
-	  <parameter value="SharedWorld" />
+	  <parameter value="SharedBelief" />
 	</parameter>
       </parameter>
     </section>
