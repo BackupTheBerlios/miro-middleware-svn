@@ -105,7 +105,7 @@ CLEANFILES = $(BUILT_SOURCES)
 
 includefiles1 = $(sources:.xml=.h) $(bttvsources:.xml=.h) $(meteorsources:.xml=.h) $(1394sources:.xml=.h) $(extraheader)
 includefiles2 = $(includefiles1:.cpp=.h)
-miro_include_HEADERS = $(includefiles2)
+video_include_HEADERS = $(includefiles2)
 
 all-local:
 	$(INSTALLLTLIBRARIES)
