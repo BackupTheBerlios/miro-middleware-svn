@@ -310,12 +310,12 @@
 <!-- werte fuer neue (labcam-version) -->
   <parameter name="Camera" >
    <parameter value="0.060000" name="Latency" />
-   <parameter value="31.0" name="Alpha" />
-   <parameter value="600" name="Height" />
-   <parameter value="198.357868" name="Cx" />
-   <parameter value="144.904037" name="Cy" />
-   <parameter value="4.217908" name="F" />
-   <parameter value="1.908834e-02" name="Kappa" />
+   <parameter value="28.5" name="Alpha" />
+   <parameter value="550" name="Height" />
+   <parameter value="192.368407" name="Cx" />
+   <parameter value="142.367206" name="Cy" />
+   <parameter value="4.411363" name="F" />
+   <parameter value="2.614732e-02" name="Kappa" />
    <parameter value="1" name="Sx" />
    <parameter value="0.00625" name="Dx" />
    <parameter value="0.0125" name="Dy" />
