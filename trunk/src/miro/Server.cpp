@@ -128,6 +128,7 @@ namespace Miro
     //    signals_.sig_add(SIGINT);
     //    signals_.sig_add(SIGTERM);
 
+    pServer = this;
     ACE_Sig_Action sa ((ACE_SignalHandler) handler, SIGINT);
 
     if (reactor()->register_handler(signals_, event_) == -1) {
