@@ -2,8 +2,8 @@
 
 
 # required versions
-REQUIRED_AUTOMAKE=1.5
-REQUIRED_AUTOCONF=2.13
+REQUIRED_AUTOMAKE=1.7
+REQUIRED_AUTOCONF=2.57
 
 # search for the version strings
 AUTOMAKE=`automake --version | head -n 1 | sed 's/[^0-9.]*//' | sed 's/\([0-9.]*\).*/\1/'`
