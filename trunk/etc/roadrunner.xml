@@ -335,12 +335,10 @@
 			      <parameter value="AttentionBall" name="Type" />
 			      <parameter value="AttentionBall" name="Name" />
 			    </parameter>
-
 			    <parameter name="Filter" >
 			      <parameter value="AttentionGoal" name="Type" />
 			      <parameter value="AttentionGoal" name="Name" />
 			    </parameter>
-
 			    <parameter name="Filter" >
 			      <parameter value="AttentionCornerPoles" name="Type" />
 			      <parameter value="AttentionCornerPoles" name="Name" />
@@ -403,6 +401,32 @@
 
 			  </parameter>
 			</parameter>
+		      </parameter>
+		    </parameter>
+
+		    <parameter name="Filter" >
+		      <parameter value="ColorHist" name="Name" />
+		      <parameter value="ColorHist" name="Type" />
+		      <parameter name="BackLink" >
+			<parameter value="AttentionBall" />
+		      </parameter>
+		    </parameter>
+		    <parameter name="Filter" >
+		      <parameter value="OrientHist" name="Name" />
+		      <parameter value="OrientHist" name="Type" />
+		      <parameter name="BackLink" >
+			<parameter value="SobelVertical" />
+			<parameter value="SobelHorizontal" />
+			<parameter value="AttentionBall" />
+		      </parameter>
+		    </parameter>
+		    <parameter name="Filter" >
+		      <parameter value="NeuralNetBall" name="Type" />
+		      <parameter value="NeuralNetBall" name="Name" />
+		      <parameter name="BackLink" >
+			<parameter value="ColorHist" />
+			<parameter value="OrientHist" />
+			<parameter value="AttentionBall" />
 		      </parameter>
 		    </parameter>
 
@@ -478,12 +502,10 @@
         <parameter value="false" name="Rotate" />
         <parameter value="false" name="Random" />
       </parameter>
-
       <parameter name="AttentionBall" >
 	<parameter value="false" name="Random" />
 	<parameter value="false" name="Rotate" />
       </parameter>
-
       <parameter name="AttentionCornerPoles">
 	<parameter value="false" name="Rotate" />
 	<parameter value="false" name="Random" />
@@ -528,6 +550,31 @@
         <parameter value="WHITE" name="ColorTwo" />
         <parameter value="120" name="LowThresh" />
         <parameter value="180" name="HighThresh" />
+      </parameter>
+
+      <parameter name="OrientHist">
+        <parameter value="3" name="UseROIFrom" />
+        <parameter value="0.2" name="WideROI" />
+        <parameter value="0.0" name="XOverlap" />
+        <parameter value="0.0" name="YOverlap" />
+        <parameter value="2" name="XSubwin" />
+        <parameter value="2" name="YSubwin" />
+        <parameter value="8" name="Discrete" />
+      </parameter>
+      <parameter name="ColorHist">
+        <parameter value="1" name="UseROIFrom" />
+        <parameter value="0.0" name="WideROI" />
+        <parameter value="0.0" name="XOverlap" />
+        <parameter value="0.0" name="YOverlap" />
+        <parameter value="1" name="XSubwin" />
+        <parameter value="2" name="YSubwin" />
+        <parameter value="8" name="Discrete" />
+      </parameter>
+      <parameter name="NeuralNetBall">
+	<parameter value="Ball.net" name="File" />
+	<parameter value="1" name="UseColorHistFrom" />
+	<parameter value="2" name="UseOrientHistFrom" />
+	<parameter value="3" name="UseROIFrom" />
       </parameter>
 
       <parameter name="CollectAllFeaturesBasic" >
