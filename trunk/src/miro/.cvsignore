@@ -4,6 +4,11 @@ BatteryC.cpp
 BatteryS.h
 BatteryS.i
 BatteryS.cpp
+CanonPanTiltC.h
+CanonPanTiltC.i
+CanonPanTiltS.cpp
+CanonPanTiltS.h
+CanonPanTiltS.i
 TimeC.h
 TimeC.i
 TimeC.cpp
