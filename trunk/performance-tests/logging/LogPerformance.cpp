@@ -36,18 +36,19 @@ enum PayloadID {
   NONE, 
   OCTED_STREAM_1K, OCTET_STREAM_100K,
   INT_ARRAY_1K, INT_ARRAY_100K,
-  SHARED_BELIEF 
+  SHARED_BELIEF, SHARED_BELIEF_FULL
 };
 
 
-const unsigned int NUM_PAYLOADS = 6;
+const unsigned int NUM_PAYLOADS = 7;
 char const * const payloadName[NUM_PAYLOADS] = {
   "None",
   "OctetStream1K",
   "OctetStream100K",
   "IntArray1K",
   "IntArray10K",
-  "SharedBeliefState01"
+  "SharedBelief",
+  "SharedBeliefFull"
 };
 
 bool verbose = false;
@@ -112,6 +113,20 @@ producePayload(CosNotifyChannelAdmin::EventChannel_ptr _ec)
   case SHARED_BELIEF: 
     {
       MSL::SharedBeliefState01 * load = new MSL::SharedBeliefState01();
+      event.remainder_of_body <<= load;
+      break;
+    }
+  case SHARED_BELIEF_FULL: 
+    {
+      MSL::SharedBeliefState01 * load = new MSL::SharedBeliefState01();
+
+      load->time = 0x123456789abcdef0LL;
+      load->egoBelief.oppGoal.length(2);
+      load->egoBelief.ownGoal.length(2);
+      load->egoBelief.observation.length(15);
+      for (unsigned int i = 0; i < 15; ++i) {
+	load->egoBelief.observation[i].classification.length(2);
+      }
       event.remainder_of_body <<= load;
       break;
     }
@@ -187,8 +202,11 @@ parseArgs(int& argc, char* argv[])
       std::cerr << "usage: " << argv[0] << "[-fpv?]" << std::endl
 		<< "  -n <iterations> number of iterations" << std::endl
 		<< "  -f <file name> log file name" << std::endl
-		<< "  -p <payload> the type of payload for the test" << std::endl
-		<< "  -v verbose mode" << std::endl
+		<< "  -p <payload> the type of payload for the test:" << std::endl;
+      for (unsigned int i = 0; i < NUM_PAYLOADS; ++i) {
+	std::cerr << "      " << payloadName[i] << std::endl;
+      }
+      std::cerr << "  -v verbose mode" << std::endl
 		<< "  -? help: emit this text and stop" << std::endl;
       rc = -1;
     }
