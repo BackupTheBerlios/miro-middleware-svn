@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2000, 2001, 2002
+// (c) 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -16,6 +16,7 @@
 
 // forward declarations
 class QDomNode;
+class QDomElement;
 
 namespace Miro
 {
@@ -51,7 +52,9 @@ namespace Miro
     virtual ~ArbiterParameters();
 
     //! XML-parsingoperator.
-    void operator <<= (const QDomNode&);
+    virtual void operator <<= (const QDomNode&);
+    //! XML-parsingoperator.
+    virtual QDomElement operator >>= (QDomNode&) const;
 
     //! Register behaviours for acces control
     virtual void registerBehaviour(Behaviour * _behaviour);
@@ -73,5 +76,5 @@ namespace Miro
     std::ostream&
     operator << (std::ostream& ostr, const ArbiterParameters& _params);
   };
-};
+}
 #endif

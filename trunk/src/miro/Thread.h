@@ -37,8 +37,8 @@ namespace Miro
 	   long _priority = ACE_DEFAULT_THREAD_PRIORITY);
     virtual ~Thread();
 
-    void detach(int nthreads = 1);
-    void cancel(bool _wait = true);
+    virtual void detach(int nthreads = 1);
+    virtual void cancel(bool _wait = true);
     bool canceled() const ;
 
     // methods defined by ACE_Task_Base
@@ -56,7 +56,7 @@ namespace Miro
   Thread::canceled() const {
     return canceled_;
   }
-};
+}
 #endif
 
 

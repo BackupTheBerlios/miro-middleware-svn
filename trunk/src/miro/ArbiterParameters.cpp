@@ -12,6 +12,8 @@
 #include "ArbiterParameters.h"
 #include "Behaviour.h"
 
+#include <qdom.h>
+
 namespace Miro
 {
   ArbiterParameters::ArbiterParameters() :
@@ -25,6 +27,12 @@ namespace Miro
   void
   ArbiterParameters::operator <<= (const QDomNode&)
   {}
+
+  QDomElement
+  ArbiterParameters::operator >>= (QDomNode&) const
+  {
+    return QDomElement();
+  }
 
   void
   ArbiterParameters::registerBehaviour(Behaviour * _behaviour)

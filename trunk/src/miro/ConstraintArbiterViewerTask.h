@@ -11,26 +11,37 @@
 #ifndef ConstraintArbiterViewerTask_h
 #define ConstraintArbiterViewerTask_h
 
-#include <ace/Task.h>
-
 #include "ConstraintArbiterViewer.h"
+#include "VelocitySpace.h"
+#include "Thread.h"
+
 #include <qapplication.h>
 #include <qwidget.h>
-#include "VelocitySpace.h"
 
 namespace Miro
 {
-  class ConstraintArbiterViewerTask : public ACE_Task<ACE_MT_SYNCH> {
-    typedef ACE_Task<ACE_MT_SYNCH> Super;    
+  class ConstraintArbiterViewerTask : public Thread
+  {
+    //! Type defining the super class.
+    typedef Thread Super;    
+
   public:
-    ConstraintArbiterViewerTask(VelocitySpace *);
+    ConstraintArbiterViewerTask(VelocitySpace const * _velocitySpace);
     ~ConstraintArbiterViewerTask();
-    int svc();
-    int open(void * = 0);
+
+    //--------------------------------------------------------------------------
+    // inherited interface
+    //--------------------------------------------------------------------------
+
+    virtual int svc();
+    virtual void cancel(bool _wait = true);
+  
+  protected:
+    //! Dummy for command line parameters
     int temp;
+
     QApplication conArbApp_;
     ConstraintArbiterViewer conArbView_;
-
   };
-};
+}
 #endif

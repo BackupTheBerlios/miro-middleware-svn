@@ -1,16 +1,29 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2001, 2002, 2003, 2004
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+
 #include "ConstraintArbiterViewer.h"
 #include "ConstraintArbiterViewerTask.h"
-#include <qpainter.h>
-#include <qpixmap.h>
 #include "VelocitySpace.h"
 
-namespace Miro {
+#include <qpainter.h>
+#include <qpixmap.h>
 
-  ConstraintArbiterViewerTask::ConstraintArbiterViewerTask(VelocitySpace * _VelocitySpace) :
+namespace Miro 
+{
+  ConstraintArbiterViewerTask::
+  ConstraintArbiterViewerTask(VelocitySpace const * _velocitySpace) :
     Super(),
     temp(0),
     conArbApp_(temp, (char **)NULL),
-    conArbView_(_VelocitySpace)
+    conArbView_(_velocitySpace)
   {
     conArbView_.setCaption("Constraint Arbiter Viewer");
     conArbView_.setBackgroundColor(Qt::white);
@@ -18,7 +31,8 @@ namespace Miro {
     conArbView_.show();
   }
   
-  ConstraintArbiterViewerTask::~ConstraintArbiterViewerTask() {
+  ConstraintArbiterViewerTask::~ConstraintArbiterViewerTask() 
+  {
     /* left empty */
   }
   
@@ -26,8 +40,10 @@ namespace Miro {
     return conArbApp_.exec();
   }
   
-  int ConstraintArbiterViewerTask::open(void *) {
-    return activate();
-  }
-    
-};
+  void 
+  ConstraintArbiterViewerTask::cancel(bool _wait)
+  {
+    conArbApp_.exit();
+    Super::cancel(_wait);
+  }   
+}

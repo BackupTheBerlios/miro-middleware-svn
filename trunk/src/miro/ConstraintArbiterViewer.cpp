@@ -1,18 +1,34 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2001, 2002, 2003, 2004
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+
 #include "ConstraintArbiterViewer.h"
 #include "VelocitySpace.h"
+
 #include <qpainter.h>
 #include <qpen.h>
 #include <qcolor.h>
 #include <qpixmap.h>
 #include <qtimer.h>
-#include <iostream>
 
-namespace Miro {
+namespace Miro 
+{
 
-  ConstraintArbiterViewer::ConstraintArbiterViewer(VelocitySpace * _VelocitySpace, QWidget *parent, const char *name)
-    : QWidget(parent, name), VelocitySpace_(_VelocitySpace) {
+  ConstraintArbiterViewer::
+  ConstraintArbiterViewer(VelocitySpace const * _velocitySpace, 
+			  QWidget *parent, const char *name) :
+    QWidget(parent, name),
+    velocitySpace_(_velocitySpace) 
+  {
 
-    int dim = 2*(VelocitySpace_->maxVelocity_/VelocitySpace_->spaceResolution_)+1;
+    int dim = 2*(velocitySpace_->maxVelocity_/velocitySpace_->spaceResolution_)+1;
 	    
     startTimer(100);
 
@@ -26,16 +42,16 @@ namespace Miro {
 
   void ConstraintArbiterViewer::paintVelocitySpace() {
 
-    int dim = 2*(VelocitySpace_->maxVelocity_/VelocitySpace_->spaceResolution_)+1;
+    int dim = 2*(velocitySpace_->maxVelocity_/velocitySpace_->spaceResolution_)+1;
     unsigned char pointValue;
 
     painter_.begin(&pixmap_);
     pixmap_.fill(Qt::white);
     QColor color;
-    for(int l_index=VelocitySpace_->minDynWinLeft_; l_index<=VelocitySpace_->maxDynWinLeft_; l_index++) {
-      for(int r_index=VelocitySpace_->minDynWinRight_; r_index<=VelocitySpace_->maxDynWinRight_; r_index++) {
+    for(int l_index=velocitySpace_->minDynWinLeft_; l_index<=velocitySpace_->maxDynWinLeft_; l_index++) {
+      for(int r_index=velocitySpace_->minDynWinRight_; r_index<=velocitySpace_->maxDynWinRight_; r_index++) {
 
-        pointValue = VelocitySpace_->velocitySpace_[l_index][r_index];
+        pointValue = velocitySpace_->velocitySpace_[l_index][r_index];
 	if(pointValue==0)
 	  color.setRgb(255, 0, 0);
 	else
@@ -56,11 +72,10 @@ namespace Miro {
 	
     painter_.end();
     repaint(FALSE);
-
   }
   
-  void ConstraintArbiterViewer::paintEvent(QPaintEvent*) {
+  void ConstraintArbiterViewer::paintEvent(QPaintEvent*)
+  {
     bitBlt(this, 10, 10, &pixmap_);
   }
-  
-};
+}

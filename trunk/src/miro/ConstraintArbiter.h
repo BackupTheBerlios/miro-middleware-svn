@@ -16,6 +16,8 @@
 #include "Arbiter.h"
 #include "ConstraintArbiterViewerTask.h"
 #include "VelocitySpace.h"
+#include "ConstraintArbiterParameters.h"
+#include "Synch.h"
 
 #include <ace/Reactor.h>
 
@@ -27,6 +29,8 @@ namespace Miro
 {
   class StructuredPushSupplier;
 
+  typedef ArbiterMessage ConstraintArbiterMessage;
+
   class ConstraintArbiter :
     public Arbiter,
     public ACE_Event_Handler
@@ -35,19 +39,33 @@ namespace Miro
     ConstraintArbiter(ACE_Reactor &,
 		  DifferentialMotion_ptr _pMotion,
 		  StructuredPushSupplier * _pSupplier = NULL);
-    ~ConstraintArbiter();
+    virtual ~ConstraintArbiter();
 
+    //--------------------------------------------------------------------------
+    // inherited Arbiter interface methods
+    //--------------------------------------------------------------------------
+
+    virtual ConstraintArbiterParameters * 
+    ConstraintArbiter::getParametersInstance() const;
+    virtual void init(ArbiterParameters const * _params);
+    virtual void open();
+    virtual void close();
     virtual const std::string& getName() const;
 
-    void open();
-    void close();
+    //--------------------------------------------------------------------------
+    // inherited ACE_Event_Handler interface methods
+    //--------------------------------------------------------------------------
 
     virtual int handle_timeout(const ACE_Time_Value&, const void*);
 
   protected:
+
+    //! Calcualte the current activattion of the velocity space.
     virtual void calcActivation();
 
+    //! Reference to the differential motion interface.
     DifferentialMotion_var pMotion_;
+    //! Pointer to the supplier for monitoring events.
     StructuredPushSupplier * pSupplier_;
 
     FILE *fileHandler;
@@ -57,14 +75,11 @@ namespace Miro
 
     VelocityIDL currentVelocity_;
 
-    VelocitySpace velocitySpace_;
-
     ConstraintArbiterViewerTask * conArbViewTask_;
-    bool conArbViewTaskCreated;
 
     CosNotification::StructuredEvent notifyEvent;
 
     static const std::string name_;
   };
-};
+}
 #endif

@@ -73,6 +73,13 @@
     <config_item name="PriorityArbiter" parent="Arbiter" final="false" />
     <config_item name="MotionArbiter" parent="PriorityArbiter" />
     <config_item name="PowerArbiter" parent="PriorityArbiter" />
-    <config_item name="ConstraintArbiter" parent="Arbiter" dummy="true" />
+    <config_item name="ConstraintArbiter" parent="PriorityArbiter" dummy="true" >
+      <config_parameter name="maxVelocity" type="int" default="1500" measure="mm/s" />
+      <config_parameter name="maxAccel" type="int" default="2000" measure="mm/s" />
+      <config_parameter name="maxDecel" type="int" default="500" measure="mm/s" />
+      <config_parameter name="spaceResolution" type="int" default="20" measure="mm/s" />
+      <config_parameter name="pace" type="ACE_Time_Value" default="0, 50000" measure="ms" />
+      <config_parameter name="viewerTask" type="bool" default="false" />
+    </config_item>
   </config_group>
 </config>

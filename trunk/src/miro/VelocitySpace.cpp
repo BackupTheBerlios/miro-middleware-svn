@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -25,19 +25,61 @@ namespace Miro
 
   // constructor
   //
-  VelocitySpace::VelocitySpace(int _maxVelocity,
-			       int _spaceResolution,
-			       int _maxAccel,
-			       int _maxDecel,
-			       int _pace) :
-    maxVelocity_(_maxVelocity),		// in mm/sec
-    spaceResolution_(_spaceResolution),	// in mm
-    maxAccel_(_maxAccel),		// in mm/sec2
-    maxDecel_(_maxDecel),		// in mm/sec2
-    pace_(_pace)			// in times/sec
+  VelocitySpace::VelocitySpace() :
+    maxVelocity_(0),		// in mm/sec
+    spaceResolution_(0),	// in mm
+    maxAccel_(0),		// in mm/sec2
+    maxDecel_(0),		// in mm/sec2
+    pace_(0),			// in times/sec
+    wheelBase_(0),
+    space_(NULL),
+    velocitySpace_(NULL)
   {
-    // init member variables for given parameters
+  }
 
+  VelocitySpace::VelocitySpace(VelocitySpace const& _rhs) :
+    maxVelocity_(_rhs.maxVelocity_),
+    spaceResolution_(_rhs.spaceResolution_),
+    maxAccel_(_rhs.maxAccel_),
+    maxDecel_(_rhs.maxDecel_),
+    pace_(_rhs.pace_),
+    wheelBase_(_rhs.wheelBase_),
+    space_(NULL),
+    velocitySpace_(NULL)
+  {
+    init(maxVelocity_, spaceResolution_, 
+	 maxAccel_, maxDecel_, pace_);
+  }
+
+
+  // destructor
+  //
+  VelocitySpace::~VelocitySpace()
+  {
+    delete[] space_;
+    delete[] velocitySpace_;
+  }
+
+  void 
+  VelocitySpace::setWheelBase(double _wheelBase)
+  {
+    wheelBase_ = _wheelBase;
+  }
+
+  void
+  VelocitySpace::init(int _maxVelocity, int _spaceResolution,
+		      int _maxAccel, int _maxDecel, int _pace)
+  {
+    // clean up old variables
+    delete[] space_;
+    delete[] velocitySpace_;
+
+    // set member variables
+    maxVelocity_ = _maxVelocity;
+    spaceResolution_ = _spaceResolution;
+    maxAccel_ = _maxAccel;
+    maxDecel_ = _maxDecel;
+    pace_ = _pace;
 
     // set up velocity space
     int size = 2 * (maxVelocity_/spaceResolution_) + 1;
@@ -50,19 +92,13 @@ namespace Miro
     // set initial dynamic window
     setNewVelocity(Vector2d(0., 0.));
   }
-  // destructor
-  //
-  VelocitySpace::~VelocitySpace()
-  {
-    delete[] space_;
-  }
+
   // add evaluation for preferred direction
   //
   void
   VelocitySpace::addEvalForPreferredDirection(double _prefDir, double _maxSpeed)
   {
     double l_value, r_value, left, right;
-    double _maxSpeed2 = _maxSpeed * _maxSpeed;
     if(fabs(_prefDir) < M_PI_2)
 	_prefDir = -_prefDir;
 
@@ -94,7 +130,6 @@ namespace Miro
   void VelocitySpace::addEvalForStraightVelocity(double _prefDir, double _maxSpeed)
   {
     double l_value, r_value, left, right;
-    double _maxSpeed2 = _maxSpeed * _maxSpeed;
     double axis_direction;
     double axis_value;
     double v_dist;
@@ -129,6 +164,40 @@ namespace Miro
     }
   }
 
+  /**
+   * velocity.real() = translation, velocity.imag() = rotation
+   */  
+  void
+  VelocitySpace::addEvalForVelocity(Vector2d const& _velocity) 
+  {
+#ifdef ASDF
+    for(int l_index = minDynWinLeft_; l_index <= maxDynWinLeft_; l_index++) {
+      for(int r_index = minDynWinRight_; r_index <= maxDynWinRight_; r_index++) {
+
+	double left = getVelocityByIndex(l_index);
+	double right = getVelocityByIndex(r_index);
+	double l_value = 
+	  cos(_prefDir - M_PI_4) * left -
+	  sin(_prefDir - M_PI_4) * right;
+	double r_value =
+	  sin(_prefDir - M_PI_4) * left +
+	  cos(_prefDir - M_PI_4) * right;
+
+        double v_dist = sqrt(left*left + right*right);
+	if (v_dist <= _maxSpeed){
+            axis_direction = (fabs(atan2(l_value, r_value)) > M_PI_2)?-1.0:1.0;
+            axis_value = ((axis_direction*v_dist)/abs(maxVelocity_) + 1.0)/2.0;
+            velocitySpace_[l_index][r_index] =
+	    (int)rint(255. * (((1. +
+			      atan(fabs(l_value /r_value)) / M_PI_2) / 2.)*axis_value));
+
+        }
+	else
+	  velocitySpace_[l_index][r_index] = 0;
+      }
+    }
+#endif
+  }
 
   // clear all evaluations
   //
@@ -322,7 +391,7 @@ namespace Miro
     double biggestRad = 0.;
     Vector2d biggestValueVelocity(0., 0.);
     bool found = false;
-    double left, right, rel;
+    double left, right;
     double temp_left, temp_right;
 
     // destinate best entry
@@ -331,7 +400,7 @@ namespace Miro
 
 	left = getVelocityByIndex(l_index);
 	right = getVelocityByIndex(r_index);
-	rel = atan(left/right);
+	//double	rel = atan(left/right);
 
 	if(    (velocitySpace_[l_index][r_index] > biggestEval)
 	    || (velocitySpace_[l_index][r_index] == biggestEval

@@ -31,11 +31,10 @@ namespace Miro
     pMotion_(DifferentialMotion::_duplicate(_pMotion)),
     pSupplier_(_pSupplier),
     reactor(ar_),
-    timerId(0),
-    velocitySpace_(1000, 20, 2000, 500, 20),
-    conArbViewTask_(NULL),
-    conArbViewTaskCreated(false)
+    timerId(-1),
+    conArbViewTask_(NULL)
   {
+
     currentVelocity_.translation = 0;
     currentVelocity_.rotation = 0.;
 
@@ -58,23 +57,21 @@ namespace Miro
 
   }
 
-  ConstraintArbiter::~ConstraintArbiter() {
-    if(conArbViewTaskCreated) {
-      delete conArbViewTask_;
-      conArbViewTaskCreated = false;
-    }
-  }
-
-#ifdef WE_ACTUALLY_NEED_IT
-  void
-  ConstraintArbiter::init(const ArbiterParameters * _params)
+  ConstraintArbiter::~ConstraintArbiter() 
   {
-    Arbiter::init(_params);
-
-    leftVelocity_ = 0;
-    rightVelocity_ = 0;
   }
-#endif
+
+  ConstraintArbiterParameters * 
+  ConstraintArbiter::getParametersInstance() const
+  {
+    ConstraintArbiterParameters * p = new ConstraintArbiterParameters();
+    // set the wheelbase 
+    // this shouldn't change for different action patterns
+    // but we have to deferr this initialization until runtime
+    p->velocitySpace.setWheelBase(pMotion_->getWheelBase());
+    
+    return p;
+  }
 
   void
   ConstraintArbiter::calcActivation()
@@ -93,22 +90,44 @@ namespace Miro
     }
   }
 
+  void 
+  ConstraintArbiter::init(ArbiterParameters const * _params)
+  {
+    Arbiter::init(_params);
+
+    ConstraintArbiterParameters const * params =
+      dynamic_cast<ConstraintArbiterParameters const *>(params_);
+
+    MIRO_ASSERT(params != NULL);
+
+    // create task for viewing velocity space
+    if(params->viewerTask) {
+      if (conArbViewTask_ != NULL) {
+	conArbViewTask_->cancel();
+	delete conArbViewTask_;
+      }
+      conArbViewTask_ = new ConstraintArbiterViewerTask(&params->velocitySpace);
+      conArbViewTask_->open();
+    }
+    if (timerId != -1)
+      reactor.reset_timer_interval(timerId, params->pace);
+  }
+
   void
   ConstraintArbiter::open()
   {
     // open arbiter
     Arbiter::open();
 
-    // create task for viewing velocity space
-    if(!conArbViewTaskCreated) {
-      conArbViewTask_ = new ConstraintArbiterViewerTask(&velocitySpace_);
-      conArbViewTask_->open();
-      conArbViewTaskCreated = true;
-    }
+    ConstraintArbiterParameters const * params =
+      dynamic_cast<ConstraintArbiterParameters const *>(params_);
+
+    MIRO_ASSERT(params != NULL);
 
     // init timer for calculating velocity space every 50000usecs
-    timerId = reactor.schedule_timer(this, 0, ACE_Time_Value(0,0),
-	ACE_Time_Value(0, 50000));
+    timerId = reactor.schedule_timer(this, 0,
+				     ACE_Time_Value(0,0),
+				     params->pace);
 
     // debug message
     MIRO_DBG_OSTR(MIRO,LL_NOTICE, "ConstraintArbiter.cpp : open()" << std::endl);
@@ -117,15 +136,21 @@ namespace Miro
   void
   ConstraintArbiter::close()
   {
+    // debug message
+    MIRO_DBG_OSTR(MIRO,LL_CTOR_DTOR, "ConstraintArbiter.cpp : close()" << std::endl);
+
+    conArbViewTask_->cancel();
+    delete conArbViewTask_;
+    conArbViewTask_ = NULL;
+
     // release timer
-    reactor.cancel_timer(timerId);
-    timerId = 0;
+    if (timerId != -1) {
+      reactor.cancel_timer(timerId);
+      timerId = -1;
+    }
 
     // stop robot
     pMotion_->setLRVelocity(0, 0);
-
-    // debug message
-    MIRO_DBG_OSTR(MIRO,LL_CTOR_DTOR, "ConstraintArbiter.cpp : close()" << std::endl);
 
     // close arbiter
     Arbiter::close();
@@ -134,30 +159,45 @@ namespace Miro
   int
   ConstraintArbiter::handle_timeout(const ACE_Time_Value &, const void*)
   {
-    std::complex<double> velocity;
-    std::FILE *logFile1;
+    ConstraintArbiterParameters * params =
+      const_cast<ConstraintArbiterParameters *>
+      ( dynamic_cast<ConstraintArbiterParameters const *>(params_));
 
-    // let each behaviour calculate its velocity space ascend by priority
+    Vector2d velocity;
+    //    std::FILE *logFile1;
+
+    ACE_Time_Value start = ACE_OS::gettimeofday();
+
     typedef std::vector<Behaviour *> BehaviourVector;
+
+    // get the registered behaviours ascenting by priority
     BehaviourVector bv(params_->priorities.size());
     ArbiterParameters::RegistrationMap::const_iterator j;
     for(j = params_->priorities.begin(); j != params_->priorities.end(); j++) {
       bv[j->second] = j->first;
     }
+
+    // preinitialize the velocity space
+    params->velocitySpace.clearAllEvals();
+
+    // let each behaviour calculate its velocity space
     BehaviourVector::const_iterator k;
-    velocitySpace_.clearAllEvals();
     for(k = bv.begin(); k != bv.end(); k++) {
-      (*k)->addEvaluation(&velocitySpace_);
+      (*k)->addEvaluation(&params->velocitySpace);
     }
 
     // calculate new velocity using the content of the velocity space
-    velocity = velocitySpace_.applyObjectiveFunctionToEval();
+    velocity = params->velocitySpace.applyObjectiveFunctionToEval();
 
     //    cout << "LEFT: " << velocity.real() << " ::: " << velocity.imag() << endl;
 
     // set steering commands
     pMotion_->setLRVelocity(velocity.real(), velocity.imag());
 
+    ACE_Time_Value stop = ACE_OS::gettimeofday();
+
+    MIRO_DBG_OSTR(MIRO, LL_PRATTLE, "ConstraintArbiter eval time: " << stop - start);
+    
 //    logFile1 = std::fopen("velocityspace.log","a");
 //    for(int r_index = 0; r_index <= 2*(velocitySpace_.maxVelocity_/velocitySpace_.spaceResolution_)+1; r_index++) {
 //	for(int l_index = 0; l_index <= 2*(velocitySpace_.maxVelocity_/velocitySpace_.spaceResolution_)+1; l_index++) {
@@ -174,4 +214,4 @@ namespace Miro
   {
     return name_;
   }
-};
+}

@@ -49,6 +49,7 @@ sources1 = \
 	MotionArbiter.cpp \
 	MotionArbiterMessage.cpp \
 	ConstraintArbiter.cpp \
+	ConstraintArbiterParameters.cpp \
 	ConstraintArbiterViewer.cpp \
 	ConstraintArbiterViewerTask.cpp \
 	Behaviour.cpp \
