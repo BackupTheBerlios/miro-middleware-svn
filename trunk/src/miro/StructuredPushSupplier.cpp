@@ -116,8 +116,8 @@ using CosNotifyChannelAdmin::StructuredProxyPushConsumer;
   }
 
   void
-  StructuredPushSupplier::subscription_change(const CosNotification::EventTypeSeq& added,
-					      const CosNotification::EventTypeSeq& removed
+  StructuredPushSupplier::subscription_change(const CosNotification::EventTypeSeq& DBG(added),
+					      const CosNotification::EventTypeSeq& DBG(removed)
 					      ACE_ENV_ARG_DECL_NOT_USED)
     throw(CORBA::SystemException, CosNotifyComm::InvalidEventType)
   {
