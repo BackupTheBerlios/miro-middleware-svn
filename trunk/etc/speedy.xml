@@ -176,9 +176,9 @@
 
       <parameter name="Camera" >
 	<parameter value="0.060000" name="Latency" />
-	<parameter value="34.5" name="Alpha" />
+	<parameter value="31.5" name="Alpha" />
 	<parameter value="670" name="Height" />
-
+	
 	<parameter value=" 6.4000000000e+02" name="Ncx" />
 	<parameter value=" 6.4000000000e+02" name="Nfx" />
 	<parameter value=" 7.4000000000e-03" name="Dx" />
@@ -232,6 +232,7 @@
         <parameter value="320" name="Width" />
         <parameter value="240" name="Height" />
         <parameter name="Filter">
+	  <!--
           <parameter value="DeviceQuickCam" name="Name" />
           <parameter value="DeviceQuickCam" name="Type" />
           <parameter name="Successor" >
@@ -252,6 +253,7 @@
               </parameter>
             </parameter>
           </parameter>
+	  -->
         </parameter>
       </parameter>
 
