@@ -2,35 +2,41 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2000, 2001, 2002
+// (c) 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-#ifndef Parameter_h
-#define Parameter_h
+#ifndef Miro_CFG_Parameter_h
+#define Miro_CFG_Parameter_h
 
 #include <qstring.h>
 
-struct Parameter
+namespace Miro
 {
-  QString type_;
-  QString name_;
-  QString default_;
-  QString fullDefault_;
-  QString measure_;
-  QString description_;
-  
-  Parameter();
-  Parameter(const QString& _type,
-	    const QString& _name,
-	    const QString& _default,
-	    const QString& _fullDefault,
-	    const QString& _measure,
-	    const QString& _description);
-};
+  namespace CFG
+  {
+    struct Parameter
+    {
+      QString type_;
+      QString name_;
+      QString default_;
+      QString fullDefault_;
+      QString measure_;
+      QString description_;
+      
+      Parameter();
+      Parameter(const QString& _type,
+		const QString& _name,
+		const QString& _default,
+		const QString& _fullDefault,
+		const QString& _measure,
+		const QString& _description);
+    };
+    
+    bool operator < (const Parameter& lhs, const Parameter& rhs);
+  }
+}
 
-bool operator < (const Parameter& lhs, const Parameter& rhs);
-
-#endif
+#endif // Miro_CFG_Parameter_h

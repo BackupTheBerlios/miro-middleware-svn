@@ -2,11 +2,10 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2000, 2001, 2002
+// (c) 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
-// $Date$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -19,6 +18,7 @@
 #include <qfileinfo.h>
 
 #include <iostream>
+#include <algorithm>
 
 #include <sys/time.h>
 
@@ -30,220 +30,257 @@ namespace
   QString spaces("                                                        ");
 };
 
-Generator::Generator()
+namespace Miro
 {
-  addInclude("iostream");
-  addInclude("qdom.h");
+  namespace CFG
+  {
+    Generator::Generator()
+    {
+      addInclude("iostream");
+      addInclude("qdom.h");
 
-}
+    }
 
-void
-Generator::addinclude(const QString& _include)
-{
-  include_.insert(_include);
-}
+    void
+    Generator::addinclude(const QString& _include)
+    {
+      include_.insert(_include);
+    }
 
-void
-Generator::addInclude(const QString& _Include)
-{
-  Include_.insert(_Include);
-}
+    void
+    Generator::addInclude(const QString& _Include)
+    {
+      Include_.insert(_Include);
+    }
 
-void
-Generator::addSrcInclude(const QString& _Include)
-{
-  srcInclude_.insert(_Include);
-}
+    void
+    Generator::addSrcInclude(const QString& _Include)
+    {
+      srcInclude_.insert(_Include);
+    }
 
-void
-Generator::addForwardDeclaration(const QString& _decl)
-{
-  forwardDeclaration_.insert(_decl);
-}
+    void
+    Generator::addForwardDeclaration(const QString& _decl)
+    {
+      forwardDeclaration_.insert(_decl);
+    }
 
-void
-Generator::addLocalForwardDeclaration(const QString& _decl)
-{
-  localForwardDeclaration_.insert(_decl);
-}
+    void
+    Generator::addLocalForwardDeclaration(const QString& _decl)
+    {
+      localForwardDeclaration_.insert(_decl);
+    }
 
-void
-Generator::addClass(const QString& _group, const Class& _class)
-{
-  class_.push_back(_class);
-  QString nameSpace;
-  QStringVector::const_iterator first, last = namespace_.end();
-  for (first = namespace_.begin(); first != last; ++first)
-    nameSpace += (*first) + "::";
-  class_.back().setNameSpace(nameSpace);
-  groups_.insert(std::make_pair(_group, _class));
-}
+    void
+    Generator::addType(const QString& _group, const Type& _type)
+    {
+      type_.push_back(_type);
+      QString nameSpace;
+      QStringVector::const_iterator first, last = namespace_.end();
+      for (first = namespace_.begin(); first != last; ++first)
+	nameSpace += (*first) + "::";
+      type_.back().setNameSpace(nameSpace);
+      groups_.insert(std::make_pair(_group, type_.back()));
+    }
 
-void
-Generator::setBaseName(const QString& _fileName)
-{
-  fileName_ = _fileName;
-}
+    void
+    Generator::setBaseName(const QString& _fileName)
+    {
+      fileName_ = _fileName;
+    }
 
-void
-Generator::setHeaderExtension(const QString& _extensionName)
-{
-  extensionName_ = _extensionName;
-}
+    void
+    Generator::setHeaderExtension(const QString& _extensionName)
+    {
+      extensionName_ = _extensionName;
+    }
 
-void 
-Generator::addNamespace(const QString& _namespace)
-{
-  namespace_.push_back(_namespace);
-}
+    void 
+    Generator::addNamespace(const QString& _namespace)
+    {
+      namespace_.push_back(_namespace);
+    }
 
-void
-Generator::generateHeader(std::ostream& ostr) const
-{
-  if(fileName_.isEmpty())
-    throw QString("No file name specified.");
+    void
+    Generator::generateHeader(std::ostream& ostr) const
+    {
+      if(fileName_.isEmpty())
+	throw QString("No file name specified.");
 
-  struct timeval t;
-  struct timezone z;
-  gettimeofday(&t, &z);
+      struct timeval t;
+      struct timezone z;
+      gettimeofday(&t, &z);
 
-  int indent = 0;
+      int indent = 0;
 
-  QFileInfo fileName(fileName_);
-  QString includeGuard(fileName.baseName() + "_" + extensionName_);
+      QFileInfo fileName(fileName_);
+      QString includeGuard(fileName.baseName() + "_" + extensionName_);
 
-  ostr << head << std::endl;
-  ostr << "#ifndef " << includeGuard
-       << "_" << t.tv_usec // make it truely unique
-       << std::endl
-       << "#define " << includeGuard
-       << "_" << t.tv_usec // make it truely unique
-       << std::endl;
+      ostr << head << std::endl;
+      ostr << "#ifndef " << includeGuard
+	   << "_" << t.tv_usec // make it truely unique
+	   << std::endl
+	   << "#define " << includeGuard
+	   << "_" << t.tv_usec // make it truely unique
+	   << std::endl;
 
-  QStringSet::const_iterator i;
-  if (include_.size() > 0)
-    ostr << std::endl;
-  for (i = include_.begin(); i != include_.end(); ++i)
-    ostr << "#include \""<< *i << "\"" << std::endl;
-  if (Include_.size() > 0)
-    ostr << std::endl;
-  for (i = Include_.begin(); i != Include_.end(); ++i)
-    ostr << "#include <"<< *i << ">" << std::endl;
+      QStringSet::const_iterator i;
+      if (include_.size() > 0)
+	ostr << std::endl;
+      for (i = include_.begin(); i != include_.end(); ++i)
+	ostr << "#include \""<< *i << "\"" << std::endl;
+      if (Include_.size() > 0)
+	ostr << std::endl;
+      for (i = Include_.begin(); i != Include_.end(); ++i)
+	ostr << "#include <"<< *i << ">" << std::endl;
 
-  ostr << std::endl;
-
-  if (forwardDeclaration_.size() != 0) {
-    ostr << "// forward declarations" << std::endl;
-    for (i = forwardDeclaration_.begin(); i != forwardDeclaration_.end(); ++i)
-      ostr << "class " << *i << ";" << std::endl;
-    ostr << std::endl;
-  }
-
-  QStringVector::const_iterator f, l = namespace_.end();
-  for (f = namespace_.begin(); f != l; ++f) {
-    ostr << spaces.left(indent) << "namespace " <<  *f << std::endl
-	 << spaces.left(indent) << "{" << std::endl;
-    indent += STEP;
-  }
-
-  if (localForwardDeclaration_.size() != 0) {
-    ostr << "// forward declarations" << std::endl;
-    for (i = localForwardDeclaration_.begin(); i != localForwardDeclaration_.end(); ++i)
-      ostr << "class " << *i << ";" << std::endl;
-    ostr << std::endl;
-  }
-
-  ClassVector::const_iterator first, last = class_.end();
-  for (first = class_.begin(); first != last; ++first) {
-    if (first != class_.begin())
       ostr << std::endl;
-    if (!first->isDummy())
-      first->generateHeader(ostr, indent);
-  }
+
+      if (forwardDeclaration_.size() != 0) {
+	ostr << "// forward declarations" << std::endl;
+	for (i = forwardDeclaration_.begin(); i != forwardDeclaration_.end(); ++i)
+	  ostr << "class " << *i << ";" << std::endl;
+	ostr << std::endl;
+      }
+
+      QStringVector::const_iterator f, l = namespace_.end();
+      for (f = namespace_.begin(); f != l; ++f) {
+	ostr << spaces.left(indent) << "namespace " <<  *f << std::endl
+	     << spaces.left(indent) << "{" << std::endl;
+	indent += STEP;
+      }
+
+      if (localForwardDeclaration_.size() != 0) {
+	ostr << "// forward declarations" << std::endl;
+	for (i = localForwardDeclaration_.begin(); i != localForwardDeclaration_.end(); ++i)
+	  ostr << "class " << *i << ";" << std::endl;
+	ostr << std::endl;
+      }
+
+      TypeVector::const_iterator first, last = type_.end();
+      for (first = type_.begin(); first != last; ++first) {
+	if (first != type_.begin())
+	  ostr << std::endl;
+	if (!first->isDummy())
+	  first->generateHeader(ostr, indent);
+      }
    
-  while (indent) {
-    indent -= STEP;
-    ostr << spaces.left(indent) << "};" << std::endl;
-  }
+      while (indent) {
+	indent -= STEP;
+	ostr << spaces.left(indent) << "};" << std::endl;
+      }
 
-  ostr << std::endl
-       << "#endif // " << fileName_ << "_" << extensionName_ << std::endl;
-}
+      ostr << std::endl
+	   << "#endif // " << fileName_ << "_" << extensionName_ << std::endl;
+    }
 
-void
-Generator::generateSource(std::ostream& ostr) const
-{
-  if(fileName_.isEmpty())
-    throw QString("No file name specified.");
+    void
+    Generator::generateSource(std::ostream& ostr) const
+    {
+      if(fileName_.isEmpty())
+	throw QString("No file name specified.");
 
-  int indent = 0;
+      int indent = 0;
 
-  ostr << head << std::endl;
-  ostr << "#include \"" << fileName_ << "." << extensionName_ << "\"" << std::endl
-       << std::endl;
+      ostr << head << std::endl;
+      ostr << "#include \"" << fileName_ << "." << extensionName_ << "\"" << std::endl
+	   << std::endl;
 
-  QStringSet::const_iterator i;
-  for (i = srcInclude_.begin(); i != srcInclude_.end(); ++i)
-    ostr << "#include <"<< *i << ">" << std::endl;
+      QStringSet::const_iterator i;
+      for (i = srcInclude_.begin(); i != srcInclude_.end(); ++i)
+	ostr << "#include <"<< *i << ">" << std::endl;
 
-  ostr << "#include <miro/XmlParse.h>" << std::endl
-       << "#include <qdom.h>" << std::endl
-       << std::endl;
+      ostr << "#include <miro/XmlParse.h>" << std::endl
+	   << "#include <qdom.h>" << std::endl
+	   << std::endl;
 
-  // match the operator <<= from Miro into local namespace
-  if (namespace_.size() == 0 || 
-      namespace_.front() != QString("Miro")) {
-    ostr << "namespace" << std::endl
-	 << "{" << std::endl
-	 << "  using Miro::operator<<=;" << std::endl
-	 << "  using Miro::operator>>=;" << std::endl
-	 << "  using Miro::operator<<;" << std::endl
-	 << "};" << std::endl
-	 << std::endl;
-  }
+      // match the operator <<= from Miro into local namespace
+      if (namespace_.size() == 0 || 
+	  namespace_.front() != QString("Miro")) {
+	ostr << "namespace" << std::endl
+	     << "{" << std::endl
+	     << "  using Miro::operator<<=;" << std::endl
+	     << "  using Miro::operator>>=;" << std::endl
+	     << "  using Miro::operator<<;" << std::endl
+	     << "};" << std::endl
+	     << std::endl;
+      }
 
-  QStringVector::const_iterator f, l = namespace_.end();
-  for (f = namespace_.begin(); f != l; ++f) {
-    ostr << spaces.left(indent) << "namespace " <<  *f << std::endl
-	 << spaces.left(indent) << "{" << std::endl;
-    indent += STEP;
-  }
+      QStringVector::const_iterator f, l = namespace_.end();
+      for (f = namespace_.begin(); f != l; ++f) {
+	ostr << spaces.left(indent) << "namespace " <<  *f << std::endl
+	     << spaces.left(indent) << "{" << std::endl;
+	indent += STEP;
+      }
 
-  ClassVector::const_iterator first, last = class_.end();
-  for (first = class_.begin(); first != last; ++first) {
-    if (first != class_.begin())
-      ostr << std::endl;
-    if (!first->isDummy())
-      first->generateSource(ostr, indent);
-  }
+      TypeVector::const_iterator first, last = type_.end();
+      for (first = type_.begin(); first != last; ++first) {
+	if (first != type_.begin())
+	  ostr << std::endl;
+	if (!first->isDummy())
+	  first->generateSource(ostr, indent);
+      }
 
-  while (indent) {
-    indent -= STEP;
-    ostr << spaces.left(indent) << "};" << std::endl;
-  }
+      while (indent) {
+	indent -= STEP;
+	ostr << spaces.left(indent) << "};" << std::endl;
+      }
 
-}
+    }
 
-void
-Generator::getGroupedClasses(const QString& _group, 
-			     GroupMap::const_iterator& _first, GroupMap::const_iterator& _last) const
-{
-  _first = groups_.lower_bound(_group);
-  _last = groups_.upper_bound(_group);
-}
+    Generator::QStringVector
+    Generator::groups() const
+    {
+      QStringVector result;
+      result.reserve(groups_.size());
+      GroupMap::const_iterator first, last = groups_.end();
+      for (first = groups_.begin(); first != last; ++first) {
+	result.push_back(first->first);
+	result.back()[0] = result.back()[0].upper();
+      }
+      std::sort(result.begin(), result.end());
+      // FIXME: this should actually 
+      QStringVector::iterator i = std::unique(result.begin(), result.end());
+      result.erase(i, result.end());
+      return result;
+    }
 
-const Class *
-Generator::getClass(const QString& _name) const
-{
-  ClassVector::const_iterator first, last = class_.end();
-  for (first = class_.begin(); first != last; ++first)
-    if (first->name() == _name ||
-	first->name() + "Parameters" == _name ||
-	first->fullName() == _name)
+    void
+    Generator::getGroupedTypes(const QString& _group, 
+				GroupMap::const_iterator& _first, GroupMap::const_iterator& _last) const
+    {
+      _first = groups_.lower_bound(_group);
+      _last = groups_.upper_bound(_group);
+    }
+
+    const Type *
+    Generator::getType(const QString& _name) const
+    {
+      TypeVector::const_iterator first, last = type_.end();
+      for (first = type_.begin(); first != last; ++first)
+	if (first->name() == _name ||
+	    first->name() + "Parameters" == _name ||
+	    first->fullName() == _name ||
+	    first->fullName() == _name + "Parameters")
 #if GCC_MAJOR_VERSION > 2
-      return first.base();
+	  return first.base();
 #else
       return first;
 #endif
-  return NULL;
+      return NULL;
+    }
+
+    void
+    Generator::clearNamespace() {
+      namespace_.clear();
+    }
+
+    std::ostream& operator << (std::ostream& _ostr, const Generator& _rhs)
+    {
+      Generator::TypeVector::const_iterator first, last = _rhs.type_.end();
+      for (first = _rhs.type_.begin(); first != last; ++first) 
+	_ostr << first->fullName() << std::endl;
+      return _ostr;
+    }
+  }
 }

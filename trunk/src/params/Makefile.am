@@ -19,7 +19,7 @@ lib_LTLIBRARIES = libmiroParams.la
 
 
 sources = \
-	Class.cpp \
+	Type.cpp \
 	Parameter.cpp \
 	Parser.cpp \
 	Generator.cpp \

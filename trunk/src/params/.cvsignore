@@ -3,7 +3,7 @@ Makefile.in
 Makefile
 .deps
 .libs
-Class.lo
+Type.lo
 Generator.lo
 Parameter.lo
 Parser.lo

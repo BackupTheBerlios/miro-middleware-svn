@@ -1,27 +1,42 @@
-#ifndef TextErrorHandler_h
-#define TextErrorHandler_h
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2002, 2003, 2004
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef Miro_CFG_TextErrorHandler_h
+#define Miro_CFG_TextErrorHandler_h
 
 #include <qxml.h>
 
-class TextErrorHandler : public QXmlErrorHandler
+namespace Miro
 {
-  typedef QXmlErrorHandler Super;
+  namespace CFG
+  {
+    class TextErrorHandler : public QXmlErrorHandler
+    {
+      typedef QXmlErrorHandler Super;
 
- public:
+    public:
+      
+      virtual ~TextErrorHandler();
+      
+      virtual bool warning ( const QXmlParseException & exception );
+      virtual bool error ( const QXmlParseException & exception );
+      virtual bool fatalError ( const QXmlParseException & exception );
+      virtual QString errorString ();
+      
+    protected:
+      void createErrorMessage(const QString& type,
+			      const QXmlParseException & exception);
+      
+      QString error_;
+    };
+  }
+}
 
-  virtual ~TextErrorHandler();
-
-  virtual bool warning ( const QXmlParseException & exception );
-  virtual bool error ( const QXmlParseException & exception );
-  virtual bool fatalError ( const QXmlParseException & exception );
-  virtual QString errorString ();
-
- protected:
-
-  void createErrorMessage(const QString& type,
-			  const QXmlParseException & exception);
-
-  QString error_;
-};
-
-#endif
+#endif // Miro_CFG_TextErrorHandler_h
