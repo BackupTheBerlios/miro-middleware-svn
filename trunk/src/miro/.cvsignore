@@ -4,6 +4,12 @@ BatteryC.cpp
 BatteryS.h
 BatteryS.i
 BatteryS.cpp
+GripperC.h
+GripperC.i
+GripperC.cpp
+GripperS.h
+GripperS.i
+GripperS.cpp
 CanonCameraC.h
 CanonCameraC.i
 CanonCameraC.cpp

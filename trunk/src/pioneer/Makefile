@@ -34,7 +34,8 @@ FILES = 	PioneerConnection \
 		PioneerParameters \
 		CanonPanTiltImpl \
 		CanonCameraImpl \
-		CanonMessage
+		CanonMessage \
+		GripperImpl
 
 DEFS  = $(addsuffix .h,$(FILES))
 LSRC  = $(addsuffix .cpp,$(FILES))

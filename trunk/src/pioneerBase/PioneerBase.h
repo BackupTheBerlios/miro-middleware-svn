@@ -28,6 +28,7 @@
 #include "pioneer/PioneerStallImpl.h"
 #include "pioneer/CanonPanTiltImpl.h"
 #include "pioneer/CanonCameraImpl.h"
+#include "pioneer/GripperImpl.h"
 #include "miro/RangeSensorImpl.h"
 
 #include <orbsvcs/CosNotifyChannelAdminS.h>
@@ -82,6 +83,7 @@ private:
   Miro::RangeSensorImpl tactile;
   Canon::CanonPanTiltImpl canonPanTilt;
   Canon::CanonCameraImpl canonCamera;
+  Miro::GripperImpl gripper;
 
   Miro::Odometry_var pOdometry;
   Miro::Motion_var pMotion;
@@ -91,6 +93,7 @@ private:
   Miro::Battery_var pBattery;
   Miro::CanonPanTilt_var pCanonPanTilt;
   Miro::CanonCamera_var pCanonCamera;
+  Miro::Gripper_var pGripper;
 };
 #endif
 

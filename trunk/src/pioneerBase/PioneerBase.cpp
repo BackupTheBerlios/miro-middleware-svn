@@ -63,7 +63,8 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   sonar(Pioneer::Parameters::instance()->sonarDescription, &structuredPushSupplier_),
   tactile(Pioneer::Parameters::instance()->tactileDescription, &structuredPushSupplier_),
   canonPanTilt(pioneerConnection, *pPioneerConsumer,Pioneer::Parameters::instance()->cameraUpsideDown),
-  canonCamera(pioneerConnection, *pPioneerConsumer, canonPanTilt.getAnswer())
+  canonCamera(pioneerConnection, *pPioneerConsumer, canonPanTilt.getAnswer()),
+  gripper(pioneerConnection, *pPioneerConsumer)
 {
   pOdometry = odometry._this();
   pMotion = motion._this();
@@ -73,6 +74,7 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   pBattery = battery._this();
   pCanonPanTilt = canonPanTilt._this();
   pCanonCamera = canonCamera._this();
+  pGripper = gripper._this();
 
   addToNameService(pOdometry.in(), "Odometry");
   addToNameService(pMotion.in(), "Motion");
@@ -87,6 +89,8 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
     addToNameService(pCanonPanTilt.in(), "PanTilt");
     addToNameService(pCanonPanTilt.in(), "Camera");
   }
+
+  addToNameService(pGripper.in(), "Gripper");
 
   // start the asychronous consumer listening for the hardware
   reactorTask.open(0);

@@ -23,6 +23,7 @@
 #include "pioneer/PioneerStallImpl.h"
 #include "pioneer/CanonPanTiltImpl.h"
 #include "pioneer/CanonCameraImpl.h"
+#include "pioneer/GripperImpl.h"
 
 #include "psos/PsosEventHandler.h"
 
@@ -72,6 +73,7 @@ struct Service
   Pioneer::StallImpl * pStallImpl;
   Canon::CanonPanTiltImpl canonPanTiltImpl;
   Canon::CanonCameraImpl canonCamera;
+  Miro::GripperImpl gripper;
   Psos::EventHandler * pEventHandler;
   Pioneer::Connection connection;
   
@@ -88,9 +90,84 @@ Service::Service() :
   pStallImpl(new Pioneer::StallImpl()),
   canonPanTiltImpl(connection, *pConsumer,Pioneer::Parameters::instance()->cameraUpsideDown),
   canonCamera(connection, *pConsumer,canonPanTiltImpl.getAnswer()),
+  gripper(connection, *pConsumer),
   pEventHandler(new Psos::EventHandler(pConsumer, connection)),
   connection(reactorTask.reactor(), pEventHandler, pConsumer)
 {}
+
+void gripperMenu(Service& service)
+{
+  bool loop=true;
+  char c;
+  string str;
+
+  while(loop) {
+    cout << endl
+	 << "*****  Gripper menu:  *****"<< endl
+	 << "1 - set Grip pressure" << endl
+	 << "2 - open Grip" << endl
+	 << "3 - close Grip" << endl
+	 << "4 - raise Grip" << endl
+	 << "5 - lower Grip" << endl
+	 << "6 - store Grip " << endl
+	 << "7 - stop Grip" << endl
+	 << endl << "x - back" << endl;
+    cin >> str;
+    c = str[0];
+    printf("\033[2J");             // clear screen
+    printf("\033[0;0f");           // set cursor
+    
+    switch (c)
+      {
+      case '1' :
+	{
+	  double pressure;
+	  cout << "pressure (0-2 Kg.): " << endl;
+	  cin >> pressure;
+
+	  service.gripper.setGripPressure(pressure);
+	  break;
+	}
+      case '2' :
+	{
+	  service.gripper.openGrip();
+	  break;
+	}
+      case '3' :
+	{
+	  service.gripper.closeGrip();
+	  break;
+	}
+      case '4' :
+	{
+	  service.gripper.raiseGrip();
+	  break;
+	}
+      case '5' :
+	{
+	  service.gripper.lowerGrip();
+	  break;
+	}
+      case '6':
+	{
+	  service.gripper.storeGrip();
+	  break;
+	}
+      case '7':
+	{
+	  service.gripper.stopGrip();
+	  break;
+	}
+      case 'X':
+      case 'x' : loop=false;break;
+      default: cout << "gibts doch gar net!!!" << endl;
+	
+      }//switch(c)
+    
+  } //while(loop)
+
+}
+
 
 void cameraMenu(Service& service)
 {
@@ -321,9 +398,10 @@ int main(int argc, char* argv[])
 	       << "7 - status (Sonar and Stall infos)" << endl
 	       << "8 - Odo status" << endl
 	       << "9 - set rotation velocity" << endl
-	       << "0 - all motors off!!!" << endl;
-	  if (Pioneer::Parameters::instance()->camera) cout << "a - camera Options" << endl;
-	  cout
+	       << "0 - all motors off!!!";
+	  if (Pioneer::Parameters::instance()->camera) cout << endl << "a - camera Options";
+	  cout << endl
+	       << "b - gripper Options" << endl
 	       << endl << "x - Program end!!!" << endl;
 	  cin >> str;
           c = str[0];
@@ -422,6 +500,11 @@ int main(int argc, char* argv[])
 	 case 'a' :
 	   {
 	     if (Pioneer::Parameters::instance()->camera) cameraMenu(service);
+	     break;
+	   }
+	 case 'b' :
+	   {
+	     gripperMenu(service);
 	     break;
 	   }
 	 case 'X':

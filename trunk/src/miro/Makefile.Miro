@@ -81,12 +81,14 @@ ifneq (,$(findstring Deprecated,$(MIRO_COMPONENTS)))
 endif
 ifneq (,$(findstring Pioneer1,$(MIRO_COMPONENTS)))
   IDL_FILES += 	PioneerStall \
-		PioneerMotion
+		PioneerMotion \
+		Gripper
 endif
 ifneq (,$(findstring Sparrow99,$(MIRO_COMPONENTS)))
   ifeq (,$(findstring Pioneer1, $(MIRO_COMPONENTS)))
     IDL_FILES +=PioneerStall \
-		PioneerMotion
+		PioneerMotion \
+		Gripper
   endif
   IDL_FILES +=	Kicker \
 		SparrowPanTilt \

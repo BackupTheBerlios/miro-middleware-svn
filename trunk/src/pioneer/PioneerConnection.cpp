@@ -197,4 +197,16 @@ namespace Pioneer
     writeMessage(answer);
   }
 
+  void Connection::gripperCommand(unsigned short command)
+  {
+    Message com(SF_COMGRIPPER,command);
+    writeMessage(com);
+  }
+
+  void Connection::gripperValue(unsigned short value)
+  {
+    Message com(SF_COMGVAL,value);
+    writeMessage(com);
+  }
+
 };
