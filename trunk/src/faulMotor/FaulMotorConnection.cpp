@@ -78,7 +78,7 @@ namespace FaulMotor
     	writeMessage(speedMessage);
     }
 
-    speed = speed *4.2;//* 112;
+    speed = speed * 4.2;//* 112;
     strcpy(buffer,"0v\0");
     sprintf(strbuff, "%d", speed);
     strcat(buffer, strbuff);
