@@ -525,10 +525,9 @@ namespace Miro
 	break;
 
       default:
-	analyzeTraffic(_timestamp, _iov[0].iov_len);
+	analyzeTraffic(_timestamp, len);
 	break;
       }
-
     }
 
 
@@ -546,10 +545,11 @@ namespace Miro
     Sender::sendData(iovec *_iov, size_t _iovLen) 
     {
       ACE_Time_Value start = ACE_OS::gettimeofday();
-      return configuration_->getSocket()->send(_iov, (int)_iovLen);
+      int rc =  configuration_->getSocket()->send(_iov, (int)_iovLen);
       ACE_Time_Value stop = ACE_OS::gettimeofday();
 
       MIRO_DBG_OSTR(NMC, LL_PRATTLE, "Sender: time for sending=" << (stop - start));
+      return rc;
     }
 	
     /** Set an Object for event filtering.
@@ -582,7 +582,7 @@ namespace Miro
 	for (first = bandwidth_.begin(); first != last; ++first) {
 	  sum += first->second;
 	}
-	sum /= TIMEOUT_MSEC;
+	sum /= TIMEOUT_MSEC / 1000;
 
 
 	MIRO_DBG_OSTR(NMC, LL_DEBUG, "Sender: output per second = " << sum);
