@@ -73,7 +73,7 @@ namespace Video
     FilterRepository();
     //! Copy construction is prohibited
     FilterRepository(FilterRepository const&) {}
-    friend class Miro::Singleton<FilterRepository>;
+    friend class Miro::Singleton<FilterRepository>::ACE_Singleton_Type;
   };
 
   template<class T>
