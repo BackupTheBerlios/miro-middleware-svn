@@ -99,7 +99,8 @@ namespace Miro
     signals_.sig_add(SIGTERM);
 
     pServer = this;
-    ACE_Sig_Action sa ((ACE_SignalHandler) handler, signals_);
+    ACE_Sig_Action sa ((ACE_SignalHandler) handler, SIGINT);
+    ACE_Sig_Action sa2 ((ACE_SignalHandler) handler, SIGTERM);
 
     // Activate the POA manager.
     poa_mgr->activate();
