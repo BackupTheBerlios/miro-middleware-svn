@@ -100,7 +100,7 @@ int EventHandler::handle_input(ACE_HANDLE){
        
        if (e.number == 1){
           
-	  velocity.translation = -(maxTranslation * e.value * 80)/(32767*100);
+	  velocity.translation = -(maxTranslation * e.value * 4)/(32767*5);
 	  oldtrans = velocity.translation;
 	  motion_->setVelocity(velocity);
 	
