@@ -81,7 +81,7 @@ namespace Sparrow
     Consumer2003 * consumer;
     EventHandler2003 * eventHandler;
     
-    unsigned int panTicksPerDegree;
+    unsigned int panTicksPerDegree_;
     float currentPanPos;			// Pan position as rad
 
     short rad2servo0Ticks(double rad) const;

@@ -12,9 +12,9 @@
     </config_item>
 
     <config_item name="Pan" parent="Miro::Pan" final="false">
-      <config_parameter name="rangeMin" type="angle" inherited="true" default="-170" />
-      <config_parameter name="rangeMax" type="angle" inherited="true" default="170" />
-
+      <config_parameter name="servo" type="bool" default="true" />
+      <config_parameter name="rangeMin" type="angle" inherited="true" default="-900" />
+      <config_parameter name="rangeMax" type="angle" inherited="true" default="90" />
       <config_parameter name="panLatency" type="ACE_Time_Value" default="0, 50000" measure="sec" />
       <config_parameter name="panSwing" type="ACE_Time_Value" default="0, 500000" measure="sec" />
       <config_parameter name="panRadPerSec" type="angle" default="180" measure="&deg;" />

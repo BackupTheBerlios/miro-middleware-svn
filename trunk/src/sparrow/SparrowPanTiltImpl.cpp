@@ -132,39 +132,42 @@ namespace Sparrow
   {
     Miro::PanPositionIDL position;
 
-/*    if (!prvPanning(stamp)) {
-      // the pan doesn't move
-      position.angle = (stamp < timeLastSet + params_.panLatency)? lastPosition : nextPosition;
-      position.accuracy = params_.panAccuracy;
-    }
-    else {
-      ACE_Time_Value t = stamp;
-      t -= timeLastSet;
-      t -= params_.panLatency;
-
-      // estimated pan angle
-      double alpha = t.usec();
-      alpha /= 1000000.;
-      alpha += t.sec();
-      alpha *= params_.panRadPerSec;
-
-      double delta = fabs(nextPosition - lastPosition);
-
-      if (alpha > delta) {
-	// it is swing time
-	position.angle = nextPosition;
-	position.accuracy = params_.panSwingAccuracy;
+    if (params_.servo) {
+      if (!prvPanning(stamp)) {
+	// the pan doesn't move
+	position.angle = (stamp < timeLastSet + params_.panLatency)? lastPosition : nextPosition;
+	position.accuracy = params_.panAccuracy;
       }
       else {
-	// we are panning
-	position.angle = (nextPosition > lastPosition)?
-	  lastPosition + alpha : lastPosition - alpha;
-	position.accuracy = std::max(delta * .25, params_.panSwingAccuracy);
-      }
-    }*/
+	ACE_Time_Value t = stamp;
+	t -= timeLastSet;
+	t -= params_.panLatency;
 
-    position.angle = ((Connection2003 *)connection)->getPanPosition();
-    position.accuracy = params_.panAccuracy;
+	// estimated pan angle
+	double alpha = t.usec();
+	alpha /= 1000000.;
+	alpha += t.sec();
+	alpha *= params_.panRadPerSec;
+
+	double delta = fabs(nextPosition - lastPosition);
+
+	if (alpha > delta) {
+	  // it is swing time
+	  position.angle = nextPosition;
+	  position.accuracy = params_.panSwingAccuracy;
+	}
+	else {
+	  // we are panning
+	  position.angle = (nextPosition > lastPosition)?
+	    lastPosition + alpha : lastPosition - alpha;
+	  position.accuracy = std::max(delta * .25, params_.panSwingAccuracy);
+	}
+      }
+    }
+    else {
+      position.angle = ((Connection2003 *)connection)->getPanPosition();
+      position.accuracy = params_.panAccuracy;
+    }
 
     return position;
   }

@@ -37,7 +37,8 @@ namespace Sparrow
     Super(_reactor, _devEventHandler),
     consumer(_consumer),
     eventHandler(new EventHandler2003(*this)),
-    boardReply(-1)
+    boardReply(-1),
+    panTicksPerDegree_(0)
   {
     MIRO_LOG_CTOR("SparrowConnection2003");
 
@@ -52,7 +53,8 @@ namespace Sparrow
       throw Miro::ACE_Exception(errno, 
 				"Failed to register timer for status report startup.");
 
-    deferredQueryPanTicksPerDegree(ACE_Time_Value(0, 10000));
+    if (params_->pan.servo)
+      deferredQueryPanTicksPerDegree(ACE_Time_Value(0, 10000));
   }
 
   //----------------------//
@@ -120,7 +122,13 @@ namespace Sparrow
     message.length(5);
     message.id(CAN_PAN_GO_2005);
     message.byteData(0, 0); // servo number
-    message.longData(1, (long)((double)getPanTicksPerDegree()*Miro::rad2Deg(-_rad)) );
+
+    if (params_->pan.servo) {
+      message.longData(1, rad2servo0Ticks(_rad));
+    }
+    else {
+      message.longData(1, (long)((double)getPanTicksPerDegree()*Miro::rad2Deg(-_rad)) );
+    }
     write(message);
   }
 
@@ -231,13 +239,13 @@ namespace Sparrow
   void 
   Connection2003::setPanTicksPerDegree(unsigned int ticks)
   {
-    panTicksPerDegree = ticks;
+    panTicksPerDegree_ = ticks;
   }
 
   unsigned int 
   Connection2003::getPanTicksPerDegree()
   {
-    return(panTicksPerDegree);
+    return panTicksPerDegree_;
   }
 
 
