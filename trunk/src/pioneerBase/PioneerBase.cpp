@@ -112,12 +112,10 @@ PioneerBase::~PioneerBase()
   pioneerConnection.close();
 
   // Deactivate.
-  PortableServer::ObjectId_var oid =
-    poa->reference_to_id (notifyFactory_.in());
-
+//  PortableServer::ObjectId_var oid =
+//    poa->reference_to_id (notifyFactory_.in());
   // deactivate from the poa.
-  poa->deactivate_object (oid.in ());
-
+//  poa->deactivate_object (oid.in ());
   reactorTask.cancel();
   DBG(cout << "reactor Task ended" << endl);
 }
