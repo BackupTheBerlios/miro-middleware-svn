@@ -4,19 +4,19 @@
 //
 // for details copyright, usage and credits to other groups see Miro/COPYRIGHT
 // for documentation see Miro/doc
-// 
+//
 // (c) 1999,2000
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
+// Authors:
+//   Stefan Enderle,
+//   Stefan Sablatnoeg,
 //   Hans Utz
-// 
+//
 // $Id$
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
- 
+
 #include "sparrow/SparrowConnection2003.h"
 #include "sparrow/Parameters.h"
 #include "sparrow/SparrowConsumer2003.h"
@@ -31,6 +31,7 @@
 #include "miro/Angle.h"
 
 #include <iostream>
+#include <string>
 
 using namespace Miro;
 
@@ -97,6 +98,9 @@ int main(int argc, char * argv[])
   double rot;
   bool loop = true;
 
+  char motor_command[64];
+  char motor_id[64];
+
   double angle, beta;
   Miro::Angle alpha, gamma;
 
@@ -115,15 +119,16 @@ int main(int argc, char * argv[])
 	   << "  1 - initMax" << endl
 	   << "  2 - initStall" << endl
 	   << "  3 - initDrive" << endl
-	   << "  4 - setPower" << endl*/
+	   << "  4 - setPower" << endl
 	   << "  5 - setSpeed" << endl
-	   /*<< "  6 - setSpeedRot" << endl
+	   << "  6 - setSpeedRot" << endl
 	   << "  7 - kick" << endl
 	   << "  8 - drive distance" << endl
 	   << "  9 - turn in place" << endl
 	   << "  p - get position" << endl
 	   << "  d - status" << endl*/
            << "  7 - kick" << endl
+	   << "  m - send motor command" << endl
            << "  s - set servo" << endl
 	   << "q - quit" << endl;
       cin >> c;
@@ -215,6 +220,18 @@ int main(int argc, char * argv[])
 	cin >> kicktime;
 	service.connection.kick(ventilatetime, kicktime);
 	break;
+      case 'm':
+      	cout << "hint : if nothing happens, try to use command 'en' (for both motors) for enabling motor controllers..." << endl;
+      	cout << "which motor? --> (l)eft, (r)ight, (b)oth: " << flush;
+	cin >> motor_id;
+      	cout << "command: " << flush;
+	cin >> motor_command;
+	if(!strncmp(motor_id, "l", 1) || !strncmp(motor_id, "b", 1))
+	  service.connection.writeWheel(motor_command, strlen(motor_command), 0);
+	if(!strncmp(motor_id, "r", 1) || !strncmp(motor_id, "b", 1))
+	  service.connection.writeWheel(motor_command, strlen(motor_command), 1);
+      	break;
+
       /*case '8':  // drive distance
 	cout << "distance (mm): " << flush;
 	cin >> distance;
