@@ -216,6 +216,7 @@ void cameraMenu(Service& service)
 	 << "a - set AutoFocus" << endl
 	 << "b - set AF Lock OFF" << endl
 	 << "c - set AF Lock ON" << endl
+	 << "d - set AF Value" << endl
 	 << endl << "x - back" << endl;
     cin >> str;
     c = str[0];
@@ -319,7 +320,7 @@ void cameraMenu(Service& service)
 	  int focus;
 	  cout << "New focus position (0-100%):" << endl;
 	  cin >> focus;
-	  
+
 	  service.canonCamera.setFocus(focus);
 	  break;
 	}
@@ -341,6 +342,15 @@ void cameraMenu(Service& service)
       case 'c':
 	{
 	  service.canonCamera.setAEon();
+	  break;
+	}
+      case 'd':
+	{
+	  int aeValue;
+	  cout << "New AE-value(16-255):" << endl;
+	  cin >> aeValue;
+
+	  service.canonCamera.setFocus(aeValue);
 	  break;
 	}
       case 'X':
