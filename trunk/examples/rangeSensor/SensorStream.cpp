@@ -31,7 +31,7 @@ char ** argVector;
 SensorStream::SensorStream(EventChannel_ptr _ec,
 			 const std::string& domainName,
 			 const std::string& sensorName) :
-  Super(_ec)
+  Super(_ec, false)
 {
   EventTypeSeq added(1);
   EventTypeSeq removed(1);
@@ -45,6 +45,7 @@ SensorStream::SensorStream(EventChannel_ptr _ec,
   removed[0].type_name = CORBA::string_dup("*");
 
   consumerAdmin_->subscription_change(added, removed);
+  connect();
 }
 
 SensorStream::~SensorStream()
