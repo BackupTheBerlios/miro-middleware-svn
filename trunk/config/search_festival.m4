@@ -72,7 +72,7 @@ AC_DEFUN(AC_SEARCH_FESTIVAL_LOCAL,
 
 	if test "x$success" != xyes; then
 		AC_MSG_WARN(Festival not (properly) installed. See http://www.cstr.ed.ac.uk/projects/festival.html)
-		has_festival=no
+		ac_has_festival=no
 	else
 		AC_SUBST(FESTIVAL_LIBS, "-lFestival")
 		if test "$1" ; then
@@ -81,6 +81,6 @@ AC_DEFUN(AC_SEARCH_FESTIVAL_LOCAL,
 			AC_SUBST(FESTIVAL_CPPFLAGS, "-I$1/src/include -I/include")
 			AC_SUBST(FESTIVAL_CFLAGS, "-I$1/src/include -I/include")
 		fi
-		has_festival=yes
+		ac_has_festival=yes
 	fi
 ])
