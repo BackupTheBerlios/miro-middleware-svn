@@ -10,7 +10,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "XmlParse.h"
-// #include "Exception.h"
+#include "Exception.h"
 //#include "ScanDescriptionC.h"
 
 #include <ace/Time_Value.h>
@@ -83,7 +83,6 @@ namespace Miro
 
   void operator <<= (double& lhs, const QDomNode& node)
   {
-#ifdef AASDF
     bool valid;
 
     if (!node.isNull()) {
@@ -103,7 +102,6 @@ namespace Miro
     }
     else
       throw Exception("Parse exception");
-#endif
   }
 
   void operator <<= (std::string& lhs, const QDomNode& node)

@@ -16,6 +16,11 @@
 
 #include <iostream>
 
+namespace 
+{
+  using Miro::operator <<=;
+};
+
 namespace Psos
 {
   Parameters::Parameters() :
@@ -41,7 +46,6 @@ namespace Psos
     if (!node.isNull()) {
       QDomNode n1 = node.firstChild();
       while(!n1.isNull()) {
-	/*
 	if (n1.nodeName() == "AngleConvFactor")
 	  angleConvFactor <<= n1;
 	else if (n1.nodeName() == "DistConvFactor")
@@ -54,7 +58,6 @@ namespace Psos
 	  diffConvFactor <<= n1;
 	else if (n1.nodeName() == "Vel2Divisor")
 	  vel2Divisor <<= n1;
-	*/
 	n1 = n1.nextSibling();
       }
     }
