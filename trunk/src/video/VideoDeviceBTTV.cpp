@@ -2,21 +2,19 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 //
 //////////////////////////////////////////////////////////////////////////////
-#include <unistd.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <sys/ioctl.h>
-#include <sys/stat.h>
-#include <sys/mman.h>
-#include <miro/Exception.h>
+#include <ace/OS.h>
+
 #include "VideoDeviceBTTV.h"
-#include <ace/Time_Value.h>
+
+#include <miro/Exception.h>
+
+#include <iostream>
 
 #undef DEBUG
 
@@ -36,7 +34,7 @@ static int                      gb_pal[64];
 
 VideoDeviceBTTV::VideoDeviceBTTV()
 	{
-    DBG(cout << "Constructing VideoDeviceBTTV." << endl);
+    DBG(std::cout << "Constructing VideoDeviceBTTV." << std::endl);
 
 	videoFd = -1;
 	map = (char*)-1;
@@ -76,7 +74,7 @@ void VideoDeviceBTTV::handleConnect(const int fd, const int, const int fmt, cons
 	{
 	int	err;
 
-	DBG(cout << "Connecting VideoDeviceBTTV." << endl);
+	DBG(std::cout << "Connecting VideoDeviceBTTV." << std::endl);
 
 	videoFd = fd;
 
@@ -99,9 +97,9 @@ void VideoDeviceBTTV::handleConnect(const int fd, const int, const int fmt, cons
 	iNBuffers = gb_buffers.frames;
 	iCurrentBuffer = iNBuffers-1;
 
-	cout << "buffersize: " << gb_buffers.size << endl;
-	cout << "buffersize/frame: " << gb_buffers.size/gb_buffers.frames << endl;
-	cout << "frames: " << gb_buffers.frames << endl;
+	std::cout << "buffersize: " << gb_buffers.size << std::endl;
+	std::cout << "buffersize/frame: " << gb_buffers.size/gb_buffers.frames << std::endl;
+	std::cout << "frames: " << gb_buffers.frames << std::endl;
 
 	probeAllFormats();
 
@@ -140,7 +138,7 @@ void VideoDeviceBTTV::handleConnect(const int fd, const int, const int fmt, cons
 			}
 		else
 			{
-			cout << "Warning: hardware doesn't support subfields ;-(" << endl;
+			std::cout << "Warning: hardware doesn't support subfields ;-(" << std::endl;
 			deviceSubfieldID = subfieldAll;
 			}
 		}
@@ -154,7 +152,7 @@ void VideoDeviceBTTV::handleConnect(const int fd, const int, const int fmt, cons
 
 void VideoDeviceBTTV::handleDisconnect()
 	{
-	DBG(cout << "VideoDeviceBTTV: frames captured " << iNFramesCaptured << endl);
+	DBG(std::cout << "VideoDeviceBTTV: frames captured " << iNFramesCaptured << std::endl);
 
 	if (channels != NULL)
 		{
@@ -172,7 +170,7 @@ void VideoDeviceBTTV::handleDisconnect()
 
 void VideoDeviceBTTV::setFormat(int id)
 	{
-	DBG(cout << "VideoDeviceBTTV: setFormat" << endl);
+	DBG(std::cout << "VideoDeviceBTTV: setFormat" << std::endl);
 
 	if (formatLookup[id] != -1)
 		formatID = id;
@@ -182,7 +180,7 @@ void VideoDeviceBTTV::setFormat(int id)
 
 void VideoDeviceBTTV::setSource(int id)
 	{
-	DBG(cout << "VideoDeviceBTTV: setSource" << endl);
+	DBG(std::cout << "VideoDeviceBTTV: setSource" << std::endl);
 
 	if ((sourceLookup[id] != -1) && (sourceLookup[id] < capability.channels))
 		{
@@ -197,7 +195,7 @@ void VideoDeviceBTTV::setSource(int id)
 
 void VideoDeviceBTTV::setPalette(int id)
 	{
-	DBG(cout << "VideoDeviceBTTV: setPalette" << endl);
+	DBG(std::cout << "VideoDeviceBTTV: setPalette" << std::endl);
 
 	requestedPaletteID = id;
 
@@ -214,7 +212,7 @@ void VideoDeviceBTTV::setPalette(int id)
 
 void VideoDeviceBTTV::setSize(int w, int h)
 	{
-	DBG(cout << "VideoDeviceBTTV: setSize" << endl);
+	DBG(std::cout << "VideoDeviceBTTV: setSize" << std::endl);
 
 	if ((w>=capability.minwidth) && (w<=capability.maxwidth))
 		imgWidth = w;
@@ -232,7 +230,7 @@ void VideoDeviceBTTV::setSize(int w, int h)
 
 void* VideoDeviceBTTV::grabImage() const
 	{
-	DBG(cout << "VideoDeviceBTTV: grabImage" << endl);
+	DBG(std::cout << "VideoDeviceBTTV: grabImage" << std::endl);
 
 	ACE_Time_Value beginTime = ACE_OS::gettimeofday();
 
@@ -257,22 +255,22 @@ void* VideoDeviceBTTV::grabImage() const
 
 	++counter %= 100;
 	if (!counter) {
-	  cout << "time for SYNC: " << msec2 / 100 << "msec" << endl;
-	  cout << "time for grabbing: " << msec / 100 << "msec" << endl;
+	  std::cout << "time for SYNC: " << msec2 / 100 << "msec" << std::endl;
+	  std::cout << "time for grabbing: " << msec / 100 << "msec" << std::endl;
 	  msec = msec2 = 0;
 	}
 	
 
 	iNFramesCaptured++;
 
-	//	cout << "grabbing buffer #" << gb.frame << endl;
+	//	std::cout << "grabbing buffer #" << gb.frame << std::endl;
 	iCurrentBuffer = nextBuffer;
 	return map + gb_buffers.offsets[iCurrentBuffer];
 	}
 
 void VideoDeviceBTTV::getCapabilities()
 	{
-	DBG(cout << "VideoDeviceBTTV: getCapabilities" << endl);
+	DBG(std::cout << "VideoDeviceBTTV: getCapabilities" << std::endl);
 
 	int	err;
 
@@ -283,7 +281,7 @@ void VideoDeviceBTTV::getCapabilities()
 
 void VideoDeviceBTTV::getChannels()
 	{
-	DBG(cout << "VideoDeviceBTTV: getChannels" << endl);
+	DBG(std::cout << "VideoDeviceBTTV: getChannels" << std::endl);
 
 	int		i;
 	int		err;
@@ -302,7 +300,7 @@ void VideoDeviceBTTV::getChannels()
 
 bool VideoDeviceBTTV::probeFormat(int format)
 	{
-    DBG(cout << "VideoDeviceBTTV: probeFormat" << endl);
+    DBG(std::cout << "VideoDeviceBTTV: probeFormat" << std::endl);
 
 	struct	video_mmap gb;
 	int		err;
