@@ -141,8 +141,8 @@ namespace Sparrow
   PanTiltImpl::getPanLimits() throw (EDevIO)
   {
     Miro::PanLimitsIDL result;
-    result.minpanposition=-90;
-    result.maxpanposition=90;
+    result.minpanposition=-179.0f;
+    result.maxpanposition=179.0f;
     
     return result;
   }

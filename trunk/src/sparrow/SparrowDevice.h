@@ -164,12 +164,14 @@ namespace Sparrow
   static const unsigned long CAN_R_PAN_RESET_2005   = 0x9F0F0401;
   static const unsigned long CAN_PAN_ERROR_2005     = 0x9D0F0401;
   static const unsigned long CAN_R_PAN_TICKSPERDEG_2005 = 0x82810401;
-  static const unsigned long CAN_PAN_GO_2005        = 0x81010104;  
+  static const unsigned long CAN_R_PAN_POSITION_2005   = 0x84810401;
     /* messages to pan device */
+  static const unsigned long CAN_PAN_GO_2005        = 0x81010104;
   static const unsigned long CAN_PAN_TICKSPERDEG_2005 = 0x82010104;
   static const unsigned long CAN_PAN_SETLIMITS_2005 = 0x83010104;
   static const unsigned long CAN_PAN_RESET_2005     = 0x8d010104;
   static const unsigned long CAN_PAN_QUERY_2005     = 0x8e010104;
+  static const unsigned long CAN_PAN_GETPOSITION_2005 = 0x84010104;
   
 
   // infrared messages

@@ -303,6 +303,8 @@ namespace Sparrow
       break;
     }
 
+	// Odometry messages...
+
     case CAN_MOTOR_TICKS_LEFT_2003: {
       MIRO_DBG(SPARROW, LL_PRATTLE, "MotorController received  MotorTicksLeft2003!");
       FaulController::OdometryMessage 
@@ -390,6 +392,21 @@ namespace Sparrow
       }
       break;
     }
+
+	// Pan 2005 messages
+    case CAN_R_PAN_TICKSPERDEG_2005:
+	{
+		//TODO: store value in PanTilt parameters...
+		break;
+	}
+
+    case CAN_R_PAN_POSITION_2005:
+        {
+              	// TODO: store current pan position in PanTilt...
+		break;
+	}
+
+
 
       // Debug Messages
     default:
