@@ -197,9 +197,14 @@ namespace FaulMotor
     char const * const getTicksMessage = "pos\r\n\0";
 
     Miro::Guard guard(mutex_);
+    ACE_Time_Value now = ACE_OS::gettimeofday();
+    ACE_Time_Value nextWrite = std::min(leftWheel_.lastWrite, rightWheel_.lastWrite)
+      + ACE_Time_Value(0, 18000);
+
+    if (nextWrite > now)
+      ACE_OS::sleep(nextWrite - now);
     leftWheel_.writeMessage(getTicksMessage);            // send it
     rightWheel_.writeMessage(getTicksMessage);
-    ACE_OS::sleep(ACE_Time_Value(0, 20000));
   }
 
   void
