@@ -53,7 +53,7 @@ namespace Sparrow
       throw Miro::ACE_Exception(errno, 
 				"Failed to register timer for status report startup.");
 
-    if (params_->pan.servo)
+    if (!params_->pan.servo)
       deferredQueryPanTicksPerDegree(ACE_Time_Value(5));
   }
 

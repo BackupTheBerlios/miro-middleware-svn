@@ -46,11 +46,12 @@ namespace Sparrow
     unsigned int task = *reinterpret_cast<unsigned int const *>(_arg);
     switch (task) {
     case INIT_TIMER:
-      MIRO_DBG(SPARROW, LL_DEBUG, "Sparrow::EventHandler2003 startup event.");
+      MIRO_LOG(LL_NOTICE, "Sparrow::EventHandler2003 startup event.");
       connection_.init();
       MIRO_DBG(SPARROW, LL_DEBUG, "Sparrow::EventHandler2003 startup successfull.");
       break;
     case PAN_CALIBRATION_TIMER:
+      MIRO_LOG(LL_NOTICE, "Sparrow::EventHandler2003 query pan ticks event.");
       connection_.queryPanTicksPerDegree();
       break;
     default:
