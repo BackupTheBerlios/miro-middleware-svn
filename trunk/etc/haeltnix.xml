@@ -2,7 +2,8 @@
 <config>
  <section name="Robot" >
   <parameter name="Robot" >
-   <parameter name="Name" value="Sparrow99" />
+   <parameter value="haeltnix" name="Name" />
+   <parameter value="Sparrow99" name="Type" />
   </parameter>
  </section>
  <section name="Sparrow99" >
@@ -285,7 +286,7 @@
    <parameter value="odd" name="Subfield" />
    <parameter value="pal" name="Format" />
    <parameter value="bttv" name="Grabber" />
-   <parameter value="rgb" name="Palette" />
+   <parameter value="bgr" name="Palette" />
    <parameter value="composite1" name="Source" />
   </parameter>
   <parameter name="Camera" >
