@@ -19,183 +19,124 @@
 // extern "C"
 // {
 #include "canmsg.h"
+#include "pcan.h"
 // }
 
 namespace Can
 {
   enum drivertype { OLD, PCAN, UNINITIALIZED };
 
-  // Roland: sind die irgendwo anders definiert ???
-  // ansonsten waere eine Miro-konforme Variablenbenennung schön
-  // struct TPCANMsg { CanId id .... };
 
-  typedef struct
-  {
-	CanId ID;              // 11/29 bit code
-	unsigned char  MSGTYPE;         // bits of MSGTYPE_*
-	unsigned char  LEN;             // count of data bytes (0..8)
-	unsigned char  DATA[8];         // data bytes, up to 8
-  } TPCANMsg;              // for PCAN_WRITE_MSG
-
-  typedef struct
-  {
-	TPCANMsg Msg;          // the above message
-	unsigned long dwTime;       // a timestamp in msec, read only
-  } pcanmsg;            // for PCAN_READ_MSG
 
   // forward declarations
   class Message;
 
-  std::ostream& operator<< (std::ostream& ostr, const Message& rhs);
 
-  // Roland: Mittelfristig sollten wir
-  // die ganzen Methoden virtualisieren, daraus eine
-  // Interface-Klasse bauen und
-  // zwei Implementierungen anbieten für die beiden
-  // treiber.
-  // Dann braucht man nur noch eine factory-methode, die
-  // aufgrund der Parameter eine Instanz von dem einen
-  // oder anderen zurückgibt
+  std::ostream& operator<< (std::ostream& ostr, const Message& rhs);
 
   class Message : public Miro::DevMessage
   {
   public:
     Message();
-    int            length() const;
-    void           length(int _len);
+    virtual int            length() const;
+    virtual void           length(int _len);
 
-    char           charData(int i) const;
-    void           charData(int i, char d);
-    unsigned char  byteData(int i) const;
-    void           byteData(int i, unsigned char d);
-    short shortData(int i) const;
-    void           shortData(int i, unsigned short d); // sets two chars !
-    long  longData(int i) const;
-    void           longData(int i, unsigned long d);   // sets four chars !
+    virtual char           charData(int i) const;
+    virtual void           charData(int i, char d);
+    virtual unsigned char  byteData(int i) const;
+    virtual void           byteData(int i, unsigned char d);
+    virtual short shortData(int i) const;
+    virtual void           shortData(int i, unsigned short d); // sets two chars !
+    virtual long  longData(int i) const;
+    virtual void           longData(int i, unsigned long d);   // sets four chars !
 
-    void           setBuffer(int pos, const char * buffer, int length ) ;
+    virtual void           setBuffer(int pos, const char * buffer, int length ) ;
 
-    CanId          id() const;
-    void           id(CanId _id);
+    virtual CanId          id() const;
+    virtual void           id(CanId _id);
 
-    static drivertype driver;
+    //static drivertype driver;
 
-    void canMessage(canmsg ** msg_ )  { *msg_= message_; }
-    void canMessage(pcanmsg ** msg_)  { *msg_=messagep_; }
+    virtual void canMessage(int ** msg_) { };
+
+
 
   protected:
-    canmsg * message_;
-    pcanmsg * messagep_;
+
   };
 
   inline
   CanId
-  Message::id() const { 
-    if(driver == OLD)
-      return message_->id; 
-    else
-      return messagep_->Msg.ID;
+  Message::id() const {
+
   }
 
   inline
   void
-  Message::id(CanId _id) { 
-    if(driver == OLD)
-      message_->id = _id; 
-    else
-      messagep_->Msg.ID=_id;  
+  Message::id(CanId _id) {
+
   }
 
   inline
   int
   Message::length() const {
-    if(driver == OLD)
-      return message_->len;
-    else
-      return messagep_->Msg.LEN;
+
   }
 
   inline
-  void 
-  Message::length(int _len) { 
-    if(driver == OLD)
-      message_->len = _len; 
-    else
-      messagep_->Msg.LEN=_len;
+  void
+  Message::length(int _len) {
+
   }
 
   inline
   char
-  Message::charData(int i) const { 
-    if(driver == OLD)
-      return message_->d[i]; 
-    else
-      return messagep_->Msg.DATA[i];
+  Message::charData(int i) const {
+
   }
 
   inline
   void
-  Message::charData(int i, char d) { 
-    if(driver == OLD)
-      message_->d[i] = d; 
-    else
-      messagep_->Msg.DATA[i]=d;
+  Message::charData(int i, char d) {
+
   }
 
   inline
   unsigned char
-  Message::byteData(int i) const { 
-    if(driver == OLD)
-      return message_->d[i]; 
-    else
-      return messagep_->Msg.DATA[i];
+  Message::byteData(int i) const {
+
   }
 
   inline
   void
-  Message::byteData(int i, unsigned char d) { 
-    if(driver == OLD)
-      message_->d[i] = d; 
-    else
-      messagep_->Msg.DATA[i]=d;
+  Message::byteData(int i, unsigned char d) {
+
   }
 
   inline
   short
-  Message::shortData(int i) const { 
-    if(driver == OLD)
-      return (short) ACE_NTOHS(*((const unsigned short *) (&(message_->d[i]))));
-    else
-      return (short) ACE_NTOHS(*((const unsigned short *) (&(messagep_->Msg.DATA[i]))));
+  Message::shortData(int i) const {
+
   }
-  
+
   inline
-  void 
-  Message::shortData(int i, unsigned short d) 
-  { 
-    if(driver == OLD)
-      *((unsigned short *) (&(message_->d[i]))) = ACE_HTONS(d);
-    else
-      *((unsigned short *) (&(messagep_->Msg.DATA[i]))) = ACE_HTONS(d);
+  void
+  Message::shortData(int i, unsigned short d)
+  {
+
   }
 
   inline
   long
-  Message::longData(int i) const { 
-    if(driver== OLD)
-      return (long) ACE_NTOHL(*((const unsigned long *) (&(message_->d[i]))));
-    else
-      return (long) ACE_NTOHL(*((const unsigned long *) (&(messagep_->Msg.DATA[i]))));
+  Message::longData(int i) const {
+
   }
 
   inline
-  void 
-  Message::longData(int i, unsigned long d) 
-  { 
-    if(driver == OLD)
-      *((unsigned long *) (&(message_->d[i]))) = ACE_HTONL(d);
-    else
-      *((unsigned long *) (&(messagep_->Msg.DATA[i]))) = ACE_HTONL(d);
+  void
+  Message::longData(int i, unsigned long d)
+  {
+
   }
 };
-#endif 
+#endif

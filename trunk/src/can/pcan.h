@@ -30,6 +30,9 @@
 // constants and definitions to access the drivers 
 //
 // $Log$
+// Revision 1.3  2003/10/29 13:25:26  rr4
+// virtual Message-class
+//
 // Revision 1.2  2003/06/20 21:22:01  gmayer
 // okay, big branch-merge of the roland-sparrow-2003-stuff
 //
@@ -174,6 +177,20 @@ typedef struct
 	DWORD dwBitRate;       // in + out, bitrate in bits per second
 	WORD  wBTR0BTR1;       // out only: the result
 } TPBTR0BTR1;
+
+typedef struct
+{
+	CanId id;              // 11/29 bit code
+	unsigned char  msgtype;         // bits of MSGTYPE_*
+	unsigned char  len;             // count of data bytes (0..8)
+	unsigned char  data[8];         // data bytes, up to 8
+} TPCanMsg;              // for PCAN_WRITE_MSG
+
+  typedef struct
+{
+	TPCanMsg msg;          // the above message
+	unsigned long dwTime;       // a timestamp in msec, read only
+} pcanmsg;            // for PCAN_READ_MSG
 
 //****************************************************************************
 // some predefines for ioctls

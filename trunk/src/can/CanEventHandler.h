@@ -39,6 +39,8 @@ namespace Can
 
     virtual int handle_input (ACE_HANDLE fd); // fd select
 
+    static Message * newMessage(Parameters const * _params);
+
   protected:
     Message * msg;
     Parameters const * params_;

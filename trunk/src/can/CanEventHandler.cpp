@@ -49,8 +49,24 @@ namespace Can
 
   int canCounter = 0;
 
+  Message * EventHandler::newMessage(Parameters const * _params){
+
+     Message * msg;
+     if(_params->module == "pcan"){
+
+        msg = new Message();
+
+     }
+     else{
+
+        msg = new Message();
+     }
+
+
+  }
+
   EventHandler::EventHandler(Miro::DevConsumer * _consumer, Parameters const * _params) :
-    Super(_consumer, new Message()),
+    Super(_consumer, newMessage(_params)),
     msg(static_cast<Message *>(message_)),
     params_(_params)
   {
@@ -73,38 +89,31 @@ namespace Can
     if(params_->module == "pcan"){
        pcanmsg * msgp_;
 //       std::cout << "msgp " << (void *) msgp_ << endl;
-       msg->canMessage(&msgp_);
+       msg->canMessage((int **) &msgp_);
 //       std::cout << "msgp " << (void *) msgp_ << endl;
        count = ioctl(fd, PCAN_READ_MSG, msgp_);
+       if (count == 0) {
+         cerr << "Pcan handle_input failed!" << endl;
+         return 0;
+       }
+
+
 
     }
     else {
        canmsg * msg_;
-       msg->canMessage(&msg_);
+       msg->canMessage((int **) &msg_);
        count = ACE_OS::read(fd, msg_, sizeof(canmsg));
-    }
- //   std::cout << "Count " << count << " Errno " << errno << endl;
-
-    // since we are called by the ACE_Reactor, we dont emit exceptions
-    // but just return on error. - We could return and deregister the
-    // event handler (return 1), but then we also have to shut down the
-    // whole server...
-
-    // Roland: sollte das nicht wieder rein ???
-
-    /*if (count == 0) {
-      cerr << "handle_input called with no data!" << endl;
-      return 0;
-    }
-
-    // Roland: kann das weg oder wieder rein ???
-    // event.: coutn != canmsg.length() + HEADER_SIZE
-
-    if (count != sizeof(canmsg)) {
-      cerr << "canEventHandler: read() != sizeof(canmsg): "
+       if (count == 0) {
+         cerr << "handle_input called with no data!" << endl;
+         return 0;
+       }
+       if (count != sizeof(canmsg)) {
+         cerr << "canEventHandler: read() != sizeof(canmsg): "
 	   << count << " != " << sizeof(canmsg) << endl;
-      return 0;
-    }*/
+         return 0;
+       }
+    }
 
     msg->time() = ACE_OS::gettimeofday(); // set time stamp
 #ifdef DEBUG

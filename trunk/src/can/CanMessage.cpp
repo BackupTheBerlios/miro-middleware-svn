@@ -24,20 +24,11 @@
 
 namespace Can
 {
-  drivertype Message::driver = UNINITIALIZED;
+  //drivertype Message::driver = UNINITIALIZED;
 
-  Message::Message() 
+  Message::Message()
   {
-    if(driver == OLD){
-      message_ = new canmsg;
-    }
-    else if(driver == PCAN){
-      messagep_ = new pcanmsg;
-    }
-    else{
-      message_ = new canmsg;
-      messagep_ = new pcanmsg;
-    }
+
   }
 
   std::ostream& operator<< (std::ostream& ostr, const Message& rhs)
@@ -52,9 +43,8 @@ namespace Can
   }
 
   void Message::setBuffer(int pos, const char * buffer, int length){
-    if(driver == OLD)
-      memcpy(&(message_->d[pos]), buffer , length);
-    else
-      memcpy(&(messagep_->Msg.DATA[pos]), buffer , length);
+    
   }
+
+
 };

@@ -15,6 +15,7 @@
 
 #include "CanConnection.h"
 #include "Parameters.h"
+#include "PCanMessage.h"
 
 // extern "C"
 // {
@@ -76,7 +77,7 @@ namespace Can
     if(parameters_.module == "Can"){
        CanConfig cfg;
 
-       Message::driver=OLD;
+       //Message::driver=OLD;
 
        // can_ClearStatus(fd);
        if(ioctl(ioBuffer.get_handle(), CAN_CLEARSTAT, 0L))
@@ -101,28 +102,6 @@ namespace Can
          throw Miro::Exception("can_SetConfig() ioctl error\n");
     }
 
-    // Roland: kann das raus ???
-   /* if(parameters_.module == "sja1000"){
-
-       unsigned long baud_rate = B250;
-       long long acode = -1, amask = -1;
-
-       Message::driver=OLD;
-
-       if(ioctl(ioBuffer.get_handle(), CAN_IOCSBAUD, &baud_rate))
-         throw Miro::Exception("can_IOCSBAUD() ioctl error");
-
-       if(acode != -1){
-          if(ioctl(ioBuffer.get_handle(), CAN_IOCSACODE, &acode))
-            throw Miro::Exception("can_IOCSACODE() ioctl error");
-       }
-
-       if(amask != -1){
-          if(ioctl(ioBuffer.get_handle(), CAN_IOCSAMASK, &amask))
-            throw Miro::Exception("can_IOCSAMASK() ioctl error");
-       }
-
-    }*/
 
     /* PCAN Driver by peak-system  http://www.peak-system.com */
     if(parameters_.module == "pcan") {
@@ -132,7 +111,7 @@ namespace Can
 	caninit.ucCANMsgType = MSGTYPE_EXTENDED;
 	caninit.ucListenOnly = 0;          // kein Listen only
 
-        Message::driver = PCAN;
+        //Message::driver = PCAN;
 	if(ioctl(ioBuffer.get_handle(), PCAN_INIT , &caninit))
 	  throw Miro::Exception("can PCAN_INIT() ioctl error");
     }
@@ -162,15 +141,15 @@ namespace Can
     int rc;
     if (parameters_.module == "pcan") {
        pcanmsg * msgp;
-       message.canMessage(&msgp);
-       msgp->Msg.MSGTYPE = MSGTYPE_EXTENDED;
-       for(int i = 0; i < msgp->Msg.LEN; i++)
-          std::cout << msgp->Msg.DATA[i];
+       message.canMessage((int **) &msgp);
+       msgp->msg.msgtype = MSGTYPE_EXTENDED;
+       for(int i = 0; i < msgp->msg.len; i++)
+          std::cout << msgp->msg.data[i];
        rc = ioctl(ioBuffer.get_handle(), PCAN_WRITE_MSG, msgp);
     }
     else {
        canmsg * msg;
-       message.canMessage(&msg);
+       message.canMessage((int **) &msg);
        rc = ioBuffer.send_n(msg, sizeof(canmsg));
     }
 

@@ -24,6 +24,8 @@ sources = \
 	Parameters.xml \
 	CanConnection.cpp \
 	CanMessage.cpp \
+        Can0Message.cpp \
+        PCanMessage.cpp \
 	CanEventHandler.cpp
 
 libcan_a_SOURCES = $(sources)
