@@ -133,7 +133,7 @@ namespace Miro
       QString parsingError;
       int line;
       int column;
-      if (!document_->setContent(&f, &parsingError, &line, &column)) {
+      if (!document_->setContent(&f/*, &parsingError, &line, &column*/)) {
 	f.close();
 	std::stringstream ostr;
 	ostr << "error parsing " << fullName << endl

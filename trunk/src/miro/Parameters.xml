@@ -14,7 +14,7 @@
     </config_item>
 
     <config_item name="Tty" parent="Dev">
-      <config_parameter name="device" type="string" inherited="true" default="/dev/tty/0" />
+      <config_parameter name="device" type="string" inherited="true" default="/dev/tts/0" />
       <config_parameter name="ttyParams" type="ACE_TTY_IO::Serial_Params" />
       <constructor>
         ttyParams.baudrate = 38400;
