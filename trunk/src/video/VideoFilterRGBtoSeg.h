@@ -31,8 +31,11 @@ namespace Video
     public:
         FilterRGBtoSeg(Miro::ImageFormatIDL const& _inputFormat);
 	virtual ~FilterRGBtoSeg();
+	FILTER_PARAMETERS_FACTORY(FilterRGBtoSeg);
+	
 	virtual void process();
     protected:
+        void init(Miro::Server& _server, FilterParameters const * _params);
         
         void buildLookupTables();
     
@@ -44,7 +47,7 @@ namespace Video
 	unsigned int bitImage_[360*4];
 	unsigned int distanceProfile_[360];
 	unsigned int distLookup_[120];
-
+        FilterRGBtoSegParameters const  * params_;
     };
 };
 

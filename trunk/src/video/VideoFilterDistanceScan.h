@@ -28,6 +28,8 @@ namespace Video
     public:
         FilterDistanceScan(Miro::ImageFormatIDL const& _inputFormat);
 	virtual ~FilterDistanceScan();
+	
+	
 	virtual void process();
     protected:
         void init(Miro::Server& _server, FilterParameters const * _params);

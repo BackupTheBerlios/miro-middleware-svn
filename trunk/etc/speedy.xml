@@ -309,6 +309,7 @@
 
       <parameter name="FilterRGBtoSeg">
 	<parameter value="true" name="InterfaceInstance" />
+	<parameter value="150.0" name="Threshold" />
 	<parameter name="Interface" >
 	  <parameter value="VideoSeg" name="Name" />
 	</parameter>

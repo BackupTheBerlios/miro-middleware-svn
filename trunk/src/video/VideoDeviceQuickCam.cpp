@@ -234,21 +234,19 @@ namespace Video
     /* set pwc centric parameters */
     MIRO_DBG(VIDEO, LL_DEBUG, "Retrieving PWC information.");
 //    getPWC();
-#ifdef oaisfdh
-    setWbMode(params_->whitebalance);
-    setWbManualRed(params_->whitebalanceRed);
-    setWbManualBlue(params_->whitebalanceBlue);
-    setWbSpeed(params_->whitebalanceSpeed);
-    setWbDelay(params_->whitebalanceDelay);
-    setAGC(params_->autoGainControl);
-    setShutterSpeed(params_->shutterSpeed);
-    setSharpness(params_->sharpness);
-    setBC(params_->backlightCompensation);
-    setFM(params_->flickerlessMode);
-    setDNR(params_->dynamicNoiseReduction);
-    setCompression(params_->compression);
+   setWbMode(params_->whitebalance);
+   setWbManualRed(params_->whitebalanceRed);    
+   setWbManualBlue(params_->whitebalanceBlue);
+   setWbSpeed(params_->whitebalanceSpeed);
+   setWbDelay(params_->whitebalanceDelay);
+   setAGC(params_->autoGainControl);
+   setShutterSpeed(params_->shutterSpeed);
+   setSharpness(params_->sharpness);
+   setBC(params_->backlightCompensation);
+   setFM(params_->flickerlessMode);
+   setDNR(params_->dynamicNoiseReduction);
+   setCompression(params_->compression);
     setPWC();
-#endif
     //	preparing buffers
 
 /*    delete gb;

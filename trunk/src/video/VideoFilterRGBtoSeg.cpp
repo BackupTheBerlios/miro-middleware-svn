@@ -15,17 +15,19 @@
 #include "miro/VideoHelper.h"
 #include "miro/Exception.h"
 #include "miro/Log.h"
+#include "miro/Server.h"
 #include <iostream>
 #include <algorithm>
 #include <cmath>
 
 namespace Video
 {
-
+  FILTER_PARAMETERS_FACTORY_IMPL(FilterRGBtoSeg);
 
   //---------------------------------------------------------------
   FilterRGBtoSeg::FilterRGBtoSeg(Miro::ImageFormatIDL const& _inputFormat) :
-    Super(_inputFormat)
+    Super(_inputFormat),
+    params_(NULL)
   {
     MIRO_LOG_CTOR("Video::FilterRGBtoSeg");
     if (_inputFormat.palette != Miro::RGB_24)
@@ -48,10 +50,13 @@ namespace Video
     unsigned char * tgt_img = outputBuffer();
 
     unsigned int length = inputFormat_.width * inputFormat_.height;
+    float threshold = (params_ != NULL)?(params_->threshold):80.0;
+    
+    std::cout << "VideoFilterRGBtoSeg threshold: " << threshold << std::endl;
 
     for(unsigned int x = 0; x < length; ++x){
 
-          *(tgt_img++) =  (r_lookup[*(src_img++)] +  g_lookup[*(src_img++)] + b_lookup[*(src_img++)] < 80.0)?0:255;
+          *(tgt_img++) =  (r_lookup[*(src_img++)] +  g_lookup[*(src_img++)] + b_lookup[*(src_img++)] < threshold)?0:255;
 
     }
     
@@ -198,4 +203,17 @@ namespace Video
   
   }
 
+  void FilterRGBtoSeg::init(Miro::Server& _server, FilterParameters const * _params){
+
+   params_ = dynamic_cast<FilterRGBtoSegParameters const *> (_params);
+   Super::init(_server, _params);
+
+}
+
+  
+  
+  
 };
+
+
+
