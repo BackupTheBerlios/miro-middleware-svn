@@ -278,19 +278,35 @@
  </section>
  <section name="Video" >
   <parameter name="Video" >
-   <parameter value="/dev/v4l/video0" name="Device" />
-   <parameter value="3" name="PixelSize" />
-   <parameter value="false" name="UpsideDown" />
-   <parameter value="1" name="Byteorder" />
-   <parameter value="16" name="Buffers" />
-   <parameter value="16" name="Connections" />
-   <parameter value="288" name="Height" />
-   <parameter value="384" name="Width" />
-   <parameter value="odd" name="Subfield" />
-   <parameter value="pal" name="Format" />
-   <parameter value="bttv" name="Grabber" />
    <parameter value="bgr" name="Palette" />
-   <parameter value="composite1" name="Source" />
+   <parameter value="384" name="Width" />
+   <parameter value="288" name="Height" />
+   <parameter name="Filter">
+     <parameter value="DeviceBTTV" name="Name" />
+     <parameter value="DeviceBTTV" name="Type" />
+     <parameter name="Successor" >
+      <parameter name="Filter" >
+       <parameter value="FilterCopy" name="Name" />
+       <parameter value="FilterCopy" name="Type" />
+      </parameter>
+      <parameter name="Filter" >
+       <parameter value="FilterSwap3" name="Name" />
+       <parameter value="FilterSwap3" name="Type" />
+      </parameter> 
+    </parameter>
+   </parameter>
+  </parameter>
+  <parameter name="DeviceBTTV">
+   <parameter value="/dev/video0" name="Device" />
+  </parameter>
+  <parameter name="FilterCopy">
+   <parameter value="true" name="InterfaceInstance" />
+  </parameter> 
+  <parameter name="FilterSwap3">
+   <parameter value="true" name="InterfaceInstance" />
+   <parameter name="Interface">
+    <parameter value="RGB" name="Name" />
+   </parameter>
   </parameter>
 <!-- alte kamera die jetzt auf siehtnix ist
   <parameter name="Camera" >
