@@ -15,10 +15,11 @@
      <parameter value="/dev/tts/0" name="Device" />
    </parameter>
    <parameter name="LeftTicksPerMM" value="113.6" />
-   <parameter name="RightTicksPerMM" value="115.3" />
+   <parameter name="RightTicksPerMM" value="114.3" />
    <parameter name="Motion">
     <parameter name="WheelBase" value="385" />
    </parameter>
+  <parameters name="SpeedConvFactor" value="3.36" />
   </parameter>
  </section>
 
