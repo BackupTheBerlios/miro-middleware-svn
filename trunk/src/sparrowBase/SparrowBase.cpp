@@ -16,6 +16,7 @@
 #include "miro/Exception.h"
 #include "miro/Utils.h"
 #include "miro/Log.h"
+#include "miro/IO.h"
 
 #include "sparrow/Parameters.h"
 #include "faulMotor/Parameters.h"
@@ -86,12 +87,13 @@ main(int argc, char *argv[])
       rc = 0;
     }
     catch (Miro::EOutOfBounds const& e) {
-          MIRO_LOG(LL_CRITICAL, 
-		   "OutOfBounds excetpion: Wrong parameter for device initialization.");
+          MIRO_LOG_OSTR(LL_CRITICAL, 
+			"OutOfBounds excetpion: Wrong parameter for device initialization.\n" <<
+			e);
     }
     catch (Miro::EDevIO const& e) {
           MIRO_LOG_OSTR(LL_CRITICAL, 
-			"DevIO excetpion: Device access failed.\nn" << e);
+			"DevIO excetpion: Device access failed.\n" << e);
     }
     catch (CORBA::Exception const& e) {
           MIRO_LOG_OSTR(LL_CRITICAL, 
@@ -102,7 +104,7 @@ main(int argc, char *argv[])
   }
   catch (Miro::Exception const& e) {
           MIRO_LOG_OSTR(LL_CRITICAL, 
-			"Miro exception: " << e);
+			"Miro exception:\n" << e);
     rc = 1;
   }
   return rc;
