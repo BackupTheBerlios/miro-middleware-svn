@@ -129,6 +129,8 @@ void MainForm::initDialog()
 
 void MainForm::paintEvent(QPaintEvent * )
 {
+  //  cout << __PRETTY_FUNCTION__ << endl;
+
   QPainter p(this);
 
   if (!qImage_->isNull()) {
