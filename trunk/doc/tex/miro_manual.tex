@@ -423,6 +423,24 @@ cd Miro.Sparrow99
 make
 \end{lstlisting}
 
+\subsubsection{Additional make targets}
+
+Beside the already described \texttt{install} target and an solely
+\texttt{make} (which in fact means \texttt{make all}), there are a
+couple of other targets, that may be of interest:
+
+\begin{description}
+\item[clean:] Removes object files, libraries, binaries and
+  automatically generated code, like the parameter classes generated
+  from the xml files and the client and server stubs generated from
+  the idl files.
+\item[distclean:] Removes all of the above files and the automatically
+  generated files generated from the autotools.
+\item[dist:] Generates a gzipped tar-file containing a snapshot of the
+  actual \miro directory, including all the necessary source files to
+  configure and build \miro.
+\end{description}
+
 \subsubsection{Developer information}
 
 The build-process within \miro is done using automake, autoconf and
@@ -450,7 +468,7 @@ If you want to change something within \miro like for example adding
 additional files or directories, you have to change the proper
 \texttt{Makefile.am}. Do \textbf{not} change the \texttt{Makefile.in}
 or even the final \texttt{Makefile}, because changes there are getting
-lost are the next automake run. The same applies, if you want to
+lost at the next automake run. The same applies, if you want to
 change the behaviour of the configure script itself, for example to
 detect new software packages or special version information, you have
 to change the \texttt{configure.ac} and \textbf{not} the
@@ -471,6 +489,17 @@ autoconf
 For every consecutive step, you can simply call the resulting
 \texttt{config.status} script, that rerun the configure procedure with
 the used configuration values.
+
+Depending on your versions of automake, autoconf and libtool you may
+get some warning messages about improper usage of \texttt{LDFLAGS}.
+Ignore this, since it is without any influence on the final result. We
+tested the whole procedure successfully with at least the following
+versions:
+\begin{itemize}
+\item automake 1.5
+\item autoconf 2.52
+\item libtool 1.4.2
+\end{itemize}
 
 Normally, it should be enough, to use the available examples within
 \miro to add some small additions to the build process, but sometimes
