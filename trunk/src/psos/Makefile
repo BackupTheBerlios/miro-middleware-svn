@@ -62,34 +62,33 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 
 .obj/PsosDevice.o .obj/PsosDevice.o .obj/PsosDevice.o .obj/PsosDevice.o: PsosDevice.cpp PsosDevice.h PsosMessage.h \
- $(MIRO_ROOT)/src/miro/DevMessage.h
+
 
 .obj/PsosMessage.o .obj/PsosMessage.o .obj/PsosMessage.o .obj/PsosMessage.o: PsosMessage.cpp PsosMessage.h \
- $(MIRO_ROOT)/src/miro/DevMessage.h PsosDevice.h
+ PsosDevice.h
 
 .obj/PsosConnection.o .obj/PsosConnection.o .obj/PsosConnection.o .obj/PsosConnection.o: PsosConnection.cpp \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/Synch.h PsosConnection.h \
- $(MIRO_ROOT)/src/miro/TtyConnection.h \
+ \
+ \
+ \
+ PsosConnection.h \
  PsosEventHandler.h \
- $(MIRO_ROOT)/src/miro/DevEventHandler.h PsosMessage.h \
- $(MIRO_ROOT)/src/miro/DevMessage.h PsosDevice.h \
- PsosParameters.h $(MIRO_ROOT)/src/miro/TtyParameters.h \
- $(MIRO_ROOT)/src/miro/DevParameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h
+ PsosMessage.h \
+ PsosDevice.h \
+ PsosParameters.h \
+ \
+
 
 .obj/PsosParameters.o .obj/PsosParameters.o .obj/PsosParameters.o .obj/PsosParameters.o: PsosParameters.cpp PsosParameters.h \
- $(MIRO_ROOT)/src/miro/TtyParameters.h \
- $(MIRO_ROOT)/src/miro/DevParameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h
+ \
+ \
+
 
 .obj/PsosEventHandler.o .obj/PsosEventHandler.o .obj/PsosEventHandler.o .obj/PsosEventHandler.o: PsosEventHandler.cpp PsosEventHandler.h \
- $(MIRO_ROOT)/src/miro/DevEventHandler.h \
- $(MIRO_ROOT)/src/miro/Synch.h PsosConnection.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/TtyConnection.h PsosMessage.h \
- $(MIRO_ROOT)/src/miro/DevMessage.h PsosDevice.h
+ \
+ PsosConnection.h \
+ \
+ PsosMessage.h \
+ PsosDevice.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

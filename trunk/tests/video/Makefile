@@ -17,6 +17,8 @@
 #	Local macros
 #----------------------------------------------------------------------------
 
+INSTALL = $(VBIN:%=$(INSBIN)/%)
+
 ## dynamic libraries if needed
 LDLIBS += -lmiro -lTAO_CosNaming -lTAO
 

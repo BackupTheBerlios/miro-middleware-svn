@@ -17,8 +17,9 @@
 #	Local macros
 #----------------------------------------------------------------------------
 
-## static libraries
+INSTALL = $(VBIN:%=$(INSBIN)/%)
 
+## static libraries
 STATIC_LIBS = sparrow can miroSvc
 
 ## performing the magic

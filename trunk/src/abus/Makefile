@@ -60,16 +60,16 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 
 .obj/AbusConnection.o .obj/AbusConnection.o .obj/AbusConnection.o .obj/AbusConnection.o: AbusConnection.cpp \
- $(MIRO_ROOT)/src/miro/Exception.h AbusConnection.h \
- $(MIRO_ROOT)/src/miro/DevConnection.h AbusDevice.h \
- AbusMessage.h $(MIRO_ROOT)/src/miro/DevMessage.h
+ AbusConnection.h \
+ AbusDevice.h \
+ AbusMessage.h
 
 .obj/AbusDevice.o .obj/AbusDevice.o .obj/AbusDevice.o .obj/AbusDevice.o: AbusDevice.cpp AbusDevice.h
 
 .obj/AbusEventHandler.o .obj/AbusEventHandler.o .obj/AbusEventHandler.o .obj/AbusEventHandler.o: AbusEventHandler.cpp AbusEventHandler.h \
- $(MIRO_ROOT)/src/miro/DevEventHandler.h \
- AbusConnection.h $(MIRO_ROOT)/src/miro/DevConnection.h \
- $(MIRO_ROOT)/src/miro/Exception.h AbusMessage.h \
- $(MIRO_ROOT)/src/miro/DevMessage.h AbusDevice.h
+ AbusConnection.h \
+ \
+ AbusMessage.h \
+ AbusDevice.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

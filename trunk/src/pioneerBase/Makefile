@@ -17,6 +17,8 @@
 #	Local macros
 #----------------------------------------------------------------------------
 
+INSTALL = $(VBIN:%=$(INSBIN)/%)
+
 ## static libraries
 
 STATIC_LIBS = pioneer psos miroSvc

@@ -13,12 +13,11 @@
 ##
 ##############################################################################
 
-# a makefile example
-# for a directory, wich has one binary to be built
-
 #----------------------------------------------------------------------------
 #	Local macros
 #----------------------------------------------------------------------------
+
+INSTALL = $(VBIN:%=$(INSBIN)/%)
 
 ## dynamic libraries if needed
 LDLIBS += -lmiro -lTAO_CosNotification -lTAO_CosNaming -lTAO

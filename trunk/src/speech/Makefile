@@ -17,6 +17,8 @@
 #	Local macros
 #----------------------------------------------------------------------------
 
+INSTALL = $(VBIN:%=$(INSBIN)/%)
+
 ## static libraries
 
 STATIC_LIBS = miroSvc
@@ -69,21 +71,21 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 
 .obj/SpeechConnection.o .obj/SpeechConnection.so .shobj/SpeechConnection.o .shobj/SpeechConnection.so: SpeechConnection.cpp SpeechConnection.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i.h SpeechDevice.h \
+ \
+ \
+ SpeechDevice.h \
 
 
 .obj/SpeechImpl.o .obj/SpeechImpl.so .shobj/SpeechImpl.o .shobj/SpeechImpl.so: SpeechImpl.cpp SpeechImpl.h \
- $(MIRO_ROOT)/src/miro/DtlkSpeechS.h \
- $(MIRO_ROOT)/src/miro/ExceptionS.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
- $(MIRO_ROOT)/src/miro/ExceptionS.i.h \
- $(MIRO_ROOT)/src/miro/DtlkSpeechC.h \
- $(MIRO_ROOT)/src/miro/DtlkSpeechC.i.h \
- $(MIRO_ROOT)/src/miro/DtlkSpeechS.i.h \
- SpeechConnection.h $(MIRO_ROOT)/src/miro/Exception.h \
- SpeechDevice.h
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ SpeechConnection.h \
+ SpeechDevice.h \
+
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

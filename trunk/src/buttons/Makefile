@@ -62,54 +62,54 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 
 .obj/ButtonsConnection.o .obj/ButtonsConnection.o .obj/ButtonsConnection.o .obj/ButtonsConnection.o: ButtonsConnection.cpp ButtonsConnection.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ \
+ \
+ \
  ButtonsEventHandler.h \
- $(MIRO_ROOT)/src/miro/B21ButtonsC.h \
- $(MIRO_ROOT)/src/miro/ButtonsC.h \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i.h \
- $(MIRO_ROOT)/src/miro/ButtonsC.i.h \
- $(MIRO_ROOT)/src/miro/B21ButtonsC.i.h \
- $(MIRO_ROOT)/src/miro/StructuredPushSupplier.h \
- $(MIRO_ROOT)/src/miro/Synch.h ButtonsDevice.h
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ ButtonsDevice.h
 
 .obj/ButtonsEventHandler.o .obj/ButtonsEventHandler.o .obj/ButtonsEventHandler.o .obj/ButtonsEventHandler.o: ButtonsEventHandler.cpp ButtonsEventHandler.h \
- $(MIRO_ROOT)/src/miro/B21ButtonsC.h \
- $(MIRO_ROOT)/src/miro/ButtonsC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i.h \
- $(MIRO_ROOT)/src/miro/ButtonsC.i.h \
- $(MIRO_ROOT)/src/miro/B21ButtonsC.i.h \
- $(MIRO_ROOT)/src/miro/StructuredPushSupplier.h \
- $(MIRO_ROOT)/src/miro/Synch.h ButtonsDevice.h \
- ButtonsConnection.h $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/TimeHelper.h
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ ButtonsDevice.h \
+ ButtonsConnection.h \
+
 
 .obj/ButtonsImpl.o .obj/ButtonsImpl.o .obj/ButtonsImpl.o .obj/ButtonsImpl.o: ButtonsImpl.cpp ButtonsImpl.h \
- $(MIRO_ROOT)/src/miro/B21ButtonsS.h \
- $(MIRO_ROOT)/src/miro/ButtonsS.h \
- $(MIRO_ROOT)/src/miro/ExceptionS.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
- $(MIRO_ROOT)/src/miro/ExceptionS.i.h \
- $(MIRO_ROOT)/src/miro/TimeS.h \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i.h \
- $(MIRO_ROOT)/src/miro/TimeS.i.h \
- $(MIRO_ROOT)/src/miro/ButtonsC.h \
- $(MIRO_ROOT)/src/miro/ButtonsC.i.h \
- $(MIRO_ROOT)/src/miro/ButtonsS.i.h \
- $(MIRO_ROOT)/src/miro/B21ButtonsC.h \
- $(MIRO_ROOT)/src/miro/B21ButtonsC.i.h \
- $(MIRO_ROOT)/src/miro/B21ButtonsS.i.h \
- $(MIRO_ROOT)/src/miro/Exception.h ButtonsDevice.h \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ ButtonsDevice.h \
  ButtonsConnection.h ButtonsEventHandler.h \
- $(MIRO_ROOT)/src/miro/StructuredPushSupplier.h \
- $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/TimeHelper.h
+ \
+ \
+
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

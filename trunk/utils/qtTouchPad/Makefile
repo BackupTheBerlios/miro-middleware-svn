@@ -13,13 +13,11 @@
 ##
 ##############################################################################
 
-# a makefile example
-# for a directory, wich has one binary to be built
-
 #----------------------------------------------------------------------------
 #	Local macros
 #----------------------------------------------------------------------------
 
+INSTALL = $(VBIN:%=$(INSBIN)/%)
 
 ## dynamic libraries if needed
 LDLIBS += -lmiro -lTAO_CosNaming -lTAO
@@ -70,15 +68,15 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 
 .obj/MainForm.o .obj/MainForm.so .shobj/MainForm.o .shobj/MainForm.so: MainForm.cpp MainForm.h \
- $(MIRO_ROOT)/src/miro/Client.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/RobotParameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/MotionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
- $(MIRO_ROOT)/src/miro/VelocityC.h \
- $(MIRO_ROOT)/src/miro/VelocityC.i.h \
- $(MIRO_ROOT)/src/miro/MotionC.i.h
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY
