@@ -1,0 +1,76 @@
+This is a Player interface for Miro.
+
+It needs a running istance of Player and provides Miro services for some of 
+ the player devices. Currently offered services are:
+Odometry
+Motion
+Stall
+Laser
+Sonar
+Battery
+PanTilt
+
+Video is included as a device in src/video
+
+If a device is not supplied by Player, it will issue a warning and not provide
+ the Miro service; other services should be unnaffected. The only required
+ Player device is position. Should it not be available, PlayerBase will end
+ with error. It doesn't make any sense a robot without odometry or movement
+ in Miro, does it?
+
+FAQ
+
+configure says "Player support disabled" even though --enable-Player was used
+-----------------------------------------------------------------------------
+The header files for player were not found on the standard include paths.
+Try pointing the environment variable PLAYER_ROOT to your player installation
+ directory ("--prefix" used when configuring player)
+
+
+How to run a single simulated robot on a single computer
+--------------------------------------------------------
+(Based on gazebo-0.51 and Player-1.6.2)
+
+-Run gazebo
+(gazebo/bin> gazebo ../share/gazebo/worlds/example.world)
+-Run Player
+(player/bin> player -g 0 $MIRO_ROOT/examples/player/gazebo.cfg)
+-Run PlayerBase
+(Miro/bin> PlayerBase)
+-Run the desired Miro clients
+(Miro/bin> QtTouchpad)
+(Miro/bin> OdometryStream)
+
+
+How to run a single simulated robot on different computers
+----------------------------------------------------------
+
+-Run gazebo 
+(gazebo/bin> gazebo ../share/gazebo/worlds/example.world)
+-Run Player on the same computer
+(player/bin> player -g 0 $MIRO_ROOT/examples/player/gazebo.cfg)
+-Run PlayerBase on another computer
+(Miro/bin> PlayerBase -h PlayerHostname -p PlayerPort)
+-Run the desired Miro clients
+(Miro/bin> PanTiltTest)
+(Miro/bin> QtVideo)
+
+
+How to run many simulated robots
+--------------------------------
+-Run gazebo (one instance with all robots within)
+(gazebo/bin> gazebo $MIRO_ROOT/examples/player/pioneers.world)
+-Run Player (one instance with all robots within)
+(player/bin> player $MIRO_ROOT/examples/player/pioneers.cfg)
+-Run PlayerBase for the first robot
+(Miro/bin> PlayerBase -MNC robot1)
+-Run PlayerBase for the second robot
+(Miro/bin> PlayerBase -MNC robot2 -i 1)
+[Use a different naming context ("robot2") and connect to the second instance
+ of the player devices ("-i 1"; first is 0)]
+-Run the desired Miro clients
+(Miro/bin> QtTouchPad -MNC robot1)
+(Miro/bin> QtTouchPad -MNC robot2)
+
+There are of course other possibilities; such as running each PlayerBase on a different computer, using two separate player instances for each robot (e.g. on different ports), ...
+
