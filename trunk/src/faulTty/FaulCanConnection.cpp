@@ -50,7 +50,7 @@ namespace FaulController
     ACE_Time_Value av(ACE_OS::gettimeofday() + ACE_Time_Value(1));
 
     if (mutex_.acquire(av) == -1)
-      throw Miro::CException(errno, "Error writing faulTty device.");
+      throw Miro::CException(errno, "Error writing faulCan device.");
 
     ACE_Time_Value t = ACE_OS::gettimeofday();
     ACE_Time_Value delta = t - lastWrite_;
@@ -67,5 +67,6 @@ namespace FaulController
       connection2003_->writeWheel(*pMessage, strlen(*pMessage), motor_);
       ++pMessage;
     }
+    mutex_.release();
   }
 };
