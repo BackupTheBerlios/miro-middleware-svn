@@ -156,8 +156,8 @@ namespace Miro
   // output operator for PanTiltPositionIDL
   std::ostream &
   operator<<(std::ostream &ostr, const PanTiltPositionIDL &rhs) {
-    ostr << rad2Deg(rhs.panvalue) << "° ";
-    ostr << rad2Deg(rhs.tiltvalue) << "°";
+    ostr << rad2Deg(rhs.panValue) << "° ";
+    ostr << rad2Deg(rhs.tiltValue) << "°";
     return ostr;
   }
   // output for exceptions which take arguments

@@ -8,57 +8,65 @@
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-
 #ifndef PanImpl_h
 #define PanImpl_h
 
+#include "PanTiltBase.h"
 #include "idl/PanS.h"
-#include "miro/Exception.h"
 #include "miro/SvcParameters.h"
-
-#include <cmath>
-
 
 namespace Miro
 {
 
-  //! Implementation of a dummy Pan interface.
+  //! Implementation of a base Pan interface.
   /**
    * This class offers a generic implementation for the Pan
    *
    * @author Guillem Pagès Gassull
    */
-  class  PanImpl : public virtual POA_Miro::Pan
+  class  PanImpl : public virtual PanTiltBase,
+		   public virtual POA_Miro::Pan
   {
   public:
     //! Initializing constructor.
-    PanImpl(const Miro::PanParameters& _panParameters);
+    PanImpl(PanParameters const& _params);
     virtual ~PanImpl();
-
-
    
-    void setTargetPan(double value);
-    //! Pan interface method implementation.
-    virtual double getTargetPan() throw();
-    //! Pan interface method implementation.
-    virtual PanLimitsIDL getPanLimits() throw(Miro::EDevIO);
 
-    bool testPan(double value);
+    //! Pan interface method implementation.
+    virtual CORBA::Float getTargetPan() throw();
+    //! Pan interface method implementation.
+    virtual PanLimitsIDL getPanLimits() throw();
 
   protected:
     //-------------------------------------------------------------------------
-    // protected object data
+    // protected methods
     //-------------------------------------------------------------------------
-    Miro::PanParameters panParameters_;
+
+    //! Test if pan angle is within the limits.
+    bool testPan(CORBA::Float _angle) const throw();
+    //! Set the new target pan angle.
+    void setTargetPan(CORBA::Float _angle) throw();
+
+    //-------------------------------------------------------------------------
+    // protected data
+    //-------------------------------------------------------------------------
+    PanParameters const& params_;
     double targetPan_;
   };
 
-  inline bool PanImpl::testPan(double value) {
-    return ((value>=panParameters_.rangeMin) &&
-	    (value<=panParameters_.rangeMax));
+  inline 
+  bool 
+  PanImpl::testPan(CORBA::Float _angle) const throw() {
+    return ((_angle >= params_.rangeMin) &&
+	    (_angle <= params_.rangeMax));
   }
-  inline void PanImpl::setTargetPan(double value) 
-  { targetPan_=value; }
+
+  inline 
+  void 
+  PanImpl::setTargetPan(CORBA::Float _angle) throw() {
+    targetPan_ = _angle; 
+  }
 }
 
 #endif // PanImpl_h

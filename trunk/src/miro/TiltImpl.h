@@ -8,58 +8,64 @@
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-
 #ifndef TiltImpl_h
 #define TiltImpl_h
 
+#include "PanTiltBase.h"
 #include "idl/TiltS.h"
-#include "miro/Exception.h"
 #include "miro/SvcParameters.h"
-
-#include <cmath>
-
 
 namespace Miro
 {
 
-  //! Implementation of a dummy Tilt interface.
+  //! Partial implementation of the Tilt interface.
   /**
-   * This class offers a generic implementation for the Tilt
+   * This class offers a generic part of a tilt implementation.
    *
    * @author Guillem Pagès Gassull
    */
-  class  TiltImpl : public virtual POA_Miro::Tilt
+  class  TiltImpl :public virtual PanTiltBase,
+		   public virtual POA_Miro::Tilt
   {
   public:
     //! Initializing constructor.
-    TiltImpl(const Miro::TiltParameters& _panParameters);
+    TiltImpl(Miro::TiltParameters const& _params);
     virtual ~TiltImpl();
 
-
-    
-    void setTargetTilt(double value);
     //! Tilt interface method implementation.
-    virtual double getTargetTilt() throw();
+    virtual float getTargetTilt() throw();
     //! Tilt interface method implementation.
-    virtual TiltLimitsIDL getTiltLimits() throw(Miro::EDevIO);
-
-    bool testTilt(double value);
+    virtual TiltLimitsIDL getTiltLimits() throw();
 
   protected:
     //-------------------------------------------------------------------------
-    // protected object data
+    // protected methods
     //-------------------------------------------------------------------------
-    Miro::TiltParameters tiltParameters_;
-    double targetTilt_;
+
+    //! Test if tilt angle is within the limits.
+    bool testTilt(CORBA::Float _angle) const throw();
+    //! Set the new target pan angle.
+    void setTargetTilt(CORBA::Float _angle) throw();
+
+    //-------------------------------------------------------------------------
+    // protected data
+    //-------------------------------------------------------------------------
+    TiltParameters const& params_;
+    CORBA::Float targetTilt_;
   };
 
-  inline bool TiltImpl::testTilt(double value) {
-    return ((value>=tiltParameters_.rangeMin) &&
-	    (value<=tiltParameters_.rangeMax));
+  inline 
+  bool
+  TiltImpl::testTilt(CORBA::Float _angle) const throw() {
+    return ((_angle >= params_.rangeMin) &&
+	    (_angle <= params_.rangeMax));
   }
   
-  inline void TiltImpl::setTargetTilt(double value)
-  { targetTilt_=value; }
+  inline
+  void
+  TiltImpl::setTargetTilt(CORBA::Float _angle) throw() {
+    targetTilt_ = _angle; 
+  }
 }
 
 #endif // TiltImpl_h

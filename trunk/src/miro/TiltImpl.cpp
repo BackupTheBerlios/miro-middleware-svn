@@ -15,25 +15,27 @@
 namespace Miro
 {
 
-  TiltImpl::TiltImpl(const Miro::TiltParameters& _tiltParameters) :
-    tiltParameters_(_tiltParameters),
+  TiltImpl::TiltImpl(TiltParameters const& _params) :
+    params_(_params),
     targetTilt_(0)
   {}
 
-  TiltImpl::~TiltImpl() {}
+  TiltImpl::~TiltImpl() 
+  {}
 
-  double TiltImpl::getTargetTilt() throw() 
+  CORBA::Float TiltImpl::getTargetTilt() throw() 
   {
     return targetTilt_;
   }
 
-  TiltLimitsIDL TiltImpl::getTiltLimits() throw(Miro::EDevIO) {
+  TiltLimitsIDL TiltImpl::getTiltLimits() throw()
+  {
     TiltLimitsIDL result;
+    ACE_Guard<ACE_Recursive_Thread_Mutex> guard(mutex_);
 
-    result.mintiltposition=tiltParameters_.rangeMin;
-    result.maxtiltposition=tiltParameters_.rangeMax;
+    result.minAngle = params_.rangeMin;
+    result.maxAngle = params_.rangeMax;
 
     return result;
   }
-
 }

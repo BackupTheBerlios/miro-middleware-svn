@@ -10,30 +10,33 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "PanImpl.h"
-#include "Angle.h"
 
 namespace Miro
 {
 
-  PanImpl::PanImpl(const Miro::PanParameters& _panParameters) :
-    panParameters_(_panParameters),
-    targetPan_(0)
+  PanImpl::PanImpl(PanParameters const& _params) :
+    params_(_params),
+    targetPan_(0.f)
   {}
 
-  PanImpl::~PanImpl() {}
+  PanImpl::~PanImpl() 
+  {}
 
-  double PanImpl::getTargetPan() throw() 
+  CORBA::Float 
+  PanImpl::getTargetPan() throw() 
   {
     return targetPan_;
   }
 
-  PanLimitsIDL PanImpl::getPanLimits() throw(Miro::EDevIO) {
+  PanLimitsIDL 
+  PanImpl::getPanLimits() throw()
+  {
     PanLimitsIDL result;
+    ACE_Guard<ACE_Recursive_Thread_Mutex> guard(mutex_);
 
-    result.minpanposition=panParameters_.rangeMin;
-    result.maxpanposition=panParameters_.rangeMax;
+    result.minAngle = params_.rangeMin;
+    result.maxAngle = params_.rangeMax;
 
     return result;
   }
-
 }

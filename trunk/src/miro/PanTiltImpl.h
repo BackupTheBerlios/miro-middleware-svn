@@ -8,7 +8,6 @@
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-
 #ifndef PanTiltImpl_h
 #define PanTiltImpl_h
 
@@ -31,41 +30,44 @@ namespace Miro
    *
    * @author Guillem Pagès Gassull
    */
-  class  PanTiltImpl : public virtual POA_Miro::PanTilt, public Miro::PanImpl, public Miro::TiltImpl
+  class  PanTiltImpl : public virtual POA_Miro::PanTilt, 
+		       public Miro::PanImpl,
+		       public Miro::TiltImpl
   {
   public:
     //! Initializing constructor.
-    PanTiltImpl(const Miro::PanTiltParameters& _panTiltParameters);
+    PanTiltImpl(PanTiltParameters const& _params);
     virtual ~PanTiltImpl();
 
-
-    virtual void setTargetPosition(const PanTiltPositionIDL& value);
     //! PanTilt interface method implementation.
     virtual PanTiltPositionIDL getTargetPosition() throw();
     //! PanTilt interface method implementation.
-    virtual PanTiltLimitsIDL getPanTiltLimits() throw(Miro::EDevIO);
-
-    bool testPosition(const PanTiltPositionIDL& value);
+    virtual PanTiltLimitsIDL getPanTiltLimits() throw();
 
   protected:
+    //------------------------------------------------------------------------
+    // protected methods
+    //------------------------------------------------------------------------
+    bool testPosition(PanTiltPositionIDL const& _value) const throw();
+    void setTargetPosition(PanTiltPositionIDL const& _value) throw();
+
     //------------------------------------------------------------------------
     // protected object data
     //------------------------------------------------------------------------
   };
 
-  inline bool PanTiltImpl::testPosition(const PanTiltPositionIDL& value) {
-    return ((value.panvalue<=panParameters_.rangeMax) && 
-	(value.panvalue>=panParameters_.rangeMin) && 
-	(value.tiltvalue<=tiltParameters_.rangeMax) && 
-	    (value.tiltvalue>=tiltParameters_.rangeMin));
+  inline
+  bool
+  PanTiltImpl::testPosition(PanTiltPositionIDL const& _value) const throw() {
+    return (testPan(_value.panValue) && testTilt(_value.tiltValue));
   }
   
-  inline void PanTiltImpl::setTargetPosition(const PanTiltPositionIDL& value)
-  { 
-    targetPan_=value.panvalue;
-    targetTilt_=value.tiltvalue;
+  inline 
+  void
+  PanTiltImpl::setTargetPosition(PanTiltPositionIDL const& _value) throw() { 
+    setTargetPan(_value.panValue);
+    setTargetTilt(_value.tiltValue);
   }
-
 }
 
 #endif // PanTiltImpl_h

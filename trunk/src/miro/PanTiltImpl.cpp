@@ -15,31 +15,34 @@
 namespace Miro
 {
 
-  PanTiltImpl::PanTiltImpl(const Miro::PanTiltParameters& _panTiltParameters):
-    PanImpl(_panTiltParameters.pan),
-    TiltImpl(_panTiltParameters.tilt)
+  PanTiltImpl::PanTiltImpl(PanTiltParameters const& _params):
+    PanImpl(_params.pan),
+    TiltImpl(_params.tilt)
   {
   }
 
-  PanTiltImpl::~PanTiltImpl() {}
+  PanTiltImpl::~PanTiltImpl() 
+  {}
 
   PanTiltPositionIDL PanTiltImpl::getTargetPosition() throw() 
   {
     PanTiltPositionIDL targetPosition;
-    targetPosition.panvalue=targetPan_;
-    targetPosition.tiltvalue=targetTilt_;
+    ACE_Guard<ACE_Recursive_Thread_Mutex> guard(mutex_);
+
+    targetPosition.panValue = targetPan_;
+    targetPosition.tiltValue = targetTilt_;
+
     return targetPosition;
   }
 
-  PanTiltLimitsIDL PanTiltImpl::getPanTiltLimits() throw(Miro::EDevIO) {
+  PanTiltLimitsIDL PanTiltImpl::getPanTiltLimits() throw()
+  {
     PanTiltLimitsIDL result;
+    ACE_Guard<ACE_Recursive_Thread_Mutex> guard(mutex_);
 
-    result.minpanposition=panParameters_.rangeMin;
-    result.maxpanposition=panParameters_.rangeMax;
-    result.mintiltposition=tiltParameters_.rangeMin;
-    result.maxtiltposition=tiltParameters_.rangeMax;
+    result.pan = getPanLimits();
+    result.tilt = getTiltLimits();
 
     return result;
   }
-
 }
