@@ -1,4 +1,5 @@
 \chapter{Behaviour Engine}
+\label{SEC:BEHAVIOURS}
 
 Controlling the actuators of an autonomous mobile robot is one of the
 central aspects of mobile robot research. As \miro exposes the
@@ -344,17 +345,10 @@ name of the behaviour class. The first macro has to be placed within
 the call definition and the second within the cpp-file containing the
 behaviour implementation.
 
-
-In the default constructor of the parameters class,
-the default settings of the parameters are expected to be set. There
-are two more methods for each {\tt BehaviourParameters} class to be
-populated. The first is a method to parse its parameters from an xml
-DOM tree, the second is for debug output. If your behaviour doesn't
-need any additional parameters, you can skip this work. Its parents
-Parameters class will then be used. --- The {\tt BehaviourParameters}
-framework is about to be subject to automatic code generation (see
-section \ref{sec:makeParams}). So hopefully you don't have to worry
-about it too much.
+The behaviour parameters classes are handled by the parameters
+framework described in the previous chapter. Section
+\ref{sec:BehaviourDescription} covers the details for parameter
+classes for behaviours.
 
 \subsection{Behaviour Initialization}
 \label{sec:init}
@@ -430,7 +424,7 @@ explained in more detail as soon as we do some more work on arbiters.
 
 ``Now I built all my behaviours. What code do I have to write to make
 them an action pattern?'' Well, you don't have to write code. Action
-patterns and policies are defined within an xml file. Allowing for
+patterns and policies are defined within an XML file. Allowing for
 fast and convenient modifications. Which is especially cool when
 debugging. So let us take a look at how to put those things together.
 
@@ -530,6 +524,7 @@ class as can be seen in the behaviour example at:
 {\tt \$MIRO\_ROOT/examples/b21Behaviours/BehaviourEngine.cpp|h}
 
 \section{The Policy Editor}
+\label{SEC:POLICY_EDITOR}
 
 Editing large XML files is tedious and error prone. Therefore \miro
 offers an GUI based editor, with which you can build and edit your
@@ -566,17 +561,15 @@ policy graph within the big scroll view area of the program.
 \end{itemize}
 \subsubsection{Options}
 \begin{itemize}
-\item Behaviour-Description-Filename \\
-  Display the name of the currently loaded behaviour description file.
-  This is the file, describing the available behaviours, arbiters and
-  parameters to the policy editor. Its syntax is described in section
-  \ref{SEC:BehaviourDescription}.
-\item Load Behaviour-Description-File \\
-  Load a behaviour description
-  file. The file dialog will be displayed. Note that the selected file
+\item Behaviour Descriptions \\
+  Display the behaviour descriptions dialog. The dialog consist of a
+  listbox with the currently loaded behaviour parameter description
+  files. (See the chapter \ref{SEC:PARAMETERS} for more details on
+  parameter files.) Buttons for adding and deleting files are
+  provided. On pressing the button add, the file dialog will be displayed. Note that the selected file
   has to contain a valid behaviour description. - Verifying, whether
-  the load was successful is currently only possible, by querying the
-  behaviour description file name via the menu item above. On the
+  the load was successful is currently only done on leaving the
+  dialog. On the
   positive side the currently loaded description is memorized in the
   file .PolicyEditorConfig.xml file in the users home directory for
   further runs of the policy editor.
@@ -611,7 +604,7 @@ pattern produces a popup menu with the following options.
 \item Rename transition \\
   A dialog box will appear with the name and the target of the
   transitions. You can also delete a transition by deleting the name
-  as well as the target of the transition. - Be carful, the new entry
+  or the target of the transition. - Be carful, the new entry
   will only be accepted, if you left the entry field by clicking on
   another entry before hitting the okay button.
 \item Delete pattern \\
@@ -638,11 +631,17 @@ pattern produces a popup menu with the following options.
 \item Down \\
   Move the behaviour down one position in the list of behaviours.
 \item Set parameters \\
-  A dialog box will appear with the name and the value of the
-  behaviours parameters along with the type and the measure they
-  represent. - Please only edit the value field. Also, be carful, the
-  new entry will only be accepted, if you left the entry field by
-  clicking on another entry before hitting the okay button.
+  The parameters dialog will be displayed. It has three columns. In
+  the left one, the parameter names are displayed as label. The middle column
+  contains a single line entry field for the parameter. In the right column the
+  measure of the parameter is displayed as label, if no measure is available
+  the parameters type is displayed. The default value is
+  displayed as bubble help associated with each entry field, if
+  available. The parameters type is displayed as bubble help
+  associated with each measure label. The dialog is strictly
+  typed. Therefore the okay button inactive if any of the entry fields
+  are containing invalid input, for instance a value bigger than 180
+  for an Angle type.
 \item Delete behaviour \\
   Deletes the behaviour from the action pattern.
 \end{itemize}
@@ -651,72 +650,64 @@ pattern produces a popup menu with the following options.
 \label{SEC:BehaviourDescription}
 
 To be able to use your own behaviours within the PolicyEditor, you
-have to describe their properties (name and parameters) within another
-XML file, witch looks like this:
+have to describe their properties (name and parameters) within a
+parameters description file. The parameter framework is explained in
+more detail in the previous chapter. Anyhow there are some minor
+restrictions for behaviour parameter description files, that are
+explained below:
 
 $<$!--MiroParametersConfigDocument--$>$
 
 \begin{description}
   \item[config]
-    A parameters config file describes the types, names and defaults
-    for parameter classes as used within the \miro framework. 
-
   \begin{description}
   \item[config\_group]
-    Configurations can be grouped together for various reasons. 
 
     Attributes:
     \begin{itemize}
     \item \textit{name} The name of the config group. Within the
       behaviour parameters framework the valid names are \textbf{behaviour} and
       \textbf{arbiter}. Within each group only config items of the
-      specified type are allowed to occur.
+      specified type are allowed to occur. Other groups are processed
+      by the parameter auto code generation tool {\tt MakeParams} but
+      ignored by the {\ PolicyEditor}.
     \end{itemize}
 
     \begin{description}
-    \item[config\_item] A configurable item to built a parameters
-      class for.
+    \item[config\_item]
 
       Attributes:
       \begin{itemize}
       \item \textit{name} The name of the behaviour or the arbiter.
-      \item \textit{parent} The name of the super class.
-      \item \textit{namespace} The namespace, the class resides.
+      \item \textit{parent} The name of the super class. That has to
+        correspond to the corresponding super class of the behaviour.
+      \item \textit{namespace}
       \end{itemize}
-  
       \begin{description}
-      \item[config\_parameter] A parameter for the class.
+      \item[config\_parameter]
 
         Attributes:
         \begin{itemize}
-        \item \textit{name} Guess what.
-        \item \textit{type} int, double, bool, std::string, etc.
-        \item \textit{default} default value (set in the constructor)
-        \item \textit{measure} Possible types: mm, msec, °, mm/s, °/s.
-          Those will be used for input checking by the GUI interface.
-        \item \textit{inherited true/false}
-          This attribute is used to 
-          overwrite defaults for inherited variables within the
-          constructor of the class. If set to true, no new member
-          variable will be added to the class, and only the
-          attributes name and default will be evaluated.
+        \item \textit{name}
+        \item \textit{type} No nested types are allowed!
+        \item \textit{default}
+        \item \textit{measure}
+        \item \textit{inherited}
         \end{itemize}
-
-        text tag: some description for debug output or bubble help
       \end{description}
     \end{description}
   \end{description}
 \end{description}
 
+\subsection{Example Behaviour Description File}
 
 \subsection{Auto-generating Parameter Class Code}
 \label{sec:makeParams}
 
 Having written the description of your behaviours parameters within
 XML, it is possible to auto-generate the necessary code for your
-behaviours associated Parameters class. This is done by the tool {\tt
-  makeParams} which will be soon available within the \miro bin
-directory.
+behaviours associated Parameters class. See the previous chapter for
+details.
 
 \section{Policy Controller}
 
