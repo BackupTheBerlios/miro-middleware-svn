@@ -82,7 +82,6 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/DynamicWindow.h \
  $(MIRO_ROOT)/src/miro/ActionPattern.h \
  $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/MotionArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/Arbiter.h \
  $(MIRO_ROOT)/src/miro/StructuredPushConsumer.h \
@@ -114,7 +113,6 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/DynamicWindow.h \
  $(MIRO_ROOT)/src/miro/ActionPattern.h \
  $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/MotionArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/Arbiter.h \
  $(MIRO_ROOT)/src/miro/StructuredPushConsumer.h \
@@ -136,7 +134,6 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/DynamicWindow.h \
  $(MIRO_ROOT)/src/miro/ActionPattern.h \
  $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/MotionArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/Arbiter.h \
  $(MIRO_ROOT)/src/miro/StructuredPushConsumer.h \
@@ -146,8 +143,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/MotionArbiterMessage.h \
  $(MIRO_ROOT)/src/miro/VelocityC.h \
  $(MIRO_ROOT)/src/miro/VelocityC.i \
- $(MIRO_ROOT)/src/miro/ArbiterMessage.h \
- $(MIRO_ROOT)/src/miro/MotionC.h $(MIRO_ROOT)/src/miro/MotionC.i
+ $(MIRO_ROOT)/src/miro/ArbiterMessage.h
 
 .obj/SonarAvoidParameters.o .obj/SonarAvoidParameters.so .shobj/SonarAvoidParameters.o .shobj/SonarAvoidParameters.so: SonarAvoidParameters.cpp \
  SonarAvoidParameters.h \
@@ -158,18 +154,15 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 .obj/LaserAvoid.o .obj/LaserAvoid.so .shobj/LaserAvoid.o .shobj/LaserAvoid.so: LaserAvoid.cpp $(MIRO_ROOT)/src/miro/ActionPattern.h \
  $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/MotionArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/Arbiter.h \
  $(MIRO_ROOT)/src/miro/MotionArbiterMessage.h \
  $(MIRO_ROOT)/src/miro/VelocityC.h \
  $(MIRO_ROOT)/src/miro/VelocityC.i \
- $(MIRO_ROOT)/src/miro/ArbiterMessage.h \
- $(MIRO_ROOT)/src/miro/MotionC.h \
+ $(MIRO_ROOT)/src/miro/ArbiterMessage.h LaserAvoid.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/MotionC.i LaserAvoid.h \
- $(MIRO_ROOT)/src/miro/RangeSensorC.h \
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
  $(MIRO_ROOT)/src/miro/RangeEventC.h \
@@ -195,7 +188,6 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/DynamicWindow.h \
  $(MIRO_ROOT)/src/miro/ActionPattern.h \
  $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/MotionArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/Arbiter.h \
  $(MIRO_ROOT)/src/miro/TimedBehaviourParameters.h \
@@ -203,11 +195,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/MotionArbiterMessage.h \
  $(MIRO_ROOT)/src/miro/VelocityC.h \
  $(MIRO_ROOT)/src/miro/VelocityC.i \
- $(MIRO_ROOT)/src/miro/ArbiterMessage.h \
- $(MIRO_ROOT)/src/miro/MotionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/MotionC.i
+ $(MIRO_ROOT)/src/miro/ArbiterMessage.h
 
 .obj/StraightParameters.o .obj/StraightParameters.so .shobj/StraightParameters.o .shobj/StraightParameters.so: StraightParameters.cpp StraightParameters.h \
  $(MIRO_ROOT)/src/miro/TimedBehaviourParameters.h \
@@ -220,7 +208,6 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/DynamicWindow.h \
  $(MIRO_ROOT)/src/miro/ActionPattern.h \
  $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/MotionArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/Arbiter.h \
  $(MIRO_ROOT)/src/miro/TimedBehaviourParameters.h \
@@ -228,11 +215,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/MotionArbiterMessage.h \
  $(MIRO_ROOT)/src/miro/VelocityC.h \
  $(MIRO_ROOT)/src/miro/VelocityC.i \
- $(MIRO_ROOT)/src/miro/ArbiterMessage.h \
- $(MIRO_ROOT)/src/miro/MotionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/MotionC.i WanderParameters.h
+ $(MIRO_ROOT)/src/miro/ArbiterMessage.h WanderParameters.h
 
 .obj/WanderParameters.o .obj/WanderParameters.so .shobj/WanderParameters.o .shobj/WanderParameters.so: WanderParameters.cpp WanderParameters.h \
  $(MIRO_ROOT)/src/miro/TimedBehaviourParameters.h \
@@ -269,15 +252,15 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/OdometryC.i \
  $(MIRO_ROOT)/src/miro/StructuredPushConsumer.h \
  $(MIRO_ROOT)/src/miro/MotionArbiter.h \
+ $(MIRO_ROOT)/src/miro/PriorityArbiter.h \
  $(MIRO_ROOT)/src/miro/Arbiter.h \
  $(MIRO_ROOT)/src/miro/MotionArbiterMessage.h \
- $(MIRO_ROOT)/src/miro/ArbiterMessage.h \
- $(MIRO_ROOT)/src/miro/MotionArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h OnButton.h \
+ $(MIRO_ROOT)/src/miro/ArbiterMessage.h OnButton.h \
  $(MIRO_ROOT)/src/miro/EventBehaviour.h \
  $(MIRO_ROOT)/src/miro/Behaviour.h \
  $(MIRO_ROOT)/src/miro/DynamicWindow.h \
- $(MIRO_ROOT)/src/miro/ActionPattern.h OnButtonParameters.h \
+ $(MIRO_ROOT)/src/miro/ActionPattern.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h OnButtonParameters.h \
  $(MIRO_ROOT)/src/miro/EventBehaviourParameters.h \
  $(MIRO_ROOT)/src/miro/BehaviourParameters.h TactileStop.h \
  SonarAvoid.h SonarAvoidParameters.h LaserAvoid.h \
@@ -291,18 +274,15 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 .obj/TurnRight.o .obj/TurnRight.so .shobj/TurnRight.o .shobj/TurnRight.so: TurnRight.cpp $(MIRO_ROOT)/src/miro/ActionPattern.h \
  $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/MotionArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/Arbiter.h \
  $(MIRO_ROOT)/src/miro/MotionArbiterMessage.h \
  $(MIRO_ROOT)/src/miro/VelocityC.h \
  $(MIRO_ROOT)/src/miro/VelocityC.i \
- $(MIRO_ROOT)/src/miro/ArbiterMessage.h \
- $(MIRO_ROOT)/src/miro/MotionC.h \
+ $(MIRO_ROOT)/src/miro/ArbiterMessage.h TurnRight.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/MotionC.i TurnRight.h \
- $(MIRO_ROOT)/src/miro/RangeSensorC.h \
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
  $(MIRO_ROOT)/src/miro/RangeEventC.h \
