@@ -146,6 +146,7 @@ namespace Miro
 
     // calculate new velocity using the content of the dynamicWindow    
     newVelocity = dynWindow_.calcNewVelocity();
+    newVelocity = std::complex<double>(std::min(std::max(newVelocity.real(),-40.),40.), std::min(std::max(newVelocity.imag(),-40.),40.));
 
 
     // Set motion

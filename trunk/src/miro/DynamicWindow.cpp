@@ -75,7 +75,7 @@ namespace Miro
 	  }
 	}
 
-	velocitySpace_[left+100][right+100] = (int)(64. * (1.0 * rot + 1.5 * trans));
+	velocitySpace_[left+100][right+100] = (int)(64. * (1.0 * rot + 1.0 * trans));
       }
     }
   }	
@@ -87,7 +87,7 @@ namespace Miro
     
     const double WHEEL_DISTANCE  = 390.;  // in mm
     const double MIN_DISTANCE = 10.; // in mm
-    const double MAX_POLYGON_DISTANCE = 200.;  // in mm
+    const double MAX_POLYGON_DISTANCE = 500.;  // in mm
     const double BREAK_ACCELERATION = 2000.;  // in mm/sec2
     const int RESOLUTION = 4;
 
