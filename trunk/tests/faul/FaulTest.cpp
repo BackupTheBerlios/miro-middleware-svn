@@ -144,7 +144,7 @@ Service::Service() :
 
 
     pConsumer2003->registerInterfaces(pConnection2003, NULL, NULL,
-				      pFaulhaber->pConsumer, NULL);
+				      pFaulhaber->pConsumer, NULL, NULL);
   }
   else {
     pFaulhaber = new FaulhaberHardware(reactorTask.reactor(), 

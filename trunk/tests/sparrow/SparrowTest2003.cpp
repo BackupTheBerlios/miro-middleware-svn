@@ -52,11 +52,11 @@ struct Service
 Service::Service() :
   reactorTask(),
   //odometryImpl(new Miro::OdometryImpl(NULL)),
-  pSparrowConsumer(new Sparrow::Consumer2003(&connection, NULL, NULL)),
+  pSparrowConsumer(new Sparrow::Consumer2003()),
   pCanEventHandler(new Can::EventHandler(pSparrowConsumer, Sparrow::Parameters::instance())),
   connection(reactorTask.reactor(), pCanEventHandler, pSparrowConsumer)
 {
-
+  pSparrowConsumer->registerInterfaces(&connection, NULL, NULL, NULL, NULL, NULL);
 }
 
 int main(int argc, char * argv[])
@@ -81,8 +81,6 @@ int main(int argc, char * argv[])
   Service service;
 
   MIRO_LOG(LL_NOTICE, "Initialized");
-
-  int num;
 
   unsigned short nMotorflood, counter;
   long sleepTime;
@@ -134,13 +132,11 @@ int main(int argc, char * argv[])
       	break;
 
 
-      case 's':      // setSpeedRot
-	cout << "servo number (0-1): " << flush;
-	cin >> num;
-	cout << "servo position (deg): " << flush;
+      case 's':      // set pan
+	cout << "pan position (deg): " << flush;
 	cin >> rot;
 //	rot = deg2Rad(rot);
-	service.connection.setServo(num, rot);
+	service.connection.setPan(rot);
 	break;
 
       case 'f':      //MotorFlood
