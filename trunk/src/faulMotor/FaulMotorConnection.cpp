@@ -101,7 +101,24 @@ namespace FaulMotor
     int speedR = (short) (_speedR * params_->speedConvFactor);//* 112;
     double accL, accR;
 
-    if ((speedL != 0) && (speedR != 0))
+    double dSpeedL, dSpeedR;
+    dSpeedL = speedL - prevSpeedL;
+    dSpeedR = speedR - prevSpeedR;
+    accR = ( params_-> maxPosAccel) * 9. / 320.;
+    accL = ( params_-> maxPosAccel) * 9. / 320.;
+    if ((dSpeedL != 0) && (dSpeedR != 0))
+    {
+    if (abs(dSpeedL) > abs(dSpeedR))
+    	{
+		accR = (dSpeedR / dSpeedL *params_-> maxPosAccel) * 9. / 320.;
+    	}
+	else
+	{
+		accL = ( dSpeedL / dSpeedR * params_-> maxPosAccel) * 9. / 320.;
+	}
+     }
+
+    /*if ((speedL != 0) && (speedR != 0))
     {
     	accL = -speedL;
     	if (prevSpeedL != 0) accL = -speedL / prevSpeedL;
@@ -129,8 +146,8 @@ namespace FaulMotor
 	{
 	  accL = params_-> maxNegAccel * 9. / 320;
 	  accR = params_-> maxNegAccel * 9. / 320;
-	}
-    
+	}*/
+
     acctestL = (short)accL;
     acctestR = (short)accR;
     cout << "maxPosAcc: " << params_-> maxPosAccel <<" AccR: " << acctestR ;
