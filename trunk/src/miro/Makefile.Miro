@@ -17,7 +17,7 @@
 # debug = 1
 # optimize = 0
 
-LIBS += -lTAO_CosNotification -lTAO_CosNaming -lTAO -lACE -lqt
+LIBS += -lTAO_CosNotification -lTAO_CosNaming -lTAO -lACE
 
 ## this is the name of the resulting library
 NAME     = miro
