@@ -16,7 +16,10 @@
 
 #include <orbsvcs/Time_Utilities.h>
 
+#include <tao/Version.h>
+#if (TAO_MAJOR_VERSION > 1) || ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION >= 4))
 #include <tao/Any_Impl.h>
+#endif
 
 #include <ace/FILE_Connector.h>
 
@@ -154,13 +157,16 @@ namespace Miro
 	  // obtain type code id
 	  CORBA::Long typeId = -1;
 	  if (_event.remainder_of_body.impl() != NULL) {
-	    CORBA::TypeCode_ptr tc = _event.remainder_of_body.type();
-	    if (tc != CORBA::_tc_null) {
-	      typeId = typeRepository_.typeID(tc);
+	    CORBA::TypeCode_var tc = _event.remainder_of_body.type();
+	    if (tc.in() != CORBA::_tc_null) {
+	      typeId = typeRepository_.typeID(tc.in());
 	      //	      std::cout << "*" << std::flush;
 	    }
 	  }
 	  
+#if (TAO_MAJOR_VERSION > 1) || ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION >= 4))
+
+
 	  // if not type code repository full
 	  if (typeId != -2 && 
 	      // write type code id
@@ -174,6 +180,50 @@ namespace Miro
 	    totalLength_ = ostr_.total_length();
 	    return true;
 	  }
+#else
+	  // if not type code repository full
+	  if (typeId != -2 && 
+	      // write type code id
+	      ostr_.write_long(typeId)) {
+
+	    ACE_TRY_NEW_ENV {
+	      TAO_InputCDR input(_event.remainder_of_body._tao_get_cdr (),
+				 _event.remainder_of_body._tao_byte_order ());
+	      
+#if ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 3))
+	      
+	      CORBA::TypeCode::traverse_status status =
+		TAO_Marshal_Object::perform_append (tc.in(),
+						    &input,
+						    &ostr_
+						    ACE_ENV_ARG_PARAMETER);
+	      ACE_TRY_CHECK;
+	      
+	      if (status != CORBA::TypeCode::TRAVERSE_CONTINUE) {
+		full_ = true;
+		return false;
+	      }
+#else // TAO_MINOR_VERSION <= 2
+	      
+	      TAO_Marshal_Object::perform_append (tc.in (),
+						  &input,
+						  &ostr_,
+						  ACE_TRY_ENV);
+	      ACE_TRY_CHECK;
+#endif
+	    }
+	    ACE_CATCH (CORBA_Exception, ex) {
+	      full_ = true;
+	      return false;
+	    }
+	    ACE_ENDTRY;
+
+	    if (ostr_.total_length() <= parameters_.maxFileSize) {
+	      totalLength_ = ostr_.total_length();
+	      return true;
+	    }
+	  }
+#endif
 	}
       }
     

@@ -21,8 +21,11 @@
 #include <orbsvcs/Time_Utilities.h>
 #include <orbsvcs/CosNotificationC.h>
 
+#include <tao/Version.h>
+#if (TAO_MAJOR_VERSION > 1) || ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION >= 4))
 #include <tao/Any_Impl.h>
-#include "tao/Any_Unknown_IDL_Type.h"
+#include <tao/Any_Unknown_IDL_Type.h>
+#endif
 
 #include <cstdio>
 
@@ -197,9 +200,12 @@ namespace Miro
 
       }
 
+      // direct copies from TAO sources
+      // read the any payload
+
+#if (TAO_MAJOR_VERSION > 1) || ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION >= 4))
       try {
 
-	// direct copy from TAO sources
 	TAO::Unknown_IDL_Type *impl = new TAO::Unknown_IDL_Type (tc,
 								 0,
 								 istr_->byte_order ());
@@ -210,6 +216,57 @@ namespace Miro
 	eof_ = true;
 	return false;
       }
+#else
+      ACE_TRY_NEW_ENV {
+
+	// This will be the start of a new message block.
+	char *begin = istr_->rd_ptr ();
+
+	// Skip over the next aregument.
+#if ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 3))
+	CORBA::TypeCode::traverse_status status =
+	  TAO_Marshal_Object::perform_skip (tc,
+					    istr_
+					    ACE_ENV_ARG_PARAMETER);
+#else // TAO_MINOR_VERSION <= 2
+	CORBA::TypeCode::traverse_status status =
+	  TAO_Marshal_Object::perform_skip (tc, istr_, ACE_TRY_ENV);
+#endif
+	ACE_TRY_CHECK;
+
+	if (status != CORBA::TypeCode::TRAVERSE_CONTINUE) {
+	  eof_ = true;
+	  return false;
+        }
+
+	// This will be the end of the new message block.
+	char *end = istr_->rd_ptr ();
+
+	// The ACE_CDR::mb_align() call can shift the rd_ptr by up to
+	// ACE_CDR::MAX_ALIGNMENT-1 bytes. Similarly, the offset adjustment
+	// can move the rd_ptr by up to the same amount. We accommodate
+	// this by including 2 * ACE_CDR::MAX_ALIGNMENT bytes of additional
+	// space in the message block.
+	size_t size = end - begin;
+	ACE_Message_Block mb (size + 2 * ACE_CDR::MAX_ALIGNMENT);
+	ACE_CDR::mb_align (&mb);
+	ptr_arith_t offset = ptr_arith_t (begin) % ACE_CDR::MAX_ALIGNMENT;
+	mb.rd_ptr (offset);
+	mb.wr_ptr (offset + size);
+	ACE_OS::memcpy (mb.rd_ptr (), begin, size);
+	
+	// Stick it into the Any. It gets duplicated there.
+	x._tao_replace (tc,
+			istr_->byte_order (),
+			&mb);
+      }
+      ACE_CATCH (CORBA_Exception, ex) {
+	eof_ = true;
+	return false;
+      }
+      ACE_ENDTRY;
+
+#endif
     }
     // version 1 parsing
     else {
