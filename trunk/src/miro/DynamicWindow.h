@@ -18,7 +18,7 @@
 // florian: const static member variables?
 #define VEL_SPACE_LEFT 201
 #define VEL_SPACE_RIGHT 201
-#define PACE 10
+#define PACE 5
 
 namespace Miro
 {
@@ -31,6 +31,8 @@ namespace Miro
     DynamicWindow(Vector2d, int, int);
     // destructor
     ~DynamicWindow();
+    // copy function
+    void getCopy(Miro::DynamicWindow *);
 
     // florian: const &    // florian: const vector , const ?
     void setPreferredDirection(double);

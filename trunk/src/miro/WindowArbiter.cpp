@@ -31,9 +31,9 @@ namespace Miro
     pSupplier_(_pSupplier),
     reactor(ar_),
     timerId(0),
-    dynWindow_(std::complex<double>(0., 0.), 20000, 20000),
+    dynWindow_(std::complex<double>(0., 0.), 700, 2000),
     winArbViewTask_(NULL),
-    winArbViewTaskCreated(false)
+    winArbViewTaskCreated(true)
   {
     currentVelocity_.translation = 0;
     currentVelocity_.rotation = 0.;
@@ -49,7 +49,8 @@ namespace Miro
       notifyEvent.filterable_data.length(0);          // put nothing here
     }
 
-    fileHandler = fopen("windowArbiter.log","w");
+    fileHandler = fopen("windowArbiter.log","w
+");
 
   }
 
@@ -103,7 +104,7 @@ namespace Miro
     }
       
     timerId = reactor.schedule_timer(this, 0, ACE_Time_Value(0,0),
-	ACE_Time_Value(0, 50000));
+	ACE_Time_Value(0, 100000));
     cout << "WindowArbiter Open." << endl;
   }
 
@@ -149,14 +150,21 @@ namespace Miro
 
     // Set motion
     // florian: probier mal wie's mit setLRVelocity läuft.
+
+    pMotion_->setLRVelocity((int)(10. * newVelocity.real()), (int)(10. * newVelocity.imag()));
+    cout << "WindowArbiter.cpp : left=" << newVelocity.real() << " - right=" << newVelocity.imag() << endl;
+    currentVelocity_ = velocity;
+
+    /*
     velocity.translation = 10 * ((int)newVelocity.real() + (int)newVelocity.imag()) / 2;
     velocity.rotation = 10 * ((int)newVelocity.imag() - (int)newVelocity.real()) / RADSTAND;
     if (velocity.translation != currentVelocity_.translation || velocity.rotation != currentVelocity_.rotation) {
-      // pMotion_->setVelocity(velocity);
-      // currentVelocity_ = velocity;
+      cout << "VELOCITY TRANS : " << currentVelocity_.translation << " _ VELOCITY ROT : " << currentVelocity_.rotation << endl;
+      pMotion_->setVelocity(velocity);
+    
     }
-
-    cout << "\n\nWindowArbiter TimeOutHandler FINISHED.\n\n" << endl;
+    */
+    cout << "WindowArbiter.cpp : TimeOutHandler finished!" << endl;
 
     return 0;
   }

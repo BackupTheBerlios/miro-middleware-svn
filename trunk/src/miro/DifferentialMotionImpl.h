@@ -84,8 +84,10 @@ namespace Miro
     if (_left < params_.minLTranslation ||
 	_left > params_.maxLTranslation ||
 	_right < params_.minRTranslation ||
-	_right > params_.maxRTranslation)
+	_right > params_.maxRTranslation) {
+      cout << "DifferentialMotion: left - " << _left << " right - " << _right << endl;
       throw EOutOfBounds();
+    }
   }
 
   inline

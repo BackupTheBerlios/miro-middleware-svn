@@ -47,6 +47,17 @@ namespace Miro
 
   }
 
+  // copy function
+  void DynamicWindow::getCopy(Miro::DynamicWindow *_dynamicWindow) {
+
+    for(int left = 0; left < VEL_SPACE_LEFT; left++) {
+      for(int right = 0; right < VEL_SPACE_RIGHT; right++) {
+        _dynamicWindow->velocitySpace_[left][right] = velocitySpace_[left][right];
+      }
+    }
+
+  }
+
 
   // set preferred direction
   //
@@ -72,20 +83,19 @@ namespace Miro
 
   void DynamicWindow::collisionCheckDeluxe(std::vector<Vector2d> &_robot, std::vector<Vector2d> &_obstacle) {
 
-    const int CURV_CNT = 8; // count
-    const int CURV_RES = 8; // count
+    const int CURV_CNT = 6; // count
+    const int CURV_RES = 6; // count
     const int CURV_LEN = 700; // mm
-    const int CURV_SMOOTH_LEN = 100; // mm
-    const int CURV_DELAY = 4; // count
+    const int CURV_SMOOTH_LEN = 10; // mm
+    const int CURV_DELAY = 6; // count
     const double WHEEL_DISTANCE  = 390.; // mm
-    const double BREAK_ACCEL = 2500.; // in mm/sec2
+    const double BREAK_ACCEL = 2000.; // in mm/sec2
 
     int CURV[2*CURV_CNT+1][2*CURV_RES+1]; // curvature space
     
     int count, seg, left, right, curv, target, front, back;
     bool frontObstacle, backObstacle;
     double fLeft, fRight, offset, angle, rel, break_dist, left_break, right_break;
-    std::vector<Vector2d>::iterator a;
     
     std::FILE *logFile1;
     logFile1 = std::fopen("curvature.log","a");
@@ -96,6 +106,7 @@ namespace Miro
       //
       
       // relation between left and right wheel (-inf...0...+inf)
+      
       rel = tan( (M_PI * count / (2*CURV_CNT)) - (M_PI/2) );
       
       // calculate speed for left and right wheel using 'rel'
@@ -121,14 +132,6 @@ namespace Miro
 	// rotate stepwise forwards and check for collisions
 	for(seg = 0; seg < 2*CURV_RES+1; seg++) {
 	  rotateMountedPolygon(_robot, Vector2d(offset, 0.), -angle);
-	  cout << endl << "REL:" << rel << endl;
-	  cout << endl << "ROBOT:" << flush;
-	  for(a = _robot.begin(); a < _robot.end(); a++) {
-	    cout << a->real() << "_" << a->imag() << "|" << flush;
-	  }
-	  cout << endl;
-	  if(seg==CURV_RES)
-	    cout << "SEG finished!!!!!!!" << endl;
           if(getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) == 0) {
 	    CURV[count][seg] = 0;
 	  }
@@ -221,11 +224,15 @@ namespace Miro
 	  break_dist = left_break;
 	else
 	  break_dist = right_break;
-
-	target = CURV_RES  + CURV_DELAY + (int)(break_dist  * (double)CURV_RES / (double)CURV_LEN);
 	
-	// velocitySpace_[left+100][right+100] = (double)CURV[std::max(0,std::min(2*CURV_CNT,curv))][std::max(0,std::min(2*CURV_RES,target))] * (double)velocitySpace_[left+100][right+100] / 250.;
-	velocitySpace_[left+100][right+100] = std::min(CURV[std::max(0,std::min(2*CURV_CNT,curv))][std::max(0,std::min(2*CURV_RES,target))], 255); // velocitySpace_[left+100][right+100]);
+	if((left+right)>0)
+	  target = CURV_RES  + CURV_DELAY + (int)(break_dist  * (double)CURV_RES / (double)CURV_LEN);
+	else
+
+	  target = CURV_RES - CURV_DELAY + (int)(break_dist * (double)CURV_RES / (double)CURV_LEN);
+	
+	velocitySpace_[left+100][right+100] = (double)CURV[std::max(0,std::min(2*CURV_CNT,curv))][std::max(0,std::min(2*CURV_RES,target))] * (double)velocitySpace_[left+100][right+100] / 250.;
+	// velocitySpace_[left+100][right+100] = std::min(CURV[std::max(0,std::min(2*CURV_CNT,curv))][std::max(0,std::min(2*CURV_RES,target))], 255); // velocitySpace_[left+100][right+100]);
 	
       }
     }
@@ -323,12 +330,16 @@ namespace Miro
     Vector2d biggestVelocitySpaceValueVelocity(0,0);
     bool found = false;
     int temp_left, temp_right;
+    double angle;
+    const double WHEEL_DISTANCE = 390.;
 
     for(int left = minLeft_; left < maxLeft_; left++) {
       for(int right = minRight_; right < maxRight_; right++) {
 
-        if((velocitySpace_[left+100][right+100] > biggestVelocitySpaceValue) || 
-	   ((velocitySpace_[left+100][right+100] == biggestVelocitySpaceValue) && ((left * left) + (right * right)) > biggestVelocitySpaceRadius) )
+	angle = fabs((180. * (double)(left - right)) / (WHEEL_DISTANCE * M_PI));
+
+        if((angle < 90.) && ((velocitySpace_[left+100][right+100] > biggestVelocitySpaceValue) || 
+	   ((velocitySpace_[left+100][right+100] == biggestVelocitySpaceValue) && ((left * left) + (right * right)) > biggestVelocitySpaceRadius) ))
         {
           biggestVelocitySpaceValue = velocitySpace_[left+100][right+100];
 	  biggestVelocitySpaceRadius = (left * left) + (right * right);

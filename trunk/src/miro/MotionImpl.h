@@ -68,8 +68,10 @@ namespace Miro
     if (_velocity.translation < params_.minTranslation ||
 	_velocity.translation > params_.maxTranslation ||
 	_velocity.rotation < params_.minRotation ||
-	_velocity.rotation > params_.maxRotation)
-      throw EOutOfBounds();
+	_velocity.rotation > params_.maxRotation) {
+     	 std::cout << "trans: " << _velocity.translation << " rot: " << Miro::rad2Deg(_velocity.rotation) << endl;
+	 throw EOutOfBounds();
+    }
   }
 };
 
