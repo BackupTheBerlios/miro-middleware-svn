@@ -11,6 +11,9 @@
 
 #include "PayloadC.h"
 #include "SharedBeliefStateC.h"
+#include "idl/MotionStatusC.h"
+#include "idl/RangeEventC.h"
+
 
 #include "miro/Server.h"
 #include "miro/StructuredPushSupplier.h"
@@ -36,17 +39,20 @@ enum PayloadID {
   NONE, 
   OCTED_STREAM_1K, OCTET_STREAM_100K,
   INT_ARRAY_1K, INT_ARRAY_100K,
+  MOTION_STATUS, RANGE_EVENT,
   SHARED_BELIEF, SHARED_BELIEF_FULL
 };
 
 
-const unsigned int NUM_PAYLOADS = 7;
+const unsigned int NUM_PAYLOADS = 9;
 char const * const payloadName[NUM_PAYLOADS] = {
   "None",
   "OctetStream1K",
   "OctetStream100K",
   "IntArray1K",
   "IntArray10K",
+  "MotionStatus",
+  "RangeSensor",
   "SharedBelief",
   "SharedBeliefFull"
 };
@@ -110,6 +116,25 @@ producePayload(CosNotifyChannelAdmin::EventChannel_ptr _ec)
       event.remainder_of_body <<= load;
       break;
     }
+  case MOTION_STATUS:
+    {
+      Miro::MotionStatusIDL * load = new Miro::MotionStatusIDL();;
+      std::cerr << "MotionStautsIDL size: " << sizeof(*load);
+      load->time.sec = 0xffffffff;
+      load->time.sec = 0x0f0f0f0f;
+      event.remainder_of_body <<= load;
+      break;
+    }
+  case RANGE_EVENT:
+    {
+      Miro::RangeScanEventIDL * load = new Miro::RangeScanEventIDL();
+      load->time.sec = 0xffffffff;
+      load->time.sec = 0x0f0f0f0f;
+      load->range.length(1);
+      load->range[0].length(361);
+      event.remainder_of_body <<= load;
+      break;
+    }
   case SHARED_BELIEF: 
     {
       MSL::SharedBeliefState01 * load = new MSL::SharedBeliefState01();
@@ -159,6 +184,7 @@ producePayload(CosNotifyChannelAdmin::EventChannel_ptr _ec)
   ACE_UINT32 gsf = ACE_High_Res_Timer::global_scale_factor ();
   ACE_DEBUG ((LM_DEBUG, "done\n"));
   
+  std::cerr << "Scale facor: " << gsf << std::endl;
   //  history.dump_samples ("HISTORY", gsf);
   
   ACE_Basic_Stats stats;
