@@ -100,15 +100,15 @@ namespace Can
     // In case base is hosed. SIGALRM will be thrown. If we catch it,
     // MCP did not respond in time.  If not, cancel alarm 
     // Since the reactor isn't running yet, we have to do this native
-    ACE_OS::signal(SIGALRM, &deadHandler); 
-    ACE_OS::alarm(INITIAL_WAIT_TIME);
+//    ACE_OS::signal(SIGALRM, &deadHandler); 
+//    ACE_OS::alarm(INITIAL_WAIT_TIME);
 
     // will definitely choke if base is off
     int rc = ioBuffer.send_n(message.canMessage(), sizeof(canmsg));
 
     // if we made it back, cancel alarm 
-    ACE_OS::alarm(0);
-    ACE_OS::signal(SIGALRM, SIG_DFL);
+//    ACE_OS::alarm(0);
+//    ACE_OS::signal(SIGALRM, SIG_DFL);
 
     lastWrite = time;
     ACE_OS::sleep(canTimeOut);
