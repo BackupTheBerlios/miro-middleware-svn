@@ -33,7 +33,7 @@ acquisition:
 \subsection{Bttv Frame Grabbers}
 
 These frame grabber cards are supported via video for linux \cite{}.
-Tis is the standard way of connecting standard analog video cameras
+This is the standard way of connecting standard analog video cameras
 to the computer.
 
 Note, that the default number of frames used by the kernel driver for
@@ -192,7 +192,7 @@ The available video device filters are (listed by type name):
   additional parameter:
   \begin{description}
   \item[Subfield] The subfield chosen (std::string). As the PAL and
-    NTSC images are interleaved, the bttv frame grabbes can select,
+    NTSC images are interleaved, the bttv frame grabbers can select,
     which of the half images to scan, if the height of the output
     image is half the height of the full image (384). Possible values
     are odd, even and all. Note however, that many frame grabber cards
@@ -226,7 +226,7 @@ The available video device filters are (listed by type name):
 \item[VideDeviceMeteor] The matrox meteor device filter does not
   define any additional parameters.
 \item[VideoDeviceDummy] A dummy device which reads an image specified
-  by the {\em Device} parameter. Usefull for offline testing.
+  by the {\em Device} parameter. Useful for offline testing.
 \end{description}
 
 \subsection{Basic Video Filters and Their Parameters}
@@ -387,6 +387,23 @@ buffers, to share new images with its clients.
 
 \subsection{C++ Helper Classes}
 
+To facilitate the usage of the {\tt Video} interface and the adherence
+of the connect/disconnect, acquire/release protocol, \miro provides
+two simple helper classes. They are defined in the file {\tt
+  \$(MIRO\_ROO)/src/miro/VideoHelper.h}
+
+\begin{description}
+\item[Miro::VideoConnection] This class connects to a {\tt Video}
+  interface instance on construction and disconnects on destruction.
+  The constructor takes a pointer to the {\tt Video} object, to
+  connect to as argument.
+\item[Miro::VideoAcquireImage] This class acquires an image from a
+  {\tt Video} interface instance on construction and releases it on
+  destruction. The constructor takes a reference to a {\tt
+    Miro::VideoConnection} object, as first argument, the second
+  selects whether the current or the next image is to be acquired.
+\end{description}
+
 \subsection{Example Video Client}
 
 \lstinputlisting[frame=tb, first=12, caption={examples/video/VideoExample.cpp}]{VideoExample.cpp}
@@ -399,8 +416,8 @@ custom filters to the video image processing framework. This is a two
 step process. First the filter has to be implemented as a class
 derived from the {\tt Filter} base class. Second a customized version
 of the {\tt VideoService} has to be built. The later has two
-reasons. The first is, that \miro currently does not contain a plugin
-architectur for dynamically loadable modules. The second is, that
+reasons. The first is, that \miro currently does not contain a plug in
+architecture for dynamically loadable modules. The second is, that
 dynamic loadable modules require the usage of shared libraries. As
 this is has some runtime performance impact, that might not really
 desirable for performance critical tasks like image
@@ -416,9 +433,9 @@ with a {\tt Video} interface instance.
 The most important protected methods and data members for child classes are.
 \begin{description}
 \item[inputBuffer] Returns a pointer to the input buffer.
-\item[inputFormat_] Specifies the data format of the input buffer.
+\item[inputFormat\_] Specifies the data format of the input buffer.
 \item[outputBuffer] Returns a pointer to the output buffer.
-\item[outputFormat_] Specifies the data format of the output buffer.
+\item[outputFormat\_] Specifies the data format of the output buffer.
 \end{description}
 
 \subsection{Methods to Overwrite}
@@ -430,7 +447,7 @@ The most important methods for child classes are.
   of the filter (hence the output format of the predecessor filter).
   The constructor of the {\tt Filter} base class copies this parameter
   into the two member variables {\tt inputFormat\_} and {\tt
-    outputFormat_}. The derived filter has to ensure, that the input
+    outputFormat\_}. The derived filter has to ensure, that the input
   format is a valid format for the filter and modify the member {\tt
     outputFormat\_}, to correctly describe the output format of the
   filter. If the input format is not valid a {\tt Miro::Exception} has
@@ -445,29 +462,29 @@ add them to the configuration file framework by specifying them in a
 parameter file description, deriving them from {\tt
   Miro::FilterParameters}. You have to overwrite the factory methods
 for {\tt Miro::FilterParamters} in the {\tt Filter} class to return an
-instance of your derived parameters class. This can be automized by
+instance of your derived parameters class. This can be automated by
 using the macros:
 \begin{description}
-\item[FILTER_PARAMETERS_FACTORY(X)] For usage within the class definition.
-\item[FILTER_PARAMETERS_FACTORY_IMPL(X)] For usage within the class implementation.
+\item[FILTER\_PARAMETERS\_FACTORY(X)] For usage within the class definition.
+\item[FILTER\_PARAMETERS\_FACTORY\_IMPL(X)] For usage within the class implementation.
 \end{description}
 Where X is the name of your derived Filter class. 
 
-For initialization and cleanup the folling two methods exist.
+For initialization and cleanup the following two methods exist.
 \begin{description}
 \item[init] Called on initialization of the filter tree. It provides a
   pointer to the parameters object initialized from the configuration
-  file. Use dynamic_cast to convert it to the type of your derived
-  parameter class.
+  file. Use {\tt dynamic\_cast} to convert it to the type of your
+  derived parameter class.
 \item[fini] Called before destruction of the filter tree.
 \end{description}
 
 \subsection{Example Video Filter}
 
 To illustrate the framework, a simple example filter is provided under
-{\tt \$(MIRO_ROOT)/examples/videoFilter}.
+{\tt \$(MIRO\_ROOT)/examples/videoFilter}.
 
-Start the example service in the directory videFilter with \\
+Start the example service in the directory videoFilter with \\
 {\tt GrayVideoService -MiroConfigFile GrayVideoService.xml}
 
 It registers two interfaces at the naming service: {\tt Video} and
