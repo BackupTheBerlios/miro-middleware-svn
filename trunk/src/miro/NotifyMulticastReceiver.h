@@ -143,6 +143,7 @@ namespace Miro {
                 // ACE_Time_Value timestamp(const std::string _name);
 
                 void setSH(SH *_sh);
+		void invalidateSH();
 
                 friend class NotifyMulticast;
 

@@ -151,14 +151,14 @@ namespace Miro
 
     if (own_) {
       MIRO_LOG(LL_NOTICE, "Deactivating POA manager.\n");
-      poa_mgr->deactivate(0, 0);
+      //poa_mgr->deactivate(0, 0);
       MIRO_LOG(LL_NOTICE, "Destroying the POA.\n");
-      poa->destroy(0, 0);
+      //poa->destroy(0, 0);
       MIRO_LOG(LL_NOTICE, "Performing remaining work in POA\n");
       ACE_Time_Value timeSlice(0, 200000);
-      orb_->perform_work(timeSlice);
+      //orb_->perform_work(timeSlice);
       MIRO_LOG(LL_NOTICE, "Destroying the ORB.\n");
-      orb_->shutdown(1);
+      //orb_->shutdown(1);
     }
   }
 

@@ -138,6 +138,7 @@ namespace Miro {
                                       ACE_Event_Handler::READ_MASK);
 
                 if (eventHandlerId_ == -1) {
+                    PRINT("Cannot register event handler");
                     throw Exception("Cannot register event handler");
                 }
 
@@ -189,21 +190,46 @@ namespace Miro {
         Adapter::~Adapter() throw(CORBA::Exception, Exception) {
             PRINT_DBG(DBG_INFO, "Cleaning up");
 
-            if (timeoutHandlerId_ != -1) {
-                reactor_->cancel_timer(timeoutHandlerId_);
-            }
+	    try {
+                if (timeoutHandlerId_ != -1) {
+                    reactor_->cancel_timer(timeoutHandlerId_);
+		}
+            } catch(...) {
+		PRINT("Error cancelling timeout timer");
+	    }
 
-            if (shId_ != -1) {
-                reactor_->cancel_timer(shId_);
-            }
+	    try {
+                if (shId_ != -1) {
+                    reactor_->cancel_timer(shId_);
+		}
+            } catch(...) {
+		PRINT("Error cancelling sh timer");
+	    }
 
-            reactor_->remove_handler(eventHandler_, ACE_Event_Handler::READ_MASK);
+	    try {
+	        if (eventHandlerId_ != -1) {
+		    reactor_->remove_handler(eventHandler_, ACE_Event_Handler::READ_MASK);
+		}
+	    } catch(...) {
+		PRINT("Error removing event handler");
+	    }
 
-            delete sh_;
+	    PRINT("Deleting handlers (1/2)...");
             delete timeoutHandler_;
+	    PRINT("+ timeout handler");
             delete eventHandler_;
-            delete sender_;
+	    PRINT("+ event handler");
+
+	    PRINT("Invalidating SH...");
+	    receiver_->invalidateSH();
+	    
+	    PRINT("Deleting handlers (2/2)...");
+            delete sh_;
+	    PRINT("+ sh");
             delete receiver_;
+	    PRINT("+ receiver");
+            delete sender_;
+	    PRINT("+ sender");
 
             LOG(&configuration_, "NotifyMulticast successfully terminated");
 

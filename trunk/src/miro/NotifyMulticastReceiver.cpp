@@ -129,7 +129,6 @@ namespace Miro {
         void Receiver::sendEvent(const CosNotification::StructuredEvent& event)
         throw(CosEventComm::Disconnected) {
             if (connected_) {
-                Miro::Guard guard(connectedMutex_);
 
                 try {
                     if (!CORBA::is_nil(proxyConsumer_.in()))
@@ -157,8 +156,7 @@ namespace Miro {
          */
         int Receiver::handle_input() {
             if (connected_) {
-                // TODO: Check if really needed! (Try not to read all data from socket)
-                Miro::Guard   guard(mutex_); /* needed for timeout handling */
+		if (mutex_.acquire()) {
                 CORBA::ULong  header[HEADER_SIZE / sizeof(CORBA::ULong) + ACE_CDR::MAX_ALIGNMENT];
                 EventData     eventData;
                 iovec         iov[1];
@@ -169,11 +167,13 @@ namespace Miro {
                     case -1:
                         PRINT_DBG(DBG_INFO, "handleInput: receiveData failed (-1)");
                         LOG(configuration_, "Receiver::handleInput(): receiveData failed (-1)");
+			mutex_.release();
                         return -1;
 
                     case 0:
                         PRINT_DBG(DBG_INFO, "handleInput: receiveData returned 0 bytes");
                         LOG(configuration_, "Receiver::handleInput(): receiveData returned 0 bytes");
+			mutex_.release();
                         return 0;
 
                     default:
@@ -199,6 +199,7 @@ namespace Miro {
                     if (droppedLocal_ == 0xffffffff)
                         LOG(configuration_, "Receiver::handle_input(): number of locally dropped packets reset to 0");
 
+		    mutex_.release();
                     return 0;
                 }
 
@@ -229,6 +230,8 @@ namespace Miro {
 
                 handle_event(eventData, iov);
             }
+		mutex_.release();
+	    }
 
             return 0;
         }
@@ -246,30 +249,32 @@ namespace Miro {
          */
         int Receiver::handle_timeout(const ACE_Time_Value &/*_tv*/, const void */*_act*/)
         {
-            Miro::Guard guard(mutex_, 0);
-            if (!guard.locked()) return 0;
+            if (!mutex_.tryacquire()) {
 
-            RequestMap::iterator begin = requestMap_.begin();
-            RequestMap::iterator end = requestMap_.end();
+                RequestMap::iterator begin = requestMap_.begin();
+                RequestMap::iterator end = requestMap_.end();
 
-            {
-                for (RequestMap::iterator i = begin; i != end; ++i) {
-                    (*i).int_id_->incTimeout();
-                }
-            }
-
-            for (RequestMap::iterator j = begin; j != end; ) {
-                if ((*j).int_id_->getTimeout() > this->maxRetry_) {
-                    RequestMapEntry& entry = *j;
-                    ++j;
-                    {
-                        delete entry.int_id_;
-                        this->requestMap_.unbind(&entry);
+                {
+                    for (RequestMap::iterator i = begin; i != end; ++i) {
+                        (*i).int_id_->incTimeout();
                     }
-                } else {
-                    ++j;
                 }
-            }
+
+                for (RequestMap::iterator j = begin; j != end; ) {
+                    if ((*j).int_id_->getTimeout() > this->maxRetry_) {
+                        RequestMapEntry& entry = *j;
+                        ++j;
+                        {
+                            delete entry.int_id_;
+                            this->requestMap_.unbind(&entry);
+                        }
+                    } else {
+                        ++j;
+                    }
+                }
+		
+		mutex_.release();
+	    }
 
             return 0;
         }
@@ -280,7 +285,7 @@ namespace Miro {
          *
          *   Description:
          *     Processes an event that arrived through the MC-Channel
-         *
+         /n*
          *   Parameters:
          *     _eventData: header of IP/MC Event packet
          *     _iov:       Complete packet
@@ -394,12 +399,16 @@ namespace Miro {
                 if (!strcmp(event.header.fixed_header.event_type.type_name, "NotifyMulticast::offered")) {
                     CosNotification::EventTypeSeq *ets;
                     event.remainder_of_body >>= ets;
-                    sh_->handleOffers(*ets);
+		    if (shValid_) {
+			sh_->handleOffers(*ets);
+		    }
 
                 } else if (!strcmp(event.header.fixed_header.event_type.type_name, "NotifyMulticast::subscribed")) {
                     CosNotification::EventTypeSeq *ets;
                     event.remainder_of_body >>= ets;
-                    sh_->handleSubscriptions(*ets);
+		    if (shValid_) {
+			sh_->handleSubscriptions(*ets);
+		    }
                     
                 } else {
                     
@@ -498,5 +507,10 @@ namespace Miro {
                 sh_ = _sh;
             }
         }
+
+	void Receiver::invalidateSH() {
+	    shValid_ = false;
+	}
+		
     };
 };
