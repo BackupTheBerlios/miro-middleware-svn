@@ -133,7 +133,7 @@
     <parameter>
      <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.0" name="Scaling" />
+     <parameter value="1.1" name="Scaling" />
      <parameter value="0" name="Offset" />
     </parameter>
     <parameter>
@@ -145,9 +145,9 @@
    </parameter>
    <parameter value="0.050000" name="ButtonsPollInterval" />
    <parameter value="1.0776" name="TransFactor" />
-   <parameter value="27.0" name="Deg2ServoTicks" />
+   <parameter value="26.0" name="Deg2ServoTicks" />
    <parameter value="1.000000" name="WatchdogTimeout" />
-   <parameter value="3970" name="Servo0MidPulse" />
+   <parameter value="3950" name="Servo0MidPulse" />
    <parameter value="15" name="MaxAccel" /><!-- SollDistanz zum Torrueckwand 10 -->
    <parameter value="1555" name="Diameter" />
    <parameter value="15" name="MaxPower" /><!-- Vorfaktor turnfehler 15 -->
@@ -158,7 +158,7 @@
    <parameter name="Motion" >
     <parameter value="180" name="MaxRotation" />
     <parameter value="-180" name="MinRotation" /><!-- Unterreichweite fue  Turndoubler 9 (6) -->
-    <parameter value="1000" name="MaxTranslation" /><!-- Vorfaktor Distanzefehler 1 -->
+    <parameter value="300" name="MaxTranslation" /><!-- Vorfaktor Distanzefehler 1 -->
     <parameter value="-1000" name="MinTranslation" />
     <parameter value="450" name="WheelBase" />
     <parameter value="1000" name="MaxLTranslation" />
