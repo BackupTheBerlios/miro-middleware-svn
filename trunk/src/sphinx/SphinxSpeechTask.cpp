@@ -12,6 +12,7 @@
 
 #include "SphinxSpeechTask.h"
 #include "SphinxSpeechImpl.h"
+#include "FestivalSpeech.h"
 
 #include "miro/Exception.h"
 
@@ -20,12 +21,6 @@
 #include <iostream>
 
 #include <ace/ARGV.h>
-
-extern "C" {
-#include <sphinx2/fbs.h>
-}
-
-//#include <netinet/in.h>
 
 // #undef DEBUG
 
@@ -55,7 +50,7 @@ namespace Miro
 #ifdef DEBUG
     ACE_DEBUG ((LM_DEBUG, "(%P|%t) Task 0x%x starts in thread %u\n", (void *) this, ACE_Thread::self ()));
 #endif
-
+    
     ACE_ARGV args;
     int error;
     int16 adbuf[4097];
@@ -156,6 +151,7 @@ namespace Miro
     newLm="";
 
     speechImpl->startRec();
+
     speechImpl->cont = cont_ad_init(speechImpl->ad, ad_read);
     cont_ad_calib(speechImpl->cont);
 
@@ -169,8 +165,29 @@ namespace Miro
 	newLm="";
       }
 
-      //TODO? : Test if the sound queue is not empty: speak
-      //May not be a good idea to keep a queue at all
+      if (!speechImpl->rec) { //soundcard being used to speak
+	usleep(1000);
+	continue;
+      }
+
+      //Queue might not be needed (it is not used at the moment)
+      if (speechImpl->halfDuplex) {
+ 	if (speechImpl->sounds.size()>0) {
+	  string str;
+	  speechImpl->stopRec();
+	  str=*(speechImpl->sounds.begin());
+	  speechImpl->sounds.pop_front();
+	  if (*(speechImpl->soundIsSpeech.begin())) {
+	    speechImpl->festival->speak(str.c_str());
+	  }
+	  speechImpl->soundIsSpeech.pop_front();
+	  speechImpl->startRec();
+
+	  //go to next iteration
+	  continue;
+	}
+      }
+
 
       //Await data for next utterance
       error = cont_ad_read(speechImpl->cont, adbuf, 4096);

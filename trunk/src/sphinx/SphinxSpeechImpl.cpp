@@ -89,9 +89,18 @@ namespace Miro {
   **/
   void SphinxSpeechImpl::speak(const char *str) throw(EDevIO)
   {
-    sounds.push_back(str);
-    soundIsSpeech.push_back(true);
+    bool recording;
+    recording=rec;
+    if (recording&&halfDuplex) {
+      stopRec();
+    }
     festival->speak(str);
+    if (recording&&halfDuplex) {
+      usleep(1000);
+      startRec();
+    }
+
+
   }
 
   void SphinxSpeechImpl::skip() throw(EDevIO)
