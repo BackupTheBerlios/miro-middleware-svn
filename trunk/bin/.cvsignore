@@ -91,6 +91,9 @@ SphinxSpeech
 SphinxTest
 StallPoll
 SynchroMotionTest
+TCM2Get
+TCM2Poll
+TCM2Stream
 TestImageClient
 TestRemoteVideoClient
 TestVideoClient
