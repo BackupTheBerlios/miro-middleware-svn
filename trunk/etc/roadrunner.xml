@@ -285,22 +285,28 @@
 		  <parameter name="Successor" >
 
 		    <parameter name="Filter" >
-		      <parameter value="RGBtoGray" name="Name" />
-		      <parameter value="RGBtoGray" name="Type" />
+		      <parameter value="ROIListDummy" name="Name" />
+		      <parameter value="ROIListDummy" name="Type" />
 		      <parameter name="Successor" >
 			<parameter name="Filter" >
-			  <parameter value="Sobel" name="Type" />
-			  <parameter value="SobelVertical" name="Name" />
-			</parameter>
-			<parameter name="Filter" >
-			  <parameter value="Sobel" name="Type" />
-			  <parameter value="SobelHorizontal" name="Name" />
+			  <parameter value="RGBtoGray" name="Name" />
+			  <parameter value="RGBtoGray" name="Type" />
 			  <parameter name="Successor" >
 			    <parameter name="Filter" >
-			      <parameter value="Canny" name="Type" />
-			      <parameter value="Canny" name="Name" />
-			      <parameter name="BackLink" >
-				<parameter value="SobelVertical" />
+			      <parameter value="Sobel" name="Type" />
+			      <parameter value="SobelVertical" name="Name" />
+			    </parameter>
+			    <parameter name="Filter" >
+			      <parameter value="Sobel" name="Type" />
+			      <parameter value="SobelHorizontal" name="Name" />
+			      <parameter name="Successor" >
+				<parameter name="Filter" >
+				  <parameter value="Canny" name="Type" />
+				  <parameter value="Canny" name="Name" />
+				  <parameter name="BackLink" >
+				    <parameter value="SobelVertical" />
+				  </parameter>
+				</parameter>
 			      </parameter>
 			    </parameter>
 			  </parameter>
@@ -391,6 +397,7 @@
 				      <parameter value="Multiply" name="Name" />
 				      <parameter name="BackLink" >
 					<parameter value="Canny" />
+					<parameter value="ROIListDummy" />
 				      </parameter>
 				      <parameter name="Successor" >
 					<parameter name="Filter" >
@@ -521,7 +528,14 @@
 	  <parameter value="RGB" name="Name" />
 	</parameter>
       </parameter>
-      
+
+      <parameter name="ROIListDummy">
+	<parameter value="0" name="X" />
+	<parameter value="100" name="Y" />
+	<parameter value="640" name="Width" />
+	<parameter value="380" name="Height" />
+      </parameter>
+
       <parameter name="SobelVertical">
         <parameter value="VERTICAL" name="Orientation" />
       </parameter>
@@ -592,6 +606,10 @@
         <parameter value="WHITE" name="ColorTwo" />
         <parameter value="120" name="LowThresh" />
         <parameter value="180" name="HighThresh" />
+      </parameter>
+
+      <parameter name="Multiply">
+        <parameter value="2" name="UseROIFrom" />
       </parameter>
 
       <parameter name="RGBtoGrayForBall">
