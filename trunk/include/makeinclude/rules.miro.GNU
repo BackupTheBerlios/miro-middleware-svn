@@ -31,6 +31,12 @@ $(foreach ext, $(IDL_EXT2_MINUS), %$(ext)): %Cli.h
 %.eps: %.fig
 	fig2dev -L eps $< $@
 
+%.png: %.fig
+	fig2dev -L png $< $@
+
+%.png: %.ps
+	convert $< $@
+
 %.ps: %.dvi
 	dvips $< -o $@
 
