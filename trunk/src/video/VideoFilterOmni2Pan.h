@@ -39,7 +39,7 @@ namespace Video
     int middleX_;
     int middleY_;
 
-    short srcOffset_[IMAGE_WIDTH * IMAGE_HEIGHT];
+    short srcOffset_[IMAGE_WIDTH * IMAGE_HEIGHT * 3];
 
     static double cosLookup_[360];
     static double sinLookup_[360];

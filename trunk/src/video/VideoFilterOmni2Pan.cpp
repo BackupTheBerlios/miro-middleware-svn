@@ -15,7 +15,7 @@
  */
 
 #include "VideoFilterOmni2Pan.h"
-
+#include "miro/Log.h"
 #include "miro/VideoHelper.h"
 #include "miro/Exception.h"
 
@@ -31,6 +31,7 @@ namespace Video
   FilterOmni2Pan::FilterOmni2Pan(Miro::ImageFormatIDL const& _inputFormat) :
     Super(_inputFormat)
   {
+    MIRO_LOG_CTOR("Video::FilterOmni2Pan");
     if (_inputFormat.palette != Miro::RGB_24)
       throw Miro::Exception("Incompatible input format for FilterOmni2Pan.");
     outputFormat_.palette = Miro::RGB_24;
@@ -54,7 +55,7 @@ namespace Video
   {
     unsigned char const * srcImg = inputBuffer();
     unsigned char * tgtImg = outputBuffer();
-    unsigned char * tgtImgEnd = tgtImg + IMAGE_WIDTH * IMAGE_HEIGHT;
+    unsigned char * tgtImgEnd = tgtImg + IMAGE_WIDTH * IMAGE_HEIGHT * 3;
     short * srcOffset = srcOffset_;
 
     for (; tgtImg != tgtImgEnd; ++tgtImg, ++srcOffset) {
