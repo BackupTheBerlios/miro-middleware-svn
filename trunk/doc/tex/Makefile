@@ -115,7 +115,7 @@ all:  links manual #reference
 links:
 	-ln -s $(EXAMPLE_LINKS) .
 
-manual: miro_manual.ps miro_manual.pdf
+manual: miro_manual.pdf miro_manual.ps # don't change this sequence
 
 #reference: miro_reference.ps
 

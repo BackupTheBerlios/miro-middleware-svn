@@ -8,12 +8,32 @@
 
 \documentclass[10pt]{book}
 
-%% insert the common definitions
 \ifpdf
 \usepackage{graphicx} % enhanced graphics usage
 \else
 \usepackage[dvips]{graphicx} % enhanced graphics usage
 \fi
+\usepackage{a4} % A4 paperformat
+\usepackage{isolatin1} % for input of 8 bits character
+\usepackage{makeidx} % enable indexing
+\usepackage{verbatim} % better verbatim environment
+\usepackage{epsfig}
+\usepackage{xspace} % add extra space at the end of the word if necessary
+\usepackage{color} % provides standard LaTeX colors
+\usepackage{fancyhdr}
+\usepackage{float} % float environment enhancements
+\usepackage{alltt} % defines alltt environment which is like verbatim, but allows some additional formating
+\usepackage{listings} % pritty print of code-listings
+\ifpdf
+% this package should be loaded last
+\usepackage[colorlinks=true,
+            pdfstartview=FitV,
+            linkcolor=blue,
+            citecolor=blue,
+            urlcolor=blue]{hyperref}
+\fi
+
+%% insert the common definitions
 \input{tex_definitions}
 
 %% special definitions
