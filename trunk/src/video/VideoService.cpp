@@ -24,8 +24,12 @@
 #include "Parameters.h"
 
 #include "VideoDevice.h"
+#ifdef MIRO_HAS_BTTV
 #include "VideoDeviceBTTV.h"
+#endif
+#ifdef MIRO_HAS_METEOR
 #include "VideoDeviceMeteor.h"
+#endif
 #ifdef MIRO_HAS_1394
 #include "VideoDevice1394.h"
 #endif
