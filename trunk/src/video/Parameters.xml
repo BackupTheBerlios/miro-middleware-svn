@@ -26,7 +26,7 @@
 
     <config_item name="FilterHalfImage" parent="Filter" final="true">
       <config_parameter name="odd" type="bool" default="false" />
-dm    </config_item>
+    </config_item>
 
     <config_item name="Device" parent="Filter" final="false">
       <config_parameter name="device" type="string" default="/dev/v4l/video0" />
