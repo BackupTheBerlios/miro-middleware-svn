@@ -304,6 +304,7 @@ namespace Sparrow
     }
 
     case CAN_MOTOR_TICKS_LEFT_2003: {
+      MIRO_DBG(SPARROW, LL_PRATTLE, "MotorController received  MotorTicksLeft2003!");
       FaulController::OdometryMessage 
 	odoMessage(FaulController::OdometryMessage::LEFT);
       if (params_->module == "pcan") {
@@ -322,7 +323,7 @@ namespace Sparrow
     }
 
     case CAN_MOTOR_TICKS_RIGHT_2003: {
-
+      MIRO_DBG(SPARROW, LL_PRATTLE, "MotorController received  MotorTicksRight2003!");
       FaulController::OdometryMessage 
 	odoMessage(FaulController::OdometryMessage::RIGHT);
 
@@ -342,13 +343,14 @@ namespace Sparrow
     }
       
     case CAN_MOTOR_TICKS_2003: {
+      MIRO_DBG(SPARROW, LL_PRATTLE, "MotorController received MotorTicks2003!");
 
       if(faulConsumer) {
       
 	FaulController::OdometryMessage 
-	  odoLeft(FaulController::OdometryMessage::LEFT);
+	  odoLeft(FaulController::OdometryMessage::DELTA_LEFT);
 	FaulController::OdometryMessage 
-	  odoRight(FaulController::OdometryMessage::RIGHT);
+	  odoRight(FaulController::OdometryMessage::DELTA_RIGHT);
 	
 	MIRO_ASSERT(params_->module == "pcan");
 	
