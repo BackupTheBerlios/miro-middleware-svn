@@ -29,10 +29,12 @@
   <parameter name="Sparrow::Parameters" >
    <parameter value="true" name="Faulhaber" />
    <parameter value="/dev/can/0" name="Device" />
-   <parameter value="0.060000" name="PanLatency" />
-   <parameter value="0.560000" name="PanSwing" />
-   <parameter value="220" name="PanRadPerSec" />
-   <parameter value="3." name="PanAccuracy" />
+   <parameter name="Pan">
+    <parameter value="0.060000" name="PanLatency" />
+    <parameter value="0.560000" name="PanSwing" />
+    <parameter value="220" name="PanRadPerSec" />
+    <parameter value="3." name="PanAccuracy" />
+   </parameter>
    <parameter value="0.040000" name="InfraredPulse" />
    <parameter value="0.040000" name="OdometryPulse" />
    <parameter name="IrScaling" >
@@ -108,13 +110,6 @@
     <parameter value="-1000" name="MinLTranslation" />
     <parameter value="-1000" name="MinRTranslation" />
    </parameter>
-  </parameter>
- </section>
-
- <section name="Camera">
-  <parameter name="Miro::PanParameters">
-   <parameter name="RangeMin" value="-90"/>
-   <parameter name="RangeMax" value="90"/>
   </parameter>
  </section>
 

@@ -38,10 +38,12 @@
 	<parameter value="true" name="Sparrow2003" />
 	<parameter value="/dev/pcan24" name="Device" />
 	<parameter value="pcan" name="Module" />
-	<parameter value="0.050000" name="PanLatency" />
-	<parameter value="0.300000" name="PanSwing" />
-	<parameter value="245" name="PanRadPerSec" />
-	<parameter value="3." name="PanAccuracy" />
+        <parameter name="Pan">
+	  <parameter value="0.050000" name="PanLatency" />
+	  <parameter value="0.300000" name="PanSwing" />
+	  <parameter value="245" name="PanRadPerSec" />
+	  <parameter value="3." name="PanAccuracy" />
+        </parameter>
 	<parameter value="0.040000" name="InfraredPulse" />
 	<parameter value="0.040000" name="OdometryPulse" />
 	<parameter name="IrScaling" >
@@ -165,13 +167,6 @@
 	  <parameter value="-2500" name="MinLTranslation" />
 	  <parameter value="-2500" name="MinRTranslation" />
 	</parameter>
-      </parameter>
-    </section>
-
-    <section name="Camera">
-      <parameter name="Miro::PanParameters">
-        <parameter name="RangeMin" value="-90"/>
-        <parameter name="RangeMax" value="90"/>
       </parameter>
     </section>
 
