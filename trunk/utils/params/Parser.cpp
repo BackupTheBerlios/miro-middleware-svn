@@ -292,8 +292,10 @@ Parser::endElement(const QString&, const QString&, const QString& qName)
       }
       if (angle_)
 	generator_.addInclude("miro/Angle.h");
-      if (timeValue_)
+      if (timeValue_) {
 	generator_.addInclude("ace/Time_Value.h");
+	generator_.addSrcInclude("miro/TimeHelper.h");
+      }
       if (serialParams_) {
 	generator_.addInclude("ace/TTY_IO.h");
 	generator_.addSrcInclude("miro/IO.h");

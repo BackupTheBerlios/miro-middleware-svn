@@ -72,11 +72,12 @@ parseArgs(int& argc, char* argv[])
       rc = 1;
     }
 
-    if (verbose) 
+    if (verbose) {
       cout << "file name: " << fileName << endl
 	   << "base name: " << baseName << endl
 	   << "source extension: " << sourceExtension << endl
 	   << "header extension: " << headerExtension << endl;
+    }
   }
   return rc;
 }
