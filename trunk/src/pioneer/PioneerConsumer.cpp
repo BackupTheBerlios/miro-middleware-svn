@@ -13,12 +13,12 @@
 #include "PioneerStallImpl.h"
 #include "Parameters.h"
 
+#include "PioneerMotionImpl.h"
 #include "pioneer/CanonPanTiltImpl.h"
 //#include "pioneer/CanonPanTiltMessage.h"
 
 #include "miro/RangeEventC.h"
 #include "miro/RangeSensorImpl.h"
-#include "miro/DifferentialMotionImpl.h"
 #include "miro/OdometryImpl.h"
 #include "miro/BatteryImpl.h"
 #include "miro/TimeHelper.h"
@@ -45,7 +45,7 @@ namespace Pioneer
   Consumer::Consumer(Miro::RangeSensorImpl * _pSonar,
 		     Miro::RangeSensorImpl * _pTactile,
 		     Miro::RangeSensorImpl * _pInfrared,
-		     Miro::DifferentialMotionImpl * _pMotion,
+		     Pioneer::MotionImpl * _pMotion,
 		     Miro::OdometryImpl * _pOdometry,
 		     Miro::BatteryImpl * _pBattery,
 		     Pioneer::StallImpl * _pStall,
