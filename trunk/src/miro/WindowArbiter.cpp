@@ -34,7 +34,7 @@ namespace Miro
     dynWindow_(std::complex<double>(0., 0.), 700, 2000),
     dynWindowPaint_(std::complex<double>(0., 0.), 700, 2000),
     winArbViewTask_(NULL),
-    winArbViewTaskCreated(false)
+    winArbViewTaskCreated(true)
   {
     currentVelocity_.translation = 0;
     currentVelocity_.rotation = 0.;
@@ -131,6 +131,8 @@ namespace Miro
     Miro::VelocityIDL  velocity;
     std::complex<double> newVelocity;
 
+    std::FILE *logFile1;
+
     // debug message
     // std::cout << "WindowArbiter.cpp : handle_timeout() started" << std::endl;
 
@@ -153,11 +155,19 @@ namespace Miro
     dynWindow_.getCopy(&dynWindowPaint_);
 
     // set motion
-    pMotion_->setLRVelocity((int)(10. * newVelocity.real()), (int)(10. * newVelocity.imag()));
+    pMotion_->setLRVelocity(std::max(-400, std::min(400, (int)(10. * newVelocity.real()))), std::max(-400, std::min(400, (int)(10. * newVelocity.imag()))));
     currentVelocity_ = velocity;
 
     // std::cout << "WindowArbiter.cpp : handle_timeout() finished" << std::endl;
 
+    logFile1 = std::fopen("velocityspace.log","a");
+    for(int right = 0; right <= 200; right += 10) {
+	for(int left = 0; left <= 200; left += 10) {
+		fprintf(logFile1, "%d\n", dynWindow_.velocitySpace_[left][right]);
+	}
+    }
+    fclose(logFile1);
+    
     return 0;
   }
 
