@@ -6,8 +6,16 @@
    <parameter value="Sparrow99" name="Type" />
   </parameter>
  </section>
- <section name="Fauhaber" >
+ <section name="Faulhaber" >
   <parameter name="FaulMotor" >
+   <parameter name="LeftWheel">
+     <parameter value="/dev/tts/2" name="Device" />
+   </parameter>
+   <parameter name="RightWheel">
+     <parameter value="/dev/tts/0" name="Device" />
+   </parameter>
+   <parameter name="LeftTicksPerMM" value="113.5" />
+   <parameter name="RightTicksPerMM" value="113.5" />
   </parameter>
  </section>
 
@@ -137,6 +145,7 @@
      <parameter value="BallPosition" />
      <parameter value="LocalizedPosition" />
    </parameter>
+   <parameter name="Logfile" value="/home/passtnix/NMC.log" />
   </parameter>
  </section>
 </config>

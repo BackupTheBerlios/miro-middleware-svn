@@ -54,11 +54,14 @@ namespace FaulMotor
     char const * const accMessage = "ac50\r\n\0"; // build acceleration packet
     leftWheel_.writeMessage(accMessage);
     rightWheel_.writeMessage(accMessage);
+
+    disable();
   }
 
   Connection::~Connection()
   { 
     DBG(cout << "Destructing FaulMotorConnection." << endl);
+    disable();
   }
 
   //-------------------//
@@ -70,6 +73,11 @@ namespace FaulMotor
   void
   Connection::setSpeed(short _speed)
   {
+    if (disabled_)
+      enable();
+
+       
+	  
     char speedMessageL[20];
     char speedMessageR[20];
 
@@ -93,6 +101,9 @@ namespace FaulMotor
   void
   Connection::setSpeed(short _speedL, short _speedR)
   {
+    if (disabled_)
+      enable();
+    
     char speedMessageL[20];
     char speedMessageR[20];
     short acctestL, acctestR;
@@ -226,6 +237,7 @@ namespace FaulMotor
   {
     char const * const getSpeedMessage = "en\r\n\0";
 
+    disabled_ = false;
     leftWheel_.writeMessage(getSpeedMessage);             // send it
     rightWheel_.writeMessage(getSpeedMessage);
   }
@@ -235,6 +247,7 @@ namespace FaulMotor
   {
     char const * const getSpeedMessage = "di\r\n\0";
 
+    disabled_ = true;
     leftWheel_.writeMessage(getSpeedMessage);             // send it
     rightWheel_.writeMessage(getSpeedMessage);
   }

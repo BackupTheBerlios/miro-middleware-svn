@@ -131,17 +131,19 @@ namespace FaulMotor
 	  //cout << status_.time.sec<< "  " << status_.time.usec <<endl; //(dL+dR) / 2*dtime<<  endl;
 	  
 // berechnung 
-
+if (false) {
 	  ACE_Time_Value dTR = timeStampR_ - prevTimeStampR_;
 	  deltaTR[counter] = (double)dTR.sec() + (double)dTR.usec() / 1000000.;
 	  
 	  ACE_Time_Value dTL = timeStampL_ - prevTimeStampL_;
 	  deltaTL[counter] = (double)dTL.sec() + (double)dTL.usec()/ 1000000.;
 	   
-	  ACE_Time_Value dTLR = timeStampL_ - timeStampR_;
+	  ACE_Time_Value dTLR = (timeStampL_ > timeStampR_)?
+		                timeStampL_ - timeStampR_ :
+				timeStampR_ - timeStampL_;
 	  deltaTLR[counter] = (double)dTLR.sec() + (double)dTLR.usec()/ 1000000.;
 
-	  cout << "dTR: " << dTR << " \tdTL: " << dTL << " \tdTLR: " << dTLR;
+	  cout << "TimerOdo dTR: " << dTR << " \tdTL: " << dTL << " \tdTLR: " << dTLR << endl;
 
 	  int i;
 	  if (counter ==  0) {
@@ -152,12 +154,12 @@ namespace FaulMotor
 	    for ( i = 49; i > 0; --i) {
 	      meanL += deltaTL[i];
 	      meanR += deltaTR[i];
-	      meanLR += deltaTR[i];	
+	      meanLR += deltaTLR[i];	
 	    }
 
 	    meanL /= 50.;
 	    meanR /= 50.;
-	    meanR /= 50.;
+	    meanLR /= 50.;
 
 	    double varL = 0.;
 	    double varR = 0.;
@@ -173,16 +175,16 @@ namespace FaulMotor
 	    varR /= 49.;
 	    varLR /= 49.;
 
-	    cout << "TimerOdoL: mean=" << meanL << "sec \t var=" <<sqrt(varL)<< endl;
-	    cout << "TimerOdoR: mean=" << meanR << "sec \t var=" <<sqrt(varR)<< endl;
-	    cout << "TimerOdoL-R: mean=" << meanLR << endl;
+	    cout << "TimerOdo L:  mean=" << meanL << "sec \t var=" <<sqrt(varL)<< endl;
+	    cout << "TimerOdo R:  mean=" << meanR << "sec \t var=" <<sqrt(varR)<< endl;
+	    cout << "TimerOdo LR: mean=" << meanLR << "sec \t var=" <<sqrt(varLR)<< endl;
 
 	    counter = 50;
 	  }
 
 	  
 	  --counter;
-
+}
 	  // save current values for next iteration
 	  prevTimeStampL_ = timeStampL_;
 	  prevTimeStampR_ = timeStampR_;
