@@ -11,6 +11,7 @@ BehaviourEngineTest
 ButtonsNotify
 ButtonsPoll
 CanPerformance
+ConfigEditor
 DifferentialMotionTest
 DpPanTilt
 DpPanTiltTest
@@ -28,6 +29,7 @@ KickerTest
 LaserGet
 LaserStream
 LogNotify
+LogPerformance
 LogPlayer
 LogTruncate
 LogVideo
