@@ -6,11 +6,12 @@
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
 
 #include "SparrowPanTiltImpl.h"
 #include "SparrowConnection.h"
+#include "SparrowConnection2003.h"
 
 #include "miro/TimeHelper.h"
 #include "miro/Angle.h"
@@ -22,40 +23,52 @@ namespace Sparrow
   using Miro::EOutOfBounds;
 
   // Implementation skeleton constructor
-  PanTiltImpl::PanTiltImpl(Connection& _connection) :
+  PanTiltImpl::PanTiltImpl(BaseConnection* _connection) :
     connection(_connection),
     params_(*Parameters::instance()),
     lastPosition(Miro::deg2Rad(90.)),
     nextPosition(0.),
     timeLastSet(ACE_OS::gettimeofday()),
-    totalLatency(params_.panLatency + params_.panSwing)
+    totalLatency(params_.panLatency + params_.panSwing),
+    sparrow2003_(Parameters::instance()->sparrow2003)
   {
-    connection.setServo(0, Miro::deg2Rad(0.));
+    if(sparrow2003_){
+       ((Connection2003 *)connection)->setServo(0, Miro::deg2Rad(0.));
+    }
+    else{
+       ((Connection *)connection)->setServo(0, Miro::deg2Rad(0.));
+    }
     //    connection.setServo(1, params_.farAngle);
   }
-  
+
   // Implementation skeleton destructor
   PanTiltImpl::~PanTiltImpl()
   {
   }
-  
+
 #ifdef LETSTILTAGAIN
-  Miro::PanTiltPositionIDL 
+  Miro::PanTiltPositionIDL
   PanTiltImpl::getPosition() throw (EDevIO, ETimeOut)
   {
     Miro::Guard guard(mutex);
 
     return currentPosition();
   }
-  
-  void 
+
+  void
   PanTiltImpl::setPosition(const PanTiltPositionIDL& dest)
     throw (EOutOfBounds, EDevIO)
   {
     Miro::Guard guard(mutex);
 
-    connection.setServo(0, dest.panvalue);
-    connection.setServo(1, dest.tiltvalue);
+    if(sparrow2003_){
+       ((Connection2003 *)connection)->setServo(0, dest.panvalue);
+       ((Connection2003 *)connection)->setServo(1, dest.tiltvalue);
+    }
+    else{
+       ((Connection *)connection)->setServo(0, dest.panvalue);
+       ((Connection *)connection)->setServo(1, dest.tiltvalue);
+    }
 
     timeLastSet = ACE_OS::gettimeofday();
     lastPosition = currentPosition();
@@ -63,7 +76,7 @@ namespace Sparrow
   }
 #endif
 
-  void 
+  void
   PanTiltImpl::setPan(CORBA::Double value) throw (EDevIO, EOutOfBounds)
   {
     Miro::Guard guard(mutex);
@@ -74,16 +87,21 @@ namespace Sparrow
       ACE_Time_Value t = ACE_OS::gettimeofday();
 
       // set servo
-      connection.setServo(0, value);
 
+      if(sparrow2003_){
+         ((Connection2003 *)connection)->setServo(0, value);
+      }
+      else{
+         ((Connection *)connection)->setServo(0, value);
+      }
       // set positioning parameters
       lastPosition = currentPosition(t).angle;
       nextPosition = value;
       timeLastSet = t;
     }
   }
-  
-  CORBA::Double 
+
+  CORBA::Double
   PanTiltImpl::getPan() throw (EDevIO)
   {
     Miro::Guard guard(mutex);
@@ -91,13 +109,19 @@ namespace Sparrow
     return currentPosition(t).angle;
   }
 
-#ifdef LETSTILTAGAIN  
+#ifdef LETSTILTAGAIN
   void
   PanTiltImpl::setTilt(CORBA::Double value) throw (EDevIO, EOutOfBounds)
   {
     Miro::Guard guard(mutex);
 
-    connection.setServo(1, value);
+
+    if(sparrow2003_){
+         ((Connection2003 *)connection)->setServo(1, value);
+    }
+    else{
+         ((Connection *)connection)->setServo(1, value);
+    }
 
     timeLastSet = ACE_OS::gettimeofday();
     lastPosition = currentPosition();
@@ -111,9 +135,9 @@ namespace Sparrow
     return currentPosition().tiltvalue;
   }
 #endif
-  
 
-  CORBA::Boolean 
+
+  CORBA::Boolean
   PanTiltImpl::panning(const Miro::TimeIDL& stamp) throw()
   {
     Miro::Guard guard(mutex);
@@ -131,7 +155,7 @@ namespace Sparrow
     return currentPosition(t);
   }
 
-#ifdef LETSTILTAGAIN  
+#ifdef LETSTILTAGAIN
   CORBA::Boolean
   PanTiltImpl::tilting() throw()
   {
@@ -139,7 +163,7 @@ namespace Sparrow
     return prvTilting();
   }
 #endif
-  
+
   Miro::PanPositionIDL
   PanTiltImpl::currentPosition(const ACE_Time_Value& stamp)
   {
@@ -147,7 +171,7 @@ namespace Sparrow
 
     if (!prvPanning(stamp)) {
       // the pan doesn't move
-      position.angle = (stamp < timeLastSet + params_.panLatency)? lastPosition : nextPosition; 
+      position.angle = (stamp < timeLastSet + params_.panLatency)? lastPosition : nextPosition;
       position.accuracy = params_.panAccuracy;
     }
     else {

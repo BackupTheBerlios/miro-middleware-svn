@@ -6,7 +6,7 @@
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
 
 
@@ -15,6 +15,9 @@
 
 #include "miro/Exception.h"
 #include "miro/StructuredPushSupplier.h"
+#include "SparrowConnection.h"
+#include "SparrowConnection2003.h"
+#include "Parameters.h"
 
 #include <iostream>
 
@@ -28,8 +31,8 @@
 
 namespace Sparrow
 {
-  StallImpl::StallImpl(Connection& _connection,
-		       Miro::StructuredPushSupplier * _pSupplier) 
+  StallImpl::StallImpl(BaseConnection * _connection,
+		       Miro::StructuredPushSupplier * _pSupplier)
     throw(Miro::Exception) :
     connection(_connection),
     pSupplier(_pSupplier)
@@ -38,9 +41,9 @@ namespace Sparrow
 
     // Stall Notify Event initialization
     if (pSupplier) {
-    notifyEvent.header.fixed_header.event_type.domain_name = 
+    notifyEvent.header.fixed_header.event_type.domain_name =
       CORBA::string_dup(pSupplier->domainName().c_str());
-    notifyEvent.header.fixed_header.event_type.type_name = 
+    notifyEvent.header.fixed_header.event_type.type_name =
 	  CORBA::string_dup("Stall");
     notifyEvent.header.fixed_header.event_name = CORBA::string_dup("");
     notifyEvent.header.variable_header.length(0);   // put nothing here
@@ -60,22 +63,30 @@ namespace Sparrow
       pSupplier->sendEvent(notifyEvent);
   }
 
-  // 
+  //
   // IDL interface implementation
 
   //--------------------------------------------------------------------------
   // Stall interface implementation
   //--------------------------------------------------------------------------
 
-  CORBA::Boolean 
+  CORBA::Boolean
   StallImpl::isStalled() throw()
   {
-    return connection.isStalled();
+    CORBA::Boolean rvalue;
+    if(Parameters::instance()->sparrow2003)
+       rvalue = false;//((Connection2003 *) connection)->isStalled();
+    else
+       rvalue = ((Connection *) connection)->isStalled();
+
+    return rvalue;
   }
 
-  void 
+  void
   StallImpl::unstall() throw()
   {
-    connection.unstall();
+    //connection.unstall();
+    if(!Parameters::instance()->sparrow2003)
+           ((Connection *) connection)->unstall();
   }
 };

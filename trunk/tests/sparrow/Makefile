@@ -33,9 +33,11 @@ LDLIBS += -lmiro
 
 ## program to be built
 BIN 	= \
+	SparrowTest2003 \
+	SparrowAlive \
 	SparrowTest \
-	KickerTest \
-	PanPosition
+	PanPosition \
+	KickerTest
 
 ## additional files
 FILES	= 

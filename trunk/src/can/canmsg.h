@@ -18,7 +18,7 @@ typedef unsigned long CanId;
 #define STID_MASK	0x000007ffL		/* standard identifier mask (11 bits)	*/
 
 /* can message */
-typedef struct 
+typedef struct
 {
   CanId id;
   int rtr;					/* remote transmission	*/

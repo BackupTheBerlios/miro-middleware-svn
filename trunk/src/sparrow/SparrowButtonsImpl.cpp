@@ -28,9 +28,8 @@
 
 namespace Sparrow
 {
-  ButtonsImpl::ButtonsImpl(Consumer& _consumer,
-			   Miro::StructuredPushSupplier * _pSupplier) :
-    consumer(_consumer),
+  ButtonsImpl::ButtonsImpl(Miro::StructuredPushSupplier * _pSupplier) :
+//    consumer(_consumer),
     pSupplier(_pSupplier)
   {
     DBG(cout << "Constructing SparrowButtonsImpl" << endl);

@@ -54,7 +54,7 @@ namespace FaulMotor
     status_.position.heading = 0.;
     status_.velocity.translation = 0;
     status_.velocity.rotation = 0.;
-    
+
   }
 
 
@@ -80,7 +80,8 @@ namespace FaulMotor
     ++Connection::gotTicks_;
 
     if (pOdometry_) {
-      const FaulTty::OdometryMessage * pFaulMsg = 
+
+      const FaulTty::OdometryMessage * pFaulMsg =
 	static_cast<const FaulTty::OdometryMessage *>(_message);
 
       if (pFaulMsg->wheel_ == FaulTty::OdometryMessage::LEFT) {
@@ -94,7 +95,7 @@ namespace FaulMotor
 	timeStampR_ = pFaulMsg->time();
       }
 
-      if (prevTimeStampL_+ ACE_Time_Value(0, 10000) < timeStampR_ && 
+      if (prevTimeStampL_+ ACE_Time_Value(0, 10000) < timeStampR_ &&
 	  prevTimeStampR_+ ACE_Time_Value(0, 10000) < timeStampL_ &&
 	  prevTimeStampL_ != timeStampL_ &&
 	  prevTimeStampR_ != timeStampR_) {
@@ -105,7 +106,7 @@ namespace FaulMotor
 //	  cout << "dL: " << dL << " dR: " << dR << endl;
 
 	  // reset tick counters to minimize overhead
-	  //if ((pFaulMsg->lPos < 3000) or (pFaulMsg->lPos > 10000) pConnection->setPos1(0); 
+	  //if ((pFaulMsg->lPos < 3000) or (pFaulMsg->lPos > 10000) pConnection->setPos1(0);
 	  //if ((pFaulMsg->RPos < 3000) or (pFaulMsg->RPos > 10000) pConnection->setPos0(0);
 
 	  // calculate new orientation
@@ -121,7 +122,7 @@ namespace FaulMotor
 
 	  double dist = (dL + dR) / 2.;
 	  xPos_ += cos(status_.position.heading) * dist;
-	  yPos_ += sin(status_.position.heading) * dist; 
+	  yPos_ += sin(status_.position.heading) * dist;
 
 	  ACE_Time_Value timeDelta = timeStampR_ - prevTimeStampR_;
 
@@ -130,20 +131,20 @@ namespace FaulMotor
 	  // compose odometry message
 	  Miro::timeA2C(timeStampR_, status_.time);
 	  status_.position.point.x = (long) xPos_;
-	  status_.position.point.y = (long) yPos_; 
+	  status_.position.point.y = (long) yPos_;
 	  status_.velocity.translation = (long)(dist / deltaT);
 	  status_.velocity.rotation = turn / deltaT;
 
 	  //cout << status_.time.sec<< "  " << status_.time.usec <<endl; //(dL+dR) / 2*dtime<<  endl;
-	  
-// berechnung 
+
+// berechnung
 if (false) {
 	  ACE_Time_Value dTR = timeStampR_ - prevTimeStampR_;
 	  deltaTR[counter] = (double)dTR.sec() + (double)dTR.usec() / 1000000.;
-	  
+
 	  ACE_Time_Value dTL = timeStampL_ - prevTimeStampL_;
 	  deltaTL[counter] = (double)dTL.sec() + (double)dTL.usec()/ 1000000.;
-	   
+
 	  ACE_Time_Value dTLR = (timeStampL_ > timeStampR_)?
 		                timeStampL_ - timeStampR_ :
 				timeStampR_ - timeStampL_;
@@ -160,7 +161,7 @@ if (false) {
 	    for ( i = 49; i > 0; --i) {
 	      meanL += deltaTL[i];
 	      meanR += deltaTR[i];
-	      meanLR += deltaTLR[i];	
+	      meanLR += deltaTLR[i];
 	    }
 
 	    meanL /= 50.;
@@ -188,7 +189,7 @@ if (false) {
 	    counter = 50;
 	  }
 
-	  
+
 	  --counter;
 }
 	  // save current values for next iteration
@@ -196,7 +197,7 @@ if (false) {
 	  prevTimeStampR_ = timeStampR_;
 	  prevTicksL_ = ticksL_;
 	  prevTicksR_ = ticksR_;
-
+          
 	  pOdometry_->integrateData(status_);
 	  return;
 	}

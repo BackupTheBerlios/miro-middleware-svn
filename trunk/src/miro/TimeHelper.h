@@ -6,6 +6,10 @@
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
+// Authors: 
+//   Stefan Enderle, 
+//   Stefan Sablatnoeg, 
+//   Hans Utz
 // 
 //////////////////////////////////////////////////////////////////////////////
 #ifndef miroTimeHelper_hh

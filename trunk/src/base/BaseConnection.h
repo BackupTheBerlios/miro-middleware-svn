@@ -535,7 +535,7 @@ namespace Base
 
     if (translateVelocity != arg) {
       translateVelocity = arg;
-#if DEBUG
+#ifdef DEBUG
       cerr << __FILE__ << ":"
 	   << __LINE__ << ":"
 	   << __FUNCTION__ << "() - " 

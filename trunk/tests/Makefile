@@ -37,6 +37,7 @@ DIRS =		odometry \
 		speech \
 		behaviours \
 		behaviourEngine \
+		faul \
 
 ifdef SPHINX_ROOT
   DIRS +=  	sphinx
@@ -52,8 +53,8 @@ ifneq (,$(findstring Pioneer1,$(MIRO_COMPONENTS)))
 		gripper
 endif
 ifneq (,$(findstring Sparrow99,$(MIRO_COMPONENTS)))
-  DIRS +=	sparrow \
-		faul
+  DIRS +=	sparrow 
+
 endif
 ifneq (,$(findstring Deprecated,$(MIRO_COMPONENTS)))
   DIRS +=	image

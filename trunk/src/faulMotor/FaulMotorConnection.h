@@ -12,6 +12,7 @@
 #define FaulMotorConnection_h
 
 #include "faulTty/FaulTtyConnection.h"
+#include "sparrow/SparrowConnection2003.h"
 
 #include "miro/Synch.h"
 
@@ -30,7 +31,8 @@ namespace FaulMotor
   {
   public:
     Connection(ACE_Reactor * _reactor,
-	       Consumer * _consumer);
+	       Consumer * _consumer,
+	       Sparrow::Connection2003 * _connection2003);
     virtual ~Connection();
 
     //-----------------//
@@ -51,10 +53,11 @@ namespace FaulMotor
   protected:
     const Parameters * params_;
 
-    FaulTty::Connection leftWheel_;
-    FaulTty::Connection rightWheel_;
+    FaulTty::Connection * leftWheel_;
+    FaulTty::Connection * rightWheel_;
 
     Consumer * consumer;
+    Sparrow::Connection2003 * connection2003;
 
     double prevSpeedL;
     double prevSpeedR;

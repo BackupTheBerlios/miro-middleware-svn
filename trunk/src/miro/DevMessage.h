@@ -31,9 +31,9 @@ namespace Miro
    */
   class DevMessage 
   {
+  public:
     //! Time the message was produced by the device.
     ACE_Time_Value  time_;
-  public:
     //! Get a constant reference to the time value.
     const ACE_Time_Value& time() const { return time_;}
     //! Get a non constant reference to the time value.

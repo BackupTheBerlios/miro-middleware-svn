@@ -61,9 +61,10 @@ ifneq (,$(findstring Sparrow99,$(MIRO_COMPONENTS)))
     DIRS +=	psos \
 		pioneer
   endif
-  DIRS +=	faulTty \
-		faulMotor \
+  DIRS += \
 		can \
+		faulTty \
+		faulMotor \
 		sparrow \
 		sparrowBase
 endif

@@ -4,9 +4,9 @@
 //
 // (c) 1999, 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
-// 
+//
 // $Id$
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
 #ifndef sparrowBase_hh
 #define sparrowBase_hh
@@ -19,20 +19,24 @@
 #include "miro/OdometryImpl.h"
 
 #include "can/CanEventHandler.h"
+#include "sparrow/AliveCollector.h"
+
 #include "sparrow/SparrowConnection.h"
+#include "sparrow/SparrowConnection2003.h"
 #include "sparrow/SparrowConsumer.h"
+#include "sparrow/SparrowConsumer2003.h"
 #include "sparrow/SparrowMotionImpl.h"
 #include "sparrow/SparrowKickerImpl.h"
 #include "sparrow/SparrowButtonsImpl.h"
 #include "sparrow/SparrowStallImpl.h"
 #include "sparrow/SparrowPanTiltImpl.h"
-
+#include "sparrow/AliveEventHandler.h"
 #include "psos/PsosEventHandler.h"
 #include "pioneer/PioneerConnection.h"
 #include "pioneer/PioneerConsumer.h"
 
 #include "faulMotor/FaulMotorConnection.h"
-#include "faulMotor/Parameters.h" 
+#include "faulMotor/Parameters.h"
 #include "faulMotor/FaulMotorConsumer.h"
 #include "faulMotor/TimerEventHandler.h"
 
@@ -51,7 +55,8 @@ struct FaulhaberHardware
   FaulMotor::Connection connection;
 
   FaulhaberHardware(ACE_Reactor * _reactor,
-		    Miro::OdometryImpl * _pOdometryImpl);
+		    Miro::OdometryImpl * _pOdometryImpl,
+		    Sparrow::Connection2003 * connection2003_);
   ~FaulhaberHardware();
 };
 
@@ -111,30 +116,33 @@ public:
   CosNotification::AdminProperties initialAdmin_;
   /** The one channel that we create using the factory. */
   CosNotifyChannelAdmin::EventChannel_ptr ec_;
-  
+
   Miro::StructuredPushSupplier structuredPushSupplier_;
 
   Miro::OdometryImpl odometry;
-  std::auto_ptr<Miro::RangeSensorImpl> pSonar_;
+  Miro::RangeSensorImpl * pSonar_;
   Miro::RangeSensorImpl infrared;
+  //Miro::RangeSensorImpl * infrared2;
 
   // Sparrow board hardware abstraction
   Sparrow::Consumer * pSparrowConsumer;
+  Sparrow::Consumer2003 * pSparrowConsumer2003;
   Can::EventHandler * pCanEventHandler;
-  Sparrow::Connection sparrowConnection;
+  Sparrow::Connection * sparrowConnection;
+  Sparrow::Connection2003 * sparrowConnection2003;
 
   // Pioneer board hardware abstraction
-  std::auto_ptr<PioneerHardware> pPioneer;
+  PioneerHardware * pPioneer;
 
   // Faulhaber board hardware abstraction
-  std::auto_ptr<FaulhaberHardware> pFaulhaber;
+  FaulhaberHardware * pFaulhaber;
 
   // IDL interface implementations
-  std::auto_ptr<POA_Miro::Motion> pSparrowMotion;
-  Sparrow::KickerImpl  sparrowKicker;
-  Sparrow::ButtonsImpl sparrowButtons;
-  Sparrow::StallImpl   sparrowStall;
-  Sparrow::PanTiltImpl sparrowPanTilt;
+  POA_Miro::Motion * pSparrowMotion;
+  Sparrow::KickerImpl * sparrowKicker;
+  Sparrow::ButtonsImpl * sparrowButtons;
+  Sparrow::StallImpl *  sparrowStall;
+  Sparrow::PanTiltImpl * sparrowPanTilt;
 
   Miro::Odometry_ptr pOdometry;
   Miro::Motion_ptr pMotion;
@@ -143,19 +151,24 @@ public:
   Miro::Stall_ptr pStall;
   Miro::SparrowPanTilt_ptr pPanTilt;
   Miro::RangeSensor_ptr pInfrared;
-  
+
   Miro::RangeSensor_ptr pSonar;
 
   /* NotifyMulticast */
   Miro::NotifyMulticast::Adapter *mcAdapter_;
+
+  Sparrow::AliveCollector * aCollector;
+  Sparrow::AliveEventHandler * aEventHandler;
+  ACE_Time_Value delay;
+  ACE_Time_Value interval;
 };
 
-inline 
+inline
 Miro::NotifyMulticast::Adapter *
 SparrowBase::notifyMulticast() {
   return mcAdapter_;
 }
-  
+
 #endif
 
 

@@ -43,7 +43,7 @@ namespace Sparrow
   //------------------------//
   //----- constructors -----//
   //------------------------//
-  Consumer::Consumer(Connection& _connection,
+  Consumer::Consumer(Connection * _connection,
 		     Miro::OdometryImpl * _pOdometry,
 		     StallImpl * _pStall,
 		     ButtonsImpl * _pButtons,
@@ -105,6 +105,48 @@ namespace Sparrow
     }
   }
 
+  Consumer::Consumer() :
+    params_(Parameters::instance()),
+    status_(),
+    motorAliveMutex(),
+    motorAliveCond(motorAliveMutex),
+    odoAliveMutex(),
+    odoAliveCond(odoAliveMutex),
+    portsAliveMutex(),
+    portsAliveCond(portsAliveMutex),
+    stallAliveMutex(),
+    stallAliveCond(stallAliveMutex),
+    kickerAliveMutex(),
+    kickerAliveCond(kickerAliveMutex),
+    servoAliveMutex(),
+    servoAliveCond(servoAliveMutex),
+    dbgAliveMutex(),
+    dbgAliveCond(dbgAliveMutex),
+    distanceLRMutex(),
+    distanceLRCond(distanceLRMutex),
+    digitalMutex(),
+    digitalCond(digitalMutex),
+    analogMutex(),
+    analogCond(analogMutex),
+    irAliveMutex(),
+    irAliveCond(irAliveMutex),
+    accelMutex(),
+    accelCond(accelMutex),
+    x_(0.),
+    y_(0.),
+    index_(0)
+  {
+    cout << "Constructing SparrowConsumer." << endl;
+
+    status_.position.point.x = 0.;
+    status_.position.point.y = 0.;
+    status_.position.heading = 0.;
+    status_.velocity.translation = 0;
+    status_.velocity.rotation = 0.;
+
+
+  }
+
 
   //----------------------//
   //----- destructor -----//
@@ -133,6 +175,37 @@ namespace Sparrow
     analogMutex.release();
   }
 
+
+  void Consumer::registerInterfaces(Connection * _connection,
+                                    Miro::OdometryImpl * _pOdometry,
+                                    StallImpl * _pStall,
+                                    ButtonsImpl * _pButtons,
+                                    Miro::RangeSensorImpl * _pIR)
+  {
+
+     connection = _connection;
+     pOdometry_ = _pOdometry;
+     pStall_ = _pStall;
+     pButtons_ = _pButtons;
+     pIR_ = _pIR;
+
+     if (pOdometry_) {
+      Miro::PositionIDL origin;
+      origin.point.x = -params_->initialX;
+      origin.point.y = -params_->initialY;
+      origin.heading = -params_->initialHeading;
+
+      if (params_->goalie) {
+        origin.point.x += 125;
+        origin.point.y -= 85;
+      }
+      pOdometry_->setPosition(origin);
+    }
+
+
+
+
+  }
   // reads incoming packets from the canBus connection and stores the values
   // in the local (class internal) variables.
   void
@@ -142,13 +215,13 @@ namespace Sparrow
     int tmp;
     int versNr, versSub;
 
-    connection.boardReply = 1;
+    connection->boardReply = 1;
 
     Can::Parameters *CanParams = new Can::Parameters();
 
     CanId msgID = message.id();
 
-    if(CanParams->module == "sja1000")
+    if(CanParams->module == "pcan")
        msgID = (msgID | 0x80000000);
 
     switch (msgID) {
@@ -319,7 +392,7 @@ namespace Sparrow
 
     case CAN_R_STALL:
       cout << "Consumer::receiveThread:  received message: STALL_RETURN" << endl;
-      connection.stallTimerStart();
+      connection->stallTimerStart();
       if (pStall_)
 	pStall_->pushEvent();
       break;
@@ -385,14 +458,14 @@ namespace Sparrow
 	    calRange = ((int)message.charData(i) * 10 - param->irScaling[i].offset);
 	    calRange = calRange - param->irScaling[i].minDistance;
 	    calRange = (long) (calRange * param->irScaling[i].scaling);
-	    calRange = calRange + param->irScaling[i].minDistance ;  
-	    if ((calRange < param->irScaling[i].minDistance) || 
+	    calRange = calRange + param->irScaling[i].minDistance ;
+	    if ((calRange < param->irScaling[i].minDistance) ||
 		(calRange > param->irScaling[i].maxDistance)) {
 	      calRange = -1;
 	    }
-	  } 
+	  }
 	  else {
-	    calRange = -1; 
+	    calRange = -1;
 	  }
 	  data->range[i] = calRange;
 	}
@@ -416,8 +489,8 @@ namespace Sparrow
 
     case CAN_R_DBG_PRINT:
       for (int k = 0; k < std::min(message.length(), 8); ++k)
-	if (message.canMessage()->d[k] != 0)
-	  cout << message.canMessage()->d[k] << flush;
+	//if (message.canMessage()->d[k] != 0)
+	//  cout << message.canMessage()->d[k] << flush;
       break;
 
     case CAN_R_DBG_ALIVE: {

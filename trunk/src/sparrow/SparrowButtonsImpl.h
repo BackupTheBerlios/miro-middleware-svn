@@ -34,8 +34,7 @@ namespace Sparrow
     //-------------------------------------------------------------------------
   public:
     // Constructor/Destructor
-    ButtonsImpl(Consumer& _consumer,
-		Miro::StructuredPushSupplier * _pSupplier);
+    ButtonsImpl(Miro::StructuredPushSupplier * _pSupplier);
     virtual ~ButtonsImpl();
 
     void pushEvent(Miro::ButtonStatusIDL * pEvent);
@@ -47,7 +46,7 @@ namespace Sparrow
     virtual CORBA::ULong numberOfButtons() throw();
 
   protected:
-    Consumer& consumer;
+    //Consumer& consumer;
     Miro::StructuredPushSupplier * pSupplier;
     CosNotification::StructuredEvent notifyEvent;
 

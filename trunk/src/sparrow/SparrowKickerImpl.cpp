@@ -6,14 +6,18 @@
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
 
 
 #include "SparrowKickerImpl.h"
+#include "SparrowConnection2003.h"
 #include "SparrowConnection.h"
 
+
+
 #include "miro/Exception.h"
+#include "Parameters.h"
 
 #include <iostream>
 
@@ -25,9 +29,11 @@
 #define DBG(x)
 #endif
 
+
+
 namespace Sparrow
 {
-  KickerImpl::KickerImpl(Connection& _connection) :
+  KickerImpl::KickerImpl(BaseConnection * _connection) :
     connection(_connection)
   {
     DBG(cout << "Constructing SparrowKickerImpl" << endl);
@@ -38,7 +44,7 @@ namespace Sparrow
     DBG(cout << "Destructing SparrowKickerImpl" << endl);
   }
 
-  // 
+  //
   // IDL interface implementation
 
   //--------------------------------------------------------------------------
@@ -48,6 +54,13 @@ namespace Sparrow
   void
   KickerImpl::kick(const Miro::TimeIDL& time) throw()
   {
-    connection.kick(time.sec * 1000 + time.usec / 1000);
+     if(Sparrow::Parameters::instance()->sparrow2003){
+
+        ((Sparrow::Connection2003 *)connection)->kick(50, (unsigned char)(time.usec/1000));
+
+     }
+     else{
+        ((Sparrow::Connection *)connection)->kick(time.sec * 1000 + time.usec / 1000);
+     }
   }
 };

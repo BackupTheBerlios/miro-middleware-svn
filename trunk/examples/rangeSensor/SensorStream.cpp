@@ -6,7 +6,7 @@
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
 
 
@@ -27,6 +27,8 @@ using CosNotifyChannelAdmin::EventChannel_var;
 
 int argCounter;
 char ** argVector;
+unsigned short group;
+bool group_en;
 
 SensorStream::SensorStream(EventChannel_ptr _ec,
 			 const std::string& domainName,
@@ -76,17 +78,36 @@ SensorStream::push_structured_event(const StructuredEvent & notification
   }
   else if (notification.remainder_of_body >>= pSensorGroup) {
 
+    if(group_en && group == pSensorGroup->group){
+    for( int i = 2; i < argCounter-2; i++ ) {
+      unsigned int k;
+      sscanf( argVector[ i ], " %d ", &k );
+
+      for (unsigned int j = 0; j < pSensorGroup->range.length(); ++j)
+	if (j == k) {
+          cout.width(6);
+
+	  cout << pSensorGroup->range[j] << "\t";
+	}
+    }
+    cout << endl;
+    }
+    if(!group_en){
     for( int i = 2; i < argCounter; i++ ) {
       unsigned int k;
-      sscanf( argVector[ i ], " %i ", &k );
+      sscanf( argVector[ i ], " %d ", &k );
 
       for (unsigned int j = 0; j < pSensorGroup->range.length(); ++j)
 	if (j == k) {
           cout.width(6);
 	  cout << pSensorGroup->range[j] << "\t";
 	}
+
+
+
     }
     cout << endl;
+    }
   }
   else
     cerr << "No SensorIDL message." << endl;
@@ -98,26 +119,36 @@ main(int argc, char *argv[])
   Miro::Server server(argc, argv);
 
   if( argc <= 2 ) {
-    cout << "usage: " << argv[0] << " <sensor name> <sensor #1> <sensor #2> ..." << endl;
+    cout << "usage: " << argv[0] << " <sensor name> <sensor #1> <sensor #2> ...<-group group#>" << endl;
     cout << "prints sensor values of the specified sensor." << endl;
     return 0;
+  }
+  group = 0;
+  group_en = false;
+
+  if(argc >=4 && (strcmp(argv[argc-2], "-group") == 0)){
+     group = atoi(argv[argc-1]);
+     group_en = true;
+     cout << "Group: " << group << endl;
+
   }
 
   argCounter = argc;
   argVector = argv;
-    
+
+  
   try {
     // The one channel that we create using the factory.
     EventChannel_var ec(server.resolveName<EventChannel>("EventChannel"));
 
     cerr << "press return to start..." << flush;
     getchar();
- 
+
     // The consumer, that gets the events
-    SensorStream pushConsumer(ec.in(), 
-			      server.namingContextName, 
+    SensorStream pushConsumer(ec.in(),
+			      server.namingContextName,
 			      std::string(argv[1]) );
-    
+
     cerr << "Loop forever handling events." << endl;
     server.run();
     cerr << "Server stoped, exiting." << endl;

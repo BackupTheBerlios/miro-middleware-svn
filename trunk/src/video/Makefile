@@ -6,8 +6,6 @@
 ## Department of Neural Information Processing, University of Ulm, Germany
 ##
 ## $Id$
-## $Date$
-## 
 ##
 ## Miro/src/video/Makefile
 ##
@@ -22,8 +20,16 @@ MAKEFILE = Makefile
 include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
 
 #----------------------------------------------------------------------------
-#       Define local macros
-#---------------------------------------------------------------------------
+#	Local targets
+#----------------------------------------------------------------------------
+
+$(BIN): $(STATIC_DEPS)
+
+.PRECIOUS: Parameters.cpp Parameters.h
+
+# DO NOT DELETE THIS LINE -- g++dep uses it.
+# DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
+
 
 # The order in this list is important as some libraries depend on
 # others, please keep that in mind when adding or changing libraries.

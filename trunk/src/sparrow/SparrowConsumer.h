@@ -40,20 +40,26 @@ namespace Sparrow
     typedef Miro::DevConsumer Super;
     
   public:
-    Consumer(Connection& _connection,
+    Consumer(Connection * _connection,
 	     Miro::OdometryImpl * _pOdometry,
 	     StallImpl * _pStall,
 	     ButtonsImpl * _pButtons,
 	     Miro::RangeSensorImpl * _pIR);
+    Consumer();
     ~Consumer();
 
     virtual void handleMessage(const Miro::DevMessage * _message);
+    virtual void registerInterfaces(Connection * _connection,
+                                    Miro::OdometryImpl * _pOdometry,
+                                    StallImpl * _pStall,
+                                    ButtonsImpl * _pButtons,
+                                    Miro::RangeSensorImpl * _pIR);
 
     short * getTable1();
     short * getTable2();
 
   protected:
-    Connection& connection;
+    Connection * connection;
     Miro::OdometryImpl * pOdometry_;
     StallImpl * pStall_;
     ButtonsImpl * pButtons_;

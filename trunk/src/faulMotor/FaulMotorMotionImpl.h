@@ -6,7 +6,7 @@
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
 #ifndef faulMotionImpl_hh
 #define faulMotionImpl_hh
@@ -27,7 +27,6 @@ namespace FaulMotor
 {
   // forward declerations
   class Connection;
-  class Consumer;
   class Parameters;
 
   class MotionImpl :  public virtual POA_Miro::SparrowMotion,
@@ -38,8 +37,7 @@ namespace FaulMotor
     //-------------------------------------------------------------------------
   public:
     // Constructor/Destructor
-    MotionImpl(Connection& _connection,
-	       Consumer& _consumer) throw(Miro::Exception);
+    MotionImpl(Connection& _connection) throw(Miro::Exception);
     virtual ~MotionImpl();
 
     //-------------------------------------------------------------------------
@@ -55,11 +53,11 @@ namespace FaulMotor
       throw(Miro::EOutOfBounds, Miro::EDevIO);
     void initMax(short maxAcc, short maxPower, short maxSpeed, double maxTurn)
      throw();
-     
+
   protected:
     const Parameters *  params_;
     Connection&         connection; // encapsulating communication to hardware
-    Consumer&		consumer;
+
   };
 };
 

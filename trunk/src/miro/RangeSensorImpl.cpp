@@ -53,7 +53,7 @@ namespace Miro
   }
 
 
-  void 
+  void
   RangeSensorDispatcher::setData(RangeScanEventIDL * _data)
   {
     notifyEvent_[0].remainder_of_body <<= _data;
@@ -78,14 +78,16 @@ namespace Miro
   int
   RangeSensorDispatcher::svc()
   {
-    cout << "Asynchronous RangeSensor dispatching" << endl;
+
 
     while(!canceled()) {
       Guard guard(mutex_);
       ACE_Time_Value timeout(ACE_OS::gettimeofday());
       timeout += maxWait_;
+      cout << "Asynchronous RangeSensor dispatching **************************" << endl;
       if (cond_.wait(&timeout) != -1 &&
 	  !canceled()) {
+        cout << "Asynchronous RangeSensor dispatching ++++++++++++++++++++++" << endl;
 	dispatch();
       }
     }
@@ -143,7 +145,7 @@ namespace Miro
   {
     DBG(cout << "Constructing Miro::RangeSensorImpl." << endl);
 
-    if (_description.group.length() == 0) 
+    if (_description.group.length() == 0)
       throw Exception("RangeSensorImpl: Empty Scan Description");
 
     scan_.range.length(description_.group.length());
@@ -210,6 +212,8 @@ namespace Miro
       condition_.broadcast();
     }
 
+
+
     if (supplier_) {
       if (asynchDispatching_) {
 	Guard guard(dispatcherThread_.mutex_);
@@ -237,7 +241,7 @@ namespace Miro
 	  scan_.range[group][index] = _data->sensor[i].range;
 	}
 	else
-	  cout << "RangeSensor: integrated data beyond buffer boundaries: " 
+	  cout << "RangeSensor: integrated data beyond buffer boundaries: "
 	       << group << " " << index << endl;
       }
       condition_.broadcast();
@@ -276,7 +280,7 @@ namespace Miro
 
     Guard guard(mutex_);
     RangeGroupEventIDL_var event = new RangeGroupEventIDL();
-    
+
     event->time = scan_.time;
     event->group = id;
     event->range = scan_.range[id];
@@ -298,7 +302,7 @@ namespace Miro
       throw ETimeOut();
 
     RangeGroupEventIDL_var event = new RangeGroupEventIDL();
-    
+
     event->time = scan_.time;
     event->group = id;
     event->range = scan_.range[id];

@@ -27,6 +27,20 @@
 #include "canmsg.h"
 #include "canioctl.h"
 #include "can.h"
+#include "pcan.h"     // pcan treiber
+
+/* from peak-linux-driver-2.8/lib/libpcan.h */
+// bitrate codes of BTR0/BTR1 registers
+#define CAN_BAUD_1M     0x0014  //   1 MBit/s
+#define CAN_BAUD_500K   0x001C  // 500 kBit/s
+#define CAN_BAUD_250K   0x011C  // 250 kBit/s
+#define CAN_BAUD_125K   0x031C  // 125 kBit/s
+#define CAN_BAUD_100K   0x432F  // 100 kBit/s
+#define CAN_BAUD_50K    0x472F  //  50 kBit/s
+#define CAN_BAUD_20K    0x532F  //  20 kBit/s
+#define CAN_BAUD_10K    0x672F  //  10 kBit/s
+#define CAN_BAUD_5K     0x7F7F  //   5 kBit/s
+
 // }
 
 namespace
@@ -65,6 +79,8 @@ namespace Can
     if(parameters_.module == "Can"){
        CanConfig cfg;
 
+       Message::driver=OLD;
+
     // can_ClearStatus(fd);
        if(ioctl(ioBuffer.get_handle(), CAN_CLEARSTAT, 0L))
          throw Miro::Exception("can_ClearStatus() ioctl error");
@@ -87,32 +103,49 @@ namespace Can
        if(ioctl(ioBuffer.get_handle(), CAN_SETCONFIG, (void*)&cfg))
          throw Miro::Exception("can_SetConfig() ioctl error\n");
     }
-    if(parameters_.module == "sja1000"){
+   /* if(parameters_.module == "sja1000"){
 
        unsigned long baud_rate = B250;
        long long acode = -1, amask = -1;
+
+       Message::driver=OLD;
 
        if(ioctl(ioBuffer.get_handle(), CAN_IOCSBAUD, &baud_rate))
          throw Miro::Exception("can_IOCSBAUD() ioctl error");
 
        if(acode != -1){
-          if(ioctl(ioBuffer.get_handle(), CAN_IOCSACODE, &baud_rate))
+          if(ioctl(ioBuffer.get_handle(), CAN_IOCSACODE, &acode))
             throw Miro::Exception("can_IOCSACODE() ioctl error");
        }
 
        if(amask != -1){
-          if(ioctl(ioBuffer.get_handle(), CAN_IOCSAMASK, &baud_rate))
+          if(ioctl(ioBuffer.get_handle(), CAN_IOCSAMASK, &amask))
             throw Miro::Exception("can_IOCSAMASK() ioctl error");
        }
 
+    }*/
+
+    /* PCAN Driver by peak-system  http://www.peak-system.com */
+    if(parameters_.module == "pcan"){
+	TPCANInit caninit;
+	caninit.wBTR0BTR1=CAN_BAUD_250K; // Hier evtl. noch SJW1 und SJW0 setzen, d. h. Synchronization Jump Width
+	caninit.ucCANMsgType=MSGTYPE_EXTENDED;
+	caninit.ucListenOnly=0;          // kein Listen only
+
+        Message::driver = PCAN;
+	if(ioctl(ioBuffer.get_handle(), PCAN_INIT , &caninit))
+		         throw Miro::Exception("can PCAN_INIT() ioctl error");
 
 
     }
   }
 
   void
-  Connection::write(const Message& message)
+  Connection::write(Message& message)
   {
+
+
+
     ACE_Time_Value av(ACE_OS::gettimeofday() + ACE_Time_Value(1));
 
     if (writeMutex.acquire(av) == -1)
@@ -130,7 +163,33 @@ namespace Can
     }
 
     // will definitely choke if base is off
-    int rc = ioBuffer.send_n(message.canMessage(), sizeof(canmsg));
+    int rc;
+    if(parameters_.module == "pcan"){
+     //  std::cout << "First" << endl;
+       pcanmsg * msgp;
+       message.canMessage(&msgp);
+     //  std::cout << "Second" << endl;
+       msgp->Msg.MSGTYPE = MSGTYPE_EXTENDED;
+    //   std::cout << "Vor ioctl" << endl;
+       std::cout << "CanMessage ";
+       for(int i = 0; i < msgp->Msg.LEN; i++)
+          std::cout << msgp->Msg.DATA[i];
+       std::cout << " " << endl;
+       rc = ioctl(ioBuffer.get_handle(), PCAN_WRITE_MSG, msgp);
+
+    }
+    else{
+       canmsg * msg;
+       message.canMessage(&msg);
+       /*if(parameters_.module == "sja1000"){
+          msg->type = EXTENDED;
+       }*/
+       rc = ioBuffer.send_n(msg, sizeof(canmsg));
+     //  std::cout << "message " << msg->d[0] << msg->d[1] << endl;
+    }
+
+
+
 
     lastWrite = time;
     //    ACE_OS::sleep(canTimeOut);

@@ -75,6 +75,7 @@ namespace Miro
      * The Id of the @ref DevEventHandler at the ACE_Reactor.
      */
     int selectHandlerId;
+    ACE_Time_Value tv;
   };
 };
 
