@@ -362,8 +362,8 @@ main(int argc, char** argv)
 //   s.insert(Parameter("int", "int", "", "", "" ));
 //   s.insert(Parameter("unsigned int", "unsigned int", "", "", "" ));
 //   s.insert(Parameter("double", "double", "", "", "" ));
-//   s.insert(Parameter("angle", "angle", "2", ",A0(B", "" ));
-//   s.insert(Parameter("Angle", "Angle", "3", ",A0(B", "" ));
+//   s.insert(Parameter("angle", "angle", "2", "°", "" ));
+//   s.insert(Parameter("Angle", "Angle", "3", "°", "" ));
 //   s.insert(Parameter("ACE_Time_Value", "time", ".0003", "sec", "" ));
 
 //   ParameterDialog d(s, "MyBehaviour", NULL);
