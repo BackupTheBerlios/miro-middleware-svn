@@ -1,3 +1,745 @@
+2002-10-29  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/AUTHORS: added guillem as author
+
+2002-10-26  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/utils/qtVideo/Makefile: fixed makefile bug
+
+	* /soft/MiroRepository/Miro/src/panTilt/PanTiltMessage.h, /soft/MiroRepository/Miro/utils/notify/LogNotify.cpp, /soft/MiroRepository/Miro/utils/qtVideo/MainForm.cpp, /soft/MiroRepository/Miro/utils/qtVideo/Makefile, /soft/MiroRepository/Miro/examples/video/LogVideo.cpp, /soft/MiroRepository/Miro/examples/video/VideoLatency.cpp:
+	fixing gcc 3.2 C++ standart enforcement bugs raised by ACE/TAO x.2.5
+
+	* /soft/MiroRepository/Miro/src/miro/NotifyMulticastSender.cpp, /soft/MiroRepository/Miro/utils/qtVideo/MainForm.cpp, /soft/MiroRepository/Miro/utils/qtVideo/Makefile:
+	fixes for ACE/TAO x.2.5
+
+2002-10-25  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/video/VideoDeviceBTTV.cpp:
+	trying to fix remaining gcc 3.2/TAO 1.2.5 issues
+
+	* /soft/MiroRepository/Miro/examples/behaviours/WallFollow.cpp, /soft/MiroRepository/Miro/src/can/CanConnection.cpp, /soft/MiroRepository/Miro/src/miro/ArbiterMessage.cpp, /soft/MiroRepository/Miro/src/miro/DynamicWindow.cpp, /soft/MiroRepository/Miro/src/miro/Makefile.SSH, /soft/MiroRepository/Miro/src/miro/MotionParameters.cpp, /soft/MiroRepository/Miro/src/miro/PowerArbiterMessage.cpp, /soft/MiroRepository/Miro/src/pioneer/CanonPanTiltImpl.cpp, /soft/MiroRepository/Miro/src/video/VideoParameters.cpp, /soft/MiroRepository/Miro/tests/behaviours/DummyArbiterMessage.cpp, /soft/MiroRepository/Miro/tests/pioneer/PioneerTest.cpp, /soft/MiroRepository/Miro/utils/policyEditor/PolicyDocument.cpp, /soft/MiroRepository/Miro/utils/qtVideo/MainForm.cpp:
+	fixed code for gcc 3.2 C++ standart compability
+
+2002-10-25  Guillem Pages  <guillem@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/pioneer/CanonCameraImpl.cpp, /soft/MiroRepository/Miro/src/pioneer/CanonMessage.cpp, /soft/MiroRepository/Miro/src/pioneer/CanonMessage.h, /soft/MiroRepository/Miro/src/pioneer/CanonPanTiltImpl.cpp:
+	Changed the mutex zones to a more "elegant" and safe way
+
+	* /soft/MiroRepository/Miro/idl/Gripper.idl:
+	Some functions are not yet implemented.
+	Stated so in the comments
+
+2002-10-25  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/examples/behaviours/Makefile, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorBehaviour.cpp:
+	conditionalizing nix visualization debug output
+
+2002-10-24  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/examples/behaviours/PpbWallfollow.xml:
+	adding Ppb behaviours
+
+	* /soft/MiroRepository/Miro/examples/behaviours/BehaviourParameters.xml, /soft/MiroRepository/Miro/examples/behaviours/Behaviours.cpp, /soft/MiroRepository/Miro/examples/behaviours/PpbStraight.xml, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorBehaviour.cpp, /soft/MiroRepository/Miro/examples/behaviours/Straight.cpp, /soft/MiroRepository/Miro/examples/behaviours/WallFollow.cpp, /soft/MiroRepository/Miro/examples/behaviours/WallFollowParameters.cpp:
+	behaviour hacking
+
+	* /soft/MiroRepository/Miro/examples/behaviours/RangeSensorAvoid.cpp, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorBehaviour.cpp:
+	behaviour hacking - synch for test on robot
+
+	* /soft/MiroRepository/Miro/examples/behaviours/RangeSensorBehaviour.cpp:
+	hacking along
+
+2002-10-23  Guillem Pages  <guillem@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/pioneer/PioneerConnection.h, /soft/MiroRepository/Miro/tests/pioneer/PioneerTest.cpp, /soft/MiroRepository/Miro/idl/Gripper.idl, /soft/MiroRepository/Miro/src/pioneer/GripperImpl.cpp, /soft/MiroRepository/Miro/src/pioneer/GripperImpl.h, /soft/MiroRepository/Miro/src/pioneer/PioneerConnection.cpp:
+	Added new functions to the gripper interface
+	Changed the parameters and semantic for the setGripPressure function
+
+	* /soft/MiroRepository/Miro/tests/Makefile:
+	Changed gripper so that it only compiles on Pioneer
+
+	* /soft/MiroRepository/Miro/tests/Makefile:
+	Added gripperTest to the compilation sequence
+
+2002-10-23  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/examples/behaviours/BehaviourControler.cpp, /soft/MiroRepository/Miro/idl/DtlkSpeech.idl, /soft/MiroRepository/Miro/src/miro/KeyValueList.h, /soft/MiroRepository/Miro/src/panTilt/PanTiltMessage.h, /soft/MiroRepository/Miro/utils/notify/LogNotify.cpp:
+	applied patches from Arndt
+	mostly Qt qstrcmp macro fix
+	and a TAO_IDL  strict standart support fix
+
+	* /soft/MiroRepository/Miro/utils/Joystick/README, /soft/MiroRepository/Miro/utils/Makefile, /soft/MiroRepository/Miro/utils/makeParams/README, /soft/MiroRepository/Miro/utils/notify/README, /soft/MiroRepository/Miro/utils/nsIOR/README, /soft/MiroRepository/Miro/utils/policyEditor/BehaviourDescription.h, /soft/MiroRepository/Miro/utils/policyEditor/BehaviourParam.h, /soft/MiroRepository/Miro/utils/policyEditor/PatternWidget.cpp, /soft/MiroRepository/Miro/utils/policyEditor/PolicyConfig.cpp, /soft/MiroRepository/Miro/utils/policyEditor/PolicyConfig.h, /soft/MiroRepository/Miro/utils/policyEditor/PolicyDocument.cpp, /soft/MiroRepository/Miro/utils/policyEditor/PolicyDocument.h, /soft/MiroRepository/Miro/utils/policyEditor/PolicyEditor.cpp, /soft/MiroRepository/Miro/utils/policyEditor/PolicyEditor.h, /soft/MiroRepository/Miro/utils/policyEditor/PolicyView.cpp, /soft/MiroRepository/Miro/utils/policyEditor/PolicyView.h, /soft/MiroRepository/Miro/utils/policyEditor/README, /soft/MiroRepository/Miro/utils/qtJoystick/README, /soft/MiroRepository/Miro/utils/qtTouchPad/README, /soft/MiroRepository/Miro/utils/sparrowBoard/README:
+	added README files
+	cleaning up the PolicyEditor part 1 - to be continued
+
+	* /soft/MiroRepository/Miro/utils/logPlayer/LogPlayer.cpp, /soft/MiroRepository/Miro/utils/logPlayer/README:
+	reverting localize test hack
+
+	* /soft/MiroRepository/Miro/examples/behaviours/Behaviours.cpp, /soft/MiroRepository/Miro/examples/behaviours/Makefile, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorBehaviour.cpp, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorBehaviourParameters.cpp, /soft/MiroRepository/Miro/src/sparrowBase/Makefile:
+	work on behaviour fixing - the new ego map needs some fixing...
+	makefile dependency update for sparrowBase
+
+2002-10-22  Guillem Pages  <guillem@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/idl/Gripper.idl, /soft/MiroRepository/Miro/src/miro/.cvsignore, /soft/MiroRepository/Miro/src/miro/Makefile.Miro, /soft/MiroRepository/Miro/src/miro/Makefile.MiroSvc, /soft/MiroRepository/Miro/src/pioneer/GripperImpl.cpp, /soft/MiroRepository/Miro/src/pioneer/GripperImpl.h, /soft/MiroRepository/Miro/src/pioneer/Makefile, /soft/MiroRepository/Miro/src/pioneer/PioneerConnection.cpp, /soft/MiroRepository/Miro/src/pioneer/PioneerConnection.h, /soft/MiroRepository/Miro/src/pioneerBase/PioneerBase.cpp, /soft/MiroRepository/Miro/src/pioneerBase/PioneerBase.h, /soft/MiroRepository/Miro/tests/pioneer/PioneerTest.cpp:
+	Added the gripper interface and implementation
+
+	* /soft/MiroRepository/Miro/src/pioneer/CanonCameraImpl.cpp, /soft/MiroRepository/Miro/src/pioneer/CanonCameraImpl.h:
+	Removed some useless lines
+	Corrected some typos
+	The code should be the same
+
+	* /soft/MiroRepository/Miro/idl/CanonCamera.idl, /soft/MiroRepository/Miro/src/pioneer/CanonCameraImpl.cpp, /soft/MiroRepository/Miro/src/pioneer/CanonCameraImpl.h, /soft/MiroRepository/Miro/src/pioneer/CanonMessage.cpp, /soft/MiroRepository/Miro/src/pioneer/CanonMessage.h, /soft/MiroRepository/Miro/src/pioneer/CanonPanTiltImpl.cpp, /soft/MiroRepository/Miro/src/pioneer/CanonPanTiltImpl.h:
+	Added TimeOuts and TimeOut exceptions
+
+2002-10-21  Guillem Pages  <guillem@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/pioneer/CanonCameraImpl.cpp, /soft/MiroRepository/Miro/src/pioneer/CanonMessage.cpp, /soft/MiroRepository/Miro/src/pioneer/CanonMessage.h, /soft/MiroRepository/Miro/src/pioneer/CanonPanTiltImpl.cpp:
+	Added mutex
+	Switched pan direction to conform to Miro standart
+
+	* /soft/MiroRepository/Miro/src/pioneerBase/PioneerBase.cpp:
+	Fixed some typos
+
+	* /soft/MiroRepository/Miro/src/miro/Makefile.Miro, /soft/MiroRepository/Miro/src/miro/Makefile.MiroSvc:
+	Added Canon Camera idl to compilation sequence
+
+	* /soft/MiroRepository/Miro/src/miro/.cvsignore:
+	Adding CanonCamera to .cvsignore
+
+	* /soft/MiroRepository/Miro/idl/CanonCamera.idl:
+	IDL file for the Canon camera interface
+
+2002-10-18  Guillem Pages  <guillem@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/pioneer/CanonPanTiltImpl.h, /soft/MiroRepository/Miro/src/pioneer/CanonPanTiltMessage.cpp, /soft/MiroRepository/Miro/src/pioneer/CanonPanTiltMessage.h, /soft/MiroRepository/Miro/src/pioneer/Makefile, /soft/MiroRepository/Miro/src/pioneer/PioneerConnection.h, /soft/MiroRepository/Miro/src/pioneer/PioneerConsumer.cpp, /soft/MiroRepository/Miro/src/pioneer/PioneerConsumer.h, /soft/MiroRepository/Miro/src/pioneer/PioneerParameters.cpp, /soft/MiroRepository/Miro/src/pioneerBase/Makefile, /soft/MiroRepository/Miro/src/pioneerBase/PioneerBase.cpp, /soft/MiroRepository/Miro/src/pioneerBase/PioneerBase.h, /soft/MiroRepository/Miro/src/psos/Makefile, /soft/MiroRepository/Miro/tests/pioneer/Makefile, /soft/MiroRepository/Miro/tests/pioneer/PioneerTest.cpp, /soft/MiroRepository/Miro/src/pioneer/CanonCameraImpl.cpp, /soft/MiroRepository/Miro/src/pioneer/CanonCameraImpl.h, /soft/MiroRepository/Miro/src/pioneer/CanonDevice.h, /soft/MiroRepository/Miro/src/pioneer/CanonMessage.cpp, /soft/MiroRepository/Miro/src/pioneer/CanonMessage.h, /soft/MiroRepository/Miro/src/pioneer/CanonPanTiltDevice.h, /soft/MiroRepository/Miro/src/pioneer/CanonPanTiltImpl.cpp:
+	Added the Camera interface for changing zoom and focus of a Canon camera
+	TODO: Concurrence problems might (will) arise between CanonPanTiltImpl and CanonCamera,
+	as they are sharing a variable where the consumer writes.
+
+2002-10-17  trifftnix  <trifftnix@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/examples/video/LogVideo.cpp:
+	reverted default streaming mode
+
+2002-10-16  Guillem Pages  <guillem@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/etc/ppb.xml, /soft/MiroRepository/Miro/idl/CanonPanTilt.idl, /soft/MiroRepository/Miro/src/pioneer/CanonPanTiltImpl.cpp, /soft/MiroRepository/Miro/src/pioneer/CanonPanTiltImpl.h, /soft/MiroRepository/Miro/src/pioneer/PioneerConnection.cpp, /soft/MiroRepository/Miro/src/pioneer/PioneerConsumer.h, /soft/MiroRepository/Miro/src/pioneer/PioneerParameters.cpp, /soft/MiroRepository/Miro/src/pioneer/PioneerParameters.h, /soft/MiroRepository/Miro/src/pioneerBase/PioneerBase.cpp, /soft/MiroRepository/Miro/tests/pioneer/PioneerTest.cpp:
+	Finished implementation of CanonPanTilt interface
+	Added configuration parameter for inverse mounted (Canon) cameras
+
+2002-10-16  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/examples/behaviours/Behaviours.cpp, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorBehaviour.cpp:
+	sending arbitration changes via notify in behaviours.cpp
+
+	* /soft/MiroRepository/Miro/examples/behaviours/Makefile, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorAvoidParameters.h, /soft/MiroRepository/Miro/tests/motion/DifferentialMotionInterface.cpp, /soft/MiroRepository/Miro/tests/motion/MotionInterface.cpp:
+	changing MotionInterface tests to use the same method for halting
+	as for moving
+
+	* /soft/MiroRepository/Miro/src/psos/PsosMessage.cpp: next fix
+
+	* /soft/MiroRepository/Miro/src/abus/Makefile, /soft/MiroRepository/Miro/src/base/Makefile, /soft/MiroRepository/Miro/src/buttons/Makefile, /soft/MiroRepository/Miro/src/can/Makefile, /soft/MiroRepository/Miro/src/image/Makefile, /soft/MiroRepository/Miro/src/laser/Makefile, /soft/MiroRepository/Miro/src/mcp/Makefile, /soft/MiroRepository/Miro/src/miro/Makefile.Miro, /soft/MiroRepository/Miro/src/miro/Makefile.MiroSvc, /soft/MiroRepository/Miro/src/msp/Makefile, /soft/MiroRepository/Miro/src/panTilt/Makefile, /soft/MiroRepository/Miro/src/pioneer/Makefile, /soft/MiroRepository/Miro/src/pioneer/PioneerConnection.cpp, /soft/MiroRepository/Miro/src/pioneer/PioneerMotionImpl.cpp, /soft/MiroRepository/Miro/src/pioneerBase/Makefile, /soft/MiroRepository/Miro/src/psos/Makefile, /soft/MiroRepository/Miro/src/psos/PsosMessage.cpp, /soft/MiroRepository/Miro/src/psos/PsosMessage.h, /soft/MiroRepository/Miro/src/sparrow/Makefile, /soft/MiroRepository/Miro/src/sparrowBase/Makefile, /soft/MiroRepository/Miro/src/speech/Makefile, /soft/MiroRepository/Miro/src/video/Makefile, /soft/MiroRepository/Miro/tests/behaviours/Makefile, /soft/MiroRepository/Miro/tests/motion/Makefile, /soft/MiroRepository/Miro/tests/notify/Makefile, /soft/MiroRepository/Miro/tests/pioneer/Makefile, /soft/MiroRepository/Miro/tests/sparrow/Makefile, /soft/MiroRepository/Miro/utils/logPlayer/Makefile, /soft/MiroRepository/Miro/utils/notify/Makefile, /soft/MiroRepository/Miro/utils/policyEditor/Makefile, /soft/MiroRepository/Miro/utils/qtJoystick/Makefile, /soft/MiroRepository/Miro/utils/qtTouchPad/Makefile, /soft/MiroRepository/Miro/utils/qtVideo/Makefile, /soft/MiroRepository/Miro/utils/rangeSensor/Makefile, /soft/MiroRepository/Miro/examples/b21Behaviours/Makefile, /soft/MiroRepository/Miro/examples/battery/Makefile, /soft/MiroRepository/Miro/examples/behaviours/Makefile:
+	making dependencies
+	trying to fix two byte message for psos
+
+	* /soft/MiroRepository/Miro/src/miro/.cvsignore: missed one entry
+
+	* /soft/MiroRepository/Miro/src/miro/.cvsignore:
+	adding CanonPanTilt stups and sceletons to .cvsignore
+
+	* /soft/MiroRepository/Miro/src/pioneer/PioneerConnection.cpp, /soft/MiroRepository/Miro/src/pioneer/PioneerConnection.h, /soft/MiroRepository/Miro/src/pioneer/PioneerMotionImpl.cpp:
+	trying to fix left right velocity
+	trying to fix limp
+
+	* /soft/MiroRepository/Miro/src/psos/PsosEventHandler.cpp:
+	next try on fixing segfault on first start after pioneer board reset
+	seems to be successfull
+
+2002-10-15  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/etc/haeltnix.xml, /soft/MiroRepository/Miro/etc/siehtnix.xml, /soft/MiroRepository/Miro/etc/trifftnix.xml, /soft/MiroRepository/Miro/examples/behaviours/Behaviours.cpp, /soft/MiroRepository/Miro/examples/behaviours/Makefile:
+	removing tables from sparrow config files
+	testing behaviours
+	adding missing forward declaration in PolicyController.h
+
+	* /soft/MiroRepository/Miro/etc/ppb.xml, /soft/MiroRepository/Miro/examples/behaviours/Behaviours.cpp, /soft/MiroRepository/Miro/src/pioneer/PioneerParameters.cpp, /soft/MiroRepository/Miro/tests/notify/Makefile:
+	changed ppb.xml motion parameter settings to their syntax
+	testig new behaviours examples
+	fixing typo in notify/Makefile
+	adding motion parameters to PioneerParameters output operator
+
+	* /soft/MiroRepository/Miro/idl/CanonPanTilt.idl:
+	added the derived pantilt interface for the ppb
+
+	* /soft/MiroRepository/Miro/examples/behaviours/PpbStraight.xml:
+	the basic behaviour for the peoplebot
+
+2002-10-15  Guillem Pages  <guillem@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/pioneerBase/PioneerBase.cpp, /soft/MiroRepository/Miro/src/pioneerBase/PioneerBase.h, /soft/MiroRepository/Miro/src/psos/PsosDevice.h, /soft/MiroRepository/Miro/src/psos/PsosMessage.cpp, /soft/MiroRepository/Miro/src/psos/PsosMessage.h, /soft/MiroRepository/Miro/tests/pioneer/PioneerTest.cpp, /soft/MiroRepository/Miro/src/miro/Makefile.Miro, /soft/MiroRepository/Miro/src/miro/Makefile.MiroSvc, /soft/MiroRepository/Miro/src/pioneer/CanonPanTiltDevice.h, /soft/MiroRepository/Miro/src/pioneer/CanonPanTiltImpl.cpp, /soft/MiroRepository/Miro/src/pioneer/CanonPanTiltImpl.h, /soft/MiroRepository/Miro/src/pioneer/CanonPanTiltMessage.cpp, /soft/MiroRepository/Miro/src/pioneer/CanonPanTiltMessage.h, /soft/MiroRepository/Miro/src/pioneer/Makefile, /soft/MiroRepository/Miro/src/pioneer/PioneerConnection.cpp, /soft/MiroRepository/Miro/src/pioneer/PioneerConnection.h, /soft/MiroRepository/Miro/src/pioneer/PioneerConsumer.cpp, /soft/MiroRepository/Miro/src/pioneer/PioneerConsumer.h:
+	Implementation of CanonPanTilt began.
+	Basic functions work
+
+2002-10-14  Guillem Pages  <guillem@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/utils/qtVideo/Makefile, /soft/MiroRepository/Miro/utils/qtVideo/QtVideo.cpp:
+	Finished renaming to QtVideo (I hope ;)
+	Removed lots of superfluous old code
+
+2002-10-14  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/utils/rangeSensor/QtRangeSensor.cpp, /soft/MiroRepository/Miro/utils/rangeSensor/QtRangeSensor.h, /soft/MiroRepository/Miro/utils/rangeSensor/README:
+	making a nice GUI interface for the range sensor stuff
+
+	* /soft/MiroRepository/Miro/examples/behaviours/RangeSensorBehaviour.h:
+	RH still suffers the deque bug. So we use list instead
+
+2002-10-13  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/examples/b21Behaviours/README, /soft/MiroRepository/Miro/examples/b21Motion/README, /soft/MiroRepository/Miro/examples/battery/.cvsignore, /soft/MiroRepository/Miro/examples/battery/README, /soft/MiroRepository/Miro/examples/behaviours/README, /soft/MiroRepository/Miro/examples/buttons/README, /soft/MiroRepository/Miro/examples/infrared/README, /soft/MiroRepository/Miro/examples/motion/MotionStatusPoll.cpp, /soft/MiroRepository/Miro/examples/motion/README, /soft/MiroRepository/Miro/examples/notify/GenericNotify.cpp, /soft/MiroRepository/Miro/examples/notify/README, /soft/MiroRepository/Miro/examples/odometry/README, /soft/MiroRepository/Miro/examples/rangeSensor/README, /soft/MiroRepository/Miro/examples/robotikI/README, /soft/MiroRepository/Miro/examples/sonar/README, /soft/MiroRepository/Miro/examples/stall/README, /soft/MiroRepository/Miro/examples/video/README, /soft/MiroRepository/Miro/src/miro/.cvsignore, /soft/MiroRepository/Miro/utils/qtVideo/.cvsignore:
+	fixing up typos etc.
+	adding the domain name as second optional command line parameter to
+	GenericNotify
+	adding README files for all example code modules
+
+	* /soft/MiroRepository/Miro/tests/b21/README, /soft/MiroRepository/Miro/tests/behaviours/README, /soft/MiroRepository/Miro/tests/dpPanTilt/README, /soft/MiroRepository/Miro/tests/dtlk/README, /soft/MiroRepository/Miro/tests/image/README, /soft/MiroRepository/Miro/tests/panTilt/README, /soft/MiroRepository/Miro/tests/pioneer/README, /soft/MiroRepository/Miro/tests/rangeSensor/README, /soft/MiroRepository/Miro/tests/sparrow/KickerTest.cpp, /soft/MiroRepository/Miro/tests/sparrow/PanPosition.cpp, /soft/MiroRepository/Miro/tests/sparrow/README, /soft/MiroRepository/Miro/tests/video/README, /soft/MiroRepository/Miro/tests/video/TestVideoClient.cpp:
+	adding README files for every test module
+	small code cleanup, mostly typos
+
+2002-10-11  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/tests/motion/README, /soft/MiroRepository/Miro/tests/notify/Makefile, /soft/MiroRepository/Miro/tests/odometry/README:
+	some more text
+
+	* /soft/MiroRepository/Miro/tests/motion/README, /soft/MiroRepository/Miro/tests/notify/Makefile, /soft/MiroRepository/Miro/tests/notify/README, /soft/MiroRepository/Miro/tests/odometry/README, /soft/MiroRepository/Miro/tests/pioneer/README:
+	adding readme files for the different tests
+
+	* /soft/MiroRepository/Miro/CONFIG: added a file about configuring
+
+	* /soft/MiroRepository/Miro/src/pioneer/PioneerConnection.cpp, /soft/MiroRepository/Miro/src/pioneer/PioneerConnection.h, /soft/MiroRepository/Miro/src/pioneer/PioneerMotionImpl.cpp, /soft/MiroRepository/Miro/src/pioneer/PioneerMotionImpl.h:
+	fixing up motion interface - to be tested
+
+	* /soft/MiroRepository/Miro/src/pioneer/PioneerMotionImpl.cpp, /soft/MiroRepository/Miro/src/pioneer/PioneerMotionImpl.h:
+	fixing motion to connection speed conversion part 1
+
+	* /soft/MiroRepository/Miro/examples/Makefile:
+	added battery to the make DIRS list
+
+	* /soft/MiroRepository/Miro/examples/battery/BatteryGet.cpp, /soft/MiroRepository/Miro/examples/battery/Makefile, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorAvoid.cpp, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorAvoid.h, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorBehaviour.cpp, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorBehaviour.h, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorBehaviourParameters.cpp, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorBehaviourParameters.h, /soft/MiroRepository/Miro/examples/behaviours/WallFollow.cpp, /soft/MiroRepository/Miro/examples/behaviours/WallFollow.h, /soft/MiroRepository/Miro/examples/behaviours/WallFollowParameters.cpp, /soft/MiroRepository/Miro/examples/behaviours/WallFollowParameters.h:
+	adding battery interface example
+	cleaning up unified behaviours
+
+	* /soft/MiroRepository/Miro/etc/BehaviourDescriptionFile.xml, /soft/MiroRepository/Miro/etc/PolicyEditorConfig.xml, /soft/MiroRepository/Miro/etc/PolicyEditorNewFile.xml:
+	added Files for the policy editor
+
+	* /soft/MiroRepository/Miro/INSTALL, /soft/MiroRepository/Miro/etc/ppb.xml, /soft/MiroRepository/Miro/src/miro/Exception.h, /soft/MiroRepository/Miro/src/miro/XmlParse.h, /soft/MiroRepository/Miro/utils/rangeSensor/QtRangeSensor.cpp:
+	cleaning up for people bot beta
+	building xml parsing infrastructure
+
+2002-10-09  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/tests/pioneer/PioneerTest.cpp:
+	fixing COMCLOSE for PioneerTest
+
+2002-10-08  Guillem Pages  <guillem@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/etc/ppb.xml:
+	Configured video parameters for the PeopleBot
+
+2002-10-07  Guillem Pages  <guillem@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/psos/PsosDevice.h:
+	Added constants to control PTZ camera on PeopleBot
+
+2002-10-07  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/pioneer/PioneerConsumer.cpp, /soft/MiroRepository/Miro/src/psos/PsosConnection.cpp, /soft/MiroRepository/Miro/src/psos/PsosEventHandler.cpp:
+	fixing pioneer shutdown problems
+	reading psos status message
+
+	* /soft/MiroRepository/Miro/src/pioneerBase/PioneerBase.cpp, /soft/MiroRepository/Miro/src/psos/PsosConnection.cpp, /soft/MiroRepository/Miro/src/psos/PsosConnection.h:
+	trying to fix shutdown problems with pioneer board
+
+2002-10-06  passtnix  <passtnix@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/miro/ActionPattern.cpp:
+	resloving deadlock for too fast actionpattern changes
+
+2002-10-06  trifftnix  <trifftnix@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/etc/passtnix.xml: changed config
+
+2002-10-06  siehtnix  <siehtnix@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/etc/notifyLog.xml, /soft/MiroRepository/Miro/etc/siehtnix.xml:
+	changed camera settings
+
+	* /soft/MiroRepository/Miro/etc/haeltnix.xml:
+	changed config for channel sharing
+
+2002-10-05  haeltnix  <haeltnix@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/miro/CameraParameters.cpp:
+	120 msec seems to be the latency
+
+	* /soft/MiroRepository/Miro/src/miro/CameraParameters.cpp:
+	lower default latency
+
+2002-10-05  passtnix  <passtnix@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/miro/CameraParameters.cpp, /soft/MiroRepository/Miro/src/miro/NotifyMulticastReceiver.cpp:
+	fixed too high camera latency
+
+2002-10-05  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/can/CanConnection.cpp, /soft/MiroRepository/Miro/src/miro/CameraParameters.cpp, /soft/MiroRepository/Miro/src/miro/CameraParameters.h, /soft/MiroRepository/Miro/src/miro/XmlParse.cpp, /soft/MiroRepository/Miro/src/miro/XmlParse.h:
+	removing signal code from CanConnection
+	adding latency parameter option to CameraParameters
+	adding/fixing parsing routines in XML-Parse
+
+2002-10-04  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/etc/haeltnix.xml:
+	pioneer conversion factors (now in xml)
+
+	* /soft/MiroRepository/Miro/src/can/CanConnection.cpp:
+	trying to detect sparrow board crash - next try
+
+2002-10-04  trifftnix  <trifftnix@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/can/CanConnection.cpp:
+	reverted fix because of problems
+
+	* /soft/MiroRepository/Miro/src/can/CanConnection.cpp:
+	trying to detect SparrowBoard crash
+
+2002-10-04  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/can/CanConnection.cpp, /soft/MiroRepository/Miro/src/can/CanConnection.h:
+	trying to detect SparrowBoard crash
+
+	* /soft/MiroRepository/Miro/src/pioneer/PioneerConsumer.cpp, /soft/MiroRepository/Miro/src/sparrow/SparrowConnection.cpp, /soft/MiroRepository/Miro/src/sparrow/SparrowConnection.h, /soft/MiroRepository/Miro/src/sparrow/SparrowConsumer.cpp, /soft/MiroRepository/Miro/src/sparrow/SparrowEventHandler.cpp:
+	revamping sparrowboard crash detection
+
+2002-10-02  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/miro/MotionArbiter.cpp, /soft/MiroRepository/Miro/src/miro/MotionArbiter.h, /soft/MiroRepository/Miro/src/psos/PsosDevice.h, /soft/MiroRepository/Miro/utils/rangeSensor/QtRangeSensor.cpp, /soft/MiroRepository/Miro/utils/rangeSensor/QtRangeSensor.h:
+	trying to fix arbiter problems
+	adding options to QtRangeSensor
+
+2002-10-01  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/pioneer/PioneerConsumer.cpp, /soft/MiroRepository/Miro/src/pioneer/PioneerConsumer.h:
+	debugging tactile support
+
+	* /soft/MiroRepository/Miro/src/pioneer/PioneerConsumer.cpp:
+	next try on fixing
+
+2002-10-01  Guillem Pages  <guillem@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/utils/Makefile, /soft/MiroRepository/Miro/utils/liveVideo/LiveVideoClient.cpp, /soft/MiroRepository/Miro/utils/liveVideo/MainForm.cpp, /soft/MiroRepository/Miro/utils/liveVideo/MainForm.h, /soft/MiroRepository/Miro/utils/liveVideo/Makefile, /soft/MiroRepository/Miro/utils/qtVideo/MainForm.cpp, /soft/MiroRepository/Miro/utils/qtVideo/MainForm.h, /soft/MiroRepository/Miro/utils/qtVideo/Makefile, /soft/MiroRepository/Miro/utils/qtVideo/QtVideo.cpp:
+	Rename liveVideo to qtVideo
+
+2002-10-01  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/pioneer/PioneerConsumer.cpp: next try
+
+	* /soft/MiroRepository/Miro/src/pioneer/PioneerConsumer.cpp:
+	trying to fix tactiles
+
+	* /soft/MiroRepository/Miro/etc/ppb.xml: configuration for peoplebot
+
+2002-09-30  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/pioneer/PioneerParameters.cpp:
+	fixing init bug
+
+	* /soft/MiroRepository/Miro/tests/pioneer/PioneerTest.cpp:
+	integrating battery interface
+
+	* /soft/MiroRepository/Miro/tests/pioneer/PioneerTest.cpp: fix
+
+	* /soft/MiroRepository/Miro/tests/motion/DifferentialMotionInterface.cpp, /soft/MiroRepository/Miro/tests/motion/MotionInterface.cpp, /soft/MiroRepository/Miro/tests/motion/SynchroMotionInterface.cpp:
+	fixing modified Pioneer constructor signature
+
+	* /soft/MiroRepository/Miro/src/miro/BatteryImpl.cpp, /soft/MiroRepository/Miro/src/miro/BatteryImpl.h:
+	added implementation
+
+	* /soft/MiroRepository/Miro/idl/Battery.idl:
+	added battery interface - namely for pioneer
+
+2002-09-30  siehtnix  <siehtnix@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/etc/trifftnix.xml, /soft/MiroRepository/Miro/etc/siehtnix.xml:
+	Changed values for camera parameters height and alpha
+
+2002-09-30  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/miro/Makefile.Miro, /soft/MiroRepository/Miro/src/miro/Makefile.MiroSvc, /soft/MiroRepository/Miro/src/miro/ScanDescriptionHelper.cpp, /soft/MiroRepository/Miro/src/pioneer/PioneerConnection.cpp, /soft/MiroRepository/Miro/src/pioneer/PioneerConsumer.cpp, /soft/MiroRepository/Miro/src/pioneer/PioneerConsumer.h, /soft/MiroRepository/Miro/src/pioneer/PioneerParameters.cpp, /soft/MiroRepository/Miro/src/pioneer/PioneerParameters.h, /soft/MiroRepository/Miro/src/pioneer/PioneerStallImpl.cpp, /soft/MiroRepository/Miro/src/pioneer/PioneerStallImpl.h, /soft/MiroRepository/Miro/src/pioneerBase/PioneerBase.cpp, /soft/MiroRepository/Miro/src/pioneerBase/PioneerBase.h, /soft/MiroRepository/Miro/src/psos/PsosMessage.h:
+	adding tactile support for PeopleBot
+	need to configure it for Pioneer1 conformance...
+
+2002-09-27  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/pioneer/PioneerConsumer.cpp, /soft/MiroRepository/Miro/src/psos/PsosMessage.h:
+	accessing bumpers
+
+	* /soft/MiroRepository/Miro/src/pioneer/PioneerConsumer.cpp, /soft/MiroRepository/Miro/src/psos/PsosMessage.h:
+	evaluating more message information
+
+	* /soft/MiroRepository/Miro/src/pioneer/PioneerConsumer.cpp:
+	revamping message consuming for AROS
+
+	* /soft/MiroRepository/Miro/src/miro/XmlParse.cpp, /soft/MiroRepository/Miro/src/psos/PsosParameters.cpp:
+	adding parsing support for psos conversion factor parameters
+
+	* /soft/MiroRepository/Miro/etc/passtnix.xml, /soft/MiroRepository/Miro/etc/pioneer1.xml, /soft/MiroRepository/Miro/etc/ppb.xml, /soft/MiroRepository/Miro/examples/b21Behaviours/Makefile, /soft/MiroRepository/Miro/examples/behaviours/Makefile, /soft/MiroRepository/Miro/src/abus/Makefile, /soft/MiroRepository/Miro/src/base/Makefile, /soft/MiroRepository/Miro/src/buttons/Makefile, /soft/MiroRepository/Miro/src/can/Makefile, /soft/MiroRepository/Miro/src/image/Makefile, /soft/MiroRepository/Miro/src/laser/Makefile, /soft/MiroRepository/Miro/src/mcp/Makefile, /soft/MiroRepository/Miro/src/miro/Makefile.Miro, /soft/MiroRepository/Miro/src/miro/Makefile.MiroSvc, /soft/MiroRepository/Miro/src/miro/ScanDescriptionHelper.cpp, /soft/MiroRepository/Miro/src/miro/ScanDescriptionHelper.h, /soft/MiroRepository/Miro/src/miro/XmlParse.cpp, /soft/MiroRepository/Miro/src/miro/XmlParse.h, /soft/MiroRepository/Miro/src/msp/Makefile, /soft/MiroRepository/Miro/src/panTilt/Makefile, /soft/MiroRepository/Miro/src/pioneer/Makefile, /soft/MiroRepository/Miro/src/pioneer/PioneerConnection.cpp, /soft/MiroRepository/Miro/src/pioneer/PioneerConnection.h, /soft/MiroRepository/Miro/src/pioneer/PioneerConsumer.cpp, /soft/MiroRepository/Miro/src/pioneer/PioneerConsumer.h, /soft/MiroRepository/Miro/src/pioneer/PioneerParameters.cpp, /soft/MiroRepository/Miro/src/pioneerBase/PioneerBase.cpp, /soft/MiroRepository/Miro/src/pioneerBase/PioneerBase.h, /soft/MiroRepository/Miro/src/psos/Makefile, /soft/MiroRepository/Miro/src/psos/PsosDevice.h, /soft/MiroRepository/Miro/src/psos/PsosMessage.h, /soft/MiroRepository/Miro/src/psos/PsosParameters.cpp, /soft/MiroRepository/Miro/src/psos/PsosParameters.h, /soft/MiroRepository/Miro/src/sparrow/Makefile, /soft/MiroRepository/Miro/src/sparrowBase/Makefile, /soft/MiroRepository/Miro/src/sparrowBase/SparrowBase.cpp, /soft/MiroRepository/Miro/src/sparrowBase/SparrowServer.cpp, /soft/MiroRepository/Miro/src/sparrowBase/SparrowServer.h, /soft/MiroRepository/Miro/src/speech/Makefile, /soft/MiroRepository/Miro/src/video/Makefile, /soft/MiroRepository/Miro/tests/behaviours/Makefile, /soft/MiroRepository/Miro/tests/motion/Makefile, /soft/MiroRepository/Miro/tests/pioneer/PioneerTest.cpp, /soft/MiroRepository/Miro/utils/logPlayer/LogPlayer.cpp, /soft/MiroRepository/Miro/utils/logPlayer/Makefile, /soft/MiroRepository/Miro/utils/notify/Makefile, /soft/MiroRepository/Miro/utils/policyEditor/Makefile, /soft/MiroRepository/Miro/utils/qtJoystick/Makefile, /soft/MiroRepository/Miro/utils/qtTouchPad/Makefile, /soft/MiroRepository/Miro/utils/rangeSensor/Makefile:
+	specifing configuration options for Motion
+	specifing configuration options for PSOS etc. conversion factors
+	switching to singleton instance of Pioneer::Parameters
+
+2002-09-26  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/pioneer/PioneerConsumer.cpp, /soft/MiroRepository/Miro/src/psos/PsosDevice.h:
+	fixing sonar group selection
+	hacking PsosDevice for quick success (need some parameter entries)
+
+	* /soft/MiroRepository/Miro/utils/rangeSensor/Makefile, /soft/MiroRepository/Miro/utils/rangeSensor/QtRangeSensor.cpp, /soft/MiroRepository/Miro/utils/rangeSensor/QtRangeSensor.h:
+	adding group support for QtRangeSensor
+
+	* /soft/MiroRepository/Miro/etc/ppb.xml: configuring
+
+	* /soft/MiroRepository/Miro/doc/tex/.cvsignore, /soft/MiroRepository/Miro/etc/pioneer1.xml, /soft/MiroRepository/Miro/etc/ppb.xml, /soft/MiroRepository/Miro/src/miro/ScanDescriptionHelper.cpp, /soft/MiroRepository/Miro/src/psos/PsosEventHandler.cpp, /soft/MiroRepository/Miro/utils/Joystick/.cvsignore:
+	added further .cvsignore file
+	setting up configuration of people bot
+
+	* /soft/MiroRepository/Miro/etc/ppb.xml, /soft/MiroRepository/Miro/src/miro/OdometryImpl.h, /soft/MiroRepository/Miro/src/pioneer/PioneerConsumer.cpp, /soft/MiroRepository/Miro/src/psos/PsosEventHandler.cpp, /soft/MiroRepository/Miro/tests/pioneer/PioneerTest.cpp:
+	adding confguration for peoplebot
+	adding missing include for OdometryImpl.h
+	tweaking the pioneer consumer for peoplebot support
+
+2002-09-26  Guillem Pages  <guillem@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/miro/OdometryImpl.h, /soft/MiroRepository/Miro/src/miro/XmlParse.cpp, /soft/MiroRepository/Miro/src/miro/XmlParse.h, /soft/MiroRepository/Miro/src/pioneerBase/PioneerBase.cpp, /soft/MiroRepository/Miro/src/psos/PsosEventHandler.cpp:
+	Configuring the PeopleBot (1)
+
+	* /soft/MiroRepository/Miro/utils/Makefile, /soft/MiroRepository/Miro/utils/liveVideo/LiveVideoClient.cpp, /soft/MiroRepository/Miro/utils/liveVideo/MainForm.cpp, /soft/MiroRepository/Miro/utils/liveVideo/MainForm.h, /soft/MiroRepository/Miro/utils/liveVideo/Makefile:
+	Added a utility to view the video data provided by VideoServer in "real time" and grab selected images to disk
+
+	* /soft/MiroRepository/Miro/src/video/VideoConsumer.cpp, /soft/MiroRepository/Miro/src/video/VideoImpl.cpp, /soft/MiroRepository/Miro/src/video/VideoParameters.cpp, /soft/MiroRepository/Miro/src/video/VideoParameters.h:
+	Added support for cameras mounted upside-down
+	Added meaning to the "palette" field in ImageHandle
+
+2002-09-24  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/sparrow/SparrowParameters.cpp:
+	fixing default value for deg2servoTicks
+
+2002-09-24  trifftnix  <trifftnix@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/etc/trifftnix.xml: fixing servo deg2ticks
+
+2002-09-24  passtnix  <passtnix@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/etc/passtnix.xml: fixing servo pulse
+
+2002-08-29  uid1805  <uid1805@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/utils/logPlayer/LogPlayer.cpp:
+	changed the maximum deceleration to twice the old value. also changed the layout management
+
+2002-08-22  trifftnix  <trifftnix@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/miro/DynamicWindow.cpp, /soft/MiroRepository/Miro/src/miro/WindowArbiter.cpp:
+	Behaviour tuning!
+
+	* /soft/MiroRepository/Miro/src/miro/DynamicWindow.cpp, /soft/MiroRepository/Miro/src/miro/WindowArbiter.cpp, /soft/MiroRepository/Miro/src/miro/WindowArbiterViewer.cpp:
+	Debugging and parameter tuning...
+	First working version!!
+
+2002-08-21  trifftnix  <trifftnix@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/etc/trifftnix.xml, /soft/MiroRepository/Miro/src/miro/WindowArbiter.cpp:
+	Debugging.
+
+	* /soft/MiroRepository/Miro/src/miro/WindowArbiter.cpp, /soft/MiroRepository/Miro/src/miro/WindowArbiter.h:
+	Fixed arbitration bug.
+
+2002-08-19  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/miro/BehaviourEngineImpl.cpp, /soft/MiroRepository/Miro/src/miro/BehaviourEngineImpl.h:
+	added the generic implementation for the BehaviourEngine interface
+
+	* /soft/MiroRepository/Miro/examples/behaviours/.cvsignore, /soft/MiroRepository/Miro/examples/behaviours/BehaviourControler.cpp, /soft/MiroRepository/Miro/idl/BehaviourEngine.idl, /soft/MiroRepository/Miro/src/miro/.cvsignore, /soft/MiroRepository/Miro/tests/behaviours/.cvsignore, /soft/MiroRepository/Miro/tests/behaviours/BehaviourEngineTest.cpp, /soft/MiroRepository/Miro/tests/behaviours/EmptyActionPatternName.xml, /soft/MiroRepository/Miro/tests/behaviours/EmptyArbiterName.xml, /soft/MiroRepository/Miro/tests/behaviours/EmptyBehaviourName.xml, /soft/MiroRepository/Miro/tests/behaviours/EmptyParameterName.xml, /soft/MiroRepository/Miro/tests/behaviours/EmptyParameterValue.xml, /soft/MiroRepository/Miro/tests/behaviours/EmptyTransitionMessage.xml, /soft/MiroRepository/Miro/tests/behaviours/EmptyTransitionTarget.xml, /soft/MiroRepository/Miro/tests/behaviours/NoStartPattern.xml, /soft/MiroRepository/Miro/tests/behaviours/NoXml.xml, /soft/MiroRepository/Miro/tests/behaviours/PolicyParsingTest.cpp, /soft/MiroRepository/Miro/tests/behaviours/SkippedActionPatternName.xml, /soft/MiroRepository/Miro/tests/behaviours/SkippedArbiter.xml, /soft/MiroRepository/Miro/tests/behaviours/SkippedArbiterName.xml, /soft/MiroRepository/Miro/tests/behaviours/SkippedBehaviourName.xml, /soft/MiroRepository/Miro/tests/behaviours/SkippedParameterName.xml, /soft/MiroRepository/Miro/tests/behaviours/SkippedParameterValue.xml, /soft/MiroRepository/Miro/tests/behaviours/SkippedTransitionMessage.xml, /soft/MiroRepository/Miro/tests/behaviours/SkippedTransitionTarget.xml, /soft/MiroRepository/Miro/tests/behaviours/Test.xml, /soft/MiroRepository/Miro/tests/behaviours/TwoArbiters.xml, /soft/MiroRepository/Miro/tests/behaviours/UnknownArbiter.xml, /soft/MiroRepository/Miro/tests/behaviours/UnknownBehaviour.xml, /soft/MiroRepository/Miro/tests/behaviours/UnknownTag.xml, /soft/MiroRepository/Miro/tests/behaviours/UnknownTarget.xml:
+	added the BehaviourEngine interface for remote management of Policies
+	added the BehaviourControle as an example client
+	added the PolicyParsingTest for policy parsing testing
+	added various .xml test policies, to provoke parsing errors
+	added the BehaviourEngineTest as a dummy behaviour engine server
+
+	* /soft/MiroRepository/Miro/examples/b21Behaviours/Makefile, /soft/MiroRepository/Miro/examples/behaviours/Makefile, /soft/MiroRepository/Miro/src/abus/Makefile, /soft/MiroRepository/Miro/src/base/Makefile, /soft/MiroRepository/Miro/src/buttons/Makefile, /soft/MiroRepository/Miro/src/can/Makefile, /soft/MiroRepository/Miro/src/image/Makefile, /soft/MiroRepository/Miro/src/laser/Makefile, /soft/MiroRepository/Miro/src/mcp/Makefile, /soft/MiroRepository/Miro/src/miro/ActionPattern.cpp, /soft/MiroRepository/Miro/src/miro/ActionPattern.h, /soft/MiroRepository/Miro/src/miro/ArbiterRepository.cpp, /soft/MiroRepository/Miro/src/miro/ArbiterRepository.h, /soft/MiroRepository/Miro/src/miro/BehaviourRepository.cpp, /soft/MiroRepository/Miro/src/miro/BehaviourRepository.h, /soft/MiroRepository/Miro/src/miro/KeyValueList.cpp, /soft/MiroRepository/Miro/src/miro/KeyValueList.h, /soft/MiroRepository/Miro/src/miro/Makefile.Miro, /soft/MiroRepository/Miro/src/miro/Makefile.MiroSvc, /soft/MiroRepository/Miro/src/miro/Policy.cpp, /soft/MiroRepository/Miro/src/miro/Policy.h, /soft/MiroRepository/Miro/src/msp/Makefile, /soft/MiroRepository/Miro/src/panTilt/Makefile, /soft/MiroRepository/Miro/src/pioneer/Makefile, /soft/MiroRepository/Miro/src/psos/Makefile, /soft/MiroRepository/Miro/src/sparrow/Makefile, /soft/MiroRepository/Miro/src/sparrowBase/Makefile, /soft/MiroRepository/Miro/src/speech/Makefile, /soft/MiroRepository/Miro/src/video/Makefile, /soft/MiroRepository/Miro/tests/behaviours/Makefile, /soft/MiroRepository/Miro/tests/behaviours/PriorityArbitersTest.cpp, /soft/MiroRepository/Miro/tests/motion/Makefile, /soft/MiroRepository/Miro/utils/logPlayer/Makefile, /soft/MiroRepository/Miro/utils/notify/Makefile, /soft/MiroRepository/Miro/utils/policyEditor/Makefile, /soft/MiroRepository/Miro/utils/policyEditor/PolicyEditor.cpp, /soft/MiroRepository/Miro/utils/policyEditor/PolicyEditor.h, /soft/MiroRepository/Miro/utils/qtJoystick/Makefile, /soft/MiroRepository/Miro/utils/qtTouchPad/Makefile, /soft/MiroRepository/Miro/utils/rangeSensor/Makefile:
+	revamp of the behaviour configuration parsing
+	additional interfaces and test cases to follow
+
+2002-08-09  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/examples/b21Behaviours/Makefile, /soft/MiroRepository/Miro/examples/behaviours/Makefile, /soft/MiroRepository/Miro/src/abus/Makefile, /soft/MiroRepository/Miro/src/base/Makefile, /soft/MiroRepository/Miro/src/buttons/Makefile, /soft/MiroRepository/Miro/src/can/Makefile, /soft/MiroRepository/Miro/src/image/Makefile, /soft/MiroRepository/Miro/src/laser/Makefile, /soft/MiroRepository/Miro/src/mcp/Makefile, /soft/MiroRepository/Miro/src/miro/Makefile.Miro, /soft/MiroRepository/Miro/src/miro/Makefile.MiroSvc, /soft/MiroRepository/Miro/src/msp/Makefile, /soft/MiroRepository/Miro/src/panTilt/Makefile, /soft/MiroRepository/Miro/src/pioneer/Makefile, /soft/MiroRepository/Miro/src/psos/Makefile, /soft/MiroRepository/Miro/src/sparrow/Makefile, /soft/MiroRepository/Miro/src/sparrowBase/Makefile, /soft/MiroRepository/Miro/src/speech/Makefile, /soft/MiroRepository/Miro/src/video/Makefile, /soft/MiroRepository/Miro/tests/behaviours/Makefile, /soft/MiroRepository/Miro/tests/motion/Makefile, /soft/MiroRepository/Miro/utils/Makefile, /soft/MiroRepository/Miro/utils/logPlayer/Makefile, /soft/MiroRepository/Miro/utils/notify/Makefile, /soft/MiroRepository/Miro/utils/qtJoystick/Makefile, /soft/MiroRepository/Miro/utils/qtTouchPad/Makefile, /soft/MiroRepository/Miro/utils/rangeSensor/Makefile:
+	*** empty log message ***
+
+2002-08-09  siehtnix  <siehtnix@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/idl/Joystick.idl:
+	Joystick IDL Velocity + buttons
+
+	* /soft/MiroRepository/Miro/utils/Joystick/Joystick.cpp, /soft/MiroRepository/Miro/utils/Joystick/Joystick.cpp~, /soft/MiroRepository/Miro/utils/Joystick/JoystickService.cpp, /soft/MiroRepository/Miro/utils/Joystick/JoystickService.h, /soft/MiroRepository/Miro/utils/Joystick/Makefile:
+	JoystickService added
+
+2002-08-08  phbaer  <phbaer@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/miro/NotifyMulticastReceiver.cpp:
+	hopefully fiexed serious bug when copying data from one location to another
+
+2002-08-05  passtnix  <passtnix@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/sparrow/SparrowConsumer.cpp:
+	*** empty log message ***
+
+2002-08-05  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/examples/video/LogVideo.cpp:
+	temporaryly default for streaming to disk
+
+2002-08-01  passtnix  <passtnix@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/etc/passtnix.xml, /soft/MiroRepository/Miro/src/sparrow/SparrowParameters.cpp:
+	fixing arameter parsing for deg2servoTicks
+	added servo deg/ticks correction parameter to config file
+
+2002-07-25  trifftnix  <trifftnix@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/utils/qtJoystick/Makefile, /soft/MiroRepository/Miro/utils/qtTouchPad/Makefile, /soft/MiroRepository/Miro/utils/rangeSensor/Makefile, /soft/MiroRepository/Miro/examples/behaviours/Makefile, /soft/MiroRepository/Miro/src/can/Makefile, /soft/MiroRepository/Miro/src/miro/DynamicWindow.cpp, /soft/MiroRepository/Miro/src/miro/Makefile.Miro, /soft/MiroRepository/Miro/src/miro/Makefile.MiroSvc, /soft/MiroRepository/Miro/src/miro/WindowArbiter.cpp, /soft/MiroRepository/Miro/src/pioneer/Makefile, /soft/MiroRepository/Miro/src/psos/Makefile, /soft/MiroRepository/Miro/src/sparrow/Makefile, /soft/MiroRepository/Miro/src/sparrowBase/Makefile, /soft/MiroRepository/Miro/src/video/Makefile, /soft/MiroRepository/Miro/tests/behaviours/Makefile, /soft/MiroRepository/Miro/tests/motion/Makefile, /soft/MiroRepository/Miro/utils/logPlayer/Makefile, /soft/MiroRepository/Miro/utils/notify/Makefile:
+	Some changes!
+
+2002-07-25  rr4  <rr4@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/utils/Joystick/Joystick.cpp, /soft/MiroRepository/Miro/utils/Joystick/Joystick.cpp~:
+	Longint-overflow fixed
+
+2002-07-24  rr4  <rr4@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/utils/Joystick/Joystick.cpp, /soft/MiroRepository/Miro/utils/Joystick/Joystick.cpp~, /soft/MiroRepository/Miro/utils/Joystick/Joystick.h, /soft/MiroRepository/Miro/utils/Joystick/Makefile:
+	Programm zum Fahren mit dem Joystick
+
+2002-07-23  rr4  <rr4@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/examples/behaviours/Makefile, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorBehaviour.cpp:
+	fixed erronous commit
+
+	* /soft/MiroRepository/Miro/src/miro/Client.cpp:
+	temporary fix for DBG -> MIRO_LOG transition
+
+2002-07-19  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/examples/sonar/SonarPoll1.cpp:
+	testing ACE_Log_Msg
+	changes to disapear - just for synch
+
+	* /soft/MiroRepository/Miro/src/miro/Client.cpp, /soft/MiroRepository/Miro/src/miro/Debug.h:
+	changing to ACE_Log_Msg framework
+
+2002-07-18  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/base/BaseParameters.cpp, /soft/MiroRepository/Miro/src/miro/MotionParameters.cpp, /soft/MiroRepository/Miro/src/miro/MotionParameters.h, /soft/MiroRepository/Miro/src/miro/Parameters.h, /soft/MiroRepository/Miro/src/pioneer/PioneerParameters.cpp, /soft/MiroRepository/Miro/src/sparrow/SparrowParameters.cpp:
+	added parameter parsing for Motion/DifferentialMotion Parameters
+
+2002-07-16  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/examples/behaviours/Behaviours.cpp, /soft/MiroRepository/Miro/examples/behaviours/Makefile, /soft/MiroRepository/Miro/examples/behaviours/OnButton.cpp, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorBehaviour.cpp, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorBehaviour.h, /soft/MiroRepository/Miro/examples/behaviours/WallFollow.cpp, /soft/MiroRepository/Miro/examples/behaviours/WallFollow.h, /soft/MiroRepository/Miro/examples/behaviours/WallFollowParameters.cpp:
+	debugging the behaviour examples
+
+	* /soft/MiroRepository/Miro/src/miro/Arbiter.cpp, /soft/MiroRepository/Miro/src/miro/Arbiter.h, /soft/MiroRepository/Miro/src/miro/ArbiterMessage.cpp, /soft/MiroRepository/Miro/src/miro/ArbiterMessage.h, /soft/MiroRepository/Miro/src/miro/ArbiterParameters.h, /soft/MiroRepository/Miro/src/miro/ArbiterRepository.cpp, /soft/MiroRepository/Miro/src/miro/ArbiterRepository.h, /soft/MiroRepository/Miro/src/miro/Behaviour.cpp, /soft/MiroRepository/Miro/src/miro/Behaviour.h, /soft/MiroRepository/Miro/src/miro/BehaviourParameters.cpp, /soft/MiroRepository/Miro/src/miro/BehaviourParameters.h, /soft/MiroRepository/Miro/src/miro/BehaviourRepository.cpp, /soft/MiroRepository/Miro/src/miro/BehaviourRepository.h, /soft/MiroRepository/Miro/src/miro/Makefile.Miro, /soft/MiroRepository/Miro/src/miro/Makefile.MiroSvc, /soft/MiroRepository/Miro/src/miro/MotionArbiter.h, /soft/MiroRepository/Miro/src/miro/MotionArbiterMessage.h, /soft/MiroRepository/Miro/src/miro/Policy.cpp, /soft/MiroRepository/Miro/src/miro/Policy.h, /soft/MiroRepository/Miro/src/miro/Singleton.h:
+	updates for inline documentation
+
+	* /soft/MiroRepository/Miro/examples/b21Behaviours/Makefile, /soft/MiroRepository/Miro/examples/behaviours/Makefile:
+	new make depend run
+
+	* /soft/MiroRepository/Miro/tests/behaviours/.cvsignore: fixing typo
+
+	* /soft/MiroRepository/Miro/tests/behaviours/.cvsignore, /soft/MiroRepository/Miro/tests/rangeSensor/.cvsignore:
+	added missing cvsignore files
+
+	* /soft/MiroRepository/Miro/tests/Makefile, /soft/MiroRepository/Miro/tests/behaviours/DummyArbiter.cpp, /soft/MiroRepository/Miro/tests/behaviours/DummyArbiter.h, /soft/MiroRepository/Miro/tests/behaviours/DummyArbiterMessage.cpp, /soft/MiroRepository/Miro/tests/behaviours/DummyArbiterMessage.h, /soft/MiroRepository/Miro/tests/behaviours/DummyBehaviour.cpp, /soft/MiroRepository/Miro/tests/behaviours/DummyBehaviour.h, /soft/MiroRepository/Miro/tests/behaviours/DummyBehaviourB.cpp, /soft/MiroRepository/Miro/tests/behaviours/DummyBehaviourB.h, /soft/MiroRepository/Miro/tests/behaviours/Makefile, /soft/MiroRepository/Miro/tests/behaviours/PriorityArbitersTest.cpp:
+	started a test suite for the behaviour stuff
+	- added a PriorityArbiterTest with two multiply instancable dummy behaviours
+	  and a multiply instanceable dummy arbiter
+
+	* /soft/MiroRepository/Miro/src/miro/PriorityArbiter.cpp, /soft/MiroRepository/Miro/src/miro/PriorityArbiter.h, /soft/MiroRepository/Miro/src/miro/WindowArbiter.cpp, /soft/MiroRepository/Miro/src/miro/WindowArbiter.h, /soft/MiroRepository/Miro/src/miro/WindowArbiterMessage.cpp, /soft/MiroRepository/Miro/src/miro/WindowArbiterMessage.h, /soft/MiroRepository/Miro/src/miro/WindowArbiterParameters.cpp, /soft/MiroRepository/Miro/src/miro/WindowArbiterParameters.h, /soft/MiroRepository/Miro/src/miro/ActionPattern.cpp, /soft/MiroRepository/Miro/src/miro/ActionPattern.h, /soft/MiroRepository/Miro/src/miro/Arbiter.cpp, /soft/MiroRepository/Miro/src/miro/Arbiter.h, /soft/MiroRepository/Miro/src/miro/ArbiterMessage.cpp, /soft/MiroRepository/Miro/src/miro/ArbiterMessage.h, /soft/MiroRepository/Miro/src/miro/ArbiterParameters.cpp, /soft/MiroRepository/Miro/src/miro/ArbiterParameters.h, /soft/MiroRepository/Miro/src/miro/Makefile.Miro, /soft/MiroRepository/Miro/src/miro/MotionArbiter.cpp, /soft/MiroRepository/Miro/src/miro/MotionArbiter.h, /soft/MiroRepository/Miro/src/miro/MotionArbiterMessage.cpp, /soft/MiroRepository/Miro/src/miro/MotionArbiterMessage.h, /soft/MiroRepository/Miro/src/miro/MotionArbiterParameters.cpp, /soft/MiroRepository/Miro/src/miro/MotionArbiterParameters.h, /soft/MiroRepository/Miro/src/miro/MotionArbiterPower.cpp, /soft/MiroRepository/Miro/src/miro/MotionArbiterPower.h, /soft/MiroRepository/Miro/src/miro/Policy.cpp, /soft/MiroRepository/Miro/src/miro/Policy.h, /soft/MiroRepository/Miro/src/miro/PowerArbiter.cpp, /soft/MiroRepository/Miro/src/miro/PowerArbiter.h, /soft/MiroRepository/Miro/src/miro/PowerArbiterMessage.cpp, /soft/MiroRepository/Miro/src/miro/PowerArbiterMessage.h:
+	big revamp of the behaviour engine
+	- moving the action pattern switching code from MotionArbiter to Arbiter
+	- seperating the priority arbitration code from MotionArbiter into
+	  the new PriorityArbiter super class
+	- adding a PowerArbiter that as another descendant of the PriorityArbiter
+	  for use with the Sparrow99 goalie
+	- removing the never finished MotionArbiterPower
+	- fixing the WindowArbiter code to work with the new arbiter infrastructur
+	- made the arbiter message subclassable and move the VelocityIDL back into
+	  the MotionArbiterMessage
+	- Added PowerArbiterMessage as another ArbiterMessage subclass that holds the
+	  left and right wheel power for the PowerArbiter
+
+2002-07-15  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/buttons/ButtonsEventHandler.cpp:
+	fixing old event type name to "Button", as promised in the documentation
+
+	* /soft/MiroRepository/Miro/utils/rangeSensor/QtRangeSensor.cpp:
+	changing getWaitGroup into getGroup call to avoid timeout exceptions -
+	especially on tactile sensors...
+
+	* /soft/MiroRepository/Miro/tests/odometry/OdometryTest.cpp:
+	on getPosition actually getWaitPosition was called - fixed
+
+2002-07-11  haeltnix  <haeltnix@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/examples/behaviours/RangeSensorBehaviour.cpp, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorBehaviour.h, /soft/MiroRepository/Miro/examples/behaviours/SparrowWallFollow.xml, /soft/MiroRepository/Miro/examples/behaviours/WallFollow.cpp, /soft/MiroRepository/Miro/idl/MotionStatus.idl:
+	bug hunt in WallFollow
+	fixed xemacs file type header to c++ for MotionStatus.idl
+
+	* /soft/MiroRepository/Miro/examples/behaviours/RangeSensorBehaviour.cpp, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorBehaviour.h, /soft/MiroRepository/Miro/examples/behaviours/SparrowWallFollow.xml, /soft/MiroRepository/Miro/examples/behaviours/WallFollow.cpp:
+	bugfixing
+
+2002-07-08  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/miro/.cvsignore:
+	changed inline idl extension from .i.h .i
+	fixing .cvsignore
+
+	* /soft/MiroRepository/Miro/utils/notify/Makefile, /soft/MiroRepository/Miro/utils/policyEditor/Makefile, /soft/MiroRepository/Miro/utils/qtJoystick/Makefile, /soft/MiroRepository/Miro/utils/qtTouchPad/Makefile, /soft/MiroRepository/Miro/utils/rangeSensor/Makefile, /soft/MiroRepository/Miro/examples/b21Behaviours/Makefile, /soft/MiroRepository/Miro/examples/behaviours/Makefile, /soft/MiroRepository/Miro/idl/DifferentialMotion.idl, /soft/MiroRepository/Miro/idl/Motion.idl, /soft/MiroRepository/Miro/idl/RangeSensor.idl, /soft/MiroRepository/Miro/include/makeinclude/macros.miro.GNU, /soft/MiroRepository/Miro/src/abus/Makefile, /soft/MiroRepository/Miro/src/b21Base/Makefile, /soft/MiroRepository/Miro/src/base/BaseImpl.cpp, /soft/MiroRepository/Miro/src/base/Makefile, /soft/MiroRepository/Miro/src/buttons/Makefile, /soft/MiroRepository/Miro/src/can/Makefile, /soft/MiroRepository/Miro/src/image/Makefile, /soft/MiroRepository/Miro/src/laser/Makefile, /soft/MiroRepository/Miro/src/laser/SickLaserImpl.cpp, /soft/MiroRepository/Miro/src/mcp/Makefile, /soft/MiroRepository/Miro/src/miro/Angle.h, /soft/MiroRepository/Miro/src/miro/Client.h, /soft/MiroRepository/Miro/src/miro/DifferentialMotionImpl.cpp, /soft/MiroRepository/Miro/src/miro/DifferentialMotionImpl.h, /soft/MiroRepository/Miro/src/miro/Exception.cpp, /soft/MiroRepository/Miro/src/miro/Exception.h, /soft/MiroRepository/Miro/src/miro/IO.h, /soft/MiroRepository/Miro/src/miro/Makefile.Miro, /soft/MiroRepository/Miro/src/miro/Makefile.MiroSvc, /soft/MiroRepository/Miro/src/miro/MotionImpl.cpp, /soft/MiroRepository/Miro/src/miro/MotionImpl.h, /soft/MiroRepository/Miro/src/miro/OdometryImpl.cpp, /soft/MiroRepository/Miro/src/miro/OdometryImpl.h, /soft/MiroRepository/Miro/src/miro/OdometryTracking.cpp, /soft/MiroRepository/Miro/src/miro/OdometryTracking.h, /soft/MiroRepository/Miro/src/miro/RangeSensorImpl.cpp, /soft/MiroRepository/Miro/src/miro/RangeSensorImpl.h, /soft/MiroRepository/Miro/src/miro/Server.cpp, /soft/MiroRepository/Miro/src/miro/Server.h, /soft/MiroRepository/Miro/src/miro/StructuredPushSupplier.cpp, /soft/MiroRepository/Miro/src/miro/StructuredPushSupplier.h, /soft/MiroRepository/Miro/src/msp/Makefile, /soft/MiroRepository/Miro/src/panTilt/Makefile, /soft/MiroRepository/Miro/src/pioneer/Makefile, /soft/MiroRepository/Miro/src/pioneer/PioneerMotionImpl.cpp, /soft/MiroRepository/Miro/src/pioneerBase/Makefile, /soft/MiroRepository/Miro/src/psos/Makefile, /soft/MiroRepository/Miro/src/sparrow/Makefile, /soft/MiroRepository/Miro/src/sparrow/SparrowMotionImpl.cpp, /soft/MiroRepository/Miro/src/sparrow/SparrowMotionImpl.h, /soft/MiroRepository/Miro/src/sparrowBase/Makefile, /soft/MiroRepository/Miro/src/speech/Makefile, /soft/MiroRepository/Miro/src/video/Makefile, /soft/MiroRepository/Miro/templates/Makefile.bin, /soft/MiroRepository/Miro/tests/Makefile, /soft/MiroRepository/Miro/tests/motion/.cvsignore, /soft/MiroRepository/Miro/tests/motion/DifferentialMotionInterface.cpp, /soft/MiroRepository/Miro/tests/motion/DifferentialMotionInterface.h, /soft/MiroRepository/Miro/tests/motion/DifferentialMotionTest.cpp, /soft/MiroRepository/Miro/tests/motion/Makefile, /soft/MiroRepository/Miro/tests/motion/MotionInterface.cpp, /soft/MiroRepository/Miro/tests/motion/MotionInterface.h, /soft/MiroRepository/Miro/tests/motion/MotionTest.cpp, /soft/MiroRepository/Miro/tests/motion/SynchroMotionInterface.cpp, /soft/MiroRepository/Miro/tests/motion/SynchroMotionInterface.h, /soft/MiroRepository/Miro/tests/motion/SynchroMotionTest.cpp, /soft/MiroRepository/Miro/tests/odometry/.cvsignore, /soft/MiroRepository/Miro/tests/odometry/Makefile, /soft/MiroRepository/Miro/tests/odometry/OdometryTest.cpp, /soft/MiroRepository/Miro/tests/rangeSensor/Makefile, /soft/MiroRepository/Miro/tests/rangeSensor/RangeSensorTest.cpp, /soft/MiroRepository/Miro/utils/logPlayer/Makefile:
+	added the tests for the Odometry, Motion, SynchroMotion,
+	DifferentialMotion and RangeSensor interfaces
+	fixed make depend before first build bug
+	fixed static library dependency tracking
+	added inline documentation for most of the sources in src/miro
+
+2002-07-02  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/doc/tex/Makefile, /soft/MiroRepository/Miro/doc/tex/miro_manual.tex, /soft/MiroRepository/Miro/doc/tex/miro_reference.tex, /soft/MiroRepository/Miro/doc/tex/tex_definitions.tex:
+	okay, only the pdf-file should have colored links, but not the postscript-file
+
+	* /soft/MiroRepository/Miro/doc/tex/Makefile, /soft/MiroRepository/Miro/doc/tex/tex_definitions.tex:
+	added hyperref functionality to the pdf-file
+
+2002-07-02  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/examples/behaviours/BehaviourParameters.xml, /soft/MiroRepository/Miro/examples/behaviours/Behaviours.cpp, /soft/MiroRepository/Miro/examples/behaviours/Makefile, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorAvoid.h, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorAvoidParameters.h, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorBehaviour.cpp, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorBehaviour.h, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorBehaviourParameters.cpp, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorBehaviourParameters.h, /soft/MiroRepository/Miro/examples/behaviours/SparrowWallFollow.xml, /soft/MiroRepository/Miro/examples/behaviours/WallFollow.cpp, /soft/MiroRepository/Miro/examples/behaviours/WallFollow.h, /soft/MiroRepository/Miro/examples/behaviours/WallFollowParameters.cpp, /soft/MiroRepository/Miro/examples/behaviours/WallFollowParameters.h:
+	moved the wall follow behaviour into the official repository
+
+2002-07-01  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/doc/html/Makefile, /soft/MiroRepository/Miro/performance-tests/can/Makefile, /soft/MiroRepository/Miro/performance-tests/image/Makefile, /soft/MiroRepository/Miro/performance-tests/mcp/Makefile, /soft/MiroRepository/Miro/performance-tests/response/Makefile, /soft/MiroRepository/Miro/performance-tests/video/Makefile, /soft/MiroRepository/Miro/tests/dtlk/Makefile, /soft/MiroRepository/Miro/tests/image/Makefile, /soft/MiroRepository/Miro/tests/notify/Makefile, /soft/MiroRepository/Miro/tests/xml/Makefile, /soft/MiroRepository/Miro/utils/makeParams/Makefile, /soft/MiroRepository/Miro/utils/notify/Makefile, /soft/MiroRepository/Miro/utils/nsIOR/Makefile, /soft/MiroRepository/Miro/utils/policyEditor/Makefile, /soft/MiroRepository/Miro/utils/qtJoystick/Makefile, /soft/MiroRepository/Miro/utils/qtTouchPad/Makefile, /soft/MiroRepository/Miro/utils/sparrowBoard/Makefile:
+	removing obsolete variable DEPS from Makefiles
+
+	* /soft/MiroRepository/Miro/bin/st_svc.conf, /soft/MiroRepository/Miro/src/sparrow/SparrowButtonsImpl.cpp:
+	fixing single threaded config for svc.conf
+	initializing button state for sparrow buttons interface
+
+2002-06-28  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/doc/tex/.cvsignore, /soft/MiroRepository/Miro/doc/tex/Makefile, /soft/MiroRepository/Miro/doc/tex/definitions.tex, /soft/MiroRepository/Miro/doc/tex/miro_manual.tex, /soft/MiroRepository/Miro/doc/tex/miro_reference.tex, /soft/MiroRepository/Miro/doc/tex/tex_definitions.tex, /soft/MiroRepository/Miro/doc/tex/writing_a_server.tex:
+	a pdf-formated manual is now also build. Therefor changed some include directives within the tex-files
+
+	* /soft/MiroRepository/Miro/include/makeinclude/rules.miro.GNU:
+	added some rules for image-conversion to png-format (for pdf-manual creation)
+
+	* /soft/MiroRepository/Miro/doc/fig/.cvsignore, /soft/MiroRepository/Miro/doc/fig/pincolla.jpg, /soft/MiroRepository/Miro/doc/fig/signature.gif:
+	removed some converted images, they are no longer used (png-images are created automatically) - adapt ignore-file
+
+2002-06-28  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/doc/tex/miro_reference.tex, /soft/MiroRepository/Miro/doc/tex/styleguide.tex:
+	changes to miro_reference - but it is obsolete anyways
+
+	* /soft/MiroRepository/Miro/bin/speech.conf: updated settings
+
+	* /soft/MiroRepository/Miro/src/sparrow/SparrowButtonsImpl.cpp, /soft/MiroRepository/Miro/src/sparrow/SparrowButtonsImpl.h:
+	fixing the buttons polling interface
+
+	* /soft/MiroRepository/Miro/utils/qtJoystick/.cvsignore, /soft/MiroRepository/Miro/utils/qtTouchPad/.cvsignore:
+	adding .moc.cpp files to .cvsignore
+
+2002-06-27  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/doc/tex/doxygen.conf.tmpl:
+	removed deprecated files from the documentation
+
+2002-06-27  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/INSTALL, /soft/MiroRepository/Miro/examples/b21Behaviours/Makefile, /soft/MiroRepository/Miro/examples/behaviours/Makefile, /soft/MiroRepository/Miro/src/abus/Makefile, /soft/MiroRepository/Miro/src/base/Makefile, /soft/MiroRepository/Miro/src/buttons/Makefile, /soft/MiroRepository/Miro/src/can/Makefile, /soft/MiroRepository/Miro/src/image/Makefile, /soft/MiroRepository/Miro/src/laser/Makefile, /soft/MiroRepository/Miro/src/mcp/Makefile, /soft/MiroRepository/Miro/src/miro/Makefile.Miro, /soft/MiroRepository/Miro/src/miro/Makefile.MiroSvc, /soft/MiroRepository/Miro/src/msp/Makefile, /soft/MiroRepository/Miro/src/panTilt/Makefile, /soft/MiroRepository/Miro/src/pioneer/Makefile, /soft/MiroRepository/Miro/src/psos/Makefile, /soft/MiroRepository/Miro/src/sparrow/Makefile, /soft/MiroRepository/Miro/src/sparrowBase/Makefile, /soft/MiroRepository/Miro/src/speech/Makefile, /soft/MiroRepository/Miro/src/video/Makefile, /soft/MiroRepository/Miro/utils/logPlayer/Makefile, /soft/MiroRepository/Miro/utils/notify/Makefile, /soft/MiroRepository/Miro/utils/qtJoystick/Makefile, /soft/MiroRepository/Miro/utils/qtTouchPad/Makefile, /soft/MiroRepository/Miro/utils/rangeSensor/Makefile:
+	an update on the dependecies
+	update on INSTALL instructions
+
+2002-06-27  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/doc/html/doxygen.conf.tmpl:
+	excluded deprecated files form the doc
+
+2002-06-27  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/miro/DynamicWindow.cpp, /soft/MiroRepository/Miro/src/miro/NotifyMulticastAdapter.cpp, /soft/MiroRepository/Miro/src/miro/NotifyMulticastParameters.h, /soft/MiroRepository/Miro/src/miro/NotifyMulticastReceiver.cpp, /soft/MiroRepository/Miro/src/miro/NotifyMulticastSender.cpp, /soft/MiroRepository/Miro/utils/policyEditor/ArbiterWidget.cpp, /soft/MiroRepository/Miro/utils/policyEditor/ParamDialog.cpp, /soft/MiroRepository/Miro/utils/policyEditor/PatternWidget.cpp, /soft/MiroRepository/Miro/utils/policyEditor/PatternWidget.h, /soft/MiroRepository/Miro/utils/policyEditor/PolicyConfig.cpp, /soft/MiroRepository/Miro/utils/policyEditor/PolicyConfigurationDialog.h, /soft/MiroRepository/Miro/utils/policyEditor/PolicyDocument.cpp, /soft/MiroRepository/Miro/utils/policyEditor/PolicyDocument.h, /soft/MiroRepository/Miro/utils/policyEditor/PolicyEditor.cpp, /soft/MiroRepository/Miro/utils/policyEditor/PolicyView.cpp, /soft/MiroRepository/Miro/utils/policyEditor/PolicyView.h, /soft/MiroRepository/Miro/utils/policyEditor/Transition.h, /soft/MiroRepository/Miro/utils/qtJoystick/Makefile, /soft/MiroRepository/Miro/utils/qtTouchPad/Makefile, /soft/MiroRepository/Miro/utils/rangeSensor/Makefile:
+	cleaning up for gcc 3.1 enforced c++ standart compability
+
+	* /soft/MiroRepository/Miro/bin/.cvsignore: fixing .cvsignore part 1
+
+2002-06-27  uid1805  <uid1805@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/doc/html/.cvsignore:
+	added cpp-dir to the ignore-files
+
+2002-06-27  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/tests/notify/NotifyTest.cpp:
+	fixed id -> number change for Miro::ButtonEventIDL
+
+2002-06-26  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/src/panTilt/Makefile, /soft/MiroRepository/Miro/src/pioneer/Makefile, /soft/MiroRepository/Miro/src/pioneerBase/Makefile, /soft/MiroRepository/Miro/src/psos/Makefile, /soft/MiroRepository/Miro/src/sparrow/Makefile, /soft/MiroRepository/Miro/src/sparrowBase/Makefile, /soft/MiroRepository/Miro/src/speech/Makefile, /soft/MiroRepository/Miro/src/video/Makefile, /soft/MiroRepository/Miro/templates/Makefile.bin, /soft/MiroRepository/Miro/tests/b21/Makefile, /soft/MiroRepository/Miro/tests/dpPanTilt/Makefile, /soft/MiroRepository/Miro/tests/dtlk/Makefile, /soft/MiroRepository/Miro/tests/image/Makefile, /soft/MiroRepository/Miro/tests/notify/Makefile, /soft/MiroRepository/Miro/tests/panTilt/Makefile, /soft/MiroRepository/Miro/tests/pioneer/Makefile, /soft/MiroRepository/Miro/tests/sparrow/Makefile, /soft/MiroRepository/Miro/tests/video/Makefile, /soft/MiroRepository/Miro/tests/xml/Makefile, /soft/MiroRepository/Miro/utils/logPlayer/Makefile, /soft/MiroRepository/Miro/utils/makeParams/Makefile, /soft/MiroRepository/Miro/utils/notify/Makefile, /soft/MiroRepository/Miro/utils/nsIOR/Makefile, /soft/MiroRepository/Miro/utils/policyEditor/Makefile, /soft/MiroRepository/Miro/utils/qtJoystick/Makefile, /soft/MiroRepository/Miro/utils/qtTouchPad/Makefile, /soft/MiroRepository/Miro/utils/rangeSensor/Makefile, /soft/MiroRepository/Miro/utils/sparrowBoard/Makefile, /soft/MiroRepository/Miro/ChangeLog, /soft/MiroRepository/Miro/examples/b21Behaviours/Makefile, /soft/MiroRepository/Miro/examples/b21Motion/Makefile, /soft/MiroRepository/Miro/examples/behaviours/Makefile, /soft/MiroRepository/Miro/examples/buttons/Makefile, /soft/MiroRepository/Miro/examples/infrared/Makefile, /soft/MiroRepository/Miro/examples/motion/Makefile, /soft/MiroRepository/Miro/examples/notify/Makefile, /soft/MiroRepository/Miro/examples/odometry/Makefile, /soft/MiroRepository/Miro/examples/rangeSensor/Makefile, /soft/MiroRepository/Miro/examples/robotikI/Makefile, /soft/MiroRepository/Miro/examples/sonar/Makefile, /soft/MiroRepository/Miro/examples/stall/Makefile, /soft/MiroRepository/Miro/examples/video/Makefile, /soft/MiroRepository/Miro/performance-tests/can/Makefile, /soft/MiroRepository/Miro/performance-tests/image/Makefile, /soft/MiroRepository/Miro/performance-tests/mcp/Makefile, /soft/MiroRepository/Miro/performance-tests/response/Makefile, /soft/MiroRepository/Miro/performance-tests/video/Makefile, /soft/MiroRepository/Miro/src/abus/Makefile, /soft/MiroRepository/Miro/src/b21Base/Makefile, /soft/MiroRepository/Miro/src/base/Makefile, /soft/MiroRepository/Miro/src/buttons/Makefile, /soft/MiroRepository/Miro/src/can/Makefile, /soft/MiroRepository/Miro/src/image/Makefile, /soft/MiroRepository/Miro/src/laser/Makefile, /soft/MiroRepository/Miro/src/mcp/Makefile, /soft/MiroRepository/Miro/src/miro/Makefile.Miro, /soft/MiroRepository/Miro/src/miro/Makefile.MiroSvc, /soft/MiroRepository/Miro/src/msp/Makefile:
+	added install directive to the "bin"-makefiles
+
+2002-06-26  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/idl/DirectedPerceptionPanTilt.idl:
+	update on the directed perception PTU interface documentation
+
+2002-06-26  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/doc/tex/servers.tex:
+	update the frame grabber section
+
+	* /soft/MiroRepository/Miro/doc/tex/servers.tex:
+	added section "frame grabber" to the documentation
+
+2002-06-26  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/AUTHORS, /soft/MiroRepository/Miro/examples/sonar/SonarNotify.cpp, /soft/MiroRepository/Miro/examples/sonar/SonarPoll3.cpp, /soft/MiroRepository/Miro/src/buttons/ButtonsDevice.h, /soft/MiroRepository/Miro/src/buttons/ButtonsEventHandler.cpp, /soft/MiroRepository/Miro/src/buttons/ButtonsImpl.cpp:
+	adding Markus Lauer to the AUTHORS file for the PolicyEditor
+	removed the catch all statements from the sonar examples
+	fixed warnings about signed/unsigned compares for the B21 buttons.
+
+	* /soft/MiroRepository/Miro/doc/tex/behaviourEngine.tex, /soft/MiroRepository/Miro/doc/tex/writing_a_client.tex:
+	propagating file extension naming changes
+
+	* /soft/MiroRepository/Miro/doc/tex/servers.tex:
+	updating the interface descriptions
+
+2002-06-26  Gerd Mayer  <gmayer@achilles.neuro.informatik.uni-ulm.de>
+
+	* /soft/MiroRepository/Miro/doc/tex/doxygen.conf.tmpl, /soft/MiroRepository/Miro/doc/tex/miro_manual.tex:
+	changed the doxygen config file to the new extensions, fixed some outdated
+	comments in the manual
+
+	* /soft/MiroRepository/Miro/scripts/generateChangeLog.sh:
+	added a script that generates automaticall a ChangeLog file
+
 2002-06-26  Hans Utz  <hutz@achilles.neuro.informatik.uni-ulm.de>
 
 	* /soft/MiroRepository/Miro/examples/b21Behaviours/OnButton.cpp, /soft/MiroRepository/Miro/examples/behaviours/OnButton.cpp, /soft/MiroRepository/Miro/examples/behaviours/RangeSensorAvoid.cpp, /soft/MiroRepository/Miro/examples/buttons/ButtonsNotify.cpp, /soft/MiroRepository/Miro/examples/buttons/ButtonsPoll.cpp, /soft/MiroRepository/Miro/idl/B21Buttons.idl, /soft/MiroRepository/Miro/idl/B21Motion.idl, /soft/MiroRepository/Miro/idl/Buttons.idl, /soft/MiroRepository/Miro/idl/ClosedMotion.idl, /soft/MiroRepository/Miro/idl/DifferentialMotion.idl, /soft/MiroRepository/Miro/idl/DtlkSpeech.idl, /soft/MiroRepository/Miro/idl/Kicker.idl, /soft/MiroRepository/Miro/idl/Motion.idl, /soft/MiroRepository/Miro/idl/Odometry.idl, /soft/MiroRepository/Miro/idl/Pan.idl, /soft/MiroRepository/Miro/idl/PanTilt.idl, /soft/MiroRepository/Miro/idl/RangeSensor.idl, /soft/MiroRepository/Miro/idl/ScanDescription.idl, /soft/MiroRepository/Miro/idl/SparrowPanTilt.idl, /soft/MiroRepository/Miro/idl/Tilt.idl, /soft/MiroRepository/Miro/idl/Time.idl, /soft/MiroRepository/Miro/idl/Video.idl, /soft/MiroRepository/Miro/src/buttons/ButtonsEventHandler.cpp, /soft/MiroRepository/Miro/src/buttons/ButtonsImpl.cpp, /soft/MiroRepository/Miro/src/buttons/ButtonsImpl.h, /soft/MiroRepository/Miro/src/laser/SickLaserParameters.cpp, /soft/MiroRepository/Miro/src/miro/RangeSensorImpl.cpp, /soft/MiroRepository/Miro/src/msp/MspConsumer.cpp, /soft/MiroRepository/Miro/src/msp/MspParameters.cpp, /soft/MiroRepository/Miro/src/pioneer/PioneerParameters.cpp, /soft/MiroRepository/Miro/src/sparrow/SparrowButtonsImpl.cpp, /soft/MiroRepository/Miro/src/sparrow/SparrowButtonsImpl.h, /soft/MiroRepository/Miro/src/sparrow/SparrowConsumer.cpp, /soft/MiroRepository/Miro/src/sparrow/SparrowDevice.h, /soft/MiroRepository/Miro/src/sparrow/SparrowParameters.cpp:
