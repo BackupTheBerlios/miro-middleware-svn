@@ -17,7 +17,7 @@
 #include "AbusMessage.h"
 
 #include <iostream>
-
+#include <miro/Log.h>
 #include <unistd.h>
 
 #undef DEBUG
@@ -49,7 +49,7 @@ namespace Abus
 			 const DevParameters& _parameters) :
     Super(_reactor, _eventHandler, _parameters)
   {
-    DBG(cout << "AbusConnection intizialising" << endl);
+    MIRO_LOG(LL_NOTICE, "AbusConnection intizialising\n");
 
     // start polling for devices
     linkRequest("RWI-DEV", "MSP", "1");
@@ -57,7 +57,7 @@ namespace Abus
 
   Connection::~Connection()
   {
-    DBG(cout << "Destructing AbusConnection" << endl);
+    MIRO_LOG(LL_NOTICE, "Destructing AbusConnection\n");
   }
 
   //--------------------------------------------------------------------------
@@ -177,20 +177,17 @@ namespace Abus
       throw Exception(std::string("non-existent devId "));
     }
 
-    DBG(cout << "abus: write() - dev 0x" << hex << (int)msg->devId() << dec << endl);
-
+    MIRO_DBG_OSTR(ABUS,LL_PRATTLE,"abus: write() - dev 0x" << hex << (int)msg->devId() << dec << endl);
 
     for (int i = 0; i < 3; ++i) {
       if (ioBuffer_.send_n(msg->buffer(), Message::MSG_LEN) >= 0) {
 	return;
       }
-      cerr << "abus: write() failed - " << (i+1) << endl;
-
-      DBG(perror("abusConnection: "));
+      MIRO_DBG_OSTR(ABUS,LL_PRATTLE, "abus: write() failed - " << (i+1) << endl);
 
       ACE_OS::sleep(ACE_Time_Value(0, (unsigned long)(.01*1000000)));
     }
-    cerr << "abus: write() failed - giving up" << endl;
+    MIRO_LOG_OSTR(LL_ERROR, "abus: write() failed - giving up" << endl);
   }
 };
 
