@@ -29,7 +29,7 @@ VideoExample_SOURCES = VideoExample.cpp
 linkwithlibraries = \
 	-lTAO \
 	-lTAO_CosNaming \
-	$(top_builddir)/lib/libmiroVideo.a \
+	-lmiroVideo \
 	-lmiroIDL \
 	-lmiro \
 	$(top_builddir)/lib/libmiroSvc.a \

@@ -61,7 +61,7 @@ PolicyEditor_LDADD = \
 	$(QT_LIBS)
 
 BUILT_SOURCES = $(tomocsources:.cpp=.moc.cpp)
-CLEANFILES = $(tomocsources:.cpp=.moc.cpp)
+CLEANFILES = $(BUILT_SOURCES)
 
 all-local:
 	$(INSTALLPROGRAMS)

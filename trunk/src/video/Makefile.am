@@ -15,7 +15,7 @@ include $(top_srcdir)/config/Make-rules
 # AM_LDFLAGS += -version-info `echo $(VERSION) | sed 's/\./:/g'`
 
 
-lib_LIBRARIES = libmiroVideo.a
+lib_LTLIBRARIES = libmiroVideo.la
 bin_PROGRAMS = VideoService
 
 
@@ -66,7 +66,7 @@ endif
 
 
 
-libmiroVideo_a_SOURCES = \
+libmiroVideo_la_SOURCES = \
 	$(sources) \
 	$(bttvsources_used) \
 	$(meteorsources_used) \
@@ -86,7 +86,8 @@ endif
 ## local version of libmiroVideo, because it is not installed at this point.
 VideoService_LDADD = \
 	$(top_builddir)/lib/libmiroSvc.a \
-	libmiroVideo.a \
+	-L./ \
+	-lmiroVideo \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS) \
@@ -109,9 +110,9 @@ includefiles2 = $(includefiles1:.cpp=.h)
 video_include_HEADERS = $(includefiles2)
 
 all-local:
-	$(INSTALLLIBRARIES)
+	$(INSTALLLTLIBRARIES)
 	$(INSTALLPROGRAMS)
 
 clean-local:
-	$(CLEANLIBRARIES)
+	$(CLEANLTLIBRARIES)
 	$(CLEANPROGRAMS)

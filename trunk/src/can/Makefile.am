@@ -33,15 +33,15 @@ libcan_a_SOURCES = $(sources)
 BUILT_SOURCES = Parameters.cpp Parameters.h
 CLEANFILES = $(BUILT_SOURCES)
 
-includefiles1 = $(sources:.xml=.h)
-includefiles2 = $(includefiles1:.cpp=.h)
-can_include_HEADERS = $(includefiles2)
-
-EXTRA_DIST = \
+extraheader = \
 	canioctl.h \
 	canmsg.h \
 	pcan.h \
 	can.h
+
+includefiles1 = $(sources:.xml=.h) $(extraheader)
+includefiles2 = $(includefiles1:.cpp=.h)
+can_include_HEADERS = $(includefiles2)
 
 all-local:
 	$(INSTALLLIBRARIES)

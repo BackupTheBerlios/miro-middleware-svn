@@ -24,11 +24,11 @@ SUFFIXES = .h .moc.cpp
 bin_PROGRAMS = QtRangeSensor
 
 
-sources = 
+sources = \
+	QtRangeSensor.h
 
 tomocsources = \
-	QtRangeSensor.cpp \
-	QtRangeSensor.h
+	QtRangeSensor.cpp
 
 QtRangeSensor_SOURCES = $(sources) $(tomocsources) $(sources:.cpp=.h) $(tomocsources:.cpp=.moc.cpp)
 
@@ -41,7 +41,7 @@ QtRangeSensor_LDADD = \
 	$(QT_LIBS)
 
 BUILT_SOURCES = $(tomocsources:.cpp=.moc.cpp)
-CLEANFILES = $(tomocsources:.cpp=.moc.cpp)
+CLEANFILES = $(BUILT_SOURCES)
 
 all-local:
 	$(INSTALLPROGRAMS)

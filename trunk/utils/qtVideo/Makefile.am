@@ -26,11 +26,11 @@ bin_PROGRAMS = QtVideo
 
 
 sources = \
-	QtVideo.cpp
+	QtVideo.cpp \
+	MainForm.h
 
 tomocsources = \
-	MainForm.cpp \
-	MainForm.h
+	MainForm.cpp
 
 QtVideo_SOURCES = $(sources) $(tomocsources) $(tomocsources:.cpp=.moc.cpp)
 
@@ -43,7 +43,7 @@ QtVideo_LDADD = \
 	$(QT_LIBS)
 
 BUILT_SOURCES = $(tomocsources:.cpp=.moc.cpp)
-CLEANFILES = $(tomocsources:.cpp=.moc.cpp)
+CLEANFILES = $(BUILT_SOURCES)
 
 all-local:
 	$(INSTALLPROGRAMS)

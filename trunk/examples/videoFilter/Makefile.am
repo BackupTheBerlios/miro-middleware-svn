@@ -33,7 +33,7 @@ endif
 
 GrayVideoService_LDADD = \
 	$(top_builddir)/lib/libmiroSvc.a \
-	$(top_builddir)/lib/libmiroVideo.a \
+	-lmiroVideo \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS) \

@@ -21,9 +21,10 @@ SUFFIXES = .h .moc.cpp
 bin_PROGRAMS = myBinary
 
 ## sourcefiles needed for the binary to be built
-sources = mySourceFile.cpp mySourceFile.h
+sources = mySourceFile.cpp mySourceFile.h myQtFile.h
 ## sourcefiles that need to be compiled with qt's moc compiler also
-tomocsources = myQtFile.cpp myQtFile.h
+## (do NOT write header files for the qt-files here, but in the variable above)
+tomocsources = myQtFile.cpp
 
 ## the prefix of the two following macros must have the same name as the respective binary
 myBinary_SOURCES = $(sources) $(tomocsources) $(tomocsources:.cpp=.moc.cpp)
@@ -31,7 +32,7 @@ myBinary_SOURCES = $(sources) $(tomocsources) $(tomocsources:.cpp=.moc.cpp)
 myBinary_LDADD = -lmyLibrary
 
 BUILT_SOURCES = $(tomocsources:.cpp=.moc.cpp)
-CLEANFILES = $(tomocsources:.cpp=.moc.cpp)
+CLEANFILES = $(BUILT_SOURCES)
 
 all-local:
 	$(INSTALLPROGRAMS)

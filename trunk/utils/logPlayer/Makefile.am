@@ -25,15 +25,16 @@ bin_PROGRAMS = LogPlayer
 sources = \
 	LogPlayer.cpp \
 	ChannelManager.cpp \
-	ChannelManager.h
+	ChannelManager.h \
+	LogFile.h \
+	FileSet.h \
+	MainForm.h
 
 tomocsources = \
 	LogFile.cpp \
-	LogFile.h \
 	FileSet.cpp \
-	FileSet.h \
-	MainForm.cpp \
-	MainForm.h
+	MainForm.cpp
+
 
 LogPlayer_SOURCES = $(sources) $(tomocsources) $(tomocsources:.cpp=.moc.cpp)
 
@@ -45,7 +46,7 @@ LogPlayer_LDADD = \
 	$(QT_LIBS)
 
 BUILT_SOURCES = $(tomocsources:.cpp=.moc.cpp)
-CLEANFILES = $(tomocsources:.cpp=.moc.cpp)
+CLEANFILES = $(BUILT_SOURCES)
 
 all-local:
 	$(INSTALLPROGRAMS)
