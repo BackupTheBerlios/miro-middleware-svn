@@ -362,5 +362,21 @@ QuickCamControlS.cpp
 QuickCamControlS.h
 QuickCamControlS.i.h
 QuickCamControlS.lo
+ArbiterEventC.cpp
+ArbiterEventC.h
+ArbiterEventC.i.h
+ArbiterEventC.lo
+ArbiterEventS.cpp
+ArbiterEventS.h
+ArbiterEventS.i.h
+ArbiterEventS.lo
+DistanceScanC.cpp
+DistanceScanC.h
+DistanceScanC.i.h
+DistanceScanC.lo
+DistanceScanS.cpp
+DistanceScanS.h
+DistanceScanS.i.h
+DistanceScanS.lo
 
 libmiroIDL.la
