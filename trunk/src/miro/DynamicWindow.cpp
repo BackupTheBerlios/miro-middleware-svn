@@ -72,18 +72,17 @@ namespace Miro
 
   void DynamicWindow::collisionCheckDeluxe(std::vector<Vector2d> &_robot, std::vector<Vector2d> &_obstacle) {
 
-    const int CURV_COUNT = 21; // = 2n+1
-    const int CURV_SEGS = 21; // = 2n+1
+    const int CURV_COUNT = 15; // = 2n+1
+    const int CURV_SEGS = 15; // = 2n+1
     const int CURV_SEG_LEN = 50;  // in mm
-    const int CURV_SEG_SMOOTH = 50;
+    const int CURV_SEG_SMOOTH = 30;
     const double WHEEL_DISTANCE  = 390.;  // in mm
-    const double MIN_DISTANCE = 10; // in mm
-    const double BREAK_ACCELERATION = 2000.;  // in mm/sec2
+    const double BREAK_ACCELERATION = 1500.;  // in mm/sec2
 
     int CURV[21][21];	// curvature space
-    int count, seg, left, right, curv, target;
+    int count, seg, left, right, curv, target, k, l;
+    bool kObst, lObst;
     double fLeft, fRight, offset, angle, rel, breaklen, left_break, right_break;
-    int k,l,m;
 
     std::FILE *logFile1, *logFile2;
     logFile1 = std::fopen("Curvature.log","a");
@@ -110,7 +109,7 @@ namespace Miro
 	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -1 * angle * (CURV_SEGS + 1) / 2);
         for(seg = 0; seg < CURV_SEGS; seg++) {  	
 	  rotateMountedPolygon(_robot, Vector2d(-offset, 0.), angle);
-          getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) < MIN_DISTANCE ? CURV[count][seg] = 0 : CURV[count][seg] = 250;
+          getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) == 0 ? CURV[count][seg] = 0 : CURV[count][seg] = 250;
 	  fprintf(logFile1,"%d\n",CURV[count][seg]);
 	}
 	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -1 * angle * (CURV_SEGS - 1) / 2);
@@ -121,15 +120,25 @@ namespace Miro
 	  fprintf(logFile1,"%d\n",0);
 	}
       }
-
       k = (CURV_SEGS - 1) / 2;
-      l = 0;
-      while((k <= CURV_SEGS) && (CURV[count][k] != 250))
+      while((k <= CURV_SEGS) && (CURV[count][k] != 0)) {
 	k++;
-      if(k != (CURV_SEGS + 1)) {
-	while(k >= ((CURV_SEGS - 1) / 2)) {
-	  CURV[count][k-1] = std::max(0, CURV[count][k] - CURV_SEG_SMOOTH);
+      }
+      l = (CURV_SEGS - 1) / 2;
+      while((l >= 0) && (CURV[count][l] != 0)) {
+	l--;
+      }
+      (k == (CURV_SEGS + 1)) ? kObst = false : kObst = true;
+      (l == -1) ? lObst = false : lObst = true;
+
+      while((kObst && k > 0) || (lObst && l < CURV_SEGS)) {
+	if(kObst && k > 0) {
+	  CURV[count][k-1] = std::min(CURV[count][k-1],std::min(250, CURV[count][k] + CURV_SEG_SMOOTH));
 	  k--;
+	}
+	if(lObst && l < CURV_SEGS) {
+	  CURV[count][l+1] = std::min(CURV[count][l+1],std::min(250, CURV[count][l] + CURV_SEG_SMOOTH));
+	  l++;
 	}
       }
       
@@ -146,7 +155,7 @@ namespace Miro
 	target = 10 + (int)(breaklen / CURV_SEG_LEN);
 	fprintf(logFile2,"%d %d\n",curv,target);
 
-	velocitySpace_[left+100][right+100] = CURV[std::max(0,std::min(CURV_COUNT-1,curv))][std::max(0,std::min(CURV_SEGS-1,target))];
+	velocitySpace_[left+100][right+100] = ((double)CURV[std::max(0,std::min(CURV_COUNT-1,curv))][std::max(0,std::min(CURV_SEGS-1,target))] / 250.) * velocitySpace_[left+100][right+100];
       }
     }
 

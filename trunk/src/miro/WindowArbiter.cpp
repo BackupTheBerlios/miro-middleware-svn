@@ -103,7 +103,7 @@ namespace Miro
     }
       
     timerId = reactor.schedule_timer(this, 0, ACE_Time_Value(0,0),
-	ACE_Time_Value(1, 50000));
+	ACE_Time_Value(0, 50000));
     cout << "WindowArbiter Open." << endl;
   }
 
@@ -152,8 +152,8 @@ namespace Miro
     velocity.translation = 10 * ((int)newVelocity.real() + (int)newVelocity.imag()) / 2;
     velocity.rotation = 10 * ((int)newVelocity.imag() - (int)newVelocity.real()) / RADSTAND;
     if (velocity.translation != currentVelocity_.translation || velocity.rotation != currentVelocity_.rotation) {
-      //      pMotion_->setVelocity(velocity);
-      //      currentVelocity_ = velocity;
+      // pMotion_->setVelocity(velocity);
+      // currentVelocity_ = velocity;
     }
 
     cout << "\n\nWindowArbiter TimeOutHandler FINISHED.\n\n" << endl;
