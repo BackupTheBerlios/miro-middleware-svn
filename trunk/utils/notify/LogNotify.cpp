@@ -21,6 +21,9 @@ main(int argc, char *argv[])
   int rc = 1;
   std::string fileName;
 
+  // read syslog options
+  Miro::Log::init(argc, argv);
+
   // Parameters to be passed to the services
   Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
   Miro::LogNotifyParameters * parameters = Miro::LogNotifyParameters::instance();
