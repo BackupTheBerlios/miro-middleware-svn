@@ -69,7 +69,7 @@ namespace Miro
     MotionStatusIDL * odometry;
     RawPositionIDL * raw;
 
-    if (notification.remainder_of_body >>= odometry) {
+    if (::operator >>= (notification.remainder_of_body, odometry)) {
       Guard guard(odoMutex);
       if (!odoTruncate_ && odoDeque.size() > maxDequeSize)
 	odoTruncate_ = true;

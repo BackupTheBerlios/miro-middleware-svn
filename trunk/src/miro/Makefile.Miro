@@ -118,7 +118,7 @@ FILES +=	\
 	Parameters \
 	Exception \
 	Angle \
-	Utils \
+	ConfigDocument \
 	Log \
 	Thread \
 	Task \
@@ -349,7 +349,8 @@ realclean: clean
 
 .obj/Angle.o .obj/Angle.so .shobj/Angle.o .shobj/Angle.so: Angle.cpp Angle.h
 
-.obj/Utils.o .obj/Utils.so .shobj/Utils.o .shobj/Utils.so: Utils.cpp Utils.h \
+.obj/ConfigDocument.o .obj/ConfigDocument.so .shobj/ConfigDocument.o .shobj/ConfigDocument.so: ConfigDocument.cpp \
+ ConfigDocument.h \
  Exception.h \
  Parameters.h \
  ArbiterParameters.h \

@@ -2,24 +2,16 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999,2000
+// (c) 1999, 2000, 2001, 2002 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "Utils.h"
-#include "Exception.h"
-#include "Parameters.h"
+#include "miro/ConfigDocument.h"
+#include "miro/Exception.h"
+#include "miro/Parameters.h"
 
 #include <ace/Arg_Shifter.h>
 
@@ -29,6 +21,10 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #undef DEBUG
 
