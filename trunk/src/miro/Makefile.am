@@ -81,7 +81,7 @@ if COND_SPARROW99
 sparrowsources1_used = $(sparrowsources1)
 endif
 
-pioneersources1 = \
+pioneersources1 = 
 
 
 if COND_PIONEER
