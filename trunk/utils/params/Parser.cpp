@@ -19,8 +19,13 @@ Parser::Parser(Generator& _generator) :
   class_(),
   generator_(_generator),
   parsing_(false),
+  instance_(false),
   string_(false),
+  vector_(false),
+  set_(false),
+  angle_(false),
   timeValue_(false),
+  inetAddr_(false),
   serialParams_(false),
   scanDescription_(false)
 {
