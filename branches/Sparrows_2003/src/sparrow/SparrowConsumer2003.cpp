@@ -171,7 +171,7 @@ namespace Sparrow
   void
   Consumer2003::handleMessage(const Miro::DevMessage * _message)
   {
-    const Can::Message& message = *((Can::Message*)_message);
+    Can::Message& message = *((Can::Message*)_message);
     int tmp;
     int versNr, versSub;
 
@@ -181,7 +181,7 @@ namespace Sparrow
 
     CanId msgID = message.id();
 
-    if(CanParams->module == "sja1000")
+    if(CanParams->module == "pcan")
        msgID = (msgID | 0x80000000);
 
     switch (msgID) {
@@ -294,7 +294,16 @@ namespace Sparrow
 
     case CAN_MOTOR_TICKS_LEFT:{
       FaulTty::OdometryMessage odoMessage(FaulTty::OdometryMessage::LEFT);
-      memcpy((void *) &(odoMessage.ticks_),(void *) (message.canMessage())->d,  4);
+      if(CanParams->module == "pcan"){
+         Can::pcanmsg * msgp_;
+	 message.canMessage(&msgp_);
+         memcpy((void *) &(odoMessage.ticks_),(void *) (msgp_->Msg.DATA),  4);
+      }
+      else{
+         canmsg * msg_;
+	 message.canMessage(&msg_);
+	 memcpy((void *) &(odoMessage.ticks_),(void *) (msg_->d),  4);
+      }
       faulConsumer->handleMessage(&odoMessage);
       std::cout << "MotorTicksLeft" << message << endl;
 
@@ -305,7 +314,16 @@ namespace Sparrow
     case CAN_MOTOR_TICKS_RIGHT:{
 
        FaulTty::OdometryMessage odoMessage2(FaulTty::OdometryMessage::RIGHT);
-       memcpy((void *) &(odoMessage2.ticks_),(void *) (message.canMessage())->d,  4);
+       if(CanParams->module == "pcan"){
+         Can::pcanmsg * msgp_;
+	 message.canMessage(&msgp_);
+         memcpy((void *) &(odoMessage2.ticks_),(void *) (msgp_->Msg.DATA),  4);
+      }
+      else{
+         canmsg * msg_;
+	 message.canMessage(&msg_);
+	 memcpy((void *) &(odoMessage2.ticks_),(void *) (msg_->d),  4);
+      }
        faulConsumer->handleMessage(&odoMessage2);
        std::cout << "MotorTicksRight" << message << endl;
        break;

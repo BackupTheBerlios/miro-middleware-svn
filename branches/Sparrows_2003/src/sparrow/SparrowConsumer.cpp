@@ -221,7 +221,7 @@ namespace Sparrow
 
     CanId msgID = message.id();
 
-    if(CanParams->module == "sja1000")
+    if(CanParams->module == "pcan")
        msgID = (msgID | 0x80000000);
 
     switch (msgID) {
@@ -458,14 +458,14 @@ namespace Sparrow
 	    calRange = ((int)message.charData(i) * 10 - param->irScaling[i].offset);
 	    calRange = calRange - param->irScaling[i].minDistance;
 	    calRange = (long) (calRange * param->irScaling[i].scaling);
-	    calRange = calRange + param->irScaling[i].minDistance ;  
-	    if ((calRange < param->irScaling[i].minDistance) || 
+	    calRange = calRange + param->irScaling[i].minDistance ;
+	    if ((calRange < param->irScaling[i].minDistance) ||
 		(calRange > param->irScaling[i].maxDistance)) {
 	      calRange = -1;
 	    }
-	  } 
+	  }
 	  else {
-	    calRange = -1; 
+	    calRange = -1;
 	  }
 	  data->range[i] = calRange;
 	}
@@ -489,8 +489,8 @@ namespace Sparrow
 
     case CAN_R_DBG_PRINT:
       for (int k = 0; k < std::min(message.length(), 8); ++k)
-	if (message.canMessage()->d[k] != 0)
-	  cout << message.canMessage()->d[k] << flush;
+	//if (message.canMessage()->d[k] != 0)
+	//  cout << message.canMessage()->d[k] << flush;
       break;
 
     case CAN_R_DBG_ALIVE: {

@@ -156,13 +156,17 @@ namespace Sparrow
   void
   Connection2003::kick(unsigned char ventilatetime, unsigned char kicktime)
   {
+    std::cout << "Hallo Kicker" << endl;
     Message message;
     message.length(3);
+    std::cout << "Hallo Kicker2" << endl;
     message.id(CAN_KICK);
     message.byteData(0,0);
     message.byteData(1, ventilatetime);
     message.byteData(2, kicktime);
+    std::cout << "Hallo Kicker3 " << endl;
     write(message);
+    std::cout << "Hallo Kicker4" << endl;
 
   }
 
