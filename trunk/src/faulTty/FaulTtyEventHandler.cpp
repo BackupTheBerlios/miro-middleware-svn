@@ -15,7 +15,7 @@
 
 #include "miro/Exception.h"
 
-// #undef DEBUG
+#undef DEBUG
 
 #ifdef DEBUG
 #include <iostream>
@@ -68,7 +68,6 @@ namespace FaulTty
 
     char const * last = buff_ + bytes;
     for (char const * first = buff_; first != last; ++first) {
-      cout << " " << (int)*first;
       if (msg->ticks_ == 0)
 	msg->time() = ACE_OS::gettimeofday();
 
@@ -78,21 +77,19 @@ namespace FaulTty
       else if (*first >= '0' && *first <= '9') {
 	msg->ticks_ *= 10;
 	msg->ticks_ += *first - '0';
-	if (negate_) {
-	  msg->ticks_ = -msg->ticks_;
-	  negate_ = false;
-	}
       }
-      else if (*first == '\13') {
-	cout << "dispatch: " << msg->ticks_ << endl;
+      else if (*first == '\r') {
+        if (negate_) {
+          msg->ticks_ = -msg->ticks_;
+          negate_ = false;
+        }
+
 	dispatchMessage();
       }
-      else if (*first == '\10') {
-	cout << "message reset" << endl;
+      else if (*first == '\n') {
 	msg->ticks_ = 0;
       }
     }
-    cout << endl;
     DBG(cerr << "Read " << bytes << " bytes from FaulTty" << endl);
     DBG(cout << "FaulTtyEventHandler: Done with select" << endl);
 
