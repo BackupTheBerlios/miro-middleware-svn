@@ -30,8 +30,8 @@
 	  <parameter value="-2500" name="MinRTranslation"/>
 	</parameter>
 	<parameter name="SpeedConvFactor" value="2.2" />
-	<parameter name="MaxPosAccel" value="2000" />
-	<parameter name="MaxNegAccel" value="2000" />
+	<parameter name="MaxPosAccel" value="1700" />
+	<parameter name="MaxNegAccel" value="1700" />
       </parameter>
     </section>
 
@@ -909,13 +909,14 @@
 	  <parameter value="Odometry" />
 	  <parameter value="RawPosition" />
 	  <parameter value="VisionData" />
-	  <parameter value="LineSamples2" />
-	  <parameter value="SharedBelief" />
+	  <parameter value="LineSamples" />
+	  <parameter value="GoalPosition" />
+	  <parameter value="BallPosition" />
 	  <parameter value="PatternChange" />
 	  <parameter value="ArbitrateChange" />
+	  <parameter value="LocalizedPosition" />
 	  <parameter value="LocalizeStatistics" />
 	  <parameter value="PositionHypothesis" />
-	  <parameter value="SharedWorld" />
 	</parameter>
 	<parameter value="157286400" name="MaxFileSize" />
       </parameter>
@@ -923,7 +924,10 @@
 	<parameter value="225.2.2.1:41006" name="Multicastgroup" />
 	<parameter value="500" name="Messagetimeout" />
 	<parameter name="Subscription">
-	  <parameter value="SharedBelief" />
+	  <parameter value="BallPosition" />
+	  <parameter value="GoalPosition" />
+	  <parameter value="LocalizedPosition" />
+	  <parameter value="SharedWorld" />
 	</parameter>
       </parameter>
     </section>
