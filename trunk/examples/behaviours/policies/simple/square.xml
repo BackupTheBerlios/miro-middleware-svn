@@ -1,0 +1,35 @@
+<!DOCTYPE MiroPolicyConfig>
+<policy>
+ <actionpattern x="74" y="87" start="false" name="A" >
+  <arbiter name="MotionArbiter" />
+  <transition target="B" message="TargetReached" />
+  <behaviour name="MoveToPoint" >
+   <parameter value="-1500" name="targetX" />
+   <parameter value="1500" name="targetY" />
+  </behaviour>
+ </actionpattern>
+ <actionpattern x="382" y="97" start="true" name="B" >
+  <arbiter name="MotionArbiter" />
+  <transition target="C" message="TargetReached" />
+  <behaviour name="MoveToPoint" >
+   <parameter value="1500" name="targetX" />
+   <parameter value="1500" name="targetY" />
+  </behaviour>
+ </actionpattern>
+ <actionpattern x="412" y="280" start="false" name="C" >
+  <arbiter name="MotionArbiter" />
+  <transition target="D" message="TargetReached" />
+  <behaviour name="MoveToPoint" >
+   <parameter value="1500" name="targetX" />
+   <parameter value="-1500" name="targetY" />
+  </behaviour>
+ </actionpattern>
+ <actionpattern x="91" y="282" start="false" name="D" >
+  <arbiter name="MotionArbiter" />
+  <transition target="A" message="TargetReached" />
+  <behaviour name="MoveToPoint" >
+   <parameter value="-1500" name="targetX" />
+   <parameter value="-1500" name="targetY" />
+  </behaviour>
+ </actionpattern>
+</policy>
