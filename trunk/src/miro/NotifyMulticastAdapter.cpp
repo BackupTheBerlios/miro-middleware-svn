@@ -81,7 +81,7 @@ namespace Miro {
                 timeoutHandlerId_(-1),
                 timeoutHandler_(NULL),
                 timeoutHandlerInterval_(ACE_Time_Value(0, 50000)),
-                shInterval_(ACE_Time_Value(1, 0)),
+                shInterval_(ACE_Time_Value(2, 0)),
                 useLogfile_(false)
         {
             PRINT_DBG(DBG_INFO, "Initializing");
