@@ -16,11 +16,11 @@
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-
+ 
 #include "sparrow/SparrowConnection.h"
 #include "sparrow/SparrowParameters.h"
 #include "sparrow/SparrowConsumer.h"
-
+ 
 #include "can/CanEventHandler.h"
 
 #include "miro/ReactorTask.h"
@@ -96,7 +96,7 @@ int main(int argc, char * argv[])
   char c;
   double rot;
   bool loop = true;
-
+  
   double angle, beta;
   Miro::Angle alpha, gamma;
 

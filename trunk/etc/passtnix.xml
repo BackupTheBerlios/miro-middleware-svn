@@ -33,7 +33,7 @@
       <buttonspollinterval>300</buttonspollinterval>
 
       <servo0midpulse>3300</servo0midpulse>
-      <deg2servoticks>28.2</deg2servoticks>
+      <deg2servoticks>27.5</deg2servoticks>
       <!--
         <servo1midpulse></servo1midpulse>
         <panswing>350</panswing> -->
@@ -299,7 +299,7 @@
       <sx>1</sx>
       <f>4.098558</f>
       <kappa>1.703137e-02</kappa>
-      <height>580</height>
+      <height>570</height>
       <alpha>34.0</alpha>
       <latency>0.12</latency>
     </Camera>
@@ -308,6 +308,7 @@
     <logging>
       <type_name>Infrared</type_name>
       <type_name>Odometry</type_name>
+      <type_name>RawPosition</type_name>
       <type_name>VisionData</type_name>
       <type_name>LineSamples</type_name>
       <type_name>GoalPosition</type_name>
