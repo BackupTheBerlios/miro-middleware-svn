@@ -109,6 +109,8 @@ namespace Sparrow
       infraredDescription.group[0].sensor[i].beta = Miro::deg2Rad(beta[i]);
       infraredDescription.group[0].sensor[i].gamma = 0;
     }
+
+    motion.wheelBase = 450;
   }
 
   void
@@ -127,6 +129,8 @@ namespace Sparrow
 	    n2 = n2.nextSibling();
 	  }
 	}
+	else if (n1.nodeName() == "DifferentialMotion")
+	  motion <<= n1;
 	else if (!n2.isNull()) {
 	  QDomText t = n2.toText(); // try to convert the node to a text
 	  if(!t.isNull() ) {        // the node was really a text element.

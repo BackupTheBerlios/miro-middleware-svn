@@ -2,22 +2,14 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999,2000
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-#ifndef miro_parameters_hh
-#define miro_parameters_hh
+#ifndef miroParameters_h
+#define miroParameters_h
 
 #include <iostream>
 
@@ -26,11 +18,33 @@ class QDomNode;
 
 namespace Miro
 {
-  class Parameters {
+  // forward declaration
+  class Parameters;
+
+  //! Debug output stream operator.
+  std::ostream& operator<<(std::ostream& _ostr, const Parameters& _rhs);
+
+  //! Base class for all Parameter classes.
+  class Parameters 
+  {
   public:
+    //! Initializing default constructor.
     virtual ~Parameters() {};
+    //! XML parsing operator.
     virtual void operator <<= (const QDomNode& node) = 0;
+  protected:
+    virtual void printToStream(std::ostream&) const {};
+    friend
+    std::ostream& operator<<(std::ostream& _ostr, const Parameters& _rhs);
   };
+
+  inline
+  std::ostream&
+  operator<<(std::ostream& _ostr, const Parameters& _rhs) {
+    _rhs.printToStream(_ostr);
+    return _ostr;
+  }
+
 };
 
 #endif

@@ -28,6 +28,17 @@ namespace Pioneer
 
   Parameters::Parameters()
   {
+    // Motion parameter defaults
+
+    motion.minTranslation = -500;
+    motion.maxTranslation = 500;
+
+    motion.minLTranslation = -500;
+    motion.maxLTranslation = 500;
+    motion.minRTranslation = -500;
+    motion.maxRTranslation = 500;
+    motion.wheelBase = 350;
+
     //
     // Infrared description defaults
     //
@@ -59,13 +70,17 @@ namespace Pioneer
     if (!node.isNull()) {
       QDomNode n1 = node.firstChild();
       while(!n1.isNull()) {
-	QDomNode n2 = n1.firstChild();
-	if (!n2.isNull()) {
-	  if (n1.nodeName() == "sonar") {
-	    while (!n2.isNull()) {
-	      if (n2.nodeName() == "scandescription") 
-		sonarDescription <<= n2;
-	      n2 = n2.nextSibling();
+	if (n1.nodeName() == "DifferentialMotion")
+	  motion <<= n1;
+	else {
+	  QDomNode n2 = n1.firstChild();
+	  if (!n2.isNull()) {
+	    if (n1.nodeName() == "sonar") {
+	      while (!n2.isNull()) {
+		if (n2.nodeName() == "scandescription") 
+		  sonarDescription <<= n2;
+		n2 = n2.nextSibling();
+	      }
 	    }
 	  }
 	}

@@ -49,30 +49,34 @@ namespace Base
     if (!node.isNull()) {
       QDomNode n1 = node.firstChild();
       while(!n1.isNull() ) {
-	QDomNode n2 = n1.firstChild();
-	if (!n2.isNull()) {
-	  QDomText t = n2.toText(); // try to convert the node to a text
-	  if(!t.isNull() ) {        // the node was really a text element.
-	    if (n1.nodeName() == "radius") {
-	      radius = t.data().toDouble();
+	if (n1.nodeName() == "DifferentialMotion")
+	  motion <<= n1;
+	else {
+	  QDomNode n2 = n1.firstChild();
+	  if (!n2.isNull()) {
+	    QDomText t = n2.toText(); // try to convert the node to a text
+	    if(!t.isNull() ) {        // the node was really a text element.
+	      if (n1.nodeName() == "radius") {
+		radius = t.data().toDouble();
+	      }
+	      if (n1.nodeName() == "maxTransVelocity") {
+		maxTransVelocity = t.data().toInt();
+	      }
+	      if (n1.nodeName() == "maxTransAccel") {
+		maxTransAccel = t.data().toInt();
+	      }
+	      if (n1.nodeName() == "maxRotVelocity") {
+		maxRotVelocity = Miro::deg2Rad(t.data().toDouble());
+	      }
+	      if (n1.nodeName() == "maxRotAccel") {
+		maxRotAccel = Miro::deg2Rad(t.data().toDouble());
+	      }
+	      if (n1.nodeName() == "voltWarn") {
+		voltWarn = t.data().toInt();
+	      }
+	      if (n1.nodeName() == "voltPanic") {
+		voltPanic = t.data().toInt();
 	    }
-	    if (n1.nodeName() == "maxTransVelocity") {
-	      maxTransVelocity = t.data().toInt();
-	    }
-	    if (n1.nodeName() == "maxTransAccel") {
-	      maxTransAccel = t.data().toInt();
-	    }
-	    if (n1.nodeName() == "maxRotVelocity") {
-	      maxRotVelocity = Miro::deg2Rad(t.data().toDouble());
-	    }
-	    if (n1.nodeName() == "maxRotAccel") {
-	       maxRotAccel = Miro::deg2Rad(t.data().toDouble());
-	    }
-	    if (n1.nodeName() == "voltWarn") {
-	      voltWarn = t.data().toInt();
-	    }
-	    if (n1.nodeName() == "voltPanic") {
-	      voltPanic = t.data().toInt();
 	    }
 	  }
 	}

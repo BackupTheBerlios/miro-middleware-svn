@@ -25,6 +25,9 @@ namespace Miro
 
     MotionParameters();
     void operator <<= (const QDomNode& _node);
+
+  protected:
+    void printToStream(std::ostream& _ostr) const;
   };
 
   struct DifferentialMotionParameters : public MotionParameters
@@ -39,6 +42,11 @@ namespace Miro
 
     DifferentialMotionParameters();
     void operator <<= (const QDomNode& _node);
+
+  protected:
+    void printToStream(std::ostream& _ostr) const;
+  private:
+    typedef MotionParameters Super;
   };
 };
 #endif // velocityParameters_hh
