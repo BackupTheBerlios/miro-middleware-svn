@@ -68,7 +68,8 @@ pioneersources = \
 	PioneerStall.idl \
 	PioneerMotion.idl \
 	Gripper.idl \
-	Obst.idl
+	ObjectVector.idl \
+	Cortex.idl
 
 sparrowsources = \
 	Kicker.idl \
