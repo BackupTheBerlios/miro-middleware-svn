@@ -100,7 +100,7 @@ namespace Miro
   std::ostream &
   operator<<(std::ostream &ostr, const PositionIDL &rhs) {
     ostr << "(" << rhs.point << ",";
-    ostr << rad2Deg(rhs.heading) << "°";
+    ostr << rad2Deg(rhs.heading) << "°)";
     return ostr;
   }
   // output operator for WorldPointIDL

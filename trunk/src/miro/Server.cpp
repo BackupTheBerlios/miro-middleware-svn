@@ -25,7 +25,7 @@ extern "C" void handler (int signum)
 {
   // check of sigint and sigterm
   if (signum == SIGINT || signum == SIGTERM) {
-    MIRO_LOG_OSTR(LL_CRITICAL, "Signal received: " << signum << std::endl);
+    MIRO_LOG_OSTR(LL_CRITICAL, "Signal received: " << signum);
     pServer->shutdown();
   }
 }
@@ -143,9 +143,8 @@ namespace Miro
 	}
       }
       catch (const CORBA::Exception& e) {
-        MIRO_LOG_OSTR(LL_ERROR,"Caught CORBA exception on unbinding: " << n[0].id << std::endl
-	  << "Probably the NameSevice went down while we run:" << std::endl
-	  << e << std::endl);
+        MIRO_LOG_OSTR(LL_ERROR,"Caught CORBA exception on unbinding: " << n[0].id 
+	  << "\nProbably the NameSevice went down while we run:\n" << e);
       }
     }
 
@@ -229,8 +228,8 @@ namespace Miro
 	// sure they are always up-to-date.
 	try {
 	  namingContext->unbind(n);
-          MIRO_LOG_OSTR(LL_ERROR, "Object still bound in naming service: " << _name << std::endl
-	       << "Rebinding it." << std::endl);
+          MIRO_LOG_OSTR(LL_ERROR, "Object still bound in naming service: " << _name
+	       << "\nRebinding it.");
 	} catch (...) {
 	}
       }
@@ -240,8 +239,8 @@ namespace Miro
       }
       catch (CosNaming::NamingContext::AlreadyBound& ) {
 	MIRO_LOG_OSTR(LL_ERROR, "Object is already bound in naming service: "
-	     << n[0].id << std::endl
-	     << "Use -MiroRebindIOR if you really want to rebind it." << std::endl);
+	     << n[0].id
+	     << "\nUse -MiroRebindIOR if you really want to rebind it.");
 	throw(0);
       }
 
@@ -268,8 +267,7 @@ namespace Miro
 	// sure they are always up-to-date.
 	try {
 	  _context->unbind(n);
-	  MIRO_LOG_OSTR(LL_ERROR, "Object still bound in naming service: " << _name << std::endl
-	       << "Rebinding it." << std::endl);
+	  MIRO_LOG_OSTR(LL_ERROR, "Object still bound in naming service: " << _name  << "\nRebinding it.");
 	} catch (...) {
 	}
       }
@@ -279,8 +277,8 @@ namespace Miro
       }
       catch (CosNaming::NamingContext::AlreadyBound& ) {
 	MIRO_LOG_OSTR(LL_ERROR,  "Object is already bound in naming service: "
-	     << n[0].id << std::endl
-	     << "Use -MiroRebindIOR if you really want to rebind it." << std::endl);
+	     << n[0].id 
+	     << "\nUse -MiroRebindIOR if you really want to rebind it.");
 	throw(0);
       }
 
