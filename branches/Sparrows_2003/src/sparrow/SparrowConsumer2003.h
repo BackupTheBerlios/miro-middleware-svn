@@ -39,14 +39,16 @@ namespace Sparrow
   public:
     Consumer2003(Connection2003 * _connection,
 	     Miro::OdometryImpl * _pOdometry,
-	     Miro::RangeSensorImpl * _pIR);
+	     Miro::RangeSensorImpl * _pIR1,
+	     Miro::RangeSensorImpl * _pIR2);
     Consumer2003();
     ~Consumer2003();
 
     virtual void handleMessage(const Miro::DevMessage * _message);
     virtual void registerInterfaces(Connection2003 * _connection,
 	     				Miro::OdometryImpl * _pOdometry,
-	     				Miro::RangeSensorImpl * _pIR,
+	     				Miro::RangeSensorImpl * _pIR1,
+					Miro::RangeSensorImpl * _pIR2, 
 					FaulMotor::Consumer * _faulConsumer,
 					AliveCollector * _aliveCollector);
 
@@ -56,7 +58,8 @@ namespace Sparrow
   protected:
     Connection2003 * connection;
     Miro::OdometryImpl * pOdometry_;
-    Miro::RangeSensorImpl * pIR_;
+    Miro::RangeSensorImpl * pIR1_;
+    Miro::RangeSensorImpl * pIR2_;
 
     Parameters const * params_;
 

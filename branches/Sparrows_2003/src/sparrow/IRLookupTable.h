@@ -1,7 +1,7 @@
 #ifndef IRLookupTable_h
 #define IRLookupTable_h
 
-static const unsigned char IR_LOOKUP_TABLE[256] = {
+static const long IR_LOOKUP_TABLE[256] = {
 /* 000 */ 500, /* >max */
 /* 001 */ 500,
 /* 002 */ 500,

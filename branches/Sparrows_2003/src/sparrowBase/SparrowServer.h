@@ -122,6 +122,7 @@ public:
   Miro::OdometryImpl odometry;
 //  Miro::RangeSensorImpl * pSonar_;
   Miro::RangeSensorImpl infrared;
+  Miro::RangeSensorImpl * infrared2;
 
   // Sparrow board hardware abstraction
   Sparrow::Consumer * pSparrowConsumer;

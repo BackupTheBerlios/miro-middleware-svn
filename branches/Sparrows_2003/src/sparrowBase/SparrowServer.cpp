@@ -125,6 +125,8 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
        std::cout << "Sparrow2003-Base-Constructor" << std::endl;
    //aCollector = new Sparrow::AliveCollector();
 
+  infrared2 = new Miro::RangeSensorImpl(Sparrow::Parameters::instance()->infraredDescription2003,
+                                                                   &structuredPushSupplier_, true);
   pSparrowConsumer2003 = new Sparrow::Consumer2003();/**sparrowConnection,
 					 /*( (Sparrow::Parameters::instance()->faulhaber)?
 					   NULL :
@@ -151,6 +153,7 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 					   NULL :
 					   &odometry),
 					   &infrared,
+					   infrared2,
 					   pFaulhaber->pConsumer,
 					   NULL);
 
@@ -256,6 +259,8 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
    if(Sparrow::Parameters::instance()->sparrow2003){
 
    //aCollector = new Sparrow::AliveCollector();
+   infrared2 = new Miro::RangeSensorImpl(Sparrow::Parameters::instance()->infraredDescription2003,
+                                                                   &structuredPushSupplier_, true);
    pSparrowConsumer2003 = new Sparrow::Consumer2003(); /**sparrowConnection,
 					 ( (Sparrow::Parameters::instance()->faulhaber)?
 					   NULL :
@@ -286,6 +291,7 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 					   NULL :
 					   &odometry),
 					 &infrared,
+					 infrared2,
 					 pFaulhaber->pConsumer,
 					 NULL);
 

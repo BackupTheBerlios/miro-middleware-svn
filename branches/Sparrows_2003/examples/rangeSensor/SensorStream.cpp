@@ -85,11 +85,13 @@ SensorStream::push_structured_event(const StructuredEvent & notification
       for (unsigned int j = 0; j < pSensorGroup->range.length(); ++j)
 	if (j == k) {
           cout.width(6);
+
 	  cout << pSensorGroup->range[j] << "\t";
 	}
     }
+    cout << endl;
     }
-    else{
+    if(!group_en){
     for( int i = 2; i < argCounter; i++ ) {
       unsigned int k;
       sscanf( argVector[ i ], " %d ", &k );
@@ -133,6 +135,7 @@ main(int argc, char *argv[])
   argCounter = argc;
   argVector = argv;
 
+  
   try {
     // The one channel that we create using the factory.
     EventChannel_var ec(server.resolveName<EventChannel>("EventChannel"));

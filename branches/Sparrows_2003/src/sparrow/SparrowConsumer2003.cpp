@@ -43,10 +43,12 @@ namespace Sparrow
   //------------------------//
   Consumer2003::Consumer2003(Connection2003 * _connection,
 		     Miro::OdometryImpl * _pOdometry,
-		     Miro::RangeSensorImpl * _pIR) :
+		     Miro::RangeSensorImpl * _pIR1,
+		     Miro::RangeSensorImpl * _pIR2) :
     connection(_connection),
     pOdometry_(_pOdometry),
-    pIR_(_pIR),
+    pIR1_(_pIR1),
+    pIR2_(_pIR2),
     params_(Parameters::instance()),
     status_()
 
@@ -128,7 +130,8 @@ namespace Sparrow
 
   void Consumer2003::registerInterfaces(Connection2003 * _connection,
 	     				Miro::OdometryImpl * _pOdometry,
-	     				Miro::RangeSensorImpl * _pIR,
+	     				Miro::RangeSensorImpl * _pIR1,
+					Miro::RangeSensorImpl * _pIR2,
 					FaulMotor::Consumer * _faulConsumer,
 					AliveCollector * _aliveCollector)
   {
@@ -137,7 +140,8 @@ namespace Sparrow
 
      connection = _connection;
      pOdometry_ = _pOdometry;
-     pIR_ = _pIR;
+     pIR1_ = _pIR1;
+     pIR2_ = _pIR2;
      faulConsumer = _faulConsumer;
      pAliveCollector = _aliveCollector;
 
@@ -184,7 +188,7 @@ namespace Sparrow
 
       case CAN_R_IR_GET_CONT1:{
       DBG(cout << "Consumer::receiveThread: receiveThread message: IR_CONT1" << endl);
-      if (pIR_) {
+      if (pIR1_) {
 	Sparrow::Parameters * param = Sparrow::Parameters::instance(); //uli
 	long calRange;
 	Miro::RangeGroupEventIDL * data = new Miro::RangeGroupEventIDL();
@@ -192,7 +196,7 @@ namespace Sparrow
 	data->group = 0;
 	data->range.length(8);
 	for (int i = 7; i >= 0; --i)  {
-        calRange = IR_LOOKUP_TABLE[message.charData(i)];
+        calRange = IR_LOOKUP_TABLE[message.byteData(i)];
 
         // -1 wenn Entfernung >= 50cm
 	if (calRange == 500) {
@@ -201,16 +205,16 @@ namespace Sparrow
 
 	  data->range[i] = calRange;
 	}
-	pIR_->integrateData(data);
+	pIR1_->integrateData(data);
       }
 
       break;
       }
 
-      case CAN_R_IR_GET_CONT2:{
+      case CAN_IR_GET_CONT2:{
       DBG(cout << "Consumer::receiveThread: receiveThread message: IR_CONT2" << endl);
 
-      if (pIR_) {
+      if (pIR2_) {
 	Sparrow::Parameters * param = Sparrow::Parameters::instance(); //uli
 	long calRange;
 	Miro::RangeGroupEventIDL * data = new Miro::RangeGroupEventIDL();
@@ -234,7 +238,7 @@ namespace Sparrow
 	    calRange = -1;
 	  } */
 
-	  calRange = IR_LOOKUP_TABLE[message.charData(i)];
+	  calRange = IR_LOOKUP_TABLE[message.byteData(i)];
 
         // -1 wenn Entfernung >= 50cm
 	if (calRange == 500) {
@@ -242,7 +246,7 @@ namespace Sparrow
 	}
 	  data->range[i] = calRange;
 	}
-	pIR_->integrateData(data);
+	pIR2_->integrateData(data);
       }
       break;
       }
@@ -257,7 +261,7 @@ namespace Sparrow
     }
 
 
-    case CAN_R_IR_ALIVE2:{
+    case CAN_IR_ALIVE2:{
       DBG(cout << "Consumer::receiveThread:  received message: IR_ALIVE2" << endl);
       //pAliveCollector->setLastInfraredAlive(ACE_OS::gettimeofday());
 
