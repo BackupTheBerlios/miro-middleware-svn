@@ -5,3 +5,7 @@ PanPosition
 SparrowAlive
 SparrowTest2003
 
+Makefile.in
+Makefile
+.deps
+.libs

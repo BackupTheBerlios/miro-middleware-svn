@@ -64,6 +64,7 @@ AC_CHECK_PROG(ac_has_convert, convert, yes, no)
 AC_CHECK_PROG(ac_has_bibtex, bibtex, yes, no)
 AC_CHECK_PROG(ac_has_makeindex, makeindex, yes, no)
 AC_CHECK_PROG(ac_has_doxygen, doxygen, yes, no)
+AC_CHECK_PROG(ac_has_fig2dev, fig2dev, yes, no)
 
 # our own specific paket tests
 AC_CHECK_LIB(termcap, free)
@@ -119,6 +120,7 @@ if test "x$ac_request_docu" = xyes; then
 	if test "x$ac_has_bibtex" = xyes &&
 	test "x$ac_has_makeindex" = xyes &&
 	test "x$ac_has_convert" = xyes &&
+	test "x$ac_has_fig2dev" = xyes &&
 	 ((test "x$ac_has_latex" = xyes &&
 	   test "x$ac_has_dvips" = xyes) ||
 	  (test "x$ac_has_pdflatex" = xyes)); then
@@ -126,6 +128,7 @@ if test "x$ac_request_docu" = xyes; then
 	fi
 
 	if test "x$ac_has_pdflatex" = xyes &&
+	test "x$ac_has_fig2dev" = xyes &&
 	test "x$ac_has_convert" = xyes; then
 		ac_compile_pdf=yes
 	fi

@@ -8,3 +8,5 @@ grid_coords.eps
 grid_coords.png
 pincolla.png
 signature.png
+Makefile
+Makefile.in

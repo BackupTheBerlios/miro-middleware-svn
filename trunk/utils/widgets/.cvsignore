@@ -1,1 +1,8 @@
 FileListDialog.moc.cpp
+Makefile.in
+Makefile
+.deps
+.libs
+FileListDialog.lo
+FileListDialog.moc.lo
+libmiroWidgets.la

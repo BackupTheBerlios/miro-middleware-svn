@@ -1,1 +1,5 @@
 FaulTest
+Makefile.in
+Makefile
+.deps
+.libs

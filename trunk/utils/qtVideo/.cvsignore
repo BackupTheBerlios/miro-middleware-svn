@@ -1,2 +1,6 @@
 MainForm.moc.cpp
 QtVideo
+Makefile.in
+Makefile
+.deps
+.libs

@@ -1,2 +1,6 @@
 PolicyController.moc.cpp
 PolicyController
+Makefile.in
+Makefile
+.deps
+.libs

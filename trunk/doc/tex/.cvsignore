@@ -22,3 +22,5 @@ miro_manual.ps
 miro_manual.pdf
 miro_reference.dvi
 miro_reference.ps
+Makefile
+Makefile.in

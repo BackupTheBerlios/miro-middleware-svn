@@ -1,2 +1,6 @@
 MotionStatusNotify
 MotionStatusPoll
+Makefile.in
+Makefile
+.deps
+.libs

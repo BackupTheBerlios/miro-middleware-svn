@@ -1,1 +1,5 @@
 DpPanTiltTest
+Makefile.in
+Makefile
+.deps
+.libs

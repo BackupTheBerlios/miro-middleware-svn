@@ -1,1 +1,5 @@
 PanLatency
+Makefile.in
+Makefile
+.deps
+.libs

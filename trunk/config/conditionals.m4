@@ -23,9 +23,9 @@ AC_ARG_ENABLE(
 
 AC_ARG_ENABLE(
 	Pioneer1,
-	AC_HELP_STRING([--enable-Pioneer1], [Turn on Pioneer1 support (default off)]),
+	AC_HELP_STRING([--enable-Pioneer1], [Turn on Pioneer1 support (default on)]),
 	ac_request_pioneer1=$enableval,
-	ac_request_pioneer1=no)
+	ac_request_pioneer1=yes)
 
 AC_ARG_ENABLE(
 	Sparrow99,
@@ -46,9 +46,9 @@ AC_DEFUN(AC_DETERMINE_VIDEODEVICES,
 [
 AC_ARG_ENABLE(
 	BTTV,
-	AC_HELP_STRING([--enable-BTTV], [Turn on BTTV support (default off)]),
+	AC_HELP_STRING([--enable-BTTV], [Turn on BTTV support (default on)]),
 	ac_request_bttv=$enableval,
-	ac_request_bttv=no)
+	ac_request_bttv=yes)
 
 AC_ARG_ENABLE(
 	Meteor,

@@ -2,3 +2,7 @@ LogPlayer
 LogFile.moc.cpp
 MainForm.moc.cpp
 FileSet.moc.cpp
+Makefile.in
+Makefile
+.deps
+.libs
