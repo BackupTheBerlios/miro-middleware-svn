@@ -172,7 +172,7 @@
     </section>
 
     <section name="Video" >
-     <parameter name="Video" >
+     <parameter name="VideoOmniCam" >
       <parameter value="yuv420p" name="Palette" />
       <parameter value="320" name="Width" />
       <parameter value="240" name="Height" />
@@ -191,7 +191,13 @@
               <parameter name="Filter" >
                <parameter value="FilterRGBtoSeg" name="Name" />
                <parameter value="FilterRGBtoSeg" name="Type" />
-             </parameter>
+               <parameter name="Successor" >
+                <parameter name="Filter" >
+                <parameter value="FilterDistanceScan" name="Name" />
+                <parameter value="FilterDistanceScan" name="Type" />
+               </parameter>
+              </parameter>
+	     </parameter>
             </parameter>
 	   </parameter>
           </parameter>
@@ -199,6 +205,24 @@
         </parameter>
        </parameter>
       </parameter>
+      
+       <parameter name="Video" >
+	<parameter value="yuv422" name="Palette" />
+	<parameter value="640" name="Width" />
+	<parameter value="480" name="Height" />
+
+	<parameter name="Filter">
+	  <parameter value="Device1394" name="Name" />
+	  <parameter value="Device1394" name="Type" />
+	  <parameter name="Successor" >
+                <parameter name="Filter" >
+                <parameter value="FilterYUV422toRGBIpp" name="Name" />
+                <parameter value="FilterYUV422toRGB" name="Type" />
+	     </parameter>
+          </parameter>
+	</parameter>
+      </parameter>
+
 
       <parameter name="Camera" >
 	<parameter value="0.060000" name="Latency" />
@@ -291,7 +315,7 @@
       </parameter>
 
       <parameter name="DeviceQuickCam" >
-        <parameter value="15" name="Framerate" />
+        <parameter value="20" name="Framerate" />
         <parameter name="Contrast" value="27648" />
         <parameter name="Brightness" value="-20992" />
         <parameter name="Hue" value="-1"/>
@@ -345,7 +369,13 @@
        </parameter>
       </parameter>
 
-
+      <parameter name="FilterDistanceScan">
+       <parameter value="true" name="InterfaceInstance" />
+       <parameter name="Interface" >
+        <parameter value="DistanceScan" name="Name" />
+       </parameter>
+      </parameter>
+      
       <parameter name="FilterYUV422Save" >
 	<parameter value="true" name="Activate" />
 	<parameter value="50" name="Interval" />
@@ -358,6 +388,9 @@
 
       <parameter name="FilterYUV422toRGBIpp">
 	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="VideoBla" name="Name" />
+	</parameter>
       </parameter>
 
       <parameter name="FilterRGBtoGray">
