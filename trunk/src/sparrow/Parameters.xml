@@ -51,9 +51,11 @@
       <config_parameter name="servo1MidPulse" type="unsigned long" default="3600"/>
       <config_parameter name="deg2ServoTicks" type="double" default="28.2"/>
 
-      <config_parameter name="panLatency" type="ACE_Time_Value" default="0" measure="sec" />
-      <config_parameter name="panMSecPerRad" type="int" default="400" measure="msec" />
-      <config_parameter name="panSwing" type="int" default="200" measure="msec" />
+      <config_parameter name="panLatency" type="ACE_Time_Value" default="0.05" measure="sec" />
+      <config_parameter name="panSwing" type="ACE_Time_Value" default="0.500" measure="sec" />
+      <config_parameter name="panRadPerSec" type="angle" default="180" measure="&deg;" />
+      <config_parameter name="panAccuracy" type="angle" default="2.5" measure="&deg;" />
+      <config_parameter name="panSwingAccuracy" type="angle" default="10." measure="&deg;" />
 
       <config_parameter name="transFactor" type="double" default="1.0776"/>
 

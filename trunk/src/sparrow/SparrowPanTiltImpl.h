@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -13,16 +13,12 @@
 
 #include "miro/SparrowPanTiltS.h"
 #include "miro/Synch.h"
-#include "miro/TimeHelper.h"
 #include "miro/Angle.h"
 
 #include "Parameters.h"
 
 namespace Sparrow
 {
-  using std::min;
-  using std::max;
-
   // forward declaration
   class Connection;
   class Parameters;
@@ -49,51 +45,42 @@ namespace Sparrow
     //    throw (Miro::EDevIO, Miro::EOutOfBounds);
     //  virtual CORBA::Double getTilt() throw (Miro::EDevIO);
 
-    virtual CORBA::Boolean panning() throw();
-    virtual Miro::PanPositionIDL currentPan() throw();
+    virtual CORBA::Boolean panning(const Miro::TimeIDL& stamp) throw();
+    virtual Miro::PanPositionIDL currentPan(const Miro::TimeIDL& stamp) throw();
 
     //  virtual CORBA::Boolean tilting();
 
   protected:
-    bool prvPanning();
-    //  bool prvTilting() const;
-    void updateAccuracy();
-
-    Miro::PanPositionIDL currentPosition();
+    bool prvPanning(const ACE_Time_Value& _t);
+    Miro::PanPositionIDL currentPosition(const ACE_Time_Value& _t);
 
     Connection&              connection;
     const Parameters&        params_;
-
     Miro::Mutex              mutex;
+
     double lastPosition;
     double nextPosition;
-    double actPosition;
-    double accuracy;
-
     ACE_Time_Value timeLastSet;
+
+    ACE_Time_Value totalLatency;
   };
 
   inline
-  void PanTiltImpl::updateAccuracy() {
-    ACE_Time_Value t = ACE_OS::gettimeofday();
-    double delta = 1000.0 * ( t - timeLastSet ).sec() +
-                   ( t - timeLastSet ).usec() / 1000.0;
-    double move = 0.5 * delta / params_.panMSecPerRad;
-    accuracy -= move * 0.8;
-    if( nextPosition > actPosition )
-       actPosition = min( nextPosition, actPosition + move );
-    else
-       actPosition = max( nextPosition, actPosition - move );
-    //    cout << "Pan: " << actPosition << " " << accuracy << endl;
-    timeLastSet = t;
-  }
-
-  inline
   bool 
-  PanTiltImpl::prvPanning()
+  PanTiltImpl::prvPanning(const ACE_Time_Value& _t)
   {
-    updateAccuracy();
-    return accuracy * params_.panMSecPerRad > -params_.panSwing; 
+    if (timeLastSet < _t) {
+      ACE_Time_Value t1 = _t; // elapsed time
+      t1 -= timeLastSet;
+      ACE_Time_Value t2; // time needed to do pan
+      t2.set(fabs(nextPosition - lastPosition) / params_.panRadPerSec);
+      t2 += totalLatency;
+
+      return (params_.panLatency < t1 && t1 < t2);
+    }
+    else {
+      return false;
+    }
   }
 
   /*

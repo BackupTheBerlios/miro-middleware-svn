@@ -2,16 +2,17 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "SparrowPanTiltImpl.h"
 #include "SparrowConnection.h"
+
+#include "miro/TimeHelper.h"
 #include "miro/Angle.h"
 
 namespace Sparrow
@@ -24,16 +25,13 @@ namespace Sparrow
   PanTiltImpl::PanTiltImpl(Connection& _connection) :
     connection(_connection),
     params_(*Parameters::instance()),
-    timeLastSet(ACE_OS::gettimeofday())
+    lastPosition(Miro::deg2Rad(90.)),
+    nextPosition(0.),
+    timeLastSet(ACE_OS::gettimeofday()),
+    totalLatency(params_.panLatency + params_.panSwing)
   {
-    connection.setServo(0, Miro::deg2Rad(0));
-
+    connection.setServo(0, Miro::deg2Rad(0.));
     //    connection.setServo(1, params_.farAngle);
-
-    lastPosition = Miro::deg2Rad(0);
-    nextPosition = lastPosition;
-    actPosition = nextPosition;
-    accuracy = 0;
   }
   
   // Implementation skeleton destructor
@@ -72,14 +70,16 @@ namespace Sparrow
 
     if (value != nextPosition) {
 
+      // get current time
+      ACE_Time_Value t = ACE_OS::gettimeofday();
+
+      // set servo
       connection.setServo(0, value);
 
-      updateAccuracy();
-      lastPosition = nextPosition;
+      // set positioning parameters
+      lastPosition = currentPosition(t).angle;
       nextPosition = value;
-      if( accuracy < 0.0 )
-        accuracy = 0.0;
-      accuracy += fabs( lastPosition - nextPosition ) * 0.6;
+      timeLastSet = t;
     }
   }
   
@@ -87,7 +87,8 @@ namespace Sparrow
   PanTiltImpl::getPan() throw (EDevIO)
   {
     Miro::Guard guard(mutex);
-    return currentPosition().angle;
+    ACE_Time_Value t = ACE_OS::gettimeofday();
+    return currentPosition(t).angle;
   }
 
 #ifdef LETSTILTAGAIN  
@@ -113,17 +114,21 @@ namespace Sparrow
   
 
   CORBA::Boolean 
-  PanTiltImpl::panning() throw()
+  PanTiltImpl::panning(const Miro::TimeIDL& stamp) throw()
   {
     Miro::Guard guard(mutex);
-    return prvPanning();
+    ACE_Time_Value t;
+    Miro::timeC2A(stamp, t);
+    return prvPanning(t);
   }
 
   Miro::PanPositionIDL
-  PanTiltImpl::currentPan() throw()
+  PanTiltImpl::currentPan(const Miro::TimeIDL& stamp) throw()
   {
     Miro::Guard guard(mutex);
-    return currentPosition();
+    ACE_Time_Value t;
+    Miro::timeC2A(stamp, t);
+    return currentPosition(t);
   }
 
 #ifdef LETSTILTAGAIN  
@@ -136,36 +141,39 @@ namespace Sparrow
 #endif
   
   Miro::PanPositionIDL
-  PanTiltImpl::currentPosition()
+  PanTiltImpl::currentPosition(const ACE_Time_Value& stamp)
   {
     Miro::PanPositionIDL position;
-    position.angle = actPosition;
-    position.accuracy = Miro::deg2Rad(3.);
 
-    if (prvPanning()) {
-      position.accuracy += max( Miro::deg2Rad(7.), accuracy );
+    if (!prvPanning(stamp)) {
+      // the pan doesn't move
+      position.angle = nextPosition;
+      position.accuracy = params_.panAccuracy;
+    }
+    else {
+      ACE_Time_Value t = stamp;
+      t -= timeLastSet;
+      t -= params_.panLatency;
 
-#ifdef WEGOTIT
-      ACE_Time_Value delta = ACE_OS::gettimeofday() - timeLastSet;
+      // estimated pan angle
+      double alpha = t.usec();
+      alpha /= 1000000;
+      alpha += t.sec();
+      alpha *= params_.panRadPerSec;
 
-      position.angle = lastPosition;
-      position.accuracy = Miro::deg2Rad(10.);
+      double delta = fabs(nextPosition - lastPosition);
 
-      double blur = Miro::deg2Rad(0.04 * delta.msec());
-
-      int t_msec = (int)fabs((nextPosition - lastPosition) * 300);
-
-      // sind wir noch in der Bewegung?
-      if (delta < ACE_Time_Value(t_msec / 1000 , (t_msec % 1000) * 1000)) {
-	position.angle += (nextPosition - lastPosition) * (double)delta.msec() / (double)t_msec;
+      if (alpha > delta) {
+	// it is swing time
+	position.angle = nextPosition;
+	position.accuracy = params_.panSwingAccuracy;
       }
       else {
-	position.angle = nextPosition;
-	blur *= 1 - (delta.msec() - t_msec) / 400;
+	// we are panning
+	position.angle = (nextPosition > lastPosition)?
+	  lastPosition + alpha : lastPosition - alpha;
+	position.accuracy = std::max(delta * .25, params_.panSwingAccuracy);
       }
-      position.accuracy += blur;
-#endif
-
     }
 
 #ifdef LETSTILTAGAIN
