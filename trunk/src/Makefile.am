@@ -43,12 +43,7 @@ pioneerdirs = \
 endif
 
 if COND_SPARROW99
-if !COND_PIONEER
-sparrowdirs1 = \
-	psos \
-	pioneer
-endif 
-sparrowdirs2 = \
+sparrowdirs = \
 	can \
 	sparrow \
 	faulTty \
@@ -62,6 +57,6 @@ deprecateddirs = \
 endif
 
 
-SUBDIRS = $(globaldirs) $(b21dirs) $(speechdirs) $(pioneerdirs) $(sparrowdirs1) $(sparrowdirs2) $(deprecateddirs)
+SUBDIRS = $(globaldirs) $(b21dirs) $(speechdirs) $(pioneerdirs) $(sparrowdirs) $(deprecateddirs)
 
 
