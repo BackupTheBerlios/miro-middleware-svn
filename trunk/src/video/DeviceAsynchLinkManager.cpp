@@ -31,11 +31,7 @@ namespace Video
     DeviceAsynchBufferSetVector::iterator first, last = bufferSets_.end();
     for (first = bufferSets_.begin(); first != last; ++first) {
       if (_device == first->device()) {
-#if GCC_MAJOR_VERSION >= 3
-	return first.base();
-#else
 	return &(*first);
-#endif
       }
     }
     bufferSets_.push_back(DeviceAsynchBufferSet(_device, &mutex_, &condition_));
