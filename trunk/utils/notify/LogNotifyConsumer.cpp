@@ -49,12 +49,18 @@ LogNotify::LogNotify(Miro::Server& _server,
     throw Miro::CException(errno, std::strerror(errno));
 
   EventTypeSeq added;
-  added.length(parameters_.typeName.size());
+  added.length(parameters_.typeName.size() + parameters_.event.size());
 
-  for (unsigned int i = 0; i < parameters_.typeName.size(); ++i) {
-    added[i].domain_name =  CORBA::string_dup(domainName.c_str());
-    added[i].type_name =
+  int index = 0;
+  for (unsigned int i = 0; i < parameters_.typeName.size(); ++i, ++index) {
+    added[index].domain_name =  CORBA::string_dup(domainName.c_str());
+    added[index].type_name =
       CORBA::string_dup(parameters_.typeName[i].c_str());
+  }
+  for (unsigned int i = 0; i < parameters_.event.size(); ++i, ++index) {
+    added[index].domain_name =  CORBA::string_dup(parameters_.event[i].domain.c_str());
+    added[index].type_name =
+      CORBA::string_dup(parameters_.event[i].type.c_str());
   }
   setSubscriptions(added);
 }

@@ -3,9 +3,15 @@
   <config_global name="include" value="miro/Parameters.h" />
 
   <config_group name="Notification">
+    <config_item name="Event" parent="Miro::Config" instance="false" final="false" >
+      <config_parameter name="type" type="std::string" />
+      <config_parameter name="domain" type="std::string" />
+    </config_item>
+
     <config_item name="LogNotify" parent="Miro::Config" instance="true">
       <config_parameter name="MaxFileSize" type="unsigned long" default="150*1024*1024" measure="bytes" />
       <config_parameter name="TypeName" type="std::vector&lt;std::string&gt;" />
+      <config_parameter name="event" type="std::vector&lt;EventParameters&gt;" />
     </config_item>
   </config_group>
 </config>
