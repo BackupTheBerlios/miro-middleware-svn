@@ -154,8 +154,8 @@
 	<parameter value="30720" name="MaxPower" />
 	<parameter value="29" name="TicksL" />
 	<parameter value="29" name="TicksR" />
-	<parameter value="22.0" name="Deg2ServoTicksL"/>
-	<parameter value="19.0" name="Deg2ServoTicksR"/>
+	<parameter value="21.0" name="Deg2ServoTicksL"/>
+	<parameter value="19.5" name="Deg2ServoTicksR"/>
 	<parameter value="false" name="ChannelSharing" />
 	<parameter name="Motion" >
 	  <parameter value="180" name="MaxRotation" />
