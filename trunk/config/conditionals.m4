@@ -126,3 +126,63 @@ AC_ARG_ENABLE(
 	ac_request_loginfo=$enableval,
 	ac_request_loginfo=yes)
 ])
+
+
+AC_DEFUN([AC_DETERMINE_LIBDC_VERSION],
+[
+	AC_LANG_PUSH(C)
+	AC_MSG_CHECKING(how to setup dma capture)
+	success=failed
+	AC_TRY_COMPILE([
+		#include <dc1394_control.h>
+	],[
+		raw1394handle_t handle;
+		nodeid_t node;
+		dc1394_dma_setup_capture(
+			handle,
+			node,
+			1,
+			FORMAT_VGA_NONCOMPRESSED,
+			MODE_640x480_YUV422,
+			SPEED_400,
+			FRAMERATE_30, 
+			4,
+			1,
+			1,
+			"/dev/blabla",
+			(dc1394_cameracapture *)NULL);
+	],[
+	success=new
+	],[
+	])
+	AC_TRY_COMPILE([
+		#include <dc1394_control.h>
+	],[
+		raw1394handle_t handle;
+		nodeid_t node;
+		dc1394_dma_setup_capture(
+			handle,
+			node,
+			1,
+			FORMAT_VGA_NONCOMPRESSED,
+			MODE_640x480_YUV422,
+			SPEED_400,
+			FRAMERATE_30, 
+			4,
+			1,
+			"/dev/blabla",
+			(dc1394_cameracapture *)NULL);
+	],[
+	success=old
+	],[
+	])
+	AC_MSG_RESULT($success)
+	AC_LANG_POP()
+
+	AH_TEMPLATE([LIBDC1394_VERSION], [the used libdc1394 version.])
+	if test "x$success" != "xfailed"; then
+		AC_DEFINE_UNQUOTED(LIBDC1394_VERSION, $success)
+	else
+		AC_MSG_ERROR([Cannot determine libdc1394 version. Giving up. For more details about this problem, look at the end of config.log.])
+	fi
+])

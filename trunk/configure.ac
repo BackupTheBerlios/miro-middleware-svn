@@ -40,6 +40,8 @@ AC_PROG_LIBTOOL
 AC_CHECK_LIB(raw1394, raw1394_get_libversion, [ac_have_libraw1394=yes], [ac_have_libraw1394=no])
 AC_CHECK_LIB(dc1394_control, dc1394_print_feature_set, [ac_have_libdc1394=yes], [ac_have_libdc1394=no], [-lraw1394])
 
+AC_DETERMINE_LIBDC_VERSION
+
 # Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS([errno.h fcntl.h netinet/in.h stdlib.h string.h sys/ioctl.h sys/time.h termios.h unistd.h])

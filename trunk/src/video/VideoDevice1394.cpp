@@ -15,6 +15,10 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.14  2004/05/19 14:50:26  gmayer
+ * YACT -- yet another configure test
+ * because there is a change in libdc1394 0.9.4 we need to check which interface we have to use....
+ *
  * Revision 1.13  2004/03/11 12:04:47  hutz
  * cleaning up debug output for filter framework, firewire and quickcam
  * BTTV and Meteor are left dirty for now.
@@ -356,6 +360,20 @@ namespace Video
 		  "ISO channel: " << channel << "    speed: " << speed);
     channel = 1;
 
+#if (LIBDC1394_VERSION == new)
+    if (dc1394_dma_setup_capture(handle_,
+				 p_camera_->node,
+				 channel,
+				 FORMAT_VGA_NONCOMPRESSED,
+				 imageFormat_,
+				 SPEED_400,
+				 frameRate_,
+				 NUM_BUFFERS,
+				 1,
+				 DROP_FRAMES,
+				 params_.device.c_str(),
+				 p_camera_) != DC1394_SUCCESS)
+#elif (LIBDC1394_VERSION == old)
     if (dc1394_dma_setup_capture(handle_,
 				 p_camera_->node,
 				 channel,
@@ -367,6 +385,7 @@ namespace Video
 				 DROP_FRAMES,
 				 params_.device.c_str(),
 				 p_camera_) != DC1394_SUCCESS)
+#endif
       throw Miro::Exception("Device1394::handleConnect: unable to setup camera");
 	
     if (dc1394_start_iso_transmission(handle_, p_camera_->node) != DC1394_SUCCESS)
