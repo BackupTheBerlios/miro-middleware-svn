@@ -12,6 +12,7 @@
 #include "DynamicWindow.h"
 #include <iostream>
 #include <complex>
+#include <cstdio>
 #include <cmath>
 
 namespace Miro
@@ -77,15 +78,20 @@ namespace Miro
     const double WHEEL_DISTANCE  = 390.;  // in mm
     const double MIN_DISTANCE = 10; // in mm
 
-    bool CURV[CURV_COUNT,CURV_SEGS];	// curvature space
-    int count, seg, rel;
-    double fLeft, fRight;
+    bool CURV[42][21];	// curvature space
+    int count, seg;
+    double fLeft, fRight, offset, angle, rel;
 
-    for(count = 1; count++; count <= CURV_COUNT / 2) {
+    std::FILE *logFile;
+    logFile = std::fopen("Curvature.log","w");
 
-      rel = tan(count * M_PI / (2 * ((CURV_COUNT / 2) + 1)));
-      if(rel != 1)
-        if(rel>=1) {
+    for(count = 1; count <= CURV_COUNT / 2; count++) {
+
+      rel = tan((double)count * M_PI / (2 * ((CURV_COUNT / 2) + 1)));
+
+      if(rel != 1.) {
+
+	if(rel>=1) {
           fLeft = CURV_SEG_LEN;
           fRight = fLeft / rel;
         }
@@ -98,15 +104,23 @@ namespace Miro
         angle = (180. * (fLeft - fRight)) / (WHEEL_DISTANCE * M_PI);
 
 	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -1 * angle * (CURV_SEGS - 1) / 2);
-	getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) < MIN_DISTANCE ? CURV[count,0] = false : CURV[count,seg] = true;
-        for(seg = 1; seg++; seg <= CURV_SEGS)
-          rotateMountedPolygon(_robot, Vector2d(-offset, 0.), angle);
-          getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) < MIN_DISTANCE ? CURV[count,seg] = false : CURV[count,seg] = true;
-        }
-	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -1 * angle * (CURV_SEGS - 1) / 2);
-      }
+	getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) < MIN_DISTANCE ? CURV[count][0] = false : CURV[count][seg] = true;
+	fprintf(logFile,"%d\n",CURV[count][0]);
 
+        for(seg = 1; seg <= CURV_SEGS; seg++) {
+          rotateMountedPolygon(_robot, Vector2d(-offset, 0.), angle);
+          getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) < MIN_DISTANCE ? CURV[count][seg] = false : CURV[count][seg] = true;
+	  fprintf(logFile,"%d\n",CURV[count][0]);
+
+        }
+
+	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -1 * angle * (CURV_SEGS - 1) / 2);
+	
+      }
+      
     }
+
+    fclose(logFile);
 
   }
 

@@ -35,6 +35,8 @@ namespace Miro
     // florian: const &    // florian: const vector , const ?
     void setPreferredDirection(double);
 
+    void collisionCheckDeluxe(std::vector<Vector2d>&, std::vector<Vector2d>&);
+
     // florain: const !
     void collisionCheck(std::vector<Vector2d>&, std::vector<Vector2d>&);
     // calculate the new velocity using the content
