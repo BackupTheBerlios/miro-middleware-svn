@@ -302,7 +302,7 @@ realclean: clean
  ExceptionC.i KickerC.i
 
 .obj/SparrowPanTiltC.o .obj/SparrowPanTiltC.so .shobj/SparrowPanTiltC.o .shobj/SparrowPanTiltC.so: SparrowPanTiltC.cpp SparrowPanTiltC.h PanC.h \
- ExceptionC.h ExceptionC.i PanC.i SparrowPanTiltC.i
+ ExceptionC.h ExceptionC.i PanC.i TimeC.h TimeC.i SparrowPanTiltC.i
 
 .obj/SparrowStallC.o .obj/SparrowStallC.so .shobj/SparrowStallC.o .shobj/SparrowStallC.so: SparrowStallC.cpp SparrowStallC.h StallC.h StallC.i \
  SparrowStallC.i
@@ -473,6 +473,8 @@ realclean: clean
  Singleton.h Synch.h Exception.h Behaviour.h \
  BehaviourParameters.h DynamicWindow.h ActionPattern.h Synch.h \
  Policy.h ArbiterParameters.h Arbiter.h
+
+.obj/BAFactory.o .obj/BAFactory.so .shobj/BAFactory.o .shobj/BAFactory.so: BAFactory.cpp BAFactory.h
 
 .obj/EventBehaviour.o .obj/EventBehaviour.so .shobj/EventBehaviour.o .shobj/EventBehaviour.so: EventBehaviour.cpp EventBehaviour.h Behaviour.h \
  BehaviourParameters.h DynamicWindow.h ActionPattern.h Synch.h \

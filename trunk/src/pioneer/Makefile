@@ -114,19 +114,29 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/PioneerStallS.i Parameters.h \
  $(MIRO_ROOT)/src/psos/Parameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h PioneerMotionImpl.h \
+ $(MIRO_ROOT)/src/miro/MotionS.h $(MIRO_ROOT)/src/miro/ExceptionS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/ExceptionS.i $(MIRO_ROOT)/src/miro/VelocityS.h \
+ $(MIRO_ROOT)/src/miro/VelocityS.i $(MIRO_ROOT)/src/miro/MotionC.h \
+ $(MIRO_ROOT)/src/miro/MotionC.i $(MIRO_ROOT)/src/miro/MotionS.i \
+ $(MIRO_ROOT)/src/miro/OdometryC.h $(MIRO_ROOT)/src/miro/OdometryC.i \
+ $(MIRO_ROOT)/src/miro/DifferentialMotionImpl.h \
+ $(MIRO_ROOT)/src/miro/DifferentialMotionS.h \
+ $(MIRO_ROOT)/src/miro/DifferentialMotionC.h \
+ $(MIRO_ROOT)/src/miro/DifferentialMotionC.i \
+ $(MIRO_ROOT)/src/miro/DifferentialMotionS.i \
+ $(MIRO_ROOT)/src/miro/MotionImpl.h $(MIRO_ROOT)/src/miro/Exception.h \
  CanonPanTiltImpl.h \
  $(MIRO_ROOT)/src/miro/CanonPanTiltS.h $(MIRO_ROOT)/src/miro/PanTiltS.h \
- $(MIRO_ROOT)/src/miro/TiltS.h $(MIRO_ROOT)/src/miro/ExceptionS.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/ExceptionS.i $(MIRO_ROOT)/src/miro/TiltC.h \
+ $(MIRO_ROOT)/src/miro/TiltS.h $(MIRO_ROOT)/src/miro/TiltC.h \
  $(MIRO_ROOT)/src/miro/TiltC.i $(MIRO_ROOT)/src/miro/TiltS.i \
  $(MIRO_ROOT)/src/miro/PanS.h $(MIRO_ROOT)/src/miro/PanC.h \
  $(MIRO_ROOT)/src/miro/PanC.i $(MIRO_ROOT)/src/miro/PanS.i \
  $(MIRO_ROOT)/src/miro/PanTiltC.h $(MIRO_ROOT)/src/miro/PanTiltC.i \
  $(MIRO_ROOT)/src/miro/PanTiltS.i $(MIRO_ROOT)/src/miro/CanonPanTiltC.h \
  $(MIRO_ROOT)/src/miro/CanonPanTiltC.i \
- $(MIRO_ROOT)/src/miro/CanonPanTiltS.i $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/CanonPanTiltS.i \
  PioneerConnection.h \
  $(MIRO_ROOT)/src/psos/PsosConnection.h \
  $(MIRO_ROOT)/src/miro/TtyConnection.h \
@@ -140,21 +150,11 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/RangeEventS.h $(MIRO_ROOT)/src/miro/TimeS.h \
  $(MIRO_ROOT)/src/miro/TimeS.i $(MIRO_ROOT)/src/miro/RangeEventS.i \
  $(MIRO_ROOT)/src/miro/RangeSensorC.h $(MIRO_ROOT)/src/miro/RangeSensorC.i \
- $(MIRO_ROOT)/src/miro/RangeSensorS.i \
- $(MIRO_ROOT)/src/miro/DifferentialMotionImpl.h \
- $(MIRO_ROOT)/src/miro/DifferentialMotionS.h \
- $(MIRO_ROOT)/src/miro/MotionS.h $(MIRO_ROOT)/src/miro/VelocityS.h \
- $(MIRO_ROOT)/src/miro/VelocityS.i $(MIRO_ROOT)/src/miro/MotionC.h \
- $(MIRO_ROOT)/src/miro/MotionC.i $(MIRO_ROOT)/src/miro/MotionS.i \
- $(MIRO_ROOT)/src/miro/DifferentialMotionC.h \
- $(MIRO_ROOT)/src/miro/DifferentialMotionC.i \
- $(MIRO_ROOT)/src/miro/DifferentialMotionS.i \
- $(MIRO_ROOT)/src/miro/MotionImpl.h $(MIRO_ROOT)/src/miro/OdometryImpl.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorS.i $(MIRO_ROOT)/src/miro/OdometryImpl.h \
  $(MIRO_ROOT)/src/miro/OdometryS.h $(MIRO_ROOT)/src/miro/PositionS.h \
  $(MIRO_ROOT)/src/miro/WorldPointS.h $(MIRO_ROOT)/src/miro/WorldPointS.i \
  $(MIRO_ROOT)/src/miro/PositionS.i $(MIRO_ROOT)/src/miro/MotionStatusS.h \
- $(MIRO_ROOT)/src/miro/MotionStatusS.i $(MIRO_ROOT)/src/miro/OdometryC.h \
- $(MIRO_ROOT)/src/miro/OdometryC.i $(MIRO_ROOT)/src/miro/OdometryS.i \
+ $(MIRO_ROOT)/src/miro/MotionStatusS.i $(MIRO_ROOT)/src/miro/OdometryS.i \
  $(MIRO_ROOT)/src/miro/BatteryImpl.h $(MIRO_ROOT)/src/miro/BatteryS.h \
  $(MIRO_ROOT)/src/miro/BatteryC.h $(MIRO_ROOT)/src/miro/BatteryC.i \
  $(MIRO_ROOT)/src/miro/BatteryS.i $(MIRO_ROOT)/src/miro/TimeHelper.h \

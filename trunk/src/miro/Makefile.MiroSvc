@@ -301,7 +301,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 .obj/SparrowPanTiltS.o .obj/SparrowPanTiltS.o .obj/SparrowPanTiltS.o .obj/SparrowPanTiltS.o: SparrowPanTiltS.cpp SparrowPanTiltS.h PanS.h \
  ExceptionS.h ExceptionC.h ExceptionC.i ExceptionS.i PanC.h PanC.i \
- PanS.i SparrowPanTiltC.h SparrowPanTiltC.i SparrowPanTiltS.i
+ PanS.i TimeS.h TimeC.h TimeC.i TimeS.i SparrowPanTiltC.h \
+ SparrowPanTiltC.i SparrowPanTiltS.i
 
 .obj/SparrowStallS.o .obj/SparrowStallS.o .obj/SparrowStallS.o .obj/SparrowStallS.o: SparrowStallS.cpp SparrowStallS.h StallS.h StallC.h \
  StallC.i StallS.i SparrowStallC.h SparrowStallC.i SparrowStallS.i
