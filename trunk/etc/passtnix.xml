@@ -301,6 +301,7 @@
       <kappa>1.703137e-02</kappa>
       <height>580</height>
       <alpha>34.0</alpha>
+      <latency>0.12</latency>
     </Camera>
   </Sparrow99>
   <Notification>
