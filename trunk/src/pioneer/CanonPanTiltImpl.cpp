@@ -105,7 +105,7 @@ cout << "position set" << endl;
   double
   CanonPanTiltImpl::getPan() throw(Miro::EDevIO)
   {
-    Miro::PanTiltPositionIDL pos=getPosition();
+    Miro::PanTiltPositionIDL pos = getPosition();
     return pos.panvalue;
     
   }
@@ -129,7 +129,7 @@ cout << "position set" << endl;
   double 
   CanonPanTiltImpl::getTilt() throw(Miro::EDevIO)
   {
-    Miro::PanTiltPositionIDL pos=getPosition();
+    Miro::PanTiltPositionIDL pos = getPosition();
     return pos.tiltvalue;
 
   }
@@ -140,8 +140,10 @@ cout << "position set" << endl;
   Miro::PanTiltPositionIDL 
   CanonPanTiltImpl::getPosition() throw(Miro::EDevIO)
   {
+    cout << "getPosition" << endl;
+
     Miro::PanTiltPositionIDL result;
-    bool done=false;
+    bool done = false;
 
     waitInitialize();
 
@@ -292,9 +294,12 @@ cout << "miro exception" << endl;
       //Miro's pan standart is opposite to camera's !!!
       goal.panvalue = -goal.panvalue;
     }
+
     do {
       //test if finished
-      dest=getPosition();
+      cout << "waitCompletion getPosition" << endl;
+
+      dest = getPosition();
     } 
     while ( (fabs(goal.panvalue-dest.panvalue) > 0.01) || 
 	    (fabs(goal.tiltvalue-dest.tiltvalue) > 0.01) );
@@ -503,7 +508,8 @@ cout << "miro exception" << endl;
   CanonPanTiltImpl::getLimits() throw(Miro::EDevIO, Miro::ETimeOut)
   {
     CanonPanTiltLimitsIDL result;
-    if (!initialized) initialize();
+    if (!initialized) 
+      initialize();
 
     Message getMinPan(GET_ANGLE_LIMITS,0x30);
     Message getMaxPan(GET_ANGLE_LIMITS,0x31);
@@ -541,7 +547,8 @@ cout << "miro exception" << endl;
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
 	timeout+=maxWait;
 	
-	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	if (pAnswer->cond.wait(&timeout) == -1)
+	  throw Miro::ETimeOut(); 
 	//wait until the error code is finished or timeout
       }
       //get the rest
@@ -561,7 +568,7 @@ cout << "miro exception" << endl;
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
 	timeout+=maxWait;
 	
-	if (pAnswer->cond.wait(&timeout)==-1)
+	if (pAnswer->cond.wait(&timeout) == -1)
 	  throw Miro::ETimeOut(); 
 	//wait until the error code is finished or timeout
       }
@@ -618,8 +625,13 @@ cout << "miro exception" << endl;
    
     pAnswer->init();
     connection.sendCamera(getRatio);
-    while (!pAnswer->errorCode()) 
-      pAnswer->cond.wait(); //wait until the error code is finished
+    while (!pAnswer->errorCode()) {
+      ACE_Time_Value timeout(ACE_OS::gettimeofday());
+      timeout += maxWait;
+      
+      if (pAnswer->cond.wait(&timeout) == -1) 
+	throw Miro::ETimeOut(); 
+    }
     
     //if there is no error, read the rest of the parameters
     if (pAnswer->errorCode() == ERROR_NO_ERROR)
@@ -645,9 +657,13 @@ cout << "miro exception" << endl;
 
     pAnswer->init();
     connection.sendCamera(getRatio);
-    while (!pAnswer->errorCode()) 
-      pAnswer->cond.wait(); //wait until the error code is finished
-    
+    while (!pAnswer->errorCode()) {
+      ACE_Time_Value timeout(ACE_OS::gettimeofday());
+      timeout += maxWait;
+      
+      if (pAnswer->cond.wait(&timeout) == -1) 
+	throw Miro::ETimeOut(); 
+    }
     //if there is no error, read the rest of the parameters
     if (pAnswer->errorCode() == ERROR_NO_ERROR)
       connection.getCamera(4);
@@ -671,8 +687,7 @@ cout << "miro exception" << endl;
       pAnswer->init();
       connection.sendCamera(msg);
       checkAnswer();
-    }
-    {//scope for mutex
+
       Canon::Message initMsg(INITIALIZE1,0x030);
       pAnswer->init();
       connection.sendCamera(initMsg);
@@ -683,11 +698,11 @@ cout << "miro exception" << endl;
       getPanPulseRatio();
       getTiltPulseRatio();
     }
-    initialized=true;
+    initialized = true;
   }
   
   void
-  CanonPanTiltImpl::waitInitialize(bool force,bool forceWait)
+  CanonPanTiltImpl::waitInitialize(bool force, bool forceWait)
   {
     bool done;
     
@@ -698,10 +713,13 @@ cout << "miro exception" << endl;
     if (!forceWait && !force && initialized)
       return;
 
+    cout << "wait initialize 1" << endl;
     //initialize only if not initialized
     //or asked for initialization
     if (force || !initialized) 
       initialize();
+
+    cout << "wait initialize 2" << endl;
     do {
       done = true;
       try {
@@ -711,6 +729,8 @@ cout << "miro exception" << endl;
       catch (Miro::EDevIO & e) {
 	// avoid "mode" errors
 	done = false;
+	cout << "initialize error" << endl;
+
       }
     } while(!done);
   }
@@ -721,7 +741,7 @@ cout << "miro exception" << endl;
   {
     while (!pAnswer->isValid()) { //try to get the whole answer
       ACE_Time_Value timeout(ACE_OS::gettimeofday());
-      timeout+=maxWait;
+      timeout += maxWait;
       
       if (pAnswer->cond.wait(&timeout) == -1) 
 	throw Miro::ETimeOut(); 
