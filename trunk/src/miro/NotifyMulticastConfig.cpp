@@ -3,16 +3,17 @@
 //  NotifyMulticast Config
 //
 //
-//  (c) 2002
+//  (c) 2002, 2003
 //  Department of Neural Information Processing, University of Ulm, Germany
 //
 //
 //  Authors:
-//    Philipp Baer <phbaer@openums.org>
+//    Philipp Baer <philipp.baer@informatik.uni-ulm.de>
+//    Hans Utz <hans.utz@informatik.uni-ulm.de>
 //
 //
 //  Version:
-//    1.0.3
+//    1.0.4
 //
 //
 //  Todo:
@@ -25,12 +26,20 @@
 /* NotifyMulticast includes */
 #include "NotifyMulticastDefines.h"
 #include "NotifyMulticastConfig.h"
+#include "NotifyMulticastParameters.h"
+
+#include <sstream>
 
 #define DBG_CLASSNAME "NotifyMulticast::Config"
 
 namespace Miro {
 
     namespace NotifyMulticast {
+
+	const char Config::months[13][4] = {
+	    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+	    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+	};
 
         /**
          * Config::Config()
@@ -43,8 +52,23 @@ namespace Miro {
             socketAddress_(),
             socket_(new ACE_SOCK_Dgram_Mcast()),
             domain_(),
-            subscribed_(false)
+	    subscribed_(false),
+            logfile_()
         {
+	    Parameters *parameters = Parameters::instance();
+
+	    cout << "NotifyMulticast Logfile: " << parameters->logfile << endl;
+	    /* setup logfile */
+	    if (parameters->logfile.length() > 0) {
+		logfile_.open(parameters->logfile.c_str());
+
+		if (!logfile_.is_open()) {
+		    PRINT_ERR("Error opening/creating logfile " << parameters->logfile);
+		    useLogfile_ = false;
+		} else
+                    useLogfile_ = true;
+	    }
+
         }
 
 
@@ -185,5 +209,32 @@ namespace Miro {
         unsigned long int Config::getEventMaxAge() {
             return eventMaxAge_;
         }
+
+
+	/**
+	 * Config::logfile()
+	 *
+	 *   Description:
+	 *     Return pointer to logfile
+	 */
+        ofstream *Config::logfile() {
+	    return (useLogfile_ ? &logfile_ : NULL);
+	}
+
+
+	std::string Config::datetime() {
+	    std::stringstream str;
+
+	    dt_.update();
+
+	    str << months[dt_.month()] << " "
+		<< (dt_.day() < 10 ? "0" : "") << dt_.day() << " "
+		<< (dt_.hour() < 10 ? "0" : "") << dt_.hour() << ":"
+		<< (dt_.minute() < 10 ? "0" : "") << dt_.minute() << ":"
+		<< (dt_.second() < 10 ? "0" : "") << dt_.second() << ": ";
+
+	    return str.str();
+	}
+
     };
 };

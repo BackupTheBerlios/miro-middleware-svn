@@ -3,16 +3,17 @@
 //  NotifyMulticast Config
 //
 //
-//  (c) 2002
+//  (c) 2002, 2003
 //  Department of Neural Information Processing, University of Ulm, Germany
 //
 //
 //  Authors:
-//    Philipp Baer <phbaer@openums.org>
+//    Philipp Baer <philipp.baer@informatik.uni-ulm.de>
+//    Hans Utz <hans.utz@informatik.uni-ulm.de>
 //
 //
 //  Version:
-//    1.0.3
+//    1.0.4
 //
 //
 //  Description:
@@ -21,6 +22,9 @@
 //
 //
 //    Changes:
+//
+//      1.0.4
+//      - added logging support
 //
 //      1.0.3
 //      - many clean ups
@@ -45,6 +49,7 @@
 /* ACE includes */
 #include <ace/SOCK_Dgram_Mcast.h>
 #include <ace/INET_Addr.h>
+#include <ace/Date_Time.h>
 
 /* TAO includes */
 #include <orbsvcs/CosNotifyChannelAdminS.h>
@@ -82,6 +87,10 @@ namespace Miro {
             void setEventMaxAge(unsigned long int _eventMaxAge);
             unsigned long int getEventMaxAge();
 
+	    ofstream *logfile();
+
+	    std::string datetime();
+
         protected:
             CosNotifyChannelAdmin::EventChannel_var  eventChannel_;
 
@@ -93,6 +102,15 @@ namespace Miro {
             unsigned long int                        eventMaxAge_;
 
             bool                                     subscribed_;
+
+	    /* logfile */
+	    std::ofstream                            logfile_;
+	    bool                                     useLogfile_;
+
+	    ACE_Date_Time                            dt_;
+
+	    static const char                        months[13][4];
+
         };
     };
 };

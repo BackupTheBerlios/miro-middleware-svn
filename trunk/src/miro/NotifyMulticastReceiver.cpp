@@ -53,7 +53,8 @@ namespace Miro {
             configuration_(_configuration),
             maxRetry_(5),
             mutex_(),
-            localIPs_()
+	    localIPs_(),
+            droppedLocal_(0)
         {
             PRINT_DBG(DBG_INFO, "Initializing for domain " << configuration_->getDomain());
 
@@ -62,8 +63,16 @@ namespace Miro {
 
             ACE::get_ip_interfaces(localsCount, locals);
 
-            for (ACE_INET_Addr *i = locals; i != locals + localsCount; ++i)
-                localIPs_.insert(i->get_ip_address());
+	    LOG(configuration_, "Local ip interfaces determined by Receiver:");
+
+	    for (ACE_INET_Addr *i = locals; i != locals + localsCount; ++i) {
+		struct in_addr ia;
+
+                ia.s_addr = htonl(i->get_ip_address());
+		localIPs_.insert(i->get_ip_address());
+
+		LOG(configuration_, "  " << inet_ntoa(ia));
+	    }
 
             delete []locals;
 
@@ -95,7 +104,9 @@ namespace Miro {
         void Receiver::disconnect_structured_push_supplier(ACE_ENV_SINGLE_ARG_DECL_NOT_USED)
             throw(CORBA::SystemException)
         {
-            PRINT("Disconnected");
+	    PRINT("Disconnected");
+
+	    LOG(configuration_, "Receiver: push consumer disconnected!");
 
             connected_ = false;
         }
@@ -121,8 +132,13 @@ namespace Miro {
                     if (!CORBA::is_nil(proxyConsumer_.in()))
                         proxyConsumer_->push_structured_event(event);
                 } catch (...) {
-                    connected_ = false;
-                    throw CosEventComm::Disconnected();
+		    connected_ = false;
+
+		    PRINT_DBG(DBG_INFO, "sendEvent(): cannot push structured event");
+
+		    LOG(configuration_, "Receiver::sendEvent(): cannot push structured event");
+
+		    throw CosEventComm::Disconnected();
                 }
 
             } else
@@ -147,12 +163,14 @@ namespace Miro {
 
                 switch (receiveData(iov, from)) {
                 case -1:
-                    PRINT_DBG(DBG_INFO, "handleInput: read");
+		    PRINT_DBG(DBG_INFO, "handleInput: receiveData failed (-1)");
+		    LOG(configuration_, "Receiver::handleInput(): receiveData failed (-1)");
                     return -1;
 
                 case 0:
-                    PRINT_DBG(DBG_INFO, "handleInput: read 0");
-                    return 0;
+                    PRINT_DBG(DBG_INFO, "handleInput: receiveData returned 0 bytes");
+		    LOG(configuration_, "Receiver::handleInput(): receiveData returned 0 bytes");
+		    return 0;
 
                 default:
                     /* fall through */
@@ -160,15 +178,24 @@ namespace Miro {
                 }
 
                 /* Check if paket was sent locally and if so, drop it */
-                if (is_loopback(from))
-                    return 0;
+		if (is_loopback(from)) {
+		    droppedLocal_++;
 
-//#if DEBUG_LEVEL == DBG_TOOMUCH
+		    if (droppedLocal_ % 100 == 99)
+			LOG(configuration_, "Receiver::handle_input(): dropped " << droppedLocal_ << " packets from myself");
+
+		    if (droppedLocal_ == 0xffffffff)
+			LOG(configuration_, "Receiver::handle_input(): number of locally dropped packets reset to 0");
+
+		    return 0;
+		}
+
+#if DEBUG_LEVEL == DBG_TOOMUCH
                 struct in_addr ia;
                 ia.s_addr = htonl(from.get_ip_address());
 
                 PRINT("Datagram from " << inet_ntoa(ia) << ":" << from.get_port_number());
-//#endif
+#endif
 
                 /* Process packet */
                 memcpy(header, ((char *)iov[0].iov_base ), sizeof(header));
@@ -251,10 +278,18 @@ namespace Miro {
                 (_eventData.fragmentOffset >= _eventData.requestSize)  ||
                 (_eventData.fragmentId     >= _eventData.fragmentCount)) {
 
-                PRINT_DBG(DBG_INFO, "Dropping packet");
+		PRINT_DBG(DBG_INFO, "Dropping packet");
+
+		LOG(configuration_, "Receiver::handle_event(): Packet (id=" << _eventData.requestId << ") dropped due to errors:");
+                LOG(configuration_, "(requestSize >= fragmentSize) && (fragmentOffset < requestSize) && (fragmentId < fragmentCount)");
+		LOG(configuration_, "  requestSize   " << _eventData.requestSize);
+                LOG(configuration_, "  fragmentSize  " << _eventData.fragmentSize);
+                LOG(configuration_, "  fragmentId    " << _eventData.fragmentId);
+                LOG(configuration_, "  fragmentCount " << _eventData.fragmentCount);
 
                 return 0;
-            }
+	    }
+
             /* Index the incomplete (due to fragmentation) requests */
             RequestIndex     mapIndex(from, _eventData.requestId);
             RequestMapEntry *entry;
@@ -274,7 +309,8 @@ namespace Miro {
                     return 0;
                 }
             }
-            /* Validate the message... */
+
+	    /* Validate the message... */
             if (entry->int_id_->validateFragment(_eventData.byteOrder,
                                                  _eventData.requestSize,
                                                  _eventData.fragmentSize,
@@ -283,26 +319,39 @@ namespace Miro {
                                                  _eventData.fragmentCount) == 0) {
                 PRINT_DBG(DBG_VERBOSE, "Fragment rejected");
 
-                return 0;
-            }
-            /* Already received this fragment */
-            if (false && entry->int_id_->testReceived(_eventData.fragmentId) == 1) {
+		LOG(configuration_, "Receiver::handle_event(): Fragment (id=" << _eventData.fragmentId << ") rejected due to errors");
+
+		return 0;
+	    }
+
+	    /* Already received this fragment */
+	    /* WAS: "if (false && entry->...)" */
+            if (entry->int_id_->testReceived(_eventData.fragmentId) == 1) {
                 PRINT_DBG(DBG_VERBOSE, "Duplicate Fragment, dropping");
+
+                LOG(configuration_, "Receiver::handle_event(): duplicate fragment, fragment dropped");
 
                 return 0;
             }
             /* Copy the payload into the fragment buffer */
             char *buffer = (char *)_iov[0].iov_base + HEADER_SIZE;
-            int   bufferLen = _iov[0].iov_len - HEADER_SIZE;
+	    int   bufferLen = _iov[0].iov_len - HEADER_SIZE;
+
             memcpy(entry->int_id_->fragmentBuffer(_eventData.fragmentOffset),
                    buffer,
                    bufferLen);
-            /* Mark datagram fragment as received */
+
+	    /* Mark datagram fragment as received */
             entry->int_id_->markReceived(_eventData.fragmentId);
-            /* If the message is not complete we must return... */
-            if (!entry->int_id_->complete())
+
+	    /* If the message is not complete we must return... */
+	    if (!entry->int_id_->complete()) {
+                LOG(configuration_, "Receiver::handle_event(): message incomplete, message dropped");
+
                 return 0;
-            /* Demarshal datagram payload */
+	    }
+
+	    /* Demarshal datagram payload */
             ACE_DECLARE_NEW_CORBA_ENV;
             ACE_TRY {
                 CosNotification::StructuredEvent event;
@@ -311,17 +360,20 @@ namespace Miro {
                 entry->int_id_->decode(event);
                 ACE_TRY_CHECK;
 
-                /* Drop packet if it's too old */
-                if (ACE_OS::gettimeofday().msec() - _eventData.timestamp > configuration_->getEventMaxAge()) {
+		/* Drop packet if it's too old */
+		unsigned int time = ACE_OS::gettimeofday().msec();
+                if (time - _eventData.timestamp > configuration_->getEventMaxAge()) {
                     PRINT_DBG(DBG_VERBOSE, "Packet " << _eventData.requestId << " dropped because it was too old");
-                    return 0;
-                }
+		    LOG(configuration_, "Receiver::handle_event(): message too old (" << time - _eventData.timestamp << ", dropped message");
+		    return 0;
+		}
 
                 /* Send event to event channel */
-                sendEvent(event);
-                ACE_TRY_CHECK;
+		sendEvent(event);
+		ACE_TRY_CHECK;
 
             } ACE_CATCHANY {
+		LOG(configuration_, "Receiver::handle_event(): Exception");
                 ACE_PRINT_EXCEPTION(ACE_ANY_EXCEPTION, "NotifyMulticastReceiver::handle_input");
             }
             ACE_ENDTRY;

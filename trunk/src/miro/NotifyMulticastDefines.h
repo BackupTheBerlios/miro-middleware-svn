@@ -54,4 +54,15 @@
 #  define PRINT_DBG(l, x)
 #endif
 
+/* needed for QT/ACE compatibility */
+//#define QT_GENUINE_STR
+
+#undef RRC_DEBUG
+
+#define LOG(cfg, x) { \
+    if ((cfg)->logfile() != NULL) { \
+    (*((cfg)->logfile())) << (cfg)->datetime() << x << endl; \
+    } \
+    }
+
 #endif

@@ -3,16 +3,16 @@
 //  NotifyMulticastSender
 //
 //
-//  (c) 2002
+//  (c) 2002, 2003
 //  Department of Neural Information Processing, University of Ulm, Germany
 //
 //
 //  Authors:
-//    Philipp Baer <phbaer@openums.org>
+//    Philipp Baer <philipp.baer@informatik.uni-ulm.de>
 //
 //
 //  Version:
-//    1.0.3
+//    1.0.4
 //
 //
 //  Description:
@@ -23,6 +23,9 @@
 //
 //
 //  Changes:
+//
+//    1.0.4
+//     - added some logging output
 //
 //    1.0.3
 //      - many clean ups

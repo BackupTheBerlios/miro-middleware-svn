@@ -3,16 +3,17 @@
 //  NotifyMulticast Adapter
 //
 //
-//  (c) 2001, 2002
+//  (c) 2001, 2002, 2003
 //  Department of Neural Information Processing, University of Ulm, Germany
 //
 //
 //  Authors:
-//    Philipp Baer <phbaer@openums.org>
+//    Philipp Baer <philipp.baer@informatik.uni-ulm.de>
+//    Hans Utz <hans.utz@informatik.uni-ulm.de>
 //
 //
 //  Version:
-//    1.0.3
+//    1.0.4
 //
 //
 //  Description:
@@ -38,6 +39,10 @@
 //
 //
 //  Changes:
+//
+//    1.0.4
+//    - removed code that was commented out
+//    - added support for logging debug output to a file
 //
 //    1.0.3
 //    - many clean ups
@@ -94,6 +99,7 @@
 /* g++lib includes */
 #include <string>
 #include <map>
+#include <fstream>
 
 namespace Miro {
 
@@ -118,24 +124,23 @@ namespace Miro {
         class Adapter {
 
         public:
-	  //! Initializing constructor.
+	    //! Initializing constructor.
             Adapter(int                                      _argc,
                     char                                    *_argv[],
                     Miro::Client                            *_client,
                     CosNotifyChannelAdmin::EventChannel_ptr  _eventChannel,
 		    unsigned int                             _eventMaxAge = 500,
-                    // ACE_Time_Value                           _timeoutHandlerInterval = ACE_Time_Value(0, 50000),
                     std::string                              _multicastAddress = "225.2.2.1")
             throw(CORBA::Exception, Miro::Exception);
 
-	  //! Destructor 
+	    //! Destructor
             ~Adapter() throw(CORBA::Exception, Miro::Exception);
 
-	  //! Returns pointer to sender.
+	    //! Returns pointer to sender.
             Sender *getSender();
 
-	  //! Returns pointer to receiver.
-	  Receiver *getReceiver();
+	    //! Returns pointer to receiver.
+	    Receiver *getReceiver();
 
             /* Fried classes */
             friend class Receiver;
@@ -160,7 +165,16 @@ namespace Miro {
             /* timeout handling */
             int                                      timeoutHandlerId_;
             TimeoutHandler                          *timeoutHandler_;
-            ACE_Time_Value                           timeoutHandlerInterval_;
+	    ACE_Time_Value                           timeoutHandlerInterval_;
+
+            /* logfile */
+	    std::ofstream                            logfile_;
+	    bool                                     useLogfile_;
+
+	    ACE_Date_Time                            dt_;
+
+	    static const char                        months[13][4];
+
         };
     };
 };

@@ -3,16 +3,16 @@
 //  NotifyMulticastSender
 //
 //
-//  (c) 2002
+//  (c) 2002, 2003
 //  Department of Neural Information Processing, University of Ulm, Germany
 //
 //
 //  Authors:
-//    Philipp Baer <phbaer@openums.org>
+//    Philipp Baer <philipp.baer@informatik.uni-ulm.de>
 //
 //
 //  Version:
-//    1.0.3
+//    1.0.4
 //
 //
 //  Todo:
@@ -72,12 +72,15 @@ namespace Miro {
 		//subscribe(configuration_->getDomain(), "BallPosition");
                 //subscribe(configuration_->getDomain(), "LocalizedPosition");
             } catch (const CORBA::SystemException &e) {
-                PRINT_ERR("Unable to subscribe events: " << e);
+		LOG(configuration_, "Sender: Unable to subscribe to events");
+		PRINT_ERR("Unable to subscribe events: " << e);
                 PRINT_ERR("No events will be sent to the peers");
             } catch (const CosNotifyComm::InvalidEventType &e) {
+		LOG(configuration_, "Sender: Unable to subscribe to events");
                 PRINT_ERR("Unable to subscribe events: " << e);
                 PRINT_ERR("No events will be sent to the peers");
             } catch (...) {
+		LOG(configuration_, "Sender: Unable to subscribe to events, uncaught exception");
                 PRINT_ERR("Unable to subscribe events: uncaught exception");
                 PRINT_ERR("No events will be sent to the peers");
             }
@@ -121,7 +124,8 @@ namespace Miro {
             added[0].type_name   = CORBA::string_dup(_type.c_str());
             removed[0].domain_name = CORBA::string_dup("*");
             removed[0].type_name   = CORBA::string_dup("*");
-            consumerAdmin_->subscription_change(added, removed);
+	    consumerAdmin_->subscription_change(added, removed);
+	    LOG(configuration_, "Sender: Subscribed to domain=" << _domain << ", type=" << _type);
         }
 
 
@@ -146,6 +150,7 @@ namespace Miro {
             removed[0].domain_name = CORBA::string_dup(_domain.c_str());
             removed[0].type_name   = CORBA::string_dup(_type.c_str());
             consumerAdmin_->subscription_change(added, removed);
+	    LOG(configuration_, "Sender: Unsubscribed from domain=" << _domain << ", type=" << _type);
         }
 
 
@@ -178,6 +183,7 @@ namespace Miro {
         void Sender::disconnect_structured_push_consumer(ACE_ENV_SINGLE_ARG_DECL_NOT_USED)
         throw(CORBA::SystemException) {
             PRINT_DBG(DBG_INFO, "Consumer disconnected");
+	    LOG(configuration_, "Sender: Consumer disconnected!");
 
             connected_ = false;
         }
@@ -198,6 +204,7 @@ namespace Miro {
             /* marschal event */
             if (!(cdr << _event)) {
                 PRINT_ERR("Unable to marshal event, discarding!");
+		LOG(configuration_, "Sender: Unable to marshal event, discarding!");
                 return;
             }
 
@@ -472,11 +479,13 @@ namespace Miro {
             switch (sendData(_iov, _iovcnt)) {
             case -1:
                 PRINT_DBG(DBG_INFO, "send_fragment: send failed");
+		LOG(configuration_, "Sender: send_fragment: send failed (-1)");
                 throw CORBA::COMM_FAILURE();
                 break;
 
             case 0:
                 PRINT_DBG(DBG_INFO, "send_fragment: EOF on send");
+		LOG(configuration_, "Sender: send_fragment: EOF on send (0)");
                 throw CORBA::COMM_FAILURE();
                 break;
 
