@@ -150,7 +150,7 @@
    <parameter value="26.0" name="Deg2ServoTicksL" />
    <parameter value="26.0" name="Deg2ServoTicksR" />
    <parameter value="1.000000" name="WatchdogTimeout" />
-   <parameter value="3850" name="Servo0MidPulse" />
+   <parameter value="3875" name="Servo0MidPulse" />
    <parameter value="13" name="MaxAccel" /><!-- SollDistanz zum Torrueckwand 13 -->
    <parameter value="1555" name="Diameter" />
    <parameter value="15" name="MaxPower" /><!-- Vorfaktor turnfehler 15 -->
