@@ -371,8 +371,8 @@
 			    </parameter>
 
 			    <parameter name="Filter" >
-			      <parameter value="IndextoEdge" name="Type" />
-			      <parameter value="IndextoEdgeGreenWhite" name="Name" />
+			      <parameter value="IndextoCanny" name="Type" />
+			      <parameter value="IndextoCannyGreenWhite" name="Name" />
 			      <parameter name="Successor" >
 				<parameter name="Filter" >
 				  <parameter value="Enlarge4" name="Type" />
@@ -550,9 +550,11 @@
         <parameter value="YELLOWRIGHTGOALPOST" name="Type" />
       </parameter>
 
-      <parameter name="IndextoEdgeGreenWhite">
+      <parameter name="IndextoCannyGreenWhite">
         <parameter value="GREEN" name="ColorOne" />
         <parameter value="WHITE" name="ColorTwo" />
+        <parameter value="120" name="LowThresh" />
+        <parameter value="180" name="HighThresh" />
       </parameter>
 
       <parameter name="CollectAllFeatures" >
