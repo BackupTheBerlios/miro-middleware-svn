@@ -69,7 +69,7 @@ main(int argc, char *argv[])
 		  "\n  sparrow paramters:\n" << *pSparrowParameters);
     if (pFaulMotorParameters)
       MIRO_LOG_OSTR(LL_NOTICE,
-		    "  faulhaber paramters:\n" << *pFaulMotorParameters);
+		    "\n  faulhaber paramters:\n" << *pFaulMotorParameters);
     MIRO_LOG_OSTR(LL_NOTICE,
 		  "  NotifyMulticast parameters:\n" << *notifyMulticastParameters);
 
