@@ -72,7 +72,7 @@ namespace Miro
   inline
   unsigned char const *
   VideoConnection::bufferAddr(CORBA::ULong _index) const {
-    memory + handle->offset[_index];
+    return memory + handle->offset[_index];
   }
 
   //! Helper class for video image acquisition management.
