@@ -49,6 +49,9 @@ namespace FaulMotor
 
     int init_;
 
+    bool gotLeft_;
+    bool gotRight_;
+
     double xPos_;
     double yPos_;
 

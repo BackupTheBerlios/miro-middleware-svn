@@ -37,6 +37,8 @@ namespace FaulMotor
     params_(Parameters::instance()),
     pOdometry_(_pOdometry),
     init_(2),
+    gotLeft_(false),
+    gotRight_(false),
     xPos_(0.),
     yPos_(0.),
     ticksL_(0.),
@@ -76,16 +78,19 @@ namespace FaulMotor
 //	cout << "L: " << pFaulMsg->ticks_;
 	ticksL_ = pFaulMsg->ticks_;
 	timeStampL_ = pFaulMsg->time();
+	gotLeft_ = true;
       }
       else {
 //	cout << "R: " << pFaulMsg->ticks_;
 	ticksR_ = pFaulMsg->ticks_;
 	timeStampR_ = pFaulMsg->time();
+	gotRight_ = true;
+      }
 
+      if (gotLeft_ && gotRight_) {
 	if (init_ == 0) {
 	  double dL = -(ticksL_ - prevTicksL_) / params_->leftTicksPerMM;
 	  double dR = (ticksR_ - prevTicksR_) / params_->rightTicksPerMM;
-
 
 //	  cout << "dL: " << dL << " dR: " << dR << endl;
 
@@ -136,6 +141,9 @@ namespace FaulMotor
 
 	  --init_;
 	}
+      
+	gotLeft_ = false;
+	gotRight_ = false;
       }
     }
   }
