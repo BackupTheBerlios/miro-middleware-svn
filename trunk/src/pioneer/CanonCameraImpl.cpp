@@ -343,6 +343,53 @@ cout << "Error:" <<pAnswer->errorCode() << endl;
     }*/
   }
 
+  void
+  CanonCameraImpl::setAGCGain(short value) throw(Miro::EDevIO, Miro::ETimeOut)
+  {
+    bool done=false;
+    char tmp[4];
+    char fixChar[4];
+
+    strcpy(fixChar , "7");   // set preparameter 37h
+    if (!initialized) initialize();
+    if (value < 0) value = 0;
+    if (value > 255) value = 255;
+    Message gainValue(LIGHT_AE,strcat(fixChar, int2str(tmp,value,3)));
+
+    while (!done) {
+      Miro::Guard guard(pAnswer->mutex);
+      pAnswer->init();
+      connection.sendCamera(gainValue);
+      checkAnswer();
+      //keep trying...
+      if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
+    }
+  }
+
+  void
+  CanonCameraImpl::setShutterSpeed(short value) throw(Miro::EDevIO, Miro::ETimeOut)
+  {
+    bool done=false;
+    char tmp[4];
+    char fixChar[4];
+
+    strcpy(fixChar , "5");   // set preparameter 35h
+    if (!initialized) initialize();
+    if (value < 0) value = 0;
+    if (value > 25) value = 25;
+    Message shutterSpeedValue(LIGHT_AE,strcat(fixChar, int2str(tmp,value,3)));
+
+    while (!done) {
+      Miro::Guard guard(pAnswer->mutex);
+      pAnswer->init();
+      connection.sendCamera(shutterSpeedValue);
+      checkAnswer();
+      //keep trying...
+      if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
+    }
+  }
+
+
   //-------------------------------------------------------------------
   // auxiliary functions
   //-------------------------------------------------------------------
