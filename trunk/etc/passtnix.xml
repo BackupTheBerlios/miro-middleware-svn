@@ -33,6 +33,7 @@
       <buttonspollinterval>300</buttonspollinterval>
 
       <servo0midpulse>3700</servo0midpulse>
+      <deg2servoticks>28.2</deg2servoticks>
       <!--
         <servo1midpulse></servo1midpulse>
         <panswing>350</panswing> -->

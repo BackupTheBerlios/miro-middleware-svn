@@ -188,6 +188,10 @@ namespace Sparrow
 	    else if (n1.nodeName() == "buttonspollinterval") {
 	      buttonsPollInterval.msec(t.data().toInt());
 	    }
+            else if (n1.nodeName() == "deg2servoticks") {
+              deg2servoTicks = t.data().toDouble();
+            }
+ 
 	    else if (n1.nodeName() == "servo0midpulse") {
 	      servo0MidPulse = t.data().toInt();
 	    }
