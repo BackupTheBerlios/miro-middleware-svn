@@ -17,7 +17,7 @@ include $(top_srcdir)/config/Make-rules
 SUFFIXES = .idl C.cpp C.h C.i.h S.cpp S.h S.i.h
 
 .idlC.cpp:
-	$(TAO_BINDIR)/tao_idl -in -Ge 0 -hc C.h -cs C.cpp -ci C.i.h -hs S.h -hT S_T.h -ss S.cpp -sT S_T.cpp -si S.i.h -st S_T.i.h -Sc -Wp,-I$(top_srcdir)/idl $<
+	$(TAO_IDL) -in -Ge 0 -hc C.h -cs C.cpp -ci C.i.h -hs S.h -hT S_T.h -ss S.cpp -sT S_T.cpp -si S.i.h -st S_T.i.h -Sc -Wp,-I$(top_srcdir)/idl $<
 
 
 lib_LTLIBRARIES = libmiroIDL.la
@@ -62,7 +62,7 @@ b21sources = \
 	B21Motion.idl
 endif
 
-if COND_PIONEER1
+if COND_PIONEER
 pioneersources = \
 	PioneerStall.idl \
 	PioneerMotion.idl \
@@ -70,7 +70,7 @@ pioneersources = \
 endif
 
 if COND_SPARROW99
-if !COND_PIONEER1
+if !COND_PIONEER
 sparrowsources1 = \
 	PioneerStall.idl \
 	PioneerMotion.idl \

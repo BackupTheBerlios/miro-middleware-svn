@@ -120,7 +120,7 @@ AC_DEFUN(AC_SEARCH_QT_LOCAL,
 	# AC_CHECK_PROG(ac_qtbindir, moc, yes)
 	AC_PATH_PROG(ac_qtbindir, moc, no)
 	if test "x$ac_qtbindir" != xno; then
-		AC_SUBST(QT_BINDIR, "$ac_qtbindir")
+		AC_SUBST(QT_MOC, "$ac_qtbindir")
 	else
 		AC_MSG_ERROR(Qt not (properly) installed. Get a (free) recent version from: http://www.trolltech.com)
 	fi

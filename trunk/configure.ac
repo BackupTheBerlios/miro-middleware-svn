@@ -83,7 +83,7 @@ AC_FEATURES_COMPILE_ACE
 AC_DETERMINE_PLATFORMS
 
 AM_CONDITIONAL(COND_SPARROW99, [test "x$ac_request_sparrow99" = xyes])
-AM_CONDITIONAL(COND_PIONEER1,  [test "x$ac_request_pioneer1" = xyes])
+AM_CONDITIONAL(COND_PIONEER,   [test "x$ac_request_pioneer" = xyes])
 AM_CONDITIONAL(COND_B21,       [test "x$ac_request_b21" = xyes])
 AM_CONDITIONAL(COND_DEPRECATED,[test "x$ac_request_deprecated" = xyes])
 
@@ -274,7 +274,7 @@ echo "lib-dirs:  " $ac_feature_acetao_libdirs
 echo "incl-dirs: " $ac_feature_acetao_incldirs
 echo ""
 echo $ECHO_N "Sparrow99 support "; if test "x$ac_request_sparrow99" = xyes; then echo "enabled."; else echo "disabled."; fi
-echo $ECHO_N "Pioneer support "; if test "x$ac_request_pioneer1" = xyes; then echo "enabled."; else echo "disabled."; fi
+echo $ECHO_N "Pioneer support "; if test "x$ac_request_pioneer" = xyes; then echo "enabled."; else echo "disabled."; fi
 echo $ECHO_N "B21 support "; if test "x$ac_request_b21" = xyes; then echo "enabled."; else echo "disabled."; fi
 echo ""
 echo $ECHO_N "BTTV support "; if test "x$ac_miro_has_bttv" = xyes; then echo "enabled."; else echo "disabled."; fi

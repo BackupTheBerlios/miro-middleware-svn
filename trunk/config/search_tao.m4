@@ -91,7 +91,7 @@ AC_DEFUN(AC_SEARCH_TAO_LOCAL,
 	# AC_CHECK_PROG(ac_taobindir, tao_idl, yes)
 	AC_PATH_PROG(ac_taobindir, tao_idl, no)
 	if test "x$ac_taobindir" != xno ; then
-		AC_SUBST(TAO_BINDIR, "$ac_taobindir")
+		AC_SUBST(TAO_IDL, "$ac_taobindir")
 	else
 		AC_MSG_ERROR(TAO not (properly) installed. Source tarball and CVS at: http://www.cs.wustl.edu/~schmidt/ACE.html)
 	fi

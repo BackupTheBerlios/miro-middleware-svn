@@ -38,7 +38,7 @@ speechdirs = \
 	sphinx
 endif
 
-if COND_PIONEER1
+if COND_PIONEER
 pioneerdirs = \
 	pioneer \
 	gripper

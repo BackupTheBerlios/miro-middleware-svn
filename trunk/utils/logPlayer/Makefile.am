@@ -16,7 +16,7 @@ include $(top_srcdir)/config/Make-rules
 SUFFIXES = .h .moc.cpp
 
 .h.moc.cpp:
-	$(QT_BINDIR)/moc $< -o $@
+	$(QT_MOC) $< -o $@
 
 
 bin_PROGRAMS = LogPlayer

@@ -35,7 +35,7 @@ speechdirs = \
 	sphinx
 endif
 
-if COND_PIONEER1
+if COND_PIONEER
 pioneerdirs = \
 	psos \
 	pioneer \
@@ -43,7 +43,7 @@ pioneerdirs = \
 endif
 
 if COND_SPARROW99
-if !COND_PIONEER1
+if !COND_PIONEER
 sparrowdirs1 = \
 	psos \
 	pioneer
