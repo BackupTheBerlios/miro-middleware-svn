@@ -53,7 +53,7 @@ FaulhaberHardware::FaulhaberHardware(ACE_Reactor * _reactor,
     FaulMotor::Parameters::instance();
   if (params->odometryPolling) {
     timerId = reactor->schedule_timer(pTimerEventHandler, NULL, 
-				      params->odometryPace,
+		                      ACE_Time_Value(2),
 				      params->odometryPace);
   }
 }
