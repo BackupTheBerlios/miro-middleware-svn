@@ -78,12 +78,12 @@ A step by step walk trough the code:
 
 \lstinputlisting[frame=tb, first=1, last=1]{SonarPoll1.cpp}
 
-The file \lstinline!miro/client.hh! contains the definition of the class
+The file \lstinline!miro/Client.h! contains the definition of the class
 \lstinline!Miro::Client!. See below.
 
 \lstinputlisting[frame=tb, first=2, last=2]{SonarPoll1.cpp}
 
-The file \lstinline!miro/rangeSensorC.hh! provides the classes for the interface of the
+The file \lstinline!miro/RangeSensorC.h! provides the classes for the interface of the
 sonar service. The 'C' at the end of the name stands for client. This
 file is automatically generated from the idl-description of the interface.
 
@@ -162,7 +162,7 @@ using namespace Miro;
 
 would do the same trick. But mapping a namespace completely is
 generally not a good idea, since it tends to produce name conflicts
-and secondly code reviewers can trace the origin of the Type less
+and secondly code reviewers can trace the origin of the types less
 easily. Be especially careful in header files. You are flattening the
 namespace for everyone that has to include your header file, which can
 lead to bad surprises.
@@ -184,7 +184,7 @@ gracefully segfaulting. This is done in this example by enclosing the
 code in the main function in a try/catch block.
 
 Since \miro defines ostream operators for every \lstinline!Miro::...IDL!
-type in \lstinline! miro/IO.hh!, we include that file and abandon the
+type in \lstinline! miro/IO.h!, we include that file and abandon the
 handcrafted streaming of the sonar data.
 
 Note the different kinds off exceptions. There are \miro exceptions.
@@ -194,9 +194,8 @@ hardware problems (may be the batteries?), bad service calls (trying
 to accelerate the robot to warp 1?) or load problems. Then there are
 CORBA exceptions. Those occur if there arise some communication
 problems: A service went down, the robot is loosing the radio ethernet
-connection etc. The last catch statement tries to catch any other
-exceptions. We hope those are not our fault ;-) Since all \miro
-exceptions derived from \lstinline!CORBA::UserException!, thosealso
+connection etc. Since all \miro
+exceptions derived from \lstinline!CORBA::UserException!, those also
 are catched within the first \lstinline!catch! block of the exsample
 code. You do not have to catch all exceptions. An uncaught exception
 will lead to program termination. Just as if you'd catch them at the
@@ -257,7 +256,7 @@ callback that is called from the notification service.
 The \lstinline!EventTypeSeq! class is for specifying the events that you
 want to be subscribed for. It is an incremental protocol. So you make
 a list of events you want to receive from now on and another with the
-events you do not longer become informed about. Since we are just
+events you wish to no longer become informed about. Since we are just
 subscribing, the second list is empty.
 
 \lstinputlisting[frame=tb, first=33, last=35]{SonarNotify.cpp}
