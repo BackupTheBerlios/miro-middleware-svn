@@ -62,7 +62,7 @@ namespace Pioneer
     Miro::MotionStatusIDL status_;
     short prevX, prevY;
     double prevTheta;
-    bool bumpers_;
+    unsigned short bumpers_;
 
     Pioneer::Parameters * params_;
   };
