@@ -89,7 +89,13 @@ namespace Can
   {
     // is this sleep necessary ???
     // well, yes
-    Miro::Guard guard(writeMutex);
+
+    ACE_Time_Value av(ACE_OS::gettimeofday() + ACE_Time_Value(1));
+
+    if (writeMutex.acquire(av) == -1)
+      throw Miro::CException(errno, "Error writing can device.");
+    //    Miro::Guard guard(writeMutex);
+
     ACE_Time_Value time = ACE_OS::gettimeofday();
     ACE_Time_Value delta = time - lastWrite;
     if (delta < canTimeOut) {
@@ -112,6 +118,8 @@ namespace Can
 
     lastWrite = time;
     ACE_OS::sleep(canTimeOut);
+
+    writeMutex.release();
     if (rc == -1)
       throw Miro::CException(errno, "Error writing can device.");
   }
