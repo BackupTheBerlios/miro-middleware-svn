@@ -11,6 +11,18 @@
       <config_parameter name="maxDistance" type="int" default="400" measure="mm" />
     </config_item>
 
+    <config_item name="Pan" parent="Miro::Pan" final="false">
+      <config_parameter name="rangeMin" type="angle" inherited="true" default="-170" />
+      <config_parameter name="rangeMax" type="angle" inherited="true" default="170" />
+
+      <config_parameter name="panLatency" type="ACE_Time_Value" default="0, 50000" measure="sec" />
+      <config_parameter name="panSwing" type="ACE_Time_Value" default="0, 500000" measure="sec" />
+      <config_parameter name="panRadPerSec" type="angle" default="180" measure="&deg;" />
+      <config_parameter name="panAccuracy" type="angle" default="2.5" measure="&deg;" />
+      <config_parameter name="panSwingAccuracy" type="angle" default="10." measure="&deg;" />
+    </config_item>
+
+
     <config_item parent="Can::" instance="true">
       <config_parameter name="motion" type="Miro::DifferentialMotionParameters" />
       <constructor>
@@ -55,11 +67,7 @@
       <config_parameter name="deg2ServoTicksL" type="double" default="28.2"/>
       <config_parameter name="deg2ServoTicksR" type="double" default="28.2"/>
 
-      <config_parameter name="panLatency" type="ACE_Time_Value" default="0, 50000" measure="sec" />
-      <config_parameter name="panSwing" type="ACE_Time_Value" default="0, 500000" measure="sec" />
-      <config_parameter name="panRadPerSec" type="angle" default="180" measure="&deg;" />
-      <config_parameter name="panAccuracy" type="angle" default="2.5" measure="&deg;" />
-      <config_parameter name="panSwingAccuracy" type="angle" default="10." measure="&deg;" />
+      <config_parameter name="pan" type="PanParameters" />
 
       <config_parameter name="transFactor" type="double" default="1.0776"/>
 

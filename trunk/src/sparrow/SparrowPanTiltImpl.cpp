@@ -25,11 +25,10 @@ namespace Sparrow
 
   // Implementation skeleton constructor
   PanTiltImpl::PanTiltImpl(BaseConnection* _connection,
-			   Miro::PanParameters _panParameters,
 			   Miro::StructuredPushSupplier * _pSupplier) :
-    Miro::PanImpl(_panParameters),
+    Miro::PanImpl(Parameters::instance()->pan),
     connection(_connection),
-    params_(*Parameters::instance()),
+    params_(Parameters::instance()->pan),
     pSupplier_(_pSupplier),
     lastPosition(Miro::deg2Rad(90.)),
     nextPosition(0.),

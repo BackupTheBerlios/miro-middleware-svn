@@ -37,7 +37,6 @@ namespace Sparrow
   public:
     //Constructor
     PanTiltImpl(BaseConnection * _connection,
-		Miro::PanParameters _panParameters,
 		Miro::StructuredPushSupplier * _pSupplier = NULL);
 
     //Destructor
@@ -55,7 +54,7 @@ namespace Sparrow
     Miro::PanPositionIDL currentPosition(const ACE_Time_Value& _t);
 
     BaseConnection *         connection;
-    const Parameters&        params_;
+    PanParameters const&     params_;
     Miro::Mutex              mutex;
 
     Miro::StructuredPushSupplier * pSupplier_;
