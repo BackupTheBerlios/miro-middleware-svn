@@ -1,0 +1,117 @@
+#include "Joystick.h"
+
+#include <miro/Client.h>
+#include <miro/MotionC.h>
+#include <miro/KickerC.h>
+#include <ace/Reactor.h>
+#include <tao/ORB_Core.h>
+
+//Netzwerk
+
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
+
+
+#include <stdio.h>
+#include <linux/joystick.h>
+
+double EventHandler::oldrot;
+long EventHandler::oldtrans;
+
+
+EventHandler::EventHandler(Miro::Motion_var _motion, Miro::Kicker_var _kicker, ACE_HANDLE fd_): ACE_Event_Handler(){
+	motion_ = _motion;
+	kicker_ = _kicker;
+        fd = fd_;
+	oldrot = 0.0;
+	oldtrans = 0;
+
+}
+
+int EventHandler::handle_input(ACE_HANDLE handle){
+    
+    js_event e;
+    Miro::VelocityIDL velocity;
+    read(fd, &e, sizeof(struct js_event));
+    printf("Es macht was\n");
+    velocity.rotation = oldrot;
+    velocity.translation = oldtrans;
+    
+    if(e.type == JS_EVENT_BUTTON){
+       
+       if(e.number == 0) {
+       	oldrot = 0.0;
+       	oldtrans = 0;
+       	velocity.rotation = 0.0;
+       	velocity.translation = 0;
+  //     	motion_->setVelocity(velocity);
+       	printf("Joystick Axen-Bewegung\n");
+       }
+       if(e.number == 1) {
+        Miro::TimeIDL time;
+	time.sec = 0;
+	time.usec = 300000;
+	kicker_->kick(time);
+       }
+    
+    }
+    
+    if(e.type == JS_EVENT_AXIS){
+       
+       if (e.number == 1){
+          
+	  velocity.translation = -(500 * e.value)/32767;
+	  oldtrans = velocity.translation;
+//	  motion_->setVelocity(velocity);
+	  printf("Achsen Nummer %d\n", e.number);
+          printf("Achsen Wert %d\n", e.value);
+       }
+       if (e.number == 0){
+          
+	  velocity.rotation = -(double)(e.value)*1.57/32767.0;
+	  oldrot = velocity.rotation;
+//	  motion_->setVelocity(velocity);
+	  printf("Achsen Nummer %d\n", e.number);
+          printf("Achsen Wert %d\n", e.value);
+       }	
+		
+    }
+    return 0;
+}
+
+
+
+
+
+int
+main(int argc, char *argv[])
+{
+/*    struct sockaddr_in addr;
+    addr.sin_addr.s_addr = inet_addr("134.60.236.210");
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(3344);
+    
+    int fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (connect(fd, (sockaddr*)&addr, sizeof(addr)) == 0){
+       printf("Verbunden\n");
+    }*/
+    
+    
+    int fd = open("/dev/input/js0", O_RDONLY);
+    
+    Miro::Client client(argc, argv);
+    Miro::Client *client_;
+    client_ = &client;
+    Miro::Motion_var motion = Miro::resolve_name<Miro::Motion>(client, "Motion");
+    Miro::Kicker_var kicker = Miro::resolve_name<Miro::Kicker>(client, "Kicker");
+    ACE_Reactor *reactor = ACE_Reactor::instance();
+    EventHandler eventHandler(motion, kicker, (ACE_HANDLE) fd);
+    int result = reactor->register_handler((ACE_HANDLE) fd, &eventHandler, ACE_Event_Handler::READ_MASK);
+    
+    reactor->run_reactor_event_loop();
+    
+}
