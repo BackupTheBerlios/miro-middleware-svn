@@ -15,6 +15,7 @@
 #include <cstdio>
 #include <cmath>
 #include "Angle.h"
+#include "Log.h"
 
 namespace Miro
 {
@@ -180,6 +181,7 @@ namespace Miro
 
   void VelocitySpace::addEvalForStraightVelocity(double _prefDir, double _maxSpeed)
   {
+    timingEval_.start();
     double l_value, r_value, left, right;
     double axis_direction;
     double axis_value;
@@ -229,6 +231,14 @@ namespace Miro
  //          velocitySpace_[l_index][r_index] = 0.0;
       }
     }
+    timingEval_.stop();
+
+    if (Miro::Log::level() >= Miro::Log::LL_PRATTLE) {
+        TimeStats stats;
+        timingEval_.eval(stats);
+        MIRO_DBG_OSTR(MIRO, LL_PRATTLE, "VelocitySpace EvalFunction time: " << std::endl << stats);
+    }
+       
   }
 
   void VelocitySpace::addEvalForStraightVelocityLP(double _prefDir, double _maxSpeed)
@@ -297,7 +307,7 @@ namespace Miro
      
      Miro::Angle::normalize(preferredDir);
      
-     addEvalForPreferredDirection(preferredDir, maxSpeed);
+     addEvalForStraightVelocity(preferredDir, maxSpeed);
   
   
   }
@@ -353,11 +363,13 @@ namespace Miro
 				    Polygon &_obstacle)
   {
 
+    
+    timingObst_.start();
     const int CURV_CNT = 6; // count (6)
     const int CURV_RES = 6; // count (6)
     const int CURV_LEN = 700; // mm
     const int CURV_SMOOTH_LEN = 10; // mm
-    const int CURV_DELAY = 3; // count
+    const int CURV_DELAY = 5;//3; // count
     const double WHEEL_DISTANCE  = 330.; // mm
     const double BREAK_ACCEL = 2000.; // in mm/sec2
 
@@ -506,13 +518,21 @@ namespace Miro
     }
 
     // create logFiles
-    logFile1 = std::fopen("curvature.log","a");
+    /*logFile1 = std::fopen("curvature.log","a");
     for(curv = 0; curv <= 2*CURV_CNT; curv++) {
       for(seg = 0; seg <= 2*CURV_RES; seg++) {
 	fprintf(logFile1,"%d\n",CURV[curv][seg]);
       }
     }
-    fclose(logFile1);
+    fclose(logFile1);*/
+
+    timingObst_.stop();
+    if (Miro::Log::level() >= Miro::Log::LL_PRATTLE) {
+       TimeStats stats;
+       timingObst_.eval(stats);
+       MIRO_DBG_OSTR(MIRO, LL_PRATTLE, "VelocitySpace addEvalForObstacle time: " << std::endl << stats);
+    }
+       
 
   }
 
@@ -522,6 +542,9 @@ namespace Miro
   Vector2d
   VelocitySpace::applyObjectiveFunctionToEval()
   {
+    
+    timingApply_.start();
+	  
     float biggestEval = 10.0;		// start with a threshold of 10
     double biggestRad = 0.;
     Vector2d biggestValueVelocity(0., 0.);
@@ -580,6 +603,15 @@ namespace Miro
 
     // set new velocity
     setNewVelocity(biggestValueVelocity);
+
+    timingApply_.stop();
+
+    if (Miro::Log::level() >= Miro::Log::LL_PRATTLE) {
+       TimeStats stats;
+       timingApply_.eval(stats);
+       MIRO_DBG_OSTR(MIRO, LL_PRATTLE, "VelocitySpace ApplyOjectiveFunction time: " << std::endl << stats);
+    }
+   
 
     return biggestValueVelocity;
   }
