@@ -107,7 +107,7 @@ int main(int argc, char* argv[])
   // Signal set to be handled by the event handler.
   ACE_Sig_Set sigs;
 
-  //ACE_Time_Value ace_time;
+  ACE_Time_Value ace_time;
 
   bool loop = true;
   char c;
@@ -125,12 +125,12 @@ int main(int argc, char* argv[])
   if (service.reactorTask.reactor()->register_handler(sigs, &event) == -1) {
     throw Miro::ACE_Exception(errno, "failed to register signal handler");
   }
-  cout << "updaterate? (msec) " << endl;
-	     //cin >> uptimer;
-  //ACE_Time_Value tv(0,uptimer);
-   ACE_Time_Value tv(0,90000);
+  cout << "updaterate? (usec) " << endl;
+  cin >> uptimer;
+  ACE_Time_Value tv(0,uptimer);
+   //ACE_Time_Value tv(0,15000);
 
-  service.reactorTask.reactor()->schedule_timer(service.pTimerEventHandler, NULL, tv ,tv);
+//  service.reactorTask.reactor()->schedule_timer(service.pTimerEventHandler, NULL, tv ,tv);
 
 
   service.reactorTask.open(NULL);
@@ -144,7 +144,7 @@ int main(int argc, char* argv[])
     {
       Miro::RangeGroupEventIDL_var  pSonarEvent;
       Miro::PositionIDL odoData;
-      cout << "hier1" << endl;
+      //cout << "hier1" << endl;
       /*pSonarEvent = service.pRangeSensorImpl->getGroup(0);
       service.pOdometryImpl->setPosition(odoData);
       odoData = service.pOdometryImpl->getWaitPosition();
@@ -169,6 +169,7 @@ int main(int argc, char* argv[])
 	       << "0 - all motors off!!!" << endl
 	       << "g - get vel" << endl
 	       << "p - get pos" << endl
+               << "t - test endlosschleife" << endl
 	       << "x - Program end!!!" << endl;
 	  cin >> str;
           c = str[0];
@@ -279,9 +280,20 @@ int main(int argc, char* argv[])
 
 	     break;
 	   }
-	 case 'b' :
+	 case 't' :
 	   {
+             cout << "how long?  (msec)" << endl;
+             cin >> i;
+             ace_time.msec(i);
 
+	     while(true)
+	     {
+		service.connection.setSpeed(100);
+                ACE_OS::sleep(ace_time);
+                service.connection.setSpeed(0);
+                ACE_OS::sleep(ace_time);
+                
+             }
 	     break;
 	   }
 	  case 'g' :
