@@ -138,13 +138,16 @@ namespace Miro
 	  masking_ = true;
       }
     }
+    if (asynchDispatching_)
+      dispatcherThread_.detach(1);
   }
 
   RangeSensorImpl::~RangeSensorImpl()
   {
     DBG(cout << "Destructing RangeSensorImpl." << endl);
 
-    dispatcherThread_.cancel();
+    if (asynchDispatching_)
+      dispatcherThread_.cancel();
   }
 
   void

@@ -76,7 +76,7 @@ namespace Miro
     //! Initializing constructor.
     OdometryImpl(Miro::StructuredPushSupplier * _supplier,
 		 bool _rawPositionEvents = true,
-		 bool _asychDispatching = false);
+		 bool _asynchDispatching = false);
     virtual ~OdometryImpl();
 
     //! Method to pass raw odometry data from the device into the OdometryImpl class.

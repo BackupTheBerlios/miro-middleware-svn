@@ -114,11 +114,11 @@ namespace Miro
    */
   OdometryImpl::OdometryImpl(StructuredPushSupplier * _supplier,
 			     bool _rawPositionEvents,
-			     bool _asychDispatching) :
+			     bool _asynchDispatching) :
     supplier_(_supplier),
     mutex_(),
     cond_(mutex_),
-    asynchDispatching_(_asychDispatching),
+    asynchDispatching_(_asynchDispatching),
     dispatcherThread_(_supplier, _rawPositionEvents),
     sinHeading_(0.0),
     cosHeading_(1.0)
@@ -138,12 +138,16 @@ namespace Miro
     status_.position.heading = 0.;
     status_.velocity.translation = 0;
     status_.velocity.rotation = 0.;
+
+    if (asynchDispatching_)
+      dispatcherThread_.detach(1);
   }
   
   // Implementation skeleton destructor
   OdometryImpl::~OdometryImpl()
   {
-    dispatcherThread_.cancel();
+    if (asynchDispatching_)
+      dispatcherThread_.cancel();
   }
   
   /**
