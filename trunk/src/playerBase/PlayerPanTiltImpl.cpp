@@ -17,23 +17,16 @@
 
 #include "PlayerPanTiltImpl.h"
 
-#include <iostream>
-
 #include <playerclient.h>
 
 namespace Player
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-
   using Miro::EDevIO;
   using Miro::ETimeOut;
   using Miro::EOutOfBounds;
   using Miro::Exception;
   using Miro::rad2Deg;
   using Miro::deg2Rad;
-  //  using Miro::PlayerPanTiltSpdAccIDL;
   using Miro::PanTiltLimitsIDL;
   using Miro::PanLimitsIDL;
   using Miro::TiltLimitsIDL;
@@ -83,8 +76,8 @@ namespace Player
 
     //if camera is not inverse mounted, change sign for current saved value
     //as it will be changed again on setPosition
-    dest.panvalue = angle;
-    dest.tiltvalue = (upsideDown? currentTilt : -currentTilt);
+    dest.panValue = angle;
+    dest.tiltValue = (upsideDown? currentTilt : -currentTilt);
   
     setPosition(dest);
   }
@@ -93,7 +86,7 @@ namespace Player
   PlayerPanTiltImpl::getPan() throw(Miro::EDevIO)
   {
     Miro::PanTiltPositionIDL pos = getPosition();
-    return pos.panvalue;
+    return pos.panValue;
     
   }
   
@@ -111,8 +104,8 @@ namespace Player
 
     //if camera is inverse mounted, change sign for current saved value
     //as it will be changed again on setPosition
-    dest.panvalue=(upsideDown?-currentPan:currentPan);
-    dest.tiltvalue=angle;
+    dest.panValue=(upsideDown?-currentPan:currentPan);
+    dest.tiltValue=angle;
 
     setPosition(dest);
   }
@@ -121,7 +114,7 @@ namespace Player
   PlayerPanTiltImpl::getTilt() throw(Miro::EDevIO)
   {
     Miro::PanTiltPositionIDL pos = getPosition();
-    return pos.tiltvalue;
+    return pos.tiltValue;
 
   }
   
@@ -133,15 +126,15 @@ namespace Player
   {
     Miro::PanTiltPositionIDL result;
 
-    result.tiltvalue=playerPTZ->tilt;
-    result.panvalue=playerPTZ->pan;
+    result.tiltValue=playerPTZ->tilt;
+    result.panValue=playerPTZ->pan;
 
     if (upsideDown) {
       //if inverse mounting, switch directions
-      result.panvalue = -result.panvalue;
+      result.panValue = -result.panValue;
     } else {
       //Miro's vertical standard is opposite to camera's !!!
-      result.tiltvalue = -result.tiltvalue;
+      result.tiltValue = -result.tiltValue;
     }
 
     return result;
@@ -156,8 +149,8 @@ namespace Player
 
     //if camera in inverse position, change sign for pan/tilt
     //Miro's tilt works opposite to camera's!!!
-    currentPan = dest.panvalue *  (upsideDown? -1 :  1);
-    currentTilt = dest.tiltvalue* (upsideDown?  1 : -1);
+    currentPan = dest.panValue *  (upsideDown? -1 :  1);
+    currentTilt = dest.tiltValue* (upsideDown?  1 : -1);
     
     playerPTZ->SetCam(currentPan,currentTilt,playerPTZ->zoom);
     setTargetPosition(dest);
