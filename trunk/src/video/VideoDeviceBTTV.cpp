@@ -36,8 +36,8 @@ namespace Video
     channels(NULL),
     videoFd(-1),
     map_((char*)-1),
-    currentBuffer_(-1),
-    nextBuffer_(-1)
+    currentBuffer_(0),
+    nextBuffer_(0)
   {
     DBG(std::cout << "Constructing VideoDeviceBTTV." << std::endl);
 
@@ -155,11 +155,11 @@ namespace Video
       }
     }
 
-    ++nextBuffer_;
     err = ioctl(videoFd, VIDIOCMCAPTURE, &(gb[nextBuffer_]));
+    ++nextBuffer_;
     if (err != -1 && iNBuffers > 2) {
-      ++nextBuffer_;
       err = ioctl(videoFd, VIDIOCMCAPTURE, &(gb[nextBuffer_]));
+      ++nextBuffer_;
     }
     if (err == -1)
       throw Miro::CException(errno, "VideoDeviceBTTV::handleConnect() - VIDIOCMCAPTURE");
@@ -242,24 +242,33 @@ namespace Video
   {
     DBG(std::cout << "VideoDeviceBTTV: grabImage" << std::endl);
 
-    // update the buffer pointers
-    ++currentBuffer_;
-    currentBuffer_ %= iNBuffers;
-    ++nextBuffer_;
-    nextBuffer_ %= iNBuffers;
-
     // runtime statistics I
     ACE_Time_Value beginTime = ACE_OS::gettimeofday();
 
+    // synch current image
     int err = ioctl(videoFd, VIDIOCSYNC, &currentBuffer_);
     if (err == -1) {
       cerr << currentBuffer_ << endl;
       throw Miro::CException(errno, "VideoDeviceBTTV::grabImage() - VIDIOCSYNC");
     }
+
+    void * buffer = map_ + gb_buffers.offsets[currentBuffer_];
+
+    // update the follower buffer pointer
+    ++currentBuffer_;
+    if (currentBuffer_ == iNBuffers)
+    currentBuffer_ = 0;
+
+    // grab next image
     err = ioctl(videoFd, VIDIOCMCAPTURE, &(gb[nextBuffer_]));
     if (err == -1)
       throw Miro::CException(errno, "VideoDeviceBTTV::grabImage() - VIDIOCMCAPTURE");
     ++iNFramesCaptured;
+
+    // update the leader buffer pointer
+    ++nextBuffer_;
+    if (nextBuffer_ == iNBuffers)
+      nextBuffer_ = 0;
     
     // runtime statistics II
     ACE_Time_Value endTime = ACE_OS::gettimeofday();
@@ -269,7 +278,7 @@ namespace Video
       msec = 0;
     }
 
-    return map_ + gb_buffers.offsets[currentBuffer_];
+    return buffer;
   }
 
   void VideoDeviceBTTV::getCapabilities()

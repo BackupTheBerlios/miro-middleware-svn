@@ -133,11 +133,9 @@ namespace Video
       catch(Miro::CException& e) {
 	cout << "VideoConsumer::svc() caught Miro::CException: " << endl
 	     << e << endl;
-	running = false;
       }
       catch(Miro::Exception& e) {
 	cout << "VideoConsumer::svc() caught Miro::Exception: " << e << endl;
-	running = false;
       }
       cond.broadcast();
     }
