@@ -341,8 +341,8 @@ int main(int argc, char* argv[])
 
   // Config file processing
   Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
-  config->setSection("Pioneer1");
-  config->getParameters("pioneerBoard", *pParams);
+  config->setSection("ActiveMedia");
+  config->getParameters("PioneerBoard", *pParams);
   delete config;
 
 #ifdef DEBUG

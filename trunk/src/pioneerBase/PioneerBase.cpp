@@ -140,7 +140,7 @@ main(int argc, char *argv[])
     Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
     config->setSection("Robot");
     config->getParameters("Robot", *robotParameters);
-    config->setSection("Pioneer");
+    config->setSection("ActiveMedia");
     config->getParameters("PioneerBoard", *pioneerParameters);
     delete config;
     

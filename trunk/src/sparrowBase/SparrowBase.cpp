@@ -62,6 +62,7 @@ main(int argc, char *argv[])
     config->getParameters("Robot", *robotParameters);
     config->setSection("Sparrow99");
     config->getParameters("SparrowBoard", *pSparrowParameters);
+    config->setSection("ActiveMedia");
     config->getParameters("PioneerBoard", *pPioneerParameters);
     config->setSection("Notification");
     config->getParameters("NotifyMulticast", *notifyMulticastParameters);
