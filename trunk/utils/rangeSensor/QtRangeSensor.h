@@ -15,10 +15,15 @@
 #include "miro/RangeSensorC.h"
 
 #include <qwidget.h>
+#include <qstring.h>
 
 #include <complex>
 
-/** RangeSensorWidget */
+// forward declarations
+class QMenuBar;
+class QPopupMenu;
+
+//! RangeSensorWidget
 class RangeSensorWidget : public QWidget
 {
   Q_OBJECT
@@ -29,13 +34,20 @@ class RangeSensorWidget : public QWidget
   typedef std::complex<double> Vector2d;
   
 public:
-  /** Constructor */
-  RangeSensorWidget(Miro::RangeSensor_ptr _sensor, CORBA::UShort _group);
+  //! Constructor
+  RangeSensorWidget(int& argc, char * argv[]);
 
-  /** Destructor */
+  //! Destructor
   virtual ~RangeSensorWidget();
 
+  void setRobot(const QString& _robot);
+  void setSensor(const QString& _sensor);
+  void setGroup(CORBA::UShort _group);
+
 public slots:
+  void selectRobot();
+  void selectSensor();
+  void selectGroup();
   void toggleCone();
 
 protected:
@@ -43,17 +55,31 @@ protected:
   void paintEvent(QPaintEvent*);
   void resizeEvent(QResizeEvent*);
   void calcSize();
+  void calcCaption();
 
+  Miro::Client client_;
+  CosNaming::NamingContext_var robot_;
   Miro::RangeSensor_var sensor_;
   Miro::ScanDescriptionIDL_var scanDescription_;
-  CORBA::UShort group_;
   Miro::RangeGroupEventIDL_var scan_;
+
+  QString robotName_;
+  QString sensorName_;
+  CORBA::UShort group_;
 
   int x0_;
   int y0_;
 
   double scaling_;
+  int timer_;
   bool drawCones_;
+
+  QMenuBar*   menuBar_;
+  QPopupMenu* menuFile_;
+  QPopupMenu* menuView_;
+
+  int groupIndex_;
+  int coneIndex_;
 };
 
 #endif
