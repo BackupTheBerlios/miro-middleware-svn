@@ -181,7 +181,7 @@ namespace Miro
    * @param nthreads Number of threads in the threadpool.
    */
   void 
-  Server::detach(unsigned   int nthreads)
+  Server::detach(unsigned int nthreads)
   {
     if (worker_.activate(THR_NEW_LWP | THR_JOINABLE, nthreads) != 0)
       throw Miro::Exception("Miro::Server: Cannot activate client threads");
