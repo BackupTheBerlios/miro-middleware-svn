@@ -87,13 +87,13 @@ namespace Miro
 	rc = 0;
       }
       catch (const Miro::CException& e) {
-	cerr << "Miro exception: " << e << endl;
+	std::cerr << "Miro exception: " << e << endl;
       }
       catch (const Miro::Exception& e) {
-	cerr << "Miro exception: " << e << endl;
+	std::cerr << "Miro exception: " << e << endl;
       }
       catch (...) {
-	cerr << "Unknown exception: " << endl;
+	std::cerr << "Unknown exception: " << endl;
       }
       return rc;
     }
