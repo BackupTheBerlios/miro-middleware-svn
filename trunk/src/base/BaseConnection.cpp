@@ -50,7 +50,7 @@ namespace Base
     ACE_Time_Value batteryStart(BATTERYPOLL_START);
     ACE_Time_Value batteryPolling(BATTERYPOLL_INTERVAL);
     
-    batteryTimerId = reactor->schedule_timer(eventHandler, 
+    batteryTimerId = reactor_->schedule_timer(eventHandler, 
 					     NULL,            // no parameter
 					     batteryStart,    // delay
 					     batteryPolling); // respawn every timeout sec.
@@ -66,7 +66,7 @@ namespace Base
     sendCommands(vec, 2);
 
     // stop battery polling
-    reactor->cancel_timer(batteryTimerId);
+    reactor_->cancel_timer(batteryTimerId);
     
     // deleting eventHandler handler
     delete eventHandler;

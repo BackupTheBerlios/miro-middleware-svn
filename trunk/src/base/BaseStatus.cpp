@@ -137,7 +137,7 @@ namespace Base
     // for correctness of the report.
 
     if ((currentReport.Request & REPORT_EVERYTHING) != REPORT_EVERYTHING) {
-      cerr << "illigal status report!" << endl;
+      cerr << "illegal status report!" << endl;
       exit(1);
       //    throw Miro::DevIO();
     }
