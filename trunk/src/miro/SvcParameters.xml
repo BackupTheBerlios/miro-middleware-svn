@@ -23,13 +23,13 @@
   </config_group>
 
   <config_global name="namespace" value="Miro" />
-  <config_group name="config">
+  <config_group name="Miro">
     
-    <config_item name="Dev" parent="Config">
+    <config_item name="Dev" parent="Config" final="false">
       <config_parameter name="device" type="std::string" />
     </config_item>
 
-    <config_item name="Tty" parent="Dev">
+    <config_item name="Tty" parent="Dev" final="false">
       <config_parameter name="device" type="string" inherited="true" default="/dev/tts/0" />
       <config_parameter name="ttyParams" type="ACE_TTY_IO::Serial_Params" />
       <constructor>
@@ -48,14 +48,14 @@
       </constructor>
     </config_item>
 
-    <config_item name="Motion" parent="Config">
+    <config_item name="Motion" parent="Config" final="false">
       <config_parameter name="minTranslation" type="long" default="-1000" measure="mm/s" />
       <config_parameter name="maxTranslation" type="long" default="1000" measure="mm/s" />
       <config_parameter name="minRotation" type="angle" default="-180" measure="&deg;/s" />
       <config_parameter name="maxRotation" type="angle" default="180" measure="&deg;/s" />
     </config_item>
 
-    <config_item name="DifferentialMotion" parent="Motion">
+    <config_item name="DifferentialMotion" parent="Motion" final="false">
       <config_parameter name="minLTranslation" type="long" default="-1000" measure="mm/s" />
       <config_parameter name="maxLTranslation" type="long" default="1000" measure="mm/s" />
       <config_parameter name="minRTranslation" type="long" default="-1000" measure="mm/s" />
@@ -65,7 +65,7 @@
 
   </config_group>
 
-  <config_group name="scandescription">
+  <config_group name="Miro">
     <config_item name="SensorDescriptionIDL" final="false" dummy="true">
       <config_parameter name="minRange" type="long" default="" measure="mm" />
       <config_parameter name="maxRange" type="long" default="" measure="mm" />

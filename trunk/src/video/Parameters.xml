@@ -87,6 +87,18 @@
       <config_parameter name="compression" type="int" default="0" />
     </config_item>
     
+    <config_item name="FilterCopy" parent="Filter" final="true" />
+    <config_item name="FilterSwap3" parent="Filter" final="true" />
+    <config_item name="FilterSwap4" parent="Filter" final="true" />
+    <config_item name="FilterReverse" parent="Filter" final="true" />
+    <config_item name="FilterFlip" parent="Filter" final="true" />
+
+    <config_item name="FilterYUV411toRGB" parent="Filter" final="true" />
+    <config_item name="FilterYUV422toRGB" parent="Filter" final="true" />
+    <config_item name="FilterYUV422toYUV" parent="Filter" final="true" />
+    <config_item name="FilterYUV420PtoRGB" parent="Filter" final="true" />
+    <config_item name="FilterOmni2Pan" parent="Filter" final="true" />
+    <config_item name="FilterDistanceScan" parent="Filter" final="true" />
     <config_item name="FilterRGBtoSeg" parent="Filter" final="true">
        <config_parameter name="threshold" type="double" default="80.0" />
     </config_item>
@@ -114,7 +126,7 @@
 
     </config_item>
 
-    <config_item parent="Miro::Config" instance="true">
+    <config_item parent="Miro::Config">
       <config_parameter name="width" type="int" default="384" measure="pixel" />
       <config_parameter name="height" type="int" default="288" measure="pixel" />
       <config_parameter name="palette" type="string" default="rgb" />

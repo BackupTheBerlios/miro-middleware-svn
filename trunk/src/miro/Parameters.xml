@@ -4,16 +4,22 @@
   <config_global name="include" value="miro/BehaviourParameters.h" />
   <config_global name="include" value="miro/ArbiterParameters.h" />
 
-  <config_group name="config">
+  <config_group name="Config">
     
-    <config_item name="Config" />
+    <config_item name="Config" final="false" />
+    
+  </config_group>
+
+  <config_group name="Robot">
     
     <config_item name="Robot" parent="Config" instance="true">
       <config_parameter name="name" type="std::string" default="Miro" />
       <config_parameter name="type" type="std::string" default="Robot" />
       <config_parameter name="nameServiceIOR" type="std::string" />
     </config_item>
+  </config_group>
 
+  <config_group name="Video">
     <config_item name="Camera" parent="Config" instance="true">
       <config_parameter name="ncx" type="double" default="768.0" />
       <config_parameter name="nfx" type="double" default="384.0" />
@@ -49,10 +55,9 @@
       <config_parameter name="alpha" type="angle" default="0." measure="&deg;" />
       <config_parameter name="latency" type="ACE_Time_Value" default="0, 120000" measure="sec"/>
     </config_item>
-
   </config_group>
 
-  <config_group name="behaviour">
+  <config_group name="Behaviour">
     
     <config_item name="Behaviour" final="false" dummy="true">
     </config_item>
@@ -69,7 +74,7 @@
     
   </config_group>
 
-  <config_group name="arbiter">
+  <config_group name="Arbiter">
     <config_item name="PriorityArbiter" parent="Arbiter" final="false" />
     <config_item name="MotionArbiter" parent="PriorityArbiter" />
     <config_item name="PowerArbiter" parent="PriorityArbiter" />

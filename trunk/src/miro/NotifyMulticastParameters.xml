@@ -10,7 +10,6 @@
       <config_parameter name="Subscription" type="std::set&lt;std::string&gt;" />
       <config_parameter name="MessageTimeout" type="ACE_Time_Value" default="0, 500000" measure="sec"/>
       <config_parameter name="MulticastGroup" type="ACE_INET_Addr" default="225.2.2.1:41006"/>
-      <config_parameter name="Logfile" type="std::string" />
     </config_item>
   </config_group>
 </config>

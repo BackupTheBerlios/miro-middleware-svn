@@ -4,7 +4,7 @@
   <config_global name="include" value="can/Parameters.h" />
 
   <config_group name="Sparrow">
-    <config_item name="IrScaling">
+    <config_item name="IrScaling" final="false">
       <config_parameter name="offset" type="int" default="0" measure="mm" />
       <config_parameter name="scaling" type="double" default="1"/>
       <config_parameter name="minDistance" type="int" default="30" measure="mm" />

@@ -3,7 +3,7 @@
   <config_global name="namespace" value="Msp" />
   <config_global name="include" value="miro/SvcParameters.h" />
 
-  <config_group name="msp">
+  <config_group name="B21">
     <config_item parent="Miro::Dev" instance="true">
       <config_parameter name="device" type="string" inherited="true" default="/dev/abus" />
       <config_parameter name="sonarDescription" type="Miro::ScanDescriptionIDL" />

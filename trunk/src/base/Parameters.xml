@@ -3,7 +3,7 @@
   <config_global name="namespace" value="Base" />
   <config_global name="include" value="mcp/Parameters.h" />
 
-  <config_group name="base">
+  <config_group name="B21">
     <config_item parent="Mcp::" instance="true">
       <config_parameter name="device" type="string" inherited="true" default="/dev/cur0" />
       <config_parameter name="motion" type="Miro::MotionParameters" />
