@@ -24,6 +24,7 @@
 
 #include <vector>
 #include <set>
+#include <map>
 #include <algorithm>
 #include <functional>
 #include <utility>
@@ -48,11 +49,19 @@ protected:
   typedef std::pair< ACE_Time_Value, char * > TimePair;
   typedef std::vector< TimePair > TimeVector;
   typedef std::vector< QString > QStringVector;
+  typedef std::pair< char const *, Miro::StructuredPushSupplier *> SupplierPair;
 
   struct LtStr : public std::binary_function<char const *, char const *, bool>
   {
     bool operator()(char const * s1, char const * s2) const {
       return strcmp(s1, s2) < 0;
+    }
+  };
+
+  struct LtStrFirst : public std::binary_function<SupplierPair const&, SupplierPair const&, bool>
+  {
+    bool operator()(SupplierPair const & s1, SupplierPair const & s2) const {
+      return strcmp(s1.first, s2.first) < 0;
     }
   };
 
@@ -64,8 +73,9 @@ protected:
   };
 
 public:
-  //  typedef std::set< char const *, LtStr > CStringSet;
-  typedef std::set< QString > CStringSet;
+  typedef std::set< char const *, LtStr > CStringSet;
+  typedef std::map< char const *, CStringSet, LtStr > CStringMap;
+  typedef std::vector< SupplierPair > SupplierVector;
 
 public:
   LogFile(QString const& _name,
@@ -89,11 +99,10 @@ public:
   void parseEvent();
 
   void clearExclude();
-  void addExclude(QString const& _typeName);
-  void delExclude(QString const& _typeName);
+  void addExclude(QString const& _domainName, QString const& _typeName);
+  void delExclude(QString const& _domainName, QString const& _typeName);
 
-  QString const& domainName() const;
-  CStringSet const& typeNames() const;
+  CStringMap const& eventTypes() const;
 
   void setTimeOffset(ACE_Time_Value const& _offset);
   bool assertBefore(ACE_Time_Value const& _t);
@@ -121,12 +130,13 @@ protected:
   TimeVector timeVector_;
   TimeVector::const_iterator coursor_;
 
-  CStringSet typeNames_;
+  CStringMap eventTypes_;
+  char const * currentDomainName_;
+  CStringMap::iterator currentDomainEvents_;
 
-  CosNotifyChannelAdmin::EventChannel_var ec_;
-  Miro::StructuredPushSupplier * supplier_;
+  SupplierVector suppliers_;
 
-  QStringVector exclude_;
+  CStringMap exclude_;
 
   TAO_InputCDR * istr_;    
   bool parsed_;
@@ -177,17 +187,10 @@ LogFile::parsed() const
 }
 
 inline
-QString const&
-LogFile::domainName() const
+LogFile::CStringMap const&
+LogFile::eventTypes() const
 {
-  return domainName_;
-}
-
-inline
-LogFile::CStringSet const&
-LogFile::typeNames() const
-{
-  return typeNames_;
+  return eventTypes_;
 }
 
 inline

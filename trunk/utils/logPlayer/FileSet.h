@@ -37,7 +37,7 @@ public:
   // public types
   //----------------------------------------------------------------------------
   typedef std::vector<LogFile *> FileVector;
-  typedef std::map<QString, LogFile::CStringSet> DNETMap; // domain_name type_came map
+  typedef LogFile::CStringMap DNETMap; // domain_name type_came map
 
   //----------------------------------------------------------------------------
   // public methods
@@ -118,6 +118,9 @@ private:
   ACE_Time_Value startCut_;
   //! The end of the log files after cutting.
   ACE_Time_Value endCut_;
+
+  //! Flag indicating the direction we play the events.
+  bool forward_;
 };
 
 inline

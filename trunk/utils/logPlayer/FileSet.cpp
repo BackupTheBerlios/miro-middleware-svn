@@ -13,6 +13,7 @@
 #include "ChannelManager.h"
 
 #include <miro/TimeHelper.h>
+#include <miro/Log.h>
 
 #define QT_NO_TEXTSTREAM
 #include <qtl.h>
@@ -38,7 +39,8 @@ namespace
 FileSet::FileSet(ChannelManager * _channelManager) :
   channelManager_(_channelManager),
   startCut_(ACE_Time_Value::zero),
-  endCut_(ACE_Time_Value::zero)
+  endCut_(ACE_Time_Value::zero),
+  forward_(true)
 {}
 
 FileSet::~FileSet()
@@ -46,6 +48,7 @@ FileSet::~FileSet()
   FileVector::iterator first, last = file_.end();
   for (first = file_.begin(); first != last; ++first)
     delete *first;
+  
 }
 
 LogFile *
@@ -55,7 +58,7 @@ FileSet::addFile(QString const& _name)
   for (first = file_.begin(); first != last; ++first)
     if ((*first)->name() == _name)
       break;
-  assert(first == file_.end());
+  MIRO_ASSERT(first == file_.end());
 
   LogFile * const logFile = new LogFile(_name, channelManager_);
   file_.push_back(logFile);
@@ -66,16 +69,17 @@ FileSet::addFile(QString const& _name)
 void
 FileSet::delFile(QString const& _name)
 {
+  // remember coursor time
+  ACE_Time_Value t;
+  bool parsed = file_.front()->parsed();
+  if (parsed)
+    t = coursorTime();
+
   FileVector::iterator first, last = file_.end();
   for (first = file_.begin(); first != last; ++first)
     if ((*first)->name() == _name)
       break;
-  assert (first != file_.end());
-
-  ACE_Time_Value t;
-  bool parsed = (*first)->parsed();
-  if (parsed)
-    t = coursorTime();
+  MIRO_ASSERT(first != file_.end());
 
   delete *first;
   file_.erase(first);
@@ -83,6 +87,8 @@ FileSet::delFile(QString const& _name)
   if (parsed && file_.size() != 0) {
     calcStartEndTime();
     coursorTime(t);
+    forward_ = true;
+    std::make_heap(file_.begin(), file_.end(), LFMore());
   }
 }
 
@@ -108,12 +114,8 @@ FileSet::calcStartEndTime()
     }
   }
 
-  if (startCut_ < startTime_ ||
-      startCut_ > endTime_)
-    startCut_ = startTime_;
-  if (endCut_ > endTime_ ||
-      endCut_ < startTime_)
-    endCut_ = endTime_;
+  startCut_ = startTime_;
+  endCut_ = endTime_;
 
   emit intervalChange();
 }
@@ -126,7 +128,9 @@ FileSet::coursorTime(ACE_Time_Value const& _time)
     (*first)->coursorTime(_time);
   }
 
-  std::make_heap(file_.begin(), file_.end(), LFLess());
+  std::make_heap(file_.begin(), file_.end(), LFMore());
+  forward_ = true;
+
   std::cout << "new time heap: " << std::endl;
   for (first = file_.begin(); first != last; ++first) {
     std::cout << (*first)->coursorTime()  - startTime_ << std::endl;
@@ -147,23 +151,28 @@ FileSet::coursorTimeRel(ACE_Time_Value const& _time)
 void
 FileSet::playEvents(ACE_Time_Value const& _time)
 {
-  assert(file_.size() != 0);
+  MIRO_ASSERT(file_.size() != 0);
 
   if (coursorTime() > endCut_)
     return;
 
   // correct heap if we change direction
-  FileVector::const_iterator first, last = file_.end();
-  first = file_.begin();
-  for (++first; first != last; ++first)
-    (*first)->assertAfter(file_.front()->coursorTime());
+  if (!forward_) {
+    FileVector::const_iterator first, last = file_.end();
+    first = file_.begin();
+    for (++first; first != last; ++first)
+      (*first)->assertAfter(file_.front()->coursorTime());
+    std::make_heap(file_.begin(), file_.end(), LFMore());
+    forward_ = true;
+  }
 
   while (file_.front()->coursorTime() <= _time) {
-    file_.front()->sendEvent();
-    file_.front()->nextEvent();
+    std::pop_heap(file_.begin(), file_.end(), LFMore());
+    file_.back()->sendEvent();
+    file_.back()->nextEvent();
+    std::push_heap(file_.begin(), file_.end(), LFMore());
 
     // restore heap attibute
-    std::make_heap(file_.begin(), file_.end(), LFLess());
     std::cout << "new time heap: " << std::endl;
     FileVector::const_iterator first, last = file_.end();
     for (first = file_.begin(); first != last; ++first) {
@@ -179,22 +188,28 @@ FileSet::playEvents(ACE_Time_Value const& _time)
 void
 FileSet::playBackwards()
 {
-  assert(file_.size() != 0);
+  MIRO_ASSERT(file_.size() != 0);
   if (coursorTime() <= startCut_)
     return;
 
   // correct heap if we change direction
-  FileVector::const_iterator first, last = file_.end();
-  first = file_.begin();
-  for (++first; first != last; ++first)
-    (*first)->assertBefore(file_.front()->coursorTime());
+  if (forward_) {
+    FileVector::const_iterator first, last = file_.end();
+    first = file_.begin();
+    for (++first; first != last; ++first)
+      (*first)->assertBefore(file_.front()->coursorTime());
 
-  file_.front()->sendEvent();
-  file_.front()->prevEvent();
+    std::make_heap(file_.begin(), file_.end(), LFLess());
+    forward_ = false;
+  }
 
-  // restore heap attibute
-  std::make_heap(file_.begin(), file_.end(), LFMore());
+  std::pop_heap(file_.begin(), file_.end(), LFLess());
+  file_.back()->sendEvent();
+  file_.back()->prevEvent();
+  std::push_heap(file_.begin(), file_.end(), LFLess());
+
   std::cout << "new time heap: " << std::endl;
+  FileVector::const_iterator first, last = file_.end();
   for (first = file_.begin(); first != last; ++first) {
     std::cout << (*first)->coursorTime()  - startTime_ << std::endl;
   }
@@ -214,8 +229,9 @@ FileSet::getEvents(ACE_Time_Value const& _time, unsigned int _num)
   coursorTime(_time);
 
   while (file_.front()->coursorTime() <= endCut_ && --_num > 0) {
-    file_.front()->nextEvent();
-    std::make_heap(file_.begin(), file_.end(), LFLess());
+    std::pop_heap(file_.begin(), file_.end(), LFMore());
+    file_.back()->nextEvent();
+    std::push_heap(file_.begin(), file_.end(), LFMore());
     file_.front()->parseEvent();
   }
 
@@ -241,11 +257,18 @@ FileSet::typeNames() const
   DNETMap tree;
   FileVector::const_iterator first, last = file_.end();
   for (first = file_.begin(); first != last; ++first) {
-    DNETMap::iterator iter = tree.find((*first)->domainName());
-    if (iter == tree.end())
-      tree.insert(std::make_pair((*first)->domainName(), (*first)->typeNames()));
-    else 
-      iter->second.insert((*first)->typeNames().begin(), (*first)->typeNames().end());
+
+    DNETMap const& fileTree((*first)->eventTypes());
+    DNETMap::const_iterator f2, l2 = fileTree.end();
+    for (f2 = fileTree.begin(); f2 != l2; ++f2) {
+      DNETMap::iterator iter = tree.find(f2->first);
+      if (iter == tree.end()) {
+	tree.insert(*f2);
+      }
+      else {
+	iter->second.insert(f2->second.begin(), f2->second.end());
+      }
+    }
   }
   
   return tree;
@@ -265,8 +288,7 @@ FileSet::addExclude(QString const& _domainName, QString const& _typeName)
 {
   FileVector::const_iterator first, last = file_.end();
   for (first = file_.begin(); first != last; ++first) {
-    if ((*first)->domainName() == _domainName)
-      (*first)->addExclude(_typeName);
+    (*first)->addExclude(_domainName, _typeName);
   }
 }
 
@@ -275,8 +297,7 @@ FileSet::delExclude(QString const& _domainName, QString const& _typeName)
 {
   FileVector::const_iterator first, last = file_.end();
   for (first = file_.begin(); first != last; ++first) {
-    if ((*first)->domainName() == _domainName)
-      (*first)->delExclude(_typeName);
+    (*first)->delExclude(_domainName, _typeName);
   }
 }
 

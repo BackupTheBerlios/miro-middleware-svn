@@ -411,7 +411,7 @@ MainForm::loadFile(QString const & _name )
 
       statusBar()->message(QString("loaded file: ") + _name, 5000);
       fileSet_.calcStartEndTime();
-      fileSet_.coursorTime(fileSet_.coursorTime());
+      fileSet_.coursorTime(fileSet_.cutStartTime());
 
       connect(file, SIGNAL(notifyEvent(const QString&)), 
 	      statusBar(), SLOT(message(const QString&)));

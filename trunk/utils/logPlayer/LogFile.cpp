@@ -24,7 +24,7 @@ LogFile::LogFile(QString const& _name,
   name_(_name),
   channelManager_(_channelManager),
   coursor_(timeVector_.end()),
-  supplier_(NULL),
+  currentDomainName_(""),
   istr_(NULL),
   parsed_(false)
 {
@@ -37,10 +37,25 @@ LogFile::LogFile(QString const& _name,
 
 LogFile::~LogFile()
 {
-  if (supplier_)
-    supplier_->disconnect();
-  delete supplier_;
 
+  {
+    // free strings
+    CStringMap::iterator first, last = eventTypes_.end();
+    for (first = eventTypes_.begin(); first != last; ++first) {
+      CStringSet::iterator f2, l2 = first->second.end();
+      for (f2 = first->second.begin(); f2 != l2; ++f2) {
+	delete[] (*f2);
+      }
+    }
+  }
+
+  {
+    SupplierVector::const_iterator first, last = suppliers_.end();
+    for (first = suppliers_.begin(); first != last; ++first) {
+      first->second->disconnect();
+      delete first->second;
+    }
+  }
   delete istr_;
 
   memoryMap_.close();
@@ -66,8 +81,24 @@ LogFile::parse()
     // skip event
     (*istr_) >> event;
 
-    typeNames_.insert(QString(event.header.fixed_header.event_type.type_name));
+    // get domain name slot
+    if (strcmp(currentDomainName_, 
+	       (char const *)event.header.fixed_header.event_type.domain_name) != 0) {
+      currentDomainEvents_ = 
+	eventTypes_.find((char const *)event.header.fixed_header.event_type.domain_name);
+      if (currentDomainEvents_ == eventTypes_.end()) {
+	currentDomainEvents_ =
+	  eventTypes_.insert(std::make_pair((char const *)CORBA::string_dup(event.header.fixed_header.event_type.domain_name),
+					    CStringSet())).first;
+      }
+      currentDomainName_ = currentDomainEvents_->first;
+    }
+    if (currentDomainEvents_->second.find(event.header.fixed_header.event_type.type_name) ==
+	currentDomainEvents_->second.end())
 
+    currentDomainEvents_->second.insert(CORBA::string_dup(event.header.fixed_header.event_type.type_name));
+
+    // break parsing up to advance status bar
     if (!(timeVector_.size() % 2048))
       break;
   }
@@ -77,21 +108,30 @@ LogFile::parse()
 
   // EOF
   if (istr_->length() == 0 || timeStamp == ACE_Time_Value::zero) {
+    cout << "." << endl;
     coursor_ = timeVector_.begin();
     
-    domainName_ = event.header.fixed_header.event_type.domain_name;
-    ec_ = channelManager_->getEventChannel(domainName_);
-    supplier_ = new Miro::StructuredPushSupplier(ec_.in(), domainName_.latin1());
+    suppliers_.reserve(eventTypes_.size());
+    CStringMap::const_iterator first, last = eventTypes_.end();
+    for (first = eventTypes_.begin(); first != last; ++first) {
+      CosNotifyChannelAdmin::EventChannel_ptr ec =
+	channelManager_->getEventChannel(first->first);
+      Miro::StructuredPushSupplier * supplier = 
+	new Miro::StructuredPushSupplier(ec, first->first);
+      suppliers_.push_back(std::make_pair(first->first, supplier));
+      
+      cout << "." << endl;
+  
+      CosNotification::EventTypeSeq offers;
+      offers.length(first->second.size());
 
-    CosNotification::EventTypeSeq offers;
-    offers.length(typeNames_.size());
-
-    CStringSet::const_iterator typeName = typeNames_.begin();
-    for (unsigned int i = 0; i < offers.length(); ++i, ++ typeName) {
-      offers[i].domain_name = CORBA::string_dup(domainName_.latin1());
-      offers[i].type_name = CORBA::string_dup(typeName->latin1());
+      CStringSet::const_iterator typeName = first->second.begin();
+      for (unsigned int i = 0; i < offers.length(); ++i, ++ typeName) {
+	offers[i].domain_name = CORBA::string_dup(first->first);
+	offers[i].type_name = CORBA::string_dup(*typeName);
+      }
+      supplier->setOffers(offers);
     }
-    supplier_->setOffers(offers);
 
     delete istr_;
     istr_ = NULL;
@@ -113,7 +153,18 @@ LogFile::sendEvent()
 
   emit notifyEvent(domainName_ + " - " + typeName_);
   
-  supplier_->sendEvent(event_);
+  if (suppliers_.size() == 1) {
+    suppliers_.front().second->sendEvent(event_);
+  }
+  else {
+    SupplierVector::const_iterator supplier =
+      std::lower_bound(suppliers_.begin(), suppliers_.end(), 
+		       std::make_pair((char const *)event_.header.fixed_header.event_type.domain_name, 
+				      (Miro::StructuredPushSupplier *) NULL),
+		       LtStrFirst());
+    MIRO_ASSERT(supplier != suppliers_.end());
+    supplier->second->sendEvent(event_);
+  }
 }
 
 bool
@@ -205,39 +256,49 @@ LogFile::clearExclude()
 }
 
 void
-LogFile::addExclude(QString const& _typeName)
+LogFile::addExclude(QString const& _domainName, QString const& _typeName)
 {
-  if (typeNames_.find(_typeName.latin1()) == typeNames_.end())
+  CStringMap::const_iterator domain = eventTypes_.find(_domainName.latin1());
+  if (domain == eventTypes_.end())
     return;
 
-  assert(std::find(exclude_.begin(), exclude_.end(), _typeName) == exclude_.end());
+  CStringSet::const_iterator type = domain->second.find(_typeName.latin1());
+  if (type == domain->second.end())
+    return;
 
-  exclude_.push_back(_typeName);
+  CStringMap::iterator eDomain = exclude_.find(domain->first);
+  if (eDomain == exclude_.end()) {
+    eDomain = exclude_.insert(std::make_pair(domain->first, CStringSet())).first;
+  }
+  eDomain->second.insert(*type);
 }
 
 void
-LogFile::delExclude(QString const& _typeName)
+LogFile::delExclude(QString const& _domainName, QString const& _typeName)
 {
-  if (typeNames_.find(_typeName.latin1()) == typeNames_.end())
+  CStringMap::iterator domain = exclude_.find(_domainName.latin1());
+  if (domain == exclude_.end())
     return;
 
-  QStringVector::iterator iter = 
-    std::find(exclude_.begin(), exclude_.end(), _typeName);
-  assert(iter != exclude_.end());
+  CStringSet::iterator type = domain->second.find(_typeName.latin1());
+  if (type == domain->second.end())
+    return;
 
-  exclude_.erase(iter);
+  domain->second.erase(type);
+  if (domain->second.size() == 0)
+    exclude_.erase(domain);
 }
 
 bool
 LogFile::validEvent() const
 {
   // skip excluded events
-  QStringVector::const_iterator first, last = exclude_.end();
-  for (first = exclude_.begin(); first != last; ++first) {
-    if (strcmp(first->latin1(), 
-	       (char const *)event_.header.fixed_header.event_type.type_name) == 0) {
-     return false;
-    }
+  CStringMap::const_iterator eDomain =
+    exclude_.find(event_.header.fixed_header.event_type.domain_name);
+  if (eDomain != exclude_.end()) {
+    return 
+      eDomain->second.find(event_.header.fixed_header.event_type.type_name) == 
+      eDomain->second.end();
   }
   return true;
 }

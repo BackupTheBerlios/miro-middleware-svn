@@ -143,10 +143,10 @@ main(int argc, char *argv[])
 	channelManager.detach(4);
 
 	// parse remaining args
-	if (argc > 1) {
+	for (int i = 1; i < argc; ++i) {
 	  if (verbose)
-	    std::cout << "using file " << argv[1] << endl;
-	  mainWindow.loadFile(argv[1]);
+	    std::cout << "using file " << argv[i] << endl;
+	  mainWindow.loadFile(argv[i]);
 	}
 	
 	if (verbose)
