@@ -31,8 +31,9 @@ static Miro::Server * pServer;
 
 extern "C" void handler (int signum)
 {
-  // check of sigint
+  // check of sigint and sigterm
   if (signum == SIGINT || signum == SIGTERM) {
+    DBG(cerr << "Signal received: " << signum << endl);
     pServer->shutdown();
   }
 }
