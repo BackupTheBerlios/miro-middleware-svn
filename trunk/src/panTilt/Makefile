@@ -73,6 +73,8 @@ $(BIN): $(STATIC_DEPS)
 # DO NOT DELETE THIS LINE -- g++dep uses it.
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
+<<<<<<< Makefile
+=======
 
 .obj/PanTiltConnection.o .obj/PanTiltConnection.so .shobj/PanTiltConnection.o .shobj/PanTiltConnection.so: PanTiltConnection.cpp \
  $(MIRO_ROOT)/src/miro/ExceptionC.h \
@@ -153,4 +155,5 @@ $(BIN): $(STATIC_DEPS)
  $(MIRO_ROOT)/src/miro/Singleton.h \
  $(MIRO_ROOT)/src/miro/Synch.h
 
+>>>>>>> 1.8
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

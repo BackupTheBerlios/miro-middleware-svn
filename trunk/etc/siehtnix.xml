@@ -32,7 +32,8 @@
       <watchdogtimeout>2000</watchdogtimeout>
       <buttonspollinterval>300</buttonspollinterval>
 
-      <servo0midpulse>3650</servo0midpulse>
+      <servo0midpulse>3200</servo0midpulse>
+      <deg2servoticks>26</deg2servoticks>
       <!--
         <servo1midpulse></servo1midpulse>
         <panswing>350</panswing> 
@@ -126,7 +127,7 @@
       <f>4.245162</f>
       <kappa>1.608197e-02</kappa>
       <height>540</height><!-- 515 -->
-      <alpha>36.0</alpha><!-- 34.5 -->
+      <alpha>35.5</alpha><!-- 34.5 -->
     </Camera>
   </Sparrow99>
   <Notification>

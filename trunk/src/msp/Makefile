@@ -70,6 +70,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 # DO NOT DELETE THIS LINE -- g++dep uses it.
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
+<<<<<<< Makefile
+=======
 
 .obj/MspConnection.o .obj/MspConnection.o .obj/MspConnection.o .obj/MspConnection.o: MspConnection.cpp \
  $(MIRO_ROOT)/src/abus/AbusDevice.h MspConnection.h \
@@ -158,4 +160,5 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/VelocityC.i \
  $(MIRO_ROOT)/src/miro/MotionStatusC.i
 
+>>>>>>> 1.8
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

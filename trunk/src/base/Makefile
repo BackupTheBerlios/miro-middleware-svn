@@ -65,6 +65,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 # DO NOT DELETE THIS LINE -- g++dep uses it.
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
+<<<<<<< Makefile
+=======
 
 .obj/BaseDevice.o .obj/BaseDevice.o .obj/BaseDevice.o .obj/BaseDevice.o: BaseDevice.cpp BaseDevice.h \
  $(MIRO_ROOT)/src/mcp/McpMessage.h \
@@ -353,4 +355,5 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/DevParameters.h \
  $(MIRO_ROOT)/src/miro/IO.h
 
+>>>>>>> 1.8
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

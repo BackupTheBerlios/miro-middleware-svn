@@ -73,6 +73,8 @@ $(BIN): $(STATIC_DEPS)
 # DO NOT DELETE THIS LINE -- g++dep uses it.
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
+<<<<<<< Makefile
+=======
 
 .obj/SickLaserConnection.o .obj/SickLaserConnection.so .shobj/SickLaserConnection.o .shobj/SickLaserConnection.so: SickLaserConnection.cpp SickLaserConnection.h \
  $(MIRO_ROOT)/src/miro/RangeSensorImpl.h \
@@ -256,4 +258,5 @@ $(BIN): $(STATIC_DEPS)
  $(MIRO_ROOT)/src/miro/ScanDescriptionHelper.h \
  $(MIRO_ROOT)/src/miro/Angle.h
 
+>>>>>>> 1.8
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

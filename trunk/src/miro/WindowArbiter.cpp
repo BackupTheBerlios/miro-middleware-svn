@@ -121,7 +121,7 @@ namespace Miro
 
     cout << "WindowArbiter TimeOutHandler." << endl;
     
-    // Let each behaviour calculate its dynamicWindow ascend by priority
+    // let each behaviour calculate its dynamicWindow ascend by priority
     typedef std::vector<Behaviour *> BehaviourVector;
     BehaviourVector bv(params_->priorities.size());
     ArbiterParameters::RegistrationMap::const_iterator j;
@@ -133,15 +133,8 @@ namespace Miro
       (*k)->calcDynamicWindow(&dynWindow_);
     }
 
-    // Calculate new velocity using the content of the dynamicWindow    
+    // calculate new velocity using the content of the dynamicWindow    
     newVelocity = dynWindow_.calcNewVelocity();
-    newVelocity = std::complex<double>(std::max(std::min(40., newVelocity.real()),-40.), std::max(std::min(40.,newVelocity.imag()),-40.));
-
-    // florian: gehört eigentlich vor die ->calcDynamicWindow Schleife
-    dynWindow_.setNewDynamicWindow(newVelocity);
-    
-    // print velocity for debugging
-    cout << "\nVelocity: left: " << newVelocity.real() << " - right: " << newVelocity.imag() << endl;
 
     // Set motion
     // florian: probier mal wie's mit setLRVelocity läuft.

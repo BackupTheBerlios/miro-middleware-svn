@@ -77,6 +77,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 # DO NOT DELETE THIS LINE -- g++dep uses it.
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
+<<<<<<< Makefile
+=======
 
 .obj/Pixels.o .obj/Pixels.so .shobj/Pixels.o .shobj/Pixels.so: Pixels.cpp Pixels.h MiroImage.h pixels.ih
 
@@ -248,4 +250,5 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/ImageS.i ImageFactory.h \
  ImageFactoryDefinitions.h MiroImage.h
 
+>>>>>>> 1.8
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

@@ -31,8 +31,9 @@ namespace Miro
     DynamicWindow(Vector2d, int, int);
     // destructor
     ~DynamicWindow();
-    // check for collisions for every reachable velocity
-    // and update the content of the actual dynamic window
+
+    // florian: const &    // florian: const vector , const ?
+    void setPreferredDirection(double);
 
     // florain: const !
     void collisionCheck(std::vector<Vector2d>&, std::vector<Vector2d>&);
@@ -44,29 +45,7 @@ namespace Miro
     // set the new velocity and calculate the size
     // of the new dynamicWindow
 
-    // florian: const &
-    void setNewDynamicWindow(Vector2d);
-    // set a prefferedDirection and prefferedTranslation
-    // and calculate the new content of the velocitySpace
-    void setPreferredDirection(double);
-    // rotate the given polygon around the given point by the given angle
-    void rotateMountedPolygon(std::vector<Vector2d>&, Vector2d, double);
-    // move the given polygon by the given distance
-    void moveMountedPolygon(std::vector<Vector2d>&, Vector2d);
-    // get mathematical directed angle between two vectors (0..2*pi)
-    double getAngleBetweenVectors(Vector2d, Vector2d);
-    // get signed distance between point and line
-    double getSignedDistanceBetweenPointAndLine(Vector2d, Vector2d, Vector2d);	
-    // get distance between line and line
-    double getDistanceBetweenLineAndLine(Vector2d, Vector2d, Vector2d, Vector2d);
-    // florian: const vector , const ?
-    // get distance between two given polygons
-    double getDistanceBetweenPolygonAndPolygon(std::vector<Vector2d>&, std::vector<Vector2d>&);
-
-
-    
-    // 		protected:
-    // uncommented for debugging only
+		
     
     // the velocity space
     int velocitySpace_[VEL_SPACE_LEFT][VEL_SPACE_RIGHT];
@@ -83,6 +62,22 @@ namespace Miro
 
     // actual velocity
     Vector2d velocity_;
+    
+    
+  private:
+    // set new DynamicWindow
+    void setNewDynamicWindow(Vector2d);
+    // get signed distance between point and line
+    double getSignedDistanceBetweenPointAndLine(Vector2d, Vector2d, Vector2d);	
+    // get distance between two lines
+    double getDistanceBetweenLineAndLine(Vector2d, Vector2d, Vector2d, Vector2d);
+    // get distance between two mounted polygons
+    double getDistanceBetweenMountedPolygonAndMountedPolygon(std::vector<Vector2d>&, std::vector<Vector2d>&);
+    // rotate mounted polygon around offset by given angle
+    void rotateMountedPolygon(std::vector<Vector2d>&, Vector2d, double);
+    // move the given polygon by the given distance
+    void moveMountedPolygon(std::vector<Vector2d>&, Vector2d);
+    
   };
 };
 #endif

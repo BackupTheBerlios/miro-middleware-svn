@@ -68,6 +68,8 @@ $(BIN): $(STATIC_DEPS)
 # DO NOT DELETE THIS LINE -- g++dep uses it.
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
+<<<<<<< Makefile
+=======
 
 .obj/SpeechConnection.o .obj/SpeechConnection.so .shobj/SpeechConnection.o .shobj/SpeechConnection.so: SpeechConnection.cpp SpeechConnection.h \
  $(MIRO_ROOT)/src/miro/Exception.h \
@@ -92,4 +94,5 @@ $(BIN): $(STATIC_DEPS)
  $(MIRO_ROOT)/src/miro/Exception.h SpeechDevice.h \
 
 
+>>>>>>> 1.8
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY
