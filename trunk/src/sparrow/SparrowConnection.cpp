@@ -6,7 +6,7 @@
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
 
 
@@ -15,8 +15,6 @@
 #include "SparrowConsumer.h"
 #include "SparrowDevice.h"
 #include "Parameters.h"
-
-#include "can/CanMessage.h"
 
 #include "miro/Exception.h"
 
@@ -139,7 +137,7 @@ namespace Sparrow
     ACE_OS::sleep(1);
     reactor->cancel_timer(buttonsPollTimerId);
   }
-  
+
   //-------------------//
   //----- methods -----//
   //-------------------//
@@ -209,7 +207,7 @@ namespace Sparrow
       leftPower = left;
       rightPower = right;
 
-      Message message;
+      CanMessage message;
       message.length(8);
       message.id(CAN_SET_POWER);
       message.shortData(0, left);
@@ -231,34 +229,34 @@ namespace Sparrow
       leftSpeed = left;
       rightSpeed = right;
 
-      Message message;
+      CanMessage message;
       message.length(8);
       message.id(CAN_SET_SPEED);
       message.shortData(0, left);
       message.shortData(2, right);
       message.longData(4, 0);
-      
+
       write(message);
     }
   }
 
-  void 
+  void
   Connection::setSpeedRot(short speed, short rot)
   {
     Miro::Guard guard(motionMutex);
-    if (motionState != SPEED_ROT || 
+    if (motionState != SPEED_ROT ||
 	translateSpeed != speed || rotateSpeed != rot) {
       motionState = SPEED_ROT;
       translateSpeed = speed;
       rotateSpeed = rot;
 
-      Can::Message message;
+      CanMessage message;
       message.length(8);
       message.id(CAN_SET_SPEED_ROT);
       message.shortData(0, speed);
       message.shortData(2, rot);
       message.longData(4, 0);
-      
+
       write(message);
     }
   }
@@ -266,7 +264,7 @@ namespace Sparrow
   void
   Connection::setAccelValues(short index, short table1, short table2)
   {
-    Message message;
+    CanMessage message;
     message.length(6);
     message.id(CAN_SET_ACCELS);
     message.shortData(0, index);
@@ -279,7 +277,7 @@ namespace Sparrow
   void
   Connection::getAccelValues()
   {
-    Message message;
+    CanMessage message;
     message.length(0);
     message.id(CAN_GET_ACCELS);
 
@@ -289,7 +287,7 @@ namespace Sparrow
   void
   Connection::initDrive(short ticksL, short ticksR, short diameter)
   {
-    Message message;
+    CanMessage message;
     message.length(6);
     message.id(CAN_INIT_DRIVE);
     message.shortData(0, ticksL);
@@ -302,7 +300,7 @@ namespace Sparrow
   void
   Connection::initMax(short maxAcc, short maxPower, short maxSpeed, double maxTurn)
   {
-    Message message;
+    CanMessage message;
     message.length(8);
     message.id(CAN_INIT_MAX);
     message.shortData(0, maxAcc);
@@ -316,7 +314,7 @@ namespace Sparrow
   void
   Connection::motorInit()
   {
-    Message message;
+    CanMessage message;
     message.length(0);
     message.id(CAN_MOTOR_INIT);
 
@@ -327,7 +325,7 @@ namespace Sparrow
   void
   Connection::motorAllOff()
   {
-    Message message;
+    CanMessage message;
     message.length(0);
     message.id(CAN_MOTOR_ALL_OFF);
 
@@ -339,7 +337,7 @@ namespace Sparrow
   {
     Miro::Guard guard(consumer->motorAliveMutex);
 
-    Message message;
+    CanMessage message;
     message.length(0);
     message.id(CAN_MOTOR_ALIVE);
 
@@ -350,10 +348,10 @@ namespace Sparrow
     return (consumer->motorAliveCond.wait(&timeout) != -1);
   }
 
-  void 
+  void
   Connection::getPosition(unsigned short msec, unsigned short times)
   {
-    Message message;
+    CanMessage message;
     message.length(4);
     message.id(CAN_GET_POS_CONT);
     message.shortData(0, msec);
@@ -362,12 +360,12 @@ namespace Sparrow
     write(message);
   }
 
-  void 
+  void
   Connection::getDistanceLR(int& left, int& right)
   {
     Miro::Guard guard(consumer->distanceLRMutex);
 
-    Message message;
+    CanMessage message;
     message.length(0);
     message.id(0x82020102);
 
@@ -383,10 +381,10 @@ namespace Sparrow
     right = consumer->distanceR;
   }
 
-  void 
+  void
   Connection::setPosition(short x, short y, double theta)
   {
-    Message message;
+    CanMessage message;
     message.length(6);
     message.id(CAN_SET_POS);
     message.shortData(0, (unsigned short)(x));
@@ -396,10 +394,10 @@ namespace Sparrow
     write(message);
   }
 
-  void 
+  void
   Connection::setRelativePosition(short dx, short dy, double delta)
   {
-    Message message;
+    CanMessage message;
     message.length(6);
     message.id(CAN_SET_POS_REL);
     message.shortData(0, (unsigned short)(dx));
@@ -414,7 +412,7 @@ namespace Sparrow
   {
     Miro::Guard guard(consumer->odoAliveMutex);
 
-    Message message;
+    CanMessage message;
     message.length(0);
     message.id(CAN_ODO_ALIVE);
 
@@ -428,7 +426,7 @@ namespace Sparrow
   void
   Connection::readDigital()
   {
-    Message message;
+    CanMessage message;
     message.length(0);
     message.id(CAN_READ_PORTS);
 
@@ -438,7 +436,7 @@ namespace Sparrow
   void
   Connection::writeDigital(short index, unsigned short _and, unsigned short _or)
   {
-    Message message;
+    CanMessage message;
     message.length(6);
     message.id(CAN_WRITE_PORT);
     message.longData(0, index);
@@ -449,12 +447,12 @@ namespace Sparrow
   }
 
 
-  unsigned short 
+  unsigned short
   Connection::readAnalog(short index)
   {
     Miro::Guard guard(consumer->analogMutex);
 
-    Message message;
+    CanMessage message;
     message.length(2);
     message.id(CAN_READ_ANALOG);
     message.shortData(0, index);
@@ -462,14 +460,14 @@ namespace Sparrow
     write(message);
 
     consumer->analogCond.wait();
-  
+
     return consumer->analog[index];
   }
 
   void
   Connection::setDigital(unsigned short port2)
   {
-    Message message;
+    CanMessage message;
     message.length(2);
     message.id(CAN_SET_PORT);
     message.longData(0, port2);
@@ -480,7 +478,7 @@ namespace Sparrow
   void
   Connection::portsAllOff()
   {
-    Message message;
+    CanMessage message;
     message.length(0);
     message.id(CAN_MOTOR_ALL_OFF);
 
@@ -492,7 +490,7 @@ namespace Sparrow
   {
     Miro::Guard guard(consumer->portsAliveMutex);
 
-    Message message;
+    CanMessage message;
     message.length(0);
     message.id(CAN_PORTS_ALIVE);
 
@@ -503,10 +501,10 @@ namespace Sparrow
     return (consumer->portsAliveCond.wait(&timeout) != -1);
   }
 
-  void 
+  void
   Connection::initStall(short threashold, short a2, short a1, short a0)
   {
-    Message message;
+    CanMessage message;
     message.length(8);
     message.id(CAN_STALL_INIT);
     message.shortData(0, threashold);
@@ -520,8 +518,8 @@ namespace Sparrow
   void
   Connection::stallTimerStart()
   {
-    if ( (eventHandler->stallTimerId = 
-	  reactor->schedule_timer(eventHandler, 
+    if ( (eventHandler->stallTimerId =
+	  reactor->schedule_timer(eventHandler,
 				  (void *)STALL_TIMER, // timer id
 				  stallReset) )         // delay
 	 == -1 )
@@ -545,12 +543,12 @@ namespace Sparrow
     }
   };
 
-  bool 
+  bool
   Connection::stallAlive()
   {
     Miro::Guard guard(consumer->stallAliveMutex);
 
-    Message message;
+    CanMessage message;
     message.length(0);
     message.id(CAN_STALL_ALIVE);
 
@@ -561,10 +559,10 @@ namespace Sparrow
     return (consumer->stallAliveCond.wait(&timeout) != -1);
   }
 
-  void 
+  void
   Connection::kick(unsigned short msec)
   {
-    Message message;
+    CanMessage message;
 
     message.length(4);
     message.id(CAN_KICK);
@@ -575,10 +573,10 @@ namespace Sparrow
     write(message);
   }
 
-  void 
+  void
   Connection::kickIfBall(unsigned short tryMsec, unsigned short msec, short threashold)
   {
-    Message message;
+    CanMessage message;
 
     message.length(6);
     message.id(CAN_KICK_IF_BALL);
@@ -592,7 +590,7 @@ namespace Sparrow
   void
   Connection::kickerAllOff()
   {
-    Message message;
+    CanMessage message;
     message.length(0);
     message.id(CAN_KICK_ALL_OFF);
 
@@ -604,7 +602,7 @@ namespace Sparrow
   {
     Miro::Guard guard(consumer->kickerAliveMutex);
 
-    Message message;
+    CanMessage message;
     message.length(0);
     message.id(CAN_KICK_ALIVE);
 
@@ -615,10 +613,10 @@ namespace Sparrow
     return (consumer->kickerAliveCond.wait(&timeout) != -1);
   }
 
-  void 
+  void
   Connection::servoGo(short index, short value)
   {
-    Message message;
+    CanMessage message;
 
     message.length(4);
     message.id(CAN_SERVO_GO);
@@ -631,7 +629,7 @@ namespace Sparrow
   void
   Connection::servoAllOff()
   {
-    Message message;
+    CanMessage message;
     message.length(0);
     message.id(CAN_MOTOR_ALL_OFF);
 
@@ -643,7 +641,7 @@ namespace Sparrow
   {
     Miro::Guard guard(consumer->servoAliveMutex);
 
-    Message message;
+    CanMessage message;
     message.length(0);
     message.id(CAN_SERVO_ALIVE);
 
@@ -654,10 +652,10 @@ namespace Sparrow
     return (consumer->servoAliveCond.wait(&timeout) != -1);
   }
 
-  void 
+  void
   Connection::setServo(short servo, double rad)
   {
-    Message message;
+    CanMessage message;
     message.length(8);
     message.id(CAN_SERVO_GO);
     message.shortData(0, servo);                         // servo number
@@ -667,10 +665,10 @@ namespace Sparrow
     write(message);
   }
 
-  void 
+  void
   Connection::infraredGet(unsigned short msec, unsigned short times)
   {
-    Message message;
+    CanMessage message;
     message.length(4);
     message.id(CAN_IR_GET_CONT);
     message.shortData(0, msec);
@@ -695,10 +693,10 @@ namespace Sparrow
     return (consumer->irAliveCond.wait(&timeout) != -1);
   }
 
-  void 
+  void
   Connection::status()
   {
-    Message message;
+    CanMessage message;
     message.length(0);
     message.id(CAN_STATUS);
 
@@ -710,7 +708,7 @@ namespace Sparrow
   {
     Miro::Guard guard(consumer->dbgAliveMutex);
 
-    Message message;
+    CanMessage message;
     message.length(0);
     message.id(CAN_DBG_ALIVE);
 
@@ -724,7 +722,7 @@ namespace Sparrow
   void
   Connection::testAdd()
   {
-    Message message;
+    CanMessage message;
     message.length(0);
     message.id(CAN_TEST_ADD);
 
@@ -734,7 +732,7 @@ namespace Sparrow
   void
   Connection::testResult()
   {
-    Message message;
+    CanMessage message;
     message.length(0);
     message.id(CAN_TEST_RESULT);
 

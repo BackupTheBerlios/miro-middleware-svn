@@ -23,6 +23,7 @@
 
 
 #include "can/CanMessage.h"
+#include "can/pcan.h"
 
 #include <miro/Exception.h>
 #include <algorithm>
@@ -44,6 +45,9 @@ namespace Sparrow
   //------------------------//
   //----- constructors -----//
   //------------------------//
+  const int Consumer2003::INTEGRATION_NUMBER = 5;
+
+
   Consumer2003::Consumer2003(Connection2003 * _connection,
 		     Miro::OdometryImpl * _pOdometry,
 		     Miro::RangeSensorImpl * _pIR1,
@@ -234,7 +238,7 @@ namespace Sparrow
 
     switch (msgID) {
 
-      case CAN_R_IR_GET_CONT1:{
+      case CAN_R_IR_GET_CONT1_2003:{
       DBG(cout << "Consumer::receiveThread: receiveThread message: IR_CONT1" << endl);
       if (pIR1_) {
 	/*Sparrow::Parameters * param = Sparrow::Parameters::instance(); //uli
@@ -339,7 +343,7 @@ namespace Sparrow
       break;
       }
 
-      case CAN_R_IR_GET_CONT2:{
+      case CAN_R_IR_GET_CONT2_2003:{
       DBG(cout << "Consumer::receiveThread: receiveThread message: IR_CONT2" << endl);
 
       if (pIR1_) {
@@ -464,7 +468,7 @@ namespace Sparrow
 
 // Kicker_Alive, Pan_Alive, Motor_Alive, IR_Alive1+2
 
-    case CAN_R_IR_ALIVE1:{
+    case CAN_R_IR_ALIVE1_2003:{
       DBG(cout << "Consumer::receiveThread:  received message: IR_ALIVE1" << endl);
       if(pAliveCollector)
          pAliveCollector->setLastInfrared1Alive(ACE_OS::gettimeofday());
@@ -473,7 +477,7 @@ namespace Sparrow
     }
 
 
-    case CAN_R_IR_ALIVE2:{
+    case CAN_R_IR_ALIVE2_2003:{
       DBG(cout << "Consumer::receiveThread:  received message: IR_ALIVE2" << endl);
       if(pAliveCollector)
          pAliveCollector->setLastInfrared2Alive(ACE_OS::gettimeofday());
@@ -482,7 +486,7 @@ namespace Sparrow
     }
 
 
-    case CAN_R_MOTOR_ALIVE:{
+    case CAN_R_MOTOR_ALIVE_2003:{
       DBG(cout << "Consumer::receiveThread:  received message: MOTOR_ALIVE" << endl);
       if(pAliveCollector)
          pAliveCollector->setLastMotorAlive(ACE_OS::gettimeofday());
@@ -491,7 +495,7 @@ namespace Sparrow
     }
 
 
-    case CAN_R_PAN_ALIVE:{
+    case CAN_R_PAN_ALIVE_2003:{
       DBG(cout << "Consumer::receivedThread:  received message: PAN_ALIVE" << endl);
       if(pAliveCollector)
          pAliveCollector->setLastPanAlive(ACE_OS::gettimeofday());
@@ -500,7 +504,7 @@ namespace Sparrow
     }
 
 
-    case CAN_R_KICK_ALIVE:{
+    case CAN_R_KICK_ALIVE_2003:{
       DBG(cout << "Consumer::receiveThread:  received message: KICK_ALIVE" << endl);
       if(pAliveCollector)
          pAliveCollector->setLastKickAlive(ACE_OS::gettimeofday());
@@ -508,18 +512,18 @@ namespace Sparrow
       break;
     }
 
-    case CAN_MOTOR_TICKS_LEFT:{
+    case CAN_MOTOR_TICKS_LEFT_2003:{
       FaulController::OdometryMessage odoMessage(FaulController::OdometryMessage::LEFT);
       if(params_->module == "pcan"){
-         Can::pcanmsg * msgp_;
-	 message.canMessage(&msgp_);
+         pcanmsg * msgp_;
+	 message.canMessage((int **) &msgp_);
 	 // long tickTmp;
          // memcpy((void *) &(odoMessage.ticks_),(void *) (msgp_->Msg.DATA),  4);
 	 odoMessage.ticks_ = message.longData(0);
 	}
       else{
          canmsg * msg_;
-	 message.canMessage(&msg_);
+	 message.canMessage((int **) &msg_);
 	 memcpy((void *) &(odoMessage.ticks_),(void *) (msg_->d),  4);
       }
       odoMessage.setTimestamp(ACE_OS::gettimeofday());
@@ -531,18 +535,18 @@ namespace Sparrow
        break;
     }
 
-    case CAN_MOTOR_TICKS_RIGHT:{
+    case CAN_MOTOR_TICKS_RIGHT_2003:{
 
        FaulController::OdometryMessage odoMessage2(FaulController::OdometryMessage::RIGHT);
        if(params_->module == "pcan"){
-         Can::pcanmsg * msgp_;
-	 message.canMessage(&msgp_);
+         pcanmsg * msgp_;
+	 message.canMessage((int **) &msgp_);
         //memcpy((void *) &(odoMessage2.ticks_),(void *) (msgp_->Msg.DATA),  4);
 	odoMessage2.ticks_ = message.longData(0);
       }
       else{
          canmsg * msg_;
-	 message.canMessage(&msg_);
+	 message.canMessage((int **) &msg_);
 	 memcpy((void *) &(odoMessage2.ticks_),(void *) (msg_->d),  4);
       }
        odoMessage2.setTimestamp(ACE_OS::gettimeofday());
@@ -565,17 +569,13 @@ namespace Sparrow
     }
   }
 
-  // Roland:
-  // mach aus den Konstaten static const KONSTANTE = ...
-  // members
-  // vielleicht klappts dann auch f,A|(Br andere Werte...
 
   long Consumer2003::integrateIrValues(unsigned int group, unsigned int sensor, long value){
 
      IrValues[TimeIndex[group]][group][sensor] = value;
      int counter = 0;
      long sum = 0;
-     for(int i = 0; i < 5; i++){
+     for(int i = 0; i < INTEGRATION_NUMBER; i++){
         if(IrValues[i][group][sensor] == -1){
 	   counter++;
 
@@ -583,13 +583,13 @@ namespace Sparrow
 	sum += IrValues[i][group][sensor];
      }
 
-     TimeIndex[group] = (TimeIndex[group] + 1) % 5;
+     TimeIndex[group] = (TimeIndex[group] + 1) % INTEGRATION_NUMBER;
 
      if(counter >= 1){
         return -1;
      }
      else{
-        return (long) (sum/5);
+        return (long) (sum/INTEGRATION_NUMBER);
      }
 
   }

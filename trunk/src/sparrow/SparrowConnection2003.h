@@ -11,10 +11,11 @@
 #ifndef SparrowConnection2003_h
 #define SparrowConnection2003_h
 
-#include "SparrowDevice2003.h"
+#include "SparrowDevice.h"
 #include "sparrow/Parameters.h"
 
 #include "SparrowBaseConnection.h"         // CanConnection, CanMessageClass
+#include "can/PCanMessage.h"
 
 //------------------------ SparrowClass ---------------------------//
 
@@ -30,6 +31,7 @@ namespace Sparrow
   class Connection2003 : public BaseConnection
   {
     typedef BaseConnection Super;
+    typedef Can::PCanMessage CanMessage;
 
   public:
     Connection2003(ACE_Reactor * _reactor,
@@ -46,7 +48,7 @@ namespace Sparrow
     void kick(unsigned char ventilatetime, unsigned char kicktime);
 
     void writeWheel(char const * constbuffer, int length, int motor);
-    
+
 
     void setInfrared1WaitTime(unsigned char waittime);
     void setInfrared2WaitTime(unsigned char waittime);

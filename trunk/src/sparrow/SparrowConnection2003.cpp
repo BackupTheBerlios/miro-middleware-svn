@@ -16,7 +16,7 @@
 #include "SparrowDevice.h"
 #include "Parameters.h"
 
-#include "can/CanMessage.h"
+
 
 #include "miro/Exception.h"
 
@@ -137,12 +137,12 @@ namespace Sparrow
   {
     assert(length <= 8);
 
-    Message message;
+    CanMessage message;
     message.length(length);
     if(motor == LEFT_MOTOR)
-       message.id(CAN_WRITE_MOTOR_LEFT);
+       message.id(CAN_WRITE_MOTOR_LEFT_2003);
     if(motor == RIGHT_MOTOR)
-       message.id(CAN_WRITE_MOTOR_RIGHT);
+       message.id(CAN_WRITE_MOTOR_RIGHT_2003);
     message.setBuffer(0, buffer, length);
     write(message);
   }
@@ -150,9 +150,9 @@ namespace Sparrow
   void
   Connection2003::setServo(unsigned char servo, double rad)
   {
-    Message message;
+    CanMessage message;
     message.length(3);
-    message.id(CAN_SERVO_GO);
+    message.id(CAN_SERVO_GO_2003);
     message.byteData(0, servo);                         // servo number
     message.shortData(1, (servo)? rad2servo1Ticks(rad) : rad2servo0Ticks(rad));
     write(message);
@@ -162,10 +162,10 @@ namespace Sparrow
   Connection2003::kick(unsigned char ventilatetime, unsigned char kicktime)
   {
     std::cout << "Hallo Kicker" << endl;
-    Message message;
+    CanMessage message;
     message.length(3);
     std::cout << "Hallo Kicker2" << endl;
-    message.id(CAN_KICK);
+    message.id(CAN_KICK_2003);
     message.byteData(0,0);
     message.byteData(1, ventilatetime);
     message.byteData(2, kicktime);
@@ -178,7 +178,7 @@ namespace Sparrow
   void
   Connection2003::alivetimeout()
   {
-    Message message;
+    CanMessage message;
     message.length(1);
     message.id(CAN_READ_PORTS);
     message.byteData(0,0);
@@ -188,9 +188,9 @@ namespace Sparrow
   void
   Connection2003::setInfrared1WaitTime(unsigned char waittime)
   {
-    Message message;
+    CanMessage message;
     message.length(2);
-    message.id(CAN_IR_SET_FREQ1);
+    message.id(CAN_IR_SET_FREQ1_2003);
     message.byteData(0, 1);
     message.byteData(1, waittime);
 
@@ -201,9 +201,9 @@ namespace Sparrow
   void
   Connection2003::setInfrared2WaitTime(unsigned char waittime)
   {
-    Message message;
+    CanMessage message;
     message.length(2);
-    message.id(CAN_IR_SET_FREQ2);
+    message.id(CAN_IR_SET_FREQ2_2003);
     message.byteData(0, 1);
     message.byteData(1, waittime);
     write(message);

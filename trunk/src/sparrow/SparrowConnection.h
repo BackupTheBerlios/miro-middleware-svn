@@ -15,6 +15,7 @@
 #include "sparrow/Parameters.h"
 
 #include "SparrowBaseConnection.h"         // CanConnection, CanMessageClass
+#include "can/Can0Message.h"
 
 //------------------------ SparrowClass ---------------------------//
 
@@ -30,6 +31,7 @@ namespace Sparrow
   class Connection : public BaseConnection
   {
     typedef BaseConnection Super;
+    typedef Can::Can0Message CanMessage;
 
   public:
     Connection(ACE_Reactor * _reactor,

@@ -6,7 +6,7 @@
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
 #ifndef SparrowDevice_h
 #define SparrowDevice_h
@@ -33,17 +33,17 @@ namespace Sparrow
   static const unsigned long NUMBER_OF_BUTTONS = 2;
 
   static const int SERVO_FACTOR = 27;
-  
+
   inline
-  unsigned short rad2ticks(double rad) { 
+  unsigned short rad2ticks(double rad) {
     int ticks = (int)rint(rad * 512. / M_PI);
     ticks = (ticks < 0)? -((-ticks)  % 1024) : ticks % 1024;
 
-    return (unsigned short) ticks; 
+    return (unsigned short) ticks;
   }
 
   inline
-  double ticks2rad(unsigned short ticks) { 
+  double ticks2rad(unsigned short ticks) {
     long h = ticks % 1024;
     if (h > 512)
       h -= 1024;
@@ -79,7 +79,7 @@ namespace Sparrow
 
   static const unsigned long CAN_GET_POS_CONT  = 0x81020102;
   static const unsigned long CAN_R_GET_POS     = 0x81820201;
-  static const unsigned long CAN_SET_POS       = 0x8a020102; 
+  static const unsigned long CAN_SET_POS       = 0x8a020102;
   static const unsigned long CAN_SET_POS_REL   = 0x8b020102;
   static const unsigned long CAN_ODO_ALIVE     = 0x8f020102;
   static const unsigned long CAN_R_ODO_ALIVE   = 0x8f820201;
@@ -136,6 +136,40 @@ namespace Sparrow
 
   static const unsigned long CAN_TEST_ADD      = 0x860e0102;
   static const unsigned long CAN_TEST_RESULT   = 0x870e0102;
+
+
+  // Sparrow2003Messages
+
+  static const unsigned long CAN_WRITE_MOTOR_LEFT_2003 = 0x05010102;
+  static const unsigned long CAN_WRITE_MOTOR_RIGHT_2003 = 0x04010102;
+  static const unsigned long CAN_MOTOR_TICKS_LEFT_2003 = 0x85020201;
+  static const unsigned long CAN_MOTOR_TICKS_RIGHT_2003 = 0x84020201;
+  static const unsigned long CAN_R_MOTOR_ALIVE_2003 = 0x8f020201;
+
+
+  // port messages
+  // kicker messages
+
+  static const unsigned long CAN_KICK_2003     = 0x81010103;
+  static const unsigned long CAN_R_KICK_ALIVE_2003 = 0x9e0f0301;
+
+  // servo messages
+
+  static const unsigned long CAN_SERVO_GO_2003      = 0x81010104;
+  static const unsigned long CAN_R_PAN_ALIVE_2003   = 0x9e0f0401;
+
+  // infrared messages
+
+
+  static const unsigned long CAN_R_IR_GET_CONT1_2003 = 0x83810501;
+  static const unsigned long CAN_R_IR_ALIVE1_2003    = 0x9e0f0501;
+  static const unsigned long CAN_IR_SET_FREQ1_2003    = 0x02010105;
+
+
+  static const unsigned long CAN_R_IR_GET_CONT2_2003 = 0x83810601;
+  static const unsigned long CAN_R_IR_ALIVE2_2003    = 0x9e0f0601;
+  static const unsigned long CAN_IR_SET_FREQ2_2003    = 0x02010106;
+
 
 };
 #endif

@@ -11,7 +11,7 @@
 #ifndef SparrowConsumer2003_h
 #define SparrowConsumer2003_h
 
-#include "SparrowDevice2003.h"
+#include "SparrowDevice.h"
 #include "AliveCollector.h"
 #include "faulMotor/FaulMotorConsumer.h"
 #include "sparrow/Parameters.h"
@@ -86,6 +86,8 @@ namespace Sparrow
   public:
     unsigned char   digital[8];
     unsigned short  analog[16];
+
+    static const int INTEGRATION_NUMBER;
 
 /*
     Miro::Mutex     irAliveMutex1;
