@@ -149,6 +149,7 @@
    <parameter name="Subscription">
      <parameter value="BallPosition" />
      <parameter value="LocalizedPosition" />
+     <parameter value="SharedWorld" />
    </parameter>
   </parameter>
  </section>
