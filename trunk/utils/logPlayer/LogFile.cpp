@@ -18,6 +18,7 @@
 #include "miro/TimeHelper.h"
 
 #include <cstring>
+#include <iostream>
 
 LogFile::LogFile(QString const& _name,
 		 ChannelManager * _channelManager) :
@@ -108,7 +109,6 @@ LogFile::parse()
 
   // EOF
   if (istr_->length() == 0 || timeStamp == ACE_Time_Value::zero) {
-    cout << "." << endl;
     coursor_ = timeVector_.begin();
     
     suppliers_.reserve(eventTypes_.size());
@@ -120,8 +120,6 @@ LogFile::parse()
 	new Miro::StructuredPushSupplier(ec, first->first);
       suppliers_.push_back(std::make_pair(first->first, supplier));
       
-      cout << "." << endl;
-  
       CosNotification::EventTypeSeq offers;
       offers.length(first->second.size());
 

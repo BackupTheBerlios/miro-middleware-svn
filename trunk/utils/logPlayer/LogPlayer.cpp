@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (Middleware for Robots)
 // 
-// (c) 2001, 2002, 2003
+// (c) 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -28,12 +28,6 @@
 #include <qapplication.h>
 
 #include <iostream>
-
-using std::cout;
-using std::cerr;
-using std::endl;
-using std::flush;
-using std::cin;
 
 namespace 
 {
@@ -79,12 +73,11 @@ main(int argc, char *argv[])
       } 
       else if (ACE_OS::strcasecmp(current_arg, helpOpt) == 0) {
 	arg_shifter.consume_arg();
-	cerr << "usage: " << argv[0] << "[-shared_ec] [-unified_ec] [-v?]" << endl
-	     << "  -shared_ec use existing event channels" << endl
-	     << "  -unified_ec use one event channel for all robots" << endl
-	     << "  -v verbose mode" << endl
-	     << "  -? help: emit this text and stop" << endl;
-	std::cout << "" << endl;
+	std::cerr << "usage: " << argv[0] << "[-shared_ec] [-unified_ec] [-v?]" << std::endl
+		  << "  -shared_ec use existing event channels" << std::endl
+		  << "  -unified_ec use one event channel for all robots" << std::endl
+		  << "  -v verbose mode" << std::endl
+		  << "  -? help: emit this text and stop" << std::endl;
 	return 0;
       } 
       else
@@ -92,15 +85,15 @@ main(int argc, char *argv[])
     }
     
     if (unified && shared) {
-      std::cerr << "Can't use unified_ec and shared_ec options simultaniously" << endl;
+      std::cerr << "Can't use unified_ec and shared_ec options simultaniously" << std::endl;
       return 1;
     }
     
     if (verbose) {
       if (shared) 
-	std::cout << "Using a shared event channel factory." << endl;
+	std::cout << "Using a shared event channel factory." << std::endl;
       if (unified)
-	std::cout << "Using a unified event channel factory." << endl;
+	std::cout << "Using a unified event channel factory." << std::endl;
     }
 
     // Init TAO Factories
@@ -114,7 +107,7 @@ main(int argc, char *argv[])
     
     // Create Miro server
     if (verbose)
-      std::cout << "Initialize server daemon." << endl;
+      std::cout << "Initialize server daemon." << std::endl;
     
     ChannelManager channelManager(argc, argv, shared, unified);
     channelManager.setDebugLoclaize(localizeDebug);
@@ -125,10 +118,10 @@ main(int argc, char *argv[])
       
       // DOTO: implement that, please...
       if (verbose)
-	std::cout << "adding excluded events" << endl;
+	std::cout << "adding excluded events" << std::endl;
       for (int i = 2; i < argc; ++i) {
 	if (verbose)
-	  std::cout << argv[i] << endl;
+	  std::cout << argv[i] << std::endl;
 	mainWindow.addExclude(argv[i]);
       }
       
@@ -136,7 +129,7 @@ main(int argc, char *argv[])
       // of MyWidget, to prevent conflicts with CORBA cleanup
       {
 	if (verbose)
-	  std::cout << "set main widget" << endl;
+	  std::cout << "set main widget" << std::endl;
 	app.setMainWidget( &mainWindow );
 	QObject::connect(&app, SIGNAL(lastWindowClosed()), &app, SLOT(quit()));
 	mainWindow.show();
@@ -145,12 +138,12 @@ main(int argc, char *argv[])
 	// parse remaining args
 	for (int i = 1; i < argc; ++i) {
 	  if (verbose)
-	    std::cout << "using file " << argv[i] << endl;
+	    std::cout << "using file " << argv[i] << std::endl;
 	  mainWindow.loadFile(argv[i]);
 	}
 	
 	if (verbose)
-	  std::cout << "exec application" << endl;
+	  std::cout << "exec application" << std::endl;
 	app.exec();
       }
       
@@ -158,12 +151,12 @@ main(int argc, char *argv[])
       channelManager.wait();
     }
     catch (const CORBA::Exception& e) {
-      std::cerr << "CORBA exception: " << e << endl;
+      std::cerr << "CORBA exception: " << e << std::endl;
       rc = 1;
     }
   }
   catch (Miro::Exception const& e) {
-    std::cerr << "Miro exception: " << e << endl;
+    std::cerr << "Miro exception: " << e << std::endl;
     rc = 1;
   }
 
