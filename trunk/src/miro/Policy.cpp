@@ -174,7 +174,7 @@ namespace Miro
     valid_ = true;
 
     // if (debug())
-    cout << *this;
+    std::cout << *this;
   }
 
   /**
@@ -247,8 +247,8 @@ namespace Miro
   void
   Policy::registerActionPattern(ActionPattern * _actionPattern) 
   {
-    cout << "Policy: Registering " 
-	 << _actionPattern->getActionPatternName() << endl;
+    std::cout << "Policy: Registering " 
+	 << _actionPattern->getActionPatternName() << std::endl;
     if (!actionPatterns_.insert(std::make_pair(_actionPattern->getActionPatternName(),
 					       _actionPattern)).second) {
       std::string error("Action pattern " +
@@ -340,7 +340,7 @@ namespace Miro
   void 
   Policy::printToStream(std::ostream& ostr) const
   {
-    ostr << "Printing policy. Patterns: " << actionPatterns_.size() << endl; 
+    ostr << "Printing policy. Patterns: " << actionPatterns_.size() << std::endl; 
     ActionPatternMap::const_iterator i;
     for(i = actionPatterns_.begin(); i != actionPatterns_.end(); ++i) {
       ostr << *(i->second);

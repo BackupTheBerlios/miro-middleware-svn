@@ -39,6 +39,9 @@
 
 using std::cout;
 using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
 using std::vector;
 using Miro::Server;
 using Miro::SparrowMotion;

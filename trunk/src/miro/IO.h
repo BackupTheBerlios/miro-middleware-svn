@@ -36,7 +36,7 @@ namespace std
   operator<<(std::ostream &ostr, const std::vector<T> &rhs) {
     typename std::vector<T>::const_iterator first, last = rhs.end();
     for (first = rhs.begin(); first != last; ++first) {
-      ostr << (*first) << endl;
+      ostr << (*first) << std::endl;
     }
     return ostr;
   }
@@ -45,7 +45,7 @@ namespace std
   operator<<(std::ostream &ostr, const std::set<T> &rhs) {
     typename std::set<T>::const_iterator first, last = rhs.end();
     for (first = rhs.begin(); first != last; ++first) {
-      ostr << (*first) << endl;
+      ostr << (*first) << std::endl;
     }
     return ostr;
   }

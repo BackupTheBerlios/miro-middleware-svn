@@ -53,23 +53,23 @@ namespace
 
 std::ostream &
 operator<<(std::ostream &ostr, const ACE_TTY_IO::Serial_Params &rhs) {
-  ostr << "baudrate = " << rhs.baudrate << endl
-       << "parityenb = " << rhs.parityenb << endl
-       << "databits = " << rhs.databits << endl
-       << "stopbits = " << rhs.stopbits << endl 
-       << "readtimeoutmsec = " << rhs.readtimeoutmsec << endl
-       << "modem = " << rhs.modem << endl
-       << "rcvenb = " << rhs.rcvenb << endl
-       << "ctsenb = " << rhs.ctsenb << endl    // CTS & RTS are the same under unix
-       << "rtsenb = " << rhs.rtsenb << endl    // enable & set rts mode (win32)
-       << "xinenb = " << rhs.xinenb << endl    // enable xon/xoff  reception
-       << "xoutenb = " << rhs.xoutenb << endl; // enable xon/xoff transmission
+  ostr << "baudrate = " << rhs.baudrate << std::endl
+       << "parityenb = " << rhs.parityenb << std::endl
+       << "databits = " << rhs.databits << std::endl
+       << "stopbits = " << rhs.stopbits << std::endl 
+       << "readtimeoutmsec = " << rhs.readtimeoutmsec << std::endl
+       << "modem = " << rhs.modem << std::endl
+       << "rcvenb = " << rhs.rcvenb << std::endl
+       << "ctsenb = " << rhs.ctsenb << std::endl    // CTS & RTS are the same under unix
+       << "rtsenb = " << rhs.rtsenb << std::endl    // enable & set rts mode (win32)
+       << "xinenb = " << rhs.xinenb << std::endl    // enable xon/xoff  reception
+       << "xoutenb = " << rhs.xoutenb << std::endl; // enable xon/xoff transmission
     return ostr;
 }
 
 std::ostream &
 operator<<(std::ostream &ostr, const ACE_INET_Addr &rhs) {
-  ostr << rhs.get_host_addr() << endl;
+  ostr << rhs.get_host_addr() << std::endl;
   return ostr; 
 }
 namespace Miro
@@ -166,7 +166,7 @@ namespace Miro
   {
     unsigned int l = rhs.length();
     for (unsigned int i = 0; i != l; ++i) {
-      ostr << rhs[i] << endl;
+      ostr << rhs[i] << std::endl;
     }
     return ostr;
   }
@@ -182,14 +182,14 @@ namespace Miro
 			  rhs.sensor[i].range));
     std::sort(scan.begin(), scan.end(), Less());
 
-    ostr << rhs.time << endl;
+    ostr << rhs.time << std::endl;
     int group = -1;
     int index = 0;
     std::vector<Scan>::const_iterator i, j = scan.end();
     for (i = scan.begin(); i != j; ++i) {
       if (i->group > group) {
 	if (group != -1)
-	  ostr << endl;
+	  ostr << std::endl;
 	ostr << i->group << ": ";
 	group = i->group;
 	index = 0;
@@ -217,7 +217,7 @@ namespace Miro
   std::ostream &
   operator<<(std::ostream &ostr, const RangeScanEventIDL &rhs) 
   {
-    ostr << rhs.time << endl 
+    ostr << rhs.time << std::endl 
 	 << rhs. range;
     return ostr;
   }

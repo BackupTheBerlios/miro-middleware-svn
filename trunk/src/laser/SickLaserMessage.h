@@ -16,6 +16,10 @@
 
 namespace Miro 
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   /**
    * represents a message block sent to and received from the SICK 
    * laserscanner. 

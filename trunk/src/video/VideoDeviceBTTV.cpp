@@ -43,6 +43,10 @@ namespace
 
 namespace Video
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   FILTER_PARAMETERS_FACTORY_IMPL(DeviceBTTV);
 
 

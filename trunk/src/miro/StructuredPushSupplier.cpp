@@ -45,7 +45,7 @@ namespace Miro
     connectedMutex_(),
     connected_(false)
   {
-    DBG(cout << "Constructing StructuredPushSupplier." << endl);
+    DBG(std::cout << "Constructing StructuredPushSupplier." << std::endl);
 
     if (_connect)
       connect();
@@ -56,7 +56,7 @@ namespace Miro
    */
   StructuredPushSupplier::~StructuredPushSupplier()
   {
-    DBG(cout << "Destructing StructuredPushSupplier." << endl);
+    DBG(std::cout << "Destructing StructuredPushSupplier." << std::endl);
 
     disconnect();
   }
@@ -68,7 +68,7 @@ namespace Miro
   void
   StructuredPushSupplier::connect() 
   {
-    DBG(cout << "Connecting StructuredPushSupplier." << endl);
+    DBG(std::cout << "Connecting StructuredPushSupplier." << std::endl);
 
     Guard guard(connectedMutex_);
     if(!connected_) {
@@ -90,12 +90,12 @@ namespace Miro
       connected_ = true;
 
 #ifdef DEBUG
-      cout << "currently subscribed messages:" << endl;
+      std::cout << "currently subscribed messages:" << std::endl;
       CosNotification::EventTypeSeq_var events = 
 	proxyConsumer_->obtain_subscription_types(CosNotifyChannelAdmin::ALL_NOW_UPDATES_ON);
       for (unsigned int i=0; i < events->length(); ++i) {
-	cout << "  " << events[i].domain_name << "\t"
-	     << "  " << events[i].type_name << endl;
+	std::cout << "  " << events[i].domain_name << "\t"
+	     << "  " << events[i].type_name << std::endl;
       }
 #endif
     }
@@ -103,7 +103,7 @@ namespace Miro
   void
   StructuredPushSupplier::disconnect() 
   {
-    DBG(cout << "Disconnecting StructuredPushSupplier." << endl);
+    DBG(std::cout << "Disconnecting StructuredPushSupplier." << std::endl);
 
     Guard guard(connectedMutex_);
     if (connected_) {
@@ -139,24 +139,24 @@ namespace Miro
     throw(CORBA::SystemException, CosNotifyComm::InvalidEventType)
   {
 #ifdef DEBUG
-    cout << "subscription change" << endl;
-    cout << "added messages:" << endl;
+    std::cout << "subscription change" << std::endl;
+    std::cout << "added messages:" << std::endl;
     for (unsigned int i=0; i < added.length(); ++i) {
-      cout << "  " << added[i].domain_name << "\t"
-	   << "  " << added[i].type_name << endl;
+      std::cout << "  " << added[i].domain_name << "\t"
+	   << "  " << added[i].type_name << std::endl;
     }
-    cout << "removed messages:" << endl;
+    std::cout << "removed messages:" << std::endl;
     for (unsigned int i=0; i < removed.length(); ++i) {
-      cout << "  " << removed[i].domain_name << "\t"
-	   << "  " << removed[i].type_name << endl;
+      std::cout << "  " << removed[i].domain_name << "\t"
+	   << "  " << removed[i].type_name << std::endl;
     }
 
-    cout << "currently subscribed messages:" << endl;
+    std::cout << "currently subscribed messages:" << std::endl;
     CosNotification::EventTypeSeq_var events = 
       proxyConsumer_->obtain_subscription_types(CosNotifyChannelAdmin::ALL_NOW_UPDATES_ON);
     for (unsigned int i=0; i < events->length(); ++i) {
-      cout << "  " << events[i].domain_name << "\t"
-	   << "  " << events[i].type_name << endl;
+      std::cout << "  " << events[i].domain_name << "\t"
+	   << "  " << events[i].type_name << std::endl;
     }
 
 #endif
@@ -166,7 +166,7 @@ namespace Miro
   StructuredPushSupplier::disconnect_structured_push_supplier(ACE_ENV_SINGLE_ARG_DECL_NOT_USED)
     throw(CORBA::SystemException)
   {
-    DBG(cout << "disconnect supplier" << endl);
+    DBG(std::cout << "disconnect supplier" << std::endl);
 
     connected_ = false;
   }

@@ -40,12 +40,12 @@ namespace Miro
     priority_(_priority),
     canceled_(true)
   {
-    DBG(cout << "Constructing [Miro::Thread]." << endl);
+    DBG(cout << "Constructing [Miro::Thread]." << std::endl);
   }
 
   Thread::~Thread()
   {
-    DBG(cout << "Destructing [Miro::Thread]." << endl);
+    DBG(cout << "Destructing [Miro::Thread]." << std::endl);
   }
 
   int
@@ -71,7 +71,7 @@ namespace Miro
   void
   Thread::cancel(bool _wait) 
   {
-    DBG(cout << "[Miro::Thread] shutdown." << endl);
+    DBG(cout << "[Miro::Thread] shutdown." << std::endl);
     if (!canceled_) {
       canceled_ = true;
       if (_wait)
@@ -82,7 +82,7 @@ namespace Miro
   int
   Thread::close(u_long /* flags */ )
   {
-    DBG(cout << "[Miro::Thread] ended." << endl);
+    DBG(cout << "[Miro::Thread] ended." << std::endl);
     return 0;
   }
 };

@@ -24,6 +24,12 @@
 #include <cmath>
 #include <algorithm>
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
+
 namespace 
 {
   const double deg90 = M_PI_2;

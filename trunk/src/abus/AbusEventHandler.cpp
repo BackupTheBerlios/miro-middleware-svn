@@ -20,6 +20,7 @@
 
 using std::cout;
 using std::cerr;
+using std::endl;
 
 #ifdef DEBUG
 #define DBG(x) x
@@ -100,7 +101,7 @@ namespace Abus
       break;
     default:
       cerr << "abus error: unhandled major - 0x" 
-	   << hex << (int)msg->majorOp() << dec << endl;
+	   << std::hex << (int)msg->majorOp() << std::dec << endl;
     }
     DBG(cerr << "Done with select" << endl);
 

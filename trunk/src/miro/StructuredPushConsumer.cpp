@@ -14,6 +14,7 @@
 
 // #undef DEBUG
 #ifdef DEBUG
+#include <iostream>
 #define DBG(x) x
 #else
 #define DBG(x)
@@ -36,7 +37,7 @@ namespace Miro
     connectedMutex_(),
     connected_(-1)
   {
-    DBG(cout << "Constructing StructuredPushConsumer." << endl);
+    DBG(std::cout << "Constructing StructuredPushConsumer." << std::endl);
 
     init();
     if (_connect)
@@ -46,13 +47,13 @@ namespace Miro
   StructuredPushConsumer::~StructuredPushConsumer()
   {
     disconnect();
-    DBG(cout << "Destructing StructuredPushConsumer." << endl);
+    DBG(std::cout << "Destructing StructuredPushConsumer." << std::endl);
   }
 
   void
   StructuredPushConsumer::init()
   {
-    DBG(cout << "Init StructuredPushConsumer." << endl);
+    DBG(std::cout << "Init StructuredPushConsumer." << std::endl);
 
     Guard guard(connectedMutex_);
     if (connected_ == -1) {
@@ -73,7 +74,7 @@ namespace Miro
   void
   StructuredPushConsumer::connect()
   {
-    DBG(cout << "Connecting StructuredPushConsumer." << endl);
+    DBG(std::cout << "Connecting StructuredPushConsumer." << std::endl);
 
     Guard guard(connectedMutex_);
     if (connected_ == -1) {
@@ -88,12 +89,12 @@ namespace Miro
       connected_ = 1;
 
 #ifdef DEBUG
-      cout << "currently offered messages:" << endl;
+      std::cout << "currently offered messages:" << std::endl;
       CosNotification::EventTypeSeq_var events = 
 	proxySupplier_->obtain_offered_types(CosNotifyChannelAdmin::ALL_NOW_UPDATES_ON);
       for (unsigned int i=0; i < events->length(); ++i) {
-	cout << "  " << events[i].domain_name << "\t"
-	     << "  " << events[i].type_name << endl;
+	std::cout << "  " << events[i].domain_name << "\t"
+	     << "  " << events[i].type_name << std::endl;
       }
 #endif
     }
@@ -104,7 +105,7 @@ namespace Miro
   {
     Guard guard(connectedMutex_);
     if (connected_ == 1) {
-      DBG(cout << "Disconnecting StructuredPushConsumer." << endl);
+      DBG(std::cout << "Disconnecting StructuredPushConsumer." << std::endl);
       connected_ = -1;
       try {
 	proxySupplier_->disconnect_structured_push_supplier();
@@ -123,8 +124,8 @@ namespace Miro
 	poa->deactivate_object (oid.in ());
       }
       catch (const CORBA::Exception & e) {
-	cerr << "StructuredPushConsumer::disconnect() CORBA exception on: " << endl
-	     << e << endl;
+	 std::cerr << "StructuredPushConsumer::disconnect() CORBA exception on: " << std::endl
+	     << e << std::endl;
       }
     }      
   }
@@ -136,25 +137,25 @@ namespace Miro
     throw(CORBA::SystemException, CosNotifyComm::InvalidEventType)
   {
 #ifdef DEBUG
-    cout << "StructuredPushConsumer: offer change" << endl;
-    cout << "subscription change" << endl;
-    cout << "added messages:" << endl;
+    std::cout << "StructuredPushConsumer: offer change" << std::endl;
+    std::cout << "subscription change" << std::endl;
+    std::cout << "added messages:" << std::endl;
     for (unsigned int i=0; i < added.length(); ++i) {
-      cout << "  " << added[i].domain_name << "\t"
-	   << "  " << added[i].type_name << endl;
+      std::cout << "  " << added[i].domain_name << "\t"
+	   << "  " << added[i].type_name << std::endl;
     }
-    cout << "removed messages:" << endl;
+    std::cout << "removed messages:" << std::endl;
     for (unsigned int i=0; i < removed.length(); ++i) {
-      cout << "  " << removed[i].domain_name << "\t"
-	   << "  " << removed[i].type_name << endl;
+      std::cout << "  " << removed[i].domain_name << "\t"
+	   << "  " << removed[i].type_name << std::endl;
     }
 
-    cout << "currently offered messages:" << endl;
+    std::cout << "currently offered messages:" << std::endl;
     CosNotification::EventTypeSeq_var events = 
       proxySupplier_->obtain_offered_types(CosNotifyChannelAdmin::ALL_NOW_UPDATES_ON);
     for (unsigned int i=0; i < events->length(); ++i) {
-      cout << "  " << events[i].domain_name << "\t"
-	   << "  " << events[i].type_name << endl;
+      std::cout << "  " << events[i].domain_name << "\t"
+	   << "  " << events[i].type_name << std::endl;
     }
 #endif
   }
@@ -164,15 +165,15 @@ namespace Miro
                                                       ACE_ENV_ARG_DECL_NOT_USED)
     throw(CORBA::SystemException, CosEventComm::Disconnected)
   {
-    cerr << "You have to overwrite " 
-	 << "StructuredPushConsumer::push_structured_event" << endl;
+     std::cerr << "You have to overwrite " 
+	 << "StructuredPushConsumer::push_structured_event" << std::endl;
   }
 
   void
   StructuredPushConsumer::disconnect_structured_push_consumer(ACE_ENV_SINGLE_ARG_DECL_NOT_USED)
     throw(CORBA::SystemException)
   {
-    DBG(cout << "StructuredPushConsumer: disconnect consumer" << endl);
+    DBG(std::cout << "StructuredPushConsumer: disconnect consumer" << std::endl);
 
     connected_ = -1;
   }

@@ -287,7 +287,7 @@ namespace Miro
   {
     ostr << "description: " << group.description;
     for (unsigned int i = 0; i < group.sensor.length(); ++i) {
-      ostr << endl 
+      ostr << std::endl 
 	   << "sensor " << i << ": "
 	   << group.sensor[i];
     }
@@ -298,12 +298,12 @@ namespace Miro
   std::ostream&
   operator << (std::ostream& ostr, const ScanDescriptionIDL& description) 
   {
-    ostr << "  scan description:" << endl
+    ostr << "  scan description:" << std::endl
 	 << "    scan type=" << description.scanType
 	 << "    event name=" << description.eventName;
     for (unsigned int i = 0; i < description.group.length(); ++i) {
-      ostr << endl 
-	   << "    group " << i << ":" << endl
+      ostr << std::endl 
+	   << "    group " << i << ":" << std::endl
 	   << description.group[i];
     }
     

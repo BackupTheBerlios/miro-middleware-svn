@@ -39,6 +39,10 @@ namespace DpPanTilt
   using Miro::Guard;
   using Miro::CException;
 
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   Connection::Connection(ACE_Reactor * _reactor, 
 			 EventHandler * _eventHandler,
 			 Data& _data) :

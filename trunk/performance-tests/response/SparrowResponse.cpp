@@ -31,6 +31,9 @@
 
 using std::cout;
 using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
 using std::vector;
 using namespace Miro;
 
@@ -49,7 +52,7 @@ Service::Service() :
   reactorTask(),
   odometryImpl(new Miro::OdometryImpl(NULL)),
   pSparrowConsumer(new Sparrow::Consumer(&connection, odometryImpl, NULL, NULL, NULL)),
-  pCanEventHandler(new Can::EventHandler(pSparrowConsumer)),
+  pCanEventHandler(new Can::EventHandler(pSparrowConsumer, Sparrow::Parameters::instance())),
   connection(reactorTask.reactor(), pCanEventHandler, pSparrowConsumer)
 {
 

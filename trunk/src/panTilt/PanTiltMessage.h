@@ -65,7 +65,7 @@ namespace DpPanTilt
 
   inline 
   std::ostream& operator << (std::ostream &ostr, const Message &lm) {
-    ostr << lm.getMessage() << endl;
+    ostr << lm.getMessage() << std::endl;
 
     return ostr;
   }

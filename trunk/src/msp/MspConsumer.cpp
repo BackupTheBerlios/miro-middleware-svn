@@ -36,6 +36,7 @@
 using std::cout;
 using std::cin;
 using std::cerr;
+using std::endl;
 
 using Miro::RangeBunchEventIDL;
 

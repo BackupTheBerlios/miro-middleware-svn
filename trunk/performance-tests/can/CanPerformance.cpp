@@ -24,6 +24,12 @@
 
 using namespace Miro;
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
+
 struct Service
 {
   ReactorTask reactorTask;
@@ -37,7 +43,7 @@ struct Service
 Service::Service() :
   reactorTask(),
   pSparrowConsumer(new Sparrow::Consumer(&sparrowConnection, NULL, NULL, NULL, NULL)),
-  pCanEventHandler(new Can::EventHandler(pSparrowConsumer)),
+  pCanEventHandler(new Can::EventHandler(pSparrowConsumer, Sparrow::Parameters::instance())),
   sparrowConnection(reactorTask.reactor(), pCanEventHandler, pSparrowConsumer)
 {
 

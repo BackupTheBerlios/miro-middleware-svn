@@ -536,11 +536,11 @@ namespace Base
     if (translateVelocity != arg) {
       translateVelocity = arg;
 #ifdef DEBUG
-      cerr << __FILE__ << ":"
+      std::cerr << __FILE__ << ":"
 	   << __LINE__ << ":"
 	   << __FUNCTION__ << "() - " 
 	   << arg << ": 0x"
-	   << hex << convertMMToEncoders(arg) << dec << endl;
+	   << std::hex << convertMMToEncoders(arg) << std::dec << std::endl;
 #endif
       OutMessage message(OP_TRANS_VEL, convertMMToEncoders(arg));
       const iovec vec[2] = { {&message, sizeof(OutMessage)}, 

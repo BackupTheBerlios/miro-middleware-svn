@@ -55,7 +55,7 @@ int main (int, char**)
     ostr << (dt.microsec() / 10000)
 	 << ".ppm";
   
-    cout << ostr.str() << endl;
+    std::cout << ostr.str() << std::endl;
 
     ACE_OS::sleep(ACE_Time_Value(0, 1));
   }

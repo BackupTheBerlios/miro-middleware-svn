@@ -61,7 +61,7 @@ namespace Base
     // management of the base hardware
     // set the robot into the middle, so we have 
     // 650m to drive in each direction befor overflow
-    // of the counters - I don´t think the batteries will do it that long
+    // of the counters - I don,A4(Bt think the batteries will do it that long
     //  connection.loadHeading(0);
     //  connection.loadPosition(INITIAL_XPOS, INITIAL_YPOS);
 
@@ -79,7 +79,7 @@ namespace Base
   Impl::~Impl()
   {
 #ifdef DEBUG
-    cout << "Destructing BaseImpl" << endl;
+    std::cout << "Destructing BaseImpl" << std::endl;
 #endif
   }
 

@@ -24,6 +24,12 @@
 
 #include <iostream>
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
+
 Miro::Singleton<PolicyConfigClass> PolicyConfigClass::instance;
 
 PolicyConfigClass::PolicyConfigClass() :

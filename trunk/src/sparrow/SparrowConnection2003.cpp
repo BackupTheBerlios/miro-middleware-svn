@@ -37,6 +37,10 @@ namespace
 
 namespace Sparrow
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   using Can::Message;
 
   const int Connection2003::LEFT_MOTOR = 0;

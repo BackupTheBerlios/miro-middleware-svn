@@ -39,6 +39,10 @@ using Miro::ACE_Exception;
 
 namespace Psos
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   const ACE_Time_Value Connection::writeTimeOut(0, 100000);
 
   Connection::Connection(ACE_Reactor * _reactor, 

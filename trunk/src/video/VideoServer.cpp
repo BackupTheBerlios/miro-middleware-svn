@@ -32,6 +32,10 @@
 
 namespace Video
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   Service::Service(Miro::Server& _server, 
 		   Miro::ConfigDocument * _config) :
     schedparams_(ACE_SCHED_FIFO, 10),

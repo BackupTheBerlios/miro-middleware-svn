@@ -33,6 +33,10 @@ using Miro::Guard;
 
 namespace Pioneer
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   //------------------------//
   //----- constructors -----//
   //------------------------//

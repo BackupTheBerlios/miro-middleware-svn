@@ -12,6 +12,12 @@
 #include "DummyArbiter.h"
 #include "DummyArbiterMessage.h"
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
+
 DummyArbiter::DummyArbiter(const std::string& _name) :
   message_(),
   name_(_name)

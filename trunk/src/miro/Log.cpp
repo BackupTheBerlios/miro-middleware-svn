@@ -54,7 +54,7 @@ namespace Miro {
       tt = time.sec();
 	
       string label[]={"[INFO]","[WARNING]","[ERROR]","[FATAL ERROR]"};
-      cerr << "[" << objectName << "] " << label[logLevel] << " " << logmsg << " " << ctime(&tt);
+      std::cerr << "[" << objectName << "] " << label[logLevel] << " " << logmsg << " " << ctime(&tt);
     }
   }
 
@@ -72,7 +72,7 @@ namespace Miro {
       tt = time.sec();
 
       string label[]={"[INFO]","[WARNING]","[ERROR]","[FATAL ERROR]"};
-      cerr << "[" << objectName << "] " << label[logLevel] << " " << logmsg << " " << param << " " << ctime(&tt);
+      std::cerr << "[" << objectName << "] " << label[logLevel] << " " << logmsg << " " << param << " " << ctime(&tt);
     }
   }
 
@@ -90,7 +90,7 @@ namespace Miro {
       tt = time.sec();
 
       string label[]={"[INFO]","[WARNING]","[ERROR]","[FATAL ERROR]"};
-      cerr << "[" << objectName << "] " << label[logLevel] << " " << logmsg << " " << param << " " << ctime(&tt);
+      std::cerr << "[" << objectName << "] " << label[logLevel] << " " << logmsg << " " << param << " " << ctime(&tt);
     }
   }
   
@@ -108,7 +108,7 @@ namespace Miro {
       tt = time.sec();
 
       string label[]={"[INFO]","[WARNING]","[ERROR]","[FATAL ERROR]"};
-      cerr << "[" << objectName << "] " 
+      std::cerr << "[" << objectName << "] " 
 	   << label[logLevel] << " " 
 	   << logmsg << " " << param << " " << ctime(&tt);
     }

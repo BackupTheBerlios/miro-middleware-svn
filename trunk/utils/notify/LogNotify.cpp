@@ -21,6 +21,9 @@
 
 using std::cout;
 using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
 using std::string;
 using std::ostringstream;
 

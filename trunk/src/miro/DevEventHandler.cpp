@@ -45,12 +45,12 @@ namespace Miro
     consumer_(_consumer),
     message_(_message)
   {
-    DBG(cout << "Constructing DevEvent." << endl);
+    DBG(cout << "Constructing DevEvent." << std::endl);
   }
 
   DevEventHandler::~DevEventHandler()
   {
-    DBG(cout << "Destructing DeviceEvent." << endl);
+    DBG(cout << "Destructing DeviceEvent." << std::endl);
 
     delete consumer_;
     delete message_;
@@ -59,7 +59,7 @@ namespace Miro
   int
   DevEventHandler::handle_close(ACE_HANDLE, ACE_Reactor_Mask)
   {
-    DBG(cout << "Device handle_close called." << endl);
+    DBG(cout << "Device handle_close called." << std::endl);
 
     // commit suizide
     delete this;

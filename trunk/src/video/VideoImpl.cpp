@@ -26,6 +26,9 @@ using namespace Video;
 
 namespace Miro 
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
 
   CORBA::Long VideoImpl::idCounter = 0;
 

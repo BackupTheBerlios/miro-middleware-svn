@@ -25,8 +25,8 @@ int main(int argc, char *argv[])
   // Write the IOR to cout
   String_var str = client.orb()->object_to_string(client.initialNamingContext.in());
 
-  cout << "Naming Service IOR:" << endl
-       << str << endl;
+  std::cout << "Naming Service IOR:" << std::endl
+	    << str << std::endl;
 
   return 0;
 }

@@ -11,6 +11,8 @@
 #include "Pixels.h"
 #include "patternSource.h"
 
+using namespace std;
+
 namespace MiroImage 
 {
 

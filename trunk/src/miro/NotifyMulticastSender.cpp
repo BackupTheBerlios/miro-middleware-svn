@@ -466,14 +466,14 @@ namespace Miro {
             cdr.write_ulong(_timestamp);                 /* timestamp */
 
             PRINT_DBG(DBG_TOOMUCH,
-                      "Event Datagram Sent" << endl <<
-                      "  request id:      " << _requestId << endl <<
-                      "  request size:    " << _requestSize << endl <<
-                      "  fragment size:   " << _fragmentSize << endl <<
-                      "  fragment offset: " << _fragmentOffset << endl <<
-                      "  fragment id:     " << _fragmentId << endl <<
-                      "  fragment count:  " << _fragmentCount << endl <<
-                      "  timestamp:       " << _timestamp << endl);
+                      "Event Datagram Sent" << std::endl <<
+                      "  request id:      " << _requestId << std::endl <<
+                      "  request size:    " << _requestSize << std::endl <<
+                      "  fragment size:   " << _fragmentSize << std::endl <<
+                      "  fragment offset: " << _fragmentOffset << std::endl <<
+                      "  fragment id:     " << _fragmentId << std::endl <<
+                      "  fragment count:  " << _fragmentCount << std::endl <<
+                      "  timestamp:       " << _timestamp << std::endl);
 
             _iov[0].iov_base = cdr.begin()->rd_ptr();
             _iov[0].iov_len  = cdr.begin()->length();

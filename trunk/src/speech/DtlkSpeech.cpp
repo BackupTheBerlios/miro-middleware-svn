@@ -22,6 +22,7 @@
 
 using std::cout;
 using std::cerr;
+using std::endl;
 
 const char * intro = "Hello everybody. I am Stanislav. At your service.";
 
@@ -116,7 +117,7 @@ main(int argc, char *argv[])
 
     if (strcmp(argv[i], "-SpeechSetIntro") == 0) {
       char buffer[256];
-      cin.getline(buffer, 256);
+      std::cin.getline(buffer, 256);
       speech.speechImpl.connection.setBootMessage(buffer);
       return 0;
     }

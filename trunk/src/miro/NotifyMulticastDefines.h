@@ -43,13 +43,13 @@
 #define DBG_ALWAYS  0
 
 /* Debug macros */
-#define _PRINT_X(l, fd, x) if (DEBUG_LEVEL >= (l)) fd << DBG_CLASSNAME << ": " << x << endl;
+#define _PRINT_X(l, fd, x) if (DEBUG_LEVEL >= (l)) fd << DBG_CLASSNAME << ": " << x << std::endl;
 
-#define PRINT(x) _PRINT_X(DBG_ALWAYS, cout, x)
-#define PRINT_ERR(x) _PRINT_X(DBG_ERROR, cerr, x)
+#define PRINT(x) _PRINT_X(DBG_ALWAYS, std::cout, x)
+#define PRINT_ERR(x) _PRINT_X(DBG_ERROR, std::cerr, x)
 
 #ifdef DEBUG
-#  define PRINT_DBG(l, x) _PRINT_X(l, cout, x)
+#  define PRINT_DBG(l, x) _PRINT_X(l, std::cout, x)
 #else
 #  define PRINT_DBG(l, x)
 #endif
@@ -61,7 +61,7 @@
 
 #define LOG(cfg, x) { \
     if ((cfg)->logfile() != NULL) { \
-    (*((cfg)->logfile())) << (cfg)->datetime() << x << endl; \
+    (*((cfg)->logfile())) << (cfg)->datetime() << x << std::endl; \
     } \
     }
 

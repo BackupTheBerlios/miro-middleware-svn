@@ -13,6 +13,12 @@
 #include "DummyBehaviourD.h"
 #include "DummyArbiterMessage.h"
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
+
 unsigned long DummyBehaviourD::counter_ = 0;
 
 const std::string DummyBehaviourD::name_ = "DummyBehaviourD";

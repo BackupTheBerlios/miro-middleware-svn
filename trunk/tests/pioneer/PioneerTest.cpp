@@ -33,6 +33,12 @@
 #include <iostream>
 #include <stdio.h>
  
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
+
 bool canceled = false;
 
 using Miro::deg2Rad;
@@ -265,8 +271,8 @@ void cameraMenu(Service& service)
       case '5' :
 	{
 	  Miro::PanTiltPositionIDL pos=service.canonPanTiltImpl.getPosition();
-	  cout << "Pan: " << Miro::rad2Deg(pos.panvalue) << "°" << endl;
-	  cout << "Tilt: " << Miro::rad2Deg(pos.tiltvalue) << "°" << endl;
+	  cout << "Pan: " << Miro::rad2Deg(pos.panvalue) << ",A0(B" << endl;
+	  cout << "Tilt: " << Miro::rad2Deg(pos.tiltvalue) << ",A0(B" << endl;
 	  break;
 	}
       case '6':
@@ -471,7 +477,7 @@ int main(int argc, char* argv[])
 	   { 
 	     cout << "Servosetting:" << endl 
 		  << "  0: middle Setting " << endl
-		  << "  +/- 90° " << endl;
+		  << "  +/- 90,A0(B " << endl;
 	     cin >> k;  
 	     service.connection.setServo(k);
 	     break;

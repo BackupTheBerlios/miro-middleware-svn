@@ -20,10 +20,16 @@ using Miro::SparrowPanTilt_var;
 using Miro::PanPositionIDL;
 using Miro::rad2Deg;
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
+
 std::ostream &
 operator<<(std::ostream &ostr, const PanPositionIDL &rhs) 
 {
-  ostr << rad2Deg(rhs.angle) << "° " << rad2Deg(rhs. accuracy) << "°";
+  ostr << rad2Deg(rhs.angle) << ",A0(B " << rad2Deg(rhs. accuracy) << ",A0(B";
   return ostr;
 }
 

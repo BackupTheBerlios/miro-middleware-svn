@@ -33,6 +33,10 @@ using std::cerr;
 
 namespace FaulController
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   EventHandler::EventHandler(Miro::DevConsumer * _consumer, OdometryMessage::Wheel _wheel) :
     Super(_consumer, new OdometryMessage(_wheel)),
     negate_(false)
@@ -64,7 +68,7 @@ namespace FaulController
 
     if (bytes == 0)
       throw Miro::Exception("FaulTty file descriptor was called to read 0" \
-			    "bytes from the device. I can´t belief this!");
+			    "bytes from the device. I can,A4(Bt belief this!");
 
     DBG(buff_[bytes] = 0);
     DBG(cout << "FaulTty message: " << buff_ << endl);

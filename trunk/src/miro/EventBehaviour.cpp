@@ -26,7 +26,7 @@ namespace Miro
     Super(_ec),
     behaviour_(_behaviour)
   {
-    DBG(cout << "Constructing BehaviourEventConsumer" << endl);
+    DBG(std::cout << "Constructing BehaviourEventConsumer" << std::endl);
     // proxySupplier_->suspend_connection();
   }
 
@@ -53,12 +53,12 @@ namespace Miro
     consumer(*this, _ec),
     event(NULL)
   {
-    DBG(cout << "Constructing EventBehaviour" << endl);
+    DBG(std::cout << "Constructing EventBehaviour" << std::endl);
   }
 
   EventBehaviour::~EventBehaviour()
   {
-    DBG(cout << "Destructing EventBehaviour" << endl);
+    DBG(std::cout << "Destructing EventBehaviour" << std::endl);
   }
 
   void

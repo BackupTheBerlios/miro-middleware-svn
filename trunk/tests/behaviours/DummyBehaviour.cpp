@@ -12,6 +12,12 @@
 #include "DummyBehaviour.h"
 #include "DummyArbiterMessage.h"
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
+
 BEHAVIOUR_PARAMETERS_FACTORY_IMPL(DummyBehaviour, DummyBehaviourParameters)
 
 DummyBehaviour::DummyBehaviour(const std::string& _name) :

@@ -14,6 +14,12 @@
 #include "miro/Angle.h"
 #include "miro/IO.h"
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
+
 DifferentialMotionInterface::DifferentialMotionInterface(Miro::DifferentialMotion_ptr _motion) :
   Super(_motion),
   diffMotion_(Miro::DifferentialMotion::_duplicate(_motion))

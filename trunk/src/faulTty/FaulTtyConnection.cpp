@@ -33,6 +33,10 @@ namespace
 
 namespace FaulController
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   FaulTtyConnection::FaulTtyConnection(ACE_Reactor * _reactor,
 			 EventHandler * _eventHandler,
 			 const Miro::TtyParameters& _parameters) :

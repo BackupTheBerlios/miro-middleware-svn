@@ -63,7 +63,7 @@ namespace Miro
   int
   OdometryDispatcher::svc()
   {
-    cout << "Asynchronous Odometry dispatching" << endl;
+    std::cout << "Asynchronous Odometry dispatching" << std::endl;
 
     while(!canceled()) {
       Guard guard(mutex_);

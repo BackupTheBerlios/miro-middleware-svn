@@ -31,6 +31,9 @@
 
 namespace FaulMotor
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
 
   //------------------------//
   //----- constructors -----//

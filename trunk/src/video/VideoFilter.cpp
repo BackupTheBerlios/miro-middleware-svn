@@ -56,8 +56,8 @@ namespace Video
    */
   Filter::~Filter()
   {
-    std::cout << "deleting filter " << this->name() << endl;
-    std::cout << "deleting successor filters" << endl;
+    std::cout << "deleting filter " << this->name() << std::endl;
+    std::cout << "deleting successor filters" << std::endl;
     FilterVector::const_reverse_iterator first, last = succ_.rend();
     for (first = succ_.rbegin(); first != last; ++first) {
       delete (*first);
@@ -98,7 +98,7 @@ namespace Video
   void
   Filter::init(Miro::Server& _server, FilterParameters const * _params)
   {
-    cout << "Filter::init" << endl;
+    std::cout << "Filter::init" << std::endl;
 
     // safe instance, as we have to clean it up.
     params_ = _params;
@@ -122,13 +122,13 @@ namespace Video
       bufferManager_ = bufferManagerInstance();
     }
 
-    cout << "Filter::init end" << endl;
+    std::cout << "Filter::init end" << std::endl;
   }
 
   void
   Filter::initTree(Miro::Server& _server, Miro::ConfigDocument& _config) 
   {
-    cout << "initTree: " << name() << endl;
+    std::cout << "initTree: " << name() << std::endl;
 
     // create an instance of the the filters parameters
     FilterParameters * params = this->getParametersInstance();
@@ -137,8 +137,8 @@ namespace Video
     _config.getParameters(this->name(), *params);
 
     // debug output
-    std::cout << name() << endl;
-    std::cout << *params << endl;
+    std::cout << name() << std::endl;
+    std::cout << *params << std::endl;
 
     // initialize the filter instance with its parameters
     this->init(_server, params);
@@ -236,20 +236,20 @@ namespace Video
   void
   Filter::processFilterTree() 
   {
-    // cout << "aquire output buffer" << endl;
+    // std::cout << "aquire output buffer" << std::endl;
     outputBufferIndex_ = bufferManager_->acquireNextWriteBuffer();
     outputBuffer_ = bufferManager_->bufferAddr(outputBufferIndex_);
 
-    // cout << "process buffer" << endl;
+    // std::cout << "process buffer" << std::endl;
     timeFilter_.start();
     process();
     timeFilter_.stop();
 
-    // cout << "relable write buffer as readbuffer for all successors" << endl;
+    // std::cout << "relable write buffer as readbuffer for all successors" << std::endl;
     bufferManager_->switchWrite2ReadBuffer(outputBufferIndex_, 
 					   successors_ + brokerLink_.size());
 
-    // cout << "set input buffer for all successors." << endl;
+    // std::cout << "set input buffer for all successors." << std::endl;
     {
       FilterVector::const_iterator first, last = succ_.end();
       for (first = succ_.begin(); first != last; ++first) {
@@ -259,7 +259,7 @@ namespace Video
       }
     }
 
-    // cout << "set input buffer for all successor links." << endl;
+    // std::cout << "set input buffer for all successor links." << std::endl;
     {
       FilterSuccVector::iterator first, last = succLink_.end();
       for (first = succLink_.begin(); first != last; ++first) {
@@ -271,14 +271,14 @@ namespace Video
       }
     }
 
-    // cout << "set index of all pending broker requests" << endl;
+    // std::cout << "set index of all pending broker requests" << std::endl;
     setBrokerRequests();
 
-    // cout << "release read buffer of predecessor" << endl;
+    // std::cout << "release read buffer of predecessor" << std::endl;
     if (pre_)
       pre_->bufferManager_->releaseReadBuffer(inputBufferIndex_);
 
-    // cout << "release read buffer of all predecessor links" << endl;
+    // std::cout << "release read buffer of all predecessor links" << std::endl;
     {
       FilterPreVector::const_iterator first, last = preLink_.end();
       for (first = preLink_.begin(); first != last; ++first) {
@@ -286,7 +286,7 @@ namespace Video
       }
     }
 
-    // cout << "process successors" << endl;
+    // std::cout << "process successors" << std::endl;
     {
       timeFilterTree_.start();
       FilterVector::const_iterator first, last = succ_.end();

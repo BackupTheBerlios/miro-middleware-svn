@@ -25,7 +25,7 @@ namespace Video
   void
   FilterCopy::process()
   {
-    cout << __PRETTY_FUNCTION__ << endl;
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
     memcpy(outputBuffer(), inputBuffer(), imageSize_);
   }
 

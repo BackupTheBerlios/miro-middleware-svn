@@ -28,6 +28,10 @@
 
 namespace Sparrow
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   ButtonsImpl::ButtonsImpl(Miro::StructuredPushSupplier * _pSupplier) :
 //    consumer(_consumer),
     pSupplier(_pSupplier)

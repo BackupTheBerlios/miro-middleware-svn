@@ -30,6 +30,11 @@
 
 using namespace Miro;
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+
 int
 main(int argc, char *argv[])
 {

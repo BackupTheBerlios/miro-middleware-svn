@@ -36,6 +36,12 @@
 
 namespace Pioneer
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+  using std::hex;
+  using std::dec;
+
   using Psos::ServerInfoMessage;
   using Miro::RangeBunchEventIDL;
 

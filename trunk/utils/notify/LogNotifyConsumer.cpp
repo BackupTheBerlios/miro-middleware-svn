@@ -78,8 +78,6 @@ LogNotify::push_structured_event(const StructuredEvent & notification
 				 ACE_ENV_ARG_DECL_NOT_USED)
   throw(CORBA::SystemException, CosEventComm::Disconnected)
 {
-  // cout << "received event" << endl;
-
   Miro::TimeIDL time;
   Miro::timeA2C(ACE_OS::gettimeofday(), time);
 
@@ -93,7 +91,7 @@ LogNotify::push_structured_event(const StructuredEvent & notification
 
     if (ostr_.total_length() > parameters_.maxFileSize) {
       cout << "disconnecting since max file size reached:" 
-           << total_length_ << endl;
+           << total_length_ << std::endl;
       connected_ = false;
       disconnect();
       if (!keepAlive_)

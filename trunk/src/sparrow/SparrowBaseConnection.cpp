@@ -30,6 +30,10 @@
 
 namespace Sparrow
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   using Can::Message;
 
   //ACE_Time_Value maxTimeout(0, 500000);

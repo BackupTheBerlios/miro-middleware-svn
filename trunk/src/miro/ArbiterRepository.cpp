@@ -27,8 +27,8 @@ namespace Miro
   void 
   ArbiterRepository::registerArbiter(Arbiter * _arbiter) throw(Exception)
   {
-    cout << "ArbiterRepository: Registering " 
-	 << _arbiter->getName() << endl;
+    std::cout << "ArbiterRepository: Registering " 
+	 << _arbiter->getName() << std::endl;
     if (arbiters_.find(_arbiter->getName()) != arbiters_.end())
       throw Exception("Arbiter " + _arbiter->getName() + " already registered at the Repository.");
       
@@ -49,19 +49,19 @@ namespace Miro
   {
     ArbiterRepository::ArbiterMap::const_iterator i;
 
-    ostr << "Active Arbiters:" << endl;
+    ostr << "Active Arbiters:" << std::endl;
     for(i = arbiters_.begin(); i != arbiters_.end(); ++i) {
       // if a arbiter is active, check for disabling
       if (i->second->isActive()) {
-	ostr << i->first << endl;
+	ostr << i->first << std::endl;
       }
     }
 	
-    ostr << "Inactive Arbiters:" << endl;
+    ostr << "Inactive Arbiters:" << std::endl;
     for(i = arbiters_.begin(); i != arbiters_.end(); ++i) {
       // if a behaviour is active, check for disabling
       if (!i->second->isActive()) {
-	ostr << i->first << endl;
+	ostr << i->first << std::endl;
       }
     }
   }

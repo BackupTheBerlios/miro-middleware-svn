@@ -33,23 +33,20 @@
 
 namespace Miro
 {
-  using std::cout;
-  using std::cerr;
-
   DevConsumer::DevConsumer()
   {
-    DBG(cout << "Constructing DevConsumer." << endl);
+    DBG(std::cout << "Constructing DevConsumer." << std::endl);
   }
 
   DevConsumer::~DevConsumer()
   {
-    DBG(cout << "Destructing DevConsumer." << endl);
+    DBG(std::cout << "Destructing DevConsumer." << std::endl);
   }
 
   void 
   DevConsumer::handleMessage(const DevMessage *)
   {
-    cerr << __FILE__ << ":" << __LINE__ << ":" << __FUNCTION__ 
-	 << "() - Unhandled Message!" << endl;
+    std::cerr << __FILE__ << ":" << __LINE__ << ":" << __FUNCTION__ 
+	 << "() - Unhandled Message!" << std::endl;
   }
 }

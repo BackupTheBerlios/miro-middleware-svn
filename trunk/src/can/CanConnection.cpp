@@ -71,7 +71,7 @@ namespace Can
   Connection::init() const
   {
 
-    std::cout << "CanConnectionInit: " << parameters_.module << " " << parameters_.device << endl;
+    std::cout << "CanConnectionInit: " << parameters_.module << " " << parameters_.device << std::endl;
 
     if(parameters_.module == "Can"){
        CanConfig cfg;
@@ -186,7 +186,7 @@ namespace Can
   {
     static std::string errorMessage = "SparrowBoard write failed." \
       "\nThe SparrowBoard probably crashed.";
-    std::cerr << endl << endl << errorMessage << endl << endl;
+    std::cerr << "\n\n" << errorMessage <<"\n\n";
     abort();
     //    throw Miro::Exception(errorMessage);
   }

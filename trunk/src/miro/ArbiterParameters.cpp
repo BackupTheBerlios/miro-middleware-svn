@@ -38,7 +38,7 @@ namespace Miro
     RegistrationMap::const_iterator i;
     for (i = priorities.begin(); i != priorities.end(); ++i) {
 	ostr << i->first->getBehaviourName() 
-	     << "'s priority: " << i->second << endl;
+	     << "'s priority: " << i->second << std::endl;
     }
   }
 

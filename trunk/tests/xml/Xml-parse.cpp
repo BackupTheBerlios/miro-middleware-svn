@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -16,6 +16,12 @@
 #include <qdom.h>
 
 #include <iostream>
+
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
 
 int main(int argc, char * argv[])
 {

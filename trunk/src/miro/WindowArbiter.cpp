@@ -100,7 +100,7 @@ namespace Miro
       
     timerId = reactor.schedule_timer(this, 0, ACE_Time_Value(0,0),
 	ACE_Time_Value(0, 100000));
-    cout << "WindowArbiter.cpp : Open!" << endl;
+    std::cout << "WindowArbiter.cpp : Open!" << std::endl;
   }
 
   void
@@ -108,7 +108,7 @@ namespace Miro
   {
     reactor.cancel_timer(timerId);
     timerId = 0;
-    cout << "WindowArbiter.cpp : Close!" << endl;
+    std::cout << "WindowArbiter.cpp : Close!" << std::endl;
     Arbiter::close();
   }	
   
@@ -118,7 +118,7 @@ namespace Miro
     Miro::VelocityIDL  velocity;
     std::complex<double> newVelocity;
 
-    cout << "WindowArbiter.cpp : TimeOutHandler started!" << endl;
+    std::cout << "WindowArbiter.cpp : TimeOutHandler started!" << std::endl;
     
     // let each behaviour calculate its dynamicWindow ascend by priority
     typedef std::vector<Behaviour *> BehaviourVector;
@@ -139,7 +139,7 @@ namespace Miro
     pMotion_->setLRVelocity((int)(10. * newVelocity.real()), (int)(10. * newVelocity.imag()));
     currentVelocity_ = velocity;
 
-    cout << "WindowArbiter.cpp : TimeOutHandler finished!" << endl;
+    std::cout << "WindowArbiter.cpp : TimeOutHandler finished!" << std::endl;
 
     return 0;
   }

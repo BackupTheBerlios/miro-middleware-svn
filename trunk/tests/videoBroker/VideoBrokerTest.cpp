@@ -17,6 +17,12 @@
 
 using Miro::operator <<;
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
+
 unsigned int indent = 0;
 
 std::ostream& operator << (std::ostream& _ostr, const Miro::TimeStatsIDL& _rhs)

@@ -33,7 +33,7 @@ extern "C" void handler (int signum)
 {
   // check of sigint and sigterm
   if (signum == SIGINT || signum == SIGTERM) {
-    DBG(cerr << "Signal received: " << signum << endl);
+    DBG(std::cerr << "Signal received: " << signum << std::endl);
     pServer->shutdown();
   }
 }
@@ -72,7 +72,7 @@ namespace Miro
     signals_(),
     worker_(&threadManager_, orb_.in(), shutdown_)
   {
-    DBG(cerr << "Constructing Miro::Server." << endl);
+    DBG(std::cerr << "Constructing Miro::Server." << std::endl);
 
     // parse arguments
     ACE_Arg_Shifter arg_shifter(argc, argv);
@@ -105,7 +105,7 @@ namespace Miro
     // Activate the POA manager.
     poa_mgr->activate();
 
-    DBG(cerr << "Miro::Server. constructed" << endl);
+    DBG(std::cerr << "Miro::Server. constructed" << std::endl);
   }
 
   Server::Server(const Server& _server) :
@@ -118,17 +118,17 @@ namespace Miro
     signals_(),
     worker_(&threadManager_, orb_.in(), shutdown_)
   {
-    DBG(cerr << "Copy constructing Miro::Server." << endl);
+    DBG(std::cerr << "Copy constructing Miro::Server." << std::endl);
   }
 
   Server::~Server()
   {
 #ifdef DEBUG
     if (own_) {
-      cout << "Destructing Miro::Server." << endl;
+      std::cout << "Destructing Miro::Server." << std::endl;
     }
     else {
-      cout << "Destructing cloned Miro::Server." << endl;
+      std::cout << "Destructing cloned Miro::Server." << std::endl;
     }
 #endif
 
@@ -143,21 +143,21 @@ namespace Miro
 	}
       }
       catch (const CORBA::Exception& e) {
-	cerr << "Caught CORBA exception on unbinding: " << n[0].id << endl;
-	cerr << "Porbably the NameSevice went down while we run:" << endl;
-	cerr << e << endl;
+	std::cerr << "Caught CORBA exception on unbinding: " << n[0].id << std::endl;
+	std::cerr << "Porbably the NameSevice went down while we run:" << std::endl;
+	std::cerr << e << std::endl;
       }
     }
 
     if (own_) {
-      cout << "Deactivating POA manager." << endl;
+      std::cout << "Deactivating POA manager." << std::endl;
       poa_mgr->deactivate(0, 0);
-      cout << "Destroying the POA." << endl;
+      std::cout << "Destroying the POA." << std::endl;
       poa->destroy(0, 0);
-      cout << "Performing remaining work in POA" << endl;
+      std::cout << "Performing remaining work in POA" << std::endl;
       ACE_Time_Value timeSlice(0, 200000);
       orb_->perform_work(timeSlice);
-      cout << "Destroying the ORB." << endl;
+      std::cout << "Destroying the ORB." << std::endl;
       orb_->shutdown(1);
     }
   }
@@ -230,8 +230,8 @@ namespace Miro
 	try {
 	  namingContext->unbind(n);
 
-	  cerr << "Object still bound in naming service: " << _name << endl
-	       << "Rebinding it." << endl;
+	  std::cerr << "Object still bound in naming service: " << _name << std::endl
+	       << "Rebinding it." << std::endl;
 	} catch (...) {
 	}
       }
@@ -240,9 +240,9 @@ namespace Miro
 	namingContext->bind(n, _object);
       }
       catch (CosNaming::NamingContext::AlreadyBound& ) {
-	cerr << "Object is already bound in naming service: "
-	     << n[0].id << endl
-	     << "Use -MiroRebindIOR if you really want to rebind it." << endl;
+	std::cerr << "Object is already bound in naming service: "
+	     << n[0].id << std::endl
+	     << "Use -MiroRebindIOR if you really want to rebind it." << std::endl;
 	throw(0);
       }
 

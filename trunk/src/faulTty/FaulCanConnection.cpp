@@ -29,6 +29,10 @@ namespace
 
 namespace FaulController
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   FaulCanConnection::FaulCanConnection(Sparrow::Connection2003 * _connection2003, int _motor) :
     connection2003_(_connection2003),
     motor_(_motor)

@@ -13,6 +13,10 @@ using CosNotifyChannelAdmin::EventChannel_var;
 
 namespace Miro
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   SphinxSpeechServer::SphinxSpeechServer(int argc, char *argv[], Miro::StructuredPushSupplier * _supplier) :
     super(argc,argv),
     miroRoot(getenv("MIRO_ROOT")),

@@ -18,6 +18,9 @@
 
 using std::cout;
 using std::cerr;
+using std::endl;
+using std::flush;
+
 using CosNotification::EventTypeSeq;
 using CosNotification::StructuredEvent;
 using CosNotifyChannelAdmin::EventChannel;

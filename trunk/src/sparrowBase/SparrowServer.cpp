@@ -38,6 +38,7 @@
 
 using std::cout;
 using std::cerr;
+using std::endl;
 
 FaulhaberHardware::FaulhaberHardware(ACE_Reactor * _reactor,
 				     Miro::OdometryImpl * _pOdometryImpl,
@@ -134,20 +135,18 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:sparrowStall,
 					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:sparrowButtons,
 					 &infrared);*/
-   pCanEventHandler = new Can::EventHandler(pSparrowConsumer2003);
+   pCanEventHandler = new Can::EventHandler(pSparrowConsumer2003, Sparrow::Parameters::instance());
    sparrowConnection2003 = new Sparrow::Connection2003(reactorTask.reactor(),
 		    pCanEventHandler,
 		    pSparrowConsumer2003);
 
 
-   std::cout << "Hier 1" << flush;
    sparrowKicker = new Sparrow::KickerImpl(sparrowConnection2003);
    sparrowButtons = new Sparrow::ButtonsImpl(&structuredPushSupplier_);
    sparrowStall = new Sparrow::StallImpl(sparrowConnection2003, &structuredPushSupplier_);
    sparrowPanTilt = new Sparrow::PanTiltImpl(sparrowConnection2003);
    pFaulhaber =  new FaulhaberHardware(reactorTask.reactor(), &odometry, sparrowConnection2003);
 
-   std::cout << "Hier 2" << flush;
    pSparrowConsumer2003->registerInterfaces(sparrowConnection2003,
 					( (Sparrow::Parameters::instance()->faulhaber)?
 					   NULL :
@@ -173,7 +172,7 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:sparrowStall,
 					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:sparrowButtons,
 					 &infrared);*/
-   pCanEventHandler = new Can::EventHandler(pSparrowConsumer);
+   pCanEventHandler = new Can::EventHandler(pSparrowConsumer, Sparrow::Parameters::instance());
    sparrowConnection = new Sparrow::Connection(reactorTask.reactor(),
 		    pCanEventHandler,
 		    pSparrowConsumer);
@@ -268,7 +267,7 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:sparrowStall,
 					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:sparrowButtons,
 					 &infrared);*/
-   pCanEventHandler = new Can::EventHandler(pSparrowConsumer2003);
+   pCanEventHandler = new Can::EventHandler(pSparrowConsumer2003, Sparrow::Parameters::instance());
    sparrowConnection2003 = new Sparrow::Connection2003(reactorTask.reactor(),
 		    pCanEventHandler,
 		    pSparrowConsumer2003);
@@ -312,7 +311,7 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:sparrowStall,
 					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:sparrowButtons,
 					 &infrared);*/
-   pCanEventHandler = new Can::EventHandler(pSparrowConsumer);
+   pCanEventHandler = new Can::EventHandler(pSparrowConsumer, Sparrow::Parameters::instance());
    sparrowConnection = new Sparrow::Connection(reactorTask.reactor(),
 		    pCanEventHandler,
 		    pSparrowConsumer);

@@ -36,6 +36,10 @@ namespace FaulMotor
   using Miro::ETimeOut;
   using Miro::EOutOfBounds;
 
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   MotionImpl::MotionImpl(Connection& _connection) throw(Exception) :
     Miro::DifferentialMotionImpl(Parameters::instance()->motion),
     params_(Parameters::instance()),

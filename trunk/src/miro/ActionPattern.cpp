@@ -208,31 +208,31 @@ namespace Miro
   void
   ActionPattern::open() 
   {
-    cout << "ActionPattern: New Pattern: " << getActionPatternName() << endl;
+    std::cout << "ActionPattern: New Pattern: " << getActionPatternName() << std::endl;
 
     if (currentActionPattern() != NULL) {
       // disable behaviours which are not needed anymore
       currentActionPattern()->close(this);
     }
 
-    cout << "ActionPattern: Init arbiter." << endl;
+    std::cout << "ActionPattern: Init arbiter." << std::endl;
     arbiter_->init(arbiterParameters_);
 
     policy_->currentActionPattern(this);
     
     if (!(arbiter_->isActive())) {
-      cout << "ActionPattern: Activate arbiter: " << arbiter_->getName() << endl;
+      std::cout << "ActionPattern: Activate arbiter: " << arbiter_->getName() << std::endl;
       arbiter_->open();
     }
 	
     //enable all current behaviours		
-    cout <<"ActionPattern: Enabling behaviours." << endl;
+    std::cout <<"ActionPattern: Enabling behaviours." << std::endl;
     BehaviourMap::const_iterator i;
     for(i = behaviourMap_.begin(); i != behaviourMap_.end(); i++) {
       i->second.first->init(i->second.second);
       // if a behaviour is active, check for disabling
       if (!(i->second.first->isActive())) {
-	cout << "Enabling Behaviour: " << i->second.first->getBehaviourName() << endl;
+	std::cout << "Enabling Behaviour: " << i->second.first->getBehaviourName() << std::endl;
 	i->second.first->open();			
       }
     }
@@ -257,7 +257,7 @@ namespace Miro
   void
   ActionPattern::close(ActionPattern * nextPattern)
   {
-    cout << "Disabling behaviours." << endl;
+    std::cout << "Disabling behaviours." << std::endl;
     BehaviourMap::const_iterator i;
     // disable behaviours which are not needed anymore
     for(i = behaviourMap().begin(); i != behaviourMap().end(); ++i) {
@@ -267,18 +267,18 @@ namespace Miro
 	if (nextPattern == NULL || 
 	    nextPattern->getBehaviour(i->first) == NULL) {
 	  //disable behaviour
-	  cout << "Disabling Behaviour: " << i->second.first->getBehaviourName() << endl;
+	  std::cout << "Disabling Behaviour: " << i->second.first->getBehaviourName() << std::endl;
 	  i->second.first->close();			
 	}
       }
     }
     if (nextPattern == NULL || 
 	nextPattern->arbiter() != arbiter_) {
-      cout << "Disabling arbiter: " << arbiter_->getName() << endl;
+      std::cout << "Disabling arbiter: " << arbiter_->getName() << std::endl;
       arbiter_->close();
     }
 
-    cout << "Disabling done." << endl;
+    std::cout << "Disabling done." << std::endl;
   }
 
   /**
@@ -366,20 +366,20 @@ namespace Miro
 
     if (policy_->transitionMutex_.acquire(t) == -1) {
       // this can happen due to Reactor/Timed-Behaviour upcalls.
-      std::cerr << "Transition mutex blocked!" << endl;
+      std::cerr << "Transition mutex blocked!" << std::endl;
       return;
     }
     // make sure this is still the current action pattern
     if (currentActionPattern() == this) {
-      cout << "ActionPattern: Transition " << message << endl;
+      std::cout << "ActionPattern: Transition " << message << std::endl;
 
       ActionPattern* ap = getTransitionPattern(message);
       if (ap != currentActionPattern()) { 
 	if (ap != NULL)
 	  ap->open();
 	else {
-	  cerr << "ActionPattern: no transition registered for message! \a" 
-	       << endl;
+	   std::cerr << "ActionPattern: no transition registered for message! \a" 
+	       << std::endl;
 	}
       }
     }
@@ -389,23 +389,23 @@ namespace Miro
   void 
   ActionPattern::printToStream(std::ostream& ostr) const
   {
-    ostr << "ActionPattern: " << getActionPatternName() << endl;
+    ostr << "ActionPattern: " << getActionPatternName() << std::endl;
  		
-    ostr << "Transitions:" << endl;
+    ostr << "Transitions:" << std::endl;
     TransitionMap::const_iterator i;
     for(i = transitionTable_.begin(); i != transitionTable_.end(); ++i) {
       ostr << "Transition: " << i->first << "-->"
 	   << ((i->second)? i->second->getActionPatternName() : "NULL")
-	   << endl;
+	   << std::endl;
     }
 
     BehaviourMap::const_iterator j;
     for(j = behaviourMap_.begin(); j != behaviourMap_.end(); ++j) {
       ostr << "Behaviour: " << j->first << "  "
-	   << j->second.first->getBehaviourName() << endl
-	   << "Parameters: " << endl
+	   << j->second.first->getBehaviourName() << std::endl
+	   << "Parameters: " << std::endl
 	   << *(j->second.second)
-	   << endl;
+	   << std::endl;
     }
   }
 

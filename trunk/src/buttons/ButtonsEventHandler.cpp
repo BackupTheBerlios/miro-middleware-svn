@@ -18,11 +18,11 @@
 #include "miro/Exception.h"
 #include "miro/TimeHelper.h"
 
+#include <iostream>
+
 #undef DEBUG
 
 #ifdef DEBUG
-#include <iostream>
-using std::cout;
 #define DBG(x) x
 #else
 #define DBG(x)
@@ -30,6 +30,10 @@ using std::cout;
 
 namespace B21Buttons
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   //
   // Constructors / Destructors
   //

@@ -13,6 +13,12 @@
 
 #include <orbsvcs/Notify/Notify_EventChannelFactory_i.h>
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
+
 ChannelManager::ChannelManager(int& argc, char * argv[], 
 			       bool _shared, bool _unified) :
   Super(argc, argv),

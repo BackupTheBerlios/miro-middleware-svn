@@ -17,6 +17,12 @@
 #include <qpainter.h>
 #include <qimage.h>
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
+
 std::string path()
 {
   char * miro_log = ACE_OS::getenv("MIRO_LOG");

@@ -23,6 +23,12 @@
 
 #include <qapplication.h>
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
+
 using namespace Miro;
 
 int parseArgs(int& argc, char* argv[])

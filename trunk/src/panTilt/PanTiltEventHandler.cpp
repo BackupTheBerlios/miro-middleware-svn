@@ -17,6 +17,10 @@
 
 namespace DpPanTilt
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   //
   // EventHandler is an object wrapper for the event handler 
   // registered with the reactor

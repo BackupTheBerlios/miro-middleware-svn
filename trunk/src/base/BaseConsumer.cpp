@@ -34,6 +34,7 @@ namespace Base
 {
   using std::cout;
   using std::cerr;
+  using std::endl;
 
   /***************************************************************************
    *

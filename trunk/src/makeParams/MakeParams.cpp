@@ -62,21 +62,21 @@ parseArgs(int& argc, char* argv[])
       break;
     case '?':
     default:
-      cerr << "usage: " << argv[0] << "[-f file] [-i item] [-s=source] [-h=header] [-v?]" << endl
-	   << "  -f <file> name of the input file (Parameters.xml)" << endl
-	   << "  -n <name> base name of the output file (Parameters)" << endl
-	   << "  -s <extension> extension of the generated source file (cpp)" << endl
-	   << "  -h <extension> extension of the generated header file (h)" << endl
-	   << "  -v verbose mode" << endl
-	   << "  -? help: emit this text and stop" << endl;
+      cerr << "usage: " << argv[0] << "[-f file] [-i item] [-s=source] [-h=header] [-v?]" << std::endl
+	   << "  -f <file> name of the input file (Parameters.xml)" << std::endl
+	   << "  -n <name> base name of the output file (Parameters)" << std::endl
+	   << "  -s <extension> extension of the generated source file (cpp)" << std::endl
+	   << "  -h <extension> extension of the generated header file (h)" << std::endl
+	   << "  -v verbose mode" << std::endl
+	   << "  -? help: emit this text and stop" << std::endl;
       rc = 1;
     }
 
     if (verbose) {
-      cout << "file name: " << fileName << endl
-	   << "base name: " << baseName << endl
-	   << "source extension: " << sourceExtension << endl
-	   << "header extension: " << headerExtension << endl;
+      cout << "file name: " << fileName << std::endl
+	   << "base name: " << baseName << std::endl
+	   << "source extension: " << sourceExtension << std::endl
+	   << "header extension: " << headerExtension << std::endl;
     }
   }
   return rc;
@@ -102,29 +102,29 @@ main (int argc, char * argv[])
       reader.setContentHandler( &handler );
       reader.setErrorHandler( &errorHandler );
       if (verbose)
-	cout << "parsing " << fileName << endl;
+	cout << "parsing " << fileName << std::endl;
       bool success = reader.parse( source );
       
       if (success) {
 
 	if (verbose)
-	  cout << "generating  " << (baseName + "." + sourceExtension) << endl;
+	  cout << "generating  " << (baseName + "." + sourceExtension) << std::endl;
 	ofstream sourceFile(baseName + "." + sourceExtension);
 	if (verbose)
-	  cout << "generating  " << (baseName + "." + headerExtension) << endl;
+	  cout << "generating  " << (baseName + "." + headerExtension) << std::endl;
 	ofstream headerFile(baseName + "." + headerExtension);
       
 	generator.generateSource(sourceFile);
 	generator.generateHeader(headerFile);
       }
       else {
-	cerr << "Error parsing " << fileName << endl
+	cerr << "Error parsing " << fileName << std::endl
 	     << errorHandler.errorString();
 	rc = 1;
       }
     }
     catch (const QString& e) {
-      cerr << "Exception: " << e << endl;
+      cerr << "Exception: " << e << std::endl;
       rc = 1;
     }
   }

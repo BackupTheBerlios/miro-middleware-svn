@@ -13,6 +13,7 @@
 #include "miro/VideoHelper.h" // Global helper functions.
 #include "miro/Exception.h"   // Exception declarations.
 
+
 // Factory method implementation.
 FILTER_PARAMETERS_FACTORY_IMPL(FilterGray);
 
@@ -53,8 +54,6 @@ FilterGray::init(Miro::Server& _server, Video::FilterParameters const * _params)
 void
 FilterGray::process()
 {
-  cout << __PRETTY_FUNCTION__ << endl;
-
   // Pointer to the input image.
   unsigned char const * src = inputBuffer();
   // Pointer to the output image.

@@ -20,12 +20,7 @@
 
 #undef DEBUG
 
-#ifdef DEBUG
 #include <iostream>
-
-using std::cout;
-using std::cerr;
-#endif
 
 #ifdef DEBUG
 #define DBG(x) x
@@ -35,6 +30,12 @@ using std::cerr;
 
 namespace Psos
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+  using std::hex;
+  using std::dec;
+
   EventHandler::EventHandler(Miro::DevConsumer * _consumer, Connection& _connection) :
     Super(_consumer, new Message()),
     connection(_connection),
@@ -77,7 +78,7 @@ namespace Psos
 
     if (bytes == 0)
       throw Miro::Exception("PSOS file descriptor was called to read 0" \
-			    "bytes from the device. I can´t belief this!");
+			    "bytes from the device. I can,A4(Bt belief this!");
 
     buffLen = bytes;
     buffPos = 0;

@@ -29,9 +29,6 @@
 
 #undef DEBUG
 
-using std::cerr;
-using std::cout;
-
 /***************************************************************************
 *
 *  Mcp Async Module 
@@ -42,6 +39,10 @@ using std::cout;
 
 namespace Mcp
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   Consumer::Consumer(Connection& connection_) :
     Super(),
     connection(connection_)
@@ -76,7 +77,7 @@ namespace Mcp
       case 0x03:
 	cout << "time-out (if record not completed within .5 sec)";
       default:
-	cout << "undocumented error: 0x" << hex << (int)msg.value() << dec;
+	cout << "undocumented error: 0x" << std::hex << (int)msg.value() << std::dec;
 	break;
       }
       cout << " - reseting mcp communication." << endl;
@@ -114,7 +115,7 @@ namespace Mcp
       cerr << __FILE__ << ":" 
 	   << __LINE__ << ":" 
 	   << __FUNCTION__ << "() - Unhandled opcode 0x" 
-	   << hex << (int)msg.opcode() << dec << endl;
+	   << std::hex << (int)msg.opcode() << std::dec << endl;
     }
   }
 };

@@ -88,7 +88,7 @@ main(int argc, char *argv[])
 	g = (*logNotifyParameters) >>= f;
       }
       else {
-	std::cerr << "unknown parameter class: " << name << endl;
+	std::cerr << "unknown parameter class: " << name << std::endl;
 	rc = 1;
 	break;
       }

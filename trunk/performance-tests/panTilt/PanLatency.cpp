@@ -32,6 +32,11 @@ namespace
 {
   using std::string;
   using std::ostringstream;
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+  using std::flush;
+  using std::cin;
 
   using Miro::Client;
   using Miro::Pan;
@@ -200,7 +205,7 @@ int main(int argc, char *argv[])
       switch (c) { // test cases
       case '0':
 	cout << "current pan angle: " 
-	     << Miro::rad2Deg(pan->getPan()) << "°" << endl;
+	     << Miro::rad2Deg(pan->getPan()) << ",A0(B" << endl;
 	break;
       case '1':
 	{

@@ -36,6 +36,12 @@
 #include <iostream>
 #include <stdio.h>
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
+
 bool canceled = false;
 
 using Miro::deg2Rad;
@@ -138,7 +144,7 @@ Service::Service() :
   //(Sparrow::Parameters::instance()->sparrow2003)?connection2003:NULL)
 {
    consumer2003 = new Sparrow::Consumer2003();
-   pCanEventHandler = new Can::EventHandler(consumer2003);
+   pCanEventHandler = new Can::EventHandler(consumer2003, Sparrow::Parameters::instance());
    connection2003 = new Sparrow::Connection2003(reactorTask.reactor(), pCanEventHandler, consumer2003);
    pFaulhaber =  new FaulhaberHardware(reactorTask.reactor(), pOdometryImpl, (Sparrow::Parameters::instance()->sparrow2003)?connection2003:NULL);
 
@@ -314,7 +320,7 @@ int main(int argc, char* argv[])
 	   {
 	     cout << "Servosetting:" << endl
 		  << "  0: middle Setting " << endl
-		  << "  +/- 90° " << endl;
+		  << "  +/- 90,A0(B " << endl;
 	     cin >> k;
 	     //service.connection.setServo(k);
 	     break;

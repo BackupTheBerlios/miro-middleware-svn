@@ -19,6 +19,12 @@
 
 using namespace Miro;
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
+
 int main(int argc, char *argv[])
 {
   Client client(argc, argv);

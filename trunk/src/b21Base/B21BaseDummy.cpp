@@ -20,6 +20,7 @@
 
 using std::cout;
 using std::cerr;
+using std::endl;
 
 B21BaseDummy::B21BaseDummy(int argc, char *argv[]) :
   super(argc, argv),

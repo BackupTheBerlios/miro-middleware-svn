@@ -4,6 +4,7 @@
 #include <iostream>
 
 using std::cout;
+using std::endl;
 using Miro::Client;
 using Miro::RangeSensor;
 using Miro::RangeSensor_var;

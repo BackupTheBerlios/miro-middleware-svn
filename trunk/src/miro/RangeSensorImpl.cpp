@@ -143,7 +143,7 @@ namespace Miro
     asynchDispatching_(_asynchDispatching),
     dispatcherThread_(_description, _supplier)
   {
-    DBG(cout << "Constructing Miro::RangeSensorImpl." << endl);
+    DBG(std::cout << "Constructing Miro::RangeSensorImpl." << std::endl);
 
     if (_description.group.length() == 0)
       throw Exception("RangeSensorImpl: Empty Scan Description");
@@ -164,7 +164,7 @@ namespace Miro
 
   RangeSensorImpl::~RangeSensorImpl()
   {
-    DBG(cout << "Destructing RangeSensorImpl." << endl);
+    DBG(std::cout << "Destructing RangeSensorImpl." << std::endl);
 
     if (asynchDispatching_)
       dispatcherThread_.cancel();
@@ -241,8 +241,8 @@ namespace Miro
 	  scan_.range[group][index] = _data->sensor[i].range;
 	}
 	else
-	  cout << "RangeSensor: integrated data beyond buffer boundaries: "
-	       << group << " " << index << endl;
+	  std::cout << "RangeSensor: integrated data beyond buffer boundaries: "
+		    << group << " " << index << std::endl;
       }
       condition_.broadcast();
     }

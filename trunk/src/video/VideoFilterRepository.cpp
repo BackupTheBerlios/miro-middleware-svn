@@ -42,7 +42,7 @@ namespace Video
     FactoryMap::const_iterator first, last = factory_.end();	
     
     for (first = factory_.begin(); first != last; ++first) {		
-	ostr << first->first << endl;
+	ostr << first->first << std::endl;
     }
   }
 

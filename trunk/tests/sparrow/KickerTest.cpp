@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2001, 2002
+// (c) 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -24,6 +24,12 @@
 
 using namespace Miro;
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
+
 struct Service
 {
   ReactorTask reactorTask;
@@ -37,7 +43,7 @@ struct Service
 Service::Service() :
   reactorTask(),
   pSparrowConsumer(new Sparrow::Consumer(&connection, NULL, NULL, NULL, NULL)),
-  pCanEventHandler(new Can::EventHandler(pSparrowConsumer)),
+  pCanEventHandler(new Can::EventHandler(pSparrowConsumer, Sparrow::Parameters::instance())),
   connection(reactorTask.reactor(), pCanEventHandler, pSparrowConsumer)
 {
 

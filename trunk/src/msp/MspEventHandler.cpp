@@ -22,6 +22,10 @@
 
 namespace Msp
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   EventHandler::EventHandler(Connection& _msp, 
 			     Miro::DevConsumer * _consumer) :
     Super(_msp, _consumer, new Message()),

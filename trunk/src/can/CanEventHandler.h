@@ -25,13 +25,15 @@ namespace Can
 {
   // forward declarations
   class Message;
+  class Parameters;
 
   class EventHandler : public Miro::DevEventHandler
   {
     typedef Miro::DevEventHandler Super;
 
   public:
-    EventHandler(Miro::DevConsumer* _consumer);
+    EventHandler(Miro::DevConsumer* _consumer,
+		 Parameters const * _params);
     // private:
     virtual ~EventHandler();
 
@@ -39,6 +41,7 @@ namespace Can
 
   protected:
     Message * msg;
+    Parameters const * params_;
   };
 };
 #endif

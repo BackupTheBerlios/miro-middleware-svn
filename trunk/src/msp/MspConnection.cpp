@@ -25,9 +25,6 @@
 
 #ifdef DEBUG
 #include <iostream>
-
-using std::cout;
-using std::cerr;
 #endif
 
 #ifdef DEBUG
@@ -39,6 +36,9 @@ using std::cerr;
 namespace Msp
 {
   using Miro::DevEventHandler;
+  using std::cout;
+  using std::cerr;
+  using std::endl;
 
 
   const unsigned long Connection::ping1[7] = 

@@ -33,6 +33,10 @@
 
 namespace Sparrow
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   KickerImpl::KickerImpl(BaseConnection * _connection) :
     connection(_connection)
   {

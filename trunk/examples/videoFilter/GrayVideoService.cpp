@@ -36,7 +36,7 @@ main(int argc, char *argv[])
 
   try {
     // Building up the filter repository.
-    std::cout << "registered filters" << endl;
+    std::cout << "registered filters" << std::endl;
     
     Video::FilterRepository * repo = Video::FilterRepository::instance();
     repo->registerFilter<Video::DeviceDummy>("DeviceDummy");
@@ -44,7 +44,7 @@ main(int argc, char *argv[])
     repo->registerFilter<FilterGray>("FilterGray");
 
     // Loading the parameters from the configuration file.
-    std::cout << "Config file processing" << endl;
+    std::cout << "Config file processing" << std::endl;
     
     Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
     config->setSection("Robot");
@@ -53,10 +53,10 @@ main(int argc, char *argv[])
     config->getParameters("Video", * videoParameters);
 
     // Debug output of the configuration.
-    std::cout << "  robot parameters:" << endl << *robotParameters << endl;
-    std::cout << "  video paramters:" << endl << *videoParameters << endl;
+    std::cout << "  robot parameters:" << std::endl << *robotParameters << std::endl;
+    std::cout << "  video paramters:" << std::endl << *videoParameters << std::endl;
     
-    std::cout << "Initialize server daemon." << endl;
+    std::cout << "Initialize server daemon." << std::endl;
     Miro::Server server(argc, argv);
 
     try {
@@ -66,29 +66,29 @@ main(int argc, char *argv[])
       // We don't need the config file anymore.
       delete config;
 
-      std::cout << "Loop forever handling events." << endl;
+      std::cout << "Loop forever handling events." << std::endl;
       server.run(3);
-      std::cout << "videoService ended, exiting." << endl;
+      std::cout << "videoService ended, exiting." << std::endl;
     }
     catch (const Miro::EOutOfBounds& e) {
-      std::cerr << "OutOfBounds excetpion: Wrong parameter for device initialization." << endl;
+      std::cerr << "OutOfBounds excetpion: Wrong parameter for device initialization." << std::endl;
       rc = 1;
     }
     catch (const Miro::EDevIO& e) {
-      std::cerr << "DevIO excetpion: Device access failed." << endl;
+      std::cerr << "DevIO excetpion: Device access failed." << std::endl;
       rc = 1;
     }
     catch (const CORBA::Exception & e) {
-      cerr << "Uncaught CORBA exception: " << e << endl;
+      std::cerr << "Uncaught CORBA exception: " << e << std::endl;
       rc = 1;
     }
   }
   catch (const Miro::Exception& e) {
-    cerr << "Miro exception: " << e << endl;
+    std::cerr << "Miro exception: " << e << std::endl;
     rc = 1;
   }
   catch (...) {
-    cerr << "Uncaught exception: " << endl;
+    std::cerr << "Uncaught exception: " << std::endl;
     rc = 1;
   }
   return rc;

@@ -31,14 +31,18 @@ using Miro::ConfigDocument;
 using DpPanTilt::Parameters;
 using DpPanTilt::PanTiltServer;
 
+using Miro::Server;
+using Miro::ReactorTask;
+using Miro::Log;
+
+using std::cout;
+using std::cerr;
+using std::endl;
+
 enum {INFO, WARNING, ERROR, FATAL_ERROR};
 
 namespace DpPanTilt
 {
-  using Miro::Server;
-  using Miro::ReactorTask;
-  using Miro::Log;
-
   PanTiltServer::PanTiltServer(int argc, char *argv[]) :
     Server(argc, argv),
     Log(INFO,"PanTiltServer"),

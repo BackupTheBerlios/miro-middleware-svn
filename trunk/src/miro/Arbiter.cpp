@@ -160,16 +160,16 @@ namespace Miro
 	  calcActivation();
 	}
 	else {
-	  cerr << "PriorityArbiter: got message from unregistered behaviour: "
-	       << _message.id->getBehaviourName() << endl;
+	   std::cerr << "PriorityArbiter: got message from unregistered behaviour: "
+	       << _message.id->getBehaviourName() << std::endl;
 	}
       }
       else {
-	cerr << "PriorityArbiter: got arbitrate call while not active from behaviour: "
-	     << _message.id->getBehaviourName() << endl;
+	 std::cerr << "PriorityArbiter: got arbitrate call while not active from behaviour: "
+	     << _message.id->getBehaviourName() << std::endl;
       }
     }
     else
-      cerr << "PriorityArbiter: received message without behaviour id." << endl;
+       std::cerr << "PriorityArbiter: received message without behaviour id." << std::endl;
   }
 };

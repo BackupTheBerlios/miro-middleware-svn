@@ -35,6 +35,11 @@
 
 using namespace Miro;
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
 
 double normalizeAngle(double alpha)
 {
@@ -61,7 +66,7 @@ Service::Service() :
   reactorTask(),
   //odometryImpl(new Miro::OdometryImpl(NULL)),
   pSparrowConsumer(new Sparrow::Consumer2003(&connection, NULL, NULL,NULL)),
-  pCanEventHandler(new Can::EventHandler(pSparrowConsumer)),
+  pCanEventHandler(new Can::EventHandler(pSparrowConsumer, Sparrow::Parameters::instance())),
   connection(reactorTask.reactor(), pCanEventHandler, pSparrowConsumer)
 {
 
@@ -151,7 +156,7 @@ int main(int argc, char * argv[])
 	cin >> power;
 	cout << "maxSpeed (1000): " << flush;
 	cin >> speed;
-	cout << "maxRotation (180°): " << flush;
+	cout << "maxRotation (180,A0(B): " << flush;
 	cin >> rot;
 	rot = deg2Rad(rot);;
 	service.connection.initMax(accel, power, speed, rot);
@@ -314,7 +319,7 @@ int main(int argc, char * argv[])
 	alpha = service.odometryImpl->getWaitPosition().heading;
 	beta += alpha - gamma;
 
-	cout << "turned angle: " << rad2Deg(beta) << "°" <<endl;
+	cout << "turned angle: " << rad2Deg(beta) << ",A0(B" <<endl;
 	break;
       case 'p':
 	cout << "current position is: "

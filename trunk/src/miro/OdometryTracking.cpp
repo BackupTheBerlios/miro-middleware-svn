@@ -86,7 +86,7 @@ namespace Miro
       rawDeque.push_front(*raw);
     }
     else {
-      cerr << "OdometryTracking: received message I did not subscribe for." << endl;
+      std::cerr << "OdometryTracking: received message I did not subscribe for." << std::endl;
     }
   }
 

@@ -18,11 +18,9 @@
 #include "miro/Exception.h"
 #include "miro/TimeHelper.h"
 
-// #undef DEBUG
+#include <iostream>
 
 #ifdef DEBUG
-#include <iostream>
-using std::cout;
 #define DBG(x) x
 #else
 #define DBG(x)
@@ -38,6 +36,10 @@ namespace B21Buttons
   using Miro::ACE_Exception;
   using Miro::EDevIO;
   using Miro::EOutOfBounds;
+
+  using std::cout;
+  using std::cerr;
+  using std::endl;
 
   //
   // Constructors / Destructors

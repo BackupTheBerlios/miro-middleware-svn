@@ -56,6 +56,10 @@ namespace FaulMotor
   using namespace FaulController;
   using Miro::Guard;
 
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   unsigned int Connection::gotTicks_ = 2;
 
   //------------------------//
@@ -275,7 +279,7 @@ namespace FaulMotor
   }
 
   void
-  Connection::jmp2()					// ododaten so schnell wie möglich
+  Connection::jmp2()					// ododaten so schnell wie m,Av(Bglich
   {
     leftWheel_->writeMessage(ENABLE_ODO_MSG);             // send it
     rightWheel_->writeMessage(ENABLE_ODO_MSG);

@@ -26,7 +26,7 @@ namespace Miro
   void
   BehaviourRepository::registerBehaviour(Behaviour * _behaviour)  throw(Exception)
   {
-    cout << "BehaviourRepository: Registering " << _behaviour->getBehaviourName() << endl;
+    std::cout << "BehaviourRepository: Registering " << _behaviour->getBehaviourName() << std::endl;
     if (behaviours_.find(_behaviour->getBehaviourName()) != behaviours_.end())
       throw Exception("Behaviour " + _behaviour->getBehaviourName() + " already registered at the Repository.");
       
@@ -47,19 +47,19 @@ namespace Miro
   {
     BehaviourRepository::BehaviourMap::const_iterator i;	
 
-    ostr << "Active Behaviours:" << endl;
+    ostr << "Active Behaviours:" << std::endl;
     for(i = behaviours_.begin(); i != behaviours_.end(); ++i) {		
       // if a behaviour is active, check for disabling
       if (i->second->isActive()) {
-	ostr << i->first << endl;
+	ostr << i->first << std::endl;
       }
     }
 	
-    ostr << "Inactive Behaviours:" << endl;
+    ostr << "Inactive Behaviours:" << std::endl;
     for(i = behaviours_.begin(); i != behaviours_.end(); ++i) {		
       // if a behaviour is active, check for disabling
       if (!i->second->isActive()) {
-	ostr << i->first << endl;
+	ostr << i->first << std::endl;
       }
     }
   }

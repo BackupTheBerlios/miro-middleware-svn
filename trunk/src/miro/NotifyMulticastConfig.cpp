@@ -57,7 +57,7 @@ namespace Miro {
         {
 	    Parameters *parameters = Parameters::instance();
 
-	    cout << "NotifyMulticast Logfile: " << parameters->logfile << endl;
+	    std::cout << "NotifyMulticast Logfile: " << parameters->logfile << std::endl;
 	    /* setup logfile */
 	    if (parameters->logfile.length() > 0) {
 		logfile_.open(parameters->logfile.c_str());

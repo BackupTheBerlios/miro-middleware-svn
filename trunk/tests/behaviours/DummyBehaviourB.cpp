@@ -14,6 +14,12 @@
 
 unsigned long DummyBehaviourB::counter_ = 0;
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
+
 DummyBehaviourB::DummyBehaviourB(const std::string& _name,
 				 const std::string& _transition) :
   Super(*ACE_Reactor::instance()),

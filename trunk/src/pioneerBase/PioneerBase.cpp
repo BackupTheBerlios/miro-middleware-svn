@@ -33,6 +33,7 @@
 
 using std::cout;
 using std::cerr;
+using std::endl;
 
 PioneerBase::PioneerBase(int argc, char *argv[]) :
   Super(argc, argv),

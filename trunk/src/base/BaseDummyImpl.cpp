@@ -21,6 +21,10 @@
 
 namespace Base
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   Dummy::Dummy():
     Miro::MotionImpl(Parameters::instance()->motion),
     rotateState(LIMP),

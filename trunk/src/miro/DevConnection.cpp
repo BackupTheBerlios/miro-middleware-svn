@@ -56,11 +56,11 @@ namespace Miro
     selectHandlerId(-1),
     tv(0,0)
   {
-    DBG(cout << "DevConnection intizialising" << endl);
+    DBG(cout << "DevConnection intizialising" << std::endl);
 
     if (connector.connect(ioBuffer, devName, &tv, ACE_Addr::sap_any, 0, O_RDWR) == -1) {
-      cerr << "Failed to open device." << endl
-	   << "Propably running on the wrong machine?" << endl;
+      cerr << "Failed to open device." << std::endl
+	   << "Propably running on the wrong machine?" << std::endl;
       throw CException(errno, std::strerror(errno));
     }
 
@@ -75,7 +75,7 @@ namespace Miro
 
   DevConnection::~DevConnection()
   {
-    DBG(cout << "Destructing DevConnection" << endl);
+    DBG(cout << "Destructing DevConnection" << std::endl);
 
     // Stop hardware triggered communication
     if (selectHandlerId != -1)

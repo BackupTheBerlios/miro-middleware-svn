@@ -37,6 +37,8 @@
 
 namespace Sparrow
 {
+  using std::cerr;
+  using std::endl;
   using std::cout;
 
   //  Parameters* EventHandler::sparrowParam; // sparrow parameters

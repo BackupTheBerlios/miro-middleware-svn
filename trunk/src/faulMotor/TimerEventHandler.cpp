@@ -26,6 +26,10 @@
 
 namespace FaulMotor
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   TimerEventHandler::TimerEventHandler(Connection& _connection) :
     connection_(_connection)
   {

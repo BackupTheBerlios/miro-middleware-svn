@@ -30,12 +30,16 @@ using std::cerr;
 #define DBG(x)
 #endif
 
-using Miro::CException;
-using Miro::ACE_Exception;
-using Miro::EDevIO;
-
 namespace B21Buttons
 {
+  using Miro::CException;
+  using Miro::ACE_Exception;
+  using Miro::EDevIO;
+
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   //
   // Constructors / Destructors
   //

@@ -23,9 +23,6 @@
 
 #undef DEBUG
 
-using std::cout;
-using std::cerr;
-
 #ifdef DEBUG
 #define DBG(x) x
 #else
@@ -34,6 +31,10 @@ using std::cerr;
 
 namespace Mcp
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   EventHandler::EventHandler(Connection& _connection, 
 			     Consumer* _consumer,
 			     const Parameters& _parameters) :
@@ -67,7 +68,7 @@ namespace Mcp
 
     if (bytes == 0)
       throw Miro::Exception("MCP file descriptor was called to read 0" \
-			    "bytes from the device. I can´t belief this!");
+			    "bytes from the device. I can,A4(Bt belief this!");
 
     buffLen = bytes;
     buffPos = 0;
@@ -99,7 +100,7 @@ namespace Mcp
 	  state = ONE_START;
 	}
 	else {
-	  cerr << "Unexpected char " << hex << (int)thisChar << dec << " before start" << endl;
+	  cerr << "Unexpected char " << std::hex << (int)thisChar << std::dec << " before start" << endl;
 	}
 	break;
       case ONE_START:
@@ -111,7 +112,7 @@ namespace Mcp
 	}
 	else {
 	  state = NO_STARTS; /* starts only count if in a pair */
-	  cerr << "Unexpected char " << hex << (int)thisChar << dec  << " before start" << endl;
+	  cerr << "Unexpected char " << std::hex << (int)thisChar << std::dec  << " before start" << endl;
 	}
 	break;
       case IN_PROGRESS:

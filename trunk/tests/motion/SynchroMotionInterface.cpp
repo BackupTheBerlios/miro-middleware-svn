@@ -14,6 +14,12 @@
 #include "miro/Angle.h"
 #include "miro/IO.h"
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
+
 SynchroMotionInterface::SynchroMotionInterface(Miro::SynchroMotion_ptr _motion) :
   Super(_motion),
   synchroMotion_(Miro::SynchroMotion::_duplicate(_motion))
@@ -60,7 +66,7 @@ SynchroMotionInterface::evalCommand(char c)
     break;
   case '6':
     std::cout << "Set rotational velocity: " << endl
-	      << "rotation (°/s) : " << flush;
+	      << "rotation (,A0(B/s) : " << flush;
     std::cin >> rot;
     std::cout << "time before stop (msec) : " << flush;
     std::cin >> msec;

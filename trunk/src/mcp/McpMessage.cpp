@@ -5,7 +5,7 @@
 // for details copyright, usage and credits to other groups see Miro/COPYRIGHT
 // for documentation see Miro/doc
 // 
-// (c) 1999,2000
+// (c) 1999, 2000, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // Authors: 
@@ -24,10 +24,13 @@
 
 namespace Mcp
 {
-  inline
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   std::ostream& operator << (std::ostream& ostr, const Message& message) {
     ostr << "size: " << (int) message.size() 
-	 << "  opcode: 0x" << hex;
+	 << "  opcode: 0x" << std::hex;
     ostr.width(2);
     ostr.fill('0');
     ostr << (int) message.opcode() << endl;
@@ -37,6 +40,6 @@ namespace Mcp
       ostr.fill('0');
       ostr << (int) message.buffer()[i] << " ";
     }
-    return ostr << dec;
+    return ostr << std::dec;
   } 
 };

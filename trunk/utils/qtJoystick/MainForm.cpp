@@ -125,5 +125,5 @@ void MainForm::slotRightOff()
 void MainForm::slotStopClicked()
 {
   motion->limp();
-  cout << "Emergency stop!" << endl;
+  std::cout << "Emergency stop!" << std::endl;
 }

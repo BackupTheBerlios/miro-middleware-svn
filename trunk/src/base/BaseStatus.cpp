@@ -24,6 +24,12 @@
 
 namespace Base
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+  using std::hex;
+  using std::dec;
+
   std::ostream& 
   operator << (std::ostream& out, const ReportData& report) 
   {

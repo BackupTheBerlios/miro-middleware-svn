@@ -30,35 +30,31 @@
 
 namespace Miro
 {
-  using std::string;
-  using std::cout;
-  using std::cerr;
-  using std::vector;
 
-  string
-  findFile(const string& name, const vector<string>& userPath)
+  std::string
+  findFile(const std::string& name, const std::vector<std::string>& userPath)
   {
     struct stat statBuf;
 
-    string fullName;
-    vector<string> path(userPath);
-    vector<string>::iterator i;
+    std::string fullName;
+    std::vector<std::string> path(userPath);
+    std::vector<std::string>::iterator i;
 
-    path.push_back(string("."));
+    path.push_back(std::string("."));
     char* miroRoot = ACE_OS::getenv("MIRO_ROOT");
     if (miroRoot) {
-      path.push_back(string(miroRoot) + string("/etc"));
+      path.push_back(std::string(miroRoot) + std::string("/etc"));
     }
     // this should be here, because the plain name could also be right
     // and a . before an absolute path is no longer an absolute path
-    path.push_back(string("")); 
+    path.push_back(std::string("")); 
   
     for (i = path.begin(); i != path.end(); ++i) {
       fullName = *i + "/" + name;
       if (stat(fullName.c_str(), &statBuf) == 0)  
 	return fullName;
     }
-    return string();
+    return std::string();
   }
 
   ConfigDocument::ConfigDocument(int& argc, 
@@ -105,32 +101,32 @@ namespace Miro
 	arg_shifter.ignore_arg ();
     }
 
-    string fileName = name;
+    std::string fileName = name;
     if (name == host)
       fileName += std::string(".xml");
-    string fullName = Miro::findFile(fileName, userPath );
+    std::string fullName = Miro::findFile(fileName, userPath );
 
     if (fullName.length() == 0) {
-      cerr << "File not found: " << fileName << endl;
-      cerr << "No config file processing." << endl;
+      std::cerr << "File not found: " << fileName << std::endl;
+      std::cerr << "No config file processing." << std::endl;
     } 
     else {
       QFile f(fullName.c_str());
 
       if (!f.open(IO_ReadOnly)) {
-	cout << "error on open" << endl;
+	std::cout << "error on open" << std::endl;
 	throw CException(errno, std::strerror(errno));
       }
       QString parsingError;
-      int line;
-      int column;
+      int line = 0;
+      int column = 0;
       if (!document_->setContent(&f/*, &parsingError, &line, &column*/)) {
 	f.close();
 	std::stringstream ostr;
-	ostr << "error parsing " << fullName << endl
+	ostr << "error parsing " << fullName << std::endl
 	     << " in line " << line << " "
-	     << ", column " << column << endl
-	     << parsingError << endl;
+	     << ", column " << column << std::endl
+	     << parsingError << std::endl;
 	throw Exception(ostr.str());
       }
       f.close();

@@ -17,6 +17,7 @@
 #include <sched.h>
 
 using namespace Miro;
+using namespace std;
 
 ImageServer::ImageServer(int argc, char *argv[]) :
   Miro::Server(argc, argv)

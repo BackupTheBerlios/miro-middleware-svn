@@ -21,11 +21,12 @@
 
 #include <iostream>
 
+using std::cerr;
+using std::cout;
+using std::endl;
+
 namespace Miro
 {
-  using std::cerr;
-  using std::endl;
-
   LaserServer::LaserServer(int argc, char *argv[]) :
     Miro::Server(argc, argv),
     Log(INFO,"LaserServer"),

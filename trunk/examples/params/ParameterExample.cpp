@@ -14,6 +14,10 @@
 #include "miro/Utils.h"
 #include "miro/Exception.h"
 
+using std::cout;
+using std::cerr;
+using std::endl;
+
 int
 main(int argc, char *argv[])
 {

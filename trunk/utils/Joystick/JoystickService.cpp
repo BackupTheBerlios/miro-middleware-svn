@@ -10,6 +10,12 @@
 #include <string.h>
 #include <stdlib.h>
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
+
 using Miro::Server;
 using Miro::ReactorTask;
 using CosNotifyChannelAdmin::EventChannel;
@@ -37,7 +43,7 @@ EventHandler::EventHandler(Miro::StructuredPushSupplier *_JoystickSupplier, ACE_
 	CurStatus.rotation = 0.0;
 	CurStatus.buttons = 0;
 	
-	//Maximal zulässige Translation und Rotation holen
+	//Maximal zul,Ad(Bssige Translation und Rotation holen
 	
 	
 	
@@ -77,7 +83,7 @@ int EventHandler::handle_input(ACE_HANDLE){
     
     
     
-    //falls Button gedrückt
+    //falls Button gedr,A|(Bckt
     
     if(e.type == JS_EVENT_BUTTON){
        

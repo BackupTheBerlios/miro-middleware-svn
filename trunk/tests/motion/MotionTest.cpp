@@ -31,11 +31,11 @@ main(int argc, char * argv[])
     std::string input;
     while(input != "q") {
 
-      std::cout << "Possible Commands:" << endl << endl;
+      std::cout << "Possible Commands:" << std::endl << std::endl;
       
       interface.printOptions();
-      std::cout << "q to quit" << endl << endl
-		<< "Selection: " << flush;
+      std::cout << "q to quit" << std::endl << std::endl
+		<< "Selection: " << std::flush;
 
       std::cin >> input;
       
@@ -43,16 +43,16 @@ main(int argc, char * argv[])
 	interface.evalCommand(input[0]);
       }
       catch (const Miro::EOutOfBounds& e) {
-	std::cerr << "ERROR: Service reported: Parameter out of bounds." << endl << e << endl;
+	std::cerr << "ERROR: Service reported: Parameter out of bounds." << std::endl << e << std::endl;
       }
       catch (const Miro::EDevIO& e) {
-	std::cerr << "ERROR: Service reported: Device IO error." << endl << e << endl;
+	std::cerr << "ERROR: Service reported: Device IO error." << std::endl << e << std::endl;
       }
     }
   }
   catch (const CORBA::Exception& e) {
-    std::cerr << "CORBA exception occured: " << endl
-	      << e << endl;
+    std::cerr << "CORBA exception occured: " << std::endl
+	      << e << std::endl;
     return 1;
   }
 

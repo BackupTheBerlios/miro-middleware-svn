@@ -24,10 +24,10 @@ MotionInterface::~MotionInterface()
 void
 MotionInterface::printOptions()
 {
-  std::cout << " 0 - getMinMaxVelocity" << endl
-	    << " 1 - getTargetVelocity" << endl
-	    << " 2 - setVelocity" << endl
-	    << " 3 - limp" << endl;
+  std::cout << " 0 - getMinMaxVelocity" << std::endl
+	    << " 1 - getTargetVelocity" << std::endl
+	    << " 2 - setVelocity" << std::endl
+	    << " 3 - limp" << std::endl;
 }
 
 bool
@@ -48,21 +48,21 @@ MotionInterface::evalCommand(char c)
   switch (c) {
   case '0':
     motion_->getMinMaxVelocity(minTrans, maxTrans, minRot, maxRot);
-    std::cout << "Velocity bounds: " << endl
-	      << "Translation: " << minTrans << "mm/s to " << maxTrans << "mm/s" << endl
-	      << "Rotation: "<< Miro::rad2Deg(minRot) << "° to " << Miro::rad2Deg(maxRot) << "°" << endl;
+    std::cout << "Velocity bounds: " << std::endl
+	      << "Translation: " << minTrans << "mm/s to " << maxTrans << "mm/s" << std::endl
+	      << "Rotation: "<< Miro::rad2Deg(minRot) << ",A0(B to " << Miro::rad2Deg(maxRot) << ",A0(B" << std::endl;
     break;
   case '1':
     velocity = motion_->getTargetVelocity();
-    std::cout << "Current target velocity: " << velocity << endl;
+    std::cout << "Current target velocity: " << velocity << std::endl;
     break;
   case '2':
-    std::cout << "Set velocity: " << endl
-	      << "translation (mm/s) : " << flush;
+    std::cout << "Set velocity: " << std::endl
+	      << "translation (mm/s) : " << std::flush;
     std::cin >> trans;
-    std::cout << "rotation (°/s) : " << flush;
+    std::cout << "rotation (,A0(B/s) : " << std::flush;
     std::cin >> rot;
-    std::cout << "time befor stop (msec) : " << flush;
+    std::cout << "time befor stop (msec) : " << std::flush;
     std::cin >> msec;
 
     rot = Miro::deg2Rad(rot);

@@ -28,6 +28,12 @@ using Miro::Client;
 using Miro::Gripper;
 using Miro::Gripper_var;
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
+
 int main(int argc, char *argv[])
 {
   int rc = 0;

@@ -14,6 +14,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.8  2003/10/22 16:35:04  hutz
+ * tons of fixes for namespace std conformance
+ *
  * Revision 1.7  2003/10/17 13:31:42  hutz
  * big video service update
  * we now support filters with multiple input buffers
@@ -78,6 +81,10 @@
 
 namespace Video
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   FILTER_PARAMETERS_FACTORY_IMPL(DeviceDummy);
 
 

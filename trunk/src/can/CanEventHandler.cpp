@@ -23,19 +23,16 @@
 #include "CanConnection.h"
 #include "CanMessage.h"
 #include "Parameters.h"
-#include "sparrow/Parameters.h"
 #include "pcan.h"
 #include "errno.h"
 
 #include "miro/TimeHelper.h"
 
+#include <iostream>
+
 #undef DEBUG
 
 #ifdef DEBUG
-#include <iostream>
-
-using std::cout;
-using std::cerr;
 #endif
 
 #ifdef DEBUG
@@ -46,11 +43,16 @@ using std::cerr;
 
 namespace Can
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   int canCounter = 0;
 
-  EventHandler::EventHandler(Miro::DevConsumer * _consumer) :
+  EventHandler::EventHandler(Miro::DevConsumer * _consumer, Parameters const * _params) :
     Super(_consumer, new Message()),
-    msg(static_cast<Message *>(message_))
+    msg(static_cast<Message *>(message_)),
+    params_(_params)
   {
     DBG(cout << "Constructing CanEventHandler." << endl);
   }
@@ -68,7 +70,6 @@ namespace Can
     DBG(cout << "canEventHandler: handle_input" << endl);
     //cout << "CanEventHandler vor ReadMessage" << endl;
     int count;
-    Sparrow::Parameters * params_ = Sparrow::Parameters::instance();
     if(params_->module == "pcan"){
        pcanmsg * msgp_;
 //       std::cout << "msgp " << (void *) msgp_ << endl;
@@ -77,7 +78,7 @@ namespace Can
        count = ioctl(fd, PCAN_READ_MSG, msgp_);
 
     }
-    else{
+    else {
        canmsg * msg_;
        msg->canMessage(&msg_);
        count = ACE_OS::read(fd, msg_, sizeof(canmsg));

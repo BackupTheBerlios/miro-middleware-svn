@@ -25,11 +25,15 @@
 /* NotifyMulticast includes */
 #include "NotifyMulticastRequestEntry.h"
 
+#include <iostream>
+
 #define DBG_CLASSNAME "NotifyMulticast::RequestEntry"
 
-namespace Miro {
-
-    namespace NotifyMulticast {
+namespace Miro 
+{
+  
+  namespace NotifyMulticast 
+  {
 
         /**
          * RequestEntry::RequestEntry()
@@ -214,8 +218,8 @@ namespace Miro {
             TAO_InputCDR cdr(&payload_, ACE_static_cast(int, byteOrder_));
 
             if (!(cdr >> event)) {
-                cout << "Unable to demarshal" << endl;
-                ACE_THROW(CORBA::MARSHAL());
+	      std::cout << "Unable to demarshal" << std::endl;
+	      ACE_THROW(CORBA::MARSHAL());
             }
         }
 
@@ -240,5 +244,5 @@ namespace Miro {
         int RequestEntry::getTimeout(void) const {
             return timeoutCounter_;
         }
-    };
-};
+    }
+}

@@ -149,12 +149,12 @@ namespace Miro
       throw;
     }
     catch (const CORBA::Exception & e) {
-      cerr << "Cannot get initial reference for " << id << ": " << e << endl;
+      std::cerr << "Cannot get initial reference for " << id << ": " << e << std::endl;
       throw 0;
     }
 
     if (CORBA::is_nil(obj.in())) {
-      cerr << "Cannot get initial reference for " << id << endl;
+      std::cerr << "Cannot get initial reference for " << id << std::endl;
       throw 0;
     }
 
@@ -163,11 +163,11 @@ namespace Miro
       ref = T::_narrow(obj.in());
     }
     catch (const CORBA::Exception & e) {
-      cerr << "Cannot narrow reference for " << id << ": " << e << endl;
+      std::cerr << "Cannot narrow reference for " << id << ": " << e << std::endl;
       throw 0;
     }
     if (CORBA::is_nil(ref.in())) {
-      cerr << "Incorrect type of reference: " << id << endl;
+      std::cerr << "Incorrect type of reference: " << id << std::endl;
       throw 0;
     }
     return ref._retn();
@@ -190,15 +190,15 @@ namespace Miro
       obj = namingContext->resolve(n);
     }
     catch (const CosNaming::NamingContext::NotFound & e) {
-      cerr << "No " << name << " in Naming Service" << endl;
+      std::cerr << "No " << name << " in Naming Service" << std::endl;
       throw 0;
     }
     catch (const CORBA::Exception & e) {
-      cerr << "Cannot resolve binding for " << name << ": " << e << endl;
+      std::cerr << "Cannot resolve binding for " << name << ": " << e << std::endl;
       throw 0;
     }
     if (CORBA::is_nil(obj.in())) {
-      cerr << "Nil binding in Naming Service for " << name << endl;
+      std::cerr << "Nil binding in Naming Service for " << name << std::endl;
       throw 0;
     }
 
@@ -207,11 +207,11 @@ namespace Miro
       ref = T::_narrow(obj.in());
     }
     catch (const CORBA::Exception & e) {
-      cerr << "Cannot narrow reference for " << name << ": " << e << endl;
+      std::cerr << "Cannot narrow reference for " << name << ": " << e << std::endl;
       throw 0;
     }
     if (CORBA::is_nil(ref.in())) {
-      cerr << "Reference has incorrect type: " << name << endl;
+      std::cerr << "Reference has incorrect type: " << name << std::endl;
       throw 0;
     }
     return ref._retn();
@@ -227,9 +227,9 @@ namespace Miro
     CORBA::Object_var obj;
     obj = initialNamingContext->resolve(name);
     if (CORBA::is_nil(obj.in())) {
-      cerr << "Nil binding in Naming Service for " 
-	   << name[name.length() - 1].id
-	   << endl;
+      std::cerr << "Nil binding in Naming Service for " 
+		<< name[name.length() - 1].id
+		<< std::endl;
       throw 0;
     }
 
@@ -238,15 +238,15 @@ namespace Miro
       ref = T::_narrow(obj.in());
     }
     catch (const CORBA::Exception & e) {
-      cerr << "Cannot narrow reference for"
+      std::cerr << "Cannot narrow reference for"
 	   << name[name.length() - 1].id
-	   << ": " << e << endl;
+	   << ": " << e << std::endl;
       throw 0;
     }
     if (CORBA::is_nil(ref.in())) {
-      cerr << "Reference has incorrect type: "
+      std::cerr << "Reference has incorrect type: "
 	   << name[name.length() - 1].id
-	   << endl;
+	   << std::endl;
       throw 0;
     }
     return ref._retn();
@@ -267,15 +267,15 @@ namespace Miro
       obj = client.namingContext->resolve(n);
     }
     catch (const CosNaming::NamingContext::NotFound & e) {
-      cerr << "No " << name << " in Naming Service" << endl;
+      std::cerr << "No " << name << " in Naming Service" << std::endl;
       throw 0;
     }
     catch (const CORBA::Exception & e) {
-      cerr << "Cannot resolve binding for " << name << ": " << e << endl;
+      std::cerr << "Cannot resolve binding for " << name << ": " << e << std::endl;
       throw 0;
     }
     if (CORBA::is_nil(obj.in())) {
-      cerr << "Nil binding in Naming Service for " << name << endl;
+      std::cerr << "Nil binding in Naming Service for " << name << std::endl;
       throw 0;
     }
 
@@ -284,11 +284,11 @@ namespace Miro
       ref = T::_narrow(obj.in());
     }
     catch (const CORBA::Exception & e) {
-      cerr << "Cannot narrow reference for " << name << ": " << e << endl;
+      std::cerr << "Cannot narrow reference for " << name << ": " << e << std::endl;
       throw 0;
     }
     if (CORBA::is_nil(ref.in())) {
-      cerr << "Reference has incorrect type:" << name << endl;
+      std::cerr << "Reference has incorrect type:" << name << std::endl;
       throw 0;
     }
     return ref._retn();

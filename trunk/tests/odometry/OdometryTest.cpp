@@ -34,19 +34,19 @@ main(int argc, char * argv[])
     std::string input;
     while(input != "q") {
 
-      std::cout << "Possible Commands:" << endl << endl
-		<< " 0 - getPosition" << endl
-		<< " 1 - getWaitPosition" << endl
-		<< " 2 - setPosition" << endl
-		<< " 3 - updatePosition" << endl
-		<< " 4 - getVelocity" << endl
-		<< " 5 - getWaitVelocity" << endl
-		<< " 6 - getStatus" << endl
-		<< " 7 - getWaitStatus" << endl
-		<< " 8 - getRawPosition" << endl
-		<< " 9 - getWaitRawPosition" << endl
-		<< "q to quit" << endl << endl
-		<< "Selection: " << flush;
+      std::cout << "Possible Commands:" << std::endl << std::endl
+		<< " 0 - getPosition" << std::endl
+		<< " 1 - getWaitPosition" << std::endl
+		<< " 2 - setPosition" << std::endl
+		<< " 3 - updatePosition" << std::endl
+		<< " 4 - getVelocity" << std::endl
+		<< " 5 - getWaitVelocity" << std::endl
+		<< " 6 - getStatus" << std::endl
+		<< " 7 - getWaitStatus" << std::endl
+		<< " 8 - getRawPosition" << std::endl
+		<< " 9 - getWaitRawPosition" << std::endl
+		<< "q to quit" << std::endl << std::endl
+		<< "Selection: " << std::flush;
 
       std::cin >> input;
 
@@ -54,19 +54,19 @@ main(int argc, char * argv[])
 	switch (input[0]) {
 	case '0':
 	  position = odometry->getPosition();
-	  std::cout << "Current position: " << position << endl;
+	  std::cout << "Current position: " << position << std::endl;
 	  break;
 	case '1':
 	  position = odometry->getWaitPosition();
-	  std::cout << "Current position: " << position << endl;
+	  std::cout << "Current position: " << position << std::endl;
 	  break;
 	case '2':
-	  std::cout << "New position: " << endl
-		    << "x (mm) - " << flush;
+	  std::cout << "New position: " << std::endl
+		    << "x (mm) - " << std::flush;
 	  std::cin >> x;
-	  std::cout << "y (mm) - " << flush;
+	  std::cout << "y (mm) - " << std::flush;
 	  std::cin >> y;
-	  std::cout << "theta (°) - " << flush;
+	  std::cout << "theta (,A0(B) - " << std::flush;
 	  std::cin >> theta;
 	  theta = Miro::deg2Rad(theta);
 
@@ -77,12 +77,12 @@ main(int argc, char * argv[])
 	  odometry->setPosition(position);
 	  break;
 	case '3':
-	  std::cout << "Position correction: " << endl
-		    << "dx (mm) - " << flush;
+	  std::cout << "Position correction: " << std::endl
+		    << "dx (mm) - " << std::flush;
 	  std::cin >> x;
-	  std::cout << "dy (mm) - " << flush;
+	  std::cout << "dy (mm) - " << std::flush;
 	  std::cin >> y;
-	  std::cout << "delta (°) - " <<  flush;
+	  std::cout << "delta (,A0(B) - " <<  std::flush;
 	  std::cin >> theta;
 	  theta = Miro::deg2Rad(theta);
 
@@ -94,41 +94,41 @@ main(int argc, char * argv[])
 	  break;
 	case '4':
 	  velocity = odometry->getVelocity();
-	  std::cout << "Current velocity: " << velocity << endl;
+	  std::cout << "Current velocity: " << velocity << std::endl;
 	  break;
 	case '5':
 	  velocity = odometry->getWaitVelocity();
-	  std::cout << "Current velocity: " << velocity << endl;
+	  std::cout << "Current velocity: " << velocity << std::endl;
 	  break;
 	case '6':
 	  status = odometry->getStatus();
-	  std::cout << "Current motion status: " << status << endl;
+	  std::cout << "Current motion status: " << status << std::endl;
 	  break;
 	case '7':
 	  status = odometry->getWaitStatus();
-	  std::cout << "Current motion status: " << status << endl;
+	  std::cout << "Current motion status: " << status << std::endl;
 	  break;
 	case '8':
 	  position = odometry->getRawPosition();
-	  std::cout << "Current position: " << position << endl;
+	  std::cout << "Current position: " << position << std::endl;
 	  break;
 	case '9':
 	  position = odometry->getWaitRawPosition();
-	  std::cout << "Current position: " << position << endl;
+	  std::cout << "Current position: " << position << std::endl;
 	  break;
 	default:
-	  std::cerr << "Unknown command: " << input << endl;
+	  std::cerr << "Unknown command: " << input << std::endl;
 	  break;
 	}
       }
       catch (const Miro::ETimeOut& e) {
-	std::cerr << "ERROR: Service reported: Timeout." << endl << e << endl;
+	std::cerr << "ERROR: Service reported: Timeout." << std::endl << e << std::endl;
       }
     }
   }
   catch (const CORBA::Exception& e) {
-    std::cerr << "CORBA exception occured: " << endl
-	      << e << endl;
+    std::cerr << "CORBA exception occured: " << std::endl
+	      << e << std::endl;
     return 1;
   }
 

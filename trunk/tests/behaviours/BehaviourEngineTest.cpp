@@ -19,6 +19,12 @@
 #include "miro/BehaviourEngineImpl.h"
 #include "miro/Server.h"
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
+
 int
 main(int argc, char* argv[])
 {

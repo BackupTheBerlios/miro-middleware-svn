@@ -12,6 +12,12 @@
 #include <iostream>
 #include <string.h>
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
+
 double EventHandler::oldrot;
 long EventHandler::oldtrans;
 
@@ -29,7 +35,7 @@ EventHandler::EventHandler(Miro::Motion_var _motion, Miro::Kicker_var _kicker, b
 	maxRotation = 3.14; 
 	maxTranslation = 1000;
 
-	//Maximal zulässige Translation und Rotation holen
+	//Maximal zul,Ad(Bssige Translation und Rotation holen
 
 	CORBA::Long minTrans;
 	CORBA::Long maxTrans;
@@ -71,7 +77,7 @@ int EventHandler::handle_input(ACE_HANDLE){
 
 
 
-    //falls Button gedrückt
+    //falls Button gedr,A|(Bckt
 
     if(e.type == JS_EVENT_BUTTON){
 
@@ -182,7 +188,7 @@ main(int argc, char *argv[])
     Miro::Motion_var motion;
     
 
-    //über den Client Motion- und Kicker-Interface holen und Exception-Handling
+    //,A|(Bber den Client Motion- und Kicker-Interface holen und Exception-Handling
     
     try {
        motion = Miro::resolve_name<Miro::Motion>(client, "Motion");
@@ -215,12 +221,12 @@ main(int argc, char *argv[])
        exit(1);
     }
     cout << "Joystick Device gefunden" << endl;
-    //EventHandler erzeugen, Motion und Kicker übergeben, Joystick-fd übergeben
+    //EventHandler erzeugen, Motion und Kicker ,A|(Bbergeben, Joystick-fd ,A|(Bbergeben
     
     EventHandler eventHandler(motion, kicker, kickeron, (ACE_HANDLE) fd);
     
     
-    //EventHandler beim reactor für Handle registrieren und den reactor starten
+    //EventHandler beim reactor f,A|(Br Handle registrieren und den reactor starten
     
     reactor->register_handler((ACE_HANDLE) fd, &eventHandler, ACE_Event_Handler::READ_MASK);
 

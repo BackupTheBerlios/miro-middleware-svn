@@ -289,7 +289,7 @@ PolicyEditorClass::slotSendTo()
     }
     catch(const CORBA::Exception& e) {
       std::ostringstream sstr;
-      sstr << "Communication Failed. CORBA exception: " << e << flush;
+      sstr << "Communication Failed. CORBA exception: " << e << std::flush;
 
       error = sstr.str().c_str();
       ok = false;
@@ -362,8 +362,8 @@ main(int argc, char** argv)
 //   s.insert(Parameter("int", "int", "", "", "" ));
 //   s.insert(Parameter("unsigned int", "unsigned int", "", "", "" ));
 //   s.insert(Parameter("double", "double", "", "", "" ));
-//   s.insert(Parameter("angle", "angle", "2", "°", "" ));
-//   s.insert(Parameter("Angle", "Angle", "3", "°", "" ));
+//   s.insert(Parameter("angle", "angle", "2", ",A0(B", "" ));
+//   s.insert(Parameter("Angle", "Angle", "3", ",A0(B", "" ));
 //   s.insert(Parameter("ACE_Time_Value", "time", ".0003", "sec", "" ));
 
 //   ParameterDialog d(s, "MyBehaviour", NULL);
@@ -393,11 +393,11 @@ main(int argc, char** argv)
     rc = 1;
   }
   catch (const Miro::Exception& e) {
-    std::cerr << "Uncought Miro exception: " << e << endl;
+    std::cerr << "Uncought Miro exception: " << e << std::endl;
     rc = 1;
   }
   catch (const CORBA::Exception& e) {
-    std::cerr << "Uncought CORBA exception: " << e << endl;
+    std::cerr << "Uncought CORBA exception: " << e << std::endl;
     rc = 1;
   }
 

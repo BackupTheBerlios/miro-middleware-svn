@@ -38,6 +38,10 @@ namespace Canon
   using Miro::EOutOfBounds;
   using Miro::Exception;
 
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   // maximum wait time for cond.wait calls
   ACE_Time_Value CanonCameraImpl::maxWait = ACE_Time_Value(0, 500000);
 

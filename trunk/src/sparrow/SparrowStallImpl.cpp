@@ -31,6 +31,10 @@
 
 namespace Sparrow
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   StallImpl::StallImpl(BaseConnection * _connection,
 		       Miro::StructuredPushSupplier * _pSupplier)
     throw(Miro::Exception) :

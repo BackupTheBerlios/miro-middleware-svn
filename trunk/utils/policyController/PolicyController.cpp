@@ -25,6 +25,12 @@
 #include <qapplication.h>
 #include <qmessagebox.h>
 
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::flush;
+using std::cin;
+
 ControllerWidget::ControllerWidget(Miro::Client& _client, bool _start,
 				   QWidget *parent, const char *name) :
   QWidget(parent, name),

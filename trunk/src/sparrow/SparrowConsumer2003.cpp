@@ -37,6 +37,9 @@
 
 namespace Sparrow
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
 
   //------------------------//
   //----- constructors -----//
@@ -565,7 +568,7 @@ namespace Sparrow
   // Roland:
   // mach aus den Konstaten static const KONSTANTE = ...
   // members
-  // vielleicht klappts dann auch für andere Werte...
+  // vielleicht klappts dann auch f,A|(Br andere Werte...
 
   long Consumer2003::integrateIrValues(unsigned int group, unsigned int sensor, long value){
 

@@ -32,6 +32,10 @@
 
 namespace Pioneer
 {
+  using std::cout;
+  using std::cerr;
+  using std::endl;
+
   using Miro::EDevIO;
   using Miro::ETimeOut;
   using Miro::EOutOfBounds;

@@ -39,7 +39,7 @@ namespace Miro
     reactor_(),
     schedp_(ACE_SCHED_OTHER, 0)
   {
-    DBG(cout << "Constructing [Miro::ReactorTask]." << endl);
+    DBG(cout << "Constructing [Miro::ReactorTask]." << std::endl);
     reactor(&reactor_);
     reactor_.open(size);
     if (pschedp) 
@@ -48,10 +48,10 @@ namespace Miro
 
   ReactorTask::~ReactorTask()
   {
-    DBG(cout << "Destructing [Miro::ReactorTask]." << endl);
+    DBG(cout << "Destructing [Miro::ReactorTask]." << std::endl);
     reactor_.close();
     reactor(NULL);
-    DBG(cout << "Reactor canceled." << endl);
+    DBG(cout << "Reactor canceled." << std::endl);
   }
 
   //
@@ -68,9 +68,9 @@ namespace Miro
     // set the given thread scheduling policy
 
     if (ACE_OS::sched_params(schedp_) == -1) {
-      std::cerr << "[Miro::ReactorTask] Could not set sched parameters." << endl 
-		<< "[Miro::ReactorTask] Maybe suid root is missing." << endl
-		<< "[Miro::ReactorTask] Will work on default scheduling policy." << endl;
+      std::cerr << "[Miro::ReactorTask] Could not set sched parameters." << std::endl 
+		<< "[Miro::ReactorTask] Maybe suid root is missing." << std::endl
+		<< "[Miro::ReactorTask] Will work on default scheduling policy." << std::endl;
     }
 
     // set the thread to be the owner of the reactor, 
@@ -83,41 +83,40 @@ namespace Miro
       delta = timeout;
       // trigger message handling
       try {
-//	cout << "." << flush;
 	reactor_.handle_events(delta);
       }
       catch (const ETimeOut& e) {
-	cerr << "ReactorTask.handleMessage() - Miro Timeout exception: " << e << endl;
+	std::cerr << "ReactorTask.handleMessage() - Miro Timeout exception: " << e << std::endl;
 	if(pServer_)
 	    pServer_->shutdown();
       }
       catch (const EDevIO& e) {
-	cerr << "ReactorTask.handleMessage() - Miro Device I/O exception: " << e << endl;
+	std::cerr << "ReactorTask.handleMessage() - Miro Device I/O exception: " << e << std::endl;
 	if(pServer_)
 	  pServer_->shutdown();
       }
       catch (const EOutOfBounds& e) {
-	cerr << "ReactorTask.handleMessage() - Miro out of bounds exception: " << e << endl;
+	std::cerr << "ReactorTask.handleMessage() - Miro out of bounds exception: " << e << std::endl;
 	if(pServer_)
 	  pServer_->shutdown();
       }
       catch (const CORBA::Exception& e) {
-	cerr << "ReactorTask.handleMessage() - Uncaught CORBA exception: " << e << endl;
+	std::cerr << "ReactorTask.handleMessage() - Uncaught CORBA exception: " << e << std::endl;
 	if(pServer_)
 	  pServer_->shutdown();
       }
       catch(const Miro::CException& e) {
-	cerr << "ReactorTask.handleMessage() - c exception: " << e << endl;
+	std::cerr << "ReactorTask.handleMessage() - c exception: " << e << std::endl;
 	if(pServer_)
 	  pServer_->shutdown();
       }
       catch(const Miro::Exception& e) {
-	cerr << "ReactorTask.handleMessage() - exception: " << e << endl;
+	std::cerr << "ReactorTask.handleMessage() - exception: " << e << std::endl;
 	if(pServer_)
 	  pServer_->shutdown();
       }
       catch(...) {
-	cerr << "ReactorTask.handleMessage() - unknown exception: " << endl;
+	std::cerr << "ReactorTask.handleMessage() - unknown exception: " << std::endl;
 	if(pServer_)
 	  pServer_->shutdown();
       }

@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
   for (unsigned int i = 0; i < sonarScan->range.length(); ++i) {
     for (unsigned int j = 0; j < sonarScan->range[i].length(); ++j)
       std::cout << sonarScan->range[i][j] << "\t";
-    std::cout << endl;
+    std::cout << std::endl;
   }
   
   return 0;
