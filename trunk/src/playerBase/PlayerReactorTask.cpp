@@ -58,13 +58,26 @@ namespace Miro {
     playerPTZ(NULL)
   {
 
-    playerSonar=new SonarProxy(playerClient,playerId,'r');
-    playerLaser=new LaserProxy(playerClient,playerId,'a');
+    //position has to be the first proxy to be created.
+    //if the first proxy could not be created (i.e. player does not 
+    //  provide a driver), player warnings are returned and data for 
+    //  other sensors is unreliable.
+    //as a robot without odometry/motion is not useful and playerBase
+    //  does not run in such a case; further corrupt data would be
+    //  unimportant (in fact, it would not be even read)
+
     playerPosition=new PositionProxy(playerClient,playerId,'a');
+
+    if (!playerPosition || playerPosition->GetAccess() != 'a') {
+      throw (Miro::Exception("Could not get reference to Player Position"));
+    }
+
+    playerSonar=new SonarProxy(playerClient,playerId,'r');
+    playerLaser=new LaserProxy(playerClient,playerId,'r');
     playerPower=new PowerProxy(playerClient,playerId,'r');
     playerPTZ=new PtzProxy(playerClient,playerId,'a');
 
-    if (!playerLaser || playerLaser->GetAccess() != 'a') {
+    if (!playerLaser || playerLaser->GetAccess() != 'r') {
       cerr << "WARNING: Could not get reference to Player Laser. No Laser available" << endl;
       delete playerLaser;
       playerLaser=NULL;
@@ -83,10 +96,6 @@ namespace Miro {
       cerr << "WARNING: Could not get reference to Player PanTilt. No PanTilt available" << endl;
       delete playerPTZ;
       playerPTZ=NULL;
-  }
-
-    if (!playerPosition || playerPosition->GetAccess() != 'a') {
-      throw (Miro::Exception("Could not get reference to Player Position"));
     }
 
     status.position.point.x=0;
