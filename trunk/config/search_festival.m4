@@ -71,7 +71,7 @@ AC_DEFUN(AC_SEARCH_FESTIVAL_LOCAL,
 	CFLAGS=$OLD_CFLAGS
 
 	if test "x$success" != xyes; then
-		AC_MSG_WARN(Festival not (properly) installed. See http://www.cstr.ed.ac.uk/projects/festival.html)
+		AC_MSG_WARN([Festival not (properly) installed. See http://www.cstr.ed.ac.uk/projects/festival.html])
 		ac_has_festival=no
 	else
 		AC_SUBST(FESTIVAL_LIBS, "-lFestival")

@@ -70,7 +70,7 @@ AC_DEFUN(AC_SEARCH_SPEECHTOOLS_LOCAL,
 	CFLAGS=$OLD_CFLAGS
 
 	if test "x$success" != xyes; then
-		AC_MSG_WARN(Speechtools not (properly) installed. See http://www.cstr.ed.ac.uk/projects/speech_tools)
+		AC_MSG_WARN([Speechtools not (properly) installed. See http://www.cstr.ed.ac.uk/projects/speech_tools])
 		ac_has_speechtools=no
 	else
 		AC_SUBST(SPEECHTOOLS_LIBS, "-lestools -leststring -lestbase -ltermcap")

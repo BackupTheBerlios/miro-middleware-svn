@@ -75,7 +75,7 @@ AC_DEFUN(AC_SEARCH_TAO_LOCAL,
 	CFLAGS=$OLD_CFLAGS
 
 	if test "x$success" != xyes; then
-		AC_MSG_ERROR(TAO not (properly) installed. Source tarball and CVS at: http://www.cs.wustl.edu/~schmidt/ACE.html)
+		AC_MSG_ERROR([TAO not (properly) installed. Source tarball and CVS at: http://www.cs.wustl.edu/~schmidt/ACE.html. Please check your installation! For more details about this problem, look at the end of config.log.])
 	else
 		AC_SUBST(TAO_LIBS, "-lTAO")
 		if test "$1" ; then
@@ -93,7 +93,7 @@ AC_DEFUN(AC_SEARCH_TAO_LOCAL,
 	if test "x$ac_taobindir" != xno ; then
 		AC_SUBST(TAO_IDL, "$ac_taobindir")
 	else
-		AC_MSG_ERROR(TAO not (properly) installed. Source tarball and CVS at: http://www.cs.wustl.edu/~schmidt/ACE.html)
+		AC_MSG_ERROR([TAO not (properly) installed. Source tarball and CVS at: http://www.cs.wustl.edu/~schmidt/ACE.html. Please check your installation! For more details about this problem, look at the end of config.log.])
 	fi
 
 	PATH=$OLD_PATH

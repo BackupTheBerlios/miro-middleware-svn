@@ -102,7 +102,7 @@ AC_DEFUN(AC_SEARCH_QT_LOCAL,
 	CFLAGS=$OLD_CFLAGS
 
 	if test "x$success" != xyes; then
-		AC_MSG_ERROR(Qt not (properly) installed. Get a (free) recent version from: http://www.trolltech.com)
+		AC_MSG_ERROR([Qt not (properly) installed. Get a (free) recent version from: http://www.trolltech.com. Please check your installation! For more details about this problem, look at the end of config.log.])
 	else
 		if test "$1"; then
 			AC_SUBST(QT_LDFLAGS, "-L$1")
@@ -122,7 +122,7 @@ AC_DEFUN(AC_SEARCH_QT_LOCAL,
 	if test "x$ac_qtmocdir" != xno; then
 		AC_SUBST(QT_MOC, "$ac_qtmocdir")
 	else
-		AC_MSG_ERROR(Qt not (properly) installed. Get a (free) recent version from: http://www.trolltech.com)
+		AC_MSG_ERROR([Qt not (properly) installed. Get a (free) recent version from: http://www.trolltech.com. Please check your installation! For more details about this problem, look at the end of config.log.])
 	fi
 
 # uic test
@@ -131,7 +131,7 @@ AC_DEFUN(AC_SEARCH_QT_LOCAL,
 	if test "x$ac_qtuicdir" != xno; then
 		AC_SUBST(QT_UIC, "$ac_qtuicdir")
 	else
-		AC_MSG_ERROR(Qt not (properly) installed. Get a (free) recent version from: http://www.trolltech.com)
+		AC_MSG_ERROR([Qt not (properly) installed. Get a (free) recent version from: http://www.trolltech.com. Please check your installation! For more details about this problem, look at the end of config.log.])
 	fi
 
 	PATH=$OLD_PATH

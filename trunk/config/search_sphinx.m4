@@ -70,7 +70,7 @@ AC_DEFUN(AC_SEARCH_SPHINX_LOCAL,
 	CFLAGS=$OLD_CFLAGS
 
 	if test "x$success" != xyes; then
-		AC_MSG_WARN(Sphinx not (properly) installed. See http://www.speech.cs.cmu.edu/sphinx/)
+		AC_MSG_WARN([Sphinx not (properly) installed. See http://www.speech.cs.cmu.edu/sphinx/])
 		ac_has_sphinx=no
 	else
 		AC_SUBST(SPHINX_LIBS, "-lsphinx2 -lsphinx2ad -lsphinx2fe")
