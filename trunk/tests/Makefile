@@ -37,15 +37,15 @@ DIRS =		odometry \
 		video \
 		notify \
 		behaviours \
-		xml \
-		gripper
+		xml
 ifneq (,$(findstring B21,$(MIRO_COMPONENTS)))
   DIRS +=	b21 \
 		dpPanTilt \
 		dtlk 
 endif
 ifneq (,$(findstring Pioneer1,$(MIRO_COMPONENTS)))
-  DIRS +=	pioneer
+  DIRS +=	pioneer \
+		gripper
 endif
 ifneq (,$(findstring Sparrow99,$(MIRO_COMPONENTS)))
   DIRS +=	sparrow
