@@ -34,6 +34,8 @@ namespace Miro
     timerId(-1),
     conArbViewTask_(NULL)
   {
+    MIRO_LOG_CTOR("Miro::ConstraintArbiter");
+    
     currentVelocity_.translation = 0;
     currentVelocity_.rotation = 0.;
 
@@ -161,7 +163,7 @@ namespace Miro
     ConstraintArbiterParameters * params =
       const_cast<ConstraintArbiterParameters *>
       ( dynamic_cast<ConstraintArbiterParameters const *>(params_));
-
+    MIRO_ASSERT(params != NULL);
     Vector2d velocity;
     //    std::FILE *logFile1;
 
@@ -175,20 +177,20 @@ namespace Miro
     for(j = params_->priorities.begin(); j != params_->priorities.end(); j++) {
       bv[j->second] = j->first;
     }
-
+	 
     // preinitialize the velocity space
     params->velocitySpace.clearAllEvals();
     params->velocitySpace.clearCurvatureConstraints();
-
+	 
     // let each behaviour calculate its velocity space
     BehaviourVector::const_iterator k;
     for(k = bv.begin(); k != bv.end(); k++) {
       (*k)->addEvaluation(&params->velocitySpace);
     }
-
+	 
     // calculate new velocity using the content of the velocity space
     velocity = params->velocitySpace.applyObjectiveFunctionToEval();
-
+	 
     //    cout << "LEFT: " << velocity.real() << " ::: " << velocity.imag() << endl;
 
     // set steering commands
