@@ -13,20 +13,7 @@
 #include "AbusEventHandler.h"
 #include "AbusConnection.h"
 #include "AbusMessage.h"
-
-#include <iostream>
-
-#undef DEBUG
-
-using std::cout;
-using std::cerr;
-using std::endl;
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
+#include <miro/Log.h>
 
 namespace Abus
 {
@@ -36,18 +23,18 @@ namespace Abus
     Super(_consumer, _message),
     connection(_connection)
   {
-    DBG(cout << "Constructing AbusEventHandler." << endl);
+    MIRO_DBG(ABUS,LL_CTOR_DTOR,"Constructing AbusEventHandler");
   }
 
   EventHandler::~EventHandler() {
-    DBG(cout << "Destructing AbusEventHandler." << endl);
+    MIRO_DBG(ABUS,LL_CTOR_DTOR,"Destructing AbusEventHandler.");
   }
 
   // file descriptor callback
   int
   EventHandler::handle_input (ACE_HANDLE fd) 
   {
-    DBG(cout << "abusEventHandler: handle_input" << endl);
+    MIRO_DBG(ABUS,LL_PRATTLE, "abusEventHandler: handle_input");
 
     Message* msg = (Message*)message_;
     int count = ACE_OS::read(fd, msg->buffer(), Message::MSG_LEN);
@@ -67,8 +54,8 @@ namespace Abus
       return 0;
     }
  
-    DBG(cerr << "abusEventHandler: major Op: 0x" << hex << (int)msg->majorOp() 
-	<< " minor op: 0x" << (int)msg->minorOp() << dec << endl);
+    MIRO_DBG_OSTR(ABUS,LL_PRATTLE,"abusEventHandler: major Op: 0x" << hex << (int)msg->majorOp()
+        << " minor op: 0x" << (int)msg->minorOp() << dec );
 
     if (deviceTable[msg->devId()].state == NOT)
       deviceTable[msg->devId()].state = NEW;   // first message of device
@@ -100,10 +87,10 @@ namespace Abus
       linkApproveAck(*msg);
       break;
     default:
-      cerr << "abus error: unhandled major - 0x" 
-	   << std::hex << (int)msg->majorOp() << std::dec << endl;
+      MIRO_LOG_OSTR(LL_ERROR,"abus error: unhandled major - 0x" 
+	   << std::hex << (int)msg->majorOp() << std::dec);
     }
-    DBG(cerr << "Done with select" << endl);
+    MIRO_DBG(ABUS,LL_PRATTLE,"Done with select");
 
     return 0;
   }
@@ -124,14 +111,13 @@ namespace Abus
 	connection.linkApprove (msg.devId(), 1);     // reply with a link approval
 
       // display vital stats
-      DBG(cout << "libmsp: LINK_REPLY or LONG_ID -"
-	  << " devId: 0x" <<(int)msg.devId()
-	  << " devStatus: 0x" << (int)message.longId().devStatus().byte 
-	  << dec << endl);
+      MIRO_DBG_OSTR(ABUS,LL_PRATTLE,"libmsp: LINK_REPLY or LONG_ID -"
+          << " devId: 0x" <<(int)msg.devId()
+          << " devStatus: 0x" << (int)message.longId().devStatus().byte
+          << dec );
     }
     else {
-      DBG(cout << "LINK_REPLY or LONG_ID: "
-	  << "No free devs available at this time." << endl);
+      MIRO_DBG(ABUS,LL_PRATTLE,"LINK_REPLY or LONG_ID: No free devs available at this time.");
       connection.linkApprove(0, 1);	// approve for new devs
     }
   }
@@ -139,25 +125,25 @@ namespace Abus
   void
   EventHandler::id(const Message&)
   {
-    DBG(cerr << "libmsp: mspM2D - unhandled major M2D_ID" << endl);
+    MIRO_LOG(LL_WARNING,"libmsp: mspM2D - unhandled major M2D_ID");
   }
 
   void
   EventHandler::type(const Message&)
   {
-    DBG(cerr << "libmsp: mspM2D - unhandled major M2D_TYPE" << endl);
+    MIRO_LOG(LL_WARNING,"libmsp: mspM2D - unhandled major M2D_TYPE");
   }
 
   void
   EventHandler::status(const Message&)
   {
-    DBG(cerr << "libmsp: mspM2D - unhandled major M2D_STATUS" << endl);
+    MIRO_LOG(LL_WARNING,"libmsp: mspM2D - unhandled major M2D_STATUS");
   }
     
   void
   EventHandler::disconnect(const Message& msg)
   {
-    DBG(cerr << "abusEventHandler: disconnect" << hex << (int)msg.devId() << dec <<endl);
+    MIRO_DBG_OSTR(ABUS,LL_PRATTLE,"abusEventHandler: disconnect" << hex << (int)msg.devId() << dec);
 
     deviceTable[msg.devId()].state = NOT;
   }
@@ -170,7 +156,7 @@ namespace Abus
   {
     int devId = msg.devId();
 
-    DBG(cerr << "abusEventHandler: linkApproveAck: " << hex << devId << dec <<endl);
+    MIRO_DBG_OSTR(ABUS,LL_PRATTLE,"abusEventHandler: linkApproveAck: " << hex << devId << dec);
 
     if (msg.minorOp() == 0) { // connect
       deviceTable[devId].state = READY;
