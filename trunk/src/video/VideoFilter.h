@@ -49,7 +49,7 @@ namespace Video
   class Filter
   {
   public:
-    Filter(const Miro::ImageFormatIDL& _inputFormat);
+    Filter(Miro::ImageFormatIDL const& _inputFormat);
     virtual ~Filter();
 
     FILTER_PARAMETERS_FACTORY(Filter);
@@ -98,6 +98,10 @@ namespace Video
     FilterVector succ_;
 
     std::string name_;
+
+  private:
+    //! Private copy constructor to prevent accidental usage.
+    Filter(const Filter&) {}
   };
 
   inline

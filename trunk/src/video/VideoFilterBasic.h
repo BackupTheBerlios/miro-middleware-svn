@@ -54,6 +54,24 @@ namespace Video
   protected:
     unsigned int rowSize_;
   };
+
+  class FilterHalfImage : public Filter
+  {
+    typedef Filter Super;
+  public:
+    FilterHalfImage(const Miro::ImageFormatIDL& _inputFormat);
+
+    FILTER_PARAMETERS_FACTORY(FilterHalfImage);
+
+    virtual void init(FilterParameters const *);
+    virtual void process();
+  protected:
+    FilterHalfImageParameters const * params_;
+
+    unsigned int rowSize_;
+    unsigned int rowSize2_;
+    unsigned int offset_;
+  };
 };
 
 #endif

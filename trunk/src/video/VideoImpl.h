@@ -52,10 +52,15 @@ namespace Miro
     virtual void releaseImage(CORBA::ULong id, CORBA::ULong buffer) 
       ACE_THROW_SPEC((EOutOfBounds));
 
+    virtual SubImageDataIDL * exportSubImage(CORBA::ULong& x, CORBA::ULong& y)  
+      ACE_THROW_SPEC ((EOutOfBounds, EDevIO));
     virtual SubImageDataIDL * exportWaitSubImage(CORBA::ULong& x, CORBA::ULong& y)  
       ACE_THROW_SPEC ((EOutOfBounds, EDevIO, ETimeOut));
 
   protected:
+    SubImageDataIDL * localExportSubImage(CORBA::ULong& x, CORBA::ULong& y, bool _wait)  
+      ACE_THROW_SPEC ((EOutOfBounds, EDevIO, ETimeOut));
+
     typedef std::set<CORBA::ULong> ClientIdVector;
 
     Server& server_;

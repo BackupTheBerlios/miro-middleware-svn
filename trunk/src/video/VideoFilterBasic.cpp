@@ -108,4 +108,38 @@ namespace Video
       dst -= rowSize_;
     }
   }
+
+  FILTER_PARAMETERS_FACTORY_IMPL(FilterHalfImage);
+
+  FilterHalfImage::FilterHalfImage(const Miro::ImageFormatIDL& _format) :
+    Super(_format),
+    rowSize_(getRowSize(_format)),
+    rowSize2_(rowSize_ * 2),
+    offset_(0)
+  {
+    outputFormat_.height /= 2;
+  }
+
+  void
+  FilterHalfImage::init(FilterParameters const * _params)
+  {
+    params_ = dynamic_cast<FilterHalfImageParameters const *>(_params);
+    assert(params_ != NULL);
+
+    if (params_->odd)
+      offset_ = rowSize_;
+  }
+
+  void
+  FilterHalfImage::process()
+  {
+    unsigned char const * src = inputBuffer() + offset_;
+    unsigned char * dst = outputBuffer();
+
+    for (unsigned int i = 0; i < inputFormat_.height; i += 2) {
+      memcpy(dst, src, rowSize_);
+      src += rowSize2_;
+      dst += rowSize_;
+    }
+  }
 };

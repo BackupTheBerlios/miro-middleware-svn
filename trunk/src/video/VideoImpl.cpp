@@ -160,14 +160,31 @@ namespace Miro
   }
 
   SubImageDataIDL *
+  VideoImpl::exportSubImage(CORBA::ULong& x, CORBA::ULong& y)
+    ACE_THROW_SPEC((EOutOfBounds, EDevIO))
+  {
+    return localExportSubImage(x, y, false);
+  }
+
+  SubImageDataIDL *
   VideoImpl::exportWaitSubImage(CORBA::ULong& x, CORBA::ULong& y)
+    ACE_THROW_SPEC((EOutOfBounds, EDevIO, ETimeOut))
+  {
+    return localExportSubImage(x, y, true);
+  }
+
+  SubImageDataIDL *
+  VideoImpl::localExportSubImage(CORBA::ULong& x, CORBA::ULong& y, bool _wait)
     ACE_THROW_SPEC((EOutOfBounds, EDevIO, ETimeOut))
   {
     int             bufferSize = ::Miro::getImageSize(format_);
     unsigned char   * dst   = new unsigned char[bufferSize];
     SubImageDataIDL * subImage = new SubImageDataIDL(bufferSize, bufferSize, dst, 1);
 
-    unsigned int bufferId = pBufferManager_->acquireNextReadBuffer();
+    unsigned int bufferId = (_wait)?
+      pBufferManager_->acquireNextReadBuffer() :
+      pBufferManager_->acquireCurrentReadBuffer();
+
     unsigned char const * src = pBufferManager_->bufferAddr(bufferId);
 
     unsigned int srcWidth  = imageHandle_.format.width;
