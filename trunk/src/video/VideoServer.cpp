@@ -43,6 +43,7 @@ namespace Video
 
     std::cout << "Setting up filter tree." << endl;
     
+    _config->setSection("Video");
     Miro::ImageFormatIDL format;
     format.width = videoParameters->width;
     format.height = videoParameters->height;
