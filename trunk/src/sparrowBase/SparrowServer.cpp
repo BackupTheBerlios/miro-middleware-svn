@@ -53,8 +53,7 @@ FaulhaberHardware::~FaulhaberHardware()
 
 SparrowBase::SparrowBase(Miro::Server& _server, bool _startReactorTask) :
   server_(_server),
-  schedparams_(ACE_SCHED_FIFO, 10),
-  reactorTask( &_server, 20, &schedparams_),
+  reactorTask( &_server, 20, &Sparrow::Parameters::instance()->scheduling),
 
   // Notification Channel
   notifyFactory_(TAO_Notify_EventChannelFactory_i::
