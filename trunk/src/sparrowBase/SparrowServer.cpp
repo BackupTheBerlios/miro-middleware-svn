@@ -91,8 +91,10 @@ SparrowBase::SparrowBase(Miro::Server& _server, bool _startReactorTastk) :
   pFaulhaber(NULL),
 
   // notify multicast iniitialization
+  argc_(0),
+  argv_(NULL),
   mcAdapter_(( (Sparrow::Parameters::instance()->channelSharing)?
-	       new Miro::NotifyMulticast::Adapter(0, NULL, &server_, ec_) :
+	       new Miro::NMC::Adapter(argc_, argv_, &server_, ec_) :
 	       NULL) ),
   aEventHandler_(NULL),
   delay(0,0),

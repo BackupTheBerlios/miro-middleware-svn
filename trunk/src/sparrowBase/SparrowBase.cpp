@@ -56,7 +56,7 @@ main(int argc, char *argv[])
     Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
     Sparrow::Parameters * pSparrowParameters = Sparrow::Parameters::instance();
     FaulMotor::Parameters * pFaulMotorParameters = NULL;
-    Miro::NotifyMulticast::Parameters * notifyMulticastParameters = Miro::NotifyMulticast::Parameters::instance();
+    Miro::NMC::Parameters * notifyMulticastParameters = Miro::NMC::Parameters::instance();
     
     // Config file processing
     Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
