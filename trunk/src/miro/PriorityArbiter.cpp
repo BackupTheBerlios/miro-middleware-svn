@@ -55,7 +55,7 @@ namespace Miro
    * a default constructed message with active == false.
    */
   ArbiterMessage *
-  PriorityArbiter::getInferior(Behaviour const * _id)
+  PriorityArbiter::getMessageForBehaviour(Behaviour * _id)
   {
     ArbiterMessage * message = getMessageInstance();
 
@@ -81,6 +81,7 @@ namespace Miro
       }
     }
 
+    message->id = _id;
     return message;
   }
 }

@@ -47,7 +47,8 @@ namespace Miro
    * @author Ingmar Baetge
    * @author Hand Utz
    */
-  class Behaviour {
+  class Behaviour 
+  {
   public:
     //! Default constructor.
     Behaviour();
@@ -66,8 +67,11 @@ namespace Miro
     //! Initialize the behaviour with a new parameter set.
     virtual void init(const BehaviourParameters * _params);
 
-    //! The actual implementation of the behaviour.
-    virtual void action() = 0;
+    //! Callback for the actual implementation of the behaviour.
+    virtual void action();
+    //! Callback for the default implementation of the action callback.
+    virtual std::string actionTake2(BehaviourParameters const * _params,
+				    ArbiterMessage * _message);
 
     //! Return the name of the behaviour.
     /**

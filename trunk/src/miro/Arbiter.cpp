@@ -168,4 +168,21 @@ namespace Miro
     }
     else MIRO_LOG_OSTR(LL_WARNING, "PriorityArbiter: received message without behaviour id." << std::endl);
   }
+
+  /**
+   * @return A pointer containing an arbiter message.
+   * Note that the caller takes ownership of the message and is
+   * responsible for freeing its memory if the message is no longer
+   * needed, by using delete.
+   *
+   * Creates a default message instance and initializes the message id.
+   */
+  ArbiterMessage *
+  Arbiter::getMessageForBehaviour(Behaviour * _id)
+  {
+    ArbiterMessage * message = getMessageInstance();
+
+    message->id = _id;
+    return message;
+  }
 }

@@ -13,6 +13,7 @@
 #include "Behaviour.h"
 #include "BehaviourParameters.h"
 #include "ActionPattern.h"
+#include "ArbiterMessage.h"
 
 
 namespace Miro 
@@ -96,6 +97,40 @@ namespace Miro
   Behaviour::close()
   {
     active_ = false;
+  }
+
+  /**
+   * The default implementation calls the method doSomethingGrommit().
+   * This method has an ArbiterMessage in/out parameter.
+   * On input it contains the arbitration message of the next lower 
+   * priority behaviour that is active at the arbiter, or a default
+   * message if no such behaviuor exists.
+   * The two return values are the arbiter message and a transition 
+   * message string. The arbitration message is passed on to the arbiter,
+   * if the transition message string is none null, the transition
+   * message is sent.
+   */
+  void
+  Behaviour::action()
+  {
+    // we need a local copy to keep up thread safety
+    BehaviourParameters const * params = params_;
+    
+    ArbiterMessage * message = 
+      params->pattern->arbiter()->getMessageForBehaviour(this);
+    std::string transition = actionTake2(params, message);
+    params_->pattern->arbiter()->arbitrate(*message);
+    if (transition.length() != 0)
+      params->pattern->sendMessage(this, transition);
+      
+    delete message;
+  }
+
+  std::string
+  Behaviour::actionTake2(BehaviourParameters const *,
+                         ArbiterMessage * )
+  {
+    return std::string();
   }
 
   void 

@@ -111,4 +111,4 @@ namespace Miro
   {
     return name_;
   }
-};
+}

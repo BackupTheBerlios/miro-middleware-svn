@@ -36,7 +36,7 @@ namespace Miro
 
     virtual void calcActivation();
     //! Get the next active arbitration message with lower priority.
-    virtual ArbiterMessage * getInferior(Behaviour const * _id);
+    virtual ArbiterMessage * getMessageForBehaviour(Behaviour * _id);
 
   protected:
     //! Pass the arbitration message to the actuators.

@@ -34,6 +34,7 @@
 
 namespace Miro
 {
+  class Behaviour;
   class ArbiterMessage;
   class ArbiterParameters;
 
@@ -70,6 +71,9 @@ namespace Miro
     virtual void arbitrate(const ArbiterMessage& _message);
     //! Determine, what to do
     virtual void calcActivation() = 0;
+    //! Get an arbitration suggestion from the arbiter.
+    virtual ArbiterMessage * getMessageForBehaviour(Behaviour * _id);
+
     //! Name of the arbiter.
     virtual const std::string& getName() const = 0;
         

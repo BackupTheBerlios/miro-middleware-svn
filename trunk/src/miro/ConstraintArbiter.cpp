@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -32,15 +32,10 @@ namespace Miro
     pSupplier_(_pSupplier),
     reactor(ar_),
     timerId(-1),
-    velocitySpace_(1000, 20, 4000, 500, 20),
-    conArbViewTask_(NULL),
-    conArbViewTaskCreated(false)
+    conArbViewTask_(NULL)
   {
-
     currentVelocity_.translation = 0;
     currentVelocity_.rotation = 0.;
-    velocitySpace_.setWheelBase(332);//pMotion_->getWheelBase());
-
 
     if (pSupplier_) {
       // Status Notify Event initialization
@@ -72,7 +67,7 @@ namespace Miro
     // set the wheelbase
     // this shouldn't change for different action patterns
     // but we have to deferr this initialization until runtime
-//    velocitySpace_.setWheelBase(332);//pMotion_->getWheelBase());
+    p->velocitySpace.setWheelBase(pMotion_->getWheelBase());
 
     return p;
   }
@@ -97,7 +92,7 @@ namespace Miro
   void
   ConstraintArbiter::init(ArbiterParameters const * _params)
   {
-    Arbiter::init(_params);
+    PriorityArbiter::init(_params);
 
     ConstraintArbiterParameters const * params =
       dynamic_cast<ConstraintArbiterParameters const *>(params_);
@@ -105,14 +100,14 @@ namespace Miro
     MIRO_ASSERT(params != NULL);
 
     // create task for viewing velocity space
-    /*if(params->viewerTask) {
+    if(params->viewerTask) {
       if (conArbViewTask_ != NULL) {
 	conArbViewTask_->cancel();
 	delete conArbViewTask_;
-      }*/
-      conArbViewTask_ = new ConstraintArbiterViewerTask(&velocitySpace_);
+      }
+      conArbViewTask_ = new ConstraintArbiterViewerTask(&params->velocitySpace);
       conArbViewTask_->open();
-    //}
+    }
     if (timerId != -1)
       reactor.reset_timer_interval(timerId, params->pace);
   }
@@ -182,18 +177,17 @@ namespace Miro
     }
 
     // preinitialize the velocity space
-    velocitySpace_.clearAllEvals();
+    params->velocitySpace.clearAllEvals();
+    params->velocitySpace.clearCurvatureConstraints();
 
     // let each behaviour calculate its velocity space
     BehaviourVector::const_iterator k;
-    velocitySpace_.clearAllEvals();
-    velocitySpace_.clearCurvatureConstraints();
     for(k = bv.begin(); k != bv.end(); k++) {
-      (*k)->addEvaluation(&velocitySpace_);
+      (*k)->addEvaluation(&params->velocitySpace);
     }
 
     // calculate new velocity using the content of the velocity space
-    velocity = velocitySpace_.applyObjectiveFunctionToEval();
+    velocity = params->velocitySpace.applyObjectiveFunctionToEval();
 
     //    cout << "LEFT: " << velocity.real() << " ::: " << velocity.imag() << endl;
 
@@ -219,5 +213,20 @@ namespace Miro
   ConstraintArbiter::getName() const
   {
     return name_;
+  }
+
+  /** Dummy implemenation as we do it the other way round. */
+  void 
+  ConstraintArbiter::setActuators(const ArbiterMessage&)
+  {
+
+  }
+   
+
+  void 
+  ConstraintArbiter::limpActuators()
+  {
+    // set steering commands
+    pMotion_->setLRVelocity(0, 0);
   }
 }
