@@ -124,9 +124,9 @@ FileSet::coursorTime(ACE_Time_Value const& _time)
   }
 
   std::make_heap(file_.begin(), file_.end(), LFLess());
-  cout << "new time heap: " << endl;
+  std::cout << "new time heap: " << std::endl;
   for (first = file_.begin(); first != last; ++first) {
-    std::cout << (*first)->coursorTime()  - startTime_ << endl;
+    std::cout << (*first)->coursorTime()  - startTime_ << std::endl;
   }
 
   file_.front()->getCurrentEvent();
@@ -159,10 +159,10 @@ FileSet::playEvents(ACE_Time_Value const& _time)
 
     // restore heap attibute
     std::make_heap(file_.begin(), file_.end(), LFLess());
-    cout << "new time heap: " << endl;
+    std::cout << "new time heap: " << std::endl;
     FileVector::const_iterator first, last = file_.end();
     for (first = file_.begin(); first != last; ++first) {
-      std::cout << (*first)->coursorTime() - startTime_ << endl;
+      std::cout << (*first)->coursorTime() - startTime_ << std::endl;
     }
 
     file_.front()->parseEvent();
@@ -187,9 +187,9 @@ FileSet::playBackwards()
 
   // restore heap attibute
   std::make_heap(file_.begin(), file_.end(), LFMore());
-  cout << "new time heap: " << endl;
+  std::cout << "new time heap: " << std::endl;
   for (first = file_.begin(); first != last; ++first) {
-    std::cout << (*first)->coursorTime()  - startTime_ << endl;
+    std::cout << (*first)->coursorTime()  - startTime_ << std::endl;
   }
 
   file_.front()->parseEvent();

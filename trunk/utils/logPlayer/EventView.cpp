@@ -256,7 +256,7 @@ EventView::includeEvent(const QString&, const QString&)
 ACE_Time_Value
 EventView::eventTime(QListViewItem * _item)
 {
-  cout << "event time: " << (void *) _item << std::endl;
+  std::cout << "event time: " << (void *) _item << std::endl;
   ACE_Time_Value t = ACE_Time_Value::zero;
   if (_item != NULL) {
     std::istringstream istr((char const *)_item->text(0));
