@@ -68,6 +68,9 @@ namespace Psos
   static const char SF_COMIOREQ   = 0x28; // IO SIP
   static const char SF_COMPTUPOS  = 0x29; // servo pulse
 
+  static const char SF_COMTTY2    = 0x2a; //write to aux1
+  static const char SF_COMGETAUX  = 0x2b; //read from aux1
+
   static const char SF_COMBSTALL  = 0x2c; // stall on bump
 
   static const char SF_COMESTOP   = 0x37; // emergency stop
