@@ -58,9 +58,10 @@ namespace Miro
       
       newPower = true;
       
-      pMotion_->setLRPower(currentLeft_, currentRight_);
       currentLeft_ = message.left;
       currentRight_ = message.right;
+
+      pMotion_->setLRPower(currentLeft_, currentRight_);
       
       // velocity for debug output
       currentVelocity_.translation = (currentLeft_ + currentRight_) / 2;
