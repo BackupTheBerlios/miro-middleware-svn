@@ -39,6 +39,8 @@
 	<parameter value="/dev/pcan24" name="Device" />
 	<parameter value="pcan" name="Module" />
         <parameter name="Pan">
+	  <parameter value="5" name="Offset" />
+	  <parameter value="784" name="TicksPerDegree" />
 	  <parameter value="0.050000" name="PanLatency" />
 	  <parameter value="0.300000" name="PanSwing" />
 	  <parameter value="245" name="PanRadPerSec" />
