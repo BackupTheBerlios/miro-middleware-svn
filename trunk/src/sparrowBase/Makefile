@@ -147,8 +147,8 @@ $(BIN): $(STATIC_DEPS)
  $(MIRO_ROOT)/src/pioneer/PioneerConnection.h \
  $(MIRO_ROOT)/src/psos/PsosConnection.h \
  $(MIRO_ROOT)/src/miro/TtyConnection.h \
- $(MIRO_ROOT)/src/pioneer/CanonPanTiltMessage.h \
- $(MIRO_ROOT)/src/pioneer/CanonPanTiltDevice.h \
+ $(MIRO_ROOT)/src/pioneer/CanonMessage.h \
+ $(MIRO_ROOT)/src/pioneer/CanonDevice.h \
  $(MIRO_ROOT)/src/pioneer/PioneerConsumer.h \
  $(MIRO_ROOT)/src/pioneer/PioneerStatus.h $(MIRO_ROOT)/src/miro/Utils.h \
  $(MIRO_ROOT)/src/pioneer/PioneerParameters.h \

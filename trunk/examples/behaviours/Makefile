@@ -24,7 +24,7 @@ LDFLAGS +=  -L$(IPP_ROOT)/lib
 
 ## static libraries
 
-STATIC_LIBS = miroSvc
+STATIC_LIBS = miroSvc 
 
 ## performing the magic
 
@@ -32,7 +32,10 @@ STATIC_DEPS = $(addprefix $(MIRO_ROOT)/lib/lib, $(addsuffix .a,$(STATIC_LIBS)))
 LDLIBS += $(addprefix -l, $(STATIC_LIBS))
 
 ## dynamic libraries if needed
-LDLIBS += -lmiro
+LDLIBS += -lmiro -lTAO -lACE \
+	$(NIX_ROOT)/src/nix/.shobj/LineSamplesC.o \
+	$(NIX_ROOT)/src/nix/.shobj/GoalFeatureC.o \
+	$(NIX_ROOT)/src/nix/.shobj/CornerFeatureC.o
 
 ## program to be built
 BIN 	= Behaviours BehaviourControler

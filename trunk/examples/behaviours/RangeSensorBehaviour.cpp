@@ -18,7 +18,7 @@
 #include "miro/TimeHelper.h"
 
 #include "miro/StructuredPushSupplier.h"
-//#include "nix/LineSamplesC.h"
+#include "nix/LineSamplesC.h"
 
 #include <algorithm>
 
@@ -121,11 +121,12 @@ RangeSensorBehaviour::action()
   }
   else if (initialized_) {
 
-    ACE_Time_Value now = ACE_OS::gettimeofday();
+    cout << name_ << ": integrating range senor data" << endl;
+
     ACE_Time_Value integrationTime;
     integrationTime.msec(params->historyMSec);
     
-    truncateBuffer(now - integrationTime);
+    truncateBuffer(integrationTime);
 
     if (event->remainder_of_body >>= pBunchScan) {
       Miro::timeC2A(pBunchScan->time, timeStamp);
@@ -156,38 +157,40 @@ RangeSensorBehaviour::action()
     else {
       std::cerr << name_ << ": Unhandled Event!" << endl; 
     }
+
+    evalScan();
   }
 
-  // #define SADF
+#define SADF
 #ifdef SADF
-  if (pSupplier_ && !(++counter % 5)) {
+  if (pSupplier_ && !(++counter % 10)) {
     Nix::VisionFeaturesIDL * features = new Nix::VisionFeaturesIDL();
 
-    cout << "left size: " << left_.size() << endl;
+    cout << "map size: " << egoMap_.size() << endl;
 
-    features->lineFeature.length(right_.size());
-    SensorScan::const_iterator j = right_.begin();
+    features->lineFeature.length(egoMap_.size());
+    EgoMap::const_iterator j = egoMap_.begin();
     for (unsigned int i = 0; i < features->lineFeature.length(); ++i, ++j) {
 
-      Vector2d s(*j);
-      Vector2d alpha(cos(-heading_), sin(-heading_));
-
-      s -= position_;
-      s *= alpha;
-
-      features->lineFeature[i].distance = abs(s);
-      features->lineFeature[i].angle = arg(s);
-
-      //      cout << "abs: " << abs(s) << "\targ: " << Miro::rad2Deg(arg(s)) << "°" << endl;
+      features->lineFeature[i].distance = abs(j->second);
+      features->lineFeature[i].angle = arg(j->second);
     }
     features->rawPosition.point.x = position_.real();
     features->rawPosition.point.y = position_.imag();
     features->rawPosition.heading = heading_;
 
-    features->worldPosition.point.x = 0; // position_.real();
-    features->worldPosition.point.y = 0; // position_.imag();
-    features->worldPosition.heading = 0.; //heading_;
+    features->worldPosition.point.x = position_.real();
+    features->worldPosition.point.y = position_.imag();
+    features->worldPosition.heading = heading_;
     features->cameraAngle = 0;
+
+    features->goalFeature.visible = 0;
+    features->goalFeature.post[0] = Nix::GoalItem::NOT_SEEN;
+    features->goalFeature.post[1] = Nix::GoalItem::NOT_SEEN;
+
+    features->cornerFeature.visible = 0;
+    features->cornerFeature.post[0] = Nix::CornerItem::NOT_SEEN;
+    features->cornerFeature.post[1] = Nix::CornerItem::NOT_SEEN;
 
     
     CosNotification::StructuredEvent lineEvent;
@@ -229,11 +232,13 @@ RangeSensorBehaviour::addBuffer(const ACE_Time_Value& _time, const Vector2d& _p)
 }
 
 void
-RangeSensorBehaviour::truncateBuffer(const ACE_Time_Value& _time)
+RangeSensorBehaviour::truncateBuffer(const ACE_Time_Value& _delta)
 {
+  ACE_Time_Value t = ACE_OS::gettimeofday();
+
   SensorScan::iterator first, last = scan_.end();
   for (first = scan_.begin(); first != last; ++first)
-    if (first->time < _time)
+    if (first->time + _delta >= t)
       break;
 
   scan_.erase(scan_.begin(), first);
@@ -249,19 +254,18 @@ RangeSensorBehaviour::evalSensor(const ACE_Time_Value& _time,
 //   const RangeSensorBehaviourParameters * params =
 //     dynamic_cast<const RangeSensorBehaviourParameters *>(params_);
 
-  bool ignore = false;
   if (range == Miro::RangeSensor::HORIZON_RANGE)
-    ignore = true;
+    return;
 
   // calc egocentric sensor origin
   double d = description_->group[group].sensor[index].distance;
-  Vector2d p(cos(description_->group[group].sensor[index].alpha) * d,
-	     sin(description_->group[group].sensor[index].alpha) * d);
+  Vector2d p(-sin(description_->group[group].sensor[index].alpha) * d,
+	     cos(description_->group[group].sensor[index].alpha) * d);
 
   // calc sensor heading
   double a = ( description_->group[group].sensor[index].alpha +
 	       description_->group[group].sensor[index].beta);
-  Vector2d q(cos(a) * (double)range, sin(a) * (double)range);
+  Vector2d q(-sin(a) * (double)range, cos(a) * (double)range);
 
   // calc egocentric range end point;
   p += q;
@@ -279,9 +283,9 @@ RangeSensorBehaviour::evalScan()
   // transform the global coordinate frame
   // to the egocentric mapping
 
-  Vector2d alpha(cos(-heading_), sin(-heading_));
+  Vector2d alpha(cos(heading_), -sin(heading_));
 
-  SensorScan::const_iterator first, last = scan_.begin();
+  SensorScan::const_iterator first, last = scan_.end();
   for (first = scan_.begin(); first != last; ++first) {
     Vector2d p(first->point);
     p -= position_;

@@ -54,8 +54,12 @@ using std::cerr;
 
 int main(int argc, char *argv[])
 {
+  cout << "test" << endl;
+
   Server server(argc, argv);
+  cout << "test" << endl;
   ReactorTask * task = new ReactorTask(&server);
+  cout << "test" << endl;
 
   if (argc < 2) {
     cout << "usage: behaviours <BEHAVIOURFILE>" << endl;
@@ -76,8 +80,8 @@ int main(int argc, char *argv[])
     // construct all available behaviours
     cout << "Constructing Behaviours and Arbiters." << endl;
     TactileStop tactileStop(motion.in(), ec.in(), server.namingContextName);
-    RangeSensorAvoid avoid1(server, ec.in(), "AvoidOne", server.namingContextName);
-    RangeSensorAvoid avoid2(server, ec.in(), "AvoidTwo", server.namingContextName);
+    RangeSensorAvoid avoid1(server, ec.in(), "AvoidOne", server.namingContextName, &supplier);
+    RangeSensorAvoid avoid2(server, ec.in(), "AvoidTwo", server.namingContextName, &supplier);
     WallFollow wallFollow(server, ec.in(), "WallFollow", server.namingContextName, &supplier);
     Straight straight(*task->reactor());
     Wander wander(*task->reactor());

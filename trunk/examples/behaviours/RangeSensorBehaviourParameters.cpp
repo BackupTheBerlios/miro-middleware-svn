@@ -18,7 +18,7 @@
 using Miro::KeyValueList;
 
 RangeSensorBehaviourParameters::RangeSensorBehaviourParameters() :
-  historyMSec(1000),
+  historyMSec(5000),
   sensorName("Sonar")
 {}
 
