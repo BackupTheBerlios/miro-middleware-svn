@@ -47,6 +47,22 @@ using CosNotifyChannelAdmin::EventChannel;
 
 CosNaming::Name channelFactoryName;
 
+class StatisticHandler : public ACE::Event_Handler {
+    public:
+        StatisticHandler() {
+        }
+        
+        ~StatisticHandler() {
+        }
+
+        int handle_timeout(
+                const ACE_Time_Value &currentTime,
+                const void *act = 0) {
+            std::cout << "SECOND" << std::endl;
+        }
+                
+};
+
 class Consumer : public Miro::StructuredPushConsumer {
     public:
         Consumer(CosNotifyChannelAdmin::EventChannel_ptr ec,
@@ -87,6 +103,7 @@ NotifyMulticastTest::NotifyMulticastTest(int argc, char *argv[], bool _colocated
   id_(),
   ifgop_(CosNotifyChannelAdmin::OR_OP)
 {
+    St
   try {
     ec_ = resolveName<EventChannel>("EventChannel");
     DBG(cout << "found channel" << endl);
@@ -128,6 +145,13 @@ NotifyMulticastTest::NotifyMulticastTest(int argc, char *argv[], bool _colocated
 
   consumer = new Consumer(ec_.in(), ets);
 
+  reactor_ = reactor(Consumer);
+
+  sh_ = new StatisticHandler(Consumer);
+  shTime_ = ACE_Time(1, 0);
+  
+  shId_ = reactor_->schedule_timer(sh_, 0, shTime_, shTime_);
+
   nmcAdapter = new Miro::NotifyMulticast::Adapter(argc, argv, this, ec_);
 
   DBG(cout << "NotifyMulticastTest initialized.." << endl);
@@ -137,6 +161,8 @@ NotifyMulticastTest::~NotifyMulticastTest()
 {
   DBG(cout << "Destructing NotifyMulticastTest." << endl);
 
+  reactor_->cancel_timer(shId_);
+  delete sh_;
   delete nmcAdapter;
   delete consumer;
 

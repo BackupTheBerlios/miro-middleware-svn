@@ -18,7 +18,11 @@
 #include <orbsvcs/CosNotifyChannelAdminS.h>
 #include <orbsvcs/CosNotifyCommC.h>
 
+#include <ace/Reactor.h>
+
 class Consumer;
+
+class StatisticHandler;
 
 class NotifyMulticastTest : public Miro::Server
 {
@@ -57,6 +61,13 @@ public:
   Miro::NotifyMulticast::Adapter *nmcAdapter;
   
   CosNotification::EventTypeSeq ets;
+
+  ACE::Reactor *reactor_;
+
+  StatisticHandler *sh_;
+  int shId_;
+
+  ACE_Time_Value shTime_;
 };
 #endif
 
