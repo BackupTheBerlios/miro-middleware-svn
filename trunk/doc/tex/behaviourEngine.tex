@@ -328,9 +328,9 @@ constellation. Therefore each behaviour has an associated {\tt
   BehaviourParameters} class which is designed to hold the different
 parameter sets for the different use cases of a behaviour. These
 parameter classes become initialized on startup of the behaviour
-framework and are expected to be static during the run of an entire
-policy. (How to handle dynamic parameters like destination coordinates
-of a 'move to position' behaviour is explained in section
+framework and are expected to be static and constant during the run of
+an entire policy. (How to handle dynamic parameters like destination
+coordinates of a 'move to position' behaviour is explained in section
 \ref{SEC:DYNAMIC_PARAMETERS})
 
 Behaviours, which subclass the {\tt BehaviourParameters} class,
@@ -343,7 +343,7 @@ the two macros:
 \end{itemize}
 X denotes the name of the behaviour parameters class and Y denotes the
 name of the behaviour class. The first macro has to be placed within
-the call definition and the second within the cpp-file containing the
+the class definition and the second within the cpp-file containing the
 behaviour implementation.
 
 The behaviour parameters classes are handled by the parameters
@@ -361,7 +361,9 @@ a convenient way. Note however, that the {\tt init()} method can be
 called while the behaviour is already active (see section
 \ref{sec:active-inactive}) and so its {\tt action()} method can be
 concurrently running. Therefore a mutex is needed to avoid race
-conditions.
+conditions. For an example see:
+
+{\tt \$MIRO\_ROOT/examples/behaviours/simple/Timer.cpp|h}
 
 Parameters that are valid for the whole lifetime of a behaviour, such
 as references to the robots services or other objects within the
