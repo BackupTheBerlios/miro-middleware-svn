@@ -30,7 +30,7 @@
    <parameter value="true" name="Faulhaber" />
    <parameter value="/dev/can/0" name="Device" />
    <parameter value="0.050000" name="PanLatency" />
-   <parameter value="0.0800000" name="PanSwing" />
+   <parameter value="0.2000000" name="PanSwing" />
    <parameter value="250" name="PanRadPerSec" />
    <parameter value="3." name="PanAccuracy" />
    <parameter value="0.040000" name="InfraredPulse" />
@@ -96,7 +96,7 @@
    <parameter value="30720" name="MaxPower" />
    <parameter value="29" name="TicksL" />
    <parameter value="29" name="TicksR" />
-   <parameter value="false" name="ChannelSharing" />
+   <parameter value="true" name="ChannelSharing" />
    <parameter name="Motion" >
     <parameter value="180" name="MaxRotation" />
     <parameter value="-180" name="MinRotation" />
