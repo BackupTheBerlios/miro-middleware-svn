@@ -305,6 +305,7 @@ namespace FaulMotor
     writeThisRound_ = false;
 
     if (Sparrow::Parameters::instance()->sparrow2003){
+      gotTicks_ = 0;
       leftWheel_->sendAccVelTicks(newAccL, newAccR, newSpeedL, newSpeedR);
       prevSpeedL = newSpeedL;
       prevSpeedR = newSpeedR;

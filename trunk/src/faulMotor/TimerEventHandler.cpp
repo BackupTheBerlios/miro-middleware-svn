@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -11,36 +11,24 @@
 
 #include "TimerEventHandler.h"
 #include "FaulMotorConnection.h"
+
 #include "sparrow/Parameters.h"
+
 #include "miro/TimeHelper.h"
-
-//#undef DEBUG
-
-#ifdef DEBUG
-#include <iostream>
-#endif
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
+#include "miro/Log.h"
 
 namespace FaulMotor
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-
   TimerEventHandler::TimerEventHandler(Connection& _connection) :
-    connection_(_connection)
+    connection_(_connection),
+    stallCounter_(0)
   {
-    DBG(std::cout << "Constructing FaulTty::TimerEventHandler." << endl);
+    MIRO_LOG_CTOR("FaulMotor::TimerEventHandler");
   }
 
   TimerEventHandler::~TimerEventHandler()
   {
-    DBG(std::cout << "Destructing FaulTty::TimerEventHandler." << endl);
+    MIRO_LOG_DTOR("FaulMotor::TimerEventHandler");
   }
 
   // timer callback
@@ -48,7 +36,14 @@ namespace FaulMotor
   TimerEventHandler::handle_timeout(const ACE_Time_Value &, const void *)
   {
     if (Connection::gotTicks_ == 0) {
-      std::cerr << " odometry stall " << ACE_OS::gettimeofday() << endl;
+      ++stallCounter_;
+      MIRO_LOG_OSTR(LL_WARNING, " odometry stall " << stallCounter_);
+      if (stallCounter_ >= 5) {
+	if (!Sparrow::Parameters::instance()->sparrow2003)
+	  connection_.getTicks();
+	connection_.deferredSetSpeed();
+	stallCounter_ = 0;
+      }
     }
     else {
       if (!Sparrow::Parameters::instance()->sparrow2003)

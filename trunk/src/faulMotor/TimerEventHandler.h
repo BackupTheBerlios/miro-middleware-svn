@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -31,6 +31,7 @@ namespace FaulMotor
 
   protected:
     Connection& connection_;
+    unsigned int stallCounter_;
   };
 }
 
