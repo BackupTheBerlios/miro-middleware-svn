@@ -31,10 +31,29 @@
 #include "pioneer/PioneerConnection.h"
 #include "pioneer/PioneerConsumer.h"
 
+#include "faulMotor/FaulMotorConnection.h"
+#include "faulMotor/Parameters.h" 
+#include "faulMotor/FaulMotorConsumer.h"
+#include "faulTty/FaulTtyEventHandler.h"
+#include "faulTty/TimerEventHandler.h"
+
 #include <orbsvcs/CosNotifyChannelAdminS.h>
 #include <orbsvcs/CosNotifyCommC.h>
 
 #include <memory>
+
+struct FaulhaberHardware
+{
+  // Faulhaber hardware abstraction
+  FaulMotor::Consumer * pConsumer;
+  FaulTty::EventHandler * pEventHandler;
+  FaulTty::TimerEventHandler * pTimerEventHandler;
+  FaulMotor::Connection connection;
+
+  FaulhaberHardware(ACE_Reactor * _reactor,
+		    Miro::OdometryImpl * _pOdometryImpl);
+  ~FaulhaberHardware();
+};
 
 struct PioneerHardware
 {
@@ -96,7 +115,6 @@ public:
   Miro::OdometryImpl odometry;
   std::auto_ptr<Miro::RangeSensorImpl> pSonar_;
   Miro::RangeSensorImpl infrared;
-  Sparrow::MotionImpl sparrowMotion;
 
   // Sparrow board hardware abstraction
   Sparrow::Consumer * pSparrowConsumer;
@@ -106,7 +124,11 @@ public:
   // Pioneer board hardware abstraction
   std::auto_ptr<PioneerHardware> pPioneer;
 
+  // Faulhaber board hardware abstraction
+  std::auto_ptr<FaulhaberHardware> pFaulhaber;
+
   // IDL interface implementations
+  std::auto_ptr<POA_Miro::Motion> pSparrowMotion;
   Sparrow::KickerImpl  sparrowKicker;
   Sparrow::ButtonsImpl sparrowButtons;
   Sparrow::StallImpl   sparrowStall;

@@ -10,7 +10,6 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "SparrowServer.h"
 
 #include "miro/Exception.h"
@@ -20,6 +19,7 @@
 
 #include "sparrow/Parameters.h"
 #include "pioneer/Parameters.h"
+#include "faulMotor/FaulMotorMotionImpl.h"
 
 #include <orbsvcs/Notify/Notify_EventChannelFactory_i.h>
 #include <orbsvcs/Notify/Notify_Default_CO_Factory.h>
@@ -37,6 +37,19 @@
 
 using std::cout;
 using std::cerr;
+
+FaulhaberHardware::FaulhaberHardware(ACE_Reactor * _reactor,
+				     Miro::OdometryImpl * _pOdometryImpl) :
+  pConsumer(new FaulMotor::Consumer(_pOdometryImpl)),
+  pEventHandler(new FaulTty::EventHandler(pConsumer, connection)),
+  pTimerEventHandler(new FaulTty::TimerEventHandler(connection)),
+  connection(_reactor, pEventHandler, pConsumer)
+{}
+
+FaulhaberHardware::~FaulhaberHardware()
+{
+
+}
 
 PioneerHardware::PioneerHardware(ACE_Reactor * _reactor,
 				 Miro::RangeSensorImpl * _sonar) :
@@ -67,7 +80,6 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 				    &structuredPushSupplier_) : NULL),
   infrared(Sparrow::Parameters::instance()->infraredDescription,
 	   &structuredPushSupplier_),
-  sparrowMotion(sparrowConnection, *pSparrowConsumer),
 
   // Sparrow board initialization
   pSparrowConsumer(new Sparrow::Consumer(sparrowConnection, 
@@ -84,7 +96,16 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
   pPioneer((Sparrow::Parameters::instance()->goalie)? 
 	   new PioneerHardware(reactorTask.reactor(), pSonar_.get()) : NULL),
 
+  // Faulhaber board initialization
+  pFaulhaber((Sparrow::Parameters::instance()->faulhaber)? 
+	   new FaulhaberHardware(reactorTask.reactor(), &odometry) : NULL),
+
   // Service initialization
+  pSparrowMotion((Sparrow::Parameters::instance()->faulhaber)?
+                 (POA_Miro::Motion *) new FaulMotor::MotionImpl(pFaulhaber->connection, 
+								*pFaulhaber->pConsumer) :
+		 (POA_Miro::Motion *) new Sparrow::MotionImpl(sparrowConnection, 
+							      *pSparrowConsumer)),
   sparrowKicker(sparrowConnection),
   sparrowButtons(*pSparrowConsumer, &structuredPushSupplier_),
   sparrowStall(sparrowConnection, &structuredPushSupplier_),
@@ -116,7 +137,6 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 				    &structuredPushSupplier_) : NULL),
   infrared(Sparrow::Parameters::instance()->infraredDescription,
 	   &structuredPushSupplier_),
-  sparrowMotion(sparrowConnection, *pSparrowConsumer),
 
   // Sparrow board initialization
   pSparrowConsumer(new Sparrow::Consumer(sparrowConnection, 
@@ -133,7 +153,16 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
   pPioneer((Sparrow::Parameters::instance()->goalie)? 
 	   new PioneerHardware(reactorTask.reactor(), pSonar_.get()) : NULL),
 
+  // Faulhaber board initialization
+  pFaulhaber((Sparrow::Parameters::instance()->faulhaber)? 
+	   new FaulhaberHardware(reactorTask.reactor(), &odometry) : NULL),
+
   // Service initialization
+  pSparrowMotion((Sparrow::Parameters::instance()->faulhaber)?
+                 (POA_Miro::Motion *) new FaulMotor::MotionImpl(pFaulhaber->connection,
+								*pFaulhaber->pConsumer) :
+		 (POA_Miro::Motion *) new Sparrow::MotionImpl(sparrowConnection, 
+							      *pSparrowConsumer)),
   sparrowKicker(sparrowConnection),
   sparrowButtons(*pSparrowConsumer, &structuredPushSupplier_),
   sparrowStall(sparrowConnection, &structuredPushSupplier_),
@@ -152,7 +181,7 @@ void
 SparrowBase::init(bool _startReactorTastk)
 {
   pOdometry = odometry._this();
-  pMotion = sparrowMotion._this();
+  pMotion = pSparrowMotion->_this();
   pKicker = sparrowKicker._this();
   pButtons = sparrowButtons._this();
   pStall = sparrowStall._this();

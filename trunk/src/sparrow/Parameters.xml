@@ -27,6 +27,7 @@
       <config_parameter name="channelSharing" type="bool" default="true" />
 
       <config_parameter name="goalie" type="bool" default="false" />
+      <config_parameter name="faulhaber" type="bool" default="false" />
 
       <config_parameter name="ticksL" type="int" default="30" />
       <config_parameter name="ticksR" type="int" default="30" />

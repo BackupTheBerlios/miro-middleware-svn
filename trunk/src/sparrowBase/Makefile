@@ -2,7 +2,7 @@
 ##
 ## This file is part of Miro (The Middleware For Robots)
 ##
-## (c) 1999, 2000, 2001
+## (c) 2000, 2001, 2002, 2003
 ## Department of Neural Information Processing, University of Ulm, Germany
 ##
 ## $Id$
@@ -21,7 +21,7 @@ INSTALL = $(VBIN:%=$(INSBIN)/%)
 
 ## static libraries
 
-STATIC_LIBS = sparrow can pioneer psos miroSvc
+STATIC_LIBS = sparrow can pioneer psos faulMotor faulTty miroSvc
 
 ## performing the magic
 
@@ -142,15 +142,23 @@ $(BIN): $(STATIC_DEPS)
  $(MIRO_ROOT)/src/miro/PanS.i $(MIRO_ROOT)/src/miro/SparrowPanTiltC.h \
  $(MIRO_ROOT)/src/miro/SparrowPanTiltC.i \
  $(MIRO_ROOT)/src/miro/SparrowPanTiltS.i \
- $(MIRO_ROOT)/src/miro/TimeHelper.h \
  $(MIRO_ROOT)/src/psos/PsosEventHandler.h \
  $(MIRO_ROOT)/src/pioneer/PioneerConnection.h \
  $(MIRO_ROOT)/src/psos/PsosConnection.h \
  $(MIRO_ROOT)/src/miro/TtyConnection.h \
  $(MIRO_ROOT)/src/pioneer/CanonMessage.h \
  $(MIRO_ROOT)/src/pioneer/CanonDevice.h \
- $(MIRO_ROOT)/src/pioneer/PioneerConsumer.h $(MIRO_ROOT)/src/miro/Utils.h \
- $(MIRO_ROOT)/src/pioneer/Parameters.h $(MIRO_ROOT)/src/psos/Parameters.h
+ $(MIRO_ROOT)/src/pioneer/PioneerConsumer.h \
+ $(MIRO_ROOT)/src/faulMotor/FaulMotorConnection.h \
+ $(MIRO_ROOT)/src/faulTty/FaulTtyConnection.h \
+ $(MIRO_ROOT)/src/faulMotor/Parameters.h \
+ $(MIRO_ROOT)/src/faulTty/Parameters.h \
+ $(MIRO_ROOT)/src/faulMotor/FaulMotorConsumer.h \
+ $(MIRO_ROOT)/src/faulTty/FaulTtyEventHandler.h \
+ $(MIRO_ROOT)/src/faulTty/TimerEventHandler.h \
+ $(MIRO_ROOT)/src/miro/Utils.h $(MIRO_ROOT)/src/pioneer/Parameters.h \
+ $(MIRO_ROOT)/src/psos/Parameters.h \
+ $(MIRO_ROOT)/src/faulMotor/FaulMotorMotionImpl.h
 
 .obj/SparrowBase.o .obj/SparrowBase.so .shobj/SparrowBase.o .shobj/SparrowBase.so: SparrowBase.cpp SparrowServer.h \
  $(MIRO_ROOT)/src/miro/Server.h $(MIRO_ROOT)/src/miro/Client.h \
@@ -223,15 +231,22 @@ $(BIN): $(STATIC_DEPS)
  $(MIRO_ROOT)/src/miro/PanS.i $(MIRO_ROOT)/src/miro/SparrowPanTiltC.h \
  $(MIRO_ROOT)/src/miro/SparrowPanTiltC.i \
  $(MIRO_ROOT)/src/miro/SparrowPanTiltS.i \
- $(MIRO_ROOT)/src/miro/TimeHelper.h \
  $(MIRO_ROOT)/src/psos/PsosEventHandler.h \
  $(MIRO_ROOT)/src/pioneer/PioneerConnection.h \
  $(MIRO_ROOT)/src/psos/PsosConnection.h \
  $(MIRO_ROOT)/src/miro/TtyConnection.h \
  $(MIRO_ROOT)/src/pioneer/CanonMessage.h \
  $(MIRO_ROOT)/src/pioneer/CanonDevice.h \
- $(MIRO_ROOT)/src/pioneer/PioneerConsumer.h $(MIRO_ROOT)/src/miro/Utils.h \
- $(MIRO_ROOT)/src/pioneer/Parameters.h $(MIRO_ROOT)/src/psos/Parameters.h \
+ $(MIRO_ROOT)/src/pioneer/PioneerConsumer.h \
+ $(MIRO_ROOT)/src/faulMotor/FaulMotorConnection.h \
+ $(MIRO_ROOT)/src/faulTty/FaulTtyConnection.h \
+ $(MIRO_ROOT)/src/faulMotor/Parameters.h \
+ $(MIRO_ROOT)/src/faulTty/Parameters.h \
+ $(MIRO_ROOT)/src/faulMotor/FaulMotorConsumer.h \
+ $(MIRO_ROOT)/src/faulTty/FaulTtyEventHandler.h \
+ $(MIRO_ROOT)/src/faulTty/TimerEventHandler.h \
+ $(MIRO_ROOT)/src/miro/Utils.h $(MIRO_ROOT)/src/pioneer/Parameters.h \
+ $(MIRO_ROOT)/src/psos/Parameters.h \
  $(MIRO_ROOT)/src/miro/NotifyMulticastParameters.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

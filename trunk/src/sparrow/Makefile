@@ -245,17 +245,18 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/ExceptionS.h $(MIRO_ROOT)/src/miro/ExceptionC.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.i $(MIRO_ROOT)/src/miro/ExceptionS.i \
  $(MIRO_ROOT)/src/miro/PanC.h $(MIRO_ROOT)/src/miro/PanC.i \
- $(MIRO_ROOT)/src/miro/PanS.i $(MIRO_ROOT)/src/miro/SparrowPanTiltC.h \
+ $(MIRO_ROOT)/src/miro/PanS.i $(MIRO_ROOT)/src/miro/TimeS.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/TimeS.i $(MIRO_ROOT)/src/miro/SparrowPanTiltC.h \
  $(MIRO_ROOT)/src/miro/SparrowPanTiltC.i \
  $(MIRO_ROOT)/src/miro/SparrowPanTiltS.i $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/TimeHelper.h $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i $(MIRO_ROOT)/src/miro/Angle.h Parameters.h \
+ $(MIRO_ROOT)/src/miro/Angle.h Parameters.h \
  $(MIRO_ROOT)/src/can/Parameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/BehaviourParameters.h SparrowConnection.h \
  SparrowDevice.h $(MIRO_ROOT)/src/can/CanConnection.h \
  $(MIRO_ROOT)/src/can/CanMessage.h $(MIRO_ROOT)/src/miro/DevMessage.h \
  $(MIRO_ROOT)/src/can/canmsg.h $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/DevConnection.h
+ $(MIRO_ROOT)/src/miro/DevConnection.h $(MIRO_ROOT)/src/miro/TimeHelper.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY
