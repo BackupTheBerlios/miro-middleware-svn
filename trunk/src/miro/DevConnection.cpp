@@ -17,14 +17,12 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
+#include "DevConnection.h"
+#include "DevEventHandler.h"
+#include "Parameters.h"
+#include "Exception.h"
 
 #include <ace/Reactor.h>
-
-#include "miro/DevConnection.h"
-#include "miro/DevEventHandler.h"
-#include "miro/Parameters.h"
-
-#include "miro/Exception.h"
 
 // #undef DEBUG
 

@@ -20,8 +20,6 @@
 #include "miro/TimeHelper.h"
 #include "can/Parameters.h"
 
-
-
 #include "can/CanMessage.h"
 
 #include <miro/Exception.h>
@@ -37,7 +35,6 @@
 
 namespace Sparrow
 {
-  using Miro::Button;
   using Miro::ButtonStatusIDL;
 
   //------------------------//
@@ -346,7 +343,7 @@ namespace Sparrow
 	  pEvent->time.sec = t.sec();
 	  pEvent->number = i;
 	  pEvent->event = (message.byteData(1) & (0x01 << i))?
-	    Button::ON_RELEASE : Button::ON_PRESS;
+	    Miro::Button::ON_RELEASE : Miro::Button::ON_PRESS;
 	  pButtons_->pushEvent(pEvent);
 	}
       }

@@ -273,8 +273,8 @@ namespace Miro
     friend bool     operator <  (Angle alpha, Angle beta);
 
   // IO friend functions
-    friend std::ostream& operator << (class std::ostream& ostr, Angle alpha);
-    friend std::istream& operator >> (class std::istream& istr,  Angle& alpha);
+    friend std::ostream& operator << (std::ostream& ostr, Angle alpha);
+    friend std::istream& operator >> (std::istream& istr,  Angle& alpha);
  
     static void normalize(double& _alpha);
     static void normalize1(double& _alpha);

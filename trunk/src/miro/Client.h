@@ -22,7 +22,7 @@
 
 namespace Miro
 {
-  // forward declaration
+ // forward declaration
   class Client;
 
   //! Global helper function for resolution of a CORBA object from the naming service.

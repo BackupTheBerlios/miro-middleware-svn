@@ -17,11 +17,9 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
-#include "miro/Exception.h"
-
-#include "miro/DevConsumer.h"
-#include "miro/DevMessage.h"
+#include "DevConsumer.h"
+#include "DevMessage.h"
+#include "Exception.h"
 
 #include <iostream>
 

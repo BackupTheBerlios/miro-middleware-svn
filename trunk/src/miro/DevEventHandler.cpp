@@ -17,12 +17,10 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
-#include "miro/DevEventHandler.h"
-#include "miro/DevConsumer.h"
-#include "miro/DevMessage.h"
-
-#include "miro/Exception.h"
+#include "DevEventHandler.h"
+#include "DevConsumer.h"
+#include "DevMessage.h"
+#include "Exception.h"
 
 // #undef DEBUG
 

@@ -9,7 +9,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "miro/Client.h"
+#include "Client.h"
 
 #include <ace/Arg_Shifter.h>
 
@@ -120,7 +120,7 @@ namespace Miro
   CORBA::ORB_ptr
   Client::orb() const
   {
-    return CORBA_ORB::_duplicate(orb_.in());
+    return CORBA::ORB::_duplicate(orb_.in());
   }
 
 };

@@ -9,7 +9,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "ScanDescriptionHelper.h"
+#include /* no pch */ "ScanDescriptionHelper.h"
 #include "ScanDescriptionC.h"
 #include "XmlParse.h"
 

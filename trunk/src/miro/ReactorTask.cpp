@@ -9,10 +9,10 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "miro/ExceptionC.h"
-#include "miro/ReactorTask.h"
-#include "miro/Server.h"
-#include "miro/Exception.h"
+#include "ExceptionC.h"
+#include "ReactorTask.h"
+#include "Server.h"
+#include "Exception.h"
 
 #include <iostream>
 

@@ -10,10 +10,9 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "BAFactory.h"
-
-#include <miro/TimedBehaviour.h>
-#include <miro/EventBehaviour.h>
-#include <miro/TaskBehaviour.h>
+#include "TimedBehaviour.h"
+#include "EventBehaviour.h"
+#include "TaskBehaviour.h"
 
 #include <miro/BehaviourRepository.h>
 #include <miro/ArbiterRepository.h>

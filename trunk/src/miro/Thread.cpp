@@ -17,9 +17,8 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
-#include "miro/Thread.h"
-#include "miro/Exception.h"
+#include "Thread.h"
+#include "Exception.h"
 
 #include <iostream>
 

@@ -30,6 +30,7 @@ SHLIB    = lib$(NAME).$(SOEXT)
 ## this I didn't understand yet
 # VPATH=.:Naming
 ACE_SHLIBS += -lTAO_Strategies
+MIRO_PCH_FILE = pch.so.H
 
 #----------------------------------------------------------------------------
 #	Include macros
@@ -193,6 +194,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 	NotifyMulticastParameters.h NotifyMulticastParameters.cpp
 
 %C.cpp: $(IDL_DIR)/$(patsubst %C.cpp, %, $@).idl
+
+pch: $(MIRO_PCH_FILE)
 
 realclean: clean
 	-$(RM) $(foreach file, $(IDL_FILES), $(foreach ext, $(IDL_EXT), $(file)$(ext)))

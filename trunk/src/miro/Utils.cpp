@@ -17,9 +17,9 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "miro/Utils.h"
-#include "miro/Exception.h"
-#include "miro/Parameters.h"
+#include "Utils.h"
+#include "Exception.h"
+#include "Parameters.h"
 
 #include <ace/Arg_Shifter.h>
 
@@ -29,11 +29,6 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-
-#include <unistd.h>
-#include <stdlib.h> // getenv ...
-#include <sys/stat.h>
-#include <sys/types.h>
 
 #undef DEBUG
 

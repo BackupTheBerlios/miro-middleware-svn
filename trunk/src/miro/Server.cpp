@@ -9,8 +9,8 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "miro/Server.h"
-#include "miro/Exception.h"
+#include "Server.h"
+#include "Exception.h"
 
 #include <ace/Synch.h>
 #include <ace/Arg_Shifter.h>

@@ -28,6 +28,7 @@ LIB      = lib$(NAME).a
 SHLIB    = lib$(NAME).$(SOEXT)
 
 PARAMS_SRC = Parameters.xml
+MIRO_PCH_FILE = miro/pch.H
 
 ## this I didn't understand yet
 # VPATH=.:Naming

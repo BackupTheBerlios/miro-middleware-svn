@@ -9,21 +9,20 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
-#include "miro/IO.h"
+#include "IO.h"
 
 // need all types defined in idl, for io operators
-#include "miro/ExceptionC.h"
-#include "miro/TimeC.h"
-#include "miro/WorldPointC.h"
-#include "miro/PositionC.h"
-#include "miro/VelocityC.h"
-#include "miro/MotionStatusC.h"
-#include "miro/RangeEventC.h"
-#include "miro/PanTiltC.h"
-// #include "miro/LaserC.h"
+#include "ExceptionC.h"
+#include "TimeC.h"
+#include "WorldPointC.h"
+#include "PositionC.h"
+#include "VelocityC.h"
+#include "MotionStatusC.h"
+#include "RangeEventC.h"
+#include "PanTiltC.h"
+// #include "LaserC.h"
 
-#include "miro/Angle.h"
+#include "Angle.h"
 
 #include <ace/INET_Addr.h>
 
