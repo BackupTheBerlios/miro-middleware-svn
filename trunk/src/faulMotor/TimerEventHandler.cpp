@@ -11,7 +11,7 @@
 
 #include "TimerEventHandler.h"
 #include "FaulMotorConnection.h"
-
+#include "sparrow/Parameters.h"
 #include "miro/TimeHelper.h"
 
 //#undef DEBUG
@@ -51,7 +51,8 @@ namespace FaulMotor
       std::cerr << " odometry stall " << ACE_OS::gettimeofday() << endl;
     }
     else {
-      connection_.getTicks();
+      if (!Sparrow::Parameters::instance()->sparrow2003)
+	connection_.getTicks();
       connection_.deferredSetSpeed();
     }
 
