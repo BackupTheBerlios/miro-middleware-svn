@@ -354,4 +354,13 @@ VideoControlS.cpp
 VideoControlS.h
 VideoControlS.i.h
 VideoControlS.lo
+QuickCamControlC.cpp
+QuickCamControlC.h
+QuickCamControlC.i.h
+QuickCamControlC.lo
+QuickCamControlS.cpp
+QuickCamControlS.h
+QuickCamControlS.i.h
+QuickCamControlS.lo
+
 libmiroIDL.la
