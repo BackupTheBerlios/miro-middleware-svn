@@ -28,7 +28,6 @@
 #include <qinputdialog.h>
 #include <qmessagebox.h>
 #include <qobjectlist.h>
-#include <qobjcoll.h>
 
 #include <algorithm>
 
