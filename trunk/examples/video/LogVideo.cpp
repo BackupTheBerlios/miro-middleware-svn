@@ -209,16 +209,16 @@ int main(int argc, char *argv[])
     Event * event = new Event();
     
     // Signal set to be handled by the event handler.
-    ACE_Sig_Set signals;
+    ACE_Sig_Set sig;
     
     // register Signal handler for Ctr+C
-    signals.sig_add(SIGINT);
-    signals.sig_add(SIGTERM);
+    sig.sig_add(SIGINT);
+    sig.sig_add(SIGTERM);
     
     // Reactor, misused as signal handler
     ACE_Reactor reactor;
     
-    if (reactor.register_handler(signals, event) == -1) {
+    if (reactor.register_handler(sig, event) == -1) {
       throw Miro::ACE_Exception(errno, "failed to register signal handler");
     }
     
