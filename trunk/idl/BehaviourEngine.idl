@@ -128,12 +128,17 @@ module Miro
     void openActionPattern(in string pattern) raises(EUnknownActionPattern);
     //! Send a transition
     /**
-     * This is for debug purposes only, as it will only succeede if
-     * the transition is registred for the current actionpattern.
+     * An external transition can be sent to a running policy. Note
+     * that there is no way for an external user to know reliably,
+     * which actionpattern is currently active and send the transition
+     * message based on that knoledge.
+     *
+     * An external transition message is internally handled by a
+     * transition pattern.
      *
      * @param transition The name of the transition.
      */
-    void sendTransition(in string transition);
+    void sendTransition(in string message);
     //! Send a transition for an actionpattern.
     /**
      * This is for debug purposes mainly, as it will only succede if
