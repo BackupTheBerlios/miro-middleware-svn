@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2000, 2001, 2002
+// (c) 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -65,7 +65,6 @@ int main(int argc, char *argv[])
 
     cout << "Loop forever handling events." << endl;
     server.run(5);
-
     cout << "Server stoped, exiting." << endl;
     server.detach(1);
 

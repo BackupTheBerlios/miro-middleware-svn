@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2000, 2001, 2002, 2003
+// (c) 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -12,51 +12,32 @@
 #include "BehavioursFactory.h"
 
 #include "miro/Server.h"
-#include "miro/BehaviourRepository.h"
 
-using CosNotifyChannelAdmin::EventChannel;
+#include "RangeSensorAvoid.h"
+#include "RangeSensorWallFollow.h"
 
-using Miro::Server;
-using Miro::RangeSensor;
-using Miro::Motion;
-using Miro::Odometry;
-using Miro::BehaviourRepository;
-
-RangeSensorBehavioursFactory::RangeSensorBehavioursFactory(Server& _server,
-							   ACE_Reactor& _reactor) :
-  server_(_server),
-  reactor_(_reactor),
-
-  ec_(server_.resolveName<EventChannel>("EventChannel")),
-  supplier_(ec_.in(), server_.namingContextName, false),
-
+RangeSensorBehavioursFactory::RangeSensorBehavioursFactory(Miro::Server& _server) :
+  // optain event channel
+  ec_(_server.resolveName<CosNotifyChannelAdmin::EventChannel>("EventChannel")),
+  supplier_(ec_.in(), _server.namingContextName, false)
+{
   // initialize behaviours
-  avoid1(server_, ec_.in(), "RangeSensorAvoidOne", server_.namingContextName, &supplier_),
-  avoid2(server_, ec_.in(), "RangeSensorAvoidTwo", server_.namingContextName),
-  wallFollow(server_, ec_.in(), "RangeSensorWallFollow", server_.namingContextName)
-{
-  cout << "Constructing RangeSensorBehavioursFactory." << endl;
 
-  BehaviourRepository * bf = BehaviourRepository::instance();
-
-  bf->registerBehaviour(&avoid1);
-  bf->registerBehaviour(&avoid2);
-  bf->registerBehaviour(&wallFollow);
-}
-
-RangeSensorBehavioursFactory::~RangeSensorBehavioursFactory()
-{
+  eventBehaviours_.push_back(new RangeSensorAvoid(_server, ec_.in(), "RangeSensorAvoidOne", _server.namingContextName, &supplier_));
+  eventBehaviours_.push_back(new RangeSensorAvoid(_server, ec_.in(), "RangeSensorAvoidTwo", _server.namingContextName));
+  eventBehaviours_.push_back(new RangeSensorWallFollow(_server, ec_.in(), "RangeSensorWallFollow", _server.namingContextName));
 }
 
 void
-RangeSensorBehavioursFactory::open()
+RangeSensorBehavioursFactory::connect()
 {
   supplier_.connect();
-
+  Super::connect();
 }
 
 void
-RangeSensorBehavioursFactory::close()
+RangeSensorBehavioursFactory::disconnect()
 {
+  Super::disconnect();
   supplier_.disconnect();
 }

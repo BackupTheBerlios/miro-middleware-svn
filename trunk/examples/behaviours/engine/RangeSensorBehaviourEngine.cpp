@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2000, 2001, 2002
+// (c) 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -35,15 +35,17 @@ int main(int argc, char *argv[])
   ReactorTask * task = new ReactorTask(&server);
 
   if (argc < 2) {
-    cout << "usage: " << argv[0] << " <BEHAVIOURFILE>" << endl;
+    cout << "usage: " << argv[0] << "[ <POLICYFILE> ]" 
+	 << "warning: No policy specified on startup." << endl;
     return 1;
   }
 
   try {
     SimpleBehavioursFactory behaviours1(server, *task->reactor());
-    RangeSensorBehavioursFactory behaviours2(server, *task->reactor());
+    RangeSensorBehavioursFactory behaviours2(server);
 
     behaviours1.init();
+    behaviours2.init();
 
     // Notification Service
     EventChannel_var ec = server.resolveName<EventChannel>("EventChannel");
@@ -56,23 +58,25 @@ int main(int argc, char *argv[])
     server.addToNameService(engineInterface.in(), "BehaviourEngine");
 
     // initialize ActionPatterns
-    engineImpl.loadPolicyFile(argv[1]);
+    if (argc >= 2)
+      engineImpl.loadPolicyFile(argv[1]);
+
 
     // start timed behaviour sceduler
     task->open(NULL);
 
     supplier_.connect();
     behaviours1.connect();
-    behaviours2.open();
+    behaviours2.connect();
 
     cout << "Loop forever handling events." << endl;
     server.run(5);
-
     cout << "Server stoped, exiting." << endl;
+    server.detach(1);
 
     engineImpl.closePolicy();
 
-    behaviours2.close();
+    behaviours2.disconnect();
     behaviours1.disconnect();
     supplier_.disconnect();
 
@@ -82,5 +86,8 @@ int main(int argc, char *argv[])
     cerr << "Uncaught CORBA exception: " << e << endl;
     return 1;
   }
+
+  server.shutdown();
+  server.wait();
   return 0;
 }
