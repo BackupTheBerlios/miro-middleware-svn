@@ -55,7 +55,7 @@ globalsources = \
 	BehaviourEngine.idl \
 	Joystick.idl \
 	DistanceScan.idl \
-	ArbiterEvent.idl
+	ArbiterEvent.idl 
 
 b21sources = \
 	Laser.idl \
