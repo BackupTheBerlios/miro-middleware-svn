@@ -64,13 +64,13 @@ WallFollow::action()
   message.velocity.translation = params->translation;
   message.velocity.rotation = 0;
 
-  cout << name_ << ": selecting action" << endl;
- 
   bool rL, rR;
   double mL = 0.;
   double bL = 0.;
   double mR = 0.;
   double bR = 0.;
+
+  cout << name_ << ": Regressionsgeraden" << endl;
 
   // left wall 
   if (!(rL = regressionsGerade(left_, Miro::deg2Rad(90), mL, bL)))
@@ -80,6 +80,8 @@ WallFollow::action()
     rR = regressionsGerade(rightFront_, Miro::deg2Rad(-45), mR, bR);
 
 
+  cout << name_ << ": selecting action" << endl;
+ 
   // follow left wall
   if ( rL && 
        ( !rR ||
@@ -131,13 +133,16 @@ WallFollow::regressionsGerade(const SensorScan& _scan, double delta,
   Vector2d alpha(cos(-delta), sin(-delta));
 
   // build vector of egocentric sensor readings
+  cout << name_ << ": local scan copy" << _scan.size() << endl;
   SensorScan scan(_scan);
+  cout << name_ << ": egocentric mapping" << endl;
   SensorScan::iterator first, last = scan.end();
   for (first = scan.begin(); first != last; ++first) {
     (*first) -= position_;
     (*first) *= alpha;
   }
 
+  cout << name_ << ": accumulate" << endl;
   // Geradengleichung y = m*x + b
   Vector2d sum = std::accumulate(scan.begin(), scan.end(), Vector2d());
 
@@ -145,6 +150,7 @@ WallFollow::regressionsGerade(const SensorScan& _scan, double delta,
   double productSum = 0.;
   double xSquareSum = 0.;
 
+  cout << name_ << ": summing up" << endl;
   for (first = scan.begin(); first != last; ++first) {
     xSquareSum += first->real() * first->real();
     productSum += first->real() * first->imag();

@@ -47,7 +47,7 @@ RangeSensorBehaviour::RangeSensorBehaviour(Miro::Client& _client,
 
   EventTypeSeq added(0);
   EventTypeSeq removed(1);
-  added.length(0);
+  added.length(1);
   removed.length(1);
 
   added[0].domain_name =  CORBA::string_dup(domainName_.c_str());
@@ -188,35 +188,35 @@ RangeSensorBehaviour::evalSensor(unsigned long group, unsigned long index, long 
       a <= Miro::deg2Rad(90) +  params->apexAngle)
     if (!ignore)
       addBuffer(left_, p);
-    else
+    else if (left_.size() > 0)
       left_.pop_back();
   // front left sensors
   if (a >= Miro::deg2Rad(45) - params->apexAngle && 
       a <= Miro::deg2Rad(45) +  params->apexAngle)
     if (!ignore)
       addBuffer(leftFront_, p);
-    else
+    else if (leftFront_.size() > 0)
       leftFront_.pop_back();
   // front sensors
   if (a >= Miro::deg2Rad(0) - params->apexAngle && 
       a <= Miro::deg2Rad(0) +  params->apexAngle)
     if (!ignore)
       addBuffer(front_, p);
-    else
+    else if (front_.size() > 0)
       front_.pop_back();
   // front right sensors
   if (a >= Miro::deg2Rad(-45) - params->apexAngle &&
       a <= Miro::deg2Rad(-45) +  params->apexAngle)
     if (!ignore)
       addBuffer(rightFront_, p);
-    else
+    else if (rightFront_.size() > 0)
       rightFront_.pop_back();
   // right sensors
   if (a >= Miro::deg2Rad(-90) - params->apexAngle && 
       a <= Miro::deg2Rad(-90) +  params->apexAngle)
     if (!ignore)
       addBuffer(right_, p);
-    else
+    else if (right_.size() > 0)
       right_.pop_back();
 }
 

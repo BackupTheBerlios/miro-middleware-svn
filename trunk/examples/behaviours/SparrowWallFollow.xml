@@ -1,16 +1,16 @@
 <!DOCTYPE xml ><xml>
- <actionpattern x="-238" y="-192" name="Wait" start="true" >
+ <actionpattern x="-238" y="-192" start="false" name="Wait" >
   <arbiter name="MotionArbiter" />
   <behaviour name="OnButton" />
   <transition target="WallFollow" message="Button" />
  </actionpattern>
- <actionpattern x="15" y="-193" name="WallFollow" start="false" >
+ <actionpattern x="30" y="-163" start="true" name="WallFollow" >
   <arbiter name="MotionArbiter" />
-  <behaviour name="TactileStop" />
-  <behaviour name="AvoidOne" />
   <behaviour name="WallFollow" >
    <parameter value="Infrared" name="SensorName" />
   </behaviour>
+  <behaviour name="TactileStop" />
+  <behaviour name="AvoidOne" />
   <behaviour name="OnButton" />
   <transition target="Wait" message="Button" />
  </actionpattern>
