@@ -54,7 +54,12 @@ namespace FaulMotor
     void jmp2();
     void jmp3();
 
+    void deferredSetSpeed(ACE_Time_Value const& _now);
+    
   protected:
+    //! mutex protected write
+    void protectedDeferredSetSpeed();
+
     const Parameters * params_;
 
     FaulController::Connection * leftWheel_;
@@ -63,10 +68,19 @@ namespace FaulMotor
     Consumer * consumer;
     Sparrow::Connection2003 * connection2003;
 
-    double prevSpeedL;
-    double prevSpeedR;
-    double prevAccL;
-    double prevAccR;
+    ACE_Time_Value nextSceduledQuery_;
+    bool writeThisRound_;
+
+    int newSpeedL;
+    int newSpeedR;
+    int newAccL;
+    int newAccR;
+
+    int prevSpeedL;
+    int prevSpeedR;
+    int prevAccL;
+    int prevAccR;
+
     bool disabled_;
 
     Miro::Mutex mutex_;

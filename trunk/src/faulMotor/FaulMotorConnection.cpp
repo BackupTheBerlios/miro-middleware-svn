@@ -21,6 +21,8 @@
 #include "faulTty/FaulCanConnection.h"
 #include "faulTty/FaulTtyConnection.h"
 
+#include <cmath>
+
 #ifdef DEBUG
 #define DBG(x) x
 #define CSDBG(x) x
@@ -74,6 +76,8 @@ namespace FaulMotor
 
     consumer(_consumer),
     connection2003(_connection2003),
+    nextSceduledQuery_(ACE_OS::gettimeofday()),
+    writeThisRound_(false),
     prevSpeedL(0),
     prevSpeedR(0),
     prevAccL(0),
@@ -134,6 +138,9 @@ namespace FaulMotor
 
     leftWheel_->writeBinary(init, 4);
     rightWheel_->writeBinary(init, 4);
+
+    // the first ticks package is ignored, so better get on with it
+    getTicks();
   }
 
   void
@@ -143,70 +150,42 @@ namespace FaulMotor
     if (disabled_)
       enable();
 
-    char speedMessageL[20];
-    char speedMessageR[20];
-    char accMessageL[20];
-    char accMessageR[20];
-    char const * messageL[3] = { accMessageL, speedMessageL, NULL };
-    char const * messageR[3] = { accMessageR, speedMessageR, NULL };
+    // calculate the new velocities
+    newSpeedL = lround(-_speedL * params_->speedConvFactor);//* 112;
+    newSpeedR = lround(_speedR * params_->speedConvFactor);//* 112;
 
-    int speedL = (short) (-_speedL * params_->speedConvFactor);//* 112;
-    int speedR = (short) (_speedR * params_->speedConvFactor);//* 112;
+    // by default use maximum accelaration
+    // acceleration conversion is hardcoded - sorry
+    double accR =  params_->maxPosAccel * 9. / 320.;
+    double accL =  accR;
 
-    double dSpeedL = -speedL - prevSpeedL;
-    double dSpeedR = speedR - prevSpeedR;
+    // calculate the speed difference
+    double dSpeedL = -newSpeedL + prevSpeedL;
+    double dSpeedR = newSpeedR - prevSpeedR;
 
-    double accEffL, accEffR;
-    /*if ((dSpeedR + dSpeedL) / 2. <= 0 ) {
-       accEffL = params_-> maxNegAccel;
-       accEffR = params_-> maxNegAccel;
-    }
-    else {*/
-       accEffL = params_-> maxPosAccel;
-       accEffR = params_-> maxPosAccel;
-    //}
-
-    double accR =  accEffR * 9. / 320.;
-    double accL =  accEffL * 9. / 320.;
+    // if the robot has to change its speed
+    // adjust the acceleations accordingly
     if ((dSpeedL != 0) && (dSpeedR != 0)) {
       if (fabs(dSpeedL) > fabs(dSpeedR)) {
-	accR = (dSpeedR / dSpeedL * accEffR) * 9. / 320.;
+	accR = (dSpeedR / dSpeedL * accR) * 9. / 320.;
       }
       else {
-	accL = ( dSpeedL / dSpeedR * accEffL) * 9. / 320.;
+	accL = ( dSpeedL / dSpeedR * accL) * 9. / 320.;
       }
     }
 
-    short acctestL = abs((short)accL);
-    short acctestR = abs((short)accR);
-//    cout << "maxPosAcc: " << params_-> maxPosAccel <<" AccR: " << acctestR ;
-//    cout << " AccL: " << acctestL << endl;
+    newAccL = abs(lround(accL));
+    newAccR = abs(lround(accR));
 
-    if (true || fabs(acctestL - prevAccL) > 2) {         //zur datenverringerung
-      sprintf(accMessageL, "ac%d", acctestL); // build acc message
-      prevAccL = acctestL;
-    }
-    else {
-      messageL[0] = speedMessageL;
-      messageL[1] = NULL;
-    }
+    // if we did not write yet and have enough
+    // time left: set the speed directly
 
-    if (true || fabs(acctestR - prevAccR) > 2) {
-      sprintf(accMessageR, "ac%d", acctestR); // build acc message
-      prevAccR = acctestR;
+    ACE_Time_Value now = ACE_OS::gettimeofday();
+    if (!writeThisRound_ &&
+	now + ACE_Time_Value(0, 20000) < nextSceduledQuery_) {
+      writeThisRound_ = true;
+      protectedDeferredSetSpeed();
     }
-    else {
-      messageR[0] = speedMessageR;
-      messageR[1] = NULL;
-    }
-
-    sprintf(speedMessageL, "v%d", speedL); // build speed message
-    sprintf(speedMessageR, "v%d", speedR); // build speed message
-
-    leftWheel_->writeMessage(messageL);
-    rightWheel_->writeMessage(messageR);   // send it
-    prevSpeedL = -speedL;
-    prevSpeedR = speedR;
   }
 
   void
@@ -305,5 +284,69 @@ namespace FaulMotor
   {
     leftWheel_->writeMessage(STOP_MSG);             // send it
     rightWheel_->writeMessage(STOP_MSG);
+  }
+
+
+  /** 
+   * Warning, this method is designed as a callback from
+   * TimerEventHandler. Everthing else will fail!
+   */
+  void
+  Connection::deferredSetSpeed(ACE_Time_Value const& _now)
+  {
+    Miro::Guard guard(mutex_);
+
+    nextSceduledQuery_ = _now + Parameters::instance()->odometryPace;
+
+    writeThisRound_ = false;
+    protectedDeferredSetSpeed();
+  }
+
+  void
+  Connection::protectedDeferredSetSpeed()
+  {
+    char speedMessageL[20];
+    char speedMessageR[20];
+    char accMessageL[20];
+    char accMessageR[20];
+    char const * messageL[3] = { NULL, NULL, NULL };
+    char const * messageR[3] = { NULL, NULL, NULL };
+
+    int indexL = 0;
+    int indexR = 0;
+    if (newAccL != prevAccL) {                //zur datenverringerung
+      sprintf(accMessageL, "ac%d", newAccL); // build acc message
+      messageL[indexL] = accMessageL;
+      ++indexL;
+      prevAccL = newAccL;
+    }
+
+    if (newSpeedL != prevSpeedL) {
+      sprintf(speedMessageL, "v%d", newSpeedL); // build speed message
+      messageL[indexL] = speedMessageL;
+      ++indexL;
+      prevSpeedL = newSpeedL;
+
+    }
+
+    if (newAccR != prevAccR) {                //zur datenverringerung
+      sprintf(accMessageR, "ac%d", newAccR); // build acc message
+      messageR[indexR] = accMessageR;
+      ++indexR;
+      prevAccR = newAccR;
+    }
+
+    if (newSpeedR != prevSpeedR) {
+      sprintf(speedMessageR, "v%d", newSpeedR); // build speed message
+      messageR[indexR] = speedMessageR;
+      ++indexR;
+      prevSpeedR = newSpeedR;
+
+    }
+
+    if (indexL > 0)
+      leftWheel_->writeMessage(messageL);
+    if (indexR > 0)
+      rightWheel_->writeMessage(messageR);   // send it
   }
 }

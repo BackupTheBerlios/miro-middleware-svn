@@ -43,13 +43,16 @@ namespace FaulMotor
 
   // timer callback
   int
-  TimerEventHandler::handle_timeout(const ACE_Time_Value &, const void *)
+  TimerEventHandler::handle_timeout(const ACE_Time_Value & _now, const void *)
   {
     if (Connection::gotTicks_ == 0)
       std::cerr << "odometry stall" << endl;
     Connection::gotTicks_ = 0;
 
+    // request new odometry update
     connection_.getTicks();
+    // set new velocities/accelerations
+    connection_.deferredSetSpeed(_now);
     return 0;
   }
 }
