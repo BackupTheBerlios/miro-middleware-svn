@@ -62,6 +62,7 @@ sources1 = \
 	TimedBehaviour.cpp \
 	Policy.cpp \
 	VelocitySpace.cpp \
+	ObstImpl.cpp \
 	NotifyMulticastParameters.xml \
 	NotifyMulticastRequestEntry.cpp \
 	NotifyMulticastSender.cpp \
