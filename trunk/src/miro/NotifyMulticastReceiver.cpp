@@ -28,7 +28,7 @@
 #include "NotifyMulticastReceiver.h"
 #include "NotifyMulticastAdapter.h"
 #include "NotifyMulticastSH.h"
-
+#include <iostream>
 #include <ace/OS.h>
 
 #include <cstdlib>
@@ -80,6 +80,8 @@ namespace Miro {
             }
 
             delete []locals;
+
+	    connected_ = true;
 
             PRINT_DBG(DBG_MORE, "Initialized");
         }
@@ -155,13 +157,15 @@ namespace Miro {
          *     Called when input is available
          */
         int Receiver::handle_input() {
+//		std::cout << "Connected: " << connected_ << std::endl;
             if (connected_) {
-		if (mutex_.acquire()) {
+//		if (mutex_.acquire()) {
                 CORBA::ULong  header[HEADER_SIZE / sizeof(CORBA::ULong) + ACE_CDR::MAX_ALIGNMENT];
                 EventData     eventData;
                 iovec         iov[1];
                 ACE_INET_Addr from;
 
+//		std::cout << "INPUT ::" << std::endl;
                 switch (receiveData(iov, from)) {
 
                     case -1:
@@ -230,8 +234,8 @@ namespace Miro {
 
                 handle_event(eventData, iov);
             }
-		mutex_.release();
-	    }
+//		mutex_.release();
+//	    }
 
             return 0;
         }
@@ -465,6 +469,7 @@ namespace Miro {
          *     _flags:  FLags for recv()
          */
         int Receiver::receiveData(iovec *_iov, int _iovLen, ACE_INET_Addr &_from, int _flags) {
+		std::cout << "Socket in Receiver: " << configuration_->getSocket()->get_handle() << std::endl;
             return configuration_->getSocket()->recv(_iov, _iovLen, _from, _flags);
         }
 
