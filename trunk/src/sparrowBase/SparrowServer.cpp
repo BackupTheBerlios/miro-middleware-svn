@@ -182,7 +182,7 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 
   mcAdapter_((Sparrow::Parameters::instance()->channelSharing)?
              new Miro::NotifyMulticast::Adapter(0, NULL, this, ec_.in()) :
-	     0)
+	     NULL)
 {
   init(_startReactorTastk);
 
@@ -222,6 +222,9 @@ SparrowBase::init(bool _startReactorTastk)
 SparrowBase::~SparrowBase()
 {
   DBG(cout << "Destructing SparrowBase." << endl);
+
+  // close channel sharing
+  delete mcAdapter_;
 
   //  sparrowConnection.readTables();
   reactorTask.cancel();
