@@ -47,10 +47,10 @@ REFERENCE_FILES = \
 	styleguide.tex
 
 EXAMPLE_LINKS = \
-	$(MIRO_ROOT)/examples/sonar/sonarPoll1.cpp \
-	$(MIRO_ROOT)/examples/sonar/sonarPoll2.cpp \
-	$(MIRO_ROOT)/examples/sonar/sonarPoll3.cpp \
-	$(MIRO_ROOT)/examples/sonar/sonarNotify.cpp \
+	$(MIRO_ROOT)/examples/sonar/SonarPoll1.cpp \
+	$(MIRO_ROOT)/examples/sonar/SonarPoll2.cpp \
+	$(MIRO_ROOT)/examples/sonar/SonarPoll3.cpp \
+	$(MIRO_ROOT)/examples/sonar/SonarNotify.cpp \
 	$(MIRO_ROOT)/examples/b21Behaviours/LaserAvoid.cpp
 
 DOXYCONFTMPL = doxygen.conf.tmpl
