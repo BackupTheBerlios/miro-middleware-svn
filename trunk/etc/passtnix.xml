@@ -14,8 +14,11 @@
    <parameter name="RightWheel">
      <parameter value="/dev/tts/0" name="Device" />
    </parameter>
-   <parameter name="LeftTicksPerMM" value="113.5" />
-   <parameter name="RightTicksPerMM" value="113.5" />
+   <parameter name="LeftTicksPerMM" value="113.6" />
+   <parameter name="RightTicksPerMM" value="115.3" />
+   <parameter name="Motion">
+    <parameter name="WheelBase" value="385" />
+   </parameter>
   </parameter>
  </section>
 
