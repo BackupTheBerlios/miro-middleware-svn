@@ -36,6 +36,7 @@ NotifyMulticastReceiver.lo
 NotifyMulticastRequestEntry.lo
 NotifyMulticastSender.lo
 NotifyMulticastTimeoutHandler.lo
+NotifyMulticastSH.lo
 OdometryTracking.lo
 Parameters.lo
 Policy.lo

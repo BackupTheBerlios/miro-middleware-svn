@@ -504,7 +504,8 @@ namespace Miro {
 
                 case -1: {
                         PRINT_DBG(DBG_INFO, "send_fragment: send failed");
-                        LOG(configuration_, "Sender: send_fragment: send failed (-1)");
+			std::string error_text = "Sender: send_fragment: send failed ("+std::string(strerror(errno))+")";
+                        LOG(configuration_, error_text);
                         throw CORBA::COMM_FAILURE();
                     }
 
