@@ -102,7 +102,7 @@ namespace Miro
     left = velocity.translation;
     right = velocity.translation;
 
-    int delta = (int) rint(velocity.rotation * params_.wheelBase * .5);
+    int delta = (int) rint(velocity.rotation * params_.wheelBase * .25);
 
     left -= delta;
     right += delta;

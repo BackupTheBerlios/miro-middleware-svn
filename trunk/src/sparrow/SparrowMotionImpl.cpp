@@ -79,7 +79,7 @@ namespace Sparrow
     Miro::Guard guard(mutex_);
     setTargetVelocity(vel);
 
-    connection.setSpeedRot(vel.translation, rad2ticks(vel.rotation));
+    connection.setSpeedRot(targetVelocity_.translation, rad2ticks(targetVelocity_.rotation));
   }
 
   void
@@ -98,6 +98,6 @@ namespace Sparrow
 
     Miro::Guard guard(mutex_);
     setTargetVelocity(left, right);
-    connection.setSpeed(left, right);
+    connection.setSpeed(left_, right_);
   };
 };

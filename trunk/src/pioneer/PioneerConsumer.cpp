@@ -140,8 +140,8 @@ namespace Pioneer
 	    velL = message->lVel() * params_->velConvFactor;
 	    velR = message->rVel() * params_->velConvFactor;
 	    status_.position.heading = message->theta() * params_->angleConvFactor;
-	    status_.velocity.translation = (long) rint((velL + velR)/2);
-	    status_.velocity.rotation = (velL - velR)*360/(2*M_PI*(-weelDist));
+	    status_.velocity.translation = (long) rint((velL + velR)/2.);
+	    status_.velocity.rotation = 2. * (velR - velL) / (double)weelDist;
 	    
 	    pOdometry->integrateData(status_);
 	    

@@ -89,10 +89,10 @@ namespace Miro
     Guard guard(connectedMutex_);
     if (connected_) {
       DBG(cout << "Disconnecting StructuredPushConsumer." << endl);
+      connected_ = false;
       try {
 	proxySupplier_->disconnect_structured_push_supplier();
 	consumerAdmin_->destroy();
-	connected_ = false;
       }
       catch (const CORBA::Exception & e) {
 	cerr << "StructuredPushConsumer::disconnect() CORBA exception on: " << endl

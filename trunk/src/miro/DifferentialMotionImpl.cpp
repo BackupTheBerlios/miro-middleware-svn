@@ -46,29 +46,36 @@ namespace Miro
   void
   DifferentialMotionImpl::setTargetVelocity(const Miro::VelocityIDL& _velocity) 
   {
-    Miro::VelocityIDL velocity(_velocity);
+    velocity2lr(_velocity, left_, right_);
 
-    CORBA::Long left;
-    CORBA::Long right;
+    // adjust velocties
 
-    velocity2lr(velocity, left, right);
+    if (left_ < params_.minLTranslation) {
+      left_ = params_.minLTranslation;
+      right_ = params_.minLTranslation + _velocity.rotation * params_.wheelBase * .5;
+    }
+    else if (left_ > params_.maxLTranslation) {
+      left_ = params_.maxLTranslation;
+      right_ = params_.maxLTranslation + _velocity.rotation * params_.wheelBase * .5;
+    }
+    if (right_ < params_.minRTranslation) {
+      left_ = params_.minRTranslation - _velocity.rotation * params_.wheelBase * .5;
+      right_ = params_.minRTranslation;
+    }
+    else if (right_ > params_.maxRTranslation) {
+      left_ = params_.maxRTranslation - _velocity.rotation * params_.wheelBase * .5;
+      right_ = params_.maxRTranslation;
+    }
 
-    // TODO: adjust velocties
-    double fastWheel = velocity.translation + 225 * velocity.rotation;
-    if (fastWheel > 900)
-      velocity.translation = (int)(900 - 225 * velocity.rotation);
-
-    targetVelocity_ = velocity;
-
-    left_ = left;
-    right_ = right;
+    // recalculate the resulting velocity
+    lr2velocity(left_, right_, targetVelocity_);
   }
 
   void
-  DifferentialMotionImpl::setTargetVelocity(CORBA::Long left, CORBA::Long right) 
+  DifferentialMotionImpl::setTargetVelocity(CORBA::Long _left, CORBA::Long _right) 
   {
-    left_ = left;
-    right_ = right;
+    left_ = _left;
+    right_ = _right;
     lr2velocity(left_, right_, targetVelocity_);
   }
 };

@@ -100,7 +100,7 @@ namespace Pioneer
 
     Miro::Guard guard(mutex_);
     setTargetVelocity(left, right);
-    connection.setSpeed2((short)left, (short)right);
+    connection.setSpeed2((short)left_, (short)right_);
   }
   
   //--------------------------------------------------------------------------
@@ -111,7 +111,7 @@ namespace Pioneer
   MotionImpl::rotateToPosition(CORBA::Double heading)
     throw(EOutOfBounds, EDevIO)
   {
-    if (pOdometry.in()) {
+    if (!CORBA::is_nil(pOdometry.in())) {
       Miro::PositionIDL position = pOdometry->getPosition();
       Miro::Angle angle(position.heading - heading);
 
