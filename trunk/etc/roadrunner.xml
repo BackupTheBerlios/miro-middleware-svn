@@ -43,7 +43,7 @@
 	  <parameter value="0.300000" name="PanSwing" />
 	  <parameter value="245" name="PanRadPerSec" />
 	  <parameter value="3." name="PanAccuracy" />
-	  <!-- <parameter value="true" name="Servo" /> -->
+	  <!--parameter value="true" name="Servo" /-->
         </parameter>
 	<parameter value="0.040000" name="InfraredPulse" />
 	<parameter value="0.040000" name="OdometryPulse" />
@@ -651,7 +651,8 @@
 	      <parameter value="CollectAllFeatures2Full" name="Name" />
 	      <parameter name="BackLink" >
 		<parameter value="NeuralNetBall" />
-		<!-- <parameter value="NeuralNetRobots" /> -->              <parameter value="AttentionGoalCornerPoles" />
+		<parameter value="NeuralNetRobots" /> 
+		<parameter value="AttentionGoalCornerPoles" />
 		<parameter value="BlueLeftPost" />
 		<parameter value="BlueRightPost" />
 		<parameter value="YellowLeftPost" />
@@ -717,8 +718,8 @@
 	<parameter value="184" name="WhiteBalance1" />
 	<parameter name="Camera" >
 	  <parameter value="0.060000" name="Latency" />
-	  <parameter value="33.0" name="Alpha" />
-	  <parameter value="595" name="Height" />
+	  <parameter value="36.0" name="Alpha" />
+	  <parameter value="673" name="Height" />
 	  <parameter value=" 6.4000000000e+02" name="Ncx" />
 	  <parameter value=" 6.4000000000e+02" name="Nfx" />
 	  <parameter value=" 7.4000000000e-03" name="Dx" />
@@ -929,7 +930,7 @@
 	</parameter>
       </instance>
       <!-- Collect All Features -->    <instance type="LVF::CollectAllFeatures2" name="CollectAllFeatures2Full" >
-	<parameter value="8" name="NumberBackLinks" />
+	<parameter value="9" name="NumberBackLinks" />
 	<parameter value="true" name="DynamicConnection" />
 	<parameter value="VisionCollectorFull" name="InterfaceName" />
 	<parameter value="2" name="ScaleFactorRunLength" />
