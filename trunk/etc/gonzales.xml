@@ -301,9 +301,9 @@
       </instance>
 
       <instance type="Video::FilterOmni2Pan" name="FilterOmni2Pan">
-	<parameter value="166" name="CenterX" />
-	<parameter value="120" name="CenterY" />
-	<parameter value="120" name="Radius" />
+	<parameter value="179" name="CenterX" />
+	<parameter value="134" name="CenterY" />
+	<parameter value="125" name="Radius" />
 	<!-- roadrunner: x=160 y=122 r=124 -->
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
