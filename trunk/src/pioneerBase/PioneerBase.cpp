@@ -58,8 +58,6 @@ PioneerBase::PioneerBase(int argc, char *argv[],
   stall(/*pioneerConnection*/),
   sonar(_pioneerParms.sonarDescription, &structuredPushSupplier_)
 {
-  CosNaming::Name n;
-
   pOdometry = odometry._this();
   pMotion = motion._this();
   pStall = stall._this();

@@ -18,7 +18,7 @@
 
 #include <algorithm>
 
-#undef DEBUG
+// #undef DEBUG
 
 #ifdef DEBUG
 #include <iostream>
@@ -167,6 +167,9 @@ namespace Psos
       }
       else {
 	// handle synch messages
+
+        Miro::Guard guard(synchMutex);
+
 	switch (msg->id()) {
 	case SF_SYNC_0 : 
 	  DBG(cout << "PSOS synch state:" << synch << " - got sync0" << endl);

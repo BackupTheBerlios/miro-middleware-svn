@@ -151,8 +151,8 @@ namespace Miro
     }
   }
 
-  void operator <<= (ScanDescriptionIDL& lhs, const QDomNode& node)
-  {
-  }
+//  void operator <<= (ScanDescriptionIDL& lhs, const QDomNode& node)
+//  {
+//  }
  
 };

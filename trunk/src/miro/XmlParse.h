@@ -31,6 +31,6 @@ namespace Miro
   void operator <<= (std::string& lhs, const QDomNode& node);
   void operator <<= (ACE_Time_Value& lhs, const QDomNode& node);
   void operator <<= (ACE_TTY_IO::Serial_Params& lhs, const QDomNode& node);
-  void operator <<= (ScanDescriptionIDL& lhs, const QDomNode& node);
+//  void operator <<= (ScanDescriptionIDL& lhs, const QDomNode& node);
 };
 #endif // xmlParse_hh

@@ -14,6 +14,7 @@
 #include "OdometryS.h"
 
 #include "Synch.h"
+#include <cmath>
 
 #include <orbsvcs/CosNotifyCommC.h>
 
