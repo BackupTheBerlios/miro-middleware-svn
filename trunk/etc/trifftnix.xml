@@ -6,8 +6,26 @@
    <parameter value="Sparrow99" name="Type" />
   </parameter>
  </section>
+ <section name="Faulhaber" >
+  <parameter name="FaulMotor" >
+   <parameter name="LeftWheel">
+     <parameter value="/dev/tts/2" name="Device" />
+   </parameter>
+   <parameter name="RightWheel">
+     <parameter value="/dev/tts/0" name="Device" />
+   </parameter>
+   <parameter name="LeftTicksPerMM" value="115.3" />
+   <parameter name="RightTicksPerMM" value="115.3" />
+   <parameter name="Motion">
+    <parameter name="WheelBase" value="385" />
+   </parameter>
+  <parameters name="SpeedConvFactor" value="3.36" />
+  </parameter>
+ </section>
+
  <section name="Sparrow99" >
   <parameter name="SparrowBoard" >
+   <parameter value="true" name="Faulhaber" />
    <parameter value="/dev/can/0" name="Device" />
    <parameter value="0.050000" name="PanLatency" />
    <parameter value="0.500000" name="PanSwing" />
