@@ -31,6 +31,12 @@
 #include <orbsvcs/CosNotifyChannelAdminS.h>
 #include <orbsvcs/CosNotifyCommC.h>
 
+namespace Miro {
+  namespace NMC {
+    class Adapter;
+  }
+}
+
 class PioneerBase : public Miro::Server
 {
   typedef Miro::Server Super;
@@ -64,8 +70,12 @@ private:
   CosNotification::AdminProperties initialAdmin_;
   /** The one channel that we create using the factory. */
   CosNotifyChannelAdmin::EventChannel_var ec_;
+  //! Event channel federation for team communication.
+  Miro::NMC::Adapter *mcAdapter_;
   
   Miro::StructuredPushSupplier structuredPushSupplier_;
+
+
 
   Miro::OdometryImpl odometry;
   Miro::BatteryImpl battery;

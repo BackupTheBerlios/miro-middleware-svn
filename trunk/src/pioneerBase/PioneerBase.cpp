@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 // 
 // $Id$
@@ -11,6 +11,7 @@
 
 #include "PioneerBase.h"
 
+#include "miro/NotifyMulticastAdapter.h"
 #include "miro/Exception.h"
 #include "miro/Utils.h"
 #include "miro/Synch.h"
@@ -43,6 +44,9 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   notifyFactory_(TAO_Notify_EventChannelFactory_i::create(poa.in() ACE_ENV_ARG_PARAMETER)),
   id_(),
   ec_(notifyFactory_->create_channel(initialQos_, initialAdmin_, id_)),
+  mcAdapter_((Pioneer::Parameters::instance()->channelSharing)?
+	     new Miro::NMC::Adapter(argc, argv, this, ec_) :
+	     NULL),
   structuredPushSupplier_(ec_.in(), namingContextName),
 
   odometry(&structuredPushSupplier_),
@@ -102,12 +106,23 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   // start the asychronous consumer listening for the hardware
   reactorTask.open(0);
 
+  if (mcAdapter_)
+    mcAdapter_->init();
+
   DBG(cout << "PioneerBase initialized.." << endl);
 }
 
 PioneerBase::~PioneerBase()
 {
   DBG(cout << "Destructing PioneerBase." << endl);
+
+  // close channel sharing
+  if (mcAdapter_) {
+    DBG(cout << "Closing multicats adapter." << endl);
+
+    mcAdapter_->fini();
+    delete mcAdapter_;
+  }
 
   pioneerConnection.close();
 
