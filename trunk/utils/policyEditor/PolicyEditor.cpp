@@ -29,6 +29,8 @@
 #include <iostream>
 #include <sstream>
 
+using namespace Miro::CFG;
+
 namespace 
 {
   const char * filters[3] = { 
@@ -350,7 +352,7 @@ main(int argc, char** argv)
   Miro::Client client(argc, argv);
   QApplication app(argc, argv);
 
-//   Class::ParameterSet s;
+//   Type::ParameterSet s;
 
 //   s.insert(Parameter("std::string", "name", "Hans Utz", "Guy", "" ));
 //   s.insert(Parameter("bool", "truth", "false", "", "" ));

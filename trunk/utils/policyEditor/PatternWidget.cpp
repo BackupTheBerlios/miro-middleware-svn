@@ -15,7 +15,7 @@
 #include "ArbiterWidget.h"
 
 #include "PolicyConfig.h"
-#include "../../src/params/Generator.h"
+#include "params/Generator.h"
 
 #include <qpainter.h>
 #include <qpopupmenu.h>
@@ -31,6 +31,8 @@
 #include <qobjectlist.h>
 
 #include <cmath>
+
+using namespace Miro::CFG;
 
 PatternWidgetClass::PatternWidgetClass(PolicyViewClass * view,
 				       QWidget* parent, const QString& name) :
@@ -246,7 +248,7 @@ PatternWidgetClass::mousePressEvent(QMouseEvent* event)
 
     // submenu: add all behaviour names //
     Generator::GroupMap::const_iterator first, last;
-    PolicyConfigClass::instance()->description().getGroupedClasses("behaviour", first, last);
+    PolicyConfigClass::instance()->description().getGroupedTypes("behaviour", first, last);
     for (; first != last; ++first) {
       if (first->second.isFinal() &&
 	  !getDocument().hasBehaviour(patternName, first->second.name())) {

@@ -12,7 +12,7 @@
 #include "ArbiterWidget.h"
 
 #include "PolicyConfig.h"
-#include "../../src/params/Generator.h"
+#include "src/params/Generator.h"
 
 #include <qpainter.h>
 #include <qpopupmenu.h>
@@ -22,6 +22,8 @@
 
 #include <cmath>
 #include <iostream>
+
+using namespace Miro::CFG;
 
 extern QApplication* qApp;
 
@@ -54,7 +56,7 @@ ArbiterWidget::mousePressEvent(QMouseEvent* event)
 
     // submenu: add all arbiter names //
     Generator::GroupMap::const_iterator first, last;
-    PolicyConfigClass::instance()->description().getGroupedClasses("arbiter", first, last);
+    PolicyConfigClass::instance()->description().getGroupedTypes("arbiter", first, last);
     for (; first != last; ++first) {
       if (first->second.isFinal()) {
         menuSetArbiter_->insertItem(first->second.name());

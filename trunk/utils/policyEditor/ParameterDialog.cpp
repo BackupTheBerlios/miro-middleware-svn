@@ -12,7 +12,7 @@
 #include "ParameterDialog.h"
 #include "PolicyConfig.h"
 
-#include "src/params/Class.h"
+#include "src/params/Type.h"
 #include "src/params/Generator.h"
 
 #include "miro/Log.h"
@@ -30,6 +30,8 @@
 #include <qmessagebox.h>
 
 #include <climits>
+
+using namespace Miro::CFG;
 
 MyIntValidator::MyIntValidator(QWidget * parent, const char *name) :
   Super(parent, name),
@@ -110,7 +112,7 @@ ParameterDialog::ParameterDialog(const QString& _name,
 				 QWidget* _parent) :
   QDialog(_parent, "ParamDialog", TRUE),
   config_(PolicyConfigClass::instance()),
-  class_(config_->description().getClass(_name)),
+  class_(config_->description().getType(_name)),
   modified_(false),
   accept_(0)
 {
@@ -121,9 +123,9 @@ ParameterDialog::ParameterDialog(const QString& _name,
   }
   params_ = class_->parameterSet();
 
-  const Class * parent = class_;
+  const Type * parent = class_;
   while (!parent->parent().isEmpty()) {
-    const Class * tmp = config_->description().getClass(parent->parent());
+    const Type * tmp = config_->description().getType(parent->parent());
     if (tmp == NULL) {
       QMessageBox::warning(this, 
 			   "Error constructing parameter dialog:",
@@ -151,7 +153,7 @@ ParameterDialog::ParameterDialog(const QString& _name,
   
   // add parameter structs:
   QMap<QString, QString>::ConstIterator iter;
-  Class::ParameterSet::const_iterator first, last = params_.end();
+  Type::ParameterSet::const_iterator first, last = params_.end();
   unsigned long i = 0;
   for (first = params_.begin(); first != last; ++first, ++i) {
 

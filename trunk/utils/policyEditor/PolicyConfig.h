@@ -17,8 +17,12 @@
 #include <qstringlist.h>
 
 // forward declarations
-class Generator;
-class Parser;
+namespace Miro {
+  namespace CFG {
+    class Generator;
+    class Parser;
+  }
+}
 
 class PolicyConfigClass
 {
@@ -33,7 +37,7 @@ public:
   
   static Miro::Singleton<PolicyConfigClass> instance;
   
-  const Generator& description() const;
+  const Miro::CFG::Generator& description() const;
 
 protected:
   void readConfigFile();
@@ -45,8 +49,8 @@ protected:
   //! list of description files 
   QStringList descriptionFiles_;
 
-  Generator * generator_;
-  Parser * handler_;
+  Miro::CFG::Generator * generator_;
+  Miro::CFG::Parser * handler_;
 };
 
 inline
@@ -56,7 +60,7 @@ PolicyConfigClass::getDescriptionFiles() const {
 }
 
 inline
-const Generator&
+const Miro::CFG::Generator&
 PolicyConfigClass::description() const {
   return *generator_;
 }

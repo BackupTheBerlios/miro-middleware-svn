@@ -11,7 +11,7 @@
 #ifndef ParameterDialog_h
 #define ParameterDialog_h
 
-#include "../../src/params/Class.h"
+#include "params/Type.h"
 
 #include <qdialog.h>
 #include <qvalidator.h>
@@ -106,8 +106,8 @@ signals:
 
 protected:
   PolicyConfigClass * config_;
-  const Class * class_;
-  Class::ParameterSet params_;
+  const Miro::CFG::Type * class_;
+  Miro::CFG::Type::ParameterSet params_;
   bool modified_;
   int accept_;
   
