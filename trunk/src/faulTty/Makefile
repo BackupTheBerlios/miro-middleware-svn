@@ -2,7 +2,7 @@
 ##
 ## This file is part of Miro (The Middleware For Robots)
 ##
-## (c) 1999, 2000, 2001
+## (c) 2003
 ## Department of Neural Information Processing, University of Ulm, Germany
 ##
 ## $Id$
@@ -26,11 +26,12 @@ SHLIB    = lib$(NAME).$(SOEXT)
 # ACE_SHLIBS = -lTAO_Svc_Utils -lTAO -lACE
 
 ## specify your library files here
-FILES = 	Parameters \
-		FaulTtyDevice \
+FILES = 	FaulTtyConnection \
+		FaulTtyEventHandler
+
+OTHERS =	Parameters \
 		FaulTtyMessage \
-		FaulTtyConnection \
-		FaulTtyEventHandler\
+		FaulTtyDevice \
 		TimerEventHandler
 
 DEFS  = $(addsuffix .h,$(FILES))
@@ -63,36 +64,15 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
 
-.obj/Parameters.o .obj/Parameters.o .obj/Parameters.o .obj/Parameters.o: Parameters.cpp Parameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h
-
-.obj/FaulTtyDevice.o .obj/FaulTtyDevice.o .obj/FaulTtyDevice.o .obj/FaulTtyDevice.o: FaulTtyDevice.cpp FaulTtyMessage.h \
- $(MIRO_ROOT)/src/miro/DevMessage.h
-
-.obj/FaulTtyMessage.o .obj/FaulTtyMessage.o .obj/FaulTtyMessage.o .obj/FaulTtyMessage.o: FaulTtyMessage.cpp FaulTtyMessage.h \
- $(MIRO_ROOT)/src/miro/DevMessage.h
-
-.obj/FaulTtyConnection.o .obj/FaulTtyConnection.o .obj/FaulTtyConnection.o .obj/FaulTtyConnection.o: FaulTtyConnection.cpp \
- $(MIRO_ROOT)/src/miro/ExceptionC.h $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/Exception.h $(MIRO_ROOT)/src/miro/Synch.h \
- FaulTtyConnection.h $(MIRO_ROOT)/src/miro/TtyConnection.h \
- FaulTtyEventHandler.h $(MIRO_ROOT)/src/miro/DevEventHandler.h \
- FaulTtyMessage.h $(MIRO_ROOT)/src/miro/DevMessage.h Parameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h
+.obj/FaulTtyConnection.o .obj/FaulTtyConnection.o .obj/FaulTtyConnection.o .obj/FaulTtyConnection.o: FaulTtyConnection.cpp FaulTtyConnection.h \
+ $(MIRO_ROOT)/src/miro/TtyConnection.h FaulTtyEventHandler.h \
+ $(MIRO_ROOT)/src/miro/DevEventHandler.h FaulTtyMessage.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i
 
 .obj/FaulTtyEventHandler.o .obj/FaulTtyEventHandler.o .obj/FaulTtyEventHandler.o .obj/FaulTtyEventHandler.o: FaulTtyEventHandler.cpp FaulTtyEventHandler.h \
- $(MIRO_ROOT)/src/miro/DevEventHandler.h $(MIRO_ROOT)/src/miro/Synch.h \
- FaulTtyConnection.h $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/TtyConnection.h FaulTtyMessage.h \
- $(MIRO_ROOT)/src/miro/DevMessage.h
-
-.obj/TimerEventHandler.o .obj/TimerEventHandler.o .obj/TimerEventHandler.o .obj/TimerEventHandler.o: TimerEventHandler.cpp TimerEventHandler.h \
- FaulTtyConnection.h $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/Exception.h $(MIRO_ROOT)/src/miro/TtyConnection.h \
- FaulTtyMessage.h $(MIRO_ROOT)/src/miro/DevMessage.h
+ $(MIRO_ROOT)/src/miro/DevEventHandler.h FaulTtyMessage.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h FaulTtyConnection.h \
+ $(MIRO_ROOT)/src/miro/TtyConnection.h $(MIRO_ROOT)/src/miro/Exception.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

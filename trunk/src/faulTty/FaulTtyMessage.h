@@ -13,24 +13,24 @@
 
 #include "miro/DevMessage.h"
 
-//#include "FaulTtyDevice.h"
-
-#include <cmath>
-
 namespace FaulTty
 {
-  // forward declarations
-  class Message;
-
-  class Message : public Miro::DevMessage
+  // input message
+  class OdometryMessage : public Miro::DevMessage
   {
   public:
-    Message() {} // default get message
-    Message(char daten[256]); //short daten);
-    void setPos(long posL, long posR);
-    char buffer_[256];
-    long lPos;
-    long rPos;
+    typedef enum { LEFT, RIGHT } Wheel;
+
+    OdometryMessage(Wheel _wheel);
+
+    Wheel wheel_;
+    long ticks_;
   }; 
+
+  inline 
+  OdometryMessage::OdometryMessage(Wheel _wheel) :
+    wheel_(_wheel),
+    ticks_(0)
+  {}
 };
 #endif 

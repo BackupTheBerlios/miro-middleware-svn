@@ -13,8 +13,7 @@
 #include "FaulTtyConnection.h"
 #include "FaulTtyMessage.h"
 
-#include "miro/TimeHelper.h"
-#include <algorithm>
+#include "miro/Exception.h"
 
 #undef DEBUG
 
@@ -34,27 +33,16 @@ using std::cerr;
 
 namespace FaulTty
 {
-  EventHandler::EventHandler(Miro::DevConsumer * _consumer, Connection& _connection) :
-    Super(_consumer, new Message()),
-    connection(_connection),
-    synchMutex(),
-    synchCondition(synchMutex),
-    synch(-1),
-    state(NO_STARTS),
-    buffLen(0),
-    buffPos(0),
-    writePtr((unsigned char*)message_)
-
+  EventHandler::EventHandler(Miro::DevConsumer * _consumer, OdometryMessage::Wheel _wheel) :
+    Super(_consumer, new OdometryMessage(_wheel)),
+    negate_(false)
   {
     DBG(cout << "Constructing FaulTtyEventHandler." << endl);
-    lrbytes=0; //init für die zwei daten wegen multiplexer
-    posinit = 0;
   }
 
   EventHandler::~EventHandler()
   {
     DBG(cout << "Destructing FaulTtyEventHandler." << endl);
-
   }
 
   // file descriptor callback
@@ -63,13 +51,10 @@ namespace FaulTty
   {
     DBG(cout << "FaulEventHandler: handle_input" << endl);
 
-    Message* msg = (Message*) message_;
-
-    int bytes = 0;
-    char thisChar;
+    OdometryMessage * msg = static_cast<OdometryMessage *>(message_);
 
     // read data from the Faul device if we do not have some left
-    bytes = ACE_OS::read(fd, buff, 511);
+    int bytes = ACE_OS::read(fd, buff_, 511);
 
     if (bytes == -1)
       throw Miro::CException(errno, "Error on FaulTty file descriptor read.");
@@ -78,85 +63,37 @@ namespace FaulTty
       throw Miro::Exception("FaulTty file descriptor was called to read 0" \
 			    "bytes from the device. I can´t belief this!");
 
-    buff[bytes] = 0;
+    DBG(buff_[bytes] = 0);
+    DBG(cout << "FaulTty message: " << buff_ << endl);
 
-    //msg->time() = ACE_OS::gettimeofday();
-    if (lrbytes==0) {
-       posR=(long)atoi(buff);
-	if ((abs((int)(posR - prePosR))<25000) || (posinit == 0))
-	{
-		lrbytes=0;
-		//cout << "byte1:  " << abs(posL-prePosL)<< endl;
-		prePosR=posR;
-		lrbytes=1;
+    char const * last = buff_ + bytes;
+    for (char const * first = buff_; first != last; ++first) {
+      if (msg->ticks_ == 0)
+	msg->time() = ACE_OS::gettimeofday();
+
+      if (*first == '-') {
+	negate_ = true;
+      }
+      else if (*first >= '0' && *first <= '9') {
+	msg->ticks_ *= 10;
+	msg->ticks_ += *first - '0';
+	if (negate_) {
+	  msg->ticks_ = -msg->ticks_;
+	  negate_ = false;
 	}
       }
-       else {
-
-	posL=(long)atoi(buff);
-	if ((abs((int)(posL-prePosL))<25000) || (posinit ==0))
-	{
-
-		lrbytes=0;
-		//cout << "                                                                       byte2:  " << abs(posR-prePosR)<< endl;
-		msg->setPos(posL,posR);
-		msg->time() = ACE_OS::gettimeofday();
-		//cout <<ACE_OS::gettimeofday()<< endl;
-		//cout << "posL: " << posL << " PosR: " << posR << endl;
-		prePosL = posL;   //alte daten sichern fuer vergleich mit neuen werten
-		prePosR = posR;
-		posinit = 1;  // in bertieb
-		dispatchMessage();
-	}
-
-       }
-
-
-
-    //cout << "hab daten gelesen!!!!!!!" << bytes << "   " <<buff<< endl;
+      else if (*first == '\13') {
+	dispatchMessage();
+      }
+      else if (*first == '\10') {
+	msg->ticks_ = 0;
+      }
+    }
 
     DBG(cerr << "Read " << bytes << " bytes from FaulTty" << endl);
-
-
-
-
-	  //dispatchMessage();
-
     DBG(cout << "FaulTtyEventHandler: Done with select" << endl);
 
     return 0;
   }
 
-  void
-  EventHandler::dispatchMessage()
-  {
-    Message* msg = (Message*) message_;
-
-
-    Super::dispatchMessage();
-
-  }
-
-  // timer callback
-  int
-  EventHandler::handle_timeout(const ACE_Time_Value &, const void *arg)
-  {
-    DBG(cout << "FaulTtyEventHandler: handle timer event." << endl);
-
-
-    return 0;
-  }
-
-
-  void
-  EventHandler::parseSynchMessage(const Message& _message)
-  {
-
-  }
-
-  void
-  EventHandler::initDevice()
-  {
-
-  }
 };
