@@ -20,8 +20,14 @@ AM_CONFIG_HEADER(config.h)
 
 AC_PREFIX_DEFAULT($PWD)
 
+test ".$CFLAGS" = "." && CFLAGS=""
 AC_PROG_CC
+test ".$CFLAGS" = "." && test "$GCC" = "yes" && CFLAGS="-O2"
+
+test ".$CXXFLAGS" = "." && CXXFLAGS=""
 AC_PROG_CXX
+test ".$CXXFLAGS" = "." && test "$GCC" = "yes" && CXXFLAGS="-O2"
+
 AC_PROG_CPP
 AC_PROG_LN_S
 AC_PROG_INSTALL
@@ -265,13 +271,45 @@ echo ""
 if test "x$ac_gcc_version" != "x"; then
 	echo $ECHO_N "gcc version" $ac_gcc_version "is used."; fi
 echo ""
-echo "inherited compilation values from ACE/TAO:"
 echo ""
+echo "ACE-related results:"
+echo "linker flags:  " $ACE_LDFLAGS
+echo "compiler flags:" $ACE_CPPFLAGS
+echo "libraries used:" $ACE_LIBS
+echo ""
+echo "TAO-related results:"
+echo "linker flags:  " $TAO_LDFLAGS
+echo "compiler flags:" $TAO_CPPFLAGS
+echo "libraries used:" $TAO_LIBS
+echo "used idl comp: " $TAO_IDL
+echo ""
+echo "inherited compilation values from ACE/TAO:"
 echo "symbols:   " $ac_feature_acetao_symbols
 # echo "warnings:  " $ac_feature_acetao_warnings
 echo "libraries: " $ac_feature_acetao_libs
 echo "lib-dirs:  " $ac_feature_acetao_libdirs
 echo "incl-dirs: " $ac_feature_acetao_incldirs
+echo ""
+echo "Qt-related results:"
+echo "linker flags:  " $QT_LDFLAGS
+echo "compiler flags:" $QT_CPPFLAGS
+echo "libraries used:" $QT_LIBS
+echo "used moc comp: " $QT_MOC
+if test "x$ac_compile_speech" = xyes; then
+	echo ""
+	echo "Sphinx-related results:"
+	echo "linker flags:  " $SPHINX_LDFLAGS
+	echo "compiler flags:" $SPHINX_CPPFLAGS
+	echo "libraries used:" $SPHINX_LIBS
+	echo "Speechtools-related results:"
+	echo "linker flags:  " $SPEECHTOOLS_LDFLAGS
+	echo "compiler flags:" $SPEECHTOOLS_CPPFLAGS
+	echo "libraries used:" $SPEECHTOOLS_LIBS
+	echo "Festival-related results:"
+	echo "linker flags:  " $FESTIVAL_LDFLAGS
+	echo "compiler flags:" $FESTIVAL_CPPFLAGS
+	echo "libraries used:" $FESTIVAL_LIBS
+fi
 echo ""
 echo $ECHO_N "Sparrow99 support "; if test "x$ac_request_sparrow99" = xyes; then echo "enabled."; else echo "disabled."; fi
 echo $ECHO_N "Pioneer support "; if test "x$ac_request_pioneer" = xyes; then echo "enabled."; else echo "disabled."; fi
