@@ -21,6 +21,7 @@
 class QString;
 class QMenuBar;
 class QPopupMenu;
+class QPushButton;
 
 class ControllerWidget : public QWidget
 {

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -21,7 +21,7 @@
 #include "miro/MotionArbiter.h"
 #include "miro/BehaviourRepository.h"
 #include "miro/ArbiterRepository.h"
-#include "miro/Policy.h"
+#include "miro/BehaviourEngineImpl.h"
 
 #include "miro/RangeSensorC.h"
 #include "miro/MotionC.h"
@@ -71,9 +71,7 @@ int main(int argc, char *argv[])
     
     // optain references
     cout << "Resolving sensor and actuator services." << endl;
-    // RangeSensor_var infrared = server.resolveName<RangeSensor>("Infrared");
     Motion_var motion = server.resolveName<Motion>("Motion");
-    // Odometry_var odometry = server.resolveName<Odometry>("Odometry");
 
     // construct all available behaviours
     cout << "Constructing Behaviours and Arbiters." << endl;
@@ -101,24 +99,23 @@ int main(int argc, char *argv[])
 
     af->registerArbiter(&ma);
 
-    // construct action patterns
-    Policy policy(argv[1]);
+    // Init behaviour infrastructure
+    Miro::BehaviourEngineImpl engineImpl(&supplier);
+    Miro::BehaviourEngine_var engineInterface = engineImpl._this();
+    server.addToNameService(engineInterface.in(), "BehaviourEngine");
 
-    cout << "current policy" << endl;
-    cout << policy << endl;
+    // initialize ActionPatterns
+    engineImpl.loadPolicyFile(argv[1]);
 
     // start timed behaviour sceduler
     task->open(NULL);
 
-    cout << "open policy" << endl;
-    // policy.open();
-    
     cout << "Loop forever handling events." << endl;
     server.run(5);
 
     cout << "Server stoped, exiting." << endl;
 
-    policy.close();
+    engineImpl.closePolicy();
 
     supplier.disconnect();
 
