@@ -8,27 +8,24 @@
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-#ifndef RangeSensorAvoidParameters_h
-#define RangeSensorAvoidParameters_h
+#ifndef RangeSensorBehaviourParameters_h
+#define RangeSensorBehaviourParameters_h
 
 #include "miro/EventBehaviourParameters.h"
 
 #include <string>
 
-struct RangeSensorAvoidParameters : public Miro::EventBehaviourParameters
+struct RangeSensorBehaviourParameters : public Miro::EventBehaviourParameters
 {
   unsigned int historySize;
   double apexAngle;
 
-  int minDistance;
-  int haltDistance;
-  int lateralDistance;
   int translation;
   double rotation;
 
   std::string sensorName;
 
-  RangeSensorAvoidParameters();
+  RangeSensorBehaviourParameters();
   virtual void operator <<= (const Miro::KeyValueList& _params);
 
 protected:

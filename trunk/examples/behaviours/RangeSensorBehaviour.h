@@ -8,14 +8,15 @@
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-#ifndef RangeSensorAvoid_h
-#define RangeSensorAvoid_h
+#ifndef RangeSensorBehaviour_h
+#define RangeSensorBehaviour_h
 
 #include "miro/RangeSensorC.h"
 #include "miro/EventBehaviour.h"
 
-#include "RangeSensorAvoidParameters.h"
+#include "RangeSensorBehaviourParameters.h"
 
+#include <complex>
 #include <deque>
 
 namespace Miro
@@ -23,32 +24,34 @@ namespace Miro
   class Client;
 };
 
-class RangeSensorAvoid : public Miro::EventBehaviour
+class RangeSensorBehaviour : public Miro::EventBehaviour
 {
   typedef Miro::EventBehaviour Super;
-  typedef std::deque<double> SensorScan;
+protected:
+  typedef std::complex<double> Vector2d;
+  typedef std::deque<Vector2d> SensorScan;
 
 public:
-  RangeSensorAvoid(Miro::Client& _client,
+  RangeSensorBehaviour(Miro::Client& _client,
 		   CosNotifyChannelAdmin::EventChannel_ptr _ec,
 		   const std::string& _name,
 		   const std::string& _domainName);
-
-  // factory method for BehaviourParameters
-  RangeSensorAvoidParameters * getParametersInstance();
 
   void init(const Miro::BehaviourParameters * _params);
   void action();
   const std::string& getBehaviourName() const;
 
 protected:
-  void addBuffer(SensorScan& _scan, double _range);
+  void addBuffer(SensorScan& _scan, const Vector2d& _p);
   void evalSensor(unsigned long group, unsigned long index, long range);
 
   Miro::Client& client_;
   Miro::RangeSensor_var rangeSensor_;
 
   Miro::Mutex mutex_;
+
+  double heading_;
+  Vector2d position_;
 
   SensorScan left_;
   SensorScan right_;

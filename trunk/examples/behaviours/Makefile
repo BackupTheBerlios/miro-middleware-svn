@@ -33,8 +33,12 @@ BIN 	= Behaviours
 FILES	= \
 	OnButton \
 	OnButtonParameters \
+	RangeSensorBehaviour \
+	RangeSensorBehaviourParameters \
 	RangeSensorAvoid \
 	RangeSensorAvoidParameters \
+	WallFollow \
+	WallFollowParameters \
 	TactileStop \
 	Straight \
 	StraightParameters \

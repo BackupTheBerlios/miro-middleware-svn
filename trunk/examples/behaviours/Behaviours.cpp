@@ -9,6 +9,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
+#include "WallFollow.h"
 #include "RangeSensorAvoid.h"
 #include "TactileStop.h"
 #include "Straight.h"
@@ -74,6 +75,7 @@ int main(int argc, char *argv[])
     TactileStop tactileStop(motion.in(), ec.in(), server.namingContextName);
     RangeSensorAvoid avoid1(server, ec.in(), "AvoidOne", server.namingContextName);
     RangeSensorAvoid avoid2(server, ec.in(), "AvoidTwo", server.namingContextName);
+    WallFollow wallFollow(server, ec.in(), "WallFollow", server.namingContextName);
     Straight straight(*task->reactor());
     Wander wander(*task->reactor());
     OnButton onButton(ec.in(), server.namingContextName);
@@ -88,6 +90,7 @@ int main(int argc, char *argv[])
     bf->registerBehaviour(&tactileStop);
     bf->registerBehaviour(&avoid1);
     bf->registerBehaviour(&avoid2);
+    bf->registerBehaviour(&wallFollow);
     bf->registerBehaviour(&straight);
     bf->registerBehaviour(&wander);
 

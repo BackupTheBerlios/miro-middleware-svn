@@ -2,6 +2,16 @@
 <config> 
   <config_group name="behaviour">
     
+    <config_item name="WallFollow" parent="RangeSensorBehaviour" namespace="">
+      <config_parameter name="HistorySize" type="int" measure=""default="50" inherited="true"/>
+      <config_parameter name="ApexAngle" type="double" measure="°" default="30" inherited="true"/>
+      <config_parameter name="Translation" type="int" measure="mm" default="400" inherited="true"/>
+      <config_parameter name="Rotation" type="double" measure="°/s" default="45" inherited="true"/>
+      <config_parameter name="SensorName" type="string" measure="" default="Infrared" inherited="true"/>
+      <config_parameter name="MinDistance" type="int" measure="mm" default="500" />
+      <config_parameter name="MaxDistance" type="int" measure="mm" default="400" />
+    </config_item>
+    
     <config_item name="AvoidOne" parent="Miro::EventBehaviour" namespace="">
       <config_parameter name="HistorySize" type="int" measure=""default="50" />
       <config_parameter name="ApexAngle" type="double" measure="°" default="30" />
