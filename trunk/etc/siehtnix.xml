@@ -291,8 +291,8 @@
       <sx>1</sx>
       <f>4.245162</f>
       <kappa>1.608197e-02</kappa>
-      <height>515</height>
-      <alpha>34.5</alpha>
+      <height>540</height><!-- 515 -->
+      <alpha>36.0</alpha><!-- 34.5 -->
     </Camera>
   </Sparrow99>
   <Notification>
