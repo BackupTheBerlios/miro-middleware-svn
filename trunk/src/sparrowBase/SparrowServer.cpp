@@ -401,6 +401,7 @@ SparrowBase::~SparrowBase()
     delete mcAdapter_;
   }
 
+  sparrowConnection->fini();
   //  sparrowConnection.readTables();
   reactorTask.cancel();
   DBG(cout << "reactor Task canceled." << endl);
