@@ -349,8 +349,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  OdometryC.h OdometryC.i OdometryS.i B21MotionC.h B21MotionC.i \
  B21MotionS.i
 
-.obj/DevConnection.o .obj/DevConnection.o .obj/DevConnection.o .obj/DevConnection.o: DevConnection.cpp \
- DevConnection.h \
+.obj/DevConnection.o .obj/DevConnection.o .obj/DevConnection.o .obj/DevConnection.o: DevConnection.cpp DevConnection.h \
  DevEventHandler.h \
  Parameters.h \
  ArbiterParameters.h \
@@ -359,14 +358,11 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 .obj/DevEventHandler.o .obj/DevEventHandler.o .obj/DevEventHandler.o .obj/DevEventHandler.o: DevEventHandler.cpp \
  DevEventHandler.h \
- DevConsumer.h \
- DevMessage.h \
+ DevConsumer.h DevMessage.h \
  Exception.h
 
-.obj/DevConsumer.o .obj/DevConsumer.o .obj/DevConsumer.o .obj/DevConsumer.o: DevConsumer.cpp \
- Exception.h \
- DevConsumer.h \
- DevMessage.h
+.obj/DevConsumer.o .obj/DevConsumer.o .obj/DevConsumer.o .obj/DevConsumer.o: DevConsumer.cpp Exception.h \
+ DevConsumer.h DevMessage.h
 
 .obj/TtyConnection.o .obj/TtyConnection.o .obj/TtyConnection.o .obj/TtyConnection.o: TtyConnection.cpp TtyConnection.h DevEventHandler.h \
  Parameters.h ArbiterParameters.h BehaviourParameters.h Exception.h

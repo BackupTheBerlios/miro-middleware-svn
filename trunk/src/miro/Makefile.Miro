@@ -342,8 +342,7 @@ realclean: clean
 .obj/Angle.o .obj/Angle.so .shobj/Angle.o .shobj/Angle.so: Angle.cpp Angle.h
 
 .obj/Utils.o .obj/Utils.so .shobj/Utils.o .shobj/Utils.so: Utils.cpp Utils.h \
- Exception.h \
- Parameters.h \
+ Exception.h Parameters.h \
  ArbiterParameters.h \
  BehaviourParameters.h
 
@@ -355,57 +354,39 @@ realclean: clean
 
 .obj/Task.o .obj/Task.so .shobj/Task.o .shobj/Task.so: Task.cpp Task.h
 
-.obj/ReactorTask.o .obj/ReactorTask.so .shobj/ReactorTask.o .shobj/ReactorTask.so: ReactorTask.cpp \
- ExceptionC.h \
- ExceptionC.i \
- Server.h \
- Client.h \
- Exception.h \
+.obj/ReactorTask.o .obj/ReactorTask.so .shobj/ReactorTask.o .shobj/ReactorTask.so: ReactorTask.cpp ExceptionC.h \
+ ExceptionC.i Server.h \
+ Client.h Exception.h \
  Parameters.h \
  ArbiterParameters.h \
  BehaviourParameters.h \
  ReactorTask.h
 
 .obj/Client.o .obj/Client.so .shobj/Client.o .shobj/Client.so: Client.cpp Client.h \
- Exception.h \
- Parameters.h \
+ Exception.h Parameters.h \
  ArbiterParameters.h \
  BehaviourParameters.h
 
 .obj/Server.o .obj/Server.so .shobj/Server.o .shobj/Server.so: Server.cpp Server.h \
- Client.h \
- Exception.h \
+ Client.h Exception.h \
  Parameters.h \
  ArbiterParameters.h \
  BehaviourParameters.h
 
-.obj/IO.o .obj/IO.so .shobj/IO.o .shobj/IO.so: IO.cpp IO.h \
- ExceptionC.h \
- ExceptionC.i \
- TimeC.h \
- TimeC.i \
- WorldPointC.h \
- WorldPointC.i \
- PositionC.h \
- PositionC.i \
- VelocityC.h \
- VelocityC.i \
- MotionStatusC.h \
- MotionStatusC.i \
- RangeEventC.h \
- RangeEventC.i \
- PanTiltC.h \
- TiltC.h \
- TiltC.i \
- PanC.h \
- PanC.i \
- PanTiltC.i \
- Angle.h
+.obj/IO.o .obj/IO.so .shobj/IO.o .shobj/IO.so: IO.cpp IO.h ExceptionC.h \
+ ExceptionC.i TimeC.h \
+ TimeC.i WorldPointC.h \
+ WorldPointC.i PositionC.h \
+ PositionC.i VelocityC.h \
+ VelocityC.i MotionStatusC.h \
+ MotionStatusC.i RangeEventC.h \
+ RangeEventC.i PanTiltC.h \
+ TiltC.h TiltC.i \
+ PanC.h PanC.i \
+ PanTiltC.i Angle.h
 
-.obj/TimeHelper.o .obj/TimeHelper.so .shobj/TimeHelper.o .shobj/TimeHelper.so: TimeHelper.cpp \
- TimeHelper.h \
- TimeC.h \
- TimeC.i
+.obj/TimeHelper.o .obj/TimeHelper.so .shobj/TimeHelper.o .shobj/TimeHelper.so: TimeHelper.cpp TimeHelper.h \
+ TimeC.h TimeC.i
 
 .obj/ScanDescriptionHelper.o .obj/ScanDescriptionHelper.so .shobj/ScanDescriptionHelper.o .shobj/ScanDescriptionHelper.so: ScanDescriptionHelper.cpp \
  ScanDescriptionHelper.h ScanDescriptionC.h ScanDescriptionC.i \
@@ -440,8 +421,7 @@ realclean: clean
 .obj/ArbiterMessage.o .obj/ArbiterMessage.so .shobj/ArbiterMessage.o .shobj/ArbiterMessage.so: ArbiterMessage.cpp ArbiterMessage.h
 
 .obj/ArbiterRepository.o .obj/ArbiterRepository.so .shobj/ArbiterRepository.o .shobj/ArbiterRepository.so: ArbiterRepository.cpp ArbiterRepository.h \
- Singleton.h Synch.h Exception.h \
- Arbiter.h Synch.h
+ Singleton.h Synch.h Exception.h Arbiter.h Synch.h
 
 .obj/PriorityArbiter.o .obj/PriorityArbiter.so .shobj/PriorityArbiter.o .shobj/PriorityArbiter.so: PriorityArbiter.cpp PriorityArbiter.h Arbiter.h \
  Synch.h Parameters.h ArbiterParameters.h BehaviourParameters.h \
@@ -489,9 +469,9 @@ realclean: clean
 .obj/BehaviourParameters.o .obj/BehaviourParameters.so .shobj/BehaviourParameters.o .shobj/BehaviourParameters.so: BehaviourParameters.cpp BehaviourParameters.h
 
 .obj/BehaviourRepository.o .obj/BehaviourRepository.so .shobj/BehaviourRepository.o .shobj/BehaviourRepository.so: BehaviourRepository.cpp BehaviourRepository.h \
- Singleton.h Synch.h Exception.h \
- Behaviour.h BehaviourParameters.h DynamicWindow.h ActionPattern.h \
- Synch.h Policy.h ArbiterParameters.h Arbiter.h
+ Singleton.h Synch.h Exception.h Behaviour.h \
+ BehaviourParameters.h DynamicWindow.h ActionPattern.h Synch.h \
+ Policy.h ArbiterParameters.h Arbiter.h
 
 .obj/EventBehaviour.o .obj/EventBehaviour.so .shobj/EventBehaviour.o .shobj/EventBehaviour.so: EventBehaviour.cpp EventBehaviour.h Behaviour.h \
  BehaviourParameters.h DynamicWindow.h ActionPattern.h Synch.h \
@@ -504,13 +484,12 @@ realclean: clean
 .obj/TimedBehaviour.o .obj/TimedBehaviour.so .shobj/TimedBehaviour.o .shobj/TimedBehaviour.so: TimedBehaviour.cpp TimedBehaviour.h Behaviour.h \
  BehaviourParameters.h DynamicWindow.h ActionPattern.h Synch.h \
  Policy.h ArbiterParameters.h Arbiter.h Parameters.h TimeHelper.h \
- TimeC.h \
- TimeC.i
+ TimeC.h TimeC.i
 
 .obj/Policy.o .obj/Policy.so .shobj/Policy.o .shobj/Policy.so: Policy.cpp BehaviourEngineC.h BehaviourEngineC.i Policy.h \
  Synch.h ActionPattern.h ArbiterParameters.h ArbiterRepository.h \
- Singleton.h Synch.h Exception.h \
- Arbiter.h Behaviour.h BehaviourParameters.h DynamicWindow.h \
+ Singleton.h Synch.h Exception.h Arbiter.h \
+ Behaviour.h BehaviourParameters.h DynamicWindow.h \
  BehaviourRepository.h
 
 .obj/DynamicWindow.o .obj/DynamicWindow.so .shobj/DynamicWindow.o .shobj/DynamicWindow.so: DynamicWindow.cpp DynamicWindow.h

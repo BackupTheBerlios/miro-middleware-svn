@@ -76,6 +76,11 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  CanonMessage.h \
  $(MIRO_ROOT)/src/miro/DevMessage.h CanonDevice.h \
  PioneerConsumer.h $(MIRO_ROOT)/src/miro/DevConsumer.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.h $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h $(MIRO_ROOT)/src/miro/WorldPointC.i \
+ $(MIRO_ROOT)/src/miro/PositionC.i $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i $(MIRO_ROOT)/src/miro/MotionStatusC.i \
  CanonPanTiltImpl.h $(MIRO_ROOT)/src/miro/CanonPanTiltS.h \
  $(MIRO_ROOT)/src/miro/PanTiltS.h $(MIRO_ROOT)/src/miro/TiltS.h \
  $(MIRO_ROOT)/src/miro/ExceptionS.h $(MIRO_ROOT)/src/miro/ExceptionC.h \
@@ -96,6 +101,11 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 .obj/PioneerConsumer.o .obj/PioneerConsumer.o .obj/PioneerConsumer.o .obj/PioneerConsumer.o: PioneerConsumer.cpp PioneerConsumer.h \
  $(MIRO_ROOT)/src/miro/Synch.h $(MIRO_ROOT)/src/miro/DevConsumer.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.h $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h $(MIRO_ROOT)/src/miro/WorldPointC.i \
+ $(MIRO_ROOT)/src/miro/PositionC.i $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i $(MIRO_ROOT)/src/miro/MotionStatusC.i \
  PioneerStallImpl.h $(MIRO_ROOT)/src/miro/PioneerStallS.h \
  $(MIRO_ROOT)/src/miro/StallS.h $(MIRO_ROOT)/src/miro/StallC.h \
  $(MIRO_ROOT)/src/miro/StallC.i $(MIRO_ROOT)/src/miro/StallS.i \
@@ -122,8 +132,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/TtyConnection.h \
  CanonMessage.h \
  $(MIRO_ROOT)/src/miro/DevMessage.h CanonDevice.h \
- $(MIRO_ROOT)/src/miro/RangeEventC.h $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i $(MIRO_ROOT)/src/miro/RangeEventC.i \
+ $(MIRO_ROOT)/src/miro/RangeEventC.h $(MIRO_ROOT)/src/miro/RangeEventC.i \
  $(MIRO_ROOT)/src/miro/RangeSensorImpl.h \
  $(MIRO_ROOT)/src/miro/RangeSensorS.h \
  $(MIRO_ROOT)/src/miro/ScanDescriptionS.h \
@@ -135,7 +144,6 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/DifferentialMotionImpl.h \
  $(MIRO_ROOT)/src/miro/DifferentialMotionS.h \
  $(MIRO_ROOT)/src/miro/MotionS.h $(MIRO_ROOT)/src/miro/VelocityS.h \
- $(MIRO_ROOT)/src/miro/VelocityC.h $(MIRO_ROOT)/src/miro/VelocityC.i \
  $(MIRO_ROOT)/src/miro/VelocityS.i $(MIRO_ROOT)/src/miro/MotionC.h \
  $(MIRO_ROOT)/src/miro/MotionC.i $(MIRO_ROOT)/src/miro/MotionS.i \
  $(MIRO_ROOT)/src/miro/DifferentialMotionC.h \
@@ -143,12 +151,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/DifferentialMotionS.i \
  $(MIRO_ROOT)/src/miro/MotionImpl.h $(MIRO_ROOT)/src/miro/OdometryImpl.h \
  $(MIRO_ROOT)/src/miro/OdometryS.h $(MIRO_ROOT)/src/miro/PositionS.h \
- $(MIRO_ROOT)/src/miro/WorldPointS.h $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i $(MIRO_ROOT)/src/miro/WorldPointS.i \
- $(MIRO_ROOT)/src/miro/PositionC.h $(MIRO_ROOT)/src/miro/PositionC.i \
+ $(MIRO_ROOT)/src/miro/WorldPointS.h $(MIRO_ROOT)/src/miro/WorldPointS.i \
  $(MIRO_ROOT)/src/miro/PositionS.i $(MIRO_ROOT)/src/miro/MotionStatusS.h \
- $(MIRO_ROOT)/src/miro/MotionStatusC.h \
- $(MIRO_ROOT)/src/miro/MotionStatusC.i \
  $(MIRO_ROOT)/src/miro/MotionStatusS.i $(MIRO_ROOT)/src/miro/OdometryC.h \
  $(MIRO_ROOT)/src/miro/OdometryC.i $(MIRO_ROOT)/src/miro/OdometryS.i \
  $(MIRO_ROOT)/src/miro/BatteryImpl.h $(MIRO_ROOT)/src/miro/BatteryS.h \
@@ -210,8 +214,14 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  CanonMessage.h \
  $(MIRO_ROOT)/src/miro/DevMessage.h CanonDevice.h \
  PioneerConsumer.h \
- $(MIRO_ROOT)/src/miro/DevConsumer.h Parameters.h \
- $(MIRO_ROOT)/src/psos/Parameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/DevConsumer.h $(MIRO_ROOT)/src/miro/MotionStatusC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/PositionC.h $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i $(MIRO_ROOT)/src/miro/PositionC.i \
+ $(MIRO_ROOT)/src/miro/VelocityC.h $(MIRO_ROOT)/src/miro/VelocityC.i \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.i \
+ Parameters.h $(MIRO_ROOT)/src/psos/Parameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/BehaviourParameters.h
 
@@ -228,8 +238,14 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  CanonMessage.h \
  $(MIRO_ROOT)/src/miro/DevMessage.h CanonDevice.h \
  PioneerConsumer.h \
- $(MIRO_ROOT)/src/miro/DevConsumer.h Parameters.h \
- $(MIRO_ROOT)/src/psos/Parameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/DevConsumer.h $(MIRO_ROOT)/src/miro/MotionStatusC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/PositionC.h $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i $(MIRO_ROOT)/src/miro/PositionC.i \
+ $(MIRO_ROOT)/src/miro/VelocityC.h $(MIRO_ROOT)/src/miro/VelocityC.i \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.i \
+ Parameters.h $(MIRO_ROOT)/src/psos/Parameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/BehaviourParameters.h
 
@@ -251,8 +267,13 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  CanonMessage.h \
  $(MIRO_ROOT)/src/miro/DevMessage.h CanonDevice.h \
  PioneerConsumer.h \
- $(MIRO_ROOT)/src/miro/DevConsumer.h Parameters.h \
- $(MIRO_ROOT)/src/psos/Parameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/DevConsumer.h $(MIRO_ROOT)/src/miro/MotionStatusC.h \
+ $(MIRO_ROOT)/src/miro/PositionC.h $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i $(MIRO_ROOT)/src/miro/PositionC.i \
+ $(MIRO_ROOT)/src/miro/VelocityC.h $(MIRO_ROOT)/src/miro/VelocityC.i \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.i \
+ Parameters.h $(MIRO_ROOT)/src/psos/Parameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/BehaviourParameters.h
 

@@ -69,11 +69,9 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/BehaviourParameters.h
 
 .obj/CanConnection.o .obj/CanConnection.o .obj/CanConnection.o .obj/CanConnection.o: CanConnection.cpp CanConnection.h CanMessage.h \
- $(MIRO_ROOT)/src/miro/DevMessage.h canmsg.h \
- $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/DevConnection.h Parameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h canmsg.h $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/Exception.h $(MIRO_ROOT)/src/miro/DevConnection.h \
+ Parameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/BehaviourParameters.h canioctl.h
 
@@ -81,13 +79,10 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/DevMessage.h canmsg.h
 
 .obj/CanEventHandler.o .obj/CanEventHandler.o .obj/CanEventHandler.o .obj/CanEventHandler.o: CanEventHandler.cpp CanEventHandler.h \
- $(MIRO_ROOT)/src/miro/DevEventHandler.h CanConnection.h \
- CanMessage.h $(MIRO_ROOT)/src/miro/DevMessage.h canmsg.h \
- $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/DevConnection.h \
- $(MIRO_ROOT)/src/miro/TimeHelper.h \
- $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/DevEventHandler.h CanConnection.h CanMessage.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h canmsg.h $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/Exception.h $(MIRO_ROOT)/src/miro/DevConnection.h \
+ $(MIRO_ROOT)/src/miro/TimeHelper.h $(MIRO_ROOT)/src/miro/TimeC.h \
  $(MIRO_ROOT)/src/miro/TimeC.i
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

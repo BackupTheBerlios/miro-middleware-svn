@@ -73,10 +73,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 .obj/PsosMessage.o .obj/PsosMessage.o .obj/PsosMessage.o .obj/PsosMessage.o: PsosMessage.cpp PsosMessage.h \
  $(MIRO_ROOT)/src/miro/DevMessage.h PsosDevice.h
 
-.obj/PsosConnection.o .obj/PsosConnection.o .obj/PsosConnection.o .obj/PsosConnection.o: PsosConnection.cpp \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/Exception.h \
+.obj/PsosConnection.o .obj/PsosConnection.o .obj/PsosConnection.o .obj/PsosConnection.o: PsosConnection.cpp $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i $(MIRO_ROOT)/src/miro/Exception.h \
  $(MIRO_ROOT)/src/miro/Synch.h PsosConnection.h \
  $(MIRO_ROOT)/src/miro/TtyConnection.h PsosEventHandler.h \
  $(MIRO_ROOT)/src/miro/DevEventHandler.h PsosMessage.h \
@@ -86,9 +84,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/BehaviourParameters.h
 
 .obj/PsosEventHandler.o .obj/PsosEventHandler.o .obj/PsosEventHandler.o .obj/PsosEventHandler.o: PsosEventHandler.cpp PsosEventHandler.h \
- $(MIRO_ROOT)/src/miro/DevEventHandler.h \
- $(MIRO_ROOT)/src/miro/Synch.h PsosConnection.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/DevEventHandler.h $(MIRO_ROOT)/src/miro/Synch.h \
+ PsosConnection.h $(MIRO_ROOT)/src/miro/Exception.h \
  $(MIRO_ROOT)/src/miro/TtyConnection.h PsosMessage.h \
  $(MIRO_ROOT)/src/miro/DevMessage.h PsosDevice.h
 
