@@ -101,7 +101,7 @@ namespace Sparrow
   inline
   float
   Connection2003::getPanPosition() {
-    return currentPanPos_;
+    return currentPanPos_ - params_->pan.offset;
   }
 
   inline
