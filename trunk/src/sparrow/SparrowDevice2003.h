@@ -63,96 +63,45 @@ namespace Sparrow
 
   // motor messages
 
-  static const unsigned long CAN_SET_POWER     = 0x81010102;
-  static const unsigned long CAN_SET_SPEED     = 0x82010102;
-  static const unsigned long CAN_SET_SPEED_ROT = 0x83010102;
+
   static const unsigned long CAN_WRITE_MOTOR_LEFT = 0x05010102;
   static const unsigned long CAN_WRITE_MOTOR_RIGHT = 0x04010102;
   static const unsigned long CAN_MOTOR_TICKS_LEFT = 0x85020201;
   static const unsigned long CAN_MOTOR_TICKS_RIGHT = 0x84020201;
-
-  // preliminary values and message names
-  static const unsigned long CAN_SET_ACCELS    = 0x89010102;
-  static const unsigned long CAN_GET_ACCELS    = 0x88010102;
-  static const unsigned long CAN_R_GET_ACCELS  = 0x88810201;
-
-  static const unsigned long CAN_INIT_DRIVE    = 0x8a010102;
-  static const unsigned long CAN_INIT_MAX      = 0x8b010102;
-  static const unsigned long CAN_MOTOR_INIT    = 0x8c010102;
-  static const unsigned long CAN_MOTOR_ALL_OFF = 0x8e010102;
-  //static const unsigned long CAN_MOTOR_ALIVE   = 0x8f010102;
   static const unsigned long CAN_R_MOTOR_ALIVE = 0x8f020201;
 
-  // odometry messages
-
-  static const unsigned long CAN_GET_POS_CONT  = 0x81020102;
-  static const unsigned long CAN_R_GET_POS     = 0x81820201;
-  static const unsigned long CAN_SET_POS       = 0x8a020102;
-  static const unsigned long CAN_SET_POS_REL   = 0x8b020102;
-  static const unsigned long CAN_ODO_ALIVE     = 0x8f020102;
-  static const unsigned long CAN_R_ODO_ALIVE   = 0x8f820201;
 
   // port messages
 
   static const unsigned long CAN_READ_PORTS    = 0x81030102;
-  static const unsigned long CAN_R_READ_PORTS  = 0x81830201;
-  static const unsigned long CAN_WRITE_PORT    = 0x82030102;
-  static const unsigned long CAN_READ_ANALOG   = 0x83030102;
-  static const unsigned long CAN_R_READ_ANALOG = 0x83830201;
-  static const unsigned long CAN_SET_PORT      = 0x8a030102;
-  static const unsigned long CAN_PORTS_ALL_OFF = 0x8e030102;
-  static const unsigned long CAN_PORTS_ALIVE   = 0x8f030102;
-  static const unsigned long CAN_R_PORTS_ALIVE = 0x8f830201;
 
-  // stall messages
-
-  static const unsigned long CAN_STALL_INIT    = 0x8a040102;
-  static const unsigned long CAN_R_STALL       = 0x81840201;
-  static const unsigned long CAN_STALL_ALIVE   = 0x8f040102;
-  static const unsigned long CAN_R_STALL_ALIVE = 0x8f840201;
 
   // kicker messages
 
   static const unsigned long CAN_KICK          = 0x81010103;
-  static const unsigned long CAN_KICK_IF_BALL  = 0x82010103;
-  static const unsigned long CAN_KICK_ALL_OFF  = 0x8e010103;
-  //static const unsigned long CAN_KICK_ALIVE    = 0x8f010103;
   static const unsigned long CAN_R_KICK_ALIVE  = 0x9e0f0301;
 
   // servo messages
 
   static const unsigned long CAN_SERVO_GO      = 0x81010104;
-  static const unsigned long CAN_SERVO_ALL_OFF = 0x8e010104;
-  static const unsigned long CAN_SERVO_ALIVE   = 0x8f010104;
-  static const unsigned long CAN_R_SERVO_ALIVE = 0x8f810401;
+  static const unsigned long CAN_R_PAN_ALIVE      = 0x9e0f0401;
 
   // infrared messages
 
-  //static const unsigned long CAN_IR_GET_CONT1   = 0x81050102;
+
   static const unsigned long CAN_R_IR_GET_CONT1 = 0x83810501;
-  //static const unsigned long CAN_IR_ALIVE1      = 0x8f050102;
   static const unsigned long CAN_R_IR_ALIVE1    = 0x9e0f0501;
   static const unsigned long CAN_IR_SET_FREQ1    = 0x02010105;
 
-  //static const unsigned long CAN_IR_GET_CONT2   = 0x81060102;
-  static const unsigned long CAN_R_IR_GET_CONT2 = 0x83810601; //noch unbekannt
-  //static const unsigned long CAN_IR_ALIVE2      = 0x8f060102;
-  static const unsigned long CAN_R_IR_ALIVE2    = 0x9e0f0601; //noch unbekannt
-  static const unsigned long CAN_IR_SET_FREQ2    = 0x02010106; //noch unbekannt
-  // pan messages
-  static const unsigned long CAN_R_PAN_ALIVE      = 0x9e0f0401;  // noch unbekannt
 
-  // debug messages
+  static const unsigned long CAN_R_IR_GET_CONT2 = 0x83810601;
+  static const unsigned long CAN_R_IR_ALIVE2    = 0x9e0f0601;
+  static const unsigned long CAN_IR_SET_FREQ2    = 0x02010106;
 
-  static const unsigned long CAN_R_DBG_PRINT   = 0x810e0200;
-  static const unsigned long CAN_STATUS        = 0x8e0e0102;
-  static const unsigned long CAN_DBG_ALIVE     = 0x8f0e0102;
-  static const unsigned long CAN_R_DBG_ALIVE   = 0x8f8e0001;
 
-  // test messages
 
-  static const unsigned long CAN_TEST_ADD      = 0x860e0102;
-  static const unsigned long CAN_TEST_RESULT   = 0x870e0102;
+
+
 
 };
 #endif

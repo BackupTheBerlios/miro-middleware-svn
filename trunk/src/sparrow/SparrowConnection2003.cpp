@@ -86,8 +86,8 @@ namespace Sparrow
   void
   Connection2003::init()
   {
-     setInfrared1WaitTime(50);
-     setInfrared2WaitTime(50);
+     setInfrared1WaitTime(40);
+     setInfrared2WaitTime(40);
 
   }
 
