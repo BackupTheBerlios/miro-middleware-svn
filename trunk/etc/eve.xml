@@ -279,6 +279,9 @@
   </parameter>
   <parameter name="DeviceBTTV">
    <parameter value="/dev/video0" name="Device" />
+   <parameter value="2" name="Buffers" />
+   <parameter value="tuner" name="Source" />
+   <parameter value="ntsc" name="Format" />
   </parameter>
   <parameter name="FilterFlip">
    <parameter value="true" name="InterfaceInstance" />
