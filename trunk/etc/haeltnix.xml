@@ -16,7 +16,7 @@
   <Sparrow99>
     <sparrowBoard>
       <device>/dev/can/0</device>
-      <channelsharing>false</channelsharing>
+      <channelsharing>true</channelsharing>
       <ticksl>22</ticksl>
       <ticksr>22</ticksr>
       <diameter>1555</diameter>
@@ -304,6 +304,12 @@
       <type_name>ArbitrateChange</type_name>
       <type_name>PositionHypothesis</type_name>
     </logging>
+    <NotifyMulticast>
+      <subscription>BallPosition</subscription>
+      <subscription>LocalizedPosition</subscription>
+      <messagetimeout>500</messagetimeout>
+      <multicastgroup>225.2.2.1:41006</multicastgroup>
+    </NotifyMulticast>
   </Notification>
   <B21>
     <video>
