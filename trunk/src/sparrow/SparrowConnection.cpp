@@ -682,7 +682,7 @@ namespace Sparrow
   {
     Miro::Guard guard(consumer->irAliveMutex);
 
-    Message message;
+    CanMessage message;
     message.length(0);
     message.id(CAN_IR_ALIVE);
 
