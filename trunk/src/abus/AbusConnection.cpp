@@ -181,7 +181,7 @@ namespace Abus
 
 
     for (int i = 0; i < 3; ++i) {
-      if (ioBuffer.send_n(msg->buffer(), Message::MSG_LEN) >= 0) {
+      if (ioBuffer_.send_n(msg->buffer(), Message::MSG_LEN) >= 0) {
 	return;
       }
       cerr << "abus: write() failed - " << (i+1) << endl;

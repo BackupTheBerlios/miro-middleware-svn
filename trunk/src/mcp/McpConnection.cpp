@@ -117,7 +117,7 @@ namespace Mcp
     // Complete initialization after entering of the reactor processing loop.
     // So we start immediately after the start of the reactor
     ACE_Time_Value startReports(0, 1); 
-    if (reactor->schedule_timer(eventHandler, 
+    if (reactor_->schedule_timer(eventHandler, 
 				(void *)STARTUP, // timer id
 				startReports)    // delay
 	== -1)
@@ -131,7 +131,7 @@ namespace Mcp
     // Stop watchdog timer
     // - otherwise the base will lock itself
     if (watchdogTimerId != -1)
-      reactor->cancel_timer(watchdogTimerId);
+      reactor_->cancel_timer(watchdogTimerId);
     watchdogTimer(0);
 
     // Stop hardware triggered communication

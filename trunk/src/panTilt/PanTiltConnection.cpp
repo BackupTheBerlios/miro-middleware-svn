@@ -54,7 +54,7 @@ namespace DpPanTilt
     DBG(cout << "Constructing Connection" << endl);
 
     startupTimerId = 
-      reactor->schedule_timer(eventHandler, 
+      reactor_->schedule_timer(eventHandler, 
 			      NULL,               // timer id
 			      ACE_Time_Value(0)); // delay
     if (startupTimerId == -1)
