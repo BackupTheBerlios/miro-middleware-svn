@@ -14,6 +14,14 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.14  2005/01/10 15:41:09  hutz
+ * extending the VIP framework to asynchronous video processing
+ * now multiple filter trees can be interlinked and are synchronized as needed
+ * at least in theroy :-)
+ * in theory it should also be completely unintrusive for synchronous trees
+ * any deviations from theory can be proven wrong and therefore do not exist
+ * - or get fixed ASAP
+ *
  * Revision 1.13  2005/01/09 21:40:34  hutz
  * switching debug output to use the Log.h macros.
  *
@@ -149,11 +157,13 @@ namespace
 	throw Miro::Exception("Image dimensions differ from output format.");
 
       if (rawflag) {
-	for (unsigned int i = 0; i < xdim * ydim; ++i) {
-	  _buffer[i*3 + 0] = fgetc(file);
-	  _buffer[i*3 + 1] = fgetc(file);
-	  _buffer[i*3 + 2] = fgetc(file);
-	}
+
+	fread(_buffer, 1, xdim * ydim * 3, file);
+// 	for (unsigned int i = 0; i < xdim * ydim; ++i) {
+// 	  _buffer[i*3 + 0] = fgetc(file);
+// 	  _buffer[i*3 + 1] = fgetc(file);
+// 	  _buffer[i*3 + 2] = fgetc(file);
+// 	}
       } 
       else {
 	int red, green, blue;
@@ -174,7 +184,7 @@ namespace
       fclose(file);
     }
     else {
-      throw Miro::CException(errno, "Cannot open file." );
+      throw Miro::CException(errno, "Cannot open file." + _name + "!");
     }
   }
 }
@@ -208,7 +218,7 @@ namespace Video
     }    
     if (counter_ < files_.size()) {
       // do work
-      MIRO_LOG_OSTR(LL_NOTICE, "Next image: " << files_[counter_]);
+      MIRO_LOG_OSTR(LL_NOTICE, name() << " - next image: " << files_[counter_]);
       getPpm(files_[counter_], 
 	     inputFormat_.width,
 	     inputFormat_.height,

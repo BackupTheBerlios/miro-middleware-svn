@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -12,6 +12,8 @@
 #define Video_Filter_h
 
 #include "Parameters.h"
+#include "AsynchSuccLink.h"
+#include "AsynchLinkManager.h"
 #include "VideoFilterLink.h"
 #include "VideoBrokerLink.h"
 #include "BufferManager.h"
@@ -87,6 +89,8 @@ namespace Video
   // forward declarations
   class FilterParameters;
   class VideoInterfaceParameters;
+  class BufferManager;
+  class Device;
 
   //! Base class of all video filters.
   /**
@@ -126,7 +130,10 @@ namespace Video
     //! Flag indicating whether setting up an instance of the Video interface for the filter is allowed.
     bool interfaceAllowed() const throw ();
     Miro::VideoImpl * interface() const throw();
+    //! Accessor to the filters buffer manager.
     BufferManager * bufferManager() throw();
+    //! Const accessor to the filters buffer manager.
+    BufferManager const * bufferManager() const throw();
 
     //! The input format the filter instance is working on.
     const Miro::ImageFormatIDL& inputFormat() const;
@@ -181,8 +188,6 @@ namespace Video
     void connect();
     //! A client disconnects from the filter.
     void disconnect();
-    //! Calcualte all currently active filters.
-    void calcConnectivity();
 
     //! Search the filter tree for a filter by its name.
     Filter * findByName(std::string const & _name);
@@ -197,6 +202,16 @@ namespace Video
 
     //! Accessor method for the filters paramters.
     FilterParameters const * parameters() const throw();
+
+    //! Deferred initialization: set synch mode.
+    void setSynchMode(bool _synchWithCurrent, bool _synchAllNew) throw();
+
+    //! Return parent node of the filter tree.
+    Filter * parentNode() throw();
+    //! Return the root node of the filter tree.
+    Filter * rootNode() throw();
+    //! Return the root node of the filter tree.
+    Device * rootDevice() throw();
 
   protected:
     //--------------------------------------------------------------------------
@@ -234,7 +249,7 @@ namespace Video
     unsigned char const * inputBufferLink(unsigned long _index) const;
     //! Get address of linked input parameters.
     FilterImageParameters const * inputBufferParametersLink(unsigned long _index) const;
-    //! Get address of linked input buffer and its parameters.
+    //! Set address of linked input buffer and its parameters.
     void inputBufferLink(unsigned long _linkIndex,
 			 unsigned long _bufferIndex, 
 			 unsigned char const * _buffer,
@@ -242,17 +257,21 @@ namespace Video
     //! Set the image index of the pending video broker getNextImageSet requests.
     virtual void setBrokerRequests();
 
-    //! Return parent node of the filter tree.
-    Filter * parentNode() throw();
-    //! Return the root node of the filter tree.
-    Filter * rootNode() throw();
-
   public:
     //! Add a broker request for the next image.
     /** This is done synchronised by the Video::Device */
     void addBrokerRequest(BrokerLink * _brokerRequest);
 
+    //! Get filter number in tree.
+    unsigned int number() const throw();
+    
   protected:
+    //--------------------------------------------------------------------------
+    // protected methods
+    //--------------------------------------------------------------------------
+
+    // connection management
+
     //! Internal connect method (no locking).
     void protectedConnect();
     //! Internal disconnect method (no locking).
@@ -260,13 +279,18 @@ namespace Video
     //! Internal calcConnectivity method (no locking).
     void protectedCalcConnectivity();
 
-    //! Packward linking method for double linking.
+    //! Backward linking method for double linking.
     /** Called from _succ->setPredecessor() */
     void addSuccessor(Filter * _succ);
-    //! Packward linking method for double linking.
+    //! Backward linking method for double linking.
     /** Called from _succ->addPredecessorLink() */
     void addSuccessorLink(Filter * _succ, unsigned long _index);
+    //! Backward linking method for double linking.
+    /** Called from _succ->addAsynchPredecessorLink() */
+    void addAsynchSuccessorLink(AsynchSuccLink const& _succLink);
 
+    //! Try to acquire the asynchronous buffers. 
+    bool tryAcquireAsynchBuffers() { return true; }
 
     //! Search the filter subtree for a filter by its name.
     Filter * findByNameDown(std::string const & _name);
@@ -278,16 +302,23 @@ namespace Video
 
     //--------------------------------------------------------------------------
     // protected types
+    //--------------------------------------------------------------------------
 
     //! A std::vector of Video::Filter pointers.
     typedef std::vector<Filter *> FilterVector;
-    //! A std::vector of Video::FilterPreLink objects.
-    typedef std::vector<FilterPreLink> FilterPreVector;
+
     //! A std::vector of Video::FilterSuccLink objects.
     typedef std::vector<FilterSuccLink> FilterSuccVector;
 
+    //! A std::vector of Video::FilterSuccLink objects.
+    typedef std::vector<FilterPreLink> FilterPreVector;
+
+    //! A std::vector of Video::FilterSuccLink objects.
+    typedef std::vector<AsynchSuccLink> AsynchSuccVector;
+
     //--------------------------------------------------------------------------
     // protected object data
+    //--------------------------------------------------------------------------
 
     //! Specification of the input format the filter instance is processing.
     Miro::ImageFormatIDL inputFormat_;
@@ -301,7 +332,7 @@ namespace Video
     FilterParameters const * params_;
 
     //! Image recording timestamp
-    const ACE_Time_Value& imageTimeStamp();
+    ACE_Time_Value const& imageTimeStamp() const;
 
     //! Filter processing time statistics.
     /**
@@ -317,12 +348,20 @@ namespace Video
     //! Pointer to the buffer manager instance;
     BufferManager * bufferManager_;
 
+    //! The index of the input buffer in the predecessors buffer manager.
     unsigned long inputBufferIndex_;
+    //! Pointer to the input buffer.
     unsigned char const * inputBuffer_;
+    //! Pointer to filter meta data of the input buffer.
     FilterImageParameters const * inputParameters_;
+    //! Index of the output buffer in the own buffer manager.
     unsigned long outputBufferIndex_;
+    //! Pointer to the output buffer.
     unsigned char * outputBuffer_;
+    //! Pointer to filter meta data for the output buffer.
     FilterImageParameters * outputParameters_;
+    //! Pointer the video interface.
+    /** NULL if no interface is available. */
     Miro::VideoImpl * interface_;
 
     //! Filter predecessor.
@@ -335,6 +374,7 @@ namespace Video
      * links, like soft links in a file system.
      */
     FilterPreVector preLink_;
+
     //! Filter successors.
     /** 
      * A filter can have multiple successor filters, recursively
@@ -348,6 +388,18 @@ namespace Video
      * links, like soft links in a file system.
      */
     FilterSuccVector succLink_;
+
+    //! Filter successor links.
+    /** 
+     * Filters are allowed to have additional input filters, that
+     * reside higher in the filter tree. Those are called filter
+     * links, like soft links in a file system.
+     */
+    AsynchSuccVector asynchSuccLink_;
+
+    //! Manager for asynchronous filter links.
+    AsynchLinkManager asynchLinkManager_;
+
     //! VideoBroker request queue.
     BrokerLinkVector brokerLink_;
 
@@ -362,16 +414,21 @@ namespace Video
 
     //! Name of the filter.
     std::string name_;
+    //! Number of the filter.
+    unsigned int number_;
 
     //--------------------------------------------------------------------------
     // protected static data
+    //--------------------------------------------------------------------------
 
     //! Connection management lock.
     static Miro::Mutex connectionMutex_;
+    static Miro::Condition connectionCondition_;
 
   private:
     //--------------------------------------------------------------------------
     // private methods
+    //--------------------------------------------------------------------------
 
     //! Private copy constructor to prevent accidental usage.
     Filter(const Filter&) {}
@@ -380,166 +437,13 @@ namespace Video
 
     //--------------------------------------------------------------------------
     // friend declarations
+    //--------------------------------------------------------------------------
 
     friend class Consumer;
+    friend class AsynchBufferSet;
   };
-
-  inline
-  bool
-  Filter::active() const {
-    return connected_;
-  }
-
-  inline
-  unsigned int
-  Filter::connections() const {
-    return connections_;
-  }
-
-  inline
-  const Miro::ImageFormatIDL& 
-  Filter::inputFormat() const {
-    return inputFormat_;
-  }
-    
-  inline
-  const Miro::ImageFormatIDL& 
-  Filter::outputFormat() const {
-    return outputFormat_;
-  }
-  
-  inline
-  void
-  Filter::name(std::string const& _name) {
-    name_ = _name;
-  }
-
-  inline
-  std::string const&
-  Filter::name() const {
-    return name_;
-  }
-
-  inline
-  unsigned char const *
-  Filter::inputBuffer() const {
-    MIRO_ASSERT(pre_ != NULL);
-    return inputBuffer_;
-  }
-
-  inline
-  unsigned long
-  Filter::inputBufferIndex() const {
-    return inputBufferIndex_;
-  }
-
-  inline
-  FilterImageParameters const *
-  Filter::inputBufferParameters() const {
-    MIRO_ASSERT(pre_ != NULL);
-    return inputParameters_;
-  }
-
-  inline
-  unsigned char *
-  Filter::outputBuffer() {
-    return outputBuffer_;
-  }
-
-  inline
-  FilterImageParameters *
-  Filter::outputBufferParameters() {
-    return outputParameters_;
-  }
-
-  inline
-  void 
-  Filter::inputBuffer(unsigned long _index, 
-		      unsigned char const * _buffer,
-		      FilterImageParameters const * _params) {
-    inputBufferIndex_ = _index;
-    inputBuffer_ = _buffer;
-    inputParameters_ = _params;
-  }
-
-  inline
-  unsigned char const * 
-  Filter::inputBufferLink(unsigned long _index) const {
-    return preLink_[_index].buffer();
-  }
-
-  inline
-  FilterImageParameters const * 
-  Filter::inputBufferParametersLink(unsigned long _index) const {
-    return preLink_[_index].params();
-  }
-
-  inline
-  void 
-  Filter::inputBufferLink(unsigned long _linkIndex,
-			  unsigned long _bufferIndex, 
-			  unsigned char const * _buffer,
-			  FilterImageParameters const * _params) {
-    preLink_[_linkIndex].buffer(_bufferIndex, _buffer, _params);
-  }
-
-  inline
-  unsigned int
-  Filter::outputBuffers() const throw() {
-    MIRO_ASSERT(params_ != NULL);
-    return params_->buffers;
-  }
-
-  inline
-  Miro::VideoImpl *
-  Filter::interface() const throw() {
-    return interface_;
-  }
-
-  inline
-  BufferManager *
-  Filter::bufferManager() throw() {
-    return bufferManager_;
-  }
-
-  inline
-  bool
-  Filter::interfaceAllowed() const throw()
-  {
-    return interfaceAllowed_;
-  }
-
-  inline
-  FilterParameters const *
-  Filter::parameters() const throw() {
-    return params_;
-  }
-
-  inline
-  Filter *
-  Filter::parentNode() throw() {
-    return pre_;
-  }
-
-  inline
-  unsigned int
-  Filter::width() const throw() {
-    return inputFormat_.width;
-  }
-
-  inline
-  unsigned int
-  Filter::height() const throw() {
-    return inputFormat_.height;
-  }
-
-  inline 
-  const ACE_Time_Value& 
-  Filter::imageTimeStamp() {
-    return bufferManager()->bufferTimeStamp(outputBufferIndex_);
-  }
-  
-
 }
 
-#endif
+#include "VideoFilter.i"
+
+#endif // Video_Filter_h

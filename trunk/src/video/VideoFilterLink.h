@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -10,6 +10,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef FilterLink_h
 #define FilterLink_h
+
+#include <vector>
 
 namespace Video
 {
@@ -41,6 +43,9 @@ namespace Video
     unsigned char const * buffer_;
     FilterImageParameters const * params_;
   };
+
+  //! A std::vector of Video::FilterPreLink objects.
+  typedef std::vector<FilterPreLink> PreLinkVector;  
 
   class FilterSuccLink
   {

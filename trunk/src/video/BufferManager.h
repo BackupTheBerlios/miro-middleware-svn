@@ -66,6 +66,9 @@ namespace Video
     unsigned int acquireCurrentReadBuffer() throw (Miro::Exception);
     //! Acquire the next written buffer for reading.
     unsigned int acquireNextReadBuffer() throw (Miro::Exception);
+    //! Acquire a buffer one more time for reading.
+    /** The buffer needs to be already acquired. This just increases the read count. */
+    void acquireReadBuffer(unsigned int _index) throw (Miro::EOutOfBounds);
     //! Release a buffer that was aquired for reading.
     void releaseReadBuffer(unsigned int _index) throw (Miro::EOutOfBounds);
     
@@ -85,6 +88,9 @@ namespace Video
     //! Acquire the next written buffer for reading.
     virtual unsigned int protectedAcquireNextReadBuffer()
       throw (Miro::Exception);
+    //! Acquire the specified buffer for reading.
+    virtual void protectedAcquireReadBuffer(unsigned int _index) 
+      throw (Miro::EOutOfBounds);
     //! Release a buffer that was aquired for reading.
     virtual void protectedReleaseReadBuffer(unsigned int _index) 
       throw (Miro::EOutOfBounds);

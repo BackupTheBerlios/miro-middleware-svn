@@ -15,6 +15,7 @@
 
 #include "miro/Exception.h"
 #include "miro/Log.h"
+#include "miro/IO.h"
 
 namespace Video
 {
@@ -48,34 +49,51 @@ namespace Video
   {
     if (ACE_OS::sched_params(schedp_) == -1) {
       MIRO_LOG_OSTR(LL_WARNING,
-		    "[Video::Consumer] Could not set sched parameters." << 
-		    std::endl <<
-		    "[Video::Consumer] Maybe suid root is missing." << 
-		    std::endl <<
-		    "[Video::Consumer] Will work on default sched policy" << 
-		    std::endl);
+		    "[Video::Consumer] Could not set sched parameters: " << 
+		    std::endl << schedp_ <<
+		    "[Video::Consumer] Maybe suid root is missing. Will work on default sched policy");
     }
 
     while (!canceled())
     {
       try {
 	// clock_t start = clock();
-	videoDevice.setBrokerRequestQueue();
-	videoDevice.calcConnectivity();
-	videoDevice.processFilterTree();
+	if (videoDevice.calcConnectivity()) {
+	  if (videoDevice.deviceAsynchLinkManager()->tryAcquireBufferSets()) {
+	    videoDevice.setBrokerRequestQueue();
+	    videoDevice.processFilterTree();
+	    videoDevice.deviceAsynchLinkManager()->releaseBufferSets();
+	  }
+	  else {
+	    MIRO_LOG_OSTR(LL_WARNING, 
+			  "Device " << videoDevice.name() << 
+			  "VideoConsumer::svc() skipping image as asynch device is not ready yet.");
+	    videoDevice.skipImage();
+	  }
+	}
+	else {
+	  MIRO_LOG_OSTR(LL_WARNING, 
+			"Device " << videoDevice.name() << 
+			"VideoConsumer::svc() skipping image due to synch latencies");
+	  videoDevice.skipImage();
+	}
 	// std::cout << "TIME " << (double)(clock() - start)/CLOCKS_PER_SEC  << std::endl;
 
       }
       catch(Miro::CException& e) {
 	MIRO_LOG_OSTR(LL_ERROR,
-		      "VideoConsumer::svc() caught Miro::CException: " << 
+		      videoDevice.name() <<
+		      " VideoConsumer::svc() caught Miro::CException: " << 
 		      std::endl <<
 		      e << std::endl);
+	ACE_OS::sleep(ACE_Time_Value(0, 500000));
       }
       catch(Miro::Exception& e) {
 	MIRO_LOG_OSTR(LL_ERROR,
-		      "VideoConsumer::svc() caught Miro::Exception: " << 
+		      videoDevice.name() <<
+		      " VideoConsumer::svc() caught Miro::Exception: " << 
 		      e << std::endl);
+	ACE_OS::sleep(ACE_Time_Value(0, 500000));
       }
     }
 

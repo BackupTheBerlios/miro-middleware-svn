@@ -1,3 +1,9 @@
+AsynchBufferSet.lo
+AsynchLinkManager.lo
+AsynchPreLink.lo
+AsynchSuccLink.lo
+DeviceAsynchBufferSet.lo
+DeviceAsynchLinkManager.lo
 Parameters.h
 Parameters.cpp
 VideoService

@@ -51,17 +51,16 @@ namespace Video
     unsigned char * tgt_img = outputBuffer();
 
     unsigned int length = inputFormat_.width * inputFormat_.height;
-    float threshold = (params_ != NULL)?(params_->threshold):80.0;
+    float threshold = (params_ != NULL)? (params_->threshold) : 80.0;
 
     int dbg_counter = 0;
     
     std::cout << "VideoFilterRGBtoSeg threshold: " << threshold << std::endl;
 
     
-    for(unsigned int x = 0; x < length; ++x){
-
-          *(tgt_img++) =  r_lookup[*(src_img++)] +  g_lookup[*(src_img++)] + b_lookup[*(src_img++)];
-
+    for (unsigned int x = 0; x < length; ++x) {
+      *(tgt_img++) =  (unsigned int)
+	    rint(r_lookup[*(src_img++)] + g_lookup[*(src_img++)] + b_lookup[*(src_img++)]);
     }
     
     bzero(bitImage_, 360 * 4 * 4);
@@ -73,12 +72,12 @@ namespace Video
     
     src_img = inputBuffer();
     tgt_img = outputBuffer();
-    int rest = inputFormat_.height % 32;
+    unsigned int rest = inputFormat_.height % 32;
     if(rest != 0){
        tmp_p = bitImage_;
-       for(int w = 0; w < rest; w++){
+       for(unsigned int w = 0; w < rest; w++){
           int_p = tmp_p;
-          for(int z = 0; z < inputFormat_.width; z++){
+          for(unsigned int z = 0; z < inputFormat_.width; z++){
             *int_p = (*int_p << 1);
 	    mask =  (r_lookup[*(src_img++)] +  g_lookup[*(src_img++)] + b_lookup[*(src_img++)] < threshold)?1:0;
 	    
@@ -115,13 +114,13 @@ namespace Video
    
     numInts += ptroff;
     unsigned int first, pre, actual;
-    for(int i = 0; i < numInts; i++){
+    for(unsigned int i = 0; i < numInts; i++){
        int_p = bitImage_ + i*inputFormat_.width;
        pre = *int_p;
        first = *int_p;
        *int_p = *int_p & *(int_p + inputFormat_.width - 1) & *(int_p + 1);
        int_p++; 
-       for(int j = 1; j < inputFormat_.width - 1; j++){
+       for(unsigned int j = 1; j < inputFormat_.width - 1; j++){
           actual = *int_p; 
           *int_p = pre & actual & *(int_p + 1);
 	  pre = actual;
@@ -138,27 +137,27 @@ namespace Video
 
     tgt_img = outputBuffer();
     
-    for(int i = 0; i < inputFormat_.width; i++){
+    for(unsigned int i = 0; i < inputFormat_.width; i++){
        int_p = bitImage_ + (numInts -1)*inputFormat_.width + i;
        z = 0;
        index = -1;
        tmpInd = 0;
-       while(*int_p == 0 && z < numInts){
+       while(*int_p == 0 && z < numInts) {
           int_p -= inputFormat_.width;
 	  z++;
 	  tmpInd += 32;
        }
-       if(z == numInts){
+       if(z == numInts) {
           distanceProfile_[i] = 5000;
        }
-       else{
+       else {
 	  dbg_counter++;
 
-          for(int j = z; j < numInts; j++) {
+          for(unsigned int j = z; j < numInts; j++) {
 	     if(*int_p != 0) {
 	        actual = *int_p;
 		int range = (j == numInts - 1)?rest-2:30;
-		for(int k = 0; k < range; k++) {
+		for (int k = 0; k < range; k++) {
 		   if(actual & 0x00000007 == 0x00000007) {
 		      index = tmpInd;
 		      break;
@@ -201,7 +200,7 @@ namespace Video
        	 distanceProfile_[i] = 5000;
        else {
        	 distanceProfile_[i] = distLookup_[index];
-	 for(int m = 0; m < inputFormat_.height - index; m++) {
+	 for(unsigned int m = 0; m < inputFormat_.height - index; m++) {
 	         *(tgt_img + (m * inputFormat_.width) + i) = 255; 
 	 }
        }

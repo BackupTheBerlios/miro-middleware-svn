@@ -53,8 +53,6 @@ namespace Video
 
 
   private:
-    /** Sceduling parameters for a realtime thread */
-    ACE_Sched_Params schedparams_;
     Video::Device * pVideoDevice_;
     Video::Consumer * pConsumer_;
     Miro::VideoBrokerImpl * pBroker_;

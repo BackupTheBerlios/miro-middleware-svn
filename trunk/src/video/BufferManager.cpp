@@ -138,6 +138,13 @@ namespace Video
     return protectedAcquireNextReadBuffer();
   }
 
+  void 
+  BufferManager::acquireReadBuffer(unsigned int _index) throw (Miro::EOutOfBounds)
+  {
+    Miro::Guard guard(mutex_);
+    protectedAcquireReadBuffer(_index);
+  }
+
   /** 
    * @param index The index of the acquired buffer. 
    */
@@ -167,6 +174,17 @@ namespace Video
     while (index != currentBuffer_);
 
     throw Miro::Exception("No buffer available for writing.");
+  }
+
+  void 
+  BufferManager::protectedAcquireReadBuffer(unsigned int _index) 
+    throw (Miro::EOutOfBounds)
+  {
+    if (bufferStatus_[_index].state == BufferEntry::READING) {
+      ++bufferStatus_[_index].readers;
+    }
+    else
+      throw Miro::EOutOfBounds("Trying to acquire wrong buffer.");
   }
 
   void 

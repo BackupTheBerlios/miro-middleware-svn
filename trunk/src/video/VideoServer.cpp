@@ -22,12 +22,19 @@
 #include "miro/Utils.h"
 #include "miro/Log.h"
 
+#include <map>
+
+namespace {
+  typedef std::map<std::string, Video::Filter *> FilterNameMap;
+  FilterNameMap filterNameMap;
+}
+
 namespace Video
 {
+
   Service::Service(Miro::Server& _server, 
 		   Miro::ConfigDocument * _config,
 		   Parameters * _videoParams) :
-    schedparams_(ACE_SCHED_FIFO, 10),
     pVideoDevice_(NULL),
     pConsumer_(NULL),
     pBroker_(NULL),
@@ -51,12 +58,17 @@ namespace Video
 
     pVideoDevice_->initTree(_server, *_config);
 
-    pConsumer_ = new Video::Consumer(*pVideoDevice_, &schedparams_);
+    // configure synchronization model
+    pVideoDevice_->
+      synchModel(videoParameters_->synchWithCurrent,
+		 videoParameters_->synchAllNew);
+    
+    pConsumer_ = new Video::Consumer(*pVideoDevice_, &videoParameters_->scheduling);
     pConsumer_->open(NULL);
 
     pBroker_ = new Miro::VideoBrokerImpl(pVideoDevice_);
     broker_ = pBroker_->_this();
-    _server.addToNameService(broker_, "VideoBroker");
+    _server.addToNameService(broker_, videoParameters_->videoBroker);
   }
 
   Service::~Service()
@@ -82,6 +94,9 @@ namespace Video
 			   Miro::ImageFormatIDL const& _format,
 			   Video::FilterTreeParameters const& _tree) 
   {
+    if (filterNameMap.find(_tree.name) != filterNameMap.end())
+      throw Miro::Exception("Filter name not unique: " + _tree.name);
+
     FilterRepository * repo = Video::FilterRepository::instance();
     Filter * filter = repo->getInstance( _tree.type, _format);
 
@@ -93,8 +108,16 @@ namespace Video
 
     // set predecessor links
     std::vector<std::string>::const_iterator first, last = _tree.backLink.end();
-    for (first = _tree.backLink.begin(); first != last; ++first) 
-      filter->addPredecessorLink(filter->findByName(*first));
+    for (first = _tree.backLink.begin(); first != last; ++first) {
+      Filter * preLink = 0;
+      FilterNameMap::const_iterator i = filterNameMap.find(*first);
+      if (i != filterNameMap.end())
+	preLink = i->second;
+      filter->addPredecessorLink(preLink);
+    }
+
+    // add filter name to filter name map for referencation
+    filterNameMap.insert(std::make_pair(filter->name(), filter));
 
     // build successor filters
     for (unsigned int i = 0; i < _tree.successor.size(); ++i)
@@ -102,6 +125,7 @@ namespace Video
 		      filter->outputFormat(),
 		      _tree.successor[i]);
   
+
     return filter;
   }
 }

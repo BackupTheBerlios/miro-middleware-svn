@@ -48,7 +48,8 @@ namespace Video
   Device::Device(const Miro::ImageFormatIDL& _format) :
     Filter(_format),
     mutex_(),
-    condition_(mutex_)
+    condition_(mutex_),
+    connectionChange_(0)
   {
     // Forbid instances of the video interface here.
     interfaceAllowed_ = false;
@@ -61,6 +62,27 @@ namespace Video
   //--------------------------------------------------------------------
   Device::~Device()
   {
+  }
+
+//   void
+//   Device::init(Miro::Server & _server, Video::FilterParameters const * _params) 
+//   {
+//     Super::init(_server, _params);
+//   }
+
+  //--------------------------------------------------------------------
+  void
+  Device::skipImage() 
+  {
+    outputBufferIndex_ = bufferManager_->acquireNextWriteBuffer();
+    outputBuffer_ = bufferManager_->bufferAddr(outputBufferIndex_);
+    outputParameters_ = bufferManager_->imageParameters(outputBufferIndex_);
+    
+    timeFilter_.start();
+    process();
+    timeFilter_.stop();
+
+    bufferManager_->switchWrite2ReadBuffer(outputBufferIndex_, 0);
   }
 
   //--------------------------------------------------------------------
@@ -103,5 +125,53 @@ namespace Video
 
     throw Miro::Exception(std::string("Video::Parameters: unknown palette: ") + pal);
   }
+
+  /**
+   * Due to synchronization and locking issues this has to be
+   * calculated before processing a filter tree.
+   *
+   * Returns true if the connectivity of connected asynchronous trees was
+   * also updated.
+   */
+  bool
+  Device::calcConnectivity()
+  {
+    if (connectionChange_ == 0)
+      return true;
+
+    Miro::Guard guard(connectionMutex_);
+
+    //    cout << name() << " calcConnectivity\n";
+    if (connectionChange_ == 2) {
+      // reset connectivity status of the asynchronous links.
+      deviceAsynchLinkManager_.clearConnectivityStatus();
+
+      // calculate the connectivity status of the synchronous links      
+      protectedCalcConnectivity();
+      connectivityTimeStamp_ = ACE_OS::gettimeofday();
+      connectionChange_ = 1;
+      connectionCondition_.broadcast();
+    }
+
+    if (deviceAsynchLinkManager_.asynchBuffersConnected(connectionChangeTimeStamp_)) {
+      connectionChange_ = 0;
+      return true;
+    }
+
+    // wait for the next update, to prevent busy waiting
+    ACE_Time_Value maxWait = ACE_OS::gettimeofday() + ACE_Time_Value(0, 500000);
+    if (connectionCondition_.wait(&maxWait) == -1) {
+      MIRO_LOG_OSTR(LL_WARNING, "VideoDevice: " << name() << 
+		    "Timeout on wait asynch connectivity update.");
+    }
+    return false;
+  }
+
+  void
+  Device::synchModel(bool _synchWithCurrent, bool _synchAllNew) throw() {
+    deviceAsynchLinkManager_.synchMode(_synchWithCurrent, _synchAllNew);
+    setSynchMode(_synchWithCurrent, _synchAllNew);
+  }
+  
 }
 

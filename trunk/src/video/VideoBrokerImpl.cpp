@@ -65,7 +65,7 @@ namespace Miro
 	throw EOutOfBounds("Unknown filter name.");
       }
 
-      assert(filter->interface() != NULL);
+      MIRO_ASSERT(filter->interface() != NULL);
       filter->interface()->checkClientId(connections[i].id);
 
       MIRO_DBG(VIDEO, LL_PRATTLE, "VideoBroker: install a callback for each");
@@ -75,7 +75,7 @@ namespace Miro
 
     device_->enqueueBrokerRequests(request);
 
-     MIRO_DBG(VIDEO, LL_PRATTLE, "VideoBroker: wait for completion of all filters");
+    MIRO_DBG(VIDEO, LL_PRATTLE, "VideoBroker: wait for completion of all filters");
     ACE_Time_Value maxWait = ACE_OS::gettimeofday() + ACE_Time_Value(10, 100000);
     bool buffersPending;
     do {
@@ -108,9 +108,9 @@ namespace Miro
     MIRO_DBG(VIDEO, LL_PRATTLE, "VideoBroker: check for filter synchronisation.");
 
     for (++index, ++first; first != last; ++first, ++index) {
-      assert(first->filter->
-	     interface()->bufferManager()->bufferTimeStamp(buffers[index])
-	     == t);
+      MIRO_ASSERT(first->filter->
+		  interface()->bufferManager()->bufferTimeStamp(buffers[index])
+		  == t);
       
     }
     TimeIDL stamp;

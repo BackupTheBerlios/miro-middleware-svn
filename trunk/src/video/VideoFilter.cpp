@@ -11,6 +11,7 @@
 
 #include "VideoFilter.h"
 #include "VideoImpl.h"
+#include "VideoDevice.h"
 
 #include "BufferManager.h"
 
@@ -22,6 +23,7 @@
 namespace Video
 {
   Miro::Mutex Filter::connectionMutex_;
+  Miro::Condition Filter::connectionCondition_(connectionMutex_);
 
   FILTER_PARAMETERS_FACTORY_IMPL(Filter);
   IMAGE_PARAMETERS_FACTORY_IMPL(Filter);
@@ -140,6 +142,9 @@ namespace Video
     // debug output
     MIRO_LOG_OSTR(LL_NOTICE, name() << std::endl << *params);
 
+    // init filter number
+    number_ = rootDevice()->getNextFilterNumber();
+
     // initialize the filter instance with its parameters
     this->init(_server, params);
 
@@ -192,10 +197,14 @@ namespace Video
   void
   Filter::setPredecessor(Filter * _pre)
   {
-    assert(_pre != NULL);
+    MIRO_ASSERT(_pre != NULL);
 
     pre_ = _pre;
     pre_->addSuccessor(this);
+
+    // now we know who our chief is...
+    asynchLinkManager_.
+      deviceAsynchLinkManager(rootDevice()->deviceAsynchLinkManager());
   }
 
   /** 
@@ -205,11 +214,19 @@ namespace Video
   void
   Filter::addPredecessorLink(Filter * _pre)
   {
-    assert(_pre != NULL);
+    MIRO_ASSERT(_pre != NULL);
 
     // double link
     preLink_.push_back(FilterPreLink(_pre));
-    _pre->addSuccessorLink(this, preLink_.size() - 1);
+    unsigned int index = preLink_.size() - 1;
+
+    if (_pre->rootNode() == rootNode()) {
+      _pre->addSuccessorLink(this, preLink_.size() - 1);
+    }
+    else {
+      AsynchSuccLink succ = asynchLinkManager_.addBufferLink(_pre, index);
+      _pre->addAsynchSuccessorLink(succ);
+    }
   }
 
   void
@@ -225,6 +242,12 @@ namespace Video
   }
 
   void
+  Filter::addAsynchSuccessorLink(AsynchSuccLink const& _succLink)
+  {
+    asynchSuccLink_.push_back(_succLink);
+  }
+
+  void
   Filter::process()
   {
   }
@@ -236,6 +259,10 @@ namespace Video
   void
   Filter::processFilterTree() 
   {
+    // std::cout << "try to aquire asynchronous input buffers" << std::endl;
+
+    asynchLinkManager_.getAsynchBuffers(preLink_);
+
     // std::cout << "aquire output buffer" << std::endl;
     outputBufferIndex_ = bufferManager_->acquireNextWriteBuffer();
     outputBuffer_ = bufferManager_->bufferAddr(outputBufferIndex_);
@@ -244,16 +271,20 @@ namespace Video
       bufferManager_->
 	bufferTimeStamp(outputBufferIndex_,
 			pre_->bufferManager_->bufferTimeStamp(inputBufferIndex_));
-
+    
+    // FIXME: this does not disable subsequent buffers, if asynch acquire failed.
+    
     // std::cout << "process buffer" << std::endl;
     timeFilter_.start();
     process();
     timeFilter_.stop();
-
+    
+    
     // std::cout << "relable write buffer as readbuffer for all successors" << std::endl;
     bufferManager_->switchWrite2ReadBuffer(outputBufferIndex_, 
-					   successors_ + brokerLink_.size());
-
+					   successors_ + 
+					   brokerLink_.size());
+    
     // std::cout << "set input buffer for all successors." << std::endl;
     {
       FilterVector::const_iterator first, last = succ_.end();
@@ -265,7 +296,7 @@ namespace Video
 	}
       }
     }
-
+    
     // std::cout << "set input buffer for all successor links." << std::endl;
     {
       FilterSuccVector::iterator first, last = succLink_.end();
@@ -278,33 +309,46 @@ namespace Video
 	}
       }
     }
-
+    
+    // std::cout << "set input buffer for all asnychronous successor links." << std::endl;
+    {
+      AsynchSuccVector::iterator first, last = asynchSuccLink_.end();
+      for (first = asynchSuccLink_.begin(); first != last; ++first) {
+	first->buffer(bufferManager_->bufferTimeStamp(outputBufferIndex_),
+		      outputBufferIndex_,
+		      outputBuffer_,
+		      outputParameters_);
+      }
+    }
+    
     // std::cout << "set index of all pending broker requests" << std::endl;
     setBrokerRequests();
-
+  
+    
     // std::cout << "release read buffer of predecessor" << std::endl;
     if (pre_)
       pre_->bufferManager_->releaseReadBuffer(inputBufferIndex_);
 
     // std::cout << "release read buffer of all predecessor links" << std::endl;
     {
-      FilterPreVector::const_iterator first, last = preLink_.end();
+      FilterPreVector::iterator first, last = preLink_.end();
       for (first = preLink_.begin(); first != last; ++first) {
-	first->filter()->bufferManager_->releaseReadBuffer(first->index());
+	if (first->buffer()) {
+	  first->filter()->bufferManager_->releaseReadBuffer(first->index());
+	  first->buffer(0, NULL, NULL);
+	}
       }
     }
 
-    // std::cout << "process successors" << std::endl;
-    {
-      timeFilterTree_.start();
-      FilterVector::const_iterator first, last = succ_.end();
-      for (first = succ_.begin(); first != last; ++first) {
-	if ((*first)->active()) {
-	  (*first)->processFilterTree();
-	}
+    // std::cout << "process asynch filter tree" << std::endl;
+    timeFilterTree_.start();
+    FilterVector::const_iterator first, last = succ_.end();
+    for (first = succ_.begin(); first != last; ++first) {
+      if ((*first)->active()) {
+	(*first)->processFilterTree();
       }
-      timeFilterTree_.stop();
     }
+    timeFilterTree_.stop();
   }
 
   /**
@@ -366,21 +410,12 @@ namespace Video
     protectedDisconnect();
   }
 
-  /**
-   * Due to synchronization and locking issues this has to be
-   * calculated before processing a filter tree.
-   */
-  void
-  Filter::calcConnectivity()
-  {
-    Miro::Guard guard(connectionMutex_);
-    protectedCalcConnectivity();
-  }
-
-
   void
   Filter::protectedConnect() 
   {
+    // remember to recalculate connectivity.
+    rootDevice()->connectionChange();
+
     // process filter connection
     ++connections_;
 
@@ -393,14 +428,20 @@ namespace Video
     for (first = preLink_.begin(); first != last; ++first) {
       first->filter()->protectedConnect();
     }
+
+    // process asynchronous predecessor link connections
+    asynchLinkManager_.protectedConnect();
   }
 
   void
   Filter::protectedDisconnect() 
   {
+    // process asynchronous predecessor link connections
+    asynchLinkManager_.protectedDisconnect();
+
     // process predecessor link connections
-    FilterPreVector::iterator first, last = preLink_.end();
-    for (first = preLink_.begin(); first != last; ++first) {
+    FilterPreVector::reverse_iterator first, last = preLink_.rend();
+    for (first = preLink_.rbegin(); first != last; ++first) {
       first->filter()->protectedDisconnect();
     }
 
@@ -410,6 +451,9 @@ namespace Video
     
     // process filter connection
     --connections_;
+
+    // remember to recalculate connectivity.
+    rootDevice()->connectionChange();
   }
 
   void
@@ -425,24 +469,52 @@ namespace Video
     // This includes successors and successor links.
     connected_ = connections_ > 0;
 
+    //--------------------------------------------------------------------------
     // Calculate the number of successors.
     successors_ = 0;
+
     // Test all direct successors.
-    for (first = succ_.begin(); first != last; ++first) {
-      if ((*first)->connected_) {
-	++successors_;
+    {
+      for (first = succ_.begin(); first != last; ++first) {
+	if ((*first)->connected_) {
+	  ++successors_;
+	}
       }
     }
-    // Test all successor links.
-    FilterSuccVector::const_iterator f, l = succLink_.end();
-    for (f = succLink_.begin(); f != l; ++f) {
-      // As connected_ is not yet be initialized on a 
-      // forward link we have to check connections_ and
-      // not connected_
-      // This is only valid as we hold the lock.
-      if (f->filter()->connections_ > 0) {
-	++successors_;
+
+    {
+      // Test all successor links.
+      FilterSuccVector::const_iterator first, last = succLink_.end();
+      for (first = succLink_.begin(); first != last; ++first) {
+	// As connected_ is not yet be initialized on a 
+	// forward link we have to check connections_ and
+	// not connected_
+	// This is only valid as we hold the lock.
+	if (first->filter()->connections_ > 0) {
+	  ++successors_;
+	}
       }
+    }
+
+    {
+      // Test all asynchronous successor links.
+      AsynchSuccVector::iterator first, last = asynchSuccLink_.end();
+      for (first = asynchSuccLink_.begin(); first != last; ++first) {
+	// As connected_ is not yet be initialized on a 
+	// forward link we have to check connections_ and
+	// not connected_
+	// This is only valid as we hold the lock.
+	if (first->protectedCalcConnectivity()) {
+	  ++successors_;
+	}
+      }
+    }
+
+    // Set the asynch links of the device, that are
+    if (!asynchLinkManager_.empty()) {
+      if (connected_)
+	asynchLinkManager_.setDeviceAsynchLinksConnected();
+      asynchLinkManager_.synchronouslyConnected(connected_);
     }
   }
 
@@ -530,5 +602,23 @@ namespace Video
       return pre_->rootNode();
     }
     return this;
+  }
+
+  Device * 
+  Filter::rootDevice() throw() 
+  {
+    return dynamic_cast<Device *>(rootNode());
+  }
+
+  void
+  Filter::setSynchMode(bool _synchWithCurrent, bool _synchAllNew) throw() 
+  {
+    // initialize successors
+    FilterVector::const_iterator first, last = succ_.end();
+    for (first = succ_.begin(); first != last; ++first) {
+      (*first)->setSynchMode(_synchWithCurrent, _synchAllNew);
+    }
+
+    asynchLinkManager_.setSynchMode(_synchWithCurrent, _synchAllNew);
   }
 }

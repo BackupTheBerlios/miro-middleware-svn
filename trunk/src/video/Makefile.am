@@ -21,6 +21,12 @@ bin_PROGRAMS = VideoService
 
 sources = \
 	Parameters.xml \
+	AsynchLinkManager.cpp \
+	AsynchBufferSet.cpp \
+	AsynchPreLink.cpp \
+	AsynchSuccLink.cpp \
+	DeviceAsynchLinkManager.cpp \
+	DeviceAsynchBufferSet.cpp \
 	BufferManager.cpp \
 	VideoFilter.cpp \
 	VideoFilterBasic.cpp \
