@@ -1,5 +1,5 @@
 <!DOCTYPE xml SYSTEM "MiroParameterDescription.dtd">
-<config> 
+<config>
   <config_global name="namespace" value="Video" />
   <config_global name="include" value="miro/Parameters.h" />
 
@@ -54,6 +54,7 @@
 
     <config_item name="DeviceQuickCam" parent="Device" final="true">
       <config_parameter name="device" type="string" inherited="true" default="/dev/video0" />
+      <config_parameter name="fps" type="int" default="10" />
     </config_item>
 
     <config_item name="Device1394" parent="Device" final="true">

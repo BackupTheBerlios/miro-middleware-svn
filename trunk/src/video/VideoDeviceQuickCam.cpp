@@ -142,6 +142,20 @@ namespace Video
     //setSource();
     setPalette();
 
+    ioctl(ioBuffer_.get_handle(), VIDIOCGWIN, &vidwindow);
+
+    std::cout << "fps " << (vidwindow.flags >> 16) << endl;
+
+    vidwindow.flags = params_->fps << 16;
+
+    std::cout << "setting " << params_->fps << " fps" << endl;
+    ioctl(ioBuffer_.get_handle(), VIDIOCSWIN, &vidwindow);
+
+    ioctl(ioBuffer_.get_handle(), VIDIOCGWIN, &vidwindow);
+
+    std::cout << "fps now " << (vidwindow.flags >> 16) << endl;
+
+
 
     //	preparing buffers
 

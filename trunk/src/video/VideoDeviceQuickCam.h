@@ -71,6 +71,7 @@ namespace Video
     struct video_mbuf gb_buffers;
     struct video_capability capability;
     struct video_channel * channels;
+    struct video_window vidwindow;
 
     unsigned char * map_;
 
