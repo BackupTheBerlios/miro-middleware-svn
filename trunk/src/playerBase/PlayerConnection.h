@@ -1,3 +1,4 @@
+
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware For Robots)
@@ -41,6 +42,14 @@ namespace Player {
 
   }; //class PlayerConnection
 
+  inline PlayerConnection::PlayerConnection(PtzProxy * _playerPTZ) {
+    playerPTZ_=_playerPTZ;
+    //set default values
+    panTarget_=playerPTZ_->pan;
+    tiltTarget_=playerPTZ_->tilt;
+    zoomTarget_=playerPTZ_->zoom;
+  }
+  
   inline bool PlayerConnection::setPan(double pan) {
     if (playerPTZ_->SetCam(pan,tiltTarget_,zoomTarget_)==0) {
       panTarget_=pan;
@@ -59,14 +68,6 @@ namespace Player {
     }
   }
 
-  inline PlayerConnection::PlayerConnection(PtzProxy * _playerPTZ) {
-    playerPTZ_=_playerPTZ;
-    //set default values
-    panTarget_=playerPTZ_->pan;
-    tiltTarget_=playerPTZ_->tilt;
-    zoomTarget_=playerPTZ_->zoom;
-  }
-
   inline bool PlayerConnection::setPanTilt(double pan, double tilt) {
     if (playerPTZ_->SetCam(pan,tilt,zoomTarget_)==0) {
       panTarget_=pan;
@@ -78,7 +79,7 @@ namespace Player {
   }
 
   inline bool PlayerConnection::setZoom(double zoom) {
-    if (playerPTZ_->SetCam(panTarget_,tiltTarget_,zoomTarget_)==0) {
+    if (playerPTZ_->SetCam(panTarget_,tiltTarget_,zoom)==0) {
       zoomTarget_=zoom;
       return true;
     } else {

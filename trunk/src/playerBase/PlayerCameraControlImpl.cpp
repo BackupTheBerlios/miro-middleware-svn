@@ -47,6 +47,9 @@ namespace Player
   CameraControlImpl::setPlayerConnection(PlayerConnection * _playerConnection)
   {
     playerConnection_=_playerConnection;
+
+    //set a reasonable initial value. Namely, the value the camera currently has
+    setTargetZoom(getZoom());
   }
 
 }

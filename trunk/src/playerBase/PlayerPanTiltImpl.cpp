@@ -160,6 +160,9 @@ namespace Player
   PlayerPanTiltImpl::setPlayerConnection(PlayerConnection * _playerConnection)
   {
     playerConnection_ = _playerConnection;
+
+    //set a reasonable initial value. Namely the values the pantilt has.
+    setPosition(getPosition());
   }
   
 };

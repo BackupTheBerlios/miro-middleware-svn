@@ -124,12 +124,19 @@ namespace Miro {
     string robotName="Robot";
 
     assert(pMotion_!=NULL);
+
+    //Do an initial read, to allow initialization with real values
+    if (playerClient->Read()) {
+      throw Miro::EDevIO("Error in connection to Player Simulator");
+    }
+
     pMotion_->setPlayerPositionProxy(playerPosition);
     
 
     Player::PlayerConnection * playerConnection=NULL;
-    if (playerPTZ) 
+    if (playerPTZ) {
       playerConnection=new Player::PlayerConnection(playerPTZ);
+    }
     
     if (pPanTilt_ && playerConnection)
       pPanTilt_->setPlayerConnection(playerConnection);
