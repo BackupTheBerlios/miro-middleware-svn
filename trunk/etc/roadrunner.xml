@@ -319,6 +319,11 @@
 			    </parameter>
 
 			    <parameter name="Filter" >
+			      <parameter value="ColorCount" name="Type" />
+			      <parameter value="ColorCount" name="Name" />
+			    </parameter>
+
+			    <parameter name="Filter" >
 			      <parameter value="AttentionRobots" name="Type" />
 			      <parameter value="AttentionRobots" name="Name" />
 			      <parameter name="BackLink" >
@@ -408,6 +413,7 @@
 			<parameter value="AttentionBall" />
 			<parameter value="AttentionGoal" />
 			<parameter value="AttentionCornerPoles" />
+			<parameter value="ColorCount" />
 		      </parameter>
 		    </parameter>
 
@@ -423,6 +429,7 @@
 			<parameter value="YellowLeftPost" />
 			<parameter value="YellowRightPost" />
 			<parameter value="AttentionLines" />
+			<parameter value="ColorCount" />
 		      </parameter>
 		    </parameter>
 
@@ -524,13 +531,13 @@
       </parameter>
 
       <parameter name="CollectAllFeaturesBasic" >
-	<parameter value="3" name="NumberBackLinks" />
+	<parameter value="4" name="NumberBackLinks" />
 	<parameter value="false" name="DynamicConnection" />
 	<parameter value="VisionCollectorBasic" name="InterfaceName" />
       </parameter>
 
       <parameter name="CollectAllFeaturesFull" >
-	<parameter value="8" name="NumberBackLinks" />
+	<parameter value="9" name="NumberBackLinks" />
 	<parameter value="true" name="DynamicConnection" />
 	<parameter value="VisionCollectorFull" name="InterfaceName" />
       </parameter>
