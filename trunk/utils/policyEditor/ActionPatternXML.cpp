@@ -25,6 +25,8 @@
 #include <qmessagebox.h>
 #include <qinputdialog.h>
 
+#include <iostream>
+
 QString const ActionPatternXML::XML_TAG("actionpattern");
 
 ActionPatternXML::ActionPatternXML(QDomNode const& _node,
@@ -119,7 +121,7 @@ ActionPatternXML::setArbiter(int _id)
     Item * item = itemFromListViewItem(i);
     ArbiterXML * arbiter = dynamic_cast<ArbiterXML *>(item);
     if (arbiter != NULL) {
-      arbiter->deleteLater();
+      arbiter->deleteItem();
       break;
     }
     i = i->nextSibling();
