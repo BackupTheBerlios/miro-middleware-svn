@@ -36,6 +36,7 @@ DIRS =		odometry \
 		sonar \
 		stall \
 		video \
+		battery \
 		notify \
 		infrared \
 		behaviours
