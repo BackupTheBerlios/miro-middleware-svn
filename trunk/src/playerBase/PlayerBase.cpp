@@ -210,7 +210,7 @@ main(int argc, char *argv[])
 
   // Parameters to be passed to the services
   Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
-  Player::Parameters * simBotParameters = Player::Parameters::instance();
+  Player::Parameters * playerParameters = Player::Parameters::instance();
   Laser::Parameters * laserParameters = Laser::Parameters::instance();
   Miro::PanParameters panParameters;
   Miro::TiltParameters tiltParameters;
@@ -226,7 +226,7 @@ main(int argc, char *argv[])
     config->setSection("Robot");
     config->getParameters("Miro::RobotParameters", *robotParameters);
     config->setSection("Player");
-    config->getParameters("Player::Parameters", *simBotParameters);
+    config->getParameters("Player::Parameters", *playerParameters);
     config->setSection("Sick");
     config->getParameters("Laser::Parameters", *laserParameters);
     delete config;

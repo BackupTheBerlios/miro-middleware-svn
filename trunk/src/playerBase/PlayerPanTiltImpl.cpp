@@ -34,7 +34,7 @@ namespace Player
   // maximum wait time for cond.wait calls
   ACE_Time_Value PlayerPanTiltImpl::maxWait = ACE_Time_Value(0, 500000);
 
-  PlayerPanTiltImpl::PlayerPanTiltImpl(Miro::PanTiltParameters _panTiltParameters,
+  PlayerPanTiltImpl::PlayerPanTiltImpl(const Miro::PanTiltParameters& _panTiltParameters,
 				       bool _upsideDown) throw(Exception) :
     Miro::PanTiltImpl(_panTiltParameters),
     playerPTZ(NULL),

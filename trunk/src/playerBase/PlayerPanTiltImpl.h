@@ -27,14 +27,15 @@ namespace Miro
 
 namespace Player
 {
-  class PlayerPanTiltImpl : public virtual POA_Miro::PanTilt , Miro::PanTiltImpl
+  class PlayerPanTiltImpl : public virtual POA_Miro::PanTilt , 
+			    public virtual Miro::PanTiltImpl
   {
     //-------------------------------------------------------------------------
     // public methods
     //-------------------------------------------------------------------------
   public:
     // Constructor/Destructor
-    PlayerPanTiltImpl(Miro::PanTiltParameters _panTiltParameters, bool _upsideDown = false) throw(Miro::Exception);
+    PlayerPanTiltImpl(const Miro::PanTiltParameters& _panTiltParameters, bool _upsideDown = false) throw(Miro::Exception);
     virtual ~PlayerPanTiltImpl();
 
     //-------------------------------------------------------------------------
