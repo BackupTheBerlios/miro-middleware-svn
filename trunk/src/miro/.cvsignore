@@ -63,3 +63,4 @@ ConstraintArbiterViewer.lo
 ConstraintArbiterViewerTask.lo
 VelocitySpace.lo
 libmiro.la
+NotifyMulticastDomainEventFilter.lo

@@ -33,7 +33,6 @@
 #define DEFAULT_MTU 65535
 
 /* Debug output macros */
-#define DEBUG_LEVEL 32
 
 #define DBG_TOOMUCH 64
 #define DBG_VERBOSE 32
@@ -41,6 +40,8 @@
 #define DBG_INFO    8
 #define DBG_ERROR   0
 #define DBG_ALWAYS  0
+
+#define DEBUG_LEVEL DBG_VERBOSE
 
 /* Debug macros */
 #define _PRINT_X(l, fd, x) if (DEBUG_LEVEL >= (l)) fd << DBG_CLASSNAME << ": " << x << std::endl;

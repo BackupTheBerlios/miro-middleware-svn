@@ -181,6 +181,14 @@ namespace Miro {
                         break;
                 }
 
+#if DEBUG_LEVEL == DBG_TOOMUCH
+
+                struct in_addr ia;
+                ia.s_addr = htonl(from.get_ip_address());
+                PRINT("Datagram from " << inet_ntoa(ia) << ":" << from.get_port_number());
+
+#endif
+
                 /* Check if paket was sent locally and if so, drop it */
                 if (is_loopback(from)) {
                     droppedLocal_++;
@@ -193,16 +201,6 @@ namespace Miro {
 
                     return 0;
                 }
-
-#if DEBUG_LEVEL == DBG_TOOMUCH
-
-                struct in_addr ia;
-
-                ia.s_addr = htonl(from.get_ip_address());
-
-                PRINT("Datagram from " << inet_ntoa(ia) << ":" << from.get_port_number());
-
-#endif
 
                 /* Process packet */
                 memcpy(header, ((char *)iov[0].iov_base ), sizeof(header));
@@ -246,9 +244,10 @@ namespace Miro {
          *     I tried to write my own timout routine, but i didn't
          *     succeed.
          */
-        int Receiver::handle_timeout(const ACE_Time_Value &/*_tv*/, const void */*_act*/) {
-            // TODO: Check if mutex is really needed!
-            Miro::Guard guard(mutex_);
+        int Receiver::handle_timeout(const ACE_Time_Value &/*_tv*/, const void */*_act*/)
+        {
+            Miro::Guard guard(mutex_, 0);
+            if (!guard.locked()) return 0;
 
             RequestMap::iterator begin = requestMap_.begin();
             RequestMap::iterator end = requestMap_.end();
@@ -384,6 +383,12 @@ namespace Miro {
 
                 /* Drop packet if it's too old */
                 unsigned int time = ACE_OS::gettimeofday().msec();
+
+		PRINT_DBG(DBG_TOOMUCH,
+			"Receiver::handle_event(): Got event "
+			<< event.header.fixed_header.event_type.domain_name
+			<< " / "
+			<< event.header.fixed_header.event_type.type_name); 
 
                 /* pub/sub protocol hook */
                 if (!strcmp(event.header.fixed_header.event_type.type_name, "NotifyMulticast::offered")) {

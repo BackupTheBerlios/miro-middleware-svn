@@ -25,6 +25,7 @@
 #include "NotifyMulticastSender.h"
 #include "NotifyMulticastAdapter.h"
 #include "NotifyMulticastParameters.h"
+#include "NotifyMulticastDomainEventFilter.h"
 
 /* ACE includes */
 #include <ace/Message_Block.h>
@@ -54,9 +55,10 @@ namespace Miro {
                 Super(_configuration->getEventchannel()),
                 main_(_main),
                 configuration_(_configuration),
-        requestId_(0) {
+        	requestId_(0)
+	{
             PRINT_DBG(DBG_INFO, "Initializing");
-
+	    event_filter_ = new DomainEventFilter(configuration_->getDomain());
             PRINT_DBG(DBG_MORE, "Initialized");
         }
 
@@ -69,7 +71,7 @@ namespace Miro {
          */
         Sender::~Sender() {
             PRINT_DBG(DBG_INFO, "Cleaning up");
-
+            delete event_filter_;
             PRINT_DBG(DBG_MORE, "Cleaned up");
         }
 
@@ -171,9 +173,8 @@ namespace Miro {
             const CosNotification::StructuredEvent &_notification
             ACE_ENV_ARG_DECL_NOT_USED)
         throw(CORBA::SystemException, CosEventComm::Disconnected) {
-            /* Where is the event comming from? */
-
-            if (!ACE_OS::strcmp((const char *)_notification.header.fixed_header.event_type.domain_name, configuration_->getDomain().c_str())) {
+            /* Where is the event coming from? */
+	    if (event_filter_->isAccepted(_notification)) {
                 marshalEvent(_notification);
             }
         }
@@ -182,7 +183,7 @@ namespace Miro {
         /**
          * Sender::disconnect_push_consumer()
          *
-         *   Descritpion:
+         *   Description:
          *     Method that is called by the eventchannel when a consumer was disconnected
          */
         void Sender::disconnect_structured_push_consumer(ACE_ENV_SINGLE_ARG_DECL_NOT_USED)
@@ -450,7 +451,7 @@ namespace Miro {
         /**
          * Sender::sendFragment()
          *
-         *   Descritpion:
+         *   Description:
          *     Sends fragment over the network
          *
          *   Parameters:
@@ -539,6 +540,19 @@ namespace Miro {
         int Sender::sendData(iovec *_iov, size_t _iovLen) {
             return configuration_->getSocket()->send(_iov, (int)_iovLen);
         }
+	
+        /** Set an Object for event filtering.
+	 *
+	 *  The object must be allocated dynamically (via new) and
+	 *  will be released (free'd) on the next call to either this
+	 *  function or the destructor, whichever comes first.
+	 */ 
+	void Sender::setEventFilter(EventFilter * _event_filter)
+	{
+	    assert(_event_filter != 0);
+            delete event_filter_;
+	    event_filter_ = _event_filter;
+	}
     }
 }
 

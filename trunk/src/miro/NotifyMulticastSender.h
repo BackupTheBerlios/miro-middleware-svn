@@ -69,6 +69,8 @@ namespace Miro {
         class Adapter;
 
         class SH;
+	
+	class EventFilter;
 
         class Sender : public Miro::StructuredPushConsumer {
 
@@ -89,6 +91,8 @@ namespace Miro {
                 int sendData(iovec *_iov, size_t _iovLen);
 
                 friend class SH;
+
+		void setEventFilter(EventFilter * _event_filter);
 
             protected:
                 void subscribe(
@@ -134,6 +138,8 @@ namespace Miro {
                 Adapter *main_;
                 Config *configuration_;
                 unsigned long int requestId_;
+		
+		EventFilter * event_filter_;
         };
     };
 };

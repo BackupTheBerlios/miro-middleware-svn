@@ -69,7 +69,8 @@ sources1 = \
 	NotifyMulticastEventHandler.cpp \
 	NotifyMulticastConfig.cpp \
 	NotifyMulticastAdapter.cpp \
-	NotifyMulticastSH.cpp
+	NotifyMulticastSH.cpp \
+	NotifyMulticastDomainEventFilter.cpp
 
 sparrowsources1 = \
 	PowerArbiter.cpp \
