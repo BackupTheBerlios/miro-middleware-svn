@@ -12,21 +12,15 @@
 #define CanonCamera_idl
 
 #include "Exception.idl"
+#include "CameraControl.idl"
 
 module Miro
 {
-  //! Struct representing the focus limits in the current zoom position
-  struct FocusRangeIDL
-  {
-    //! Minimal focus position (far).
-    short min;
-    //! Maximal focus position (near).
-    short max;
-  };
-    
-  
   //! Interface for a zoom camera.
   /** 
+   * This interface is deprecated.
+   * Use CanonCameraControl instead. Although the methods stay the same,
+   * their semantic does not, so be careful.
    * @author Guillem Pages Gassull
    */
   interface CanonCamera
@@ -39,14 +33,14 @@ module Miro
      * @throw EDevIO
      * is thrown to indicate low level device problems.
      */
-    void setZoom(in short value) raises(EDevIO, EOutOfBounds, ETimeOut);
-    //! Get the current zoom factor.
+      void setZoom(in short value) raises(EDevIO, EOutOfBounds, ETimeOut);
+      //! Get the current zoom factor.
     /**
      * @return The zoom factor, specified in percentage.
      * @throw EDevIO
      * is thrown to indicate low level device problems.
      */
-    short getZoom() raises(EDevIO, ETimeOut);
+      short getZoom() raises(EDevIO, ETimeOut);
 
     //! Set the focus factor.
     /**
@@ -56,27 +50,27 @@ module Miro
      * @throw EDevIO
      * is thrown to indicate low level device problems.
      */
-    void setFocus(in short value) raises (EDevIO, EOutOfBounds, ETimeOut);
+      void setFocus(in short value) raises (EDevIO, EOutOfBounds, ETimeOut);
     //! Get the current focus factor.
     /**
      * @return The focus factor, specified in percentage (0 - far / 100 - near).
      * @throw EDevIO
      * is thrown to indicate low level device problems.
      */
-    short getFocus() raises(EDevIO, ETimeOut);
+      short getFocus() raises(EDevIO, ETimeOut);
     //! Set the camera to autoFocus mode
     /**
      * @throw EDevIO
      * is thrown to indicate low level device problems.
      */
-    void autoFocus() raises(EDevIO, ETimeOut);
+      void autoFocus() raises(EDevIO, ETimeOut);
     //! Get the focusing range for the current zoom position
     /**
      * @return The focusing range for the current position
      * @throw EDevIO
      * is thrown to indicate low level device problems.
      */
-    FocusRangeIDL getFocusRange() raises(EDevIO, ETimeOut);
+      FocusRangeIDL getFocusRange() raises(EDevIO, ETimeOut);
 
 
     void setAEoff() raises (EDevIO, ETimeOut);

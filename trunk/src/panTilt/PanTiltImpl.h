@@ -8,10 +8,12 @@
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-#ifndef PanTiltImpl_h
-#define PanTiltImpl_h
+#ifndef DpPanTiltImpl_h
+#define DpPanTiltImpl_h
 
 #include "idl/DirectedPerceptionPanTiltS.h"
+
+#include "miro/PanTiltImpl.h"
 
 #include "PanTiltData.h"
 #include "PanTiltMessage.h"
@@ -35,7 +37,8 @@ namespace DpPanTilt
   /**
    * PanTiltImpl
    */
-  class PanTiltImpl :  public virtual POA_Miro::DirectedPerceptionPanTilt
+  class PanTiltImpl :  public virtual POA_Miro::DirectedPerceptionPanTilt,
+		       public Miro::PanTiltImpl
   {
   public:
     Connection& connection;
@@ -49,7 +52,11 @@ namespace DpPanTilt
     /**
      * Constructor
      */
-    PanTiltImpl(Connection & _connection, Data & _data);
+    PanTiltImpl(Connection & _connection, 
+		Data & _data,
+		Miro::PanParameters panParameters,
+		Miro::TiltParameters tiltParameters
+		);
 
     /**
      * Destructor

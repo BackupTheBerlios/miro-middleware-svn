@@ -31,7 +31,7 @@ namespace DpPanTilt
     /*
      * Constructor.
      */
-    PanTiltServer(int& argc, char *argv[]);
+    PanTiltServer(int& argc, char *argv[], Miro::PanParameters panParameters, Miro::TiltParameters tiltParameters);
 
     /**
      * Destructor.

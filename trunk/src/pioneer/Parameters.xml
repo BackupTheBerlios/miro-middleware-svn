@@ -111,7 +111,9 @@
       <config_parameter name="channelSharing" type="bool" default="false" />
       <config_parameter name="camera" type="bool" default="false" />
       <config_parameter name="cameraUpsideDown" type="bool" default="false" />
-      <config_parameter name="cameraType" type="string" default="canon" />
+      <config_parameter name="cameraVendor" type="std::string" default="canon" />
+      <config_parameter name="cameraModel" type="std::string" default="vc-c4" />
+      <config_parameter name="cameraFormat" type="std::string" default="pal" />
 
     </config_item>
   </config_group>

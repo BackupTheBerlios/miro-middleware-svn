@@ -9,8 +9,8 @@
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-#ifndef PioneerBase_hh
-#define PioneerBase_hh
+#ifndef PioneerBase_h
+#define PioneerBase_h
 
 #include "miro/Server.h"
 #include "miro/ReactorTask.h"
@@ -24,12 +24,19 @@
 #include "pioneer/PioneerMotionImpl.h"
 #include "pioneer/PioneerStallImpl.h"
 #include "pioneer/CanonPanTiltImpl.h"
+#include "pioneer/CanonCameraControlImpl.h"
+
+#ifdef MIRO_HAS_DEPRECATED
 #include "pioneer/CanonCameraImpl.h"
+#endif
+
 #include "pioneer/GripperImpl.h"
 #include "pioneer/TCM2Impl.h"
 #include "miro/RangeSensorImpl.h"
 #include "miro/ObjectVectorImpl.h"
 //#include "miro/CortexImpl.h"
+
+#include "pioneer/Parameters.h"
 
 #include <orbsvcs/CosNotifyChannelAdminS.h>
 #include <orbsvcs/CosNotifyCommC.h>
@@ -50,7 +57,7 @@ class PioneerBase : public Miro::Server
 
 public:
   // Initialization and Termination methods.
-  PioneerBase(int argc, char *argv[]);
+  PioneerBase(int argc, char *argv[], Miro::PanParameters panParameters, Miro::TiltParameters tiltParameters);
   // Constructor.
 
   ~PioneerBase();
@@ -94,7 +101,11 @@ private:
   Miro::RangeSensorImpl tactile;
   Miro::RangeSensorImpl infrared;
   Canon::CanonPanTiltImpl canonPanTilt;
+#ifdef MIRO_HAS_DEPRECATED
   Canon::CanonCameraImpl canonCamera;
+#endif
+  //  Miro::PanTiltImpl * panTilt;
+  Miro::CameraControlImpl * cameraControl;
   Miro::GripperImpl gripper;
   Miro::ObjectVectorImpl objectVector;
   //Miro::CortexImpl cortex;
@@ -107,11 +118,20 @@ private:
   Miro::RangeSensor_var pTactile;
   Miro::RangeSensor_var pInfrared;
   Miro::Battery_var pBattery;
-  Miro::CanonPanTilt_var pCanonPanTilt;
+#ifdef MIRO_HAS_DEPRECATED
   Miro::CanonCamera_var pCanonCamera;
+#endif
+  //  Miro::CanonPanTilt_var pCanonPanTilt;
+  Miro::PanTilt_var pCanonPanTilt;
+  Miro::CameraControl_var pCameraControl;
   Miro::Gripper_var pGripper;
   Miro::ObjectVector_var pObjectVector;
   //Miro::Cortex_var pCortex;
+
+  Miro::ZoomParameters zoomParameters;
+  Miro::FocusParameters focusParameters;
+  Miro::ShutterParameters shutterParameters;
+
 };
 #endif // PioneerBase
 

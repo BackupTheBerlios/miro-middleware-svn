@@ -123,7 +123,11 @@ sources2 = \
 	CompassImpl.cpp \
 	InclinometerImpl.cpp \
 	MagnetometerImpl.cpp \
-	ThermometerImpl.cpp
+	ThermometerImpl.cpp \
+	PanImpl.cpp \
+	TiltImpl.cpp \
+	PanTiltImpl.cpp \
+	CameraControlImpl.cpp
 
 libmiroSvc_a_SOURCES = $(sources2)
 

@@ -56,10 +56,10 @@ globalsources = \
 	Tilt.idl \
 	PanTilt.idl \
 	CanonPanTilt.idl \
-	CanonCamera.idl \
 	Buttons.idl \
 	Video.idl \
 	VideoControl.idl \
+	CameraControl.idl \
 	QuickCamControl.idl \
 	Speech.idl \
 	SphinxSpeech.idl \
@@ -89,6 +89,7 @@ b21sources = \
 pioneersources = \
 	PioneerStall.idl \
 	PioneerMotion.idl \
+	CanonCameraControl.idl \
 	Gripper.idl \
 	TCM2.idl \
 	TCM2Event.idl
@@ -100,7 +101,8 @@ sparrowsources = \
 	SparrowMotion.idl \
 	SparrowAlive.idl
 
-deprecatedsources = 
+deprecatedsources = \
+	CanonCamera.idl
 
 
 

@@ -1,0 +1,143 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef CameraControl_idl
+#define CameraControl_idl
+
+#include "Exception.idl"
+#include "Time.idl"
+
+module Miro
+{
+  //! Struct representing zoom limits.
+  struct ZoomRangeIDL
+  {
+    float min;
+    float max;
+  };
+  //! Struct representing focus limits
+  struct FocusRangeIDL
+  {
+    short min;
+    short max;
+  };
+
+  //! Struct representing the shutter speed limits
+  struct ShutterRangeIDL
+  {
+    TimeIDL min;
+    TimeIDL max;
+  };
+
+ 
+  //! Basic interface for a zoom camera.
+  /** 
+   * @author Guillem Pages Gassull
+   */
+  interface CameraControl
+    {
+    //! Set the zoom factor.
+    /**
+     * @param factor is the horizontal aperture, specified in radians.
+     * @throw EOutOfBounds
+     * is thrown if the specified factor is outside the allowed range.
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    void setZoom(in float value) raises(EDevIO, EOutOfBounds, ETimeOut);
+
+    //! Get the current zoom factor.
+    /**
+     * @return The horizontal aperture, specified in radians.
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    float getZoom() raises(EDevIO, ETimeOut);
+
+    //! Get the zooming range
+    /**
+     * @return The zooming range
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    ZoomRangeIDL getZoomRange() raises(EDevIO, ETimeOut);
+
+
+    //! Set the focal distance.
+    /**
+     * Sets autofocus off if it was on.
+     * @param factor is the focal distance, specified in mm.
+     * @throw EOutOfBounds
+     * is thrown if the specified factor is outside the allowed range.
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    void setFocus(in short value) raises (EDevIO, EOutOfBounds, ETimeOut);
+
+    //! Get the current focal distance.
+    /**
+     * @return The focal distance, specified in mm.
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    short getFocus() raises(EDevIO, ETimeOut);
+
+    //! Queries whether the camera has autofocus functionality.
+    /**
+     * @return True if the camera has autofocus functionality, false otherwise.
+     */
+     boolean hasAutoFocus();
+
+    //! Set the camera to autoFocus mode.
+    /**
+     * @param value true activates autofocus, false deactivates it.
+     * @throw EDevIO
+     * is thrown to indicate low level device problems or no autoFocus functionality.
+     */
+    void setAutoFocus(in boolean value) raises(EDevIO, ETimeOut);
+    //! Get the focusing range for the current zoom position
+    /**
+     * @return The focusing range for the current position
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    FocusRangeIDL getFocusRange() raises(EDevIO, ETimeOut);
+
+    //! Set the shutter speed.
+    /**
+     * @param speed is the shutter time. Will use the nearest available setting.
+     * On return, contains the actual setting used.
+     * @throw EOutOfBounds
+     * is thrown if the specified factor is outside the accepted camera range.
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    void setShutter(inout TimeIDL speed) raises (EDevIO, EOutOfBounds, ETimeOut);
+
+    //! Get the current shutter speed factor.
+    /**
+     * @return The shutter time.
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    TimeIDL getShutter() raises(EDevIO, ETimeOut);
+
+    //! Get the shutter speed range.
+    /**
+     * @return The shutter speed range.
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    ShutterRangeIDL getShutterRange() raises(EDevIO, ETimeOut);
+
+  };
+};
+#endif /* CameraControl_idl */
+

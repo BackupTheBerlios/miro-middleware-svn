@@ -14,6 +14,8 @@
 
 #include "idl/CanonPanTiltS.h"
 
+#include "miro/PanTiltImpl.h"
+
 #include "miro/Exception.h"
 #include "pioneer/PioneerConnection.h"
 
@@ -26,15 +28,15 @@ namespace Miro
 
 namespace Pioneer
 {
-  // forward declerations
-  //  class Connection;
+  // forward declarations
   class Consumer;
 };
 
 namespace Canon
 {
   class CanonPanTiltImpl :  public virtual POA_Miro::CanonPanTilt,
-			    public virtual ::Miro::PanTilt
+			    //			    public virtual ::Miro::PanTilt,
+			    public Miro::PanTiltImpl
   {
     //-------------------------------------------------------------------------
     // public methods
@@ -42,6 +44,8 @@ namespace Canon
   public:
     // Constructor/Destructor
     CanonPanTiltImpl(Pioneer::Connection& _connection,
+		     Miro::PanParameters _panParameters,
+		     Miro::TiltParameters _tiltParameters,
 		     bool _upsideDown = false) throw(Miro::Exception);
     virtual ~CanonPanTiltImpl();
 
@@ -76,6 +80,8 @@ namespace Canon
       throw(Miro::EDevIO);
     virtual void setPosition(const Miro::PanTiltPositionIDL & dest) 
       throw(Miro::EOutOfBounds, Miro::EDevIO);
+    virtual Miro::PanTiltLimitsIDL getPanTiltLimits()
+      throw(Miro::EDevIO);
 
     //-------------------------------------------------------------------------
     // from canonPanTilt.idl
@@ -87,8 +93,6 @@ namespace Canon
     virtual void setSpdAcc(const Miro::CanonPanTiltSpdAccIDL & dest)
       throw(Miro::ETimeOut, Miro::EDevIO, Miro::EOutOfBounds);
     virtual Miro::CanonPanTiltSpdAccIDL getSpdAcc()
-      throw(Miro::EDevIO, Miro::ETimeOut);
-    virtual Miro::PanTiltLimitsIDL getPanTiltLimits()
       throw(Miro::EDevIO, Miro::ETimeOut);
     /**
      * DEPRECATED.

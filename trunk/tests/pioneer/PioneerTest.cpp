@@ -17,7 +17,8 @@
 #include "pioneer/PioneerConsumer.h"
 #include "pioneer/PioneerStallImpl.h"
 #include "pioneer/CanonPanTiltImpl.h"
-#include "pioneer/CanonCameraImpl.h"
+
+#include "pioneer/CanonCameraControlImpl.h"
 #include "pioneer/GripperImpl.h"
 #include "pioneer/TCM2Impl.h"
 
@@ -30,6 +31,10 @@
 #include "miro/RangeSensorImpl.h"
 #include "miro/OdometryImpl.h"
 #include "miro/BatteryImpl.h"
+
+#ifdef MIRO_HAS_DEPRECATED
+#include "pioneer/CanonCameraImpl.h"
+#endif
 
 #include <ace/Signal.h>
 
@@ -76,26 +81,31 @@ struct Service
   Pioneer::Consumer * pConsumer;
   Pioneer::StallImpl * pStallImpl;
   Pioneer::TCM2Impl * pTCM2Impl;
-  Canon::CanonPanTiltImpl canonPanTiltImpl;
+  Canon::CanonPanTiltImpl * pPanTiltImpl;
+#ifdef MIRO_HAS_DEPRECATED
   Canon::CanonCameraImpl canonCamera;
+#endif
+  Miro::CameraControlImpl * pCameraControl;
   Miro::GripperImpl gripper;
   Psos::EventHandler * pEventHandler;
   Pioneer::Connection connection;
   
-  Service();
+  Service(Miro::PanParameters panParameters, Miro::TiltParameters tiltParameters);
 };
 
 
-Service::Service() :
+Service::Service(Miro::PanParameters panParameters, Miro::TiltParameters tiltParameters) :
   reactorTask(),
   pRangeSensorImpl(new Miro::RangeSensorImpl(Pioneer::Parameters::instance()->sonarDescription)),
   pOdometryImpl(new Miro::OdometryImpl(NULL)),
   pBatteryImpl(new Miro::BatteryImpl()),
-  pConsumer(new Pioneer::Consumer(pRangeSensorImpl, NULL, NULL, NULL, pOdometryImpl, NULL, NULL, NULL, &canonPanTiltImpl)),
+  pConsumer(new Pioneer::Consumer(pRangeSensorImpl, NULL, NULL, NULL, pOdometryImpl, NULL, NULL, NULL, pPanTiltImpl)),
   pStallImpl(new Pioneer::StallImpl()),
   pTCM2Impl(new Pioneer::TCM2Impl(Pioneer::Parameters::instance()->tcm2Params, NULL)),
-  canonPanTiltImpl(connection, Pioneer::Parameters::instance()->cameraUpsideDown),
-  canonCamera(connection, canonPanTiltImpl.getAnswer()),
+  pPanTiltImpl(new Canon::CanonPanTiltImpl(connection, panParameters, tiltParameters, Pioneer::Parameters::instance()->cameraUpsideDown)),
+#ifdef MIRO_HAS_DEPRECATED
+  canonCamera(connection, pPanTiltImpl->getAnswer()),
+#endif
   gripper(connection),
   pEventHandler(new Psos::EventHandler(pConsumer,
 				       connection, 
@@ -202,7 +212,7 @@ void cameraMenu(Service& service)
   cout << "camera limits:" << endl;
 
   Miro::PanTiltLimitsIDL limits;
-  limits=service.canonPanTiltImpl.getPanTiltLimits();
+  limits=service.pPanTiltImpl->getPanTiltLimits();
 
   cout << "Pan min/max value: " << limits.minpanposition << " / " << limits.maxpanposition << endl;
   cout << "Tilt min/max value: " << limits.mintiltposition << " / " << limits.maxtiltposition << endl;
@@ -223,14 +233,18 @@ void cameraMenu(Service& service)
 	 << "a - set AutoFocus" << endl
 	 << "b - set AE Lock OFF" << endl
 	 << "c - set AE Lock ON" << endl
+#ifdef MIRO_HAS_DEPRECATED
 	 << "d - set AE Value" << endl
 	 << "e - set Iris Value" << endl
+#endif
          << "f - set Shutter Speed" << endl
+#ifdef MIRO_HAS_DEPRECATED
          << "g - set AGC Gain " << endl
          << "h - set White Balance Auto" << endl
          << "i - set White Balance Lock" << endl 
 	 << "k - set White Balance Manual" << endl
 	 << "l - set White Balance Value" << endl 
+#endif
 	 << endl << "x - back" << endl;
     cin >> str;
     c = str[0];
@@ -250,7 +264,7 @@ void cameraMenu(Service& service)
 	  cin >> angle;
 	  pos.tiltvalue=deg2Rad(angle);
 	  
-	  service.canonPanTiltImpl.setPosition(pos);
+	  service.pPanTiltImpl->setPosition(pos);
 	  break;
 	}
       case '2' :
@@ -264,7 +278,7 @@ void cameraMenu(Service& service)
 	  cin >> angle;
 	  pos.tiltvalue=deg2Rad(angle);
 	  
-	  service.canonPanTiltImpl.setWaitPosition(pos);
+	  service.pPanTiltImpl->setWaitPosition(pos);
 	  break;
 	}
       case '3' :
@@ -273,7 +287,7 @@ void cameraMenu(Service& service)
 	  cout << "pan (deg): " << endl;
 	  cin >> angle;
 	  
-	  service.canonPanTiltImpl.setPan(deg2Rad(angle));
+	  service.pPanTiltImpl->setPan(deg2Rad(angle));
 	  break;
 	}
       case '4' :
@@ -282,12 +296,12 @@ void cameraMenu(Service& service)
 	  cout << "tilt (deg): " << endl;
 	  cin >> angle;
 	  
-	  service.canonPanTiltImpl.setTilt(deg2Rad(angle));
+	  service.pPanTiltImpl->setTilt(deg2Rad(angle));
 	  break;
 	}
       case '5' :
 	{
-	  Miro::PanTiltPositionIDL pos=service.canonPanTiltImpl.getPosition();
+	  Miro::PanTiltPositionIDL pos=service.pPanTiltImpl->getPosition();
 	  cout << "Pan: " << Miro::rad2Deg(pos.panvalue) << "°" << endl;
 	  cout << "Tilt: " << Miro::rad2Deg(pos.tiltvalue) << "°" << endl;
 	  break;
@@ -296,7 +310,7 @@ void cameraMenu(Service& service)
 	{
 	  Miro::CanonPanTiltSpdAccIDL spd;
 	  double angle;
-	  spd=service.canonPanTiltImpl.getSpdAcc();
+	  spd=service.pPanTiltImpl->getSpdAcc();
 	  
 	  cout 
 	    << "Current pan speed:" << spd.targetpanspeed << endl
@@ -312,7 +326,7 @@ void cameraMenu(Service& service)
 	  cout << "New tilt speed (deg/s): " << endl;
 	  cin >> angle;
 	  spd.targettiltspeed=deg2Rad(angle);
-	  service.canonPanTiltImpl.setSpdAcc(spd);
+	  service.pPanTiltImpl->setSpdAcc(spd);
 	  break;
 	}
       case '7':
@@ -320,13 +334,16 @@ void cameraMenu(Service& service)
 	  int zoom;
 	  cout << "New zoom position (0-100%):" << endl;
 	  cin >> zoom;
-	  
+#ifdef MIRO_HAS_DEPRECATED	  
 	  service.canonCamera.setZoom(zoom);
+#endif
 	  break;
 	}
       case '8':
 	{
+#ifdef MIRO_HAS_DEPRECATED
 	  cout << "current zoom factor: " << service.canonCamera.getZoom();
+#endif
 	  break;
 	}
       case '9':
@@ -334,28 +351,37 @@ void cameraMenu(Service& service)
 	  int focus;
 	  cout << "New focus position (0-100%):" << endl;
 	  cin >> focus;
-
+#ifdef MIRO_HAS_DEPRECATED
 	  service.canonCamera.setFocus(focus);
+#endif
 	  break;
 	}
       case '0':
 	{
+#ifdef MIRO_HAS_DEPRECATED
 	  cout << "current focus factor: " << service.canonCamera.getFocus();
+#endif
 	  break;
 	}
       case 'a':
 	{
+#ifdef MIRO_HAS_DEPRECATED
 	  service.canonCamera.autoFocus();
+#endif
 	  break;
 	}
       case 'b':
 	{
+#ifdef MIRO_HAS_DEPRECATED
 	  service.canonCamera.setAEoff();
+#endif
 	  break;
 	}
       case 'c':
 	{
+#ifdef MIRO_HAS_DEPRECATED 
 	  service.canonCamera.setAEon();
+#endif
 	  break;
 	}
       case 'd':
@@ -364,7 +390,9 @@ void cameraMenu(Service& service)
 	  cout << "New AE-value(16-255):" << endl;
 	  cin >> aeValue;
 
+#ifdef MIRO_HAS_DEPRECATED
 	  service.canonCamera.setAE(aeValue);
+#endif
 	  break;
 	}
       case 'e':
@@ -373,7 +401,9 @@ void cameraMenu(Service& service)
 	  cout << "New Iris-value(2-10):" << endl;
 	  cin >> irisValue;
 
+#ifdef MIRO_HAS_DEPRECATED
 	  service.canonCamera.setIrisAssignment(irisValue);
+#endif
 	  break;
 	}
       case 'f':
@@ -382,7 +412,9 @@ void cameraMenu(Service& service)
           cout << "New Shutter Speed(1-25):" << endl;
           cin >> shutterValue;
 
+#ifdef MIRO_HAS_DEPRECATED
           service.canonCamera.setShutterSpeed(shutterValue);
+#endif
           break;
         }
       case 'g':
@@ -391,22 +423,30 @@ void cameraMenu(Service& service)
           cout << "New AGC Gain-value(0-255):" << endl;
           cin >> gainValue;
 
+#ifdef MIRO_HAS_DEPRECATED
           service.canonCamera.setAGCGain(gainValue);
+#endif
           break;
         }
       case 'h':
         {
+#ifdef MIRO_HAS_DEPRECATED
           service.canonCamera.setWBauto();
+#endif
           break;
         }
       case 'i':
         {
+#ifdef MIRO_HAS_DEPRECATED
           service.canonCamera.setWBlock();
+#endif
           break;
         }
       case 'k':
         {
+#ifdef MIRO_HAS_DEPRECATED
           service.canonCamera.setWBmanual();
+#endif
           break;
         }
       case 'l':
@@ -415,7 +455,9 @@ void cameraMenu(Service& service)
           cout << "New White Balance-value(0-255):" << endl;
           cin >> wbValue;
 
+#ifdef MIRO_HAS_DEPRECATED
           service.canonCamera.setWBvalue(wbValue);
+#endif
           break;
         }
 
@@ -432,15 +474,24 @@ int main(int argc, char* argv[])
 {
   // Parameters to be passed to the services
   Pioneer::Parameters * pParams = Pioneer::Parameters::instance();
+  Miro::PanParameters panParameters;
+  Miro::TiltParameters tiltParameters;
 
   // Config file processing
   Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
   config->setSection("ActiveMedia");
   config->getParameters("PioneerBoard", *pParams);
+
+  config->setSection("Camera");
+  config->getParameters("Miro::PanParameters", panParameters);
+  config->getParameters("Miro::TiltParameters", tiltParameters);
   delete config;
 
 #ifdef DEBUG
-  cout << "  pioneer parameters:" << endl << *pParams << endl;
+  cout << "  Pioneer parameters:" << endl << *pParams << endl;
+  cout << "  Camera parameters:" << endl 
+       << "    Pan:  " << endl << panParameters << endl
+       << "    Tilt: " << endl << tiltParameters <<endl;
 #endif
 
 
@@ -448,7 +499,7 @@ int main(int argc, char* argv[])
 
 
   // Initialize server daemon.
-  Service service;
+  Service service(panParameters,tiltParameters);
   Event event;
 
   // Signal set to be handled by the event handler.

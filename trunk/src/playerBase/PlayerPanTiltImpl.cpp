@@ -41,7 +41,10 @@ namespace Player
   // maximum wait time for cond.wait calls
   ACE_Time_Value PlayerPanTiltImpl::maxWait = ACE_Time_Value(0, 500000);
 
-  PlayerPanTiltImpl::PlayerPanTiltImpl( bool _upsideDown) throw(Exception) :
+  PlayerPanTiltImpl::PlayerPanTiltImpl(Miro::PanParameters _panParameters,
+				       Miro::TiltParameters _tiltParameters,
+				       bool _upsideDown) throw(Exception) :
+    Miro::PanTiltImpl(_panParameters,_tiltParameters),
     playerPTZ(NULL),
     currentPan(0),
     currentTilt(0),
@@ -75,11 +78,16 @@ namespace Player
   {
     Miro::PanTiltPositionIDL dest;
 
+    if ((angle < panParameters.rangeMin) || 
+	(angle > panParameters.rangeMax)) {
+      throw Miro::EOutOfBounds();
+    }
+
     //if camera is not inverse mounted, change sign for current saved value
     //as it will be changed again on setPosition
     dest.panvalue = angle;
     dest.tiltvalue = (upsideDown? currentTilt : -currentTilt);
-
+  
     setPosition(dest);
   }
   
@@ -98,10 +106,17 @@ namespace Player
   PlayerPanTiltImpl::setTilt(double angle) throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
     Miro::PanTiltPositionIDL dest;
+
+    if ((angle < tiltParameters.rangeMin) || 
+	(angle > tiltParameters.rangeMax)) {
+      throw Miro::EOutOfBounds();
+    }
+
     //if camera is inverse mounted, change sign for current saved value
     //as it will be changed again on setPosition
     dest.panvalue=(upsideDown?-currentPan:currentPan);
     dest.tiltvalue=angle;
+
     setPosition(dest);
   }
 
@@ -138,6 +153,13 @@ namespace Player
   void 
   PlayerPanTiltImpl::setPosition(const Miro::PanTiltPositionIDL & dest) throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
+    if ((dest.panvalue>panParameters.rangeMax) || 
+	(dest.panvalue<panParameters.rangeMin) || 
+	(dest.tiltvalue>tiltParameters.rangeMax) || 
+        (dest.tiltvalue<tiltParameters.rangeMin)) {
+      throw Miro::EOutOfBounds();
+    }
+
     //if camera in inverse position, change sign for pan/tilt
     //Miro's tilt works opposite to camera's!!!
     currentPan = dest.panvalue *  (upsideDown? -1 :  1);
@@ -145,46 +167,6 @@ namespace Player
     
     playerPTZ->SetCam(currentPan,currentTilt,playerPTZ->zoom);
   }
-
-  PanTiltLimitsIDL
-  PlayerPanTiltImpl::getPanTiltLimits() throw(Miro::EDevIO, Miro::ETimeOut)
-  {
-    PanTiltLimitsIDL result;
-    result.minpanposition=-90;
-    result.maxpanposition=90;
-    result.mintiltposition=-90;
-    result.maxtiltposition=90;
-
-    return result;
-  }
-
-  PanTiltLimitsIDL PlayerPanTiltImpl::getLimits() throw(Miro::EDevIO, Miro::ETimeOut) 
-  {
-    cerr << "PanTilt::getLimits() is Deprecated" << endl;
-    cerr << "Use PanTilt::getPanTiltLimits" << endl;
-    return getPanTiltLimits();
-  }
-
-  PanLimitsIDL PlayerPanTiltImpl::getPanLimits() throw(Miro::EDevIO)
-  {
-    PanLimitsIDL result;
-
-    result.minpanposition=-90;
-    result.maxpanposition=90;
-
-    return result;
-  }
-
-  TiltLimitsIDL PlayerPanTiltImpl::getTiltLimits() throw(Miro::EDevIO)
-  {
-    TiltLimitsIDL result;
-
-    result.mintiltposition=-90;
-    result.maxtiltposition=90;
-
-    return result;
-  }
-
 
   void
   PlayerPanTiltImpl::setPlayerPTZProxy(PtzProxy * _playerPTZ)

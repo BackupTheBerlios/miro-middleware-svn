@@ -129,6 +129,7 @@ namespace Canon
   static const unsigned short LIGHT_BACKLIGHT	    = 0x00A5;
   static const unsigned short LIGHT_EXPOSURE	    = 0x00A5;
   static const unsigned short LIGHT_AE    	    = 0x00A5;
+  static const unsigned short LIGHT_SHUTTER_PROGRAM = 0x00A8;
   static const unsigned short LIGHT_SHUTTER_SPEED   = 0x00A5;
   static const unsigned short LIGHT_AGC_GAIN        = 0x00A5;
   static const unsigned short LIGHT_IRIS            = 0x00A5;

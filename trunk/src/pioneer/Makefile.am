@@ -32,8 +32,8 @@ sources = \
 	PioneerStallImpl.h \
 	CanonPanTiltImpl.cpp \
 	CanonPanTiltImpl.h \
-	CanonCameraImpl.cpp \
-	CanonCameraImpl.h \
+	CanonCameraControlImpl.cpp \
+	CanonCameraControlImpl.h \
 	CanonMessage.cpp \
 	CanonMessage.h \
 	GripperImpl.cpp \
@@ -42,12 +42,20 @@ sources = \
 	TCM2Impl.cpp \
 	TCM2Impl.h
 
-libpioneer_a_SOURCES = $(sources)
+deprecatedsources = \
+	CanonCameraImpl.cpp \
+	CanonCameraImpl.h
+
+if COND_DEPRECATED
+deprecatedsources_used = $(deprecatedsources)
+endif
+
+libpioneer_a_SOURCES = $(sources) $(deprecatedsources_used)
 
 BUILT_SOURCES = Parameters.cpp Parameters.h
 CLEANFILES = $(BUILT_SOURCES)
 
-includefiles1 = $(sources:.xml=.h)
+includefiles1 = $(sources:.xml=.h) $(deprecatedsources)
 includefiles2 = $(includefiles1:.cpp=.h)
 pioneer_include_HEADERS = $(includefiles2)
 

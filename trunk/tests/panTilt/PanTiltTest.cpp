@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
       case '6':
 	panLimits=panTilt->getPanLimits();
 	cout << "pan limits: " << flush
-	     << panLimits.minpanposition*180/M_PI << " <-> " << panLimits.maxpanposition*180/M_PI <<endl;
+	     << panLimits.minpanposition *180/M_PI << " <-> " << panLimits.maxpanposition*180/M_PI <<endl;
 	break;
       case '7':
 	tiltLimits=panTilt->getTiltLimits();

@@ -37,7 +37,12 @@ namespace DpPanTilt
    *
    ***************************************************************************/
 
-  PanTiltImpl::PanTiltImpl(Connection& _connection, Data& _data) :
+  PanTiltImpl::PanTiltImpl(Connection& _connection, 
+			   Data& _data,
+			   Miro::PanParameters _panParameters,
+			   Miro::TiltParameters _tiltParameters
+			   ) :
+    Miro::PanTiltImpl(_panParameters,_tiltParameters),
     connection(_connection),
     panTiltData(_data)
   {

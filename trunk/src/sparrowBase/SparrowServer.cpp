@@ -51,7 +51,7 @@ FaulhaberHardware::~FaulhaberHardware()
 }
 
 
-SparrowBase::SparrowBase(Miro::Server& _server, bool _startReactorTastk) :
+SparrowBase::SparrowBase(Miro::Server& _server, Miro::PanParameters _panParameters, bool _startReactorTask) :
   server_(_server),
   schedparams_(ACE_SCHED_FIFO, 10),
   reactorTask( &_server, 20, &schedparams_),
@@ -107,7 +107,7 @@ SparrowBase::SparrowBase(Miro::Server& _server, bool _startReactorTastk) :
     sparrowStall = 
       new Sparrow::StallImpl(sparrowConnection2003, &structuredPushSupplier_);
     sparrowPanTilt = 
-      new Sparrow::PanTiltImpl(sparrowConnection2003, &panPushSupplier_);
+      new Sparrow::PanTiltImpl(sparrowConnection2003, _panParameters, &panPushSupplier_);
     
     pSparrowConsumer2003->
       registerInterfaces(sparrowConnection2003,
@@ -138,7 +138,9 @@ SparrowBase::SparrowBase(Miro::Server& _server, bool _startReactorTastk) :
     sparrowKicker = new Sparrow::KickerImpl(sparrowConnection);
     sparrowButtons = new Sparrow::ButtonsImpl(&structuredPushSupplier_);
     sparrowStall = new Sparrow::StallImpl(sparrowConnection, &structuredPushSupplier_);
-    sparrowPanTilt = new Sparrow::PanTiltImpl(sparrowConnection, &panPushSupplier_);
+    sparrowPanTilt = new Sparrow::PanTiltImpl(sparrowConnection, 
+					      _panParameters,
+					      &panPushSupplier_);
     
     pFaulhaber = ((Sparrow::Parameters::instance()->faulhaber)?
 		  new FaulhaberHardware(reactorTask.reactor(), &odometry, NULL) : NULL),
@@ -158,11 +160,11 @@ SparrowBase::SparrowBase(Miro::Server& _server, bool _startReactorTastk) :
       (new Sparrow::MotionImpl(*sparrowConnection));
   }
 
-  init(_startReactorTastk);
+  init(_startReactorTask);
 }
 
 void
-SparrowBase::init(bool _startReactorTastk)
+SparrowBase::init(bool _startReactorTask)
 {
   pOdometry = odometry._this();
   pMotion = pSparrowMotion->_this();
@@ -186,7 +188,7 @@ SparrowBase::init(bool _startReactorTastk)
   //}
 
   // start the asychronous consumer listening for the hardware
-  if (_startReactorTastk)
+  if (_startReactorTask)
     reactorTask.open(0);
 
   if (mcAdapter_)

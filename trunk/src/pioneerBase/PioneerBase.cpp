@@ -25,7 +25,7 @@
 #include <orbsvcs/Notify/Notify_Default_Collection_Factory.h>
 #include <orbsvcs/Notify/Notify_Default_EMO_Factory.h>
 
-PioneerBase::PioneerBase(int argc, char *argv[]) :
+PioneerBase::PioneerBase(int argc, char *argv[], Miro::PanParameters panParameters, Miro::TiltParameters tiltParameters) :
   Super(argc, argv),
   reactorTask(this),
 
@@ -64,8 +64,10 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   sonar(Pioneer::Parameters::instance()->sonarDescription, &structuredPushSupplier_),
   tactile(Pioneer::Parameters::instance()->tactileDescription, &structuredPushSupplier_),
   infrared(Pioneer::Parameters::instance()->infraredDescription, &structuredPushSupplier_),
-  canonPanTilt(pioneerConnection, Pioneer::Parameters::instance()->cameraUpsideDown),
+  canonPanTilt(pioneerConnection, panParameters, tiltParameters, Pioneer::Parameters::instance()->cameraUpsideDown),
+#ifdef MIRO_HAS_DEPRECATED
   canonCamera(pioneerConnection, canonPanTilt.getAnswer()),
+#endif
   gripper(pioneerConnection),
   objectVector()
 //       	,  cortex()
@@ -78,8 +80,20 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   pInfrared = infrared._this();
   pBattery = battery._this();
   pTCM2 = tcm2._this();
-  pCanonPanTilt = canonPanTilt._this();
-  pCanonCamera = canonCamera._this();
+  if (Pioneer::Parameters::instance()->camera) {
+    if (Pioneer::Parameters::instance()->cameraVendor=="canon") {
+      cameraControl=new Canon::CanonCameraControlImpl(Pioneer::Parameters::instance(),zoomParameters, focusParameters, shutterParameters, pioneerConnection, canonPanTilt.getAnswer());
+      pCameraControl = cameraControl->_this();
+      pCanonPanTilt = canonPanTilt._this();
+#ifdef MIRO_HAS_DEPRECATED
+      pCanonCamera = canonCamera._this();
+#endif
+    } // camera is canon
+  } else {
+    cameraControl=NULL;
+    pCameraControl=NULL;
+    pCanonPanTilt=NULL;
+  }
   pGripper = gripper._this();
   pObjectVector = objectVector._this();
  // pCortex = cortex._this();
@@ -100,7 +114,10 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   //only add the pantilt if the camera is actually present
   if (Pioneer::Parameters::instance()->camera) {
     addToNameService(pCanonPanTilt.in(), "PanTilt");
-    addToNameService(pCanonPanTilt.in(), "Camera");
+    addToNameService(pCameraControl.in(), "CameraControl");
+#ifdef MIRO_HAS_DEPRECATED
+    addToNameService(pCanonCamera.in(), "Camera");
+#endif
   }
 
   addToNameService(pGripper.in(), "Gripper");
@@ -162,6 +179,9 @@ main(int argc, char *argv[])
     // Parameters to be passed to the services
     Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
     Pioneer::Parameters * pioneerParameters = Pioneer::Parameters::instance();
+
+    Miro::PanParameters panParameters;
+    Miro::TiltParameters tiltParameters;
     
     // Config file processing
     Miro::ConfigDocument * config = Miro::Configuration::document();
@@ -169,15 +189,24 @@ main(int argc, char *argv[])
     config->getParameters("Miro::RobotParameters", *robotParameters);
     config->setSection("ActiveMedia");
     config->getParameters("Pioneer::Parameters", *pioneerParameters);
+    config->setSection("Camera");
+    config->getParameters("Miro::PanParameters", panParameters);
+    config->getParameters("Miro::TiltParameters", tiltParameters);
       
     MIRO_LOG_OSTR(LL_NOTICE,
 		  "  robot parameters:" << std::endl <<
 		  *robotParameters << std::endl <<
 		  "  pioneer parameters:" << std::endl <<
-		  *pioneerParameters);
+		  *pioneerParameters << std::endl <<
+		  "  camera parameters:" << std::endl <<
+		  "    Pan:" << std::endl <<
+		  panParameters <<std::endl <<
+		  "    Tilt:" <<std::endl <<
+		  tiltParameters << std::endl
+		  );
       
     MIRO_LOG(LL_NOTICE, "Initialize server daemon.");
-    PioneerBase pioneerBase(argc, argv);
+    PioneerBase pioneerBase(argc, argv, panParameters, tiltParameters);
     try {
       MIRO_LOG(LL_NOTICE, "Loop forever handling events.");
       pioneerBase.run(8);

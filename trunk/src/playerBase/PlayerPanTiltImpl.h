@@ -13,6 +13,7 @@
 #define PlayerPanTiltImpl_h
 
 #include "idl/PanTiltS.h"
+#include "miro/PanTiltImpl.h"
 
 #include "miro/Exception.h"
 
@@ -26,14 +27,14 @@ namespace Miro
 
 namespace Player
 {
-  class PlayerPanTiltImpl : public virtual POA_Miro::PanTilt
+  class PlayerPanTiltImpl : public virtual POA_Miro::PanTilt , Miro::PanTiltImpl
   {
     //-------------------------------------------------------------------------
     // public methods
     //-------------------------------------------------------------------------
   public:
     // Constructor/Destructor
-    PlayerPanTiltImpl(bool _upsideDown = false) throw(Miro::Exception);
+    PlayerPanTiltImpl(Miro::PanParameters _panParameters, Miro::TiltParameters _tiltParameters, bool _upsideDown = false) throw(Miro::Exception);
     virtual ~PlayerPanTiltImpl();
 
     //-------------------------------------------------------------------------
@@ -46,7 +47,8 @@ namespace Player
     /**
      * returns the pan angle limits
      */
-    virtual Miro::PanLimitsIDL getPanLimits() throw(Miro::EDevIO);
+    //   Inherited implementation is enough
+    //    virtual Miro::PanLimitsIDL getPanLimits() throw(Miro::EDevIO);
 
     //-------------------------------------------------------------------------
     // from tilt.idl
@@ -58,7 +60,8 @@ namespace Player
     /**
      * returns the tilt angle limits
      */
-    virtual Miro::TiltLimitsIDL getTiltLimits() throw(Miro::EDevIO);
+    //   Inherited implementation is enough
+    //    virtual Miro::TiltLimitsIDL getTiltLimits() throw(Miro::EDevIO);
 
     //-------------------------------------------------------------------------
     // from panTilt.idl
@@ -67,14 +70,10 @@ namespace Player
       throw(Miro::EDevIO);
     virtual void setPosition(const Miro::PanTiltPositionIDL & dest) 
       throw(Miro::EOutOfBounds, Miro::EDevIO);
-    virtual Miro::PanTiltLimitsIDL getPanTiltLimits()
-      throw(Miro::EDevIO, Miro::ETimeOut);
-    /**
-     * DEPRECATED.
-     * Use getPanTiltLimits() instead
-     */
-    virtual Miro::PanTiltLimitsIDL getLimits()
-      throw(Miro::EDevIO, Miro::ETimeOut);
+    
+    //   Inherited implementation is enough
+    //    virtual Miro::PanTiltLimitsIDL getPanTiltLimits() throw(Miro::EDevIO);
+
 
     void setPlayerPTZProxy(PtzProxy * _playerPTZ);
 

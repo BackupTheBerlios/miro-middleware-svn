@@ -54,7 +54,10 @@ namespace Canon
   ACE_Time_Value CanonPanTiltImpl::maxWait = ACE_Time_Value(0, 500000);
 
   CanonPanTiltImpl::CanonPanTiltImpl(Pioneer::Connection& _connection,
+				     Miro::PanParameters _panParameters,
+				     Miro::TiltParameters _tiltParameters,
 				     bool _upsideDown) throw(Exception) :
+    PanTiltImpl(_panParameters,_tiltParameters),
     answer(),
     pAnswer(&answer),
     connection(_connection),
@@ -499,7 +502,7 @@ namespace Canon
   }
 
   PanTiltLimitsIDL 
-  CanonPanTiltImpl::getPanTiltLimits() throw(Miro::EDevIO, Miro::ETimeOut)
+  CanonPanTiltImpl::getPanTiltLimits() throw(Miro::EDevIO)
   {
     PanTiltLimitsIDL result;
     if (!initialized) 

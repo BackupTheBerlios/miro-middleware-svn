@@ -44,7 +44,12 @@ using std::cerr;
 using std::endl;
 using std::string;
 
-PlayerBase::PlayerBase(int argc, char *argv[],PlayerClient* client, int playerId) throw (CORBA::Exception) :
+PlayerBase::PlayerBase(int argc, char *argv[],
+		       PlayerClient* client, 
+		       int playerId,
+		       Miro::PanParameters panParameters,
+		       Miro::TiltParameters tiltParameters
+		       ) throw (CORBA::Exception) :
   Super(argc, argv),
   reactorTask(client,playerId,&sonar,&laser,&infrared,&tactile,&odometry,&motion,&battery,&panTilt,&stall),
 
@@ -66,7 +71,7 @@ PlayerBase::PlayerBase(int argc, char *argv[],PlayerClient* client, int playerId
   laser(new Miro::OdometryTracking(ec_.in(), namingContextName),
 	Laser::Parameters::instance()->laserDescription, 
     	&structuredPushSupplier_),
-  panTilt(Player::Parameters::instance()->cameraUpsideDown),
+  panTilt(panParameters,tiltParameters,Player::Parameters::instance()->cameraUpsideDown),
   playerClient(client)
 { 
 
@@ -140,7 +145,10 @@ PlayerBase::~PlayerBase()
   DBG(cout << "reactor Task ended" << endl);
 }
 
-int parseArgs(int& argc, char* argv[], string& playerHost,int& playerPort, int& playerId)
+int parseArgs(int& argc, char* argv[], 
+	      string& playerHost,
+	      int& playerPort, 
+	      int& playerId)
 {
   ACE_Arg_Shifter get_opts(argc, argv);
   
@@ -206,6 +214,8 @@ main(int argc, char *argv[])
   Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
   Player::Parameters * simBotParameters = Player::Parameters::instance();
   Laser::Parameters * laserParameters = Laser::Parameters::instance();
+  Miro::PanParameters panParameters;
+  Miro::TiltParameters tiltParameters;
 
   PlayerClient * playerClient=NULL;
 
@@ -221,13 +231,16 @@ main(int argc, char *argv[])
     config->getParameters("Player::Parameters", *simBotParameters);
     config->setSection("Sick");
     config->getParameters("Laser::Parameters", *laserParameters);
+    config->setSection("Camera");
+    config->getParameters("Miro::PanParameters", panParameters);
+    config->getParameters("Miro::TiltParameters", tiltParameters);
     delete config;
-    
+
     DBG(cout << "Initialize server daemon." << endl);
 
     playerClient=new PlayerClient(playerHost.c_str(),playerPort);
 
-    PlayerBase playerBase(argc, argv, playerClient,playerId);
+    PlayerBase playerBase(argc, argv, playerClient,playerId, panParameters, tiltParameters);
  
     try {
       DBG(cout << "Loop forever handling events." << endl);

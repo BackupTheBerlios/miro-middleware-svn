@@ -115,6 +115,33 @@
     </config_item>
   </config_group>
 
+  <config_group name="Camera">
+    <config_item name="Zoom" final="false" parent="Config"> 
+      <config_parameter name="present" type="bool" default="false" />
+      <config_parameter name="rangeMin" type="angle" measure="&deg;" default="90" />
+      <config_parameter name="rangeMax" type="angle" measure="&deg;" default="90" />
+    </config_item>
+    <config_item name="Focus" final="false" parent="Config">
+      <config_parameter name="present" type="bool" default="false" />
+      <config_parameter name="autoFocus" type="bool" default="false" />
+      <config_parameter name="rangeMin" type="long" measure="mm" default="0" />
+      <config_parameter name="rangeMax" type="long" measure="mm" default="0" />
+    </config_item>
+    <config_item name="Shutter" final="false" parent="Config">
+      <config_parameter name="present" type="bool" default="false" />
+      <config_parameter name="rangeMin" type="ACE_Time_Value" measure="sec" default="0, 20000" />
+      <config_parameter name="rangeMax" type="ACE_Time_Value" measure="sec" default="0, 20000" />
+    </config_item>
+    <config_item name="Pan" final="false" parent="Config">
+      <config_parameter name="rangeMin" type="angle" measure="&deg;" default="0" />
+      <config_parameter name="rangeMax" type="angle" measure="&deg;" default="0" />
+    </config_item>
+    <config_item name="Tilt" final="false" parent="Config">
+      <config_parameter name="rangeMin" type="angle" measure="&deg;" default="0" />
+      <config_parameter name="rangeMax" type="angle" measure="&deg;" default="0" />
+    </config_item>
+  </config_group>
+
   <config_group name="Notification">
     <config_item name="Event" parent="Miro::Config" instance="false" final="false" >
       <config_parameter name="type" type="std::string" />

@@ -252,8 +252,41 @@
    </parameter>
    <parameter value="true" name="Tactile" />
    <parameter value="true" name="Sonar" />
+   <parameter value="true" name="Camera" />
+   <parameter value="true" name="CameraUpsideDown" />
+   <parameter value="canon" name="CameraVendor" />
+   <parameter value="vc-c4" name="CameraModel" />
+   <parameter value="pal" name="Format" />
   </parameter>
  </section>
+
+ <section name="Camera">
+  <parameter name="Miro::ZoomParameters">
+   <parameter name="Present" value="true"/>
+   <parameter name="RangeMin" value="80"/>
+   <parameter name="RangeMax" value="135"/>
+  </parameter>
+  <parameter name="Miro::FocusParameters">
+   <parameter name="Present" value="true"/>
+   <parameter name="AutoFocus" value="false"/>
+   <parameter name="RangeMin" value="1"/>
+   <parameter name="RangeMax" value="100"/>
+  </parameter>
+  <parameter name="Miro::ShutterParameters">
+   <parameter name="Present" value="true"/>
+   <parameter name="RangeMin" value="0, 100"/>
+   <parameter name="RangeMax" value="0, 20000"/>
+  </parameter>
+  <parameter name="Miro::PanParameters">
+   <parameter name="RangeMin" value="-100"/>
+   <parameter name="RangeMax" value="100"/>
+  </parameter>
+  <parameter name="Miro::TiltParameters">
+   <parameter name="RangeMin" value="-90"/>
+   <parameter name="RangeMax" value="30"/>
+  </parameter>
+ </section>
+
  <section name="Video" >
   <parameter name="Video" >
    <parameter value="bgr" name="Palette" />

@@ -25,7 +25,9 @@ namespace Sparrow
 
   // Implementation skeleton constructor
   PanTiltImpl::PanTiltImpl(BaseConnection* _connection,
+			   Miro::PanParameters _panParameters,
 			   Miro::StructuredPushSupplier * _pSupplier) :
+    Miro::PanImpl(_panParameters),
     connection(_connection),
     params_(*Parameters::instance()),
     pSupplier_(_pSupplier),
@@ -137,16 +139,6 @@ namespace Sparrow
     return currentPosition(t).angle;
   }
 
-  Miro::PanLimitsIDL 
-  PanTiltImpl::getPanLimits() throw (EDevIO)
-  {
-    Miro::PanLimitsIDL result;
-    result.minpanposition=-179.0f;
-    result.maxpanposition=179.0f;
-    
-    return result;
-  }
-
 #ifdef LETSTILTAGAIN
   void
   PanTiltImpl::setTilt(CORBA::Double value) throw (EDevIO, EOutOfBounds)
@@ -171,16 +163,6 @@ namespace Sparrow
   {
     Miro::Guard guard(mutex);
     return currentPosition().tiltvalue;
-  }
-
-  Miro::TiltLimitsIDL 
-  PanTiltImpl::getTiltLimits() throw (EDevIO)
-  {
-    Miro::TiltLimitsIDL result;
-    result.mintiltposition=-90;
-    result.maxtiltposition=90;
-    
-    return result;
   }
 
 #endif

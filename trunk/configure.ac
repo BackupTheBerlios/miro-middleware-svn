@@ -94,6 +94,9 @@ AM_CONDITIONAL(COND_DEPRECATED,[test "x$ac_request_deprecated" = xyes])
 AH_TEMPLATE([MIRO_HAS_SPARROW99], [build with support for Sparrow99 robots.])
 AH_TEMPLATE([MIRO_HAS_PIONEER], [build with support for pioneer robots.])
 AH_TEMPLATE([MIRO_HAS_B21], [build with support for B21 robots.])
+AH_TEMPLATE([MIRO_HAS_PLAYER], [build with Player support.])
+
+AH_TEMPLATE([MIRO_HAS_DEPRECATED], [build with support for deprecated interfaces. ])
 
 if test "x$ac_request_sparrow99" = xyes; then
 	AC_DEFINE(MIRO_HAS_SPARROW99)
@@ -103,6 +106,9 @@ if test "x$ac_request_pioneer" = xyes; then
 fi
 if test "x$ac_request_b21" = xyes; then
 	AC_DEFINE(MIRO_HAS_B21)
+fi
+if test "x$ac_request_deprecated" = xyes; then
+	AC_DEFINE(MIRO_HAS_DEPRECATED)
 fi
 
 if test "x$ac_request_player" = xyes; then
@@ -186,8 +192,6 @@ if test "x$ac_request_speech" = xyes &&
 fi
 
 AM_CONDITIONAL(COND_SPEECH, [test "x$ac_compile_speech" = xyes])
-
-AH_TEMPLATE([MIRO_HAS_PLAYER], [build with Player Simulator support.])
 
 if test "x$ac_request_player" = xyes &&
 	test "x$ac_has_player" = xyes; then

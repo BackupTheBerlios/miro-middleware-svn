@@ -11,6 +11,7 @@
 #ifndef SparrowPanTiltImpl_h
 #define SparrowPanTiltImpl_h
 
+#include "miro/PanTiltImpl.h"
 #include "idl/SparrowPanTiltS.h"
 #include "miro/Synch.h"
 #include "miro/Angle.h"
@@ -30,11 +31,13 @@ namespace Sparrow
   class BaseConnection;
   class Parameters;
 
-  class  PanTiltImpl : public virtual POA_Miro::SparrowPanTilt
+  class  PanTiltImpl : public virtual POA_Miro::SparrowPanTilt,
+		       public Miro::PanImpl
   {
   public:
     //Constructor
     PanTiltImpl(BaseConnection * _connection,
+		Miro::PanParameters _panParameters,
 		Miro::StructuredPushSupplier * _pSupplier = NULL);
 
     //Destructor
@@ -49,7 +52,8 @@ namespace Sparrow
       throw (Miro::EDevIO, Miro::EOutOfBounds);
     virtual CORBA::Double getPan() throw (Miro::EDevIO);
 
-    virtual Miro::PanLimitsIDL getPanLimits() throw (Miro::EDevIO);
+    //   inherited method is enough
+    //    virtual Miro::PanLimitsIDL getPanLimits() throw (Miro::EDevIO);
 
     //  virtual void setTilt(CORBA::Double value)
     //    throw (Miro::EDevIO, Miro::EOutOfBounds);

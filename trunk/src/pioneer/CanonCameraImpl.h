@@ -9,8 +9,8 @@
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-#ifndef CanonCameraImpl_hh
-#define CanonCameraImpl_hh
+#ifndef CanonCameraImpl_h
+#define CanonCameraImpl_h
 
 #include "idl/CanonCameraS.h"
 

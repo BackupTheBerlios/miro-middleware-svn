@@ -65,7 +65,9 @@ class SparrowBase
   //    naming service and runs the orb
 
 public:
-  SparrowBase(Miro::Server& _server, bool startReactorTask = true);
+  SparrowBase(Miro::Server& _server, 
+	      Miro::PanParameters _panParameters,
+	      bool startReactorTask = true);
 
   // Constructor.
 
