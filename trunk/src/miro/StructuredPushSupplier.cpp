@@ -12,13 +12,9 @@
 #include "StructuredPushSupplier.h"
 
 #include <cstring>
+#include "Log.h"
 
 #undef DEBUG
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
 
 namespace Miro
 {
@@ -50,7 +46,7 @@ namespace Miro
     event_(_event),
     subscription_(event_.length(), false)
   {
-    DBG(std::cout << "Constructing StructuredPushSupplier." << std::endl);
+    MIRO_DBG(MIRO,LL_CTOR_DTOR,"Constructing StructuredPushSupplier.\n");
 
     if (_connect)
       connect();
@@ -61,7 +57,7 @@ namespace Miro
    */
   StructuredPushSupplier::~StructuredPushSupplier()
   {
-    DBG(std::cout << "Destructing StructuredPushSupplier." << std::endl);
+    MIRO_DBG(MIRO,LL_CTOR_DTOR, "Destructing StructuredPushSupplier.\n");
 
     disconnect();
   }
@@ -73,7 +69,7 @@ namespace Miro
   void
   StructuredPushSupplier::connect() 
   {
-    DBG(std::cout << "Connecting StructuredPushSupplier." << std::endl);
+    MIRO_DBG(MIRO,LL_PRATTLE, "Connecting StructuredPushSupplier.\n");
 
     Guard guard(connectedMutex_);
     if(!connected_) {
@@ -103,7 +99,7 @@ namespace Miro
       proxyConsumer_->connect_structured_push_supplier(objref_);
       connected_ = true;
 
-      DBG(std::cout << "currently subscribed messages:" << std::endl);
+      MIRO_DBG(MIRO,LL_PRATTLE,"currently subscribed messages:\n");
       CosNotification::EventTypeSeq_var events = 
 	proxyConsumer_->obtain_subscription_types(CosNotifyChannelAdmin::ALL_NOW_UPDATES_ON);
       for (unsigned long i = 0; i < events->length(); ++i) {
@@ -114,7 +110,7 @@ namespace Miro
 	    break;
 	  }
 	}
-	DBG(std::cout << "  " << events[i].domain_name << "\t"
+	MIRO_DBG_OSTR(MIRO,LL_PRATTLE,"  " << events[i].domain_name << "\t"
 	    << "  " << events[i].type_name << std::endl);
       }
     }
@@ -123,7 +119,7 @@ namespace Miro
   void
   StructuredPushSupplier::disconnect() 
   {
-    DBG(std::cout << "Disconnecting StructuredPushSupplier." << std::endl);
+    MIRO_DBG(MIRO,LL_PRATTLE,"Disconnecting StructuredPushSupplier.\n");
 
     Guard guard(connectedMutex_);
     if (connected_) {
@@ -158,8 +154,7 @@ namespace Miro
 					      ACE_ENV_ARG_DECL_NOT_USED)
     throw(CORBA::SystemException, CosNotifyComm::InvalidEventType)
   {
-    DBG(std::cout << "subscription change" << std::endl;
-	std::cout << "added messages:" << std::endl);
+    MIRO_DBG(MIRO,LL_PRATTLE,"subscription change\nadded messages:\n");
     for (unsigned long i = 0; i < added.length(); ++i) {
       for (unsigned long j = 0; j < event_.length(); ++j) {
 	if (strcmp (added[i].type_name, event_[j].type_name) == 0 &&
@@ -168,11 +163,11 @@ namespace Miro
 	  break;
 	}
       }
-      DBG(std::cout << "  " << added[i].domain_name << "\t"
+      MIRO_DBG_OSTR(MIRO,LL_PRATTLE, "  " << added[i].domain_name << "\t"
 	  << "  " << added[i].type_name << std::endl);
     }
 
-    DBG(std::cout << "removed messages:" << std::endl);
+    MIRO_DBG(MIRO,LL_PRATTLE,"removed messages:\n");
     for (unsigned int i = 0; i < removed.length(); ++i) {
       for (unsigned long j = 0; j < event_.length(); ++j) {
 	if (strcmp (removed[i].type_name, event_[j].type_name) == 0 &&
@@ -181,7 +176,7 @@ namespace Miro
 	  break;
 	}
       }
-      DBG(std::cout << "  " << removed[i].domain_name << "\t"
+      MIRO_DBG_OSTR(MIRO,LL_PRATTLE,"  " << removed[i].domain_name << "\t"
 	  << "  " << removed[i].type_name << std::endl);
     }
 
@@ -200,7 +195,7 @@ namespace Miro
   StructuredPushSupplier::disconnect_structured_push_supplier(ACE_ENV_SINGLE_ARG_DECL_NOT_USED)
     throw(CORBA::SystemException)
   {
-    DBG(std::cout << "disconnect supplier" << std::endl);
+    MIRO_DBG(MIRO,LL_PRATTLE, "disconnect supplier\n");
 
     connected_ = false;
   }
