@@ -32,7 +32,9 @@ namespace Miro
     pSupplier_(_pSupplier),
     reactor(ar_),
     timerId(-1),
-    conArbViewTask_(NULL)
+    velocitySpace_(1000, 20, 4000, 500, 20),
+    conArbViewTask_(NULL),
+    conArbViewTaskCreated(false)
   {
 
     currentVelocity_.translation = 0;
@@ -57,19 +59,19 @@ namespace Miro
 
   }
 
-  ConstraintArbiter::~ConstraintArbiter() 
+  ConstraintArbiter::~ConstraintArbiter()
   {
   }
 
-  ConstraintArbiterParameters * 
+  ConstraintArbiterParameters *
   ConstraintArbiter::getParametersInstance() const
   {
     ConstraintArbiterParameters * p = new ConstraintArbiterParameters();
-    // set the wheelbase 
+    // set the wheelbase
     // this shouldn't change for different action patterns
     // but we have to deferr this initialization until runtime
     p->velocitySpace.setWheelBase(pMotion_->getWheelBase());
-    
+
     return p;
   }
 
@@ -90,7 +92,7 @@ namespace Miro
     }
   }
 
-  void 
+  void
   ConstraintArbiter::init(ArbiterParameters const * _params)
   {
     Arbiter::init(_params);
@@ -182,6 +184,8 @@ namespace Miro
 
     // let each behaviour calculate its velocity space
     BehaviourVector::const_iterator k;
+    velocitySpace_.clearAllEvals();
+    velocitySpace_.clearCurvatureConstraints();
     for(k = bv.begin(); k != bv.end(); k++) {
       (*k)->addEvaluation(&params->velocitySpace);
     }
@@ -197,7 +201,7 @@ namespace Miro
     ACE_Time_Value stop = ACE_OS::gettimeofday();
 
     MIRO_DBG_OSTR(MIRO, LL_PRATTLE, "ConstraintArbiter eval time: " << stop - start);
-    
+
 //    logFile1 = std::fopen("velocityspace.log","a");
 //    for(int r_index = 0; r_index <= 2*(velocitySpace_.maxVelocity_/velocitySpace_.spaceResolution_)+1; r_index++) {
 //	for(int l_index = 0; l_index <= 2*(velocitySpace_.maxVelocity_/velocitySpace_.spaceResolution_)+1; l_index++) {
