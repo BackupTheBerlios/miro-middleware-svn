@@ -108,6 +108,25 @@ namespace Video
     features.dynamicNoiseReduction = getDNR();
     features.compression = getCompression();
 
+    std::cout << "fps: " << features.framerate << std::endl
+	      << "brightness: " << features.brightness << std::endl
+	      << "hue: " << features.hue << std::endl
+	      << "contrast: " << features.contrast << std::endl
+	      << "whitebalance: " << features.whitebalance << std::endl
+	      << "wb manual red: " << features.whitebalanceManualRed << std::endl
+	      << "wb blue: " << features.whitebalanceManualBlue << std::endl
+	      << "wb read red: " << features.whitebalanceReadRed << std::endl
+	      << "wb read blue: " << features.whitebalanceReadBlue << std::endl
+	      << "wb speed: " << features.whitebalanceSpeed << std::endl
+	      << "wb delay: " << features.whitebalanceDelay << std::endl
+	      << "gain control: " << features.autoGainControl << std::endl
+	      << "shutter: " << features.shutterSpeed << std::endl
+	      << "sharpness: " << features.sharpness << std::endl
+	      << "backlichtCompensation: " << features.backlightCompensation << std::endl
+	      << "flickerless mode: " << features.flickerlessMode << std::endl
+	      << "dynamic noise red:" << features.dynamicNoiseReduction << std::endl
+	      << "compression: " << features.compression  << std::endl;
+
     return true;
   }
   
@@ -185,6 +204,9 @@ namespace Video
 	     << "frames: " << gb_buffers.frames);
 
     probeAllFormats();
+
+    QuickCamFeatureSet s;
+    getFeatures(s);
 
     //setFormat();
     //setSource();
