@@ -6,14 +6,14 @@
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
 
 //#include "ActionPattern.h"
 #include "ArbiterParameters.h"
 #include "ArbiterMessage.h"
-#include "WindowArbiter.h"
-#include "WindowArbiterViewer.h"
+#include "ConstraintArbiter.h"
+#include "ConstraintArbiterViewer.h"
 #include "Behaviour.h"
 #include "StructuredPushSupplier.h"
 
@@ -22,19 +22,19 @@
 
 namespace Miro
 {
-  const std::string WindowArbiter::name_ = "WindowArbiter";
+  const std::string ConstraintArbiter::name_ = "ConstraintArbiter";
 
-  WindowArbiter::WindowArbiter(ACE_Reactor &ar_,
+  ConstraintArbiter::ConstraintArbiter(ACE_Reactor &ar_,
 			       DifferentialMotion_ptr _pMotion,
 			       StructuredPushSupplier * _pSupplier) :
     pMotion_(DifferentialMotion::_duplicate(_pMotion)),
     pSupplier_(_pSupplier),
     reactor(ar_),
     timerId(0),
-    dynWindow_(std::complex<double>(0., 0.), 700, 2000),
-    dynWindowPaint_(std::complex<double>(0., 0.), 700, 2000),
-    winArbViewTask_(NULL),
-    winArbViewTaskCreated(true)
+    velocitySpace_(std::complex<double>(0., 0.), 2000, 700),
+    velocitySpacePaint_(std::complex<double>(0., 0.), 2000, 700),
+    conArbViewTask_(NULL),
+    conArbViewTaskCreated(true)
   {
     currentVelocity_.translation = 0;
     currentVelocity_.rotation = 0.;
@@ -52,16 +52,16 @@ namespace Miro
 
   }
 
-  WindowArbiter::~WindowArbiter() {
-    if(winArbViewTaskCreated) {
-      delete winArbViewTask_;
-      winArbViewTaskCreated = false;
+  ConstraintArbiter::~ConstraintArbiter() {
+    if(conArbViewTaskCreated) {
+      delete conArbViewTask_;
+      conArbViewTaskCreated = false;
     }
   }
 
 #ifdef WE_ACTUALLY_NEED_IT
   void
-  WindowArbiter::init(const ArbiterParameters * _params)
+  ConstraintArbiter::init(const ArbiterParameters * _params)
   {
     Arbiter::init(_params);
 
@@ -71,7 +71,7 @@ namespace Miro
 #endif
 
   void
-  WindowArbiter::calcActivation()
+  ConstraintArbiter::calcActivation()
   {
     // search whether there is an active behaviour
     MessageVector::const_iterator first, last = message_.end();
@@ -88,28 +88,28 @@ namespace Miro
   }
 
   void
-  WindowArbiter::open()
+  ConstraintArbiter::open()
   {
     // open arbiter
     Arbiter::open();
 
-    // create task for viewing dynamic window
-    if(!winArbViewTaskCreated) {
-      winArbViewTask_ = new WindowArbiterViewerTask(&dynWindowPaint_);
-      winArbViewTask_->open();
-      winArbViewTaskCreated = true;
+    // create task for viewing velocity space
+    if(!conArbViewTaskCreated) {
+      conArbViewTask_ = new ConstraintArbiterViewerTask(&velocitySpacePaint_);
+      conArbViewTask_->open();
+      conArbViewTaskCreated = true;
     }
 
-    // init timer for calculating dynamic window every 50000usecs
+    // init timer for calculating velocity space every 50000usecs
     timerId = reactor.schedule_timer(this, 0, ACE_Time_Value(0,0),
 	ACE_Time_Value(0, 50000));
 
     // debug message
-    std::cout << "WindowArbiter.cpp : open()" << std::endl;
+    std::cout << "ConstraintArbiter.cpp : open()" << std::endl;
   }
 
   void
-  WindowArbiter::close()
+  ConstraintArbiter::close()
   {
     // release timer
     reactor.cancel_timer(timerId);
@@ -119,14 +119,14 @@ namespace Miro
     pMotion_->setLRVelocity(0, 0);
 
     // debug message
-    std::cout << "WindowArbiter.cpp : close()" << std::endl;
+    std::cout << "ConstraintArbiter.cpp : close()" << std::endl;
 
     // close arbiter
     Arbiter::close();
   }
 
   int
-  WindowArbiter::handle_timeout(const ACE_Time_Value &, const void*)
+  ConstraintArbiter::handle_timeout(const ACE_Time_Value &, const void*)
   {
     Miro::VelocityIDL  velocity;
     std::complex<double> newVelocity;
@@ -134,9 +134,9 @@ namespace Miro
     std::FILE *logFile1;
 
     // debug message
-    // std::cout << "WindowArbiter.cpp : handle_timeout() started" << std::endl;
+    // std::cout << "ConstraintArbiter.cpp : handle_timeout() started" << std::endl;
 
-    // let each behaviour calculate its dynamicWindow ascend by priority
+    // let each behaviour calculate its velocity space ascend by priority
     typedef std::vector<Behaviour *> BehaviourVector;
     BehaviourVector bv(params_->priorities.size());
     ArbiterParameters::RegistrationMap::const_iterator j;
@@ -145,34 +145,34 @@ namespace Miro
     }
     BehaviourVector::const_iterator k;
     for(k = bv.begin(); k != bv.end(); k++) {
-      (*k)->calcDynamicWindow(&dynWindow_);
+      (*k)->addEvaluation(&velocitySpace_);
     }
 
-    // calculate new velocity using the content of the dynamicWindow
-    newVelocity = dynWindow_.calcNewVelocity();
+    // calculate new velocity using the content of the velocity space
+    newVelocity = velocitySpace_.applyObjectiveFunctionToEval();
 
-    // copy dynWindow for WindowArbiterViewer
-    dynWindow_.getCopy(&dynWindowPaint_);
+    // copy velocity space  for ConstraintArbiterViewer
+    velocitySpace_.getCopy(&velocitySpacePaint_);
 
     // set motion
     pMotion_->setLRVelocity(std::max(-400, std::min(400, (int)(10. * newVelocity.real()))), std::max(-400, std::min(400, (int)(10. * newVelocity.imag()))));
     currentVelocity_ = velocity;
 
-    // std::cout << "WindowArbiter.cpp : handle_timeout() finished" << std::endl;
+    // std::cout << "ConstraintArbiter.cpp : handle_timeout() finished" << std::endl;
 
     logFile1 = std::fopen("velocityspace.log","a");
     for(int right = 0; right <= 200; right += 10) {
 	for(int left = 0; left <= 200; left += 10) {
-		fprintf(logFile1, "%d\n", dynWindow_.velocitySpace_[left][right]);
+		fprintf(logFile1, "%d\n", velocitySpace_.velocitySpace_[left][right]);
 	}
     }
     fclose(logFile1);
-    
+
     return 0;
   }
 
   const std::string&
-  WindowArbiter::getName() const
+  ConstraintArbiter::getName() const
   {
     return name_;
   }

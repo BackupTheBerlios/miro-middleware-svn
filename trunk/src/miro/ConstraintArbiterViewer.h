@@ -8,24 +8,24 @@
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-#ifndef WindowArbiterViewer_h
-#define WindowArbiterViewer_h
+#ifndef ConstraintArbiterViewer_h
+#define ConstraintArbiterViewer_h
 
 #include <qwidget.h>
-#include "DynamicWindow.h"
+#include "VelocitySpace.h"
 #include <qpixmap.h>
 #include <qpainter.h>
 #include <qtimer.h>
 
 namespace Miro
 {
-  class WindowArbiterViewer : public QWidget {
+  class ConstraintArbiterViewer : public QWidget {
     
   public:
-    WindowArbiterViewer(DynamicWindow *, QWidget *parent=0, const char *name=0);
-    void paintDynamicWindow();
+    ConstraintArbiterViewer(VelocitySpace *, QWidget *parent=0, const char *name=0);
+    void paintVelocitySpace();
   protected:
-    DynamicWindow * dynamicWindow_;
+    VelocitySpace * VelocitySpace_;
     void paintEvent(QPaintEvent*);
     void timerEvent(QTimerEvent*);
     QPixmap pixmap_;

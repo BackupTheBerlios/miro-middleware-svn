@@ -47,9 +47,9 @@ sources1 = \
 	PriorityArbiter.cpp \
 	MotionArbiter.cpp \
 	MotionArbiterMessage.cpp \
-	WindowArbiter.cpp \
-	WindowArbiterViewer.cpp \
-	WindowArbiterViewerTask.cpp \
+	ConstraintArbiter.cpp \
+	ConstraintArbiterViewer.cpp \
+	ConstraintArbiterViewerTask.cpp \
 	Behaviour.cpp \
 	BehaviourParameters.cpp \
 	BehaviourRepository.cpp \
@@ -58,7 +58,7 @@ sources1 = \
 	TaskBehaviour.cpp \
 	TimedBehaviour.cpp \
 	Policy.cpp \
-	DynamicWindow.cpp \
+	VelocitySpace.cpp \
 	NotifyMulticastParameters.xml \
 	NotifyMulticastRequestEntry.cpp \
 	NotifyMulticastSender.cpp \

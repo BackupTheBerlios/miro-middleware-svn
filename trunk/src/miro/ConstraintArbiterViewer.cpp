@@ -1,5 +1,5 @@
-#include "WindowArbiterViewer.h"
-#include "DynamicWindow.h"
+#include "ConstraintArbiterViewer.h"
+#include "VelocitySpace.h"
 #include <qpainter.h>
 #include <qpen.h>
 #include <qcolor.h>
@@ -9,8 +9,8 @@
 
 namespace Miro {
 
-  WindowArbiterViewer::WindowArbiterViewer(DynamicWindow * _dynamicWindow, QWidget *parent, const char *name)
-    : QWidget(parent, name), dynamicWindow_(_dynamicWindow) {
+  ConstraintArbiterViewer::ConstraintArbiterViewer(VelocitySpace * _VelocitySpace, QWidget *parent, const char *name)
+    : QWidget(parent, name), VelocitySpace_(_VelocitySpace) {
 
     startTimer(100);
 
@@ -18,21 +18,21 @@ namespace Miro {
     pixmap_.resize(201, 201);
   }
 
-  void WindowArbiterViewer::timerEvent(QTimerEvent *) {
-    paintDynamicWindow();
+  void ConstraintArbiterViewer::timerEvent(QTimerEvent *) {
+    paintVelocitySpace();
   }
 
-  void WindowArbiterViewer::paintDynamicWindow() {
+  void ConstraintArbiterViewer::paintVelocitySpace() {
     int right, left;
     unsigned char pointValue;
 
     painter_.begin(&pixmap_);
     pixmap_.fill(Qt::white);
     QColor color;
-    for(left=dynamicWindow_->minLeft_; left<=dynamicWindow_->maxLeft_; left++) {
-      for(right=dynamicWindow_->minRight_; right<=dynamicWindow_->maxRight_; right++) {
+    for(left=VelocitySpace_->minLeft_; left<=VelocitySpace_->maxLeft_; left++) {
+      for(right=VelocitySpace_->minRight_; right<=VelocitySpace_->maxRight_; right++) {
 
-        pointValue = dynamicWindow_->velocitySpace_[left+100][right+100];
+        pointValue = VelocitySpace_->velocitySpace_[left+100][right+100];
 	if(pointValue==0)
 	  color.setRgb(255, 0, 0);
 	else
@@ -56,7 +56,7 @@ namespace Miro {
 
   }
   
-  void WindowArbiterViewer::paintEvent(QPaintEvent*) {
+  void ConstraintArbiterViewer::paintEvent(QPaintEvent*) {
     bitBlt(this, 10, 10, &pixmap_);
   }
   

@@ -162,7 +162,7 @@
 
     <config_item name="MotionArbiter" parent="PriorityArbiter" />
     <config_item name="PowerArbiter" parent="PriorityArbiter" />
-    <config_item name="WindowArbiter" parent="Arbiter" dummy="true" />
+    <config_item name="ConstraintArbiter" parent="Arbiter" dummy="true" />
     
   </config_group>
 

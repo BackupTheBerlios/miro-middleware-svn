@@ -1,16 +1,16 @@
-#include "WindowArbiterViewer.h"
-#include "WindowArbiterViewerTask.h"
+#include "ConstraintArbiterViewer.h"
+#include "ConstraintArbiterViewerTask.h"
 #include <qpainter.h>
 #include <qpixmap.h>
-#include "DynamicWindow.h"
+#include "VelocitySpace.h"
 
 namespace Miro {
 
-  WindowArbiterViewerTask::WindowArbiterViewerTask(DynamicWindow * _dynamicWindow) :
+  ConstraintArbiterViewerTask::ConstraintArbiterViewerTask(VelocitySpace * _VelocitySpace) :
     Super(),
     temp(0),
     winArbApp_(temp, (char **)NULL),
-    winArbView_(_dynamicWindow)
+    winArbView_(_VelocitySpace)
   {
     winArbView_.setCaption("Window Arbiter Viewer");
     winArbView_.setBackgroundColor(Qt::white);
@@ -18,15 +18,15 @@ namespace Miro {
     winArbView_.show();
   }
   
-  WindowArbiterViewerTask::~WindowArbiterViewerTask() {
+  ConstraintArbiterViewerTask::~ConstraintArbiterViewerTask() {
     /* left empty */
   }
   
-  int WindowArbiterViewerTask::svc() {
+  int ConstraintArbiterViewerTask::svc() {
     return winArbApp_.exec();
   }
   
-  int WindowArbiterViewerTask::open(void *) {
+  int ConstraintArbiterViewerTask::open(void *) {
     return activate();
   }
     

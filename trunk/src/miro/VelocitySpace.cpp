@@ -9,7 +9,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include "DynamicWindow.h"
+#include "VelocitySpace.h"
 #include <iostream>
 #include <complex>
 #include <cstdio>
@@ -25,7 +25,7 @@ namespace Miro
 
   // constructor
   //
-  DynamicWindow::DynamicWindow(Vector2d _velocity, int _maxPosAccel, int _maxNegAccel) {
+  VelocitySpace::VelocitySpace(Vector2d _velocity, int _maxPosAccel, int _maxNegAccel) {
 
     for(int left = 0; left < VEL_SPACE_LEFT; left++) {
       for(int right = 0; right < VEL_SPACE_RIGHT; right++) {
@@ -36,32 +36,32 @@ namespace Miro
     maxPosAccel_ = _maxPosAccel;
     maxNegAccel_ = _maxNegAccel;
 
-    setNewDynamicWindow(_velocity);
+    setNewVelocitySpace(_velocity);
 
   }
 
 
   // destructor
   //
-  DynamicWindow::~DynamicWindow() {
+  VelocitySpace::~VelocitySpace() {
 
   }
 
   // copy function
-  void DynamicWindow::getCopy(Miro::DynamicWindow *_dynamicWindow) {
+  void VelocitySpace::getCopy(Miro::VelocitySpace *_VelocitySpace) {
 
     for(int left = 0; left < VEL_SPACE_LEFT; left++) {
       for(int right = 0; right < VEL_SPACE_RIGHT; right++) {
-        _dynamicWindow->velocitySpace_[left][right] = velocitySpace_[left][right];
+        _VelocitySpace->velocitySpace_[left][right] = velocitySpace_[left][right];
       }
     }
 
   }
 
 
-  // set preferred direction
+  // add evaluation for preferred direction
   //
-  void DynamicWindow::setPreferredDirection(double _prefDir) {
+  void VelocitySpace::addEvalForPreferredDirection(double _prefDir) {
 
     double value_left, value_right;
 
@@ -78,10 +78,10 @@ namespace Miro
   }
 
 
-  // check for collisions DELUXE
+  // add evaluation for obstacle
   //
 
-  void DynamicWindow::collisionCheckDeluxe(std::vector<Vector2d> &_robot, std::vector<Vector2d> &_obstacle) {
+  void VelocitySpace::addEvalForObstacle(std::vector<Vector2d> &_robot, std::vector<Vector2d> &_obstacle) {
 
     const int CURV_CNT = 6; // count (6)
     const int CURV_RES = 6; // count (6)
@@ -243,89 +243,9 @@ namespace Miro
   }
 
 
-  // check for collisions
-  //
-  void DynamicWindow::collisionCheck(std::vector<Vector2d> &_robot, std::vector<Vector2d> &_obstacle) {
-
-    const double WHEEL_DISTANCE  = 330.;  // in mm
-    const double MAX_POLYGON_DISTANCE = 500.;  // in mm
-    const double BREAK_ACCELERATION = 2000.;  // in mm/sec2
-    const double MIN_DISTANCE = 100.;
-    const int RESOLUTION = 4;
-
-    double offset, angle, pointValue;
-    double fLeft = 0, fRight = 0;
-
-    for(int left = minLeft_; left <= maxLeft_; left += RESOLUTION) {
-      for(int right = minRight_ ; right <= maxRight_; right += RESOLUTION ) {
-
-	if(left == right) {
-	  fLeft = 100. * (double)(abs(left) * left) / BREAK_ACCELERATION;
-	  fRight = 100. * (double)(abs(right) * right) / BREAK_ACCELERATION;
-      	}
-       	else {
-	  if(abs(left) > abs(right)) {
-	    fLeft = 100. * (double)(abs(left) * left) / BREAK_ACCELERATION;
-	    fRight = ((double)(right) / double(left)) * fLeft;
-	  }
-	  else if(abs(left) < abs(right)) {
-	    fRight = 100. * (double)(abs(right) * right) / BREAK_ACCELERATION;
-	    fLeft = ((double)(left) / double(right)) * fRight;
-	    }
-	}
-
-        if(left != right) {
-
-          offset = (WHEEL_DISTANCE / 2.) * ((fLeft + fRight) / (fLeft - fRight));
-          angle = (180. * (fLeft - fRight)) / (WHEEL_DISTANCE * M_PI);
-          rotateMountedPolygon(_robot, Vector2d(-offset, 0.), angle);
-
-	  if(getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) < MIN_DISTANCE) {
-	    pointValue = 0;
-	  }
-	  else {
-	    pointValue = std::min(1., getFrontDistanceBetweenPolygonAndPolygon(_robot, _obstacle) / MAX_POLYGON_DISTANCE);
-	  }
-
-          for(int x = 0; (x < RESOLUTION) && (x+left <= maxLeft_); x++) {
-            for(int y = 0; (y < RESOLUTION) && (y+right <= maxRight_); y++) {
-	      velocitySpace_[left+100+x][right+100+y] = (int)(velocitySpace_[left+100+x][right+100+y] * pointValue);
-	    }
-	  }
-
-          rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -angle);
-
-        }
-        else {  // (left == right)
-
-          moveMountedPolygon(_robot, Vector2d(0., (fLeft + fRight) / 2.));
-
-          if(getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) < MIN_DISTANCE) {
-	    pointValue = 0;
-	  }
-	  else {
-	    pointValue = std::min(1., getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) / MAX_POLYGON_DISTANCE);
-	  }
-
-          for(int x = 0; (x < RESOLUTION) && (x+left <= maxLeft_); x++) {
-            for(int y = 0; (y < RESOLUTION) && (y+right <= maxRight_); y++) {
-	      velocitySpace_[left+100+x][right+100+y] =	(int)(velocitySpace_[left+100+x][right+100+y] * pointValue);
-            }
-          }
-
-          moveMountedPolygon(_robot, Vector2d(0., -1 * (fLeft + fRight) / 2.));
-
-        }
-
-      }
-    }
-
-  }
-
-
   // calc new velocity
   //
-  Vector2d DynamicWindow::calcNewVelocity() {
+  Vector2d VelocitySpace::applyObjectiveFunctionToEval() {
 
     int biggestVelocitySpaceValue = 10;
     double biggestVelocitySpaceRadius = 0.;
@@ -380,7 +300,7 @@ namespace Miro
 
     }
 
-    setNewDynamicWindow(biggestVelocitySpaceValueVelocity);
+    setNewVelocitySpace(biggestVelocitySpaceValueVelocity);
 
     return biggestVelocitySpaceValueVelocity;
   }
@@ -391,9 +311,9 @@ namespace Miro
   //
 
 
-  // set new DynamicWindow
+  // set new VelocitySpace
   //
-  void DynamicWindow::setNewDynamicWindow(Vector2d _velocity) {
+  void VelocitySpace::setNewVelocitySpace(Vector2d _velocity) {
 
 
     velocity_ = _velocity;
@@ -410,7 +330,7 @@ namespace Miro
 
   // get signed distance between point and line
   //
-  double DynamicWindow::getSignedDistanceBetweenPointAndLine(Vector2d _p1, Vector2d _l1, Vector2d _l2) {
+  double VelocitySpace::getSignedDistanceBetweenPointAndLine(Vector2d _p1, Vector2d _l1, Vector2d _l2) {
 
     Vector2d l1_l2, l1_p1, l2_p1;
 
@@ -441,7 +361,7 @@ namespace Miro
 
   // get distance between two lines
   //
-  double DynamicWindow::getDistanceBetweenLineAndLine(Vector2d _l1, Vector2d _l2, Vector2d _l3, Vector2d _l4) {
+  double VelocitySpace::getDistanceBetweenLineAndLine(Vector2d _l1, Vector2d _l2, Vector2d _l3, Vector2d _l4) {
 
     double l1_to_l3_l4, l2_to_l3_l4, l3_to_l1_l2, l4_to_l1_l2;
 
@@ -460,7 +380,7 @@ namespace Miro
 
   // get distance between two mounted polygons
   //
-  double DynamicWindow::getDistanceBetweenPolygonAndPolygon(std::vector<Vector2d> &_polygon1, std::vector<Vector2d> &_polygon2) {
+  double VelocitySpace::getDistanceBetweenPolygonAndPolygon(std::vector<Vector2d> &_polygon1, std::vector<Vector2d> &_polygon2) {
 
     std::vector<Vector2d>::iterator a1, a2, b1, b2;
     double distance, minDistance = 0.0;
@@ -482,33 +402,9 @@ namespace Miro
   }
 
 
-  // get front distance between robot and obstacle
-  //
-  double DynamicWindow::getFrontDistanceBetweenPolygonAndPolygon(std::vector<Vector2d> &_polygon1, std::vector<Vector2d> &_polygon2) {
-
-    std::vector<Vector2d>::iterator a1, a2, b1, b2;
-    double distance, minDistance = 0.0;
-
-    for(a1 = _polygon1.begin() + 2, a2 = _polygon1.begin() + 3; a2 < _polygon1.begin() + 5; a1++, a2++) {
-      for(b1 = _polygon2.begin() + 4, b2 = _polygon2.begin() + 5; b2 < _polygon2.begin() + 7; b1++, b2++) {
-
-        distance = getDistanceBetweenLineAndLine(*a1, *a2, *b1, *b2);
-
-        if(((a1 == _polygon1.begin() + 2) && (b1 == _polygon2.begin() + 4)) || (distance < minDistance)) {
-          minDistance = distance;
-        }
-
-      }
-    }
-
-    return minDistance;
-
-  }
-
-
   // rotate mounted polygon around offset by given angle
   //
-  void DynamicWindow::rotateMountedPolygon(std::vector<Vector2d> &_polygon, Vector2d _point, double _angle) {
+  void VelocitySpace::rotateMountedPolygon(std::vector<Vector2d> &_polygon, Vector2d _point, double _angle) {
 
     std::vector<Vector2d>::iterator i;
 
@@ -527,7 +423,7 @@ namespace Miro
 
   // move the given mounted polygon by given distance
   //
-  void DynamicWindow::moveMountedPolygon(std::vector<Vector2d> &_polygon, Vector2d _distance) {
+  void VelocitySpace::moveMountedPolygon(std::vector<Vector2d> &_polygon, Vector2d _distance) {
 
     std::vector<Vector2d>::iterator i;
 
@@ -540,7 +436,7 @@ namespace Miro
 
   // rotate polygon around offset by given angle
   //
-  void DynamicWindow::rotatePolygon(std::vector<Vector2d> &_polygon, Vector2d _point, double _angle) {
+  void VelocitySpace::rotatePolygon(std::vector<Vector2d> &_polygon, Vector2d _point, double _angle) {
 
     std::vector<Vector2d>::iterator i;
 
@@ -559,7 +455,7 @@ namespace Miro
 
   // move the given polygon by given distance
   //
-  void DynamicWindow::movePolygon(std::vector<Vector2d> &_polygon, Vector2d _distance) {
+  void VelocitySpace::movePolygon(std::vector<Vector2d> &_polygon, Vector2d _distance) {
 
     std::vector<Vector2d>::iterator i;
 

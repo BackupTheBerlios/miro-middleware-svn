@@ -12,7 +12,7 @@
 #define Behaviour_h
 
 #include "BehaviourParameters.h"
-#include "DynamicWindow.h"
+#include "VelocitySpace.h"
 #include "ActionPattern.h"
 #include "Arbiter.h"
 
@@ -79,9 +79,9 @@ namespace Miro
     //! Returns true if the behaviour is in active state.
     bool isActive();
 
-    //! Hook for the WindowArbiter
+    //! Hook for the ConstraintArbiter
     /** @todo replace by a method pointer within the arbitration message. */
-    virtual void calcDynamicWindow(DynamicWindow *);
+    virtual void addEvaluation(VelocitySpace *);
 
     //! Initiate a memory cleanup during dynamic policy reconfiguration.
     void deleteParametersOnTransition();

@@ -8,28 +8,28 @@
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-#ifndef WindowArbiterViewerTask_h
-#define WindowArbiterViewerTask_h
+#ifndef ConstraintArbiterViewerTask_h
+#define ConstraintArbiterViewerTask_h
 
 #include <ace/Task.h>
 
-#include "WindowArbiterViewer.h"
+#include "ConstraintArbiterViewer.h"
 #include <qapplication.h>
 #include <qwidget.h>
-#include "DynamicWindow.h"
+#include "VelocitySpace.h"
 
 namespace Miro
 {
-  class WindowArbiterViewerTask : public ACE_Task<ACE_MT_SYNCH> {
+  class ConstraintArbiterViewerTask : public ACE_Task<ACE_MT_SYNCH> {
     typedef ACE_Task<ACE_MT_SYNCH> Super;    
   public:
-    WindowArbiterViewerTask(DynamicWindow *);
-    ~WindowArbiterViewerTask();
+    ConstraintArbiterViewerTask(VelocitySpace *);
+    ~ConstraintArbiterViewerTask();
     int svc();
     int open(void * = 0);
     int temp;
     QApplication winArbApp_;
-    WindowArbiterViewer winArbView_;
+    ConstraintArbiterViewer winArbView_;
 
   };
 };

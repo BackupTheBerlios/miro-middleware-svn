@@ -6,16 +6,16 @@
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef WindowArbiter_h
-#define WindowArbiter_h
+#ifndef ConstraintArbiter_h
+#define ConstraintArbiter_h
 
 #include "idl/DifferentialMotionC.h"
 #include "Arbiter.h"
-#include "WindowArbiterViewerTask.h"
-#include "DynamicWindow.h"
+#include "ConstraintArbiterViewerTask.h"
+#include "VelocitySpace.h"
 
 #include <ace/Reactor.h>
 
@@ -27,26 +27,26 @@ namespace Miro
 {
   class StructuredPushSupplier;
 
-  class WindowArbiter :
+  class ConstraintArbiter :
     public Arbiter,
     public ACE_Event_Handler
   {
   public:
-    WindowArbiter(ACE_Reactor &, 
+    ConstraintArbiter(ACE_Reactor &,
 		  DifferentialMotion_ptr _pMotion,
 		  StructuredPushSupplier * _pSupplier = NULL);
-    ~WindowArbiter();
+    ~ConstraintArbiter();
 
     virtual const std::string& getName() const;
-    
+
     void open();
     void close();
-    
+
     virtual int handle_timeout(const ACE_Time_Value&, const void*);
 
   protected:
     virtual void calcActivation();
-    
+
     DifferentialMotion_var pMotion_;
     StructuredPushSupplier * pSupplier_;
 
@@ -54,13 +54,13 @@ namespace Miro
 
     ACE_Reactor &reactor;
     int timerId;
-    
+
     VelocityIDL currentVelocity_;
 
-    DynamicWindow dynWindow_, dynWindowPaint_;
+    VelocitySpace velocitySpace_, velocitySpacePaint_;
 
-    WindowArbiterViewerTask * winArbViewTask_;
-    bool winArbViewTaskCreated;
+    ConstraintArbiterViewerTask * conArbViewTask_;
+    bool conArbViewTaskCreated;
 
     CosNotification::StructuredEvent notifyEvent;
 

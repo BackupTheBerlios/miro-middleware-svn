@@ -99,13 +99,13 @@ namespace Miro
   }
 
   void 
-  Behaviour::sendMessage(const std::string& message) 
+  Behaviour::sendMessage(const std::string& message)
   {
     params_->pattern->sendMessage(this, message);
   }
-  
+
   void
-  Behaviour::calcDynamicWindow(DynamicWindow *) {
+  Behaviour::addEvaluation(VelocitySpace *) {
   }
 
   /**
