@@ -34,7 +34,8 @@ namespace Video
   // Hardware specifica
   //--------------------------------------------------------------------------
 
-  VideoDeviceMeteor::VideoDeviceMeteor() :
+  VideoDeviceMeteor::VideoDeviceMeteor(Parameters const * _params) :
+    Super(_params),
     devName_(params_->device.c_str()),
     ioBuffer_(),
     connector_()
@@ -62,10 +63,10 @@ namespace Video
 
   VideoDeviceMeteor::~VideoDeviceMeteor()
   {
-    handleDisconnect();
+    disconnect();
   }
 
-  void VideoDeviceMeteor::handleConnect()
+  void VideoDeviceMeteor::connect()
   {
     DBG(cout << "Connecting VideoDeviceMeteor." << endl);
 
@@ -98,7 +99,7 @@ namespace Video
     iNFramesCaptured = 0;
   }
 
-  void VideoDeviceMeteor::handleDisconnect()
+  void VideoDeviceMeteor::disconnect()
   {
     DBG(cout << "VideoDeviceBTTV: frames captured " << iNFramesCaptured << endl);
 

@@ -1,3 +1,4 @@
+/* -*- c++ -*- */
 /*! \file VideoDevice1394.h
  *  \brief Implementation for a firewire video device (interface)
  *
@@ -14,6 +15,10 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.4  2003/05/13 21:58:49  hutz
+ * removing the bridge pattern between VideoDevice and VideoDeviceBase
+ * making VideoDevice* a direct descendant of VideoDevice
+ *
  * Revision 1.3  2003/05/13 20:50:20  hutz
  * cleaning up the video service, getting rid of VideoConnection
  *
@@ -43,7 +48,7 @@
 #ifndef VIDEODEVICE1394_H
 #define VIDEODEVICE1394_H
 
-#include "VideoDeviceBase.h"
+#include "VideoDevice.h"
 
 #if defined(HAVE_LIBDC1394_CONTROL) && defined(HAVE_LIBRAW1394)
 #define HAVE_VIDEODEVICE1394 1
@@ -56,59 +61,61 @@
 
 namespace Video
 {
-    class VideoConverter;
+  class VideoConverter;
 
-    //! Firewire camera support.
-    class VideoDevice1394 : public VideoDeviceBase
-    {
-    public:
-        VideoDevice1394();
-        virtual ~VideoDevice1394();
+  //! Firewire camera support.
+  class VideoDevice1394 : public VideoDevice
+  {
+    typedef VideoDevice Super;
+    
+  public:
+    VideoDevice1394(Parameters const * _params = Parameters::instance());
+    virtual ~VideoDevice1394();
 	
-	virtual	void handleConnect();
-	virtual	void handleDisconnect();
+    virtual void connect();
+    virtual void disconnect();
+    
+    virtual void * grabImage(ACE_Time_Value& _timeStamp) const;
 
-	virtual	void * grabImage(ACE_Time_Value& _timeStamp) const;
-
-    protected:
-        //! Detect and initialize the camera.
-        void initDevice(int port = 0);
-	//! Close device-driver handles.
-        void cleanupDevice();
+  protected:
+    //! Detect and initialize the camera.
+    void initDevice(int port = 0);
+    //! Close device-driver handles.
+    void cleanupDevice();
 	
-	void setFormat(VideoFormat fmt);
-	void setSource(VideoSource src);
-	void setPalette(VideoPalette pal);
-	void setSubfield(VideoSubfield sub);
-	void setSize(int w, int h);
+    void setFormat(VideoFormat fmt);
+    void setSource(VideoSource src);
+    void setPalette(VideoPalette pal);
+    void setSubfield(VideoSubfield sub);
+    void setSize(int w, int h);
 
-	//! set extra (and device specific) camera parameters.
-	void initSettings(const Video::FireWireParameters & _params);
+    //! set extra (and device specific) camera parameters.
+    void initSettings(const Video::FireWireParameters & _params);
 	
-	//! Allocate and setup the framebuffer memory.
-	void initBuffers(int buf_cnt);
+    //! Allocate and setup the framebuffer memory.
+    void initBuffers(int buf_cnt);
 	
-	//! Initialize dma transmission
-	void initCapture();
+    //! Initialize dma transmission
+    void initCapture();
 
-    private:
-        VideoConverter *        converter_;
+  private:
+    VideoConverter *        converter_;
 
-	//! Flag to indicate that the device is initialized.
-	bool                    is_open_;
-	//! Real device handle.
-	raw1394handle_t         handle_;
-	//! Actual camera features.
-	dc1394_feature_set      features_;
-	//! Camera capture data structure.
-	dc1394_cameracapture *  p_camera_;
-	//! Selected image format.
-	long                    image_format_;
-	//! Pointer to framebuffer memory.
-	char *                  frame_buffers_;
-	//! Framerate
-	int                     frame_rate_;
-    };
+    //! Flag to indicate that the device is initialized.
+    bool                    is_open_;
+    //! Real device handle.
+    raw1394handle_t         handle_;
+    //! Actual camera features.
+    dc1394_feature_set      features_;
+    //! Camera capture data structure.
+    dc1394_cameracapture *  p_camera_;
+    //! Selected image format.
+    long                    image_format_;
+    //! Pointer to framebuffer memory.
+    char *                  frame_buffers_;
+    //! Framerate
+    int                     frame_rate_;
+  };
 };
 
 #endif // HAVE_VIDEODEVICE1394

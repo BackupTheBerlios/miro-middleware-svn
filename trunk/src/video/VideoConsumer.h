@@ -14,9 +14,6 @@
 #include "miro/Synch.h"
 #include "miro/Thread.h"
 #include "miro/TimeC.h"
-//#include "miro/DevConsumer.h"
-
-
 
 namespace Video
 {
@@ -33,7 +30,6 @@ namespace Video
     
   public:
     Consumer(Video::VideoDevice& _device, 
-	     VideoImpl * _pGrabber = NULL, 
 	     ACE_Sched_Params * pschedp = NULL);
     ~Consumer();
 
@@ -59,7 +55,6 @@ namespace Video
     void swapLine4(void*, const void*, const int);
 
     Video::VideoDevice&     videoDevice;
-    VideoImpl*       pGrabber;
     Miro::Mutex      mutex;
     Miro::Condition  cond;
     void *           pCurrentImageData;

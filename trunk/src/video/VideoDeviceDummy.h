@@ -1,3 +1,4 @@
+/* -*- c++ -*- */
 /*! \file VideoDeviceDummy.h
  *  \brief Dummy implementation for a video device (interface)
  *
@@ -14,6 +15,10 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.3  2003/05/13 21:58:49  hutz
+ * removing the bridge pattern between VideoDevice and VideoDeviceBase
+ * making VideoDevice* a direct descendant of VideoDevice
+ *
  * Revision 1.2  2003/05/13 20:50:21  hutz
  * cleaning up the video service, getting rid of VideoConnection
  *
@@ -34,30 +39,32 @@
 #ifndef VIDEODEVICEDUMMY_H
 #define VIDEODEVICEDUMMY_H
 
-#include "VideoDeviceBase.h"
+#include "VideoDevice.h"
 
 namespace Video
 {
-    /** Dummy video device for testing the interface
-     */
+  /** Dummy video device for testing the interface
+   */
 
-    class VideoDeviceDummy : public VideoDeviceBase
-    {
-    public:
-        VideoDeviceDummy();
-        virtual ~VideoDeviceDummy();
+  class VideoDeviceDummy : public VideoDevice
+  {
+    typedef VideoDevice Super;
+
+  public:
+    VideoDeviceDummy(Parameters const * _params = Parameters::instance());
+    virtual ~VideoDeviceDummy();
 	    	    
-	virtual	void	handleConnect();
-	virtual	void	handleDisconnect();
+    virtual void connect();
+    virtual void disconnect();
 		
-	virtual	void*	grabImage(ACE_Time_Value & _timeStamp) const;
+    virtual void * grabImage(ACE_Time_Value & _timeStamp) const;
 
-    private:
-        //! connection simulation flag
-        bool is_connected_;
-	//! indirect framebuffer
-        char * buffer_;
-    };
+  private:
+    //! connection simulation flag
+    bool is_connected_;
+    //! indirect framebuffer
+    char * buffer_;
+  };
 };
 
 #endif // VIDEODEVICEDUMMY_H

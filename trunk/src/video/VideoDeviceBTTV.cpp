@@ -32,7 +32,8 @@ namespace Video
   //--------------------------------------------------------------------------
   int VideoDeviceBTTV::gb_pal[64];
 
-  VideoDeviceBTTV::VideoDeviceBTTV() :
+  VideoDeviceBTTV::VideoDeviceBTTV(Parameters const * _params) :
+    Super(_params),
     devName_(params_->device.c_str()),
     ioBuffer_(),
     connector_(),
@@ -73,13 +74,13 @@ namespace Video
 
   VideoDeviceBTTV::~VideoDeviceBTTV()
   {
-    handleDisconnect();
+    disconnect();
     delete gb;
   }
 
 
   void 
-  VideoDeviceBTTV::handleConnect()
+  VideoDeviceBTTV::connect()
   {
     int	err;
 
@@ -177,7 +178,7 @@ namespace Video
       throw Miro::CException(errno, "VideoDeviceBTTV::handleConnect() - VIDIOCMCAPTURE");
   }
 
-  void VideoDeviceBTTV::handleDisconnect()
+  void VideoDeviceBTTV::disconnect()
   {
     DBG(std::cout << "VideoDeviceBTTV: frames captured " << iNFramesCaptured << std::endl);
 

@@ -14,6 +14,10 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.3  2003/05/13 21:58:49  hutz
+ * removing the bridge pattern between VideoDevice and VideoDeviceBase
+ * making VideoDevice* a direct descendant of VideoDevice
+ *
  * Revision 1.2  2003/05/13 20:50:21  hutz
  * cleaning up the video service, getting rid of VideoConnection
  *
@@ -42,59 +46,62 @@
 namespace Video
 {
 //--------------------------------------------------------------------
-    VideoDeviceDummy::VideoDeviceDummy()
-     : is_connected_(false),
-       buffer_(0) 
-    {
-    }
+  VideoDeviceDummy::VideoDeviceDummy(Parameters const * _params) :
+    Super(_params),
+    is_connected_(false),
+    buffer_(NULL) 
+  {
+  }
     
 //--------------------------------------------------------------------
-    VideoDeviceDummy::~VideoDeviceDummy()
-    {
-        if (buffer_) delete buffer_;
-    }
+  VideoDeviceDummy::~VideoDeviceDummy()
+  {
+    delete buffer_;
+  }
 	
-//--------------------------------------------------------------------
-    void * VideoDeviceDummy::grabImage(ACE_Time_Value & _timeStamp) const
-    {
-        if (is_connected_)
-	{
-	  _timeStamp = ACE_OS::gettimeofday();
-            iCurrentBuffer = (iCurrentBuffer + 1) % iNBuffers;
-            return buffer_ + iCurrentBuffer*getImageSize();
-	}
-	return 0;
+  //--------------------------------------------------------------------
+  void * 
+  VideoDeviceDummy::grabImage(ACE_Time_Value & _timeStamp) const
+  {
+    if (is_connected_) {
+      _timeStamp = ACE_OS::gettimeofday();
+      iCurrentBuffer = (iCurrentBuffer + 1) % iNBuffers;
+      return buffer_ + iCurrentBuffer*getImageSize();
     }
+    return 0;
+  }
     
 //--------------------------------------------------------------------
-  void VideoDeviceDummy::handleConnect()
-    {
-	formatID = ::Video::getFormat(params_->format);
-        sourceID = ::Video::getSource(params_->source);
-        requestedPaletteID = ::Video::getPalette(params_->palette);
-        devicePaletteID = ::Video::getPalette(params_->palette);
-        requestedSubfieldID = ::Video::getSubfield(params_->subfield);
-        deviceSubfieldID = ::Video::getSubfield(params_->subfield);
-        imgWidth = params_->width;
-        imgHeight = params_->height;
-        iNBuffers = params_->buffers;
-        iCurrentBuffer = 0;
-        iNFramesCaptured = 1;
-        is_connected_ = true;
+  void
+  VideoDeviceDummy::connect()
+  {
+    formatID = ::Video::getFormat(params_->format);
+    sourceID = ::Video::getSource(params_->source);
+    requestedPaletteID = ::Video::getPalette(params_->palette);
+    devicePaletteID = ::Video::getPalette(params_->palette);
+    requestedSubfieldID = ::Video::getSubfield(params_->subfield);
+    deviceSubfieldID = ::Video::getSubfield(params_->subfield);
+    imgWidth = params_->width;
+    imgHeight = params_->height;
+    iNBuffers = params_->buffers;
+    iCurrentBuffer = 0;
+    iNFramesCaptured = 1;
+    is_connected_ = true;
 	
-	delete buffer_;
-        buffer_ = new char [iNBuffers*getImageSize()];
-	memset(buffer_, 0, iNBuffers*getImageSize());
-	
-	for (int i= 0; i < iNBuffers; i++)
-            memset(buffer_+i*getImageSize(), 255, 5*getPixelSize(requestedPaletteID));
-    }
+    delete buffer_;
+    buffer_ = new char [iNBuffers*getImageSize()];
+    memset(buffer_, 0, iNBuffers*getImageSize());
+    
+    for (int i= 0; i < iNBuffers; i++)
+      memset(buffer_+i*getImageSize(), 255, 5*getPixelSize(requestedPaletteID));
+  }
         
 //--------------------------------------------------------------------
-    void VideoDeviceDummy::handleDisconnect()
-    {
-        is_connected_ = false;
-    }
+  void
+  VideoDeviceDummy::disconnect()
+  {
+    is_connected_ = false;
+  }
 };
 
 

@@ -39,10 +39,8 @@ namespace Video
   //----- constructors -----//
   //------------------------//
   Consumer::Consumer(VideoDevice& _device,
-		     VideoImpl * _pGrabber, 
 		     ACE_Sched_Params * pschedp) :
     videoDevice(_device),
-    pGrabber(_pGrabber),
     mutex(),
     cond(mutex),
     pCurrentImageData(NULL),

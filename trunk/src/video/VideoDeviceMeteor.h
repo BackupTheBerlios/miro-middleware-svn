@@ -14,23 +14,27 @@
 // extern "C" {
 #include "ioctl_meteor.h"
 // }
-#include "VideoDeviceBase.h"
+#include "VideoDevice.h"
+
+#include <ace/DEV_Connector.h>
 
 namespace Video
 {
   //--------------------------------------------------------------------------
   // Hardware specifica
   //--------------------------------------------------------------------------
-  class VideoDeviceMeteor  :public VideoDeviceBase
+  class VideoDeviceMeteor  :public VideoDevice
   {
+    typedef VideoDevice Super;
+
   public:
-    VideoDeviceMeteor();
-    virtual	~VideoDeviceMeteor();
+    VideoDeviceMeteor(Parameters const * _params = Parameters::instance());
+    virtual ~VideoDeviceMeteor();
 
-    virtual	void*	grabImage(ACE_Time_Value& _timeStamp) const;
+    virtual void * grabImage(ACE_Time_Value& _timeStamp) const;
 
-    virtual	void	handleConnect();
-    virtual	void	handleDisconnect();
+    virtual void connect();
+    virtual void disconnect();
 
   protected:
     virtual	void	setFormat(int);

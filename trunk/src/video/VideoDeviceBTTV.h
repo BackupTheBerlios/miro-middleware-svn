@@ -15,26 +15,29 @@ extern "C" {
 #include <linux/videodev.h>
 }
 
-#include "VideoDeviceBase.h"
+#include "VideoDevice.h"
+
+#include <ace/DEV_Connector.h>
 
 namespace Video
 {
   //--------------------------------------------------------------------------
   // Hardware specifica
   //--------------------------------------------------------------------------
-  class VideoDeviceBTTV : public VideoDeviceBase
+  class VideoDeviceBTTV : public VideoDevice
   {
+    typedef VideoDevice Super;
+
   public:
-    VideoDeviceBTTV();
+    VideoDeviceBTTV(Parameters const * _params = Parameters::instance());
     virtual ~VideoDeviceBTTV();
 
-    virtual void handleConnect();
-    virtual void handleDisconnect();
+    virtual void connect();
+    virtual void disconnect();
 
     virtual void * grabImage(ACE_Time_Value& _timeStamp) const;
 
   protected:
-
     virtual void setFormat(int);
     virtual void setSource(int);
     virtual void setPalette(int);

@@ -2,10 +2,9 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
@@ -14,14 +13,14 @@
 
 #include "miro/Server.h"
 
-#include "VideoConsumer.h"
 #include "VideoImpl.h"
-#include "VideoDevice.h"
 
 // forward declarations
 namespace Video
 {
   class Parameters;
+  class VideoDevice;
+  class Consumer;
 };
 
 class VideoService : public Miro::Server
@@ -47,9 +46,9 @@ public:
 private:
   /** Sceduling parameters for a realtime thread */
   ACE_Sched_Params schedparams_;
-  Video::VideoDevice videoDevice;
-  Video::Consumer consumer;
-  Miro::VideoImpl grabber;
+  Video::VideoDevice * pVideoDevice;
+  Video::Consumer * pConsumer;
+  Miro::VideoImpl * pGrabber;
   Miro::Video_ptr pVideo;
 };
 #endif
