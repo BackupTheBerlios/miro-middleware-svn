@@ -1,6 +1,6 @@
 \chapter{Video Image Processing}
 
-Video image acquisition is one of the most standardized sensory
+Video image acquisition is one of the most common sensory
 devices used in robotics. Therefore \miro offers a common
 {\tt VideoService} that can be adapted by the configuration file to any
 supported video device.
@@ -13,7 +13,7 @@ framework.
 
 Real-time image streams need a lot of bandwidth. This is usually
 higher than the bandwidth available on most mainstream network
-devices. Therefor the {\tt Video}-interface of \miro also provides
+devices. Therefore the {\tt Video}-interface of \miro also provides
 methods for usage of shared memory for sharing of images with its
 clients on the same machine. Those methods are also designed for
 minimizing copying overhead.
@@ -33,7 +33,7 @@ acquisition:
 \subsection{Bttv Frame Grabbers}
 
 These frame grabber cards are supported via video for linux \cite{}.
-They are the standard way of connecting standard analog video cameras
+Tis is the standard way of connecting standard analog video cameras
 to the computer.
 
 Note, that the default number of frames used by the kernel driver for
@@ -68,13 +68,13 @@ filtering function.
 Often filter chains are used. I.e. first undistorting
 the image $f_0$ and then performing some color indexing $f_2$. So the
 filtering function producing the output image $M_o$ from the input
-image $M_i$ could be expressed as:  $$M_o = f_2(f_1(M_i))$$. 
+image $M_i$ could be expressed as:  $$M_o = f_2(f_1(M_i))$$
 
 More complex vision processing could also include the computation of
 an edge image $M_e$ in addition to the color indexing above. This can
 be done i.e. by producing a grey image $f_3$ and applying a canny
 filter $f_4$, leading to the second filter chain: 
-$$M_e = f_4(f_3(f_1(M_i)))$$.
+$$M_e = f_4(f_3(f_1(M_i)))$$
 
 To avoid computing the undistorted image twice, a filter tree should
 be used instead of two separate filter chains.
@@ -82,6 +82,9 @@ be used instead of two separate filter chains.
 % TODO: filter tree image.
 
 \section{VideoService}
+
+The program provided by \miro for image acquisition and preprocessing
+is called {\tt VideoService}.
 
 \miro comes with a set of basic filters. The term filter is used here
 in a very general way, as almost every processing unit of the video
@@ -125,7 +128,7 @@ video service has the following parameters:
   \item[yuv411] compressed YUV format from 1394.
   \item[yuv422] compressed YUV format from 1394.
   \end{description}
-\item[Filter] The root filter of the filter tree. The filter parameter
+\item[Filter] The root of the filter tree. The filter parameter
   has three entries:
   \begin{description}
   \item[Type] The filter type name (std::string).
@@ -154,7 +157,9 @@ The base parameter set of each filter is as follows:
   the following parameters can be specified:
   \begin{description}
   \item[Name] The name under which the interface is registered at the
-    naming service (std::string). The default is Video.
+    naming service (std::string). The default is Video. Note that if
+    you have more than one Video object, you have to specify a unique
+    name for each instance.
   \item[Buffers] The number of memory buffers, reserved by the interface
     (unsigned int). The default is 4. While a client is accessing an
     image, the video service guarantees, that it does not become

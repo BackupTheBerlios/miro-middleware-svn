@@ -54,7 +54,8 @@ EXAMPLE_LINKS = \
 	$(MIRO_ROOT)/examples/sonar/SonarPoll2.cpp \
 	$(MIRO_ROOT)/examples/sonar/SonarPoll3.cpp \
 	$(MIRO_ROOT)/examples/sonar/SonarNotify.cpp \
-	$(MIRO_ROOT)/examples/b21Behaviours/LaserAvoid.cpp
+	$(MIRO_ROOT)/examples/b21Behaviours/LaserAvoid.cpp \
+	$(MIRO_ROOT)/examples/video/VideoExample.cpp
 
 # generate the list of figures for the different output-formats
 EPSFIGS = $(addsuffix .eps,$(FIGS))
