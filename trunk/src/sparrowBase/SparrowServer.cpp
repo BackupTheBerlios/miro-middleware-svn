@@ -94,7 +94,8 @@ SparrowBase::SparrowBase(Miro::Server& _server, bool _startReactorTastk) :
   argc_(0),
   argv_(NULL),
   mcAdapter_(( (Sparrow::Parameters::instance()->channelSharing)?
-	       new Miro::NMC::Adapter(argc_, argv_, &server_, ec_) :
+	       new Miro::NMC::Adapter(argc_, argv_, 
+				      &server_, ec_, server_.namingContextName) :
 	       NULL) ),
   aEventHandler_(NULL),
   delay(0,0),

@@ -250,7 +250,7 @@ NotifyMulticastTest::NotifyMulticastTest(int argc, char *argv[], bool _colocated
   
   shId_ = reactor_->schedule_timer(sh_, 0, shTime_, shTime_);
 
-  nmcAdapter = new Miro::NMC::Adapter(argc, argv, this, ec_.in());
+  nmcAdapter = new Miro::NMC::Adapter(argc, argv, this, ec_.in(), namingContextName);
 
   DBG(cout << "NotifyMulticastTest initialized.." << endl);
 }
