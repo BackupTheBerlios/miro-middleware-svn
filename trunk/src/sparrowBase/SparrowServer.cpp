@@ -43,9 +43,8 @@ FaulhaberHardware::FaulhaberHardware(ACE_Reactor * _reactor,
   reactor(_reactor),
   timerId(-1),
   pConsumer(new FaulMotor::Consumer(_pOdometryImpl)),
-  pEventHandler(new FaulTty::EventHandler(pConsumer, connection)),
-  pTimerEventHandler(new FaulTty::TimerEventHandler(connection)),
-  connection(_reactor, pEventHandler, pConsumer)
+  pTimerEventHandler(new FaulMotor::TimerEventHandler(connection)),
+  connection(_reactor, pConsumer)
 {
   ACE_Time_Value tv(0,90000);
 

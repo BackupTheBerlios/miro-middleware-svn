@@ -34,8 +34,7 @@
 #include "faulMotor/FaulMotorConnection.h"
 #include "faulMotor/Parameters.h" 
 #include "faulMotor/FaulMotorConsumer.h"
-#include "faulTty/FaulTtyEventHandler.h"
-#include "faulTty/TimerEventHandler.h"
+#include "faulMotor/TimerEventHandler.h"
 
 #include <orbsvcs/CosNotifyChannelAdminS.h>
 #include <orbsvcs/CosNotifyCommC.h>
@@ -48,8 +47,7 @@ struct FaulhaberHardware
   ACE_Reactor * reactor;
   int timerId;
   FaulMotor::Consumer * pConsumer;
-  FaulTty::EventHandler * pEventHandler;
-  FaulTty::TimerEventHandler * pTimerEventHandler;
+  FaulMotor::TimerEventHandler * pTimerEventHandler;
   FaulMotor::Connection connection;
 
   FaulhaberHardware(ACE_Reactor * _reactor,

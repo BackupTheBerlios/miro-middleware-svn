@@ -152,10 +152,8 @@ $(BIN): $(STATIC_DEPS)
  $(MIRO_ROOT)/src/faulMotor/FaulMotorConnection.h \
  $(MIRO_ROOT)/src/faulTty/FaulTtyConnection.h \
  $(MIRO_ROOT)/src/faulMotor/Parameters.h \
- $(MIRO_ROOT)/src/faulTty/Parameters.h \
  $(MIRO_ROOT)/src/faulMotor/FaulMotorConsumer.h \
- $(MIRO_ROOT)/src/faulTty/FaulTtyEventHandler.h \
- $(MIRO_ROOT)/src/faulTty/TimerEventHandler.h \
+ $(MIRO_ROOT)/src/faulMotor/TimerEventHandler.h \
  $(MIRO_ROOT)/src/miro/Utils.h $(MIRO_ROOT)/src/pioneer/Parameters.h \
  $(MIRO_ROOT)/src/psos/Parameters.h \
  $(MIRO_ROOT)/src/faulMotor/FaulMotorMotionImpl.h
@@ -241,10 +239,8 @@ $(BIN): $(STATIC_DEPS)
  $(MIRO_ROOT)/src/faulMotor/FaulMotorConnection.h \
  $(MIRO_ROOT)/src/faulTty/FaulTtyConnection.h \
  $(MIRO_ROOT)/src/faulMotor/Parameters.h \
- $(MIRO_ROOT)/src/faulTty/Parameters.h \
  $(MIRO_ROOT)/src/faulMotor/FaulMotorConsumer.h \
- $(MIRO_ROOT)/src/faulTty/FaulTtyEventHandler.h \
- $(MIRO_ROOT)/src/faulTty/TimerEventHandler.h \
+ $(MIRO_ROOT)/src/faulMotor/TimerEventHandler.h \
  $(MIRO_ROOT)/src/miro/Utils.h $(MIRO_ROOT)/src/pioneer/Parameters.h \
  $(MIRO_ROOT)/src/psos/Parameters.h \
  $(MIRO_ROOT)/src/miro/NotifyMulticastParameters.h
