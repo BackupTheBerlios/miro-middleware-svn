@@ -32,7 +32,7 @@
   <parameter name="FilterDiff">
    <parameter value="true" name="InterfaceInstance" />
    <parameter name="Interface" >
-    <parameter value="FilterDiff" name="Name" />
+    <parameter value="DiffImage" name="Name" />
    </parameter>
   </parameter>
  </section>
