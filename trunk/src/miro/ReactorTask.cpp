@@ -31,6 +31,8 @@ using Miro::Exception;
 
 namespace Miro
 {
+  using ::operator<<;
+
   ReactorTask::ReactorTask(Server * _pServer, 
 			   int size,
 			   ACE_Sched_Params *pschedp) :  
