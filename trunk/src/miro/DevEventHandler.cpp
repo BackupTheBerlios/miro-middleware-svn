@@ -28,6 +28,7 @@ namespace Miro
   DevEventHandler::DevEventHandler(DevConsumer * _consumer, 
 				   DevMessage * _message) :
     Super(),
+    handle_(ACE_INVALID_HANDLE),
     consumer_(_consumer),
     message_(_message)
   {
