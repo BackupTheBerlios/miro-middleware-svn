@@ -78,11 +78,9 @@ FaulhaberHardware::FaulhaberHardware(ACE_Reactor * _reactor,
 {
   FaulMotor::Parameters * params = 
     FaulMotor::Parameters::instance();
-  if (params->odometryPolling) {
-    timerId = reactor->schedule_timer(pTimerEventHandler, NULL, 
-				      ACE_Time_Value(2),
-				      params->odometryPace);
-  }
+  timerId = reactor->schedule_timer(pTimerEventHandler, NULL, 
+				    ACE_Time_Value(2),
+				    params->odometryPace);
 }
 
 FaulhaberHardware::~FaulhaberHardware()
@@ -219,16 +217,10 @@ int main(int argc, char* argv[])
   // Signal set to be handled by the event handler.
   ACE_Sig_Set sigs;
 
-  ACE_Time_Value ace_time;
-
   bool loop = true;
   char c;
-  char* eing;
   std::string str;
   short k, l;
-  long uptimer;
-  int i;
-  int stallId;
 
 
   // register Signal handler for Ctr+C
@@ -238,32 +230,17 @@ int main(int argc, char* argv[])
   if (service->reactorTask.reactor()->register_handler(sigs, &event) == -1) {
     throw Miro::ACE_Exception(errno, "failed to register signal handler");
   }
-  //cout << "updaterate? (usec) " << endl;
-  //cin >> uptimer;
-  //ACE_Time_Value tv(0,uptimer);
-  //ACE_Time_Value t0(0,0);
-
-
 
   // adding a handler for odometry polling
 
   ACE_Time_Value tv(0, 500000);
   service->reactorTask.reactor()->schedule_timer(service->pFaulhaber->pTimerEventHandler, NULL, tv ,tv);
 
-
-  // adding a handler for stall detection
-  /*
-    ACE_Time_Value t0(0,0);
-    stallId = service->reactorTask.reactor()->schedule_Timer(service->pTimerEventHandler, NULL, t0, t0);
-  */
-  // service->connection.setStallId(stallId);
-
   service->reactorTask.open(NULL);
 
   try
   {
     Miro::RangeGroupEventIDL_var  pSonarEvent;
-    Miro::PositionIDL odoData;
 
     while(loop && !canceled)
     {
@@ -286,7 +263,6 @@ int main(int argc, char* argv[])
 	       << "*****  Menu:  *****"<< endl
 	       << "1 - motor on (L/R)! " << endl
 	       << "2 - motor on " << endl
-	       << "3 - Befehl!!!" << endl
 	       << "8 - Odo status" << endl
 	       << "4 - flooding test" << endl
 	    /*
@@ -296,7 +272,6 @@ int main(int argc, char* argv[])
 	       << "9 - set rotation velocity" << endl
 	    */
 	       << "0 - all motors off!!!" << endl
-	       << "g - get vel" << endl
 	       << "p - get pos" << endl
                //<< "t - test endlosschleife" << endl
 	       << "x - Program end!!!" << endl;
@@ -333,14 +308,6 @@ int main(int argc, char* argv[])
 	     service->connection.setSpeed(0);break;*/
 	   }
 
-	 case '3' :
-	   {
-	     cout << "Befehleingeben: " << endl;
-	     cin >> eing;
-	     service->pFaulhaber->connection.setBefehl(eing);
-	     //service->connection.turn(k);
-	     break;
-	   }
 
 	 case '4' :
 	   {
@@ -426,11 +393,6 @@ int main(int argc, char* argv[])
                 ACE_OS::sleep(ace_time);
 
              }*/
-	     break;
-	   }
-	  case 'g' :
-	   {
-	     service->pFaulhaber->connection.getSpeed();
 	     break;
 	   }
 	 case 'p' :
