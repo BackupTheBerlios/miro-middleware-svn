@@ -59,7 +59,7 @@ RangeSensorAvoid::action()
     dynamic_cast<const RangeSensorAvoidParameters *>(params_);
 
 
-  cout << "RangeSensorAvoid: evaluating data" << endl;
+  //  cout << "RangeSensorAvoid: evaluating data" << endl;
 
   // get the minimum distance measurement
 
@@ -80,6 +80,13 @@ RangeSensorAvoid::action()
   if (minRight < 0.)
     minRight = params->lateralDistance * 10.;
  
+  cout << "Avoid scan: " 
+       << minLeft << " \t" 
+       << minLeftFront << " \t"
+       << minFront << " \t"
+       << minRightFront << " \t"
+       << minRight << endl;
+
   // build default message;
   MotionArbiterMessage message;
   message.id = this;
@@ -87,7 +94,7 @@ RangeSensorAvoid::action()
   message.velocity.translation = params->translation;
   message.velocity.rotation = 0;
 
-  cout << "RangeSensorAvoid: selecting action" << endl;
+  //  cout << "RangeSensorAvoid: selecting action" << endl;
 
   // front blocked
   if (minFront < params->minDistance) {
@@ -116,7 +123,7 @@ RangeSensorAvoid::action()
     message.velocity.rotation = params->rotation;
   }
 
-  cout << "RangSensorAvoid: action." << endl;	   
+  //  cout << "RangSensorAvoid: action." << endl;	   
   arbitrate(message);
 }
 

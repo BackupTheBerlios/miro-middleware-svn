@@ -126,9 +126,7 @@ RangeSensorBehaviour::action()
     ACE_Time_Value integrationTime;
     integrationTime.msec(params->historyMSec);
     
-    cout << "RangeSensor: integration time: " << integrationTime << endl;
     truncateBuffer(integrationTime);
-    cout << "RangeSensor: buffer size: " << scan_.size() << endl;
 
     if (event->remainder_of_body >>= pBunchScan) {
       Miro::timeC2A(pBunchScan->time, timeStamp);
@@ -169,7 +167,7 @@ RangeSensorBehaviour::action()
   if (pSupplier_ && !(++counter % 10)) {
     Nix::VisionFeaturesIDL * features = new Nix::VisionFeaturesIDL();
 
-    cout << "map size: " << egoMap_.size() << endl;
+    //    cout << "map size: " << egoMap_.size() << endl;
 
     features->lineFeature.length(egoMap_.size());
     EgoMap::const_iterator j = egoMap_.begin();
