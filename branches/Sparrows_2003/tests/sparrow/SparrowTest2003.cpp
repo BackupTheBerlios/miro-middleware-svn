@@ -307,12 +307,12 @@ int main(int argc, char * argv[])
 	ACE_OS::sleep(ACE_Time_Value(1));
 	break;*/
       case 's':      // setSpeedRot
-	cout << "servo number (0-1): " << flush;
-	cin >> num;
+	//cout << "servo number (0-1): " << flush;
+	//cin >> num;
 	cout << "servo position (deg): " << flush;
 	cin >> rot;
 	rot = deg2Rad(rot);
-	service.connection.setServo(num, rot);
+	service.connection.setServo(0, rot);
 	break;
       case 'q':
 	loop = false;
