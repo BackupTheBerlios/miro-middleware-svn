@@ -85,10 +85,10 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 all:  idl_reference c++_reference
 
 clean:
-	-rm -f idl/*.html idl/*.gif idl/*.css idl/inStalldox idl/$(MIROIDLTAG)
+	-rm -f idl/*.html idl/*.gif idl/*.css idl/installdox idl/$(MIROIDLTAG)
 	-rmdir idl
 	-rm -f $(DOXYCONF).idl
-	-rm -f cpp/*.html cpp/*.gif cpp/*.css cpp/inStalldox cpp/$(MIROCPPTAG)
+	-rm -f cpp/*.html cpp/*.gif cpp/*.css cpp/installdox cpp/$(MIROCPPTAG)
 	-rmdir cpp
 	-rm -f $(DOXYCONF).cpp
 
@@ -108,7 +108,7 @@ idl_reference: $(addsuffix /*.idl,$(basename $(IDL_DIRS)))
 	@echo "#-----------------------------------------" >> $(DOXYCONF).idl
 	@echo "INPUT = $(IDL_DIRS)                       " >> $(DOXYCONF).idl
 	doxygen $(DOXYCONF).idl
-	-(cd idl; inStalldox $(join $(addprefix -l, $(notdir $(LINKTOLOCAL))), $(addprefix @, $(dir $(LINKTOLOCAL)))) $(join $(addprefix -l, $(notdir $(LINKTOWEB))), $(addprefix @, $(dir $(LINKTOWEB)))))
+	-(cd idl; installdox $(join $(addprefix -l, $(notdir $(LINKTOLOCAL))), $(addprefix @, $(dir $(LINKTOLOCAL)))) $(join $(addprefix -l, $(notdir $(LINKTOWEB))), $(addprefix @, $(dir $(LINKTOWEB)))))
 
 c++_reference: $(addsuffix /*.h,$(basename $(HEADER_DIRS)))
 	cp $(DOXYCONFTMPL) $(DOXYCONF).cpp
@@ -126,4 +126,4 @@ c++_reference: $(addsuffix /*.h,$(basename $(HEADER_DIRS)))
 	@echo "#-----------------------------------------" >> $(DOXYCONF).cpp
 	@echo "INPUT = $(HEADER_DIRS)                    " >> $(DOXYCONF).cpp
 	doxygen $(DOXYCONF).cpp
-	-(cd cpp; inStalldox -l $(MIROIDLTAG)@../idl/ $(join $(addprefix -l, $(notdir $(LINKTOLOCAL))), $(addprefix @, $(dir $(LINKTOLOCAL)))) $(join $(addprefix -l, $(notdir $(LINKTOWEB))), $(addprefix @, $(dir $(LINKTOWEB)))))
+	-(cd cpp; installdox -l $(MIROIDLTAG)@../idl/ $(join $(addprefix -l, $(notdir $(LINKTOLOCAL))), $(addprefix @, $(dir $(LINKTOLOCAL)))) $(join $(addprefix -l, $(notdir $(LINKTOWEB))), $(addprefix @, $(dir $(LINKTOWEB)))))
