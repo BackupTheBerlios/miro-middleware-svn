@@ -13,7 +13,7 @@
 
 extern "C" {
 #include <linux/videodev.h>
-#include <pwc-8.11/2.4.21/pwc-ioctl.h>
+#include "pwc-ioctl.h"
 }
 
 
