@@ -35,10 +35,8 @@ namespace Miro
   // maximum wait time for cond.wait calls
   ACE_Time_Value GripperImpl::maxWait = ACE_Time_Value(0, 500000);
 
-  GripperImpl::GripperImpl(Pioneer::Connection& _connection,
-			 Pioneer::Consumer& _consumer) throw(Exception) :
-    connection(_connection),
-    consumer(_consumer)
+  GripperImpl::GripperImpl(Pioneer::Connection& _connection) throw(Exception) :
+    connection(_connection)
   {
     DBG(cout << "Constructing GripperImpl" << endl);
   }

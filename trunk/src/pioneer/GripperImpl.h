@@ -37,8 +37,7 @@ namespace Miro
     //-------------------------------------------------------------------------
   public:
     // Constructor/Destructor
-    GripperImpl(Pioneer::Connection& _connection,
-		    Pioneer::Consumer& _consumer) throw(Miro::Exception);
+    GripperImpl(Pioneer::Connection& _connection) throw(Miro::Exception);
     virtual ~GripperImpl();
 
     virtual void setGripPressure(short value)
@@ -62,7 +61,6 @@ namespace Miro
 
   protected:
     Pioneer::Connection&         connection; // encapsulating communication to hardware
-    Pioneer::Consumer&           consumer;   // asynchronous processing of pioneer output
     
     static ACE_Time_Value maxWait;
   };

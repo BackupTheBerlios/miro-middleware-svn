@@ -59,13 +59,13 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   pioneerConnection(reactorTask.reactor(), pPsosEventHandler, pPioneerConsumer),
 
   // Service initialization
-  motion(pioneerConnection, *pPioneerConsumer),
+  motion(pioneerConnection),
   stall(/*pioneerConnection*/),
   sonar(Pioneer::Parameters::instance()->sonarDescription, &structuredPushSupplier_),
   tactile(Pioneer::Parameters::instance()->tactileDescription, &structuredPushSupplier_),
-  canonPanTilt(pioneerConnection, *pPioneerConsumer,Pioneer::Parameters::instance()->cameraUpsideDown),
-  canonCamera(pioneerConnection, *pPioneerConsumer, canonPanTilt.getAnswer()),
-  gripper(pioneerConnection, *pPioneerConsumer)
+  canonPanTilt(pioneerConnection, Pioneer::Parameters::instance()->cameraUpsideDown),
+  canonCamera(pioneerConnection, canonPanTilt.getAnswer()),
+  gripper(pioneerConnection)
 {
   pOdometry = odometry._this();
   pMotion = motion._this();

@@ -47,11 +47,10 @@ namespace Canon
   ACE_Time_Value CanonPanTiltImpl::maxWait = ACE_Time_Value(0, 500000);
 
   CanonPanTiltImpl::CanonPanTiltImpl(Pioneer::Connection& _connection,
-			 Pioneer::Consumer& _consumer, bool _upsideDown) throw(Exception) :
+				     bool _upsideDown) throw(Exception) :
     answer(),
     pAnswer(&answer),
     connection(_connection),
-    consumer(_consumer),
     initialized(false),
     panPulseRatio(0.1125),
     tiltPulseRatio(0.1125),

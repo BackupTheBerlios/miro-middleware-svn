@@ -199,7 +199,7 @@ namespace Psos
 	  if (synch == 2) {
             parseSynchMessage(*msg);
 	    synch = 3;
-	    connection.writeMessage(MSG_COMOPEN);
+	    initDevice();
 	    synchCondition.broadcast();
 	    break;
 	  }
@@ -270,6 +270,21 @@ namespace Psos
       cout << "PSOS Synch Name: " << name << endl;
       cout << "PSOS Synch ClassName: " << classname << endl;
       cout << "PSOS Synch Subclass: " << subclass << endl;
+    }
+  }
+
+  void 
+  EventHandler::initDevice()
+  {
+    // open connection,
+    // start delivery of standard SIPs
+    connection.writeMessage(MSG_COMOPEN);
+	    
+
+    // if it's the Ppb request IOpac SIP
+    if (true || classname == "ppb") {
+      const Message IO_SIP(SF_COMIOREQ, (unsigned short)2);
+      connection.writeMessage(IO_SIP);
     }
   }
 };

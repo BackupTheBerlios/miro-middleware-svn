@@ -42,10 +42,9 @@ namespace Canon
   ACE_Time_Value CanonCameraImpl::maxWait = ACE_Time_Value(0, 500000);
 
   CanonCameraImpl::CanonCameraImpl(Pioneer::Connection& _connection,
-			 Pioneer::Consumer& _consumer,Canon::Answer *_pAnswer) throw(Exception) :
+				   Canon::Answer *_pAnswer) throw(Exception) :
     pAnswer(_pAnswer),
     connection(_connection),
-    consumer(_consumer),
     initialized(false)
   {
     DBG(cout << "Constructing CanonCameraImpl" << endl);

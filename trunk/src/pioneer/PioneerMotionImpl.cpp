@@ -41,11 +41,9 @@ namespace Pioneer
   ACE_Time_Value MotionImpl::maxWait = ACE_Time_Value(0, 500000);
 
   MotionImpl::MotionImpl(Connection& _connection,
-			 Consumer& _consumer,
 			 Miro::Odometry_ptr _pOdometry) throw(Exception) :
     Miro::DifferentialMotionImpl(Parameters::instance()->motion),
     connection(_connection),
-    consumer(_consumer),
     pOdometry(Miro::Odometry::_duplicate(_pOdometry)),
     params_(Parameters::instance())
   {

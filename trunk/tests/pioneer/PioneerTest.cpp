@@ -88,9 +88,9 @@ Service::Service() :
   pBatteryImpl(new Miro::BatteryImpl()),
   pConsumer(new Pioneer::Consumer(pRangeSensorImpl, NULL, pOdometryImpl, NULL, NULL, &canonPanTiltImpl)),
   pStallImpl(new Pioneer::StallImpl()),
-  canonPanTiltImpl(connection, *pConsumer,Pioneer::Parameters::instance()->cameraUpsideDown),
-  canonCamera(connection, *pConsumer,canonPanTiltImpl.getAnswer()),
-  gripper(connection, *pConsumer),
+  canonPanTiltImpl(connection, Pioneer::Parameters::instance()->cameraUpsideDown),
+  canonCamera(connection, canonPanTiltImpl.getAnswer()),
+  gripper(connection),
   pEventHandler(new Psos::EventHandler(pConsumer, connection)),
   connection(reactorTask.reactor(), pEventHandler, pConsumer)
 {}

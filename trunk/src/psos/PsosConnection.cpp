@@ -126,6 +126,12 @@ namespace Psos
     eventHandler->synch = 4;
     eventHandler->synchMutex.release();
       
+    // if it's the Ppb stop IOpac SIP
+    if (true || eventHandler->classname == "ppb") {
+      const Message IO_SIP(SF_COMIOREQ, (unsigned short)0);
+      writeMessage(IO_SIP);
+    }
+
     // closes the PSOS connection
     writeMessage(MSG_COMCLOSE);
     ACE_OS::sleep(ACE_Time_Value(1));

@@ -43,6 +43,7 @@ namespace Psos
     virtual void dispatchMessage();
 
     void parseSynchMessage(const Message& _message);
+    void initDevice();
 
     Connection& connection;
 

@@ -42,7 +42,7 @@ namespace Canon
   public:
     // Constructor/Destructor
     CanonPanTiltImpl(Pioneer::Connection& _connection,
-	       Pioneer::Consumer& _consumer, bool _upsideDown=false) throw(Miro::Exception);
+		     bool _upsideDown=false) throw(Miro::Exception);
     virtual ~CanonPanTiltImpl();
 
     //-------------------------------------------------------------------------
@@ -95,7 +95,6 @@ namespace Canon
     Answer * pAnswer;
 
     Pioneer::Connection&         connection; // encapsulating communication to hardware
-    Pioneer::Consumer&           consumer;   // asynchronous processing of pioneer output
     
     static ACE_Time_Value maxWait;
     bool initialized;

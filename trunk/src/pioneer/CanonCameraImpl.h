@@ -41,7 +41,6 @@ namespace Canon
   public:
     // Constructor/Destructor
     CanonCameraImpl(Pioneer::Connection& _connection,
-		    Pioneer::Consumer& _consumer,
 		    Answer * _pAnswer) throw(Miro::Exception);
     virtual ~CanonCameraImpl();
 
@@ -70,7 +69,6 @@ namespace Canon
     Answer * pAnswer;
 
     Pioneer::Connection&         connection; // encapsulating communication to hardware
-    Pioneer::Consumer&           consumer;   // asynchronous processing of pioneer output
     
     static ACE_Time_Value maxWait;
     bool initialized;
