@@ -252,7 +252,7 @@ namespace Sparrow
     *******************************/
 
     case CAN_R_KICK_RESET_2003:
-       MIRO_LOG_OSTR(LL_WARNING, "Kicker board rebooted (FW ver.  " << (int)message.byteData(0) << ")" );
+       MIRO_LOG_OSTR(LL_WARNING, "Kicker board rebooted (FW ver.  " << ((int)message.byteData(0)) << ")" );
        break;
 
     
@@ -368,7 +368,9 @@ namespace Sparrow
     }
       
     case CAN_R_PAN_RESET_2005:
-      MIRO_LOG_OSTR(LL_WARNING, "SparrowConsumer2003: Pan2005 Controller rebooted (FW ver. " << message.byteData(0) << ")" );
+      MIRO_LOG_OSTR(LL_WARNING,
+		    "SparrowConsumer2003: Pan2005 Controller rebooted (FW ver. " 
+		    << ((int) message.byteData(0)) << ")" );
       // register timer handler for pan calibration query
       // connection_->deferredQueryPanTicksPerDegree(ACE_Time_Value(5));
       break;
@@ -408,6 +410,7 @@ namespace Sparrow
   	  break;
 	case 0x0A:
 	  err = "Pan2005 severe fault";
+	  abort();
 	  break;
 	default:
 	  err = "Pan2005 unknown pan error.";

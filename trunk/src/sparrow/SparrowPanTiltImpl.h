@@ -33,7 +33,7 @@ namespace Sparrow
   class Parameters;
 
   class  PanTiltImpl : public virtual POA_Miro::SparrowPanTilt,
-		       public virtual Miro::PanImpl
+		       public Miro::PanImpl
   {
   public:
     //! Constructor
