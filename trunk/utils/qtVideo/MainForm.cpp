@@ -2,17 +2,15 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2002
+// (c) 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "MainForm.h"
 
-#include "video/VideoDevice.h"
 #include "video/VideoConfig.h"
 
 #include <qpainter.h>
