@@ -10,9 +10,19 @@
   <parameter name="FaulMotor" >
    <parameter name="LeftWheel">
      <parameter value="/dev/tts/3" name="Device" />
+     <parameter name="TtyParams" >
+       <parameter value="1" name="Xinenb" />
+       <parameter value="1" name="Xoutenb" />
+     </parameter>
+
    </parameter>
    <parameter name="RightWheel">
      <parameter value="/dev/tts/0" name="Device" />
+     <parameter name="TtyParams" >
+       <parameter value="1" name="Xinenb" />
+       <parameter value="1" name="Xoutenb" />
+     </parameter>
+
    </parameter>
    <parameter name="LeftTicksPerMM" value="113.6" />
    <parameter name="RightTicksPerMM" value="113.6" />
@@ -85,16 +95,16 @@
    </parameter>
    <parameter value="0.050000" name="ButtonsPollInterval" />
    <parameter value="1.0776" name="TransFactor" />
-   <parameter value="25.7" name="Deg2ServoTicksL" />
-   <parameter value="25.7" name="Deg2ServoTicksR" />
+   <parameter value="26" name="Deg2ServoTicksL" />
+   <parameter value="26" name="Deg2ServoTicksR" />
    <parameter value="1.000000" name="WatchdogTimeout" />
-   <parameter value="3750" name="Servo0MidPulse" />
+   <parameter value="3735" name="Servo0MidPulse" />
    <parameter value="200" name="MaxAccel" />
    <parameter value="2310" name="Diameter" />
    <parameter value="30720" name="MaxPower" />
    <parameter value="29" name="TicksL" />
    <parameter value="29" name="TicksR" />
-   <parameter value="true" name="ChannelSharing" />
+   <parameter value="false" name="ChannelSharing" />
    <parameter name="Motion" >
     <parameter value="180" name="MaxRotation" />
     <parameter value="-180" name="MinRotation" />
