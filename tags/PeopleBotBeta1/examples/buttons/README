@@ -1,0 +1,6 @@
+Example code using the battery interface.
+
+- ButtonsPoll uses the Buttons-Interface for queries.
+
+- ButtonsNotify uses the notification channel for
+  event based delivery.

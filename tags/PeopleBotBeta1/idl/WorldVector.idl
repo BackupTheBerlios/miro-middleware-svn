@@ -1,0 +1,34 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef WorldVector_idl
+#define WorldVector_idl
+
+module Miro
+{
+  //! Struct holding a vector, a two dimensional coordinate.
+  /**
+   * When our robots start flying we are really in trouble.
+   *
+   */
+  struct WorldVectorIDL
+  {
+    //! X coordinate in mm.
+    double dx;
+    //! Y coordinate in mm.
+    double dy;
+  };
+};
+
+#endif // worldVector_idl
+
+
+
+

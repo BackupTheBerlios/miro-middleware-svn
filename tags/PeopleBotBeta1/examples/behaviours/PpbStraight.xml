@@ -1,0 +1,18 @@
+<!DOCTYPE MiroPolicyConfig>
+<policy>
+ <actionpattern x="-129" y="-174" start="true" name="Straight" >
+  <behaviour name="AvoidOne" >
+   <parameter value="500" name="HaltDistance" />
+   <parameter value="600" name="LateralDistance" />
+   <parameter value="700" name="MinDistance" />
+   <parameter value="60" name="Rotation" />
+   <parameter value="Sonar" name="SensorName" />
+  </behaviour>
+  <behaviour name="Straight" >
+   <parameter value="0" name="Rotation" />
+   <parameter value="400" name="Translation" />
+  </behaviour>
+  <arbiter name="MotionArbiter" />
+ </actionpattern>
+</policy>
+

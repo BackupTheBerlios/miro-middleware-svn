@@ -1,0 +1,45 @@
+;; This buffer is for notes you don't want to save, and for Lisp evaluation.
+;; If you want to create a file, first visit that file with C-x C-f,
+;; then enter the text in that file's own buffer.
+
+PP * Current Pan position is 0
+TP * Current Tilt position is 0
+PO * Target Pan position is 0   
+TO * Target Tilt position is 0  
+PR * 185.1428 seconds arc per position
+TR * 185.1428 seconds arc per position 
+PN * Minimum Pan position is -3100
+PX * Maximum Pan position is 3101 
+TN * Minimum Tilt position is -904 
+TX * Maximum Tilt position is 601  
+L * Limit bounds are ENABLED (soft limits enabled)
+L * Limit bounds are DISABLED (hard limits only: use care)
+PS * Target Pan speed is 1000 positions/sec
+TS * Target Tilt speed is 1000 positions/sec
+PA * Pan acceleration is 2000 positions/sec^2  
+TA * Tilt acceleration is 2000 positions/sec^2
+PB * Current Pan base speed is 1000 positions/sec
+TB * Current Tilt base speed is 1000 positions/sec
+PU * Maximum Pan speed is 2902 positions/sec
+PL * Minimum Pan speed is 31 positions/sec
+TU * Maximum Tilt speed is 2902 positions/sec
+TL * Minimum Tilt speed is 31 positions/sec 
+R !T!T!P!P*
+E * Echoing OFF
+E * Echoing ON
+F * ASCII verbose mode
+F * ASCII terse mode
+// all following are not affected by terse:
+V * Pan-Tilt Controller v1.09.0b, (C)1996 Directed Perception, Inc., All Rights Reserved
+PH * Pan in LOW hold power mode
+PH * Pan in REGULAR hold power mode
+PH * Pan in OFF hold power mode
+TH * Tilt in OFF hold power mode
+TH * Tilt in LOW hold power mode
+TH * Tilt in REGULAR hold power mode
+PM * Pan in LOW move power mode
+PM * Pan in REGULAR move power mode
+PM * Pan in HIGH move power mode
+TM * Tilt in LOW move power mode
+TM * Tilt in REGULAR move power mode
+TM * Tilt in HIGH move power mode

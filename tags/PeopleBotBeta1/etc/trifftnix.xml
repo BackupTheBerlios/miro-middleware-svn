@@ -1,0 +1,160 @@
+<xml>
+  <Robot>
+    <robot>
+      <type>Sparrow99</type>      <!-- B21, Pioneer1, Sparrow99 -->
+      <name>trifftnix</name>
+      <speech>none</speech>
+      <pantilt>sparrowPan</pantilt> <!-- none or dpPanTilt -->
+      <laser>none</laser> <!-- none or SICK -->
+      <framegrabber>bttv8</framegrabber> <!-- none, bttv8 or meteor -->
+    </robot>
+  </Robot>
+  <Sparrow99>
+    <sparrowBoard>
+      <device>/dev/can/0</device>
+      <channelsharing>true</channelsharing>
+      <ticksl>29</ticksl>
+      <ticksr>29</ticksr>
+      <diameter>2350</diameter> <!-- 2350 (2310) -->
+    
+      <maxaccel>200</maxaccel>
+      <!--
+        <maxpower></maxpower>
+        <maxtranslvelocity></maxtransvelocity>
+        <maxrotvelocity></maxrotvelocity>
+
+        <stallthreshold></stallthreshold>
+        <stalla2></stalla2>
+        <stalla1></stalla1>
+        <stalla0></stalla0>
+      -->
+
+      <watchdogtimeout>2000</watchdogtimeout>
+      <buttonspollinterval>300</buttonspollinterval>
+
+      <servo0midpulse>3600</servo0midpulse>
+      <deg2servoticks>28.2</deg2servoticks>
+      <!--
+        <servo1midpulse></servo1midpulse>
+        <panswing>400</panswing>
+      -->
+      <panmsecperrad>500</panmsecperrad>
+
+      <writetable>false</writetable>
+      <infrared>
+         <scandescription>
+           <scantype>2</scantype>
+           <eventname>Infrared</eventname>
+           <sensorgroup height="400" distance="248" beta="0" gamma="0">
+             <description>
+               <minrange>40</minrange>
+               <maxrange>800</maxrange>
+               <focus>1</focus>
+             </description>
+             <sensor><alpha>180</alpha></sensor>
+             <sensor><alpha>150</alpha></sensor>
+             <sensor><alpha>120</alpha></sensor>
+             <sensor><alpha>90</alpha></sensor>
+             <sensor><alpha>60</alpha></sensor>
+             <sensor><alpha>30</alpha></sensor>
+             <sensor><alpha>0</alpha></sensor>
+             <sensor><alpha>-90</alpha></sensor>
+           </sensorgroup>
+         </scandescription>
+         <mask>1 1 0 1</mask>
+      </infrared>
+      <!-- for 20cm -->
+      <irscaling>
+	0 1.000 3 40
+	0 0.956 3 35
+	0 1.047 3 40
+	0 1.100 3 40
+	0 1.047 3 35
+	0 1.000 3 40
+	0 1.157 3 40
+	0 1.000 3 40
+      </irscaling>
+      <!-- for 40cm
+	<irscaling>
+	0 1.088 3 40
+	0 0.818 3 35
+	0 0.925 3 40
+	0 1.156 3 40
+	0 0.948 3 40
+	0 0.948 3 40
+	0 1.057 3 40
+	0 1.000 3 40
+	</irscaling>
+	-->
+    </sparrowBoard>
+    <pioneerBoard>
+      <device>/dev/tts/0</device>
+      <baudrate>9600</baudrate>
+      <databits>8</databits>
+      <stopbits>1</stopbits>
+      <parityenb>0</parityenb>
+      <sonar>
+         <scandescription>
+           <scantype>3</scantype>
+           <eventname>Sonar</eventname>
+           <sensorgroup height="400" distance="248" beta="0" gamma="0">
+             <description>
+               <minrange>100</minrange>
+               <maxrange>3000</maxrange>
+               <focus>30</focus>
+             </description>
+             <sensor><alpha>180</alpha></sensor>
+             <sensor><alpha>150</alpha></sensor>
+             <sensor><alpha>120</alpha></sensor>
+             <sensor><alpha>90</alpha></sensor>
+             <sensor><alpha>60</alpha></sensor>
+             <sensor><alpha>30</alpha></sensor>
+             <sensor><alpha>0</alpha></sensor>
+             <sensor><alpha>-90</alpha></sensor>
+           </sensorgroup>
+         </scandescription>
+         <mask>1 1 0 1</mask>
+      </sonar>
+    </pioneerBoard>
+    <Camera>
+      <ncx>786</ncx>
+      <nfx>384</nfx>
+      <dx>0.00625</dx>
+      <dy>0.0125</dy>
+      <cx>1.82316246e+02</cx>
+      <cy>1.36687831e+02</cy>
+      <sx>1</sx>
+      <f>3.986038</f>
+      <kappa>1.850948e-02</kappa>
+      <height>530</height>
+      <alpha>31.75</alpha>
+    </Camera>
+  </Sparrow99>
+  <Notification>
+    <logging>
+      <type_name>Infrared</type_name>
+      <type_name>Odometry</type_name>
+      <type_name>VisionData</type_name>
+      <type_name>LineSamples</type_name>
+      <type_name>GoalPosition</type_name>
+      <type_name>BallPosition</type_name>
+      <type_name>PatternChange</type_name>
+      <type_name>ArbitrateChange</type_name>
+      <type_name>PositionHypothesis</type_name>
+    </logging>
+    <NotifyMulticast>
+      <subscription>BallPosition</subscription>
+      <subscription>LocalizedPosition</subscription>
+      <messagetimeout>500</messagetimeout>
+      <multicastgroup>225.2.2.1:41006</multicastgroup>
+    </NotifyMulticast>
+  </Notification>
+  <B21>
+    <video>
+      <subfield>odd</subfield>
+      <palette>bgr</palette>
+    <!-- Parameter Section for Steffan -->
+
+    </video>
+  </B21>
+</xml>

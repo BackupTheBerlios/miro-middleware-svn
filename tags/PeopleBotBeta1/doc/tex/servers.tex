@@ -1,0 +1,519 @@
+\chapter{Available Services}
+\label{sec:services}
+
+The \miro framework abstracts the robots hardware devices as active
+services, that export the sensors and actuators functionality via CORBA
+interfaces that can be accessed transparently from other programs,
+probably running on totally different machines. Which services there
+are available depends on the individual robot type. To provide easy
+access to the services interface, each service registers itself under
+a standard name at the CORBA Naming Service. To allow multiple
+robots to be accessed at a time, each individual robot creates its
+one naming context within the Naming Service under which its services
+register. The default naming context is {\tt Miro}, but a given robot
+should register itself under its own name (for example {\tt stanislav}).
+The naming context to use can be specified at the
+command line of every service and example program via the
+{\tt -MiroNamingContext} option.
+
+
+\section{Command Line Options}
+\label{sec:command-line}
+
+For each service the following command line options can be specified:
+
+\begin{description}
+\item[-MiroConfigFile {\em fileName}:]
+  The services are widely configurable. These parameters are specified
+  in config files within the directory {\tt \$MIRO\_ROOT/etc}. The
+  file name is derived from the computers {\tt \$HOST} environment
+  variable: {\tt \$HOST}.xml. If you want to specify another
+  configuration file, you can do with this command line option.
+\item[-MiroNamingContext {\em contextName}:]
+  The short form of this option is \textbf{-MNC}.
+  As mentioned before all services register their interfaces at the
+  naming service within a naming context. The default naming context
+  is {\tt Miro}. In multi robot scenarios for instance it would be
+  necessary to assign a different naming context to each robot. This
+  can be done by this command line option. Note that since it is
+  necessary to specify none default naming context names also at the
+  client side, this option is also recognized by every client program.
+\item[-MiroRebindIOR:]
+  To prevent services from different robots to accidentally
+  deregister each other from the naming service, an already existing
+  entry in the naming service isn't unbound by a service, if it tries
+  to register under the same name. Anyhow, if you need to overwrite an
+  existing entry, specify this option at the command line.
+\end{description}
+
+
+\section{Individual Interfaces}
+
+In the following, we list the different services and their interface
+names in the naming service, all interfaces are registered within the
+specified naming context in the naming service. For multi robot
+scenarios the canonical naming convention for the individual robots
+naming contexts is the robots name. Don't get confused by the fact
+that many services are collocated within a single binary, while for
+others there exists a dedicated binary. Note that in general the
+specialized interfaces of individual robots register at the Naming
+Service under their ancestors name.  The interface documentation can
+be looked up within the \miro reference and in the \miro online
+documentation as well.  For some services specializations for
+individaul robot types do exist. Those are described in the subsequent
+sections.
+
+\begin{description}
+\item[Odometry:]
+  The motion service registers the {\tt Miro::Odometry} interface as
+  {\tt Odometry}. It encapsulates
+  the odometry (dead reckoning) sensor.
+\item[Motion:]
+  The motion service registers the {\tt Miro::Motion} interface as
+  {\tt Motion}.
+\item[RangeSensor:] The range sensor interface is the general
+  abstraction of all range sensor devices, such as sonar, laser range
+  finders etc. It offers a method for querying the sensors physical
+  configuration as well as the latest sensor reading.  See the {\tt
+    QtRangeSensor} program in the utils directory for an example on
+  how to use this information.  The range sensor interface becomes
+  registered at the naming service under the name of the actual
+  sensory device.
+  \begin{description}
+  \item[Sonar:] The sonar service registers as {\tt Sonar}.  It
+    provides an interface to the very common ultrasonic sensors for
+    robots.
+  \item[Infrared:] It registers as
+    {\tt Infrared}.
+  \item[Tactile:] Some robots have bumpers as some sort of ''it's too
+    late'' sensors.  Still it is better to stop when you crashed than
+    just moving on. It is registered as {\tt Tactile}.  Since it can
+    be interpreted as a (very limited) range sensor, it is also a {\tt
+      Miro::RangeSensor}.
+  \item[Laser:] The laser scanner service registers as {\tt Laser}. It
+    provides very accurate 180° distance measurements, with up to
+    48Hz.
+  \end{description}
+\item[Stall:]
+  Similar to the bumpers, the stall detection monitors the robots
+  motion and detects, when the robot is stuck in its movement. The
+  {\tt Miro::Stall} interface registers at the naming service as
+  {\tt Stall}.
+\item[Video:] The video service registers the {\tt Miro::Video}
+  interface as {\tt Video}. It provides camera images at a rate of up
+  to 25 images per second captured by frame grabber cards. Currently
+  supported are {\tt matrox meteor} and cards, that are supported
+  by {\em video for linux} (bttv8).  Since the bandwidth needed for
+  uncompressed image data transportation exceeds the capabilities of
+  most todays network devices and even memory copying can introduce
+  excessive overhead, the video service enables access
+  to the grabbed images via shared memory keys.
+\item[PanTilt:] Cameras often are mounted on top of a pan-tilt unit,
+  allowing the robot to look sideway while moving on in another
+  direction. Lightweight versions of such a device are panning or
+  tilting units.  The associated services register the
+  {\tt Miro::Pan}, {\tt Miro::Tilt} and {\tt Miro::PanTilt}
+  interfaces as {\tt Pan, Tilt} and {\tt PanTilt} at the naming
+  service.
+\item[Buttons:]
+  For simple user interaction, some robot types provide push
+  buttons. The buttons service registers the {\tt Miro::Buttons}
+  interface as {\tt Buttons}.
+\item[Speech:]
+  To provide a more natural way of communication, some robots are
+  equipped with speech synthesizer cards. The speech service registers
+  the {\tt Miro::Speech} interface as {\tt Speech}.
+\end{description}
+
+
+\section{Asynchronous Sensory Information}
+
+Another feature of the \miro framework is the asynchronous
+distribution of sensory data via the CORBA Notification Service
+\cite{OMG:Notify-Spec}. These event channels allow filtered and
+priority based event processing for time critical sensory information
+distribution under high load.  Therefore in every robots naming
+context exists a reference {\tt EventChannel} under which the
+robots notification service can be accessed.
+
+The usage of the notification service within the \miro framework is
+explained in more detail in \ref{sec:notify}. In the following we give
+only a brief description. The notification service allows simple event
+filtering on the bases of the domain name and the type name of the
+event. This way the individual consumer can easily subscribe for the
+messages it is interested in. As the domain name, the naming context
+is used within the \miro framework (note that in a multi robot
+scenario, an event channel can transport data from multiple robots).
+In the following the type names of the events and the data contained
+in the event are listed for the individual services:
+
+\begin{description}
+\item[Odometry:] The odometry servant and all derived services
+  generates periodical {\tt Miro::MotionStatusIDL} events), that
+  propagate the robots current position and velocities. The event type
+  name is {\tt Odometry}.
+\item[RangeSensor:] The range sensor servant and all derived services
+  can generate periodical range sensor events. The event type name is
+  that of the derived sensor interface (Sonar, Laser etc.). It is also
+  returned by the {\tt getScanDescription} method within the {\tt
+    ScanDescriptionIDL} struct. The event data is one of three types,
+  as also specified within {\tt Miro::SensorDescriptionIDL}.
+  \begin{description}
+  \item[Miro::RangeScanEventIDL] 
+    The data of a range sensor that acquires data in a continuous scan
+    pushes its data within this struct. (Currently, there does exist
+    no actual sensor that behaves in this way, but anyways...)
+  \item[Miro::RangeGroupEventIDL]
+    The data of a range sensor that acquires data groupwise
+    pushes its data within this struct. A range sensor group
+    normally is formed by a set of sensors that are mounted on the
+    same hight, pointing in different directions. The laser scanners
+    are organized that way.
+  \item[Miro::RangeBunchEventIDL] The data of a range sensor that
+    acquires data in a discontinuous fashion pushes its data within
+    this struct. Each sensor reading contains its own group id as
+    well as its index within that group. Especially sonar sensor
+    are organized that way, since neighbouring sensor mustn't be
+    fired simultaneously to minimize crosstalk.
+  \end{description}
+  The event type name is that of the actual sensor: {\tt Sonar}, {\tt
+    Laser}, {\tt Tactile}, etc. as also specified within {\tt
+    Miro::SensorDescriptionIDL}.
+  
+\item[Sonar:] The sonar service generates range sensor events with the
+  type name {\tt Sonar}. Note that the sonar sensors are fired
+  interleavingly to avoid crosstalk between them. Therefore the
+  payload of an event emitted by a sonar device is normally a
+  \texttt{RangeBunchEventIDL}. That way you have to analyze multiple
+  {\tt Sonar} messages to get a full sonar scan.
+\item[Infrared:] The infrared service generates range sensor events
+  with the type name {\tt Infrared}.
+\item[Tactile:] The tactile service generates range sensor events with
+  the type name {\tt Tactile}. Due to the hopefully low frequency
+  at which those events occur it might be better to listen to the
+  {\tt Tactile} events, instead of polling the tactile status. Tactile
+  devices usually contain a \texttt{RangeBunchEventIDL} struct.
+\item[Stall:] The stall service also emits events. These contain the
+  type name {\tt Stall}. For the event data see the individual
+  robots descriptions.  Due to the hopefully rare occasions at which
+  those events occur it might be better to listen to these events,
+  instead of polling the stall interface.
+\item[Buttons:] They also provide the event triggered communications
+  model that uses the event type {\tt Button}. The events payload is
+  of type {\tt ButtonStatusIDL}.
+\end{description}
+
+
+\section{\bXXI}
+
+The \bXXI robot has a large number of available sensors and actuators. The
+relevant binaries for its specialized services are:
+
+\begin{description}
+\item[B21Base:] This is a collection of the robots main services. This
+  binary incorporates the motion service as well as the sonar, tactile
+  and infrared services. Furthermore it gives access to the four
+  colored buttons, that are mounted on top of the robot. The
+  corresponding interfaces are:
+  \begin{itemize}
+  \item {\tt Miro::B21Motion} \\
+    The {\tt Miro::B21Motion} interface is derived from the
+    {\tt Miro::Motion} interface and gives access to the
+    specialized movement commands of the B21 robot. It registers under it
+    ancestors name {\tt Motion}.
+  \item {\tt Miro::Sonar} \\
+    The derived {\tt Miro::RangeSensor} interface registers itself
+    as {\tt Sonar}.
+  \item {\tt Miro::Infrared} \\
+    The derived {\tt Miro::RangeSensor} interface registers itself
+    as {\tt Infrared}.
+  \item {\tt Miro::Tactile} \\
+    The derived {\tt Miro::RangeSensor} interface registers itself
+    as {\tt Tactile}.
+  \item {\tt Miro::B21Buttons} \\
+    The B21 has four buttons, that can be used as a simple user
+    interface. The {\tt Miro::B21Buttons} interface is supported by
+    this service. It sends {\tt Miro::ButtonStatusIDL} events, if a
+    button is pressed or released.
+  \end{itemize}
+
+\item[DickLaserService:]
+  This is the service to access the SICK laser scanner. It supports
+  the {\tt Miro::RangeSensor} interface.
+\item[DtlkSpeech:]
+  This service lets you control the DoubleTalk Speech cards. The
+  interface is named {\tt Miro::Speech}
+\item[VideoService:]
+  It gives you access to the two frame grabbers of the robot. It
+  supports the {\tt Miro::Video} interface.
+\item[DpPantilt:]
+  It supports the {\tt Miro::DirectedPerceptionPanTilt} interface,
+  which is derived from {\tt Miro::PanTilt}. It therefore registers
+  itself as {\tt PanTilt}
+\end{description}
+
+Note that the B21 has two internal computers, to which the different
+sensors and actuators are attached. You have to start the relevant
+binaries at the correct computer. The sensory/actuatory distribution
+in our laboratory is as follows: Start B21Base and LaserService
+on the left computer, VideoService and DpPantilt and
+DtlkSpeeck on the right.
+
+
+\section{\sparrow}
+
+The \sparrow soccer robots have a similar diversity of sensors and
+actuators, but for efficiency and internal design reasons, they are
+grouped together in less binaries:
+
+\begin{description}
+\item[SparrowBase:]
+  Within this file the following services are grouped together:
+  Motion, Stall, Kicker, Buttons, Sonar, Infrared and Pantilt. The
+  corresponding interfaces are: 
+  \begin{itemize}
+  \item {\tt Miro::SparrowMotion} \\
+    The {\tt Miro::SparrowMotion} interface is derived from the
+    {\tt Miro::Motion} interface and gives access to the
+    specialized movement commands of the \sparrow robot. It registers
+    under it ancestors name {\tt Motion}.
+  \item {\tt Miro::Stall} \\
+    The {\tt Miro::Stall} interface is registered as {\tt Stall}.
+  \item {\tt Miro::Kicker} \\
+    Due to its purpose as football robot, the \sparrow robot has a
+    kicker, that can be accessed via this interface. It registers at
+    the naming service as {\tt Kicker}.
+  \item {\tt Miro::Buttons} \\
+    The {\tt Miro::Buttons} interface registers as
+    {\tt Buttons}.
+  \item {\tt Miro::Sonar} \\
+    The {\tt Miro::RangeSensor} interface registers itself
+    as {\tt Sonar}.
+  \item {\tt Miro::Infrared} \\
+    The {\tt Miro::RangeSensor} interface registers itself
+    as {\tt Infrared}.
+  \item {\tt Miro::PanTilt} \\
+    The {\tt Miro::SparrowPanTilt} interface is registered as
+    {\tt PanTilt}.
+  \end{itemize}
+
+  Note that the
+  stall service sends {\tt Miro::SparrowStallIDL} events.
+\item[VideoService:]
+  It gives you access to the frame grabber of the robot. It supports
+  the {\tt Miro::Video} interface.
+\end{description}
+
+
+\section{Pioneer}
+
+Due to the limited variety of sensors and actuators on the Pioneer robots, there exists only
+the most fundamental services for this robot.
+
+\begin{description}
+\item[PioneerBase:]
+  The following services are grouped together: Motion, Stall and Sonar.
+  The corresponding interfaces are: 
+  \begin{itemize}
+  \item {\tt Miro::PioneerMotion} \\
+    The {\tt Miro::PioneerMotion} interface is derived from the
+    {\tt Miro::Motion} interface and gives access to the
+    specialized movement commands of the Pioneer robot. It registers
+    under it ancestors name {\tt Motion}.
+  \item {\tt Miro::PioneerStall} \\
+    The {\tt Miro::PioneerStall} interface (derived from {\tt
+      Miro::Stall}) is registered as {\tt Stall}.
+  \item {\tt Miro::Sonar} \\
+    The {\tt Miro::RangeSensor} interface registers itself
+    as {\tt Sonar}.
+  \end{itemize}
+
+  Note that the stall service sends {\tt Miro::PioneerStallIDL} events.
+\end{description}
+
+
+\section{Frame Grabbers}
+
+The {\tt videoService} provides an interface to several frame grabber
+cards. All BTTV cards that are supported by the video for linux
+project are also supported here (namely the Bt848/849/878/879 based
+frame grabbers). The Matrox Meteor frame grabbers cards are also
+supported, but note that kernel drivers are only available for the
+older 2.2.x kernel series.
+
+The idl-interface that is used by the {\tt videoService} is {\tt
+  Miro::Video}. The Server registers itself as {\tt Video} in the
+Naming Service. You can get the last grabbed image immediately by use
+of the {\tt getImage()} method or wait for the next available image
+with the {\tt getWaitImage()}. What you get is a handle to the image
+that simply points to a memory range, where the color values for the
+image (or the intensity value for each pixel if it is a grayscale
+image) are listed for each single pixel. Additionally you get the
+image dimensions, an associated time stamp and the robots position at
+the moment of recording the picture.
+
+As always there is a configuration section in the xml-file called {\tt
+  video}, where the following parameters can be used:
+
+\begin{description}
+\item[device:] This section describes, which device-name the frame
+  grabber card uses.
+\item[grabber:] Determine which card your robot uses, either a {\tt
+    bttv} based card or a matrox {\tt meteor} card.
+\item[format:] With the format parameter you can choose, which
+  standard you camera uses. Either the (european) {\tt pal} format,
+  the (american) {\tt ntsc} format or the (asiatic) {\tt secam}
+  format. With the {\tt auto} option, the format is choosen
+  automatically.
+\item[source:] This parameter define, from which input source the
+  server should read. Possible choises are: {\tt composite1}, {\tt
+    composite2}, {\tt composite3}, {\tt svideo} and {\tt tuner}.
+  %%{\tt usb} or {\tt 1394}.
+\item[palette:] Palette can be one of the following: {\tt gray}, {\tt
+    rgb}, {\tt rgba}, {\tt bgr} or {\tt bgra}. \\
+  {\tt rgb} or {\tt bgr} indicates the 24-Bit mode, whereas {\tt rgba} and
+  {\tt bgra} are 32-Bit modes.
+\item[subfield:] With this parameter you can choose which subfields to
+  use: {\tt odd}, {\tt even} or {\tt all}.
+\item[width:] The {\tt width} that the image should have.
+\item[height:] The {\tt height} that the image should have.
+\item[connections:]
+\item[buffers:]
+\item[byteorder:] {\tt 0} means native mode, {\tt 1} means rgb.
+\end{description}
+
+Note, that not each card support each option and that not every
+combination of options can be used for each card. If in doubt, refer
+to the technical manual of your frame grabber card.
+
+The following example shows the configuration used for our hardware:
+
+\begin{lstlisting}[frame=tb]{}
+<video>
+  <device>/dev/v4l/video0</device>
+  <grabber>bttv</grabber>
+  <format>pal</format>
+  <source>composite1</source>
+  <palette>bgr</palette>
+  <subfield>odd</subfield>
+  <width>384</width>
+  <height>288</height>
+  <connections>16</connections>
+  <buffers>16</buffers>
+  <byteorder>1</byteorder>
+</video>
+\end{lstlisting}
+
+
+\section{SICK Laser Scanner}
+
+The {\tt sickLaserService} provides an interface to a laser range
+finder of type Sick PLS.
+%%pls200 (TODO: check this?).
+This sensor is connected to the controlling PC via a serial line. It
+is delivered either with a RS-232 or a RS-422 compliant interface.
+
+The idl-interface implemented by the {\tt sickLaserService} is
+{\tt Miro::Laser}, which is derived from
+{\tt Miro::RangeSensor}. The server can be driven in two different
+modes, either the sensor automatically provides a scan about 40 times
+a second, or every scan is polled, which results in a maximum scan
+frequency of 10 times a second. The second mode also allows to choose
+a different (i.e. lower) scan frequency. At the moment no other
+special features of the Sick PLS200 are supported.
+
+The configuration of this service is provided in xml, within the
+section {\tt sick}. The following parameters are understood:
+
+\begin{description}
+\item[device:]
+  The filename of the device which should be used.
+\item[baudrate:]
+  The baudrate for communication with the sensor,
+  possible values are: 9600, 19200, 38400 and 500000.
+\item[stdcrystal:]
+  For achieving the unusual baud rate of 500000
+  baud, we use a serial adapter, that is equipped with a 16MHz
+  crystal, instead of the standard 14.??MHz. Due to this reason, the
+  standard baud rates must be generated by modifying the divisor of
+  the UART. If you have an off-the-shelf serial adapter, use
+  {\tt true} here, you will probably not be able to use 500000 baud
+  then.
+\item[continousmode:]
+  If {\tt true} is provided for this
+  parameter the sensor will provide data automatically, about 40 times
+  a second. If {\tt false} is used, the service will poll a 
+  measurement after an interval that can be specified with the
+  following parameter.
+\item[pollintervall:]
+  The interval between two consecutive
+  measurements, measured in microseconds. This parameter has no effect
+  if continousmode is set to {\tt true}.
+\end{description}
+
+The following example shows the configuration used for our hardware:
+
+\begin{lstlisting}[frame=tb]{}
+<sick>
+  <device>/dev/laser</device>
+  <baudrate>500000</baudrate>
+  <continousmode>true</continousmode>
+  <stdcrystal>false</stdcrystal>
+  <pollintervall>100000</pollintervall><!-- pollinterval in usec -->
+</sick>
+\end{lstlisting}
+
+As the laser provides a specialization of a range sensor, we also
+provide a scandescription for it. See section \ref{scandescrption} for
+details. 
+
+
+\subsection{Possible Problems}
+
+Due to the unusual and high data rate of 500000~baud a special serial
+interface card is required. The card recommended by Sick provides a
+16550A compatible interface, for that reason the current
+implementation is able to use the card through the standard linux
+serial device drivers, which keeps the implementation of the service
+more portable. Unfortunately this introduces a big drawback: receiving
+up to 50000 characters per second, results in at least $50000/16=3125$
+interrupts per second, this is an enormous load. It is essential, that
+every interrupt is handled on time, because the sensor does neither
+support hardware, nor software flow control, and provides a packet
+with data every 25~ms. If you have the chance to use an interface card
+with a larger FIFO buffer than the standard 16 bytes, this will
+provide a large improvement in performance, stability and system
+reactivity.  We solved most of our stability problems, that were
+caused by lost packages without a larger FIFO: We enabled irqs
+throughout IDE interrupt processing (this may be extremely dangerous,
+depending on your configuration, see man page of {\em hdparm}). Another
+solution could be using {\em irqtune} to give the serial irq a higher
+priority, or using {\em RT-Linux}.
+
+\textbf{Due to the adaptions of the divisor for the serial line, the
+  {\tt SickLaserService} has to be suid root. If you use a standard
+  crystal, and you do not use 500000~baud, this is not necessary.}
+
+
+\section{DoubleTalk Speech Card}
+
+
+\section{Directed Perception Pantilt}
+
+%\section{Higher-level Servers}
+
+%In the current version of \miro, no high-level services are included.
+
+%\subsection{MapServer}
+
+%\subsection{RegionServer}
+
+%\subsection{SaliencyServer}
+
+%\subsection{ClassificationServer}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "miro_manual"
+%%% End: 

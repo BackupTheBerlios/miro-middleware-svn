@@ -1,0 +1,404 @@
+## -*- Makefile -*- ##########################################################
+##
+## This file is part of Miro (The Middleware For Robots)
+##
+## (c) 1999, 2000,, 2001
+## Department of Neural Information Processing, University of Ulm, Germany
+##
+## $Id$
+## $Date$
+## 
+##
+## Miro/src/miro/Makefile.MiroSvc
+##
+##############################################################################
+
+## you can toggle the debug and optimize flags at this point
+# debug = 1
+# optimize = 0
+
+## Only build static library 
+static_libs_only = 1
+
+## this is the name of the resulting library
+NAME     = miroSvc
+
+MAKEFILE = Makefile.MiroSvc
+LIB      = lib$(NAME).a
+SHLIB    = lib$(NAME).$(SOEXT)
+
+PARAMS_SRC = Parameters.xml
+
+## this I didn't understand yet
+# VPATH=.:Naming
+# ACE_SHLIBS = -lTAO
+
+#----------------------------------------------------------------------------
+#	Include macros
+#----------------------------------------------------------------------------
+
+include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
+include $(MIRO_ROOT)/include/makeinclude/macros.miro.GNU
+include $(ACE_ROOT)/include/makeinclude/macros.GNU
+
+#----------------------------------------------------------------------------
+#	Local macros
+#----------------------------------------------------------------------------
+
+## specify your library files here
+IDL_FILES =	Time \
+		Exception \
+		WorldPoint \
+		WorldVector \
+		Position \
+		Velocity \
+		MotionStatus \
+		Odometry \
+		Motion \
+		ClosedMotion \
+		SynchroMotion \
+		DifferentialMotion \
+		Stall \
+		Battery \
+		\
+		ScanDescription \
+		RangeEvent \
+		RangeSensor \
+		\
+		Pan \
+		Tilt \
+		PanTilt \
+		CanonPanTilt \
+		CanonCamera \
+		\
+		Buttons \
+		Video  \
+		\
+		BehaviourEngine \
+		Joystick
+
+ifneq (,$(findstring Deprecated,$(MIRO_COMPONENTS)))
+  IDL_FILES += 	ImageDefinitions \
+		Image
+endif
+ifneq (,$(findstring Pioneer1,$(MIRO_COMPONENTS)))
+  IDL_FILES += 	PioneerStall \
+		PioneerMotion \
+		Gripper
+endif
+ifneq (,$(findstring Sparrow99,$(MIRO_COMPONENTS)))
+  ifeq (,$(findstring Pioneer1, $(MIRO_COMPONENTS)))
+    IDL_FILES +=PioneerStall \
+		PioneerMotion \
+		Gripper
+  endif
+  IDL_FILES +=	Kicker \
+		SparrowPanTilt \
+		SparrowStall \
+		SparrowMotion
+endif
+ifneq (,$(findstring B21,$(MIRO_COMPONENTS)))
+  IDL_FILES +=	Laser \
+		DtlkSpeech \
+		DirectedPerceptionPanTilt \
+		B21Buttons \
+		B21Motion
+endif
+
+
+IDL_SRC = \
+        $(addsuffix S.cpp, $(IDL_FILES))
+
+FILES =	\
+	XmlParse \
+	DevParameters \
+	TtyParameters \
+	DevConnection \
+	DevEventHandler \
+	DevConsumer \
+	TtyConnection \
+	RangeSensorImpl \
+	OdometryImpl \
+	MotionImpl \
+	DifferentialMotionImpl \
+	BatteryImpl \
+	BehaviourEngineImpl \
+	MotionParameters
+
+
+DEFS  = $(addsuffix .h,$(FILES))
+LSRC  =  $(IDL_SRC) $(addsuffix .cpp,$(FILES))
+
+#----------------------------------------------------------------------------
+#	Include targets
+#----------------------------------------------------------------------------
+
+default: all
+
+depend: $(IDL_SRC)
+
+include $(TAO_ROOT)/rules.tao.GNU
+include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
+include $(ACE_ROOT)/include/makeinclude/rules.nonested.GNU
+include $(ACE_ROOT)/include/makeinclude/rules.lib.GNU
+include $(ACE_ROOT)/include/makeinclude/rules.local.GNU
+include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
+
+#----------------------------------------------------------------------------
+#       Local targets (and local hacks)
+#----------------------------------------------------------------------------
+
+# Extra dependencies not caught by make depend.
+
+.PRECIOUS: $(foreach file, $(IDL_FILES), $(foreach ext, $(IDL_EXT), $(file)$(ext))))
+
+%S.cpp: $(IDL_DIR)/$(patsubst %S.cpp, %, $@).idl
+
+realclean: clean
+	-$(RM) $(foreach file, $(IDL_FILES), $(foreach ext, $(IDL_EXT), $(file)$(ext)))
+
+
+# DO NOT DELETE THIS LINE -- g++dep uses it.
+# DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
+
+
+.obj/TimeS.o .obj/TimeS.o .obj/TimeS.o .obj/TimeS.o: TimeS.cpp TimeS.h TimeC.h TimeC.i TimeS.i
+
+.obj/ExceptionS.o .obj/ExceptionS.o .obj/ExceptionS.o .obj/ExceptionS.o: ExceptionS.cpp ExceptionS.h ExceptionC.h ExceptionC.i \
+ ExceptionS.i
+
+.obj/WorldPointS.o .obj/WorldPointS.o .obj/WorldPointS.o .obj/WorldPointS.o: WorldPointS.cpp WorldPointS.h WorldPointC.h \
+ WorldPointC.i WorldPointS.i
+
+.obj/WorldVectorS.o .obj/WorldVectorS.o .obj/WorldVectorS.o .obj/WorldVectorS.o: WorldVectorS.cpp WorldVectorS.h WorldVectorC.h \
+ WorldVectorC.i WorldVectorS.i
+
+.obj/PositionS.o .obj/PositionS.o .obj/PositionS.o .obj/PositionS.o: PositionS.cpp PositionS.h WorldPointS.h WorldPointC.h \
+ WorldPointC.i WorldPointS.i PositionC.h PositionC.i PositionS.i
+
+.obj/VelocityS.o .obj/VelocityS.o .obj/VelocityS.o .obj/VelocityS.o: VelocityS.cpp VelocityS.h VelocityC.h VelocityC.i \
+ VelocityS.i
+
+.obj/MotionStatusS.o .obj/MotionStatusS.o .obj/MotionStatusS.o .obj/MotionStatusS.o: MotionStatusS.cpp MotionStatusS.h TimeS.h TimeC.h \
+ TimeC.i TimeS.i PositionS.h WorldPointS.h WorldPointC.h WorldPointC.i \
+ WorldPointS.i PositionC.h PositionC.i PositionS.i VelocityS.h \
+ VelocityC.h VelocityC.i VelocityS.i MotionStatusC.h MotionStatusC.i \
+ MotionStatusS.i
+
+.obj/OdometryS.o .obj/OdometryS.o .obj/OdometryS.o .obj/OdometryS.o: OdometryS.cpp OdometryS.h ExceptionS.h ExceptionC.h \
+ ExceptionC.i ExceptionS.i PositionS.h WorldPointS.h WorldPointC.h \
+ WorldPointC.i WorldPointS.i PositionC.h PositionC.i PositionS.i \
+ MotionStatusS.h TimeS.h TimeC.h TimeC.i TimeS.i VelocityS.h \
+ VelocityC.h VelocityC.i VelocityS.i MotionStatusC.h MotionStatusC.i \
+ MotionStatusS.i OdometryC.h OdometryC.i OdometryS.i
+
+.obj/MotionS.o .obj/MotionS.o .obj/MotionS.o .obj/MotionS.o: MotionS.cpp MotionS.h ExceptionS.h ExceptionC.h \
+ ExceptionC.i ExceptionS.i VelocityS.h VelocityC.h VelocityC.i \
+ VelocityS.i MotionC.h MotionC.i MotionS.i
+
+.obj/ClosedMotionS.o .obj/ClosedMotionS.o .obj/ClosedMotionS.o .obj/ClosedMotionS.o: ClosedMotionS.cpp ClosedMotionS.h ExceptionS.h \
+ ExceptionC.h ExceptionC.i ExceptionS.i ClosedMotionC.h \
+ ClosedMotionC.i ClosedMotionS.i
+
+.obj/SynchroMotionS.o .obj/SynchroMotionS.o .obj/SynchroMotionS.o .obj/SynchroMotionS.o: SynchroMotionS.cpp SynchroMotionS.h MotionS.h \
+ ExceptionS.h ExceptionC.h ExceptionC.i ExceptionS.i VelocityS.h \
+ VelocityC.h VelocityC.i VelocityS.i MotionC.h MotionC.i MotionS.i \
+ SynchroMotionC.h SynchroMotionC.i SynchroMotionS.i
+
+.obj/DifferentialMotionS.o .obj/DifferentialMotionS.o .obj/DifferentialMotionS.o .obj/DifferentialMotionS.o: DifferentialMotionS.cpp DifferentialMotionS.h \
+ MotionS.h ExceptionS.h ExceptionC.h ExceptionC.i ExceptionS.i \
+ VelocityS.h VelocityC.h VelocityC.i VelocityS.i MotionC.h MotionC.i \
+ MotionS.i DifferentialMotionC.h DifferentialMotionC.i \
+ DifferentialMotionS.i
+
+.obj/StallS.o .obj/StallS.o .obj/StallS.o .obj/StallS.o: StallS.cpp StallS.h StallC.h StallC.i StallS.i
+
+.obj/BatteryS.o .obj/BatteryS.o .obj/BatteryS.o .obj/BatteryS.o: BatteryS.cpp BatteryS.h ExceptionS.h ExceptionC.h \
+ ExceptionC.i ExceptionS.i BatteryC.h BatteryC.i BatteryS.i
+
+.obj/ScanDescriptionS.o .obj/ScanDescriptionS.o .obj/ScanDescriptionS.o .obj/ScanDescriptionS.o: ScanDescriptionS.cpp ScanDescriptionS.h \
+ ScanDescriptionC.h ScanDescriptionC.i ScanDescriptionS.i
+
+.obj/RangeEventS.o .obj/RangeEventS.o .obj/RangeEventS.o .obj/RangeEventS.o: RangeEventS.cpp RangeEventS.h TimeS.h TimeC.h TimeC.i \
+ TimeS.i RangeEventC.h RangeEventC.i RangeEventS.i
+
+.obj/RangeSensorS.o .obj/RangeSensorS.o .obj/RangeSensorS.o .obj/RangeSensorS.o: RangeSensorS.cpp RangeSensorS.h ExceptionS.h \
+ ExceptionC.h ExceptionC.i ExceptionS.i ScanDescriptionS.h \
+ ScanDescriptionC.h ScanDescriptionC.i ScanDescriptionS.i \
+ RangeEventS.h TimeS.h TimeC.h TimeC.i TimeS.i RangeEventC.h \
+ RangeEventC.i RangeEventS.i RangeSensorC.h RangeSensorC.i \
+ RangeSensorS.i
+
+.obj/PanS.o .obj/PanS.o .obj/PanS.o .obj/PanS.o: PanS.cpp PanS.h ExceptionS.h ExceptionC.h ExceptionC.i \
+ ExceptionS.i PanC.h PanC.i PanS.i
+
+.obj/TiltS.o .obj/TiltS.o .obj/TiltS.o .obj/TiltS.o: TiltS.cpp TiltS.h ExceptionS.h ExceptionC.h ExceptionC.i \
+ ExceptionS.i TiltC.h TiltC.i TiltS.i
+
+.obj/PanTiltS.o .obj/PanTiltS.o .obj/PanTiltS.o .obj/PanTiltS.o: PanTiltS.cpp PanTiltS.h TiltS.h ExceptionS.h ExceptionC.h \
+ ExceptionC.i ExceptionS.i TiltC.h TiltC.i TiltS.i PanS.h PanC.h \
+ PanC.i PanS.i PanTiltC.h PanTiltC.i PanTiltS.i
+
+.obj/CanonPanTiltS.o .obj/CanonPanTiltS.o .obj/CanonPanTiltS.o .obj/CanonPanTiltS.o: CanonPanTiltS.cpp CanonPanTiltS.h PanTiltS.h TiltS.h \
+ ExceptionS.h ExceptionC.h ExceptionC.i ExceptionS.i TiltC.h TiltC.i \
+ TiltS.i PanS.h PanC.h PanC.i PanS.i PanTiltC.h PanTiltC.i PanTiltS.i \
+ CanonPanTiltC.h CanonPanTiltC.i CanonPanTiltS.i
+
+.obj/ButtonsS.o .obj/ButtonsS.o .obj/ButtonsS.o .obj/ButtonsS.o: ButtonsS.cpp ButtonsS.h ExceptionS.h ExceptionC.h \
+ ExceptionC.i ExceptionS.i TimeS.h TimeC.h TimeC.i TimeS.i ButtonsC.h \
+ ButtonsC.i ButtonsS.i
+
+.obj/VideoS.o .obj/VideoS.o .obj/VideoS.o .obj/VideoS.o: VideoS.cpp VideoS.h ExceptionS.h ExceptionC.h ExceptionC.i \
+ ExceptionS.i TimeS.h TimeC.h TimeC.i TimeS.i PositionS.h \
+ WorldPointS.h WorldPointC.h WorldPointC.i WorldPointS.i PositionC.h \
+ PositionC.i PositionS.i VideoC.h VideoC.i VideoS.i
+
+.obj/BehaviourEngineS.o .obj/BehaviourEngineS.o .obj/BehaviourEngineS.o .obj/BehaviourEngineS.o: BehaviourEngineS.cpp BehaviourEngineS.h \
+ BehaviourEngineC.h BehaviourEngineC.i BehaviourEngineS.i
+
+.obj/JoystickS.o .obj/JoystickS.o .obj/JoystickS.o .obj/JoystickS.o: JoystickS.cpp JoystickS.h JoystickC.h JoystickC.i \
+ JoystickS.i
+
+.obj/ImageDefinitionsS.o .obj/ImageDefinitionsS.o .obj/ImageDefinitionsS.o .obj/ImageDefinitionsS.o: ImageDefinitionsS.cpp ImageDefinitionsS.h \
+ ExceptionS.h ExceptionC.h ExceptionC.i ExceptionS.i TimeS.h TimeC.h \
+ TimeC.i TimeS.i PositionS.h WorldPointS.h WorldPointC.h WorldPointC.i \
+ WorldPointS.i PositionC.h PositionC.i PositionS.i ImageDefinitionsC.h \
+ ImageDefinitionsC.i ImageDefinitionsS.i
+
+.obj/ImageS.o .obj/ImageS.o .obj/ImageS.o .obj/ImageS.o: ImageS.cpp ImageS.h ImageDefinitionsS.h ExceptionS.h \
+ ExceptionC.h ExceptionC.i ExceptionS.i TimeS.h TimeC.h TimeC.i \
+ TimeS.i PositionS.h WorldPointS.h WorldPointC.h WorldPointC.i \
+ WorldPointS.i PositionC.h PositionC.i PositionS.i ImageDefinitionsC.h \
+ ImageDefinitionsC.i ImageDefinitionsS.i ImageC.h ImageC.i ImageS.i
+
+.obj/PioneerStallS.o .obj/PioneerStallS.o .obj/PioneerStallS.o .obj/PioneerStallS.o: PioneerStallS.cpp PioneerStallS.h StallS.h StallC.h \
+ StallC.i StallS.i PioneerStallC.h PioneerStallC.i PioneerStallS.i
+
+.obj/PioneerMotionS.o .obj/PioneerMotionS.o .obj/PioneerMotionS.o .obj/PioneerMotionS.o: PioneerMotionS.cpp PioneerMotionS.h \
+ DifferentialMotionS.h MotionS.h ExceptionS.h ExceptionC.h \
+ ExceptionC.i ExceptionS.i VelocityS.h VelocityC.h VelocityC.i \
+ VelocityS.i MotionC.h MotionC.i MotionS.i DifferentialMotionC.h \
+ DifferentialMotionC.i DifferentialMotionS.i ClosedMotionS.h \
+ ClosedMotionC.h ClosedMotionC.i ClosedMotionS.i PioneerMotionC.h \
+ PioneerMotionC.i PioneerMotionS.i
+
+.obj/KickerS.o .obj/KickerS.o .obj/KickerS.o .obj/KickerS.o: KickerS.cpp KickerS.h TimeS.h TimeC.h TimeC.i TimeS.i \
+ ExceptionS.h ExceptionC.h ExceptionC.i ExceptionS.i KickerC.h \
+ KickerC.i KickerS.i
+
+.obj/SparrowPanTiltS.o .obj/SparrowPanTiltS.o .obj/SparrowPanTiltS.o .obj/SparrowPanTiltS.o: SparrowPanTiltS.cpp SparrowPanTiltS.h PanS.h \
+ ExceptionS.h ExceptionC.h ExceptionC.i ExceptionS.i PanC.h PanC.i \
+ PanS.i SparrowPanTiltC.h SparrowPanTiltC.i SparrowPanTiltS.i
+
+.obj/SparrowStallS.o .obj/SparrowStallS.o .obj/SparrowStallS.o .obj/SparrowStallS.o: SparrowStallS.cpp SparrowStallS.h StallS.h StallC.h \
+ StallC.i StallS.i SparrowStallC.h SparrowStallC.i SparrowStallS.i
+
+.obj/SparrowMotionS.o .obj/SparrowMotionS.o .obj/SparrowMotionS.o .obj/SparrowMotionS.o: SparrowMotionS.cpp SparrowMotionS.h \
+ DifferentialMotionS.h MotionS.h ExceptionS.h ExceptionC.h \
+ ExceptionC.i ExceptionS.i VelocityS.h VelocityC.h VelocityC.i \
+ VelocityS.i MotionC.h MotionC.i MotionS.i DifferentialMotionC.h \
+ DifferentialMotionC.i DifferentialMotionS.i SparrowMotionC.h \
+ SparrowMotionC.i SparrowMotionS.i
+
+.obj/LaserS.o .obj/LaserS.o .obj/LaserS.o .obj/LaserS.o: LaserS.cpp LaserS.h ExceptionS.h ExceptionC.h ExceptionC.i \
+ ExceptionS.i TimeS.h TimeC.h TimeC.i TimeS.i PositionS.h \
+ WorldPointS.h WorldPointC.h WorldPointC.i WorldPointS.i PositionC.h \
+ PositionC.i PositionS.i RangeSensorS.h ScanDescriptionS.h \
+ ScanDescriptionC.h ScanDescriptionC.i ScanDescriptionS.i \
+ RangeEventS.h RangeEventC.h RangeEventC.i RangeEventS.i \
+ RangeSensorC.h RangeSensorC.i RangeSensorS.i LaserC.h LaserC.i \
+ LaserS.i
+
+.obj/DtlkSpeechS.o .obj/DtlkSpeechS.o .obj/DtlkSpeechS.o .obj/DtlkSpeechS.o: DtlkSpeechS.cpp DtlkSpeechS.h ExceptionS.h ExceptionC.h \
+ ExceptionC.i ExceptionS.i DtlkSpeechC.h DtlkSpeechC.i DtlkSpeechS.i
+
+.obj/DirectedPerceptionPanTiltS.o .obj/DirectedPerceptionPanTiltS.o .obj/DirectedPerceptionPanTiltS.o .obj/DirectedPerceptionPanTiltS.o: DirectedPerceptionPanTiltS.cpp \
+ DirectedPerceptionPanTiltS.h PanTiltS.h TiltS.h ExceptionS.h \
+ ExceptionC.h ExceptionC.i ExceptionS.i TiltC.h TiltC.i TiltS.i PanS.h \
+ PanC.h PanC.i PanS.i PanTiltC.h PanTiltC.i PanTiltS.i \
+ DirectedPerceptionPanTiltC.h DirectedPerceptionPanTiltC.i \
+ DirectedPerceptionPanTiltS.i
+
+.obj/B21ButtonsS.o .obj/B21ButtonsS.o .obj/B21ButtonsS.o .obj/B21ButtonsS.o: B21ButtonsS.cpp B21ButtonsS.h ButtonsS.h ExceptionS.h \
+ ExceptionC.h ExceptionC.i ExceptionS.i TimeS.h TimeC.h TimeC.i \
+ TimeS.i ButtonsC.h ButtonsC.i ButtonsS.i B21ButtonsC.h B21ButtonsC.i \
+ B21ButtonsS.i
+
+.obj/B21MotionS.o .obj/B21MotionS.o .obj/B21MotionS.o .obj/B21MotionS.o: B21MotionS.cpp B21MotionS.h SynchroMotionS.h MotionS.h \
+ ExceptionS.h ExceptionC.h ExceptionC.i ExceptionS.i VelocityS.h \
+ VelocityC.h VelocityC.i VelocityS.i MotionC.h MotionC.i MotionS.i \
+ SynchroMotionC.h SynchroMotionC.i SynchroMotionS.i ClosedMotionS.h \
+ ClosedMotionC.h ClosedMotionC.i ClosedMotionS.i OdometryS.h \
+ PositionS.h WorldPointS.h WorldPointC.h WorldPointC.i WorldPointS.i \
+ PositionC.h PositionC.i PositionS.i MotionStatusS.h TimeS.h TimeC.h \
+ TimeC.i TimeS.i MotionStatusC.h MotionStatusC.i MotionStatusS.i \
+ OdometryC.h OdometryC.i OdometryS.i B21MotionC.h B21MotionC.i \
+ B21MotionS.i
+
+.obj/XmlParse.o .obj/XmlParse.o .obj/XmlParse.o .obj/XmlParse.o: XmlParse.cpp XmlParse.h Angle.h Exception.h
+
+.obj/DevParameters.o .obj/DevParameters.o .obj/DevParameters.o .obj/DevParameters.o: DevParameters.cpp DevParameters.h Parameters.h
+
+.obj/TtyParameters.o .obj/TtyParameters.o .obj/TtyParameters.o .obj/TtyParameters.o: TtyParameters.cpp TtyParameters.h DevParameters.h \
+ Parameters.h
+
+.obj/DevConnection.o .obj/DevConnection.o .obj/DevConnection.o .obj/DevConnection.o: DevConnection.cpp DevConnection.h \
+ DevEventHandler.h \
+ DevParameters.h Parameters.h \
+ Exception.h
+
+.obj/DevEventHandler.o .obj/DevEventHandler.o .obj/DevEventHandler.o .obj/DevEventHandler.o: DevEventHandler.cpp \
+ DevEventHandler.h \
+ DevConsumer.h DevMessage.h \
+ Exception.h
+
+.obj/DevConsumer.o .obj/DevConsumer.o .obj/DevConsumer.o .obj/DevConsumer.o: DevConsumer.cpp Exception.h \
+ DevConsumer.h DevMessage.h
+
+.obj/TtyConnection.o .obj/TtyConnection.o .obj/TtyConnection.o .obj/TtyConnection.o: TtyConnection.cpp TtyConnection.h \
+ DevEventHandler.h \
+ TtyParameters.h \
+ DevParameters.h Parameters.h \
+ Exception.h
+
+.obj/RangeSensorImpl.o .obj/RangeSensorImpl.o .obj/RangeSensorImpl.o .obj/RangeSensorImpl.o: RangeSensorImpl.cpp RangeSensorImpl.h \
+ RangeSensorS.h ExceptionS.h ExceptionC.h ExceptionC.i ExceptionS.i \
+ ScanDescriptionS.h ScanDescriptionC.h ScanDescriptionC.i \
+ ScanDescriptionS.i RangeEventS.h TimeS.h TimeC.h TimeC.i TimeS.i \
+ RangeEventC.h RangeEventC.i RangeEventS.i RangeSensorC.h \
+ RangeSensorC.i RangeSensorS.i Synch.h Exception.h \
+ StructuredPushSupplier.h
+
+.obj/OdometryImpl.o .obj/OdometryImpl.o .obj/OdometryImpl.o .obj/OdometryImpl.o: OdometryImpl.cpp OdometryImpl.h OdometryS.h \
+ ExceptionS.h ExceptionC.h ExceptionC.i ExceptionS.i PositionS.h \
+ WorldPointS.h WorldPointC.h WorldPointC.i WorldPointS.i PositionC.h \
+ PositionC.i PositionS.i MotionStatusS.h TimeS.h TimeC.h TimeC.i \
+ TimeS.i VelocityS.h VelocityC.h VelocityC.i VelocityS.i \
+ MotionStatusC.h MotionStatusC.i MotionStatusS.i OdometryC.h \
+ OdometryC.i OdometryS.i Synch.h TimeHelper.h \
+ TimeC.h StructuredPushSupplier.h
+
+.obj/MotionImpl.o .obj/MotionImpl.o .obj/MotionImpl.o .obj/MotionImpl.o: MotionImpl.cpp MotionImpl.h MotionS.h ExceptionS.h \
+ ExceptionC.h ExceptionC.i ExceptionS.i VelocityS.h VelocityC.h \
+ VelocityC.i VelocityS.i MotionC.h MotionC.i MotionS.i \
+ MotionParameters.h Parameters.h Synch.h
+
+.obj/DifferentialMotionImpl.o .obj/DifferentialMotionImpl.o .obj/DifferentialMotionImpl.o .obj/DifferentialMotionImpl.o: DifferentialMotionImpl.cpp \
+ DifferentialMotionImpl.h DifferentialMotionS.h MotionS.h ExceptionS.h \
+ ExceptionC.h ExceptionC.i ExceptionS.i VelocityS.h VelocityC.h \
+ VelocityC.i VelocityS.i MotionC.h MotionC.i MotionS.i \
+ DifferentialMotionC.h DifferentialMotionC.i DifferentialMotionS.i \
+ MotionImpl.h MotionParameters.h Parameters.h Synch.h
+
+.obj/BatteryImpl.o .obj/BatteryImpl.o .obj/BatteryImpl.o .obj/BatteryImpl.o: BatteryImpl.cpp BatteryImpl.h BatteryS.h ExceptionS.h \
+ ExceptionC.h ExceptionC.i ExceptionS.i BatteryC.h BatteryC.i \
+ BatteryS.i
+
+.obj/BehaviourEngineImpl.o .obj/BehaviourEngineImpl.o .obj/BehaviourEngineImpl.o .obj/BehaviourEngineImpl.o: BehaviourEngineImpl.cpp BehaviourEngineImpl.h \
+ BehaviourEngineS.h BehaviourEngineC.h BehaviourEngineC.i \
+ BehaviourEngineS.i Policy.h Synch.h
+
+.obj/MotionParameters.o .obj/MotionParameters.o .obj/MotionParameters.o .obj/MotionParameters.o: MotionParameters.cpp MotionParameters.h \
+ Parameters.h Exception.h
+
+# IF YOU PUT ANYTHING HERE IT WILL GO AWAY
