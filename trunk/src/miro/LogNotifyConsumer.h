@@ -14,9 +14,7 @@
 #include "StructuredPushConsumer.h"
 #include "SvcParameters.h"
 
-#include <ace/Mem_Map.h>
-#include <ace/High_Res_Timer.h>
-#include <tao/CDR.h>
+#include "LogWriter.h"
 
 #include <string>
 
@@ -90,11 +88,9 @@ namespace Miro
     std::string fileName_;
 
     Miro::Mutex mutex_;
-    //! Memory mapped file, holding the log.
-    ACE_Mem_Map memMap_;
-    //! CDR stream to log to.
-    TAO_OutputCDR ostr_;
-    size_t totalLength_;
+
+    //! The log device.
+    LogWriter logWriter_;
 
     //! End the server if logfile is full.
     /** Default is false. */

@@ -33,18 +33,11 @@ namespace Miro
     domainName_(_domainName),
     fileName_((_fileName.size() == 0)? defaultFileName() : _fileName),
     mutex_(),
-    memMap_(fileName_.c_str(), parameters_.maxFileSize,
-	    O_RDWR | O_CREAT | O_TRUNC, ACE_DEFAULT_FILE_PERMS, PROT_RDWR, 
-	    ACE_MAP_SHARED),
-    ostr_((char*)memMap_.addr(), memMap_.size()),
-    totalLength_(0),
+    logWriter_(fileName_, false, _parameters),
     keepAlive_(_keepAlive),
     history_(NULL),
     nTimes_(0)
   {
-    if (memMap_.addr() == MAP_FAILED)
-      throw CException(errno, std::strerror(errno));
-
     CosNotification::EventTypeSeq added;
     added.length(parameters_.typeName.size() + parameters_.event.size());
 
@@ -67,13 +60,6 @@ namespace Miro
   LogNotifyConsumer::~LogNotifyConsumer()
   {
     delete history_;
-
-    // close the memory mapped file
-    memMap_.close();
-
-    // truncate the file to the actual length
-    if (ACE_OS::truncate(fileName_.c_str(), totalLength_) == -1)
-      throw CException(errno, std::strerror(errno));
   }
 
   void
@@ -83,23 +69,12 @@ namespace Miro
   {
     ACE_hrtime_t start = ACE_OS::gethrtime ();
 
-    TimeIDL time;
-    timeA2C(ACE_OS::gettimeofday(), time);
-
-    Guard guard(mutex_);
+    Miro::Guard guard(mutex_);
 
     if (connected_) {
-    
-      ostr_ << time;
-      ostr_ << notification;
-
-      if (ostr_.total_length() <= parameters_.maxFileSize) {
-	totalLength_ = ostr_.total_length();
-      }
-      else {
-	MIRO_LOG_OSTR(Log::LL_NOTICE, 
-		      "Disconnecting event log consumer since max file size reached:" << 
-		      totalLength_ );
+      if (!logWriter_.logEvent(ACE_OS::gettimeofday(), notification)){
+	MIRO_LOG(Log::LL_NOTICE, 
+		 "Disconnecting event log consumer since max file size reached." );
 	connected_ = false;
 	disconnect();
 	if (!keepAlive_)

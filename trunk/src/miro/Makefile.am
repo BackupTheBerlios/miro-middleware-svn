@@ -109,6 +109,10 @@ sources2 = \
 	DevConsumer.cpp \
 	TtyConnection.cpp \
 	LogNotifyConsumer.cpp \
+	LogHeader.cpp \
+	LogTypeRepository.cpp \
+	LogReader.cpp \
+	LogWriter.cpp \
 	RangeSensorImpl.cpp \
 	OdometryImpl.cpp \
 	MotionImpl.cpp \

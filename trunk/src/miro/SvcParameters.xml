@@ -100,6 +100,7 @@
     </config_item>
 
     <config_item name="LogNotify" parent="Miro::Config" instance="true">
+      <config_parameter name="TCRFileSize" type="unsigned long" default="1024*1024" measure="bytes" />
       <config_parameter name="MaxFileSize" type="unsigned long" default="150*1024*1024" measure="bytes" />
       <config_parameter name="TypeName" type="std::vector&lt;std::string&gt;" />
       <config_parameter name="event" type="std::vector&lt;EventParameters&gt;" />

@@ -13,6 +13,17 @@
 
 namespace Miro
 {
+  /**
+   * This operator pipes a Miro::Exception to a specified ostream.
+   *
+   * @return Reference to the ostream.
+   */
+  std::ostream& operator << (std::ostream& _ostr, const Exception& x) 
+  {
+    x.printToStream(_ostr);
+    return _ostr;
+  }
+
   /** Noop implementation. */
   Exception::Exception() throw() : 
     Super(),
@@ -36,19 +47,21 @@ namespace Miro
    * @return A pointer to the string describing the exception
    * reason.  This string is set when the exception is thrown.
    */
-  char const * Exception::what () const throw() 
+  char const * 
+  Exception::what () const throw() 
   {
     return what_.c_str (); 
   }
 
   /**
-   * This operator pipes a Miro::Exception to a specified ostream.
+   * This method pipes a Miro::Exception to a specified ostream.
    *
    * @return Reference to the ostream.
    */
-  std::ostream& operator << (std::ostream& ostr, const Exception& x) 
+  void 
+  Exception::printToStream(std::ostream& _ostr) const
   {
-    return ostr << x.what();
+    _ostr << what();
   }
 
   /**
@@ -74,14 +87,15 @@ namespace Miro
   }
 
   /**
-   * This operator pipes a Miro::CException to a specified ostream.
+   * This method pipes a Miro::CException to a specified ostream.
    *
    * @return Reference to the ostream.
    */
-  std::ostream& operator << (std::ostream& ostr, const CException& x) 
+  void
+  CException::printToStream(std::ostream& _ostr) const
   {
-    return ostr << x.what() << " - " 
-		<< x.error_num() << ": " << std::strerror(x.error_num());
+    _ostr << what() << " - " 
+	  << error_num() << ": " << std::strerror(error_num());
   }
 
   /**

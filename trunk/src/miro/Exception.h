@@ -2,14 +2,14 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-#ifndef miroException_h
-#define miroException_h
+#ifndef miro_Exception_h
+#define miro_Exception_h
 
 #include <exception>
 #include <string>
@@ -22,6 +22,7 @@
   public: \
     N() throw(): Super() {}  \
     N(std::string const& _what) throw() : Super(_what) {} \
+    virtual ~N() throw() {} \
   }
 
 //! The namespace of the Miro project.
@@ -39,6 +40,13 @@
  */
 namespace Miro
 {
+  // forward declarations
+  class Exception;
+
+  //! Debug output stream operator.
+  std::ostream& operator << (std::ostream& ostr, const Exception& x);
+
+
   //!The root of the server side exception hierarchy.
   /**
    * This is the root class of the exceptions used within Miro Servers.
@@ -55,17 +63,20 @@ namespace Miro
     //! Initializing constructor
     Exception(std::string const& _what) throw();
     //! Virtual dtor.
-    ~Exception() throw();
+    virtual ~Exception() throw();
 
     //! Standart information hook.
     virtual char const * what() const throw();
 
+  protected:
+    //! Stream output method.
+    void printToStream(std::ostream& _ostr) const;
+
   private:
     std::string const what_;
-  };
 
-  //! Output operator.
-  std::ostream& operator << (std::ostream& ostr, const Exception& x);
+    friend std::ostream& operator << (std::ostream& ostr, const Exception& x);
+  };
 
   //! Class to throw C errors as exceptions.
   class CException : public Exception 
@@ -74,16 +85,17 @@ namespace Miro
   public:
     //! Initializing constructor.
     CException(int _error, const std::string& _what) throw();
-    ~CException() throw();
+    virtual ~CException() throw();
     //! C error number.
     virtual int error_num() const throw();
+
+  protected:
+    //! Stream output method.
+    void printToStream(std::ostream& _ostr) const;
 
   private:
     int error_;
   };
-
-  //! Output operator.
-  std::ostream& operator << (std::ostream& ostr, const CException& x);
 
   //!  Class to throw errors of the ACE library as exceptions.
   /**
@@ -96,10 +108,10 @@ namespace Miro
   public:
     //! Initializing constructor.
     ACE_Exception(int _errno, const std::string& _what) throw();
-    ~ACE_Exception() throw();
+    virtual ~ACE_Exception() throw();
   };
 }
-#endif
+#endif // miro_Exception_h
 
 
 
