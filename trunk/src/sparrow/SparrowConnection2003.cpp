@@ -118,10 +118,10 @@ namespace Sparrow
   Connection2003::setServo(unsigned char servo, double rad)
   {
     CanMessage message;
-    message.length(3);
+    message.length(5);
     message.id(CAN_SERVO_GO_2003);
     message.byteData(0, servo);                         // servo number
-    message.shortData(1, (servo)? rad2servo1Ticks(rad) : rad2servo0Ticks(rad));
+    message.longData(1, (servo)? rad2servo1Ticks(rad) : rad2servo0Ticks(rad));
     write(message);
   }
 
