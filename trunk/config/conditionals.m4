@@ -22,10 +22,10 @@ AC_ARG_ENABLE(
 	ac_request_b21=no)
 
 AC_ARG_ENABLE(
-	Pioneer1,
-	AC_HELP_STRING([--enable-Pioneer1], [Turn on Pioneer1 support (default on)]),
-	ac_request_pioneer1=$enableval,
-	ac_request_pioneer1=yes)
+	Pioneer,
+	AC_HELP_STRING([--enable-Pioneer], [Turn on Pioneer support (default on)]),
+	ac_request_pioneer=$enableval,
+	ac_request_pioneer=yes)
 
 AC_ARG_ENABLE(
 	Sparrow99,

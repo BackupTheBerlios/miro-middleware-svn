@@ -49,7 +49,7 @@ AC_DEFUN(AC_SEARCH_TAO_LOCAL,
 		LDFLAGS="$LDFLAGS $ACE_LDFLAGS $ACE_LIBS -lTAO"
 		CPPFLAGS="$CPPFLAGS $ACE_CPPFLAGS -I$1 -I$1/orbsvcs"
 		CFLAGS="$CFLAGS $ACE_CFLAGS -I$1 -I$1/orbsvcs"
-		PATH="$PATH:$1/TAO_IDL"
+		PATH="$1/TAO_IDL:$PATH"
 	else
 		LDFLAGS="$LDFLAGS $ACE_LDFLAGS $ACE_LIBS -lTAO"
 		CPPFLAGS="$CPPFLAGS $ACE_CPPFLAGS"
@@ -88,9 +88,10 @@ AC_DEFUN(AC_SEARCH_TAO_LOCAL,
 	fi
 
 # tao_idl test
-	AC_CHECK_PROG(ac_taobindir, tao_idl, yes)
-	if test "x$ac_taobindir" = xyes ; then
-		AC_SUBST(TAO_BINDIR, "$1/TAO_IDL")
+	# AC_CHECK_PROG(ac_taobindir, tao_idl, yes)
+	AC_PATH_PROG(ac_taobindir, tao_idl, no)
+	if test "x$ac_taobindir" != xno ; then
+		AC_SUBST(TAO_BINDIR, "$ac_taobindir")
 	else
 		AC_MSG_ERROR(TAO not (properly) installed. Source tarball and CVS at: http://www.cs.wustl.edu/~schmidt/ACE.html)
 	fi

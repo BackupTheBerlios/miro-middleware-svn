@@ -80,7 +80,7 @@ AC_DEFUN(AC_SEARCH_QT_LOCAL,
 		CFLAGS="$CFLAGS -I$2"
 	fi
 	if test "$3"; then
-		PATH="$PATH:$3"
+		PATH="$3:$PATH"
 	fi
 
 	AC_LANG_PUSH(C++)
@@ -117,9 +117,10 @@ AC_DEFUN(AC_SEARCH_QT_LOCAL,
 	fi
 
 # moc test
-	AC_CHECK_PROG(ac_qtbindir, moc, yes)
-	if test "x$ac_qtbindir" = xyes; then
-		AC_SUBST(QT_BINDIR, "$3")
+	# AC_CHECK_PROG(ac_qtbindir, moc, yes)
+	AC_PATH_PROG(ac_qtbindir, moc, no)
+	if test "x$ac_qtbindir" != xno; then
+		AC_SUBST(QT_BINDIR, "$ac_qtbindir")
 	else
 		AC_MSG_ERROR(Qt not (properly) installed. Get a (free) recent version from: http://www.trolltech.com)
 	fi
