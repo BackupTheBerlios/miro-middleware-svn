@@ -14,8 +14,8 @@
 #include "base/Parameters.h"
 #include "panTilt/Parameters.h"
 #include "msp/Parameters.h"
-#include "laser/Parameters.h"
-#include "video/Parameters.h"
+//#include "laser/Parameters.h"
+//#include "video/Parameters.h"
 #include "sparrow/Parameters.h"
 #include "pioneer/Parameters.h"
 #include "../notify/Parameters.h"
@@ -31,8 +31,8 @@ main(int argc, char *argv[])
   Miro::NotifyMulticast::Parameters * multicastParameters =  Miro::NotifyMulticast::Parameters::instance();
   Base::Parameters * baseParameters =  Base::Parameters::instance();
   Msp::Parameters * mspParameters =  Msp::Parameters::instance();
-  Laser::Parameters * laserParameters =  Laser::Parameters::instance();
-  Video::Parameters * videoParameters =  Video::Parameters::instance();
+  //  Laser::Parameters * laserParameters =  Laser::Parameters::instance();
+  //  Video::Parameters * videoParameters =  Video::Parameters::instance();
   Miro::CameraParameters * cameraParameters =  Miro::CameraParameters::instance();
   Sparrow::Parameters * sparrowParameters = Sparrow::Parameters::instance();
   Pioneer::Parameters * pioneerParameters = Pioneer::Parameters::instance();
@@ -70,10 +70,10 @@ main(int argc, char *argv[])
 	g = (*mspParameters) >>= f;
       }
       else if (name == "Laser") {
-	g = (*laserParameters) >>= f;
+	//	g = (*laserParameters) >>= f;
       }
       else if (name == "Video") {
-	g = (*videoParameters) >>= f;
+	//	g = (*videoParameters) >>= f;
       }
       else if (name == "Camera") {
 	g = (*cameraParameters) >>= f;

@@ -32,8 +32,6 @@ MakeConfig_LDADD = \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS) \
-	$(top_builddir)/src/laser/Parameters.o \
-	$(top_builddir)/src/video/Parameters.o \
 	../notify/Parameters.o
 
 all-local:

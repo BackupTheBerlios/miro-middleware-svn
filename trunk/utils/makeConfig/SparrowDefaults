@@ -1,1 +1,1 @@
--s Robot -p Robot -s Sparrow99 -p SparrowBoard -p PioneerBoard -s Video -p Video -p Camera -s Notification -p Logging -p NotifyMulticast
+-s Robot -p Robot -s Sparrow99 -p SparrowBoard -p PioneerBoard -p Camera -s Notification -p Logging -p NotifyMulticast
