@@ -72,6 +72,8 @@ namespace Psos
 
   static const char SF_COMBSTALL  = 0x2c; // stall on bump
 
+  static const char SF_COMTCM2    = 0x2d; // P2OS 1.6+: TCM2 module commands
+
   static const char SF_COMESTOP   = 0x37; // emergency stop
   static const char SF_COMESTALL  = 0x38; // emergency button mode
 

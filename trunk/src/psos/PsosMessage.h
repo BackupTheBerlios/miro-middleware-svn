@@ -83,6 +83,7 @@ namespace Psos
     unsigned short PTU() const { return *(unsigned short *)(&buffer_[19]); }
     unsigned short flags() const { return *(unsigned short *)(&buffer_[19]); }
     unsigned char say() const { return buffer_[21]; }
+    unsigned char compass() const { return buffer_[21]; }
 
     int sonarReadings() const { return buffer_[22]; }
     int sonarNumber(int index) const { return buffer_[23 + index * 3]; }
@@ -105,7 +106,23 @@ namespace Psos
 //       (unsigned short const *)(&buffer_[12]); 
 //    }
   };
-  
+
+  class TCM2Message : public Message
+  {
+  public:
+    short heading() const { return *(short *)(&buffer_[4]); }
+    short pitch() const { return *(short *)(&buffer_[6]); }
+    short roll() const { return *(short *)(&buffer_[8]); }
+    short x() const { return *(short *)(&buffer_[10]); }
+    short y() const { return *(short *)(&buffer_[12]); }
+    short z() const { return *(short *)(&buffer_[14]); }
+    short temperature() const { return *(short *)(&buffer_[16]); }
+    short error() const { return *(short *)(&buffer_[18]); }
+    unsigned char h_score() const { return buffer_[20]; }
+    unsigned char v_score() const { return buffer_[21]; }
+    short m_score() const { return *(short *)(&buffer_[22]); }
+  };
+
   // inline functions
   inline
   unsigned short 
