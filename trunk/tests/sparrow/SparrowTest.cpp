@@ -74,7 +74,7 @@ int main(int argc, char * argv[])
   // Config file processing
   Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
   config->setSection("Sparrow99");
-  config->getParameters("sparrowBoard", *params);
+  config->getParameters("SparrowBoard", *params);
   delete config;
 
 #ifdef DEBUG
