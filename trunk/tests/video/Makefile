@@ -24,7 +24,7 @@ LDLIBS += -lmiro -lTAO_CosNaming -lTAO
 
 ## program to be built
 ## there has to exist a source file with the same name (mybinary.cc)
-BIN 	= TestVideoClient
+BIN 	= TestVideoClient TestRemoteVideoClient
 
 ## additional files
 FILES	=

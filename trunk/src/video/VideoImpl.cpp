@@ -120,24 +120,28 @@ void VideoImpl::getWaitImage(Miro::ImageHandleIDL & img) throw()
 	  }
 	}
 
+SubImageDataIDL *
+VideoImpl::exportWaitSubImage (CORBA::Long x, CORBA::Long y)
+   ACE_THROW_SPEC ((CORBA::SystemException, Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut))
+	{
+	int             bufferSize = pConsumer->getPaletteSize() * (int)x * (int)y;
+        unsigned char   * buffer   = new unsigned char[bufferSize];
+        SubImageDataIDL * subImage = new SubImageDataIDL(bufferSize, bufferSize, buffer, 1);
+	try
+	  {
+	  pConsumer->getWaitNextSubImage(buffer, (int)x, (int)y);
+	  }
+	catch (...)
+	  {
+	  throw Miro::EDevIO();
+	  }
+        return subImage;
+	}
+
 void VideoImpl::checkImageHandle(const Miro::ImageHandleIDL & img)
 	{
 	if ((img.handle < 0) || (img.handle >= iMaxConnections) || (pHandleArray[img.handle].key == -1) ||
 	    (img.key != pHandleArray[img.handle].key) || (pShmDataArray[img.handle] == NULL))
 		throw Miro::EOutOfBounds();
 	}
-
-  SubImageDataIDL * 
-  VideoImpl::exportSubImage (CORBA::Long x, CORBA::Long y)
-    ACE_THROW_SPEC ((CORBA::SystemException, Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut))
-  {
-    unsigned char * buffer = new unsigned char[x * y]; // groesse des buffers in []
-
-    // hier kopieren wir alles in den buffer
-
-    SubImageDataIDL * subImage = new  SubImageDataIDL(x * y, x * y, buffer, 1);
-    // parameter:
-    // max groese, derzeitige groesse, ptr, memory ownership von buffer geht an subImage
-    return subImage;
-  }
 };

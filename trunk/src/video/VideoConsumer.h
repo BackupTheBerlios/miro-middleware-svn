@@ -40,10 +40,14 @@ namespace Video
     virtual void cancel();
 
     int getImageSize() const;
+    int getPaletteSize() const;
     void getCurrentImage(void*);
     void getWaitNextImage(void*);
+    void getWaitNextSubImage(unsigned char*, const int, const int);
 
   protected:
+        void shrinkImageData(unsigned char*, unsigned char*, int, int);
+
   	void copyImageData(void*, const void*);
 
 	void copy(void*, const void*, const int);

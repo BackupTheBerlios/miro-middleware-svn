@@ -70,7 +70,8 @@ module Miro
      */
     void getWaitImage(inout ImageHandleIDL img) raises(EOutOfBounds, EDevIO, ETimeOut);
 
-    SubImageDataIDL exportSubImage(in long x, in long y) raises(EOutOfBounds, EDevIO, ETimeOut);
+    //! Get all the pixels of the current image, downsized to width=x height=y
+    SubImageDataIDL exportWaitSubImage(in long x, in long y) raises(EOutOfBounds, EDevIO, ETimeOut);
   };
 };
 

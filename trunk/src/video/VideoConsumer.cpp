@@ -150,6 +150,29 @@ int Consumer::getImageSize() const
 	return connection.videoDevice.getImageSize();
 	}
 
+int Consumer::getPaletteSize() const
+	{
+	switch (connection.videoDevice.getDevicePalette())
+	        {
+		case paletteGrey:
+		        return 1;
+			break;
+			
+		case paletteRGB:
+		case paletteBGR:
+		        return 3;
+			break;
+			
+		case paletteRGBA:
+		case paletteABGR:
+		        return 4;
+			break;
+			
+		default:
+		        throw Miro::Exception("can't get palette size: illegal image palette");
+		}
+	}
+
 void Consumer::getCurrentImage(void* data)
 	{
 	Miro::Guard guard(mutex);
@@ -173,6 +196,75 @@ void Consumer::getWaitNextImage(void* data)
 	if (cond.wait(&timeout) == -1)
 		throw Miro::ETimeOut();
 	copyImageData(data, pCurrentImageData);
+	}
+
+void Consumer::getWaitNextSubImage(unsigned char * dst, const int reqWidth, const int reqHeight)
+	{
+	Miro::Guard guard(mutex);
+	ACE_Time_Value	timeout(ACE_OS::gettimeofday());
+	timeout += maxWait;
+	if (cond.wait(&timeout) == -1)
+		throw Miro::ETimeOut();
+
+        unsigned char * src = new unsigned char[getPaletteSize()
+					       * connection.videoDevice.getImageWidth()
+					       * connection.videoDevice.getImageHeight()];
+
+	copyImageData(src, pCurrentImageData);
+        shrinkImageData(dst, src, reqWidth, reqHeight);
+
+	delete src;
+	}
+
+void Consumer::shrinkImageData(unsigned char *dst, unsigned char *src, int reqWidth, int reqHeight)
+        {
+	int srcWidth  = connection.videoDevice.getImageWidth();
+	int srcHeight = connection.videoDevice.getImageHeight();
+
+	// do not expand
+        reqWidth      = (reqWidth  > srcWidth)  ? srcWidth  : reqWidth;
+        reqHeight     = (reqHeight > srcHeight) ? srcHeight : reqHeight;
+
+	// src pixels per requested pixel
+	double intervalWidth  = (double)srcWidth  / (double)reqWidth;
+	double intervalHeight = (double)srcHeight / (double)reqHeight;
+
+	const int paletteSize = getPaletteSize();
+	unsigned long * tileValueSum = new unsigned long[paletteSize];
+
+	for (int req_h = 0; req_h < reqHeight; ++req_h)
+	        {
+		double low_h = (double)(req_h)     * intervalHeight;
+		double up_h  = (double)(req_h + 1) * intervalHeight;
+		
+		for (int req_w = 0; req_w < reqWidth; ++req_w)
+		        {
+			double low_w = (double)(req_w)     * intervalWidth;
+			double up_w  = (double)(req_w + 1) * intervalWidth;
+
+			long num_in_tile = 0;
+			for (int palette = 0; palette < paletteSize; ++palette)
+				tileValueSum[palette] = 0;
+			
+			for (int src_h = (int)low_h; src_h < (int)up_h; ++src_h)
+			        {
+				for (int src_w = (int)low_w; src_w < (int)up_w; ++src_w)
+				        {
+					for (int palette = 0; palette < paletteSize; ++palette)
+					        tileValueSum[palette] += src[paletteSize * (src_h * srcWidth + src_w) + palette];
+					num_in_tile += 1;
+					}
+				}
+
+			for (int palette = 0; palette < paletteSize; ++palette)
+			        {
+				tileValueSum[palette] /= num_in_tile;
+				dst[paletteSize * (req_h * reqWidth + req_w) + palette] = (unsigned char)tileValueSum[palette];
+				}
+			}
+		}
+
+	delete tileValueSum;
 	}
 
 void Consumer::copyImageData(void* dst, const void* src)
