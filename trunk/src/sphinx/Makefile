@@ -42,7 +42,7 @@ INCLDIRS += -I$(FESTIVAL_ROOT)/src/include -I$(SPEECH_TOOLS_ROOT)/include
 BIN 	= SphinxSpeech
 
 ## additional files
-FILES	=	Festival \
+FILES	=	FestivalSpeech \
 		SphinxSpeechImpl \
 		SphinxSpeechTask
 

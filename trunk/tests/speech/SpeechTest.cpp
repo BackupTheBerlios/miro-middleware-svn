@@ -27,6 +27,7 @@ using namespace Miro;
 int main(int argc, char *argv[])
 {
   int rc = 0;
+  int value=0;
   char c, buffer[256];
 
   // Initialize server daemon.
