@@ -292,7 +292,8 @@ PatternXML::setStartPattern()
       Item * item = itemFromListViewItem(i);
       if (item != this) {
 	PatternXML * pattern = dynamic_cast<PatternXML *>(item);
-	pattern->startPattern(false);
+	if (pattern != NULL)
+	  pattern->startPattern(false);
       }
       i = i->nextSibling();
     }
