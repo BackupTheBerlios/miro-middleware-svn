@@ -106,18 +106,13 @@ OdometryConsumer::OdometryConsumer(EventChannel_ptr _consumerAdmin,
   mutex(),
   condition(mutex)
 {
-  EventTypeSeq added(1);
-  EventTypeSeq removed(1);
+  EventTypeSeq added;
   added.length(1);
-  removed.length(1);
 
   added[0].domain_name =  CORBA::string_dup(domainName);
   added[0].type_name = CORBA::string_dup("Odometry");
 
-  removed[0].domain_name =  CORBA::string_dup("*");
-  removed[0].type_name = CORBA::string_dup("*");
-
-  consumerAdmin_->subscription_change(added, removed);
+  setSubscriptions(added);
 }
 
 OdometryConsumer::~OdometryConsumer()
