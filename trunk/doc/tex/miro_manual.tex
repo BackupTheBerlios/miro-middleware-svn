@@ -121,12 +121,13 @@ we summarize here our experience with the ACE/TAO installation.
 
 At the time of this writing we suggest always to use the
 latest beta of ACE/TAO instead of the latest stable version ---
-currently 5.1.16/1.1.16. TAO is under rapid development and \miro
+currently 5.2.2/1.2.2. TAO is under rapid development and \miro
 utilizes some of its latest features (like the CORBA Notification
 Service).
 
-The options that should be set additionally in the
-{\tt platform\_macros.GNU} file are the following:
+The options that should be set additionally in the {\tt
+  platform\_macros.GNU} file (to be found under
+$<$ACE-directory$>$/include/makeinclude/) are the following:
 
 \begin{lstlisting}[frame=tb]{}
 debug=0
@@ -139,6 +140,13 @@ following:
 \begin{lstlisting}[frame=tb]{}
 DEFFLAGS=-DACE_USE_RCSID=0
 ACE_COMPONENTS=FOR_TAO
+\end{lstlisting}
+
+If you want to build \miro only for a specific platform, insert the desired
+name of one of the following supported platforms: B21, Pioneer1 or Sparrow99
+
+\begin{lstlisting}[frame=tb]{}
+MIRO_COMPONENTS=B21
 \end{lstlisting}
 
 We also recommend to read the installation instructions provided
@@ -157,20 +165,23 @@ export LD_LIBRARY_PATH=$ACE_ROOT/ace/:$LD_LIBRARY_PATH
 \end{lstlisting}
 %%$
 
-Note that if you use a non-standart Qt installation, also the
+Note that if you use a non-standard Qt installation, also the
 environment variable \texttt{QTDIR} has to point to the correct
 installation directory of the Qt library.
+
 
 \subsection{\miro installation}
 
 \miro additionally needs the environment variable MIRO\_ROOT to be set
-to the appropriate root directory of your \miro installation. For the
-bash shell once again add the following lines to your {\tt .bashrc}
-file:
+to the appropriate root directory of your \miro installation.  The
+variable MIRO\_LOG indicates the directory where log-files are stored
+automatically.  For the bash shell once again add the following lines
+to your {\tt .bashrc} file:
 
 \begin{lstlisting}[frame=tb]{}
 export MIRO_ROOT=<path to Miro>
-export QTDIR=<path to qt >= 2.3>
+export MIRO_LOG=<path to log directory>
+export QTDIR=<path to qt>= 2.3>
 export LD_LIBRARY_PATH=$MIRO_ROOT/lib/:$LD_LIBARAY_PATH
 \end{lstlisting}
 
@@ -178,13 +189,14 @@ After that, change to the \miro root directory and type {\tt make}. There
 is no additional configuration needed, as the configuration of ACE
 (compiler settings etc.) is inherited in the makefiles of \miro.
 
+
 \section{\miro Directory Structure}
 
 \miro comes with the full source code and documentation as well as a
-set of test programs and examples that should facilitate your first steps when
-writing your own programs. To help you navigate through the directory
-tree of a \miro distribution, we give a brief overview of the directories
-present in the \miro root directory:
+set of test programs and examples that should facilitate your first
+steps when writing your own programs. To help you navigate through the
+directory tree of a \miro distribution, we give a brief overview of
+the directories present in the \miro root directory:
 
 \begin{description}
 \item[bin:]
@@ -197,10 +209,8 @@ present in the \miro root directory:
   manual and in the directory {\tt html} resides the auto generated
   online documentation of all \miro classes and their methods
   (the starting page of this documentation resides at: \\
-  {\tt \$MIRO\_ROOT/doc/html/index.html}).
-\item[demo:]
-  Source code for some more sophisticated demonstrations of the use of
-  \miro's services. See the {\tt README} file in this directory.
+  {\tt \$MIRO\_ROOT/doc/html/idl/index.html} respectivly \\
+  {\tt \$MIRO\_ROOT/doc/html/cpp/index.html}).
 \item[etc:]
   Config files for the individual robots.
 \item[examples:]
