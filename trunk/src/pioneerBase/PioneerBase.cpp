@@ -45,7 +45,7 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   id_(),
   ec_(notifyFactory_->create_channel(initialQos_, initialAdmin_, id_)),
   mcAdapter_((Pioneer::Parameters::instance()->channelSharing)?
-	     new Miro::NMC::Adapter(argc, argv, this, ec_) :
+	     new Miro::NMC::Adapter(argc, argv, this, ec_, namingContextName) :
 	     NULL),
   structuredPushSupplier_(ec_.in(), namingContextName),
 
