@@ -2,7 +2,7 @@
   <config>
     <section name="Robot">
       <parameter name="Robot">
-	<parameter value="roadrunner" name="Name" />
+	<parameter value="speedy" name="Name" />
 	<parameter value="Sparrow2003" name="Type" />
       </parameter>
     </section>
@@ -379,7 +379,7 @@
       <parameter name="FilterYUV422Save" >
 	<parameter value="true" name="Activate" />
 	<parameter value="50" name="Interval" />
-	<parameter value="roadrunner_" name="Basename" />
+	<parameter value="speedy_" name="Basename" />
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
 	  <parameter value="VideoBla" name="Name" />
