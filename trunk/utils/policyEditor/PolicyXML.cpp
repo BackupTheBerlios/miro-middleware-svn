@@ -132,6 +132,13 @@ PolicyXML::renameTransitionTo(QString const& _oldTarget, QString const& _newTarg
     if (pattern != NULL) {
       pattern->renameTransitionTo(_oldTarget, _newTarget);
     }
+    else {
+      DownTransitionXML * transition = dynamic_cast<DownTransitionXML *>(item);
+      if (transition != NULL) {
+	if (transition->target() == _oldTarget)
+	  transition->setTarget(_newTarget);
+      }
+    }
     i = i->nextSibling();
   }
 }
