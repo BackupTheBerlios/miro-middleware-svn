@@ -62,8 +62,11 @@ main(int argc, char *argv[])
     Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
     config->setSection("Robot");
     config->getParameters("Robot", *robotParameters);
+
     config->setSection("Sparrow99");
     config->getParameters("SparrowBoard", *pSparrowParameters);
+
+
     if (pSparrowParameters->goalie) {
       pPioneerParameters = Pioneer::Parameters::instance();
       config->setSection("ActiveMedia");
