@@ -172,120 +172,41 @@
     </section>
 
     <section name="Video" >
-      <parameter name="Video" >
-	<parameter value="yuv422" name="Palette" />
-	<parameter value="640" name="Width" />
-	<parameter value="480" name="Height" />
-
-	<parameter name="Filter">
-	  <parameter value="Device1394" name="Name" />
-	  <parameter value="Device1394" name="Type" />
-	  <parameter name="Successor" >
-	    <parameter name="Filter" >
-	      <parameter value="FilterYUV422Save" name="Name" />
-	      <parameter value="FilterYUV422Save" name="Type" />
-	    </parameter>
-	    <parameter name="Filter" >
-	      <parameter value="FilterYUV422toRGBIpp" name="Name" />
-	      <parameter value="FilterYUV422toRGBIpp" name="Type" />
-	      <parameter name="Successor" >
-		<parameter name="Filter" >
-		  <parameter value="FilterRGBtoGray" name="Name" />
-		  <parameter value="FilterRGBtoGray" name="Type" />
-		  <parameter name="Successor" >
-		    <parameter name="Filter" >
-		      <parameter value="FilterGraytoCanny" name="Name" />
-		      <parameter value="FilterGraytoCanny" name="Type" />
-		    </parameter>
-		  </parameter>
-		</parameter>
-		<parameter name="Filter" >
-		  <parameter value="FilterRGBtoIndex" name="Name" />
-		  <parameter value="FilterRGBtoIndex" name="Type" />
-		  <parameter name="Successor" >
-		    <parameter name="Filter" >
-		      <parameter value="FilterIndextoIndex" name="Name" />
-		      <parameter value="FilterIndextoIndex" name="Type" />
-		    </parameter>
-		  </parameter>
-		</parameter>
-	      </parameter>
-	    </parameter>
-	  </parameter>
-	</parameter>
-      </parameter>
 
       <parameter name="Camera" >
 	<parameter value="0.060000" name="Latency" />
 	<parameter value="32.5" name="Alpha" />
 	<parameter value="595" name="Height" />
 
-	<parameter value="640" name="Nfx" />
-	<parameter value="640" name="Ncx" />
-	<parameter value="0.0074" name="Dx" />
-	<parameter value="0.0074" name="Dy" />
-	<parameter value="0.0074" name="Dpx" />
-	<parameter value="0.0074" name="Dpy" />
-	<parameter value="314.220872" name="Cx" />
-	<parameter value="236.765342" name="Cy" />
-	<parameter value="1" name="Sx" />
-	<parameter value="4.907339" name="F" />
-	<parameter value="1.034753e-02" name="Kappa" />
-	<parameter value="0" name="P1" />
-	<parameter value="0" name="P2" />
-	<parameter value="-123.461165" name="Tx" />
-	<parameter value="1.472170" name="Ty" />
-	<parameter value="357.369807" name="Tz" />
-	<parameter value="-44.810556" name="Rx" />
-	<parameter value="-13.709717" name="Ry" />
-	<parameter value="-3.980549" name="Rz" />
-	<parameter value="0.969165" name="R1" />
-	<parameter value="0.215876" name="R2" />
-	<parameter value="-0.118811" name="R3" />
-	<parameter value="-0.067440" name="R4" />
-	<parameter value="0.696135" name="R5" />
-	<parameter value="0.714737" name="R6" />
-	<parameter value="0.237003" name="R7" />
-	<parameter value="-0.684685" name="R8" />
-	<parameter value="0.689228" name="R9" />
+	<parameter value=" 6.4000000000e+02" name="Ncx" />
+	<parameter value=" 6.4000000000e+02" name="Nfx" />
+	<parameter value=" 7.4000000000e-03" name="Dx" />
+	<parameter value=" 7.4000000000e-03" name="Dy" />
+	<parameter value=" 7.4000000000e-03" name="Dpx" />
+	<parameter value=" 7.4000000000e-03" name="Dpy" />
+	<parameter value=" 3.1458946442e+02" name="Cx" />
+	<parameter value=" 2.3325182529e+02" name="Cy" />
+	<parameter value=" 1.0000000000e+00" name="Sx" />
+	<parameter value=" 2.8379931108e+00" name="F" />
+	<parameter value=" 3.3646352107e-02" name="Kappa" />
+	<parameter value="-5.6952478324e+01" name="Tx" />
+	<parameter value="-2.6903496465e+01" name="Ty" />
+	<parameter value=" 1.0914246726e+02" name="Tz" />
+	<parameter value="-5.1352218184e-01" name="Rx" />
+	<parameter value="-1.3500297485e-01" name="Ry" />
+	<parameter value="-5.1928845436e-02" name="Rz" />
+	<parameter value=" 0.0000000000e+00" name="P1" />
+	<parameter value=" 0.0000000000e+00" name="P2" />
+	<parameter value=" 9.8956519682e-01" name="R1" />
+	<parameter value=" 1.1124028416e-01" name="R2" />
+	<parameter value="-9.1576855280e-02" name="R3" />
+	<parameter value="-5.1433218159e-02" name="R4" />
+	<parameter value=" 8.6641359008e-01" name="R5" />
+	<parameter value=" 4.9667103298e-01" name="R6" />
+	<parameter value=" 1.3459325879e-01" name="R7" />
+	<parameter value="-4.8677827613e-01" name="R8" />
+	<parameter value=" 8.6309418060e-01" name="R9" />
       </parameter>
-
-      <!--
-      <parameter name="Camera" >
-      <parameter value="0.060000" name="Latency" />
-      <parameter value="32.5" name="Alpha" />
-      <parameter value="600" name="Height" />
-
-      <parameter value="320" name="Nfx" />
-      <parameter value="480" name="Ncx" />
-      <parameter value="0.0074" name="Dx" />
-      <parameter value="0.0074" name="Dy" />
-      <parameter value="4.9333333333e-03" name="Dpx" />
-      <parameter value="7.4000000000e-03" name="Dpy" />
-      <parameter value="342.103274" name="Cx" />
-      <parameter value="278.475116" name="Cy" />
-      <parameter value="1" name="Sx" />
-      <parameter value="8.886231" name="F" />
-      <parameter value="1.617006e-02" name="Kappa" />
-      <parameter value="0" name="P1" />
-      <parameter value="0" name="P2" />
-      <parameter value="-50.616452" name="Tx" />
-      <parameter value="-73.075400" name="Ty" />
-      <parameter value="361.653139" name="Tz" />
-      <parameter value="6.289732" name="Rx" />
-      <parameter value="-54.165032" name="Ry" />
-      <parameter value="-8.421530" name="Rz" />
-      <parameter value="0.579140" name="R1" />
-      <parameter value="0.057713" name="R2" />
-      <parameter value="-0.813183" name="R3" />
-      <parameter value="-0.085742" name="R4" />
-      <parameter value="0.996271" name="R5" />
-      <parameter value="0.009642" name="R6" />
-      <parameter value="0.810707" name="R7" />
-      <parameter value="0.064140" name="R8" />
-      <parameter value="0.581928" name="R9" />
-    </parameter>
-      -->
 
       <parameter name="Device1394" >
 	<parameter value="-1" name="Focus" />
@@ -305,47 +226,426 @@
 	<parameter value="184" name="WhiteBalance1" />
       </parameter>
 
-      <parameter name="FilterYUV422Save" >
-	<parameter value="true" name="Activate" />
-	<parameter value="50" name="Interval" />
-	<parameter value="roadrunner_" name="Basename" />
-	<parameter value="true" name="InterfaceInstance" />
-	<parameter name="Interface" >
-	  <parameter value="VideoBla" name="Name" />
+      <parameter name="VideoOmniCam" >
+        <parameter value="yuv420p" name="Palette" />
+        <parameter value="320" name="Width" />
+        <parameter value="240" name="Height" />
+        <parameter name="Filter">
+          <parameter value="DeviceQuickCam" name="Name" />
+          <parameter value="DeviceQuickCam" name="Type" />
+          <parameter name="Successor" >
+            <parameter name="Filter" >
+              <parameter value="FilterYUV420PtoRGB" name="Name" />
+              <parameter value="FilterYUV420PtoRGB" name="Type" />
+              <parameter name="Successor" >
+                <parameter name="Filter" >
+                  <parameter value="FilterOmni2Pan" name="Name" />
+                  <parameter value="FilterOmni2Pan" name="Type" />
+                  <parameter name="Successor" >
+                    <parameter name="Filter" >
+                      <parameter value="FilterRGBtoSeg" name="Name" />
+                      <parameter value="FilterRGBtoSeg" name="Type" />
+                      <parameter name="Successor" >
+                        <parameter name="Filter" >
+                          <parameter value="FilterDistanceScan" name="Name" />
+                          <parameter value="FilterDistanceScan" name="Type" />
+                        </parameter>
+                      </parameter>
+                    </parameter>
+                  </parameter>
+                </parameter>
+              </parameter>
+            </parameter>
+          </parameter>
+        </parameter>
+      </parameter>
+
+      <parameter name="Video" >
+	<parameter value="640" name="Width" />
+	<parameter value="480" name="Height" />
+	<parameter value="yuv422" name="Palette" />
+	<parameter name="Filter">
+	  <parameter value="Device1394" name="Name" />
+	  <parameter value="Device1394" name="Type" />
+	  <parameter name="Successor" >
+
+	    <parameter name="Filter" >
+	      <parameter value="YUV422toRGBIpp" name="Type" />
+	      <parameter value="YUV422toRGBIpp" name="Name" />
+	      <parameter name="Successor" >
+
+		<parameter name="Filter" >
+		  <parameter value="RGBtoGray" name="Name" />
+		  <parameter value="RGBtoGray" name="Type" />
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="Sobel" name="Type" />
+		      <parameter value="SobelVertical" name="Name" />
+		    </parameter>
+		    <parameter name="Filter" >
+		      <parameter value="Sobel" name="Type" />
+		      <parameter value="SobelHorizontal" name="Name" />
+		      <parameter name="Successor" >
+			<parameter name="Filter" >
+			  <parameter value="Canny" name="Type" />
+			  <parameter value="Canny" name="Name" />
+			  <parameter name="BackLink" >
+			    <parameter value="SobelVertical" />
+			  </parameter>
+			</parameter>
+		      </parameter>
+		    </parameter>
+		  </parameter>
+		</parameter>
+
+		<parameter name="Filter" >
+		  <parameter value="Shrink4" name="Type" />
+		  <parameter value="Shrink4" name="Name" />
+		  <parameter name="Successor" >
+
+		    <parameter name="Filter" >
+		      <parameter value="RGBtoIndex" name="Type" />
+		      <parameter value="RGBtoIndex" name="Name" />
+		      <parameter name="Successor" >
+
+			<parameter name="Filter" >
+			  <parameter value="IndextoIndex" name="Type" />
+			  <parameter value="IndextoIndex" name="Name" />
+			</parameter>
+
+			<parameter name="Filter" >
+			  <parameter value="AttentionRobots" name="Type" />
+			  <parameter value="AttentionRobots" name="Name" />
+			  <parameter name="BackLink" >
+			    <parameter value="RGBtoGray" />
+			  </parameter>
+			</parameter>
+
+			<parameter name="Filter" >
+			  <parameter value="AttentionBall" name="Type" />
+			  <parameter value="AttentionBall" name="Name" />
+			</parameter>
+
+			<parameter name="Filter" >
+			  <parameter value="AttentionGoal" name="Type" />
+			  <parameter value="AttentionGoal" name="Name" />
+			</parameter>
+
+			<parameter name="Filter" >
+			  <parameter value="AttentionCornerPoles" name="Type" />
+			  <parameter value="AttentionCornerPoles" name="Name" />
+			</parameter>
+
+			<parameter name="Filter" >
+			  <parameter value="IndextoCanny" name="Type" />
+			  <parameter value="IndextoCannyWhiteBlue" name="Name" />
+			  <parameter name="Successor" >
+			    <parameter name="Filter" >
+			      <parameter value="AttentionGoalPosts" name="Type" />
+			      <parameter value="BlueLeftPost" name="Name" />
+			    </parameter>
+			  </parameter>
+			</parameter>
+			<parameter name="Filter" >
+			  <parameter value="IndextoCanny" name="Type" />
+			  <parameter value="IndextoCannyBlueWhite" name="Name" />
+			  <parameter name="Successor" >
+			    <parameter name="Filter" >
+			      <parameter value="AttentionGoalPosts" name="Type" />
+			      <parameter value="BlueRightPost" name="Name" />
+			    </parameter>
+			  </parameter>
+			</parameter>
+			<parameter name="Filter" >
+			  <parameter value="IndextoCanny" name="Type" />
+			  <parameter value="IndextoCannyWhiteYellow" name="Name" />
+			  <parameter name="Successor" >
+			    <parameter name="Filter" >
+			      <parameter value="AttentionGoalPosts" name="Type" />
+			      <parameter value="YellowLeftPost" name="Name" />
+			    </parameter>
+			  </parameter>
+			</parameter>
+			<parameter name="Filter" >
+			  <parameter value="IndextoCanny" name="Type" />
+			  <parameter value="IndextoCannyYellowWhite" name="Name" />
+			  <parameter name="Successor" >
+			    <parameter name="Filter" >
+			      <parameter value="AttentionGoalPosts" name="Type" />
+			      <parameter value="YellowRightPost" name="Name" />
+			    </parameter>
+			  </parameter>
+			</parameter>
+
+			<parameter name="Filter" >
+			  <parameter value="IndextoCanny" name="Type" />
+			  <parameter value="IndextoCannyGreenWhite" name="Name" />
+			  <parameter name="Successor" >
+			    <parameter name="Filter" >
+			      <parameter value="Enlarge4" name="Type" />
+			      <parameter value="Enlarge4" name="Name" />
+			      <parameter name="Successor" >
+				<parameter name="Filter" >
+				  <parameter value="Multiply" name="Type" />
+				  <parameter value="Multiply" name="Name" />
+				  <parameter name="BackLink" >
+				    <parameter value="Canny" />
+				  </parameter>
+				  <parameter name="Successor" >
+				    <parameter name="Filter" >
+				      <parameter value="AttentionLines" name="Type" />
+				      <parameter value="AttentionLines" name="Name" />
+				    </parameter>
+				  </parameter>
+				</parameter>
+			      </parameter>
+			    </parameter>
+			  </parameter>
+			</parameter>
+
+		      </parameter>
+		    </parameter>
+		  </parameter>
+		</parameter>
+
+		<parameter name="Filter" >
+		  <parameter value="CollectAllFeatures" name="Type" />
+		  <parameter value="CollectAllFeatures" name="Name" />
+		  <parameter name="BackLink" >
+                    <parameter value="AttentionBall" />
+		    <parameter value="AttentionGoal" />
+		    <parameter value="AttentionCornerPoles" />
+		    <!--
+		    <parameter value="BlueLeftPost" />
+		    <parameter value="BlueRightPost" />
+		    <parameter value="YellowLeftPost" />
+		    <parameter value="YellowRightPost" />
+		    <parameter value="AttentionRobots" />
+		    -->
+		  </parameter>
+		</parameter>
+
+		<parameter name="Filter" >
+		  <parameter value="ROIVisual" name="Type" />
+		  <parameter value="ROIVisual" name="Name" />
+		  <parameter name="BackLink" >
+		    <parameter value="CollectAllFeatures" />
+		  </parameter>
+		</parameter>
+
+		<parameter name="Filter" >
+		  <parameter value="ROIVisual" name="Type" />
+		  <parameter value="ROIVisualLines" name="Name" />
+		  <parameter name="BackLink" >
+		    <parameter value="AttentionLines" />
+		  </parameter>
+		</parameter>
+
+                <parameter name="Filter" >
+                  <parameter value="ROIVisual" name="Type" />
+                  <parameter value="ROIVisualGoal" name="Name" />
+                  <parameter name="BackLink" >
+                    <parameter value="AttentionGoal" />
+                  </parameter>
+                </parameter>
+
+	      </parameter>
+	    </parameter>
+	  </parameter>
 	</parameter>
       </parameter>
 
-      <parameter name="FilterYUV422toRGBIpp">
-	<parameter value="true" name="InterfaceInstance" />
+      <parameter name="SobelVertical">
+        <parameter value="VERTICAL" name="Orientation" />
+      </parameter>
+      <parameter name="SobelHorizontal">
+        <parameter value="HORIZONTAL" name="Orientation" />
+      </parameter>
+      
+      <parameter name="Shrink4" >
+	<parameter value="NN" name="Interpolation" />
       </parameter>
 
-      <parameter name="FilterRGBtoGray">
+      <parameter name="IndextoIndex" >
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
-	  <parameter value="VideoGray" name="Name" />
+	  <parameter value="Index" name="Name" />
 	</parameter>
       </parameter>
 
-      <parameter name="FilterGraytoCanny">
+      <parameter name="AttentionRobots">
+        <parameter value="false" name="Rotate" />
+        <parameter value="false" name="Random" />
+      </parameter>
+
+      <parameter name="AttentionBall" >
+	<parameter value="false" name="Random" />
+	<parameter value="false" name="Rotate" />
+      </parameter>
+
+      <parameter name="AttentionCornerPoles">
+	<parameter value="false" name="Rotate" />
+	<parameter value="false" name="Random" />
+      </parameter>
+
+      <parameter name="IndextoCannyWhiteBlue">
+        <parameter value="WHITE" name="ColorOne" />
+        <parameter value="BLUE" name="ColorTwo" />
+        <parameter value="50" name="LowThresh" />
+        <parameter value="180" name="HighThresh" />
+        <parameter value="true" name="SelectOrient" />
+        <parameter value="-30" name="LowAngle" />
+        <parameter value="30" name="HighAngle" />
+        <parameter value="false" name="OppositeDirection" />
+      </parameter>
+      <parameter name="BlueLeftPost">
+        <parameter value="false" name="Rotate" />
+        <parameter value="false" name="Random" />
+        <parameter value="BLUELEFTGOALPOST" name="Type" />
+      </parameter>
+
+      <parameter name="IndextoCannyBlueWhite">
+        <parameter value="BLUE" name="ColorOne" />
+        <parameter value="WHITE" name="ColorTwo" />
+        <parameter value="50" name="LowThresh" />
+        <parameter value="180" name="HighThresh" />
+        <parameter value="true" name="SelectOrient" />
+        <parameter value="-30" name="LowAngle" />
+        <parameter value="30" name="HighAngle" />
+        <parameter value="false" name="OppositeDirection" />
+      </parameter>
+      <parameter name="BlueRightPost">
+        <parameter value="false" name="Rotate" />
+        <parameter value="false" name="Random" />
+        <parameter value="BLUERIGHTGOALPOST" name="Type" />
+      </parameter>
+
+      <parameter name="IndextoCannyWhiteYellow">
+        <parameter value="WHITE" name="ColorOne" />
+        <parameter value="YELLOW" name="ColorTwo" />
+        <parameter value="50" name="LowThresh" />
+        <parameter value="180" name="HighThresh" />
+        <parameter value="true" name="SelectOrient" />
+        <parameter value="-30" name="LowAngle" />
+        <parameter value="30" name="HighAngle" />
+        <parameter value="false" name="OppositeDirection" />
+      </parameter>
+      <parameter name="YellowLeftPost">
+        <parameter value="false" name="Rotate" />
+        <parameter value="false" name="Random" />
+        <parameter value="YELLOWLEFTGOALPOST" name="Type" />
+      </parameter>
+
+      <parameter name="IndextoCannyYellowWhite">
+        <parameter value="YELLOW" name="ColorOne" />
+        <parameter value="WHITE" name="ColorTwo" />
+        <parameter value="50" name="LowThresh" />
+        <parameter value="180" name="HighThresh" />
+        <parameter value="true" name="SelectOrient" />
+        <parameter value="-30" name="LowAngle" />
+        <parameter value="30" name="HighAngle" />
+        <parameter value="false" name="OppositeDirection" />
+      </parameter>
+      <parameter name="YellowRightPost">
+        <parameter value="false" name="Rotate" />
+        <parameter value="false" name="Random" />
+        <parameter value="YELLOWRIGHTGOALPOST" name="Type" />
+      </parameter>
+
+      <parameter name="IndextoCannyGreenWhite">
+        <parameter value="GREEN" name="ColorOne" />
+        <parameter value="WHITE" name="ColorTwo" />
+        <parameter value="50" name="LowThresh" />
+        <parameter value="180" name="HighThresh" />
+      </parameter>
+
+      <parameter name="CollectAllFeatures" >
+	<parameter value="3" name="NumberBackLinks" />
+	<parameter value="true" name="DynamicConnection" />
+      </parameter>
+
+      <parameter name="ROIVisual">
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
-	  <parameter value="VideoCanny" name="Name" />
+	  <parameter value="ROI" name="Name" />
 	</parameter>
       </parameter>
 
-      <parameter name="FilterRGBtoIndex">
+      <parameter name="ROIVisualLines">
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
-	  <parameter value="VideoIndex" name="Name" />
+	  <parameter value="Lines" name="Name" />
 	</parameter>
       </parameter>
 
-      <parameter name="FilterIndextoIndex">
-	<parameter value="true" name="InterfaceInstance" />
-	<parameter name="Interface" >
-	  <parameter value="VideoIndexDebug" name="Name" />
-	</parameter>
+      <parameter name="ROIVisualGoal">
+        <parameter value="true" name="InterfaceInstance" />
+        <parameter name="Interface" >
+          <parameter value="Goal" name="Name" />
+        </parameter>
       </parameter>
+
+      <parameter name="DeviceQuickCam" >
+        <parameter value="20" name="Framerate" />
+        <parameter name="Contrast" value="27648" />
+        <parameter name="Brightness" value="-20992" />
+        <parameter name="Hue" value="-1"/>
+
+        <!-- pwc centric -->
+        <!-- indoor = 0, outdoor = 1, flourecence = 2, manual = 3, auto = 4 -->
+        <parameter name="Whitebalance" value="2" />
+        <!-- BEGIN only available in whitebalance=manual -->
+        <parameter name="WhitebalanceRed" value="0" />
+        <parameter name="WhitebalanceBlue" value="0" />
+        <!-- END -->
+        <!-- BEGIN only available in writebalance=auto -->
+        <parameter name="WhitebalanceSpeed" value="2032" />
+        <parameter name="WhitebalanceDelay" value="0" />
+        <!-- END -->
+        <!-- autoGainControl < 0 ? auto : fixed (0..65535) -->
+        <parameter name="AutoGainControl" value="31744" />
+        <!-- shutterSpeed < 0 ? auto : fixed (0..65535) -->
+        <parameter name="ShutterSpeed" value="0" />
+        <!-- sharpness < 0 ? auto : fixed (0..65535) -->
+        <parameter name="Sharpness" value="-1" />
+        <!-- backlightCompensation == 0 ? off : on -->
+        <parameter name="BacklightCompensation" value="0" />
+        <!-- flickerlessMode == 0 ? off : on -->
+        <parameter name="FlickerlessMode" value="0" />
+        <!-- dynamicNoiseReduction == 0 ? off : fixed (1..3) -->
+        <parameter name="DynamicNoiseReduction" value="1" />
+        <!-- compression == 0 ? off : fixed (1..3) -->
+        <parameter name="Compression" value="0" />
+      </parameter>
+
+      <parameter name="FilterYUV420PtoRGB">
+       <parameter value="true" name="InterfaceInstance" />
+       <parameter name="Interface" >
+        <parameter value="VideoOmniCam" name="Name" />
+       </parameter>
+      </parameter>
+
+      <parameter name="FilterOmni2Pan">
+       <parameter value="true" name="InterfaceInstance" />
+       <parameter name="Interface" >
+        <parameter value="VideoPanorama" name="Name" />
+       </parameter>
+      </parameter>
+
+      <parameter name="FilterRGBtoSeg">
+       <parameter value="true" name="InterfaceInstance" />
+       <parameter name="Interface" >
+        <parameter value="VideoSeg" name="Name" />
+       </parameter>
+      </parameter>
+
+      <parameter name="FilterDistanceScan">
+       <parameter value="true" name="InterfaceInstance" />
+       <parameter name="Interface" >
+        <parameter value="DistanceScan" name="Name" />
+       </parameter>
+      </parameter>
+
     </section>
 
     <section name="Notification" >
