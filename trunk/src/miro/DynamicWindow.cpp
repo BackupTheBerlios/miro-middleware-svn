@@ -72,22 +72,24 @@ namespace Miro
 
   void DynamicWindow::collisionCheckDeluxe(std::vector<Vector2d> &_robot, std::vector<Vector2d> &_obstacle) {
 
-    const double CURV_COUNT = 41;
-    const double CURV_SEGS = 41;
-    const double CURV_SEG_LEN = 50;  // in mm
+    const int CURV_COUNT = 21; // = 2n+1
+    const int CURV_SEGS = 21; // = 2n+1
+    const int CURV_SEG_LEN = 50;  // in mm
     const double WHEEL_DISTANCE  = 390.;  // in mm
     const double MIN_DISTANCE = 10; // in mm
+    const double BREAK_ACCELERATION = 2000.;  // in mm/sec2
 
-    int CURV[41][41];	// curvature space
-    int count, seg;
-    double fLeft, fRight, offset, angle, rel;
+    int CURV[21][21];	// curvature space
+    int count, seg, left, right, curv, target;
+    double fLeft, fRight, offset, angle, rel, breaklen, left_break, right_break;
 
-    std::FILE *logFile;
-    logFile = std::fopen("Curvature.log","w");
+    std::FILE *logFile1, *logFile2;
+    logFile1 = std::fopen("Curvature.log","a");
+    logFile2 = std::fopen("Window.log","a");
 
     for(count = 0; count < CURV_COUNT; count++) {
 
-      rel = tan(((M_PI/2) * count / CURV_COUNT) - (M_PI/4));
+      rel = tan((M_PI * count / CURV_COUNT) - (M_PI/2));
 
       if(fabs(rel)!=1) {
 
@@ -106,21 +108,40 @@ namespace Miro
 	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -1 * angle * (CURV_SEGS + 1) / 2);
         for(seg = 0; seg < CURV_SEGS; seg++) {  	
 	  rotateMountedPolygon(_robot, Vector2d(-offset, 0.), angle);
-          getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) < MIN_DISTANCE ? CURV[count][seg] = 1 : CURV[count][seg] = 0;
-	  fprintf(logFile,"%d\n",CURV[count][seg]);
+          getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) < MIN_DISTANCE ? CURV[count][seg] = 0 : CURV[count][seg] = 1;
+	  fprintf(logFile1,"%d\n",CURV[count][seg]);
 	}
 	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -1 * angle * (CURV_SEGS - 1) / 2);
 	
       }
       else {
 	for(seg = 1; seg <= CURV_SEGS; seg++) {
-	  fprintf(logFile,"%d\n",2);
+	  fprintf(logFile1,"%d\n",0);
 	}
       }
       
     }
 
-    fclose(logFile);
+    for(left = minLeft_; left <= maxLeft_; left++) {
+      for(right = minRight_ ; right <= maxRight_; right++) {
+	
+	curv = (int)((atan((double)left / (double)right) + (M_PI / 2.)) * CURV_COUNT / M_PI);
+	left_break = 100. * (double)(left * abs(left)) / BREAK_ACCELERATION;
+	right_break = 100. * (double)(right * abs(right)) / BREAK_ACCELERATION;
+	fabs(left_break) > fabs(right_break) ? breaklen = left_break : breaklen = right_break;
+	target = 10 + (int)(breaklen / CURV_SEG_LEN);
+	fprintf(logFile2,"%d %d\n
+",curv,target);
+
+
+	velocitySpace_[left+100][right+100] = 255 * CURV[std::max(0,std::min(CURV_COUNT-1,curv))][std::max(0,std::min(CURV_SEGS-1,target))];
+
+      }
+    }
+
+
+    fclose(logFile1);
+    fclose(logFile2);
 
   }
 

@@ -31,7 +31,7 @@ namespace Miro
     pSupplier_(_pSupplier),
     reactor(ar_),
     timerId(0),
-    dynWindow_(std::complex<double>(0., 0.), 700, 2000),
+    dynWindow_(std::complex<double>(0., 0.), 20000, 20000),
     winArbViewTask_(NULL),
     winArbViewTaskCreated(false)
   {
@@ -103,7 +103,7 @@ namespace Miro
     }
       
     timerId = reactor.schedule_timer(this, 0, ACE_Time_Value(0,0),
-	ACE_Time_Value(0, 50000));
+	ACE_Time_Value(1, 50000));
     cout << "WindowArbiter Open." << endl;
   }
 
