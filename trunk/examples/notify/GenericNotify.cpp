@@ -9,13 +9,9 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
-#include "ace/OS.h"
 #include "GenericNotify.h"
 
 #include "miro/Server.h"
-
-#include <map>
 
 using std::cout;
 using std::cerr;
@@ -76,7 +72,7 @@ main(int argc, char *argv[])
   Miro::Server server(argc, argv);
 
   if (argc < 2) {
-    cout << "usage: genericNotify <TypeName>" << endl;
+    cout << "usage: " << argv[0] << " <TypeName>" << endl;
     return 1;
   }
     
@@ -95,10 +91,6 @@ main(int argc, char *argv[])
   }
   catch (const CORBA::Exception & e) {
     cerr << "Uncaught CORBA exception: " << e << endl;
-    return 1;
-  }
-  catch (...) {
-    cerr << "Uncaught exception!" << endl;
     return 1;
   }
   return 0;

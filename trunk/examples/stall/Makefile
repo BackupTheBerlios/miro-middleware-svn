@@ -2,14 +2,12 @@
 ##
 ## This file is part of Miro (The Middleware For Robots)
 ##
-## (c) 1999, 2000, 2001
+## (c) 1999, 2000, 2001, 2002
 ## Department of Neural Information Processing, University of Ulm, Germany
 ##
 ## $Id$
-## $Date$
-## 
 ##
-## Miro/examples/sonar/Makefile
+## Miro/examples/stall/Makefile
 ##
 ##############################################################################
 
@@ -17,9 +15,8 @@
 #	Local macros
 #----------------------------------------------------------------------------
 
-
 ## dynamic libraries if needed
-LDLIBS += -lmiro -lTAO_CosNotification -lTAO_CosNaming -lTAO
+LDLIBS += -lmiro -lTAO_CosNaming -lTAO
 
 ## program to be built
 BIN 	= StallPoll

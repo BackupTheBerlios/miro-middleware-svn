@@ -2,17 +2,9 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999,2000
+// (c) 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 //
 //////////////////////////////////////////////////////////////////////////////
@@ -23,6 +15,15 @@
 #include <iostream>
 #include <strstream>
 
+// This is an attempt to determine the latency between vidoe capture
+// of the camera and video capture of the device driver.  When it is
+// started it just prints the current time on the screen.  Recording
+// the monitor by the camera and capturing the video with LogVideo in
+// streaming mode one can compare the log file time in the name with
+// the last time printed on the screen.
+//
+// It gives a rough estimate, but is by far not as accurate as a
+// latency test should be.
 int main (int, char**)
 {
   while (true) {

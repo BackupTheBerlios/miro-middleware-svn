@@ -2,29 +2,19 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999,2000
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
 #include "miro/RangeSensorC.h"
-
 #include "miro/Client.h"
 #include "miro/IO.h"
 
 #include <iostream>
 #include <stdio.h>
-#include <string.h>
 
 #define WAIT_FOR_KEY
 

@@ -124,7 +124,7 @@ namespace
 	break;
       case '?':
       default:
-	cout << "usage: " << argv[0] << "[-r] [-s [-i=msec] [-t=msec]] [-?]" << endl
+	cout << "usage: " << argv[0] << " [-r] [-s [-i=msec] [-t=msec]] [-?]" << endl
 	     << "  -r reverse byte order: BGR palette" << endl
 	     << "  -s streaming mode: continuos grabbing" << endl
 	     << "  -i interval: stop between each frame (default is 0)" << endl

@@ -18,14 +18,19 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "miro/OdometryC.h"
-
 #include "miro/Client.h"
 #include "miro/IO.h"
 #include "miro/Angle.h"
 
 #include <iostream>
 
-using namespace Miro;
+using std::cout;
+using std::cerr;
+
+using Miro::Client;
+using Miro::Odometry;
+using Miro::Odometry_var;
+using Miro::PositionIDL;
 
 int
 main(int argc, char *argv[])
@@ -48,7 +53,7 @@ main(int argc, char *argv[])
 
   try {
     // Reference to the server object
-    Odometry_var odometry = resolve_name<Odometry>(client, "Motion");
+    Odometry_var odometry = client.resolveName<Odometry>("Odometry");
 
     PositionIDL data;
     data.point.x = x;

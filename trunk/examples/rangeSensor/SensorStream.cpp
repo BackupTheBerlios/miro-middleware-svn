@@ -97,7 +97,7 @@ main(int argc, char *argv[])
   Miro::Server server(argc, argv);
 
   if( argc <= 2 ) {
-    cout << "usage: <sensor name> <sensor #1> <sensor #2> ..." << endl;
+    cout << "usage: " << argv[0] << " <sensor name> <sensor #1> <sensor #2> ..." << endl;
     cout << "prints sensor values of the specified sensor." << endl;
     return 0;
   }

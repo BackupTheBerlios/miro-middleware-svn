@@ -2,16 +2,22 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
+
 #include "miro/ButtonsC.h"
 #include "miro/Client.h"
 
-using namespace Miro;
+using std::cout;
+using std::cerr;
+
+using Miro::Client;
+using Miro::Buttons;
+using Miro::Buttons_var;
 
 int 
 main(int argc, char* argv[])
@@ -24,7 +30,7 @@ main(int argc, char* argv[])
 
     int number = buttons->numberButtons();
 
-    while(1) {
+    while(true) {
       cout << "Buttons status: ";
       for (int i = 0; i < number; ++i) {
 	bool pressed = buttons->isPressed(i);
@@ -36,11 +42,7 @@ main(int argc, char* argv[])
     }
   }
   catch (const CORBA::Exception& e) {
-    cout << "CORBA exception occured: " << e << endl;
-    rc = 1;
-  }
-  catch (...) {
-    cout << "Cought unknown exception!" << endl;
+    cerr << "CORBA exception occured: " << e << endl;
     rc = 1;
   }
 

@@ -2,17 +2,9 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999,2000
+// (c) 1999,2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
@@ -21,6 +13,9 @@
 #include "miro/Client.h"
 
 #include <iostream>
+
+using std::cout;
+using std::cerr;
 
 using Miro::Client;
 using Miro::Stall;
@@ -42,10 +37,6 @@ main(int argc, char *argv[])
   }
   catch (const CORBA::Exception & e) {
     cerr << "Uncaught CORBA exception: " << e << endl;
-    return 1;
-  }
-  catch (...) {
-    cerr << "Uncaught exception: " << endl;
     return 1;
   }
   return 0;

@@ -23,11 +23,18 @@
 
 #include <iostream>
 #include <stdio.h>
-#include <string.h>
 
 #define WAIT_FOR_KEY
 
-using namespace Miro;
+using std::cout;
+using std::cerr;
+
+using Miro::Client;
+using Miro::RangeSensor;
+using Miro::RangeSensor_var;
+using Miro::RangeGroupEventIDL_var;
+using Miro::EDevIO;
+using Miro::EOutOfBounds;
 
 int
 main(int argc, char *argv[])
@@ -38,7 +45,7 @@ main(int argc, char *argv[])
   try {
 
     if( argc <= 2 ) {
-      cout << "usage: <SensorName> <sensor#1> <sensor#2> ..." << endl;
+      cout << "usage: " << argv[0] << " <SensorName> <sensor#1> <sensor#2> ..." << endl;
       cout << "prints sensor values of the specified sensor." << endl;
       return 0;
     }
@@ -65,10 +72,6 @@ main(int argc, char *argv[])
 #endif
     }
   }
-  catch (const ETimeOut & e) {
-    cerr << "Miro Timeout exception: " << endl;
-    return 1;
-  }
   catch (const EDevIO & e) {
     cerr << "Miro Device I/O exception: " << endl;
     return 1;
@@ -79,10 +82,6 @@ main(int argc, char *argv[])
   }
   catch (const CORBA::Exception & e) {
     cerr << "Uncaught CORBA exception: " << e << endl;
-    return 1;
-  }
-  catch (...) {
-    cerr << "Uncaught exception: " << endl;
     return 1;
   }
   return 0;

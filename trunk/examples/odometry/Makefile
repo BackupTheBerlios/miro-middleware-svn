@@ -2,12 +2,10 @@
 ##
 ## This file is part of Miro (The Middleware For Robots)
 ##
-## (c) 1999, 2000, 2001
+## (c) 1999, 2000, 2001, 2002
 ## Department of Neural Information Processing, University of Ulm, Germany
 ##
 ## $Id$
-## $Date$
-## 
 ##
 ## Miro/examples/odometry/Makefile
 ##
@@ -38,10 +36,6 @@ BUILD 	= $(VBIN)
 #----------------------------------------------------------------------------
 #	Include macros and targets
 #----------------------------------------------------------------------------
-
-## you can toggle the debug and optimize flags at this point
-# debug = 1
-optimize = 0
 
 include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
 include $(ACE_ROOT)/include/makeinclude/macros.GNU
