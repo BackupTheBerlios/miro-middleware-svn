@@ -68,7 +68,10 @@ namespace Sparrow
 
     Miro::Guard guard(mutex_);
     setTargetVelocity(v);
-    connection.setPower(0,0);
+    if (!params_->goalie)
+      connection.setPower(0,0);
+    else
+      connection.setSpeed(0,0);
   }
 
   void 
