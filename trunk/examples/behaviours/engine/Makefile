@@ -25,14 +25,19 @@ STATIC_DEPS = $(addprefix $(MIRO_ROOT)/lib/lib, $(addsuffix .a,$(STATIC_LIBS)))
 LDLIBS += $(addprefix -l, $(STATIC_LIBS))
 
 ## dynamic libraries if needed
-LDLIBS += -lmiroBehavioursSimple -lmiroBehavioursB21 -lmiroBehavioursRangeSensor -lmiro
+LDLIBS += -lmiroBehavioursSimple -lmiroBehavioursRangeSensor -lmiro
+ifneq (,$(findstring B21,$(MIRO_COMPONENTS)))
+  LDLIBS += -lmiroBehavioursB21
+endif
 
 ## program to be built
 ## there has to exist a source file with the same name (mybinary.cc)
 BIN 	= \
-	SimpleBehaviourEngine \
-	B21BehaviourEngine \
-	RangeSensorBehaviourEngine
+	SimpleBehaviourEngine
+ifneq (,$(findstring B21,$(MIRO_COMPONENTS)))
+  BIN += B21BehaviourEngine
+endif
+BIN +=	RangeSensorBehaviourEngine
 
 ## additional files
 FILES	= 

@@ -20,9 +20,13 @@
 ##
 
 # DIRS  = subdir1 subdir2 ...
-DIRS =	simple \
-	b21 \
-	rangeSensor \
+DIRS =	simple
+
+ifneq (,$(findstring B21,$(MIRO_COMPONENTS)))
+  DIRS += b21
+endif
+
+DIRS +=	rangeSensor \
 	engine
 
 #----------------------------------------------------------------------------

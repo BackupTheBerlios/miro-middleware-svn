@@ -2,12 +2,14 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2002
+// (c) 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
+
+#define QT_ALTERNATE_QTSMANIP
 
 #include "PolicyDocument.h"
 #include "PolicyConfig.h"
@@ -15,6 +17,7 @@
 #include <qfile.h>
 #include <qstringlist.h>
 #include <qdom.h>
+#include <qtextstream.h>
 
 #include <iostream>
 
