@@ -193,7 +193,7 @@ namespace Pioneer
 	  unsigned long counter = 0;
 	  unsigned long index = 0;
 	  unsigned short bumpers = message->bumpers();
-	  unsigned long mask = bumpers_ ~ bumpers ^ 0x3e3e;
+	  unsigned long mask = bumpers_ ^ bumpers & 0x3e3e;
 
 	  for (unsigned int i = 9; i < 14; ++i, ++index) {
 	    if (mask & (1 << i)) {
