@@ -5,7 +5,7 @@
 // for details copyright, usage and credits to other groups see Miro/COPYRIGHT
 // for documentation see Miro/doc
 // 
-// (c) 1999,2000
+// (c) 1999, 2000, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // Authors: 
@@ -17,28 +17,66 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <qapplication.h>
-
 #include "MainForm.h"
 
+#include <ace/Get_Opt.h>
+
+#include <qapplication.h>
 
 using namespace Miro;
 
+int parseArgs(int& argc, char* argv[])
+{
+  ACE_Get_Opt get_opts (argc, argv, "ri:v?");
+  
+  int rc = 0;
+  int c;
+  
+  while ((c = get_opts()) != -1) {
+    switch (c) {
+    case 'n':
+      MainForm::interfaceName = get_opts.optarg;
+      break;
+    case 'r':
+      MainForm::remote = true;
+      break;
+    case 'v':
+      MainForm::verbose = true;
+      break;
+    case '?':
+    default:
+      cout << "usage: " << argv[0] << " [-r] [-n=interface name] [-?]" << endl
+	     << "  -r using the remote video interface (default: false)" << endl
+	     << "  -n interface name (default: Video)" << endl
+	     << "  -v verbose mode" << endl
+	     << "  -? help: emit this text and stop" << endl;
+	rc = 1;
+      }
+    }
+
+    if (MainForm::verbose)
+      cout << "Remote: " << MainForm::remote << endl
+	   << "Interface: " << MainForm::interfaceName << endl;
+
+    return rc;
+  }
+
+
 int main(int argc, char *argv[])
 {
-
   QApplication a(argc, argv);
+  Miro::Client client(argc, argv);
 
-  MainForm *mainForm=new MainForm(argc,argv);
+  if (int rc = parseArgs(argc, argv) != 0)
+    return rc;
+
+  MainForm * mainForm = new MainForm(client);
 
   a.setMainWidget(mainForm);
   mainForm->setCaption("QtVideo");
   mainForm->show();
 
-  
-  int result=a.exec();
-
-  return result;
+  return a.exec();
 }
 
 

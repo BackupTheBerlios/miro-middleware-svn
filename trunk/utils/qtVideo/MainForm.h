@@ -2,59 +2,73 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
+#ifndef MainForm_h
+#define MainForm_h
 
-#ifndef MAINFORM_H
-#define MAINFORM_H
+#include "miro/Client.h"
+#include "miro/VideoC.h"
 
 #include <qwidget.h>
 #include <qdialog.h>
 #include <qtimer.h>
 #include <qpushbutton.h>
 
-#include <ace/Date_Time.h>
+#include <ace/Time_Value.h>
 
-#include "miro/Client.h"
-#include "miro/VideoC.h"
+#include <string>
 
-class MainForm : public QDialog  {
+class MainForm : public QDialog  
+{
   Q_OBJECT
 public: 
-  MainForm(int argc, char* argv[], QWidget *parent=0, const char *name=0);
+  MainForm(Miro::Client& _client,
+	   QWidget *parent=0, const char *name = 0);
   ~MainForm();
+
+  // static data
+  static bool remote;
+  static bool verbose;
+  static std::string interfaceName;
 
 public slots:
   void actualizeImage();
   void slotGrabClicked();
 
 protected:
-
-  QTimer *timer;
-  QPushButton *buttonGrab;
-
   void initDialog();
   void paintEvent(QPaintEvent * p);
   
-  Miro::Client client;
-  Miro::Video_var video;
+  QTimer * timer;
+  QPushButton * buttonGrab;
+  QImage * qImage_;
 
-  unsigned char* image;
-  unsigned char* ppm;
-  int imageLength;
-  int direction; //indicates if the image should be flipped (rotated camera)
-  int bpp;
+  Miro::Client& client_;
+  Miro::Video_var video_;
+  Miro::ImageHandleIDL_var imageIDL_;
+
+  CORBA::ULong id_;
+  CORBA::ULong bufferIndex_;
+  CORBA::ULong imageOffset_;
+
+  unsigned char * imageBuffer_;
+  unsigned char * ppmBuffer_;
+  unsigned int ppmOffset_;
+
+  int imageSize_;
+  int bpp_;
   int fps;
   int fpsTmp;
-  bool bgr;
-  Miro::ImageHandleIDL imageIDL;
-  ACE_Date_Time lastTime;
-  QRgb *colorTable; //used for gray images
+  bool bgr_;
 
+  ACE_Time_Value lastTime_;
+
+  QRgb * colorTable_; //used for gray images
 };
 
 #endif
