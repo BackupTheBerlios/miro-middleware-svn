@@ -65,24 +65,22 @@
 #ifndef NotifyMulticastAdapter_h
 #define NotifyMulticastAdapter_h
 
-/* NotifyMulticast includes */
-#include <miro/NotifyMulticastConfig.h>
-
 /* TAO Notification includes */
-#include <orbsvcs/CosNotifyChannelAdminS.h>
+#include <orbsvcs/CosNotifyChannelAdminC.h>
 #include <orbsvcs/CosNotifyCommC.h>
 
-/* ACE includes */
-#include <ace/Reactor.h>
-
 /* Miro includes */
+#include "NotifyMulticastParameters.h"
 #include "Exception.h"
 #include "Client.h"
 
 /* g++lib includes */
 #include <string>
 #include <map>
-#include <fstream>
+
+// forward declarations
+class ACE_Reactor;
+class ACE_SOCK_Dgram_Mcast;
 
 namespace Miro 
 {
@@ -134,10 +132,10 @@ namespace Miro
       //! Initializing constructor.
       Adapter(int& _argc,
 	      char *_argv[],
-	      Miro::Client *_client,
+	      Miro::Client * _client,
 	      CosNotifyChannelAdmin::EventChannel_ptr _eventChannel,
-	      unsigned int _eventMaxAge = 500,
-	      std::string _multicastAddress = "225.2.2.1")
+	      std::string& _domainName,
+	      Parameters * _parameters = Parameters::instance())
 	throw(CORBA::Exception, Miro::Exception);
 
       //! Destructor
@@ -146,58 +144,27 @@ namespace Miro
       void init();
       void fini();
 
-      //! Returns pointer to sender.
-      Sender *getSender();
-
-      //! Returns pointer to receiver.
-      Receiver *getReceiver();
-
-      // Fried classes
-
-      friend class Receiver;
-      friend class Sender;
-
     protected:
-      Miro::Client *client_;
-      ACE_Reactor *reactor_;
-      Config configuration_;
+      Parameters * parameters_;
+      ACE_Reactor * reactor_;
+      ACE_SOCK_Dgram_Mcast * socket_;
 
-      Sender *sender_;
-      Receiver *receiver_;
+      Sender * sender_;
+      Receiver * receiver_;
 
       /* event handling */
       int eventHandlerId_;
-      EventHandler *eventHandler_;
+      EventHandler * eventHandler_;
 
       /* timeout handling */
       int timeoutHandlerId_;
-      TimeoutHandler *timeoutHandler_;
+      TimeoutHandler * timeoutHandler_;
       ACE_Time_Value timeoutHandlerInterval_;
 
       int shId_;
-      SH *sh_;
+      SH * sh_;
       ACE_Time_Value shInterval_;
-
-      /* logfile */
-      std::ofstream logfile_;
-      bool useLogfile_;
-
-      ACE_Date_Time dt_;
-
-      static const char months[13][4];
     };
-
-    inline
-    Sender *
-    Adapter::getSender() {
-      return sender_;
-    }
-
-    inline
-    Receiver *
-    Adapter::getReceiver() {
-      return receiver_;
-    }
   }
 }
 #endif // NotifyMulticastAdapter_h 

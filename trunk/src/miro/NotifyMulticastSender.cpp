@@ -23,7 +23,6 @@
 /* NotifyMulticast includes */
 #include "NotifyMulticastDefines.h"
 #include "NotifyMulticastSender.h"
-#include "NotifyMulticastAdapter.h"
 #include "NotifyMulticastParameters.h"
 #include "NotifyMulticastDomainEventFilter.h"
 
@@ -52,17 +51,20 @@ namespace Miro
      *     _main:          Pointer to adapter instance
      *     _configuration: Pointer to configuration instance
      */
-    Sender::Sender(Adapter *_main,
-		   Config *_configuration) :
-      Super(_configuration->getEventchannel()),
-      main_(_main),
-      configuration_(_configuration),
+    Sender::Sender(ACE_SOCK_Dgram_Mcast& _socket,
+		   CosNotifyChannelAdmin::EventChannel_ptr _ec,
+		   std::string const& _domainName,
+		   Parameters * _parameters) :
+      Super(_ec),
+      parameters_(_parameters),
+      socket_(_socket),
+      domainName_(_domainName),
       requestId_(0),
       lastTrafficAnalysis_(0)
     {
       MIRO_LOG_CTOR("NMC::Sender");
 
-      event_filter_ = new DomainEventFilter(configuration_->getDomain());
+      event_filter_ = new DomainEventFilter(domainName_);
     }
 
 
@@ -84,15 +86,13 @@ namespace Miro
     Sender::init() 
     {
       try {
-	Parameters *parameters = Parameters::instance();
-	
 	// TODO: Subscription changing
 	
 	std::set<std::string>::const_iterator first, last;
-	first = parameters->subscription.begin();
-	last = parameters->subscription.end();
+	first = parameters_->subscription.begin();
+	last = parameters_->subscription.end();
 	for (; first != last; ++first) {
-	  subscribe(configuration_->getDomain(), *first);
+	  subscribe(domainName_, *first);
 	}
       } 
       catch (const CosNotifyComm::InvalidEventType &e) {
@@ -547,7 +547,7 @@ namespace Miro
     Sender::sendData(iovec *_iov, size_t _iovLen) 
     {
       ACE_Time_Value start = ACE_OS::gettimeofday();
-      int rc =  configuration_->getSocket()->send(_iov, (int)_iovLen);
+      int rc =  socket_.send(_iov, (int)_iovLen);
       ACE_Time_Value stop = ACE_OS::gettimeofday();
 
       MIRO_DBG_OSTR(NMC, LL_PRATTLE, "Sender: time for sending=" << (stop - start));

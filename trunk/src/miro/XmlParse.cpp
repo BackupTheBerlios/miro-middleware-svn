@@ -289,7 +289,7 @@ namespace Miro
     _node.appendChild(e);
     return e;
   }
-};
+}
 
 
 #ifdef ANALYZED_THAT

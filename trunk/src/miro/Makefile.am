@@ -68,7 +68,6 @@ sources1 = \
 	NotifyMulticastReceiver.cpp \
 	NotifyMulticastTimeoutHandler.cpp \
 	NotifyMulticastEventHandler.cpp \
-	NotifyMulticastConfig.cpp \
 	NotifyMulticastAdapter.cpp \
 	NotifyMulticastSH.cpp \
 	NotifyMulticastDomainEventFilter.cpp

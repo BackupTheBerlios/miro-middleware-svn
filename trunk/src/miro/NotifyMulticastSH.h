@@ -13,7 +13,6 @@
 
 #include "NotifyMulticastSender.h"
 #include "NotifyMulticastReceiver.h"
-#include "NotifyMulticastConfig.h"
 
 #include <ace/Event_Handler.h>
 
@@ -25,8 +24,7 @@ namespace Miro
     {
     public:
       SH(Sender *_sender,
-	 Receiver *_receiver,
-	 Config *_config);
+	 Receiver *_receiver);
       virtual ~SH();
 
       virtual int handle_timeout(ACE_Time_Value const& _tv, void const *_act);
@@ -39,7 +37,6 @@ namespace Miro
 
       Sender *sender_;
       Receiver *receiver_;
-      Config *config_;
                 
       typedef std::map<std::string, int> SubscribedMap;
       typedef std::map<std::pair<std::string, std::string> , int> OfferMap;

@@ -19,10 +19,9 @@ namespace Miro
   {
     using ::operator <<;
 
-    SH::SH(Sender *_sender, Receiver *_receiver, Config *_config) :
+    SH::SH(Sender *_sender, Receiver *_receiver) :
       sender_( _sender),
-      receiver_(_receiver),
-      config_(_config)
+      receiver_(_receiver)
     {
     }
 

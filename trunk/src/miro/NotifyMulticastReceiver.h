@@ -65,6 +65,7 @@
 #include "NotifyMulticastDefines.h"
 #include "NotifyMulticastRequestEntry.h"
 #include "NotifyMulticastTimeoutHandler.h"
+#include "NotifyMulticastParameters.h"
 
 /* ACE includes */
 #include <ace/SOCK_Dgram_Mcast.h>
@@ -80,9 +81,8 @@
 #include <miro/Exception.h>
 
 /* g++lib includes */
-#include <map>
-#include <set>
-
+#include <vector>
+#include <algorithm>
 
 namespace Miro 
 {
@@ -103,17 +103,17 @@ namespace Miro
       // public types
       //------------------------------------------------------------------------
 
-      // typedef std::map<std::string, ACE_Time_Value> PeerTime;
-      // typedef std::map<std::string, unsigned int> RunMap;
-
-      typedef std::set<unsigned long int> IPAddresses;
+      typedef std::vector<unsigned long int> IPAddresses;
 
       //------------------------------------------------------------------------
       // public methods
       //------------------------------------------------------------------------
 
       //! Initializing constructor.
-      Receiver(Adapter *_main, Config  *_config);
+      Receiver(ACE_SOCK_Dgram_Mcast& _socket, 
+	       CosNotifyChannelAdmin::EventChannel_ptr _ec,
+	       std::string const& _domainName,
+	       Parameters const * _params = Parameters::instance());
 
       //! Defaint destructor.
       ~Receiver();
@@ -130,18 +130,6 @@ namespace Miro
 
       //! Receive Data fram MC-Notification-Channel.
       int receiveData(iovec         *_iov,
-		      int            _iovLen,
-		      ACE_INET_Addr &_from,
-		      int            _flags = 0);
-
-      //! Receive Data fram MC-Notification-Channel.
-      int receiveData(iovec         *_iov,
-		      ACE_INET_Addr &_from,
-		      int            _flags = 0);
-
-      //! Receive Data fram MC-Notification-Channel.
-      int receiveData(void          *_data,
-		      int            _dataLen,
 		      ACE_INET_Addr &_from,
 		      int            _flags = 0);
 
@@ -150,8 +138,6 @@ namespace Miro
       void setSH(SH *_sh);
       void invalidateSH();
 
-      friend class NotifyMulticast;
-      friend class NotifyMulticastSender;
       friend class SH;
 
     protected:
@@ -160,7 +146,7 @@ namespace Miro
       // protected types
       //------------------------------------------------------------------------
 
-      typedef ACE_Hash_Map_Manager<RequestIndex, RequestEntry*, TAO_SYNCH_MUTEX> RequestMap;
+      typedef ACE_Hash_Map_Manager<RequestIndex, RequestEntry*, ACE_SYNCH_NULL_MUTEX> RequestMap;
       typedef ACE_Hash_Map_Entry<RequestIndex, RequestEntry*> RequestMapEntry;
 
       struct EventData 
@@ -181,20 +167,24 @@ namespace Miro
       // protected methods
       //------------------------------------------------------------------------
 
+      //! Check if address (_from) is local.
       bool is_loopback(ACE_INET_Addr const &_from);
-      int handle_event(EventData &_eventData, iovec *_iov);
+      int handle_event(ACE_INET_Addr const& form,
+		       EventData const& _eventData, 
+		       char const *_iov,
+		       unsigned long _len);
 
       //! Inherited interface method.
       /** StructuredUDPReceiver method */
       virtual void disconnect_structured_push_supplier(ACE_ENV_SINGLE_ARG_DECL_WITH_DEFAULTS)
 	throw(CORBA::SystemException);
 
+    private:
       //------------------------------------------------------------------------
-      // protected data
+      // private data
       //------------------------------------------------------------------------
-
-      Adapter              *main_;
-      Config               *configuration_;
+      ACE_SOCK_Dgram_Mcast& socket_;
+      Parameters const * params_;
 
       //! The map containing all the incoming requests which have been partially received.
       RequestMap            requestMap_;
@@ -217,6 +207,16 @@ namespace Miro
       bool shValid_;
       SH *sh_;
     };
+
+    /**
+     *  @param from: address to check
+     */
+    inline
+    bool 
+    Receiver::is_loopback(const ACE_INET_Addr &_from) 
+    {
+      return (std::binary_search(localIPs_.begin(), localIPs_.end(), _from.get_ip_address()));
+    }
   }
 }
 

@@ -35,8 +35,10 @@
 #include "Log.h"
 
 /* ACE includes */
+#include <ace/Reactor.h>
+#include <ace/SOCK_Dgram_Mcast.h>
+#include <ace/INET_Addr.h>
 #include <ace/Arg_Shifter.h>
-#include <ace/Thread.h>
 
 /* TAO includes */
 #include <tao/ORB_Core.h>
@@ -56,10 +58,6 @@ namespace Miro
      *     _argv:             Argument vector
      *     _client:           Pointer to Miro client
      *     _eventChannel:     Pointer to eventchannel
-     *     _eventMaxAge:      Max. age of an event in milliseconds
-     *     _timeoutInterval:  Periodial checks for event fragments that
-     *                        were not processed (-> drop)
-     *     _multicastAddress: Multicast address spec
      *
      *   Throws:
      *     CORBA::Exception
@@ -67,69 +65,66 @@ namespace Miro
      */
     Adapter::Adapter(int& _argc,
 		     char *_argv[],
-		     Miro::Client *_client,
+		     Miro::Client * _client,
 		     CosNotifyChannelAdmin::EventChannel_ptr _eventChannel,
-		     unsigned int _eventMaxAge,
-		     std::string _multicastAddress)
+		     std::string& _domainName,
+		     Parameters * _parameters)
       throw(CORBA::Exception, Miro::Exception) :
-      client_(_client),
+      parameters_(_parameters),
       reactor_(_client->orb()->orb_core()->reactor()),
-      configuration_(),
+      socket_(new ACE_SOCK_Dgram_Mcast()),
       eventHandlerId_(-1),
       eventHandler_(NULL),
       timeoutHandlerId_(-1),
       timeoutHandler_(NULL),
       timeoutHandlerInterval_(ACE_Time_Value(0, 50000)),
-      shInterval_(ACE_Time_Value(2, 0)),
-      useLogfile_(false)
+      shInterval_(ACE_Time_Value(2, 0))
     {
       MIRO_LOG_CTOR("NMC::Adapter");
-
-      Parameters *parameters = Parameters::instance();
-
-      // remove!
-      _eventMaxAge = 0;
-      _multicastAddress = "";
-
-      /* set up configuration */
-      configuration_.setSocket(parameters->multicastgroup);
-      configuration_.setDomain(_client->namingContextName);
-      configuration_.setEventchannel(_eventChannel);
-      configuration_.setEventMaxAge(parameters->messagetimeout);
 
       /* process parameters */
       ACE_Arg_Shifter arg_shifter(_argc, _argv);
 
       while (arg_shifter.is_anything_left()) {
 	if (arg_shifter.is_option_next()) {
-	  if (!arg_shifter.cur_arg_strncasecmp("-mcastgroup")) {
-	    std::string temp (arg_shifter.get_the_parameter("-mcastgroup"));
-	    ACE_INET_Addr iaddr((temp + ":41006").c_str());
-	    configuration_.setSocket(iaddr);
+	  if (!arg_shifter.cur_arg_strncasecmp("-MiroNofitfyMulticastGroup")) {
+	    std::string addr (arg_shifter.get_the_parameter("-MiroNotifyMulticastGroup"));
+	    parameters_->multicastGroup.set(addr.c_str());
 	    arg_shifter.consume_arg();
-	  } else {
+	  } 
+	  else if (!arg_shifter.cur_arg_strncasecmp("-MNMG")) {
+	    std::string addr (arg_shifter.get_the_parameter("-MNMG"));
+	    parameters_->multicastGroup.set(addr.c_str());
+	    arg_shifter.consume_arg();
+	  } 
+	  else {
 	    arg_shifter.ignore_arg();
 	  }
-	} else {
+	} 
+	else {
 	  arg_shifter.ignore_arg();
 	}
       }
 
+      // Set up connection socket
+      if (socket_->subscribe(parameters_->multicastGroup) == -1) {
+	throw Miro::Exception("Cannot subscribe multicast address");
+      }
+
       /* Setup sender and receiver */
-      sender_ = new Sender(this, &configuration_);
-      receiver_ = new Receiver(this, &configuration_);
+      sender_ = new Sender(*socket_, _eventChannel, _domainName, parameters_);
+      receiver_ = new Receiver(*socket_, _eventChannel, _domainName, parameters_);
 
       /* Create handlers */
       timeoutHandler_ = new TimeoutHandler(receiver_);
-      eventHandler_   = new EventHandler(receiver_, &configuration_);
-      sh_ = new SH(sender_, receiver_, &configuration_);
+      eventHandler_   = new EventHandler(socket_->get_handle(), receiver_);
+      sh_ = new SH(sender_, receiver_);
 
       receiver_->setSH(sh_);
 
       /* Install handlers */
       if (reactor_ != 0) {
-	eventHandlerId_ = reactor_->register_handler(configuration_.getSocket()->get_handle(),
-						     eventHandler_,
+	eventHandlerId_ = reactor_->register_handler(eventHandler_,
 						     ACE_Event_Handler::READ_MASK);
 
 	if (eventHandlerId_ == -1) {
@@ -156,9 +151,10 @@ namespace Miro
       }
 
       char group[255];
-      parameters->multicastgroup.addr_to_string(group, sizeof(group));
+      parameters_->multicastGroup.addr_to_string(group, sizeof(group));
 
-      MIRO_LOG_OSTR(LL_NOTICE, " Initialized Multicast Forwarding. Multicast Group: " << group);
+      MIRO_LOG_OSTR(LL_NOTICE, 
+		    " Initialized Multicast Forwarding. Multicast Group: " << group);
 
       /* log details */
       MIRO_DBG_OSTR(NMC, LL_DEBUG,
@@ -178,13 +174,15 @@ namespace Miro
       if (eventHandlerId_ != -1) 
 	reactor_->remove_handler(eventHandler_, ACE_Event_Handler::READ_MASK);
 
+      MIRO_DBG(NMC, LL_DEBUG, "Invalidating SH.");
+      receiver_->invalidateSH();
+      MIRO_DBG(NMC, LL_DEBUG, "Unsubscribing from multicast group.");
+      socket_->unsubscribe(parameters_->multicastGroup);
+
       MIRO_DBG(NMC, LL_DEBUG, "Deleting timeout handler.");
       delete timeoutHandler_;
       MIRO_DBG(NMC, LL_DEBUG, "Deleting event handler.");
       delete eventHandler_;
-
-      MIRO_DBG(NMC, LL_DEBUG, "Invalidating SH.");
-      receiver_->invalidateSH();
 	    
       MIRO_DBG(NMC, LL_DEBUG, "Deleting sh.");
       delete sh_;
@@ -192,6 +190,8 @@ namespace Miro
       delete receiver_;
       MIRO_DBG(NMC, LL_DEBUG, "Deleting sender.");
       delete sender_;
+      MIRO_DBG(NMC, LL_DEBUG, "Deleting socket.");
+      delete socket_;
 
       MIRO_LOG(LL_NOTICE, "NotifyMulticast successfully terminated.");
     }

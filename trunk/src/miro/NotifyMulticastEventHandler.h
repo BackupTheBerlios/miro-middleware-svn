@@ -51,16 +51,16 @@ namespace Miro
       
     public:
       //! Initializing constructor.
-      EventHandler(Receiver *_receiver, Config *_configuration);
+      EventHandler(ACE_HANDLE _handle, Receiver *_receiver);
       
       //! Inherited interface.
-      virtual int handle_input(ACE_HANDLE handle);
+      virtual int handle_input(ACE_HANDLE _handle);
       //! Inherited interface.
-      ACE_HANDLE get_handle() const;
+      virtual ACE_HANDLE get_handle() const;
       
     protected:
-      Receiver *receiver_;
-      Config   *config_;
+      ACE_HANDLE handle_;
+      Receiver * receiver_;
     };
   }
 }

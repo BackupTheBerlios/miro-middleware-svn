@@ -67,9 +67,9 @@ namespace Miro
   {
     // forward declerations
     class Config;
-    class Adapter;
     class SH;
     class EventFilter;
+    class Parameters;
 
     class Sender : public Miro::StructuredPushConsumer 
     {
@@ -77,7 +77,10 @@ namespace Miro
      
     public:
       //! Initializing constructor.
-      Sender(Adapter *_main, Config * _configuration);
+      Sender(ACE_SOCK_Dgram_Mcast& _socket,
+	     CosNotifyChannelAdmin::EventChannel_ptr _ec,
+	     std::string const& _domainName,
+	     Parameters * _parameters);
 
       //! Default destructor.
       ~Sender();
@@ -87,8 +90,6 @@ namespace Miro
       void setEventFilter(EventFilter * _event_filter);
 
       friend class SH;
-      friend class Adapter;
-
     protected:
       // protected types
       typedef std::pair<CORBA::ULong, CORBA::ULong> TimeSizePair;
@@ -131,8 +132,14 @@ namespace Miro
 
       void analyzeTraffic(CORBA::ULong _timestamp, CORBA::ULong _size);
 
-      Adapter *main_;
-      Config *configuration_;
+    private:
+      //------------------------------------------------------------------------
+      // private data
+      //------------------------------------------------------------------------
+      Parameters * parameters_;
+
+      ACE_SOCK_Dgram_Mcast& socket_;
+      std::string const domainName_;
       unsigned long int requestId_;
 		
       EventFilter * event_filter_;

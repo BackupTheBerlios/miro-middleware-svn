@@ -49,23 +49,21 @@ namespace Miro
      *     Default constructor
      *
      *   Parameter:
-     *     _main:          Pointer to NotifyMulticast adapter
      *     _configuration: Pointer to config object
      */
-    Receiver::Receiver(Adapter *_main,
-		       Config  *_configuration) :
-      Super(_configuration->getEventchannel(), _configuration->getDomain()),
-      main_(_main),
-      configuration_(_configuration),
+    Receiver::Receiver(ACE_SOCK_Dgram_Mcast& _socket,
+		       CosNotifyChannelAdmin::EventChannel_ptr _ec,
+		       std::string const& _domainName,
+		       Parameters const * _params) :
+      Super(_ec, _domainName),
+      socket_(_socket),
+      params_(_params),
       maxRetry_(5),
       mutex_(),
       localIPs_(),
       droppedLocal_(0) 
     {
       MIRO_LOG_CTOR("NMC::Receiver");
-      MIRO_DBG_OSTR(NMC, LL_DEBUG, 
-		    "NMC::Receiver: Initializing for domain " <<
-		    configuration_->getDomain());
       
       shValid_ = false;
       
@@ -80,16 +78,16 @@ namespace Miro
 	
 	struct in_addr ia;
 	
-	ia.s_addr = htonl(i->get_ip_address());
-	localIPs_.insert(i->get_ip_address());
+	ia.s_addr = ACE_HTONL(i->get_ip_address());
+	localIPs_.push_back(i->get_ip_address());
 	
 	MIRO_DBG_OSTR(NMC, LL_DEBUG,  "  " << inet_ntoa(ia));
       }
+      std::sort(localIPs_.begin(), localIPs_.end());
       
       delete[] locals;
       
       connected_ = true;
-      
     }
     
     
@@ -172,7 +170,6 @@ namespace Miro
     {
       if (connected_) {
 	Miro::Guard guard(mutex_);
-	CORBA::ULong  header[NMC_HEADER_SIZE / sizeof(CORBA::ULong) + ACE_CDR::MAX_ALIGNMENT];
 	EventData     eventData;
 	iovec         iov[1];
 	ACE_INET_Addr from;
@@ -217,11 +214,9 @@ namespace Miro
 	}
 
 	/* Process packet */
-	memcpy(header, ((char *)iov[0].iov_base ), sizeof(header));
-
-	char * buf = ACE_reinterpret_cast(char *, header);
-
-	TAO_InputCDR  headerCdr(buf, sizeof(header), (int)buf[0]);
+	TAO_InputCDR  headerCdr(reinterpret_cast<char const *>(iov[0].iov_base),
+				NMC_HEADER_SIZE,
+				reinterpret_cast<char const *>(iov[0].iov_base)[0]);
 
 	eventData.systemTimestamp = ACE_OS::gettimeofday().msec();
 
@@ -234,7 +229,12 @@ namespace Miro
 	headerCdr.read_ulong(eventData.fragmentCount);
 	headerCdr.read_ulong(eventData.timestamp);
 
-	handle_event(eventData, iov);
+	handle_event(from, eventData, 
+		     reinterpret_cast<char const *>(iov[0].iov_base) + 
+		     NMC_HEADER_SIZE, 
+		     iov[0].iov_len - NMC_HEADER_SIZE);
+
+	delete[] reinterpret_cast<char const *>(iov[0].iov_base);
       }
 
       return 0;
@@ -273,7 +273,8 @@ namespace Miro
 	      delete entry.int_id_;
 	      this->requestMap_.unbind(&entry);
 	    }
-	  } else {
+	  } 
+	  else {
 	    ++j;
 	  }
 	}
@@ -296,9 +297,11 @@ namespace Miro
      *     _iov:       Complete packet
      */
     int 
-    Receiver::handle_event(EventData &_eventData, iovec *_iov) 
+    Receiver::handle_event(ACE_INET_Addr const& _from,
+			   EventData const &_eventData, 
+			   char const *_buffer, 
+			   unsigned long _len) 
     {
-      ACE_INET_Addr from;
 
       /* Drop the packet if data doesn't fit */
 
@@ -323,7 +326,7 @@ namespace Miro
       }
 
       /* Index the incomplete (due to fragmentation) requests */
-      RequestIndex     mapIndex(from, _eventData.requestId);
+      RequestIndex     mapIndex(_from, _eventData.requestId);
       RequestMapEntry *entry;
 
       if (this->requestMap_.find(mapIndex, entry) == -1) {
@@ -336,9 +339,8 @@ namespace Miro
 
 	/* Drop the packet if impossible to bind entry to map */
 
-	if ((requestEntry == 0) || 
-	    (this->requestMap_.bind(mapIndex, requestEntry, entry) == -1)) {
-	  MIRO_LOG(LL_NOTICE, "Unable to index, dropping");
+	if (this->requestMap_.bind(mapIndex, requestEntry, entry) == -1) {
+	  MIRO_LOG(LL_NOTICE, "NMC::Receiver::handle_event(): Unable to index, dropping");
 
 	  return 0;
 	}
@@ -369,13 +371,9 @@ namespace Miro
       }
 
       /* Copy the payload into the fragment buffer */
-      char *buffer = (char *)_iov[0].iov_base + NMC_HEADER_SIZE;
-
-      int   bufferLen = _iov[0].iov_len - NMC_HEADER_SIZE;
-
       memcpy(entry->int_id_->fragmentBuffer(_eventData.fragmentOffset),
-	     buffer,
-	     bufferLen);
+	     _buffer,
+	     _len);
 
       /* Mark datagram fragment as received */
       entry->int_id_->markReceived(_eventData.fragmentId);
@@ -394,9 +392,6 @@ namespace Miro
 
 	/* Decode datagram */
 	entry->int_id_->decode(event);
-
-	/* Drop packet if it's too old */
-	// unsigned int time = ACE_OS::gettimeofday().msec();
 
 	MIRO_DBG_OSTR(NMC, LL_PRATTLE,
 		      "Receiver::handle_event(): Got event "
@@ -423,21 +418,28 @@ namespace Miro
 	} 
 	else {
                     
-#ifdef EnablePacketTooOldCheck
-	  int delta = abs((int)time - (int)_eventData.timestamp);
-	  if (delta > configuration_->getEventMaxAge()) {
+	  // Drop packet if it's too old
+	  ACE_Time_Value now = ACE_OS::gettimeofday();
+	  ACE_Time_Value timestamp;
+	  timestamp.msec(_eventData.timestamp);
+	  ACE_Time_Value delta = 
+	    (now > timestamp)? now - timestamp : timestamp - now;
+
+	  if (params_->messageTimeout != ACE_Time_Value::zero &&
+	      delta > params_->messageTimeout) {
 	    MIRO_DBG_OSTR(NMC, LL_PRATTLE,
-		      "NMC::Receiver::handle_event(): Packet " <<
-			  _eventData.requestId << " dropped because it was too old: " << delta);
-	    return 0;
+			  "NMC::Receiver::handle_event(): Packet " <<
+			  _eventData.requestId <<
+			  " dropped because it was too old: " << delta << "msec");
 	  }
-#endif /* EnablePacketTooOldCheck */
-
-	  /* Send event to event channel */
-	  sendEvent(event);
+	  else {
+	    /* Send event to event channel */
+	    sendEvent(event);
+	  }
+	      
+	  delete entry->int_id_;
+	  this->requestMap_.unbind(entry);
 	}
-
-
       } 
       catch (...) {
 	MIRO_LOG(LL_ERROR, "NMC::Receiver::handle_event(): Exception");
@@ -445,36 +447,6 @@ namespace Miro
 
       return 0;
     }
-
-
-    /**
-     *     Check if address (_from) is local
-     *
-     *   Parameters:
-     *     _from: address to check
-     */
-    bool 
-    Receiver::is_loopback(const ACE_INET_Addr &_from) 
-    {
-      return (localIPs_.find(_from.get_ip_address()) != localIPs_.end());
-    }
-
-
-    /**
-     *     Reads data from the MC-Notification-Channel into an IOVec.
-     *
-     *   Parameters:
-     *     _iov:    IOVec in which the data is stored
-     *     _iovLen: Length (size) of _iov
-     *     _from:   Sender address
-     *     _flags:  FLags for recv()
-     */
-    int 
-    Receiver::receiveData(iovec *_iov, int _iovLen, ACE_INET_Addr &_from, int _flags) 
-    {
-      return configuration_->getSocket()->recv(_iov, _iovLen, _from, _flags);
-    }
-
 
     /**
      *     Reads data from the MC-Notification-Channel into an IOVec.
@@ -487,23 +459,7 @@ namespace Miro
     int
     Receiver::receiveData(iovec *_iov, ACE_INET_Addr &_from, int _flags) 
     {
-      return configuration_->getSocket()->recv(_iov, _from, _flags);
-    }
-
-
-    /**
-     *     Reads data from the MC-Notification-Channel into a buffer.
-     *
-     *   Parameters:
-     *     _data:    Pointer to a buffer
-     *     _dataLen: Size of the buffer
-     *     _from:    Sender address
-     *     _flags:   FLags for recv()
-     */
-    int 
-    Receiver::receiveData(void *_data, int _dataLen, ACE_INET_Addr &_from, int _flags) 
-    {
-      return configuration_->getSocket()->recv(_data, _dataLen, _from, _flags);
+      return socket_.recv(_iov, _from, _flags);
     }
 
     void Receiver::setSH(SH *_sh) 
