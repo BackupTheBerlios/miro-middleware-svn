@@ -12,7 +12,7 @@
   <Sparrow99>
     <sparrowBoard>
       <device>/dev/can/0</device>
-      <channelsharing>false</channelsharing>
+      <channelsharing>true</channelsharing>
       <ticksl>30</ticksl>
       <ticksr>30</ticksr>
       <diameter>2310</diameter>
@@ -32,7 +32,7 @@
       <watchdogtimeout>2000</watchdogtimeout>
       <buttonspollinterval>300</buttonspollinterval>
 
-      <servo0midpulse>3700</servo0midpulse>
+      <servo0midpulse>3300</servo0midpulse>
       <deg2servoticks>28.2</deg2servoticks>
       <!--
         <servo1midpulse></servo1midpulse>
@@ -309,6 +309,12 @@
       <type_name>ArbitrateChange</type_name>
       <type_name>PositionHypothesis</type_name>
     </logging>
+    <NotifyMulticast>
+      <subscription>BallPosition</subscription>
+      <subscription>LocalizedPosition</subscription>
+      <messagetimeout>500</messagetimeout>
+      <multicastgroup>225.2.2.1:41006</multicastgroup>
+    </NotifyMulticast>
   </Notification>
   <B21>
     <video>
