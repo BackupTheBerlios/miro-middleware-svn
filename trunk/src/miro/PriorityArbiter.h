@@ -35,6 +35,7 @@ namespace Miro
     ARBITER_TYPES_FACTORY(PriorityArbiter);
 
     virtual void calcActivation();
+    virtual ArbiterMessage * getInferior(Behaviour const * _id);
 
   protected:
     //! Pass the arbitration message to the actuators.

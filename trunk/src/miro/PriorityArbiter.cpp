@@ -44,4 +44,33 @@ namespace Miro
       currentBehaviour_ = NULL;
     }
   }
-};
+
+  ArbiterMessage *
+  PriorityArbiter::getInferior(Behaviour const * _id)
+  {
+    ArbiterMessage * message = getMessageInstance();
+
+    MessageVector::const_iterator first, last = message_.end();
+    for (first = message_.begin(); first != last; ++first) {
+      // find first calling behaviours
+      if ((*first)->id == _id) {
+	break;
+      }
+    }
+    
+    // if this behaviour has a successor
+    // get his arbitration
+    if (first != last) {
+      ++first;
+      for (; first != last; ++first) {
+	// find first active behaviour
+	if ((*first)->active) {
+	  message->assign(**first);
+	  break;
+	}
+      }
+    }
+
+    return message;
+  }
+}
