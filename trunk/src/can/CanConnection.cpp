@@ -143,8 +143,8 @@ namespace Can
        pcanmsg * msgp;
        message.canMessage((int **) &msgp);
        msgp->msg.msgtype = MSGTYPE_EXTENDED;
-       for(int i = 0; i < msgp->msg.len; i++)
-          std::cout << msgp->msg.data[i];
+       //for(int i = 0; i < msgp->msg.len; i++)
+       //   std::cout << msgp->msg.data[i];
        rc = ioctl(ioBuffer.get_handle(), PCAN_WRITE_MSG, msgp);
     }
     else {
