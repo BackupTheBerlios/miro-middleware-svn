@@ -59,6 +59,8 @@
 /* Miro includes */
 #include <miro/StructuredPushConsumer.h>
 
+#include <deque>
+
 namespace Miro 
 {
   namespace NMC 
@@ -72,7 +74,7 @@ namespace Miro
     class Sender : public Miro::StructuredPushConsumer 
     {
       typedef Miro::StructuredPushConsumer Super;
-
+     
     public:
       //! Initializing constructor.
       Sender(Adapter *_main, Config * _configuration);
@@ -88,6 +90,10 @@ namespace Miro
       friend class Adapter;
 
     protected:
+      // protected types
+      typedef std::pair<CORBA::ULong, CORBA::ULong> TimeSizePair;
+      typedef std::deque<TimeSizePair> BandwidthQueue;
+
       void subscribe(std::string const& _domain,
 		     std::string const& _type)
 	throw(CORBA::SystemException, CosNotifyComm::InvalidEventType);
@@ -123,11 +129,18 @@ namespace Miro
 				 ACE_ENV_ARG_DECL_WITH_DEFAULTS)
 	throw(CORBA::SystemException, CosEventComm::Disconnected);
 
+      void analyzeTraffic(CORBA::ULong _timestamp, CORBA::ULong _size);
+
       Adapter *main_;
       Config *configuration_;
       unsigned long int requestId_;
 		
       EventFilter * event_filter_;
+
+      CORBA::ULong lastTrafficAnalysis_;
+      BandwidthQueue bandwidth_;
+
+      static CORBA::ULong const TIMEOUT_MSEC = 2000;
     };
   }
 }

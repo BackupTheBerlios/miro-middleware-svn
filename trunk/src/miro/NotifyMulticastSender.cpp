@@ -55,7 +55,8 @@ namespace Miro
       Super(_configuration->getEventchannel()),
       main_(_main),
       configuration_(_configuration),
-      requestId_(0)
+      requestId_(0),
+      lastTrafficAnalysis_(0)
     {
       MIRO_LOG_CTOR("NMC::Sender");
 
@@ -505,7 +506,8 @@ namespace Miro
       _iov[0].iov_base = cdr.begin()->rd_ptr();
       _iov[0].iov_len  = cdr.begin()->length();
 
-      switch (sendData(_iov, _iovcnt)) {
+      size_t len = sendData(_iov, _iovcnt);
+      switch (len) {
       case -1: 
 	{
 	  MIRO_LOG_OSTR(LL_ERROR, 
@@ -523,6 +525,7 @@ namespace Miro
 	break;
 
       default:
+	analyzeTraffic(_timestamp, _iov[0].iov_len);
 	break;
       }
 
@@ -561,6 +564,29 @@ namespace Miro
       MIRO_ASSERT(_event_filter != 0);
       delete event_filter_;
       event_filter_ = _event_filter;
+    }
+
+    void
+    Sender::analyzeTraffic(CORBA::ULong _timestamp, CORBA::ULong _size) {
+      bandwidth_.push_back(std::make_pair(_timestamp, _size));
+
+      while (_timestamp - bandwidth_.front().first > TIMEOUT_MSEC) {
+	bandwidth_.pop_front();
+      }
+
+      if (_timestamp - lastTrafficAnalysis_ > 1000) {
+	lastTrafficAnalysis_ = _timestamp;
+
+	BandwidthQueue::const_iterator first, last = bandwidth_.end();
+	CORBA::ULong sum = 0;
+	for (first = bandwidth_.begin(); first != last; ++first) {
+	  sum += first->second;
+	}
+	sum /= TIMEOUT_MSEC;
+
+
+	MIRO_DBG_OSTR(NMC, LL_DEBUG, "Sender: output per second = " << sum);
+      }
     }
   }
 }
