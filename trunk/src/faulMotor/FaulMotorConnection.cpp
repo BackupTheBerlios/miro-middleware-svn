@@ -304,16 +304,16 @@ namespace FaulMotor
 
     writeThisRound_ = false;
 
-    protectedDeferredSetSpeed();
-
-#ifdef ASDF
-     if (Sparrow::Parameters::instance()->sparrow2003){
+    if (Sparrow::Parameters::instance()->sparrow2003){
       leftWheel_->sendAccVelTicks(newAccL, newAccR, newSpeedL, newSpeedR);
-
+      prevSpeedL = newSpeedL;
+      prevSpeedR = newSpeedR;
+      prevAccL = newAccL;
+      prevAccR = newAccR;
     } 
     else {
+      protectedDeferredSetSpeed();
     }
-#endif
   }
 
   void
