@@ -81,8 +81,8 @@ namespace Sparrow
 
     Parameters * params = Parameters::instance();
 
-    connection.getPosition(params->odometryInterval, 0);
-    connection.infraredGet(params->infraredInterval, 0);
+    connection.getPosition(params->odometryPulse.msec(), 0);
+    connection.infraredGet(params->infraredPulse.msec(), 0);
 
     DBG(cout << "Sparrow startup successfull." << endl);
   }

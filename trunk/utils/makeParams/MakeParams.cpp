@@ -14,10 +14,9 @@
 
 #include <ace/Get_Opt.h>
 
-#include "Parser.h"
-#include "Generator.h"
-
-#include "miro/Exception.h"
+#include "../params/Parser.h"
+#include "../params/Generator.h"
+#include "../params/TextErrorHandler.h"
 
 #include <qstring.h>
 #include <qfile.h>
@@ -28,6 +27,7 @@
 
 using std::cout;
 using std::cerr;
+using std::ofstream;
 
 bool verbose = false;
 
@@ -65,9 +65,9 @@ parseArgs(int& argc, char* argv[])
     default:
       cerr << "usage: " << argv[0] << "[-f file] [-i item] [-s=source] [-h=header] [-v?]" << endl
 	   << "  -f <file> name of the input file (Parameters.xml)" << endl
-	   << "  -f <name> base name of the output file (Parameters)" << endl
-	   << "  -s <extension> extension of the generated source file (.h)" << endl
-	   << "  -h <extension> extension of the generated header file (.cpp)" << endl
+	   << "  -n <name> base name of the output file (Parameters)" << endl
+	   << "  -s <extension> extension of the generated source file (cpp)" << endl
+	   << "  -h <extension> extension of the generated header file (h)" << endl
 	   << "  -v verbose mode" << endl
 	   << "  -? help: emit this text and stop" << endl;
       rc = 1;
@@ -97,23 +97,33 @@ main (int argc, char * argv[])
       QFile xmlFile( fileName );
       QXmlInputSource source( xmlFile );
       QXmlSimpleReader reader;
+      TextErrorHandler errorHandler;
       
       reader.setContentHandler( &handler );
+      reader.setErrorHandler( &errorHandler );
       if (verbose)
 	cout << "parsing " << fileName << endl;
-      reader.parse( source );
+      bool success = reader.parse( source );
       
-      if (verbose)
-	cout << "generating  " << (baseName + "." + sourceExtension) << endl;
-      ofstream sourceFile(baseName + "." + sourceExtension);
-      if (verbose)
-	cout << "generating  " << (baseName + "." + headerExtension) << endl;
-      ofstream headerFile(baseName + "." + headerExtension);
+      if (success) {
+
+	if (verbose)
+	  cout << "generating  " << (baseName + "." + sourceExtension) << endl;
+	ofstream sourceFile(baseName + "." + sourceExtension);
+	if (verbose)
+	  cout << "generating  " << (baseName + "." + headerExtension) << endl;
+	ofstream headerFile(baseName + "." + headerExtension);
       
-      generator.generateSource(sourceFile);
-      generator.generateHeader(headerFile);
+	generator.generateSource(sourceFile);
+	generator.generateHeader(headerFile);
+      }
+      else {
+	cerr << "Error parsing " << fileName << endl
+	     << errorHandler.errorString();
+	rc = 1;
+      }
     }
-    catch (const Miro::Exception& e) {
+    catch (const QString& e) {
       cerr << "Exception: " << e << endl;
       rc = 1;
     }

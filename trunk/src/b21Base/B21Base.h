@@ -25,7 +25,7 @@
 #include "msp/MspConsumer.h"
 #include "msp/MspConnection.h"
 #include "msp/MspEventHandler.h"
-#include "msp/MspParameters.h"
+#include "msp/Parameters.h"
 
 #include "buttons/ButtonsConnection.h"
 #include "buttons/ButtonsImpl.h"
@@ -35,7 +35,7 @@
 
 class B21Base : public Miro::Server
 {
-  typedef Miro::Server super;
+  typedef Miro::Server Super;
   typedef B21Base self;
 
   // = DESCRIPTION
@@ -44,10 +44,7 @@ class B21Base : public Miro::Server
 
 public:
   // Initialization and Termination methods.
-  B21Base(int& argc, char *argv[],
-	  const Miro::RobotParameters& _robotParameters,
-	  const Base::Parameters& _baseParameters,
-	  const Msp::Parameters& _mspParameters);
+  B21Base(int& argc, char *argv[]);
   // Constructor.
 
   ~B21Base();

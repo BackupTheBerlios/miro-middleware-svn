@@ -43,8 +43,6 @@ include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
 include $(ACE_ROOT)/include/makeinclude/macros.GNU
 include $(MIRO_ROOT)/include/makeinclude/macros.miro.GNU
 
-depend: $(MOC_SRC)
-
 include $(TAO_ROOT)/rules.tao.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.nonested.GNU
@@ -57,6 +55,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 #----------------------------------------------------------------------------
 .PRECIOUS: $(MOC_SRC)
 
+depend: $(MOC_SRC)
+
 realclean: clean
 	-$(RM) $(MOC_SRC))
 
@@ -67,10 +67,9 @@ realclean: clean
 .obj/LogPlayer.o .obj/LogPlayer.so .shobj/LogPlayer.o .shobj/LogPlayer.so: LogPlayer.cpp $(MIRO_ROOT)/src/miro/Server.h \
  $(MIRO_ROOT)/src/miro/Client.h \
  $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/RobotParameters.h \
  $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/Singleton.h \
- $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
  $(MIRO_ROOT)/src/miro/StructuredPushSupplier.h \
  $(MIRO_ROOT)/src/miro/TimeHelper.h \
  $(MIRO_ROOT)/src/miro/TimeC.h \

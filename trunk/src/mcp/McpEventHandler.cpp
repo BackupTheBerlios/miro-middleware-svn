@@ -5,25 +5,19 @@
 // for details copyright, usage and credits to other groups see Miro/COPYRIGHT
 // for documentation see Miro/doc
 // 
-// (c) 1999,2000
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-
 
 #include "McpEventHandler.h"
 #include "McpConnection.h"
 #include "McpConsumer.h"
 #include "McpMessage.h"
 #include "McpDevice.h"
-#include "McpParameters.h"
+#include "Parameters.h"
 
 #include "miro/Exception.h"
 

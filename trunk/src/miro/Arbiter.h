@@ -16,6 +16,22 @@
 #include <vector>
 #include <string>
 
+#define ARBITER_TYPES_FACTORY(X) \
+    virtual X ## Parameters * getParametersInstance() const; \
+    virtual X ## Message * getMessageInstance() const
+
+#define ARBITER_TYPES_FACTORY_IMPL(X) \
+  X ## Parameters * \
+  X::getParametersInstance() const \
+  { \
+    return new X ## Parameters(); \
+  } \
+  X ## Message * \
+  X::getMessageInstance() const \
+  { \
+    return new X ## Message(); \
+  }
+
 namespace Miro
 {
   class ArbiterMessage;
@@ -37,13 +53,13 @@ namespace Miro
     virtual ~Arbiter();
 
     //! Factory method for ArbiterParameters.
-    virtual ArbiterParameters * getParametersInstance();
+    virtual ArbiterParameters * getParametersInstance() const;
     //! Factory method for ArbiterMessage.
-    virtual ArbiterMessage * getMessageInstance();
+    virtual ArbiterMessage * getMessageInstance() const;
 
-    //! Start action pattern.
+    //! Start arbiter.
     virtual void open();
-    //! Stop action pattern.
+    //! Stop arbiter.
     virtual void close();
     //! True if action pattern is started.
     bool isActive() const;
@@ -58,11 +74,13 @@ namespace Miro
     virtual const std::string& getName() const = 0;
         
   protected:
+    //! A vector for arbitration input from the behaviours.
     typedef std::vector<ArbiterMessage *> MessageVector;
 
-    //! Lock for init / arbitrate concurrency
+    //! Lock for init / arbitrate concurrency.
     Mutex mutex_;
     //! Active flag.
+    /** Initialized to false. */
     bool active_;
     //! Vector of arbitration messages.
     MessageVector message_;

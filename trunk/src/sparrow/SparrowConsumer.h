@@ -12,7 +12,7 @@
 #define SparrowConsumer_h
 
 #include "SparrowDevice.h"
-#include "SparrowParameters.h"
+#include "Parameters.h"
 
 #include "miro/Synch.h"
 #include "miro/DevConsumer.h"

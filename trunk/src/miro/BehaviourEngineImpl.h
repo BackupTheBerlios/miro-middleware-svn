@@ -20,6 +20,7 @@ namespace Miro
   // forward declarations
   class StructuredPushSupplier;
   class Policy;
+  class ActionPattern;
 
   //! Implementation of the BehaviourEngine CORBA interface.
   /**
@@ -60,6 +61,12 @@ namespace Miro
     virtual void closePolicy ()
       ACE_THROW_SPEC ((Miro::BehaviourEngine::ENoPolicy));
     //! BehaviourEngine interface method implementation.
+    virtual void suspendPolicy ()
+      ACE_THROW_SPEC ((Miro::BehaviourEngine::ENoPolicy));
+    //! BehaviourEngine interface method implementation.
+    virtual void resumePolicy ()
+      ACE_THROW_SPEC ((Miro::BehaviourEngine::ENoPolicy));
+    //! BehaviourEngine interface method implementation.
     virtual void openActionPattern(const char * pattern)
       ACE_THROW_SPEC ((Miro::BehaviourEngine::EUnknownActionPattern));
     //! BehaviourEngine interface method implementation.
@@ -79,6 +86,10 @@ namespace Miro
     //! Flag indicating whether to open a policy automatically after loading or not.
     /** Default is false. */
     bool openOnLoad_;
+
+    //! Currently suspended pattern.
+    /** NULL if no pattern is currently suspended. */
+    Miro::ActionPattern * suspendedPattern_;
   };
 
   inline

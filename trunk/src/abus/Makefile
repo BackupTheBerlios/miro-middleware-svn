@@ -59,15 +59,17 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
 
-.obj/AbusConnection.o .obj/AbusConnection.o .obj/AbusConnection.o .obj/AbusConnection.o: AbusConnection.cpp $(MIRO_ROOT)/src/miro/Exception.h \
- AbusConnection.h $(MIRO_ROOT)/src/miro/DevConnection.h AbusDevice.h \
+.obj/AbusConnection.o .obj/AbusConnection.o .obj/AbusConnection.o .obj/AbusConnection.o: AbusConnection.cpp \
+ $(MIRO_ROOT)/src/miro/Exception.h AbusConnection.h \
+ $(MIRO_ROOT)/src/miro/DevConnection.h AbusDevice.h \
  AbusMessage.h $(MIRO_ROOT)/src/miro/DevMessage.h
 
 .obj/AbusDevice.o .obj/AbusDevice.o .obj/AbusDevice.o .obj/AbusDevice.o: AbusDevice.cpp AbusDevice.h
 
 .obj/AbusEventHandler.o .obj/AbusEventHandler.o .obj/AbusEventHandler.o .obj/AbusEventHandler.o: AbusEventHandler.cpp AbusEventHandler.h \
  $(MIRO_ROOT)/src/miro/DevEventHandler.h AbusConnection.h \
- $(MIRO_ROOT)/src/miro/DevConnection.h $(MIRO_ROOT)/src/miro/Exception.h \
- AbusMessage.h $(MIRO_ROOT)/src/miro/DevMessage.h AbusDevice.h
+ $(MIRO_ROOT)/src/miro/DevConnection.h \
+ $(MIRO_ROOT)/src/miro/Exception.h AbusMessage.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h AbusDevice.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

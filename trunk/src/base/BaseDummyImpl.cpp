@@ -11,7 +11,7 @@
 
 
 #include "BaseDummyImpl.h"
-#include "BaseParameters.h"
+#include "Parameters.h"
 
 #include "miro/IO.h"
 

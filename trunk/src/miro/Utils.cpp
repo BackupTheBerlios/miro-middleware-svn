@@ -17,14 +17,14 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "miro/Utils.h"
 #include "miro/Exception.h"
-#include "miro/DevParameters.h"
+#include "miro/Parameters.h"
 
 #include <ace/Arg_Shifter.h>
 
 #include <qfile.h>
+#include <qdom.h>
 
 #include <iostream>
 #include <fstream>
@@ -36,13 +36,13 @@
 
 #undef DEBUG
 
-using std::string;
-using std::cout;
-using std::cerr;
-using std::vector;
-
 namespace Miro
 {
+  using std::string;
+  using std::cout;
+  using std::cerr;
+  using std::vector;
+
   string
   findFile(const string& name, const vector<string>& userPath)
   {
@@ -74,7 +74,7 @@ namespace Miro
 				 const std::string& defaultname, 
 				 const std::string& documentname,
 				 const std::vector<std::string> &userPath ) :
-    document( documentname.c_str() )
+    document_( new QDomDocument(documentname.c_str()) )
   {
 
     const char *name;
@@ -127,7 +127,7 @@ namespace Miro
 
       if (!f.open(IO_ReadOnly))
 	throw CException(errno, std::strerror(errno));
-      if (!document.setContent(&f)) {
+      if (!document_->setContent(&f)) {
 	f.close();
 	throw CException(errno, std::strerror(errno));
       }
@@ -135,49 +135,40 @@ namespace Miro
     }
   }
 
-  void 
-  ConfigDocument::setRobotType(const char name[])
+  ConfigDocument::~ConfigDocument()
   {
-    QDomElement docElem = document.documentElement();
-    sections = document.elementsByTagName(name);
-  }
-  void 
-  ConfigDocument::setSection(const char name[])
-  {
-    QDomElement docElem = document.documentElement();
-    sections = document.elementsByTagName(name);
+    delete document_;
   }
 
   void 
-  ConfigDocument::getParameters(const char category[], 
-				Parameters& parameters)
+  ConfigDocument::getParameters(const std::string& _category, 
+				ConfigParameters& parameters)
   {
-    //cerr << "get params" << endl;
-    for (unsigned int i = 0; i < sections.length(); ++i) {
-      //cerr << "doing section " << i << endl;
-      QDomNode n = sections.item(i).firstChild();
-      //cerr << "after first child" << endl;
-      while(!n.isNull()) {
-	if (n.nodeName() == QString(category)) {
-	  parameters <<= n;
-	  //cerr << "after <<=" << endl;
+    QString section = section_.c_str();
+    QString category = _category.c_str();
+
+    // get the root nodes first child
+    QDomNode n1 = document_->documentElement().firstChild();
+    while(!n1.isNull()) {
+      QDomElement e1 = n1.toElement();
+      if (!e1.isNull() &&
+	  (n1.nodeName() == "section" &&
+	   e1.attribute("name") == section) ||
+	  (n1.nodeName() == section)) {
+
+	QDomNode n2 = n1.firstChild();
+	while (!n2.isNull()) {
+	  QDomElement e2 = n2.toElement();
+	  if (!e2.isNull() &&
+	      (n2.nodeName() == "parameter" &&
+	       e2.attribute("name") == category) ||
+	      (n2.nodeName() == category)) {
+	    parameters <<= n2;
+	  }
+	  n2 = n2.nextSibling();
 	}
-	n = n.nextSibling();
-	//cerr << "after next" << endl;
       }
+      n1 = n1.nextSibling();
     }
   }
 };
-
-//
-// Template instantiations
-//
-#if defined (ACE_HAS_EXPLICIT_TEMPLATE_INSTANTIATION)
-
-template class std::vector<std::string>;
-
-#elif defined (ACE_HAS_TEMPLATE_INSTANTIATION_PRAGMA)
-
-#pragma instantiate std::vector<std::string>
-
-#endif

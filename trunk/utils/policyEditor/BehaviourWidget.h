@@ -15,7 +15,6 @@
 #include "PolicyDocument.h"
 
 #include <qlabel.h>
-#include <qstring.h>
 
 /**
  * This class shows a behaviour name for use in PatternWidget
@@ -26,19 +25,10 @@ class BehaviourWidget : public QLabel
 
   typedef QLabel Super;
 
-private:
-  int picked_x;
-  int picked_y;
+public:
+  BehaviourWidget(QWidget* parent, const QString& patternName);
 
-  QString behaviourName;
-
-  /** returns a reference of the parent pattern widget */
-  PatternWidgetClass& getPatternWidget() const;
-
-  /** returns a reference of the document */
-  PolicyDocumentClass& getDocument() const;
-
-private slots:
+protected slots:
   void onUp();
   void onDown();
   void onSetParameters();
@@ -46,12 +36,15 @@ private slots:
 
 protected:
   void mousePressEvent(QMouseEvent*);
-  void mouseMoveEvent(QMouseEvent* event);
+  void mouseDoubleClickEvent(QMouseEvent* event);
   void enterEvent(QEvent*);
   void leaveEvent(QEvent*);
 
-public:
-  BehaviourWidget(QWidget* parent, const QString& patternName);
+  //! returns a reference of the parent pattern widget
+  PatternWidgetClass& getPatternWidget() const;
+
+  //! returns a reference of the document
+  PolicyDocumentClass& getDocument() const;
 };
 
 /** returns a reference of the document */

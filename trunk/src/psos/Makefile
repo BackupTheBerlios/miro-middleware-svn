@@ -26,10 +26,10 @@ SHLIB    = lib$(NAME).$(SOEXT)
 # ACE_SHLIBS = -lTAO_Svc_Utils -lTAO -lACE
 
 ## specify your library files here
-FILES = 	PsosDevice \
+FILES = 	Parameters \
+		PsosDevice \
 		PsosMessage \
 		PsosConnection \
-		PsosParameters \
 		PsosEventHandler
 
 DEFS  = $(addsuffix .h,$(FILES))
@@ -56,10 +56,16 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 #       Local targets (and local hacks)
 #----------------------------------------------------------------------------
 
+.PRECIOUS: Parameters.cpp Parameters.h
 
 # DO NOT DELETE THIS LINE -- g++dep uses it.
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
+
+.obj/Parameters.o .obj/Parameters.o .obj/Parameters.o .obj/Parameters.o: Parameters.cpp Parameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h
 
 .obj/PsosDevice.o .obj/PsosDevice.o .obj/PsosDevice.o .obj/PsosDevice.o: PsosDevice.cpp PsosDevice.h PsosMessage.h \
  $(MIRO_ROOT)/src/miro/DevMessage.h
@@ -67,24 +73,22 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 .obj/PsosMessage.o .obj/PsosMessage.o .obj/PsosMessage.o .obj/PsosMessage.o: PsosMessage.cpp PsosMessage.h \
  $(MIRO_ROOT)/src/miro/DevMessage.h PsosDevice.h
 
-.obj/PsosConnection.o .obj/PsosConnection.o .obj/PsosConnection.o .obj/PsosConnection.o: PsosConnection.cpp $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i $(MIRO_ROOT)/src/miro/Exception.h \
+.obj/PsosConnection.o .obj/PsosConnection.o .obj/PsosConnection.o .obj/PsosConnection.o: PsosConnection.cpp \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/Exception.h \
  $(MIRO_ROOT)/src/miro/Synch.h PsosConnection.h \
  $(MIRO_ROOT)/src/miro/TtyConnection.h PsosEventHandler.h \
  $(MIRO_ROOT)/src/miro/DevEventHandler.h PsosMessage.h \
- $(MIRO_ROOT)/src/miro/DevMessage.h PsosDevice.h PsosParameters.h \
- $(MIRO_ROOT)/src/miro/TtyParameters.h \
- $(MIRO_ROOT)/src/miro/DevParameters.h $(MIRO_ROOT)/src/miro/Parameters.h
-
-.obj/PsosParameters.o .obj/PsosParameters.o .obj/PsosParameters.o .obj/PsosParameters.o: PsosParameters.cpp PsosParameters.h \
- $(MIRO_ROOT)/src/miro/TtyParameters.h \
- $(MIRO_ROOT)/src/miro/DevParameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/XmlParse.h $(MIRO_ROOT)/src/miro/Angle.h \
- $(MIRO_ROOT)/src/miro/Exception.h
+ $(MIRO_ROOT)/src/miro/DevMessage.h PsosDevice.h Parameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h
 
 .obj/PsosEventHandler.o .obj/PsosEventHandler.o .obj/PsosEventHandler.o .obj/PsosEventHandler.o: PsosEventHandler.cpp PsosEventHandler.h \
- $(MIRO_ROOT)/src/miro/DevEventHandler.h $(MIRO_ROOT)/src/miro/Synch.h \
- PsosConnection.h $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/DevEventHandler.h \
+ $(MIRO_ROOT)/src/miro/Synch.h PsosConnection.h \
+ $(MIRO_ROOT)/src/miro/Exception.h \
  $(MIRO_ROOT)/src/miro/TtyConnection.h PsosMessage.h \
  $(MIRO_ROOT)/src/miro/DevMessage.h PsosDevice.h
 

@@ -43,6 +43,8 @@ protected slots:
 
   void openPolicy();
   void closePolicy();
+  void suspendPolicy();
+  void resumePolicy();
 
   void sendTransition();
   void sendGlobalTransition();
@@ -67,6 +69,8 @@ protected:
 
   QPushButton *playButton;
   QPushButton *stopButton;
+  QPushButton * suspendButton;
+  QPushButton * resumeButton;
 
   int iLoad_;
   int iSend_;

@@ -24,7 +24,7 @@
 #include "McpConnection.h"
 #include "McpEventHandler.h"
 #include "McpDevice.h"
-#include "McpParameters.h"
+#include "Parameters.h"
 
 #include <ace/Reactor.h>
 

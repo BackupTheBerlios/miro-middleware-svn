@@ -14,11 +14,14 @@
 
 namespace Miro
 {
-  BEHAVIOUR_PARAMETERS_FACTORY_IMPL(TimedBehaviour, TimedBehaviourParameters)
+  BEHAVIOUR_PARAMETERS_FACTORY_IMPL(TimedBehaviour, TimedBehaviourParameters);
 
-  TimedBehaviour::TimedBehaviour(ACE_Reactor &ar_):
+  /**
+   * @param _reactor Reference to the reactor to register with.
+   */
+  TimedBehaviour::TimedBehaviour(ACE_Reactor &_reactor):
     // store the ace reactor
-    reactor(ar_), 
+    reactor(_reactor), 
     timerId(0)
   {
   }

@@ -40,7 +40,7 @@ namespace Miro
   }
 
   PowerArbiterMessage * 
-  PowerArbiter::getMessageInstance()
+  PowerArbiter::getMessageInstance() const
   {
     return new PowerArbiterMessage();
   }

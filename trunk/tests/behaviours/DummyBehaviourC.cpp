@@ -9,7 +9,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "DummyBehaviourParameters.h"
+#include "Parameters.h"
 #include "DummyBehaviourC.h"
 #include "DummyArbiterMessage.h"
 

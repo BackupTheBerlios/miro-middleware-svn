@@ -94,6 +94,30 @@ module Miro
      * @throw ENoPolicy is thrown, when no policy is currently active.
      */
     void closePolicy() raises(ENoPolicy);
+    //! Suspend the current policy.
+    /**
+     * The policy will begin by temporarily suspended if it is
+     * currently running. If no policy is currently active, the call
+     * will be ignored.
+     *
+     * This method is intendet especially for debugging.
+     *
+     * @throw ENoPolicy is thrown, when no policy is currently loaded,
+     *        or the previous attempt to do so failed.
+     */
+    void suspendPolicy() raises(ENoPolicy);
+    //! Resume the current policy.
+    /**
+     * Resumes a previously suspended policy. That is, the action
+     * pattern, active before suspension of the policy will become
+     * active again. If no policy is currently suspended, the call
+     * will be ignored.
+     *
+     * This method is intendet especially for debugging.
+     *
+     * @throw ENoPolicy is thrown, when no policy is currently active.
+     */
+    void resumePolicy() raises(ENoPolicy);
 
     //! Initiate a global transition.
     /**

@@ -20,15 +20,15 @@
 INSTALL = $(VBIN:%=$(INSBIN)/%)
 
 ## dynamic libraries if needed
-LDLIBS += -lmiro -lTAO_CosNaming -lTAO
+LDLIBS += -lmiro
 ## program to be built
 ## there has to exist a source file with the same name (mybinary.cc)
 BIN 	= LogNotify LogTruncate NotifyLogPlayer
 
 ## additional files
 FILES	= \
-	LogNotifyConsumer \
-	LogNotifyParameters
+	Parameters \
+	LogNotifyConsumer
 
 SRC	= $(addsuffix .cpp,$(FILES))
 OBJ	= $(addsuffix .o,$(FILES))
@@ -57,20 +57,27 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 #	Local targets
 #----------------------------------------------------------------------------
 
+.PRECIOUS: Parameters.cpp Parameters.h
+
 # DO NOT DELETE THIS LINE -- g++dep uses it.
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
 
-.obj/LogNotifyConsumer.o .obj/LogNotifyConsumer.so .shobj/LogNotifyConsumer.o .shobj/LogNotifyConsumer.so: LogNotifyConsumer.cpp LogNotifyConsumer.h \
- LogNotifyParameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/StructuredPushConsumer.h \
- $(MIRO_ROOT)/src/miro/Synch.h $(MIRO_ROOT)/src/miro/Server.h \
- $(MIRO_ROOT)/src/miro/Client.h $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/RobotParameters.h $(MIRO_ROOT)/src/miro/Singleton.h \
- $(MIRO_ROOT)/src/miro/TimeHelper.h $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i
+.obj/Parameters.o .obj/Parameters.so .shobj/Parameters.o .shobj/Parameters.so: Parameters.cpp Parameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h
 
-.obj/LogNotifyParameters.o .obj/LogNotifyParameters.so .shobj/LogNotifyParameters.o .shobj/LogNotifyParameters.so: LogNotifyParameters.cpp LogNotifyParameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h
+.obj/LogNotifyConsumer.o .obj/LogNotifyConsumer.so .shobj/LogNotifyConsumer.o .shobj/LogNotifyConsumer.so: LogNotifyConsumer.cpp LogNotifyConsumer.h \
+ Parameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/StructuredPushConsumer.h \
+ $(MIRO_ROOT)/src/miro/Server.h \
+ $(MIRO_ROOT)/src/miro/Client.h \
+ $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/TimeHelper.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

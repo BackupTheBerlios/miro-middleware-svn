@@ -113,9 +113,6 @@ IDL_SRC = \
         $(addsuffix S.cpp, $(IDL_FILES))
 
 FILES =	\
-	XmlParse \
-	DevParameters \
-	TtyParameters \
 	DevConnection \
 	DevEventHandler \
 	DevConsumer \
@@ -125,9 +122,7 @@ FILES =	\
 	MotionImpl \
 	DifferentialMotionImpl \
 	BatteryImpl \
-	BehaviourEngineImpl \
-	MotionParameters
-
+	BehaviourEngineImpl
 
 DEFS  = $(addsuffix .h,$(FILES))
 LSRC  =  $(IDL_SRC) $(addsuffix .cpp,$(FILES))
@@ -156,10 +151,6 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 .PRECIOUS: $(foreach file, $(IDL_FILES), $(foreach ext, $(IDL_EXT), $(file)$(ext))))
 
 %S.cpp: $(IDL_DIR)/$(patsubst %S.cpp, %, $@).idl
-
-realclean: clean
-	-$(RM) $(foreach file, $(IDL_FILES), $(foreach ext, $(IDL_EXT), $(file)$(ext)))
-
 
 # DO NOT DELETE THIS LINE -- g++dep uses it.
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
@@ -355,31 +346,27 @@ realclean: clean
  OdometryC.h OdometryC.i OdometryS.i B21MotionC.h B21MotionC.i \
  B21MotionS.i
 
-.obj/XmlParse.o .obj/XmlParse.o .obj/XmlParse.o .obj/XmlParse.o: XmlParse.cpp XmlParse.h Angle.h Exception.h
-
-.obj/DevParameters.o .obj/DevParameters.o .obj/DevParameters.o .obj/DevParameters.o: DevParameters.cpp DevParameters.h Parameters.h
-
-.obj/TtyParameters.o .obj/TtyParameters.o .obj/TtyParameters.o .obj/TtyParameters.o: TtyParameters.cpp TtyParameters.h DevParameters.h \
- Parameters.h
-
-.obj/DevConnection.o .obj/DevConnection.o .obj/DevConnection.o .obj/DevConnection.o: DevConnection.cpp DevConnection.h \
+.obj/DevConnection.o .obj/DevConnection.o .obj/DevConnection.o .obj/DevConnection.o: DevConnection.cpp \
+ DevConnection.h \
  DevEventHandler.h \
- DevParameters.h Parameters.h \
+ Parameters.h \
+ ArbiterParameters.h \
+ BehaviourParameters.h \
  Exception.h
 
 .obj/DevEventHandler.o .obj/DevEventHandler.o .obj/DevEventHandler.o .obj/DevEventHandler.o: DevEventHandler.cpp \
  DevEventHandler.h \
- DevConsumer.h DevMessage.h \
+ DevConsumer.h \
+ DevMessage.h \
  Exception.h
 
-.obj/DevConsumer.o .obj/DevConsumer.o .obj/DevConsumer.o .obj/DevConsumer.o: DevConsumer.cpp Exception.h \
- DevConsumer.h DevMessage.h
+.obj/DevConsumer.o .obj/DevConsumer.o .obj/DevConsumer.o .obj/DevConsumer.o: DevConsumer.cpp \
+ Exception.h \
+ DevConsumer.h \
+ DevMessage.h
 
-.obj/TtyConnection.o .obj/TtyConnection.o .obj/TtyConnection.o .obj/TtyConnection.o: TtyConnection.cpp TtyConnection.h \
- DevEventHandler.h \
- TtyParameters.h \
- DevParameters.h Parameters.h \
- Exception.h
+.obj/TtyConnection.o .obj/TtyConnection.o .obj/TtyConnection.o .obj/TtyConnection.o: TtyConnection.cpp TtyConnection.h DevEventHandler.h \
+ Parameters.h ArbiterParameters.h BehaviourParameters.h Exception.h
 
 .obj/RangeSensorImpl.o .obj/RangeSensorImpl.o .obj/RangeSensorImpl.o .obj/RangeSensorImpl.o: RangeSensorImpl.cpp RangeSensorImpl.h \
  RangeSensorS.h ExceptionS.h ExceptionC.h ExceptionC.i ExceptionS.i \
@@ -400,15 +387,16 @@ realclean: clean
 
 .obj/MotionImpl.o .obj/MotionImpl.o .obj/MotionImpl.o .obj/MotionImpl.o: MotionImpl.cpp MotionImpl.h MotionS.h ExceptionS.h \
  ExceptionC.h ExceptionC.i ExceptionS.i VelocityS.h VelocityC.h \
- VelocityC.i VelocityS.i MotionC.h MotionC.i MotionS.i \
- MotionParameters.h Parameters.h Synch.h
+ VelocityC.i VelocityS.i MotionC.h MotionC.i MotionS.i Parameters.h \
+ ArbiterParameters.h BehaviourParameters.h Synch.h
 
 .obj/DifferentialMotionImpl.o .obj/DifferentialMotionImpl.o .obj/DifferentialMotionImpl.o .obj/DifferentialMotionImpl.o: DifferentialMotionImpl.cpp \
  DifferentialMotionImpl.h DifferentialMotionS.h MotionS.h ExceptionS.h \
  ExceptionC.h ExceptionC.i ExceptionS.i VelocityS.h VelocityC.h \
  VelocityC.i VelocityS.i MotionC.h MotionC.i MotionS.i \
  DifferentialMotionC.h DifferentialMotionC.i DifferentialMotionS.i \
- MotionImpl.h MotionParameters.h Parameters.h Synch.h
+ MotionImpl.h Parameters.h ArbiterParameters.h BehaviourParameters.h \
+ Synch.h
 
 .obj/BatteryImpl.o .obj/BatteryImpl.o .obj/BatteryImpl.o .obj/BatteryImpl.o: BatteryImpl.cpp BatteryImpl.h BatteryS.h ExceptionS.h \
  ExceptionC.h ExceptionC.i ExceptionS.i BatteryC.h BatteryC.i \
@@ -418,8 +406,5 @@ realclean: clean
  BehaviourEngineS.h BehaviourEngineC.h BehaviourEngineC.i \
  BehaviourEngineS.i Policy.h Synch.h ActionPattern.h \
  ArbiterParameters.h
-
-.obj/MotionParameters.o .obj/MotionParameters.o .obj/MotionParameters.o .obj/MotionParameters.o: MotionParameters.cpp MotionParameters.h \
- Parameters.h Exception.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

@@ -18,7 +18,8 @@ namespace Miro
   BehaviourEngineImpl::BehaviourEngineImpl(StructuredPushSupplier * _pSupplier,
 					   bool _openOnLoad) :
     policy_(_pSupplier),
-    openOnLoad_(_openOnLoad)
+    openOnLoad_(_openOnLoad),
+    suspendedPattern_(NULL)
   {
   }
   
@@ -49,6 +50,8 @@ namespace Miro
     Guard guard(mutex_);
 
     policy_.clear();
+    suspendedPattern_ = NULL;
+
     policy_.loadPolicyFile(fileName);
     if (openOnLoad_)
       policy_.open();
@@ -59,6 +62,10 @@ namespace Miro
     ACE_THROW_SPEC ((Miro::BehaviourEngine::ENoPolicy))
   {
     Guard guard(mutex_);
+    if (!policy_.valid())
+      throw Miro::BehaviourEngine::ENoPolicy();
+
+    suspendedPattern_ = NULL;
     policy_.open();
   }
   
@@ -67,10 +74,34 @@ namespace Miro
     ACE_THROW_SPEC ((Miro::BehaviourEngine::ENoPolicy))
   {
     Guard guard(mutex_);
-
     if (!policy_.valid())
       throw Miro::BehaviourEngine::ENoPolicy();
+
+    suspendedPattern_ = NULL;
     policy_.close();
+  }
+
+  void 
+  BehaviourEngineImpl::suspendPolicy()
+    ACE_THROW_SPEC ((Miro::BehaviourEngine::ENoPolicy))
+  {
+    Guard guard(mutex_);
+    suspendedPattern_ = policy_.currentActionPattern();
+  }
+  
+  void
+  BehaviourEngineImpl::resumePolicy ()
+    ACE_THROW_SPEC ((Miro::BehaviourEngine::ENoPolicy))
+  {
+    Guard guard(mutex_);
+    if (!policy_.valid())
+      throw Miro::BehaviourEngine::ENoPolicy();
+
+    if (suspendedPattern_) {
+      std::string pattern = suspendedPattern_->getActionPatternName();
+      policy_.openActionPattern(pattern);
+      suspendedPattern_ = NULL;
+    }
   }
 
   void

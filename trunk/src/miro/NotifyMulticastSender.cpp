@@ -65,7 +65,7 @@ namespace Miro {
 
                 // TODO: Subscription changing
 
-		for (Parameters::Subscription::iterator itr = parameters->subscription.begin();
+		for (std::set<std::string>::iterator itr = parameters->subscription.begin();
 		     itr != parameters->subscription.end();
 		     itr++)
                     subscribe(configuration_->getDomain(), *itr);

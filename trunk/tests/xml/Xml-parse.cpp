@@ -10,7 +10,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 
-#include "miro/TtyParameters.h"
+#include "miro/Parameters.h"
 
 #include <qfile.h>
 #include <qdom.h>

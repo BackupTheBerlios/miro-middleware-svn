@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -23,7 +23,6 @@ namespace Miro
 {
   // forward declarations
   class StructuredPushSupplier;
-  class MotionArbiterMessage;
 
   //! Priority based Arbiter for the generalized Motion interface.
   class MotionArbiter : public PriorityArbiter
@@ -32,10 +31,11 @@ namespace Miro
     typedef PriorityArbiter Super;
 
   public:
-    MotionArbiter(Motion_ptr _pMotion, StructuredPushSupplier * _pSupplier = NULL);
+    //! Initializing construtor.
+    MotionArbiter(Motion_ptr _pMotion,
+		  StructuredPushSupplier * _pSupplier = NULL);
 
-    //! Factory method for ArbiterMessage
-    MotionArbiterMessage * getMessageInstance();
+    ARBITER_TYPES_FACTORY(MotionArbiter);
 
     virtual void close();
     virtual const std::string& getName() const;
@@ -44,10 +44,14 @@ namespace Miro
     virtual void setActuators(const ArbiterMessage& _message);
     virtual void limpActuators();
 
+    //! Pointer to the motion interface.
     Motion_ptr pMotion_;
+    //! Pointer to the supplier.
     StructuredPushSupplier * pSupplier_;
 
+    //! The last issued motion commant.
     VelocityIDL currentVelocity_;
+    //! Preconfigured event to send to the supplier.
     CosNotification::StructuredEvent notifyEvent;
 
     //! Arbiter name.

@@ -9,7 +9,6 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "B21Base.h"
 
 #include "miro/Exception.h"
@@ -17,9 +16,9 @@
 
 #include "base/BaseImpl.h"
 #include "base/BaseConsumer.h"
-#include "base/BaseParameters.h"
+#include "base/Parameters.h"
 
-#include "msp/MspParameters.h"
+#include "msp/Parameters.h"
 
 #include "buttons/ButtonsEventHandler.h"
 
@@ -46,11 +45,8 @@ using CosNotifyChannelAdmin::EventChannelFactory;
 
 CosNaming::Name channelFactoryName;
 
-B21Base::B21Base(int& argc, char *argv[], 
-		 const Miro::RobotParameters& _robotParameters,
-		 const Base::Parameters& _baseParameters,
-		 const Msp::Parameters& _mspParameters) :
-  super(argc, argv, _robotParameters),
+B21Base::B21Base(int& argc, char *argv[]) :
+  Super(argc, argv),
   reactorTask(this),
 
   // Notification Channel
@@ -64,16 +60,16 @@ B21Base::B21Base(int& argc, char *argv[],
 				 &infrared,
 				 &tactile)),
   pMspEventHandler(new Msp::EventHandler(mspConnection, pMspConsumer)),
-  mspConnection(reactorTask.reactor(), pMspEventHandler, _mspParameters),
+  mspConnection(reactorTask.reactor(), pMspEventHandler),
 
   pB21ButtonsEventHandler(new B21Buttons::EventHandler(b21ButtonsConnection, structuredPushSupplier_)),
   b21ButtonsConnection(reactorTask.reactor(), pB21ButtonsEventHandler),
 
   odometry(&structuredPushSupplier_),
-  b21Motion(reactorTask.reactor(), &odometry, _baseParameters),
-  infrared(_mspParameters.infraredDescription, &structuredPushSupplier_),
-  sonar(_mspParameters.sonarDescription, &structuredPushSupplier_),
-  tactile(_mspParameters.tactileDescription, &structuredPushSupplier_),
+  b21Motion(reactorTask.reactor(), &odometry),
+  infrared(Msp::Parameters::instance()->infraredDescription, &structuredPushSupplier_),
+  sonar(Msp::Parameters::instance()->sonarDescription, &structuredPushSupplier_),
+  tactile(Msp::Parameters::instance()->tactileDescription, &structuredPushSupplier_),
   b21Buttons(b21ButtonsConnection, pB21ButtonsEventHandler)
 {
   CosNaming::Name n(1);
@@ -124,18 +120,18 @@ main(int argc, char *argv[])
   TAO_Notify_Default_EMO_Factory::init_svc();
 
   // Parameters to be passed to the services
-  Miro::RobotParameters robotParameters;
-  Base::Parameters baseParameters;
-  Msp::Parameters mspParameters;
+  Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
+  Base::Parameters * baseParameters = Base::Parameters::instance();
+  Msp::Parameters * mspParameters = Msp::Parameters::instance();
 
   try {
     // Config file processing
     Miro::ConfigDocument *config = new Miro::ConfigDocument(argc, argv);
-    config->setRobotType("Robot");
-    config->getParameters("robot", robotParameters);
-    config->setRobotType("B21");
-    config->getParameters("base", baseParameters);
-    config->getParameters("msp", mspParameters);
+    config->setSection("Robot");
+    config->getParameters("Robot", *robotParameters);
+    config->setSection("B21");
+    config->getParameters("Base", *baseParameters);
+    config->getParameters("Msp", *mspParameters);
     delete config;
 
 #ifdef DEBUG
@@ -145,8 +141,7 @@ main(int argc, char *argv[])
 #endif
 
     DBG(cout << "Initialize server daemon." << endl);
-    B21Base b21Base(argc, argv, 
-		    robotParameters, baseParameters, mspParameters);
+    B21Base b21Base(argc, argv);
     try {
       DBG(cout << "Loop forever handling events." << endl);
       b21Base.run(8);

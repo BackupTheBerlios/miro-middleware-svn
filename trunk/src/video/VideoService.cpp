@@ -10,14 +10,13 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "VideoServer.h"
 
 #include "miro/ExceptionC.h"
 #include "miro/Exception.h"
 #include "miro/Utils.h"
 
-#include "video/VideoParameters.h"
+#include "video/Parameters.h"
 
 #include <iostream>
 
@@ -36,16 +35,16 @@ main(int argc, char *argv[])
   int rc = 0;
 
   // Parameters to be passed to the services
-  Miro::RobotParameters robotParameters;
-  Video::Parameters videoParameters;
+  Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
+  Video::Parameters * videoParameters = Video::Parameters::instance();
 
   try {
     // Config file processing
     Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
-    config->setRobotType("Robot");
-    config->getParameters("robot", robotParameters);
-    config->setRobotType("B21");
-    config->getParameters("video", videoParameters);
+    config->setSection("Robot");
+    config->getParameters("Robot", * robotParameters);
+    config->setSection("Video");
+    config->getParameters("Video", * videoParameters);
     delete config;
     
 #ifdef DEBUG
@@ -54,8 +53,7 @@ main(int argc, char *argv[])
 #endif
     
     DBG(cout << "Initialize server daemon." << endl);
-    VideoService videoService(argc, argv, 
-			      robotParameters, videoParameters);
+    VideoService videoService(argc, argv);
     try {
       DBG(cout << "Loop forever handling events." << endl);
       videoService.run(3);

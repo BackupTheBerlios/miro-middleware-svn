@@ -69,16 +69,18 @@ realclean: clean
 .obj/PolicyController.o .obj/PolicyController.so .shobj/PolicyController.o .shobj/PolicyController.so: PolicyController.cpp PolicyController.h \
  $(MIRO_ROOT)/src/miro/Client.h \
  $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/RobotParameters.h \
  $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
  $(MIRO_ROOT)/src/miro/BehaviourEngineC.h \
  $(MIRO_ROOT)/src/miro/BehaviourEngineC.i
 
 .obj/PolicyController.moc.o .obj/PolicyController.moc.so .shobj/PolicyController.moc.o .shobj/PolicyController.moc.so: PolicyController.moc.cpp PolicyController.h \
  $(MIRO_ROOT)/src/miro/Client.h \
  $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/RobotParameters.h \
  $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
  $(MIRO_ROOT)/src/miro/BehaviourEngineC.h \
  $(MIRO_ROOT)/src/miro/BehaviourEngineC.i
 

@@ -14,7 +14,7 @@
 
 #include "BaseConsumer.h"
 #include "BaseConnection.h"
-#include "BaseParameters.h"
+#include "Parameters.h"
 
 #include <iostream>
 

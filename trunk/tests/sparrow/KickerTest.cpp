@@ -10,7 +10,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "sparrow/SparrowConnection.h"
-#include "sparrow/SparrowParameters.h"
+#include "sparrow/Parameters.h"
 #include "sparrow/SparrowConsumer.h"
 
 #include "can/CanEventHandler.h"
@@ -50,7 +50,7 @@ int main(int argc, char * argv[])
 
   // Config file processing
   Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
-  config->setRobotType("Sparrow99");
+  config->setSection("Sparrow99");
   config->getParameters("sparrowBoard", *parameters);
   delete config;
 

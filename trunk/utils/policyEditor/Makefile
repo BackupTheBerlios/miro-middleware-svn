@@ -18,7 +18,7 @@
 INSTALL = $(VBIN:%=$(INSBIN)/%)
 
 ## dynamic libraries if needed
-LDLIBS += -lmiro
+LDLIBS += -lmiroParams -lmiro
 
 ## program to be built
 ## there has to exist a source file with the same name (mybinary.cc)
@@ -27,16 +27,18 @@ BIN 	= PolicyEditor
 ## additional files
 FILES	= \
 	PolicyDocument \
+	PolicyPattern \
+	PolicyBehaviour \
 	PolicyConfig
 
 QT_SRC  = \
+	ConfigDialog \
 	PolicyView \
 	PatternWidget \
 	BehaviourWidget \
 	ArbiterWidget \
-	ParamDialog \
-	PolicyEditor \
-	PolicyConfigurationDialog
+	ParameterDialog \
+	PolicyEditor
 
 FILES += $(QT_SRC)
 
@@ -75,71 +77,78 @@ realclean: clean
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
 
-.obj/PolicyDocument.o .obj/PolicyDocument.so .shobj/PolicyDocument.o .shobj/PolicyDocument.so: PolicyDocument.cpp PolicyDocument.h \
- BehaviourDescription.h Transition.h PolicyConfig.h BehaviourParam.h
+.obj/PolicyDocument.o .obj/PolicyDocument.so .shobj/PolicyDocument.o .shobj/PolicyDocument.so: PolicyDocument.cpp PolicyDocument.h Transition.h \
+ PolicyConfig.h
 
-.obj/PolicyConfig.o .obj/PolicyConfig.so .shobj/PolicyConfig.o .shobj/PolicyConfig.so: PolicyConfig.cpp PolicyConfig.h BehaviourDescription.h \
- BehaviourParam.h PolicyConfigurationDialog.h
+.obj/PolicyPattern.o .obj/PolicyPattern.so .shobj/PolicyPattern.o .shobj/PolicyPattern.so: PolicyPattern.cpp PolicyPattern.h Transition.h \
+ PolicyDocument.h PolicyConfig.h
+
+.obj/PolicyBehaviour.o .obj/PolicyBehaviour.so .shobj/PolicyBehaviour.o .shobj/PolicyBehaviour.so: PolicyBehaviour.cpp PolicyBehaviour.h \
+ PolicyDocument.h Transition.h PolicyConfig.h
+
+.obj/PolicyConfig.o .obj/PolicyConfig.so .shobj/PolicyConfig.o .shobj/PolicyConfig.so: PolicyConfig.cpp PolicyConfig.h ../params/Parser.h \
+ ../params/Class.h ../params/Parameter.h ../params/Generator.h \
+ ../params/TextErrorHandler.h
+
+.obj/ConfigDialog.o .obj/ConfigDialog.so .shobj/ConfigDialog.o .shobj/ConfigDialog.so: ConfigDialog.cpp ConfigDialog.h
 
 .obj/PolicyView.o .obj/PolicyView.so .shobj/PolicyView.o .shobj/PolicyView.so: PolicyView.cpp PolicyView.h PolicyDocument.h \
- BehaviourDescription.h Transition.h PolicyConfig.h BehaviourParam.h \
- PatternWidget.h
+ Transition.h PolicyConfig.h PatternWidget.h
 
 .obj/PatternWidget.o .obj/PatternWidget.so .shobj/PatternWidget.o .shobj/PatternWidget.so: PatternWidget.cpp PatternWidget.h PolicyView.h \
- PolicyDocument.h BehaviourDescription.h Transition.h PolicyConfig.h \
- BehaviourParam.h BehaviourWidget.h ArbiterWidget.h
+ PolicyDocument.h Transition.h PolicyConfig.h BehaviourWidget.h \
+ ArbiterWidget.h ../params/Generator.h ../params/Class.h \
+ ../params/Parameter.h
 
 .obj/BehaviourWidget.o .obj/BehaviourWidget.so .shobj/BehaviourWidget.o .shobj/BehaviourWidget.so: BehaviourWidget.cpp BehaviourWidget.h \
- PatternWidget.h PolicyView.h PolicyDocument.h BehaviourDescription.h \
- Transition.h PolicyConfig.h BehaviourParam.h ParamDialog.h
+ PatternWidget.h PolicyView.h PolicyDocument.h Transition.h \
+ PolicyConfig.h ParameterDialog.h ../params/Class.h \
+ ../params/Parameter.h
 
 .obj/ArbiterWidget.o .obj/ArbiterWidget.so .shobj/ArbiterWidget.o .shobj/ArbiterWidget.so: ArbiterWidget.cpp ArbiterWidget.h PolicyDocument.h \
- BehaviourDescription.h Transition.h PolicyConfig.h BehaviourParam.h \
- PatternWidget.h PolicyView.h
+ Transition.h PolicyConfig.h PatternWidget.h PolicyView.h \
+ ../params/Generator.h ../params/Class.h ../params/Parameter.h
 
-.obj/ParamDialog.o .obj/ParamDialog.so .shobj/ParamDialog.o .shobj/ParamDialog.so: ParamDialog.cpp ParamDialog.h PolicyDocument.h \
- BehaviourDescription.h Transition.h PolicyConfig.h BehaviourParam.h
+.obj/ParameterDialog.o .obj/ParameterDialog.so .shobj/ParameterDialog.o .shobj/ParameterDialog.so: ParameterDialog.cpp ParameterDialog.h \
+ ../params/Class.h ../params/Parameter.h PolicyConfig.h \
+ ../params/Generator.h
 
-.obj/PolicyEditor.o .obj/PolicyEditor.so .shobj/PolicyEditor.o .shobj/PolicyEditor.so: PolicyEditor.cpp \
+.obj/PolicyEditor.o .obj/PolicyEditor.so .shobj/PolicyEditor.o .shobj/PolicyEditor.so: PolicyEditor.cpp PolicyEditor.h PolicyDocument.h \
+ Transition.h PolicyConfig.h $(MIRO_ROOT)/src/miro/Client.h \
+ $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h PolicyView.h \
+ ConfigDialog.h ParameterDialog.h ../params/Class.h \
+ ../params/Parameter.h \
  $(MIRO_ROOT)/src/miro/BehaviourEngineC.h \
- $(MIRO_ROOT)/src/miro/BehaviourEngineC.i PolicyEditor.h \
- $(MIRO_ROOT)/src/miro/Client.h $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/RobotParameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h PolicyDocument.h \
- BehaviourDescription.h Transition.h PolicyConfig.h BehaviourParam.h \
- PolicyView.h
+ $(MIRO_ROOT)/src/miro/BehaviourEngineC.i
 
-.obj/PolicyConfigurationDialog.o .obj/PolicyConfigurationDialog.so .shobj/PolicyConfigurationDialog.o .shobj/PolicyConfigurationDialog.so: PolicyConfigurationDialog.cpp \
- PolicyConfigurationDialog.h BehaviourDescription.h BehaviourParam.h \
- PolicyConfig.h
+.obj/ConfigDialog.moc.o .obj/ConfigDialog.moc.so .shobj/ConfigDialog.moc.o .shobj/ConfigDialog.moc.so: ConfigDialog.moc.cpp ConfigDialog.h
 
 .obj/PolicyView.moc.o .obj/PolicyView.moc.so .shobj/PolicyView.moc.o .shobj/PolicyView.moc.so: PolicyView.moc.cpp PolicyView.h PolicyDocument.h \
- BehaviourDescription.h Transition.h PolicyConfig.h BehaviourParam.h
+ Transition.h PolicyConfig.h
 
 .obj/PatternWidget.moc.o .obj/PatternWidget.moc.so .shobj/PatternWidget.moc.o .shobj/PatternWidget.moc.so: PatternWidget.moc.cpp PatternWidget.h \
- PolicyView.h PolicyDocument.h BehaviourDescription.h Transition.h \
- PolicyConfig.h BehaviourParam.h
+ PolicyView.h PolicyDocument.h Transition.h PolicyConfig.h
 
 .obj/BehaviourWidget.moc.o .obj/BehaviourWidget.moc.so .shobj/BehaviourWidget.moc.o .shobj/BehaviourWidget.moc.so: BehaviourWidget.moc.cpp BehaviourWidget.h \
- PatternWidget.h PolicyView.h PolicyDocument.h BehaviourDescription.h \
- Transition.h PolicyConfig.h BehaviourParam.h
+ PatternWidget.h PolicyView.h PolicyDocument.h Transition.h \
+ PolicyConfig.h
 
 .obj/ArbiterWidget.moc.o .obj/ArbiterWidget.moc.so .shobj/ArbiterWidget.moc.o .shobj/ArbiterWidget.moc.so: ArbiterWidget.moc.cpp ArbiterWidget.h \
- PolicyDocument.h BehaviourDescription.h Transition.h PolicyConfig.h \
- BehaviourParam.h PatternWidget.h PolicyView.h
-
-.obj/ParamDialog.moc.o .obj/ParamDialog.moc.so .shobj/ParamDialog.moc.o .shobj/ParamDialog.moc.so: ParamDialog.moc.cpp ParamDialog.h PolicyDocument.h \
- BehaviourDescription.h Transition.h PolicyConfig.h BehaviourParam.h
-
-.obj/PolicyEditor.moc.o .obj/PolicyEditor.moc.so .shobj/PolicyEditor.moc.o .shobj/PolicyEditor.moc.so: PolicyEditor.moc.cpp PolicyEditor.h \
- $(MIRO_ROOT)/src/miro/Client.h $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/RobotParameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h PolicyDocument.h \
- BehaviourDescription.h Transition.h PolicyConfig.h BehaviourParam.h \
+ PolicyDocument.h Transition.h PolicyConfig.h PatternWidget.h \
  PolicyView.h
 
-.obj/PolicyConfigurationDialog.moc.o .obj/PolicyConfigurationDialog.moc.so .shobj/PolicyConfigurationDialog.moc.o .shobj/PolicyConfigurationDialog.moc.so: PolicyConfigurationDialog.moc.cpp \
- PolicyConfigurationDialog.h BehaviourDescription.h BehaviourParam.h \
- PolicyConfig.h
+.obj/ParameterDialog.moc.o .obj/ParameterDialog.moc.so .shobj/ParameterDialog.moc.o .shobj/ParameterDialog.moc.so: ParameterDialog.moc.cpp ParameterDialog.h \
+ ../params/Class.h ../params/Parameter.h
+
+.obj/PolicyEditor.moc.o .obj/PolicyEditor.moc.so .shobj/PolicyEditor.moc.o .shobj/PolicyEditor.moc.so: PolicyEditor.moc.cpp PolicyEditor.h \
+ PolicyDocument.h Transition.h PolicyConfig.h \
+ $(MIRO_ROOT)/src/miro/Client.h \
+ $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

@@ -11,15 +11,20 @@
 #ifndef XmlParse_h
 #define XmlParse_h
 
-#include "Angle.h"
 #include "Exception.h"
 
-#include <string>
 #include <ace/TTY_IO.h>
+
+#include <qdom.h>
+
+#include <string>
+#include <vector>
+#include <set>
 
 // forward declarations
 class ACE_Time_Value;
-class QDomNode;
+class ACE_INET_Addr;
+
 
 #define EXCEPTION_SUBTYPE(type, parent) \
   class type : public parent \
@@ -35,7 +40,7 @@ class QDomNode;
 namespace Miro
 {
   // forward declarations
-  //  struct ScanDescriptionIDL;
+  class Angle;
 
   // XML parsing exceptions
 
@@ -47,15 +52,80 @@ namespace Miro
   void operator <<= (bool& lhs, const QDomNode& node);
   void operator <<= (char& lhs, const QDomNode& node);
   void operator <<= (short& lhs, const QDomNode& node);
+  void operator <<= (unsigned short& lhs, const QDomNode& node);
   void operator <<= (int& lhs, const QDomNode& node);
+  void operator <<= (unsigned int& lhs, const QDomNode& node);
+  void operator <<= (long& lhs, const QDomNode& node);
   void operator <<= (unsigned long& lhs, const QDomNode& node);
   void operator <<= (double& lhs, const QDomNode& node);
   void operator <<= (Angle& lhs, const QDomNode& node);
   void operator <<= (std::string& lhs, const QDomNode& node);
   void operator <<= (ACE_Time_Value& lhs, const QDomNode& node);
   void operator <<= (ACE_TTY_IO::Serial_Params& lhs, const QDomNode& node);
-  //  void operator <<= (ScanDescriptionIDL& lhs, const QDomNode& node);
+  void operator <<= (ACE_INET_Addr& lhs, const QDomNode& node);
 
-  
+  template<class T>
+  void operator <<= (std::vector<T>& lhs, const QDomNode& node) {
+    lhs.clear();
+    QDomNode n = node.firstChild();
+    while (!n.isNull()) {
+      T t;
+      t <<= n;
+      lhs.push_back(t);
+      n = n.nextSibling();
+    }
+  }
+
+  template<class T>
+  void operator <<= (std::set<T>& lhs, const QDomNode& node) {
+    lhs.clear();
+    QDomNode n = node.firstChild();
+    while (!n.isNull()) {
+      T t;
+      t <<= n;
+      lhs.insert(t);
+      n = n.nextSibling();
+    }
+  }
+
+  QDomElement operator >>= (const bool& lhs, QDomNode& node);
+  QDomElement operator >>= (const char& lhs, QDomNode& node);
+  QDomElement operator >>= (const short& lhs, QDomNode& node);
+  QDomElement operator >>= (const unsigned short& lhs, QDomNode& node);
+  QDomElement operator >>= (const int& lhs, QDomNode& node);
+  QDomElement operator >>= (const unsigned int& lhs, QDomNode& node);
+  QDomElement operator >>= (const long& lhs, QDomNode& node);
+  QDomElement operator >>= (const unsigned long& lhs, QDomNode& node);
+  QDomElement operator >>= (const double& lhs, QDomNode& node);
+  QDomElement operator >>= (const Angle& lhs, QDomNode& node);
+  QDomElement operator >>= (const std::string& lhs, QDomNode& node);
+  QDomElement operator >>= (const ACE_Time_Value& lhs, QDomNode& node);
+  QDomElement operator >>= (const ACE_TTY_IO::Serial_Params& lhs, QDomNode& node);
+  QDomElement operator >>= (const ACE_INET_Addr& lhs, QDomNode& node);
+
+  template<class T>
+  QDomElement operator >>= (const std::vector<T>& lhs, QDomNode& node) {
+    QDomDocument d = node.ownerDocument();
+    QDomElement e = d.createElement("parameter");
+    std::vector<T>::const_iterator f, l = lhs.end();
+    for (f = lhs.begin(); f != l; ++f) {
+      (*f) >>= e;
+    }
+    node.appendChild(e);
+    return e;
+  }
+  template<class T>
+  QDomElement operator >>= (const std::set<T>& lhs, QDomNode& node) {
+    QDomDocument d = node.ownerDocument();
+    QDomElement e = d.createElement("parameter");
+    std::set<T>::const_iterator f, l = lhs.end();
+    for (f = lhs.begin(); f != l; ++f) {
+      (*f) >>= e;
+    }
+    node.appendChild(e);
+    return e;
+  }
 };
-#endif // xmlParse_hh
+
+
+#endif // xmlParse_h

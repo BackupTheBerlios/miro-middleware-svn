@@ -2,27 +2,26 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
-#include "miro/RangeEventC.h"
-#include "miro/RangeSensorImpl.h"
-#include "miro/StructuredPushSupplier.h"
-
 #include "MspConsumer.h"
 #include "MspMessage.h"
 #include "MspDevice.h"
 #include "MspConnection.h"
-#include "MspParameters.h"
+#include "Parameters.h"
+
+#include "abus/AbusDevice.h"
 
 #include "base/BaseStatus.h"
 
-#include "abus/AbusDevice.h"
+#include "miro/RangeEventC.h"
+#include "miro/RangeSensorImpl.h"
+#include "miro/StructuredPushSupplier.h"
 
 #include <iostream>
 

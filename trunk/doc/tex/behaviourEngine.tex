@@ -23,7 +23,7 @@ RoboCup-scenario by our \sparrow robots.
 
 The basic idea of the behaviour approach to robot control is as
 follows. Instead of the sense-plan-act paradigm of classical AI, the
-task is splitted into a set of reactive behaviours, that each try to
+task is splited into a set of reactive behaviours, that each try to
 fulfill a small subtask of the problem set. For each of the tasks only
 a very limited part of world modeling is needed (often, even raw
 sensor readings are sufficient). By combining the output of the
@@ -60,7 +60,7 @@ pattern regardless of what it was doing before.
 
 Lets look at the simple action pattern, who's high level task is to
 explore the environment by performing a random walk. This is easily
-splitted into two distinct behaviours. The first subtask is not to
+splited into two distinct behaviours. The first subtask is not to
 collide with the environment. This can be achieved by an avoid
 behaviour, that reads the front sonar sensors to determine how far it
 is away from the nearest obstacle. If the minimal distance is below
@@ -217,7 +217,7 @@ instead of sending motor commands directly to the {\tt Motion} interface,
 the behaviours invoke the method arbitrate() of the arbiter,
 passing it a message.
 
-The {\tt MotionArbiter} uses the very a simple fixed priority, winner
+The {\tt MotionArbiter} uses a simple fixed priority, winner
 takes all, arbitration scheme. That is, each behaviour has a fixed
 priority that corresponds with the order the behaviours are defined
 within the action pattern. In the {\tt MotionArbiterMessage}, that is,
@@ -324,13 +324,14 @@ call immediately after giving control back to the behaviour framework.
 
 Behaviours usually get used within different action patterns. But they
 are often expected to behave slightly different within each
-constellation. Therefore each behaviour has an associated
-{\tt BehaviourParameters} class which is designed to hold the different
+constellation. Therefore each behaviour has an associated {\tt
+  BehaviourParameters} class which is designed to hold the different
 parameter sets for the different use cases of a behaviour. These
 parameter classes become initialized on startup of the behaviour
 framework and are expected to be static during the run of an entire
 policy. (How to handle dynamic parameters like destination coordinates
-of a 'move to position' behaviour is explained in section \ref{sec:init})
+of a 'move to position' behaviour is explained in section
+\ref{SEC:DYNAMIC_PARAMETERS})
 
 Behaviours, which subclass the {\tt BehaviourParameters} class,
 need to have their own {\tt BehaviourParameters}
@@ -358,7 +359,7 @@ Before an action pattern becomes activated all its behaviours {\tt
 initialize their per task parameters (like destination coordinates) in
 a convenient way. Note however, that the {\tt init()} method can be
 called while the behaviour is already active (see section
-\ref{sec:active-inactive} and so its {\tt action()} method can be
+\ref{sec:active-inactive}) and so its {\tt action()} method can be
 concurrently running. Therefore a mutex is needed to avoid race
 conditions.
 
@@ -374,7 +375,7 @@ When a behaviour is to become active due to it being part of an action
 pattern its {\tt open()} method is called. If the behaviour is no longer
 part of the next to be running action pattern its {\tt close()} method is
 called. If a transition from one action pattern to another is
-performed and the behaviour is part of both behaviour sets, than no
+performed and the behaviour is part of both behaviour sets, then no
 calls to {\tt close()} and {\tt open()} methods will be issued. Only the
 behaviours {\tt init()} method will be called, to allow it to update its
 parameter sets. This is useful to avoid unnecessary behaviour
@@ -386,6 +387,7 @@ arbiter will then just be ignored. On the call of {\tt open()} however it
 is guaranteed that the behaviour currently is not running.
 
 \subsection{Changing Behaviour Parameters within an Action Pattern}
+\label{SEC:DYNAMIC_PARAMETERS}
 
 Another way for interaction with the behaviour framework from outside
 is by changing the parameters of a behaviour within an action pattern
@@ -397,7 +399,7 @@ the interface of the policy.
 However there are some issues that have to be take care of. First, the
 type of the derived behaviour parameters struct has to be known, as
 you get a pointer to a BehaviourParameters instance, that has to be
-down casted aproprietly. Second, to avoid memory leaks and
+down casted appropriately. Second, to avoid memory leaks and
 segmentation faults, the memory handling has to be understood. When
 querying the parameters, the caller takes ownership of the object
 returned. When setting the parameters, the action pattern takes
@@ -409,7 +411,7 @@ If you first retrieve the parameters instance by querying the policy,
 change the parameters and write them back by the set method,
 everything works okay.
 
-A similar interface exists for the behaviours themselfs. But they only
+A similar interface exists for the behaviours themselves. But they only
 can query and set the parameters of behaviours in action patterns that
 are linked to the current action pattern by a local transition. The
 behaviours can therefore only query the parameters by the transition
@@ -426,7 +428,14 @@ explained in more detail as soon as we do some more work on arbiters.
 them an action pattern?'' Well, you don't have to write code. Action
 patterns and policies are defined within an XML file. Allowing for
 fast and convenient modifications. Which is especially cool when
-debugging. So let us take a look at how to put those things together.
+debugging. An Instance of each arbiter and behaviour has to be
+registered within repositories. Afterwards, the policy can configure
+the action patterns and transitions by parsing the XML file. 
+To make live easier, the editing of action patterns, transitions and
+behaviour parameters can also be done using the GUI based PolicyEditor
+(see section \ref{SEC:POLICY_EDITOR}), but
+let us first take a look at how those things are put together in the
+XML syntax.
 
 \subsection{The Policy File}
 
@@ -438,7 +447,7 @@ $<$!--MiroPolicyDocument--$>$
   \item[policy]
     One file always describes one entire policy. A policy defines a
     state machine that consists of a set of action patterns. Each
-    action pattern describing on state of the machine.
+    action pattern describing one state of the machine.
   
   \begin{description}
   \item[actionpattern]
@@ -566,13 +575,13 @@ policy graph within the big scroll view area of the program.
   listbox with the currently loaded behaviour parameter description
   files. (See the chapter \ref{SEC:PARAMETERS} for more details on
   parameter files.) Buttons for adding and deleting files are
-  provided. On pressing the button add, the file dialog will be displayed. Note that the selected file
-  has to contain a valid behaviour description. - Verifying, whether
-  the load was successful is currently only done on leaving the
-  dialog. On the
-  positive side the currently loaded description is memorized in the
-  file .PolicyEditorConfig.xml file in the users home directory for
-  further runs of the policy editor.
+  provided. On pressing the button add, the file dialog will be
+  displayed. Note that the selected file has to contain a valid
+  behaviour description. - Verifying, whether the load was successful
+  is currently only done on leaving the dialog. On the positive side
+  the currently loaded description is memorized in the file
+  .PolicyEditorConfig.xml file in the users home directory for further
+  runs of the policy editor.
 \end{itemize}
 \subsubsection{Help}
 Currently this menu only contains two about dialogs.
@@ -586,7 +595,7 @@ name of the new pattern in the dialog box.
 Clicking with the right mouse button into the name of an action
 pattern produces a popup menu with the following options.
 \begin{itemize}
-\item Star pattern \\
+\item Start pattern \\
   Select the pattern to be the start pattern. That is the pattern, the
   policy will begin with by default. Every policy has to have exactly
   one start pattern. The start pattern is marked with two asterix
@@ -604,7 +613,7 @@ pattern produces a popup menu with the following options.
 \item Rename transition \\
   A dialog box will appear with the name and the target of the
   transitions. You can also delete a transition by deleting the name
-  or the target of the transition. - Be carful, the new entry
+  or the target of the transition. - Be careful, the new entry
   will only be accepted, if you left the entry field by clicking on
   another entry before hitting the okay button.
 \item Delete pattern \\
@@ -627,7 +636,7 @@ pattern produces a popup menu with the following options.
 \item Up \\
   Move the behaviour up one position in the list of behaviours. The
   position in the behaviour list represents the priority of the
-  behaviour at the arbiter. - The higher, the better.
+  behaviour at the arbiter. - The higher, the more important.
 \item Down \\
   Move the behaviour down one position in the list of behaviours.
 \item Set parameters \\
@@ -639,7 +648,7 @@ pattern produces a popup menu with the following options.
   displayed as bubble help associated with each entry field, if
   available. The parameters type is displayed as bubble help
   associated with each measure label. The dialog is strictly
-  typed. Therefore the okay button inactive if any of the entry fields
+  typed. Therefore the okay button is inactive if any of the entry fields
   are containing invalid input, for instance a value bigger than 180
   for an Angle type.
 \item Delete behaviour \\

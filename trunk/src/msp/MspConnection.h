@@ -24,8 +24,7 @@ namespace Msp
     typedef Abus::Connection Super;
   public:
     Connection(ACE_Reactor * _reactor, 
-	       Miro::DevEventHandler * _eventHandler,
-	       const Parameters& _parameters);
+	       Miro::DevEventHandler * _eventHandler);
     virtual ~Connection();
 
     // server behaviour

@@ -11,6 +11,9 @@
 
 #include "ArbiterWidget.h"
 
+#include "PolicyConfig.h"
+#include "../params/Generator.h"
+
 #include <qpainter.h>
 #include <qpopupmenu.h>
 #include <qapplication.h>
@@ -23,7 +26,7 @@
 extern QApplication* qApp;
 
 ArbiterWidget::ArbiterWidget(QWidget* parent, const QString& name) :
-  Super(parent, "behaviourwidget"), arbiterName(name)
+  Super(parent, "arbiterwidget")
 {
   setText(name);
   setBackgroundColor(darkGreen);
@@ -31,45 +34,38 @@ ArbiterWidget::ArbiterWidget(QWidget* parent, const QString& name) :
   setMouseTracking(true);    // enable mouse tracking for highlighting
 }
 
-
-PatternWidgetClass& ArbiterWidget::getPatternWidget() const
+PatternWidgetClass& 
+ArbiterWidget::getPatternWidget() const
 {
-  return (PatternWidgetClass&) *(parentWidget()); 
+  return dynamic_cast<PatternWidgetClass&>(* parentWidget()); 
 }
 
-
-void ArbiterWidget::mousePressEvent(QMouseEvent* event) 
+void 
+ArbiterWidget::mousePressEvent(QMouseEvent* event) 
 {
-  // left button //
-  if (event->button() == LeftButton) {
-    std::cout << "ArbiterWidget: left button pressed" << std::endl;
-  }
-
-
   // right button -> popup menu //
   if (event->button() == RightButton) {
 
     // popup menu //
-    QPopupMenu Menu;
-    QPopupMenu menuSetArbiter;
+    QPopupMenu menu;
+    menuSetArbiter_ = new QPopupMenu(&menu);
 
-    Menu.insertItem("Set arbiter",    &menuSetArbiter);
-    Menu.insertSeparator();
-    Menu.insertItem("Delete arbiter",         this, SLOT(onDelete()));
+    menu.insertItem("Set arbiter", menuSetArbiter_);
 
     // submenu: add all arbiter names //
-    for (unsigned int id=0; id<getDocument().arbiterVector.size(); id++) {
-      menuSetArbiter.insertItem(getDocument().arbiterVector[id], id);
+    Generator::GroupMap::const_iterator first, last;
+    PolicyConfigClass::instance()->description().getGroupedClasses("arbiter", first, last);
+    for (; first != last; ++first) {
+      if (first->second.isFinal()) {
+        menuSetArbiter_->insertItem(first->second.name());
+      }
     }
-    connect(&menuSetArbiter, SIGNAL(activated(int)), 
- 	    this, SLOT(onSetArbiter(int)));
+    connect(menuSetArbiter_, SIGNAL(activated(int)), this, SLOT(onSetArbiter(int)));
 
     // show popup menu //
-    Menu.exec(QCursor::pos());
+    menu.exec(QCursor::pos());
   }
 }
-
-
 
 void ArbiterWidget::enterEvent(QEvent*)
 {
@@ -83,35 +79,10 @@ void ArbiterWidget::leaveEvent(QEvent*)
   repaint();
 }
 
-
-void ArbiterWidget::mouseMoveEvent(QMouseEvent* event)
-{
-  // if left key is pressed -> move widget //
-  if (event->state() & LeftButton) {
-    //     QPoint newPos = mapToParent(event->pos());
-    //     move(newPos.x()-picked_x, newPos.y()-picked_y);
-    //     getDocument().setX(name, newPos.x());
-    //     getDocument().setY(name, newPos.y());
-    //     getView().repaint();
-  }
-
-  // if left key is not pressed -> highlight selection //
-  else {
-  }
-}
-
-
 void ArbiterWidget::onSetArbiter(int n)
 {
   // set arbiter for the current pattern //
-  getDocument().setArbiter(getPatternWidget().getPatternName(), n);
-  getDocument().setModified(true);
-  getPatternWidget().update();             // update pattern
+  getDocument().setArbiter(getPatternWidget().getPatternName(), menuSetArbiter_->text(n));
+  setText(menuSetArbiter_->text(n));
 }
 
-
-
-void ArbiterWidget::onDelete()
-{
-  std::cout << "ArbiterWidget::onDelete: not implemented!" << std::endl;
-}

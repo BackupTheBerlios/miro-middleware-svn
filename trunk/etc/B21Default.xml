@@ -1,0 +1,80 @@
+<!DOCTYPE MiroConfigDocument>
+<config>
+ <section name="Robot" >
+  <parameter name="Robot" >
+   <parameter value="b21" name="Name" />
+   <parameter value="B21" name="Type" />
+  </parameter>
+ </section>
+ <section name="B21" >
+  <parameter name="Base" >
+   <parameter value="/dev/cur0" name="Device" />
+   <parameter name="TtyParams" >
+    <parameter value="38400" name="Baudrate" />
+    <parameter value="0" name="Parityenb" />
+   </parameter>
+   <parameter value="20.0" name="WatchdogTimeout" />
+   <parameter value="180" name="MaxRotAccel" />
+   <parameter value="2000" name="MaxTransAccel" />
+   <parameter value="267" name="Radius" />
+   <parameter name="Motion" >
+    <parameter value="180" name="MaxRotation" />
+    <parameter value="-180" name="MinRotation" />
+    <parameter value="950" name="MaxTranslation" />
+    <parameter value="-950" name="MinTranslation" />
+   </parameter>
+  </parameter>
+  <parameter name="Msp" >
+   <parameter value="/dev/abus" name="Device" />
+  </parameter>
+ </section>
+ <section name="Sick" >
+  <parameter name="Laser" >
+   <parameter value="/dev/laser" name="Device" />
+   <parameter name="TtyParams" >
+    <parameter value="500000" name="Baudrate" />
+   </parameter>
+   <parameter value="false" name="ContinousMode" />
+   <parameter value="false" name="Notify" />
+   <parameter value="0.100000" name="PollInterval" />
+   <parameter value="false" name="PositionStamps" />
+   <parameter value="true" name="Statistics" />
+   <parameter value="false" name="StdCrystal" />
+  </parameter>
+ </section>
+ <section name="DirectedPerception" >
+  <parameter name="PanTilt" >
+   <parameter value="/dev/panTilt" name="Device" />
+   <parameter name="TtyParams" >
+    <parameter value="9600" name="Baudrate" />
+   </parameter>
+  </parameter>
+ </section>
+ <section name="Video" >
+  <parameter name="Video" >
+   <parameter value="/dev/v4l/video0" name="Device" />
+   <parameter value="3" name="PixelSize" />
+   <parameter value="false" name="UpsideDown" />
+   <parameter value="1" name="Byteorder" />
+   <parameter value="16" name="Buffers" />
+   <parameter value="16" name="Connections" />
+   <parameter value="288" name="Height" />
+   <parameter value="384" name="Width" />
+   <parameter value="all" name="Subfield" />
+   <parameter value="pal" name="Format" />
+   <parameter value="bttv" name="Grabber" />
+   <parameter value="rgb" name="Palette" />
+   <parameter value="composite1" name="Source" />
+  </parameter>
+ </section>
+ <section name="Notification" >
+  <parameter name="Logging" >
+   <parameter name="TypeName" />
+     <parameter value="Sonar" />
+     <parameter value="Odometry" />
+     <parameter value="ArbitrateChange" />
+     <parameter value="PatternChange" />
+   <parameter value="157286400" name="MaxFileSize" />
+  </parameter>
+ </section>
+</config>

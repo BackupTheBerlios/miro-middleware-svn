@@ -250,6 +250,10 @@ BehaviourEngineC.cpp
 BehaviourEngineS.h
 BehaviourEngineS.i
 BehaviourEngineS.cpp
+Parameters.h
+Parameters.cpp
+NotifyMulticastParameters.h
+NotifyMulticastParameters.cpp
 libmiro.so
 libmiroSvc.a
 libmiroSsh.a

@@ -5,20 +5,15 @@
 // for details copyright, usage and credits to other groups see Miro/COPYRIGHT
 // for documentation see Miro/doc
 // 
-// (c) 1999,2000
+// (c) 2000, 2001, 2002. 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
 #include "pioneer/PioneerConnection.h"
-#include "pioneer/PioneerParameters.h"
+#include "pioneer/Parameters.h"
 #include "pioneer/PioneerConsumer.h"
 #include "pioneer/PioneerStallImpl.h"
 #include "pioneer/CanonPanTiltImpl.h"
@@ -346,7 +341,7 @@ int main(int argc, char* argv[])
 
   // Config file processing
   Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
-  config->setRobotType("Pioneer1");
+  config->setSection("Pioneer1");
   config->getParameters("pioneerBoard", *pParams);
   delete config;
 

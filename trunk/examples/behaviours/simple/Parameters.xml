@@ -1,0 +1,29 @@
+<!DOCTYPE xml SYSTEM "PolicyParametersConfigDocument.dtd">
+<config> 
+  <config_global name="include" value="miro/Parameters.h" />
+
+  <config_group name="behaviour">
+    
+    <config_item name="TactileStop" parent="Miro::EventBehaviour">
+    </config_item>
+
+    <config_item name="Straight" parent="Miro::TimedBehaviour">
+      <config_parameter  name="Translation" type="long" measure="mm/s" default="500" />
+      <config_parameter  name="Rotation" type="angle" measure="&deg;/s" default="0" />
+    </config_item>
+    
+    <config_item name="Wander" parent="Miro::TimedBehaviour">
+      <config_parameter  name="ThresholdChange" type="double" measure="" default=".20" />
+      <config_parameter  name="ThresholdStraight" type="double" measure="" default=".5" />
+      <config_parameter  name="MinTranslation" type="long" measure="mm/s" default="200" />
+      <config_parameter  name="MaxTranslation" type="long" measure="mm/s" default="500" />
+      <config_parameter  name="MinRotation" type="angle" measure="&deg;/s" default="10" />
+      <config_parameter  name="MaxRotation" type="angle" measure="&deg;/s" default="90" />
+    </config_item>
+    
+    <config_item name="Timer" parent="Miro::TimedBehaviour">
+      <config_parameter  name="Time" type="ACE_Time_Value" default="10.0" measure="sec" />
+    </config_item>
+    
+  </config_group>
+</config>

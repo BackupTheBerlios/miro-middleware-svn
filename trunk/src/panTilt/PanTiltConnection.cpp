@@ -18,8 +18,8 @@
 #include "PanTiltConnection.h"
 #include "PanTiltEventHandler.h"
 #include "PanTiltMessage.h"
-#include "PanTiltParameters.h"
 #include "PanTiltData.h"
+#include "Parameters.h"
 
 #include <ace/Reactor.h>
 

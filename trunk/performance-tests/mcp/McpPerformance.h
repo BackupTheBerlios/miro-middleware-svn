@@ -21,7 +21,7 @@ class McpPerformance
 
 public:
   // Initialization and Termination methods.
-  McpPerformance(int& , char **, const Base::Parameters& _parameters);
+  McpPerformance(int& , char **);
   // Constructor.
 
   ~McpPerformance();

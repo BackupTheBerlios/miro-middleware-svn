@@ -51,7 +51,7 @@ namespace Miro
     virtual ~ArbiterParameters();
 
     //! XML-parsingoperator.
-    void operator<<=(const QDomNode&);
+    void operator <<= (const QDomNode&);
 
     //! Register behaviours for acces control
     virtual void registerBehaviour(Behaviour * _behaviour);

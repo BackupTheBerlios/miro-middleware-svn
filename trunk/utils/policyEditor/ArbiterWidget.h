@@ -16,6 +16,10 @@
 
 #include <qlabel.h>
 
+// forward declarations
+class QPopupMenu;
+class QString;
+
 /**
  * This class shows a behaviour name for use in PatternWidget
  */
@@ -25,33 +29,30 @@ class ArbiterWidget : public QLabel
 
   typedef QLabel Super;
 
-private:
-  QString arbiterName;
+public:
+  ArbiterWidget(QWidget* parent, const QString& patternName);
 
-  /** returns a reference of the parent pattern widget */
-  PatternWidgetClass& getPatternWidget() const;
-
-  /** returns a reference of the document */
-  PolicyDocumentClass& getDocument() const;
-
-private slots:
+protected slots:
   void onSetArbiter(int);
-  void onDelete();
 
 protected:
-  void mousePressEvent(QMouseEvent*);
-  void mouseMoveEvent(QMouseEvent* event);
+  void mousePressEvent(QMouseEvent * event);
   void enterEvent(QEvent*);
   void leaveEvent(QEvent*);
 
-public:
-  ArbiterWidget(QWidget* parent, const QString& patternName);
+  //! returns a reference of the parent pattern widget
+  PatternWidgetClass& getPatternWidget() const;
+
+  //! returns a reference of the document
+  PolicyDocumentClass& getDocument() const;
+
+private:
+  QPopupMenu * menuSetArbiter_;
 };
 
 inline
 PolicyDocumentClass& 
-ArbiterWidget::getDocument() const  
-{
+ArbiterWidget::getDocument() const {
   return getPatternWidget().getDocument(); 
 }
 

@@ -13,7 +13,7 @@
 #include <ace/Reactor.h>
 
 #include "SickLaserConnection.h"
-#include "SickLaserParameters.h"
+#include "Parameters.h"
 
 #include <termios.h>
 #include <linux/serial.h>
@@ -37,15 +37,14 @@ namespace Miro
 
   LaserConnection::LaserConnection(ACE_Reactor * _reactor,
 				   RangeSensorImpl& _rangeSenorI,
-				   const ::Laser::Parameters& _parameters,
 				   LaserStatistic * _laserStatistic) :
     Log(WARNING,"LaserConnection"),
     reactor_(_reactor),
-    parameters_(_parameters),
+    parameters_(*::Laser::Parameters::instance()),
     laserStatistic_(_laserStatistic),
     laserTask_(new LaserTask(*this, _rangeSenorI, _laserStatistic)),
     laserEvent_(new LaserEvent(laserTask_, _laserStatistic)),
-    laserPollTask_(new LaserPollTask(*this, *laserEvent_, _parameters, _laserStatistic)),
+    laserPollTask_(new LaserPollTask(*this, *laserEvent_, _laserStatistic)),
     fd(0),
     selectHandlerId(-1),
     syncLaserScan(),
@@ -100,7 +99,7 @@ namespace Miro
 
     log(WARNING, "entered stoptasks.");
 
-    if (parameters_.continousmode) {
+    if (parameters_.continousMode) {
       // stop the laser from sending stuff all the time
       setPollingMode();
     } else {
@@ -388,7 +387,7 @@ namespace Miro
 
     if (baudrate == 500000) {
 
-      if (parameters_.stdcrystal) 
+      if (parameters_.stdCrystal) 
 	throw Miro::Exception("LaserConnection::setBaudrate: baudrate only supported with nonstandard crystal.");
 
       // get serial info
@@ -438,7 +437,7 @@ namespace Miro
     if (tcsetattr(fd,TCSANOW,&newtio) < 0)
       throw Miro::CException(errno, "LaserConnection::setBaudrate:tcsetattr " + string(strerror(errno)) );
 
-    if ((baudrate != 500000) && (!parameters_.stdcrystal)) {
+    if ((baudrate != 500000) && (!parameters_.stdCrystal)) {
       // get serial info
       if (ioctl(fd,TIOCGSERIAL,&ss) < 0 ) {
 	log(ERROR,"setBaudrate: " + string(strerror(errno)));
@@ -518,7 +517,7 @@ namespace Miro
       throw Miro::Exception("LaserConnection::initHardware could not connect to laser.");
     }
 
-    if (parameters_.continousmode) {
+    if (parameters_.continousMode) {
       setContinousMode();
     } else {
       setPollingMode();

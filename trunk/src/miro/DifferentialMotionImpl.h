@@ -13,7 +13,7 @@
 
 #include "DifferentialMotionS.h"
 #include "MotionImpl.h"
-#include "MotionParameters.h"
+#include "Parameters.h"
 
 #include <cmath>
 

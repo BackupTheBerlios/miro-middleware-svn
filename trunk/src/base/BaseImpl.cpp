@@ -18,7 +18,7 @@
 #include "BaseEventHandler.h"
 #include "BaseConsumer.h"
 #include "BaseImpl.h"
-#include "BaseParameters.h"
+#include "Parameters.h"
 
 #include <iostream>
 #include <cmath>
@@ -45,11 +45,10 @@ namespace Base
 
 
   Impl::Impl(ACE_Reactor * _reactor, 
-	     Miro::OdometryImpl * _odometry,
-	     const Parameters& _parameters) 
+	     Miro::OdometryImpl * _odometry) 
     throw(Miro::Exception) :
-    Miro::MotionImpl(_parameters.motion),
-    parameters(_parameters),
+    Miro::MotionImpl(Parameters::instance()->motion),
+    parameters(*Parameters::instance()),
     consumer(new Consumer(connection, _odometry)),
     mcpEventHandler(new Mcp::EventHandler(connection, consumer, parameters)),
     eventHandler(new EventHandler(connection, *consumer, parameters)),
@@ -114,7 +113,7 @@ namespace Base
   void 
   Impl::rotate(double velocity) throw(Miro::EDevIO, Miro::EOutOfBounds)
   {
-    if (fabs(velocity) > parameters.maxRotVelocity)
+    if (fabs(velocity) > parameters.motion.maxRotation)
       throw EOutOfBounds();
 
     connection.setRotateVelocity(abs(rad2base(velocity)));
@@ -133,7 +132,7 @@ namespace Base
   void
   Impl::translate(CORBA::Long velocity) throw(Miro::EDevIO, Miro::EOutOfBounds)
   {
-    if (abs(velocity) > parameters.maxTransVelocity)
+    if (abs(velocity) > parameters.motion.maxTranslation)
       throw EOutOfBounds();
 
     connection.setTranslateVelocity(abs((int)(velocity)));
@@ -222,7 +221,7 @@ namespace Base
   void
   Impl::setRotateVelocity(CORBA::Double velocity) throw(EOutOfBounds, EDevIO)
   {
-    if (velocity < 0. || velocity > parameters.maxRotVelocity)
+    if (velocity < 0. || velocity > parameters.motion.maxRotation)
       throw EOutOfBounds();
 
     connection.setRotateVelocity(rad2base(velocity));
@@ -312,7 +311,7 @@ namespace Base
   void
   Impl::setTranslateVelocity(CORBA::ULong velocity) throw(EOutOfBounds, EDevIO)
   {
-    if ((long)velocity > parameters.maxTransVelocity)
+    if ((long)velocity > parameters.motion.maxTranslation)
       throw EOutOfBounds();
 
     connection.setTranslateVelocity(velocity);

@@ -32,7 +32,7 @@ namespace Miro
 		 StructuredPushSupplier * _pSupplier = NULL);
 
     // factory method for ArbiterParameters
-    PowerArbiterMessage * getMessageInstance();
+    PowerArbiterMessage * getMessageInstance() const;
 
     virtual const std::string& getName() const;
 

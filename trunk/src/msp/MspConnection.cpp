@@ -2,13 +2,12 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-
 
 #include <ace/Reactor.h>
 
@@ -19,7 +18,7 @@
 #include "MspConnection.h"
 #include "MspDevice.h"
 #include "MspMessage.h"
-#include "MspParameters.h"
+#include "Parameters.h"
 
 // #undef DEBUG
 // #undef VERBOSE
@@ -69,9 +68,8 @@ namespace Msp
   //
 
   Connection::Connection(ACE_Reactor* _reactor, 
-			 Miro::DevEventHandler * _eventHandler,
-			 const Parameters& _parameters) :
-    Super(_reactor, _eventHandler, _parameters),
+			 Miro::DevEventHandler * _eventHandler) :
+    Super(_reactor, _eventHandler, *Parameters::instance()),
     sonarsPinging(false),
     sonarsRequested(false),
     masterMspBusId(0)

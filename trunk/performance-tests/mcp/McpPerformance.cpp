@@ -17,7 +17,7 @@
 #include "miro/TimeHelper.h"
 
 #include "base/BaseImpl.h"
-#include "base/BaseParameters.h"
+#include "base/Parameters.h"
 
 #include <iostream>
 
@@ -30,10 +30,9 @@
 using std::cout;
 using std::cerr;
 
-McpPerformance::McpPerformance(int& , char **, 
-			       const Base::Parameters& _parameters) :
+McpPerformance::McpPerformance(int& , char **) :
   reactorTask(),
-  b21Motion(reactorTask.reactor(), NULL, _parameters)
+  b21Motion(reactorTask.reactor(), NULL)
 {
   // start the asychronous consumer listening for the hardware
   reactorTask.open(0);
@@ -56,21 +55,21 @@ main(int argc, char *argv[])
   int rc = 0;
 
   // Parameters to be passed to the services
-  Base::Parameters parameters;
+  Base::Parameters * parameters = Base::Parameters::instance();
 
   try {
     // Config file processing
     Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
-    config->setRobotType("B21");
-    config->getParameters("base", parameters);
+    config->setSection("B21");
+    config->getParameters("base", *parameters);
     delete config;
 
 #ifdef DEBUG
-    cout << "  base parameters:" << endl << parameters << endl;
+    cout << "  base parameters:" << endl << *parameters << endl;
 #endif
 
     DBG(cout << "Initialize mcp connection." << endl);
-    McpPerformance mcpPerformance(argc, argv, parameters);
+    McpPerformance mcpPerformance(argc, argv);
 
     int messages = 300;
     

@@ -9,14 +9,13 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "DpPanTilt.h"
 
 #include "PanTiltImpl.h"
-#include "PanTiltParameters.h"
 #include "PanTiltData.h"
 #include "PanTiltConsumer.h"
 #include "PanTiltConnection.h"
+#include "Parameters.h"
 
 #include "miro/Utils.h"
 #include "miro/Log.h"
@@ -119,15 +118,19 @@ namespace
 
 int main(int argc, char *argv[])
 {
+  Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
   Parameters * params = Parameters::instance();
 
   // Config file processing
   ConfigDocument * config = new ConfigDocument(argc, argv);
-  config->setRobotType("B21");
-  config->getParameters("dpPanTilt", *params);
+  config->setSection("Robot");
+  config->getParameters("Robot", *robotParameters);
+  config->setSection("DirectedPerception");
+  config->getParameters("PanTilt", *params);
   delete config;
 
 #ifdef DEBUG
+  cout << "  robot parameters:" << endl << *robotParameters << endl;
   cout << "  paramters:" << endl << *params << endl;
 #endif
 

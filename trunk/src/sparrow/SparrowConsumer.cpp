@@ -214,7 +214,7 @@ namespace Sparrow
 	phiPrev_ = phi_;
       
 	// fill motion status data struct
-	double deltaT = 1000. / (double) (params_->odometryInterval);
+	double deltaT = 1000. / (double) (params_->odometryPulse.msec());
 	Miro::timeA2C(message.time(), status_.time);
 	status_.position.point.x = x_ * params_->transFactor;
 	status_.position.point.y = y_ * params_->transFactor;

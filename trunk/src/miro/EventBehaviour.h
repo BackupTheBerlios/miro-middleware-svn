@@ -38,9 +38,11 @@ namespace Miro
   class EventBehaviour : 
     public Behaviour
   {
+    //! Super class type.
     typedef Behaviour Super;
 
   public:
+    //! Initializing constructor.
     EventBehaviour(CosNotifyChannelAdmin::EventChannel_ptr _ec);
     virtual ~EventBehaviour();
 

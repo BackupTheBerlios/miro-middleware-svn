@@ -13,59 +13,46 @@
 
 #include "PolicyDocument.h"
 
-#include <qwidget.h>
-#include <qpushbutton.h>
-#include <qcheckbox.h> 
-#include <qscrollbar.h>
+#include <qstring.h>
+#include <qscrollview.h>
 
 // forward declarations
 class PatternWidgetClass;
 
-class PolicyViewClass : public QWidget
+class PolicyViewClass : public QScrollView
 {
   Q_OBJECT
+  typedef QScrollView Super;
 
 public:
-  PolicyViewClass(QWidget *parent, PolicyDocumentClass& _document);
+  PolicyViewClass(QWidget * _parent, PolicyDocumentClass& _document);
 
-  void                 update();
+  void                 init();
   PolicyDocumentClass& getDocument();
   void                 startAddTransition(PatternWidgetClass* patternWidget);
   void                 endAddTransition(PatternWidgetClass* patternWidget);
   bool                 isAddTransitionMode() const;
-  void		       setVerticalScrollValue(int value);
-  void		       setHorizontalScrollValue(int value);
-  void		       prepareFileClosing();
-
-public slots:
-  void getHorizontalScrollValue(int value); 
-  void getVerticalScrollValue(int value);
 
 protected slots:
   void onAddPattern();
 
 protected:
-  void resizeEvent(QResizeEvent* );
-  void paintEvent(QPaintEvent* );
-  void mousePressEvent(QMouseEvent* event);
-  void mouseReleaseEvent(QMouseEvent* event);
-  void mouseMoveEvent(QMouseEvent* event);
+  void drawContents(QPainter * p, int clipx, int clipy, int clipw, int cliph);
+  void contentsMousePressEvent(QMouseEvent* event);
+  void contentsMouseMoveEvent(QMouseEvent* event);
 
   PolicyDocumentClass& document;
-
-  std::list<PatternWidgetClass*> PatternWidgetList;
 
   int                 picked_x;
   int                 picked_y;
 
   PatternWidgetClass* pickedPatternPtr;
   QString             pickedPattern;
-  
-  QScrollBar          *scrollBar,*verticalScrollBar;
-  QWidget	      *parent;
-  
- 
+
   bool addTransitionMode;  // true while a signal arrow is dragged to destination
+
+  QPoint arrowFrom_;
+  QPoint arrowTo_;
 };
 
 inline

@@ -17,11 +17,14 @@
 #include <qwidget.h>
 #include <qframe.h>
 #include <qlabel.h>
+#include <qpoint.h>
 
 #include <list>
 
+// forward declarations
 class BehaviourWidget;
 class ArbiterWidget;
+class QPopupMenu;
 
 
 /**
@@ -40,12 +43,6 @@ class PatternWidgetClass : public QFrame
 private:
   QString patternName;
 
-  ArbiterWidget*         arbiterWidget;
-  std::list<BehaviourWidget*> behaviourWidgetList;
-
-  int picked_x;
-  int picked_y;
-
 private slots:
   void onAddBehaviour(int);
   void onDelete();
@@ -56,35 +53,45 @@ private slots:
 
 protected:
   void paintEvent(QPaintEvent* event);
-  void drawArrow(QPainter& p, int x1, int y1, int x2, int y2, int size);
+  void drawArrow(QPainter * p, int x1, int y1, int x2, int y2, int size);
   void mousePressEvent(QMouseEvent*);
-  void mouseReleaseEvent(QMouseEvent*);
+  void mouseReleaseEvent(QMouseEvent* event);
   void mouseMoveEvent(QMouseEvent* event);
   void enterEvent(QEvent*);
   void leaveEvent(QEvent*);
-  void renamePattern(QString oldName);
-  void renameTransition(QString pattern);
+  void renamePattern(const QString& oldName);
+  void renameTransition(const QString& pattern);
 
 public:
-  PatternWidgetClass(QWidget* parent, const QString& name);
+  PatternWidgetClass(PolicyViewClass * view, QWidget* parent, const QString& name);
   virtual ~PatternWidgetClass();
 
   /** returns the name of the associated pattern */
   const QString& getPatternName() const;
 
   /** returns a reference of the document. (called by BehaviourWidget) */
-  PolicyDocumentClass& getDocument() const;
-
-  /**updated PatternPosition*/
-  void updatePos();
+  PolicyDocumentClass& getDocument();
 
   /** updates internal representation and calls repaint(). (called by
    *  BehaviourWidget) */
-  virtual void update();
+  void init();
 
   /** returns a reference of the main view. (called by BehaviourWidget) */
-  PolicyViewClass& getView() const;
+  PolicyViewClass& getView();
+
+  void drawArrows(QPainter * p);
+
+  PolicyViewClass * view_;
+  QPopupMenu * menuAddBehaviour_;
+
+  QPoint pickedPos;
 };
+
+inline
+PolicyViewClass&
+PatternWidgetClass::getView() {
+  return *view_;
+}
 
 inline
 const QString& 
@@ -95,7 +102,7 @@ PatternWidgetClass::getPatternName() const
 
 inline
 PolicyDocumentClass&
-PatternWidgetClass::getDocument() const
+PatternWidgetClass::getDocument()
 {
   return getView().getDocument(); 
 }

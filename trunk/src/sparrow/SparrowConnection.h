@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -12,7 +12,7 @@
 #define SparrowConnection_hh
 
 #include "SparrowDevice.h"
-#include "SparrowParameters.h"
+#include "Parameters.h"
 
 #include "can/CanConnection.h"         // CanConnection, CanMessageClass
 
@@ -38,8 +38,11 @@ namespace Sparrow
     virtual ~Connection();
 
     void init();
+
+#ifdef DEPRECATED_SPARROW_FEATURE
     void writeTables();
     void readTables();
+#endif
 
     //------------------------------------------------------------------------
     // motor methods
@@ -162,7 +165,7 @@ namespace Sparrow
   Connection::rad2servo0Ticks(double rad) const
   {
     return params_->servo0MidPulse + 
-      static_cast<short>(rint(rad * params_->deg2servoTicks * 180. / M_PI));
+      static_cast<short>(rint(rad * params_->deg2ServoTicks * 180. / M_PI));
   }
 
   inline
@@ -170,7 +173,7 @@ namespace Sparrow
   Connection::rad2servo1Ticks(double rad) const
   {
     return params_->servo1MidPulse + 
-      static_cast<short>(rint(rad * params_->deg2servoTicks * 180. / M_PI));
+      static_cast<short>(rint(rad * params_->deg2ServoTicks * 180. / M_PI));
   }
 
 };

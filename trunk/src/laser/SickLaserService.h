@@ -40,9 +40,7 @@ namespace Miro
 
   public:
     // Initialization and Termination methods.
-    LaserServer(int argc, char *argv[],
-		const Miro::RobotParameters& _robotParameters,
-		const ::Laser::Parameters& parameters);
+    LaserServer(int argc, char *argv[]);
     // Constructor.
 
     ~LaserServer();

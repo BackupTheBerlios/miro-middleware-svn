@@ -37,12 +37,14 @@ LDLIBS += -lmiro
 BIN 	= SickLaserService
 
 ## additional files
-FILES	= 	SickLaserConnection \
+FILES	= 	Parameters \
+		SickLaserService \
+		SickLaserConnection \
 		SickLaserTask \
 		SickLaserPollTask \
 		SickLaserEvent \
 		SickLaserImpl \
-		SickLaserParameters
+		SickLaserService
 
 
 SRC	= $(addsuffix .cpp,$(FILES))
@@ -70,124 +72,290 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 $(BIN): $(STATIC_DEPS)
 
+.PRECIOS: Parameters.cpp Parameters.h
+
 # DO NOT DELETE THIS LINE -- g++dep uses it.
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
 
+.obj/Parameters.o .obj/Parameters.so .shobj/Parameters.o .shobj/Parameters.so: Parameters.cpp Parameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h
+
+.obj/SickLaserService.o .obj/SickLaserService.so .shobj/SickLaserService.o .shobj/SickLaserService.so: SickLaserService.cpp SickLaserImpl.h \
+ $(MIRO_ROOT)/src/miro/LaserS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/ExceptionS.i \
+ $(MIRO_ROOT)/src/miro/TimeS.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/TimeS.i \
+ $(MIRO_ROOT)/src/miro/PositionS.h \
+ $(MIRO_ROOT)/src/miro/WorldPointS.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i \
+ $(MIRO_ROOT)/src/miro/WorldPointS.i \
+ $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/PositionC.i \
+ $(MIRO_ROOT)/src/miro/PositionS.i \
+ $(MIRO_ROOT)/src/miro/RangeSensorS.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionS.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionS.i \
+ $(MIRO_ROOT)/src/miro/RangeEventS.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.i \
+ $(MIRO_ROOT)/src/miro/RangeEventS.i \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.i \
+ $(MIRO_ROOT)/src/miro/RangeSensorS.i \
+ $(MIRO_ROOT)/src/miro/LaserC.h \
+ $(MIRO_ROOT)/src/miro/LaserC.i \
+ $(MIRO_ROOT)/src/miro/LaserS.i \
+ $(MIRO_ROOT)/src/miro/RangeSensorImpl.h \
+ $(MIRO_ROOT)/src/miro/Synch.h Parameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
+ SickLaserService.h $(MIRO_ROOT)/src/miro/OdometryC.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.i \
+ $(MIRO_ROOT)/src/miro/OdometryC.i \
+ $(MIRO_ROOT)/src/miro/Server.h \
+ $(MIRO_ROOT)/src/miro/Client.h \
+ $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/ReactorTask.h \
+ $(MIRO_ROOT)/src/miro/StructuredPushSupplier.h \
+ $(MIRO_ROOT)/src/miro/Log.h SickLaserConnection.h \
+ SickLaserMessage.h SickLaserOpcodes.h SickLaserTask.h \
+ $(MIRO_ROOT)/src/miro/Task.h SickLaserPollTask.h \
+ $(MIRO_ROOT)/src/miro/Thread.h SickLaserEvent.h \
+ SickLaserStatistic.h $(MIRO_ROOT)/src/miro/Utils.h \
+ $(MIRO_ROOT)/src/miro/OdometryTracking.h \
+ $(MIRO_ROOT)/src/miro/StructuredPushConsumer.h
+
 .obj/SickLaserConnection.o .obj/SickLaserConnection.so .shobj/SickLaserConnection.o .shobj/SickLaserConnection.so: SickLaserConnection.cpp SickLaserConnection.h \
  $(MIRO_ROOT)/src/miro/RangeSensorImpl.h \
- $(MIRO_ROOT)/src/miro/RangeSensorS.h $(MIRO_ROOT)/src/miro/ExceptionS.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/RangeSensorS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i \
  $(MIRO_ROOT)/src/miro/ExceptionS.i \
  $(MIRO_ROOT)/src/miro/ScanDescriptionS.h \
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
  $(MIRO_ROOT)/src/miro/ScanDescriptionS.i \
- $(MIRO_ROOT)/src/miro/RangeEventS.h $(MIRO_ROOT)/src/miro/TimeS.h \
- $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/TimeS.i $(MIRO_ROOT)/src/miro/RangeEventC.h \
- $(MIRO_ROOT)/src/miro/RangeEventC.i $(MIRO_ROOT)/src/miro/RangeEventS.i \
- $(MIRO_ROOT)/src/miro/RangeSensorC.h $(MIRO_ROOT)/src/miro/RangeSensorC.i \
- $(MIRO_ROOT)/src/miro/RangeSensorS.i $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/LaserC.h $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/PositionC.i $(MIRO_ROOT)/src/miro/LaserC.i \
- SickLaserMessage.h SickLaserOpcodes.h $(MIRO_ROOT)/src/miro/Exception.h \
- SickLaserTask.h $(MIRO_ROOT)/src/miro/Task.h $(MIRO_ROOT)/src/miro/Log.h \
- SickLaserPollTask.h $(MIRO_ROOT)/src/miro/Thread.h SickLaserEvent.h \
- SickLaserStatistic.h SickLaserParameters.h \
- $(MIRO_ROOT)/src/miro/TtyParameters.h \
- $(MIRO_ROOT)/src/miro/DevParameters.h $(MIRO_ROOT)/src/miro/Parameters.h
+ $(MIRO_ROOT)/src/miro/RangeEventS.h \
+ $(MIRO_ROOT)/src/miro/TimeS.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/TimeS.i \
+ $(MIRO_ROOT)/src/miro/RangeEventC.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.i \
+ $(MIRO_ROOT)/src/miro/RangeEventS.i \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.i \
+ $(MIRO_ROOT)/src/miro/RangeSensorS.i \
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/LaserC.h \
+ $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i \
+ $(MIRO_ROOT)/src/miro/PositionC.i \
+ $(MIRO_ROOT)/src/miro/LaserC.i SickLaserMessage.h \
+ SickLaserOpcodes.h $(MIRO_ROOT)/src/miro/Exception.h \
+ SickLaserTask.h $(MIRO_ROOT)/src/miro/Task.h \
+ $(MIRO_ROOT)/src/miro/Log.h SickLaserPollTask.h \
+ $(MIRO_ROOT)/src/miro/Thread.h SickLaserEvent.h \
+ SickLaserStatistic.h Parameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h
 
 .obj/SickLaserTask.o .obj/SickLaserTask.so .shobj/SickLaserTask.o .shobj/SickLaserTask.so: SickLaserTask.cpp SickLaserTask.h \
- $(MIRO_ROOT)/src/miro/Task.h $(MIRO_ROOT)/src/miro/Log.h \
- SickLaserConnection.h $(MIRO_ROOT)/src/miro/RangeSensorImpl.h \
- $(MIRO_ROOT)/src/miro/RangeSensorS.h $(MIRO_ROOT)/src/miro/ExceptionS.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/Task.h \
+ $(MIRO_ROOT)/src/miro/Log.h SickLaserConnection.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorImpl.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i \
  $(MIRO_ROOT)/src/miro/ExceptionS.i \
  $(MIRO_ROOT)/src/miro/ScanDescriptionS.h \
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
  $(MIRO_ROOT)/src/miro/ScanDescriptionS.i \
- $(MIRO_ROOT)/src/miro/RangeEventS.h $(MIRO_ROOT)/src/miro/TimeS.h \
- $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/TimeS.i $(MIRO_ROOT)/src/miro/RangeEventC.h \
- $(MIRO_ROOT)/src/miro/RangeEventC.i $(MIRO_ROOT)/src/miro/RangeEventS.i \
- $(MIRO_ROOT)/src/miro/RangeSensorC.h $(MIRO_ROOT)/src/miro/RangeSensorC.i \
- $(MIRO_ROOT)/src/miro/RangeSensorS.i $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/LaserC.h $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/PositionC.i $(MIRO_ROOT)/src/miro/LaserC.i \
- SickLaserMessage.h SickLaserOpcodes.h $(MIRO_ROOT)/src/miro/Exception.h \
- SickLaserPollTask.h $(MIRO_ROOT)/src/miro/Thread.h SickLaserEvent.h \
- SickLaserStatistic.h $(MIRO_ROOT)/src/miro/TimeHelper.h
+ $(MIRO_ROOT)/src/miro/RangeEventS.h \
+ $(MIRO_ROOT)/src/miro/TimeS.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/TimeS.i \
+ $(MIRO_ROOT)/src/miro/RangeEventC.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.i \
+ $(MIRO_ROOT)/src/miro/RangeEventS.i \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.i \
+ $(MIRO_ROOT)/src/miro/RangeSensorS.i \
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/LaserC.h \
+ $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i \
+ $(MIRO_ROOT)/src/miro/PositionC.i \
+ $(MIRO_ROOT)/src/miro/LaserC.i SickLaserMessage.h \
+ SickLaserOpcodes.h $(MIRO_ROOT)/src/miro/Exception.h \
+ SickLaserPollTask.h $(MIRO_ROOT)/src/miro/Thread.h \
+ SickLaserEvent.h SickLaserStatistic.h \
+ $(MIRO_ROOT)/src/miro/TimeHelper.h
 
 .obj/SickLaserPollTask.o .obj/SickLaserPollTask.so .shobj/SickLaserPollTask.o .shobj/SickLaserPollTask.so: SickLaserPollTask.cpp SickLaserPollTask.h \
- $(MIRO_ROOT)/src/miro/Log.h $(MIRO_ROOT)/src/miro/Thread.h \
- SickLaserConnection.h $(MIRO_ROOT)/src/miro/RangeSensorImpl.h \
- $(MIRO_ROOT)/src/miro/RangeSensorS.h $(MIRO_ROOT)/src/miro/ExceptionS.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/Log.h \
+ $(MIRO_ROOT)/src/miro/Thread.h SickLaserConnection.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorImpl.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i \
  $(MIRO_ROOT)/src/miro/ExceptionS.i \
  $(MIRO_ROOT)/src/miro/ScanDescriptionS.h \
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
  $(MIRO_ROOT)/src/miro/ScanDescriptionS.i \
- $(MIRO_ROOT)/src/miro/RangeEventS.h $(MIRO_ROOT)/src/miro/TimeS.h \
- $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/TimeS.i $(MIRO_ROOT)/src/miro/RangeEventC.h \
- $(MIRO_ROOT)/src/miro/RangeEventC.i $(MIRO_ROOT)/src/miro/RangeEventS.i \
- $(MIRO_ROOT)/src/miro/RangeSensorC.h $(MIRO_ROOT)/src/miro/RangeSensorC.i \
- $(MIRO_ROOT)/src/miro/RangeSensorS.i $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/LaserC.h $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/PositionC.i $(MIRO_ROOT)/src/miro/LaserC.i \
- SickLaserMessage.h SickLaserOpcodes.h $(MIRO_ROOT)/src/miro/Exception.h \
- SickLaserTask.h $(MIRO_ROOT)/src/miro/Task.h SickLaserEvent.h \
- SickLaserStatistic.h SickLaserParameters.h \
- $(MIRO_ROOT)/src/miro/TtyParameters.h \
- $(MIRO_ROOT)/src/miro/DevParameters.h $(MIRO_ROOT)/src/miro/Parameters.h
+ $(MIRO_ROOT)/src/miro/RangeEventS.h \
+ $(MIRO_ROOT)/src/miro/TimeS.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/TimeS.i \
+ $(MIRO_ROOT)/src/miro/RangeEventC.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.i \
+ $(MIRO_ROOT)/src/miro/RangeEventS.i \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.i \
+ $(MIRO_ROOT)/src/miro/RangeSensorS.i \
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/LaserC.h \
+ $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i \
+ $(MIRO_ROOT)/src/miro/PositionC.i \
+ $(MIRO_ROOT)/src/miro/LaserC.i SickLaserMessage.h \
+ SickLaserOpcodes.h $(MIRO_ROOT)/src/miro/Exception.h \
+ SickLaserTask.h $(MIRO_ROOT)/src/miro/Task.h \
+ SickLaserEvent.h SickLaserStatistic.h Parameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h
 
 .obj/SickLaserEvent.o .obj/SickLaserEvent.so .shobj/SickLaserEvent.o .shobj/SickLaserEvent.so: SickLaserEvent.cpp SickLaserEvent.h SickLaserTask.h \
- $(MIRO_ROOT)/src/miro/Task.h $(MIRO_ROOT)/src/miro/Log.h \
- SickLaserStatistic.h SickLaserOpcodes.h SickLaserMessage.h \
+ $(MIRO_ROOT)/src/miro/Task.h \
+ $(MIRO_ROOT)/src/miro/Log.h SickLaserStatistic.h \
+ SickLaserOpcodes.h SickLaserMessage.h \
  $(MIRO_ROOT)/src/miro/Exception.h
 
 .obj/SickLaserImpl.o .obj/SickLaserImpl.so .shobj/SickLaserImpl.o .shobj/SickLaserImpl.so: SickLaserImpl.cpp SickLaserImpl.h \
- $(MIRO_ROOT)/src/miro/LaserS.h $(MIRO_ROOT)/src/miro/ExceptionS.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/ExceptionS.i $(MIRO_ROOT)/src/miro/TimeS.h \
- $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/TimeS.i $(MIRO_ROOT)/src/miro/PositionS.h \
- $(MIRO_ROOT)/src/miro/WorldPointS.h $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i $(MIRO_ROOT)/src/miro/WorldPointS.i \
- $(MIRO_ROOT)/src/miro/PositionC.h $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/PositionS.i $(MIRO_ROOT)/src/miro/RangeSensorS.h \
+ $(MIRO_ROOT)/src/miro/LaserS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/ExceptionS.i \
+ $(MIRO_ROOT)/src/miro/TimeS.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/TimeS.i \
+ $(MIRO_ROOT)/src/miro/PositionS.h \
+ $(MIRO_ROOT)/src/miro/WorldPointS.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i \
+ $(MIRO_ROOT)/src/miro/WorldPointS.i \
+ $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/PositionC.i \
+ $(MIRO_ROOT)/src/miro/PositionS.i \
+ $(MIRO_ROOT)/src/miro/RangeSensorS.h \
  $(MIRO_ROOT)/src/miro/ScanDescriptionS.h \
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
  $(MIRO_ROOT)/src/miro/ScanDescriptionS.i \
- $(MIRO_ROOT)/src/miro/RangeEventS.h $(MIRO_ROOT)/src/miro/RangeEventC.h \
- $(MIRO_ROOT)/src/miro/RangeEventC.i $(MIRO_ROOT)/src/miro/RangeEventS.i \
- $(MIRO_ROOT)/src/miro/RangeSensorC.h $(MIRO_ROOT)/src/miro/RangeSensorC.i \
- $(MIRO_ROOT)/src/miro/RangeSensorS.i $(MIRO_ROOT)/src/miro/LaserC.h \
- $(MIRO_ROOT)/src/miro/LaserC.i $(MIRO_ROOT)/src/miro/LaserS.i \
- $(MIRO_ROOT)/src/miro/RangeSensorImpl.h $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/RangeEventS.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.i \
+ $(MIRO_ROOT)/src/miro/RangeEventS.i \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.i \
+ $(MIRO_ROOT)/src/miro/RangeSensorS.i \
+ $(MIRO_ROOT)/src/miro/LaserC.h \
+ $(MIRO_ROOT)/src/miro/LaserC.i \
+ $(MIRO_ROOT)/src/miro/LaserS.i \
+ $(MIRO_ROOT)/src/miro/RangeSensorImpl.h \
+ $(MIRO_ROOT)/src/miro/Synch.h \
  $(MIRO_ROOT)/src/miro/OdometryTracking.h \
- $(MIRO_ROOT)/src/miro/MotionStatusC.h $(MIRO_ROOT)/src/miro/VelocityC.h \
- $(MIRO_ROOT)/src/miro/VelocityC.i $(MIRO_ROOT)/src/miro/MotionStatusC.i \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.i \
  $(MIRO_ROOT)/src/miro/StructuredPushConsumer.h \
  $(MIRO_ROOT)/src/miro/TimeHelper.h
 
-.obj/SickLaserParameters.o .obj/SickLaserParameters.so .shobj/SickLaserParameters.o .shobj/SickLaserParameters.so: SickLaserParameters.cpp SickLaserParameters.h \
- $(MIRO_ROOT)/src/miro/TtyParameters.h \
- $(MIRO_ROOT)/src/miro/DevParameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
+.obj/SickLaserService.o .obj/SickLaserService.so .shobj/SickLaserService.o .shobj/SickLaserService.so: SickLaserService.cpp SickLaserImpl.h \
+ $(MIRO_ROOT)/src/miro/LaserS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/ExceptionS.i \
+ $(MIRO_ROOT)/src/miro/TimeS.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/TimeS.i \
+ $(MIRO_ROOT)/src/miro/PositionS.h \
+ $(MIRO_ROOT)/src/miro/WorldPointS.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i \
+ $(MIRO_ROOT)/src/miro/WorldPointS.i \
+ $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/PositionC.i \
+ $(MIRO_ROOT)/src/miro/PositionS.i \
+ $(MIRO_ROOT)/src/miro/RangeSensorS.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionS.h \
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
- $(MIRO_ROOT)/src/miro/RangeSensorC.h $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i $(MIRO_ROOT)/src/miro/RangeEventC.h \
- $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/RangeEventC.i $(MIRO_ROOT)/src/miro/RangeSensorC.i \
- $(MIRO_ROOT)/src/miro/ScanDescriptionHelper.h \
- $(MIRO_ROOT)/src/miro/Angle.h
+ $(MIRO_ROOT)/src/miro/ScanDescriptionS.i \
+ $(MIRO_ROOT)/src/miro/RangeEventS.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.h \
+ $(MIRO_ROOT)/src/miro/RangeEventC.i \
+ $(MIRO_ROOT)/src/miro/RangeEventS.i \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.h \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.i \
+ $(MIRO_ROOT)/src/miro/RangeSensorS.i \
+ $(MIRO_ROOT)/src/miro/LaserC.h \
+ $(MIRO_ROOT)/src/miro/LaserC.i \
+ $(MIRO_ROOT)/src/miro/LaserS.i \
+ $(MIRO_ROOT)/src/miro/RangeSensorImpl.h \
+ $(MIRO_ROOT)/src/miro/Synch.h Parameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
+ SickLaserService.h $(MIRO_ROOT)/src/miro/OdometryC.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.i \
+ $(MIRO_ROOT)/src/miro/OdometryC.i \
+ $(MIRO_ROOT)/src/miro/Server.h \
+ $(MIRO_ROOT)/src/miro/Client.h \
+ $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/ReactorTask.h \
+ $(MIRO_ROOT)/src/miro/StructuredPushSupplier.h \
+ $(MIRO_ROOT)/src/miro/Log.h SickLaserConnection.h \
+ SickLaserMessage.h SickLaserOpcodes.h SickLaserTask.h \
+ $(MIRO_ROOT)/src/miro/Task.h SickLaserPollTask.h \
+ $(MIRO_ROOT)/src/miro/Thread.h SickLaserEvent.h \
+ SickLaserStatistic.h $(MIRO_ROOT)/src/miro/Utils.h \
+ $(MIRO_ROOT)/src/miro/OdometryTracking.h \
+ $(MIRO_ROOT)/src/miro/StructuredPushConsumer.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

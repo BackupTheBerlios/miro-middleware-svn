@@ -2,7 +2,7 @@
 ##
 ## This file is part of Miro (The Middleware For Robots)
 ##
-## (c) 1999, 2000, 2001
+## (c) 1999, 2000, 2001, 2002, 2003
 ## Department of Neural Information Processing, University of Ulm, Germany
 ##
 ## $Id$
@@ -39,6 +39,12 @@ $(foreach ext, $(IDL_EXT2_MINUS), %$(ext)): %Cli.h
 
 %.ps: %.dvi
 	dvips $< -o $@
+
+%arameters.cpp: %arameters.h
+	@
+
+%arameters.h: %arameters.xml $(MIRO_ROOT)/bin/MakeParams
+	$(MIRO_ROOT)/bin/MakeParams -f $< -n $(subst .h,,$@) $(MIRO_MAKEPARAMSFLAGS)
 
 .PHONY: distclean
 

@@ -17,7 +17,6 @@
 #include "BehaviourParameters.h"
 #include "BehaviourRepository.h"
 #include "ArbiterRepository.h"
-#include "KeyValueList.h"
 #include "StructuredPushSupplier.h"
 
 #include <qdom.h>
@@ -145,10 +144,7 @@ namespace Miro
 	    if ((behaviour = br->getBehaviour(name)) != NULL) {
 	      parameters = behaviour->getParametersInstance();
 
-	      KeyValueList params;
-	      params <<= n;
-
-	      *parameters <<= params;
+	      *parameters <<= n;
 	      addBehaviour(behaviour, parameters);
 	    } 
 	    else {

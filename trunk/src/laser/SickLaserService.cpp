@@ -9,9 +9,8 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "SickLaserImpl.h"
-#include "SickLaserParameters.h"
+#include "Parameters.h"
 #include "SickLaserService.h"
 
 #include "miro/Utils.h"
@@ -27,33 +26,31 @@ namespace Miro
   using std::cerr;
   using std::endl;
 
-  LaserServer::LaserServer(int argc, char *argv[], 
-			   const Miro::RobotParameters& _robotParameters,
-			   const ::Laser::Parameters& _parameters) :
-    Miro::Server(argc, argv, _robotParameters),
+  LaserServer::LaserServer(int argc, char *argv[]) :
+    Miro::Server(argc, argv),
     Log(INFO,"LaserServer"),
     reactorTask_( this, 20, new ACE_Sched_Params(ACE_SCHED_FIFO,10) ),
-    ec_(_parameters.notify?
+    ec_(::Laser::Parameters::instance()->notify?
 	tryResolveName<CosNotifyChannelAdmin::EventChannel>("EventChannel") : 
 	CosNotifyChannelAdmin::EventChannel::_nil()),
     structuredPushSupplier_((!CORBA::is_nil(ec_.in()))?
 			    new StructuredPushSupplier(ec_.in(), namingContextName) :
 			    NULL),
-    odoTracking_(_parameters.positionStamps?
+    odoTracking_(::Laser::Parameters::instance()->positionStamps?
 		 new OdometryTracking(ec_.in(), namingContextName) :
 		 NULL),
-    laser_(odoTracking_, _parameters.laserDescription, structuredPushSupplier_),
-    laserStatistic_(_parameters.statistics?
+    laser_(odoTracking_, ::Laser::Parameters::instance()->laserDescription, structuredPushSupplier_),
+    laserStatistic_(::Laser::Parameters::instance()->statistics?
 		    new LaserStatistic() : NULL),
-    connection_(reactorTask_.reactor(), laser_, _parameters, laserStatistic_)
+    connection_(reactorTask_.reactor(), laser_, laserStatistic_)
   {
-    if (_parameters.notify && CORBA::is_nil(ec_.in())) {
+    if (::Laser::Parameters::instance()->notify && CORBA::is_nil(ec_.in())) {
       cerr << "Could not resolve event channel in naming context " 
 	   << namingContextName << "," << endl
 	   << "will not broadcast events.";
     }
 
-    if (_parameters.positionStamps && CORBA::is_nil(ec_.in())) {
+    if (::Laser::Parameters::instance()->positionStamps && CORBA::is_nil(ec_.in())) {
       cerr << "Could not resolve event channel in naming context "
 	   << namingContextName << "," << endl
 	   << "will not use position stamps." << endl;
@@ -120,24 +117,23 @@ int
 main(int argc, char *argv[])
 {
 
-  Miro::RobotParameters robotParameters;
-  Laser::Parameters parameters;
+  Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
+  Laser::Parameters * parameters = Laser::Parameters::instance();
 
   // Config file processing
   Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
-  config->setRobotType("Robot");
-  config->getParameters("robot", robotParameters);
-  config->setRobotType("B21");
-  config->getParameters("sick", parameters);
+  config->setSection("Robot");
+  config->getParameters("Robot", *robotParameters);
+  config->setSection("Sick");
+  config->getParameters("Laser", *parameters);
   delete config;
 
   log(Miro::INFO, "Initialize server daemon.");
-  Miro::LaserServer laserServer(argc, argv, 
-				robotParameters, parameters);
+  Miro::LaserServer laserServer(argc, argv);
 
 #ifdef DEBUG
-  cout << "  robot parameters:" << endl << robotParameters << endl;
-  cout << "  parameters:" << endl << parameters << endl;
+  cout << "  robot parameters:" << endl << *robotParameters << endl;
+  cout << "  parameters:" << endl << *parameters << endl;
 #endif
 
   try {

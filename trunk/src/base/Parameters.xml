@@ -1,0 +1,21 @@
+<!DOCTYPE xml SYSTEM "PolicyEditor_behaviour.dtd">
+<config> 
+  <config_global name="namespace" value="Base" />
+  <config_global name="include" value="mcp/Parameters.h" />
+
+  <config_group name="base">
+    <config_item parent="Mcp::" instance="true">
+      <config_parameter name="device" type="string" inherited="true" default="/dev/cur0" />
+      <config_parameter name="motion" type="Miro::MotionParameters" />
+      <constructor>
+      motion.minTranslation = -950;
+      motion.maxTranslation = 950;
+      </constructor>
+      <config_parameter name="radius" type="int" default="267" measure="mm"/>
+      <config_parameter name="maxTransAccel" type="int" default="2000" measure="mm/(s*s)"/>
+      <config_parameter name="maxRotAccel" type="int" default="180" measure="&deg;/(s*s)"/>
+      <config_parameter name="voltWarn" type="int" default="44" measure="v"/>
+      <config_parameter name="voltPanic" type="int" default="39" measure="v"/>
+    </config_item>
+  </config_group>
+</config>

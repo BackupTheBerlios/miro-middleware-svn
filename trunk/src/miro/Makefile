@@ -27,7 +27,7 @@ include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
 
 # The order in this list is important as some libraries depend on
 # others, please keep that in mind when adding or changing libraries.
-MKLIST = Makefile.MiroSvc Makefile.Miro Makefile.SSH
+MKLIST = Makefile.Miro Makefile.MiroSvc Makefile.SSH
 
 #----------------------------------------------------------------------------
 #       Local rules

@@ -75,15 +75,11 @@ $(BIN): $(STATIC_DEPS)
  $(MIRO_ROOT)/src/pioneer/CanonMessage.h \
  $(MIRO_ROOT)/src/miro/DevMessage.h \
  $(MIRO_ROOT)/src/pioneer/CanonDevice.h \
- $(MIRO_ROOT)/src/pioneer/PioneerParameters.h \
- $(MIRO_ROOT)/src/psos/PsosParameters.h \
- $(MIRO_ROOT)/src/miro/TtyParameters.h \
- $(MIRO_ROOT)/src/miro/DevParameters.h \
+ $(MIRO_ROOT)/src/pioneer/Parameters.h \
+ $(MIRO_ROOT)/src/psos/Parameters.h \
  $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/MotionParameters.h \
- $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
- $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
- $(MIRO_ROOT)/src/miro/Singleton.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
  $(MIRO_ROOT)/src/pioneer/PioneerConsumer.h \
  $(MIRO_ROOT)/src/miro/DevConsumer.h \
  $(MIRO_ROOT)/src/pioneer/PioneerStatus.h \
@@ -99,7 +95,6 @@ $(BIN): $(STATIC_DEPS)
  $(MIRO_ROOT)/src/miro/MotionStatusC.i \
  $(MIRO_ROOT)/src/miro/ExceptionC.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/Angle.h \
  $(MIRO_ROOT)/src/pioneer/PioneerStallImpl.h \
  $(MIRO_ROOT)/src/miro/PioneerStallS.h \
  $(MIRO_ROOT)/src/miro/StallS.h \

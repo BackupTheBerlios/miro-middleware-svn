@@ -15,7 +15,7 @@
 #include "BaseConnection.h"
 #include "BaseEventHandler.h"
 #include "BaseConsumer.h"
-#include "BaseParameters.h"
+#include "Parameters.h"
 
 #include "miro/Exception.h"
 

@@ -72,7 +72,8 @@ interface. The only difference in querying an infrared or a sonar
 device is the name under which these sensors are registered within the
 naming service.
 
-\lstinputlisting[frame=tb, caption={examples/sonar/SonarPoll1.cpp\label{lst:SonarPoll1}}]{SonarPoll1.cpp}
+\lstinputlisting[frame=tb, caption={examples/sonar/SonarPoll1.cpp}]{SonarPoll1.cpp}
+\label{lst:SonarPoll1}
 
 A step by step walk trough the code:
 
@@ -171,7 +172,8 @@ See the following listing which shows the same code again, but without
 the \lstinline!Miro::! prefixes. The initial lines containing the includes
 are skipped.
 
-\lstinputlisting[frame=tb, first=6, caption={examples/sonar/SonarPoll2.cpp\label{lst:SonarPoll2}}]{SonarPoll2.cpp}
+\lstinputlisting[frame=tb, first=6, caption={examples/sonar/SonarPoll2.cpp}]{SonarPoll2.cpp}
+\label{lst:SonarPoll2}
 
 
 \section{Adding Exception Handling}
@@ -212,7 +214,8 @@ the constructor of Client, print them to stderr and exit. There is
 little to do for the client program anyhow, if it can't access the
 services. 
 
-\lstinputlisting[frame=tb, first=14, caption={examples/sonar/SonarPoll3.cpp\label{lst:SonarPoll3}}]{SonarPoll3.cpp}
+\lstinputlisting[frame=tb, first=14, caption={examples/sonar/SonarPoll3.cpp}]{SonarPoll3.cpp}
+\label{lst:SonarPoll3}
 
 \section{An Asynchronous Sonar Client}
 \label{sec:notify}
@@ -238,7 +241,8 @@ To show how asynchronous event processing works within \miro, lets
 look at a small example. First we look at the code to handle the
 events.
 
-\lstinputlisting[frame=tb, first=24, last=53, caption={examples/sonar/SonarNotify.cpp\label{lst:SonarNotify}}]{SonarNotify.cpp}
+\lstinputlisting[frame=tb, first=24, last=53, caption={examples/sonar/SonarNotify.cpp}]{SonarNotify.cpp}
+\label{lst:SonarNotify}
 
 A step by step walk trough the code:
 
@@ -282,7 +286,8 @@ Even though a \lstinline!CORBA::Any! can hold any IDL defined struct,
 you can only extract type \lstinline!T! from a \lstinline!CORBA::Any!
 if it actually contains an object of type \lstinline!T!.
 
-\lstinputlisting[frame=tb, first=54, caption={examples/sonar/SonarNotify.cpp\label{lst:SonarNotify2}}]{SonarNotify.cpp}
+\lstinputlisting[frame=tb, first=54, caption={examples/sonar/SonarNotify.cpp}]{SonarNotify.cpp}
+\label{lst:SonarNotify2}
 
 Lets now have a look at the \lstinline!main! function:
 

@@ -13,7 +13,7 @@
 #include "SickLaserPollTask.h"
 
 #include "SickLaserConnection.h"
-#include "SickLaserParameters.h"
+#include "Parameters.h"
 #include "SickLaserStatistic.h"
 #include "SickLaserEvent.h"
 #include "SickLaserMessage.h"
@@ -28,12 +28,11 @@ namespace Miro
 {
   LaserPollTask::LaserPollTask(LaserConnection& _laser, 
 			       LaserEvent& _event,
-			       const ::Laser::Parameters& _description,
 			       LaserStatistic * _laserStatistic) : 
     Log(INFO,"LaserPollTask"), 
     laser(_laser),
     event(_event),
-    description(_description),
+    description(*::Laser::Parameters::instance()),
     laserStatistic(_laserStatistic)
   {
   }
@@ -45,12 +44,11 @@ namespace Miro
   int LaserPollTask::svc() 
   {
     char c = 0x01;
-    int pollintervall = description.pollintervall;
     LaserMessage lm( 0, LO_REQ_DATA, 1, &c );
     ACE_Time_Value abstimeout, last, now;
     ACE_Time_Value timeout(1,0); // timeout for data request 
 
-    log(INFO,"polling intervall is :", pollintervall);
+    log(INFO,"polling intervall is :", (int)description.pollInterval.msec());
     // msg_queue is used to terminate this thread
     // when we receive a MB_HANGUP we stop
     //
@@ -76,7 +74,7 @@ namespace Miro
       // TODO improve
       now = ACE_OS::gettimeofday();
 
-      ACE_OS::sleep( ACE_Time_Value(0,pollintervall) - (now - last) );
+      ACE_OS::sleep( description.pollInterval - (now - last) );
     }
 
     log(INFO,"left service");

@@ -2,12 +2,10 @@
 ##
 ## This file is part of Miro (The Middleware For Robots)
 ##
-## (c) 1999, 2000, 2001
+## (c) 1999, 2000, 2001, 2002, 2003
 ## Department of Neural Information Processing, University of Ulm, Germany
 ##
 ## $Id$
-## $Date$
-## 
 ##
 ## Miro/tests/Makefile
 ##
@@ -36,14 +34,13 @@ DIRS =		odometry \
 		panTilt \
 		video \
 		notify \
+		speech \
 		behaviours \
-		speech 
+		behaviourEngine \
 
 ifdef SPHINX_ROOT
   DIRS +=  	sphinx
 endif
-
-  DIRS +=	xml
 
 ifneq (,$(findstring B21,$(MIRO_COMPONENTS)))
   DIRS +=	b21 \
@@ -60,6 +57,8 @@ endif
 ifneq (,$(findstring Deprecated,$(MIRO_COMPONENTS)))
   DIRS +=	image
 endif
+
+REST = xml
 
 #----------------------------------------------------------------------------
 #       Include targets

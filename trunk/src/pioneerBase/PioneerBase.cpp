@@ -15,7 +15,7 @@
 #include "miro/Utils.h"
 #include "miro/Synch.h"
 
-#include "pioneer/PioneerParameters.h"
+#include "pioneer/Parameters.h"
 
 #include <orbsvcs/Notify/Notify_EventChannelFactory_i.h>
 #include <orbsvcs/Notify/Notify_Default_CO_Factory.h>
@@ -132,16 +132,20 @@ main(int argc, char *argv[])
   TAO_Notify_Default_EMO_Factory::init_svc();
 
   // Parameters to be passed to the services
+  Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
   Pioneer::Parameters * pioneerParameters = Pioneer::Parameters::instance();
 
   try {
     // Config file processing
     Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
-    config->setRobotType("Pioneer1");
-    config->getParameters("pioneerBoard", *pioneerParameters);
+    config->setSection("Robot");
+    config->getParameters("Robot", *robotParameters);
+    config->setSection("Pioneer");
+    config->getParameters("PioneerBoard", *pioneerParameters);
     delete config;
     
 #ifdef DEBUG
+    cout << "  robot parameters:" << endl << *robotParameters << endl;
     cout << "  pioneer parameters:" << endl << *pioneerParameters << endl;
 #endif
     

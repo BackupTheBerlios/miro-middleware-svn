@@ -12,6 +12,10 @@
 #define BehaviourParameters_h
 
 #include <iostream>
+#include <qdom.h>
+
+// forward declarations
+class QDomNode;
 
 namespace Miro
 {
@@ -36,7 +40,8 @@ namespace Miro
     virtual ~BehaviourParameters();
 
     //! XML-Parsing operator.
-    virtual void operator <<= (const KeyValueList&);
+    virtual void operator <<= (const QDomNode&);
+    virtual QDomElement operator >>= (QDomNode& _node) const;
 
   protected:
     //! Dump the BehaviourParameters to the specified output stream.

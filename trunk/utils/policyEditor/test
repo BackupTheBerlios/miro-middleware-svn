@@ -1,6 +1,0 @@
-<!DOCTYPE xml ><xml>
- <actionpattern x="-74" y="-81" start="false" name="asdf" >
-  <arbiter name="MotionArbiterPower" />
- </actionpattern>
-</xml>
-

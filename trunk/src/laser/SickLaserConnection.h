@@ -54,7 +54,6 @@ namespace Miro
     //! Constructor
     LaserConnection(ACE_Reactor * _reactor_,
 		    RangeSensorImpl& _rangeSenorI,
-		    const ::Laser::Parameters& _parameters,
 		    LaserStatistic * _laserStatistic);
 
     //! Destructor

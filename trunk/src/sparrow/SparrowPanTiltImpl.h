@@ -16,7 +16,7 @@
 #include "miro/TimeHelper.h"
 #include "miro/Angle.h"
 
-#include "SparrowParameters.h"
+#include "Parameters.h"
 
 namespace Sparrow
 {

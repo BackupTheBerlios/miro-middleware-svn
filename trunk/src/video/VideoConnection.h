@@ -29,8 +29,7 @@ namespace Video
   class Connection
   {
   public:
-    Connection(Consumer * _consumer,
-	       const Parameters& _parameters);
+    Connection(Consumer * _consumer);
     virtual ~Connection();
 
     //------------------------------------------------------------------------

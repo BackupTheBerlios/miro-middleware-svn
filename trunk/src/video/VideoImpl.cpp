@@ -17,11 +17,12 @@
 
 using namespace Video;
 
-namespace Miro {
-
-VideoImpl::VideoImpl(::Video::Consumer* _pconsumer, const ::Video::Parameters& _parameters)
-			:pConsumer(_pconsumer), parameters(_parameters)
-	{
+namespace Miro 
+{
+  VideoImpl::VideoImpl(::Video::Consumer* _pconsumer) :
+    pConsumer(_pconsumer), 
+    parameters(*Parameters::instance())
+  {
 	int	i;
 	
 	iMaxConnections = parameters.connections;

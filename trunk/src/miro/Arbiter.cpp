@@ -33,7 +33,7 @@ namespace Miro
    * object.
    */
   ArbiterParameters * 
-  Arbiter::getParametersInstance()
+  Arbiter::getParametersInstance() const
   {
     return new ArbiterParameters();
   }
@@ -44,7 +44,7 @@ namespace Miro
    * object.
    */
   ArbiterMessage * 
-  Arbiter::getMessageInstance()
+  Arbiter::getMessageInstance() const
   {
     return new ArbiterMessage();
   }

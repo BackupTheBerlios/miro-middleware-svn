@@ -12,11 +12,14 @@
 #define PolicyEditor_h
 
 #include "PolicyDocument.h"
-#include "PolicyView.h"
 
 #include "miro/Client.h"
 
 #include <qmainwindow.h>
+
+// forward declarattions
+class ConfigDialog;
+class PolicyViewClass;
 
 //! Main class of the PolicyEditor application 
 class PolicyEditorClass : public QMainWindow
@@ -24,29 +27,38 @@ class PolicyEditorClass : public QMainWindow
   Q_OBJECT
   
 public:
-  PolicyEditorClass(int argc, char** argv, Miro::Client& _client);
+  PolicyEditorClass(Miro::Client& _client);
+
+  void newPolicy();
+  void openPolicy(const QString& _name);
+  bool savePolicy();
+  bool savePolicyAs();
 
 protected slots:
+  // file menu
   void slotNew();
   void slotLoad();
   void slotSave();
   void slotSaveAs();
   void slotSendTo();
+  // options menu
+  void behaviourDescriptions();
   //void slotConfiguration();
+  // help menu
   void slotAbout();
   void slotAboutQt();
-  void getBehaviourDescriptionFileName();
-  void setBehaviourDescriptionFileName();
-  void quit();
 
 protected:
+  void defaultView();
+  bool saveIfModified();
   void closeEvent(QCloseEvent *e);
 
   Miro::Client&       client_;
+  PolicyConfigClass   config_;
   PolicyDocumentClass document_;
-  PolicyViewClass*    view_;
-  QString             miroRoot_;
-  QString             policyFileName_;
+  PolicyViewClass *   view_;
+  ConfigDialog *      configDialog_;
+
   QString             robot_;
 };
 

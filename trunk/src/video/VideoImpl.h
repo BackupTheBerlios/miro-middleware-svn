@@ -12,7 +12,7 @@
 #define VideoImpl_h
 
 #include "video/VideoConsumer.h"
-#include "video/VideoParameters.h"
+#include "video/Parameters.h"
 #include "miro/VideoS.h"
 //------------------------ VideoImpl ---------------------------//
 
@@ -25,7 +25,7 @@ namespace Miro {
 class VideoImpl :  public virtual POA_Miro::Video	//	, public Log
   {
    public:
-   	VideoImpl(::Video::Consumer*, const ::Video::Parameters&);
+   	VideoImpl(::Video::Consumer*);
    	virtual ~VideoImpl();
 
     virtual Miro::ImageHandleIDL connect () throw();

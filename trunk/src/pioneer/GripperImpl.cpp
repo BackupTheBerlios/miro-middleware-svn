@@ -14,7 +14,7 @@
 #include "pioneer/GripperImpl.h"
 #include "pioneer/PioneerConnection.h"
 #include "pioneer/PioneerConsumer.h"
-#include "pioneer/PioneerParameters.h"
+#include "pioneer/Parameters.h"
 
 #include "miro/Synch.h"
 #include "miro/Exception.h"

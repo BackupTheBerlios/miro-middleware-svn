@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2000, 2001
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -11,10 +11,6 @@
 
 
 #include "BehaviourParameters.h"
-
-#include "KeyValueList.h"
-
-#include <qdom.h>
 
 #include <iostream>
 
@@ -28,8 +24,18 @@ namespace Miro
   {}
 
   void
-  BehaviourParameters::operator <<= (const KeyValueList&)
+  BehaviourParameters::operator <<= (const QDomNode&)
   {}
+
+  QDomElement
+  BehaviourParameters::operator >>= (QDomNode& _node) const
+  {
+    QDomDocument d = _node.ownerDocument();
+    QDomElement e = d.createElement("config_item");
+    _node.appendChild(e);
+
+    return e;
+  }
 
   void
   BehaviourParameters::printToStream(std::ostream&) const

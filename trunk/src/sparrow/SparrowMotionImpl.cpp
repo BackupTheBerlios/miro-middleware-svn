@@ -13,7 +13,7 @@
 #include "SparrowMotionImpl.h"
 #include "SparrowConnection.h"
 #include "SparrowConsumer.h"
-#include "SparrowParameters.h"
+#include "Parameters.h"
 
 #include "miro/Synch.h"
 #include "miro/Exception.h"

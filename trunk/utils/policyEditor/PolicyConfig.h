@@ -11,50 +11,54 @@
 #ifndef PolicyConfig_h
 #define PolicyConfig_h
 
-#include "BehaviourDescription.h"
-#include "BehaviourParam.h"
+#include <miro/Singleton.h>
 
-#include <qdom.h>
 #include <qstring.h>
-#include <qwidget.h>
+#include <qstringlist.h>
 
-#include <vector>
+// forward declarations
+class Generator;
+class Parser;
 
 class PolicyConfigClass
 {
 public:
+  //! Initializing constructor.
   PolicyConfigClass();
+  //! Destructor
+  ~PolicyConfigClass();
   
-  //**returns all behaviours that are known*/
+  void setDescriptionFiles(const QStringList& _files);
+  const QStringList& getDescriptionFiles() const;
   
-  std::vector<BehaviourDescription> getBehaviours() const;
-  std::vector<QString> getArbiters() const;
-  std::vector<BehaviourParam> getBehaviourParams(const QString& behaviourName) const;
+  static Miro::Singleton<PolicyConfigClass> instance;
   
-  void setNewBehaviourDescriptionFileName(const QString& file);
-  
-  QString getBehaviourDescriptionFileName() const;
-  void setBehaviourDescriptionFileName();
-  
-  void getBehaviourDescription();  //reads the behaviour-Description-File
-  
-  void setConfiguration(QWidget *parent);
+  const Generator& description() const;
 
 protected:
-  /**contains the path of the config-file*/
-  QString configFile;
-  QString behaviourFile;
+  void readConfigFile();
+  void writeConfigFile();
+  void parseDescriptionFiles();
 
-  /**the main document structure containing the config-Params*/
-  QDomDocument domDocument_behaviours;
-  QDomDocument domDocument_config;
+  //! fully qualified name of the config file
+  QString configFile_;
+  //! list of description files 
+  QStringList descriptionFiles_;
 
-  // typedef std::vector<BehaviourParam> BehaviourDescription;
-  // typedef std::map<QString, BehaviourDescription >BehaviouConfig;
-  // BehaviourConfig behaviourConfig;
-  
-  // typedef std::vector<QString> ArbiterConfig;
-  // ArbiterConfig arbiterConfig;
+  Generator * generator_;
+  Parser * handler_;
 };
+
+inline
+const QStringList&
+PolicyConfigClass::getDescriptionFiles() const {
+  return descriptionFiles_;
+}
+
+inline
+const Generator&
+PolicyConfigClass::description() const {
+  return *generator_;
+}
 
 #endif

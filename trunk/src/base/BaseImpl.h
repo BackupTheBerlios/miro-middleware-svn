@@ -48,8 +48,7 @@ namespace Base
   public:
     // Constructor/Destructor
     Impl(ACE_Reactor * _reactor,
-	 Miro::OdometryImpl * _odometry,
-	 const Parameters& _parameters) throw(Miro::Exception);
+	 Miro::OdometryImpl * _odometry) throw(Miro::Exception);
     virtual ~Impl();
 
     // server behaviour

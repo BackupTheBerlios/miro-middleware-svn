@@ -38,14 +38,14 @@ DIRS =		\
 		qtTouchPad \
 		qtJoystick \
 		policyEditor \
-		policyController
+		policyController \
+		makeConfig
 ifneq (,$(findstring Sparrow99,$(MIRO_COMPONENTS)))
-  DIRS +=	sparrowBoard \
-		Joystick 
+  DIRS +=	Joystick 
 endif
 
 #currently under development
-OTHERS = 	makeParams
+OTHERS = 	sparrowBoard
 
 #----------------------------------------------------------------------------
 #       Include targets

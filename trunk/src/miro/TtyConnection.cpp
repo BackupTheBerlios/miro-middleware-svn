@@ -2,38 +2,23 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999,2000
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include <ace/Reactor.h>
 
-#include "miro/TtyConnection.h"
-#include "miro/DevEventHandler.h"
-#include "miro/TtyParameters.h"
-
-#include "miro/Exception.h"
+#include "TtyConnection.h"
+#include "DevEventHandler.h"
+#include "Parameters.h"
+#include "Exception.h"
 
 // #undef DEBUG
 
-#ifdef DEBUG
 #include <iostream>
-
-using std::cout;
-using std::cerr;
-#endif
 
 #ifdef DEBUG
 #define DBG(x) x
@@ -43,6 +28,9 @@ using std::cerr;
 
 namespace Miro
 {
+  using std::cout;
+  using std::cerr;
+
   //
   // Constructors / Destructors
   //

@@ -11,7 +11,7 @@
 #ifndef DummyBehaviour_h
 #define DummyBehaviour_h
 
-#include "DummyBehaviourParameters.h"
+#include "Parameters.h"
 #include "miro/TimedBehaviour.h"
 
 class DummyBehaviour : public Miro::TimedBehaviour

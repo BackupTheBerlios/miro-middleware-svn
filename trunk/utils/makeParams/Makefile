@@ -6,8 +6,6 @@
 ## Department of Neural Information Processing, University of Ulm, Germany
 ##
 ## $Id$
-## $Date$
-## 
 ##
 ## Miro/utils/parameters/Makefile
 ##
@@ -20,17 +18,14 @@
 INSTALL = $(VBIN:%=$(INSBIN)/%)
 
 ## dynamic libraries if needed
-LDLIBS += -lmiro
+LDLIBS += -lmiroParams
 
 ## program to be built
 ## there has to exist a source file with the same name (mybinary.cc)
 BIN 	= MakeParams
 
 ## additional files
-FILES	= Class \
-	  Parameter \
-	  Generator \
-	  Parser
+FILES	= MakeParams 
 
 SRC	= $(addsuffix .cpp,$(FILES))
 OBJ	= $(addsuffix .o,$(FILES))
@@ -59,3 +54,11 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 #	Local targets
 #----------------------------------------------------------------------------
 
+# DO NOT DELETE THIS LINE -- g++dep uses it.
+# DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
+
+
+.obj/MakeParams.o .obj/MakeParams.so .shobj/MakeParams.o .shobj/MakeParams.so: MakeParams.cpp ../params/Parser.h ../params/Class.h \
+ ../params/Parameter.h ../params/Generator.h
+
+# IF YOU PUT ANYTHING HERE IT WILL GO AWAY

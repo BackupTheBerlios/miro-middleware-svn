@@ -11,6 +11,9 @@
 #ifndef miroIO_h
 #define miroIO_h
 
+#include <ace/TTY_IO.h>
+#include <vector>
+#include <set>
 #include <iostream>
 
 #define OSTR_OPERATOR_DECL(x) \
@@ -21,6 +24,29 @@
   std::istream & \
   operator<<(std::istream &ostr, x &rhs)
 
+std::ostream & 
+operator<<(std::ostream &ostr, const ACE_TTY_IO::Serial_Params &rhs);
+OSTR_OPERATOR_DECL(ACE_INET_Addr);
+
+  // set and vector ostream operators
+  template<class T>
+  std::ostream &
+  operator<<(std::ostream &ostr, const std::vector<T> &rhs) {
+    std::vector<T>::const_iterator first, last = rhs.end();
+    for (first = rhs.begin(); first != last; ++first) {
+      ostr << (*first) << endl;
+    }
+    return ostr;
+  }
+  template<class T>
+  std::ostream &
+  operator<<(std::ostream &ostr, const std::set<T> &rhs) {
+    std::set<T>::const_iterator first, last = rhs.end();
+    for (first = rhs.begin(); first != last; ++first) {
+      ostr << (*first) << endl;
+    }
+    return ostr;
+  }
 namespace Miro 
 {
   // exceptions
@@ -46,6 +72,7 @@ namespace Miro
 
   // b21 specific types
   //  OSTR_OPERATOR_DECL(LaserScanIDL);
+
 };
 
 #endif

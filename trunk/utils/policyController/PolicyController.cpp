@@ -61,17 +61,24 @@ ControllerWidget::ControllerWidget(Miro::Client& _client, bool _start,
   stopButton = new QPushButton( "Stop", this, "stop" );
   stopButton->setMinimumSize(90, 30);
 
+  resumeButton = new QPushButton( "Resume", this, "stop" );
+  resumeButton->setMinimumSize(90, 30);
+  suspendButton = new QPushButton( "Suspend", this, "play" );
+  suspendButton->setMinimumSize(90, 30);
+
   // ... add to the layout 
   QBoxLayout *layout1 = new QVBoxLayout(topLayout, 5);
-  QGridLayout *layout2 = new QGridLayout(layout1, 2, 3, 5);
+  QGridLayout *layout2 = new QGridLayout(layout1, 2, 2, 5);
 
   layout2->addWidget(playButton, 0, 0);
-  layout2->addWidget(stopButton, 0, 1);
+  layout2->addWidget(stopButton, 1, 1);
+  layout2->addWidget(resumeButton, 1, 0);
+  layout2->addWidget(suspendButton, 0, 1);
 
-  connect( playButton, SIGNAL( clicked() ),
-	   this, SLOT( openPolicy() ) );
-  connect( stopButton, SIGNAL( clicked() ),
-	   this, SLOT( closePolicy() ) );
+  connect(playButton, SIGNAL(clicked()), this, SLOT(openPolicy()));
+  connect(stopButton, SIGNAL(clicked()), this, SLOT(closePolicy()));
+  connect(resumeButton, SIGNAL(clicked()), this, SLOT(resumePolicy()));
+  connect(suspendButton, SIGNAL(clicked()), this, SLOT(suspendPolicy()));
 
   connectToRobot(robotName_, true);
 }
@@ -258,6 +265,8 @@ ControllerWidget::setItemsEnable(bool toggle)
 
   playButton->setEnabled(toggle);
   stopButton->setEnabled(toggle);
+  suspendButton->setEnabled(toggle);
+  resumeButton->setEnabled(toggle);
 }
 
 
@@ -351,6 +360,60 @@ ControllerWidget::closePolicy()
 
   if (!ok)
     QMessageBox::warning(this, "Error closing policy:", error);
+}
+
+void 
+ControllerWidget::suspendPolicy() 
+{
+  bool ok = true;
+  QString error;
+
+  try {
+    engine_->suspendPolicy();
+  }
+  catch(const Miro::BehaviourEngine::ENoPolicy& ) {
+    ok = false;
+    error = "No policy loaded.";
+  }
+  catch(const CORBA::Exception& e) {
+    ok = false;
+    setItemsEnable(false);
+    std::ostringstream sstr;
+    sstr << "Communication Failed." << endl
+	 << "CORBA exception: " << endl
+	 << e;
+    error = sstr.str().c_str();
+  }
+
+  if (!ok)
+    QMessageBox::warning(this, "Error suspending policy:", error);
+}
+
+void 
+ControllerWidget::resumePolicy() 
+{
+  bool ok = true;
+  QString error;
+
+  try {
+    engine_->resumePolicy();
+  }
+  catch(const Miro::BehaviourEngine::ENoPolicy& ) {
+    ok = false;
+    error = "No policy loaded.";
+  }
+  catch(const CORBA::Exception& e) {
+    ok = false;
+    setItemsEnable(false);
+    std::ostringstream sstr;
+    sstr << "Communication Failed." << endl
+	 << "CORBA exception: " << endl
+	 << e;
+    error = sstr.str().c_str();
+  }
+
+  if (!ok)
+    QMessageBox::warning(this, "Error resuming policy:", error);
 }
 
 void 

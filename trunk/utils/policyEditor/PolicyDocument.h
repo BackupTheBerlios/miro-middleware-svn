@@ -11,19 +11,12 @@
 #ifndef PolicyDocument_h
 #define PolicyDocument_h
 
-#include "BehaviourDescription.h"      // BehaviourDescription
 #include "Transition.h"                // Transition
 #include "PolicyConfig.h"
 
 #include <qstring.h> 
-#include <qdom.h>
 #include <qmap.h>
-
-#include <list>            // STL list
-#include <vector>          // STL vector
-#include <string> 
-#include <fstream>
-
+#include <qdom.h>
 
 const QString XML_TAG_PATTERN    = "actionpattern";
 const QString XML_TAG_BEHAVIOUR  = "behaviour";
@@ -34,61 +27,53 @@ const QString XML_PARAM_KEY      = "name";  // <parameter name=".." value="..">
 const QString XML_PARAM_VALUE    = "value";
 
 
+// forward declarations
+class QDomDocument;
+class QDomNode;
+
 /** This class represents all internal data of the PolicyEditor */
 class PolicyDocumentClass
 {
 public:
-  typedef std::vector<BehaviourDescription> DatabaseVector;
-
-  const DatabaseVector& databaseVector() const;
-
-  std::vector<QString>               arbiterVector;
-  
-public:
   PolicyDocumentClass();
   ~PolicyDocumentClass();
-  
-  /** returns policyConfig*/
-  PolicyConfigClass& getPolicyConfig();
-  const PolicyConfigClass& getPolicyConfig() const;
 
+  //! Reset policy document.
+  void init(); 
+  
   //------------------//
   // document methods //
   //------------------//
 
+  //! Set the name of the document
+  void setDocumentName(const QString& _name);
+  //! Get the name of the document
+  const QString& getDocumentName() const;
   /** loads a new document from a given XML file */
   void loadXML(const QString& filename);
 
   /** saves the document to a given XML file */
-  void saveXML(const QString& filename) const;
+  void saveXML();
 
-  /** loads the behaviour description database */
-  void loadDatabase(const std::string& filename);
-  
-  void setModified(bool wert);
-  
-  bool getModified();
-  
-  void setWindowSize(int width, int height);
+  bool getModified() const;
+  void setModified();
 
-  QDomDocument& getDomDocument()  { return domDocument; }
-  
-  void setNewBehaviourDescriptionFileName(const QString& file);
-  
-  QString getBehaviourDescriptionFileName();
+ 
+  //  void setWindowSize(int width, int height);
 
-
+  QDomDocument& getDomDocument()  { return *document_; }
+  
   //-----------------//
   // pattern methods //
   //-----------------//
 
   /** adds a new pattern to the policy */
-  void addPattern(const QString& name, int x, int y);
+  bool addPattern(const QString& name, int x, int y);
 
   /** deletes a given pattern */
   void delPattern(const QString& name);
 
-  void renamePattern(const QString& oldName, const QString& newName);
+  bool renamePattern(const QString& oldName, const QString& newName);
 
   /** returns a list with the names of all behaviours of the given pattern */
   QStringList getPatternNames() const;
@@ -124,7 +109,7 @@ public:
   //-------------------//
 
   /** adds a new behaviour to a given pattern */
-  void addBehaviour(const QString& patternName, int n);
+  void addBehaviour(const QString& patternName, const QString& behaviourName);
 
   /** returns true if the specified pattern hat the specified behaviour*/
   bool hasBehaviour(const QString& patternName, const QString& behaviourName);
@@ -188,7 +173,7 @@ public:
   //--------------------//
 
   /** add a new transition from a pattern to a target */
-  void addTransition(const QString& patternName, const QString& message, 
+  bool addTransition(const QString& patternName, const QString& message, 
 		     const QString& target);
 
   /** returns a list with all transitions of the given pattern */
@@ -207,9 +192,6 @@ public:
 
   /** set the arbiter for a given pattern */
   void setArbiter(const QString& patternName, const QString& arbiter);
-
-  /** set the arbiter for a given pattern */
-  void setArbiter(const QString& patternName, int arbiterIndex);
 
   /** returns the arbiter of a given pattern. If no arbiter is given,
    *  "" is returned. 
@@ -235,16 +217,16 @@ protected:
   QDomNode getPrevBehaviourNode(const QString& patternName, 
 				const QString& behaviourName) const;
 
+
 protected:
-  PolicyConfigClass policyConfig;
+  PolicyConfigClass& policyConfig;
   
   
   //! The main document structure containing all patterns and behaviours
-  QDomDocument domDocument;
+  QDomDocument * document_;
+  QString documentName_;
 
-  DatabaseVector databaseVector_;
-
-  bool modified;
+  bool modified_;
 
   int xModificator;
   int yModificator;
@@ -254,23 +236,21 @@ protected:
 };
 
 inline
-const PolicyDocumentClass::DatabaseVector& 
-PolicyDocumentClass::databaseVector() const {
-  return databaseVector_;
-}
-
-
-inline
-PolicyConfigClass&
-PolicyDocumentClass::getPolicyConfig() {
-  return policyConfig;
+void 
+PolicyDocumentClass::setModified() {
+  modified_ = true;
 }
 
 inline
-const PolicyConfigClass&
-PolicyDocumentClass::getPolicyConfig() const {
-  return policyConfig;
+bool 
+PolicyDocumentClass::getModified() const {
+  return modified_;
 }
 
+inline
+const QString&
+PolicyDocumentClass::getDocumentName() const {
+  return documentName_;
+}
 
 #endif

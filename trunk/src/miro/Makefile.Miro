@@ -112,6 +112,8 @@ IDL_SRC = \
 
 
 FILES +=	\
+	XmlParse \
+	Parameters \
 	Exception \
 	Angle \
 	Utils \
@@ -119,7 +121,6 @@ FILES +=	\
 	Thread \
 	Task \
 	ReactorTask \
-	RobotParameters \
 	Client \
 	Server \
 	IO \
@@ -141,17 +142,14 @@ FILES +=	\
 	WindowArbiter \
 	WindowArbiterViewer \
 	WindowArbiterViewerTask \
-	KeyValueList \
 	Behaviour \
 	BehaviourParameters \
 	BehaviourRepository \
 	EventBehaviour \
 	TaskBehaviour \
 	TimedBehaviour \
-	TimedBehaviourParameters \
 	Policy \
 	DynamicWindow \
-	CameraParameters \
 	NotifyMulticastRequestEntry \
 	NotifyMulticastSender \
         NotifyMulticastReceiver \
@@ -161,10 +159,7 @@ FILES +=	\
 	NotifyMulticastParameters \
 	NotifyMulticastAdapter
 
-REST =	WindowArbiterMessage \
-	WindowArbiterParameters
-
-
+REST =	WindowArbiterMessage
 
 DEFS  = $(addsuffix .h,$(FILES))
 LSRC  =  $(IDL_SRC) $(addsuffix .cpp,$(FILES))
@@ -190,7 +185,9 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 # Extra dependencies not caught by make depend.
 
-.PRECIOUS: $(foreach file, $(IDL_FILES), $(foreach ext, $(IDL_EXT), $(file)$(ext))))
+.PRECIOUS: $(foreach file, $(IDL_FILES), $(foreach ext, $(IDL_EXT), $(file)$(ext))) \
+	Parameters.cpp Parameters.h \
+	NotifyMulticastParameters.h NotifyMulticastParameters.cpp
 
 %C.cpp: $(IDL_DIR)/$(patsubst %C.cpp, %, $@).idl
 
@@ -335,13 +332,20 @@ realclean: clean
  PositionC.h WorldPointC.h WorldPointC.i PositionC.i MotionStatusC.h \
  TimeC.h TimeC.i MotionStatusC.i OdometryC.i B21MotionC.i
 
+.obj/XmlParse.o .obj/XmlParse.so .shobj/XmlParse.o .shobj/XmlParse.so: XmlParse.cpp XmlParse.h Exception.h Angle.h
+
+.obj/Parameters.o .obj/Parameters.so .shobj/Parameters.o .shobj/Parameters.so: Parameters.cpp Parameters.h ArbiterParameters.h \
+ BehaviourParameters.h
+
 .obj/Exception.o .obj/Exception.so .shobj/Exception.o .shobj/Exception.so: Exception.cpp Exception.h
 
 .obj/Angle.o .obj/Angle.so .shobj/Angle.o .shobj/Angle.so: Angle.cpp Angle.h
 
 .obj/Utils.o .obj/Utils.so .shobj/Utils.o .shobj/Utils.so: Utils.cpp Utils.h \
- Exception.h DevParameters.h \
- Parameters.h
+ Exception.h \
+ Parameters.h \
+ ArbiterParameters.h \
+ BehaviourParameters.h
 
 .obj/Log.o .obj/Log.so .shobj/Log.o .shobj/Log.so: Log.cpp Exception.h \
  Log.h
@@ -351,42 +355,61 @@ realclean: clean
 
 .obj/Task.o .obj/Task.so .shobj/Task.o .shobj/Task.so: Task.cpp Task.h
 
-.obj/ReactorTask.o .obj/ReactorTask.so .shobj/ReactorTask.o .shobj/ReactorTask.so: ReactorTask.cpp ExceptionC.h \
- ExceptionC.i Server.h \
- Client.h Exception.h \
- RobotParameters.h \
- Parameters.h Singleton.h \
- Synch.h ReactorTask.h
-
-.obj/RobotParameters.o .obj/RobotParameters.so .shobj/RobotParameters.o .shobj/RobotParameters.so: RobotParameters.cpp RobotParameters.h Parameters.h
+.obj/ReactorTask.o .obj/ReactorTask.so .shobj/ReactorTask.o .shobj/ReactorTask.so: ReactorTask.cpp \
+ ExceptionC.h \
+ ExceptionC.i \
+ Server.h \
+ Client.h \
+ Exception.h \
+ Parameters.h \
+ ArbiterParameters.h \
+ BehaviourParameters.h \
+ ReactorTask.h
 
 .obj/Client.o .obj/Client.so .shobj/Client.o .shobj/Client.so: Client.cpp Client.h \
- Exception.h RobotParameters.h \
- Parameters.h
+ Exception.h \
+ Parameters.h \
+ ArbiterParameters.h \
+ BehaviourParameters.h
 
 .obj/Server.o .obj/Server.so .shobj/Server.o .shobj/Server.so: Server.cpp Server.h \
- Client.h Exception.h \
- RobotParameters.h \
- Parameters.h Singleton.h \
- Synch.h
+ Client.h \
+ Exception.h \
+ Parameters.h \
+ ArbiterParameters.h \
+ BehaviourParameters.h
 
-.obj/IO.o .obj/IO.so .shobj/IO.o .shobj/IO.so: IO.cpp IO.h ExceptionC.h \
- ExceptionC.i TimeC.h \
- TimeC.i WorldPointC.h \
- WorldPointC.i PositionC.h \
- PositionC.i VelocityC.h \
- VelocityC.i MotionStatusC.h \
- MotionStatusC.i RangeEventC.h \
- RangeEventC.i PanTiltC.h \
- TiltC.h TiltC.i \
- PanC.h PanC.i \
- PanTiltC.i Angle.h
+.obj/IO.o .obj/IO.so .shobj/IO.o .shobj/IO.so: IO.cpp IO.h \
+ ExceptionC.h \
+ ExceptionC.i \
+ TimeC.h \
+ TimeC.i \
+ WorldPointC.h \
+ WorldPointC.i \
+ PositionC.h \
+ PositionC.i \
+ VelocityC.h \
+ VelocityC.i \
+ MotionStatusC.h \
+ MotionStatusC.i \
+ RangeEventC.h \
+ RangeEventC.i \
+ PanTiltC.h \
+ TiltC.h \
+ TiltC.i \
+ PanC.h \
+ PanC.i \
+ PanTiltC.i \
+ Angle.h
 
-.obj/TimeHelper.o .obj/TimeHelper.so .shobj/TimeHelper.o .shobj/TimeHelper.so: TimeHelper.cpp TimeHelper.h \
- TimeC.h TimeC.i
+.obj/TimeHelper.o .obj/TimeHelper.so .shobj/TimeHelper.o .shobj/TimeHelper.so: TimeHelper.cpp \
+ TimeHelper.h \
+ TimeC.h \
+ TimeC.i
 
 .obj/ScanDescriptionHelper.o .obj/ScanDescriptionHelper.so .shobj/ScanDescriptionHelper.o .shobj/ScanDescriptionHelper.so: ScanDescriptionHelper.cpp \
- ScanDescriptionHelper.h ScanDescriptionC.h ScanDescriptionC.i Angle.h
+ ScanDescriptionHelper.h ScanDescriptionC.h ScanDescriptionC.i \
+ XmlParse.h Exception.h Angle.h
 
 .obj/StructuredPushSupplier.o .obj/StructuredPushSupplier.so .shobj/StructuredPushSupplier.o .shobj/StructuredPushSupplier.so: StructuredPushSupplier.cpp \
  StructuredPushSupplier.h Synch.h
@@ -404,7 +427,7 @@ realclean: clean
  ArbiterParameters.h BehaviourEngineC.h BehaviourEngineC.i Behaviour.h \
  BehaviourParameters.h DynamicWindow.h Arbiter.h BehaviourRepository.h \
  Singleton.h Synch.h Exception.h \
- ArbiterRepository.h KeyValueList.h StructuredPushSupplier.h
+ ArbiterRepository.h StructuredPushSupplier.h
 
 .obj/Arbiter.o .obj/Arbiter.so .shobj/Arbiter.o .shobj/Arbiter.so: Arbiter.cpp Arbiter.h Synch.h ArbiterParameters.h \
  ArbiterMessage.h Behaviour.h BehaviourParameters.h DynamicWindow.h \
@@ -417,16 +440,19 @@ realclean: clean
 .obj/ArbiterMessage.o .obj/ArbiterMessage.so .shobj/ArbiterMessage.o .shobj/ArbiterMessage.so: ArbiterMessage.cpp ArbiterMessage.h
 
 .obj/ArbiterRepository.o .obj/ArbiterRepository.so .shobj/ArbiterRepository.o .shobj/ArbiterRepository.so: ArbiterRepository.cpp ArbiterRepository.h \
- Singleton.h Synch.h Exception.h Arbiter.h Synch.h
+ Singleton.h Synch.h Exception.h \
+ Arbiter.h Synch.h
 
 .obj/PriorityArbiter.o .obj/PriorityArbiter.so .shobj/PriorityArbiter.o .shobj/PriorityArbiter.so: PriorityArbiter.cpp PriorityArbiter.h Arbiter.h \
- Synch.h ArbiterMessage.h
+ Synch.h Parameters.h ArbiterParameters.h BehaviourParameters.h \
+ ArbiterMessage.h
 
 .obj/MotionArbiter.o .obj/MotionArbiter.so .shobj/MotionArbiter.o .shobj/MotionArbiter.so: MotionArbiter.cpp MotionArbiter.h MotionC.h \
  ExceptionC.h ExceptionC.i VelocityC.h VelocityC.i MotionC.i \
- PriorityArbiter.h Arbiter.h Synch.h MotionArbiterMessage.h \
- ArbiterMessage.h Behaviour.h BehaviourParameters.h DynamicWindow.h \
- ActionPattern.h Policy.h ArbiterParameters.h StructuredPushSupplier.h
+ PriorityArbiter.h Arbiter.h Synch.h Parameters.h ArbiterParameters.h \
+ BehaviourParameters.h MotionArbiterMessage.h ArbiterMessage.h \
+ Behaviour.h DynamicWindow.h ActionPattern.h Policy.h \
+ StructuredPushSupplier.h
 
 .obj/MotionArbiterMessage.o .obj/MotionArbiterMessage.so .shobj/MotionArbiterMessage.o .shobj/MotionArbiterMessage.so: MotionArbiterMessage.cpp \
  MotionArbiterMessage.h VelocityC.h VelocityC.i ArbiterMessage.h
@@ -434,9 +460,10 @@ realclean: clean
 .obj/PowerArbiter.o .obj/PowerArbiter.so .shobj/PowerArbiter.o .shobj/PowerArbiter.so: PowerArbiter.cpp PowerArbiter.h SparrowMotionC.h \
  DifferentialMotionC.h MotionC.h ExceptionC.h ExceptionC.i VelocityC.h \
  VelocityC.i MotionC.i DifferentialMotionC.i SparrowMotionC.i \
- PriorityArbiter.h Arbiter.h Synch.h PowerArbiterMessage.h \
- ArbiterMessage.h Behaviour.h BehaviourParameters.h DynamicWindow.h \
- ActionPattern.h Policy.h ArbiterParameters.h StructuredPushSupplier.h
+ PriorityArbiter.h Arbiter.h Synch.h Parameters.h ArbiterParameters.h \
+ BehaviourParameters.h PowerArbiterMessage.h ArbiterMessage.h \
+ Behaviour.h DynamicWindow.h ActionPattern.h Policy.h \
+ StructuredPushSupplier.h
 
 .obj/PowerArbiterMessage.o .obj/PowerArbiterMessage.so .shobj/PowerArbiterMessage.o .shobj/PowerArbiterMessage.so: PowerArbiterMessage.cpp PowerArbiterMessage.h \
  ArbiterMessage.h
@@ -455,20 +482,16 @@ realclean: clean
 .obj/WindowArbiterViewerTask.o .obj/WindowArbiterViewerTask.so .shobj/WindowArbiterViewerTask.o .shobj/WindowArbiterViewerTask.so: WindowArbiterViewerTask.cpp \
  WindowArbiterViewer.h DynamicWindow.h WindowArbiterViewerTask.h
 
-.obj/KeyValueList.o .obj/KeyValueList.so .shobj/KeyValueList.o .shobj/KeyValueList.so: KeyValueList.cpp KeyValueList.h BehaviourEngineC.h \
- BehaviourEngineC.i
-
 .obj/Behaviour.o .obj/Behaviour.so .shobj/Behaviour.o .shobj/Behaviour.so: Behaviour.cpp BehaviourEngineC.h BehaviourEngineC.i \
  Behaviour.h BehaviourParameters.h DynamicWindow.h ActionPattern.h \
  Synch.h Policy.h ArbiterParameters.h Arbiter.h
 
-.obj/BehaviourParameters.o .obj/BehaviourParameters.so .shobj/BehaviourParameters.o .shobj/BehaviourParameters.so: BehaviourParameters.cpp BehaviourParameters.h \
- KeyValueList.h
+.obj/BehaviourParameters.o .obj/BehaviourParameters.so .shobj/BehaviourParameters.o .shobj/BehaviourParameters.so: BehaviourParameters.cpp BehaviourParameters.h
 
 .obj/BehaviourRepository.o .obj/BehaviourRepository.so .shobj/BehaviourRepository.o .shobj/BehaviourRepository.so: BehaviourRepository.cpp BehaviourRepository.h \
- Singleton.h Synch.h Exception.h Behaviour.h \
- BehaviourParameters.h DynamicWindow.h ActionPattern.h Synch.h \
- Policy.h ArbiterParameters.h Arbiter.h
+ Singleton.h Synch.h Exception.h \
+ Behaviour.h BehaviourParameters.h DynamicWindow.h ActionPattern.h \
+ Synch.h Policy.h ArbiterParameters.h Arbiter.h
 
 .obj/EventBehaviour.o .obj/EventBehaviour.so .shobj/EventBehaviour.o .shobj/EventBehaviour.so: EventBehaviour.cpp EventBehaviour.h Behaviour.h \
  BehaviourParameters.h DynamicWindow.h ActionPattern.h Synch.h \
@@ -480,39 +503,31 @@ realclean: clean
 
 .obj/TimedBehaviour.o .obj/TimedBehaviour.so .shobj/TimedBehaviour.o .shobj/TimedBehaviour.so: TimedBehaviour.cpp TimedBehaviour.h Behaviour.h \
  BehaviourParameters.h DynamicWindow.h ActionPattern.h Synch.h \
- Policy.h ArbiterParameters.h Arbiter.h TimedBehaviourParameters.h \
- TimeHelper.h TimeC.h TimeC.i
-
-.obj/TimedBehaviourParameters.o .obj/TimedBehaviourParameters.so .shobj/TimedBehaviourParameters.o .shobj/TimedBehaviourParameters.so: TimedBehaviourParameters.cpp \
- TimedBehaviourParameters.h BehaviourParameters.h TimeHelper.h \
- TimeC.h TimeC.i \
- KeyValueList.h
+ Policy.h ArbiterParameters.h Arbiter.h Parameters.h TimeHelper.h \
+ TimeC.h \
+ TimeC.i
 
 .obj/Policy.o .obj/Policy.so .shobj/Policy.o .shobj/Policy.so: Policy.cpp BehaviourEngineC.h BehaviourEngineC.i Policy.h \
  Synch.h ActionPattern.h ArbiterParameters.h ArbiterRepository.h \
- Singleton.h Synch.h Exception.h Arbiter.h \
- Behaviour.h BehaviourParameters.h DynamicWindow.h \
+ Singleton.h Synch.h Exception.h \
+ Arbiter.h Behaviour.h BehaviourParameters.h DynamicWindow.h \
  BehaviourRepository.h
 
 .obj/DynamicWindow.o .obj/DynamicWindow.so .shobj/DynamicWindow.o .shobj/DynamicWindow.so: DynamicWindow.cpp DynamicWindow.h
-
-.obj/CameraParameters.o .obj/CameraParameters.so .shobj/CameraParameters.o .shobj/CameraParameters.so: CameraParameters.cpp CameraParameters.h \
- Parameters.h Singleton.h Synch.h Angle.h \
- TimeHelper.h TimeC.h TimeC.i
 
 .obj/NotifyMulticastRequestEntry.o .obj/NotifyMulticastRequestEntry.so .shobj/NotifyMulticastRequestEntry.o .shobj/NotifyMulticastRequestEntry.so: NotifyMulticastRequestEntry.cpp \
  NotifyMulticastRequestEntry.h NotifyMulticastRequestIndex.h
 
 .obj/NotifyMulticastSender.o .obj/NotifyMulticastSender.so .shobj/NotifyMulticastSender.o .shobj/NotifyMulticastSender.so: NotifyMulticastSender.cpp \
  NotifyMulticastDefines.h NotifyMulticastSender.h \
- NotifyMulticastAdapter.h Exception.h Client.h RobotParameters.h \
- Parameters.h NotifyMulticastParameters.h Singleton.h
+ NotifyMulticastAdapter.h Exception.h Client.h Parameters.h \
+ ArbiterParameters.h BehaviourParameters.h NotifyMulticastParameters.h
 
 .obj/NotifyMulticastReceiver.o .obj/NotifyMulticastReceiver.so .shobj/NotifyMulticastReceiver.o .shobj/NotifyMulticastReceiver.so: NotifyMulticastReceiver.cpp \
  NotifyMulticastDefines.h NotifyMulticastReceiver.h \
  NotifyMulticastRequestEntry.h NotifyMulticastRequestIndex.h \
  NotifyMulticastTimeoutHandler.h NotifyMulticastAdapter.h Exception.h \
- Client.h RobotParameters.h Parameters.h
+ Client.h Parameters.h ArbiterParameters.h BehaviourParameters.h
 
 .obj/NotifyMulticastTimeoutHandler.o .obj/NotifyMulticastTimeoutHandler.so .shobj/NotifyMulticastTimeoutHandler.o .shobj/NotifyMulticastTimeoutHandler.so: NotifyMulticastTimeoutHandler.cpp \
  NotifyMulticastDefines.h NotifyMulticastTimeoutHandler.h \
@@ -529,14 +544,15 @@ realclean: clean
  NotifyMulticastDefines.h NotifyMulticastConfig.h Exception.h
 
 .obj/NotifyMulticastParameters.o .obj/NotifyMulticastParameters.so .shobj/NotifyMulticastParameters.o .shobj/NotifyMulticastParameters.so: NotifyMulticastParameters.cpp \
- NotifyMulticastParameters.h Parameters.h Singleton.h \
- Synch.h Angle.h
+ NotifyMulticastParameters.h Parameters.h ArbiterParameters.h \
+ BehaviourParameters.h
 
 .obj/NotifyMulticastAdapter.o .obj/NotifyMulticastAdapter.so .shobj/NotifyMulticastAdapter.o .shobj/NotifyMulticastAdapter.so: NotifyMulticastAdapter.cpp \
  NotifyMulticastDefines.h NotifyMulticastAdapter.h Exception.h \
- Client.h RobotParameters.h Parameters.h NotifyMulticastSender.h \
- NotifyMulticastReceiver.h NotifyMulticastRequestEntry.h \
- NotifyMulticastRequestIndex.h NotifyMulticastTimeoutHandler.h \
- NotifyMulticastEventHandler.h NotifyMulticastParameters.h Singleton.h
+ Client.h Parameters.h ArbiterParameters.h BehaviourParameters.h \
+ NotifyMulticastSender.h NotifyMulticastReceiver.h \
+ NotifyMulticastRequestEntry.h NotifyMulticastRequestIndex.h \
+ NotifyMulticastTimeoutHandler.h NotifyMulticastEventHandler.h \
+ NotifyMulticastParameters.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

@@ -10,6 +10,9 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "PolicyEditor.h"
+#include "PolicyView.h"
+#include "ConfigDialog.h"
+#include "ParameterDialog.h"
 
 #include "miro/BehaviourEngineC.h"
 
@@ -25,11 +28,12 @@
 #include <iostream>
 #include <sstream>
 
-PolicyEditorClass::PolicyEditorClass(int argc, char** argv, Miro::Client& _client) :
+PolicyEditorClass::PolicyEditorClass(Miro::Client& _client) :
   QMainWindow(NULL, "PolicyEditor"),
   client_(_client),
-  miroRoot_(getenv("MIRO_ROOT")),
-  policyFileName_("_"),
+  config_(*PolicyConfigClass::instance()),
+  view_(new PolicyViewClass(this, document_)),
+  configDialog_(new ConfigDialog(this)),
   robot_(getenv("HOST"))
 {
   resize(600, 500);
@@ -39,217 +43,205 @@ PolicyEditorClass::PolicyEditorClass(int argc, char** argv, Miro::Client& _clien
   //-----------//
 
   // file menu
-  QPopupMenu* MenuFile = new QPopupMenu();
-  menuBar()->insertItem("&File", MenuFile);
+  QPopupMenu* menuFile = new QPopupMenu();
+  menuBar()->insertItem("&File", menuFile);
 
-  MenuFile->insertItem("New",         this, SLOT(slotNew()));
-  MenuFile->insertItem("Open ...",    this, SLOT(slotLoad()));
-  MenuFile->insertItem("Save",        this, SLOT(slotSave())); 
-  MenuFile->insertItem("Save As ...", this, SLOT(slotSaveAs()));
-  MenuFile->insertSeparator();
-  MenuFile->insertItem("Send to ...", this, SLOT(slotSendTo()));
-  MenuFile->insertSeparator();
-  MenuFile->insertItem("Quit",        this, SLOT(quit()));
+  menuFile->insertItem("New",         this, SLOT(slotNew()));
+  menuFile->insertItem("Open ...",    this, SLOT(slotLoad()));
+  menuFile->insertItem("Save",        this, SLOT(slotSave())); 
+  menuFile->insertItem("Save As ...", this, SLOT(slotSaveAs()));
+  menuFile->insertSeparator();
+  menuFile->insertItem("Send to ...", this, SLOT(slotSendTo()));
+  menuFile->insertSeparator();
+  menuFile->insertItem("Quit",        this, SLOT(close()));
 
   // options menue
-  QPopupMenu* MenuOptions = new QPopupMenu();
-  menuBar()->insertItem("&Options", MenuOptions);
+  QPopupMenu* menuOptions = new QPopupMenu();
+  menuBar()->insertItem("&Options", menuOptions);
 
-  //MenuOptions->insertItem("&Configuration ..",  this, SLOT(slotConfiguration()));
+  //menuOptions->insertItem("&Configuration ..",  this, SLOT(slotConfiguration()));
   //  MenuEdit->insertItem("Add Basic Behaviour ..", this, NULL);
-  MenuOptions->insertItem("&Behaviour-Description-Filename..", this, SLOT(getBehaviourDescriptionFileName()));
-  MenuOptions->insertItem("&Load Behaviour-Description-Filename..", this, SLOT(setBehaviourDescriptionFileName()));
-
+  menuOptions->insertItem("&Behaviour descriptions ...", this, SLOT(behaviourDescriptions()));
 
   // help menu
-  QPopupMenu* MenuHelp = new QPopupMenu();
+  QPopupMenu* menuHelp = new QPopupMenu();
   menuBar()->insertSeparator();
-  menuBar()->insertItem("&Help", MenuHelp);
+  menuBar()->insertItem("&Help", menuHelp);
   
-  MenuHelp->insertItem("About PolicyEditor", this, SLOT(slotAbout()));
-  MenuHelp->insertItem("About Qt",           this, SLOT(slotAboutQt()));
+  menuHelp->insertItem("About PolicyEditor", this, SLOT(slotAbout()));
+  menuHelp->insertItem("About Qt",           this, SLOT(slotAboutQt()));
   
+  //-----------//
+  // init view //
+  //-----------//
+  setCentralWidget(view_);
 
   //---------------//
   // init document //
   //---------------//
 
-  // load database file
-  document_.loadDatabase("behaviours.dat");
-  document_.setModified(false);
-
-  // if given -> load policy file
-  if (argc > 1) {
-    document_.loadXML(argv[1]);
-    policyFileName_=argv[1];
-    statusBar()->message(policyFileName_+" geladen!", 1000);
-  }
-  else {
-    document_.loadXML(miroRoot_ + "/etc/PolicyEditorNewFile.xml");
-    document_.setModified(false);
-
-    setCaption("new document");
-    policyFileName_="_";
-    QString message;
-    message.sprintf("New document opend");
-    statusBar()->message(message, 3000);
-  }
-
-  //-----------//
-  // init view //
-  //-----------//
-  view_ = new PolicyViewClass(this, document_);
-  setCentralWidget(view_);
-
-#ifdef ASDF
-  // load pattern database //
-  QMessageBox::information(this, "Policy Editor", "Hallo,\n\nfirst, you have to select your\nbehaviour database ...");
-  QString filename = QFileDialog::getOpenFileName(0, "*.dat", this);
-  if (filename.isNull()) 
-  { 
-    std::cout << "database must be chosen !" << std::endl; 
-    exit(0); 
-  }
-  document_.LoadDatabase(string(filename));
-#endif
- 
+  newPolicy();
 }
 
+// update the view
+void
+PolicyEditorClass::defaultView()
+{
+  view_->update();     
+}
+
+bool
+PolicyEditorClass::saveIfModified()
+{
+  bool success = true;
+
+  if (document_.getModified()) {
+    
+    int rc = QMessageBox::warning(this, 
+				  "Save if Modified", 
+				  "The document " + document_.getDocumentName() + " has been modified\n" + 
+				  "Do you want to save it?",
+				  "&Save...", "&Dont't Save", "&Cancel", 0, 2);
+    
+    switch(rc) {
+    case 0: 
+      success = savePolicy(); 
+      break;
+    case 1:
+      success = true;
+      break; 
+    case 2:
+      success = false;
+    }
+  }  
+  return success;
+}
+
+void 
+PolicyEditorClass::newPolicy()
+{
+  document_.init();
+  view_->init();
+  
+  setCaption("New document.");
+  QString message("New document opend.");
+  statusBar()->message(message, 3000);
+  defaultView();
+}
+
+void 
+PolicyEditorClass::openPolicy(const QString& _name)
+{
+  if (_name.isEmpty())
+    return;
+
+  // load selected XML file
+  document_.loadXML(_name);
+  view_->init();
+
+  // set new caption and status bar
+  setCaption(document_.getDocumentName());
+  QString message(_name + " opened.");
+  statusBar()->message(message, 3000);
+  defaultView();
+}
+
+bool
+PolicyEditorClass::savePolicy() 
+{
+  bool procede = true;
+  if (document_.getDocumentName().isEmpty()) {
+    procede = savePolicyAs();
+  }
+  if (procede) {
+    document_.saveXML();
+    QString message(document_.getDocumentName() + " saved.");
+    statusBar()->message(message, 3000);
+  }
+  return procede;
+}
+
+bool
+PolicyEditorClass::savePolicyAs()
+{
+  bool rc = true;
+  bool selected = false;
+  QString filename;
+
+  while (!selected) {
+    // show file dialog
+    filename = QFileDialog::getSaveFileName(0, "*.xml", this);
+	
+    if (filename.isEmpty()) {
+      rc = false;
+      break;
+    }
+
+    // append file extension if none is given
+    QFileInfo file(filename);
+    if (file.extension(false).isEmpty()) {
+      filename.append(".xml");
+      file.setFile(filename);
+    }
+
+    // warn if file exists
+    if (!file.exists()) {
+      selected = true;
+    } 
+    else {
+      int button = QMessageBox::warning(this, 
+					"PolicyEditor", 
+					"The file " + filename + " alread exists!\n" +
+					"Do you want to overwrite the existing file?",
+					"&Yes", "&No", QString::null, 1);
+      
+      if (button == 0)
+	selected = true;
+    }
+  }
+
+  // set new caption and document name
+  setCaption(filename);
+  document_.setDocumentName(filename);
+
+  return rc;
+}
 
 void 
 PolicyEditorClass::slotNew()
 {
-  if (document_.getModified()) {
-
-    int rc = QMessageBox::warning(this, "PolicyEditor", "The document"
-				+policyFileName_+" has been modified\n"+"Do you want to save it?",
-				  "&Save...", "&Dont't Save", "&Cancel", 0,2);
-
-    switch(rc) {
-    case 0: 
-      slotSaveAs(); 
-      break;
-    case 1:
-      break;
-    case 2:
-      return;
-    }
-  }  
- 
-  view_->prepareFileClosing();
-  document_.loadXML(miroRoot_ + "/etc/PolicyEditorNewFile.xml");
-  document_.setModified(false);
-
-  //   std::cout <<"opened new document" << std::endl;
-
-  setCaption("new document");
-  policyFileName_="_";
-  QString message;
-  message.sprintf("New document opend");
-  statusBar()->message(message, 3000);
-  view_->setVerticalScrollValue(0);
-  view_->setHorizontalScrollValue(0);
-  view_->update();     
+  if (saveIfModified())
+    newPolicy();
 }
 
 
 void 
 PolicyEditorClass::slotLoad()
 {
-  // show file dialog //
-  if (document_.getModified())
-  {
-    int rc = QMessageBox::warning(this, "PolicyEditor", "The document"
-				  + policyFileName_ + " has been modified\n"+"Do you want to save it?",
-				  "&Save...", "&Dont't Save", "&Cancel", 0, 2);
-
-    switch(rc)
-    {
-    case 0: 
-      slotSaveAs();
-      break;
-    case 1:
-      break;
-    case 2:
+  if (saveIfModified()) {
+    QString filename = QFileDialog::getOpenFileName(0, 
+						    "Polycies *.xml\nAlle Dateien *", 
+						    this);
+    if (filename.isNull())
       return;
-    }
-  } 
-  QString filename = QFileDialog::getOpenFileName(0, "Polycies *.xml\nAlle Dateien *", this);
-  if (filename.isNull())
-    return;
-  view_->prepareFileClosing();
 
-  // load selected XML file
-  document_.loadXML(filename);
-  document_.setModified(false);
-  policyFileName_=filename;
-
-  // set new caption and status bar
-  setCaption(policyFileName_);
-  QString message;
-  message.sprintf("%s loaded", (const char*)filename);
-  statusBar()->message(message, 3000);
-  
-  // update the view
-  view_->setVerticalScrollValue(0);
-  view_->setHorizontalScrollValue(0);
-  view_->update();
+    openPolicy(filename);
+  }
 }
 
 void 
 PolicyEditorClass::slotSave()
 {
-  if (policyFileName_!="_")
-  {
-    document_.saveXML(policyFileName_);
-    document_.setModified(false);
-    QString message;
-    message.sprintf("%s saved", (const char*) policyFileName_);
-    statusBar()->message(message, 3000);
-  }
-  else
-  {
-    slotSaveAs();
-  }
+  savePolicy();
 }
   
 
 void
 PolicyEditorClass::slotSaveAs()
 {
-  // show file dialog
-  QString filename = QFileDialog::getSaveFileName(0, "*.xml", this);
-	
-  if (filename.isNull()) return;
-  if (filename.contains('.',false)==0) filename.append(".xml");
-  QFile *qFile=new QFile(filename);
-  if (qFile->exists())  {
-    int rc = QMessageBox::warning(this, "PolicyEditor", "The file"
-				+filename+" alread exists!\n"+"Do you want to overwrite the existing file?",
-				  "&Yes", "&No", "&Cancel", 0,2);
-
-    switch(rc)
-    {
-    case 0: 
-      break;
-    case 1:
-      slotSaveAs();
-      return;
-    case 2:
-      return;		 
-    }
+  if (savePolicyAs()) {
+    savePolicy();
   }
-
-  // save with selected file name
-  document_.saveXML(filename);
-  document_.setModified(false);
-  policyFileName_=filename;
-
-  // set new caption and status bar
-  setCaption(filename);
-  QString message;
-  message.sprintf("%s saved", (const char*)filename);
-  statusBar()->message(message, 3000);
 }
 
 void 
@@ -299,35 +291,24 @@ PolicyEditorClass::slotSendTo()
   }
 }
 
-/*Not supported yet
-  void PolicyEditorClass::slotConfiguration()
-  {
-  document_.getPolicyConfig().setConfiguration(this);
-  }
-*/
-
-void 
-PolicyEditorClass::getBehaviourDescriptionFileName()
-{
-  QString fName=document_.getPolicyConfig().getBehaviourDescriptionFileName(); 
-  QMessageBox::information(this, "Behaviour-Description-Filename", 
-			   "The filename of the loaded Behaviour-Description-File is: "+fName);
-}
-
 void
-PolicyEditorClass::setBehaviourDescriptionFileName()
+PolicyEditorClass::behaviourDescriptions()
 {
-  QString fileName=QFileDialog::getOpenFileName(0,"*.xml", this);
-  if (fileName.isNull()) 
-    return;
-  document_.getPolicyConfig().setNewBehaviourDescriptionFileName(fileName);
-  document_.loadDatabase("");
+  PolicyConfigClass * config = PolicyConfigClass::instance();
+  configDialog_->init(config->getDescriptionFiles());
+  if (configDialog_->exec() &&
+      configDialog_->modified()) {
+    QStringList list = configDialog_->result();
+    config->setDescriptionFiles(list);
+  }
 }
 
 void 
 PolicyEditorClass::slotAbout()
 {
-  QMessageBox::about(this, "About Policy Editor", "Policy Editor Ver. 1.0\nCopyright 1999 - 2002 Stefan Enderle, Markus Lauer");
+  QMessageBox::about(this, 
+		     "About Policy Editor", 
+		     "Policy Editor Ver. 1.0\nCopyright 1999 - 2002 Stefan Enderle, Markus Lauer");
 
 }
 
@@ -338,55 +319,13 @@ PolicyEditorClass::slotAboutQt()
 }
 
 void 
-PolicyEditorClass::quit()
-{
-  /*if (document_.getModified())
-    {
-    switch(QMessageBox::warning(this, "PolicyEditor", "The document"
-    +policyFileName_+" has been modified\n"+"Do you want to save it?",
-    "&Save...", "&Dont't Save", "&Cancel", 0,2))
-    {
-    case 0: slotSaveAs(); break;
-    case 1: break;
-    case 2: return;
-    }
-    } 
-    //std::cout <<"close program" << std::endl;*/
-  close();
-}
-
-void 
 PolicyEditorClass::closeEvent(QCloseEvent *e)
 {
-  if (document_.getModified()) {
-    int rc = QMessageBox::warning(this, 
-				  "PolicyEditor", "The document"
-				+policyFileName_+" has been modified\n"+"Do you want to save it?",
-				  "&Save...", "&Don't Save", "&Cancel", 0, 2);
-    switch(rc) {
-    case 0: 
-      if (policyFileName_!="_") {
-	document_.saveXML(policyFileName_);
-	document_.setModified(false);
-	QString message;
-	message.sprintf("%s saved", (const char*) policyFileName_);
-	statusBar()->message(message, 3000);
-      }
-      else {
-	slotSaveAs();
-	if (policyFileName_=="_") 
-	  return;//SaveAs-Dialog wurde mit Cancel geschlossen;
-      }
-    case 1: 
-      e->accept();
-      return;
-    case 2:
-      e->ignore(); 
-      return;
-    }
+  if (saveIfModified()) {
+    e->accept();
   }
   else {
-    e->accept();
+    e->ignore(); 
   }
 }
 
@@ -398,23 +337,43 @@ main(int argc, char** argv)
 {
   int rc = 0;
   Miro::Client client(argc, argv);
+  QApplication app(argc, argv);
+
+//   Class::ParameterSet s;
+
+//   s.insert(Parameter("std::string", "name", "Hans Utz", "Guy", "" ));
+//   s.insert(Parameter("bool", "truth", "false", "", "" ));
+//   s.insert(Parameter("char", "first initial", "H", "", "" ));
+//   s.insert(Parameter("short", "short", "-3", "mm", "" ));
+//   s.insert(Parameter("unsigned short", "unsigned short", "3", "mm", "" ));
+//   s.insert(Parameter("long", "long", "", "", "" ));
+//   s.insert(Parameter("unsigned long", "unsigned long", "", "", "" ));
+//   s.insert(Parameter("int", "int", "", "", "" ));
+//   s.insert(Parameter("unsigned int", "unsigned int", "", "", "" ));
+//   s.insert(Parameter("double", "double", "", "", "" ));
+//   s.insert(Parameter("angle", "angle", "2", "°", "" ));
+//   s.insert(Parameter("Angle", "Angle", "3", "°", "" ));
+//   s.insert(Parameter("ACE_Time_Value", "time", ".0003", "sec", "" ));
+
+//   ParameterDialog d(s, "MyBehaviour", NULL);
+//   d.exec();
+//   return 0;
+  
 
   try {
-    QApplication App(argc, argv);
-    PolicyEditorClass PolicyEditor(argc, argv, client);
+    PolicyEditorClass policyEditor(client);
     
-
-    // TODO warning dialog
-    if (argc>2) { 
+    if (argc > 2) { 
       std::cout << argv[0] << " [policyfile]" << std::endl; 
       return 1;
     }
 
-    // TODO load comman line argument policy here
+    if (argc == 2)
+      policyEditor.openPolicy(argv[1]);
 
-    App.setMainWidget(&PolicyEditor);
-    PolicyEditor.show();
-    App.exec();
+    app.setMainWidget(&policyEditor);
+    policyEditor.show();
+    app.exec();
     
   }
 

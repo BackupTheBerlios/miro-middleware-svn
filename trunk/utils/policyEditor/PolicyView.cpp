@@ -20,134 +20,80 @@
 #include <qmainwindow.h>
 #include <qstatusbar.h>
 #include <qcursor.h>
+#include <qpushbutton.h>
+#include <qcheckbox.h> 
+#include <qscrollbar.h>
+#include <qinputdialog.h>
+#include <qmessagebox.h>
+#include <qobjectlist.h>
+
+#include <algorithm>
 
 PolicyViewClass::PolicyViewClass(QWidget * _parent, 
 				 PolicyDocumentClass& _document) :
-  QWidget(_parent, "view"), 
+  Super(_parent, "view"), 
   document(_document),
-  parent(_parent)
+  addTransitionMode(false)
 {
-  scrollBar=new QScrollBar(-1000,1000,1,20,0,QScrollBar::Horizontal,this,"Scrollbar");
-  scrollBar->setGeometry(0, parent->height()-70,parent->width()-20,20);
-  connect (scrollBar, SIGNAL(valueChanged(int)),this,
-	   SLOT(getHorizontalScrollValue(int)));
-    
-  verticalScrollBar= new QScrollBar(-1000,1000,1,20,0,QScrollBar::Vertical,this,"VerticalScrollbar");
-  verticalScrollBar->setGeometry(parent->width()-20,20,
-				 20,parent->height()-90);
-  connect (verticalScrollBar, SIGNAL(valueChanged(int)),this,
-	   SLOT(getVerticalScrollValue(int)));
- 
-  setBackgroundColor(white);
-  addTransitionMode = false;
+  enableClipper(true);
+  viewport()->setBackgroundMode(NoBackground);
+  // viewport()->setBackgroundColor(white);
 
   // update the view //
-  update(); 
+  init(); 
 }
 
-
-void PolicyViewClass::resizeEvent(QResizeEvent* )
+void 
+PolicyViewClass::contentsMousePressEvent(QMouseEvent* event) 
 {
-  scrollBar->setGeometry(0, parent->height()-70,parent->width()-20,20);
-  verticalScrollBar->setGeometry(parent->width()-20,20,
-				 20,parent->height()-90);
-  getDocument().setWindowSize(parent->width(),parent->height());
-  update();
-}
+  // jump out of add transition mode
+  if (addTransitionMode) {
+    // repaint last arrow
+    QRect rect(arrowFrom_, arrowTo_);
+    rect = rect.normalize();
+    repaintContents(rect);
+    addTransitionMode = false;
+  }
 
-
-void PolicyViewClass::mousePressEvent(QMouseEvent* event) 
-{
   // right button -> popup menu //
   if (event->button() == RightButton) {
     picked_x = event->pos().x();               // save this for onAddPattern
     picked_y = event->pos().y();
     // popup menu //
-    QPopupMenu Menu;
-    Menu.insertItem("Add pattern", this, SLOT(onAddPattern()));
-    Menu.exec(QCursor::pos());
+    QPopupMenu menu;
+    menu.insertItem("Add pattern", this, SLOT(onAddPattern()));
+    menu.exec(QCursor::pos());
   }
 }
 
-
-void PolicyViewClass::mouseReleaseEvent(QMouseEvent* /*event*/) 
-{
-}
-
-
-void PolicyViewClass::mouseMoveEvent(QMouseEvent* event)
+void 
+PolicyViewClass::contentsMouseMoveEvent(QMouseEvent* event)
 {
   if (isAddTransitionMode()) {
-    QPainter p;
-    p.begin(this);
-    p.drawLine(pickedPatternPtr->pos(), event->pos());
-    p.end();
+    
+    // repaint last arrow
+    QRect rect(arrowFrom_, arrowTo_);
+    rect = rect.normalize();
+    repaintContents(rect);
+
+    // update arrow coordinates
+    arrowTo_ = event->pos();
+
+    // draw new arrow
+    QPainter p(this->viewport());
+    p.drawLine(contentsToViewport(arrowFrom_), contentsToViewport(arrowTo_));
   }
 }
 
-void PolicyViewClass::getHorizontalScrollValue(int value)
+void 
+PolicyViewClass::init()
 {
-  getDocument().setxModificator(value);
-  setBackgroundColor(white);
-  std::list<PatternWidgetClass*>::iterator iter = PatternWidgetList.begin();
-  while (iter != PatternWidgetList.end()) {
-    (*iter)->updatePos();                    
-    iter++;
+  // delete all childs
+  QObjectList * childs;
+  while((childs =  const_cast<QObjectList *>(viewport()->children())) != NULL && 
+	!childs->isEmpty()) {
+    delete childs->first();
   }
-  QString message;
-  message.sprintf("Value of horizontal Scrollbar: %d",value);
-  ((QMainWindow*) parent)->statusBar()->message(message, 3000);
-}  
-
-void PolicyViewClass::getVerticalScrollValue(int value)
-{
-  getDocument().setyModificator(value);
-  setBackgroundColor(white);
-  std::list<PatternWidgetClass*>::iterator iter = PatternWidgetList.begin();
-  while (iter != PatternWidgetList.end()) {
-    (*iter)->updatePos();                    
-    iter++;
-  }
-  QString message;
-  message.sprintf("Value of vertical Scrollbar: %d",value);
-  ((QMainWindow*) parent)->statusBar()->message(message, 3000);
-}  
-
-void PolicyViewClass::setVerticalScrollValue(int value)
-{
-  verticalScrollBar->setValue(value);
-  getVerticalScrollValue(value);
-}
-
-void PolicyViewClass::setHorizontalScrollValue(int value)
-{
-  scrollBar->setValue(value);
-  getHorizontalScrollValue(value);
-}
-
-void PolicyViewClass::prepareFileClosing()
-{
-  std::list<PatternWidgetClass*>::iterator iter = PatternWidgetList.begin();
-  while (iter != PatternWidgetList.end()) {
-    delete(*iter);                    // delete widget
-    iter++;
-  }
-  PatternWidgetList.clear();
-}
-
-void PolicyViewClass::update()
-{
-  //----------------------------------------------//
-  // delete all widgets and clear the widget list //
-  //----------------------------------------------//
-
-  std::list<PatternWidgetClass*>::iterator iter = PatternWidgetList.begin();
-  while (iter != PatternWidgetList.end()) {
-    delete(*iter);                    // delete widget
-    iter++;
-  }
-
-  PatternWidgetList.clear();
 
   //-------------------------//
   // rebuild the widget list //
@@ -159,114 +105,110 @@ void PolicyViewClass::update()
   while (patternIter !=list.end()) {
     // generate pattern widget //
     QString patternName = *patternIter;
-    PatternWidgetClass* patternWidget = new PatternWidgetClass(this, patternName);
-    patternWidget->show();             // this is important !
 
-    // append widget to list //
-    PatternWidgetList.push_back(patternWidget);
+    PatternWidgetClass* patternWidget = new PatternWidgetClass(this, viewport(), patternName);
+    patternWidget->show(); 
+    int x = std::max(0, document.getX(patternName));
+    int y = std::max(0, document.getY(patternName));
+    addChild(patternWidget, x, y);
 
     patternIter++;
   }
 
-  repaint();
+  QRect r = viewport()->childrenRect();
+  QPoint s = viewportToContents(r.bottomRight());
+
+  resizeContents(s.x(), s.y());
+  setContentsPos(0, 0);
 }
 
-void PolicyViewClass::paintEvent(QPaintEvent* )
+void 
+PolicyViewClass::drawContents(QPainter * p, int clipx, int clipy, int clipw, int cliph)
 {
-  //  cout << "PolicyViewClass::paintEvent" << endl;
+  p->fillRect(clipx, clipy, clipw, cliph, white);
 
-  // repaint all pattern widgets //
-  // (TODO: This is needed because the transition arrows are no widgets 
-  // and so they are not repainted automatically.)
-  std::list<PatternWidgetClass*>::iterator iter = PatternWidgetList.begin();
-  while (iter != PatternWidgetList.end()) {
-    (*iter)->repaint();
-    iter++;
+  const QPtrList<QObject> * childs = viewport()->children();
+
+  if (childs) {
+    QPtrListIterator<QObject> iter(*childs);
+    while (iter.current() != NULL) {
+      PatternWidgetClass * pattern = 
+	dynamic_cast<PatternWidgetClass *>(iter.current());
+
+      assert (pattern != NULL);
+
+      pattern->drawArrows(p);
+      ++iter;
+    }
+  }
+  Super::drawContents(p, clipx, clipy, clipw, cliph);
+}
+
+void 
+PolicyViewClass::onAddPattern()
+{
+  bool ok = false;
+  QString text = QInputDialog::getText(
+                    tr( "Add Pattern" ),
+                    tr( "Pattern name:" ),
+                    QLineEdit::Normal, QString::null, &ok, this );
+  if ( ok && !text.isEmpty() ) {
+    if (document.addPattern(text, picked_x, picked_y)) {
+      PatternWidgetClass* patternWidget = new PatternWidgetClass(this, viewport(), text);
+      addChild(patternWidget, picked_x, picked_y);
+      patternWidget->show();  
+      
+      QRect r = viewport()->childrenRect();
+      QPoint s = viewportToContents(r.bottomRight());
+
+      resizeContents(s.x(), s.y());
+      ensureVisible(picked_x, picked_y);
+
+    }
+    else
+      QMessageBox::warning(this, 
+			   "Add Pattern", 
+			   "Pattern " + text + " allready exists.\n" + 
+			   "No pattern added.");
+
   }
 }
 
-
-void PolicyViewClass::onAddPattern()
-{
-  QDialog dialog(this, "addPatternDialog", true);
-  dialog.setCaption("Add Pattern");
-
-  // line edit for pattern name //
-  QLineEdit   lineEdit(&dialog);
-  lineEdit.setGeometry(120,20,100,20);  
-  lineEdit.setFocus();
-  connect(&lineEdit, SIGNAL(returnPressed()), &dialog, SLOT(accept()));
-
-  // label //
-  QLabel      label(&lineEdit, "&Pattern Name:", &dialog);
-  label.setGeometry(10,20,100,20);  
-
-  // cancel button //
-  QPushButton cancelButton("Cancel", &dialog);
-  cancelButton.setGeometry(40,80,60,25);
-  connect(&cancelButton, SIGNAL(clicked()), &dialog, SLOT(reject()));
-
-  // OK button //
-  QPushButton okButton("OK", &dialog);
-  okButton.setGeometry(130,80,60,25);  
-  connect(&okButton,     SIGNAL(clicked()), &dialog, SLOT(accept()));
-
-  // OK pressed in dialog ? //
-  if (dialog.exec()) {
-    document.addPattern(lineEdit.text(), picked_x, picked_y);
-    document.setModified(true);
-    update();
-  }  
-}
-
-
-void PolicyViewClass::startAddTransition(PatternWidgetClass* patternWidget)
+void 
+PolicyViewClass::startAddTransition(PatternWidgetClass* patternWidget)
 {
   pickedPatternPtr = patternWidget;
   pickedPattern    = patternWidget->getPatternName();
   addTransitionMode = true;
-  setMouseTracking(true);
+  arrowFrom_.setX(childX(pickedPatternPtr));
+  arrowFrom_.setY(childY(pickedPatternPtr));
+
+  viewport()->setMouseTracking(true);
 }
 
-
-
 // this is called from the clicked PatternWidget when in signal mode //
-void PolicyViewClass::endAddTransition(PatternWidgetClass* patternWidget)
+void 
+PolicyViewClass::endAddTransition(PatternWidgetClass* patternWidget)
 {
   // if addTransition mode is on, finish it and add the signal //
   if (isAddTransitionMode()) {
-    setMouseTracking(false);
+    viewport()->setMouseTracking(false);
     addTransitionMode = false;
 
-    // dialog //
-    QDialog dialog(this, "addTransitionDialog", true);
-    dialog.setCaption("Add Transition");
-    // line edit for pattern name //
-    QLineEdit   lineEdit(&dialog);
-    lineEdit.setGeometry(120,20,100,20);  
-    lineEdit.setFocus();
-    connect(&lineEdit, SIGNAL(returnPressed()), &dialog, SLOT(accept()));
-    // label //
-    QLabel      label(&lineEdit, "&Transition Name:", &dialog);
-    label.setGeometry(10,20,100,20);  
-    // cancel button //
-    QPushButton cancelButton("Cancel", &dialog);
-    cancelButton.setGeometry(40,80,60,25);
-    connect(&cancelButton, SIGNAL(clicked()), &dialog, SLOT(reject()));
-    // OK button //
-    QPushButton okButton("OK", &dialog);
-    okButton.setGeometry(130,80,60,25);  
-    connect(&okButton,     SIGNAL(clicked()), &dialog, SLOT(accept()));
-    
-    // OK pressed in dialog ? //
-    if (dialog.exec()) {
-      QString message = lineEdit.text();
+    bool ok = false;
+    QString message = QInputDialog::getText(tr( "Add Transition" ),
+					    tr( "Transition name:" ),
+					    QLineEdit::Normal, QString::null, &ok, this );
+    if ( ok && !message.isEmpty() ) {
       QString target  = patternWidget->getPatternName();
+      if (document.addTransition(pickedPattern, message, target))
+	updateContents();
+      else
+	QMessageBox::warning(this, 
+			     "Add Transition", 
+			     "Transition " + message + " allready exists.\n" + 
+			     "No transition added.");
 
-      // TODO add signal //
-      getDocument().addTransition(pickedPattern, message, target);
-      getDocument().setModified(true);
-      update();
     }
   }
 }

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 // 
 // $Id$
@@ -11,7 +11,7 @@
 
 #include "PioneerConsumer.h"
 #include "PioneerStallImpl.h"
-#include "PioneerParameters.h"
+#include "Parameters.h"
 
 #include "pioneer/CanonPanTiltImpl.h"
 //#include "pioneer/CanonPanTiltMessage.h"
@@ -263,7 +263,6 @@ namespace Pioneer
 	    static_cast<Psos::IOpacMessage const * const>(_message);
 
 	  int ir = message->ir() & 0x0f; // lower 4 bit represent the ir sensors of the ppb
-	  
 	  if (ir != infrared_) {
 
 	    Miro::RangeGroupEventIDL * pInfraredEvent = new Miro::RangeGroupEventIDL();

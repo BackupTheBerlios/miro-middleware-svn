@@ -18,6 +18,12 @@
 #include "video/VideoConsumer.h"
 #include "video/VideoImpl.h"
 
+// forward declarations
+namespace Video
+{
+  class Parameters;
+};
+
 class VideoService : public Miro::Server
 {
   typedef Miro::Server Super;
@@ -30,11 +36,8 @@ public:
   // Initialization and Termination methods.
 
   // Constructor
-  VideoService(int argc, char *argv[],
-	       const Miro::RobotParameters& robotParameters,
-	       const Video::Parameters& _videoParameters);
-  VideoService(Server& _server,
-	       const Video::Parameters& _videoParameters);
+  VideoService(int argc, char *argv[]);
+  VideoService(Server& _server);
 
   // Destructor.
   ~VideoService();

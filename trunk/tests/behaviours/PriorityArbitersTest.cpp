@@ -32,33 +32,33 @@ main(int, char**)
   // The behaviour parameters
   Miro::TimedBehaviourParameters * parameters00 = behaviour0.getParametersInstance();
   Miro::TimedBehaviourParameters * parameters0B = behaviourB.getParametersInstance();
-  parameters00->pace = ACE_Time_Value(1);
-  parameters0B->pace = ACE_Time_Value(2);
+  parameters00->pace = 1000;
+  parameters0B->pace = 2000;
 
   Miro::TimedBehaviourParameters * parameters10 = behaviour0.getParametersInstance();
   Miro::TimedBehaviourParameters * parameters11 = behaviour1.getParametersInstance();
   Miro::TimedBehaviourParameters * parameters1B = behaviourB.getParametersInstance();
-  parameters10->pace = ACE_Time_Value(1);
-  parameters11->pace = ACE_Time_Value(2);
-  parameters1B->pace = ACE_Time_Value(2);
+  parameters10->pace = 1000;
+  parameters11->pace = 2000;
+  parameters1B->pace = 2000;
 
   Miro::TimedBehaviourParameters * parameters22 = behaviour0.getParametersInstance();
   Miro::TimedBehaviourParameters * parameters23 = behaviour1.getParametersInstance();
   Miro::TimedBehaviourParameters * parameters2B = behaviourB.getParametersInstance();
-  parameters22->pace = ACE_Time_Value(1);
-  parameters23->pace = ACE_Time_Value(1);
-  parameters1B->pace = ACE_Time_Value(1, 500000);
+  parameters22->pace = 1000;
+  parameters23->pace = 1000;
+  parameters1B->pace = 1500;
 
   Miro::TimedBehaviourParameters * parameters30 = behaviour0.getParametersInstance();
   Miro::TimedBehaviourParameters * parameters31 = behaviour1.getParametersInstance();
   Miro::TimedBehaviourParameters * parameters32 = behaviour2.getParametersInstance();
   Miro::TimedBehaviourParameters * parameters33 = behaviour3.getParametersInstance();
   Miro::TimedBehaviourParameters * parameters3B = behaviourB.getParametersInstance();
-  parameters30->pace = ACE_Time_Value(1);
-  parameters31->pace = ACE_Time_Value(2);
-  parameters32->pace = ACE_Time_Value(3);
-  parameters33->pace = ACE_Time_Value(4);
-  parameters1B->pace = ACE_Time_Value(4);
+  parameters30->pace = 1000;
+  parameters31->pace = 2000;
+  parameters32->pace = 3000;
+  parameters33->pace = 4000;
+  parameters1B->pace = 4000;
 
   DummyArbiter arbiter0("Arbiter0");
   DummyArbiter arbiter1("Arbiter1");

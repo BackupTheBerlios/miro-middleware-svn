@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // 
@@ -18,8 +18,8 @@
 
 #include <tao/ORB_Core.h>
 
-#include "sparrow/SparrowParameters.h"
-#include "pioneer/PioneerParameters.h"
+#include "sparrow/Parameters.h"
+#include "pioneer/Parameters.h"
 
 #include <orbsvcs/Notify/Notify_EventChannelFactory_i.h>
 #include <orbsvcs/Notify/Notify_Default_CO_Factory.h>
@@ -38,9 +38,8 @@
 using std::cout;
 using std::cerr;
 
-SparrowBase::SparrowBase(int argc, char *argv[],
-			 const Miro::RobotParameters& _robotParameters) :
-  Super(argc, argv, _robotParameters),
+SparrowBase::SparrowBase(int argc, char *argv[]) :
+  Super(argc, argv),
   reactorTask(this),
 
   // Notification Channel
@@ -174,7 +173,7 @@ SparrowBase::~SparrowBase()
   poa->deactivate_object (oid.in ());
 
 
-  sparrowConnection.readTables();
+  //  sparrowConnection.readTables();
   reactorTask.cancel();
   DBG(cout << "reactor Task ended" << endl);
 }

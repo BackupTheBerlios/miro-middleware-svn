@@ -21,17 +21,18 @@
 
 #include <ace/OS.h>
 
-#include <qdom.h>
-
 #include <string>
 #include <vector>
 
 #include <termios.h>
 
+// forward declarations
+class QDomDocument;
+
 namespace Miro 
 {
   // forward declarations
-  class Parameters;
+  class ConfigParameters;
   //  class DevParameters;
 
   std::string 
@@ -51,17 +52,24 @@ namespace Miro
 		   const std::string& defaultname = std::string(""), 
 		   const std::string& documentname = std::string("MiroConfigDocument"),
 		   const std::vector<std::string> &userPath = std::vector<std::string>() );
-    
-    void setRobotType(const char name[]);
-    void setSection(const char name[]);
-    void getParameters(const char category[], Parameters& parameters);
+    ~ConfigDocument();    
+
+    void setSection(const std::string& _section);
+    void getParameters(const std::string& _category, ConfigParameters& parameters);
 
   protected:
-    QDomDocument document;
-    QDomNodeList sections;
-  };
-};
+    QDomDocument * document_;
 
+    std::string section_;
+  };
+
+inline
+void 
+ConfigDocument::setSection(const std::string& _section) {
+  section_ = _section;
+}
+
+};
 #endif
 
 

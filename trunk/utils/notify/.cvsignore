@@ -1,3 +1,5 @@
+Parameters.h
+Parameters.cpp
 LogNotify
 NotifyLogPlayer
 LogTruncate

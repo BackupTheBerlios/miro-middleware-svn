@@ -47,8 +47,7 @@ class SparrowBase : public Miro::Server
 
 public:
   // Initialization and Termination methods.
-  SparrowBase(int argc, char *argv[],
-	      const Miro::RobotParameters& _robotParameters);
+  SparrowBase(int argc, char *argv[]);
 
   SparrowBase(Server& _server);
 

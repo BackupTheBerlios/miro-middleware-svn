@@ -33,11 +33,10 @@ LogNotify::LogNotify(Miro::Server& _server,
 		     EventChannel_ptr _ec,
 		     const string& domainName,
 		     const string& _fileName,
-		     const LogNotifyParameters& _parameters,
 		     bool _keepAlive) :
   Super(_ec),
   server_(_server),
-  parameters_(_parameters),
+  parameters_(*LogNotifyParameters::instance()),
   fileName_(_fileName),
   mutex_(),
   memMap_(fileName_.c_str(), parameters_.maxFileSize,
@@ -49,15 +48,15 @@ LogNotify::LogNotify(Miro::Server& _server,
   if (memMap_.addr() == MAP_FAILED)
     throw Miro::CException(errno, std::strerror(errno));
 
-  EventTypeSeq added(parameters_.typeNames.size());
+  EventTypeSeq added(parameters_.typeName.size());
   EventTypeSeq removed(1);
-  added.length(parameters_.typeNames.size());
+  added.length(parameters_.typeName.size());
   removed.length(1);
 
-  for (unsigned int i = 0; i < parameters_.typeNames.size(); ++i) {
+  for (unsigned int i = 0; i < parameters_.typeName.size(); ++i) {
     added[i].domain_name =  CORBA::string_dup(domainName.c_str());
     added[i].type_name =
-      CORBA::string_dup(parameters_.typeNames[i].c_str());
+      CORBA::string_dup(parameters_.typeName[i].c_str());
   }
   removed[0].domain_name =  CORBA::string_dup("*");
   removed[0].type_name = CORBA::string_dup("*");

@@ -80,15 +80,15 @@ main(int argc, char *argv[])
 
   // Parameters to be passed to the services
   Miro::RobotParameters robotParameters;
-  LogNotifyParameters parameters;
+  LogNotifyParameters * parameters = LogNotifyParameters::instance();
 
   // Config file processing
   Miro::ConfigDocument * config = 
     new Miro::ConfigDocument(argc, argv);
-  config->setRobotType("Robot");
-  config->getParameters("robot", robotParameters);
-  config->setRobotType("Notification");
-  config->getParameters("logging", parameters);
+  config->setSection("Robot");
+  config->getParameters("Robot", robotParameters);
+  config->setSection("Notification");
+  config->getParameters("Logging", *parameters);
   delete config;
 
 #ifdef DEBUG

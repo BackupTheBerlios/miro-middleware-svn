@@ -32,7 +32,6 @@ namespace Miro
     //! Constructor
     LaserPollTask(LaserConnection& _laser,
 		  LaserEvent& _event,
-		  const ::Laser::Parameters& _description,
 		  LaserStatistic * _laserStatistic);
 
     //! Destructor

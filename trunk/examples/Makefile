@@ -39,12 +39,12 @@ DIRS =		odometry \
 		battery \
 		notify \
 		infrared \
+		params \
 		behaviours \
 		speechSimple
 ifneq (,$(findstring B21,$(MIRO_COMPONENTS)))
   DIRS +=	robotikI \
-		b21Motion \
-		b21Behaviours
+		b21Motion
 endif
 ifneq (,$(findstring Pioneer1,$(MIRO_COMPONENTS)))
   DIRS +=
@@ -55,7 +55,6 @@ endif
 ifneq (,$(findstring Deprecated,$(MIRO_COMPONENTS)))
   DIRS +=
 endif
-
 
 # robotikI needs to be seperated for robot types
 

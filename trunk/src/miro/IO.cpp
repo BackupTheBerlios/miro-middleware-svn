@@ -2,17 +2,9 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999,2000
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
@@ -29,10 +21,11 @@
 #include "miro/MotionStatusC.h"
 #include "miro/RangeEventC.h"
 #include "miro/PanTiltC.h"
-
 // #include "miro/LaserC.h"
 
 #include "miro/Angle.h"
+
+#include <ace/INET_Addr.h>
 
 #include <iostream>
 #include <vector>
@@ -59,6 +52,28 @@ namespace
   };
 };
 
+
+std::ostream &
+operator<<(std::ostream &ostr, const ACE_TTY_IO::Serial_Params &rhs) {
+  ostr << "baudrate = " << rhs.baudrate << endl
+       << "parityenb = " << rhs.parityenb << endl
+       << "databits = " << rhs.databits << endl
+       << "stopbits = " << rhs.stopbits << endl 
+       << "readtimeoutmsec = " << rhs.readtimeoutmsec << endl
+       << "modem = " << rhs.modem << endl
+       << "rcvenb = " << rhs.rcvenb << endl
+       << "ctsenb = " << rhs.ctsenb << endl    // CTS & RTS are the same under unix
+       << "rtsenb = " << rhs.rtsenb << endl    // enable & set rts mode (win32)
+       << "xinenb = " << rhs.xinenb << endl    // enable xon/xoff  reception
+       << "xoutenb = " << rhs.xoutenb << endl; // enable xon/xoff transmission
+    return ostr;
+}
+
+std::ostream &
+operator<<(std::ostream &ostr, const ACE_INET_Addr &rhs) {
+  ostr << rhs.get_host_addr() << endl;
+  return ostr; 
+}
 namespace Miro
 {
 //   // output operator for LaserScanIDL

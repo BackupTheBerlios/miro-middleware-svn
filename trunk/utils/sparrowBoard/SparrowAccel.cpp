@@ -2,25 +2,17 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999,2000
+// (c) 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
 #include "sparrow/SparrowConnection.h"
-#include "sparrow/SparrowParameters.h"
 #include "sparrow/SparrowConsumer.h"
 #include "sparrow/SparrowDevice.h"
+#include "sparrow/Parameters.h"
 
 #include "can/CanEventHandler.h"
 
@@ -62,7 +54,7 @@ int main(int argc, char *argv[])
 
   // Config file processing
   Miro::ConfigDocument config(argc, argv);
-  config.setRobotType("Sparrow99");
+  config.setSection("Sparrow99");
   config.getParameters("sparrowBoard", *parameters);
 
 #ifdef DEBUG
@@ -89,6 +81,7 @@ int main(int argc, char *argv[])
   ACE_OS::sleep(ACE_Time_Value(2));
 
   try {
+#ifdef WE_USE_THIS_FEATURE_AGAIN
     if (write) {
       cout << "Table entries: " << endl
 	   << "  table1: " << parameters->table1.size() << endl
@@ -100,6 +93,7 @@ int main(int argc, char *argv[])
 	service.connection.setAccelValues(j, 
 					  parameters->table1[j],
 					  parameters->table2[j]);
+#endif
     }
 
     cout << "receiving tables:" << endl;

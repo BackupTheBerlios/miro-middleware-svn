@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // 
@@ -10,14 +10,13 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "SparrowServer.h"
 
 #include "miro/Exception.h"
 #include "miro/Utils.h"
 
-#include "sparrow/SparrowParameters.h"
-#include "pioneer/PioneerParameters.h"
+#include "sparrow/Parameters.h"
+#include "pioneer/Parameters.h"
 #include "miro/NotifyMulticastParameters.h"
 
 #include <orbsvcs/Notify/Notify_EventChannelFactory_i.h>
@@ -51,7 +50,7 @@ main(int argc, char *argv[])
   TAO_Notify_Default_EMO_Factory::init_svc();
 
   // Parameters to be passed to the services
-  Miro::RobotParameters robotParameters;
+  Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
   Sparrow::Parameters * pSparrowParameters = Sparrow::Parameters::instance();
   Pioneer::Parameters * pPioneerParameters = Pioneer::Parameters::instance();
   Miro::NotifyMulticast::Parameters * notifyMulticastParameters = Miro::NotifyMulticast::Parameters::instance();
@@ -59,12 +58,12 @@ main(int argc, char *argv[])
   try {
     // Config file processing
     Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
-    config->setRobotType("Robot");
-    config->getParameters("robot", robotParameters);
-    config->setRobotType("Sparrow99");
-    config->getParameters("sparrowBoard", *pSparrowParameters);
-    config->getParameters("pioneerBoard", *pPioneerParameters);
-    config->setRobotType("Notification");
+    config->setSection("Robot");
+    config->getParameters("Robot", *robotParameters);
+    config->setSection("Sparrow99");
+    config->getParameters("SparrowBoard", *pSparrowParameters);
+    config->getParameters("PioneerBoard", *pPioneerParameters);
+    config->setSection("Notification");
     config->getParameters("NotifyMulticast", *notifyMulticastParameters);
     delete config;
 
@@ -76,8 +75,7 @@ main(int argc, char *argv[])
 #endif
 
     DBG(cout << "Initialize server daemon." << endl);
-    SparrowBase sparrowBase(argc, argv, 
-			    robotParameters);
+    SparrowBase sparrowBase(argc, argv);
     try {
       DBG(cout << "Loop forever handling events." << endl);
       sparrowBase.run(8);

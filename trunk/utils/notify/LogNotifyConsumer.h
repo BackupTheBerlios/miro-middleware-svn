@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -13,7 +13,7 @@
 
 #include <ace/Mem_Map.h>
 #include <tao/CDR.h>
-#include "LogNotifyParameters.h"
+#include "Parameters.h"
 
 #include "miro/StructuredPushConsumer.h"
 
@@ -43,7 +43,6 @@ public:
 	    CosNotifyChannelAdmin::EventChannel_ptr _ec,
 	    const std::string& domainName,
 	    const std::string& _fileName,
-	    const LogNotifyParameters& _parameters,
 	    bool _keepAlive = false);
   /** Disconnect from the supplier. */
   virtual ~LogNotify();

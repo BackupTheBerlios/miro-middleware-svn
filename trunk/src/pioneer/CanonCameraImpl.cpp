@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // 
@@ -14,8 +14,8 @@
 #include "pioneer/CanonCameraImpl.h"
 #include "pioneer/PioneerConnection.h"
 #include "pioneer/PioneerConsumer.h"
-#include "pioneer/PioneerParameters.h"
 #include "pioneer/CanonMessage.h"
+#include "pioneer/Parameters.h"
 
 #include "miro/Synch.h"
 #include "miro/Exception.h"

@@ -18,7 +18,7 @@
 #include <iostream>
 
 #include "Exception.h"
-#include "RobotParameters.h"
+#include "Parameters.h"
 
 namespace Miro
 {
@@ -56,7 +56,7 @@ namespace Miro
      * from the argument vector.
      */
     Client(int& argc, char *argv[], 
-	   const RobotParameters& _params = RobotParameters());
+	   const RobotParameters& _params = *RobotParameters::instance());
     Client(const Client& _client);
     
     /**

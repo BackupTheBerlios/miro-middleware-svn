@@ -1,16 +1,15 @@
 \chapter{Parameter Sets}
-\label{SEC::PARAMETERS}
+\label{SEC:PARAMETERS}
 
                                 % problem
 
-Robot control programs and robotic algorithms are full of
-parameters. Different robot types vary in shape and sensor
-configuration, but also different robots of the same type tend to vary
-slightly. For instance they some of them are
-equipped with further sensory or actuatory devices not present in the
-standard configuration. Also damage and repair of parts of a robot
-during its lifetime result in an individual robot, which has its own
-unique configuration.
+Robot control programs and robotic algorithms are full of parameters.
+Different robot types vary in shape and sensor configuration, but also
+different robots of the same type tend to vary slightly. For instance
+some of them are equipped with further sensory or actuatory devices
+not present in the standard configuration. Also damage and repair of
+parts of a robot during its lifetime result in an individual robot,
+which has its own unique configuration.
 
                                 % examples
 
@@ -41,12 +40,12 @@ robots control software maintainable and adaptable to new tasks.
 In this chapter we will therfore introduce the parameter framework of
 \miro.                                % organization of the chapter
 The remaining of this chapter is organized as follows.  First the
-general conecept of parameter sets and configuration files is
-scetched. Then the
+general concept of parameter sets and configuration files is
+sketched. Then the
 location and naming of the robot configuration files of \miro and how to
 create a configuration for an individual robot will be explained. In
-the then following section the description and implementation of
-parameter sets and the the mapping to the actual parameter files will
+the following section the description and implementation of
+parameter sets and the mapping to the actual parameter files will
 be discussed. In section \ref{SEC:DESCRIPTION_SYNTAX} the syntax and
 semantics of the description language will be explained.
 
@@ -122,9 +121,9 @@ computer mounted on the robot will try to load the configuration file:
 {\tt \$MIRO\_ROOT/etc/haeltnix.xml}
 
 The default name and location of the configuration file can be
-overwritten by the command line option{\tt -MiroConfigFile} 
+overwritten by the command line option {\tt -MiroConfigFile} 
 {\em filename}. The search order of directories stays the same.
-Additionally there can also be an absolute path be specified.
+Additionally there can also be an absolute path specified.
 
 In {\tt \$MIRO\_ROOT/etc} there are sample configuration files for
 every robot model currently supported by \miro. They are named
@@ -222,19 +221,19 @@ within the next section.
 
 Parameter sets, described as component parameters within a configuration file
 correspond to strictly typed classes within C++. Those structures can
-be initialized by parsing the configuration file. To fasiliate the
+be initialized by parsing the configuration file. To facilitate the
 generation of parameter sets, parameter classes needn't to be
 hand coded, but are auto-generated from parameter description files by a
 little parameter class compiler ({\tt MakeParams}). The parameter
 description files are once again based on the XML syntax.
 
 Furthermore the description files are not only used for the
-configuration of the services or \miro but also by other tools within
+configuration of the services of \miro but also by other tools within
 the \miro framework. The behaviour framework (sec.\ 
 \ref{SEC:BEHAVIOURS}) uses this functionality for parameterization of
 behaviours and arbiters and the {\tt PolicyEditor} (sec.\ 
 \ref{SEC:POLICY_EDITOR} uses the parameter description files for GUI
-based editing of the behaviour parameters. To fasciliate the reuse of
+based editing of the behaviour parameters). To facilitate the reuse of
 the parameter descriptions by multiple tools, the syntax of the file is
 somehow obfuscated by additional tags and attributes.
 
@@ -347,7 +346,7 @@ $<$!--MiroParametersConfigDocument--$>$
 
 \subsection{Example Description}
 
-See {\tt \$MIRO\_ROOT/examples/params/Parmeters.xml}
+See {\tt \$MIRO\_ROOT/examples/params/Parameters.xml}
 for a small initial example.
 
 TODO: include and comment the example code here.
@@ -364,12 +363,25 @@ parameters.
   \item[-v] verbose mode
   \item[-?] help: emit this text and stop
 \end{description}
+
 \subsection{Example Header File}
 
-See {\tt \$MIRO\_ROOT/examples/params/Parmeters.h}
+See {\tt \$MIRO\_ROOT/examples/params/Parameters.h}
 for a small initial example.
 
 TODO: include and comment the example code here.
+
+\subsection{Makefile magic}
+
+To enable automatic generation of the C++ source and header files from
+XML parameter descriptions, there does allready exist a rule within
+the make files of \miro. That is, for every file named *Parameters.cpp
+| h, make checks the existance of the corresponding *Parameters.xml
+file and if necessary, invokes MakeParams accordingly. To prevent make
+from removing the generated files at the end of the task, you have to
+define an additional .PRECIOUS target like this:
+
+.PRECIOUS: MyParameters.cpp MyParameters.h
 
 %%% Local Variables: 
 %%% mode: latex

@@ -22,7 +22,7 @@
 
 #include "miro/DevConnection.h"
 #include "miro/DevEventHandler.h"
-#include "miro/DevParameters.h"
+#include "miro/Parameters.h"
 
 #include "miro/Exception.h"
 

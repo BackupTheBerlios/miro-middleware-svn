@@ -11,12 +11,11 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "VideoServer.h"
-#include "VideoParameters.h"
+#include "Parameters.h"
 
 #include "miro/ExceptionC.h"
 #include "miro/Exception.h"
 #include "miro/Utils.h"
-
 
 #include <iostream>
 
@@ -29,15 +28,13 @@
 using std::cout;
 using std::cerr;
 
-VideoService::VideoService(int argc, char *argv[],
-			   const Miro::RobotParameters& _robotParameters,
-			   const Video::Parameters& _videoParms) :
-  Super(argc, argv, _robotParameters),
+VideoService::VideoService(int argc, char *argv[]) :
+  Super(argc, argv),
 
   // Video board initialization
   pConsumer(new Video::Consumer(connection /*, &grabber */)),
-  connection(pConsumer, _videoParms),
-  grabber(pConsumer, _videoParms)
+  connection(pConsumer),
+  grabber(pConsumer)
 
   // Service initialization
 {
@@ -45,14 +42,13 @@ VideoService::VideoService(int argc, char *argv[],
   DBG(cout << "VideoService initialized.." << endl);
 }
 
-VideoService::VideoService(Server& _server,
-			   const Video::Parameters& _videoParms) :
+VideoService::VideoService(Server& _server) :
   Super(_server),
 
   // Video board initialization
   pConsumer(new Video::Consumer(connection /*, &grabber */)),
-  connection(pConsumer, _videoParms),
-  grabber(pConsumer, _videoParms)
+  connection(pConsumer),
+  grabber(pConsumer)
 
   // Service initialization
 {

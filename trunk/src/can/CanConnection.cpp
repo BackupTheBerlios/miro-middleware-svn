@@ -19,7 +19,7 @@
 
 
 #include "CanConnection.h"
-#include "CanParameters.h"
+#include "Parameters.h"
 
 // extern "C" 
 // {

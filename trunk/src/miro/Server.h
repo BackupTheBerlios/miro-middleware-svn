@@ -87,7 +87,7 @@ namespace Miro
 
     //! Constructor.
     Server(int& argc, char *argv[],
-	   const RobotParameters& _params = RobotParameters());
+	   const RobotParameters& _params = *RobotParameters::instance());
     Server(const Server& _server);
     ~Server();
 

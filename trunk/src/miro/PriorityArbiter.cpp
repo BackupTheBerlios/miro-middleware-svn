@@ -11,9 +11,12 @@
 
 #include "PriorityArbiter.h"
 #include "ArbiterMessage.h"
+#include "Parameters.h"
 
 namespace Miro
 {
+  ARBITER_TYPES_FACTORY_IMPL(PriorityArbiter);
+
   PriorityArbiter::PriorityArbiter() :
     currentBehaviour_(NULL)
   {

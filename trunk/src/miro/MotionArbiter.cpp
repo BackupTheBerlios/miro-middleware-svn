@@ -10,15 +10,23 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "MotionArbiter.h"
-#include "MotionArbiterMessage.h"
 #include "Behaviour.h"
 #include "StructuredPushSupplier.h"
+#include "Parameters.h"
 
 namespace Miro
 {
   const std::string MotionArbiter::name_ = "MotionArbiter";
 
-  MotionArbiter::MotionArbiter(Motion_ptr _pMotion, StructuredPushSupplier * _pSupplier) :
+  ARBITER_TYPES_FACTORY_IMPL(MotionArbiter);
+
+  /**
+   * @param _pMotion a pointer to the motion interface
+   * @param _pSupplier a pointer to a StructuredPushSupplier for
+   *   emitting arbitration events for debugging.
+   */
+  MotionArbiter::MotionArbiter(Motion_ptr _pMotion, 
+			       StructuredPushSupplier * _pSupplier) :
     pMotion_(_pMotion),
     pSupplier_(_pSupplier)
   {
@@ -35,12 +43,6 @@ namespace Miro
       notifyEvent.header.variable_header.length(0);   // put nothing here
       notifyEvent.filterable_data.length(0);          // put nothing here
     }
-  }
-
-  MotionArbiterMessage * 
-  MotionArbiter::getMessageInstance()
-  {
-    return new MotionArbiterMessage();
   }
 
   void

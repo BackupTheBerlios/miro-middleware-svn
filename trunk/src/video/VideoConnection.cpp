@@ -13,7 +13,7 @@
 #include "VideoConnection.h"
 #include "VideoConsumer.h"
 #include "VideoDevice.h"
-#include "VideoParameters.h"
+#include "Parameters.h"
 
 #include "miro/Exception.h"
 
@@ -40,14 +40,13 @@ namespace Video
   //----- constructors -----//
   //------------------------//
 
-  Connection::Connection(Consumer * _consumer,
-			 const Parameters& _parameters) : 
+  Connection::Connection(Consumer * _consumer) : 
     consumer(_consumer),
-    parameters(_parameters),
-    devName(_parameters.device.c_str()),
+    parameters(*Parameters::instance()),
+    devName(parameters.device.c_str()),
     ioBuffer(),
     connector(),
-	videoDevice(_parameters.grabber)
+    videoDevice(parameters.grabber)
   { 
     DBG(cout << "Constructing VideoConnection." << endl);
 

@@ -11,7 +11,7 @@
 
 
 #include "PanTiltImpl.h"
-#include "PanTiltParameters.h"
+#include "Parameters.h"
 
 #include "miro/Exception.h"
 

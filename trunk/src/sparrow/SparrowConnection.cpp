@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -14,7 +14,7 @@
 #include "SparrowEventHandler.h"
 #include "SparrowConsumer.h"
 #include "SparrowDevice.h"
-#include "SparrowParameters.h"
+#include "Parameters.h"
 
 #include "can/CanMessage.h"
 
@@ -98,8 +98,8 @@ namespace Sparrow
 
     initMax(params_->maxAccel, 
 	    params_->maxPower, 
-	    params_->maxTransVelocity,
-	    params_->maxRotVelocity);
+	    params_->motion.maxTranslation,
+	    params_->motion.maxRotation);
 
     // init stall
     initStall(params_->stallThreshold, 
@@ -108,7 +108,7 @@ namespace Sparrow
 	      params_->stallA0);
 
     // init motor control tables
-    writeTables();
+    // writeTables();
   }
 
 
@@ -120,8 +120,8 @@ namespace Sparrow
   { 
     DBG(cout << "Destructing SparrowConnection." << endl);
 
-    getPosition(params_->odometryInterval, 1);
-    infraredGet(params_->infraredInterval, 1);
+    getPosition(params_->odometryPulse.msec(), 1);
+    infraredGet(params_->infraredPulse.msec(), 1);
     setPower(0, 0);
 
     reactor->cancel_timer(buttonsPollTimerId);
@@ -132,6 +132,7 @@ namespace Sparrow
   //----- methods -----//
   //-------------------//
 
+#ifdef DEPRECATED_SPARROW_FEATURE
   void
   Connection::writeTables()
   {
@@ -182,6 +183,7 @@ namespace Sparrow
       }
     }
   }
+#endif
 
   //----------- commands ----------- //
 
