@@ -370,25 +370,22 @@ namespace Sparrow
 	Miro::timeA2C(message.time(), data->time);
 	data->group = 0;
 	data->range.length(8);
-	for (int i = 7; i >= 0; --i) 
-	{
-	  if (message.charData(i) != -1) 
-	  {
-	    calRange =((int)message.charData(i) - param->irScaling[i].offset);
+	for (int i = 7; i >= 0; --i)  {
+	  if (message.charData(i) != -1) {
+
+	    calRange = ((int)message.charData(i) * 10 - param->irScaling[i].offset);
 	    calRange = calRange - param->irScaling[i].minDistance;
 	    calRange = (long) (calRange * param->irScaling[i].scaling);
 	    calRange = calRange + param->irScaling[i].minDistance ;  
-	    if ((calRange < param->irScaling[i].minDistance) || (calRange > param->irScaling[i].maxDistance)) 
-	    {
-	  	calRange = -1;
+	    if ((calRange < param->irScaling[i].minDistance) || 
+		(calRange > param->irScaling[i].maxDistance)) {
+	      calRange = -1;
 	    }
-	   } 
-	  else
-	   { calRange = -1; }
+	  } 
+	  else {
+	    calRange = -1; 
+	  }
 	  data->range[i] = calRange;
-	  //data->range[i] = message.charData(i);		//***uli end
-	  if (data->range[i] > 0)
-	    data->range[i] *= 10;
 	}
 	pIR_->integrateData(data);
       }
