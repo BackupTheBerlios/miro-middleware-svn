@@ -193,6 +193,10 @@ namespace Miro
 	dispatcherThread_.dispatch();
       }
     }
+    else {
+      // as we own the data, we have to take care of it
+      delete _data;
+    }
   }
 
   void
@@ -222,6 +226,10 @@ namespace Miro
 	dispatcherThread_.setData(_data);
 	dispatcherThread_.dispatch();
       }
+    }
+    else {
+      // as we own the data, we have to take care of it
+      delete _data;
     }
   }
 
@@ -255,6 +263,10 @@ namespace Miro
 	dispatcherThread_.setData(_data);
 	dispatcherThread_.dispatch();
       }
+    }
+    else {
+      // as we own the data, we have to take care of it
+      delete _data;
     }
   }
 
@@ -327,4 +339,4 @@ namespace Miro
 
     return new RangeScanEventIDL(scan_);
   }
-};
+}
