@@ -186,6 +186,11 @@ namespace Miro {
 	    sender_->init();
 	}
 	
+	void Adapter::fini() {
+	    PRINT_DBG(DBG_MORE, "Finalizing notify multicast adapter.");
+	    receiver_->disconnect();
+	}
+	
 	
         /**
          * Adapter::getSender()

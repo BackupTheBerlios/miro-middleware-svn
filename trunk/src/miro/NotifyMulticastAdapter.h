@@ -136,7 +136,8 @@ namespace Miro {
 	    //! Destructor
             ~Adapter() throw(CORBA::Exception, Miro::Exception);
 
-	    void init();
+            void init();
+	    void fini();
 	    
 	    //! Returns pointer to sender.
             Sender *getSender();
@@ -150,8 +151,6 @@ namespace Miro {
 
         protected:
             Miro::Client                            *client_;
-
-            CosNotifyChannelAdmin::EventChannel_var  eventChannel_;
 
             ACE_Reactor                             *reactor_;
 

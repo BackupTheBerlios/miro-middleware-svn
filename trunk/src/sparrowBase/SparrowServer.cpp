@@ -396,7 +396,10 @@ SparrowBase::~SparrowBase()
   DBG(cout << "Destructing SparrowBase." << endl);
 
   // close channel sharing
-  delete mcAdapter_;
+  if (mcAdapter_) {
+    mcAdapter_->fini();
+    delete mcAdapter_;
+  }
 
   //  sparrowConnection.readTables();
   reactorTask.cancel();

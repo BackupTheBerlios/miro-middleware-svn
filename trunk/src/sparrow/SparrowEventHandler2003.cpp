@@ -55,9 +55,8 @@ namespace Sparrow
   }
 
   int
-  EventHandler2003::handle_timeout(const ACE_Time_Value &, const void *arg)
+  EventHandler2003::handle_timeout(const ACE_Time_Value &, const void * /*arg*/)
   {
-
     return 0;
   }
 

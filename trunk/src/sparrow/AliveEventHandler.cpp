@@ -25,27 +25,23 @@ namespace Sparrow{
 
    };
 
-   int AliveEventHandler::handle_timeout (const ACE_Time_Value &current_time, const void *act){
-
-      //std::cout << "Handle Timeout" << std::endl;
-
-      Miro::SparrowAliveIDL aliveIDL;
-      aliveIDL.MotorAlive = collector->motorAlive();
-      aliveIDL.KickerAlive = collector->kickAlive();
-      aliveIDL.Infrared1Alive = collector->infrared1Alive();
-      aliveIDL.Infrared2Alive = collector->infrared2Alive();
-      aliveIDL.PanAlive = collector->panAlive();
-
-      notifyEvent.remainder_of_body <<= aliveIDL;
-      if(pSupplier)
-         pSupplier->sendEvent(notifyEvent);
-
-      return 0;
-   };
-
-
-
-
-
+  int AliveEventHandler::handle_timeout (const ACE_Time_Value &/*current_time*/, 
+					 const void */*act*/) 
+  {
+    //std::cout << "Handle Timeout" << std::endl;
+    
+    Miro::SparrowAliveIDL aliveIDL;
+    aliveIDL.MotorAlive = collector->motorAlive();
+    aliveIDL.KickerAlive = collector->kickAlive();
+    aliveIDL.Infrared1Alive = collector->infrared1Alive();
+    aliveIDL.Infrared2Alive = collector->infrared2Alive();
+    aliveIDL.PanAlive = collector->panAlive();
+    
+    notifyEvent.remainder_of_body <<= aliveIDL;
+    if(pSupplier)
+      pSupplier->sendEvent(notifyEvent);
+    
+    return 0;
+  };
 };
 

@@ -217,8 +217,8 @@ namespace Sparrow
   Consumer2003::handleMessage(const Miro::DevMessage * _message)
   {
     Can::Message& message = *((Can::Message*)_message);
-    int tmp;
-    int versNr, versSub;
+    // int tmp;
+    // int versNr, versSub;
 
     connection->boardReply = 1;
 
@@ -343,9 +343,9 @@ namespace Sparrow
       FaulController::OdometryMessage odoMessage(FaulController::OdometryMessage::LEFT);
       if(CanParams->module == "pcan"){
          Can::pcanmsg * msgp_;
-	 long tickTmp;
 	 message.canMessage(&msgp_);
-         //memcpy((void *) &(odoMessage.ticks_),(void *) (msgp_->Msg.DATA),  4);
+	 // long tickTmp;
+         // memcpy((void *) &(odoMessage.ticks_),(void *) (msgp_->Msg.DATA),  4);
 	 odoMessage.ticks_ = message.longData(0);
 	}
       else{

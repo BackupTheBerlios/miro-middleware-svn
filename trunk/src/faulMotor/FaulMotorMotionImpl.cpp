@@ -95,7 +95,8 @@ namespace FaulMotor
   };
 
   void
-  MotionImpl::initMax(short maxAcc, short maxPower, short maxSpeed, double maxTurn) throw()
+  MotionImpl::initMax(short /*maxAcc*/, short /*maxPower*/, 
+		      short /*maxSpeed*/, double /*maxTurn*/) throw()
   {
     std::cerr << "init max  not implemented" << endl;
   };
