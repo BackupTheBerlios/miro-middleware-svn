@@ -1,0 +1,81 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef CanonCamera_idl
+#define CanonCamera_idl
+
+#include "Exception.idl"
+
+module Miro
+{
+
+  //! Struct representing the focus limits in the current zoom position
+  struct FocusRangeIDL
+  {
+    //minimal focus position (far)
+    short min;
+    //maximal focus position (near)
+    short max;
+  };
+    
+  
+  //! Interface for a zoom camera.
+  interface CanonCamera
+    {
+    //! Set the zoom factor.
+    /**
+     * @param factor is specified in percentage.
+     * @throw EOutOfBounds
+     * is thrown if the specified factor is not a percentage
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    void setZoom(in short value) raises(EDevIO, EOutOfBounds);
+    //! Get the current zoom factor.
+    /**
+     * @return The zoom factor, specified in percentage.
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    short getZoom() raises(EDevIO);
+
+    //! Set the focus factor.
+    /**
+     * @param factor is specified in percentage (0 - far / 100 - near).
+     * @throw EOutOfBounds
+     * is thrown if the specified factor is not a percentage
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    void setFocus(in short value) raises (EDevIO, EOutOfBounds);
+    //! Get the current focus factor.
+    /**
+     * @return The focus factor, specified in percentage (0 - far / 100 - near).
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    short getFocus() raises(EDevIO);
+    //! Set the camera to autoFocus mode
+    /*
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    void autoFocus() raises(EDevIO);
+    //! get the focusing range for the current zoom position
+    /*
+     * @return The focusing range for the current position
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    FocusRangeIDL getFocusRange() raises(EDevIO);
+
+  };
+};
+#endif /* CanonCamera_idl */
