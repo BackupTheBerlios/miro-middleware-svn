@@ -162,7 +162,8 @@ namespace FaulMotor
 
     // if the robot has to change its speed
     // adjust the acceleations accordingly
-    if ((dSpeedL != 0) && (dSpeedR != 0)) {
+    if ((dSpeedL != 0) && (dSpeedR != 0) &&
+	fabs(newSpeedL) > 250. && fabs(newSpeedR) > 250. ) {
       if (fabs(dSpeedL) > fabs(dSpeedR)) {
 	accR *= dSpeedR / dSpeedL;
       }

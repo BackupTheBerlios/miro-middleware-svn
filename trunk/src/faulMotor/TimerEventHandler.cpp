@@ -42,10 +42,13 @@ namespace FaulMotor
 	if (!Sparrow::Parameters::instance()->sparrow2003)
 	  connection_.getTicks();
 	connection_.deferredSetSpeed();
+	// reset stall counter
 	stallCounter_ = 0;
       }
     }
     else {
+	// reset stall counter
+      stallCounter_ = 0;
       if (!Sparrow::Parameters::instance()->sparrow2003)
 	connection_.getTicks();
       connection_.deferredSetSpeed();

@@ -225,6 +225,7 @@ if(!oddWheel_) {
     
     if (FAUL_LOGGING && clockL_ == 0)
       ticksFile << "left  ticks == 0" << std::endl;
+
     if (FAUL_LOGGING && clockR_ == 0)
       ticksFile << "right ticks == 0" << std::endl;
     
@@ -301,6 +302,12 @@ if(!oddWheel_) {
   void
   Consumer::odometryUpdate(double _dL, double _dR, double _deltaT)
   {
+    // sanity check:
+    // with 30Hz and 3 m/s we drive at most 100mm per query
+    // if we measure more than 2000mm its better to ignore this
+    if (_dL > 2000 || _dR > 2000 || _dL < -2000 || _dR < -2000)
+      return;
+
     // calculate new orientation
     double turn = (_dR - _dL) / wheelBase_;
     status_.position.heading += turn;
