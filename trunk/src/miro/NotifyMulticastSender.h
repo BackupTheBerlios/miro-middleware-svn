@@ -59,7 +59,11 @@
 /* Miro includes */
 #include <miro/StructuredPushConsumer.h>
 
+#if GCC_MAJOR_VERSION == 2 && GCC_MINOR_VERSION == 96
+#include <list>
+#else
 #include <deque>
+#endif
 
 namespace Miro 
 {
@@ -73,10 +77,15 @@ namespace Miro
 
     class Sender : public Miro::StructuredPushConsumer 
     {
+      //--------------------------------------------------------------------------
+      // private types
+      //--------------------------------------------------------------------------
       typedef Miro::StructuredPushConsumer Super;
      
     public:
-      //! Initializing constructor.
+      //--------------------------------------------------------------------------
+      // public methods
+      //--------------------------------------------------------------------------
       Sender(ACE_SOCK_Dgram_Mcast& _socket,
 	     CosNotifyChannelAdmin::EventChannel_ptr _ec,
 	     std::string const& _domainName,
@@ -91,10 +100,19 @@ namespace Miro
 
       friend class SH;
     protected:
+      //--------------------------------------------------------------------------
       // protected types
+      //--------------------------------------------------------------------------
       typedef std::pair<CORBA::ULong, CORBA::ULong> TimeSizePair;
+#if GCC_MAJOR_VERSION == 2 && GCC_MINOR_VERSION == 96
+      typedef std::list<TimeSizePair> BandwidthQueue;
+#else
       typedef std::deque<TimeSizePair> BandwidthQueue;
+#endif
 
+      //--------------------------------------------------------------------------
+      // protected methods
+      //--------------------------------------------------------------------------
       void subscribe(std::string const& _domain,
 		     std::string const& _type)
 	throw(CORBA::SystemException, CosNotifyComm::InvalidEventType);
@@ -147,6 +165,9 @@ namespace Miro
       CORBA::ULong lastTrafficAnalysis_;
       BandwidthQueue bandwidth_;
 
+      //------------------------------------------------------------------------
+      // private static constants
+      //------------------------------------------------------------------------
       static CORBA::ULong const TIMEOUT_MSEC = 2000;
     };
   }
