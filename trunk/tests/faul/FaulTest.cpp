@@ -17,8 +17,10 @@
 #include "faulMotor/FaulMotorConsumer.h"
 #include "faulMotor/TimerEventHandler.h"
 #include "sparrow/Parameters.h"
+#include "sparrow/SparrowConnection.h"
 #include "sparrow/SparrowConnection2003.h"
 #include "can/CanEventHandler.h"
+#include "sparrow/SparrowConsumer.h"
 #include "sparrow/SparrowConsumer2003.h"
 //#include "sparrowBase/SparrowServer.h"
 
@@ -112,23 +114,15 @@ Event::handle_signal(int, siginfo_t *, ucontext_t *)
 struct Service
 {
   Miro::ReactorTask  reactorTask;
-  //Miro::RangeSensorImpl * pRangeSensorImpl;
   Miro::OdometryImpl * pOdometryImpl;
-  //Miro::BatteryImpl * pBatteryImpl;
-  //FaulMotor::Consumer * pConsumer;
-  //FaulMotor::StallImpl * pStallImpl;
-  //Canon::CanonPanTiltImpl canonPanTiltImpl;
-  //Canon::CanonCameraImpl canonCamera;
-  //Miro::GripperImpl gripper;
-  //FaulMotor::TimerEventHandler * pTimerEventHandler;
-  //FaulMotor::Connection connection;
-
   FaulhaberHardware * pFaulhaber;
 
-  Sparrow::Connection2003 * connection2003;
+  // Sparrow board hardware abstraction
+  Sparrow::Consumer * pConsumer;
+  Sparrow::Consumer2003 * pConsumer2003;
   Can::EventHandler * pCanEventHandler;
-  Sparrow::Consumer2003 * consumer2003;
-
+  Sparrow::Connection * pConnection;
+  Sparrow::Connection2003 * pConnection2003;
 
   Service();
 };
@@ -137,25 +131,40 @@ struct Service
 Service::Service() :
   reactorTask(),
   pOdometryImpl(new Miro::OdometryImpl(NULL))
-  //pConsumer(new FaulMotor::Consumer(pOdometryImpl)),
-  //pTimerEventHandler(new FaulMotor::TimerEventHandler(connection)),
-  //consumer2003(new Sparrow::Consumer2003()),//connection2003, NULL, NULL, NULL, pConsumer, NULL)),
-  //pCanEventHandler(new Can::EventHandler(consumer2003)),
-  //connection2003(new Sparrow::Connection2003(reactorTask.reactor(),
- // 										pCanEventHandler,
-//										consumer2003)),
-
-  //connection(reactorTask.reactor(), pConsumer,
-
-  //(Sparrow::Parameters::instance()->sparrow2003)?connection2003:NULL)
 {
-   consumer2003 = new Sparrow::Consumer2003();
-   pCanEventHandler = new Can::EventHandler(consumer2003, Sparrow::Parameters::instance());
-   connection2003 = new Sparrow::Connection2003(reactorTask.reactor(), pCanEventHandler, consumer2003);
-   pFaulhaber =  new FaulhaberHardware(reactorTask.reactor(), pOdometryImpl, (Sparrow::Parameters::instance()->sparrow2003)?connection2003:NULL);
+  if (Sparrow::Parameters::instance()->sparrow2003) {
+    pConsumer2003 = new Sparrow::Consumer2003();
+    pCanEventHandler = new Can::EventHandler(pConsumer2003, 
+					    Sparrow::Parameters::instance());
+    pConnection2003 = new Sparrow::Connection2003(reactorTask.reactor(), 
+						pCanEventHandler, 
+						pConsumer2003);
+    pFaulhaber =  new FaulhaberHardware(reactorTask.reactor(), 
+					pOdometryImpl,
+					pConnection2003);
 
 
-    consumer2003->registerInterfaces(connection2003, NULL, NULL, NULL, pFaulhaber->pConsumer, NULL);
+    pConsumer2003->registerInterfaces(pConnection2003, NULL, NULL, NULL,
+				      pFaulhaber->pConsumer, NULL);
+  }
+  else {
+   pConsumer = new Sparrow::Consumer();
+   pCanEventHandler = new Can::EventHandler(pConsumer, 
+					    Sparrow::Parameters::instance());
+   pConnection = new Sparrow::Connection(reactorTask.reactor(),
+					pCanEventHandler,
+					pConsumer);
+
+   pFaulhaber = new FaulhaberHardware(reactorTask.reactor(), 
+				      pOdometryImpl, NULL),
+
+
+   pConsumer->registerInterfaces(pConnection,
+				 NULL,
+				 NULL,
+				 NULL,
+				 NULL);
+  }
 }
 
 
