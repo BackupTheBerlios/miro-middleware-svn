@@ -28,24 +28,40 @@ namespace FaulMotor
   // forward declarations
   class Parameters;
 
-  /**
-   * Class for using the FaulMotor robot
-   */
+  //! Class integrating data from the faulhaber controller
   class Consumer : public Miro::DevConsumer
   {
+    //--------------------------------------------------------------------------
+    // private types
+    //--------------------------------------------------------------------------
     typedef Miro::DevConsumer Super;
 
   public:
+    //--------------------------------------------------------------------------
+    // public methods
+    //--------------------------------------------------------------------------
     Consumer(Miro::OdometryImpl * _pOdometry = NULL);
-    ~Consumer();
+    virtual ~Consumer();
 
+    //! inherited interface
     virtual void handleMessage(const Miro::DevMessage * _message);
 
   protected:
+    //--------------------------------------------------------------------------
+    // protected methods
+    //--------------------------------------------------------------------------
+    void integrateBinary();
+    void integrateAscii();
+    void odometryUpdate(double _dL, double _dR, double _deltaT);
+
+    //--------------------------------------------------------------------------
+    // protected data
+    //--------------------------------------------------------------------------
     FaulMotor::Parameters * params_;
     Miro::OdometryImpl * pOdometry_;
     Miro::MotionStatusIDL status_;
 
+    //! Counter to skip the first initializing odometry ticks.
     int init_;
 
     double xPos_;
@@ -57,8 +73,6 @@ namespace FaulMotor
     double prevTicksR_;
     int clockL_;
     int clockR_;
-    int counterL;
-    int counterR;
     
     ACE_Time_Value timeStampL_;
     ACE_Time_Value timeStampR_;
@@ -67,8 +81,12 @@ namespace FaulMotor
 
     double wheelBase_;
     int oddWheel_;
-    double deltaT_;
 
+    //--------------------------------------------------------------------------
+    // protected constants
+    //--------------------------------------------------------------------------
+
+    // the pace of the faulhaber controller
     static double const CLOCK_2_SEC;
   };
 }

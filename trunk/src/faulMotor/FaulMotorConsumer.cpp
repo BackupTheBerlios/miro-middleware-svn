@@ -38,7 +38,7 @@ namespace FaulMotor
 
   std::ofstream ticksFile;
 
-  bool const FAUL_LOGGING = true;
+  bool const FAUL_LOGGING = false;
 
   double const Consumer::CLOCK_2_SEC = 0.00933;
 
@@ -55,8 +55,6 @@ namespace FaulMotor
     ticksR_(0.),
     prevTicksL_(0.),
     prevTicksR_(0.),
-    counterL(49),
-    counterR(49),
     wheelBase_(params_->motion.wheelBase),
     oddWheel_(0)
   {
@@ -114,164 +112,76 @@ namespace FaulMotor
       ++oddWheel_; 
       oddWheel_ &= 1;
 
-      if (!oddWheel_) {
+      if ((params_->odometryPolling && !oddWheel_) || // new odometry mode
+
+	  (prevTimeStampL_+ ACE_Time_Value(0, 10000) < timeStampR_ && // old odo
+	   prevTimeStampR_+ ACE_Time_Value(0, 10000) < timeStampL_ &&
+	   prevTimeStampL_ != timeStampL_ &&
+	   prevTimeStampR_ != timeStampR_)) {
+
 	if (init_ == 0) {
-	  double deltaTicksL = ticksL_ - prevTicksL_;
-	  double deltaTicksR = ticksR_ - prevTicksR_;
+	  if (params_->odometryPolling)
+	    integrateBinary();
+	  else
+	    integrateAscii();
 
-	  // sanity checking for clock ticks
-	  // 
-	  // the faulhaber controller can only count to 9, regarding clock ticks
-	  // so we have to make sure, we didn't miss 1/10 of a second...
-
-	  if (FAUL_LOGGING && clockL_ == 0)
-	    ticksFile << "left  ticks == 0=" << std::endl;
-	  if (FAUL_LOGGING && clockR_ == 0)
-	    ticksFile << "right ticks == 0=" << std::endl;
-
-	  bool overflow = false;
-	  ACE_Time_Value jitter(0, 50000); // 1/20 sec
-	  ACE_Time_Value deltaTimeL = timeStampL_ - prevTimeStampL_;
-
-	  ACE_Time_Value t;
-	  t.set((double)clockL_ * CLOCK_2_SEC);
-	  while (deltaTimeL > t + jitter) {
-	    overflow = true;
-	    clockL_ += 9;
-	    t.set((double)clockL_ * CLOCK_2_SEC);
-	  }
-	  ACE_Time_Value deltaTimeR = timeStampR_ - prevTimeStampR_;
-	  t.set((double)clockR_ * CLOCK_2_SEC);
-	  while (deltaTimeR > t + jitter) {
-	    overflow = true;
-	    clockR_ += 9;
-	    t.set((double)clockR_ * CLOCK_2_SEC);
-	  }
-
-
-	  // lowlevel logging hook
-	  if (FAUL_LOGGING) {
-	    ticksFile << timeStampL_ << " " 
-		      << (timeStampL_ - prevTimeStampL_) << " " 
-		      << clockL_ << " " 
-		      << ticksL_ << " " << deltaTicksL << "\t"
-		      << timeStampR_ << " " 
-		      << (timeStampR_ - prevTimeStampR_) << " " 
-		      << clockR_ << " " 
-		      << ticksR_ << " " << deltaTicksR;
-
-	    if (overflow)
-	      ticksFile << "   !!!!!!!!!!!";
-
-	    if (abs(clockL_ - clockR_) > 5)
-	      ticksFile << "   ???????????";
-
-	    ticksFile << std::endl;
-	  }
-
-
-	  // okay, lets do business
-	  double dL = -(ticksL_ - prevTicksL_) / params_->leftTicksPerMM;
-	  double dR = (ticksR_ - prevTicksR_) / params_->rightTicksPerMM;
-
-	  // correct clock jitter from both wheels
-	  double mean = ((double)(clockL_ + clockR_)) / 2.;
-	  deltaT_ = mean * CLOCK_2_SEC;
-
-	  if (clockL_ != clockR_) {
-
-	    dL *= mean/((double)clockL_);
-	    dR *= mean/((double)clockR_);
-	  }
-
-	  // calculate new orientation
-	  double turn = (dR - dL) / wheelBase_;
-	  status_.position.heading += turn;
-
-	  Miro::Angle::normalize(status_.position.heading);
-
-	  double dist = (dL + dR) / 2.;
-	  xPos_ += cos(status_.position.heading) * dist;
-	  yPos_ += sin(status_.position.heading) * dist;
-
-
-	  // compose odometry message
-	  Miro::timeA2C(timeStampR_, status_.time);
-
-	  if (!Sparrow::Parameters::instance()->goalie) {
-	    status_.position.point.x = (long) xPos_;
-	    status_.position.point.y = (long) yPos_;
-	  }
-	  else {
-	    if (Sparrow::Parameters::instance()->sparrow2003){
-               status_.position.point.x = (long) -yPos_;
-	       status_.position.point.y = (long) xPos_;
+	  // statistical evaluation of odometry timing
+	  if (false) {
+	    ACE_Time_Value dTR = timeStampR_ - prevTimeStampR_;
+	    deltaTR[counter] = (double)dTR.sec() + (double)dTR.usec() / 1000000.;
+	    
+	    ACE_Time_Value dTL = timeStampL_ - prevTimeStampL_;
+	    deltaTL[counter] = (double)dTL.sec() + (double)dTL.usec()/ 1000000.;
+	    
+	    ACE_Time_Value dTLR = (timeStampL_ > timeStampR_)?
+	      timeStampL_ - timeStampR_ :
+	      timeStampR_ - timeStampL_;
+	    deltaTLR[counter] = (double)dTLR.sec() + (double)dTLR.usec()/ 1000000.;
+	    
+	    cout << "TimerOdo dTR: " << dTR << " \tdTL: " << dTL << " \tdTLR: " << dTLR << endl;
+	    
+	    int i;
+	    if (counter ==  0) {
+	      double meanL = deltaTL[0];
+	      double meanR = deltaTR[0];
+	      double meanLR = deltaTLR[0];
+	      
+	      for ( i = 49; i > 0; --i) {
+		meanL += deltaTL[i];
+		meanR += deltaTR[i];
+		meanLR += deltaTLR[i];
+	      }
+	      
+	      meanL /= 50.;
+	      meanR /= 50.;
+	      meanLR /= 50.;
+	      
+	      double varL = 0.;
+	      double varR = 0.;
+	      double varLR = 0.;
+	      
+	      for ( i = 49; i >= 0; --i) {
+		varL += (deltaTL[i] - meanL) * (deltaTL[i] - meanL);
+		varR += (deltaTR[i] - meanR) * (deltaTR[i] - meanR);
+		varLR += (deltaTLR[i] - meanLR) * (deltaTLR[i] - meanLR);
+	      }
+	      
+	      varL /= 49.;
+	      varR /= 49.;
+	      varLR /= 49.;
+	      
+	      cout << "TimerOdo L:  mean=" << meanL << "sec \t var=" <<sqrt(varL)<< endl;
+	      cout << "TimerOdo R:  mean=" << meanR << "sec \t var=" <<sqrt(varR)<< endl;
+	      cout << "TimerOdo LR: mean=" << meanLR << "sec \t var=" <<sqrt(varLR)<< endl;
+	      
+	      counter = 50;
 	    }
-	    else{
-	       status_.position.point.x = (long) yPos_;
-	       status_.position.point.y = (long) -xPos_;
-	    }
-	  }
-	  status_.velocity.translation = (long)(dist / deltaT_);
-	  status_.velocity.rotation = turn / deltaT_;
-
-	  //cout << status_.time.sec<< "  " << status_.time.usec <<endl; //(dL+dR) / 2*dtime<<  endl;
-
-// berechnung
-if (false) {
-	  ACE_Time_Value dTR = timeStampR_ - prevTimeStampR_;
-	  deltaTR[counter] = (double)dTR.sec() + (double)dTR.usec() / 1000000.;
-
-	  ACE_Time_Value dTL = timeStampL_ - prevTimeStampL_;
-	  deltaTL[counter] = (double)dTL.sec() + (double)dTL.usec()/ 1000000.;
-
-	  ACE_Time_Value dTLR = (timeStampL_ > timeStampR_)?
-		                timeStampL_ - timeStampR_ :
-				timeStampR_ - timeStampL_;
-	  deltaTLR[counter] = (double)dTLR.sec() + (double)dTLR.usec()/ 1000000.;
-
-	  cout << "TimerOdo dTR: " << dTR << " \tdTL: " << dTL << " \tdTLR: " << dTLR << endl;
-
-	  int i;
-	  if (counter ==  0) {
-	    double meanL = deltaTL[0];
-	    double meanR = deltaTR[0];
-	    double meanLR = deltaTLR[0];
-
-	    for ( i = 49; i > 0; --i) {
-	      meanL += deltaTL[i];
-	      meanR += deltaTR[i];
-	      meanLR += deltaTLR[i];
-	    }
-
-	    meanL /= 50.;
-	    meanR /= 50.;
-	    meanLR /= 50.;
-
-	    double varL = 0.;
-	    double varR = 0.;
-	    double varLR = 0.;
-
-	    for ( i = 49; i >= 0; --i) {
-	      varL += (deltaTL[i] - meanL) * (deltaTL[i] - meanL);
-	      varR += (deltaTR[i] - meanR) * (deltaTR[i] - meanR);
-	      varLR += (deltaTLR[i] - meanLR) * (deltaTLR[i] - meanLR);
-	    }
-
-	    varL /= 49.;
-	    varR /= 49.;
-	    varLR /= 49.;
-
-	    cout << "TimerOdo L:  mean=" << meanL << "sec \t var=" <<sqrt(varL)<< endl;
-	    cout << "TimerOdo R:  mean=" << meanR << "sec \t var=" <<sqrt(varR)<< endl;
-	    cout << "TimerOdo LR: mean=" << meanLR << "sec \t var=" <<sqrt(varLR)<< endl;
-
-	    counter = 50;
+	    
+	    
+	    --counter;
 	  }
 
 
-	  --counter;
-}
 	  // save current values for next iteration
 	  prevTimeStampL_ = timeStampL_;
 	  prevTimeStampR_ = timeStampR_;
@@ -292,5 +202,128 @@ if (false) {
 	}
       }
     }
+  }
+
+  void
+  Consumer::integrateBinary() 
+  {
+    double deltaTicksL = ticksL_ - prevTicksL_;
+    double deltaTicksR = ticksR_ - prevTicksR_;
+
+    // sanity checking for clock ticks
+    // 
+    // the faulhaber controller can only count to 9, regarding clock ticks
+    // so we have to make sure, we didn't miss 1/10 of a second...
+    
+    if (FAUL_LOGGING && clockL_ == 0)
+      ticksFile << "left  ticks == 0" << std::endl;
+    if (FAUL_LOGGING && clockR_ == 0)
+      ticksFile << "right ticks == 0" << std::endl;
+    
+    bool overflow = false;
+    ACE_Time_Value jitter(0, 50000); // 1/20 sec
+    ACE_Time_Value deltaTimeL = timeStampL_ - prevTimeStampL_;
+    
+    if (abs(clockL_ - clockR_) > 4) {
+      ACE_Time_Value t;
+      t.set((double)clockL_ * CLOCK_2_SEC);
+      while (deltaTimeL > t + jitter) {
+	overflow = true;
+	clockL_ += 9;
+	t.set((double)clockL_ * CLOCK_2_SEC);
+      }
+      ACE_Time_Value deltaTimeR = timeStampR_ - prevTimeStampR_;
+      t.set((double)clockR_ * CLOCK_2_SEC);
+      while (deltaTimeR > t + jitter) {
+	overflow = true;
+	clockR_ += 9;
+	t.set((double)clockR_ * CLOCK_2_SEC);
+      }
+    }
+        
+    // lowlevel logging hook
+    if (FAUL_LOGGING) {
+      ticksFile << timeStampL_ << " " 
+		<< (timeStampL_ - prevTimeStampL_) << " " 
+		<< clockL_ << " " 
+		<< ticksL_ << " " << deltaTicksL << "\t"
+		<< timeStampR_ << " " 
+		<< (timeStampR_ - prevTimeStampR_) << " " 
+		<< clockR_ << " " 
+		<< ticksR_ << " " << deltaTicksR;
+      
+      if (overflow)
+	ticksFile << "   !!!!!!!!!!!";
+      
+      if (abs(clockL_ - clockR_) > 5)
+	ticksFile << "   ???????????";
+      
+      ticksFile << std::endl;
+    }
+
+    
+    // okay, lets do business
+    double dL = -(ticksL_ - prevTicksL_) / params_->leftTicksPerMM;
+    double dR = (ticksR_ - prevTicksR_) / params_->rightTicksPerMM;
+    
+    // correct clock jitter from both wheels
+    double mean = ((double)(clockL_ + clockR_)) / 2.;
+    double deltaT = mean * CLOCK_2_SEC;
+    
+    if (clockL_ != clockR_) {
+      
+      dL *= mean/((double)clockL_);
+      dR *= mean/((double)clockR_);
+    }
+
+    odometryUpdate(dL, dR, deltaT);
+  }
+
+  void
+  Consumer::integrateAscii() 
+  {
+    double dL = -(ticksL_ - prevTicksL_) / params_->leftTicksPerMM;
+    double dR = (ticksR_ - prevTicksR_) / params_->rightTicksPerMM;
+    ACE_Time_Value timeDelta = timeStampR_ - prevTimeStampR_;
+    double deltaT = (double)timeDelta.sec() + (double)timeDelta.usec() / 1000000.;
+
+    odometryUpdate(dL, dR, deltaT);
+  }
+
+  void
+  Consumer::odometryUpdate(double _dL, double _dR, double _deltaT)
+  {
+    // calculate new orientation
+    double turn = (_dR - _dL) / wheelBase_;
+    status_.position.heading += turn;
+    
+    Miro::Angle::normalize(status_.position.heading);
+    
+    double dist = (_dL + _dR) / 2.;
+    xPos_ += cos(status_.position.heading) * dist;
+    yPos_ += sin(status_.position.heading) * dist;
+    
+    
+    // compose odometry message
+    Miro::timeA2C(timeStampR_, status_.time);
+    
+    if (!Sparrow::Parameters::instance()->goalie) {
+      status_.position.point.x = (long) xPos_;
+      status_.position.point.y = (long) yPos_;
+    }
+    else {
+      if (Sparrow::Parameters::instance()->sparrow2003){
+	status_.position.point.x = (long) -yPos_;
+	status_.position.point.y = (long) xPos_;
+      }
+      else{
+	status_.position.point.x = (long) yPos_;
+	status_.position.point.y = (long) -xPos_;
+      }
+    }
+    status_.velocity.translation = (long)(dist / _deltaT);
+    status_.velocity.rotation = turn / _deltaT;
+    
+    //cout << status_.time.sec<< "  " << status_.time.usec <<endl; //(dL+dR) / 2*dtime<<  endl;
   }
 }
