@@ -152,11 +152,11 @@ namespace Sparrow
 
   // port messages
   /* kicker messages sparrows 2003 */
-    /* messages to kicker device */
+    /* messages from kicker device */
   static const unsigned long CAN_R_KICK_RESET_2003  = 0x9F0F0301;   // sent once after device reset
   static const unsigned long CAN_R_KICK_STATUS_2003 = 0x9D0F0301;   // error or status report from device
   static const unsigned long CAN_R_KICK_ALIVE_2003  = 0x9e0f0301;
-    /* messages from kicker device */
+    /* messages to kicker device */
   static const unsigned long CAN_KICK_2003          = 0x81010103;  // control kicker
   static const unsigned long CAN_KICK_RESET_2003    = 0x8d010103;   // enforce device reset
   static const unsigned long CAN_KICK_QUERY_2003    = 0x8e010103;   // query device version/status
@@ -189,16 +189,6 @@ namespace Sparrow
   static const unsigned long CAN_R_IR_ALIVE2_2003    = 0x9e0f0601;
   static const unsigned long CAN_IR_SET_FREQ2_2003    = 0x02010106;
 
-  // omnicam-pan messages
-  /* Messages from omnicam can-serial bridge */
-  static const unsigned long CAN_R_OMNIPAN_RESET = 0x9F0F0701;   // sent once after device reset
-  static const unsigned long CAN_R_OMNIPAN_ALIVE = 0x9E0F0701;   // alive message from device
-  static const unsigned long CAN_R_OMNIPAN_STATUS = 0x9D0F0701;  // error or status report from device
-  static const unsigned long CAN_R_OMNIPAN_DATA  = 0x910F0701;   // data from motor controller 4 host
-  /* messages to omnicam can-serial bridge */
-  static const unsigned long CAN_OMNIPAN_RESET   = 0x8d010107;   // enforce device reset
-  static const unsigned long CAN_OMNIPAN_QUERY   = 0x8e010107;   // query device version/status
-  static const unsigned long CAN_OMNIPAN_DATA    = 0x81010107;   // send data to motor controller
 
 }
 #endif

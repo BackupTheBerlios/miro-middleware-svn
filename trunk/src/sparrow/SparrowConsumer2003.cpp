@@ -247,6 +247,17 @@ namespace Sparrow
       break;
     }
 
+    /*******************************
+    *   Reboot Messages            *
+    *******************************/
+
+    case CAN_R_KICK_RESET_2003:
+       MIRO_LOG_OSTR(LL_WARNING, "Kicker board rebooted (FW ver.  " << message.byteData(0) << ")" );
+       break;
+
+    
+
+
 	// Odometry messages...
 
     case CAN_MOTOR_TICKS_LEFT_2003: {
@@ -358,7 +369,7 @@ namespace Sparrow
     }
       
     case CAN_R_PAN_RESET_2005:
-      MIRO_LOG(LL_NOTICE, "SparrowConsumer2003: Received Pan2005 reset message.");
+      MIRO_LOG_OSTR(LL_WARNING, "SparrowConsumer2003: Pan2005 Controller rebooted (FW ver. " << message.byteData(0) << ")" );
       // register timer handler for pan calibration query
       connection_->deferredQueryPanTicksPerDegree(ACE_Time_Value(5));
       break;
@@ -392,6 +403,12 @@ namespace Sparrow
 	  break;
 	case 0x08:	//ERR_NO_RESPONSE = 0x08;      // Debug Messages
 	  err = "Pan2005 reports motorcontroller IO timeout";
+	  break;
+	case 0x09:
+          err = "Pan2005 serial data error";
+  	  break;
+	case 0x0A:
+	  err = "Pan2005 severe fault";
 	  break;
 	default:
 	  err = "Pan2005 unknown pan error.";
