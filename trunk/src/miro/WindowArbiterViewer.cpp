@@ -14,7 +14,7 @@ namespace Miro {
     
     startTimer(500);
     
-    resize(250,250);
+    resize(221,221);
     pixmap_.resize(201, 201);
   }
 
@@ -36,13 +36,20 @@ namespace Miro {
 	if(pointValue==0)
 	  color.setRgb(255, 0, 0);
 	else	      
-	  color.setRgb(pointValue, 255 - pointValue, pointValue);
+	  color.setRgb(255 - pointValue, pointValue, 0);
 		
 	painter_.setPen(color);
 	painter_.drawPoint(100 + right, 100 - left);
 
       }
     }
+
+    painter_.setPen(Qt::black);
+    painter_.drawRect(0, 0, 201, 201);
+    painter_.moveTo(0, 100);
+    painter_.lineTo(200, 100);
+    painter_.moveTo(100, 0);
+    painter_.lineTo(100, 200);
 	
     painter_.end();
     repaint(FALSE);

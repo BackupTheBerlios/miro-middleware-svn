@@ -138,9 +138,12 @@ namespace Miro
     newVelocity = std::complex<double>(std::max(std::min(20., newVelocity.real()),-20.), std::max(std::min(20.,newVelocity.imag()),-20.));
     dynWindow_.setNewDynamicWindow(newVelocity);
     
+    // print velocity for debugging
+    cout << "\nVelocity: left: " << newVelocity.real() << " - right: " << newVelocity.imag() << endl;
+
     // Set motion
     velocity.translation = 10 * ((int)newVelocity.real() + (int)newVelocity.imag()) / 2;
-    velocity.rotation = 10 * ((int)newVelocity.real() - (int)newVelocity.imag()) / RADSTAND;
+    velocity.rotation = 10 * ((int)newVelocity.imag() - (int)newVelocity.real()) / RADSTAND;
     if (velocity.translation != currentVelocity_.translation || velocity.rotation != currentVelocity_.rotation) {
       pMotion_->setVelocity(velocity);
       currentVelocity_ = velocity;

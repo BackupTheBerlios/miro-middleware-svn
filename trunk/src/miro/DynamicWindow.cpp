@@ -59,8 +59,8 @@ namespace Miro
   Vector2d DynamicWindow::calcNewVelocity() {
 
     // local variables and objects
-    const double ANGLE_STEP = 5.;
-    const int STEP_SIZE = 3;
+    const double ANGLE_STEP = 2.;
+    const int STEP_SIZE = 2;
 
     Vector2d bestLineVelocity(0, 0), bestVelocity(0, 0);
 
@@ -117,11 +117,13 @@ namespace Miro
 		
     const double WHEEL_DISTANCE  = 390.;  // in mm
     // const double BREAK_ACCEL = 2000.;     // in mm/sec²
-    const double SCALE = 0.5;
+    const double SCALE_ANGLE = 0.5;
+    const double SCALE_POL_DIST = 1.;
+    const double MAX_POL_DIST = 500.; // maximum polgon distance = 50cm
     const int RES = 5;
     int hack;
 
-    double offset, angle, pointValue;
+    double offset, angle, pointValue, maxPointValue = 0.;
     
     for(int left = minLeft_; left <= maxLeft_; left+=RES) {
       for(int right = minRight_; right <= maxRight_; right+=RES ) {
@@ -137,9 +139,9 @@ namespace Miro
 	offset = (WHEEL_DISTANCE / 2.) * ((fLeft + (fRight + hack)) / (fLeft - (fRight + hack)));
 	angle = (180. * (fLeft - (fRight + hack))) / (390. * M_PI);
 	
-	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), angle * SCALE);
-	pointValue = getPolygonDistance(_robot, _obstacle);
-	if(pointValue == 0.) {
+	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), angle * SCALE_ANGLE);
+	pointValue = min(MAX_POL_DIST, getPolygonDistance(_robot, _obstacle));
+	if(pointValue < 10.) {
 	  for(int x = 0; x < RES; x++) {
 	    for(int y = 0; y < RES; y++) {
 	      if ((left+100+x < VEL_SPACE_LEFT) && (right+100+y < VEL_SPACE_RIGHT)) {
@@ -153,15 +155,18 @@ namespace Miro
 	    for(int y = 0; y < RES; y++) {
 	      if ((left+100+x < VEL_SPACE_LEFT) && (right+100+y < VEL_SPACE_RIGHT)) {
 		velocitySpace_[left+100+x][right+100+y] =
-		  min(255, (int)(velocitySpace_[left+100+x][right+100+y] * (pointValue / 255)));
+		  min(255, (int)(velocitySpace_[left+100+x][right+100+y] * (pointValue / MAX_POL_DIST)));
 	      }
 	    }
 	  }
 	}
-	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -angle * SCALE);
-      }
-      
+	if(maxPointValue < pointValue)
+	  maxPointValue = pointValue;
+	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -angle * SCALE_ANGLE);
+      }  
     }
+    cout << "MAX POINT VALUE :::: " << maxPointValue << endl;
+    
   }
   
   
@@ -175,19 +180,19 @@ namespace Miro
     for(int left = minLeft_; left <= maxLeft_; left++) {
       for(int right = minRight_; right <= maxRight_; right++) {
 	
-	// calculate translation and rotation (-294..294)
+	// calculate translation (-100..100) and rotation (-294..294)
 	trans = (left + right) / 2.;
 	rot = (left - right) * 180. / (WHEEL_DISTANCE * M_PI);
 	
 	// calculate the difference between the preferred direction and
-	// and the actual direction and calculate the weight betwwen 0 and 100
+	// and the actual direction and deliver the weight betwwen 0 and 100
 	rotDist = 100. * (1. - ((fabs(_prefDir - rot)) / (fabs(_prefDir) + 294.)));
 	
-	// positive translation between 0 and 100
-	posTrans = max(0., trans);
+	// positive translation weight (0..100)
+	posTrans = (trans + 100.) / 2.;
 	
 	// set the corresponding value in the velocitySpace
-	velocitySpace_[left+100][right+100] = (int)(0.5 * rotDist + 0.5 * trans);
+	velocitySpace_[left+100][right+100] = (int)(0.0 * rotDist + 2.0 * posTrans);
 	
       }
     }	
