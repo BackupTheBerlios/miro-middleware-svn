@@ -85,15 +85,30 @@ main(int argc, char *argv[])
     try {
       service.reserve(params.size());
       for (unsigned i = 0; i < params.size(); ++i) {
-	service.push_back(new Video::Service(server, config, &params[i]));
+	try {
+	  service.push_back(new Video::Service(server, config, &params[i]));
+	}
+	catch (Miro::Exception const& e) {
+	  MIRO_LOG_OSTR(LL_ERROR, 
+			"Failed to set up video service " << interfaces[i] << ":\n" << e);
+	}
+	catch (CORBA::Exception const& e) {
+	  MIRO_LOG_OSTR(LL_ERROR, 
+			"CORBA exception while initializing video service " << interfaces[i] << ":\n" << e);
+	}
       }
 
-      MIRO_LOG(LL_NOTICE, "Loop forever handling events.");
-      server.run(3);
-      MIRO_LOG(LL_NOTICE, "Video::Service ended, exiting.");
+      if (service.size() > 0) {
+	MIRO_LOG(LL_NOTICE, "Loop forever handling events.");
+	server.run(3);
+	MIRO_LOG(LL_NOTICE, "Video::Service ended, exiting.");
 
-      for (unsigned i = 0; i < service.size(); ++i) {
-	delete service[i];
+	for (unsigned i = 0; i < service.size(); ++i) {
+	  delete service[i];
+	}
+      }
+      else {
+	MIRO_LOG(LL_CRITICAL, "No video service successfully initialized.");
       }
     }
     catch (const Miro::EOutOfBounds& e) {
