@@ -65,10 +65,8 @@ namespace Canon
       throw(Miro::EDevIO, Miro::ETimeOut);
     virtual void setIrisAssignment(short factor)
       throw(Miro::EDevIO, Miro::ETimeOut);
-    virtual void setAGCGain(short value)
-      throw(Miro::EDevIO, Miro::ETimeOut);
-    virtual void setShutterSpeed(short value)
-      throw(Miro::EDevIO, Miro::ETimeOut);
+    void setAGCGain(short value);
+    void setShutterSpeed(short value);
 
     Answer * getAnswer();
     void checkAnswer() throw(Miro::EDevIO,Miro::EOutOfBounds, Miro::ETimeOut);

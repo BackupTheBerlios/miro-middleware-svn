@@ -218,6 +218,8 @@ void cameraMenu(Service& service)
 	 << "c - set AE Lock ON" << endl
 	 << "d - set AE Value" << endl
 	 << "e - set Iris Value" << endl
+         << "f - set Shutter Speed" << endl
+         << "g - set AGC Gain " << endl
 	 << endl << "x - back" << endl;
     cin >> str;
     c = str[0];
@@ -363,6 +365,25 @@ void cameraMenu(Service& service)
 	  service.canonCamera.setIrisAssignment(irisValue);
 	  break;
 	}
+      case 'f':
+        {
+          int shutterValue;
+          cout << "New Shutter Speed(1-25):" << endl;
+          cin >> shutterValue;
+
+          service.canonCamera.setShutterSpeed(shutterValue);
+          break;
+        }
+      case 'g':
+        {
+          int gainValue;
+          cout << "New AGC Gain-value(0-155):" << endl;
+          cin >> gainValue;
+
+          service.canonCamera.setAGCGain(gainValue);
+          break;
+        }
+
       case 'X':
       case 'x' : loop=false;break;
       default: cout << "gibts doch gar net!!!" << endl;
