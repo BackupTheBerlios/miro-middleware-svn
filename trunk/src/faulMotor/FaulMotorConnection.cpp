@@ -75,36 +75,6 @@ namespace FaulMotor
   //----------- commands ----------- //
 
   void
-  Connection::setSpeed(short _speed)
-  {
-    Miro::Guard guard(mutex_);
-
-    if (disabled_)
-      enable();
-
-       
-	  
-    char speedMessageL[20];
-    char speedMessageR[20];
-
-    if (_speed < 10) {       // zum bremsen grosse beschl.
-      char const * const speedMessage = "ac20\r\n\0";
-      leftWheel_.writeMessage(speedMessage);
-      rightWheel_.writeMessage(speedMessage);
-    }
-
-    int speed = (short) (_speed * params_->speedConvFactor);//* 112;
-    double accL, accR;
-  
-    sprintf(speedMessageL, "v%d\r\n", -speed); // build speed message
-    sprintf(speedMessageR, "v%d\r\n", speed); // build speed message
-    leftWheel_.writeMessage(speedMessageL);
-    rightWheel_.writeMessage(speedMessageR);             // send it
-    prevSpeedL = speed;
-    prevSpeedR = speed;
-  }
-
-  void
   Connection::setSpeed(short _speedL, short _speedR)
   {
     Miro::Guard guard(mutex_);
@@ -168,21 +138,19 @@ namespace FaulMotor
 
     acctestL = abs((short)accL);
     acctestR = abs((short)accR);
-    cout << "maxPosAcc: " << params_-> maxPosAccel <<" AccR: " << acctestR ;
-    cout << " AccL: " << acctestL << endl;
-    if (abs(acctestL-prevAccL)>2){			//zur datenverringerung
+//    cout << "maxPosAcc: " << params_-> maxPosAccel <<" AccR: " << acctestR ;
+//    cout << " AccL: " << acctestL << endl;
+    if (true || abs(acctestL-prevAccL)>2){			//zur datenverringerung
     	sprintf(speedMessageL, "ac%d\r\n", acctestL); // build speed message
 	leftWheel_.writeMessage(speedMessageL);
 	prevAccL=acctestL;
     }
-    if (abs(acctestR-prevAccR)>2){
+    if (true || abs(acctestR-prevAccR)>2){
     	sprintf(speedMessageR, "ac%d\r\n", acctestR); // build speed message
 	rightWheel_.writeMessage(speedMessageR);
     	prevAccR=acctestR;
     }
 
-
-   // ACE_OS::sleep(ACE_Time_Value(2));
     sprintf(speedMessageL, "v%d\r\n", speedL); // build speed message
     sprintf(speedMessageR, "v%d\r\n", speedR); // build speed message
     leftWheel_.writeMessage(speedMessageL);
