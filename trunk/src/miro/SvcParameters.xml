@@ -132,14 +132,24 @@
       <config_parameter name="rangeMin" type="ACE_Time_Value" measure="sec" default="0, 20000" />
       <config_parameter name="rangeMax" type="ACE_Time_Value" measure="sec" default="0, 20000" />
     </config_item>
-    <config_item name="Pan" final="false" parent="Config">
+    <config_item name="Pan" final="true" parent="Config">
       <config_parameter name="rangeMin" type="angle" measure="&deg;" default="0" />
       <config_parameter name="rangeMax" type="angle" measure="&deg;" default="0" />
     </config_item>
-    <config_item name="Tilt" final="false" parent="Config">
+    <config_item name="Tilt" final="true" parent="Config">
       <config_parameter name="rangeMin" type="angle" measure="&deg;" default="0" />
       <config_parameter name="rangeMax" type="angle" measure="&deg;" default="0" />
     </config_item>
+    <config_item name="Camera::" parent="Config" final="true">
+      <config_parameter name="zoom" type="Miro::ZoomParameters"/>
+      <config_parameter name="focus" type="Miro::FocusParameters"/>
+      <config_parameter name="shutter" type="Miro::ShutterParameters"/>
+    </config_item>
+    <config_item name="PanTilt" final="true" parent="Config">
+      <config_parameter name="pan" type="Miro::PanParameters"/>
+      <config_parameter name="tilt" type="Miro::TiltParameters"/>
+    </config_item>
+    
   </config_group>
 
   <config_group name="Notification">
