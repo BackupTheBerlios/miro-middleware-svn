@@ -32,6 +32,8 @@ namespace FaulMotor
   using namespace FaulTty;
   using Miro::Guard;
 
+  unsigned int Connection::gotTicks_ = 2;
+
   //------------------------//
   //----- constructors -----//
   //------------------------//
@@ -50,8 +52,6 @@ namespace FaulMotor
     prevSpeedR(0)
   { 
     DBG(cout << "Constructing FaulMotorConnection." << endl);
-
-    gotTicks_ = 2;
 
     char const * const accMessage = "ac50\r\n\0"; // build acceleration packet
     leftWheel_.writeMessage(accMessage);
