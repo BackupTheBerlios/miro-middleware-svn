@@ -2,44 +2,31 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-//
-// (c) 1999,2000
+// (c) 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
-//
-// Authors:
-//   Stefan Enderle,
-//   Stefan Sablatnoeg,
-//   Hans Utz
 //
 // $Id$
 //
 //////////////////////////////////////////////////////////////////////////////
 
 #include "sparrow/SparrowConnection2003.h"
-#include "sparrow/Parameters.h"
 #include "sparrow/SparrowConsumer2003.h"
+#include "sparrow/Parameters.h"
 
 #include "can/CanEventHandler.h"
 
 #include "miro/ReactorTask.h"
-#include "miro/IO.h"
-#include "miro/Utils.h"
-
+#include "miro/Configuration.h"
 #include "miro/TimeHelper.h"
 #include "miro/Angle.h"
+#include "miro/Log.h"
+#include "miro/IO.h"
 
 #include <iostream>
 #include <string>
 
 using namespace Miro;
-
-using std::cout;
-using std::cerr;
-using std::endl;
-using std::flush;
-using std::cin;
+using namespace std;
 
 double normalizeAngle(double alpha)
 {
@@ -74,23 +61,26 @@ Service::Service() :
 
 int main(int argc, char * argv[])
 {
+  Miro::Log::init(argc, argv);
+  Miro::Configuration::init(argc, argv);
+
   // Parameters to be passed to the services
+  Miro::RobotParameters * robotParams = Miro::RobotParameters::instance();
   Sparrow::Parameters * params = Sparrow::Parameters::instance();
 
   // Config file processing
-  Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
-  config->setSection("Sparrow99");
-  config->getParameters("SparrowBoard", *params);
-  delete config;
+  Miro::ConfigDocument * config = Miro::Configuration::document();
+  config->setSection("Robot");
+  config->getParameters("Miro::RobotParameters", *robotParams);
+  config->setSection("Sparrow");
+  config->getParameters("Sparrow::Parameters", *params);
 
-#ifdef DEBUG
-    cout << "  sparrow paramters:" << endl <<* params << endl;
-#endif
+  MIRO_LOG_OSTR(LL_NOTICE,  "  sparrow paramters:\n" <<* params);
 
   // Initialize server daemon.
   Service service;
 
-  cout << "initialized" << endl;
+  MIRO_LOG(LL_NOTICE, "Initialized");
 
   int num;
 
@@ -103,7 +93,6 @@ int main(int argc, char * argv[])
 
   char motor_command[64];
   char motor_id[64];
-
 
   service.reactorTask.open(NULL);
 
