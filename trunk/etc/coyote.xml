@@ -1013,7 +1013,7 @@
 	<parameter value="VisionCollectorFull" name="InterfaceName" />
 	<parameter value="2" name="ScaleFactorRunLength" />
 	<parameter value="9" name="UseIndexFrom" />
-	<parameter value="true" name="Save" />
+	<parameter value="false" name="Save" />
         <parameter value="true" name="InterfaceInstance" />
         <parameter name="Interface" >
           <parameter value="CollectFull" name="Name" />
