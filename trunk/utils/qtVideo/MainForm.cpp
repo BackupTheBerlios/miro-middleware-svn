@@ -131,8 +131,9 @@ void MainForm::paintEvent(QPaintEvent * )
 {
   QPainter p(this);
 
-  if (!qImage_->isNull()) 
+  if (!qImage_->isNull()) {
     p.drawImage(QPoint(0,0), *qImage_); 
+  }
   else {
     cout << "no image to paint" << endl;
   }
@@ -157,10 +158,15 @@ void MainForm::actualizeImage()
       video_->exportWaitSubImage(imageIDL_->format.width, imageIDL_->format.height);
   }
   else {
-    video_->acquireNextImage(id_, bufferIndex_);
+    try {
+      video_->acquireNextImage(id_, bufferIndex_);
+    }
+    catch (Miro::EOutOfBounds const& e) {
+      cout << "Out of bounds exception:" << e.what << endl;
+      abort();
+    }
     imageOffset_ = imageIDL_->offset[bufferIndex_];
   }
-
 
   // calculate statistics
   // TODO: should be improved
