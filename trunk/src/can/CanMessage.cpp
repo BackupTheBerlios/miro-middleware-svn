@@ -38,7 +38,8 @@ namespace Can
     return ostr;
   }
 
-  
+  Message::~Message() {
+  }
 
 
 };

@@ -32,6 +32,10 @@ namespace Can
 
   }
 
+  Can0Message::~Can0Message() {
+    delete message_;
+  }
+  
   void Can0Message::setBuffer(int pos, const char * buffer, int length){
       memcpy(&(message_->d[pos]), buffer , length);
   }

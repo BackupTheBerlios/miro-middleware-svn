@@ -28,6 +28,8 @@ namespace Can
   {
   public:
     Can0Message();
+    virtual ~Can0Message();
+
     int            length() const;
     void           length(int _len);
 

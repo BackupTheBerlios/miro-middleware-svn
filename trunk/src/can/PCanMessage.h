@@ -19,15 +19,12 @@
 
 namespace Can
 {
-
-
-
-
-
   class PCanMessage : public Message
   {
   public:
     PCanMessage();
+    virtual ~PCanMessage();
+
     int            length() const;
     void           length(int _len);
 
@@ -129,5 +126,5 @@ namespace Can
   {
       *((unsigned long *) (&(messagep_->msg.data[i]))) = ACE_HTONL(d);
   }
-};
+}
 #endif

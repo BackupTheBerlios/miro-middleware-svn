@@ -39,6 +39,7 @@ namespace Can
   {
   public:
     Message() {};
+    virtual ~Message();
     virtual int            length() const = NULL;
     virtual void           length(int _len) = NULL;
 

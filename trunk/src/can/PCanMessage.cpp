@@ -33,9 +33,11 @@ namespace Can
 
   }
 
-
-
+  PCanMessage::~PCanMessage() {
+    delete messagep_;
+  }
+  
   void PCanMessage::setBuffer(int pos, const char * buffer, int length){
       memcpy(&(messagep_->msg.data[pos]), buffer , length);
   }
-};
+}
