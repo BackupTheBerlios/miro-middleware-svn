@@ -20,6 +20,11 @@
       <config_parameter name="xonlim" type="int" />
       <config_parameter name="xofflim" type="int" />
     </config_item>
+    <config_item name="ACE_Sched_Params" final="false" dummy="true">
+      <config_parameter name="policy" type="int" default="0" />
+      <config_parameter name="priority" type="int" defautl="0" />
+      <config_parameter name="quantum" type="ACE_Time_Value" default="0, 0"/>
+    </config_item>
   </config_group>
 
   <config_global name="namespace" value="Miro" />

@@ -22,10 +22,13 @@
 #include "idl/PanTiltC.h"
 
 #include "Angle.h"
+#include "TimeHelper.h"
 
 #include <ace/INET_Addr.h>
+#include <ace/Sched_Params.h>
 
 #include <iostream>
+#include <sstream>
 #include <vector>
 #include <functional>
 #include <algorithm>
@@ -68,7 +71,30 @@ operator<<(std::ostream &ostr, const ACE_TTY_IO::Serial_Params &rhs) {
 }
 
 std::ostream &
-operator<<(std::ostream &ostr, const ACE_INET_Addr &rhs) {
+operator<<(std::ostream &ostr, ACE_Sched_Params const &rhs) {
+  std::ostringstream p;
+  switch(rhs.policy()) {
+  case ACE_SCHED_OTHER:
+    p <<  "ACE_SCHED_OTHER";
+    break;
+  case ACE_SCHED_FIFO:
+    p << "ACE_SCHED_FIFO";
+  case ACE_SCHED_RR:
+    p << "ACE_SCHED_RR";
+    break;
+  default:
+    p << rhs.policy();
+  }
+  
+  ostr << "policy = " << p.str() << std::endl
+       << "priority = " << rhs.priority() << std::endl
+       << "quantum = " << rhs.quantum() << " sec" << std::endl;
+
+  return ostr; 
+}
+
+std::ostream &
+operator<<(std::ostream &ostr, ACE_INET_Addr const &rhs) {
   ostr << rhs.get_host_addr() << std::endl;
   return ostr; 
 }

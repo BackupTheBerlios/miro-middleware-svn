@@ -19,7 +19,7 @@
 #define OSTR_OPERATOR_DECL(x) \
   class x; \
   std::ostream & \
-  operator<<(std::ostream &ostr, const x &rhs)
+  operator<<(std::ostream &ostr, x const &rhs)
 #define ISTR_OPERATOR_DECL(x) \
   std::istream & \
   operator<<(std::istream &ostr, x &rhs)
@@ -27,6 +27,7 @@
 std::ostream & 
 operator<<(std::ostream &ostr, const ACE_TTY_IO::Serial_Params &rhs);
 OSTR_OPERATOR_DECL(ACE_INET_Addr);
+OSTR_OPERATOR_DECL(ACE_Sched_Params);
 
 namespace std
 {
@@ -49,7 +50,7 @@ namespace std
     }
     return ostr;
   }
-};
+}
 
 namespace Miro 
 {
@@ -73,11 +74,7 @@ namespace Miro
   OSTR_OPERATOR_DECL(RangeBunchEventIDL);
   OSTR_OPERATOR_DECL(RangeGroupEventIDL);
   OSTR_OPERATOR_DECL(RangeScanEventIDL);
-
-  // b21 specific types
-  //  OSTR_OPERATOR_DECL(LaserScanIDL);
-
-};
+}
 
 #endif
 

@@ -268,9 +268,9 @@ namespace Miro
     static signed int const LL_PRATTLE = 9;
 
     //! The highest log level.
-    static signed int const MAX_LOG_LEVEL = LL_NOTICE;
+    static signed int const MAX_LOG_LEVEL = LL_CTOR_DTOR;
     //! The lowest deug level.
-    static signed int const MIN_DBG_LEVEL = LL_CTOR_DTOR;
+    static signed int const MIN_DBG_LEVEL = LL_DEBUG;
     //! The highest debug level.
     static signed int const MAX_DBG_LEVEL = LL_PRATTLE;
 

@@ -13,6 +13,7 @@
 #include "Angle.h"
 
 #include <ace/INET_Addr.h>
+#include <ace/Sched_Params.h>
 
 #include <qstring.h>
 
@@ -284,8 +285,57 @@ namespace Miro
   QDomElement operator >>= (const ACE_INET_Addr& lhs, QDomNode& _node)
   {
     QDomDocument document = _node.ownerDocument();
-    QDomElement e = document. createElement("parameter");
+    QDomElement e = document.createElement("parameter");
     e.setAttribute("value", QString(lhs.get_host_addr()));
+    _node.appendChild(e);
+    return e;
+  }
+
+  void operator <<= (ACE_Sched_Params& _lhs, const QDomNode& _node)
+  {
+    if (!_node.isNull()) {
+      QDomNode n = _node.firstChild();
+      while(!n.isNull() ) {
+        QDomElement e = n.toElement();
+        if( !e.isNull() ) {
+          QDomAttr a = e.attributeNode("name");
+          if (!a.isNull()) {
+            QString i = a.value();
+            if (i == "Policy") {
+	      int p;
+	      p <<= n;
+              _lhs.policy(p);
+            }
+            else if (i == "Priority") {
+	      int p;
+	      p <<= n;
+              _lhs.priority(p);
+            }
+            else if (i == "Quantum") {
+	      ACE_Time_Value t;
+	      t <<= n;
+              _lhs.quantum(t);
+            }
+          }
+        }
+        n = n.nextSibling();
+      }
+    }
+  }
+
+  QDomElement operator >>= (const ACE_Sched_Params& lhs, QDomNode& _node)
+  {
+    QDomDocument document = _node.ownerDocument();
+    QDomElement e = document. createElement("parameter");
+
+    QDomElement f;
+    f = (lhs.policy() >>= e);
+    f.setAttribute("name", "Policy");
+    f = (lhs.priority() >>= e);
+    f.setAttribute("name", "Priority");
+    f = (lhs.quantum() >>= e);
+    f.setAttribute("name", "Quantum");
+ 
     _node.appendChild(e);
     return e;
   }

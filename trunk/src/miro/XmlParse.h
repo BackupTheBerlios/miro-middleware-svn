@@ -63,6 +63,7 @@ namespace Miro
   void operator <<= (ACE_Time_Value& lhs, const QDomNode& node);
   void operator <<= (ACE_TTY_IO::Serial_Params& lhs, const QDomNode& node);
   void operator <<= (ACE_INET_Addr& lhs, const QDomNode& node);
+  void operator <<= (ACE_Sched_Params& lhs, const QDomNode& node);
 
   template<class T>
   void operator <<= (std::vector<T>& lhs, const QDomNode& node) {
@@ -106,6 +107,7 @@ namespace Miro
   QDomElement operator >>= (const ACE_Time_Value& lhs, QDomNode& node);
   QDomElement operator >>= (const ACE_TTY_IO::Serial_Params& lhs, QDomNode& node);
   QDomElement operator >>= (const ACE_INET_Addr& lhs, QDomNode& node);
+  QDomElement operator >>= (const ACE_Sched_Params& lhs, QDomNode& node);
 
   template<class T>
   QDomElement operator >>= (const std::vector<T>& lhs, QDomNode& node) {
@@ -129,7 +131,7 @@ namespace Miro
     node.appendChild(e);
     return e;
   }
-};
+}
 
 
 #endif // xmlParse_h
