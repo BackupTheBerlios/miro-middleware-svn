@@ -226,7 +226,7 @@ namespace Miro
 	else
 	  target = CURV_RES - CURV_DELAY + (int)(break_dist * (double)CURV_RES / (double)CURV_LEN);
 
-	velocitySpace_[left+100][right+100] = (double)CURV[std::max(0,std::min(2*CURV_CNT,curv))][std::max(0,std::min(2*CURV_RES,target))] * (double)velocitySpace_[left+100][right+100] / 250.;
+	velocitySpace_[left+100][right+100] = (int)((double)CURV[std::max(0,std::min(2*CURV_CNT,curv))][std::max(0,std::min(2*CURV_RES,target))] * (double)velocitySpace_[left+100][right+100] / 250.);
 
       }
     }
@@ -253,7 +253,8 @@ namespace Miro
     const double MIN_DISTANCE = 100.;
     const int RESOLUTION = 4;
 
-    double offset, angle, pointValue, fLeft, fRight;
+    double offset, angle, pointValue;
+    double fLeft = 0, fRight = 0;
 
     for(int left = minLeft_; left <= maxLeft_; left += RESOLUTION) {
       for(int right = minRight_ ; right <= maxRight_; right += RESOLUTION ) {
@@ -462,7 +463,7 @@ namespace Miro
   double DynamicWindow::getDistanceBetweenPolygonAndPolygon(std::vector<Vector2d> &_polygon1, std::vector<Vector2d> &_polygon2) {
 
     std::vector<Vector2d>::iterator a1, a2, b1, b2;
-    double distance, minDistance;
+    double distance, minDistance = 0.0;
 
     for(a1 = _polygon1.begin(), a2 = _polygon1.begin() + 1; a2 < _polygon1.end(); a1++, a2++) {
       for(b1 = _polygon2.begin(), b2 = _polygon2.begin() + 1; b2 < _polygon2.end(); b1++, b2++) {
@@ -486,7 +487,7 @@ namespace Miro
   double DynamicWindow::getFrontDistanceBetweenPolygonAndPolygon(std::vector<Vector2d> &_polygon1, std::vector<Vector2d> &_polygon2) {
 
     std::vector<Vector2d>::iterator a1, a2, b1, b2;
-    double distance, minDistance;
+    double distance, minDistance = 0.0;
 
     for(a1 = _polygon1.begin() + 2, a2 = _polygon1.begin() + 3; a2 < _polygon1.begin() + 5; a1++, a2++) {
       for(b1 = _polygon2.begin() + 4, b2 = _polygon2.begin() + 5; b2 < _polygon2.begin() + 7; b1++, b2++) {
