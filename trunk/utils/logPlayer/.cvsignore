@@ -1,4 +1,5 @@
 LogPlayer
+time2date
 LogFile.moc.cpp
 MainForm.moc.cpp
 FileSet.moc.cpp

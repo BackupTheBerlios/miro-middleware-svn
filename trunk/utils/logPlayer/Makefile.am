@@ -19,7 +19,7 @@ SUFFIXES = .h .moc.cpp
 	$(QT_MOC) $< -o $@
 
 
-bin_PROGRAMS = LogPlayer
+bin_PROGRAMS = LogPlayer time2date
 
 
 sources = \
@@ -36,7 +36,6 @@ tomocsources = \
 	EventView.cpp \
 	MainForm.cpp
 
-
 LogPlayer_SOURCES = $(sources) $(tomocsources) $(tomocsources:.cpp=.moc.cpp)
 
 LogPlayer_LDADD = \
@@ -44,6 +43,9 @@ LogPlayer_LDADD = \
 	-lmiroWidgets \
 	-lmiro \
 	$(QT_LIBS)
+
+time2date_SOURCES = time2date.cpp
+time2date_LDADD = -lmiro
 
 BUILT_SOURCES = $(tomocsources:.cpp=.moc.cpp)
 CLEANFILES = $(BUILT_SOURCES)
