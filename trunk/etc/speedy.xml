@@ -305,10 +305,11 @@
       <parameter name="FilterRGBtoSeg">
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter value="150.0" name="Threshold" />
-	<parameter value="220" name="DistLookup0" />
-	<parameter value="980" name="DistLookup40" />
-	<parameter value="1780" name="DistLookup80" />
-	<parameter value="2600" name="DistLookup120" />
+	<parameter value="0" name="FrontDir" />
+	<parameter value="430" name="DistLookup0" />
+	<parameter value="1190" name="DistLookup40" />
+	<parameter value="1990" name="DistLookup80" />
+	<parameter value="2810" name="DistLookup120" />
 	<parameter name="Interface" >
 	  <parameter value="VideoSeg" name="Name" />
 	</parameter>
