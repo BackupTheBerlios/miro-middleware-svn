@@ -81,7 +81,7 @@ namespace FaulTty
 
     if (lrbytes==0) {
        posR=(long)atoi(buff);
-	if ((abs(posR-prePosR)<25000) or (posinit == 0))
+	if ((abs((int)(posR - prePosR))<25000) || (posinit == 0))
 	{
 		lrbytes=0;
 		//cout << "byte1:  " << abs(posL-prePosL)<< endl;
@@ -91,7 +91,7 @@ namespace FaulTty
       }
        else {
 	posL=(long)atoi(buff);
-	if ((abs(posL-prePosL)<25000) or (posinit ==0))
+	if ((abs((int)(posL-prePosL))<25000) || (posinit ==0))
 	{
 		lrbytes=0;
 		//cout << "                                                                       byte2:  " << abs(posR-prePosR)<< endl;
