@@ -178,7 +178,7 @@ if test "x$ac_request_player" = xyes &&
 	ac_compile_player=yes
 fi
 
-AM_CONDITIONAL(COND_PLAYER, [test "x$ac_compile_player" = yes])
+AM_CONDITIONAL(COND_PLAYER, [test "x$ac_compile_player" = xyes])
 
 AH_TEMPLATE([MIRO_NO_DEBUG], [build without debug info support.])
 AH_TEMPLATE([MIRO_NO_LOGGING], [build without log info support.])
