@@ -112,7 +112,7 @@ RangeSensorBehaviour::action()
 
   ACE_Time_Value timeStamp;
 
-  cout << name_ << ": integrating data" << endl;
+  //  cout << name_ << ": integrating data" << endl;
 
   if (event->remainder_of_body >>= pPosition) {
     position_ = Vector2d(pPosition->position.point.x, pPosition->position.point.y);
@@ -121,15 +121,18 @@ RangeSensorBehaviour::action()
   }
   else if (initialized_) {
 
-    cout << name_ << ": integrating range senor data" << endl;
+    //    cout << name_ << ": integrating range senor data" << endl;
 
     ACE_Time_Value integrationTime;
     integrationTime.msec(params->historyMSec);
     
+    cout << "RangeSensor: integration time: " << integrationTime << endl;
     truncateBuffer(integrationTime);
+    cout << "RangeSensor: buffer size: " << scan_.size() << endl;
 
     if (event->remainder_of_body >>= pBunchScan) {
       Miro::timeC2A(pBunchScan->time, timeStamp);
+      timeStamp = ACE_OS::gettimeofday();
       for (int i = pBunchScan->sensor.length() - 1; i >= 0; --i) {
 	evalSensor(timeStamp,
 		   pBunchScan->sensor[i].group,
@@ -259,13 +262,13 @@ RangeSensorBehaviour::evalSensor(const ACE_Time_Value& _time,
 
   // calc egocentric sensor origin
   double d = description_->group[group].sensor[index].distance;
-  Vector2d p(-sin(description_->group[group].sensor[index].alpha) * d,
-	     cos(description_->group[group].sensor[index].alpha) * d);
+  Vector2d p(cos(description_->group[group].sensor[index].alpha) * d,
+	     sin(description_->group[group].sensor[index].alpha) * d);
 
   // calc sensor heading
   double a = ( description_->group[group].sensor[index].alpha +
 	       description_->group[group].sensor[index].beta);
-  Vector2d q(-sin(a) * (double)range, cos(a) * (double)range);
+  Vector2d q(cos(a) * (double)range, sin(a) * (double)range);
 
   // calc egocentric range end point;
   p += q;
