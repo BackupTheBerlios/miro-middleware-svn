@@ -93,9 +93,11 @@ namespace Miro
   Miro::ImageHandleIDL *
   VideoImpl::connect(CORBA::ULong& _id) ACE_THROW_SPEC(())
   {
-    Guard guard(clientMutex_);
-    _id = ++idCounter;
-    clientId_.insert(_id);
+    {
+      Guard guard(clientMutex_);
+      _id = ++idCounter;
+      clientId_.insert(_id);
+    }
 
     return new Miro::ImageHandleIDL(imageHandle_);
   }
@@ -104,6 +106,7 @@ namespace Miro
   VideoImpl::disconnect(CORBA::ULong _id) 
     ACE_THROW_SPEC((EOutOfBounds))
   {
+    Miro::Guard guard(clientMutex_);
     if (clientId_.erase(_id) == 0)
       throw Miro::EOutOfBounds("Unregistered client id.");
   }
@@ -114,9 +117,11 @@ namespace Miro
   {
     TimeIDL stamp;
 
-    Guard guard(clientMutex_);
-    if (clientId_.find(_id) == clientId_.end())
-      throw Miro::EOutOfBounds("Unregistered client id.");
+    {
+      Guard guard(clientMutex_);
+      if (clientId_.find(_id) == clientId_.end())
+	throw Miro::EOutOfBounds("Unregistered client id.");
+    }
 
     _buffer = pBufferManager_->acquireCurrentReadBuffer();
     timeA2C(pBufferManager_->bufferTimeStamp(_buffer), stamp);
@@ -130,9 +135,11 @@ namespace Miro
   {
     TimeIDL stamp;
 
-    Guard guard(clientMutex_);
-    if (clientId_.find(_id) == clientId_.end())
-      throw Miro::EOutOfBounds("Unregistered client id.");
+    {
+      Guard guard(clientMutex_);
+      if (clientId_.find(_id) == clientId_.end())
+	throw Miro::EOutOfBounds("Unregistered client id.");
+    }
 
     _buffer = pBufferManager_->acquireNextReadBuffer();
     timeA2C(pBufferManager_->bufferTimeStamp(_buffer), stamp);
@@ -144,10 +151,11 @@ namespace Miro
   VideoImpl::releaseImage(CORBA::ULong _id, CORBA::ULong _buffer)
     ACE_THROW_SPEC((EOutOfBounds))
   {
-    Guard guard(clientMutex_);
-    if (clientId_.find(_id) == clientId_.end())
-      throw Miro::EOutOfBounds("Unregistered client id.");
-
+    {
+      Guard guard(clientMutex_);
+      if (clientId_.find(_id) == clientId_.end())
+	throw Miro::EOutOfBounds("Unregistered client id.");
+    }
     pBufferManager_->releaseReadBuffer(_buffer);
   }
 
