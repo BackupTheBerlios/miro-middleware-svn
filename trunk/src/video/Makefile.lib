@@ -101,363 +101,199 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 
 .obj/Parameters.o .obj/Parameters.o .obj/Parameters.o .obj/Parameters.o: Parameters.cpp Parameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h
+ \
+ \
+
 
 .obj/BufferManager.o .obj/BufferManager.o .obj/BufferManager.o .obj/BufferManager.o: BufferManager.cpp BufferManager.h \
- $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i
+ \
+ \
+ /home/hutz/Miro/src/miro/ExceptionC.i
 
 .obj/VideoFilter.o .obj/VideoFilter.o .obj/VideoFilter.o .obj/VideoFilter.o: VideoFilter.cpp VideoFilter.h Parameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/VideoC.i VideoImpl.h \
- $(MIRO_ROOT)/src/miro/VideoS.h \
- $(MIRO_ROOT)/src/miro/ExceptionS.h \
- $(MIRO_ROOT)/src/miro/ExceptionS.i \
- $(MIRO_ROOT)/src/miro/TimeS.h \
- $(MIRO_ROOT)/src/miro/TimeS.i \
- $(MIRO_ROOT)/src/miro/PositionS.h \
- $(MIRO_ROOT)/src/miro/WorldPointS.h \
- $(MIRO_ROOT)/src/miro/WorldPointS.i \
- $(MIRO_ROOT)/src/miro/PositionS.i \
- $(MIRO_ROOT)/src/miro/VideoS.i BufferManager.h \
- $(MIRO_ROOT)/src/miro/VideoHelper.h \
- $(MIRO_ROOT)/src/miro/TimeHelper.h
+ \
+ \
+ \
+ \
+ \
+ /home/hutz/Miro/src/miro/ExceptionC.i \
+ /home/hutz/Miro/src/miro/TimeC.i \
+ \
+ \
+ /home/hutz/Miro/src/miro/WorldPointC.i \
+ /home/hutz/Miro/src/miro/PositionC.i \
+ /home/hutz/Miro/src/miro/VideoC.i VideoImpl.h \
+ \
+ \
+ /home/hutz/Miro/src/miro/ExceptionS.i \
+ /home/hutz/Miro/src/miro/TimeS.i \
+ \
+ \
+ /home/hutz/Miro/src/miro/WorldPointS.i \
+ /home/hutz/Miro/src/miro/PositionS.i \
+ /home/hutz/Miro/src/miro/VideoS.i BufferManager.h \
+ \
+
 
 .obj/VideoFilterBasic.o .obj/VideoFilterBasic.o .obj/VideoFilterBasic.o .obj/VideoFilterBasic.o: VideoFilterBasic.cpp VideoFilterBasic.h \
  VideoFilter.h Parameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/miro/VideoHelper.h \
- $(MIRO_ROOT)/src/miro/TimeHelper.h \
- $(MIRO_ROOT)/src/miro/Exception.h
+ \
+ \
+ \
+ \
+ /home/hutz/Miro/src/miro/ExceptionC.i \
+ /home/hutz/Miro/src/miro/TimeC.i \
+ \
+ \
+ /home/hutz/Miro/src/miro/WorldPointC.i \
+ /home/hutz/Miro/src/miro/PositionC.i \
+ /home/hutz/Miro/src/miro/VideoC.i \
+ \
+ \
 
-.obj/VideoFilterYUVbase.o .obj/VideoFilterYUVbase.o .obj/VideoFilterYUVbase.o .obj/VideoFilterYUVbase.o: VideoFilterYUVbase.cpp VideoFilterYUVbase.h \
- VideoFilter.h Parameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/VideoC.i
-
-.obj/VideoFilterYUV411toRGB.o .obj/VideoFilterYUV411toRGB.o .obj/VideoFilterYUV411toRGB.o .obj/VideoFilterYUV411toRGB.o: VideoFilterYUV411toRGB.cpp \
- VideoFilterYUV411toRGB.h VideoFilterYUVbase.h VideoFilter.h \
- Parameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/miro/VideoHelper.h \
- $(MIRO_ROOT)/src/miro/TimeHelper.h \
- $(MIRO_ROOT)/src/miro/Exception.h
-
-.obj/VideoFilterYUV411toYUV.o .obj/VideoFilterYUV411toYUV.o .obj/VideoFilterYUV411toYUV.o .obj/VideoFilterYUV411toYUV.o: VideoFilterYUV411toYUV.cpp \
- VideoFilterYUV411toYUV.h VideoFilter.h Parameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/miro/VideoHelper.h \
- $(MIRO_ROOT)/src/miro/TimeHelper.h \
- $(MIRO_ROOT)/src/miro/Exception.h
-
-.obj/VideoFilterYUV422toRGB.o .obj/VideoFilterYUV422toRGB.o .obj/VideoFilterYUV422toRGB.o .obj/VideoFilterYUV422toRGB.o: VideoFilterYUV422toRGB.cpp \
- VideoFilterYUV422toRGB.h VideoFilterYUVbase.h VideoFilter.h \
- Parameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/miro/VideoHelper.h \
- $(MIRO_ROOT)/src/miro/TimeHelper.h
-
-.obj/VideoFilterYUV422toYUV.o .obj/VideoFilterYUV422toYUV.o .obj/VideoFilterYUV422toYUV.o .obj/VideoFilterYUV422toYUV.o: VideoFilterYUV422toYUV.cpp \
- VideoFilterYUV422toYUV.h VideoFilter.h Parameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/miro/VideoHelper.h \
- $(MIRO_ROOT)/src/miro/TimeHelper.h
 
 .obj/VideoFilterRepository.o .obj/VideoFilterRepository.o .obj/VideoFilterRepository.o .obj/VideoFilterRepository.o: VideoFilterRepository.cpp \
  VideoFilterRepository.h VideoFilterFactory.h \
- $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/miro/Singleton.h \
- $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/Exception.h VideoFilter.h Parameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h
+ \
+ \
+ /home/hutz/Miro/src/miro/ExceptionC.i \
+ /home/hutz/Miro/src/miro/TimeC.i \
+ \
+ \
+ /home/hutz/Miro/src/miro/WorldPointC.i \
+ /home/hutz/Miro/src/miro/PositionC.i \
+ /home/hutz/Miro/src/miro/VideoC.i \
+ \
+ VideoFilter.h Parameters.h \
+ \
+ \
+
 
 .obj/VideoDevice.o .obj/VideoDevice.o .obj/VideoDevice.o .obj/VideoDevice.o: VideoDevice.cpp VideoDevice.h VideoFilter.h \
- Parameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/miro/Exception.h
+ Parameters.h \
+ \
+ \
+ \
+ \
+ /home/hutz/Miro/src/miro/ExceptionC.i \
+ /home/hutz/Miro/src/miro/TimeC.i \
+ \
+ \
+ /home/hutz/Miro/src/miro/WorldPointC.i \
+ /home/hutz/Miro/src/miro/PositionC.i \
+ /home/hutz/Miro/src/miro/VideoC.i \
+
 
 .obj/VideoAVDevice.o .obj/VideoAVDevice.o .obj/VideoAVDevice.o .obj/VideoAVDevice.o: VideoAVDevice.cpp VideoAVDevice.h VideoDevice.h \
  VideoFilter.h Parameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/miro/Exception.h
+ \
+ \
+ \
+ \
+ /home/hutz/Miro/src/miro/ExceptionC.i \
+ /home/hutz/Miro/src/miro/TimeC.i \
+ \
+ \
+ /home/hutz/Miro/src/miro/WorldPointC.i \
+ /home/hutz/Miro/src/miro/PositionC.i \
+ /home/hutz/Miro/src/miro/VideoC.i \
 
-.obj/VideoDeviceBTTV.o .obj/VideoDeviceBTTV.o .obj/VideoDeviceBTTV.o .obj/VideoDeviceBTTV.o: VideoDeviceBTTV.cpp VideoDeviceBTTV.h \
- VideoAVDevice.h VideoDevice.h VideoFilter.h Parameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/miro/Exception.h
-
-.obj/VideoDeviceMeteor.o .obj/VideoDeviceMeteor.o .obj/VideoDeviceMeteor.o .obj/VideoDeviceMeteor.o: VideoDeviceMeteor.cpp VideoDeviceMeteor.h \
- ioctl_meteor.h VideoAVDevice.h VideoDevice.h VideoFilter.h \
- Parameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/miro/VideoHelper.h \
- $(MIRO_ROOT)/src/miro/TimeHelper.h
-
-.obj/VideoDevice1394.o .obj/VideoDevice1394.o .obj/VideoDevice1394.o .obj/VideoDevice1394.o: VideoDevice1394.cpp VideoDevice1394.h VideoDevice.h \
- VideoFilter.h Parameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/VideoC.i
 
 .obj/VideoDeviceDummy.o .obj/VideoDeviceDummy.o .obj/VideoDeviceDummy.o .obj/VideoDeviceDummy.o: VideoDeviceDummy.cpp VideoDeviceDummy.h \
  VideoDevice.h VideoFilter.h Parameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/miro/VideoHelper.h \
- $(MIRO_ROOT)/src/miro/TimeHelper.h
+ \
+ \
+ \
+ \
+ \
+ /home/hutz/Miro/src/miro/ExceptionC.i \
+ /home/hutz/Miro/src/miro/TimeC.i \
+ \
+ \
+ /home/hutz/Miro/src/miro/WorldPointC.i \
+ /home/hutz/Miro/src/miro/PositionC.i \
+ /home/hutz/Miro/src/miro/VideoC.i \
+ \
+
 
 .obj/VideoConsumer.o .obj/VideoConsumer.o .obj/VideoConsumer.o .obj/VideoConsumer.o: VideoConsumer.cpp VideoConsumer.h \
- $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/Thread.h \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i VideoDevice.h VideoFilter.h \
- Parameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/VideoC.i VideoImpl.h \
- $(MIRO_ROOT)/src/miro/VideoS.h \
- $(MIRO_ROOT)/src/miro/ExceptionS.h \
- $(MIRO_ROOT)/src/miro/ExceptionS.i \
- $(MIRO_ROOT)/src/miro/TimeS.h \
- $(MIRO_ROOT)/src/miro/TimeS.i \
- $(MIRO_ROOT)/src/miro/PositionS.h \
- $(MIRO_ROOT)/src/miro/WorldPointS.h \
- $(MIRO_ROOT)/src/miro/WorldPointS.i \
- $(MIRO_ROOT)/src/miro/PositionS.i \
- $(MIRO_ROOT)/src/miro/VideoS.i \
- $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/TimeHelper.h
+ \
+ /home/hutz/Miro/src/miro/TimeC.i \
+ VideoDevice.h VideoFilter.h Parameters.h \
+ \
+ \
+ \
+ \
+ \
+ /home/hutz/Miro/src/miro/ExceptionC.i \
+ \
+ \
+ /home/hutz/Miro/src/miro/WorldPointC.i \
+ /home/hutz/Miro/src/miro/PositionC.i \
+ /home/hutz/Miro/src/miro/VideoC.i VideoImpl.h \
+ \
+ \
+ /home/hutz/Miro/src/miro/ExceptionS.i \
+ /home/hutz/Miro/src/miro/TimeS.i \
+ \
+ \
+ /home/hutz/Miro/src/miro/WorldPointS.i \
+ /home/hutz/Miro/src/miro/PositionS.i \
+ /home/hutz/Miro/src/miro/VideoS.i \
+ \
+
 
 .obj/VideoImpl.o .obj/VideoImpl.o .obj/VideoImpl.o .obj/VideoImpl.o: VideoImpl.cpp VideoImpl.h \
- $(MIRO_ROOT)/src/miro/VideoS.h \
- $(MIRO_ROOT)/src/miro/ExceptionS.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/ExceptionS.i \
- $(MIRO_ROOT)/src/miro/TimeS.h \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/TimeS.i \
- $(MIRO_ROOT)/src/miro/PositionS.h \
- $(MIRO_ROOT)/src/miro/WorldPointS.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/WorldPointS.i \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/PositionS.i \
- $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/miro/VideoS.i VideoDevice.h VideoFilter.h \
- Parameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h VideoConsumer.h \
- $(MIRO_ROOT)/src/miro/Thread.h BufferManager.h \
- $(MIRO_ROOT)/src/miro/Server.h \
- $(MIRO_ROOT)/src/miro/Client.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/TimeHelper.h \
- $(MIRO_ROOT)/src/miro/VideoHelper.h
+ \
+ \
+ \
+ /home/hutz/Miro/src/miro/ExceptionC.i \
+ /home/hutz/Miro/src/miro/ExceptionS.i \
+ \
+ /home/hutz/Miro/src/miro/TimeC.i /home/hutz/Miro/src/miro/TimeS.i \
+ \
+ \
+ \
+ /home/hutz/Miro/src/miro/WorldPointC.i \
+ /home/hutz/Miro/src/miro/WorldPointS.i \
+ \
+ /home/hutz/Miro/src/miro/PositionC.i \
+ /home/hutz/Miro/src/miro/PositionS.i \
+ /home/hutz/Miro/src/miro/VideoC.i \
+ /home/hutz/Miro/src/miro/VideoS.i VideoDevice.h VideoFilter.h \
+ Parameters.h \
+ \
+ VideoConsumer.h \
+ BufferManager.h \
+ \
+ \
+ \
 
-.obj/VideoServer.o .obj/VideoServer.o .obj/VideoServer.o .obj/VideoServer.o: VideoServer.cpp VideoServer.h \
- $(MIRO_ROOT)/src/miro/Server.h \
- $(MIRO_ROOT)/src/miro/Client.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h VideoImpl.h \
- $(MIRO_ROOT)/src/miro/VideoS.h \
- $(MIRO_ROOT)/src/miro/ExceptionS.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/ExceptionS.i \
- $(MIRO_ROOT)/src/miro/TimeS.h \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/TimeS.i \
- $(MIRO_ROOT)/src/miro/PositionS.h \
- $(MIRO_ROOT)/src/miro/WorldPointS.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/WorldPointS.i \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/PositionS.i \
- $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/miro/VideoS.i VideoDevice.h VideoFilter.h \
- Parameters.h VideoConsumer.h $(MIRO_ROOT)/src/miro/Thread.h \
- VideoDeviceDummy.h VideoDeviceBTTV.h VideoAVDevice.h \
- VideoDeviceMeteor.h ioctl_meteor.h VideoDevice1394.h \
- $(MIRO_ROOT)/src/miro/Utils.h
+
+.obj/VideoServer.o .obj/VideoServer.o .obj/VideoServer.o .obj/VideoServer.o: VideoServer.cpp VideoServer.h VideoImpl.h \
+ \
+ \
+ \
+ /home/hutz/Miro/src/miro/ExceptionC.i \
+ /home/hutz/Miro/src/miro/ExceptionS.i \
+ \
+ /home/hutz/Miro/src/miro/TimeC.i /home/hutz/Miro/src/miro/TimeS.i \
+ \
+ \
+ \
+ /home/hutz/Miro/src/miro/WorldPointC.i \
+ /home/hutz/Miro/src/miro/WorldPointS.i \
+ \
+ /home/hutz/Miro/src/miro/PositionC.i \
+ /home/hutz/Miro/src/miro/PositionS.i \
+ /home/hutz/Miro/src/miro/VideoC.i \
+ /home/hutz/Miro/src/miro/VideoS.i VideoDevice.h VideoFilter.h \
+ Parameters.h \
+ \
+ VideoConsumer.h \
+ VideoFilterRepository.h \
+ VideoFilterFactory.h \
+ \
+
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY
