@@ -36,6 +36,8 @@ module Miro
     long		handle;
   };
 
+  typedef sequence<octet> SubImageDataIDL;
+
   //! Interface to the frame grabber devices.
   /** 
    * @author Steffen Simon
@@ -67,6 +69,8 @@ module Miro
      * @throw EDevIO is thrown to indicate low level device problems.
      */
     void getWaitImage(inout ImageHandleIDL img) raises(EOutOfBounds, EDevIO, ETimeOut);
+
+    SubImageDataIDL exportSubImage(in long x, in long y) raises(EOutOfBounds, EDevIO, ETimeOut);
   };
 };
 
