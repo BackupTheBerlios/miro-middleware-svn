@@ -1,31 +1,26 @@
-<!DOCTYPE UlmSparrowsConfig >
+<!DOCTYPE MiroConfigFile >
 <xml>
   <robot>
     <type>PeopleBot</type>      <!-- B21, Pioneer1, Sparrow99 -->
     <name>ppb</name>
-    <speech>none</speech>
-    <pantilt>none</pantilt> <!-- none or dpPanTilt -->
-    <laser>none</laser> <!-- none or SICK -->
-    <framegrabber>bttv8</framegrabber> <!-- none, bttv8 or meteor -->
   </robot>
 
-  <Pioneer1>
-    <pioneerBoard>
-      <device>/dev/ttyS0</device>
-      <baudrate>9600</baudrate>
-      <databits>8</databits>
+  <Pioneer1>                    <!-- Missleading yes, but basically nothing changed... -->
+    <pioneerBoard>              <!-- Configuration of the controller board -->
+      <device>/dev/ttyS0</device> <!-- The serial device the board is attached to -->
+      <baudrate>9600</baudrate>   <!-- tty parameters -->
+      <databits>8</databits> 
       <stopbits>1</stopbits>
       <parityenb>0</parityenb>
 
-      <!-- Defaults
+      <!-- Conversion factors for the performance people bot -->
 
-        <AngleConvFactor>0.001534</AngleConvFactor>
-        <DistConvFactor>0.485000</DistConvFactor>
-        <VelConvFactor>1.000000</VelConvFactor>
-        <RangeConvFactor>1.000000</RangeConvFactor>
-        <DiffConvFactor>0.006000</DiffConvFactor>
-        <Vel2Divisor>20.000000</Vel2Divisor>
-      -->
+      <AngleConvFactor>0.001534</AngleConvFactor>
+      <DistConvFactor>0.485000</DistConvFactor>
+      <VelConvFactor>1.000000</VelConvFactor>
+      <RangeConvFactor>1.000000</RangeConvFactor>
+      <DiffConvFactor>0.006000</DiffConvFactor>
+      <Vel2Divisor>20.000000</Vel2Divisor>
 
       <Motion>
         <MinTranslation>-2200</MinTranslation>
@@ -41,6 +36,8 @@
         <WheelBase>340</WheelBase>
       </Motion>
       
+      <!-- The layout of the sonar sensors of the ppb -->
+
       <sonar>
          <scandescription>
            <scantype>3</scantype>
@@ -84,17 +81,18 @@
            </sensorgroup>
          </scandescription>
       </sonar>
+
+    <!-- There are infrareds just as well -->
+
     </pioneerBoard>
   </Pioneer1>
-  <B21>
+  <B21> <!-- TODO: this is a missleading Tag -->
     <video>
       <device>/dev/video0</device>
       <palette>rgb</palette>
       <format>ntsc</format>
       <source>tuner</source>
-      <upsideDown>yes</upsideDown>
-    <!-- Parameter Section for Steffan -->
-
+      <upsideDown>yes</upsideDown> <!-- The camera is mounted the wrong way... -->
     </video>
   </B21>
 </xml>

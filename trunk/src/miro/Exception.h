@@ -44,7 +44,8 @@ namespace Miro
     //! Default constructor.
     Exception() throw();
     //! Initializing constructor
-    Exception(const std::string& _what) throw(); 
+    Exception(const std::string& _what) throw();
+    //! Virtual dtor.
     ~Exception() throw();
 
     //! Standart information hook.

@@ -49,7 +49,7 @@ RangeSensorWidget::RangeSensorWidget(Miro::RangeSensor_ptr _sensor, CORBA::UShor
   menuFile->insertSeparator();
   menuFile->insertItem("Quit", qApp, SLOT(quit()));
 
-  menuView->insertItem("Draw Cone", this, SLOT(toggleCone));
+  menuView->insertItem("Draw Cone", this, SLOT(toggleCone()));
   
   calcSize();
 
