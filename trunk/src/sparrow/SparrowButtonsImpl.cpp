@@ -40,15 +40,17 @@ namespace Sparrow
       button_[i] = false;
 
     // Stall Notify Event initialization
-    notifyEvent.header.fixed_header.event_type.domain_name = 
-      CORBA::string_dup(pSupplier->domainName().c_str());
-    notifyEvent.header.fixed_header.event_type.type_name = 
-	  CORBA::string_dup("Button");
-    notifyEvent.header.fixed_header.event_name = CORBA::string_dup("");
-    notifyEvent.header.variable_header.length(0);   // put nothing here
-    notifyEvent.filterable_data.length(0);          // put nothing here
+    if (pSupplier) {
+      notifyEvent.header.fixed_header.event_type.domain_name = 
+        CORBA::string_dup(pSupplier->domainName().c_str());
+      notifyEvent.header.fixed_header.event_type.type_name = 
+  	  CORBA::string_dup("Button");
+      notifyEvent.header.fixed_header.event_name = CORBA::string_dup("");
+      notifyEvent.header.variable_header.length(0);   // put nothing here
+      notifyEvent.filterable_data.length(0);          // put nothing here
+    }
   }
-
+    
   ButtonsImpl::~ButtonsImpl()
   {
     DBG(cout << "Destructing SparrowButtonsImpl" << endl);

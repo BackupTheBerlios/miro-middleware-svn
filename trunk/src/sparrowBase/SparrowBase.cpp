@@ -92,7 +92,7 @@ main(int argc, char *argv[])
     SparrowBase sparrowBase(argc, argv);
     try {
       DBG(cout << "Loop forever handling events." << endl);
-      sparrowBase.run(8);
+      sparrowBase.run(4);
       DBG(cout << "sparrowBase ended, exiting." << endl);
     }
     catch (const Miro::EOutOfBounds& e) {
