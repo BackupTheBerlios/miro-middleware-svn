@@ -18,6 +18,8 @@
 #include "SparrowButtonsImpl.h"
 #include "miro/RangeSensorImpl.h"
 #include "miro/TimeHelper.h"
+#include "can/Parameters.h"
+
 
 
 #include "can/CanMessage.h"
@@ -94,7 +96,7 @@ namespace Sparrow
       origin.point.x = -params_->initialX;
       origin.point.y = -params_->initialY;
       origin.heading = -params_->initialHeading;
-    
+
       if (params_->goalie) {
         origin.point.x += 125;
         origin.point.y -= 85;
@@ -142,13 +144,20 @@ namespace Sparrow
 
     connection.boardReply = 1;
 
-    switch (message.id()) {
+    Can::Parameters *CanParams = new Can::Parameters();
+
+    CanId msgID = message.id();
+
+    if(CanParams->module == "sja1000")
+       msgID = (msgID | 0x80000000);
+
+    switch (msgID) {
 
       // Motor Messages
 
     case CAN_R_MOTOR_ALIVE: {
       DBG(cout << "Consumer::receiveThread:  received message: MOTOR_ALIVE" << endl);
-      
+
       versSub = message.shortData(0);
       versNr = versSub >> 4;
       versSub = versSub & 0x0F; // versNr loeschen mit AND 00001111
@@ -182,7 +191,7 @@ namespace Sparrow
 	accelCond.broadcast();
       break;
     }
-      
+
       // Odometry Messages
     case CAN_R_GET_POS:
       if (pOdometry_) {
@@ -190,29 +199,29 @@ namespace Sparrow
 	xPos_ = message.shortData(0);
 	yPos_ = message.shortData(2);
 	phi_ = ticks2rad(message.shortData(4));
-	//cout << message << endl;  //debug uli 4.8.02	
+	//cout << message << endl;  //debug uli 4.8.02
 
 	// the goalie is special
 	if (params_->goalie) {
 	  std::swap(xPos_, yPos_);
 	  yPos_ *= -1;
-	  
+
 	  xPos_ += (short)(125 * cos(phi_) + 85 *  sin(phi_));
 	  yPos_ += (short)(125 * sin(phi_) - 85 *  cos(phi_));
-	  
+
 	}
-	
+
 	double dx = (short)(xPos_ - xPrev_);
 	double dy = (short)(yPos_ - yPrev_);
 
 	x_ += dx;
 	y_ += dy;
 	double dPhi = phi_ - phiPrev_;
-	
+
 	xPrev_ = xPos_;
 	yPrev_ = yPos_;
 	phiPrev_ = phi_;
-      
+
 	// fill motion status data struct
 	double deltaT = 1000. / (double) (params_->odometryPulse.msec());
 	Miro::timeA2C(message.time(), status_.time);
@@ -221,7 +230,7 @@ namespace Sparrow
 	status_.position.heading = phi_;
 	status_.velocity.translation = (long) rint(sqrt(dx * dx + dy * dy) * deltaT);
 	status_.velocity.rotation = dPhi * deltaT;
-	
+
 	pOdometry_->integrateData(status_);
 	break;
       }
