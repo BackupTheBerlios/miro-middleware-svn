@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 1999, 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 // 
 // $Id$
@@ -33,6 +33,21 @@
 
 #include <orbsvcs/CosNotifyChannelAdminS.h>
 #include <orbsvcs/CosNotifyCommC.h>
+
+#include <memory>
+
+struct PioneerHardware
+{
+  // Pioneer board hardware abstraction
+  Pioneer::Consumer * pConsumer;
+  Psos::EventHandler * pEventHandler;
+  Pioneer::Connection connection;
+
+  PioneerHardware(ACE_Reactor * _reactor,
+		  Miro::RangeSensorImpl * _sonar);
+  ~PioneerHardware();
+};
+
 
 class SparrowBase : public Miro::Server
 {
@@ -79,6 +94,8 @@ public:
   Miro::StructuredPushSupplier structuredPushSupplier_;
 
   Miro::OdometryImpl odometry;
+  std::auto_ptr<Miro::RangeSensorImpl> pSonar_;
+  Miro::RangeSensorImpl infrared;
   Sparrow::MotionImpl sparrowMotion;
 
   // Sparrow board hardware abstraction
@@ -87,18 +104,13 @@ public:
   Sparrow::Connection sparrowConnection;
 
   // Pioneer board hardware abstraction
-  Pioneer::Consumer * pPioneerConsumer;
-  Psos::EventHandler * pPsosEventHandler;
-  Pioneer::Connection pioneerConnection;
+  std::auto_ptr<PioneerHardware> pPioneer;
 
   // IDL interface implementations
   Sparrow::KickerImpl  sparrowKicker;
   Sparrow::ButtonsImpl sparrowButtons;
   Sparrow::StallImpl   sparrowStall;
   Sparrow::PanTiltImpl sparrowPanTilt;
-
-  Miro::RangeSensorImpl sonar;
-  Miro::RangeSensorImpl infrared;
 
   Miro::Odometry_var pOdometry;
   Miro::Motion_var pMotion;

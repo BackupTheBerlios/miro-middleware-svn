@@ -38,6 +38,18 @@
 using std::cout;
 using std::cerr;
 
+PioneerHardware::PioneerHardware(ACE_Reactor * _reactor,
+				 Miro::RangeSensorImpl * _sonar) :
+  pConsumer(new Pioneer::Consumer(_sonar)),
+  pEventHandler(new Psos::EventHandler(pConsumer, connection)),
+  connection(_reactor, pEventHandler, pConsumer)
+{
+}
+
+PioneerHardware::~PioneerHardware()
+{
+}
+
 SparrowBase::SparrowBase(int argc, char *argv[]) :
   Super(argc, argv),
   reactorTask(this),
@@ -49,6 +61,11 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
   structuredPushSupplier_(ec_.in(), namingContextName),
 
   odometry(&structuredPushSupplier_),
+  pSonar_((Sparrow::Parameters::instance()->goalie)? 
+	  new Miro::RangeSensorImpl(Pioneer::Parameters::instance()->sonarDescription, 
+				    &structuredPushSupplier_) : NULL),
+  infrared(Sparrow::Parameters::instance()->infraredDescription,
+	   &structuredPushSupplier_),
   sparrowMotion(sparrowConnection, *pSparrowConsumer),
 
   // Sparrow board initialization
@@ -63,10 +80,8 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 		    pSparrowConsumer),
 
   // Pioneer board initialization
-  pPioneerConsumer(new Pioneer::Consumer(&sonar)),
-  pPsosEventHandler(new Psos::EventHandler(pPioneerConsumer, pioneerConnection)),
-  pioneerConnection(reactorTask.reactor(), 
-		    pPsosEventHandler, pPioneerConsumer),
+  pPioneer((Sparrow::Parameters::instance()->goalie)? 
+	   new PioneerHardware(reactorTask.reactor(), pSonar_.get()) : NULL),
 
   // Service initialization
   sparrowKicker(sparrowConnection),
@@ -74,9 +89,6 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
   sparrowStall(sparrowConnection, &structuredPushSupplier_),
   sparrowPanTilt(sparrowConnection),
 
-  sonar(Pioneer::Parameters::instance()->sonarDescription, &structuredPushSupplier_),
-  infrared(Sparrow::Parameters::instance()->infraredDescription, 
-           &structuredPushSupplier_),
   mcAdapter_((Sparrow::Parameters::instance()->channelSharing)?
              new Miro::NotifyMulticast::Adapter(argc, argv, this, ec_.in()) :
 	     0)
@@ -98,6 +110,11 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
   structuredPushSupplier_(ec_.in(), namingContextName),
 
   odometry(&structuredPushSupplier_),
+  pSonar_((Sparrow::Parameters::instance()->goalie)? 
+	  new Miro::RangeSensorImpl(Pioneer::Parameters::instance()->sonarDescription, 
+				    &structuredPushSupplier_) : NULL),
+  infrared(Sparrow::Parameters::instance()->infraredDescription,
+	   &structuredPushSupplier_),
   sparrowMotion(sparrowConnection, *pSparrowConsumer),
 
   // Sparrow board initialization
@@ -112,9 +129,8 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 		    pSparrowConsumer),
 
   // Pioneer board initialization
-  pPioneerConsumer(new Pioneer::Consumer(&sonar)),
-  pPsosEventHandler(new Psos::EventHandler(pPioneerConsumer, pioneerConnection)),
-  pioneerConnection(reactorTask.reactor(), pPsosEventHandler, pPioneerConsumer),
+  pPioneer((Sparrow::Parameters::instance()->goalie)? 
+	   new PioneerHardware(reactorTask.reactor(), pSonar_.get()) : NULL),
 
   // Service initialization
   sparrowKicker(sparrowConnection),
@@ -122,9 +138,6 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
   sparrowStall(sparrowConnection, &structuredPushSupplier_),
   sparrowPanTilt(sparrowConnection),
 
-  sonar(Pioneer::Parameters::instance()->sonarDescription, &structuredPushSupplier_),
-  infrared(Sparrow::Parameters::instance()->infraredDescription,
-	   &structuredPushSupplier_),
   mcAdapter_((Sparrow::Parameters::instance()->channelSharing)?
              new Miro::NotifyMulticast::Adapter(0, NULL, this, ec_.in()) :
 	     0)
@@ -145,17 +158,19 @@ SparrowBase::init(bool _startReactorTastk)
   pPanTilt = sparrowPanTilt._this();
   pInfrared = infrared._this();
   
-  pSonar = sonar._this();
-
   addToNameService(ec_.in(), "EventChannel");
   addToNameService(pOdometry.in(), "Odometry");
   addToNameService(pMotion.in(), "Motion");
   addToNameService(pKicker.in(), "Kicker");
   addToNameService(pButtons.in(), "Buttons");
   addToNameService(pStall.in(), "Stall");
-  addToNameService(pSonar.in(), "Sonar");
   addToNameService(pPanTilt.in(), "PanTilt");
   addToNameService(pInfrared.in(), "Infrared");
+
+  if (pSonar_.get() == NULL) {
+    pSonar = pSonar_->_this();
+    addToNameService(pSonar.in(), "Sonar");
+  }
 
   // start the asychronous consumer listening for the hardware
   if (_startReactorTastk)
@@ -176,5 +191,6 @@ SparrowBase::~SparrowBase()
 
   //  sparrowConnection.readTables();
   reactorTask.cancel();
+
   DBG(cout << "reactor Task ended" << endl);
 }
