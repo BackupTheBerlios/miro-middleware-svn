@@ -307,11 +307,11 @@ namespace Miro
         angle = (180. * (fLeft - fRight)) / (WHEEL_DISTANCE * M_PI);
 
 	// rotate completely backwards
-	rotateMountedPolygon(_robot, Vector2d(offset, 0.), angle * (CURV_RES + 1));
+	rotateMountedPolygon(_robot, Vector2d(0., offset), angle * (CURV_RES + 1));
 
 	// rotate stepwise forwards and check for collisions
 	for(seg = 0; seg < 2*CURV_RES+1; seg++) {
-	  rotateMountedPolygon(_robot, Vector2d(offset, 0.), -angle);
+	  rotateMountedPolygon(_robot, Vector2d(0., offset), -angle);
           if(getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) == 0) {
 	    CURV[count][seg] = 0;
 	  }
@@ -321,7 +321,7 @@ namespace Miro
 	}
 
 	// rotate backwards to middle position
-	rotateMountedPolygon(_robot, Vector2d(offset, 0.), angle * CURV_RES);
+	rotateMountedPolygon(_robot, Vector2d(0., offset), angle * CURV_RES);
 
       }
       else { // left==right ==> robot moves straight forward/backward

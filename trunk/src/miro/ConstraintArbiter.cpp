@@ -39,6 +39,8 @@ namespace Miro
 
     currentVelocity_.translation = 0;
     currentVelocity_.rotation = 0.;
+    velocitySpace_.setWheelBase(332);//pMotion_->getWheelBase());
+
 
     if (pSupplier_) {
       // Status Notify Event initialization
@@ -70,7 +72,7 @@ namespace Miro
     // set the wheelbase
     // this shouldn't change for different action patterns
     // but we have to deferr this initialization until runtime
-    p->velocitySpace.setWheelBase(pMotion_->getWheelBase());
+//    velocitySpace_.setWheelBase(332);//pMotion_->getWheelBase());
 
     return p;
   }
@@ -103,14 +105,14 @@ namespace Miro
     MIRO_ASSERT(params != NULL);
 
     // create task for viewing velocity space
-    if(params->viewerTask) {
+    /*if(params->viewerTask) {
       if (conArbViewTask_ != NULL) {
 	conArbViewTask_->cancel();
 	delete conArbViewTask_;
-      }
-      conArbViewTask_ = new ConstraintArbiterViewerTask(&params->velocitySpace);
+      }*/
+      conArbViewTask_ = new ConstraintArbiterViewerTask(&velocitySpace_);
       conArbViewTask_->open();
-    }
+    //}
     if (timerId != -1)
       reactor.reset_timer_interval(timerId, params->pace);
   }
@@ -180,18 +182,18 @@ namespace Miro
     }
 
     // preinitialize the velocity space
-    params->velocitySpace.clearAllEvals();
+    velocitySpace_.clearAllEvals();
 
     // let each behaviour calculate its velocity space
     BehaviourVector::const_iterator k;
     velocitySpace_.clearAllEvals();
     velocitySpace_.clearCurvatureConstraints();
     for(k = bv.begin(); k != bv.end(); k++) {
-      (*k)->addEvaluation(&params->velocitySpace);
+      (*k)->addEvaluation(&velocitySpace_);
     }
 
     // calculate new velocity using the content of the velocity space
-    velocity = params->velocitySpace.applyObjectiveFunctionToEval();
+    velocity = velocitySpace_.applyObjectiveFunctionToEval();
 
     //    cout << "LEFT: " << velocity.real() << " ::: " << velocity.imag() << endl;
 

@@ -75,7 +75,12 @@ namespace Miro
 
     VelocityIDL currentVelocity_;
 
+    
+
+    VelocitySpace velocitySpace_;
     ConstraintArbiterViewerTask * conArbViewTask_;
+    bool conArbViewTaskCreated;
+
 
     CosNotification::StructuredEvent notifyEvent;
 
