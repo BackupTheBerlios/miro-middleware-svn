@@ -69,6 +69,7 @@ namespace Miro
 
     mutable Mutex clientMutex_;
     ClientIdVector clientId_;
+    int connections_;
 
     static CORBA::Long idCounter;
   };

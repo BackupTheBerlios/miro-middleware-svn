@@ -35,7 +35,8 @@ namespace Miro
     server_(_server),
     params_(_params),
     format_(_format),
-    pBufferManager_(NULL)
+    pBufferManager_(NULL),
+    connections_(0)
   {
     cout << "Constructing VideoImpl." << endl;
 
@@ -87,7 +88,7 @@ namespace Miro
   VideoImpl::connections() const
   {
     Guard guard(clientMutex_);
-    return clientId_.size();
+    return connections_; //clientId_.size();
   }
   
   Miro::ImageHandleIDL *
@@ -96,32 +97,34 @@ namespace Miro
     {
       Guard guard(clientMutex_);
       _id = ++idCounter;
-      clientId_.insert(_id);
+      ++connections_;
+      //      clientId_.insert(_id);
     }
 
     return new Miro::ImageHandleIDL(imageHandle_);
   }
 
   void
-  VideoImpl::disconnect(CORBA::ULong _id) 
+  VideoImpl::disconnect(CORBA::ULong /*_id*/) 
     ACE_THROW_SPEC((EOutOfBounds))
   {
     Miro::Guard guard(clientMutex_);
-    if (clientId_.erase(_id) == 0)
-      throw Miro::EOutOfBounds("Unregistered client id.");
+    //    if (clientId_.erase(_id) == 0)
+    //      throw Miro::EOutOfBounds("Unregistered client id.");
+    --connections_;
   }
 
   TimeIDL
-  VideoImpl::acquireCurrentImage(CORBA::ULong _id, CORBA::ULong& _buffer) 
+  VideoImpl::acquireCurrentImage(CORBA::ULong /*_id*/, CORBA::ULong& _buffer) 
     ACE_THROW_SPEC((EOutOfBounds))
   {
     TimeIDL stamp;
 
-    {
-      Guard guard(clientMutex_);
-      if (clientId_.find(_id) == clientId_.end())
-	throw Miro::EOutOfBounds("Unregistered client id.");
-    }
+    //    {
+    //      Guard guard(clientMutex_);
+    //      if (clientId_.find(_id) == clientId_.end())
+    //	throw Miro::EOutOfBounds("Unregistered client id.");
+    //    }
 
     _buffer = pBufferManager_->acquireCurrentReadBuffer();
     timeA2C(pBufferManager_->bufferTimeStamp(_buffer), stamp);
@@ -130,16 +133,16 @@ namespace Miro
   }
 
   TimeIDL
-  VideoImpl::acquireNextImage(CORBA::ULong _id, CORBA::ULong& _buffer) 
+  VideoImpl::acquireNextImage(CORBA::ULong /*_id*/, CORBA::ULong& _buffer) 
     ACE_THROW_SPEC((EOutOfBounds, ETimeOut))
   {
     TimeIDL stamp;
 
-    {
-      Guard guard(clientMutex_);
-      if (clientId_.find(_id) == clientId_.end())
-	throw Miro::EOutOfBounds("Unregistered client id.");
-    }
+    //    {
+//       Guard guard(clientMutex_);
+//       if (clientId_.find(_id) == clientId_.end())
+// 	throw Miro::EOutOfBounds("Unregistered client id.");
+//     }
 
     _buffer = pBufferManager_->acquireNextReadBuffer();
     timeA2C(pBufferManager_->bufferTimeStamp(_buffer), stamp);
@@ -148,14 +151,14 @@ namespace Miro
   }
 
   void
-  VideoImpl::releaseImage(CORBA::ULong _id, CORBA::ULong _buffer)
+  VideoImpl::releaseImage(CORBA::ULong /*_id*/, CORBA::ULong _buffer)
     ACE_THROW_SPEC((EOutOfBounds))
   {
-    {
-      Guard guard(clientMutex_);
-      if (clientId_.find(_id) == clientId_.end())
-	throw Miro::EOutOfBounds("Unregistered client id.");
-    }
+//     {
+//       Guard guard(clientMutex_);
+//       if (clientId_.find(_id) == clientId_.end())
+// 	throw Miro::EOutOfBounds("Unregistered client id.");
+//     }
     pBufferManager_->releaseReadBuffer(_buffer);
   }
 
