@@ -2,17 +2,16 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002, 2003
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-#ifndef miro_ConfigDocument_h
-#define miro_ConfigDocument_h
+#ifndef Miro_ConfigDocument_h
+#define Miro_ConfigDocument_h
 
-#include <cmath>
-#include <ace/OS.h>
+#include <Exception.h>
 
 #include <string>
 #include <vector>
@@ -25,27 +24,38 @@ namespace Miro
   // forward declarations
   class ConfigParameters;
 
-  std::string 
-  Miro::findFile(const std::string& name, const std::vector<std::string>& userPath);
-
   class ConfigDocument 
   {
   public:
-    /**
-     * the file to use is identified as follows:
-     * if an argument if given in argc and argv it is used in any case
-     * else if a defaultname != "" is given it is used
-     * else the hostname is extneded by .xml
-     */
+    typedef std::vector<std::string> StringVector;
+
+    //! Initializing constructor.
     ConfigDocument(int& argc, 
 		   char * argv[], 
-		   const std::string& defaultname = std::string(""), 
-		   const std::string& documentname = std::string("MiroConfigDocument"),
-		   const std::vector<std::string> &userPath = std::vector<std::string>() );
+		   std::string const& defaultname = std::string(""), 
+		   std::string const& documentname = std::string("MiroConfigDocument"),
+		   StringVector const& userPath = std::vector<std::string>())
+      throw (Exception);
     ~ConfigDocument();    
 
-    void setSection(const std::string& _section);
-    void getParameters(const std::string& _category, ConfigParameters& parameters);
+    void setSection(std::string const& _section);
+
+    void getInstances(std::string const& _type,
+		      StringVector& _names);
+
+    void getType(std::string const& _type,
+		 std::string const& _name, 
+		 ConfigParameters& parameters);
+
+    void getParameters(std::string const& _name, 
+		       ConfigParameters& parameters);
+
+
+    //! Create the fully qualified path from a file name and a set of search paths.
+    static std::string 
+    findFile(std::string const& name, 
+	     std::vector<std::string> const& userPath);
+
 
   protected:
     QDomDocument * document_;
@@ -58,6 +68,5 @@ namespace Miro
   ConfigDocument::setSection(const std::string& _section) {
     section_ = _section;
   }
-
-};
-#endif
+}
+#endif // Miro_ConfigDocument_h

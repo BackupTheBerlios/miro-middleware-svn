@@ -12,30 +12,35 @@
 #include "ConfigDocument.h"
 #include "Exception.h"
 #include "Parameters.h"
+#include "Log.h"
+
+#include <cmath>
+
+#include <ace/Version.h>
+
+ // for string compare
+#if ACE_MAJOR_VERSION > 5 || \
+    ACE_MAJOR_VERSION == 5 && ACE_MINOR_VERSION >= 4
+#include <ace/OS_NS_strings.h>
+#else
+#include <ace/OS.h>
+#endif
 
 #include <ace/Arg_Shifter.h>
 
 #include <qfile.h>
 #include <qdom.h>
 
-#include <iostream>
-#include <fstream>
 #include <sstream>
-
-#include <unistd.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-
-#undef DEBUG
 
 namespace Miro
 {
 
+  /** The first existing file that matches the name is returned. */
   std::string
-  findFile(const std::string& name, const std::vector<std::string>& userPath)
+  ConfigDocument::findFile(std::string const& name, 
+			   StringVector const& userPath)
   {
-    struct stat statBuf;
-
     std::string fullName;
     std::vector<std::string> path(userPath);
     std::vector<std::string>::iterator i;
@@ -51,20 +56,27 @@ namespace Miro
   
     for (i = path.begin(); i != path.end(); ++i) {
       fullName = *i + "/" + name;
-      if (stat(fullName.c_str(), &statBuf) == 0)  
+      if (QFile::exists(fullName.c_str()))  
 	return fullName;
     }
     return std::string();
   }
 
+  /**
+   * The file to use is identified as follows: If a file name
+   * argument -MiroConfigFile (or -MCF for short) is given in argc
+   * and argv it is used in any case.  If a defaultname != "" is
+   * given it is used.  Otherwise the hostname ($HOSTNAME) is
+   * exteded by .xml
+   */
   ConfigDocument::ConfigDocument(int& argc, 
 				 char * argv[], 
-				 const std::string& defaultname, 
-				 const std::string& documentname,
-				 const std::vector<std::string> &userPath ) :
+				 std::string const& defaultname, 
+				 std::string const& documentname,
+				 StringVector const& userPath) 
+    throw (Exception) :
     document_( new QDomDocument(documentname.c_str()) )
   {
-
     const char *name;
     char host[256];
     if (defaultname == "") {
@@ -105,23 +117,24 @@ namespace Miro
     std::string fileName = name;
     if (name == host)
       fileName += std::string(".xml");
-    std::string fullName = Miro::findFile(fileName, userPath );
+    std::string fullName = findFile(fileName, userPath );
 
     if (fullName.length() == 0) {
-      std::cerr << "File not found: " << fileName << std::endl;
-      std::cerr << "No config file processing." << std::endl;
+      MIRO_LOG_OSTR(LL_ERROR, 
+		    "ConfigDocument: File not found: " << 
+		    fileName << std::endl <<
+		    "No config file processing.");
     } 
     else {
       QFile f(fullName.c_str());
 
       if (!f.open(IO_ReadOnly)) {
-	std::cout << "error on open" << std::endl;
-	throw CException(errno, std::strerror(errno));
+	throw CException(errno, "Error opening" + fullName);
       }
       QString parsingError;
       int line = 0;
       int column = 0;
-      if (!document_->setContent(&f/*, &parsingError, &line, &column*/)) {
+      if (!document_->setContent(&f, &parsingError, &line, &column)) {
 	f.close();
 	std::stringstream ostr;
 	ostr << "error parsing " << fullName << std::endl
@@ -137,6 +150,41 @@ namespace Miro
   ConfigDocument::~ConfigDocument()
   {
     delete document_;
+  }
+
+  void 
+  ConfigDocument::getInstances(const std::string& _type, 
+				StringVector& _names)
+  {
+    _names.clear();
+
+    QString section = section_.c_str();
+    QString type = _type.c_str();
+
+    // get the root nodes first child
+    QDomNode n1 = document_->documentElement().firstChild();
+    while(!n1.isNull()) {
+      QDomElement e1 = n1.toElement();
+      if (!e1.isNull() &&
+	  ( (n1.nodeName() == "section" &&
+	     e1.attribute("name") == section) ||
+	    (n1.nodeName() == section))) {
+
+	QDomNode n2 = n1.firstChild();
+	while (!n2.isNull()) {
+	  QDomElement e2 = n2.toElement();
+	  if (!e2.isNull() &&
+	      n2.nodeName() == "instance" &&
+	      e2.attribute("type") == type) {
+	    std::string name = e2.attribute("name").latin1();
+	    if (name != "")
+	      _names.push_back(name);
+	  }
+	  n2 = n2.nextSibling();
+	}
+      }
+      n1 = n1.nextSibling();
+    }
   }
 
   void 
@@ -159,9 +207,8 @@ namespace Miro
 	while (!n2.isNull()) {
 	  QDomElement e2 = n2.toElement();
 	  if (!e2.isNull() &&
-	      ( (n2.nodeName() == "parameter" &&
-		 e2.attribute("name") == category) ||
-		(n2.nodeName() == category))) {
+	      n2.nodeName() == "parameter" &&
+	      e2.attribute("name") == category) {
 	    parameters <<= n2;
 	  }
 	  n2 = n2.nextSibling();
@@ -170,4 +217,38 @@ namespace Miro
       n1 = n1.nextSibling();
     }
   }
-};
+
+  void 
+  ConfigDocument::getType(const std::string& _type, 
+			  const std::string& _name, 
+			  ConfigParameters& parameters)
+  {
+    QString section = section_.c_str();
+    QString type = _type.c_str();
+    QString name = _name.c_str();
+
+    // get the root nodes first child
+    QDomNode n1 = document_->documentElement().firstChild();
+    while(!n1.isNull()) {
+      QDomElement e1 = n1.toElement();
+      if (!e1.isNull() &&
+	  ( (n1.nodeName() == "section" &&
+	     e1.attribute("name") == section) ||
+	    (n1.nodeName() == section))) {
+
+	QDomNode n2 = n1.firstChild();
+	while (!n2.isNull()) {
+	  QDomElement e2 = n2.toElement();
+	  if (!e2.isNull() &&
+	      n2.nodeName() == "instance" &&
+	      e2.attribute("name") == name &&
+	      e2.attribute("type") == type) {
+	    parameters <<= n2;
+	  }
+	  n2 = n2.nextSibling();
+	}
+      }
+      n1 = n1.nextSibling();
+    }
+  }
+}
