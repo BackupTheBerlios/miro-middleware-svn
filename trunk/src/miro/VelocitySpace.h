@@ -64,7 +64,7 @@ namespace Miro
     void addEvalForPreferredDirection(double, double);
 
     void addEvalForStraightVelocity(double, double);
-
+    void addEvalForStraightVelocityLP(double, double);
     // add an evaluation for a preferred velocity
     void addEvalForVelocity(Vector2d const& _velocity);
     // clear all evaluations

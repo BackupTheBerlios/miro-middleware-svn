@@ -231,6 +231,54 @@ namespace Miro
     }
   }
 
+  void VelocitySpace::addEvalForStraightVelocityLP(double _prefDir, double _maxSpeed)
+  {
+    double l_value, r_value, left, right;
+    double axis_direction;
+    double axis_value;
+    double v_dist;
+
+    if(fabs(_prefDir) <= M_PI_2)
+	_prefDir = -_prefDir;
+
+    for(int l_index = minDynWinLeft_; l_index <= maxDynWinLeft_; l_index++) {
+      for(int r_index = minDynWinRight_; r_index <= maxDynWinRight_; r_index++) {
+
+	left = getVelocityByIndex(l_index);
+	right = getVelocityByIndex(r_index);
+        v_dist = sqrt(left*left + right*right);
+
+        if(fabs(left) < spaceResolution_ && fabs(right) < spaceResolution_){
+           left = 1.0;
+           right = 1.0;
+        }
+
+        l_value =
+	  cos(_prefDir - M_PI_4) * left -
+	  sin(_prefDir - M_PI_4) * right;
+	r_value =
+	  sin(_prefDir - M_PI_4) * left +
+	  cos(_prefDir - M_PI_4) * right;
+
+
+	   if (fabs(left) < _maxSpeed && fabs(right) < _maxSpeed){//v_dist <= _maxSpeed){
+               axis_direction = (fabs(atan2(r_value, l_value)) > M_PI_2)?-1.0:1.0;
+	       axis_value = (l_value/(abs(maxVelocity_)/sqrt(2.0)) + 1.0)/2.0;
+	       velocitySpace_[l_index][r_index] = 25.0 * exp(-(r_value*r_value)/(40.0*40.0)) * axis_value;
+
+           }
+	   else
+	     velocitySpace_[l_index][r_index] = 0.0;
+ //       }
+ //       else
+ //          velocitySpace_[l_index][r_index] = 0.0;
+      }
+    }
+  }
+
+
+
+
   /**
    * velocity.real() = translation, velocity.imag() = rotation
    */
