@@ -66,7 +66,7 @@ main(int argc, char * argv[])
 	  std::cin >> x;
 	  std::cout << "y (mm) - " << std::flush;
 	  std::cin >> y;
-	  std::cout << "theta (,A0(B) - " << std::flush;
+	  std::cout << "theta (°) - " << std::flush;
 	  std::cin >> theta;
 	  theta = Miro::deg2Rad(theta);
 
@@ -82,7 +82,7 @@ main(int argc, char * argv[])
 	  std::cin >> x;
 	  std::cout << "dy (mm) - " << std::flush;
 	  std::cin >> y;
-	  std::cout << "delta (,A0(B) - " <<  std::flush;
+	  std::cout << "delta (°) - " <<  std::flush;
 	  std::cin >> theta;
 	  theta = Miro::deg2Rad(theta);
 
