@@ -64,6 +64,62 @@ namespace Video
   }
 
 
+  bool
+  DeviceQuickCam::setFeatures(const QuickCamFeatureSet &features) {
+    setFramerate(features.framerate);
+    setVideoWindow();
+    
+    setBrightness(features.brightness);
+    setHue(features.hue);
+    setContrast(features.contrast);
+    setVideoPicture();
+    
+    setWbMode(features.whitebalance);
+    setWbManualRed(features.whitebalanceManualRed);
+    setWbManualBlue(features.whitebalanceManualBlue);
+    setWbSpeed(features.whitebalanceSpeed);
+    setWbDelay(features.whitebalanceDelay);
+    setAGC(features.autoGainControl);
+    setShutterSpeed(features.shutterSpeed);
+    setSharpness(features.sharpness);
+    setBC(features.backlightCompensation);
+    setFM(features.flickerlessMode);
+    setDNR(features.dynamicNoiseReduction);
+    setCompression(features.compression);
+    setPWC();
+
+    return true;
+  }
+  
+  bool
+  DeviceQuickCam::getFeatures(QuickCamFeatureSet &features) {
+    getVideoWindow();
+    features.framerate = getFramerate();
+   
+    getVideoPicture();
+    features.brightness = getBrightness();
+    features.hue = getHue();
+    features.contrast = getContrast();
+   
+    getPWC();
+    features.whitebalance = getWbMode();
+    features.whitebalanceManualRed = getWbManualRed();
+    features.whitebalanceManualBlue = getWbManualBlue();
+    features.whitebalanceReadRed = getWbReadRed();
+    features.whitebalanceReadBlue = getWbReadBlue();
+    features.whitebalanceSpeed = getWbSpeed();
+    features.whitebalanceDelay = getWbDelay();
+    features.autoGainControl = getAGC();
+    features.shutterSpeed = getShutterSpeed();
+    features.sharpness = getSharpness();
+    features.backlightCompensation = getBC();
+    features.flickerlessMode = getFM();
+    features.dynamicNoiseReduction = getDNR();
+    features.compression = getCompression();
+
+    return true;
+  }
+  
   BufferManager *
   DeviceQuickCam::bufferManagerInstance() const
   {
@@ -103,10 +159,9 @@ namespace Video
 
     //fcntl(ioBuffer_.get_handle(), F_SETFD, FD_CLOEXEC);
     pwc_probe probe;
-    if(ioctl(ioBuffer_.get_handle(), VIDIOCPWCPROBE, &probe) == 0) {
+    if (ioctl(ioBuffer_.get_handle(), VIDIOCPWCPROBE, &probe) == 0) {
 	std::cout << "Probing Device: " << probe.name << " successfull" << endl;
-    }
-    else{
+    } else{
        throw Miro::CException(errno, "Error Probing Device QuickCam");
     }
 
@@ -142,20 +197,44 @@ namespace Video
     //setSource();
     setPalette();
 
-    ioctl(ioBuffer_.get_handle(), VIDIOCGWIN, &vidwindow);
+    /* set framerate */
+    getVideoWindow();
 
-    std::cout << "fps " << (vidwindow.flags >> 16) << endl;
+    setFramerate(params_->framerate);
 
-    vidwindow.flags = params_->fps << 16;
+    setVideoWindow();
+    getVideoWindow();
 
-    std::cout << "setting " << params_->fps << " fps" << endl;
-    ioctl(ioBuffer_.get_handle(), VIDIOCSWIN, &vidwindow);
+    /* set parameters */
+    std::cout << "Retrieving video_picture information" << std::endl;
+    getVideoPicture();
 
-    ioctl(ioBuffer_.get_handle(), VIDIOCGWIN, &vidwindow);
+    setBrightness(params_->brightness);
+    setHue(params_->hue);
+    setContrast(params_->contrast);
 
-    std::cout << "fps now " << (vidwindow.flags >> 16) << endl;
+    setVideoPicture();
 
 
+    /* set pwc centric parameters */
+    std::cout << "Retrieving PWC information" << std::endl;
+    getPWC();
+
+    setWbMode(params_->whitebalance);
+    setWbManualRed(params_->whitebalanceRed);
+    setWbManualBlue(params_->whitebalanceBlue);
+    setWbSpeed(params_->whitebalanceSpeed);
+    setWbDelay(params_->whitebalanceDelay);
+    setAGC(params_->autoGainControl);
+    setShutterSpeed(params_->shutterSpeed);
+    setSharpness(params_->sharpness);
+    setBC(params_->backlightCompensation);
+    setFM(params_->flickerlessMode);
+    setDNR(params_->dynamicNoiseReduction);
+    setCompression(params_->compression);
+
+    setPWC();
+    
 
     //	preparing buffers
 
@@ -325,6 +404,260 @@ namespace Video
   }
 
 
+  void
+  DeviceQuickCam::getVideoWindow() {
+    ioctl(ioBuffer_.get_handle(), VIDIOCGWIN, &vidwindow);
+    std::cout << "fps " << (vidwindow.flags >> 16) << endl;
+  }
+
+  
+  void
+  DeviceQuickCam::setVideoWindow() {
+    std::cout << "setting " << (vidwindow.flags >> 16) << " fps" << endl;
+    ioctl(ioBuffer_.get_handle(), VIDIOCSWIN, &vidwindow);
+  }
+  
+
+  unsigned int
+  DeviceQuickCam::getFramerate() {
+    return vidwindow.flags >> 16;
+  }
+
+  
+  void
+  DeviceQuickCam::setFramerate(unsigned int _framerate) {
+    vidwindow.flags = _framerate << 16;
+  }
+  
+
+  void
+  DeviceQuickCam::getVideoPicture() {
+    ioctl(ioBuffer_.get_handle(), VIDIOCGPICT, &vidpicture);
+  }
+
+  void
+  DeviceQuickCam::setVideoPicture() {
+    ioctl(ioBuffer_.get_handle(), VIDIOCSPICT, &vidpicture);
+  }
+
+  
+  unsigned short
+  DeviceQuickCam::getBrightness() {
+    return vidpicture.brightness;
+  }
+
+  
+  void
+  DeviceQuickCam::setBrightness(unsigned short _brightness) {
+    vidpicture.brightness = _brightness;
+  }
+
+  
+  unsigned short
+  DeviceQuickCam::getHue() {
+    return vidpicture.hue;
+  }
+
+  
+  void
+  DeviceQuickCam::setHue(unsigned short _hue) {
+    vidpicture.hue = _hue;
+  }
+  
+
+  unsigned short
+  DeviceQuickCam::getContrast() {
+    return vidpicture.contrast;
+  }
+
+  
+  void
+  DeviceQuickCam::setContrast(unsigned short _contrast) {
+    vidpicture.contrast = _contrast;
+  }
+
+
+  void
+  DeviceQuickCam::getPWC() {
+    ioctl(ioBuffer_.get_handle(), VIDIOCPWCGAWB, &pwcWb);
+    ioctl(ioBuffer_.get_handle(), VIDIOCPWCGAWBSPEED, &pwcWbSpeed);
+    pwcShutterSpeed = 0;
+    ioctl(ioBuffer_.get_handle(), VIDIOCPWCGAGC, &pwcAGC);
+    ioctl(ioBuffer_.get_handle(), VIDIOCPWCGCONTOUR, &pwcSharpness);
+    ioctl(ioBuffer_.get_handle(), VIDIOCPWCGBACKLIGHT, &pwcBC);
+    ioctl(ioBuffer_.get_handle(), VIDIOCPWCGFLICKER, &pwcFM);
+    ioctl(ioBuffer_.get_handle(), VIDIOCPWCGDYNNOISE, &pwcDNR);
+  }
+
+  
+  void
+  DeviceQuickCam::setPWC() {
+    ioctl(ioBuffer_.get_handle(), VIDIOCPWCSDYNNOISE, &pwcDNR);
+    ioctl(ioBuffer_.get_handle(), VIDIOCPWCSFLICKER, &pwcFM);
+    ioctl(ioBuffer_.get_handle(), VIDIOCPWCSBACKLIGHT, &pwcBC);
+    ioctl(ioBuffer_.get_handle(), VIDIOCPWCSCONTOUR, &pwcSharpness);
+    ioctl(ioBuffer_.get_handle(), VIDIOCPWCSAGC, &pwcAGC);
+    ioctl(ioBuffer_.get_handle(), VIDIOCPWCSSHUTTER, &pwcShutterSpeed);
+    ioctl(ioBuffer_.get_handle(), VIDIOCPWCSAWBSPEED, &pwcWbSpeed);
+    ioctl(ioBuffer_.get_handle(), VIDIOCPWCSAWB, &pwcWb);
+  }
+
+  
+  int
+  DeviceQuickCam::getWbMode() {
+    return pwcWb.mode;
+  }
+
+  
+  void
+  DeviceQuickCam::setWbMode(int _mode) {
+    pwcWb.mode = _mode;
+  }
+
+  
+  int
+  DeviceQuickCam::getWbReadRed() {
+    return pwcWb.read_red;
+  }
+
+  
+  int
+  DeviceQuickCam::getWbManualRed() {
+    return pwcWb.manual_red;
+  }
+
+  
+  void
+  DeviceQuickCam::setWbManualRed(int _red) {
+    pwcWb.manual_red = _red;
+  }
+  
+
+  int
+  DeviceQuickCam::getWbReadBlue() {
+    return pwcWb.read_blue;
+  }
+
+  
+  int
+  DeviceQuickCam::getWbManualBlue() {
+    return pwcWb.manual_blue;
+  }
+
+  
+  void
+  DeviceQuickCam::setWbManualBlue(int _blue) {
+    pwcWb.manual_blue = _blue;
+  }
+
+  
+  int
+  DeviceQuickCam::getWbSpeed() {
+    return pwcWbSpeed.control_speed;
+  }
+
+  
+  void
+  DeviceQuickCam::setWbSpeed(int _speed) {
+    pwcWbSpeed.control_speed = _speed;
+  }
+  
+
+  int
+  DeviceQuickCam::getWbDelay() {
+    return pwcWbSpeed.control_delay;
+  }
+
+  
+  void
+  DeviceQuickCam::setWbDelay(int _delay) {
+    pwcWbSpeed.control_delay = _delay;
+  }
+  
+  
+  int
+  DeviceQuickCam::getAGC() {
+    return pwcAGC;
+  }
+
+  
+  void
+  DeviceQuickCam::setAGC(int _agc) {
+    pwcAGC = _agc;
+  }
+  
+   
+  int
+  DeviceQuickCam::getShutterSpeed() {
+    return pwcShutterSpeed;
+  }
+
+  
+  void
+  DeviceQuickCam::setShutterSpeed(int _shutterSpeed) {
+    pwcShutterSpeed = _shutterSpeed;
+  }
+  
+    
+  int
+  DeviceQuickCam::getSharpness() {
+    return pwcSharpness;
+  }
+
+  
+  void
+  DeviceQuickCam::setSharpness(int _sharpness) {
+    pwcSharpness = _sharpness;
+  }
+  
+
+  int
+  DeviceQuickCam::getBC() {
+    return pwcBC;
+  }
+
+  
+  void
+  DeviceQuickCam::setBC(int _bc) {
+    pwcBC = _bc;
+  }
+  
+
+  int
+  DeviceQuickCam::getFM() {
+    return pwcFM;
+  }
+
+  
+  void
+  DeviceQuickCam::setFM(int _fm) {
+    pwcFM = _fm;
+  }
+  
+
+  int
+  DeviceQuickCam::getDNR() {
+    return pwcDNR;
+  }
+
+  
+  void
+  DeviceQuickCam::setDNR(int _dnr) {
+    pwcDNR = _dnr;
+  }
+    
+
+  int
+  DeviceQuickCam::getCompression() {
+    return pwcCompression;
+  }
+
+  
+  void
+  DeviceQuickCam::setCompression(int _compression) {
+    pwcCompression = _compression;
+  }
+    
 
 };
 

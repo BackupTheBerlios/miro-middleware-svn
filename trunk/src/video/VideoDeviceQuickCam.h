@@ -19,6 +19,7 @@ extern "C" {
 
 #include "VideoDevice.h"
 #include <ace/DEV_Connector.h>
+#include "idl/QuickCamControlC.h"
 
 namespace Video
 {
@@ -35,6 +36,8 @@ namespace Video
 
     FILTER_PARAMETERS_FACTORY(DeviceQuickCam);
 
+    bool setFeatures(const QuickCamFeatureSet &features);
+    bool getFeatures(QuickCamFeatureSet &features);
 //    virtual void acquireOutputBuffer();
 //    virtual void releaseOutputBuffer();
 
@@ -54,6 +57,65 @@ namespace Video
     void getChannels();
     void setChannel();
 
+    void getVideoWindow();
+    void setVideoWindow();
+
+    unsigned int getFramerate();
+    void setFramerate(unsigned int _framerate);
+
+    void getVideoPicture(); 
+    void setVideoPicture();
+
+    unsigned short getBrightness();
+    void setBrightness(unsigned short _brightness);
+
+    unsigned short getHue();
+    void setHue(unsigned short _hue);
+
+    unsigned short getContrast();
+    void setContrast(unsigned short _contrast);
+
+    void getPWC();
+    void setPWC();
+
+    int getWbMode();
+    void setWbMode(int _mode);
+
+    int getWbReadRed();
+    int getWbManualRed();
+    void setWbManualRed(int _red);
+
+    int getWbReadBlue();
+    int getWbManualBlue();
+    void setWbManualBlue(int _blue);
+
+    int getWbSpeed();
+    void setWbSpeed(int _speed);
+
+    int getWbDelay();
+    void setWbDelay(int _delay);
+    
+    int getAGC();
+    void setAGC(int _agc);
+   
+    int getShutterSpeed();
+    void setShutterSpeed(int _shutterSpeed);
+    
+    int getSharpness();
+    void setSharpness(int _sharpness);
+
+    int getBC();
+    void setBC(int _bc);
+
+    int getFM();
+    void setFM(int _fm);
+
+    int getDNR();
+    void setDNR(int _dnr);
+    
+    int getCompression();
+    void setCompression(int _compression);
+    
     bool probeFormat(int format);
     int probeAllFormats();
 
@@ -72,6 +134,18 @@ namespace Video
     struct video_capability capability;
     struct video_channel * channels;
     struct video_window vidwindow;
+    struct video_picture vidpicture;
+
+    /* pwc centric */
+    struct pwc_whitebalance pwcWb;
+    struct pwc_wb_speed pwcWbSpeed;
+    int pwcAGC; /* auto gain control */
+    int pwcShutterSpeed;
+    int pwcSharpness;
+    int pwcBC; /* backlight compensation */
+    int pwcFM; /* flickerless mode */
+    int pwcDNR; /* dynamic noise reduction */
+    int pwcCompression;
 
     unsigned char * map_;
 

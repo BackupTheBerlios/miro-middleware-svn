@@ -54,7 +54,37 @@
 
     <config_item name="DeviceQuickCam" parent="Device" final="true">
       <config_parameter name="device" type="string" inherited="true" default="/dev/video0" />
-      <config_parameter name="fps" type="int" default="10" />
+      <config_parameter name="framerate" type="int" default="10" />
+
+      <config_parameter name="contrast" type="unsigned short" default="100" />
+      <config_parameter name="brightness" type="unsigned short" default="324" />
+      <config_parameter name="hue" type="unsigned short" default="-1" />
+
+      <!-- pwc centric -->
+      <!-- indoor = 0, outdoor = 1, flourecence = 2, manual = 3, auto = 4 -->
+      <config_parameter name="whitebalance" type="int" default="0" />
+      <!-- BEGIN only available in whitebalance=manual -->
+      <config_parameter name="whitebalanceRed" type="int" default="0" />
+      <config_parameter name="whitebalanceBlue" type="int" default="0" />
+      <!-- END -->
+      <!-- BEGIN only available in writebalance=auto -->
+      <config_parameter name="whitebalanceSpeed" type="int" default="0" />
+      <config_parameter name="whitebalanceDelay" type="int" default="0" />
+      <!-- END -->
+      <!-- autoGainControl < 0 ? auto : fixed (0..65535) -->
+      <config_parameter name="autoGainControl" type="int" default="-1" />
+      <!-- shutterSpeed < 0 ? auto : fixed (0..65535) -->
+      <config_parameter name="shutterSpeed" type="int" default="-1" />
+      <!-- sharpness < 0 ? auto : fixed (0..65535) -->
+      <config_parameter name="sharpness" type="int" default="-1" />
+      <!-- backlightCompensation == 0 ? off : on -->
+      <config_parameter name="backlightCompensation" type="int" default="1" />
+      <!-- flickerlessMode == 0 ? off : on -->
+      <config_parameter name="flickerlessMode" type="int" default="1" />
+      <!-- dynamicNoiseReduction == 0 ? off : fixed (1..3) -->
+      <config_parameter name="dynamicNoiseReduction" type="int" default="1" />
+      <!-- compression == 0 ? off : fixed (1..3) -->
+      <config_parameter name="compression" type="int" default="0" />
     </config_item>
 
     <config_item name="Device1394" parent="Device" final="true">
