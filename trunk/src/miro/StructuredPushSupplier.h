@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 1999, 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // This code was originally taken from the orbsvs/examples/Notify/Supplier.
@@ -20,6 +20,7 @@
 #include <orbsvcs/CosNotifyCommC.h>
 
 #include <string>
+#include <vector>
 
 namespace Miro
 {
@@ -29,7 +30,8 @@ namespace Miro
     //! Initializing constructor.
     StructuredPushSupplier(CosNotifyChannelAdmin::EventChannel_ptr  _ec,
 			   const std::string& _domainName = std::string(),
-			   bool _connect = true);
+			   bool _connect = true,
+			   const CosNotification::EventTypeSeq & _event = CosNotification::EventTypeSeq());
 
     //! Destructor
     virtual ~StructuredPushSupplier();
@@ -39,6 +41,9 @@ namespace Miro
     //! Disconnect supplier to proxy consumer.
     void disconnect();
 
+    bool subscribed(unsigned long _index) const;
+    bool subscribed(std::string const& _domain, std::string const& _type) const;
+
     //! Send one event.
     void sendEvent(const CosNotification::StructuredEvent& event);
     
@@ -46,6 +51,20 @@ namespace Miro
     const std::string& domainName();
 
   protected:
+    // inherited IDL interfae
+
+    //! CosNotifyComm::StructuredPushSupplier interface method implementation.
+    virtual void subscription_change (const CosNotification::EventTypeSeq & added,
+				      const CosNotification::EventTypeSeq & removed
+				      ACE_ENV_ARG_DECL_WITH_DEFAULTS)
+      throw(CORBA::SystemException, CosNotifyComm::InvalidEventType);
+
+    //! CosNotifyComm::StructuredPushSupplier interface method implementation.
+    virtual void disconnect_structured_push_supplier(ACE_ENV_SINGLE_ARG_DECL_WITH_DEFAULTS)
+      throw(CORBA::SystemException);
+
+    typedef std::vector<bool> SubscriptionVector;
+
     //! The channel we connect to. 
     CosNotifyChannelAdmin::EventChannel_var ec_;
     //! The group operator between admin-proxy's. 
@@ -70,17 +89,8 @@ namespace Miro
     //! If true, the supplier is connected to the event channel.
     bool connected_;
 
-    // inherited IDL interfae
-
-    //! CosNotifyComm::StructuredPushSupplier interface method implementation.
-    virtual void subscription_change (const CosNotification::EventTypeSeq & added,
-				      const CosNotification::EventTypeSeq & removed
-				      ACE_ENV_ARG_DECL_WITH_DEFAULTS)
-      throw(CORBA::SystemException, CosNotifyComm::InvalidEventType);
-
-    //! CosNotifyComm::StructuredPushSupplier interface method implementation.
-    virtual void disconnect_structured_push_supplier(ACE_ENV_SINGLE_ARG_DECL_WITH_DEFAULTS)
-      throw(CORBA::SystemException);
+    CosNotification::EventTypeSeq event_;
+    SubscriptionVector subscription_;
   };
 
   inline
@@ -92,5 +102,12 @@ namespace Miro
       proxyConsumer_->push_structured_event(event);
     }
   }
-};
+
+  inline
+  bool
+  StructuredPushSupplier::subscribed(unsigned long _index) const {
+    assert(_index < subscription_.size());
+    return subscription_[_index];
+  }
+}
 #endif

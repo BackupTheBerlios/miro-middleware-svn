@@ -143,6 +143,12 @@ namespace Miro
 	  n[0].id = CORBA::string_dup(i->c_str());
 	  namingContext->unbind(n);
 	}
+	ContextNameVector::const_iterator j;
+	for (j = contextNameVector_.begin(); j != contextNameVector_.end(); ++j) {
+	  n[0].id = CORBA::string_dup(j->second.c_str());
+	  j->first->unbind(n);
+	  CORBA::release(j->first);
+	}
       }
       catch (const CORBA::Exception& e) {
 	std::cerr << "Caught CORBA exception on unbinding: " << n[0].id << std::endl;
@@ -249,6 +255,46 @@ namespace Miro
       }
 
       nameVector_.push_back(_name);
+    }      
+  }
+
+  /**
+   * Adds an IOR at the naming service in a specified
+   * naming context.
+   */
+  void
+  Server::addToNameService(CORBA::Object_ptr _object, 
+			   CosNaming::NamingContext_ptr _context,
+			   const std::string& _name)
+  {
+    if (!noNaming_) {
+      CosNaming::Name n(1);
+      n.length(1);
+      n[0].id = CORBA::string_dup(_name.c_str());
+
+      if (rebind_) {
+	// Force binding of references to make
+	// sure they are always up-to-date.
+	try {
+	  _context->unbind(n);
+
+	  std::cerr << "Object still bound in naming service: " << _name << std::endl
+	       << "Rebinding it." << std::endl;
+	} catch (...) {
+	}
+      }
+
+      try {
+	_context->bind(n, _object);
+      }
+      catch (CosNaming::NamingContext::AlreadyBound& ) {
+	std::cerr << "Object is already bound in naming service: "
+	     << n[0].id << std::endl
+	     << "Use -MiroRebindIOR if you really want to rebind it." << std::endl;
+	throw(0);
+      }
+
+      contextNameVector_.push_back(std::make_pair(CosNaming::NamingContext::_duplicate(_context), _name));
     }      
   }
 

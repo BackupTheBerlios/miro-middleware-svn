@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 1999, 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -10,6 +10,8 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "StructuredPushSupplier.h"
+
+#include <cstring>
 
 #undef DEBUG
 #ifdef DEBUG
@@ -35,15 +37,18 @@ namespace Miro
    * Creates a new proxy supplier and connects to it.
    */
   StructuredPushSupplier::StructuredPushSupplier(EventChannel_ptr _ec,
-						 const std::string& _domainName,
-						 bool _connect) :
+						 std::string const& _domainName,
+						 bool _connect,
+						 CosNotification::EventTypeSeq const& _event) :
     ec_(EventChannel::_duplicate(_ec)),
     ifgop_(CosNotifyChannelAdmin::OR_OP),
     supplierAdminId_(),
     supplierAdmin_(),
     domainName_(_domainName),
     connectedMutex_(),
-    connected_(false)
+    connected_(false),
+    event_(_event),
+    subscription_(event_.length(), false)
   {
     DBG(std::cout << "Constructing StructuredPushSupplier." << std::endl);
 
@@ -86,20 +91,35 @@ namespace Miro
 	StructuredProxyPushConsumer::_narrow(proxyConsumer.in());
       ACE_ASSERT(!CORBA::is_nil(proxyConsumer.in()));
 
+
+      CosNotification::EventTypeSeq removed;
+      removed.length(1);
+
+      removed[0].domain_name =  CORBA::string_dup("*");
+      removed[0].type_name = CORBA::string_dup("*");
+
+      supplierAdmin_->offer_change(event_, removed);
+
       proxyConsumer_->connect_structured_push_supplier(objref_);
       connected_ = true;
 
-#ifdef DEBUG
-      std::cout << "currently subscribed messages:" << std::endl;
+      DBG(std::cout << "currently subscribed messages:" << std::endl);
       CosNotification::EventTypeSeq_var events = 
 	proxyConsumer_->obtain_subscription_types(CosNotifyChannelAdmin::ALL_NOW_UPDATES_ON);
-      for (unsigned int i=0; i < events->length(); ++i) {
-	std::cout << "  " << events[i].domain_name << "\t"
-	     << "  " << events[i].type_name << std::endl;
+      for (unsigned long i = 0; i < events->length(); ++i) {
+	for (unsigned long j = 0; j < event_.length(); ++j) {
+	  if (strcmp (events[i].type_name, event_[j].type_name) == 0 &&
+	      strcmp (events[i].domain_name, event_[j].domain_name) == 0) {
+	    subscription_[j] = true;
+	    break;
+	  }
+	}
+	DBG(std::cout << "  " << events[i].domain_name << "\t"
+	    << "  " << events[i].type_name << std::endl);
       }
-#endif
     }
   }
+
   void
   StructuredPushSupplier::disconnect() 
   {
@@ -133,24 +153,39 @@ namespace Miro
   }
 
   void
-  StructuredPushSupplier::subscription_change(const CosNotification::EventTypeSeq& DBG(added),
-					      const CosNotification::EventTypeSeq& DBG(removed)
+  StructuredPushSupplier::subscription_change(const CosNotification::EventTypeSeq& added,
+					      const CosNotification::EventTypeSeq& removed
 					      ACE_ENV_ARG_DECL_NOT_USED)
     throw(CORBA::SystemException, CosNotifyComm::InvalidEventType)
   {
-#ifdef DEBUG
-    std::cout << "subscription change" << std::endl;
-    std::cout << "added messages:" << std::endl;
-    for (unsigned int i=0; i < added.length(); ++i) {
-      std::cout << "  " << added[i].domain_name << "\t"
-	   << "  " << added[i].type_name << std::endl;
-    }
-    std::cout << "removed messages:" << std::endl;
-    for (unsigned int i=0; i < removed.length(); ++i) {
-      std::cout << "  " << removed[i].domain_name << "\t"
-	   << "  " << removed[i].type_name << std::endl;
+    DBG(std::cout << "subscription change" << std::endl;
+	std::cout << "added messages:" << std::endl);
+    for (unsigned long i = 0; i < added.length(); ++i) {
+      for (unsigned long j = 0; j < event_.length(); ++j) {
+	if (strcmp (added[i].type_name, event_[j].type_name) == 0 &&
+	    strcmp (added[i].domain_name, event_[j].domain_name) == 0) {
+	  subscription_[j] = true;
+	  break;
+	}
+      }
+      DBG(std::cout << "  " << added[i].domain_name << "\t"
+	  << "  " << added[i].type_name << std::endl);
     }
 
+    DBG(std::cout << "removed messages:" << std::endl);
+    for (unsigned int i = 0; i < removed.length(); ++i) {
+      for (unsigned long j = 0; j < event_.length(); ++j) {
+	if (strcmp (removed[i].type_name, event_[j].type_name) == 0 &&
+	    strcmp (removed[i].domain_name, event_[j].domain_name) == 0) {
+	  subscription_[j] = false;
+	  break;
+	}
+      }
+      DBG(std::cout << "  " << removed[i].domain_name << "\t"
+	  << "  " << removed[i].type_name << std::endl);
+    }
+
+#ifdef DEBUG
     std::cout << "currently subscribed messages:" << std::endl;
     CosNotification::EventTypeSeq_var events = 
       proxyConsumer_->obtain_subscription_types(CosNotifyChannelAdmin::ALL_NOW_UPDATES_ON);
@@ -158,7 +193,6 @@ namespace Miro
       std::cout << "  " << events[i].domain_name << "\t"
 	   << "  " << events[i].type_name << std::endl;
     }
-
 #endif
   }
 
@@ -170,5 +204,16 @@ namespace Miro
 
     connected_ = false;
   }
-};
+
+  bool
+  StructuredPushSupplier::subscribed(std::string const& _domain, 
+				     std::string const& _type) const {
+    for (unsigned long i = 0; i < event_.length(); ++i) {
+      if (_domain == static_cast<char const *>(event_[i].domain_name) &&
+	  _type == static_cast<char const *>(event_[i].type_name))
+	return subscription_[i];
+    }
+    return false;
+  }
+}
 

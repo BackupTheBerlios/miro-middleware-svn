@@ -91,6 +91,10 @@ namespace Miro
 
     //! Register an object reference at the CORBA naming service.
     void addToNameService(CORBA::Object_ptr _object, const std::string& _name);
+    //! Register an object reference at the CORBA naming service.
+    void addToNameService(CORBA::Object_ptr _object, 
+			  CosNaming::NamingContext_ptr _context,
+			  const std::string& _name);
 
     bool rebind() const;
 
@@ -106,7 +110,9 @@ namespace Miro
     bool own_;
 
     typedef std::vector<std::string> NameVector;
+    typedef std::vector<std::pair<CosNaming::NamingContext_ptr, std::string> > ContextNameVector;
     NameVector nameVector_;
+    ContextNameVector contextNameVector_;
 
   private:
     bool shutdown_;
