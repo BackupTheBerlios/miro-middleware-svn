@@ -31,7 +31,8 @@ sources = \
 	VideoConsumer.cpp \
 	VideoImpl.cpp \
 	VideoBrokerImpl.cpp \
-	VideoServer.cpp
+	VideoServer.cpp \
+	VideoFilterService.cpp
 
 bttvsources = \
 	BufferManagerBTTV.cpp \
