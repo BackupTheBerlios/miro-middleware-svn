@@ -89,8 +89,10 @@
   <B21>
     <video>
       <device>/dev/video0</device>
-      <subfield>odd</subfield>
-      <palette>bgr</palette>
+      <palette>rgb</palette>
+      <format>ntsc</format>
+      <source>tuner</source>
+      <upsideDown>yes</upsideDown>
     <!-- Parameter Section for Steffan -->
 
     </video>
