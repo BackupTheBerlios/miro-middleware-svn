@@ -21,8 +21,6 @@ globaldirs = \
 	notify \
 	notifyMulticast \
 	speech \
-	behaviours \
-	behaviourEngine \
         log
 
 #	xml

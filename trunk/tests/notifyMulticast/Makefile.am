@@ -27,6 +27,7 @@ NotifyMulticastTest_SOURCES = \
 	NotifyMulticastTest.h
 
 NotifyMulticastTest_LDADD = \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiro
 
 all-local: NotifyMulticastTest
