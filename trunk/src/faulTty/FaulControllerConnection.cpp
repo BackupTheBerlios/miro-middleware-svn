@@ -22,27 +22,14 @@
 
 namespace FaulController
 {
-  Connection::Connection() :
-    binaryMode_(false)
+  Connection::Connection()
   {
     DBG(std::cout << "Constructing FaulControllerConnection" << std::endl);
-
-    enableBinary();
   }
 
 
   Connection::~Connection()
   {
     DBG(std::cout << "Destructing FaulControllerConnection" << std::endl);
-  }
-
-  void
-  Connection::enableBinary()
-  {
-    // data package to enable binary commands
-    char const init[4] = {200, 200, 202, 255};
-
-    writeBinary(init, 4);
-    binaryMode_ = true;
   }
 }

@@ -21,15 +21,10 @@ namespace FaulController
     Connection();
     virtual ~Connection();
 
-    //! Enable binary controller commands.
-    void enableBinary();
     //! Write binary controller commands.
     virtual void writeBinary(char const * _message, int _len) = 0;
     //! Write ascii message vectors.
     virtual void writeMessage(char const * const _message[]) = 0;
-
-  protected:
-    bool binaryMode_;
   };
 }
 #endif

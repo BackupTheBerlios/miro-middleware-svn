@@ -105,13 +105,18 @@ namespace FaulMotor
 
 
     disable();
-    //    jmp2();
+    enableBinary();
+    if (!params_->odometryPolling) {
+      jmp2();
+    }
   }
 
   Connection::~Connection()
   {
     DBG(cout << "Destructing FaulMotorConnection." << endl);
-    //    jmp1();
+    if (!params_->odometryPolling) {
+      jmp1();
+    }
     disable();
   }
 
@@ -120,6 +125,16 @@ namespace FaulMotor
   //-------------------//
 
   //----------- commands ----------- //
+
+  void
+  Connection::enableBinary()
+  {
+    // data package to enable binary commands
+    char const init[4] = {200, 200, 202, 255};
+
+    leftWheel_->writeBinary(init, 4);
+    rightWheel_->writeBinary(init, 4);
+  }
 
   void
   Connection::setSpeed(short _speedL, short _speedR)

@@ -1,4 +1,4 @@
-<!DOCTYPE xml SYSTEM "PolicyEditor_behaviour.dtd">
+<!DOCTYPE xml SYSTEM "MiroParameterDescription.dtd">
 <config> 
   <config_global name="namespace" value="Miro" />
   <config_global name="include" value="miro/BehaviourParameters.h" />

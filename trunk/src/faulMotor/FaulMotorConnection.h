@@ -40,6 +40,9 @@ namespace FaulMotor
     //-----------------//
     //void stop();                              // stop, motor remain enabled
 
+    //! Enable binary controller commands.
+    void enableBinary();
+
     void setSpeed(short speedL, short speedR);
     void getSpeed();
     void getTicks();
