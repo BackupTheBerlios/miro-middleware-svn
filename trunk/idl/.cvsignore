@@ -378,5 +378,13 @@ DistanceScanS.cpp
 DistanceScanS.h
 DistanceScanS.i.h
 DistanceScanS.lo
+ObstC.cpp
+ObstC.h
+ObstC.i.h
+ObstC.lo
+ObstS.cpp
+ObstS.h
+ObstS.i.h
+ObstS.lo
 
 libmiroIDL.la
