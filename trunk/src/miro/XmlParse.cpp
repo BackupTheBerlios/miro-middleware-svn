@@ -174,55 +174,67 @@ namespace Miro
     return e;
   }
 
-  void operator <<= (ACE_TTY_IO::Serial_Params& lhs, const QDomNode& node)
+  void
+  operator<<= (ACE_TTY_IO::Serial_Params& _lhs, const QDomNode& _node)
   {
-    if (!node.isNull()) {
-      QDomNode n1 = node.firstChild();
-      while(!n1.isNull() ) {
-	QDomNode n2 = n1.firstChild();
-	if (!n2.isNull()) {
-	  QDomText t = n2.toText(); // try to convert the node to a text
-	  if(!t.isNull() ) {       // the node was really a text element.
-	    if (n1.nodeName() == "Baudrate") {
-	      lhs.baudrate = t.data().toInt();
-	    }
-	    else if (n1.nodeName() == "Parityenb") {
-	      lhs.parityenb = t.data().toInt();
-	    }
-	    else if (n1.nodeName() == "Databits") {
-	      lhs.databits = t.data().toInt();
-	    }
-	    else if (n1.nodeName() == "Stopbits") {
-	      lhs.stopbits = t.data().toInt();
-	    }
-	    else if (n1.nodeName() == "Readtimeoutmsec") {
-	      lhs.readtimeoutmsec = t.data().toInt();
-	    }
-	    else if (n1.nodeName() == "Modem") {
-	      lhs.modem = t.data().toInt();
-	    }
-	    else if (n1.nodeName() == "Rcvenb") {
-	      lhs.rcvenb = t.data().toInt();
-	    }
-	    else if (n1.nodeName() == "Ctsenb") {
-	      lhs.ctsenb = t.data().toInt();
-	    }
-	    else if (n1.nodeName() == "Rtsenb") {
-	      lhs.rtsenb = t.data().toInt();
-	    }
-	    else if (n1.nodeName() == "Xinenb") {
-	      lhs.xinenb = t.data().toInt();
-	    }
-	    else if (n1.nodeName() == "Xoutenb") {
-	      lhs.xoutenb = t.data().toInt();
-	    }
-	  }
-	}
-	n1 = n1.nextSibling();
+    if (!_node.isNull()) {
+      QDomNode n = _node.firstChild();
+      while(!n.isNull() ) {
+        QDomElement e = n.toElement();
+        if( !e.isNull() ) {
+          QDomAttr a = e.attributeNode("name");
+          if (!a.isNull()) {
+            QString i = a.value();
+            if (i == "Baudrate") {
+              _lhs.baudrate <<= n;
+            }
+            else if (i == "Ctsenb") {
+              _lhs.ctsenb <<= n;
+            }
+            else if (i == "Databits") {
+              _lhs.databits <<= n;
+            }
+            else if (i == "Modem") {
+              _lhs.modem <<= n;
+            }
+            else if (i == "Parityenb") {
+              _lhs.parityenb <<= n;
+            }
+            else if (i == "Rcvenb") {
+              _lhs.rcvenb <<= n;
+            }
+            else if (i == "Readtimeoutmsec") {
+              _lhs.readtimeoutmsec <<= n;
+            }
+            else if (i == "Rtsenb") {
+              _lhs.rtsenb <<= n;
+            }
+            else if (i == "Stopbits") {
+              _lhs.stopbits <<= n;
+            }
+            else if (i == "Xinenb") {
+              _lhs.xinenb <<= n;
+            }
+            else if (i == "Xofflim") {
+              _lhs.xofflim <<= n;
+            }
+            else if (i == "Xonlim") {
+              _lhs.xonlim <<= n;
+            }
+            else if (i == "Xoutenb") {
+              _lhs.xoutenb <<= n;
+            }
+	    /*
+            else if (i == "Paritymode") {
+              _lhs.paritymode <<= n;
+            }
+	    */
+          }
+        }
+        n = n.nextSibling();
       }
     }
   }
-
   QDomElement 
   operator>>= (const ACE_TTY_IO::Serial_Params& lhs, QDomNode& _node)
   {
