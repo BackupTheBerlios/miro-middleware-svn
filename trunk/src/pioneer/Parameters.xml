@@ -3,7 +3,7 @@
   <config_global name="namespace" value="Pioneer" />
   <config_global name="include" value="psos/Parameters.h" />
 
-  <config_group name="msp">
+  <config_group name="Pioneer">
     <config_item parent="Psos::" instance="true">
       <config_parameter name="motion" type="Miro::DifferentialMotionParameters" />
       <constructor>
