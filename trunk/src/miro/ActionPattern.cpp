@@ -26,7 +26,6 @@ namespace Miro
 
   ActionPattern::ActionPattern(const string &name, StructuredPushSupplier * _pSupplier) :
     pSupplier_(_pSupplier),
-    behaviourPriority_(0),
     actionPatternName_(name)
   {
     if (pSupplier_) {
@@ -55,6 +54,7 @@ namespace Miro
       ActionPattern::currentActionPattern()->close(this);
     }
 
+    cout << "ActionPattern: Init arbiter." << endl;
     arbiter_->init(arbiterParameters_);
 
     setCurrentActionPattern(this);
@@ -65,6 +65,7 @@ namespace Miro
     }
 	
     //enable all current behaviours		
+    cout <<"ActionPattern: Enabling behaviours." << endl;
     BehaviourMap::const_iterator i;
     for(i = behaviourMap_.begin(); i != behaviourMap_.end(); i++) {
       i->second.first->init(i->second.second);
@@ -91,7 +92,7 @@ namespace Miro
       // if a behaviour is active, check for disabling
       if (i->second.first->isActive()) {
 	// if the next actionpattern doesn't need this behaviour...
-	if (nextPattern == 0 || nextPattern->getBehaviour(i->first) == 0) {
+	if (nextPattern == NULL || nextPattern->getBehaviour(i->first) == 0) {
 	  //disable behaviour
 	  cout << "Disabling Behaviour: " << i->second.first->getBehaviourName() << endl;
 	  i->second.first->close();			
@@ -102,6 +103,8 @@ namespace Miro
       cout << "Disabling arbiter: " << arbiter_->getName() << endl;
       arbiter_->close();
     }
+
+    cout << "Disabling done." << endl;
   }
 
   const string&
@@ -110,11 +113,10 @@ namespace Miro
   }
 
   void
-  ActionPattern::addBehaviour(const string& _behaviourName, const BehaviourPair& _behaviour) 
+  ActionPattern::addBehaviour(Behaviour * _behaviour, BehaviourParameters * _parameters) 
   {
-    behaviourMap_[_behaviourName] = _behaviour;	
-    arbiterParameters_->priorities[_behaviour.first] = behaviourPriority_;
-    ++behaviourPriority_;
+     behaviourMap_[_behaviour->getBehaviourName()] = std::make_pair(_behaviour, _parameters);	
+    arbiterParameters_->registerBehaviour(_behaviour);
   }
 
   void 
@@ -123,12 +125,14 @@ namespace Miro
     transitionTable_[_patternName] = _actionPattern;	
   }
 
-  Behaviour* ActionPattern::getBehaviour(const string& _behaviourName) {
+  Behaviour* 
+  ActionPattern::getBehaviour(const string& _behaviourName) {
     BehaviourMap::const_iterator i = behaviourMap_.find(_behaviourName);
     return (i != behaviourMap_.end())? i->second.first : NULL;
   }
 
-  ActionPattern* ActionPattern::getTransitionPattern(const string& _patternName) {
+  ActionPattern* 
+  ActionPattern::getTransitionPattern(const string& _patternName) {
     TransitionMap::const_iterator i = transitionTable_.find(_patternName);
     return (i != transitionTable_.end())? i->second : NULL;
   }
@@ -161,8 +165,8 @@ namespace Miro
     ostr << "Transitions:" << endl;
     TransitionMap::const_iterator i;
     for(i = transitionTable_.begin(); i != transitionTable_.end(); ++i) {
-      ostr << "Transition: " << i->first 
-	   << "-->" << i->second->getActionPatternName() 
+      ostr << "Transition: " << i->first << "-->"
+	   << ((i->second)? i->second->getActionPatternName() : "NULL")
 	   << endl;
     }
 

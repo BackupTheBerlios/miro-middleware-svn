@@ -2,22 +2,20 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "ArbiterParameters.h"
 #include "Behaviour.h"
 
-#include <iostream>
-
 namespace Miro
 {
-  ArbiterParameters::ArbiterParameters()
+  ArbiterParameters::ArbiterParameters() :
+    nextNumber_(0UL)
   {}
 
   ArbiterParameters::~ArbiterParameters()
@@ -28,11 +26,18 @@ namespace Miro
   {}
 
   void
+  ArbiterParameters::registerBehaviour(Behaviour * _behaviour)
+  {
+    priorities[_behaviour] = nextNumber_;
+    ++nextNumber_;
+  }
+  void
   ArbiterParameters::printToStream(std::ostream& ostr) const
   {
-    PriorityMap::const_iterator i;
+    RegistrationMap::const_iterator i;
     for (i = priorities.begin(); i != priorities.end(); ++i) {
-	ostr << i->first->getBehaviourName() << "'s priority: " << i->second << endl;
+	ostr << i->first->getBehaviourName() 
+	     << "'s priority: " << i->second << endl;
     }
   }
 

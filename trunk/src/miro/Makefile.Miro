@@ -121,12 +121,12 @@ FILES +=	\
 	ArbiterParameters \
 	ArbiterMessage \
 	ArbiterRepository \
+	PriorityArbiter \
 	MotionArbiter \
 	MotionArbiterMessage \
-	MotionArbiterParameters \
+	PowerArbiter \
+	PowerArbiterMessage \
 	WindowArbiter \
-	WindowArbiterMessage \
-	WindowArbiterParameters \
 	WindowArbiterViewer \
 	WindowArbiterViewerTask \
 	KeyValueList \
@@ -148,6 +148,10 @@ FILES +=	\
         NotifyMulticastConfig \
 	NotifyMulticastParameters \
 	NotifyMulticastAdapter
+
+REST =	WindowArbiterMessage \
+	WindowArbiterParameters
+
 
 
 DEFS  = $(addsuffix .h,$(FILES))
@@ -372,55 +376,49 @@ realclean: clean
  TimeC.h
 
 .obj/ActionPattern.o .obj/ActionPattern.so .shobj/ActionPattern.o .shobj/ActionPattern.so: ActionPattern.cpp ActionPattern.h Synch.h \
- MotionArbiterParameters.h ArbiterParameters.h Behaviour.h \
- DynamicWindow.h Arbiter.h BehaviourParameters.h \
- StructuredPushSupplier.h
+ ArbiterParameters.h Behaviour.h DynamicWindow.h Arbiter.h \
+ BehaviourParameters.h StructuredPushSupplier.h
 
-.obj/Arbiter.o .obj/Arbiter.so .shobj/Arbiter.o .shobj/Arbiter.so: Arbiter.cpp Arbiter.h ArbiterParameters.h
+.obj/Arbiter.o .obj/Arbiter.so .shobj/Arbiter.o .shobj/Arbiter.so: Arbiter.cpp Arbiter.h Synch.h ArbiterParameters.h \
+ ArbiterMessage.h Behaviour.h DynamicWindow.h ActionPattern.h
 
 .obj/ArbiterParameters.o .obj/ArbiterParameters.so .shobj/ArbiterParameters.o .shobj/ArbiterParameters.so: ArbiterParameters.cpp ArbiterParameters.h \
- Behaviour.h DynamicWindow.h ActionPattern.h Synch.h \
- MotionArbiterParameters.h Arbiter.h
+ Behaviour.h DynamicWindow.h ActionPattern.h Synch.h Arbiter.h
 
-.obj/ArbiterMessage.o .obj/ArbiterMessage.so .shobj/ArbiterMessage.o .shobj/ArbiterMessage.so: ArbiterMessage.cpp ArbiterMessage.h MotionC.h \
- ExceptionC.h ExceptionC.i VelocityC.h VelocityC.i MotionC.i
+.obj/ArbiterMessage.o .obj/ArbiterMessage.so .shobj/ArbiterMessage.o .shobj/ArbiterMessage.so: ArbiterMessage.cpp ArbiterMessage.h
 
 .obj/ArbiterRepository.o .obj/ArbiterRepository.so .shobj/ArbiterRepository.o .shobj/ArbiterRepository.so: ArbiterRepository.cpp ArbiterRepository.h \
  Singleton.h Synch.h \
- Arbiter.h
+ Arbiter.h Synch.h
+
+.obj/PriorityArbiter.o .obj/PriorityArbiter.so .shobj/PriorityArbiter.o .shobj/PriorityArbiter.so: PriorityArbiter.cpp PriorityArbiter.h Arbiter.h \
+ Synch.h ArbiterMessage.h
 
 .obj/MotionArbiter.o .obj/MotionArbiter.so .shobj/MotionArbiter.o .shobj/MotionArbiter.so: MotionArbiter.cpp MotionArbiter.h MotionC.h \
- ExceptionC.h ExceptionC.i VelocityC.h VelocityC.i MotionC.i Synch.h \
- Arbiter.h MotionArbiterMessage.h ArbiterMessage.h \
- MotionArbiterParameters.h ArbiterParameters.h Behaviour.h \
- DynamicWindow.h ActionPattern.h IO.h StructuredPushSupplier.h
+ ExceptionC.h ExceptionC.i VelocityC.h VelocityC.i MotionC.i \
+ PriorityArbiter.h Arbiter.h Synch.h MotionArbiterMessage.h \
+ ArbiterMessage.h Behaviour.h DynamicWindow.h ActionPattern.h \
+ ArbiterParameters.h StructuredPushSupplier.h
 
 .obj/MotionArbiterMessage.o .obj/MotionArbiterMessage.so .shobj/MotionArbiterMessage.o .shobj/MotionArbiterMessage.so: MotionArbiterMessage.cpp \
- MotionArbiterMessage.h VelocityC.h VelocityC.i ArbiterMessage.h \
- MotionC.h ExceptionC.h ExceptionC.i MotionC.i
+ MotionArbiterMessage.h VelocityC.h VelocityC.i ArbiterMessage.h
 
-.obj/MotionArbiterParameters.o .obj/MotionArbiterParameters.so .shobj/MotionArbiterParameters.o .shobj/MotionArbiterParameters.so: MotionArbiterParameters.cpp \
- MotionArbiterParameters.h ArbiterParameters.h Behaviour.h \
- DynamicWindow.h ActionPattern.h Synch.h Arbiter.h \
- BehaviourRepository.h Singleton.h Synch.h
+.obj/PowerArbiter.o .obj/PowerArbiter.so .shobj/PowerArbiter.o .shobj/PowerArbiter.so: PowerArbiter.cpp PowerArbiter.h SparrowMotionC.h \
+ DifferentialMotionC.h MotionC.h ExceptionC.h ExceptionC.i VelocityC.h \
+ VelocityC.i MotionC.i DifferentialMotionC.i SparrowMotionC.i \
+ PriorityArbiter.h Arbiter.h Synch.h PowerArbiterMessage.h \
+ ArbiterMessage.h Behaviour.h DynamicWindow.h ActionPattern.h \
+ ArbiterParameters.h StructuredPushSupplier.h
 
-.obj/WindowArbiter.o .obj/WindowArbiter.so .shobj/WindowArbiter.o .shobj/WindowArbiter.so: WindowArbiter.cpp ActionPattern.h Synch.h \
- MotionArbiterParameters.h ArbiterParameters.h WindowArbiter.h \
- MotionC.h ExceptionC.h ExceptionC.i VelocityC.h VelocityC.i MotionC.i \
- Arbiter.h WindowArbiterMessage.h ArbiterMessage.h \
- WindowArbiterParameters.h MotionArbiterMessage.h \
- WindowArbiterViewerTask.h WindowArbiterViewer.h DynamicWindow.h \
- Behaviour.h IO.h StructuredPushSupplier.h
+.obj/PowerArbiterMessage.o .obj/PowerArbiterMessage.so .shobj/PowerArbiterMessage.o .shobj/PowerArbiterMessage.so: PowerArbiterMessage.cpp PowerArbiterMessage.h \
+ ArbiterMessage.h
 
-.obj/WindowArbiterMessage.o .obj/WindowArbiterMessage.so .shobj/WindowArbiterMessage.o .shobj/WindowArbiterMessage.so: WindowArbiterMessage.cpp \
- WindowArbiterMessage.h VelocityC.h VelocityC.i ArbiterMessage.h \
- MotionC.h ExceptionC.h ExceptionC.i MotionC.i
-
-.obj/WindowArbiterParameters.o .obj/WindowArbiterParameters.so .shobj/WindowArbiterParameters.o .shobj/WindowArbiterParameters.so: WindowArbiterParameters.cpp \
- WindowArbiterParameters.h ArbiterParameters.h Behaviour.h \
- DynamicWindow.h ActionPattern.h Synch.h MotionArbiterParameters.h \
- Arbiter.h BehaviourRepository.h Singleton.h \
- Synch.h
+.obj/WindowArbiter.o .obj/WindowArbiter.so .shobj/WindowArbiter.o .shobj/WindowArbiter.so: WindowArbiter.cpp ArbiterParameters.h \
+ ArbiterMessage.h WindowArbiter.h DifferentialMotionC.h MotionC.h \
+ ExceptionC.h ExceptionC.i VelocityC.h VelocityC.i MotionC.i \
+ DifferentialMotionC.i Arbiter.h Synch.h WindowArbiterViewerTask.h \
+ WindowArbiterViewer.h DynamicWindow.h Behaviour.h ActionPattern.h \
+ StructuredPushSupplier.h
 
 .obj/WindowArbiterViewer.o .obj/WindowArbiterViewer.so .shobj/WindowArbiterViewer.o .shobj/WindowArbiterViewer.so: WindowArbiterViewer.cpp WindowArbiterViewer.h \
  DynamicWindow.h
@@ -431,30 +429,26 @@ realclean: clean
 .obj/KeyValueList.o .obj/KeyValueList.so .shobj/KeyValueList.o .shobj/KeyValueList.so: KeyValueList.cpp KeyValueList.h
 
 .obj/Behaviour.o .obj/Behaviour.so .shobj/Behaviour.o .shobj/Behaviour.so: Behaviour.cpp Behaviour.h DynamicWindow.h ActionPattern.h \
- Synch.h MotionArbiterParameters.h ArbiterParameters.h Arbiter.h \
- BehaviourParameters.h
+ Synch.h ArbiterParameters.h Arbiter.h BehaviourParameters.h
 
 .obj/BehaviourParameters.o .obj/BehaviourParameters.so .shobj/BehaviourParameters.o .shobj/BehaviourParameters.so: BehaviourParameters.cpp BehaviourParameters.h \
  KeyValueList.h
 
 .obj/BehaviourRepository.o .obj/BehaviourRepository.so .shobj/BehaviourRepository.o .shobj/BehaviourRepository.so: BehaviourRepository.cpp BehaviourRepository.h \
  Singleton.h Synch.h Behaviour.h \
- DynamicWindow.h ActionPattern.h Synch.h MotionArbiterParameters.h \
- ArbiterParameters.h Arbiter.h
+ DynamicWindow.h ActionPattern.h Synch.h ArbiterParameters.h Arbiter.h
 
 .obj/EventBehaviour.o .obj/EventBehaviour.so .shobj/EventBehaviour.o .shobj/EventBehaviour.so: EventBehaviour.cpp EventBehaviour.h Behaviour.h \
- DynamicWindow.h ActionPattern.h Synch.h MotionArbiterParameters.h \
- ArbiterParameters.h Arbiter.h StructuredPushConsumer.h
+ DynamicWindow.h ActionPattern.h Synch.h ArbiterParameters.h Arbiter.h \
+ StructuredPushConsumer.h
 
 .obj/TaskBehaviour.o .obj/TaskBehaviour.so .shobj/TaskBehaviour.o .shobj/TaskBehaviour.so: TaskBehaviour.cpp TaskBehaviour.h Behaviour.h \
- DynamicWindow.h ActionPattern.h Synch.h MotionArbiterParameters.h \
- ArbiterParameters.h Arbiter.h
+ DynamicWindow.h ActionPattern.h Synch.h ArbiterParameters.h Arbiter.h
 
 .obj/TimedBehaviour.o .obj/TimedBehaviour.so .shobj/TimedBehaviour.o .shobj/TimedBehaviour.so: TimedBehaviour.cpp TimedBehaviour.h Behaviour.h \
- DynamicWindow.h ActionPattern.h Synch.h MotionArbiterParameters.h \
- ArbiterParameters.h Arbiter.h TimedBehaviourParameters.h \
- BehaviourParameters.h TimeHelper.h TimeC.h \
- TimeC.i
+ DynamicWindow.h ActionPattern.h Synch.h ArbiterParameters.h Arbiter.h \
+ TimedBehaviourParameters.h BehaviourParameters.h TimeHelper.h \
+ TimeC.h TimeC.i
 
 .obj/TimedBehaviourParameters.o .obj/TimedBehaviourParameters.so .shobj/TimedBehaviourParameters.o .shobj/TimedBehaviourParameters.so: TimedBehaviourParameters.cpp \
  TimedBehaviourParameters.h BehaviourParameters.h TimeHelper.h \
@@ -462,7 +456,7 @@ realclean: clean
  KeyValueList.h
 
 .obj/Policy.o .obj/Policy.so .shobj/Policy.o .shobj/Policy.so: Policy.cpp Policy.h ActionPattern.h Synch.h \
- MotionArbiterParameters.h ArbiterParameters.h ArbiterRepository.h \
+ ArbiterParameters.h ArbiterRepository.h \
  Singleton.h Synch.h \
  Arbiter.h Behaviour.h DynamicWindow.h BehaviourRepository.h \
  Singleton.h BehaviourParameters.h KeyValueList.h Exception.h

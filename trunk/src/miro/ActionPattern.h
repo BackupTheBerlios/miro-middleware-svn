@@ -12,7 +12,7 @@
 #define ActionPattern_h
 
 #include "Synch.h"
-#include "MotionArbiterParameters.h"
+#include "ArbiterParameters.h"
 
 #include <orbsvcs/CosNotifyCommC.h>
 
@@ -30,7 +30,6 @@ namespace Miro
   class Behaviour;
   class BehaviourParameters;
   class Arbiter;
-  class MotionArbiterParameters;
   class ActionPattern;
   class StructuredPushSupplier;
 
@@ -55,7 +54,7 @@ namespace Miro
 
     const std::string& getActionPatternName() const;
 
-    void addBehaviour(const std::string&, const BehaviourPair& _pair);
+    void addBehaviour(Behaviour * _behaviour, BehaviourParameters * _parameters);
     void addTransition(const std::string&, ActionPattern *);
 
     void arbiter(Arbiter * _a, ArbiterParameters * _p);
@@ -78,7 +77,6 @@ namespace Miro
     StructuredPushSupplier * pSupplier_;
     Arbiter * arbiter_;
     ArbiterParameters * arbiterParameters_;
-    int behaviourPriority_;
 
     BehaviourMap behaviourMap_;
     TransitionMap transitionTable_;

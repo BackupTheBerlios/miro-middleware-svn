@@ -2,13 +2,12 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-
 
 #include "Policy.h"
 #include "ActionPattern.h"
@@ -30,6 +29,13 @@ using Miro::Exception;
 
 namespace Miro
 {
+  Policy::Policy(StructuredPushSupplier * _pSupplier) :
+    pSupplier_(_pSupplier),
+    behaviourRepository_(BehaviourRepository::instance()),
+    arbiterRepository_(ArbiterRepository::instance()),
+    startPattern_(NULL)
+  {}
+
   Policy::Policy(const char* parameterFile, 
 		 StructuredPushSupplier * _pSupplier) :
     pSupplier_(_pSupplier),
@@ -153,8 +159,7 @@ namespace Miro
 	      retrieveBehaviourParameters(params, n);
 
 	      *parameters <<= params;
-	      _actionPattern.addBehaviour(name, 
-					  std::make_pair(behaviour, parameters));
+	      _actionPattern.addBehaviour(behaviour, parameters);
 	    } else {
 	      throw Exception("Behaviour not registered: " + name);
 	    }

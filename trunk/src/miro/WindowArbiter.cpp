@@ -9,31 +9,26 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
-#include "ActionPattern.h"
+//#include "ActionPattern.h"
+#include "ArbiterParameters.h"
+#include "ArbiterMessage.h"
 #include "WindowArbiter.h"
 #include "WindowArbiterViewer.h"
-#include "WindowArbiterMessage.h"
-#include "WindowArbiterParameters.h"
 #include "Behaviour.h"
-#include "IO.h"
 #include "StructuredPushSupplier.h"
+
 #include <complex>
 #include <cmath>
 
-using std::string;
-
 namespace Miro
 {
-  const string WindowArbiter::name_ = "WindowArbiter";
+  const std::string WindowArbiter::name_ = "WindowArbiter";
 
-  WindowArbiter::WindowArbiter(ACE_Reactor &ar_, Motion_ptr _pMotion,
-	StructuredPushSupplier * _pSupplier) :
-    pMotion_(_pMotion),
+  WindowArbiter::WindowArbiter(ACE_Reactor &ar_, 
+			       DifferentialMotion_ptr _pMotion,
+			       StructuredPushSupplier * _pSupplier) :
+    pMotion_(DifferentialMotion::_duplicate(_pMotion)),
     pSupplier_(_pSupplier),
-    mutex_(),
-    params_(NULL),
-    message_(),
     reactor(ar_),
     timerId(0),
     dynWindow_(std::complex<double>(0., 0.), 10000, 10000),
@@ -41,8 +36,8 @@ namespace Miro
     winArbViewTask_(NULL),
     winArbViewTaskCreated(false)
   {
-    currentVelocity.translation = 0;
-    currentVelocity.rotation = 0;
+    currentVelocity_.translation = 0;
+    currentVelocity_.rotation = 0.;
 
     if (pSupplier_) {
       // Status Notify Event initialization
@@ -63,148 +58,40 @@ namespace Miro
     }
   }
 
-  WindowArbiterParameters * 
-  WindowArbiter::getParametersInstance()
-  {
-    return new WindowArbiterParameters();
-  }
-
+#ifdef WE_ACTUALLY_NEED_IT
   void
   WindowArbiter::init(const ArbiterParameters * _params)
   {
-    Guard guard(mutex_);
+    Arbiter::init(_params);
 
     leftVelocity_ = 0;
     rightVelocity_ = 0;
-
-    const WindowArbiterParameters * params
-      = dynamic_cast<const WindowArbiterParameters *>(_params);
-    
-    if(active_)
-      reactor.reset_timer_interval(timerId, ACE_Time_Value(30, 0));
-    
-    leftVelocity_ = 0;
-    rightVelocity_ = 0;
-    
-    // convert current arbitration to new configuration
-    MessageVector tmp(message_);
-
-    message_.resize(params->priorities.size()); // new message array size
-
-    // if new configuration has no behaviour, that is allowed to arbitrate,
-    // we better should stop
-    if (message_.size() == 0) {
-      Miro::VelocityIDL velocity;
-      velocity.translation = 0;
-      velocity.rotation = 0.;
-      pMotion_->setVelocity(velocity);
-
-      currentVelocity.translation = 0;
-      currentVelocity.rotation = 0;
-    }
-
-    if (params_) { // allways except first time
-      WindowArbiterParameters::PriorityMap::const_iterator i, j;
-      // for each behaviour
-      for (i = params->priorities.begin(); i != params->priorities.end(); ++i) {
-	// if it existed before
-	j = params_->priorities.find(i->first);
-	if (j != params_->priorities.end()) {
-	  // copy its current arbitration message to the new index
-	  message_[i->second] = tmp[j->second];
-	} 
-	else {
-	  // else reset entry
-	  message_[i->second] = WindowArbiterMessage();
-	}
-      }
-    }
-    params_ = params;
-
-    setMotion();
   }
+#endif
 
   void
-  WindowArbiter::arbitrate(const ArbiterMessage& _message)
+  WindowArbiter::calcActivation()
   {
-    const WindowArbiterMessage& message =
-      dynamic_cast<const WindowArbiterMessage &>(_message);
-
-    if (active_) {
-      Guard guard(mutex_);
-      WindowArbiterParameters::PriorityMap::const_iterator i
-	= params_->priorities.find(message.id);
-      if (i != params_->priorities.end()) {
-	if (message_[i->second].active != message.active)
-	  cout << "WindowArbiter: " << message.id->getBehaviourName() 
-	       << " - " << message.active << endl;
-	message_[i->second] = message;
-      
-	setMotion();
-      }
-      else {
-	cerr << "WindowArbiter: got message from unregistered behaviour: "
-	     << message.id->getBehaviourName() << endl;
-      }
-    }
-    else {
-      cerr << "WindowArbiter: got arbitrate call while not active from behaviour: "
-	   << message.id->getBehaviourName() << endl;
-    }
-  }
-
-
-  void
-  WindowArbiter::setMotion()
-  {
-    string behaviourName;
-
-    // do the job
-    MessageVector::const_iterator j;
-    for (j = message_.begin(); j != message_.end(); ++j) {
-      if (j->active) {
-	// keep the can bus traffic low
-	if (j->velocity.translation != currentVelocity.translation ||
-    		j->velocity.rotation != currentVelocity.rotation) {
-	  behaviourName = j->id->getBehaviourName();
-	  cout << "WindowArbiter: " << flush << behaviourName 
-	       << " -  set velocity: " << flush << j->velocity << endl;
-
-	  VelocityIDL velocity = j->velocity;
-
-	  double fastWheel = velocity.translation + 225 * velocity.rotation;
-	  if (fastWheel > 900)
-	    velocity.translation = (int)(900 - 225 * velocity.rotation);
-	    
-	  pMotion_->setVelocity(velocity);
-	  currentVelocity = j->velocity;
-	}
+    // search whether there is an active behaviour
+    MessageVector::const_iterator first, last = message_.end();
+    for (first = message_.begin(); first != last; ++first) {
+      if ((*first)->active) {
 	break;
       }
     }
-    if (j == message_.end()) { // if nothing is active we should better stop
-      cout << "limp" << endl;
-      behaviourName = "None";
-      currentVelocity.translation = 0;
-      currentVelocity.rotation = 0;
-      Miro::VelocityIDL velocity;
-      velocity.translation = 0;
-      velocity.rotation = 0.;
-      pMotion_->setVelocity(velocity);
-    }
 
-    // send arbitrate change debug output
-    if (pSupplier_) {
-      notifyEvent.header.fixed_header.event_name = CORBA::string_dup(behaviourName.c_str());
-      notifyEvent.remainder_of_body <<= currentVelocity;
-      pSupplier_->sendEvent(notifyEvent);
+    // if none is active we should better stop
+    if (first == last) {
+      pMotion_->limp();
     }
   }
 
   void
   WindowArbiter::open()
   {	
+    // super class open
     Arbiter::open();
+
     if(!winArbViewTaskCreated) {
       winArbViewTask_ = new WindowArbiterViewerTask(&dynWindowFinished_);
       winArbViewTask_->open();
@@ -236,11 +123,11 @@ namespace Miro
     cout << "WindowArbiter TimeOutHandler." << endl;
     
     //    Miro::DynamicWindow dynWindow(std::complex<double>(leftVelocity_, rightVelocity_), MAX_POS_ACCEL, MAX_NEG_ACCEL);
-    ActionPattern * ap = ActionPattern::currentActionPattern();
-    ActionPattern::BehaviourMap bm = ap->behaviourMap();
+    //    ActionPattern * ap = ActionPattern::currentActionPattern();
+    //    ActionPattern::BehaviourMap bm = ap->behaviourMap();
         
     // Let each behaviour calculate its dynamicWindow-entrys (ascend by priority)
-    WindowArbiterParameters::PriorityMap::const_iterator j;
+    ArbiterParameters::RegistrationMap::const_iterator j;
     for(j = params_->priorities.begin(); j != params_->priorities.end(); j++) {
       if (j->first->isActive()) {
         j->first->calcDynamicWindow(&dynWindow_);
@@ -277,15 +164,15 @@ namespace Miro
     // Set motion
     velocity.translation = 10 * (leftVelocity_ + rightVelocity_) / 2;
     velocity.rotation = 10 * (leftVelocity_ - rightVelocity_) / RADSTAND;
-    if (velocity.translation != currentVelocity.translation ||
-	velocity.rotation != currentVelocity.rotation) {
+    if (velocity.translation != currentVelocity_.translation ||
+	velocity.rotation != currentVelocity_.rotation) {
       pMotion_->setVelocity(velocity);
-      currentVelocity = velocity;
+      currentVelocity_ = velocity;
     }
     return 0;
   }
   
-  const string&
+  const std::string&
   WindowArbiter::getName() const
   {
     return name_;

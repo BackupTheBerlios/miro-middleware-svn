@@ -8,32 +8,31 @@
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-#ifndef MotionArbiter_h
-#define MotionArbiter_h
+#ifndef PowerArbiter_h
+#define PowerArbiter_h
 
-#include "MotionC.h"
+#include "SparrowMotionC.h"
 #include "PriorityArbiter.h"
-#include "MotionArbiterMessage.h"
+#include "PowerArbiterMessage.h"
 
 #include <orbsvcs/CosNotifyCommC.h>
-
-#include <string>
 
 namespace Miro
 {
   // forward declarations
   class StructuredPushSupplier;
 
-  class MotionArbiter : public PriorityArbiter
+  class PowerArbiter : public PriorityArbiter
   {
     //! Super class type.
     typedef PriorityArbiter Super;
 
   public:
-    MotionArbiter(Motion_ptr _pMotion, StructuredPushSupplier * _pSupplier = NULL);
+    PowerArbiter(SparrowMotion_ptr _pMotion, 
+		 StructuredPushSupplier * _pSupplier = NULL);
 
     // factory method for ArbiterParameters
-    MotionArbiterMessage * getMessageInstance();
+    PowerArbiterMessage * getMessageInstance();
 
     virtual const std::string& getName() const;
 
@@ -41,9 +40,11 @@ namespace Miro
     virtual void setActuators(const ArbiterMessage& _message);
     virtual void limpActuators();
 
-    Motion_ptr pMotion_;
+    SparrowMotion_ptr pMotion_;
     StructuredPushSupplier * pSupplier_;
 
+    long currentLeft_;
+    long currentRight_;
     VelocityIDL currentVelocity_;
     CosNotification::StructuredEvent notifyEvent;
 

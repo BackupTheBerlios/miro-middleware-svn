@@ -8,24 +8,24 @@
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-#ifndef MotionArbiterMessage_h
-#define MotionArbiterMessage_h
+#ifndef PowerArbiterMessage_h
+#define PowerArbiterMessage_h
 
-#include "VelocityC.h"
 #include "ArbiterMessage.h"
 
 namespace Miro
 {
-  class MotionArbiterMessage : public ArbiterMessage
+  //! Arbitration message for the wheel power arbiter.
+  class PowerArbiterMessage : public ArbiterMessage
   {
   public:
-    //! The requested velocity.
-    VelocityIDL velocity;
+    //! The requested left wheel power.
+    long left;
+    //! The requested right wheel power.
+    long right;
 
     //! Default constructor. 
-    MotionArbiterMessage();
-
-    //! Virtual assignement operator.
+    PowerArbiterMessage();
     virtual void assign(const ArbiterMessage& _lhs);
 
   protected:
@@ -33,7 +33,7 @@ namespace Miro
     void printToConsole(std::ostream& ostr) const;
   private:
     //! Type of this class.
-    typedef MotionArbiterMessage Self;
+    typedef PowerArbiterMessage Self;
     //! Super class type.
     typedef ArbiterMessage Super;
   };

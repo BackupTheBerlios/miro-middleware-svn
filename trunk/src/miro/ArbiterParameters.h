@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -11,9 +11,8 @@
 #ifndef ArbiterParameters_h
 #define ArbiterParameters_h
 
-#include <map>
 #include <iostream>
-
+#include <map>
 
 // forward declarations
 class QDomNode;
@@ -24,24 +23,45 @@ namespace Miro
   class Behaviour;
   class ArbiterParameters;
 
-  std::ostream& operator << (std::ostream& ostr, const ArbiterParameters&);
+  //! Output stream operator for debug purposes.
+  std::ostream&
+  operator << (std::ostream& ostr, const ArbiterParameters& _params);
 
+  //! Base class for parameters for Arbiter class childs.
   struct ArbiterParameters
   {
+    //! Mapping of behaviour id's to the registration order.
+    /**
+     * The priority based arbiter chose the active behaviours 
+     * actuatory request with the lowest registration number.
+     */
+    typedef std::map<Behaviour *, unsigned int> RegistrationMap;
+
+    //! Map of the behaviours priorities.
+    RegistrationMap priorities;
+
+    //! Default constructor.
     ArbiterParameters();
+    //! Virtual destructor.
     virtual ~ArbiterParameters();
+
+    //! XML-parsingoperator.
+    void operator<<=(const QDomNode&);
+
+    //! Register behaviours for acces control
+    virtual void registerBehaviour(Behaviour * _behaviour);
     
-    typedef std::map<Behaviour *, unsigned int> PriorityMap;
-
-    PriorityMap priorities;
-
-    virtual void operator <<= (const QDomNode&);
-
   protected:
-    virtual void printToStream(std::ostream& /*ostr*/) const;
+    //! Dump the ArbiterParameters to the specified output stream.
+    virtual void printToStream(std::ostream& ostr) const;
 
-    friend 
-    std::ostream& operator << (std::ostream& ostr, const ArbiterParameters& _params);
+    //!  to assign for the next registered behaviour
+    unsigned int nextNumber_;
+
+    friend
+    std::ostream&
+    operator << (std::ostream& ostr, const ArbiterParameters& _params);
+
   };
 };
 #endif

@@ -35,17 +35,19 @@ namespace Miro
   public:
     typedef std::map<std::string, ActionPattern*> ActionPatternMap;
 
+    Policy(StructuredPushSupplier * _pSupplier = NULL);
     Policy(const char* patternfile, StructuredPushSupplier * _pSupplier = NULL);
     virtual ~Policy();
 
-    void registerActionPattern(ActionPattern *);
-    ActionPattern* getActionPattern(const std::string& name);
+    void loadActionPatterns(const char* _fileName);
+    void registerActionPattern(ActionPattern * _pattern);
+    ActionPattern* getActionPattern(const std::string& _name);
+    void setStartPattern(ActionPattern * _pattern);
 
     void open();
     void close();
 
   protected:
-    void loadActionPatterns(const char*);
     void retrieveBehaviours(ActionPattern& _actionPattern, const QDomNode&);
     void retrieveArbiters(ActionPattern& _actionPattern, const QDomNode&) ;
     void retrieveBehaviourParameters(KeyValueList& _params, const QDomNode&);
@@ -63,6 +65,12 @@ namespace Miro
     friend
     std::ostream& operator << (std::ostream& ostr, const Policy&);
   };
+
+  inline
+  void
+  Policy::setStartPattern(ActionPattern * _pattern) {
+    startPattern_ = _pattern;
+  }
 };
 #endif
 
