@@ -236,14 +236,9 @@ namespace Video
       throw Miro::Exception("VideoDeviceBTTV::setSize: illegal height");
   }
 
-  static int msec = 0;
-
   void* VideoDeviceBTTV::grabImage() const
   {
     DBG(std::cout << "VideoDeviceBTTV: grabImage" << std::endl);
-
-    // runtime statistics I
-    ACE_Time_Value beginTime = ACE_OS::gettimeofday();
 
     // synch current image
     int err = ioctl(videoFd, VIDIOCSYNC, &currentBuffer_);
@@ -256,7 +251,7 @@ namespace Video
     // update the follower buffer pointer
     ++currentBuffer_;
     if (currentBuffer_ == iNBuffers)
-    currentBuffer_ = 0;
+      currentBuffer_ = 0;
 
     // grab next image
     err = ioctl(videoFd, VIDIOCMCAPTURE, &(gb[nextBuffer_]));
@@ -269,15 +264,8 @@ namespace Video
     if (nextBuffer_ == iNBuffers)
       nextBuffer_ = 0;
     
-    // runtime statistics II
+    // runtime statistics
     ++iNFramesCaptured;
-
-    ACE_Time_Value endTime = ACE_OS::gettimeofday();
-    msec += (endTime - beginTime).msec();
-    if ((iNFramesCaptured % 100) == 0) {
-      std::cout << "time for grabbing: " << msec / 100 << "msec" << std::endl;
-      msec = 0;
-    }
 
     return buffer;
   }
