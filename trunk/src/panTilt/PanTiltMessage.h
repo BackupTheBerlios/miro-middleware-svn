@@ -16,6 +16,8 @@
 #include "miro/DevMessage.h"
 #include "miro/Exception.h"
 
+#include <strstream>
+
 namespace DpPanTilt 
 {
   /**

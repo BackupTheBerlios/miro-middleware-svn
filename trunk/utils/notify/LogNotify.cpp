@@ -17,6 +17,8 @@
 
 #include <ace/Date_Time.h>
 
+#include <strstream>
+
 using std::cout;
 using std::cerr;
 using std::string;

@@ -35,4 +35,7 @@ namespace Miro
     KeyValueListMap parameters_;
   };
 };
+
+#undef strcmp
+
 #endif

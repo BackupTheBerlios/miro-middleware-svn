@@ -49,25 +49,25 @@ module Miro
   interface DtlkSpeech
   {
     //! Speek character by character
-    const char CHARACTER_MODE = 0;
+    const char CHARACTER_MODE = '\000';
     //! Speek phonemes. 
     /**
      *This is usefull to make the card speek none
      * english words.
      */
-    const char POHNEME_MODE = 1;
+    const char POHNEME_MODE = '\001';
     //! Speek characters as english text (default).
-    const char TEXT_MODE = 2;
+    const char TEXT_MODE = '\002';
 
     //! Keep the current setting of a parameter. 
     /**
      * This value can be specified for any parameter within the
      * DtlkSpeechSettingsIDL struct. 
      */
-    const char UNCHANGED = -1;
+    const char UNCHANGED = '\xff'; // -1
 
     //! Process the rest of the text in the buffer.
-    const char FLUSH_TEXT = 13;
+    const char FLUSH_TEXT = '\015'; // 13
 
     //! Add text to the output buffer.
     void insertText(in DtlkSpeechSettingsIDL settings, in string text) raises(EDevIO);

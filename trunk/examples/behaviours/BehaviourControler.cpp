@@ -87,7 +87,7 @@ int main(int argc, char * argv[])
       std::cerr << "Malformed XML in file: " << file << endl;
     }
     catch(const Miro::BehaviourEngine::ENoPolicy& ) {
-      std::cerr << "No policy loaded" << endl;
+      std::cerr << "No policy loaded." << endl;
     }
     catch(const Miro::BehaviourEngine::EFile& ) {
       std::cerr << "Error loading file: " << file << endl;
