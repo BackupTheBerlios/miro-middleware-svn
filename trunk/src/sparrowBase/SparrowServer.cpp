@@ -238,6 +238,8 @@ SparrowBase::~SparrowBase()
     pSonar_->cancel();
   }
 
+  DBG(cout << "removing objects from POA" << endl);
+  
   // Deactivate the interfaces.
   // we have to do this manually for none owned orbs,
   // as the class goes out of scope before
@@ -261,8 +263,9 @@ SparrowBase::~SparrowBase()
     oid = poa->reference_to_id (pSonar);
     poa->deactivate_object(oid.in()); 
   }
-  oid = poa->reference_to_id (notifyFactory_);
-  poa->deactivate_object (oid.in());
+//  cout << "." << flush;
+//  oid = poa->reference_to_id (notifyFactory_);
+//  poa->deactivate_object (oid.in());
 
   DBG(cout << "Destructing SparrowBase members." << endl);
 }

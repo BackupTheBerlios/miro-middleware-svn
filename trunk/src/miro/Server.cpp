@@ -207,7 +207,7 @@ namespace Miro
       detach(nthreads - 1);
     }
     worker_.svc();
-  
+    worker_.wait(); 
     // Dectivate the POA manager.
     // poa_mgr->deactivate();
   }

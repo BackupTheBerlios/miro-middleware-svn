@@ -103,7 +103,7 @@ public:
 
   /** Channel factory. */
   CosNotifyChannelAdmin::EventChannelFactory_ptr notifyFactory_;
- /** Channel identifer. */
+  /** Channel identifer. */
   CosNotifyChannelAdmin::ChannelID id_;
   /** Initial qos specified to the factory when creating the EC. */
   CosNotification::QoSProperties initialQos_;
