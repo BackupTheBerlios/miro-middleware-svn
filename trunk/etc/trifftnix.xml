@@ -32,7 +32,7 @@
       <watchdogtimeout>2000</watchdogtimeout>
       <buttonspollinterval>300</buttonspollinterval>
 
-      <servo0midpulse>3600</servo0midpulse>
+      <servo0midpulse>3100</servo0midpulse>
       <deg2servoticks>26</deg2servoticks>
       <!--
         <servo1midpulse></servo1midpulse>

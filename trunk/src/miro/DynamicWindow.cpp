@@ -133,17 +133,15 @@ namespace Miro
 		
     // muss parameterisierbar sein, für andere Roboter...
     const double WHEEL_DISTANCE  = 390.;  // in mm
-    // const double BREAK_ACCEL = 2000.;     // in mm/sec²
-    const double SCALE_ANGLE = 0.5;
-    const double SCALE_POL_DIST = 1.;
+    const double SCALE_ANGLE = 1.0;
     const double MAX_POL_DIST = 500.; // maximum polgon distance = 50cm
-    const int RES = 5;
+    const int RES = 3;
     int hack;
 
     double offset, angle, pointValue, maxPointValue = 0.;
     
     for(int left = minLeft_; left <= maxLeft_; left+=RES) {
-      for(int right = minRight_; right <= maxRight_; right+=RES ) {
+      for(int right = minRight_ + 1; right <= maxRight_; right+=RES ) {
 	
 	if((left - right) == 0)
 	  (right<100)?(hack=1):(hack=-1);
@@ -172,7 +170,7 @@ namespace Miro
 	    for(int y = 0; y < RES; y++) {
 	      if ((left+100+x < VEL_SPACE_LEFT) && (right+100+y < VEL_SPACE_RIGHT)) {
 		velocitySpace_[left+100+x][right+100+y] =
-		  min(255, (int)(velocitySpace_[left+100+x][right+100+y] * (pointValue / MAX_POL_DIST)));
+		  min(255, (int)(velocitySpace_[left+100+x][right+100+y] * pointValue / MAX_POL_DIST));
 	      }
 	    }
 	  }
