@@ -97,7 +97,7 @@ main(int argc, char *argv[])
 #endif
 
     try {
-      //Video::Service videoService(server, config);
+      Video::Service videoService(server, config);
 #ifdef MIRO_HAS_QUICKCAM
       Video::Service videoServiceOmniCam(server, config, videoParametersOmniCam);
 #endif     
