@@ -135,8 +135,7 @@ namespace Psos
 	writePtr = msg->data();
 
         if (thisChar == 0) {
-          msg->time() = ACE_OS::gettimeofday();
-          dispatchMessage();
+          DBG(cout << "Discarding zero length message" << endl);
           // reset base output parsing
           state = NO_STARTS;
         }
