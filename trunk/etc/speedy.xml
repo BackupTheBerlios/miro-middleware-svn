@@ -9,7 +9,6 @@
 
     <section name="Faulhaber" >
       <parameter name="FaulMotor::Parameters" >
-        <parameter name="OdometryPolling" value="true" />
 	<parameter name="LeftWheel">
 	  <parameter value="/dev/tts/2" name="Device" />
 	</parameter>
