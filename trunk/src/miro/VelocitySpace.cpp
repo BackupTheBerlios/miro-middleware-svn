@@ -63,6 +63,8 @@ namespace Miro
   {
     double l_value, r_value, left, right;
     double _maxSpeed2 = _maxSpeed * _maxSpeed;
+    if(fabs(_prefDir) < M_PI_2)
+	_prefDir = -_prefDir;
 
     for(int l_index = minDynWinLeft_; l_index <= maxDynWinLeft_; l_index++) {
       for(int r_index = minDynWinRight_; r_index <= maxDynWinRight_; r_index++) {
@@ -96,6 +98,9 @@ namespace Miro
     double axis_direction;
     double axis_value;
     double v_dist;
+
+    if(fabs(_prefDir) < M_PI_2)
+	_prefDir = -_prefDir;
 
     for(int l_index = minDynWinLeft_; l_index <= maxDynWinLeft_; l_index++) {
       for(int r_index = minDynWinRight_; r_index <= maxDynWinRight_; r_index++) {
