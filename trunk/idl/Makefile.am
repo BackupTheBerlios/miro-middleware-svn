@@ -49,6 +49,7 @@ globalsources = \
 	Buttons.idl \
 	Video.idl \
 	VideoControl.idl \
+	QuickCamControl.idl \
 	Speech.idl \
 	SphinxSpeech.idl \
 	BehaviourEngine.idl \

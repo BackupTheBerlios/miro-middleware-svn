@@ -1,0 +1,65 @@
+// -*- c++ -*- 
+/*! \file VideoControl.idl
+ *  \brief IDL Interface to set QuickCam camera parameters "on the fly".
+ *
+ *  IDL Interface Video::Control.
+ *
+ * -----------------------------------------------------
+ *
+ * RoboCup Middle Size Team, "The Ulm Sparrows",
+ * University of Ulm, Germany
+ * http://www.sparrows.uni-ulm.de/
+ *
+ * Project: Miro / Video
+ *
+ * $Author$
+ * $Date$
+ * $Revision$
+ *
+ * $Log$
+ * Revision 1.1  2004/03/09 16:03:01  roadrunner
+ * Added QuickCam interface
+ *
+ *
+ */
+ 
+#ifndef QUICKCAMCONTROL_IDL
+#define QUICKCAMCONTROL_IDL
+
+module Video
+{
+    //! Definition of active camera features, negative values meaning "auto".
+    struct QuickCamFeatureSet
+    {
+        long framerate;
+	
+	short brightness;
+	short hue;
+	short contrast;
+	
+	long whitebalance;
+	long whitebalanceReadRed;
+	long whitebalanceManualRed;
+	long whitebalanceReadBlue;
+	long whitebalanceManualBlue;
+	long whitebalanceSpeed;
+	long whitebalanceDelay;
+	long autoGainControl;
+	long shutterSpeed;
+	long sharpness;
+	long backlightCompensation;
+	long flickerlessMode;
+	long dynamicNoiseReduction;
+	long compression;
+    };
+
+    //! The interface to get and set camera settings.
+    interface QuickCamControl
+    {
+        boolean getFeatures(out QuickCamFeatureSet features);
+	boolean setFeatures(in QuickCamFeatureSet features);
+    };
+};
+
+#endif /* VIDEOCONTROL_IDL */
+
