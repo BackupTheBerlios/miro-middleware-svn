@@ -29,7 +29,7 @@ namespace Video
 	VideoDevice(const std::string&);
 	~VideoDevice();
 
-	void	connect(int fd, const Parameters & params);
+	void	connect();
 	void	disconnect();
 
 	int	countBuffers() const;

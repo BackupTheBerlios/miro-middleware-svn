@@ -34,10 +34,11 @@ namespace Video
   // Hardware specifica
   //--------------------------------------------------------------------------
 
-  VideoDeviceMeteor::VideoDeviceMeteor()
+  VideoDeviceMeteor::VideoDeviceMeteor() :
+    devName_(params_->device.c_str()),
+    ioBuffer_(),
+    connector_()
   {
-    DBG(cout << "Constructing VideoDeviceMeteor '" << dev << "'" << endl);
-
     formatLookup[formatAuto] = METEOR_FMT_AUTOMODE;
     formatLookup[formatPAL] = METEOR_FMT_PAL;
     formatLookup[formatNTSC] = METEOR_FMT_NTSC;
@@ -64,23 +65,31 @@ namespace Video
     handleDisconnect();
   }
 
-  void VideoDeviceMeteor::handleConnect(int fd, const Parameters& params)
+  void VideoDeviceMeteor::handleConnect()
   {
     DBG(cout << "Connecting VideoDeviceMeteor." << endl);
 
-    videoFd = fd;
+    if (connector_.connect(ioBuffer_, 
+			  devName_, 
+			  0, ACE_Addr::sap_any, 0, O_RDWR) == -1) {
+      cerr << "Failed to open device: " << params_->device << endl
+	   << "Propably running on the wrong machine?" << endl;
+      throw Miro::CException(errno, std::strerror(errno));
+    }
 
-    fcntl(videoFd,F_SETFD, FD_CLOEXEC);
+    videoFd = ioBuffer_.get_handle();
 
-    setPalette(getPalette(params.palette));
-    setSize(params.width, params.height);
+    fcntl(videoFd, F_SETFD, FD_CLOEXEC);
+
+    setPalette(getPalette(params_->palette));
+    setSize(params_->width, params_->height);
 
     meteorGeometry.frames = 1;
     if (::ioctl(videoFd, METEORSETGEO, &meteorGeometry) < 0)
       throw Miro::Exception("METEORSETGEO");
 
-    setSource(Video::getSource(params.source));
-    setFormat(Video::getFormat(params.format));
+    setSource(Video::getSource(params_->source));
+    setFormat(Video::getFormat(params_->format));
 
     map = (char*)mmap(0,getDeviceImageSize(),PROT_READ,MAP_SHARED,videoFd,0);
     if (map == (char*)-1)
@@ -99,6 +108,7 @@ namespace Video
       map = (char*)-1;
     }
     videoFd = -1;
+    ioBuffer_.close();
   }
 
 

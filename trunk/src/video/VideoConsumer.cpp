@@ -11,7 +11,6 @@
 
 
 #include "VideoConsumer.h"
-#include "VideoConnection.h"
 #include "VideoDevice.h"
 #include "VideoImpl.h"
 #include "VideoConfig.h"
@@ -39,10 +38,10 @@ namespace Video
   //------------------------//
   //----- constructors -----//
   //------------------------//
-  Consumer::Consumer(Connection& _connection,
+  Consumer::Consumer(VideoDevice& _device,
 		     VideoImpl * _pGrabber, 
 		     ACE_Sched_Params * pschedp) :
-    connection(_connection),
+    videoDevice(_device),
     pGrabber(_pGrabber),
     mutex(),
     cond(mutex),
@@ -70,7 +69,7 @@ namespace Video
     cout << "Image size:" << getImageSize() << endl;
     pCurrentImageData = NULL;
 
-    int pixelSize = connection.parameters.pixelSize;
+    int pixelSize = Video::Parameters::instance()->pixelSize;
 
     if (ACE_OS::sched_params(schedp_) == -1) {
       std::cerr << "[Video::Consumer] Could not set sched parameters." << endl 
@@ -87,7 +86,7 @@ namespace Video
     {
       ACE_Time_Value timeStamp;
       try {
-	void * pNextImageData = connection.videoDevice.grabImage(timeStamp);
+	void * pNextImageData = videoDevice.grabImage(timeStamp);
 	Miro::timeA2C(timeStamp, timeStamp_);
 
 	/**************
@@ -98,9 +97,9 @@ namespace Video
 	
 	unsigned char* image=(unsigned char *)pNextImageData;
 
-	if (connection.parameters.upsideDown!=0) {
+	if (Video::Parameters::instance()->upsideDown!=0) {
 	  int i=0,j=0;
-	  int imgSize=connection.parameters.width * connection.parameters.height;
+	  int imgSize=Video::Parameters::instance()->width * Video::Parameters::instance()->height;
 	  for (i=0; i<imgSize/2; i++) {
 	    //	    cout << i << " " << std::flush;
 	    for (j=0; j<pixelSize; j++) {
@@ -162,12 +161,12 @@ namespace Video
 
   int Consumer::getImageSize() const
   {
-    return connection.videoDevice.getImageSize();
+    return videoDevice.getImageSize();
   }
 
   int Consumer::getPaletteSize() const
   {
-    switch (connection.videoDevice.getDevicePalette())
+    switch (videoDevice.getDevicePalette())
     {
     case paletteGrey:
       return 1;
@@ -231,8 +230,8 @@ namespace Video
       throw Miro::ETimeOut();
 
     unsigned char * src = new unsigned char[getPaletteSize()
-					    * connection.videoDevice.getImageWidth()
-					    * connection.videoDevice.getImageHeight()];
+					    * videoDevice.getImageWidth()
+					    * videoDevice.getImageHeight()];
 
     copyImageData(src, pCurrentImageData);
     shrinkImageData(dst, src, reqWidth, reqHeight);
@@ -242,8 +241,8 @@ namespace Video
 
   void Consumer::shrinkImageData(unsigned char *dst, unsigned char *src, int reqWidth, int reqHeight)
   {
-    int srcWidth  = connection.videoDevice.getImageWidth();
-    int srcHeight = connection.videoDevice.getImageHeight();
+    int srcWidth  = videoDevice.getImageWidth();
+    int srcHeight = videoDevice.getImageHeight();
 
     // do not expand
     reqWidth      = (reqWidth  > srcWidth)  ? srcWidth  : reqWidth;
@@ -293,11 +292,11 @@ namespace Video
 
   void Consumer::copyImageData(void* dst, const void* src)
   {
-    if (connection.videoDevice.getRequestedPalette() == 
-	connection.videoDevice.getDevicePalette()) {
+    if (videoDevice.getRequestedPalette() == 
+	videoDevice.getDevicePalette()) {
 
       cout << "Video::Consumer: plain copy" << endl;
-      switch (connection.videoDevice.getDevicePalette())
+      switch (videoDevice.getDevicePalette())
       {
       case paletteGrey:
 	copy(dst, src, 1);
@@ -320,31 +319,31 @@ namespace Video
     else {
       cout << "Video::Consumer: swap copy" << endl;
 
-      switch (connection.videoDevice.getDevicePalette())
+      switch (videoDevice.getDevicePalette())
       {
       case paletteRGB:
-	if (connection.videoDevice.getRequestedPalette() == paletteBGR)
+	if (videoDevice.getRequestedPalette() == paletteBGR)
 	  swap3(dst, src);
 	else
 	  throw Miro::Exception("can't copy image: incompatible image palette");
 	break;
 
       case paletteBGR:
-	if (connection.videoDevice.getRequestedPalette() == paletteRGB)
+	if (videoDevice.getRequestedPalette() == paletteRGB)
 	  swap3(dst, src);
 	else
 	  throw Miro::Exception("can't copy image: incompatible image palette");
 	break;
 
       case paletteRGBA:
-	if (connection.videoDevice.getRequestedPalette() == paletteABGR)
+	if (videoDevice.getRequestedPalette() == paletteABGR)
 	  swap4(dst, src);
 	else
 	  throw Miro::Exception("can't copy image: incompatible image palette");
 	break;
 
       case paletteABGR:
-	if (connection.videoDevice.getRequestedPalette() == paletteRGBA)
+	if (videoDevice.getRequestedPalette() == paletteRGBA)
 	  swap4(dst, src);
 	else
 	  throw Miro::Exception("can't copy image: incompatible image palette");
@@ -360,15 +359,15 @@ namespace Video
   {
     char*	start = (char*)src;
     char*	target = (char*)dst;
-    int		h = connection.videoDevice.getImageHeight();
-    int		w = connection.videoDevice.getImageWidth();
+    int		h = videoDevice.getImageHeight();
+    int		w = videoDevice.getImageWidth();
     int		bytesPerLine = w*pixSize;
 
-    if ((connection.videoDevice.getRequestedSubfield() != subfieldAll) &&
-	(connection.videoDevice.getDeviceSubfield() == subfieldAll))
+    if ((videoDevice.getRequestedSubfield() != subfieldAll) &&
+	(videoDevice.getDeviceSubfield() == subfieldAll))
     {
       int srcOffset = 2*bytesPerLine;
-      if (connection.videoDevice.getRequestedSubfield() == subfieldOdd)
+      if (videoDevice.getRequestedSubfield() == subfieldOdd)
 	start += srcOffset;
       for (int i = 0; i < h; i++) {
 	memcpy(target, start, bytesPerLine);
@@ -385,15 +384,15 @@ namespace Video
   {
     char*	start = (char*)src;
     char*	target = (char*)dst;
-    int		h = connection.videoDevice.getImageHeight();
-    int		w = connection.videoDevice.getImageWidth();
+    int		h = videoDevice.getImageHeight();
+    int		w = videoDevice.getImageWidth();
     int		srcOffset = w*3;
     int		targetOffset = srcOffset;
 
-    if ((connection.videoDevice.getRequestedSubfield() != subfieldAll) &&
-	(connection.videoDevice.getDeviceSubfield() == subfieldAll))
+    if ((videoDevice.getRequestedSubfield() != subfieldAll) &&
+	(videoDevice.getDeviceSubfield() == subfieldAll))
     {
-      if (connection.videoDevice.getRequestedSubfield() == subfieldOdd)
+      if (videoDevice.getRequestedSubfield() == subfieldOdd)
 	start += srcOffset;
       srcOffset *= 2;
     }
@@ -409,15 +408,15 @@ namespace Video
   {
     char*	start = (char*)src;
     char*	target = (char*)dst;
-    int		h = connection.videoDevice.getImageHeight();
-    int		w = connection.videoDevice.getImageWidth();
+    int		h = videoDevice.getImageHeight();
+    int		w = videoDevice.getImageWidth();
     int		srcOffset = w*4;
     int		targetOffset = srcOffset;
 
-    if ((connection.videoDevice.getRequestedSubfield() != subfieldAll) &&
-	(connection.videoDevice.getDeviceSubfield() == subfieldAll))
+    if ((videoDevice.getRequestedSubfield() != subfieldAll) &&
+	(videoDevice.getDeviceSubfield() == subfieldAll))
     {
-      if (connection.videoDevice.getRequestedSubfield() == subfieldOdd)
+      if (videoDevice.getRequestedSubfield() == subfieldOdd)
 	start += srcOffset;
       srcOffset *= 2;
     }

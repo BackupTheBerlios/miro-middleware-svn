@@ -78,10 +78,10 @@ namespace Video
     }
 
 //--------------------------------------------------------------------
-    void VideoDevice::connect(int fd, const Parameters & params)
+    void VideoDevice::connect()
     {
         DBG_CHECK_POINTER(workerDevice, "VideoDevice::connect: no worker device");
-	workerDevice->handleConnect(fd, params);
+	workerDevice->handleConnect();
     }
 
 //--------------------------------------------------------------------

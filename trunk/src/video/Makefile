@@ -44,7 +44,6 @@ FILES = \
 	VideoDeviceMeteor \
 	VideoDevice1394 \
 	VideoDeviceDummy \
-	VideoConnection \
 	VideoConsumer \
 	VideoImpl \
 	VideoConverter \
@@ -60,6 +59,9 @@ SRC	= $(addsuffix .cpp,$(FILES))
 OBJ	= $(addsuffix .o,$(FILES))
 
 BUILD 	= $(VBIN)
+
+
+REST = 	VideoConnection 
 
 #----------------------------------------------------------------------------
 #	Include macros and targets
@@ -92,64 +94,58 @@ $(BIN): $(STATIC_DEPS)
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/BehaviourParameters.h
 
-.obj/VideoConfig.o .obj/VideoConfig.so .shobj/VideoConfig.o .shobj/VideoConfig.so: VideoConfig.cpp VideoConfig.h
+.obj/VideoConfig.o .obj/VideoConfig.so .shobj/VideoConfig.o .shobj/VideoConfig.so: VideoConfig.cpp VideoConfig.h \
+ $(MIRO_ROOT)/src/miro/Exception.h
 
 .obj/VideoDevice.o .obj/VideoDevice.so .shobj/VideoDevice.o .shobj/VideoDevice.so: VideoDevice.cpp VideoDevice.h Parameters.h \
  $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- VideoDeviceBase.h VideoDeviceBTTV.h VideoDeviceMeteor.h \
- ioctl_meteor.h VideoDevice1394.h VideoDeviceDummy.h
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h VideoDeviceBase.h \
+ VideoConfig.h VideoDeviceBTTV.h VideoDeviceMeteor.h ioctl_meteor.h \
+ VideoDevice1394.h VideoDeviceDummy.h
 
 .obj/VideoDeviceBase.o .obj/VideoDeviceBase.so .shobj/VideoDeviceBase.o .shobj/VideoDeviceBase.so: VideoDeviceBase.cpp VideoDeviceBase.h VideoDevice.h \
  Parameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h VideoConfig.h
 
 .obj/VideoDeviceBTTV.o .obj/VideoDeviceBTTV.so .shobj/VideoDeviceBTTV.o .shobj/VideoDeviceBTTV.so: VideoDeviceBTTV.cpp VideoDeviceBTTV.h \
  VideoDeviceBase.h VideoDevice.h Parameters.h \
  $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h VideoConfig.h \
  $(MIRO_ROOT)/src/miro/Exception.h
 
 .obj/VideoDeviceMeteor.o .obj/VideoDeviceMeteor.so .shobj/VideoDeviceMeteor.o .shobj/VideoDeviceMeteor.so: VideoDeviceMeteor.cpp VideoDeviceMeteor.h \
  ioctl_meteor.h VideoDeviceBase.h VideoDevice.h Parameters.h \
  $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h VideoConfig.h
 
 .obj/VideoDevice1394.o .obj/VideoDevice1394.so .shobj/VideoDevice1394.o .shobj/VideoDevice1394.so: VideoDevice1394.cpp VideoDevice1394.h \
  VideoDeviceBase.h VideoDevice.h Parameters.h \
  $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h VideoConfig.h \
+ VideoConverterYUV411toRGB.h VideoConverterYUVbase.h VideoConverter.h \
+ VideoConverterYUV422toRGB.h VideoConverterYUV411toYUV.h \
+ VideoConverterYUV422toYUV.h
 
 .obj/VideoDeviceDummy.o .obj/VideoDeviceDummy.so .shobj/VideoDeviceDummy.o .shobj/VideoDeviceDummy.so: VideoDeviceDummy.cpp VideoDeviceDummy.h \
  VideoDeviceBase.h VideoDevice.h Parameters.h \
  $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h
-
-.obj/VideoConnection.o .obj/VideoConnection.so .shobj/VideoConnection.o .shobj/VideoConnection.so: VideoConnection.cpp VideoConnection.h VideoDevice.h \
- Parameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- VideoConsumer.h $(MIRO_ROOT)/src/miro/Thread.h \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/Exception.h
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h VideoConfig.h
 
 .obj/VideoConsumer.o .obj/VideoConsumer.so .shobj/VideoConsumer.o .shobj/VideoConsumer.so: VideoConsumer.cpp VideoConsumer.h \
  $(MIRO_ROOT)/src/miro/Synch.h \
  $(MIRO_ROOT)/src/miro/Thread.h \
  $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i VideoConnection.h \
- VideoDevice.h Parameters.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i VideoDevice.h Parameters.h \
  $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- VideoImpl.h $(MIRO_ROOT)/src/miro/VideoS.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h VideoImpl.h \
+ $(MIRO_ROOT)/src/miro/VideoS.h \
  $(MIRO_ROOT)/src/miro/ExceptionS.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.i \
@@ -166,7 +162,7 @@ $(BIN): $(STATIC_DEPS)
  $(MIRO_ROOT)/src/miro/PositionS.i \
  $(MIRO_ROOT)/src/miro/VideoC.h \
  $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/miro/VideoS.i \
+ $(MIRO_ROOT)/src/miro/VideoS.i VideoConfig.h \
  $(MIRO_ROOT)/src/miro/Exception.h \
  $(MIRO_ROOT)/src/miro/TimeHelper.h
 
@@ -195,7 +191,7 @@ $(BIN): $(STATIC_DEPS)
  $(MIRO_ROOT)/src/miro/PositionS.i \
  $(MIRO_ROOT)/src/miro/VideoC.h \
  $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/miro/VideoS.i VideoDevice.h
+ $(MIRO_ROOT)/src/miro/VideoS.i VideoDevice.h VideoConfig.h
 
 .obj/VideoConverter.o .obj/VideoConverter.so .shobj/VideoConverter.o .shobj/VideoConverter.so: VideoConverter.cpp VideoConverter.h
 
@@ -220,15 +216,10 @@ $(BIN): $(STATIC_DEPS)
  $(MIRO_ROOT)/src/miro/Exception.h \
  $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- VideoConnection.h \
- VideoDevice.h \
- Parameters.h \
- VideoConsumer.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h VideoConsumer.h \
  $(MIRO_ROOT)/src/miro/Thread.h \
  $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- VideoImpl.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i VideoImpl.h Parameters.h \
  $(MIRO_ROOT)/src/miro/VideoS.h \
  $(MIRO_ROOT)/src/miro/ExceptionS.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.h \
@@ -246,7 +237,7 @@ $(BIN): $(STATIC_DEPS)
  $(MIRO_ROOT)/src/miro/PositionS.i \
  $(MIRO_ROOT)/src/miro/VideoC.h \
  $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/miro/VideoS.i Parameters.h \
+ $(MIRO_ROOT)/src/miro/VideoS.i VideoDevice.h \
  $(MIRO_ROOT)/src/miro/Utils.h
 
 .obj/VideoService.o .obj/VideoService.so .shobj/VideoService.o .shobj/VideoService.so: VideoService.cpp VideoServer.h \
@@ -255,15 +246,10 @@ $(BIN): $(STATIC_DEPS)
  $(MIRO_ROOT)/src/miro/Exception.h \
  $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- VideoConnection.h \
- VideoDevice.h \
- Parameters.h \
- VideoConsumer.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h VideoConsumer.h \
  $(MIRO_ROOT)/src/miro/Thread.h \
  $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- VideoImpl.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i VideoImpl.h Parameters.h \
  $(MIRO_ROOT)/src/miro/VideoS.h \
  $(MIRO_ROOT)/src/miro/ExceptionS.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.h \
@@ -281,7 +267,8 @@ $(BIN): $(STATIC_DEPS)
  $(MIRO_ROOT)/src/miro/PositionS.i \
  $(MIRO_ROOT)/src/miro/VideoC.h \
  $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/miro/VideoS.i \
- $(MIRO_ROOT)/src/miro/Utils.h
+ $(MIRO_ROOT)/src/miro/VideoS.i VideoDevice.h \
+ $(MIRO_ROOT)/src/miro/Utils.h \
+ Parameters.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

@@ -17,11 +17,12 @@
 //#include "miro/DevConsumer.h"
 
 
+
 namespace Video
 {
   // forward declerations
-  class Connection;
   class VideoImpl;
+  class VideoDevice;
 
   /**
    * Class for using the Video robot
@@ -31,7 +32,7 @@ namespace Video
     typedef Miro::Thread Super;
     
   public:
-    Consumer(Connection& _connection, 
+    Consumer(Video::VideoDevice& _device, 
 	     VideoImpl * _pGrabber = NULL, 
 	     ACE_Sched_Params * pschedp = NULL);
     ~Consumer();
@@ -57,7 +58,7 @@ namespace Video
     void swapLine3(void*, const void*, const int);
     void swapLine4(void*, const void*, const int);
 
-    Connection&	connection;
+    Video::VideoDevice&     videoDevice;
     VideoImpl*       pGrabber;
     Miro::Mutex      mutex;
     Miro::Condition  cond;

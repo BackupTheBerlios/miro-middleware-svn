@@ -14,6 +14,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.2  2003/05/13 20:50:21  hutz
+ * cleaning up the video service, getting rid of VideoConnection
+ *
  * Revision 1.1  2003/05/12 11:48:05  hutz
  * added the fire wire dc support from graz
  * propagated changes and cleanups introduced by fire wire dc
@@ -64,17 +67,17 @@ namespace Video
     }
     
 //--------------------------------------------------------------------
-  void VideoDeviceDummy::handleConnect(const int /* fd */, const Parameters& params)
+  void VideoDeviceDummy::handleConnect()
     {
-	formatID = ::Video::getFormat(params.format);
-        sourceID = ::Video::getSource(params.source);
-        requestedPaletteID = ::Video::getPalette(params.palette);
-        devicePaletteID = ::Video::getPalette(params.palette);
-        requestedSubfieldID = ::Video::getSubfield(params.subfield);
-        deviceSubfieldID = ::Video::getSubfield(params.subfield);
-        imgWidth = params.width;
-        imgHeight = params.height;
-        iNBuffers = params.buffers;
+	formatID = ::Video::getFormat(params_->format);
+        sourceID = ::Video::getSource(params_->source);
+        requestedPaletteID = ::Video::getPalette(params_->palette);
+        devicePaletteID = ::Video::getPalette(params_->palette);
+        requestedSubfieldID = ::Video::getSubfield(params_->subfield);
+        deviceSubfieldID = ::Video::getSubfield(params_->subfield);
+        imgWidth = params_->width;
+        imgHeight = params_->height;
+        iNBuffers = params_->buffers;
         iCurrentBuffer = 0;
         iNFramesCaptured = 1;
         is_connected_ = true;

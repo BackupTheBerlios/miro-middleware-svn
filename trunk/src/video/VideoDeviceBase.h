@@ -14,6 +14,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.2  2003/05/13 20:50:21  hutz
+ * cleaning up the video service, getting rid of VideoConnection
+ *
  * Revision 1.1  2003/05/12 11:48:05  hutz
  * added the fire wire dc support from graz
  * propagated changes and cleanups introduced by fire wire dc
@@ -62,9 +65,10 @@ namespace Video
 
 	virtual	int	getPixelSize(const int) const;
 
-	virtual	void*	grabImage(ACE_Time_Value & _timeStamp) const = 0;
-	virtual	void	handleConnect(const int fd, const Parameters& params) = 0;
+	virtual	void	handleConnect() = 0;
 	virtual	void	handleDisconnect() = 0;
+
+	virtual	void*	grabImage(ACE_Time_Value & _timeStamp) const = 0;
 
     protected:
 	const Parameters * params_;

@@ -29,7 +29,7 @@ namespace Video
 
     virtual	void*	grabImage(ACE_Time_Value& _timeStamp) const;
 
-    virtual	void	handleConnect(int fd, const Parameters& params);
+    virtual	void	handleConnect();
     virtual	void	handleDisconnect();
 
   protected:
@@ -39,6 +39,10 @@ namespace Video
     virtual	void	setSize(int, int);
 
     int getCurrentErrorCount() const;
+
+    ACE_DEV_Addr devName_;
+    ACE_DEV_IO ioBuffer_;
+    ACE_DEV_Connector connector_;
 
     meteor_geomet	meteorGeometry;
 

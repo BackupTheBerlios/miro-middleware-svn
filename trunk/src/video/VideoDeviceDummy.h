@@ -14,6 +14,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.2  2003/05/13 20:50:21  hutz
+ * cleaning up the video service, getting rid of VideoConnection
+ *
  * Revision 1.1  2003/05/12 11:48:05  hutz
  * added the fire wire dc support from graz
  * propagated changes and cleanups introduced by fire wire dc
@@ -44,11 +47,11 @@ namespace Video
         VideoDeviceDummy();
         virtual ~VideoDeviceDummy();
 	    	    
-	virtual	void*	grabImage(ACE_Time_Value & _timeStamp) const;
-
-	virtual	void	handleConnect(const int fd, const Parameters& params);
+	virtual	void	handleConnect();
 	virtual	void	handleDisconnect();
 		
+	virtual	void*	grabImage(ACE_Time_Value & _timeStamp) const;
+
     private:
         //! connection simulation flag
         bool is_connected_;

@@ -28,11 +28,12 @@ namespace Video
     VideoDeviceBTTV();
     virtual ~VideoDeviceBTTV();
 
+    virtual void handleConnect();
+    virtual void handleDisconnect();
+
     virtual void * grabImage(ACE_Time_Value& _timeStamp) const;
 
   protected:
-    virtual void handleConnect(const int fd, const Parameters& params);
-    virtual void handleDisconnect();
 
     virtual void setFormat(int);
     virtual void setSource(int);
@@ -46,6 +47,10 @@ namespace Video
     virtual int probeAllFormats();
 
     // protected data
+
+    ACE_DEV_Addr devName_;
+    ACE_DEV_IO ioBuffer_;
+    ACE_DEV_Connector connector_;
 
     mutable struct video_mmap * gb;
     struct video_mbuf gb_buffers;

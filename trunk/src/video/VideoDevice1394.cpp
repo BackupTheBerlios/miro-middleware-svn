@@ -15,6 +15,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.4  2003/05/13 20:50:20  hutz
+ * cleaning up the video service, getting rid of VideoConnection
+ *
  * Revision 1.3  2003/05/13 10:56:34  hutz
  * debugging fire wire support
  *
@@ -157,12 +160,10 @@ namespace Video
 //---------------------------------------------------------------
     VideoDevice1394::VideoDevice1394() :
       converter_(NULL),
-      video_fd_(-1),
-      device_name_(DEVICE_NAME),
       is_open_(false),
       handle_(0),
       p_camera_(0),
-      frame_buffers_(0),
+      frame_buffers_(NULL),
       frame_rate_(FRAMERATE_30)
     {
         DBG(std::cout << "Constructing VideoDevice1394." << std::endl);
@@ -202,21 +203,20 @@ namespace Video
     }
     
 //---------------------------------------------------------------
-    void VideoDevice1394::handleConnect(const int fd, const Parameters& params)
+    void VideoDevice1394::handleConnect()
     {
 	DBG(std::cout << "Connecting VideoDevice1394." << std::endl);
 	
-	video_fd_ = fd;
 	initDevice();
 	initSettings(params_->fireWire);
 	
-	setFormat(::Video::getFormat(params.format));
-	setSource(::Video::getSource(params.source));
-	setPalette(::Video::getPalette(params.palette));
-	setSubfield(::Video::getSubfield(params.subfield));
-	setSize(params.width, params.height);
+	setFormat(::Video::getFormat(params_->format));
+	setSource(::Video::getSource(params_->source));
+	setPalette(::Video::getPalette(params_->palette));
+	setSubfield(::Video::getSubfield(params_->subfield));
+	setSize(params_->width, params_->height);
 	
-	initBuffers(params.buffers);
+	initBuffers(params_->buffers);
 	initCapture();
     }
 
@@ -235,13 +235,9 @@ namespace Video
 	}
 
 	cleanupDevice();
-	video_fd_ = -1;
 	
-	if (frame_buffers_)
-	{
-	    delete frame_buffers_;
-	    frame_buffers_ = 0;
-	}
+	delete frame_buffers_;
+	frame_buffers_ = NULL;
     }
     
 //---------------------------------------------------------------
@@ -367,7 +363,8 @@ namespace Video
 //---------------------------------------------------------------
     void VideoDevice1394::initBuffers(int buf_cnt)
     {
-        if (frame_buffers_) delete frame_buffers_;
+        delete frame_buffers_;
+
 	iNBuffers = buf_cnt;
 	iCurrentBuffer = iNBuffers-1;
 	iNFramesCaptured = 0;
@@ -395,7 +392,7 @@ namespace Video
 				     frame_rate_,
 				     NUM_BUFFERS,
 				     DROP_FRAMES,
-				     device_name_.c_str(),
+				     params_->device.c_str(),
 				     p_camera_) != DC1394_SUCCESS)
 	    throw Miro::Exception("VideoDevice1394::handleConnect: unable to setup camera (RAW_RGB)");
 #else
@@ -408,7 +405,7 @@ namespace Video
 				     frame_rate_,
 				     NUM_BUFFERS,
 				     DROP_FRAMES,
-				     device_name_.c_str(),
+				     params_->device.c_str(),
 				     p_camera_) != DC1394_SUCCESS)
 	    throw Miro::Exception("VideoDevice1394::handleConnect: unable to setup camera");
 #endif

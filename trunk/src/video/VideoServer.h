@@ -14,9 +14,9 @@
 
 #include "miro/Server.h"
 
-#include "video/VideoConnection.h"
-#include "video/VideoConsumer.h"
-#include "video/VideoImpl.h"
+#include "VideoConsumer.h"
+#include "VideoImpl.h"
+#include "VideoDevice.h"
 
 // forward declarations
 namespace Video
@@ -47,8 +47,8 @@ public:
 private:
   /** Sceduling parameters for a realtime thread */
   ACE_Sched_Params schedparams_;
+  Video::VideoDevice videoDevice;
   Video::Consumer consumer;
-  Video::Connection connection;
   Miro::VideoImpl grabber;
   Miro::Video_ptr pVideo;
 };

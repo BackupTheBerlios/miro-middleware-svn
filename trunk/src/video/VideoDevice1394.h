@@ -14,6 +14,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.3  2003/05/13 20:50:20  hutz
+ * cleaning up the video service, getting rid of VideoConnection
+ *
  * Revision 1.2  2003/05/12 16:34:35  hutz
  * bug hunt on fire wire
  *
@@ -62,7 +65,7 @@ namespace Video
         VideoDevice1394();
         virtual ~VideoDevice1394();
 	
-	virtual	void handleConnect(const int fd, const Parameters& params);
+	virtual	void handleConnect();
 	virtual	void handleDisconnect();
 
 	virtual	void * grabImage(ACE_Time_Value& _timeStamp) const;
@@ -90,10 +93,7 @@ namespace Video
 
     private:
         VideoConverter *        converter_;
-        //! Dummy - Device handle.
-	int		        video_fd_;
-	//! Name of the "really" used device.
-	std::string             device_name_;
+
 	//! Flag to indicate that the device is initialized.
 	bool                    is_open_;
 	//! Real device handle.

@@ -32,8 +32,8 @@ VideoService::VideoService(int argc, char *argv[]) :
   Super(argc, argv),
   schedparams_(ACE_SCHED_FIFO, 10),
   // Video board initialization
-  consumer(connection, NULL, &schedparams_),
-  connection(&consumer),
+  videoDevice(Video::Parameters::instance()->grabber),
+  consumer(videoDevice, NULL, &schedparams_),
   grabber(&consumer)
 
   // Service initialization
@@ -46,8 +46,8 @@ VideoService::VideoService(Server& _server) :
   Super(_server),
   schedparams_(ACE_SCHED_FIFO, 10),
   // Video board initialization
-  consumer(connection, NULL, &schedparams_),
-  connection(&consumer),
+  videoDevice(Video::Parameters::instance()->grabber),
+  consumer(videoDevice, NULL, &schedparams_),
   grabber(&consumer)
 
   // Service initialization
@@ -59,6 +59,9 @@ VideoService::VideoService(Server& _server) :
 void
 VideoService::init()
 {
+  videoDevice.connect();
+  consumer.open(NULL);
+
   // register the grabber interface at the POA
   pVideo = grabber._this();
 
@@ -68,6 +71,10 @@ VideoService::init()
 VideoService::~VideoService()
 {
   DBG(cout << "Destructing VideoService." << endl);
+
+  consumer.cancel();
+  videoDevice.disconnect();
+
 
   // Deactivate the interfaces.
   // we have to do this manually for none owned orbs,

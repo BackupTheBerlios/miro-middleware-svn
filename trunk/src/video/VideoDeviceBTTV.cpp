@@ -33,6 +33,9 @@ namespace Video
   int VideoDeviceBTTV::gb_pal[64];
 
   VideoDeviceBTTV::VideoDeviceBTTV() :
+    devName_(params_->device.c_str()),
+    ioBuffer_(),
+    connector_(),
     gb(NULL),
     channels(NULL),
     videoFd(-1),
@@ -76,13 +79,21 @@ namespace Video
 
 
   void 
-  VideoDeviceBTTV::handleConnect(const int fd, const Parameters& params)
+  VideoDeviceBTTV::handleConnect()
   {
     int	err;
 
     DBG(std::cout << "Connecting VideoDeviceBTTV." << std::endl);
 
-    videoFd = fd;
+    if (connector_.connect(ioBuffer_, 
+			  devName_, 
+			  0, ACE_Addr::sap_any, 0, O_RDWR) == -1) {
+      cerr << "Failed to open device: " << params_->device << endl
+	   << "Propably running on the wrong machine?" << endl;
+      throw Miro::CException(errno, std::strerror(errno));
+    }
+
+    videoFd = ioBuffer_.get_handle();
 
     fcntl(videoFd, F_SETFD, FD_CLOEXEC);
     /* video capabilities */
@@ -91,7 +102,7 @@ namespace Video
     getChannels();
 
     if (capability.type & VID_TYPE_CAPTURE) {
-      err = ioctl(videoFd,VIDIOCGMBUF,&gb_buffers);
+      err = ioctl(videoFd, VIDIOCGMBUF, &gb_buffers);
       if (err == -1)
 	throw Miro::CException(errno, "VideoDeviceBTTV::handleConnect() - VIDIOCGMBUF");
       map_ = (char*)mmap(0,gb_buffers.size, PROT_READ,MAP_SHARED, videoFd, 0);
@@ -107,10 +118,10 @@ namespace Video
 
     probeAllFormats();
 
-    setFormat(Video::getFormat(params.format));
-    setSource(Video::getSource(params.source));
-    setPalette(Video::getPalette(params.palette));
-    setSize(params.width, params.height);
+    setFormat(Video::getFormat(params_->format));
+    setSource(Video::getSource(params_->source));
+    setPalette(Video::getPalette(params_->palette));
+    setSize(params_->width, params_->height);
 
     iNFramesCaptured = 0;
 
@@ -126,7 +137,7 @@ namespace Video
       gb[i].frame = i;
     }
 
-    requestedSubfieldID = Video::getSubfield(params.subfield);
+    requestedSubfieldID = Video::getSubfield(params_->subfield);
 
     if (requestedSubfieldID != subfieldAll) {
       for (int i = 0; i < gb_buffers.frames; ++i) {
@@ -178,6 +189,7 @@ namespace Video
       map_ = (char*)-1;
     }
     videoFd = -1;
+    ioBuffer_.close();
   }
 
 
