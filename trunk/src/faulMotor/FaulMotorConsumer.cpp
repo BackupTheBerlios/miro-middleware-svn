@@ -53,9 +53,7 @@ namespace FaulMotor
     counterL(49),
     counterR(49),
     wheelBase_(params_->motion.wheelBase),
-    oddWheel_(0),
-    deltaT_((double)Parameters::instance()->odometryPace.sec() + 
-	    (double)Parameters::instance()->odometryPace.usec() / 1000000.)
+    oddWheel_(0)
   {
     DBG(cout << "Constructing FaulMotorConsumer." << endl);
     status_.position.point.x = 0.;
@@ -115,8 +113,10 @@ namespace FaulMotor
 	  double dR = (ticksR_ - prevTicksR_) / params_->rightTicksPerMM;
 
 	  // correct clock jitter from both wheels
+	  double mean = ((double)(clockL_ + clockR_)) / 2.;
+	  deltaT_ = mean * CLOCK_2_SEC;
+
 	  if (clockL_ != clockR_) {
-	    double mean = ((double)(clockL_ + clockR_)) / 2.;
 
 	    dL *= mean/((double)clockL_);
 	    dR *= mean/((double)clockR_);
