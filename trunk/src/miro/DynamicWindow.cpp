@@ -98,7 +98,6 @@ namespace Miro
     double fLeft, fRight, offset, angle, rel, break_dist, left_break, right_break;
     
     std::FILE *logFile1;
-    logFile1 = std::fopen("curvature.log","a");
     
     for(count = 0; count < 2*CURV_CNT+1; count++) {
 
@@ -138,7 +137,6 @@ namespace Miro
           else {
 	    CURV[count][seg] = 250;
 	  }
-          fprintf(logFile1,"%d\n",CURV[count][seg]);
 	}
 	
 	// rotate backwards to middle position
@@ -148,7 +146,6 @@ namespace Miro
       else { // left==right ==> robot moves straight forward/backward
 	for(seg = 0; seg < 2*CURV_RES+1 ; seg++) {
 	  CURV[count][seg] = 0;
-	  fprintf(logFile1,"%d\n",0);	// INCOMPLETE!!!!!!!!!!!!!!!!!!!!!!!!!!
 	}
       }
      
@@ -213,7 +210,7 @@ namespace Miro
     //
     
     for(left = minLeft_; left <= maxLeft_; left++) {
-      for(right = minRight_ ; right <= maxRight_; right++) {
+      for(right = minRight_; right <= maxRight_; right++) {
 	
 	// calculating actual curvature
 	curv = (int)((atan((double)left / (double)right) + (M_PI / 2.)) * 2 * CURV_CNT / M_PI);
@@ -228,15 +225,20 @@ namespace Miro
 	if((left+right)>0)
 	  target = CURV_RES  + CURV_DELAY + (int)(break_dist  * (double)CURV_RES / (double)CURV_LEN);
 	else
-
 	  target = CURV_RES - CURV_DELAY + (int)(break_dist * (double)CURV_RES / (double)CURV_LEN);
 	
 	velocitySpace_[left+100][right+100] = (double)CURV[std::max(0,std::min(2*CURV_CNT,curv))][std::max(0,std::min(2*CURV_RES,target))] * (double)velocitySpace_[left+100][right+100] / 250.;
-	// velocitySpace_[left+100][right+100] = std::min(CURV[std::max(0,std::min(2*CURV_CNT,curv))][std::max(0,std::min(2*CURV_RES,target))], 255); // velocitySpace_[left+100][right+100]);
-	
+
       }
     }
-    
+
+    // create logFiles
+    logFile1 = std::fopen("curvature.log","a");
+    for(curv = 0; curv <= 2*CURV_CNT; curv++) {
+      for(seg = 0; seg <= 2*CURV_RES; seg++) {
+	fprintf(logFile1,"%d\n",CURV[curv][seg]);
+      }
+    }
     fclose(logFile1);
     
   }
@@ -338,7 +340,7 @@ namespace Miro
 
 	angle = fabs((180. * (double)(left - right)) / (WHEEL_DISTANCE * M_PI));
 
-        if((angle < 90.) && ((velocitySpace_[left+100][right+100] > biggestVelocitySpaceValue) || 
+        if((angle < 45.) && ((velocitySpace_[left+100][right+100] > biggestVelocitySpaceValue) || 
 	   ((velocitySpace_[left+100][right+100] == biggestVelocitySpaceValue) && ((left * left) + (right * right)) > biggestVelocitySpaceRadius) ))
         {
           biggestVelocitySpaceValue = velocitySpace_[left+100][right+100];

@@ -49,9 +49,6 @@ namespace Miro
       notifyEvent.filterable_data.length(0);          // put nothing here
     }
 
-    fileHandler = fopen("windowArbiter.log","w
-");
-
   }
 
   WindowArbiter::~WindowArbiter() {
@@ -59,8 +56,6 @@ namespace Miro
       delete winArbViewTask_;
       winArbViewTaskCreated = false; 
     }
-
-    fclose(fileHandler);
   }
 
 #ifdef WE_ACTUALLY_NEED_IT
@@ -105,7 +100,7 @@ namespace Miro
       
     timerId = reactor.schedule_timer(this, 0, ACE_Time_Value(0,0),
 	ACE_Time_Value(0, 100000));
-    cout << "WindowArbiter Open." << endl;
+    cout << "WindowArbiter.cpp : Open!" << endl;
   }
 
   void
@@ -113,19 +108,17 @@ namespace Miro
   {
     reactor.cancel_timer(timerId);
     timerId = 0;
-    cout << "WindowArbiter Close." << endl;
+    cout << "WindowArbiter.cpp : Close!" << endl;
     Arbiter::close();
   }	
   
   int
   WindowArbiter::handle_timeout(const ACE_Time_Value &, const void*)
   {
-    const double RADSTAND = 390; // florian: besser aus parameter struct
-
     Miro::VelocityIDL  velocity;
     std::complex<double> newVelocity;
 
-    cout << "\n\nWindowArbiter TimeOutHandler.\n\n" << endl;
+    cout << "WindowArbiter.cpp : TimeOutHandler started!" << endl;
     
     // let each behaviour calculate its dynamicWindow ascend by priority
     typedef std::vector<Behaviour *> BehaviourVector;
@@ -139,31 +132,13 @@ namespace Miro
       (*k)->calcDynamicWindow(&dynWindow_);
     }
 
-    for(int left = 0; left < 201; left++) {
-      for(int right = 0; right < 201; right++) {
-        fprintf(fileHandler,"%d\n",dynWindow_.velocitySpace_[left][right]);
-      }
-    }
-
     // calculate new velocity using the content of the dynamicWindow    
     newVelocity = dynWindow_.calcNewVelocity();
 
-    // Set motion
-    // florian: probier mal wie's mit setLRVelocity läuft.
-
+    // set motion
     pMotion_->setLRVelocity((int)(10. * newVelocity.real()), (int)(10. * newVelocity.imag()));
-    cout << "WindowArbiter.cpp : left=" << newVelocity.real() << " - right=" << newVelocity.imag() << endl;
     currentVelocity_ = velocity;
 
-    /*
-    velocity.translation = 10 * ((int)newVelocity.real() + (int)newVelocity.imag()) / 2;
-    velocity.rotation = 10 * ((int)newVelocity.imag() - (int)newVelocity.real()) / RADSTAND;
-    if (velocity.translation != currentVelocity_.translation || velocity.rotation != currentVelocity_.rotation) {
-      cout << "VELOCITY TRANS : " << currentVelocity_.translation << " _ VELOCITY ROT : " << currentVelocity_.rotation << endl;
-      pMotion_->setVelocity(velocity);
-    
-    }
-    */
     cout << "WindowArbiter.cpp : TimeOutHandler finished!" << endl;
 
     return 0;
