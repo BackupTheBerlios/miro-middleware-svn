@@ -2,7 +2,7 @@
 ##
 ## This file is part of Miro (The Middleware For Robots)
 ##
-## (c) 1999, 2000, 2001
+## (c) 1999, 2000, 2001, 2002
 ## Department of Neural Information Processing, University of Ulm, Germany
 ##
 ## $Id$
@@ -25,9 +25,7 @@ INCLDIRS += -I$(TAO_ROOT) -I$(TAO_ROOT)/orbsvcs -I$(MIRO_ROOT)/src -I$(QTDIR)/in
 
 CCFLAGS += -Woverloaded-virtual -DDEBUG
 
-LDFLAGS +=  -L$(INSLIB) -L$(ACE_ROOT)/ace -L$(QTDIR)/lib
-
-LIBS += -lqt
+LDFLAGS +=  -L$(INSLIB) -L$(ACE_ROOT)/ace
 
 MIRO_IDL_DIR = $(MIRO_ROOT)/idl
 MIRO_SRC_DIR = $(MIRO_ROOT)/src
@@ -37,6 +35,13 @@ MIRO_IDLFLAGS += -Sc -Wp,-I$(MIRO_IDL_DIR)
 
 tao_dont_use_idl_make_rule = 1
 
-
-MOC = $(QTDIR)/bin/moc
 DOXYGEN = doxygen
+
+# add qt support if ACE/TAO was built without
+
+ifeq ($(qt_reactor),)
+  CPPFLAGS += $(PLATFORM_QT_CPPFLAGS)
+  LIBS += $(PLATFORM_QT_LIBS)
+  LDFLAGS += $(PLATFORM_QT_LDFLAGS)
+endif # qt_reactor
+
