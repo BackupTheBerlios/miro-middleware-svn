@@ -1,0 +1,32 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef BehaviourEngine_idl
+#define BehaviourEngine_idl
+
+module Miro
+{
+  interface BehaviourEngine
+  {
+    exception EMalformedXML {};
+    exception EMalformedPolicy { string what; };
+
+    exception EFile {};
+    exception ENoPolicy {};
+
+    void loadPolicy(in string policy) raises(EMalformedXML, EMalformedPolicy);
+    void loadPolicyFile(in string fileName) raises(EMalformedXML, EMalformedPolicy, EFile);
+
+    void openPolicy() raises(ENoPolicy);
+    void closePolicy() raises(ENoPolicy);
+  };
+};
+
+#endif // BehaviourEngine_idl
