@@ -35,7 +35,7 @@ libmiroBehavioursRangeSensor_la_SOURCES = \
 BUILT_SOURCES = Parameters.cpp Parameters.h
 CLEANFILES = $(BUILT_SOURCES)
 
-all-local:
+all-local: libmiroBehavioursRangeSensor.la
 	$(INSTALLLTLIBRARIES)
 
 clean-local:

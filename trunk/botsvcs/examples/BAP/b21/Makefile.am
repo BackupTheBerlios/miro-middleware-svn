@@ -35,7 +35,7 @@ libmiroBehavioursB21_la_SOURCES = \
 BUILT_SOURCES = Parameters.cpp Parameters.h
 CLEANFILES = $(BUILT_SOURCES)
 
-all-local:
+all-local: libmiroBehavioursB21.la
 	$(INSTALLLTLIBRARIES)
 
 clean-local:

@@ -10,6 +10,9 @@
 ##############################################################################
 
 include $(top_srcdir)/config/Make-rules
+if COND_PCH
+CPPFLAGS+=-include $(top_builddir)/pch/all_shared.h
+endif
 
 ## shared library to be built
 lib_LTLIBRARIES = libmiroBAPtests.la
@@ -40,7 +43,7 @@ includefiles2 = $(includefiles1:.cpp=.h)
 ## the prefix of the following macro indicates the installation directory
 miro_include_HEADERS = $(includefiles2)
 
-all-local:
+all-local: libmiroBAPtests.la
 	$(INSTALLLTLIBRARIES)
 
 clean-local:

@@ -12,6 +12,9 @@
 ##############################################################################
 
 include $(top_srcdir)/config/Make-rules
+if COND_PCH
+CPPFLAGS+=-include $(top_builddir)/pch/all_static.h
+endif
 
 bin_PROGRAMS = \
 	BehaviourEngineTest DummyBehaviourEngine
@@ -35,7 +38,7 @@ DummyBehaviourEngine_LDADD = \
 BUILT_SOURCES = 
 CLEANFILES = $(BUILT_SOURCES)
 
-all-local: BehaviourEngineTest
+all-local: BehaviourEngineTest DummyBehaviourEngine
 	$(INSTALLPROGRAMS)
 
 clean-local:

@@ -14,6 +14,9 @@
 ##############################################################################
 
 include $(top_srcdir)/config/Make-rules
+if COND_PCH
+CPPFLAGS+=-include $(top_builddir)/pch/all_shared.h
+endif
 
 lib_LTLIBRARIES = libmiroBAP.la
 
@@ -67,7 +70,7 @@ includefiles1 = \
 includefiles2 = $(includefiles1:.cpp=.h)
 miro_include_HEADERS = $(includefiles2)
 
-all-local:
+all-local: libmiroBAP.la
 	$(INSTALLLTLIBRARIES)
 
 clean-local:
