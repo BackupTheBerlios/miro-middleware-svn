@@ -186,6 +186,11 @@ namespace FaulMotor
 //       writeThisRound_ = true;
 //       protectedDeferredSetSpeed();
 //     }
+
+    // if we don't poll the odometry, we have to write sometimes...
+    if (!params_->odometryPolling)
+	protectedDeferredSetSpeed();
+
   }
 
   void
