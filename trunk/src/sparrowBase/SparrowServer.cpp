@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2000, 2001, 2002, 2003
+// (c) 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 //
@@ -14,6 +14,7 @@
 
 #include "miro/Exception.h"
 #include "miro/Utils.h"
+#include "miro/Log.h"
 
 #include <tao/ORB_Core.h>
 
@@ -26,18 +27,6 @@
 #include <orbsvcs/Notify/Notify_Default_POA_Factory.h>
 #include <orbsvcs/Notify/Notify_Default_Collection_Factory.h>
 #include <orbsvcs/Notify/Notify_Default_EMO_Factory.h>
-
-#include <iostream>
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
-
-using std::cout;
-using std::cerr;
-using std::endl;
 
 FaulhaberHardware::FaulhaberHardware(ACE_Reactor * _reactor,
 				     Miro::OdometryImpl * _pOdometryImpl,
@@ -99,6 +88,8 @@ SparrowBase::SparrowBase(Miro::Server& _server, bool _startReactorTastk) :
   interval(0, 500000),
   aEventHandlerId_(-1)
 {
+  MIRO_LOG_CTOR("SparrowBase");
+  
   if(Sparrow::Parameters::instance()->sparrow2003) {
     
     aCollector = new Sparrow::AliveCollector();
@@ -168,8 +159,6 @@ SparrowBase::SparrowBase(Miro::Server& _server, bool _startReactorTastk) :
   }
 
   init(_startReactorTastk);
-
-  DBG(cout << "SparrowBase initialized.." << endl);
 }
 
 void
@@ -202,11 +191,13 @@ SparrowBase::init(bool _startReactorTastk)
 
   if (mcAdapter_)
     mcAdapter_->init();
+
+  MIRO_LOG(LL_CTOR_DTOR, "SparrowBase initialized.");
 }
 
 SparrowBase::~SparrowBase()
 {
-  DBG(cout << "Destructing SparrowBase." << endl);
+  MIRO_LOG_DTOR("SparrowBase");
 
   if (aEventHandlerId_ != -1)
     reactorTask.reactor()->cancel_timer(aEventHandlerId_);
@@ -215,31 +206,31 @@ SparrowBase::~SparrowBase()
   
   // close channel sharing
   if (mcAdapter_) {
-    DBG(cout << "Closing multicats adapter." << endl);
+    MIRO_LOG(LL_CTOR_DTOR, "SparrowBase: Closing multicats adapter.");
 
     mcAdapter_->fini();
     delete mcAdapter_;
   }
 
   odometry.cancel();
-  DBG(cout << "Odometry dispatching canceled." << endl);
+    MIRO_LOG(LL_CTOR_DTOR, "SparrowBase: Odometry dispatching canceled.");
 
   infrared.cancel();
-  DBG(cout << "Infrared dispatching canceled." << endl);
+  MIRO_LOG(LL_CTOR_DTOR, "SparrowBase: Infrared dispatching canceled.");
 
-  DBG(cout << "Shutting down sparrow board." << endl);
+  MIRO_LOG(LL_CTOR_DTOR, "SparrowBase: Shutting down sparrow board.");
   if (sparrowConnection)
     sparrowConnection->fini();
 
   reactorTask.cancel();
-  DBG(cout << "reactor Task canceled." << endl);
+  MIRO_LOG(LL_CTOR_DTOR, "SparrowBase: Reactor Task canceled.");
 
 
   delete pFaulhaber;
   delete sparrowConnection;
   delete sparrowConnection2003;
 
-  DBG(cout << "removing objects from POA" << endl);
+  MIRO_LOG(LL_CTOR_DTOR, "SparrowBase: removing objects from POA.");
 
   // Deactivate the interfaces.
   // we have to do this manually for none owned orbs,
@@ -268,5 +259,5 @@ SparrowBase::~SparrowBase()
 //  oid = server_.poa->reference_to_id (notifyFactory_);
 //  server_.poa->deactivate_object (oid.in());
 
-  cout << "Destructing SparrowBase members." << endl;
+    MIRO_LOG(LL_CTOR_DTOR, "Destructing SparrowBase members." );
 }
