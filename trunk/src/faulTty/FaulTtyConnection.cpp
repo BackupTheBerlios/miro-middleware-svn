@@ -56,13 +56,13 @@ namespace FaulController
   {
     ACE_Time_Value av(ACE_OS::gettimeofday() + ACE_Time_Value(1));
     if (mutex_.acquire(av) == -1)
-      throw Miro::CException(errno, "Error writing faulTty device.");
+      throw Miro::CException(errno, "Error on FaulTty mutex.");
 
     int rc = ttyConnection_.ioBuffer.send_n(_buffer, _len);
     mutex_.release();
 
     if (rc == -1)
-      throw Miro::EDevIO("Error writing FaulTty device.");
+      throw Miro::CException(errno, "Error writing FaulTty device.");
   }
 
   void
@@ -72,15 +72,15 @@ namespace FaulController
 
     ACE_Time_Value av(ACE_OS::gettimeofday() + ACE_Time_Value(1));
     if (mutex_.acquire(av) == -1)
-      throw Miro::CException(errno, "Error writing faulTty device.");
+      throw Miro::CException(errno, "Error on FaulTty mutex.");
 
-    ACE_Time_Value delta = ACE_OS::gettimeofday() - lastWrite_;
-    if (delta < TIME_OUT) {
-      // is this sleep necessary ???
-      // well, yes
+//     ACE_Time_Value delta = ACE_OS::gettimeofday() - lastWrite_;
+//     if (delta < TIME_OUT) {
+//       // is this sleep necessary ???
+//       // well, yes
 
-      ACE_OS::sleep(TIME_OUT - delta); // this is at least 10usec thanks to linux
-    }
+//       ACE_OS::sleep(TIME_OUT - delta); // this is at least 10usec thanks to linux
+//     }
 
     // copy the messages 
     // setting newlines inbetween
@@ -105,13 +105,13 @@ namespace FaulController
     unsigned int len = dest - buffer;
     if (len) {
       rc = ttyConnection_.ioBuffer.send_n(buffer, len);
-      lastWrite_ = ACE_OS::gettimeofday();
+      // lastWrite_ = ACE_OS::gettimeofday();
       // std::cout << "faulTTy: " << buffer << "end" << endl;
     }
 
     mutex_.release();
 
     if (rc == -1)
-      throw Miro::EDevIO("Error writing FaulTty device.");
+      throw Miro::CException(errno, "Error writing FaulTty device.");
   }
 }

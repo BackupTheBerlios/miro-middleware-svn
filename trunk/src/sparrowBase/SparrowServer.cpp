@@ -55,12 +55,13 @@ FaulhaberHardware::FaulhaberHardware(ACE_Reactor * _reactor,
     timerId = reactor->schedule_timer(pTimerEventHandler, NULL, 
 				      params->odometryPace,
 				      params->odometryPace);
-}
+  }
 }
 
 FaulhaberHardware::~FaulhaberHardware()
 {
-  reactor->cancel_timer(timerId);
+  if (timerId != -1)
+    reactor->cancel_timer(timerId);
 
 }
 

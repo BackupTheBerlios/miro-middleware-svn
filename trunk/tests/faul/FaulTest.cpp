@@ -73,15 +73,19 @@ FaulhaberHardware::FaulhaberHardware(ACE_Reactor * _reactor,
   pTimerEventHandler(new FaulMotor::TimerEventHandler(connection)),
   connection(_reactor, pConsumer, connection2003_)
 {
-  ACE_Time_Value tv(0,50000);
-
-  timerId = reactor->schedule_timer(pTimerEventHandler, NULL, tv ,tv);
+  FaulMotor::Parameters * params = 
+    FaulMotor::Parameters::instance();
+  if (params->odometryPolling) {
+    timerId = reactor->schedule_timer(pTimerEventHandler, NULL, 
+				      params->odometryPace,
+				      params->odometryPace);
+  }
 }
 
 FaulhaberHardware::~FaulhaberHardware()
 {
-  reactor->cancel_timer(timerId);
-
+  if (timerId != -1)
+    reactor->cancel_timer(timerId);
 }
 
 // we need to shut down the faulMotor board properly on sig term
@@ -155,6 +159,40 @@ Service::Service() :
 }
 
 
+Service * service;
+
+void floodingTest(int _iter, int _timeout)
+{
+  int sec = _timeout / 1000;
+  int usec = _timeout % 1000;
+  usec *= 1000;
+
+  ACE_Time_Value t(sec, usec);
+
+
+  ACE_Time_Value start = ACE_OS::gettimeofday();
+  for (int i = 0; i < _iter; ++i) {
+    // set random velocity
+
+    double dl = (double)rand() / ((RAND_MAX + 1.0) * .5) - 1.;
+    double dr = (double)rand() / ((RAND_MAX + 1.0) * .5) - 1.;
+
+
+    short l = (short) (dl * 900.);
+    short r = (short) (dl * 900.);
+    service->pFaulhaber->connection.setSpeed(l,r);
+
+    if (_timeout != 0) {
+      ACE_OS::sleep(t);
+    }
+  }
+  ACE_Time_Value stop = ACE_OS::gettimeofday();
+
+  service->pFaulhaber->connection.setSpeed(0, 0);
+
+  std::cout << "elapsed time: " << (stop - start) << "sec" << std::endl;
+}
+
 
 int main(int argc, char* argv[])
 {
@@ -173,7 +211,7 @@ int main(int argc, char* argv[])
 
 
   // Initialize server daemon.
-  Service service;
+  service = new Service;
   Event event;
 
   // Signal set to be handled by the event handler.
@@ -195,7 +233,7 @@ int main(int argc, char* argv[])
   sigs.sig_add(SIGINT);
   sigs.sig_add(SIGTERM);
 
-  if (service.reactorTask.reactor()->register_handler(sigs, &event) == -1) {
+  if (service->reactorTask.reactor()->register_handler(sigs, &event) == -1) {
     throw Miro::ACE_Exception(errno, "failed to register signal handler");
   }
   //cout << "updaterate? (usec) " << endl;
@@ -208,17 +246,17 @@ int main(int argc, char* argv[])
   // adding a handler for odometry polling
 
   ACE_Time_Value tv(0, 500000);
-  service.reactorTask.reactor()->schedule_timer(service.pFaulhaber->pTimerEventHandler, NULL, tv ,tv);
+  service->reactorTask.reactor()->schedule_timer(service->pFaulhaber->pTimerEventHandler, NULL, tv ,tv);
 
 
   // adding a handler for stall detection
   /*
     ACE_Time_Value t0(0,0);
-    stallId = service.reactorTask.reactor()->schedule_Timer(service.pTimerEventHandler, NULL, t0, t0);
+    stallId = service->reactorTask.reactor()->schedule_Timer(service->pTimerEventHandler, NULL, t0, t0);
   */
-  // service.connection.setStallId(stallId);
+  // service->connection.setStallId(stallId);
 
-  service.reactorTask.open(NULL);
+  service->reactorTask.open(NULL);
 
   try
   {
@@ -230,16 +268,16 @@ int main(int argc, char* argv[])
       Miro::RangeGroupEventIDL_var  pSonarEvent;
       Miro::PositionIDL odoData;
       //cout << "hier1" << endl;
-      /*pSonarEvent = service.pRangeSensorImpl->getGroup(0);
-      service.pOdometryImpl->setPosition(odoData);
-      odoData = service.pOdometryImpl->getWaitPosition();
+      /*pSonarEvent = service->pRangeSensorImpl->getGroup(0);
+      service->pOdometryImpl->setPosition(odoData);
+      odoData = service->pOdometryImpl->getWaitPosition();
       k=100;
-      //odoData = service.pOdometryImpl->getWaitPosition();
+      //odoData = service->pOdometryImpl->getWaitPosition();
       cout << "Odo:__" << odoData << endl;
       */
-      //service.connection.setSpeed(0);
+      //service->connection.setSpeed(0);
 
-      //service.connection.setStallId(stallId);
+      //service->connection.setStallId(stallId);
       while(loop)
       {
 	  cout << endl
@@ -248,11 +286,13 @@ int main(int argc, char* argv[])
 	       << "2 - motor on " << endl
 	       << "3 - Befehl!!!" << endl
 	       << "8 - Odo status" << endl
-	       /*<< "4 - turn and drive" << endl
+	       << "4 - flooding test" << endl
+	    /*
 	       << "6 - set servo" << endl
 	       << "7 - status (Sonar and Stall infos)" << endl
 	       << "8 - Odo status" << endl
-	       << "9 - set rotation velocity" << endl*/
+	       << "9 - set rotation velocity" << endl
+	    */
 	       << "0 - all motors off!!!" << endl
 	       << "g - get vel" << endl
 	       << "p - get pos" << endl
@@ -271,7 +311,7 @@ int main(int argc, char* argv[])
 	     cin >> k;
 	     cout << "what speed rechts? (mm/sec) " << endl;
 	     cin >> l;
-	     service.pFaulhaber->connection.setSpeed(k, l);
+	     service->pFaulhaber->connection.setSpeed(k, l);
 	     break;
 	   }
 
@@ -279,41 +319,44 @@ int main(int argc, char* argv[])
 	   {
 	     cout << "what speed? (mm/sec) " << endl;
 	     cin >> k;
-	     service.pFaulhaber->connection.setSpeed(k,k);break;
+	     service->pFaulhaber->connection.setSpeed(k,k);break;
 	     /*
 	     cout << "how long?  (mmsec)" << endl;
 	     cin >> i;
 	     ace_time.msec(i);
 	     cout << "what speed? (mm/sec)  " << endl;
 	     cin >> k;
-	     service.connection.setSpeed(k);
+	     service->connection.setSpeed(k);
 	     ACE_OS::sleep(ace_time);
-	     service.connection.setSpeed(0);break;*/
+	     service->connection.setSpeed(0);break;*/
 	   }
 
 	 case '3' :
 	   {
 	     cout << "Befehleingeben: " << endl;
 	     cin >> eing;
-	     service.pFaulhaber->connection.setBefehl(eing);
-	     //service.connection.turn(k);
+	     service->pFaulhaber->connection.setBefehl(eing);
+	     //service->connection.turn(k);
 	     break;
 	   }
 
 	 case '4' :
 	   {
-	     cout << "what speed? (mm/sec):  " << endl;
-	     cin >> k;
-	     cout << "degrees ?  " << endl;
-	     cin >> i;
-	     //service.connection.setSpeedRot(k, i);break;
+	     int iter;
+	     int timeout;
+	     cout << "iterations:  " << endl;
+	     cin >> iter;
+	     cout << "timeout (ms) " << endl;
+	     cin >> timeout;
+	     floodingTest(iter, timeout);
+	     break;
 	   }
 
 	 case '5' :                                 // muss ich noch testen
 	   {
 	     cout << "Enter Servo middle pules! (initial 129) " << endl;
 	     cin >> k;
-	     //service.connection.setServoMidPulse((unsigned short)k);
+	     //service->connection.setServoMidPulse((unsigned short)k);
 	     cout << "Servo auf null gestellt mit: " << k << endl;
 	     break;
 	   }
@@ -324,26 +367,26 @@ int main(int argc, char* argv[])
 		  << "  0: middle Setting " << endl
 		  << "  +/- 90°" << endl;
 	     cin >> k;
-	     //service.connection.setServo(k);
+	     //service->connection.setServo(k);
 	     break;
 	   }
 
 	 case '7' :
 	   {
-	     /*pSonarEvent = service.pRangeSensorImpl->getGroup(0);
+	     /*pSonarEvent = service->pRangeSensorImpl->getGroup(0);
 	     for (i=0;i<=7;i++)
 	       {  cout << "Sonar"  << i << ":__" << pSonarEvent->range[i] << endl; }
-	     k= service.pStallImpl->getStalledWheels();
+	     k= service->pStallImpl->getStalledWheels();
 	     if (k==1) cout <<"only left wheel stalled! " << endl;
 	     if (k==2) cout <<"only right wheel stalled! " << endl;
 	     if (k==3) cout <<"left and right wheel stalled!!! " << endl;
-	     cout << "Battery (volt):  " << service.pBatteryImpl->getVoltage() << endl;*/
+	     cout << "Battery (volt):  " << service->pBatteryImpl->getVoltage() << endl;*/
 	     break;
 	   }
 
 	 case '8' :
 	   {
-	     odoData = service.pOdometryImpl->getPosition();
+	     odoData = service->pOdometryImpl->getPosition();
 	     cout << "Odo:__" << odoData << endl;break;
 	   }
 
@@ -351,15 +394,15 @@ int main(int argc, char* argv[])
 	   {
 	     //cout << pOdometryImpl->getPosition() << endl;
 
-	     //service.connection.setRotVel(k);break;
+	     //service->connection.setRotVel(k);break;
 	     break;
 	   }
 
 	 case '0' :
 	   {
-	     service.pFaulhaber->connection.setSpeed(0,0);
-	     //service.connection.setSpeed(0);
-	     //service.connection.stop();
+	     service->pFaulhaber->connection.setSpeed(0,0);
+	     //service->connection.setSpeed(0);
+	     //service->connection.stop();
 	     break;
 	   }
 	 case 'a' :
@@ -375,9 +418,9 @@ int main(int argc, char* argv[])
 
 	     while(true)
 	     {
-		service.pFaulhaber->connection.setSpeed(100);
+		service->pFaulhaber->connection.setSpeed(100);
                 ACE_OS::sleep(ace_time);
-                service.pFaulhaber->connection.setSpeed(0);
+                service->pFaulhaber->connection.setSpeed(0);
                 ACE_OS::sleep(ace_time);
 
              }*/
@@ -385,12 +428,12 @@ int main(int argc, char* argv[])
 	   }
 	  case 'g' :
 	   {
-	     service.pFaulhaber->connection.getSpeed();
+	     service->pFaulhaber->connection.getSpeed();
 	     break;
 	   }
 	 case 'p' :
 	   {
-	     service.pFaulhaber->connection.getTicks();
+	     service->pFaulhaber->connection.getTicks();
 	     break;
 	   }
 	 case 'X':
@@ -413,7 +456,8 @@ int main(int argc, char* argv[])
     cerr << "Uncaught exception: " << endl;
   }
 
-  service.reactorTask.cancel();
+  service->reactorTask.cancel();
+  delete service;
   return 0;
 }
 
