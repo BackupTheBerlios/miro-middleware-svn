@@ -97,7 +97,7 @@
     <parameter>
      <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.227" name="Scaling" />
+     <parameter value="1.0" name="Scaling" />
      <parameter value="0" name="Offset" />
     </parameter>
     <parameter>
@@ -133,7 +133,7 @@
     <parameter>
      <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.9" name="Scaling" />
+     <parameter value="1.0" name="Scaling" />
      <parameter value="0" name="Offset" />
     </parameter>
     <parameter>
