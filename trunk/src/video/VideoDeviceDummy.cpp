@@ -14,6 +14,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.12  2004/11/02 18:04:09  gmayer
+ * should handle images with blank lines (as comments) now correct
+ *
  * Revision 1.11  2004/05/11 16:37:50  gmayer
  * add another helper macro (used by libVideoFilters)
  *
@@ -122,7 +125,7 @@ namespace
 	  rawflag = 1;
 	
 	fscanf(file,"%s", magic);
-	while (!strcmp("#", magic)) {
+	while (!strncmp("#", magic,1)) {
 	  // skip newlines
 	  while ( (k = fgetc(file)) != '\n'); 
 	  fscanf(file, "%s", magic);
@@ -138,7 +141,6 @@ namespace
 	throw Miro::Exception("Unsupported ppm file format.");
 
       // read image
-
       if (xdim != _width ||
 	  ydim != _height)
 	throw Miro::Exception("Image dimensions differ from output format.");
