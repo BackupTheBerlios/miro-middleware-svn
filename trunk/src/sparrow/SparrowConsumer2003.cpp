@@ -361,7 +361,7 @@ namespace Sparrow
 	// get left clock and ticks
 	{
 	  
-	  unsigned int clockL = message.longData(0);//*(reinterpret_cast<long *>(msg_->d));
+	  unsigned int clockL = ACE_NTOHL(message.longData(0));//*(reinterpret_cast<long *>(msg_->d));
 	  int deltaL = clockL & 0x00ffffff;
 	  clockL >>= 24;
 	  
@@ -372,7 +372,7 @@ namespace Sparrow
 	
 	// get right clock and ticks
 	{
-	  unsigned int clockR = message.longData(4); //*(reinterpret_cast<long *>(msg_->d + 4));
+	  unsigned int clockR = ACE_NTOHL(message.longData(4)); //*(reinterpret_cast<long *>(msg_->d + 4));
 	  int deltaR = clockR & 0x00ffffff;
 	  clockR >>= 24;
 	  
