@@ -291,7 +291,7 @@
   </parameter>
 <!-- alte kamera die jetzt auf siehtnix ist
   <parameter name="Camera" >
-   <parameter value="0.120000" name="Latency" />
+   <parameter value="0.060000" name="Latency" />
    <parameter value="31.0" name="Alpha" />
    <parameter value="600" name="Height" />
    <parameter value="197.159465" name="Cx" />
@@ -307,7 +307,7 @@
 -->
 <!-- werte fuer neue (labcam-version) -->
   <parameter name="Camera" >
-   <parameter value="0.120000" name="Latency" />
+   <parameter value="0.060000" name="Latency" />
    <parameter value="31.0" name="Alpha" />
    <parameter value="600" name="Height" />
    <parameter value="198.357868" name="Cx" />

@@ -95,7 +95,7 @@
   </parameter>
 <!-- parameter fuer alte (kaputte) camera 
   <parameter name="Camera" >
-   <parameter value="0.120000" name="Latency" />
+   <parameter value="0.060000" name="Latency" />
    <parameter value="35.5" name="Alpha" />
    <parameter value="540" name="Height" />
    <parameter value="2.05152493e+02" name="Cx" />
@@ -111,7 +111,7 @@
 -->
 <!-- parameter fuer neue (haeltnix) camera -->
   <parameter name="Camera" >
-   <parameter value="0.120000" name="Latency" />
+   <parameter value="0.060000" name="Latency" />
    <parameter value="31.0" name="Alpha" />
    <parameter value="600" name="Height" />
    <parameter value="197.159465" name="Cx" />

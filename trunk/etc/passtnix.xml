@@ -18,6 +18,7 @@
 
  <section name="Sparrow99" >
   <parameter name="SparrowBoard" >
+   <parameter value="true" name="Faulhaber" />
    <parameter value="/dev/can/0" name="Device" />
    <parameter value="0.050000" name="PanLatency" />
    <parameter value="0.500000" name="PanSwing" />
