@@ -286,6 +286,7 @@
   <parameter name="FilterSwap3">
    <parameter value="true" name="InterfaceInstance" />
   </parameter>
+ </section>
  <section name="Notification" >
   <parameter name="Logging" >
    <parameter name="TypeName" />
