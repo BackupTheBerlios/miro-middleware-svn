@@ -15,6 +15,10 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.6  2003/06/03 11:03:36  hutz
+ * fixed copy paste error in macros.miro.GNU
+ * removed the HAVE_* macros in VideoDevice1394.*
+ *
  * Revision 1.5  2003/06/03 10:25:32  hutz
  * complete revamp of the video service
  * the interface changes slightly to allow for better access
@@ -58,12 +62,6 @@
 #define VIDEODEVICE1394_H
 
 #include "VideoDevice.h"
-
-#if defined(HAVE_LIBDC1394_CONTROL) && defined(HAVE_LIBRAW1394)
-#define HAVE_VIDEODEVICE1394 1
-#endif
-
-#ifdef HAVE_VIDEODEVICE1394
 
 #include <libraw1394/raw1394.h>
 #include <libdc1394/dc1394_control.h>
@@ -118,8 +116,5 @@ namespace Video
     int                     frameRate_;
   };
 };
-
-#endif // HAVE_VIDEODEVICE1394
-
 #endif // VIDEODEVICE1394_H
 

@@ -15,6 +15,10 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.8  2003/06/03 11:03:36  hutz
+ * fixed copy paste error in macros.miro.GNU
+ * removed the HAVE_* macros in VideoDevice1394.*
+ *
  * Revision 1.7  2003/06/03 10:25:32  hutz
  * complete revamp of the video service
  * the interface changes slightly to allow for better access
@@ -72,15 +76,9 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#   include "config.h"
-#endif
-
 #include <ace/OS.h>
 
 #include "VideoDevice1394.h"
-
-#ifdef HAVE_VIDEODEVICE1394
 
 #include <miro/Exception.h>
 
@@ -416,6 +414,4 @@ namespace Video
       frameRate_ = FRAMERATE_30;
   }
 };
-
-#endif // HAVE_VIDEODEVICE1394
 
