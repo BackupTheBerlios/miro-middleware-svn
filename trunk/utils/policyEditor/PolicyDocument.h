@@ -44,8 +44,8 @@ private:
   int halfWindowWidth, halfWindowHeight;
 
 public:
-  vector<BehaviourDescription>  DatabaseVector;
-  vector<QString>               arbiterVector;
+  std::vector<BehaviourDescription>  DatabaseVector;
+  std::vector<QString>               arbiterVector;
   
 private:
   /** current file name, held for a later save */
@@ -89,7 +89,7 @@ public:
   void saveXML(const QString& filename) const;
 
   /** loads the behaviour description database */
-  void loadDatabase(const string& filename);
+  void loadDatabase(const std::string& filename);
   
   void setModified(bool wert);
   

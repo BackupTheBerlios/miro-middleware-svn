@@ -32,8 +32,8 @@ private:
   QComboBox* comboBoxBehaviours;
   QTable* tableBehaviours;
   QPushButton* buttonOK;
-  vector<BehaviourDescription> vectorBehaviourDescription;
-  vector<BehaviourParam> vectorBehaviourParams;
+  std::vector<BehaviourDescription> vectorBehaviourDescription;
+  std::vector<BehaviourParam> vectorBehaviourParams;
   PolicyConfigClass* policyConfigClass ;
   
 public:

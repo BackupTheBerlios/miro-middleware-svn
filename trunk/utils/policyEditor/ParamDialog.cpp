@@ -14,6 +14,8 @@
 
 #include <qmessagebox.h>
 
+#include <iostream>
+
 ParamDialog::ParamDialog(QWidget* parent,
 			 const QString& behaviourName, 
 			 const PolicyConfigClass& policyConfigClass,
@@ -30,7 +32,7 @@ ParamDialog::ParamDialog(QWidget* parent,
   labelValue = new QLabel("Value", this);
   labelValue->setGeometry(170, 10, 100, 30);
   
-  vector<BehaviourParam> vectorBehaviourParams = policyConfigClass.getBehaviourParams(behaviourName);
+  std::vector<BehaviourParam> vectorBehaviourParams = policyConfigClass.getBehaviourParams(behaviourName);
   
   table = new QTable(vectorBehaviourParams.size(), 4, this);
   table->setGeometry(10, 50, 350, 400);
@@ -117,7 +119,7 @@ ParamDialog::getParameters() const
   }
   if (occuredTypemissmatch)
   {
-    cout <<"One or more type-missmatches occured" <<endl; 
+    std::cout <<"One or more type-missmatches occured" << std::endl; 
     QMessageBox::information((QWidget *) this, "Behaviour-Setup", "Type-missmatch occured");
   }
   return stringMap;

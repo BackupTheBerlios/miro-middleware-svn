@@ -33,7 +33,7 @@
 #include <ace/Message_Block.h>
 
 /* g++lib includes */
-#include <stream.h>
+// #include <stream>
 
 #define DBG_CLASSNAME "NotifyMulticast::Sender"
 

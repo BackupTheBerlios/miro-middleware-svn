@@ -15,6 +15,12 @@
 #include <qfile.h>
 #include <qstringlist.h>
 
+#include <iostream>
+
+using std::ofstream;
+using std::cout;
+using std::endl;
+
 PolicyDocumentClass::~PolicyDocumentClass() 
 {
 }
@@ -61,8 +67,8 @@ QDomNode PolicyDocumentClass::getPatternNode(const QString& patternName) const
   }
   
   // pattern node not found //
-  throw string("PolicyDocumentClass::getPatternNode: pattern '" + 
-	       patternName + "' not found");
+  throw std::string("PolicyDocumentClass::getPatternNode: pattern '" + 
+		    patternName + "' not found");
 }
 
 
@@ -88,8 +94,8 @@ QDomNode PolicyDocumentClass::getBehaviourNode(const QString& patternName,
   }
 
   // behaviour node not found //
-  throw string("PolicyDocumentClass::getBehaviourNode: behaviour '" + 
-	       behaviourName + "' not found in pattern '" + patternName + "'");
+  throw std::string("PolicyDocumentClass::getBehaviourNode: behaviour '" + 
+		    behaviourName + "' not found in pattern '" + patternName + "'");
 }
 
 
@@ -149,7 +155,7 @@ void PolicyDocumentClass::loadXML(const QString& filename)
 
   QFile f(filename);
   if (!f.open(IO_ReadOnly))  
-    throw string("PolicyDocumentClass::loadXML: Error: file not found!");
+    throw std::string("PolicyDocumentClass::loadXML: Error: file not found!");
 
   if (!domDocument.setContent(&f)) {
     f.close();
@@ -166,7 +172,7 @@ void PolicyDocumentClass::saveXML(const QString& filename) const
 }
 
 
-void PolicyDocumentClass::loadDatabase(const string& filename) 
+void PolicyDocumentClass::loadDatabase(const std::string& filename) 
 { 
   DatabaseVector=policyConfig.getBehaviours();
   arbiterVector=policyConfig.getArbiters();

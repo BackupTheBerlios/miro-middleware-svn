@@ -89,7 +89,7 @@ void PolicyViewClass::getHorizontalScrollValue(int value)
 {
   getDocument().setxModificator(value);
   setBackgroundColor(white);
-  list<PatternWidgetClass*>::iterator iter = PatternWidgetList.begin();
+  std::list<PatternWidgetClass*>::iterator iter = PatternWidgetList.begin();
   while (iter != PatternWidgetList.end()) {
     (*iter)->updatePos();                    
     iter++;
@@ -103,7 +103,7 @@ void PolicyViewClass::getVerticalScrollValue(int value)
 {
   getDocument().setyModificator(value);
   setBackgroundColor(white);
-  list<PatternWidgetClass*>::iterator iter = PatternWidgetList.begin();
+  std::list<PatternWidgetClass*>::iterator iter = PatternWidgetList.begin();
   while (iter != PatternWidgetList.end()) {
     (*iter)->updatePos();                    
     iter++;
@@ -127,7 +127,7 @@ void PolicyViewClass::setHorizontalScrollValue(int value)
 
 void PolicyViewClass::prepareFileClosing()
 {
-  list<PatternWidgetClass*>::iterator iter = PatternWidgetList.begin();
+  std::list<PatternWidgetClass*>::iterator iter = PatternWidgetList.begin();
   while (iter != PatternWidgetList.end()) {
     delete(*iter);                    // delete widget
     iter++;
@@ -141,7 +141,7 @@ void PolicyViewClass::update()
   // delete all widgets and clear the widget list //
   //----------------------------------------------//
 
-  list<PatternWidgetClass*>::iterator iter = PatternWidgetList.begin();
+  std::list<PatternWidgetClass*>::iterator iter = PatternWidgetList.begin();
   while (iter != PatternWidgetList.end()) {
     delete(*iter);                    // delete widget
     iter++;
@@ -178,7 +178,7 @@ void PolicyViewClass::paintEvent(QPaintEvent* )
   // repaint all pattern widgets //
   // (TODO: This is needed because the transition arrows are no widgets 
   // and so they are not repainted automatically.)
-  list<PatternWidgetClass*>::iterator iter = PatternWidgetList.begin();
+  std::list<PatternWidgetClass*>::iterator iter = PatternWidgetList.begin();
   while (iter != PatternWidgetList.end()) {
     (*iter)->repaint();
     iter++;

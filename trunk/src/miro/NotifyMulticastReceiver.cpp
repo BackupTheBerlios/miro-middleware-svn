@@ -28,7 +28,7 @@
 #include "NotifyMulticastAdapter.h"
 
 /* c++lib includes */
-#include <stream.h>
+// #include <stream>
 
 #define DBG_CLASSNAME "NotifyMulticast::Receiver"
 

@@ -75,7 +75,7 @@ PolicyEditorClass::PolicyEditorClass(int argc, char** argv) :
     char *nixRoot=getenv("NIX_ROOT");	
     Document.loadXML(QString(nixRoot)+"/etc/PolicyEditor_newFile_template.xml");
     Document.setModified(false);
-    cout <<"opened new document" <<endl;
+    std::cout <<"opened new document" << std::endl;
     setCaption("new document");
     policyFileName="_";
     QString message;
@@ -96,7 +96,10 @@ PolicyEditorClass::PolicyEditorClass(int argc, char** argv) :
   QMessageBox::information(this, "Policy Editor", "Hallo,\n\nfirst, you have to select your\nbehaviour database ...");
   QString filename = QFileDialog::getOpenFileName(0, "*.dat", this);
   if (filename.isNull()) 
-  { cout << "database must be chosen !" << endl; exit(0); }
+  { 
+    std::cout << "database must be chosen !" << std::endl; 
+    exit(0); 
+  }
   Document.LoadDatabase(string(filename));
 #endif
  
@@ -120,7 +123,7 @@ void PolicyEditorClass::slotNew()
   char *nixRoot=getenv("NIX_ROOT");
   Document.loadXML(QString(nixRoot)+"/etc/PolicyEditor_newFile_template.xml");
   Document.setModified(false);
-  cout <<"opened new document" <<endl;
+  std::cout <<"opened new document" << std::endl;
   setCaption("new document");
   policyFileName="_";
   QString message;
@@ -236,8 +239,7 @@ void PolicyEditorClass::setBehaviourDescriptionFileName()
 
 void PolicyEditorClass::slotAbout()
 {
-  QMessageBox::about(this, "About Policy Editor", "Policy Editor Ver.
-  0.91\nCopyright 1999 - 2002 Stefan Enderle, Markus Lauer");
+  QMessageBox::about(this, "About Policy Editor", "Policy Editor Ver. 1.0\nCopyright 1999 - 2002 Stefan Enderle, Markus Lauer");
 
 }
 
@@ -259,7 +261,7 @@ void PolicyEditorClass::quit()
     case 2: return;
     }
     } 
-    //cout <<"close program" <<endl;*/
+    //std::cout <<"close program" << std::endl;*/
   close();
 }
 
@@ -299,27 +301,27 @@ void PolicyEditorClass::closeEvent(QCloseEvent *e)
 
 int main(int argc, char** argv) 
 {
-
-  if (argc>2) { cout << argv[0] << " [policyfile]" << endl; }
-
   try {
-
     QApplication App(argc, argv);
-    
     PolicyEditorClass PolicyEditor(argc, argv);
     
+    if (argc>2) { 
+      std::cout << argv[0] << " [policyfile]" << std::endl; 
+      return 1;
+    }
+
     App.setMainWidget(&PolicyEditor);
     PolicyEditor.show();
     App.exec();
     
   }
 
-  catch (string s) {
-    cout << "main: Exception: " << s << endl;
+  catch (const std::string& s) {
+    std::cout << "main: Exception: " << s << std::endl;
   }
 
   catch (...) {
-    cout << "main: Unknown Exception!" << endl;
+    std::cout << "main: Unknown Exception!" << std::endl;
   }
 
   return 0;

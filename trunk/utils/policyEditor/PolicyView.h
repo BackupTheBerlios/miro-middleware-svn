@@ -27,7 +27,7 @@ class PolicyViewClass : public QWidget
 private:
   PolicyDocumentClass& document;
 
-  list<PatternWidgetClass*> PatternWidgetList;
+  std::list<PatternWidgetClass*> PatternWidgetList;
 
   int                 picked_x;
   int                 picked_y;

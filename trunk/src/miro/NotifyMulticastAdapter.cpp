@@ -71,9 +71,9 @@ namespace Miro {
 			 char                                    *_argv[],
 			 Miro::Client                            *_client,
 			 CosNotifyChannelAdmin::EventChannel_ptr  _eventChannel,
-			 unsigned int                             _eventMaxAge = 500,
-			 // ACE_Time_Value                           _timeoutHandlerInterval = ACE_Time_Value(0, 50000),
-			 std::string                              _multicastAddress = "225.2.2.1")
+			 unsigned int                             _eventMaxAge,
+			 // ACE_Time_Value                           _timeoutHandlerInterval,
+			 std::string                              _multicastAddress)
 	    throw(CORBA::Exception, Miro::Exception) :
             client_(_client),
             reactor_(_client->orb()->orb_core()->reactor()),
@@ -111,7 +111,7 @@ namespace Miro {
 
 		    if (arg_shifter.is_option_next()) {
 			if (!arg_shifter.cur_arg_strncasecmp("-mcastgroup")) {
-			    string temp = (string)arg_shifter.get_the_parameter("-mcastgroup");
+			    std::string temp (arg_shifter.get_the_parameter("-mcastgroup"));
 			    ACE_INET_Addr iaddr((temp + ":41006").c_str());
 			    configuration_.setSocket(iaddr);
 			    arg_shifter.consume_arg();

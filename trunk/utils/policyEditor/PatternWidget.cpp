@@ -73,7 +73,7 @@ void PatternWidgetClass::update()
   // clear current data //
   delete arbiterWidget;
 
-  list<BehaviourWidget*>::iterator iter = behaviourWidgetList.begin();
+  std::list<BehaviourWidget*>::iterator iter = behaviourWidgetList.begin();
   while (iter != behaviourWidgetList.end()) {
     delete(*iter);                    // delete widget
     iter++;

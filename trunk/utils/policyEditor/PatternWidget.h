@@ -41,7 +41,7 @@ private:
   QString patternName;
 
   ArbiterWidget*         arbiterWidget;
-  list<BehaviourWidget*> behaviourWidgetList;
+  std::list<BehaviourWidget*> behaviourWidgetList;
 
   int picked_x;
   int picked_y;

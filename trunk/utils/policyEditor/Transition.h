@@ -32,7 +32,7 @@ public:
   const QString& getMessage() const;
 };
 
-typedef list<Transition> TransitionList;
+typedef std::list<Transition> TransitionList;
 
 inline
 Transition::Transition(const QString& msg, const QString& tar) :

@@ -31,7 +31,7 @@ namespace Miro {
 	    typedef Miro::Parameters Super;
 
 	public:
-	    typedef set<std::string> Subscription;
+	    typedef std::set<std::string> Subscription;
 
 	    Subscription  subscription;
             unsigned int  messagetimeout;

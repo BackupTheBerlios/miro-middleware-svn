@@ -4,10 +4,13 @@
 #include <complex>
 #include <cmath>
 
-typedef std::complex<double> Vector2d;
-
 namespace Miro
 {
+  typedef std::complex<double> Vector2d;
+  
+  using std::min;
+  using std::max;
+
 
   // constructor
   DynamicWindow::DynamicWindow(Vector2d _velocity, int _maxPosAccel, int _maxNegAccel)

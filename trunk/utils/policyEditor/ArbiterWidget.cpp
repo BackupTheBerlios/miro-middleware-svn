@@ -18,6 +18,7 @@
 #include <qcursor.h>
 
 #include <cmath>
+#include <iostream>
 
 extern QApplication* qApp;
 
@@ -41,7 +42,7 @@ void ArbiterWidget::mousePressEvent(QMouseEvent* event)
 {
   // left button //
   if (event->button() == LeftButton) {
-    cout << "ArbiterWidget: left button pressed" << endl;
+    std::cout << "ArbiterWidget: left button pressed" << std::endl;
   }
 
 
@@ -112,5 +113,5 @@ void ArbiterWidget::onSetArbiter(int n)
 
 void ArbiterWidget::onDelete()
 {
-  cout << "ArbiterWidget::onDelete: not implemented!" << endl;
+  std::cout << "ArbiterWidget::onDelete: not implemented!" << std::endl;
 }

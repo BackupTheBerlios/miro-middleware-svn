@@ -17,6 +17,7 @@
 #include <qmessagebox.h>
 
 #include <fstream>
+#include <iostream>
 
 PolicyConfigClass::PolicyConfigClass()
 {
@@ -47,7 +48,7 @@ PolicyConfigClass::PolicyConfigClass()
 	QString("Ensure that NIX_ROOT was set to the correct path of the Nix-Project!\n")+
 	QString("Closing PolicyEditor!"); 
       QMessageBox::information(0,"Policy Editor", infoText );
-      throw string("PolicyConfigClass(): Error: Couldn't create configuration-file '~/.PolicyEditorConfig.xml'");
+      throw std::string("PolicyConfigClass(): Error: Couldn't create configuration-file '~/.PolicyEditorConfig.xml'");
     }
     QFile df(nixRoot+"/etc/DefaultPolicyEditorConfig.xml");
     if (!df.open(IO_ReadOnly)){
@@ -55,13 +56,13 @@ PolicyConfigClass::PolicyConfigClass()
 	QString("Default-config-file couldn't be loaded")+
 	QString("Closing PolicyEditor!");
       QMessageBox::information(0, "Policy Editor", infoText);
-      throw string("PolicyConfigClass(): Error: Couldn't create configuration-file '~/.PolicyEditorConfig.xml'");
+      throw std::string("PolicyConfigClass(): Error: Couldn't create configuration-file '~/.PolicyEditorConfig.xml'");
     }
     else{
       domDocument_config.setContent(&df);
       df.close();
-      ofstream outStream(configFile.ascii());
-      outStream << domDocument_config.toString() << endl;
+      std::ofstream outStream(configFile.ascii());
+      outStream << domDocument_config.toString() << std::endl;
 			
     }		
 		
@@ -86,7 +87,7 @@ PolicyConfigClass::PolicyConfigClass()
 	QString("Ensure that NIX_ROOT was set to the correct path of the Nix-Project!\n")+
 	QString("Closing PolicyEditor!"); 
       QMessageBox::information(0, "Policy Editor", infoText);
-      throw string("PolicyConfigClass(): Error: Couldn't load empty Behaviour-Description-File");
+      throw std::string("PolicyConfigClass(): Error: Couldn't load empty Behaviour-Description-File");
     }
     behaviourFile=nixRoot+"/etc/emptyBehaviourDescriptionFile.xml";
   }
@@ -95,11 +96,10 @@ PolicyConfigClass::PolicyConfigClass()
 	
 }
   
-vector<BehaviourDescription>
+std::vector<BehaviourDescription>
 PolicyConfigClass::getBehaviours() const
 {
-  vector<BehaviourDescription> vectorBehaviours;
-  vectorBehaviours.clear();
+  std::vector<BehaviourDescription> vectorBehaviours;
   QDomNode n=domDocument_behaviours.documentElement().firstChild();
   QDomNode node;
   while (!n.isNull())
@@ -127,11 +127,10 @@ PolicyConfigClass::getBehaviours() const
 }
      
 
-vector<QString> 
+std::vector<QString> 
 PolicyConfigClass::getArbiters() const
 {
-  vector<QString> vectorArbiters;
-  vectorArbiters.clear();
+  std::vector<QString> vectorArbiters;
   QDomNode n=domDocument_behaviours.documentElement().firstChild();
   QDomNode node;
   while (!n.isNull())
@@ -145,8 +144,7 @@ PolicyConfigClass::getArbiters() const
 	{
 	  if (node.toElement().tagName()=="config_item")
 	  {
-	    vectorArbiters.push_back(QString(
-					     node.toElement().attribute("name")));
+	    vectorArbiters.push_back(QString(node.toElement().attribute("name")));
 	  }
 	  node=node.nextSibling();
 	}
@@ -158,11 +156,10 @@ PolicyConfigClass::getArbiters() const
   return vectorArbiters;
 }
 
-vector<BehaviourParam> 
+std::vector<BehaviourParam> 
 PolicyConfigClass::getBehaviourParams(const QString& behaviourName) const
 {  
-  vector<BehaviourParam> vectorBehaviourParams;
-  vectorBehaviourParams.clear();
+  std::vector<BehaviourParam> vectorBehaviourParams;
   QDomNode n=domDocument_behaviours.documentElement().firstChild();
   QDomNode node;
   while (!n.isNull())
@@ -183,10 +180,10 @@ PolicyConfigClass::getBehaviourParams(const QString& behaviourName) const
 	      {
 		if (paramNode.toElement().tagName()=="config_parameter")
 		{
-		  vectorBehaviourParams.push_back(BehaviourParam(
-								 paramNode.toElement().attribute("name"),
-								 paramNode.toElement().attribute("type"),
-								 paramNode.toElement().attribute("measure")));
+		  vectorBehaviourParams.
+		    push_back(BehaviourParam(paramNode.toElement().attribute("name"),
+					     paramNode.toElement().attribute("type"),
+					     paramNode.toElement().attribute("measure")));
 		}
 		paramNode=paramNode.nextSibling();
 	      }
@@ -207,7 +204,7 @@ void
 PolicyConfigClass::setNewBehaviourDescriptionFileName(const QString& file)
 {
   behaviourFile=file;
-  cout <<behaviourFile <<endl;
+  std::cout << behaviourFile << std::endl;
   getBehaviourDescription();
   setBehaviourDescriptionFileName();
 } 	
@@ -242,12 +239,12 @@ QString PolicyConfigClass::getBehaviourDescriptionFileName() const
 	    }
 	    node=node.nextSibling();
 	  }	
-	  throw string("behaviour-description-file not specified in PolicyEditorConfig.xml");
+	  throw std::string("behaviour-description-file not specified in PolicyEditorConfig.xml");
 	}
       }
       n=n.nextSibling();
     }
-    throw string("behaviour-description-file not specified in PolicyEditorConfig.xml");
+    throw std::string("behaviour-description-file not specified in PolicyEditorConfig.xml");
   }
   else
   {
@@ -274,19 +271,19 @@ PolicyConfigClass::setBehaviourDescriptionFileName()
 	    if ((node.toElement().attribute("name"))=="behaviour-description-file"){
 	      //PolicyEditorConfig.xml auslesen
 	      node.toElement().setAttribute("path", behaviourFile);
-	      ofstream outStream(configFile.ascii());
-	      outStream << domDocument_config.toString() << endl;
+	      std::ofstream outStream(configFile.ascii());
+	      outStream << domDocument_config.toString() << std::endl;
 	      return;
 	    } 	     
           }
 	  node=node.nextSibling();
 	}	
-	throw string("behaviour-description-file not specified in PolicyEditorConfig.xml");
+	throw std::string("behaviour-description-file not specified in PolicyEditorConfig.xml");
       }
     }
     n=n.nextSibling();
   }
-  throw string("behaviour-description-file not specified in PolicyEditorConfig.xml");
+  throw std::string("behaviour-description-file not specified in PolicyEditorConfig.xml");
 }
 
 void
@@ -308,21 +305,21 @@ PolicyConfigClass::getBehaviourDescription()
 	QString("Ensure that NIX_ROOT was set to the correct path of the Nix-Project!\n")+
 	QString("Closing PolicyEditor!"); 
       QMessageBox::information(0, "Policy Editor", infoText);
-      throw string("[PolicyConfigClass.getBehaviourDescription()]: Error: Couldn't load empty Behaviour-Description-File");
+      throw std::string("[PolicyConfigClass.getBehaviourDescription()]: Error: Couldn't load empty Behaviour-Description-File");
     }
     behaviourFile=nixRoot+"/etc/emptyBehaviourDescriptionFile.xml";
     QFile emptyFile(behaviourFile);
     if (!emptyFile.open(IO_ReadOnly)){
       emptyFile.close();
-      throw string("[PolicyConfigClass.getBehaviourDescription()] Error on loading the empty Behaviour-Description-File! \n Exit!");
+      throw std::string("[PolicyConfigClass.getBehaviourDescription()] Error on loading the empty Behaviour-Description-File! \n Exit!");
     }
-    cout <<behaviourFile <<endl;
+    std::cout <<behaviourFile << std::endl;
     domDocument_behaviours.setContent(&emptyFile);
     emptyFile.close();
 		 
   }
   else {
-    cout <<behaviourFile <<endl;
+    std::cout <<behaviourFile << std::endl;
     domDocument_behaviours.setContent(&ff);
     ff.close();
   }
