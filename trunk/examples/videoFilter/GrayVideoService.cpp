@@ -11,6 +11,8 @@
 
 #include "FilterGray.h"                      // Custom filter declaration.
 
+#include "FilterDiff.h"                      // Custom filter declaration.
+
 #include "video/VideoServer.h"               // VideoServer declaration.
 #include "video/VideoDeviceDummy.h"          // Dummy device declaration.
 #include "video/VideoFilterBasic.h"          // FilterCopy declaration.
@@ -42,6 +44,7 @@ main(int argc, char *argv[])
     repo->registerFilter<Video::DeviceDummy>("DeviceDummy");
     repo->registerFilter<Video::FilterCopy>("FilterCopy");
     repo->registerFilter<FilterGray>("FilterGray");
+    repo->registerFilter<FilterDiff>("FilterDiff");
 
     // Loading the parameters from the configuration file.
     std::cout << "Config file processing" << std::endl;
