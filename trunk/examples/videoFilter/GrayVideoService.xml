@@ -3,7 +3,7 @@
  <section name="Video" >
   <parameter name="Video" >
    <parameter value="rgb" name="Palette" />
-   <parameter value="640" name="Width" />
+   <parameter value="634" name="Width" />
    <parameter value="480" name="Height" />
    <parameter name="Filter">
     <parameter value="DeviceDummy" name="Name" />

@@ -83,6 +83,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
  $(MIRO_ROOT)/src/video/VideoFilter.h \
+ $(MIRO_ROOT)/src/miro/TimeSeries.h \
  $(MIRO_ROOT)/src/miro/VideoC.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.i \

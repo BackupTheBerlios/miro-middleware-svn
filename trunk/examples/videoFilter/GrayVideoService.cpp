@@ -9,39 +9,41 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "FilterGray.h"
+#include "FilterGray.h"                      // Custom filter declaration.
 
-#include "video/Parameters.h"
-#include "video/VideoServer.h"
-#include "video/VideoDeviceDummy.h"
-#include "video/VideoFilterBasic.h"
-#include "video/VideoFilterRepository.h"
+#include "video/VideoServer.h"               // VideoServer declaration.
+#include "video/VideoDeviceDummy.h"          // Dummy device declaration.
+#include "video/VideoFilterBasic.h"          // FilterCopy declaration.
+#include "video/VideoFilterRepository.h"     // FilterRepository declaration.
 
-#include "miro/Server.h"
-#include "miro/ExceptionC.h"
-#include "miro/Exception.h"
-#include "miro/Utils.h"
+#include "miro/Server.h"                     // Server declaration.
+#include "miro/ExceptionC.h"                 // CORBA exceptions.
+#include "miro/Exception.h"                  // Miro exceptionss
+#include "miro/Utils.h"                      // ConfigDocumet declaration.
 
 #include <iostream>
 
 int
 main(int argc, char *argv[])
 {
+  // Return code.
   int rc = 0;
 
-  // Parameters to be passed to the services
+  // Miro::Server parameter.
   Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
+  // Video service parameters.
   Video::Parameters * videoParameters = Video::Parameters::instance();
 
   try {
+    // Building up the filter repository.
     std::cout << "registered filters" << endl;
     
     Video::FilterRepository * repo = Video::FilterRepository::instance();
     repo->registerFilter<Video::DeviceDummy>("DeviceDummy");
-
     repo->registerFilter<Video::FilterCopy>("FilterCopy");
     repo->registerFilter<FilterGray>("FilterGray");
 
+    // Loading the parameters from the configuration file.
     std::cout << "Config file processing" << endl;
     
     Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
@@ -50,6 +52,7 @@ main(int argc, char *argv[])
     config->setSection("Video");
     config->getParameters("Video", * videoParameters);
 
+    // Debug output of the configuration.
     std::cout << "  robot parameters:" << endl << *robotParameters << endl;
     std::cout << "  video paramters:" << endl << *videoParameters << endl;
     
@@ -57,8 +60,10 @@ main(int argc, char *argv[])
     Miro::Server server(argc, argv);
 
     try {
+      // Building the filter tree and initializing the filters.
       Video::Service videoService(server, config);
       
+      // We don't need the config file anymore.
       delete config;
 
       std::cout << "Loop forever handling events." << endl;

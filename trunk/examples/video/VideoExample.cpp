@@ -23,7 +23,12 @@ int main(int argc, char * argv[])
   try {
     Miro::Video_var video =   // Get reference to video service.
       client.resolveName<Miro::Video>("Video"); 
+
+    cout << "connection" << endl;
+
     Miro::VideoConnection connection(video.in()); // Build up connection.
+
+    cout << "local copy" << endl;
 
     // Get a local copy of the current image,
     // using full resolution.
@@ -33,6 +38,8 @@ int main(int argc, char * argv[])
       video->exportSubImage(connection.handle->format.width,
 			    connection.handle->format.height);
 
+    cout << "local copy next" << endl;
+
     // Get a local copy next image,
     // scaled down somehow.
     x = connection.handle->format.width / 2;
@@ -40,13 +47,19 @@ int main(int argc, char * argv[])
     Miro::SubImageDataIDL_var image2 = 
       video->exportWaitSubImage(x, y);
 
+    cout << "acquire current" << endl;
+
     // Acquire the current image buffer.
     Miro::VideoAcquireImage image3(connection, 
 				   Miro::VideoAcquireImage::Current);
 
+    cout << "acquire next" << endl;
+
     // Acquire the next image buffer.
     Miro::VideoAcquireImage image4(connection, 
 				   Miro::VideoAcquireImage::Next);
+
+    cout << "clean up" << endl;
 
     // Automatic resource cleanup by object destructors:
 
