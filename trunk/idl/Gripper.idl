@@ -23,6 +23,8 @@ module Miro
     /**
      * Sets the pressure that the gripper will apply when grasping objects
      * it is an approximation
+     *
+     * Not implemented yet
      * 
      * @param value The pressure to be applied in percentage
      * @throw EOutOfBounds is thrown, if the requested pressure is beyound
@@ -82,6 +84,8 @@ module Miro
 
     //! Moves the gripper for a period of time
     /**
+     *
+     * Not implemented yet!!
      *
      * @param ms time to move the griper
      * @throw EOutOfBounds is thrown, if the requested pressure is beyound
