@@ -92,7 +92,7 @@ int main(int argc, char * argv[])
     radstand;
   unsigned char num;
   short left, right, trans, distance;
-  int time, delta;
+  int ventilatetime, kicktime, delta;
   char c;
   double rot;
   bool loop = true;
@@ -123,7 +123,8 @@ int main(int argc, char * argv[])
 	   << "  9 - turn in place" << endl
 	   << "  p - get position" << endl
 	   << "  d - status" << endl*/
-	   << "  s - set servo" << endl
+           << "  7 - kick" << endl
+           << "  s - set servo" << endl
 	   << "q - quit" << endl;
       cin >> c;
       cout << endl;
@@ -206,13 +207,15 @@ int main(int argc, char * argv[])
 	service.connection.setSpeedRot(trans, Sparrow::rad2ticks(rot));
 	ACE_OS::sleep(ace_time);
 	service.connection.setSpeedRot(0, 0);
-	break;
+	break;*/
       case '7':      // kick
-	cout << "time (msec): " << flush;
-	cin >> time;
-	service.connection.kick(time);
+        cout << "ventilatetime (msec): " << flush;
+	cin >> ventilatetime;
+        cout << "kicktime (msec): " << flush;
+	cin >> kicktime;
+	service.connection.kick(ventilatetime,kicktime);
 	break;
-      case '8':  // drive distance
+      /*case '8':  // drive distance
 	cout << "distance (mm): " << flush;
 	cin >> distance;
 	cout << "speed (mm/s): " << flush;

@@ -43,6 +43,8 @@ namespace Sparrow
     bool infraredAlive();
 
     void setServo(unsigned char servo, double rad);
+    void kick(unsigned char ventilatetime, unsigned char kicktime);
+
 
 
   protected:

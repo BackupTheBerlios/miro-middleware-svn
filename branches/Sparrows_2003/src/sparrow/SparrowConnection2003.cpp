@@ -130,4 +130,17 @@ namespace Sparrow
     write(message);
   }
 
+  void
+  Connection2003::kick(unsigned char ventilatetime, unsigned char kicktime)
+  {
+    Message message;
+    message.length(3);
+    message.id(CAN_KICK);
+    message.byteData(0,0);
+    message.byteData(1, ventilatetime);
+    message.byteData(2, kicktime);
+    write(message);
+
+  }
+
 };
