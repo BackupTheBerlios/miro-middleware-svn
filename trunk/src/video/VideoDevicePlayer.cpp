@@ -14,6 +14,10 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.2  2005/02/11 16:48:04  guillem
+ * Allow for an interface
+ * Unused code cleanup
+ *
  * Revision 1.1  2005/02/09 16:29:50  guillem
  * Added support for Player simulated camera. Seems to work...
  *
@@ -112,88 +116,6 @@
 #include <unistd.h>
 #include <dirent.h>
 
-namespace 
-{
-  void getPpm(std::string const& _name, 
-	      unsigned int _width,
-	      unsigned int _height,
-	      unsigned char * _buffer)
-  {
-    FILE * file;
-    if ((file = fopen(_name.c_str(), "r")) != NULL) {
-
-      int rawflag = 0;
-      unsigned int xdim;
-      unsigned int ydim;
-      int colordepth;
-      
-      // read header
-      char magic[1024];
-      char k;
-
-      // format identifer
-      fscanf(file,"%s", magic);
-      if ((!strcmp("P6", magic)) || 
-	  (!strcmp("P3", magic))) {
-	
-	// raw format
-	if (!strcmp("P6",magic))
-	  rawflag = 1;
-	
-	fscanf(file,"%s", magic);
-	while (!strncmp("#", magic,1)) {
-	  // skip newlines
-	  while ( (k = fgetc(file)) != '\n'); 
-	  fscanf(file, "%s", magic);
-	}
-	
-	xdim = atoi(magic);
-	fscanf(file, "%d \n%d", &ydim, &colordepth);
-	
-	// skip pending newlines
-	while (fgetc(file) != (int)'\n');
-      }
-      else
-	throw Miro::Exception("Unsupported ppm file format.");
-
-      // read image
-      if (xdim != _width ||
-	  ydim != _height)
-	throw Miro::Exception("Image dimensions differ from output format.");
-
-      if (rawflag) {
-
-	fread(_buffer, 1, xdim * ydim * 3, file);
-// 	for (unsigned int i = 0; i < xdim * ydim; ++i) {
-// 	  _buffer[i*3 + 0] = fgetc(file);
-// 	  _buffer[i*3 + 1] = fgetc(file);
-// 	  _buffer[i*3 + 2] = fgetc(file);
-// 	}
-      } 
-      else {
-	int red, green, blue;
-	for (unsigned int i=0; i < xdim * ydim; ++i) {
-	  fscanf(file, "%d %d %d", &red, &green, &blue);
-	  if (colordepth > 255) {
-	    red = int((double)red * 255.0 / (double)colordepth);
-	    green = int((double)green * 255.0 / (double)colordepth);
-	    blue = int((double)blue * 255.0 / (double)colordepth);
-	  }
-	  _buffer[i*3 + 0] = red;
-	  _buffer[i*3 + 1] = green;
-	  _buffer[i*3 + 2] = blue;
-	}
-	colordepth = 255;
-      }
-
-      fclose(file);
-    }
-    else {
-      throw Miro::CException(errno, "Cannot open file." + _name + "!");
-    }
-  }
-}
-
 namespace Video
 {
   FILTER_PARAMETERS_FACTORY_IMPL(DevicePlayer);
@@ -206,6 +128,7 @@ namespace Video
     playerClient(NULL),
     playerCamera(NULL)
   {
+    interfaceAllowed_=true;
   }
     
 //--------------------------------------------------------------------
