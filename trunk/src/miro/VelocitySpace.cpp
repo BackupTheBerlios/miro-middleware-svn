@@ -14,6 +14,7 @@
 #include <complex>
 #include <cstdio>
 #include <cmath>
+#include "Angle.h"
 
 namespace Miro
 {
@@ -47,9 +48,36 @@ namespace Miro
     space_(NULL),
     velocitySpace_(NULL)
   {
-    init(maxVelocity_, spaceResolution_, 
+    init(maxVelocity_, spaceResolution_,
 	 maxAccel_, maxDecel_, pace_);
   }
+
+  VelocitySpace::VelocitySpace(int _maxVelocity,
+			       int _spaceResolution,
+			       int _maxAccel,
+			       int _maxDecel,
+			       int _pace) :
+    maxVelocity_(_maxVelocity),		// in mm/sec
+    spaceResolution_(_spaceResolution),	// in mm
+    maxAccel_(_maxAccel),		// in mm/sec2
+    maxDecel_(_maxDecel),		// in mm/sec2
+    pace_(_pace)			// in times/sec
+  {
+    // init member variables for given parameters
+
+
+    // set up velocity space
+    int size = 2 * (maxVelocity_/spaceResolution_) + 1;
+    space_ = new int[size * size];
+    velocitySpace_ = new int*[size];
+    for(int i = 0; i < size; i++) {
+      velocitySpace_[i] = space_ + i * size;
+    }
+
+    // set initial dynamic window
+    setNewVelocity(Vector2d(0., 0.));
+  }
+
 
 
   // destructor
@@ -60,7 +88,7 @@ namespace Miro
     delete[] velocitySpace_;
   }
 
-  void 
+  void
   VelocitySpace::setWheelBase(double _wheelBase)
   {
     wheelBase_ = _wheelBase;
@@ -107,18 +135,22 @@ namespace Miro
 
 	left = getVelocityByIndex(l_index);
 	right = getVelocityByIndex(r_index);
-	l_value =
+        if(fabs(left) < spaceResolution_ && fabs(right) < spaceResolution_){
+           left = 1.0;
+           right = 1.0;
+        }
+
+        l_value =
 	  cos(_prefDir - M_PI_4) * left -
 	  sin(_prefDir - M_PI_4) * right;
 	r_value =
 	  sin(_prefDir - M_PI_4) * left +
 	  cos(_prefDir - M_PI_4) * right;
 
-        left*left + right*right;
-	if (fabs(left) < _maxSpeed && fabs(right) < _maxSpeed){//left*left + right*right <= _maxSpeed2){
+	if (fabs(left) < _maxSpeed && fabs(right) < _maxSpeed){
             velocitySpace_[l_index][r_index] =
 	    (int)rint(255. * ((1. +
-			      atan(fabs(l_value /r_value)) / M_PI_2) / 2.));
+			      atan2(l_value, fabs(r_value)) / M_PI_2) / 2.));
 
         }
 	else
@@ -134,7 +166,7 @@ namespace Miro
     double axis_value;
     double v_dist;
 
-    if(fabs(_prefDir) < M_PI_2)
+    if(fabs(_prefDir) <= M_PI_2)
 	_prefDir = -_prefDir;
 
     for(int l_index = minDynWinLeft_; l_index <= maxDynWinLeft_; l_index++) {
@@ -142,24 +174,38 @@ namespace Miro
 
 	left = getVelocityByIndex(l_index);
 	right = getVelocityByIndex(r_index);
-	l_value =
+        v_dist = sqrt(left*left + right*right);
+
+        if(fabs(left) < spaceResolution_ && fabs(right) < spaceResolution_){
+           left = 1.0;
+           right = 1.0;
+        }
+
+        l_value =
 	  cos(_prefDir - M_PI_4) * left -
 	  sin(_prefDir - M_PI_4) * right;
 	r_value =
 	  sin(_prefDir - M_PI_4) * left +
 	  cos(_prefDir - M_PI_4) * right;
 
-        v_dist = sqrt(left*left + right*right);
-	if (fabs(left) < _maxSpeed && fabs(right) < _maxSpeed){//v_dist <= _maxSpeed){
-            axis_direction = (fabs(atan2(r_value, l_value)) > M_PI_2)?-1.0:1.0;
-            axis_value = ((axis_direction*v_dist)/(abs(maxVelocity_)/sqrt(2.0)) + 1.0)/2.0;
-            velocitySpace_[l_index][r_index] =
-	    (int)rint(255. * (((1. +
-			      atan(fabs(l_value /r_value)) / M_PI_2) / 2.)*axis_value));
+//        double lrAngle = atan2(right, left) - M_PI_4;
+//        Miro::Angle::normalize(lrAngle);
+//        if((fabs(lrAngle) < M_PI_2 && lrAngle > _curvature1 && lrAngle < _curvature2)||
+//	   (fabs(lrAngle) >= M_PI_2 && (lrAngle > _curvature1+M_PI || lrAngle < _curvature2-M_PI))){
 
-        }
-	else
-	  velocitySpace_[l_index][r_index] = 0;
+	   if (fabs(left) < _maxSpeed && fabs(right) < _maxSpeed){//v_dist <= _maxSpeed){
+               axis_direction = (fabs(atan2(r_value, l_value)) > M_PI_2)?-1.0:1.0;
+               axis_value = ((axis_direction*v_dist)/(abs(maxVelocity_)/sqrt(2.0)) + 1.0)/2.0;
+               velocitySpace_[l_index][r_index] =
+	       (int)rint(255. * (((1. +
+			      atan2(fabs(l_value), fabs(r_value)) / M_PI_2) / 2.)*axis_value));
+
+           }
+	   else
+	     velocitySpace_[l_index][r_index] = 0;
+ //       }
+ //       else
+ //          velocitySpace_[l_index][r_index] = 0;
       }
     }
   }
@@ -402,16 +448,28 @@ namespace Miro
 	right = getVelocityByIndex(r_index);
 	//double	rel = atan(left/right);
 
-	if(    (velocitySpace_[l_index][r_index] > biggestEval)
-	    || (velocitySpace_[l_index][r_index] == biggestEval
-	       && (left*left)+(right*right) > biggestRad )    )
-	{
-          biggestEval = velocitySpace_[l_index][r_index];
-	  biggestRad = (left * left) + (right * right);
-	  biggestValueVelocity = Vector2d(left,right);
-	  found = true;
+        if(fabs(left) < spaceResolution_ && fabs(right) < spaceResolution_){
+           left = 0.5;
+           right = 0.5;
         }
-      }
+
+        double lrAngle = atan2(right, left) - M_PI_4;
+        Miro::Angle::normalize(lrAngle);
+        if(!((lrAngle > posCurvConstrB_ && lrAngle < posCurvConstrE_)||
+             (lrAngle < negCurvConstrB_ && lrAngle > negCurvConstrE_))){
+
+
+	   if(    (velocitySpace_[l_index][r_index] > biggestEval)
+	       || (velocitySpace_[l_index][r_index] == biggestEval
+	          && (left*left)+(right*right) > biggestRad )    )
+	   {
+             biggestEval = velocitySpace_[l_index][r_index];
+	     biggestRad = (left * left) + (right * right);
+	     biggestValueVelocity = Vector2d(left,right);
+	     found = true;
+           }
+         }
+       }
     }
 
     // if no suitable entry found, slow down until stop
@@ -594,7 +652,7 @@ namespace Miro
   // move the given polygon by given distance
   //
   void 
-  VelocitySpace::movePolygon(Polygon &_polygon, Vector2d const& _distance) 
+  VelocitySpace::movePolygon(Polygon &_polygon, Vector2d const& _distance)
   {
     Polygon::iterator i;
 
@@ -602,4 +660,34 @@ namespace Miro
       *i += _distance;
     }
   }
+
+
+
+  void VelocitySpace::clearCurvatureConstraints()
+  {
+     posCurvConstrB_ = 1.5*M_PI;
+     posCurvConstrE_ = -1.5*M_PI;
+     negCurvConstrB_ = -1.5*M_PI;
+     negCurvConstrE_ = 1.5*M_PI;
+
+  }
+
+  void VelocitySpace::addPositiveCurvatureConstraint(double _constrB, double _constrE)
+  {
+
+     posCurvConstrB_ = _constrB;
+     posCurvConstrE_ = _constrE;
+
+
+  }
+
+  void VelocitySpace::addNegativeCurvatureConstraint(double _constrB, double _constrE)
+  {
+
+     negCurvConstrB_ = _constrB;
+     negCurvConstrE_ = _constrE;
+
+  }
+
+
 }
