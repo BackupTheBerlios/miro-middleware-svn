@@ -11,6 +11,7 @@ BatteryGet
 BehaviourEngineTest
 ButtonsNotify
 ButtonsPoll
+CameraControlTest
 CanPerformance
 ConfigEditor
 DifferentialMotionTest

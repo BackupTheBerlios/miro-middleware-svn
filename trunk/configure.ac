@@ -274,6 +274,7 @@ AC_CONFIG_FILES([Makefile
                  tests/notifyMulticast/Makefile
                  tests/odometry/Makefile
                  tests/panTilt/Makefile
+                 tests/cameraControl/Makefile
                  tests/kicker/Makefile
                  tests/pioneer/Makefile
                  tests/rangeSensor/Makefile
