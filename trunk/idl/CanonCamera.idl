@@ -81,8 +81,8 @@ module Miro
 
     void setAEoff() raises (EDevIO, ETimeOut);
     void setAEon() raises (EDevIO,  ETimeOut);
-    void setAE(in short value) raises (EDevIO, EOutOfBounds, ETimeOut);
-    void setIrisAssignment(in short value) raises (EDevIO, EOutOfBounds, ETimeOut);
+    void setAE(in short value) raises (EDevIO, ETimeOut);
+    void setIrisAssignment(in short value) raises (EDevIO, ETimeOut);
 
 
   };

@@ -144,6 +144,7 @@ namespace Canon
     factor=factor*(range.max-range.min)/100+range.min;
 
     Message focus(SET_FOCUS_POSITION,int2str(tmp,factor,4));
+    cout << focus << endl;  				// only test
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
@@ -200,6 +201,7 @@ namespace Canon
     if (!initialized) initialize();
 
     Message focus(FOCUS_AUTO,0x30);
+    cout << focus << endl;
 
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
@@ -259,7 +261,8 @@ namespace Canon
     if (!initialized) initialize();
 
     //Message aeLock(LIGHT_AE,0x40);
-    Message aeLock(LIGHT_AE,int2str(tmp,40,2));
+    Message aeLock(LIGHT_AE,int2str(tmp,64,2));
+    cout << aeLock << endl;
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
@@ -278,7 +281,7 @@ namespace Canon
     char tmp[3];
     if (!initialized) initialize();
 
-    Message aeLock(LIGHT_AE,int2str(tmp,41,2));
+    Message aeLock(LIGHT_AE,int2str(tmp,65,2));
 
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
@@ -291,7 +294,7 @@ namespace Canon
   }
 
   void
-  CanonCameraImpl::setAE(short value) throw(Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut)
+  CanonCameraImpl::setAE(short value) throw(Miro::EDevIO, Miro::ETimeOut)
   {
     bool done=false;
     char tmp[4];
@@ -314,26 +317,30 @@ namespace Canon
   }
 
   void
-  CanonCameraImpl::setIrisAssignment(short value) throw(Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut)
+  CanonCameraImpl::setIrisAssignment(short value) throw(Miro::EDevIO, Miro::ETimeOut)
   {
     bool done=false;
-    char tmp[4];
+    char tmp[3];
     char fixChar[4];
 
     strcpy(fixChar , "9"); // set preparameter 3Bh
     if (!initialized) initialize();
     if (value < 2) value = 2;
-    if (value > 10) value = 10;
-    Message aeIris(LIGHT_AE,strcat(fixChar, int2str(tmp,value,3)));
+    if (value > 16) value = 16;
+    Message aeIris(LIGHT_AE,strcat(fixChar, int2str(tmp,value,2)));
+cout << aeIris << endl;
+connection.sendCamera(aeIris);
+checkAnswer();
+cout << "Error:" <<pAnswer->errorCode() << endl;
 
-    while (!done) {
+/*    while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
       connection.sendCamera(aeIris);
       checkAnswer();
       //keep trying...
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
-    }
+    }*/
   }
 
   //-------------------------------------------------------------------
