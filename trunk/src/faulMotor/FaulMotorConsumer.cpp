@@ -10,6 +10,7 @@
 //////////////////////////////////////////////////////////////////////////////
   
 #include "FaulMotorConsumer.h"
+#include "FaulMotorConnection.h"
 #include "Parameters.h"
 
 #include "faulTty/FaulTtyMessage.h"
@@ -76,6 +77,8 @@ namespace FaulMotor
   void
   Consumer::handleMessage(const Miro::DevMessage * _message)
   {
+    ++Connection::gotTicks_;
+
     if (pOdometry_) {
       const FaulTty::OdometryMessage * pFaulMsg = 
 	static_cast<const FaulTty::OdometryMessage *>(_message);

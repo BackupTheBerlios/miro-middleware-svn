@@ -59,6 +59,9 @@ namespace FaulMotor
     bool disabled_;
 
     Miro::Mutex mutex_;
+
+  public:
+    static unsigned int gotTicks_;
   };
 
 };

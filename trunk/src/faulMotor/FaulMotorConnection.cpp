@@ -51,6 +51,8 @@ namespace FaulMotor
   { 
     DBG(cout << "Constructing FaulMotorConnection." << endl);
 
+    gotTicks_ = 2;
+
     char const * const accMessage = "ac50\r\n\0"; // build acceleration packet
     leftWheel_.writeMessage(accMessage);
     rightWheel_.writeMessage(accMessage);
@@ -197,6 +199,8 @@ namespace FaulMotor
     char const * const getTicksMessage = "pos\r\n\0";
 
     Miro::Guard guard(mutex_);
+
+    gotTicks_ = 0;
     ACE_Time_Value now = ACE_OS::gettimeofday();
     ACE_Time_Value nextWrite = std::min(leftWheel_.lastWrite, rightWheel_.lastWrite)
       + ACE_Time_Value(0, 18000);
