@@ -91,6 +91,10 @@ namespace Miro
   void
   Log::init(int& argc, char * argv[]) 
   {
+#if (GCC_MAJOR_VERSION >= 3)
+    std::set_terminate (__gnu_cxx::__verbose_terminate_handler);
+#endif
+
     mask_ = 0;
    // register all logging cathegories at the log record
     for (unsigned int i = 0; i < NUM_CATHEGORIES; ++i) {
