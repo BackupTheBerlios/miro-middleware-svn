@@ -131,7 +131,7 @@ namespace Canon
     return 100*result/128;
   }
   
-  void 
+  void
   CanonCameraImpl::setFocus(short factor) throw(Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut)
   {
     bool done=false;
@@ -167,14 +167,14 @@ namespace Canon
     Message focus=Message(GET_FOCUS_POSITION,0x30);
 
     while (!done) {
-      Miro::Guard guard(pAnswer->mutex); 
+      Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
       connection.sendCamera(focus);
       while (!pAnswer->errorCode()) {
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
 	timeout+=maxWait;
-	
-	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+
+	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut();
 	//wait until the error code is finished or timeout
       }
       
@@ -202,7 +202,7 @@ namespace Canon
     Message focus(FOCUS_AUTO,0x30);
 
     while (!done) {
-      Miro::Guard guard(pAnswer->mutex); 
+      Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
       connection.sendCamera(focus);
       checkAnswer();
@@ -245,8 +245,46 @@ namespace Canon
 	done=true;
       }
     }
-    
+
     return result;
+  }
+
+
+
+  void
+  CanonCameraImpl::setAEoff() throw(Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut)
+  {
+    bool done=false;
+    if (!initialized) initialize();
+
+    Message aeLock(LIGHT_AE,0x40);
+
+    while (!done) {
+      Miro::Guard guard(pAnswer->mutex);
+      pAnswer->init();
+      connection.sendCamera(aeLock);
+      checkAnswer();
+      //keep trying...
+      if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
+    }
+  }
+
+  void
+  CanonCameraImpl::setAEon() throw(Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut)
+  {
+    bool done=false;
+    if (!initialized) initialize();
+
+    Message aeLock(LIGHT_AE,0x41);
+
+    while (!done) {
+      Miro::Guard guard(pAnswer->mutex);
+      pAnswer->init();
+      connection.sendCamera(aeLock);
+      checkAnswer();
+      //keep trying...
+      if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
+    }
   }
 
 
@@ -258,7 +296,7 @@ namespace Canon
   CanonCameraImpl::initialize()
   {
     if (!initialized) {
-      Miro::Guard guard(pAnswer->mutex); 
+      Miro::Guard guard(pAnswer->mutex);
       Canon::Message msg(HOST_CONTROL_MODE,0x30);
       pAnswer->init();
       connection.sendCamera(msg);
@@ -266,7 +304,7 @@ namespace Canon
     }
     initialized=true;
   }
-  
+
   void CanonCameraImpl::checkAnswer() throw (Miro::EDevIO,Miro::EOutOfBounds, Miro::ETimeOut)
   {
     while (!pAnswer->isValid()) {

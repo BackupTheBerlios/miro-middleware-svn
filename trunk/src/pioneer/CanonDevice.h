@@ -125,6 +125,15 @@ namespace Canon
   static const unsigned short GET_ZOOM_SPEED        = 0x00B4; //shared 2
   static const unsigned short GET_ZOOM_MAX          = 0x00B4; //shared 3
 
+  static const unsigned short LIGHT_OPERATE	    = 0x00A5;
+  static const unsigned short LIGHT_BACKLIGHT	    = 0x00A5;
+  static const unsigned short LIGHT_EXPOSURE	    = 0x00A5;
+  static const unsigned short LIGHT_AE    	    = 0x00A5;
+  static const unsigned short LIGHT_SHUTTER_SPEED   = 0x00A5;
+  static const unsigned short LIGHT_AGC_GAIN        = 0x00A5;
+  static const unsigned short LIGHT_IRIS            = 0x00A5;
+
+
   //...
   
   static const unsigned short CAMERA_RESET          = 0x00AA;
