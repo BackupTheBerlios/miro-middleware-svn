@@ -34,7 +34,9 @@ namespace Miro
     pMotion_(DifferentialMotion::_duplicate(_pMotion)),
     pSupplier_(_pSupplier),
     reactor(ar_),
-    timerId(-1)
+    timerId(-1),
+    skipDebug_(0),
+    skipMax_(4)
   {
     MIRO_LOG_CTOR("Miro::ConstraintArbiter");
     
@@ -201,7 +203,8 @@ namespace Miro
 //    fclose(logFile1);
 
     if (pSupplier_ &&
-	pSupplier_->subscribed(offerIndex_)) {
+	pSupplier_->subscribed(offerIndex_) &&
+	!skipDebug_) {
 
       unsigned int const headerSize = 12;
       unsigned int dataSize = params->velocitySpace.dynamicWindowSize();
@@ -220,6 +223,9 @@ namespace Miro
 
       notifyEvent_.remainder_of_body <<= dynamicWindow;
       pSupplier_->sendEvent(notifyEvent_);
+
+      skipDebug_++;
+      skipDebug_ %= skipMax_;
     }
 
     return 0;

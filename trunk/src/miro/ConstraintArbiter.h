@@ -86,6 +86,9 @@ namespace Miro
     CosNotification::StructuredEvent notifyEvent_;
     unsigned int offerIndex_;
 
+    int skipDebug_;
+    int skipMax_;
+
     //--------------------------------------------------------------------------
     // protected static data
     //--------------------------------------------------------------------------
