@@ -14,6 +14,7 @@
 #include "FaulTtyMessage.h"
 
 #include "miro/Exception.h"
+#include "miro/Log.h"
 
 #undef DEBUG
 
@@ -71,6 +72,18 @@ namespace FaulController
       throw Miro::Exception("FaulTty file descriptor was called to read 0" \
 			    "bytes from the device. I can't belief this!");
 
+    std::ostringstream s;
+    std::string wheel = (msg->wheel_ == OdometryMessage::LEFT)? "left  " : "right ";
+    s << wheel << "length: " << bytes << std::endl << std::hex << wheel;
+    for (int i = 0; i < bytes; ++i) {
+      s.width(2);
+      s.fill('0');
+      s << static_cast<unsigned int>((unsigned char)buff_[i]) << " ";
+    }
+    s << std::dec;
+    MIRO_DBG(FAUL, LL_PRATTLE, s.str().c_str());
+		  
+    
     msg->time() = ACE_OS::gettimeofday();
     msg->ticks_ = *(reinterpret_cast<long int *>(&buff_[0]));
     if (!firstMessage_)
