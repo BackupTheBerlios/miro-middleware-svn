@@ -248,7 +248,7 @@ PatternWidgetClass::mousePressEvent(QMouseEvent* event)
 
     // submenu: add all behaviour names //
     Generator::GroupMap::const_iterator first, last;
-    PolicyConfigClass::instance()->description().getGroupedTypes("behaviour", first, last);
+    PolicyConfigClass::instance()->description().getGroupedTypes("Behaviour", first, last);
     for (; first != last; ++first) {
       if (first->second.isFinal() &&
 	  !getDocument().hasBehaviour(patternName, first->second.name())) {

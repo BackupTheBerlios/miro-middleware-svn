@@ -56,7 +56,7 @@ ArbiterWidget::mousePressEvent(QMouseEvent* event)
 
     // submenu: add all arbiter names //
     Generator::GroupMap::const_iterator first, last;
-    PolicyConfigClass::instance()->description().getGroupedTypes("arbiter", first, last);
+    PolicyConfigClass::instance()->description().getGroupedTypes("Arbiter", first, last);
     for (; first != last; ++first) {
       if (first->second.isFinal()) {
         menuSetArbiter_->insertItem(first->second.name());
