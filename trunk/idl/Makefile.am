@@ -139,8 +139,6 @@ EXTRA_DIST = \
 	$(deprecatedsources)
 
 all-local:
-	if test -L idl; then rm idl; fi
-	$(LN_S) ./ idl
 	$(INSTALLLTLIBRARIES)
 
 clean-local:

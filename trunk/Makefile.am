@@ -14,6 +14,7 @@
 include $(top_srcdir)/config/Make-rules
 
 SUBDIRS = \
+	. \
 	idl \
 	src \
 	tests \
@@ -27,6 +28,19 @@ SUBDIRS = \
 	lib \
 	doc
 
+all-local:
+	if test -L idl/idl; then rm idl/idl; fi
+	$(LN_S) ./ idl/idl
+
+distclean-local:
+	rm -f idl/idl
+	rm -f config/config.guess
+	rm -f config/config.sub
+	rm -f config/depcomp
+	rm -f config/install-sh
+	rm -f config/ltmain.sh
+	rm -f config/missing
+	rm -f config/mkinstalldirs
 
 # configh_configdir = $(libdir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/include
 configh_configdir = $(libdir)/Miro/include
