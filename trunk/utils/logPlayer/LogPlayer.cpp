@@ -31,14 +31,18 @@
 namespace 
 {
   bool verbose = false;
+  bool shared = false;
+  bool unified = false;
+
+  const char colocatedOpt[] = "-shared_ec";
+  const char unifiedOpt[] = "-unified_ec";
+  const char verboseOpt[] = "-v";
+  const char helpOpt[] = "-?";
 };
 
 int
 main(int argc, char *argv[])
 {
-  bool shared = false;
-  const char colocatedOpt[] = "-shared_ec";
-  const char verboseOpt[] = "-v";
  
   // parse optional args
   ACE_Arg_Shifter arg_shifter (argc, argv);
@@ -47,16 +51,40 @@ main(int argc, char *argv[])
 
     if (ACE_OS::strcasecmp(current_arg, colocatedOpt) == 0) {
       arg_shifter.consume_arg();
-      shared = false;
-      if (verbose)
-	std::cout << "Using a shared event channel factory." << endl;
+      shared = true;
+    } 
+    else if (ACE_OS::strcasecmp(current_arg, unifiedOpt) == 0) {
+      arg_shifter.consume_arg();
+      unified = true;
     } 
     else if (ACE_OS::strcasecmp(current_arg, verboseOpt) == 0) {
       arg_shifter.consume_arg();
       verbose = true;
     } 
+    else if (ACE_OS::strcasecmp(current_arg, helpOpt) == 0) {
+      arg_shifter.consume_arg();
+      cerr << "usage: " << argv[0] << "[-shared_ec] [-unified_ec] [-v?]" << endl
+	   << "  -shared_ec use existing event channels" << endl
+	   << "  -unified_ec use one event channel for all robots" << endl
+	   << "  -v verbose mode" << endl
+	   << "  -? help: emit this text and stop" << endl;
+      std::cout << "" << endl;
+      return 0;
+    } 
     else
       arg_shifter.ignore_arg ();
+  }
+
+  if (unified && shared) {
+    std::cerr << "Can't use unified_ec and shared_ec options simultaniously" << endl;
+    return 1;
+  }
+
+  if (verbose) {
+    if (shared) 
+      std::cout << "Using a shared event channel factory." << endl;
+    if (unified)
+      std::cout << "Using a unified event channel factory." << endl;
   }
 
   // Init TAO Factories
@@ -72,7 +100,7 @@ main(int argc, char *argv[])
   if (verbose)
     std::cout << "Initialize server daemon." << endl;
 
-  ChannelManager channelManager(argc, argv, shared);
+  ChannelManager channelManager(argc, argv, shared, unified);
   try {
     QApplication app(argc, argv);     // Create Qt application  
     FileSet fileSet(&channelManager);

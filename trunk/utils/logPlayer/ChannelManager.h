@@ -24,7 +24,7 @@ class ChannelManager : public Miro::Server
   typedef Miro::Server Super;
 
 public:
-  ChannelManager(int& argc, char * argv[], bool _shared);
+  ChannelManager(int& argc, char * argv[], bool _shared, bool _unified);
   ~ChannelManager();
 
   CosNotifyChannelAdmin::EventChannel_ptr getEventChannel(QString const& _domainName);
@@ -33,7 +33,9 @@ protected:
   typedef std::map<QString, CosNotifyChannelAdmin::EventChannel_ptr> ChannelMap;
 
   bool shared_;
+  bool unified_;
   CosNotifyChannelAdmin::EventChannelFactory_var notifyFactory_;
+  CosNotifyChannelAdmin::EventChannel_var unifiedChannel_;
   ChannelMap channel_;
 };
 

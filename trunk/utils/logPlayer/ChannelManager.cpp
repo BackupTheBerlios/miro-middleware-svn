@@ -13,14 +13,26 @@
 
 #include <orbsvcs/Notify/Notify_EventChannelFactory_i.h>
 
-ChannelManager::ChannelManager(int& argc, char * argv[], bool _shared) :
+ChannelManager::ChannelManager(int& argc, char * argv[], 
+			       bool _shared, bool _unified) :
   Super(argc, argv),
-  shared_(_shared)
+  shared_(_shared),
+  unified_(_unified)
 {
   if (!shared_) {
     // Channel factory
     notifyFactory_ =
       TAO_Notify_EventChannelFactory_i::create(poa.in() ACE_ENV_ARG_PARAMETER);
+  }
+  if (unified_) {
+    // Channel identifer.
+    CosNotifyChannelAdmin::ChannelID id;
+    // Initial qos specified to the factory when creating the EC.
+    CosNotification::QoSProperties initialQos;
+    // Initial admin props specified to the factory when creating the EC.
+    CosNotification::AdminProperties initialAdmin;
+
+    unifiedChannel_ = notifyFactory_->create_channel(initialQos, initialAdmin, id);
   }
 }
 
@@ -77,7 +89,12 @@ ChannelManager::getEventChannel(QString const& _domainName)
       // Initial admin props specified to the factory when creating the EC.
       CosNotification::AdminProperties initialAdmin;
 
-      ec = notifyFactory_->create_channel(initialQos, initialAdmin, id);
+      if (!unified_) {
+	ec = notifyFactory_->create_channel(initialQos, initialAdmin, id);
+      }
+      else {
+	ec = unifiedChannel_.in();
+      }
 
       // Attempt to create naming context.
       CosNaming::NamingContext_var namingContext;
