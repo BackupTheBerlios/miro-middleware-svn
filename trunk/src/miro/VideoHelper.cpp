@@ -86,6 +86,7 @@ namespace Miro
 
   VideoConnection::~VideoConnection()
   {
+    ::shmdt((void*)memory);
     video->disconnect(id);
   }
 };
