@@ -327,7 +327,7 @@
  <section name="Notification" >
   <parameter name="Logging" >
    <parameter name="TypeName">
-    <parameter value="Infrared" />
+    <!-- <parameter value="Infrared" /> -->
     <parameter value="Odometry" />
     <parameter value="RawPosition" />
     <parameter value="VisionData" />
@@ -337,6 +337,7 @@
     <parameter value="PatternChange" />
     <parameter value="ArbitrateChange" />
     <parameter value="PositionHypothesis" />
+    <parameter value="SharedWorld" />
    </parameter>
    <parameter value="157286400" name="MaxFileSize" />
   </parameter>
