@@ -45,13 +45,8 @@ public:
   void init();
 
 private:
-  Video::Consumer * pConsumer;
+  Video::Consumer consumer;
   Video::Connection connection;
-
-  // Steffen:
-
-  // This is your sample interface
-  // It doesn't exist by now, therefor commented out
   Miro::VideoImpl grabber;
 };
 #endif

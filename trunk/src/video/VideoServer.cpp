@@ -32,9 +32,9 @@ VideoService::VideoService(int argc, char *argv[]) :
   Super(argc, argv),
 
   // Video board initialization
-  pConsumer(new Video::Consumer(connection /*, &grabber */)),
-  connection(pConsumer),
-  grabber(pConsumer)
+  consumer(connection /*, &grabber */),
+  connection(&consumer),
+  grabber(&consumer)
 
   // Service initialization
 {
@@ -46,9 +46,9 @@ VideoService::VideoService(Server& _server) :
   Super(_server),
 
   // Video board initialization
-  pConsumer(new Video::Consumer(connection /*, &grabber */)),
-  connection(pConsumer),
-  grabber(pConsumer)
+  consumer(connection /*, &grabber */),
+  connection(&consumer),
+  grabber(&consumer)
 
   // Service initialization
 {
