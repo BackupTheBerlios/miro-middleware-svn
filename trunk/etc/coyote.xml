@@ -9,16 +9,17 @@
 
     <section name="Faulhaber" >
       <parameter name="FaulMotor" >
+        <parameter name="OdometryPolling" value="false" />
 	<parameter name="LeftWheel">
 	  <parameter value="/dev/tts/2" name="Device" />
 	</parameter>
 	<parameter name="RightWheel">
 	  <parameter value="/dev/tts/0" name="Device" />
 	</parameter>
-	<parameter name="LeftTicksPerMM" value="76.0" />
-	<parameter name="RightTicksPerMM" value="76.0" />
+	<parameter name="LeftTicksPerMM" value="74.5" />
+	<parameter name="RightTicksPerMM" value="74.5" />
 	<parameter name="Motion">
-	  <parameter name="WheelBase" value="385" />
+	  <parameter name="WheelBase" value="332" />
 	  <parameter value="2500" name="MaxTranslation" />
 	  <parameter value="-2500" name="MinTranslation" />
 	  <parameter value="360" name="MaxRotation" />
@@ -299,15 +300,15 @@
 	<parameter value="0.050000" name="ButtonsPollInterval" />
 	<parameter value="1.0776" name="TransFactor" />
 	<parameter value="1.000000" name="WatchdogTimeout" />
-	<parameter value="3145" name="Servo0MidPulse" />
+	<parameter value="3140" name="Servo0MidPulse" />
 	<parameter value="200" name="MaxAccel" />
 	<parameter value="2350" name="Diameter" />
 	<parameter value="30720" name="MaxPower" />
 	<parameter value="29" name="TicksL" />
-	<parameter value="29" name="TicksR" />
+	<parameter value="329" name="TicksR" />
 	<parameter value="true" name="Goalie" />
-	<parameter value="21.8" name="Deg2ServoTicksL"/>
-	<parameter value="20.8" name="Deg2ServoTicksR"/>
+	<parameter value="20.5" name="Deg2ServoTicksL"/>
+	<parameter value="21.8" name="Deg2ServoTicksR"/>
 	<parameter value="true" name="ChannelSharing" />
 	<parameter name="Motion" >
 	  <parameter value="180" name="MaxRotation" />
