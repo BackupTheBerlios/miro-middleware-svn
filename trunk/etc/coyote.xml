@@ -9,7 +9,7 @@
 
     <section name="Faulhaber" >
       <parameter name="FaulMotor" >
-        <parameter name="OdometryPolling" value="false" />
+        <parameter name="OdometryPolling" value="true" />
 	<parameter name="LeftWheel">
 	  <parameter value="/dev/tts/2" name="Device" />
 	</parameter>
@@ -19,7 +19,7 @@
 	<parameter name="LeftTicksPerMM" value="74.5" />
 	<parameter name="RightTicksPerMM" value="74.5" />
 	<parameter name="Motion">
-	  <parameter name="WheelBase" value="332" />
+	  <parameter name="WheelBase" value="335" />
 	  <parameter value="2500" name="MaxTranslation" />
 	  <parameter value="-2500" name="MinTranslation" />
 	  <parameter value="360" name="MaxRotation" />
