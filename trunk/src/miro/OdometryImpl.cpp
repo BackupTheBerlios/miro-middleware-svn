@@ -96,7 +96,7 @@ namespace Miro
   OdometryDispatcher::dispatch()
   {
     // conditionally send if subscribed
-    if (supplier_->subscribed(eventId_[0]))
+    if (true || supplier_->subscribed(eventId_[0]))
       supplier_->sendEvent(notifyEvent_);
     else {
       MIRO_DBG(MIRO, LL_PRATTLE, "Skipping odometry event as no one is subscribed.");
@@ -104,7 +104,7 @@ namespace Miro
 
     // conditionally send if offered and subscribed
     if (rawPositionEvents_ &&
-	supplier_->subscribed(eventId_[1])) {
+	(true || supplier_->subscribed(eventId_[1]))) {
       supplier_->sendEvent(notifyRawEvent_);
     }
   }
