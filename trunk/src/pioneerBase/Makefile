@@ -354,34 +354,34 @@ $(BIN): $(STATIC_DEPS)
   \
   \
   \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
-  /home/gmayer/Miro/src/miro/ExceptionS.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionS.i \
   \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointC.i \
-  /home/gmayer/Miro/src/miro/WorldPointS.i \
+  $(MIRO_ROOT)/src/miro/WorldPointC.i \
+  $(MIRO_ROOT)/src/miro/WorldPointS.i \
   \
-  /home/gmayer/Miro/src/miro/PositionC.i \
-  /home/gmayer/Miro/src/miro/PositionS.i \
-  \
-  \
-  /home/gmayer/Miro/src/miro/TimeC.i /home/gmayer/Miro/src/miro/TimeS.i \
+  $(MIRO_ROOT)/src/miro/PositionC.i \
+  $(MIRO_ROOT)/src/miro/PositionS.i \
   \
   \
-  /home/gmayer/Miro/src/miro/VelocityC.i \
-  /home/gmayer/Miro/src/miro/VelocityS.i \
-  \
-  /home/gmayer/Miro/src/miro/MotionStatusC.i \
-  /home/gmayer/Miro/src/miro/MotionStatusS.i \
-  \
-  /home/gmayer/Miro/src/miro/OdometryC.i \
-  /home/gmayer/Miro/src/miro/OdometryS.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i $(MIRO_ROOT)/src/miro/TimeS.i \
   \
   \
+  $(MIRO_ROOT)/src/miro/VelocityC.i \
+  $(MIRO_ROOT)/src/miro/VelocityS.i \
   \
-  /home/gmayer/Miro/src/miro/BatteryC.i \
-  /home/gmayer/Miro/src/miro/BatteryS.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusC.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusS.i \
+  \
+  $(MIRO_ROOT)/src/miro/OdometryC.i \
+  $(MIRO_ROOT)/src/miro/OdometryS.i \
+  \
+  \
+  \
+  $(MIRO_ROOT)/src/miro/BatteryC.i \
+  $(MIRO_ROOT)/src/miro/BatteryS.i \
   \
   \
   \
@@ -397,57 +397,57 @@ $(BIN): $(STATIC_DEPS)
   \
   \
   \
-  /home/gmayer/Miro/src/miro/MotionC.i \
-  /home/gmayer/Miro/src/miro/MotionS.i \
+  $(MIRO_ROOT)/src/miro/MotionC.i \
+  $(MIRO_ROOT)/src/miro/MotionS.i \
   \
   \
   \
-  /home/gmayer/Miro/src/miro/DifferentialMotionC.i \
-  /home/gmayer/Miro/src/miro/DifferentialMotionS.i \
-  \
-  \
-  \
-  \
-  /home/gmayer/Miro/src/miro/StallC.i /home/gmayer/Miro/src/miro/StallS.i \
-  \
-  /home/gmayer/Miro/src/miro/PioneerStallC.i \
-  /home/gmayer/Miro/src/miro/PioneerStallS.i \
+  $(MIRO_ROOT)/src/miro/DifferentialMotionC.i \
+  $(MIRO_ROOT)/src/miro/DifferentialMotionS.i \
   \
   \
   \
   \
-  /home/gmayer/Miro/src/miro/TiltC.i /home/gmayer/Miro/src/miro/TiltS.i \
+  $(MIRO_ROOT)/src/miro/StallC.i $(MIRO_ROOT)/src/miro/StallS.i \
   \
-  /home/gmayer/Miro/src/miro/PanC.i /home/gmayer/Miro/src/miro/PanS.i \
-  \
-  /home/gmayer/Miro/src/miro/PanTiltC.i \
-  /home/gmayer/Miro/src/miro/PanTiltS.i \
-  \
-  /home/gmayer/Miro/src/miro/CanonPanTiltC.i \
-  /home/gmayer/Miro/src/miro/CanonPanTiltS.i \
-  \
-  \
-  \
-  /home/gmayer/Miro/src/miro/CanonCameraC.i \
-  /home/gmayer/Miro/src/miro/CanonCameraS.i \
-  \
-  \
-  \
-  /home/gmayer/Miro/src/miro/GripperC.i \
-  /home/gmayer/Miro/src/miro/GripperS.i \
+  $(MIRO_ROOT)/src/miro/PioneerStallC.i \
+  $(MIRO_ROOT)/src/miro/PioneerStallS.i \
   \
   \
   \
   \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i \
-  /home/gmayer/Miro/src/miro/ScanDescriptionS.i \
+  $(MIRO_ROOT)/src/miro/TiltC.i $(MIRO_ROOT)/src/miro/TiltS.i \
+  \
+  $(MIRO_ROOT)/src/miro/PanC.i $(MIRO_ROOT)/src/miro/PanS.i \
+  \
+  $(MIRO_ROOT)/src/miro/PanTiltC.i \
+  $(MIRO_ROOT)/src/miro/PanTiltS.i \
+  \
+  $(MIRO_ROOT)/src/miro/CanonPanTiltC.i \
+  $(MIRO_ROOT)/src/miro/CanonPanTiltS.i \
   \
   \
-  /home/gmayer/Miro/src/miro/RangeEventC.i \
-  /home/gmayer/Miro/src/miro/RangeEventS.i \
   \
-  /home/gmayer/Miro/src/miro/RangeSensorC.i \
-  /home/gmayer/Miro/src/miro/RangeSensorS.i \
+  $(MIRO_ROOT)/src/miro/CanonCameraC.i \
+  $(MIRO_ROOT)/src/miro/CanonCameraS.i \
+  \
+  \
+  \
+  $(MIRO_ROOT)/src/miro/GripperC.i \
+  $(MIRO_ROOT)/src/miro/GripperS.i \
+  \
+  \
+  \
+  \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionS.i \
+  \
+  \
+  $(MIRO_ROOT)/src/miro/RangeEventC.i \
+  $(MIRO_ROOT)/src/miro/RangeEventS.i \
+  \
+  $(MIRO_ROOT)/src/miro/RangeSensorC.i \
+  $(MIRO_ROOT)/src/miro/RangeSensorS.i \
   \
   \
   \

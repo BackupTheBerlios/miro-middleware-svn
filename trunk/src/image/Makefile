@@ -214,14 +214,14 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   \
-  /home/gmayer/Miro/src/miro/TimeC.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointC.i \
-  /home/gmayer/Miro/src/miro/PositionC.i \
-  /home/gmayer/Miro/src/miro/ImageDefinitionsC.i
+  $(MIRO_ROOT)/src/miro/WorldPointC.i \
+  $(MIRO_ROOT)/src/miro/PositionC.i \
+  $(MIRO_ROOT)/src/miro/ImageDefinitionsC.i
 
 .obj/FrameGrabberMeteor.o .obj/FrameGrabberMeteor.so .shobj/FrameGrabberMeteor.o .shobj/FrameGrabberMeteor.so: FrameGrabberMeteor.cpp frameGrabberMeteor.h \
   ioctl_meteor.h frameGrabber.h ImageFactoryDefinitions.h MiroImage.h \
@@ -357,14 +357,14 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   \
-  /home/gmayer/Miro/src/miro/TimeC.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointC.i \
-  /home/gmayer/Miro/src/miro/PositionC.i \
-  /home/gmayer/Miro/src/miro/ImageDefinitionsC.i Pixels.h pixels.ih
+  $(MIRO_ROOT)/src/miro/WorldPointC.i \
+  $(MIRO_ROOT)/src/miro/PositionC.i \
+  $(MIRO_ROOT)/src/miro/ImageDefinitionsC.i Pixels.h pixels.ih
 
 .obj/ImageSource.o .obj/ImageSource.so .shobj/ImageSource.o .shobj/ImageSource.so: ImageSource.cpp Pixels.h MiroImage.h pixels.ih \
   imageSource.h ImageFactory.h ImageFactoryDefinitions.h \
@@ -500,14 +500,14 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   \
-  /home/gmayer/Miro/src/miro/TimeC.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointC.i \
-  /home/gmayer/Miro/src/miro/PositionC.i \
-  /home/gmayer/Miro/src/miro/ImageDefinitionsC.i
+  $(MIRO_ROOT)/src/miro/WorldPointC.i \
+  $(MIRO_ROOT)/src/miro/PositionC.i \
+  $(MIRO_ROOT)/src/miro/ImageDefinitionsC.i
 
 .obj/VideoSource.o .obj/VideoSource.so .shobj/VideoSource.o .shobj/VideoSource.so: VideoSource.cpp Pixels.h MiroImage.h pixels.ih \
   videoSource.h imageSource.h ImageFactory.h ImageFactoryDefinitions.h \
@@ -643,14 +643,14 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   \
-  /home/gmayer/Miro/src/miro/TimeC.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointC.i \
-  /home/gmayer/Miro/src/miro/PositionC.i \
-  /home/gmayer/Miro/src/miro/ImageDefinitionsC.i
+  $(MIRO_ROOT)/src/miro/WorldPointC.i \
+  $(MIRO_ROOT)/src/miro/PositionC.i \
+  $(MIRO_ROOT)/src/miro/ImageDefinitionsC.i
 
 .obj/PatternSource.o .obj/PatternSource.so .shobj/PatternSource.o .shobj/PatternSource.so: PatternSource.cpp Pixels.h MiroImage.h pixels.ih \
   patternSource.h imageSource.h ImageFactory.h ImageFactoryDefinitions.h \
@@ -786,14 +786,14 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   \
-  /home/gmayer/Miro/src/miro/TimeC.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointC.i \
-  /home/gmayer/Miro/src/miro/PositionC.i \
-  /home/gmayer/Miro/src/miro/ImageDefinitionsC.i
+  $(MIRO_ROOT)/src/miro/WorldPointC.i \
+  $(MIRO_ROOT)/src/miro/PositionC.i \
+  $(MIRO_ROOT)/src/miro/ImageDefinitionsC.i
 
 .obj/ImageFactoryDefinitions.o .obj/ImageFactoryDefinitions.so .shobj/ImageFactoryDefinitions.o .shobj/ImageFactoryDefinitions.so: ImageFactoryDefinitions.cpp \
   ImageFactoryDefinitions.h MiroImage.h \
@@ -929,14 +929,14 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   \
-  /home/gmayer/Miro/src/miro/TimeC.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointC.i \
-  /home/gmayer/Miro/src/miro/PositionC.i \
-  /home/gmayer/Miro/src/miro/ImageDefinitionsC.i
+  $(MIRO_ROOT)/src/miro/WorldPointC.i \
+  $(MIRO_ROOT)/src/miro/PositionC.i \
+  $(MIRO_ROOT)/src/miro/ImageDefinitionsC.i
 
 .obj/ImageFactory.o .obj/ImageFactory.so .shobj/ImageFactory.o .shobj/ImageFactory.so: ImageFactory.cpp ImageFactory.h ImageFactoryDefinitions.h \
   MiroImage.h \
@@ -1071,14 +1071,14 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   \
-  /home/gmayer/Miro/src/miro/TimeC.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointC.i \
-  /home/gmayer/Miro/src/miro/PositionC.i \
-  /home/gmayer/Miro/src/miro/ImageDefinitionsC.i imageSource.h \
+  $(MIRO_ROOT)/src/miro/WorldPointC.i \
+  $(MIRO_ROOT)/src/miro/PositionC.i \
+  $(MIRO_ROOT)/src/miro/ImageDefinitionsC.i imageSource.h \
   videoSource.h patternSource.h Pixels.h pixels.ih
 
 .obj/ImageServer.o .obj/ImageServer.so .shobj/ImageServer.o .shobj/ImageServer.so: ImageServer.cpp ImageServer.h \
@@ -1322,31 +1322,31 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(ACE_ROOT)/ace/Sched_Params.i ImageImpl.h \
   \
   \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointC.i \
-  /home/gmayer/Miro/src/miro/PositionC.i \
+  $(MIRO_ROOT)/src/miro/WorldPointC.i \
+  $(MIRO_ROOT)/src/miro/PositionC.i \
   \
-  /home/gmayer/Miro/src/miro/TimeC.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i \
   \
-  /home/gmayer/Miro/src/miro/VelocityC.i \
-  /home/gmayer/Miro/src/miro/MotionStatusC.i \
-  /home/gmayer/Miro/src/miro/OdometryC.i \
-  \
-  \
-  \
-  /home/gmayer/Miro/src/miro/ExceptionS.i \
-  /home/gmayer/Miro/src/miro/TimeS.i \
+  $(MIRO_ROOT)/src/miro/VelocityC.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusC.i \
+  $(MIRO_ROOT)/src/miro/OdometryC.i \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointS.i \
-  /home/gmayer/Miro/src/miro/PositionS.i \
   \
-  /home/gmayer/Miro/src/miro/ImageDefinitionsC.i \
-  /home/gmayer/Miro/src/miro/ImageDefinitionsS.i \
-  /home/gmayer/Miro/src/miro/ImageC.i \
-  /home/gmayer/Miro/src/miro/ImageS.i ImageFactory.h \
+  $(MIRO_ROOT)/src/miro/ExceptionS.i \
+  $(MIRO_ROOT)/src/miro/TimeS.i \
+  \
+  \
+  $(MIRO_ROOT)/src/miro/WorldPointS.i \
+  $(MIRO_ROOT)/src/miro/PositionS.i \
+  \
+  $(MIRO_ROOT)/src/miro/ImageDefinitionsC.i \
+  $(MIRO_ROOT)/src/miro/ImageDefinitionsS.i \
+  $(MIRO_ROOT)/src/miro/ImageC.i \
+  $(MIRO_ROOT)/src/miro/ImageS.i ImageFactory.h \
   ImageFactoryDefinitions.h MiroImage.h
 
 .obj/ImageImpl.o .obj/ImageImpl.so .shobj/ImageImpl.o .shobj/ImageImpl.so: ImageImpl.cpp $(ACE_ROOT)/ace/OS.h \
@@ -1493,17 +1493,17 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
   \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointC.i \
-  /home/gmayer/Miro/src/miro/PositionC.i \
+  $(MIRO_ROOT)/src/miro/WorldPointC.i \
+  $(MIRO_ROOT)/src/miro/PositionC.i \
   \
-  /home/gmayer/Miro/src/miro/TimeC.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i \
   \
-  /home/gmayer/Miro/src/miro/VelocityC.i \
-  /home/gmayer/Miro/src/miro/MotionStatusC.i \
-  /home/gmayer/Miro/src/miro/OdometryC.i \
+  $(MIRO_ROOT)/src/miro/VelocityC.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusC.i \
+  $(MIRO_ROOT)/src/miro/OdometryC.i \
   \
   \
   \
@@ -1522,17 +1522,17 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/PortableServer/Collocated_Object.i \
   $(TAO_ROOT)/tao/PortableServer/ThruPOA_Object_Proxy_Impl.h \
   $(TAO_ROOT)/tao/PortableServer/Direct_Object_Proxy_Impl.h \
-  /home/gmayer/Miro/src/miro/ExceptionS.i \
-  /home/gmayer/Miro/src/miro/TimeS.i \
+  $(MIRO_ROOT)/src/miro/ExceptionS.i \
+  $(MIRO_ROOT)/src/miro/TimeS.i \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointS.i \
-  /home/gmayer/Miro/src/miro/PositionS.i \
+  $(MIRO_ROOT)/src/miro/WorldPointS.i \
+  $(MIRO_ROOT)/src/miro/PositionS.i \
   \
-  /home/gmayer/Miro/src/miro/ImageDefinitionsC.i \
-  /home/gmayer/Miro/src/miro/ImageDefinitionsS.i \
-  /home/gmayer/Miro/src/miro/ImageC.i \
-  /home/gmayer/Miro/src/miro/ImageS.i ImageFactory.h \
+  $(MIRO_ROOT)/src/miro/ImageDefinitionsC.i \
+  $(MIRO_ROOT)/src/miro/ImageDefinitionsS.i \
+  $(MIRO_ROOT)/src/miro/ImageC.i \
+  $(MIRO_ROOT)/src/miro/ImageS.i ImageFactory.h \
   ImageFactoryDefinitions.h MiroImage.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

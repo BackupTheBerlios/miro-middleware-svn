@@ -222,15 +222,15 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
   \
   \
   \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   \
-  /home/gmayer/Miro/src/miro/TimeC.i \
-  /home/gmayer/Miro/src/miro/RangeEventC.i \
-  /home/gmayer/Miro/src/miro/RangeSensorC.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i \
+  $(MIRO_ROOT)/src/miro/RangeEventC.i \
+  $(MIRO_ROOT)/src/miro/RangeSensorC.i \
   \
   \
   \
@@ -477,7 +477,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(ACE_ROOT)/ace/DEV_Addr.i $(ACE_ROOT)/ace/DEV.i \
   $(ACE_ROOT)/ace/DEV_IO.i \
   \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i SparrowBaseConnection.h \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i SparrowBaseConnection.h \
   \
   \
   \
@@ -487,7 +487,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(ACE_ROOT)/ace/DEV_Connector.h \
   $(ACE_ROOT)/ace/DEV_Connector.i AliveCollector.h \
   \
-  /home/gmayer/Miro/src/miro/SparrowAliveC.i
+  $(MIRO_ROOT)/src/miro/SparrowAliveC.i
 
 .obj/SparrowBaseConnection.o .obj/SparrowBaseConnection.o .obj/SparrowBaseConnection.o .obj/SparrowBaseConnection.o: SparrowBaseConnection.cpp \
   SparrowBaseConnection.h Parameters.h \
@@ -642,7 +642,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
   \
   \
   \
@@ -813,7 +813,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i SparrowBaseConnection.h \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i SparrowBaseConnection.h \
   \
   \
   \
@@ -827,7 +827,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   \
   \
   \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   $(TAO_ROOT)/tao/PortableServer/PortableServer.h \
   $(TAO_ROOT)/tao/PortableServer/portableserver_export.h \
   $(TAO_ROOT)/tao/PortableServer/PortableServerC.h \
@@ -843,28 +843,28 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/PortableServer/Collocated_Object.i \
   $(TAO_ROOT)/tao/PortableServer/ThruPOA_Object_Proxy_Impl.h \
   $(TAO_ROOT)/tao/PortableServer/Direct_Object_Proxy_Impl.h \
-  /home/gmayer/Miro/src/miro/ExceptionS.i \
+  $(MIRO_ROOT)/src/miro/ExceptionS.i \
   \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointC.i \
-  /home/gmayer/Miro/src/miro/WorldPointS.i \
+  $(MIRO_ROOT)/src/miro/WorldPointC.i \
+  $(MIRO_ROOT)/src/miro/WorldPointS.i \
   \
-  /home/gmayer/Miro/src/miro/PositionC.i \
-  /home/gmayer/Miro/src/miro/PositionS.i \
-  \
-  \
-  /home/gmayer/Miro/src/miro/TimeC.i /home/gmayer/Miro/src/miro/TimeS.i \
+  $(MIRO_ROOT)/src/miro/PositionC.i \
+  $(MIRO_ROOT)/src/miro/PositionS.i \
   \
   \
-  /home/gmayer/Miro/src/miro/VelocityC.i \
-  /home/gmayer/Miro/src/miro/VelocityS.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i $(MIRO_ROOT)/src/miro/TimeS.i \
   \
-  /home/gmayer/Miro/src/miro/MotionStatusC.i \
-  /home/gmayer/Miro/src/miro/MotionStatusS.i \
   \
-  /home/gmayer/Miro/src/miro/OdometryC.i \
-  /home/gmayer/Miro/src/miro/OdometryS.i \
+  $(MIRO_ROOT)/src/miro/VelocityC.i \
+  $(MIRO_ROOT)/src/miro/VelocityS.i \
+  \
+  $(MIRO_ROOT)/src/miro/MotionStatusC.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusS.i \
+  \
+  $(MIRO_ROOT)/src/miro/OdometryC.i \
+  $(MIRO_ROOT)/src/miro/OdometryS.i \
   \
   $(ACE_ROOT)/ace/Sched_Params.h \
   $(ACE_ROOT)/ace/Sched_Params.i $(ACE_ROOT)/ace/Task.h \
@@ -1080,7 +1080,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i SparrowBaseConnection.h \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i SparrowBaseConnection.h \
   \
   \
   \
@@ -1100,19 +1100,19 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/orbsvcs/orbsvcs/CosNotifyCommC.i \
   \
   \
-  /home/gmayer/Miro/src/miro/TimeC.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointC.i \
-  /home/gmayer/Miro/src/miro/PositionC.i \
+  $(MIRO_ROOT)/src/miro/WorldPointC.i \
+  $(MIRO_ROOT)/src/miro/PositionC.i \
   \
-  /home/gmayer/Miro/src/miro/VelocityC.i \
-  /home/gmayer/Miro/src/miro/MotionStatusC.i \
-  \
-  \
+  $(MIRO_ROOT)/src/miro/VelocityC.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusC.i \
   \
   \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  \
+  \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   $(TAO_ROOT)/tao/PortableServer/PortableServer.h \
   $(TAO_ROOT)/tao/PortableServer/portableserver_export.h \
   $(TAO_ROOT)/tao/PortableServer/PortableServerC.h \
@@ -1128,19 +1128,19 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/PortableServer/Collocated_Object.i \
   $(TAO_ROOT)/tao/PortableServer/ThruPOA_Object_Proxy_Impl.h \
   $(TAO_ROOT)/tao/PortableServer/Direct_Object_Proxy_Impl.h \
-  /home/gmayer/Miro/src/miro/ExceptionS.i \
+  $(MIRO_ROOT)/src/miro/ExceptionS.i \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointS.i \
-  /home/gmayer/Miro/src/miro/PositionS.i \
+  $(MIRO_ROOT)/src/miro/WorldPointS.i \
+  $(MIRO_ROOT)/src/miro/PositionS.i \
   \
-  /home/gmayer/Miro/src/miro/TimeS.i \
+  $(MIRO_ROOT)/src/miro/TimeS.i \
   \
-  /home/gmayer/Miro/src/miro/VelocityS.i \
-  /home/gmayer/Miro/src/miro/MotionStatusS.i \
+  $(MIRO_ROOT)/src/miro/VelocityS.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusS.i \
   \
-  /home/gmayer/Miro/src/miro/OdometryC.i \
-  /home/gmayer/Miro/src/miro/OdometryS.i \
+  $(MIRO_ROOT)/src/miro/OdometryC.i \
+  $(MIRO_ROOT)/src/miro/OdometryS.i \
   \
   $(ACE_ROOT)/ace/Sched_Params.h \
   $(ACE_ROOT)/ace/Sched_Params.i $(ACE_ROOT)/ace/Task.h \
@@ -1347,7 +1347,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i SparrowBaseConnection.h \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i SparrowBaseConnection.h \
   \
   \
   \
@@ -1510,7 +1510,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i SparrowBaseConnection.h \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i SparrowBaseConnection.h \
   \
   \
   \
@@ -1654,9 +1654,9 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
   \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
-  /home/gmayer/Miro/src/miro/TimeC.i \
-  /home/gmayer/Miro/src/miro/ButtonsC.i SparrowConsumer.h SparrowDevice.h \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i \
+  $(MIRO_ROOT)/src/miro/ButtonsC.i SparrowConsumer.h SparrowDevice.h \
   Parameters.h \
   \
   \
@@ -1676,7 +1676,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(ACE_ROOT)/ace/DEV_IO.i \
   \
   \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
   \
   \
   \
@@ -1696,27 +1696,27 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/PortableServer/Collocated_Object.i \
   $(TAO_ROOT)/tao/PortableServer/ThruPOA_Object_Proxy_Impl.h \
   $(TAO_ROOT)/tao/PortableServer/Direct_Object_Proxy_Impl.h \
-  /home/gmayer/Miro/src/miro/ExceptionS.i \
+  $(MIRO_ROOT)/src/miro/ExceptionS.i \
   \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointC.i \
-  /home/gmayer/Miro/src/miro/WorldPointS.i \
+  $(MIRO_ROOT)/src/miro/WorldPointC.i \
+  $(MIRO_ROOT)/src/miro/WorldPointS.i \
   \
-  /home/gmayer/Miro/src/miro/PositionC.i \
-  /home/gmayer/Miro/src/miro/PositionS.i \
+  $(MIRO_ROOT)/src/miro/PositionC.i \
+  $(MIRO_ROOT)/src/miro/PositionS.i \
   \
-  /home/gmayer/Miro/src/miro/TimeS.i \
+  $(MIRO_ROOT)/src/miro/TimeS.i \
   \
   \
-  /home/gmayer/Miro/src/miro/VelocityC.i \
-  /home/gmayer/Miro/src/miro/VelocityS.i \
+  $(MIRO_ROOT)/src/miro/VelocityC.i \
+  $(MIRO_ROOT)/src/miro/VelocityS.i \
   \
-  /home/gmayer/Miro/src/miro/MotionStatusC.i \
-  /home/gmayer/Miro/src/miro/MotionStatusS.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusC.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusS.i \
   \
-  /home/gmayer/Miro/src/miro/OdometryC.i \
-  /home/gmayer/Miro/src/miro/OdometryS.i \
+  $(MIRO_ROOT)/src/miro/OdometryC.i \
+  $(MIRO_ROOT)/src/miro/OdometryS.i \
   \
   $(ACE_ROOT)/ace/Sched_Params.h \
   $(ACE_ROOT)/ace/Sched_Params.i $(ACE_ROOT)/ace/Task.h \
@@ -1778,20 +1778,20 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(ACE_ROOT)/ace/DEV_Connector.h \
   $(ACE_ROOT)/ace/DEV_Connector.i SparrowStallImpl.h \
   \
-  /home/gmayer/Miro/src/miro/StallC.i /home/gmayer/Miro/src/miro/StallS.i \
+  $(MIRO_ROOT)/src/miro/StallC.i $(MIRO_ROOT)/src/miro/StallS.i \
   SparrowButtonsImpl.h \
-  /home/gmayer/Miro/src/miro/ButtonsS.i \
+  $(MIRO_ROOT)/src/miro/ButtonsS.i \
   \
   \
   \
-  /home/gmayer/Miro/src/miro/ScanDescriptionS.i \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionS.i \
   \
   \
-  /home/gmayer/Miro/src/miro/RangeEventC.i \
-  /home/gmayer/Miro/src/miro/RangeEventS.i \
+  $(MIRO_ROOT)/src/miro/RangeEventC.i \
+  $(MIRO_ROOT)/src/miro/RangeEventS.i \
   \
-  /home/gmayer/Miro/src/miro/RangeSensorC.i \
-  /home/gmayer/Miro/src/miro/RangeSensorS.i \
+  $(MIRO_ROOT)/src/miro/RangeSensorC.i \
+  $(MIRO_ROOT)/src/miro/RangeSensorS.i \
  
 
 .obj/SparrowConsumer2003.o .obj/SparrowConsumer2003.o .obj/SparrowConsumer2003.o .obj/SparrowConsumer2003.o: SparrowConsumer2003.cpp \
@@ -1928,9 +1928,9 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
   \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
-  /home/gmayer/Miro/src/miro/TimeC.i \
-  /home/gmayer/Miro/src/miro/ButtonsC.i SparrowConsumer2003.h \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i \
+  $(MIRO_ROOT)/src/miro/ButtonsC.i SparrowConsumer2003.h \
   SparrowDevice2003.h AliveCollector.h \
   \
   \
@@ -1945,11 +1945,11 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointC.i \
-  /home/gmayer/Miro/src/miro/PositionC.i \
+  $(MIRO_ROOT)/src/miro/WorldPointC.i \
+  $(MIRO_ROOT)/src/miro/PositionC.i \
   \
-  /home/gmayer/Miro/src/miro/VelocityC.i \
-  /home/gmayer/Miro/src/miro/MotionStatusC.i Parameters.h \
+  $(MIRO_ROOT)/src/miro/VelocityC.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusC.i Parameters.h \
   \
   \
   \
@@ -1967,7 +1967,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(ACE_ROOT)/ace/DEV_Addr.i $(ACE_ROOT)/ace/DEV.i \
   $(ACE_ROOT)/ace/DEV_IO.i \
   \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
   \
   \
   \
@@ -1986,19 +1986,19 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/PortableServer/Collocated_Object.i \
   $(TAO_ROOT)/tao/PortableServer/ThruPOA_Object_Proxy_Impl.h \
   $(TAO_ROOT)/tao/PortableServer/Direct_Object_Proxy_Impl.h \
-  /home/gmayer/Miro/src/miro/ExceptionS.i \
+  $(MIRO_ROOT)/src/miro/ExceptionS.i \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointS.i \
-  /home/gmayer/Miro/src/miro/PositionS.i \
+  $(MIRO_ROOT)/src/miro/WorldPointS.i \
+  $(MIRO_ROOT)/src/miro/PositionS.i \
   \
-  /home/gmayer/Miro/src/miro/TimeS.i \
+  $(MIRO_ROOT)/src/miro/TimeS.i \
   \
-  /home/gmayer/Miro/src/miro/VelocityS.i \
-  /home/gmayer/Miro/src/miro/MotionStatusS.i \
+  $(MIRO_ROOT)/src/miro/VelocityS.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusS.i \
   \
-  /home/gmayer/Miro/src/miro/OdometryC.i \
-  /home/gmayer/Miro/src/miro/OdometryS.i \
+  $(MIRO_ROOT)/src/miro/OdometryC.i \
+  $(MIRO_ROOT)/src/miro/OdometryS.i \
   \
   $(ACE_ROOT)/ace/Sched_Params.h \
   $(ACE_ROOT)/ace/Sched_Params.i $(ACE_ROOT)/ace/Task.h \
@@ -2054,14 +2054,14 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   \
   \
   \
-  /home/gmayer/Miro/src/miro/ScanDescriptionS.i \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionS.i \
   \
   \
-  /home/gmayer/Miro/src/miro/RangeEventC.i \
-  /home/gmayer/Miro/src/miro/RangeEventS.i \
+  $(MIRO_ROOT)/src/miro/RangeEventC.i \
+  $(MIRO_ROOT)/src/miro/RangeEventS.i \
   \
-  /home/gmayer/Miro/src/miro/RangeSensorC.i \
-  /home/gmayer/Miro/src/miro/RangeSensorS.i \
+  $(MIRO_ROOT)/src/miro/RangeSensorC.i \
+  $(MIRO_ROOT)/src/miro/RangeSensorS.i \
   \
  
 
@@ -2202,7 +2202,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   $(TAO_ROOT)/tao/PortableServer/PortableServer.h \
   $(TAO_ROOT)/tao/PortableServer/portableserver_export.h \
   $(TAO_ROOT)/tao/PortableServer/PortableServerC.h \
@@ -2218,20 +2218,20 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/PortableServer/Collocated_Object.i \
   $(TAO_ROOT)/tao/PortableServer/ThruPOA_Object_Proxy_Impl.h \
   $(TAO_ROOT)/tao/PortableServer/Direct_Object_Proxy_Impl.h \
-  /home/gmayer/Miro/src/miro/ExceptionS.i \
+  $(MIRO_ROOT)/src/miro/ExceptionS.i \
   \
   \
-  /home/gmayer/Miro/src/miro/VelocityC.i \
-  /home/gmayer/Miro/src/miro/VelocityS.i \
+  $(MIRO_ROOT)/src/miro/VelocityC.i \
+  $(MIRO_ROOT)/src/miro/VelocityS.i \
   \
-  /home/gmayer/Miro/src/miro/MotionC.i \
-  /home/gmayer/Miro/src/miro/MotionS.i \
+  $(MIRO_ROOT)/src/miro/MotionC.i \
+  $(MIRO_ROOT)/src/miro/MotionS.i \
   \
-  /home/gmayer/Miro/src/miro/DifferentialMotionC.i \
-  /home/gmayer/Miro/src/miro/DifferentialMotionS.i \
+  $(MIRO_ROOT)/src/miro/DifferentialMotionC.i \
+  $(MIRO_ROOT)/src/miro/DifferentialMotionS.i \
   \
-  /home/gmayer/Miro/src/miro/SparrowMotionC.i \
-  /home/gmayer/Miro/src/miro/SparrowMotionS.i \
+  $(MIRO_ROOT)/src/miro/SparrowMotionC.i \
+  $(MIRO_ROOT)/src/miro/SparrowMotionS.i \
   \
   \
   \
@@ -2254,7 +2254,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   SparrowConnection.h \
   SparrowDevice.h Parameters.h \
   \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i SparrowBaseConnection.h \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i SparrowBaseConnection.h \
   \
   \
   \
@@ -2268,20 +2268,20 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointC.i \
-  /home/gmayer/Miro/src/miro/WorldPointS.i \
+  $(MIRO_ROOT)/src/miro/WorldPointC.i \
+  $(MIRO_ROOT)/src/miro/WorldPointS.i \
   \
-  /home/gmayer/Miro/src/miro/PositionC.i \
-  /home/gmayer/Miro/src/miro/PositionS.i \
+  $(MIRO_ROOT)/src/miro/PositionC.i \
+  $(MIRO_ROOT)/src/miro/PositionS.i \
   \
   \
-  /home/gmayer/Miro/src/miro/TimeC.i /home/gmayer/Miro/src/miro/TimeS.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i $(MIRO_ROOT)/src/miro/TimeS.i \
   \
-  /home/gmayer/Miro/src/miro/MotionStatusC.i \
-  /home/gmayer/Miro/src/miro/MotionStatusS.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusC.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusS.i \
   \
-  /home/gmayer/Miro/src/miro/OdometryC.i \
-  /home/gmayer/Miro/src/miro/OdometryS.i \
+  $(MIRO_ROOT)/src/miro/OdometryC.i \
+  $(MIRO_ROOT)/src/miro/OdometryS.i \
   \
   $(ACE_ROOT)/ace/Sched_Params.h \
   $(ACE_ROOT)/ace/Sched_Params.i $(ACE_ROOT)/ace/Task.h \
@@ -2467,7 +2467,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/TimeC.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i \
   $(TAO_ROOT)/tao/PortableServer/PortableServer.h \
   $(TAO_ROOT)/tao/PortableServer/portableserver_export.h \
   $(TAO_ROOT)/tao/PortableServer/PortableServerC.h \
@@ -2483,14 +2483,14 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/PortableServer/Collocated_Object.i \
   $(TAO_ROOT)/tao/PortableServer/ThruPOA_Object_Proxy_Impl.h \
   $(TAO_ROOT)/tao/PortableServer/Direct_Object_Proxy_Impl.h \
-  /home/gmayer/Miro/src/miro/TimeS.i \
+  $(MIRO_ROOT)/src/miro/TimeS.i \
   \
   \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
-  /home/gmayer/Miro/src/miro/ExceptionS.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionS.i \
   \
-  /home/gmayer/Miro/src/miro/KickerC.i \
-  /home/gmayer/Miro/src/miro/KickerS.i SparrowBaseConnection.h \
+  $(MIRO_ROOT)/src/miro/KickerC.i \
+  $(MIRO_ROOT)/src/miro/KickerS.i SparrowBaseConnection.h \
   Parameters.h \
   \
   \
@@ -2510,7 +2510,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   \
   \
   \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
   \
   \
   \
@@ -2657,7 +2657,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   $(TAO_ROOT)/tao/PortableServer/PortableServer.h \
   $(TAO_ROOT)/tao/PortableServer/portableserver_export.h \
   $(TAO_ROOT)/tao/PortableServer/PortableServerC.h \
@@ -2673,12 +2673,12 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/PortableServer/Collocated_Object.i \
   $(TAO_ROOT)/tao/PortableServer/ThruPOA_Object_Proxy_Impl.h \
   $(TAO_ROOT)/tao/PortableServer/Direct_Object_Proxy_Impl.h \
-  /home/gmayer/Miro/src/miro/ExceptionS.i \
+  $(MIRO_ROOT)/src/miro/ExceptionS.i \
   \
-  /home/gmayer/Miro/src/miro/TimeC.i /home/gmayer/Miro/src/miro/TimeS.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i $(MIRO_ROOT)/src/miro/TimeS.i \
   \
-  /home/gmayer/Miro/src/miro/ButtonsC.i \
-  /home/gmayer/Miro/src/miro/ButtonsS.i \
+  $(MIRO_ROOT)/src/miro/ButtonsC.i \
+  $(MIRO_ROOT)/src/miro/ButtonsS.i \
   $(TAO_ROOT)/orbsvcs/orbsvcs/CosNotifyCommC.h \
   $(TAO_ROOT)/orbsvcs/orbsvcs/Notify/notify_export.h \
   $(TAO_ROOT)/orbsvcs/orbsvcs/CosNotificationC.h \
@@ -2704,29 +2704,29 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(ACE_ROOT)/ace/DEV_IO.i \
   \
   \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
   \
   \
   \
   \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointC.i \
-  /home/gmayer/Miro/src/miro/WorldPointS.i \
+  $(MIRO_ROOT)/src/miro/WorldPointC.i \
+  $(MIRO_ROOT)/src/miro/WorldPointS.i \
   \
-  /home/gmayer/Miro/src/miro/PositionC.i \
-  /home/gmayer/Miro/src/miro/PositionS.i \
+  $(MIRO_ROOT)/src/miro/PositionC.i \
+  $(MIRO_ROOT)/src/miro/PositionS.i \
   \
   \
   \
-  /home/gmayer/Miro/src/miro/VelocityC.i \
-  /home/gmayer/Miro/src/miro/VelocityS.i \
+  $(MIRO_ROOT)/src/miro/VelocityC.i \
+  $(MIRO_ROOT)/src/miro/VelocityS.i \
   \
-  /home/gmayer/Miro/src/miro/MotionStatusC.i \
-  /home/gmayer/Miro/src/miro/MotionStatusS.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusC.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusS.i \
   \
-  /home/gmayer/Miro/src/miro/OdometryC.i \
-  /home/gmayer/Miro/src/miro/OdometryS.i \
+  $(MIRO_ROOT)/src/miro/OdometryC.i \
+  $(MIRO_ROOT)/src/miro/OdometryS.i \
   \
   $(ACE_ROOT)/ace/Sched_Params.h \
   $(ACE_ROOT)/ace/Sched_Params.i $(ACE_ROOT)/ace/Task.h \
@@ -2942,7 +2942,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/StallC.i \
+  $(MIRO_ROOT)/src/miro/StallC.i \
   $(TAO_ROOT)/tao/PortableServer/PortableServer.h \
   $(TAO_ROOT)/tao/PortableServer/portableserver_export.h \
   $(TAO_ROOT)/tao/PortableServer/PortableServerC.h \
@@ -2958,7 +2958,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/PortableServer/Collocated_Object.i \
   $(TAO_ROOT)/tao/PortableServer/ThruPOA_Object_Proxy_Impl.h \
   $(TAO_ROOT)/tao/PortableServer/Direct_Object_Proxy_Impl.h \
-  /home/gmayer/Miro/src/miro/StallS.i \
+  $(MIRO_ROOT)/src/miro/StallS.i \
   SparrowBaseConnection.h \
   Parameters.h \
   \
@@ -2979,7 +2979,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   \
   \
   \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
   \
   \
   \
@@ -3170,7 +3170,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   $(TAO_ROOT)/tao/PortableServer/PortableServer.h \
   $(TAO_ROOT)/tao/PortableServer/portableserver_export.h \
   $(TAO_ROOT)/tao/PortableServer/PortableServerC.h \
@@ -3186,14 +3186,14 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/PortableServer/Collocated_Object.i \
   $(TAO_ROOT)/tao/PortableServer/ThruPOA_Object_Proxy_Impl.h \
   $(TAO_ROOT)/tao/PortableServer/Direct_Object_Proxy_Impl.h \
-  /home/gmayer/Miro/src/miro/ExceptionS.i \
-  /home/gmayer/Miro/src/miro/PanC.i \
-  /home/gmayer/Miro/src/miro/PanS.i \
-  /home/gmayer/Miro/src/miro/TimeC.i \
-  /home/gmayer/Miro/src/miro/TimeS.i \
+  $(MIRO_ROOT)/src/miro/ExceptionS.i \
+  $(MIRO_ROOT)/src/miro/PanC.i \
+  $(MIRO_ROOT)/src/miro/PanS.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i \
+  $(MIRO_ROOT)/src/miro/TimeS.i \
   \
-  /home/gmayer/Miro/src/miro/SparrowPanTiltC.i \
-  /home/gmayer/Miro/src/miro/SparrowPanTiltS.i \
+  $(MIRO_ROOT)/src/miro/SparrowPanTiltC.i \
+  $(MIRO_ROOT)/src/miro/SparrowPanTiltS.i \
   \
   Parameters.h \
   \
@@ -3212,7 +3212,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(ACE_ROOT)/ace/DEV_Addr.i $(ACE_ROOT)/ace/DEV.i \
   $(ACE_ROOT)/ace/DEV_IO.i \
   \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i SparrowConnection.h \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i SparrowConnection.h \
   SparrowDevice.h SparrowBaseConnection.h \
   \
   \

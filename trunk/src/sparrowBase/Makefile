@@ -358,21 +358,21 @@ $(BIN): $(STATIC_DEPS)
   \
   \
   \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
-  /home/gmayer/Miro/src/miro/ExceptionS.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionS.i \
   \
   \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i \
-  /home/gmayer/Miro/src/miro/ScanDescriptionS.i \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionS.i \
   \
   \
-  /home/gmayer/Miro/src/miro/TimeC.i /home/gmayer/Miro/src/miro/TimeS.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i $(MIRO_ROOT)/src/miro/TimeS.i \
   \
-  /home/gmayer/Miro/src/miro/RangeEventC.i \
-  /home/gmayer/Miro/src/miro/RangeEventS.i \
+  $(MIRO_ROOT)/src/miro/RangeEventC.i \
+  $(MIRO_ROOT)/src/miro/RangeEventS.i \
   \
-  /home/gmayer/Miro/src/miro/RangeSensorC.i \
-  /home/gmayer/Miro/src/miro/RangeSensorS.i \
+  $(MIRO_ROOT)/src/miro/RangeSensorC.i \
+  $(MIRO_ROOT)/src/miro/RangeSensorS.i \
   \
   \
   \
@@ -383,22 +383,22 @@ $(BIN): $(STATIC_DEPS)
   \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointC.i \
-  /home/gmayer/Miro/src/miro/WorldPointS.i \
+  $(MIRO_ROOT)/src/miro/WorldPointC.i \
+  $(MIRO_ROOT)/src/miro/WorldPointS.i \
   \
-  /home/gmayer/Miro/src/miro/PositionC.i \
-  /home/gmayer/Miro/src/miro/PositionS.i \
+  $(MIRO_ROOT)/src/miro/PositionC.i \
+  $(MIRO_ROOT)/src/miro/PositionS.i \
   \
   \
   \
-  /home/gmayer/Miro/src/miro/VelocityC.i \
-  /home/gmayer/Miro/src/miro/VelocityS.i \
+  $(MIRO_ROOT)/src/miro/VelocityC.i \
+  $(MIRO_ROOT)/src/miro/VelocityS.i \
   \
-  /home/gmayer/Miro/src/miro/MotionStatusC.i \
-  /home/gmayer/Miro/src/miro/MotionStatusS.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusC.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusS.i \
   \
-  /home/gmayer/Miro/src/miro/OdometryC.i \
-  /home/gmayer/Miro/src/miro/OdometryS.i \
+  $(MIRO_ROOT)/src/miro/OdometryC.i \
+  $(MIRO_ROOT)/src/miro/OdometryS.i \
   \
   \
   \
@@ -425,36 +425,36 @@ $(BIN): $(STATIC_DEPS)
   \
   \
   \
-  /home/gmayer/Miro/src/miro/MotionC.i \
-  /home/gmayer/Miro/src/miro/MotionS.i \
+  $(MIRO_ROOT)/src/miro/MotionC.i \
+  $(MIRO_ROOT)/src/miro/MotionS.i \
   \
-  /home/gmayer/Miro/src/miro/DifferentialMotionC.i \
-  /home/gmayer/Miro/src/miro/DifferentialMotionS.i \
+  $(MIRO_ROOT)/src/miro/DifferentialMotionC.i \
+  $(MIRO_ROOT)/src/miro/DifferentialMotionS.i \
   \
-  /home/gmayer/Miro/src/miro/SparrowMotionC.i \
-  /home/gmayer/Miro/src/miro/SparrowMotionS.i \
-  \
-  \
+  $(MIRO_ROOT)/src/miro/SparrowMotionC.i \
+  $(MIRO_ROOT)/src/miro/SparrowMotionS.i \
   \
   \
   \
-  /home/gmayer/Miro/src/miro/KickerC.i \
-  /home/gmayer/Miro/src/miro/KickerS.i \
+  \
+  \
+  $(MIRO_ROOT)/src/miro/KickerC.i \
+  $(MIRO_ROOT)/src/miro/KickerS.i \
   \
   \
   \
-  /home/gmayer/Miro/src/miro/ButtonsC.i \
-  /home/gmayer/Miro/src/miro/ButtonsS.i \
+  $(MIRO_ROOT)/src/miro/ButtonsC.i \
+  $(MIRO_ROOT)/src/miro/ButtonsS.i \
   \
   \
-  /home/gmayer/Miro/src/miro/StallC.i /home/gmayer/Miro/src/miro/StallS.i \
+  $(MIRO_ROOT)/src/miro/StallC.i $(MIRO_ROOT)/src/miro/StallS.i \
   \
   \
   \
-  /home/gmayer/Miro/src/miro/PanC.i /home/gmayer/Miro/src/miro/PanS.i \
+  $(MIRO_ROOT)/src/miro/PanC.i $(MIRO_ROOT)/src/miro/PanS.i \
   \
-  /home/gmayer/Miro/src/miro/SparrowPanTiltC.i \
-  /home/gmayer/Miro/src/miro/SparrowPanTiltS.i \
+  $(MIRO_ROOT)/src/miro/SparrowPanTiltC.i \
+  $(MIRO_ROOT)/src/miro/SparrowPanTiltS.i \
   \
   \
   \
@@ -816,21 +816,21 @@ $(BIN): $(STATIC_DEPS)
   \
   \
   \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
-  /home/gmayer/Miro/src/miro/ExceptionS.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionS.i \
   \
   \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i \
-  /home/gmayer/Miro/src/miro/ScanDescriptionS.i \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionS.i \
   \
   \
-  /home/gmayer/Miro/src/miro/TimeC.i /home/gmayer/Miro/src/miro/TimeS.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i $(MIRO_ROOT)/src/miro/TimeS.i \
   \
-  /home/gmayer/Miro/src/miro/RangeEventC.i \
-  /home/gmayer/Miro/src/miro/RangeEventS.i \
+  $(MIRO_ROOT)/src/miro/RangeEventC.i \
+  $(MIRO_ROOT)/src/miro/RangeEventS.i \
   \
-  /home/gmayer/Miro/src/miro/RangeSensorC.i \
-  /home/gmayer/Miro/src/miro/RangeSensorS.i \
+  $(MIRO_ROOT)/src/miro/RangeSensorC.i \
+  $(MIRO_ROOT)/src/miro/RangeSensorS.i \
   \
   \
   \
@@ -841,22 +841,22 @@ $(BIN): $(STATIC_DEPS)
   \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointC.i \
-  /home/gmayer/Miro/src/miro/WorldPointS.i \
+  $(MIRO_ROOT)/src/miro/WorldPointC.i \
+  $(MIRO_ROOT)/src/miro/WorldPointS.i \
   \
-  /home/gmayer/Miro/src/miro/PositionC.i \
-  /home/gmayer/Miro/src/miro/PositionS.i \
+  $(MIRO_ROOT)/src/miro/PositionC.i \
+  $(MIRO_ROOT)/src/miro/PositionS.i \
   \
   \
   \
-  /home/gmayer/Miro/src/miro/VelocityC.i \
-  /home/gmayer/Miro/src/miro/VelocityS.i \
+  $(MIRO_ROOT)/src/miro/VelocityC.i \
+  $(MIRO_ROOT)/src/miro/VelocityS.i \
   \
-  /home/gmayer/Miro/src/miro/MotionStatusC.i \
-  /home/gmayer/Miro/src/miro/MotionStatusS.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusC.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusS.i \
   \
-  /home/gmayer/Miro/src/miro/OdometryC.i \
-  /home/gmayer/Miro/src/miro/OdometryS.i \
+  $(MIRO_ROOT)/src/miro/OdometryC.i \
+  $(MIRO_ROOT)/src/miro/OdometryS.i \
   \
   \
   \
@@ -883,36 +883,36 @@ $(BIN): $(STATIC_DEPS)
   \
   \
   \
-  /home/gmayer/Miro/src/miro/MotionC.i \
-  /home/gmayer/Miro/src/miro/MotionS.i \
+  $(MIRO_ROOT)/src/miro/MotionC.i \
+  $(MIRO_ROOT)/src/miro/MotionS.i \
   \
-  /home/gmayer/Miro/src/miro/DifferentialMotionC.i \
-  /home/gmayer/Miro/src/miro/DifferentialMotionS.i \
+  $(MIRO_ROOT)/src/miro/DifferentialMotionC.i \
+  $(MIRO_ROOT)/src/miro/DifferentialMotionS.i \
   \
-  /home/gmayer/Miro/src/miro/SparrowMotionC.i \
-  /home/gmayer/Miro/src/miro/SparrowMotionS.i \
-  \
-  \
+  $(MIRO_ROOT)/src/miro/SparrowMotionC.i \
+  $(MIRO_ROOT)/src/miro/SparrowMotionS.i \
   \
   \
   \
-  /home/gmayer/Miro/src/miro/KickerC.i \
-  /home/gmayer/Miro/src/miro/KickerS.i \
+  \
+  \
+  $(MIRO_ROOT)/src/miro/KickerC.i \
+  $(MIRO_ROOT)/src/miro/KickerS.i \
   \
   \
   \
-  /home/gmayer/Miro/src/miro/ButtonsC.i \
-  /home/gmayer/Miro/src/miro/ButtonsS.i \
+  $(MIRO_ROOT)/src/miro/ButtonsC.i \
+  $(MIRO_ROOT)/src/miro/ButtonsS.i \
   \
   \
-  /home/gmayer/Miro/src/miro/StallC.i /home/gmayer/Miro/src/miro/StallS.i \
+  $(MIRO_ROOT)/src/miro/StallC.i $(MIRO_ROOT)/src/miro/StallS.i \
   \
   \
   \
-  /home/gmayer/Miro/src/miro/PanC.i /home/gmayer/Miro/src/miro/PanS.i \
+  $(MIRO_ROOT)/src/miro/PanC.i $(MIRO_ROOT)/src/miro/PanS.i \
   \
-  /home/gmayer/Miro/src/miro/SparrowPanTiltC.i \
-  /home/gmayer/Miro/src/miro/SparrowPanTiltS.i \
+  $(MIRO_ROOT)/src/miro/SparrowPanTiltC.i \
+  $(MIRO_ROOT)/src/miro/SparrowPanTiltS.i \
   \
   \
   \

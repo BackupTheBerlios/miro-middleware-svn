@@ -302,7 +302,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
   \
   \
   \
@@ -319,14 +319,14 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/orbsvcs/orbsvcs/CosNotifyCommC.i \
   \
   \
-  /home/gmayer/Miro/src/miro/TimeC.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointC.i \
-  /home/gmayer/Miro/src/miro/PositionC.i \
+  $(MIRO_ROOT)/src/miro/WorldPointC.i \
+  $(MIRO_ROOT)/src/miro/PositionC.i \
   \
-  /home/gmayer/Miro/src/miro/VelocityC.i \
-  /home/gmayer/Miro/src/miro/MotionStatusC.i Parameters.h \
+  $(MIRO_ROOT)/src/miro/VelocityC.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusC.i Parameters.h \
   \
   \
  
@@ -472,14 +472,14 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/orbsvcs/orbsvcs/CosNotifyCommC.i \
   \
   \
-  /home/gmayer/Miro/src/miro/TimeC.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointC.i \
-  /home/gmayer/Miro/src/miro/PositionC.i \
+  $(MIRO_ROOT)/src/miro/WorldPointC.i \
+  $(MIRO_ROOT)/src/miro/PositionC.i \
   \
-  /home/gmayer/Miro/src/miro/VelocityC.i \
-  /home/gmayer/Miro/src/miro/MotionStatusC.i FaulMotorConnection.h \
+  $(MIRO_ROOT)/src/miro/VelocityC.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusC.i FaulMotorConnection.h \
   \
   \
   \
@@ -506,7 +506,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(ACE_ROOT)/ace/INET_Addr.h $(ACE_ROOT)/ace/INET_Addr.i \
   \
   \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
   \
   \
   \
@@ -519,7 +519,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   \
   \
   \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   $(TAO_ROOT)/tao/PortableServer/PortableServer.h \
   $(TAO_ROOT)/tao/PortableServer/portableserver_export.h \
   $(TAO_ROOT)/tao/PortableServer/PortableServerC.h \
@@ -535,19 +535,19 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/PortableServer/Collocated_Object.i \
   $(TAO_ROOT)/tao/PortableServer/ThruPOA_Object_Proxy_Impl.h \
   $(TAO_ROOT)/tao/PortableServer/Direct_Object_Proxy_Impl.h \
-  /home/gmayer/Miro/src/miro/ExceptionS.i \
+  $(MIRO_ROOT)/src/miro/ExceptionS.i \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointS.i \
-  /home/gmayer/Miro/src/miro/PositionS.i \
+  $(MIRO_ROOT)/src/miro/WorldPointS.i \
+  $(MIRO_ROOT)/src/miro/PositionS.i \
   \
-  /home/gmayer/Miro/src/miro/TimeS.i \
+  $(MIRO_ROOT)/src/miro/TimeS.i \
   \
-  /home/gmayer/Miro/src/miro/VelocityS.i \
-  /home/gmayer/Miro/src/miro/MotionStatusS.i \
+  $(MIRO_ROOT)/src/miro/VelocityS.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusS.i \
   \
-  /home/gmayer/Miro/src/miro/OdometryC.i \
-  /home/gmayer/Miro/src/miro/OdometryS.i \
+  $(MIRO_ROOT)/src/miro/OdometryC.i \
+  $(MIRO_ROOT)/src/miro/OdometryS.i \
   \
   $(ACE_ROOT)/ace/Sched_Params.h \
   $(ACE_ROOT)/ace/Sched_Params.i $(ACE_ROOT)/ace/Task.h \
@@ -731,7 +731,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   $(TAO_ROOT)/tao/PortableServer/PortableServer.h \
   $(TAO_ROOT)/tao/PortableServer/portableserver_export.h \
   $(TAO_ROOT)/tao/PortableServer/PortableServerC.h \
@@ -747,29 +747,29 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/PortableServer/Collocated_Object.i \
   $(TAO_ROOT)/tao/PortableServer/ThruPOA_Object_Proxy_Impl.h \
   $(TAO_ROOT)/tao/PortableServer/Direct_Object_Proxy_Impl.h \
-  /home/gmayer/Miro/src/miro/ExceptionS.i \
+  $(MIRO_ROOT)/src/miro/ExceptionS.i \
   \
   \
-  /home/gmayer/Miro/src/miro/VelocityC.i \
-  /home/gmayer/Miro/src/miro/VelocityS.i \
+  $(MIRO_ROOT)/src/miro/VelocityC.i \
+  $(MIRO_ROOT)/src/miro/VelocityS.i \
   \
-  /home/gmayer/Miro/src/miro/MotionC.i \
-  /home/gmayer/Miro/src/miro/MotionS.i \
+  $(MIRO_ROOT)/src/miro/MotionC.i \
+  $(MIRO_ROOT)/src/miro/MotionS.i \
   \
-  /home/gmayer/Miro/src/miro/DifferentialMotionC.i \
-  /home/gmayer/Miro/src/miro/DifferentialMotionS.i \
+  $(MIRO_ROOT)/src/miro/DifferentialMotionC.i \
+  $(MIRO_ROOT)/src/miro/DifferentialMotionS.i \
   \
-  /home/gmayer/Miro/src/miro/SparrowMotionC.i \
-  /home/gmayer/Miro/src/miro/SparrowMotionS.i \
+  $(MIRO_ROOT)/src/miro/SparrowMotionC.i \
+  $(MIRO_ROOT)/src/miro/SparrowMotionS.i \
   \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointC.i \
-  /home/gmayer/Miro/src/miro/PositionC.i \
+  $(MIRO_ROOT)/src/miro/WorldPointC.i \
+  $(MIRO_ROOT)/src/miro/PositionC.i \
   \
-  /home/gmayer/Miro/src/miro/TimeC.i \
-  /home/gmayer/Miro/src/miro/MotionStatusC.i \
-  /home/gmayer/Miro/src/miro/OdometryC.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusC.i \
+  $(MIRO_ROOT)/src/miro/OdometryC.i \
   \
   \
   \
@@ -799,7 +799,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   \
   \
   \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
   \
   \
   \
@@ -973,7 +973,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
   \
   \
   \
