@@ -152,11 +152,10 @@ namespace Miro
     delete document_;
   }
 
-  void 
-  ConfigDocument::getInstances(const std::string& _type, 
-				StringVector& _names)
+  ConfigDocument::StringVector 
+  ConfigDocument::getInstances(const std::string& _type)
   {
-    _names.clear();
+    StringVector names;    
 
     QString section = section_.c_str();
     QString type = _type.c_str();
@@ -178,19 +177,23 @@ namespace Miro
 	      e2.attribute("type") == type) {
 	    std::string name = e2.attribute("name").latin1();
 	    if (name != "")
-	      _names.push_back(name);
+	      names.push_back(name);
 	  }
 	  n2 = n2.nextSibling();
 	}
       }
       n1 = n1.nextSibling();
     }
+
+    return names;
   }
 
   void 
   ConfigDocument::getParameters(const std::string& _category, 
 				ConfigParameters& parameters)
   {
+    unsigned int processed = 0;
+
     QString section = section_.c_str();
     QString category = _category.c_str();
 
@@ -213,9 +216,22 @@ namespace Miro
 	    parameters <<= n2;
 	  }
 	  n2 = n2.nextSibling();
+	  ++processed;
 	}
       }
       n1 = n1.nextSibling();
+    }
+
+    if (processed == 0) {
+      MIRO_LOG_OSTR(LL_WARNING, 
+		    "ConfigDocument: No parameters found for " <<
+		    _category << " in section " << section_ <<
+		    "\nConfigDocument: Using defaults!");
+    }
+    else if (processed > 1) {
+      MIRO_LOG_OSTR(LL_WARNING, 
+		    "ConfigDocument: Multiple parameter sections found for " <<
+		    _category << " in section " << section_);
     }
   }
 
@@ -224,6 +240,8 @@ namespace Miro
 			  const std::string& _name, 
 			  ConfigParameters& parameters)
   {
+    unsigned int processed = 0;
+
     QString section = section_.c_str();
     QString type = _type.c_str();
     QString name = _name.c_str();
@@ -245,11 +263,70 @@ namespace Miro
 	      e2.attribute("name") == name &&
 	      e2.attribute("type") == type) {
 	    parameters <<= n2;
+	    ++processed;
 	  }
 	  n2 = n2.nextSibling();
 	}
       }
       n1 = n1.nextSibling();
+    }
+
+    if (processed == 0) {
+      MIRO_LOG_OSTR(LL_WARNING, 
+		    "ConfigDocument: No parameters found for " <<
+		    _name << " in section " << section_ <<
+		    "\nConfigDocument: Using defaults!");
+    }
+    else if (processed > 1) {
+      MIRO_LOG_OSTR(LL_WARNING, 
+		    "ConfigDocument: Multiple parameter sections found for " <<
+		    _name << " in section " << section_);
+    }
+  }
+
+  void 
+  ConfigDocument::getInstance(const std::string& _name, 
+			      ConfigParameters& parameters)
+  {
+    unsigned int processed = 0;
+
+    QString section = section_.c_str();
+    QString name = _name.c_str();
+
+    // get the root nodes first child
+    QDomNode n1 = document_->documentElement().firstChild();
+    while(!n1.isNull()) {
+      QDomElement e1 = n1.toElement();
+      if (!e1.isNull() &&
+	  ( (n1.nodeName() == "section" &&
+	     e1.attribute("name") == section) ||
+	    (n1.nodeName() == section))) {
+
+	QDomNode n2 = n1.firstChild();
+	while (!n2.isNull()) {
+	  QDomElement e2 = n2.toElement();
+	  if (!e2.isNull() &&
+	      n2.nodeName() == "instance" &&
+	      e2.attribute("name") == name) {
+	    parameters <<= n2;
+	    ++ processed;
+	  }
+	  n2 = n2.nextSibling();
+	}
+      }
+      n1 = n1.nextSibling();
+    }
+
+    if (processed == 0) {
+      MIRO_LOG_OSTR(LL_WARNING, 
+		    "ConfigDocument: No parameters found for " <<
+		    _name << " in section " << section_ <<
+		    "\nConfigDocument: Using defaults!");
+    }
+    else if (processed > 1) {
+      MIRO_LOG_OSTR(LL_WARNING, 
+		    "ConfigDocument: Multiple parameter sections found for " <<
+		    _name << " in section " << section_);
     }
   }
 }

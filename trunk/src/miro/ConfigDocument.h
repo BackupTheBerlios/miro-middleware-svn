@@ -40,8 +40,10 @@ namespace Miro
 
     void setSection(std::string const& _section);
 
-    void getInstances(std::string const& _type,
-		      StringVector& _names);
+    StringVector getInstances(std::string const& _type);
+
+    void getInstance(std::string const& _name, 
+		     ConfigParameters& parameters);
 
     void getType(std::string const& _type,
 		 std::string const& _name, 
