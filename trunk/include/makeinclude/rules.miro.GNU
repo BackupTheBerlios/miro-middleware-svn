@@ -55,9 +55,11 @@ distclean:
 	rm -rf `find . -name ".shobj"`
 	rm -f `find . -name *.moc.cpp`
 	rm -f `find . -name *C.h`
+	rm -f `find . -name *C.i`
 	rm -f `find . -name *C.i.h`
 	rm -f `find . -name *C.cpp`
 	rm -f `find . -name *S.h`
+	rm -f `find . -name *S.i`
 	rm -f `find . -name *S.i.h`
 	rm -f `find . -name *S.cpp`
 	rm -f `find . -name *~`

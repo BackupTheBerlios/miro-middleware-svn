@@ -16,6 +16,10 @@ ifndef MIRO_COMPONENTS
   MIRO_COMPONENTS = B21 Pioneer1 Sparrow99 Deprecated
 endif
 
+ifndef MIRO_VIDEO_COMPONENTS
+  MIRO_COMPONENTS = BTTV Meteor 1394
+endif
+
 # local macros
 
 INSLIB = $(MIRO_ROOT)/lib
