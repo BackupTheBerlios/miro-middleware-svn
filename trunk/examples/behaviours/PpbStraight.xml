@@ -1,0 +1,11 @@
+<!DOCTYPE MiroPolicyConfig>
+<policy>
+ <actionpattern x="-129" y="-174" start="true" name="Straight" >
+  <behaviour name="AvoidOne" >
+   <parameter value="Sonar" name="SensorName" />
+  </behaviour>
+  <behaviour name="Straight" />
+  <arbiter name="MotionArbiter" />
+ </actionpattern>
+</policy>
+
