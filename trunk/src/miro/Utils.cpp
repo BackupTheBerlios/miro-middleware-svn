@@ -28,6 +28,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 #include <unistd.h>
 #include <stdlib.h> // getenv ...
@@ -125,11 +126,21 @@ namespace Miro
     else {
       QFile f(fullName.c_str());
 
-      if (!f.open(IO_ReadOnly))
+      if (!f.open(IO_ReadOnly)) {
+	cout << "error on open" << endl;
 	throw CException(errno, std::strerror(errno));
-      if (!document_->setContent(&f)) {
+      }
+      QString parsingError;
+      int line;
+      int column;
+      if (!document_->setContent(&f, &parsingError, &line, &column)) {
 	f.close();
-	throw CException(errno, std::strerror(errno));
+	std::stringstream ostr;
+	ostr << "error parsing " << fullName << endl
+	     << " in line " << line << " "
+	     << ", column " << column << endl
+	     << parsingError << endl;
+	throw Exception(ostr.str());
       }
       f.close();
     }
