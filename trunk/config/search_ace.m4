@@ -77,7 +77,7 @@ AC_DEFUN([AC_SEARCH_ACE_LOCAL],
 		if test "$1" ; then
 			AC_SUBST(ACE_ROOT, "$1")
 			AC_SUBST(ACE_LDFLAGS, "-L$1/ace")
-			AC_SUBST(ACE_CPPFLAGS, "-I$1")
+			AC_SUBST(ACE_CPPFLAGS, "-I$1 -D_GNU_SOURCE")
 			AC_SUBST(ACE_CFLAGS, "-I$1")
 		fi
 	fi

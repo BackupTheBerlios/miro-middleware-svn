@@ -108,11 +108,11 @@ if test "x$ac_request_meteor" = xyes; then
 	ac_miro_has_meteor=yes
 fi
 
-if test "x$ac_request_ieee1394" = xyes; then
-	AC_CHECK_LIB(raw1394, raw1394_get_libversion, [ac_have_libraw1394=yes], [ac_have_libraw1394=no])
-	AC_CHECK_LIB(dc1394_control, dc1394_print_feature_set, [ac_have_libdc1394=yes], [ac_have_libdc1394=no], [-lraw1394])
-	AC_DETERMINE_LIBDC_VERSION
-fi
+#if test "x$ac_request_ieee1394" = xyes; then
+#	AC_CHECK_LIB(raw1394, raw1394_get_libversion, [ac_have_libraw1394=yes], [ac_have_libraw1394=no])
+#	AC_CHECK_LIB(dc1394_control, dc1394_print_feature_set, [ac_have_libdc1394=yes], [ac_have_libdc1394=no], [-lraw1394])
+#	AC_DETERMINE_LIBDC_VERSION
+#fi
 
 if test "x$ac_request_ieee1394" = xyes; then
 	AC_CHECK_LIB(raw1394, raw1394_get_libversion, [ac_have_libraw1394=yes], [ac_have_libraw1394=no])
