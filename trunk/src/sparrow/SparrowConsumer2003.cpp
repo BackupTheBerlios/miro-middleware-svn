@@ -234,7 +234,7 @@ namespace Sparrow
       case CAN_R_IR_GET_CONT1:{
       DBG(cout << "Consumer::receiveThread: receiveThread message: IR_CONT1" << endl);
       if (pIR1_) {
-	Sparrow::Parameters * param = Sparrow::Parameters::instance(); //uli
+	/*Sparrow::Parameters * param = Sparrow::Parameters::instance(); //uli
 	long calRange;
 	long preRange, aktRange, postRange;
 	Miro::RangeGroupEventIDL * data = new Miro::RangeGroupEventIDL();
@@ -308,7 +308,28 @@ namespace Sparrow
                    data->range[0] = integrateIrValues(0, 0, -1);
 		}*/
 
-        data->range[0] = integrateIrValues(0, 0, aktRange);
+        /*data->range[0] = integrateIrValues(0, 0, aktRange);
+	pIR1_->integrateData(data);*/
+	Sparrow::Parameters * param = Sparrow::Parameters::instance(); //uli
+	long calRange;
+	Miro::RangeGroupEventIDL * data = new Miro::RangeGroupEventIDL();
+	Miro::timeA2C(message.time(), data->time);
+	data->group = 0;
+	data->range.length(8);
+	for (int i = 7; i >= 0; --i)  {
+
+            calRange = IR_LOOKUP_TABLE[message.byteData(i)];
+	    calRange = (calRange - param->irScaling[i].offset);
+	    calRange = calRange - param->irScaling[i].minDistance;
+	    calRange = (long) (calRange * param->irScaling[i].scaling);
+	    calRange = calRange + param->irScaling[i].minDistance ;
+	    if (calRange < param->irScaling[i].minDistance)
+	     calRange = param->irScaling[i].minDistance;
+	    if(calRange > param->irScaling[i].maxDistance)
+	     calRange = -1;
+
+	    data->range[i] = integrateIrValues(0, i, calRange);
+	}
 	pIR1_->integrateData(data);
       }
 
@@ -319,7 +340,7 @@ namespace Sparrow
       DBG(cout << "Consumer::receiveThread: receiveThread message: IR_CONT2" << endl);
 
       if (pIR1_) {
-	Sparrow::Parameters * param = Sparrow::Parameters::instance(); //uli
+	/*Sparrow::Parameters * param = Sparrow::Parameters::instance(); //uli
 	long calRange;
 	long preRange, aktRange, postRange;
 
@@ -343,7 +364,7 @@ namespace Sparrow
 
 	  data->range[i-8] = integrateIrValues(1, i-8, calRange);
 	}*///ersten in der gruppe lesen
-	calRange = IR_LOOKUP_TABLE[message.byteData(7)];
+	/*calRange = IR_LOOKUP_TABLE[message.byteData(7)];
         calRange = (calRange - param->irScaling[7].offset);
 	calRange = calRange - param->irScaling[7].minDistance;
 	calRange = (long) (calRange * param->irScaling[7].scaling);
@@ -377,7 +398,7 @@ namespace Sparrow
 		}*/
 
 
-	for (int i = 6; i >= 1; --i)  {
+	/*for (int i = 6; i >= 1; --i)  {
 	  calRange = IR_LOOKUP_TABLE[message.byteData(i-1)];
 
 	  calRange = (calRange - param->irScaling[i-1].offset);
@@ -410,8 +431,29 @@ namespace Sparrow
                    data->range[0] = integrateIrValues(1, 0, -1);
 		}*/
 
-	data->range[0] = integrateIrValues(1, 0, aktRange);
+	/*data->range[0] = integrateIrValues(1, 0, aktRange);
 
+	pIR1_->integrateData(data);*/
+	Sparrow::Parameters * param = Sparrow::Parameters::instance(); //uli
+	long calRange;
+	Miro::RangeGroupEventIDL * data = new Miro::RangeGroupEventIDL();
+	Miro::timeA2C(message.time(), data->time);
+	data->group = 1;
+	data->range.length(8);
+	for (int i = 7; i >= 0; --i)  {
+
+            calRange = IR_LOOKUP_TABLE[message.byteData(i)];
+	    calRange = (calRange - param->irScaling[8+i].offset);
+	    calRange = calRange - param->irScaling[8+i].minDistance;
+	    calRange = (long) (calRange * param->irScaling[8+i].scaling);
+	    calRange = calRange + param->irScaling[8+i].minDistance ;
+	    if (calRange < param->irScaling[8+i].minDistance)
+	     calRange = param->irScaling[8+i].minDistance;
+	    if(calRange > param->irScaling[8+i].maxDistance)
+	     calRange = -1;
+
+	    data->range[i] = integrateIrValues(1, i, calRange);
+	}
 	pIR1_->integrateData(data);
       }
       break;
