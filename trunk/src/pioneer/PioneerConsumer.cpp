@@ -88,168 +88,183 @@ namespace Pioneer
 
     const Psos::Message * pPsosMsg = static_cast<const Psos::Message *>(_message);
 
-    switch (pPsosMsg->header()) {
+    if (pPsosMsg->header() == 0xfbfa) { // standart header
 
-    case 0xfbfa: 
-      {
-        if (((int)pPsosMsg->buffer()[3]&0xFC)==0x30) {//standard SIP
-	  const ServerInfoMessage * message = static_cast<const ServerInfoMessage *>(_message);
-	  //------------------------------
-	  // evaluating odometry data
-	  //------------------------------
-	  
-	  if (pOdometry) {
-	    short x, y, x0, y0, dX, dY;
-	    double velL, velR, weelDist;
+      if ((pPsosMsg->id() & 0xFC) == 0x30) { //standard SIP
 	
-	    weelDist = 320;  // nur zum test muss noch allgemein gemacht werden
-	    // the odometry data is 15bit unsigned
-	    // but we interpret it as a signed value 
-	    x = message->xPos();      // x position
-	    x |= (x & 0x4000) << 1;  // sign extend 15th bit
-	    x0 = x;                  // temporary
-	    y = message->yPos();      // y position 
-	    y |= (y & 0x4000) << 1;  // sign extend 15th bit
-	    y0 = y;                  // temporary
+	const ServerInfoMessage * message = static_cast<const ServerInfoMessage *>(_message);
+	//------------------------------
+	// evaluating odometry data
+	//------------------------------
+	
+	if (pOdometry) {
+	  short x, y, x0, y0, dX, dY;
+	  double velL, velR, weelDist;
+	
+	  weelDist = 320;  // nur zum test muss noch allgemein gemacht werden
+	  // the odometry data is 15bit unsigned
+	  // but we interpret it as a signed value 
+	  x = message->xPos();      // x position
+	  x |= (x & 0x4000) << 1;  // sign extend 15th bit
+	  x0 = x;                  // temporary
+	  y = message->yPos();      // y position 
+	  y |= (y & 0x4000) << 1;  // sign extend 15th bit
+	  y0 = y;                  // temporary
 	    
-	    // we have to cover under and overflows 
-	    if (prevX < 0 && x > 0 && (x & 0x2000)) // underflow
-	      x |= 0xb000;
-	    else if (prevX > 0 && x < 0 && (prevX & 0x2000))  // overflow
-	      prevX |= 0xb000;
+	  // we have to cover under and overflows 
+	  if (prevX < 0 && x > 0 && (x & 0x2000)) // underflow
+	    x |= 0xb000;
+	  else if (prevX > 0 && x < 0 && (prevX & 0x2000))  // overflow
+	    prevX |= 0xb000;
 	    
-	    if (prevY < 0 && y > 0 && (y & 0x2000)) // underflow
-	      y |= 0xb000;
-	    else if (prevY > 0 && y < 0 && (prevY & 0x2000))  // overflow
-	      prevY |= 0xb000;
+	  if (prevY < 0 && y > 0 && (y & 0x2000)) // underflow
+	    y |= 0xb000;
+	  else if (prevY > 0 && y < 0 && (prevY & 0x2000))  // overflow
+	    prevY |= 0xb000;
 	    
-	    // calculate position delta
-	    dX = x - prevX;
-	    dY = y - prevY;
+	  // calculate position delta
+	  dX = x - prevX;
+	  dY = y - prevY;
 	    
-	    // save new position
-	    prevX = x0;
-	    prevY = y0;
+	  // save new position
+	  prevX = x0;
+	  prevY = y0;
 	    
-	    // fill motion status data struct
-	    Miro::timeA2C(message->time(), status_.time);
-	    status_.position.point.x += (double)dX * params_->distConvFactor;
-	    status_.position.point.y += (double)dY * params_->distConvFactor;
+	  // fill motion status data struct
+	  Miro::timeA2C(message->time(), status_.time);
+	  status_.position.point.x += (double)dX * params_->distConvFactor;
+	  status_.position.point.y += (double)dY * params_->distConvFactor;
 	    
-	    // these aren't calculated yet
-	    velL = message->lVel() * params_->velConvFactor;
-	    velR = message->rVel() * params_->velConvFactor;
-	    status_.position.heading = message->theta() * params_->angleConvFactor;
-	    status_.velocity.translation = (long) rint((velL + velR)/2.);
-	    status_.velocity.rotation = 2. * (velR - velL) / (double)weelDist;
+	  // these aren't calculated yet
+	  velL = message->lVel() * params_->velConvFactor;
+	  velR = message->rVel() * params_->velConvFactor;
+	  status_.position.heading = message->theta() * params_->angleConvFactor;
+	  status_.velocity.translation = (long) rint((velL + velR)/2.);
+	  status_.velocity.rotation = 2. * (velR - velL) / (double)weelDist;
 	    
-	    pOdometry->integrateData(status_);
+	  pOdometry->integrateData(status_);
 	    
-	  }
-	  
-	  //------------------------------
-	  // evaluating sonar data
-	  //------------------------------
-	  
-	  if (pSonar && message->sonarReadings() > 0) {
-	    //  DBG(cout << "Sonar readings: " << message->sonarReadings() << endl);
-	    
-	    RangeBunchEventIDL * pSonarEvent = new RangeBunchEventIDL();
-	    pSonarEvent->time.sec  = message->time().sec();
-	    pSonarEvent->time.usec = message->time().usec();
-	    pSonarEvent->sensor.length(message->sonarReadings());
-	    
-	    // iterate through new data
-	    
-	    for (int i = message->sonarReadings() - 1; i >= 0; --i) {
-	      int group = 0;
-	      int index = message->sonarNumber(i);
-	      
-	      // peoplebot sonars
-	      if (index >= 8) {
-		if (index < 16)
-		  ++group;
-		index -= 8;
-	      }
-	      
-	      pSonarEvent->sensor[i].group = group;
-	      pSonarEvent->sensor[i].index = index;
-	      pSonarEvent->sensor[i].range = 
-		(CORBA::Long) ((double)message->sonarValue(i) * params_->rangeConvFactor);
-	    }
-	    
-	    //cout << "sonarReadings  " << message->sonarReadings() << endl;  
-	    pSonar->integrateData(pSonarEvent);
-	  }
-	  
-	  //------------------------------
-	  // evaluating stall and bumper data
-	  //------------------------------
-	  
-	  if (pStall) {
-	    unsigned short rBump = message->rBumper();
-	    unsigned short lBump = message->lBumper();
-	    pStall->integrateData(rBump,lBump);
-	    //cout << "Stall: " << lBump << "--" << rBump << endl;
-	  }
-	  
-	  if (pTactile) {
-	    RangeBunchEventIDL * pTactileEvent = NULL;
-	    
-	    unsigned long counter = 0;
-	    unsigned long index = 0;
-	    unsigned long bumpers = message->bumpers();
-	    unsigned long mask = (bumpers_ ^ bumpers) & 0x3e3e;
-	    
-	    if (mask) {
-	      pTactileEvent = new RangeBunchEventIDL();
-	      pTactileEvent->sensor.length(10);
-	      
-	      for (unsigned int i = 9; i < 14; ++i, ++index) {
-		if (mask & (1 << i)) {
-		  pTactileEvent->sensor[counter].group = 0;
-		  pTactileEvent->sensor[counter].index = index;
-		  pTactileEvent->sensor[counter].range = 
-		    (bumpers & (1 << i))? 0 : -1; // Miro::RangeSensor::HORIZON_RANGE;
-		  
-		  ++counter;
-		}
-	      }
-	      for (unsigned int i = 1; i < 6; ++i, ++index) {
-		if (mask & (1 << i)) {
-		  pTactileEvent->sensor[counter].group = 0;
-		  pTactileEvent->sensor[counter].index = index;
-		  pTactileEvent->sensor[counter].range = 
-		    (bumpers & (1 << i))? 0 : -1; //Miro::RangeSensor::HORIZON_RANGE;
-		  
-		  ++counter;
-		}
-	      }
-	      
-	      Miro::timeA2C(message->time(), pTactileEvent->time);
-	      pTactileEvent->sensor.length(counter);
-	      pTactile->integrateData(pTactileEvent);
-	    }
-	    bumpers_ = bumpers;
-	  }
-	  
-	  //-------------------------------------------------------------------
-	  // evaluating battery
-	  //-------------------------------------------------------------------
-	  if (pBattery) {
-	    pBattery->integrateData(message->battery());
-	    //cout << "Battery: " << bat << endl;
-	  }
-	} else if ((int)pPsosMsg->buffer()[3]==0xb0) { //SERAUXpac SIP
-	  if (pAnswer) {
-	    Miro::Guard guard(pAnswer->mutex);
-	    for (int i=4; i<4+pPsosMsg->buffer()[2]-3; i++) 
-	      pAnswer->add(pPsosMsg->buffer()[i]);
-	  }
 	}
-	break;
+	  
+	//------------------------------
+	// evaluating sonar data
+	//------------------------------
+	  
+	if (pSonar && message->sonarReadings() > 0) {
+	  //  DBG(cout << "Sonar readings: " << message->sonarReadings() << endl);
+	    
+	  RangeBunchEventIDL * pSonarEvent = new RangeBunchEventIDL();
+	  pSonarEvent->time.sec  = message->time().sec();
+	  pSonarEvent->time.usec = message->time().usec();
+	  pSonarEvent->sensor.length(message->sonarReadings());
+	    
+	  // iterate through new data
+	    
+	  for (int i = message->sonarReadings() - 1; i >= 0; --i) {
+	    int group = 0;
+	    int index = message->sonarNumber(i);
+	      
+	    // peoplebot sonars
+	    if (index >= 8) {
+	      if (index < 16)
+		++group;
+	      index -= 8;
+	    }
+	      
+	    pSonarEvent->sensor[i].group = group;
+	    pSonarEvent->sensor[i].index = index;
+	    pSonarEvent->sensor[i].range = 
+	      (CORBA::Long) ((double)message->sonarValue(i) * params_->rangeConvFactor);
+	  }
+	    
+	  //cout << "sonarReadings  " << message->sonarReadings() << endl;  
+	  pSonar->integrateData(pSonarEvent);
+	}
+	  
+	//------------------------------
+	// evaluating stall and bumper data
+	//------------------------------
+	  
+	if (pStall) {
+	  unsigned short rBump = message->rBumper();
+	  unsigned short lBump = message->lBumper();
+	  pStall->integrateData(rBump,lBump);
+	  //cout << "Stall: " << lBump << "--" << rBump << endl;
+	}
+	  
+	if (pTactile) {
+	  RangeBunchEventIDL * pTactileEvent = NULL;
+	    
+	  unsigned long counter = 0;
+	  unsigned long index = 0;
+	  unsigned long bumpers = message->bumpers();
+	  unsigned long mask = (bumpers_ ^ bumpers) & 0x3e3e;
+	    
+	  if (mask) {
+	    pTactileEvent = new RangeBunchEventIDL();
+	    pTactileEvent->sensor.length(10);
+	      
+	    for (unsigned int i = 9; i < 14; ++i, ++index) {
+	      if (mask & (1 << i)) {
+		pTactileEvent->sensor[counter].group = 0;
+		pTactileEvent->sensor[counter].index = index;
+		pTactileEvent->sensor[counter].range = 
+		  (bumpers & (1 << i))? 0 : -1; // Miro::RangeSensor::HORIZON_RANGE;
+		  
+		++counter;
+	      }
+	    }
+	    for (unsigned int i = 1; i < 6; ++i, ++index) {
+	      if (mask & (1 << i)) {
+		pTactileEvent->sensor[counter].group = 0;
+		pTactileEvent->sensor[counter].index = index;
+		pTactileEvent->sensor[counter].range = 
+		  (bumpers & (1 << i))? 0 : -1; //Miro::RangeSensor::HORIZON_RANGE;
+		  
+		++counter;
+	      }
+	    }
+	      
+	    Miro::timeA2C(message->time(), pTactileEvent->time);
+	    pTactileEvent->sensor.length(counter);
+	    pTactile->integrateData(pTactileEvent);
+	  }
+	  bumpers_ = bumpers;
+	}
+	  
+	//-------------------------------------------------------------------
+	// evaluating battery
+	//-------------------------------------------------------------------
+	if (pBattery) {
+	  pBattery->integrateData(message->battery());
+	  //cout << "Battery: " << bat << endl;
+	}
       }
-    default:
+
+      //-------------------------------------------------------------------
+      // SERAUXpac SIP
+      //-------------------------------------------------------------------
+      else if (pPsosMsg->id() == 0xb0) { //SERAUXpac SIP
+	if (pAnswer) {
+	  Miro::Guard guard(pAnswer->mutex);
+	  for (int i=4; i < 4 + pPsosMsg->buffer()[2] - 3; ++i) 
+	    pAnswer->add(pPsosMsg->buffer()[i]);
+	}
+      }
+
+      //-------------------------------------------------------------------
+      // IOpac SIP
+      //-------------------------------------------------------------------
+      else if (pPsosMsg->id() == 0xf0) { //OPpac SIP
+	
+	Psos::IOpacMessage const * const message =
+	  static_cast<Psos::IOpacMessage const * const>(_message);
+
+	cout << "IR: " << hex << (int)message->ir() << dec << endl;
+
+      }
+    }
+    else {
       std::cerr << "Unkown message header: " << hex << pPsosMsg->header() << dec << endl;
     }
   }
