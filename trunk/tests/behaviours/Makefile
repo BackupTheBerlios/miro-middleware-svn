@@ -18,11 +18,11 @@
 # INSTALL = $(VBIN:%=$(INSBIN)/%)
 
 ## dynamic libraries if needed
-LDLIBS += -lmiro
+LDLIBS +=  -lmiroSvc -lmiro
 
 ## program to be built
 ## there has to exist a source file with the same name (mybinary.cc)
-BIN 	= PriorityArbitersTest
+BIN 	= PriorityArbitersTest PolicyParsingTest BehaviourEngineTest
 
 ## additional files
 FILES = DummyBehaviour \
@@ -64,36 +64,29 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 
 .obj/DummyBehaviour.o .obj/DummyBehaviour.so .shobj/DummyBehaviour.o .shobj/DummyBehaviour.so: DummyBehaviour.cpp DummyBehaviour.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- DummyArbiterMessage.h
+ $(MIRO_ROOT)/src/miro/TimedBehaviour.h $(MIRO_ROOT)/src/miro/Behaviour.h \
+ $(MIRO_ROOT)/src/miro/DynamicWindow.h \
+ $(MIRO_ROOT)/src/miro/ActionPattern.h $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h $(MIRO_ROOT)/src/miro/Arbiter.h \
+ $(MIRO_ROOT)/src/miro/TimedBehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h DummyArbiterMessage.h \
+ $(MIRO_ROOT)/src/miro/ArbiterMessage.h
 
 .obj/DummyBehaviourB.o .obj/DummyBehaviourB.so .shobj/DummyBehaviourB.o .shobj/DummyBehaviourB.so: DummyBehaviourB.cpp DummyBehaviourB.h \
- \
- \
- \
- \
- \
- \
- \
- \
- \
- DummyArbiterMessage.h
+ $(MIRO_ROOT)/src/miro/TimedBehaviour.h $(MIRO_ROOT)/src/miro/Behaviour.h \
+ $(MIRO_ROOT)/src/miro/DynamicWindow.h \
+ $(MIRO_ROOT)/src/miro/ActionPattern.h $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h $(MIRO_ROOT)/src/miro/Arbiter.h \
+ $(MIRO_ROOT)/src/miro/TimedBehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h DummyArbiterMessage.h \
+ $(MIRO_ROOT)/src/miro/ArbiterMessage.h
 
 .obj/DummyArbiter.o .obj/DummyArbiter.so .shobj/DummyArbiter.o .shobj/DummyArbiter.so: DummyArbiter.cpp DummyArbiter.h \
- \
- \
- DummyArbiterMessage.h \
-
+ $(MIRO_ROOT)/src/miro/PriorityArbiter.h $(MIRO_ROOT)/src/miro/Arbiter.h \
+ $(MIRO_ROOT)/src/miro/Synch.h DummyArbiterMessage.h \
+ $(MIRO_ROOT)/src/miro/ArbiterMessage.h
 
 .obj/DummyArbiterMessage.o .obj/DummyArbiterMessage.so .shobj/DummyArbiterMessage.o .shobj/DummyArbiterMessage.so: DummyArbiterMessage.cpp DummyArbiterMessage.h \
-
+ $(MIRO_ROOT)/src/miro/ArbiterMessage.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

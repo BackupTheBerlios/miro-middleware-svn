@@ -18,7 +18,7 @@
 INSTALL = $(VBIN:%=$(INSBIN)/%)
 
 ## dynamic libraries if needed
-LDLIBS += 
+LDLIBS += -lmiro
 
 ## program to be built
 ## there has to exist a source file with the same name (mybinary.cc)
@@ -54,8 +54,6 @@ include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
 include $(ACE_ROOT)/include/makeinclude/macros.GNU
 include $(MIRO_ROOT)/include/makeinclude/macros.miro.GNU
 
-depend: $(MOC_SRC)
-
 include $(TAO_ROOT)/rules.tao.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.nonested.GNU
@@ -67,6 +65,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 #	Local targets
 #----------------------------------------------------------------------------
 .PRECIOUS: $(MOC_SRC)
+
+depend: $(MOC_SRC)
 
 realclean: clean
 	-$(RM) $(MOC_SRC))
@@ -100,7 +100,12 @@ realclean: clean
 .obj/ParamDialog.o .obj/ParamDialog.so .shobj/ParamDialog.o .shobj/ParamDialog.so: ParamDialog.cpp ParamDialog.h PolicyDocument.h \
  BehaviourDescription.h Transition.h PolicyConfig.h BehaviourParam.h
 
-.obj/PolicyEditor.o .obj/PolicyEditor.so .shobj/PolicyEditor.o .shobj/PolicyEditor.so: PolicyEditor.cpp PolicyEditor.h PolicyDocument.h \
+.obj/PolicyEditor.o .obj/PolicyEditor.so .shobj/PolicyEditor.o .shobj/PolicyEditor.so: PolicyEditor.cpp \
+ $(MIRO_ROOT)/src/miro/BehaviourEngineC.h \
+ $(MIRO_ROOT)/src/miro/BehaviourEngineC.i PolicyEditor.h \
+ $(MIRO_ROOT)/src/miro/Client.h $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/RobotParameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h PolicyDocument.h \
  BehaviourDescription.h Transition.h PolicyConfig.h BehaviourParam.h \
  PolicyView.h
 
@@ -127,8 +132,11 @@ realclean: clean
  BehaviourDescription.h Transition.h PolicyConfig.h BehaviourParam.h
 
 .obj/PolicyEditor.moc.o .obj/PolicyEditor.moc.so .shobj/PolicyEditor.moc.o .shobj/PolicyEditor.moc.so: PolicyEditor.moc.cpp PolicyEditor.h \
- PolicyDocument.h BehaviourDescription.h Transition.h PolicyConfig.h \
- BehaviourParam.h PolicyView.h
+ $(MIRO_ROOT)/src/miro/Client.h $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/RobotParameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h PolicyDocument.h \
+ BehaviourDescription.h Transition.h PolicyConfig.h BehaviourParam.h \
+ PolicyView.h
 
 .obj/PolicyConfigurationDialog.moc.o .obj/PolicyConfigurationDialog.moc.so .shobj/PolicyConfigurationDialog.moc.o .shobj/PolicyConfigurationDialog.moc.so: PolicyConfigurationDialog.moc.cpp \
  PolicyConfigurationDialog.h BehaviourDescription.h BehaviourParam.h \

@@ -16,7 +16,7 @@
 #include <iostream>
 
 // Forward declaration.
-class QDomNode;
+class QDomDocument;
 
 namespace Miro
 {
@@ -48,7 +48,10 @@ namespace Miro
     //! Virtual destructor.
     virtual ~Policy();
 
-    void loadActionPatterns(const char* _fileName);
+    void loadPolicyFile(const char* _fileName);
+    void loadPolicy(const char * _policy);
+    void parsePolicy(const QDomDocument& _doc);
+
     //! Register an action pattern at the policy.
     void registerActionPattern(ActionPattern * _pattern);
     //! Lookup action pattern by name.
@@ -59,31 +62,24 @@ namespace Miro
     void open();
     //! End the policy.
     void close();
+    //! Clear the policy.
+    void clear();
+    //! Is this a valid policy?
+    bool valid() const;
 
   protected:
-    //! Retrieve the behaviours of an action pattern.
-    void retrieveBehaviours(ActionPattern& _actionPattern, const QDomNode&);
-    //! Retrieve the arbiter of an action pattern.
-    void retrieveArbiters(ActionPattern& _actionPattern, const QDomNode&) ;
-    //! Initialize the parameters of a behaviour within an action pattern.
-    void retrieveBehaviourParameters(KeyValueList& _params, const QDomNode&);
-    //! Retrieve transitions for the action pattern.
-    void retrieveTransitions(ActionPattern& _actionPattern, const QDomNode&);
-
     //! Dump the policy configuration to an output stream.
     virtual void printToStream(std::ostream& ostr) const;
 
     //! Event supplier for online output.
     StructuredPushSupplier * pSupplier_;
-    //! Repository of available behaviours.
-    BehaviourRepository * behaviourRepository_;
-    //! Repository of available arbiters.
-    ArbiterRepository * arbiterRepository_;
     //! The action pattern to start with.
     ActionPattern * startPattern_;
 
     //! Map of registered action patterns, sorted by name.
     ActionPatternMap actionPatterns_;
+
+    bool valid_;
 
     friend
     std::ostream& operator << (std::ostream& ostr, const Policy&);
@@ -93,6 +89,12 @@ namespace Miro
   void
   Policy::setStartPattern(ActionPattern * _pattern) {
     startPattern_ = _pattern;
+  }
+
+  inline
+  bool
+  Policy::valid() const {
+    return valid_;
   }
 };
 #endif

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -34,12 +34,12 @@ namespace Miro
   }
 
   Behaviour * 
-  BehaviourRepository::getBehaviour(const std::string& _name) throw(Exception)
+  BehaviourRepository::getBehaviour(const std::string& _name) throw()
   {
     BehaviourMap::const_iterator i = behaviours_.find(_name);
     if (i != behaviours_.end())
       return i->second;
-    throw Exception("Behaviour " + _name + " not registered at the Repository.");
+    return NULL;
   }
 
   void

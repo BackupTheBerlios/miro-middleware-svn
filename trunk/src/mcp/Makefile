@@ -65,51 +65,42 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 
 .obj/McpDevice.o .obj/McpDevice.o .obj/McpDevice.o .obj/McpDevice.o: McpDevice.cpp McpDevice.h McpMessage.h \
-
+ $(MIRO_ROOT)/src/miro/DevMessage.h
 
 .obj/McpParameters.o .obj/McpParameters.o .obj/McpParameters.o .obj/McpParameters.o: McpParameters.cpp McpParameters.h \
- \
- \
- McpDevice.h McpMessage.h \
- \
- \
- /home/gmayer/Miro/src/miro/TimeC.i
+ $(MIRO_ROOT)/src/miro/TtyParameters.h \
+ $(MIRO_ROOT)/src/miro/DevParameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
+ McpDevice.h McpMessage.h $(MIRO_ROOT)/src/miro/DevMessage.h \
+ $(MIRO_ROOT)/src/miro/TimeHelper.h $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i
 
 .obj/McpMessage.o .obj/McpMessage.o .obj/McpMessage.o .obj/McpMessage.o: McpMessage.cpp McpMessage.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h
 
-
-.obj/McpConnection.o .obj/McpConnection.o .obj/McpConnection.o .obj/McpConnection.o: McpConnection.cpp \
- \
- /home/gmayer/Miro/src/miro/ExceptionC.i \
- McpConnection.h \
- \
- McpDevice.h McpMessage.h \
- McpEventHandler.h \
- McpParameters.h \
- \
- \
-
+.obj/McpConnection.o .obj/McpConnection.o .obj/McpConnection.o .obj/McpConnection.o: McpConnection.cpp $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i $(MIRO_ROOT)/src/miro/Exception.h \
+ McpConnection.h $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/TtyConnection.h McpDevice.h McpMessage.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h McpEventHandler.h \
+ $(MIRO_ROOT)/src/miro/DevEventHandler.h McpParameters.h \
+ $(MIRO_ROOT)/src/miro/TtyParameters.h \
+ $(MIRO_ROOT)/src/miro/DevParameters.h $(MIRO_ROOT)/src/miro/Parameters.h
 
 .obj/McpConsumer.o .obj/McpConsumer.o .obj/McpConsumer.o .obj/McpConsumer.o: McpConsumer.cpp McpConsumer.h \
- McpConnection.h \
- \
- \
- \
- \
- /home/gmayer/Miro/src/miro/ExceptionC.i McpDevice.h McpMessage.h \
-
+ $(MIRO_ROOT)/src/miro/DevConsumer.h McpConnection.h \
+ $(MIRO_ROOT)/src/miro/Synch.h $(MIRO_ROOT)/src/miro/TtyConnection.h \
+ $(MIRO_ROOT)/src/miro/Exception.h $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i McpDevice.h McpMessage.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h
 
 .obj/McpEventHandler.o .obj/McpEventHandler.o .obj/McpEventHandler.o .obj/McpEventHandler.o: McpEventHandler.cpp McpEventHandler.h \
- McpConnection.h \
- \
- \
- \
- \
- /home/gmayer/Miro/src/miro/ExceptionC.i McpDevice.h McpMessage.h \
- McpConsumer.h \
- McpParameters.h \
- \
- \
-
+ $(MIRO_ROOT)/src/miro/DevEventHandler.h McpConnection.h \
+ $(MIRO_ROOT)/src/miro/Synch.h $(MIRO_ROOT)/src/miro/TtyConnection.h \
+ $(MIRO_ROOT)/src/miro/Exception.h $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i McpDevice.h McpMessage.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h McpConsumer.h \
+ $(MIRO_ROOT)/src/miro/DevConsumer.h McpParameters.h \
+ $(MIRO_ROOT)/src/miro/TtyParameters.h \
+ $(MIRO_ROOT)/src/miro/DevParameters.h $(MIRO_ROOT)/src/miro/Parameters.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

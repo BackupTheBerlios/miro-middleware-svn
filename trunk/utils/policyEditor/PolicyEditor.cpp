@@ -2,12 +2,14 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2002
+// (c) 1998, 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
+
+#include "miro/BehaviourEngineC.h"
 
 #include "PolicyEditor.h"
 
@@ -18,13 +20,16 @@
 #include <qmessagebox.h>
 #include <qpushbutton.h>
 #include <qstatusbar.h>
+#include <qinputdialog.h>
 
 #include <iostream>
+#include <sstream>
 
-PolicyEditorClass::PolicyEditorClass(int argc, char** argv) :
+PolicyEditorClass::PolicyEditorClass(int argc, char** argv, Miro::Client& _client) :
   QMainWindow(NULL, "PolicyEditor"),
-  policyFileName("_")
-  
+  client_(_client),
+  policyFileName("_"),
+  robot_(getenv("HOST"))
 {
   resize(600, 500);
 
@@ -38,6 +43,8 @@ PolicyEditorClass::PolicyEditorClass(int argc, char** argv) :
   MenuFile->insertItem("Open ...",    this, SLOT(slotLoad()));
   MenuFile->insertItem("Save", this, SLOT(slotSave())); 
   MenuFile->insertItem("Save As ...", this, SLOT(slotSaveAs()));
+  MenuFile->insertSeparator();
+  MenuFile->insertItem("Send to ...", this, SLOT(slotSendTo()));
   MenuFile->insertSeparator();
   MenuFile->insertItem("Quit",       this, SLOT(quit()));
 
@@ -215,6 +222,51 @@ void PolicyEditorClass::slotSaveAs()
   statusBar()->message(message, 3000);
 }
 
+void PolicyEditorClass::slotSendTo()
+{
+  bool ok = false;
+  QString tmp;
+  tmp = QInputDialog::getText(tr( "Send policy" ), tr( "Robot name" ),
+				 QLineEdit::Normal, robot_, &ok, this );
+  if ( ok && !robot_.isEmpty() ) {
+    QString error;
+
+    robot_ = tmp;
+
+    // build the lookup string for the naming service
+    CosNaming::Name name;
+    name.length(2);
+    name[0].id = CORBA::string_dup(robot_.latin1());
+    name[1].id = CORBA::string_dup("BehaviourEngine");
+
+    try {
+      Miro::BehaviourEngine_var engine = client_.resolveName<Miro::BehaviourEngine>(name);
+
+      engine->loadPolicy(Document.getDomDocument().toCString());
+    }
+    catch(const Miro::BehaviourEngine::EMalformedPolicy& e) {
+      error = QString("Error parsing policy: ") + e.what;
+      ok = false;
+    }
+    catch(const Miro::BehaviourEngine::EMalformedXML& ) {
+      error = "Malformed XML.";
+      ok = false;
+    }
+    catch(const CORBA::Exception& e) {
+      std::ostringstream sstr;
+      sstr << "Communication Failed. CORBA exception: " << e << flush;
+
+      error = sstr.str().c_str();
+      ok = false;
+    }
+
+    if (!ok) {
+      QMessageBox::warning(this, "Couln't send policy:", error);
+    }
+
+  }
+}
+
 /*Not supported yet
   void PolicyEditorClass::slotConfiguration()
   {
@@ -301,9 +353,11 @@ void PolicyEditorClass::closeEvent(QCloseEvent *e)
 
 int main(int argc, char** argv) 
 {
+  Miro::Client client(argc, argv);
+
   try {
     QApplication App(argc, argv);
-    PolicyEditorClass PolicyEditor(argc, argv);
+    PolicyEditorClass PolicyEditor(argc, argv, client);
     
     if (argc>2) { 
       std::cout << argv[0] << " [policyfile]" << std::endl; 

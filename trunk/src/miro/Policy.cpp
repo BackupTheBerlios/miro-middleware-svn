@@ -9,6 +9,8 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
+#include "BehaviourEngineC.h"
+
 #include "Policy.h"
 #include "ActionPattern.h"
 #include "ArbiterRepository.h"
@@ -17,8 +19,6 @@
 #include "Behaviour.h"
 #include "BehaviourRepository.h"
 #include "BehaviourParameters.h"
-#include "KeyValueList.h"
-#include "Exception.h"
 
 #include <qdom.h>
 #include <qfile.h>
@@ -30,9 +30,8 @@ namespace Miro
 
   Policy::Policy(StructuredPushSupplier * _pSupplier) :
     pSupplier_(_pSupplier),
-    behaviourRepository_(BehaviourRepository::instance()),
-    arbiterRepository_(ArbiterRepository::instance()),
-    startPattern_(NULL)
+    startPattern_(NULL),
+    valid_(false)
   {}
 
   /**
@@ -46,99 +45,128 @@ namespace Miro
   Policy::Policy(const char * _parameterFile, 
 		 StructuredPushSupplier * _pSupplier) :
     pSupplier_(_pSupplier),
-    behaviourRepository_(BehaviourRepository::instance()),
-    arbiterRepository_(ArbiterRepository::instance()),
-    startPattern_(NULL)
+    startPattern_(NULL),
+    valid_(false)
   {
-    loadActionPatterns(_parameterFile);
+    loadPolicyFile(_parameterFile);
   }
 
   Policy::~Policy()
   {
+    close();
   }
 		
   void 
-  Policy::loadActionPatterns(const char* filename) 
+  Policy::loadPolicyFile(const char* filename) 
   {
     QDomDocument doc( "MiroPolicyConfigFile" );
     QFile f(filename);
     if ( !f.open( IO_ReadOnly ) )
-      return;
+      throw BehaviourEngine::EFile();
     if ( !doc.setContent( &f ) ) {
       f.close();
-      return;
+      throw BehaviourEngine::EMalformedXML();
     }
     f.close();
 
-    // print out the element names of all elements that are a direct child
-    // of the outermost element.
+    parsePolicy(doc);
+  }
 
-    QDomElement docElem = doc.documentElement();
+  void 
+  Policy::loadPolicy(const char * _policy) 
+  {
+    QDomDocument doc( "MiroPolicyConfigFile" );
+    QCString p(_policy);
+    if (!doc.setContent(p)) {
+      throw BehaviourEngine::EMalformedXML();
+    }
+
+    parsePolicy(doc);
+  }
+
+  void
+  Policy::parsePolicy(const QDomDocument& _doc)
+  {
+    clear();
+
+    QDomElement docElem = _doc.documentElement();
 
     QDomNode n = docElem.firstChild();
+
+    // first pass
+    // collect all action patterns
     while( !n.isNull() ) {
       QDomElement e = n.toElement(); // try to convert the node to an element.
-      if( !e.isNull() ) { // the node was really an element.
-	if (e.tagName()=="actionpattern") {
+      if( !e.isNull() ) {            // the node was really an element.
+	if (e.tagName() == "actionpattern") {
 	  ActionPattern* actionPattern;
 	  QDomAttr attribute = e.attributeNode("name");
-	  if (!attribute.isNull()) {
-	    string actionPatternName = string(attribute.value());
+	  if (!attribute.isNull() && !attribute.value().isEmpty()) {
+	    string actionPatternName(attribute.value());
 	    actionPattern = new ActionPattern(actionPatternName, pSupplier_);
-	    retrieveArbiters(*actionPattern, n);
-	    retrieveBehaviours(*actionPattern, n);
 	    registerActionPattern(actionPattern);
-	    
-	    if (actionPattern->arbiter() == NULL)
-	      throw Exception("ActionPattern without an arbiter: " + actionPatternName);
-	  } else {
-	    throw Exception("ActionPattern without a name");
+	  } 
+	  else {
+	    throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup("ActionPattern without a name."));
 	  }
 	
 	  attribute = e.attributeNode ("start");
 	  if (!attribute.isNull()) {
 	    if (string(attribute.value()) == "true")
 		startPattern_ = actionPattern;
-	  }
-	
-	} else {
-	  throw Exception("Non-actionpattern tag: " + string(e.tagName()));
+	  }	
+	} 
+	else {
+	  std::string error("Non-actionpattern tag: " + string(e.tagName()));
+	  throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup(error.c_str()));
 	}
       }
       n = n.nextSibling();
     }                	
+
+    if (startPattern_ == NULL)
+      throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup("Non start pattern specified."));
   
+    // second pass
+    // parse action pattern data
     n = docElem.firstChild();
     while( !n.isNull() ) {
       QDomElement e = n.toElement(); // try to convert the node to an element.
-      if( !e.isNull() ) { // the node was really an element.
-	if (e.tagName()=="actionpattern") {
-	  QDomAttr attribute = e.attributeNode("name");
-	  if (!attribute.isNull()) {
-	    string actionPatternName = string(attribute.value());
-	    ActionPattern* actionPattern = getActionPattern(actionPatternName);
-	    retrieveTransitions(*actionPattern, n);
-	  } else {
-	    throw Exception("ActionPattern without name");
-	  }
-	} else {
-	  throw Exception("Non-actionpattern tag: " + string(e.tagName()));
-	}
+      if( !e.isNull() ) {            // the node was really an element.
+
+	assert(e.tagName() == "actionpattern");
+
+	QDomAttr attribute = e.attributeNode("name");
+
+	assert(!attribute.isNull());
+
+	string actionPatternName(attribute.value());
+	ActionPattern*  actionPattern = getActionPattern(actionPatternName);
+
+	assert(actionPattern != NULL);
+
+	actionPattern->xmlInit(n, actionPatterns_);
       }
       n = n.nextSibling();
-    }
-    
-    if (startPattern_ == NULL)
-      throw Exception("Non start pattern specified.");
+    }             
+
+    // If we could parse it, then it's a good policy   
+    valid_ = true;
+
+    // if (debug())
+    cout << *this;
   }
 
   void
   Policy::open()
   {
+    if (!valid())
+      throw BehaviourEngine::ENoPolicy();
+
     if (startPattern_)
       startPattern_->open();
     else
-      throw Exception("No start pattern specified.");
+      throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup("No start pattern specified."));
   }
 
   void 
@@ -147,135 +175,17 @@ namespace Miro
     ActionPattern::closeCurrentActionPattern();
   }
 
-  void 
-  Policy::retrieveBehaviours(ActionPattern& _actionPattern, 
-			     const QDomNode& _domElement) 
+  void
+  Policy::clear()
   {
-    QDomNode n = _domElement.firstChild();
-    while( !n.isNull() ) {
-      QDomElement e = n.toElement(); // try to convert the node to an element.
-      if( !e.isNull() ) { // the node was really an element.
-	if (e.tagName()=="behaviour") {
-	  QDomAttr attribute = e.attributeNode("name");
-	  if (!attribute.isNull()) {
-	    string name(attribute.value());
+    close();
+    startPattern_ = NULL;
 
-	    Behaviour* behaviour;
-	    BehaviourParameters * parameters;
-	    if ((behaviour = behaviourRepository_->getBehaviour(name)) != 0) {
-	      parameters = behaviour->getParametersInstance();
-
-	      KeyValueList params;
-	      retrieveBehaviourParameters(params, n);
-
-	      *parameters <<= params;
-	      _actionPattern.addBehaviour(behaviour, parameters);
-	    } else {
-	      throw Exception("Behaviour not registered: " + name);
-	    }
-	  } else {
-	    throw Exception("Behaviour without name");		
-	  }
-	}
-      }
-      n = n.nextSibling();
-    }
-  }
-
-  void 
-  Policy::retrieveArbiters(ActionPattern &_actionPattern, 
-				  const QDomNode& _domElement) 
-  {
-    QDomNode n = _domElement.firstChild();
-    while( !n.isNull() ) {
-      QDomElement e = n.toElement(); // try to convert the node to an element.
-      if( !e.isNull() ) { // the node was really an element.
-	if (e.tagName()=="arbiter") {
-	  QDomAttr attribute = e.attributeNode("name");
-	  if (!attribute.isNull()) {
-	    string name(attribute.value());
-	    Arbiter* arbiter;
-	    if ((arbiter = arbiterRepository_->getArbiter(name)) != 0) {
-	      ArbiterParameters * params = arbiter->getParametersInstance();
-	      _actionPattern.arbiter(arbiter, params);
-	    } else {
-	      throw Exception("Arbiter not registered: " + name);
-	    }
-	  } else {
-	    throw Exception("Arbiter without name");		
-	  }
-	}
-      }
-      n = n.nextSibling();
-    }
-  }
-
-  void 
-  Policy::retrieveBehaviourParameters(KeyValueList &_parameter, 
-					     const QDomNode& _domElement) 
-  {
-    QDomNode n = _domElement.firstChild();
-    while( !n.isNull() ) {
-      QDomElement e = n.toElement(); // try to convert the node to an element.
-      if( !e.isNull() ) { // the node was really an element.
-	if (e.tagName()=="parameter") {
-	  QDomAttr parameterName = e.attributeNode("name");
-	  QString name;
-	  if (!parameterName.isNull()) {
-	    name = parameterName.value();
-	  } else {
-	    throw Exception("Parameter tag without name.");
-	  }
-
-	  QDomAttr parameterValue = e.attributeNode("value");
-	  QString value;
-	  if (!parameterValue.isNull()) {
-	    value = parameterValue.value();
-	  } else {
-	    throw Exception("Parameter tag without value.");
-	  }
-
-	  _parameter.addPair(name, value);
-	}
-      }
-      n = n.nextSibling();
-    }
-  }
-
-  void 
-  Policy::retrieveTransitions(ActionPattern& _actionPattern, 
-			      const QDomNode& _domElement) 
-  {
-    QDomNode n = _domElement.firstChild();
-    while( !n.isNull() ) {
-      QDomElement e = n.toElement(); // try to convert the node to an element.
-      if( !e.isNull() ) { // the node was really an element.
-	if (e.tagName()=="transition") {
-	  QDomAttr attrMessage = e.attributeNode("message");
-	  string message;
-	  ActionPattern * actionPattern;
-
-	  if (!attrMessage.isNull()) {
-	    message = string(attrMessage.value());
-	  } else {
-	    throw Exception("Transition without message.");
-	  }
-
-	  QDomAttr attrPattern = e.attributeNode("target");
-	  if (!attrPattern.isNull()) {
-	    string patternname = string(attrPattern.value());
-	    actionPattern = getActionPattern(patternname);
-
-	    if (actionPattern == 0) {
-	      throw Exception("ActionPattern not registered: " + patternname + ".");
-	    }
-	  }
-		
-	  _actionPattern.addTransition(message, actionPattern);
-	}
-      }
-      n = n.nextSibling();
-    }
+    ActionPatternMap::iterator first, last = actionPatterns_.end();
+    for (first = actionPatterns_.begin(); first != last; ++first)
+      delete first->second;
+    actionPatterns_.clear();
+    valid_ = false;
   }
 
   void
@@ -284,10 +194,12 @@ namespace Miro
     cout << "Policy: Registering " 
 	 << _actionPattern->getActionPatternName() << endl;
     if (actionPatterns_.find(_actionPattern->getActionPatternName()) != 
-	actionPatterns_.end())
-      throw Exception(string("Action pattern ") +
-		      _actionPattern->getActionPatternName() +
-		      "already registered.");
+	actionPatterns_.end()) {
+      std::string error("Action pattern " +
+			_actionPattern->getActionPatternName() +
+			"already registered.");
+      throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup(error.c_str()));
+    }
     actionPatterns_[_actionPattern->getActionPatternName()] = _actionPattern;	
   }
 
@@ -303,6 +215,7 @@ namespace Miro
   void 
   Policy::printToStream(std::ostream& ostr) const
   {
+    cout << "Printing policy. Patterns: " << actionPatterns_.size() << endl; 
     ActionPatternMap::const_iterator i;
     for(i = actionPatterns_.begin(); i != actionPatterns_.end(); ++i) {
       ostr << *(i->second);

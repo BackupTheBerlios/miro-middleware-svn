@@ -68,33 +68,25 @@ realclean: clean
 
 
 .obj/QtRangeSensor.o .obj/QtRangeSensor.so .shobj/QtRangeSensor.o .shobj/QtRangeSensor.so: QtRangeSensor.cpp QtRangeSensor.h \
- \
- \
- \
- \
- \
- \
- /home/gmayer/Miro/src/miro/ExceptionC.i \
- \
- /home/gmayer/Miro/src/miro/ScanDescriptionC.i \
- \
- /home/gmayer/Miro/src/miro/TimeC.i \
- /home/gmayer/Miro/src/miro/RangeEventC.i \
- /home/gmayer/Miro/src/miro/RangeSensorC.i
+ $(MIRO_ROOT)/src/miro/Client.h $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/RobotParameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h $(MIRO_ROOT)/src/miro/RangeSensorC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
+ $(MIRO_ROOT)/src/miro/RangeEventC.h $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i $(MIRO_ROOT)/src/miro/RangeEventC.i \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.i
 
 .obj/QtRangeSensor.moc.o .obj/QtRangeSensor.moc.so .shobj/QtRangeSensor.moc.o .shobj/QtRangeSensor.moc.so: QtRangeSensor.moc.cpp QtRangeSensor.h \
- \
- \
- \
- \
- \
- \
- /home/gmayer/Miro/src/miro/ExceptionC.i \
- \
- /home/gmayer/Miro/src/miro/ScanDescriptionC.i \
- \
- /home/gmayer/Miro/src/miro/TimeC.i \
- /home/gmayer/Miro/src/miro/RangeEventC.i \
- /home/gmayer/Miro/src/miro/RangeSensorC.i
+ $(MIRO_ROOT)/src/miro/Client.h $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/RobotParameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h $(MIRO_ROOT)/src/miro/RangeSensorC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
+ $(MIRO_ROOT)/src/miro/RangeEventC.h $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i $(MIRO_ROOT)/src/miro/RangeEventC.i \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.i
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

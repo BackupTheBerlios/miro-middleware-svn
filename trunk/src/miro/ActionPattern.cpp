@@ -2,20 +2,25 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "ActionPattern.h"
+
+#include "BehaviourEngineC.h"
 
 #include "Behaviour.h"
 #include "BehaviourParameters.h"
-
+#include "BehaviourRepository.h"
+#include "ArbiterRepository.h"
+#include "KeyValueList.h"
 #include "StructuredPushSupplier.h"
+
+#include <qdom.h>
 
 using std::string;
 
@@ -24,9 +29,11 @@ namespace Miro
   Mutex    ActionPattern::transitionMutex_;
   ActionPattern* ActionPattern::currentActionPattern_ = 0;
 
-  ActionPattern::ActionPattern(const string &name, StructuredPushSupplier * _pSupplier) :
+  ActionPattern::ActionPattern(const string& _name, StructuredPushSupplier * _pSupplier) :
     pSupplier_(_pSupplier),
-    actionPatternName_(name)
+    arbiter_(NULL),
+    arbiterParameters_(NULL),
+    actionPatternName_(_name)
   {
     if (pSupplier_) {
       // Status Notify Event initialization
@@ -43,6 +50,133 @@ namespace Miro
 
   ActionPattern::~ActionPattern()
   {
+  }
+
+
+  void
+  ActionPattern::xmlInit(const QDomNode& _node, const ActionPatternMap& _apMap) 
+  {
+    ArbiterRepository * ar = ArbiterRepository::instance();
+    BehaviourRepository * br = BehaviourRepository::instance();
+
+    // first pass
+    // retrieve arbiter
+
+    // we need it to register the behaviours there
+
+    QDomNode n = _node.firstChild();
+    while( !n.isNull() ) {
+      QDomElement e = n.toElement(); // try to convert the node to an element.
+      if( !e.isNull() ) {            // the node was really an element.
+
+	QDomAttr attribute = e.attributeNode("name");
+
+	// retrieve arbiter
+	if (e.tagName()=="arbiter") {
+	  if (arbiter_ == NULL) {
+	    if (!attribute.isNull() && !attribute.value().isEmpty()) {
+	      string name(attribute.value());
+	      Arbiter* a;
+	      if ((a = ar->getArbiter(name)) != 0) {
+		ArbiterParameters * params = a->getParametersInstance();
+		arbiter(a, params);
+		
+	      } 
+	      else {
+		std::string error("Arbiter not registered: " + name);
+		throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup(error.c_str()));
+	      }
+	    } 
+	    else {
+	      throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup("Arbiter without name."));
+	    }
+	  }
+	  else {
+	   throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup("Multiple arbiters specified."));
+	  }
+	}
+	// syntax checking 
+	else if (e.tagName() != "behaviour" && e.tagName() != "transition") {
+	  std::string error("Unknown tag name: " + string(e.tagName()));
+	  throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup(error.c_str()));
+	}
+      }
+      n = n.nextSibling();
+    }
+
+    // There has to be exact one arbiter
+    if (arbiter_ == NULL) {
+      std::string error("ActionPattern without an arbiter: " + actionPatternName_);
+      throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup(error.c_str()));
+    }
+    
+    // second pass 
+    // retrieve behaviours and transitions
+    
+    n = _node.firstChild();
+    while( !n.isNull() ) {
+      QDomElement e = n.toElement(); // try to convert the node to an element.
+      if( !e.isNull() ) {            // the node was really an element.
+
+	QDomAttr attribute = e.attributeNode("name");
+
+	// retrieve behaviours
+	if (e.tagName() == "behaviour") {
+	  if (!attribute.isNull() && !attribute.value().isEmpty()) {
+	    string name(attribute.value());
+
+	    Behaviour * behaviour;
+	    BehaviourParameters * parameters;
+	    if ((behaviour = br->getBehaviour(name)) != 0) {
+	      parameters = behaviour->getParametersInstance();
+
+	      KeyValueList params;
+	      params <<= n;
+
+	      *parameters <<= params;
+	      addBehaviour(behaviour, parameters);
+	    } 
+	    else {
+	      std::string error("Behaviour not registered: " + name);
+	      throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup(error.c_str()));
+	    }
+	  } 
+	  else {
+	    throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup("Behaviour without name."));		
+	  }
+	}
+
+	// retrieve transitions
+	else if (e.tagName() == "transition") {
+	  QDomAttr attrMessage = e.attributeNode("message");
+	  string message;
+
+	  if (!attrMessage.isNull() && !attrMessage.value().isEmpty()) {
+	    message = string(attrMessage.value());
+	  } 
+	  else {
+	    throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup("Transition without message."));
+	  }
+	  
+	  QDomAttr attrPattern = e.attributeNode("target");
+	  if (!attrPattern.isNull() && !attrPattern.value().isEmpty()) {
+	    string patternname = string(attrPattern.value());
+	    ActionPatternMap::const_iterator iter = _apMap.find(patternname);
+
+	    if (iter != _apMap.end())
+	      addTransition(message, iter->second);
+	    else {
+	      std::string error("ActionPattern for transition not registered: " + 
+				message + " --> " + patternname + ".");
+	      throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup(error.c_str()));
+	    }
+	  }
+	  else
+	    throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup("Transition without target."));
+	}
+      }
+      n = n.nextSibling();
+    }
   }
 
   void ActionPattern::open() 
@@ -184,8 +318,10 @@ namespace Miro
   ActionPattern::closeCurrentActionPattern()
   {
     Miro::Guard guard(transitionMutex_);
-    currentActionPattern_->close(NULL);
-    currentActionPattern_->arbiter_->close();
+    if (currentActionPattern_) {
+      currentActionPattern_->close(NULL);
+      currentActionPattern_ = NULL;
+    }
   }
 
   void 

@@ -45,9 +45,12 @@ namespace Miro
     typedef std::pair<Behaviour *, BehaviourParameters *> BehaviourPair;
     typedef std::map<std::string, BehaviourPair> BehaviourMap;
     typedef std::map<std::string, ActionPattern*> TransitionMap;
+    typedef std::map<std::string, ActionPattern*> ActionPatternMap;
 
-    ActionPattern(const std::string & _name, StructuredPushSupplier * _pSupplier = NULL);
+    ActionPattern(const std::string& _name, StructuredPushSupplier * _pSupplier = NULL);
     virtual ~ActionPattern();
+
+    void xmlInit(const QDomNode& _node, const ActionPatternMap& apMap);
 
     void open();
     void close(ActionPattern * nextPattern);
@@ -65,6 +68,8 @@ namespace Miro
   
     void sendMessage(Behaviour const * const sender, const std::string& message);
 
+    // static methods
+
     static void sendTransitionMessage(const std::string& message);
     static ActionPattern * currentActionPattern();
     static void closeCurrentActionPattern();
@@ -73,6 +78,9 @@ namespace Miro
     ActionPattern * getTransitionPattern(const std::string &);
 
     virtual void printToStream(std::ostream& ostr) const;
+
+
+    // class data
 
     StructuredPushSupplier * pSupplier_;
     Arbiter * arbiter_;
@@ -84,7 +92,11 @@ namespace Miro
     std::string actionPatternName_;
     CosNotification::StructuredEvent notifyEvent;
 
+    // protected static methods
+
     static void setCurrentActionPattern(ActionPattern *);
+
+    // static data
 
     static Mutex transitionMutex_;
     static ActionPattern* currentActionPattern_;

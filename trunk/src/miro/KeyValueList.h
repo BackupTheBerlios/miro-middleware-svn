@@ -17,6 +17,8 @@
 #include <map>
 #include <qstring.h>
 
+class QDomNode;
+
 namespace Miro
 {
   class KeyValueList  
@@ -25,6 +27,8 @@ namespace Miro
     void addPair (const QString& _key, const QString& _value);
     QString  getValue(const QString& _key) const;
     void printToConsole();
+
+    void operator <<= (const QDomNode& _node);
 
   protected:
     typedef std::map<QString, QString> KeyValueListMap;

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -40,7 +40,7 @@ namespace Miro
     //! Register an Arbiter at the repository.
     void registerArbiter(Arbiter * _arbiter) throw(Exception);
     //! Lookup an Arbiter by name.
-    Arbiter * getArbiter(const std::string& _name) throw(Exception);
+    Arbiter * getArbiter(const std::string& _name) throw();
 
     //! Accessor to the global instance of the ArbiterRepository.
     static Singleton<ArbiterRepository> instance;
