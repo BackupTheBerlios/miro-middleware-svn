@@ -111,6 +111,12 @@
   </parameter>
  </section>
 
+ <section name="Camera">
+  <parameter name="Miro::PanParameters">
+   <parameter name="RangeMin" value="-90"/>
+   <parameter name="RangeMax" value="90"/>
+  </parameter>
+ </section>
 
  <section name="Notification" >
   <parameter name="LogNotifyParameters" >

@@ -170,6 +170,13 @@
       </parameter>
     </section>
 
+    <section name="Camera">
+      <parameter name="Miro::PanParameters">
+        <parameter name="RangeMin" value="-90"/>
+        <parameter name="RangeMax" value="90"/>
+      </parameter>
+    </section>
+
     <section name="Video" >
       <!-- OmniCam -->    <instance type="Video::Parameters" name="OmniCam" >
 	<parameter value="yuv420p" name="Palette" />
