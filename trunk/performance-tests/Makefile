@@ -30,7 +30,8 @@ include $(ACE_ROOT)/include/makeinclude/macros.GNU
 ## list all the sub directories in this variable
 ##
 
-DIRS =		video
+DIRS =		video \
+		panTilt
 ifneq (,$(findstring B21,$(MIRO_COMPONENTS)))
   DIRS +=	mcp
 endif
