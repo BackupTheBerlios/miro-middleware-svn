@@ -40,6 +40,17 @@ ifneq (,$(findstring B21,$(MIRO_COMPONENTS)))
 		speech \
 		laser
 endif
+## 
+## Compile the Sphinx/Festival Speech server only if Sphinx and Festival are installed
+##
+ifdef SPHINX_ROOT
+ifdef FESTIVAL_ROOT
+ifdef SPEECH_TOOLS_ROOT
+  DIRS += sphinx
+endif
+endif
+endif
+
 ifneq (,$(findstring Pioneer1,$(MIRO_COMPONENTS)))
   DIRS +=	psos \
 		pioneer \

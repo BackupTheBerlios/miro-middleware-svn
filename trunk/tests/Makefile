@@ -37,6 +37,7 @@ DIRS =		odometry \
 		video \
 		notify \
 		behaviours \
+		speech \
 		xml
 ifneq (,$(findstring B21,$(MIRO_COMPONENTS)))
   DIRS +=	b21 \

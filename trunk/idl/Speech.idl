@@ -25,15 +25,10 @@ module Miro
   {
     //! Add text to the output buffer.
     void speak(in string text) raises(EDevIO);
-    //! Skip the next word.
-    void skip() raises(EDevIO);
-    //! Clear the buffer.
-    void clear() raises(EDevIO);
-    //! Reset the card to default values.
-    void reset() raises(EDevIO);
+
     //! Select a voice sceem. 
     void setVoice(in char voice) raises(EDevIO, EOutOfBounds);
 
   };
 };
-#endif // dtlkSpeeh_idl
+#endif // Speech_idl
