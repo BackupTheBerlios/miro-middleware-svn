@@ -55,6 +55,8 @@ namespace FaulMotor
     double ticksR_;
     double prevTicksL_;
     double prevTicksR_;
+    int clockL_;
+    int clockR_;
     int counterL;
     int counterR;
     
@@ -64,7 +66,11 @@ namespace FaulMotor
     ACE_Time_Value prevTimeStampR_;
 
     double wheelBase_;
+    int oddWheel_;
+    double deltaT_;
+
+    static double const CLOCK_2_SEC;
   };
-};
+}
 #endif
 

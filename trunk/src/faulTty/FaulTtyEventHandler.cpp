@@ -40,8 +40,7 @@ namespace FaulController
 
   EventHandler::EventHandler(Miro::DevConsumer * _consumer, OdometryMessage::Wheel _wheel) :
     Super(_consumer, new OdometryMessage(_wheel)),
-    negate_(false),
-    firstMessage_(true)
+    index_(0)
   {
     DBG(cout << "Constructing FaulTtyEventHandler." << endl);
   }
@@ -63,7 +62,7 @@ namespace FaulController
     OdometryMessage * msg = static_cast<OdometryMessage *>(message_);
 
     // read data from the Faul device if we do not have some left
-    int bytes = ACE_OS::read(fd, buff_, 5);
+    int bytes = ACE_OS::read(fd, buff_ + index_, 5 - index_);
 
     if (bytes == -1)
       throw Miro::CException(errno, "Error on FaulTty file descriptor read.");
@@ -72,24 +71,33 @@ namespace FaulController
       throw Miro::Exception("FaulTty file descriptor was called to read 0" \
 			    "bytes from the device. I can't belief this!");
 
-    std::ostringstream s;
-    std::string wheel = (msg->wheel_ == OdometryMessage::LEFT)? "left  " : "right ";
-    s << wheel << "length: " << bytes << std::endl << std::hex << wheel;
-    for (int i = 0; i < bytes; ++i) {
-      s.width(2);
-      s.fill('0');
-      s << static_cast<unsigned int>((unsigned char)buff_[i]) << " ";
+    index_ += bytes;
+    if (index_ != 5)
+      return 0;
+
+    index_ = 0;
+
+
+    if (Miro::Log::level() >= Miro::Log::LL_PRATTLE && 
+	Miro::Log::enabled(Miro::Log::FAUL)) {
+
+      std::ostringstream s;
+      std::string wheel = (msg->wheel_ == OdometryMessage::LEFT)? "left  " : "right ";
+      s << wheel << "length: " << bytes << std::endl << std::hex << wheel;
+      for (int i = 0; i < bytes; ++i) {
+	s.width(2);
+	s.fill('0');
+	s << static_cast<unsigned int>((unsigned char)buff_[i]) << " ";
+      }
+      s << std::dec;
+      MIRO_DBG(FAUL, LL_PRATTLE, s.str().c_str());
     }
-    s << std::dec;
-    MIRO_DBG(FAUL, LL_PRATTLE, s.str().c_str());
-		  
     
     msg->time() = ACE_OS::gettimeofday();
     msg->ticks_ = *(reinterpret_cast<long int *>(&buff_[0]));
-    if (!firstMessage_)
-      dispatchMessage();
-    else 
-      firstMessage_ = false;
+    msg->clock_ = buff_[4];
+
+    dispatchMessage();
 
 #ifdef ASCII_MODE
     char const * last = buff_ + bytes;

@@ -138,9 +138,6 @@ namespace FaulMotor
 
     leftWheel_->writeBinary(init, 4);
     rightWheel_->writeBinary(init, 4);
-
-    // the first ticks package is ignored, so better get on with it
-    getTicks();
   }
 
   void

@@ -29,8 +29,7 @@ namespace FaulController
 
   protected:
     char buff_[512];
-    bool negate_;
-    bool firstMessage_;
+    int index_;
   };
 }
 #endif

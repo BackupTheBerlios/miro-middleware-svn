@@ -22,22 +22,24 @@ namespace FaulController
     enum Wheel { LEFT, RIGHT };
 
     OdometryMessage(Wheel _wheel);
-    void setTimestamp(ACE_Time_Value timestamp);
+    void setTimestamp(ACE_Time_Value const& _timestamp);
 
     Wheel wheel_;
     long ticks_;
+    unsigned char clock_;
   };
 
   inline
   OdometryMessage::OdometryMessage(Wheel _wheel) :
     wheel_(_wheel),
-    ticks_(0)
+    ticks_(0),
+    clock_(0)
   {}
 
   inline
   void 
-  OdometryMessage::setTimestamp(ACE_Time_Value timestamp) {
-     time_ = timestamp;
+  OdometryMessage::setTimestamp(ACE_Time_Value const& _timestamp) {
+     time_ = _timestamp;
   }
-};
+}
 #endif 

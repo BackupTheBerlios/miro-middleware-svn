@@ -35,6 +35,8 @@ namespace FaulMotor
   using std::cerr;
   using std::endl;
 
+  double const Consumer::CLOCK_2_SEC = 0.00933;
+
   //------------------------//
   //----- constructors -----//
   //------------------------//
@@ -50,7 +52,10 @@ namespace FaulMotor
     prevTicksR_(0.),
     counterL(49),
     counterR(49),
-    wheelBase_(params_->motion.wheelBase)
+    wheelBase_(params_->motion.wheelBase),
+    oddWheel_(0),
+    deltaT_((double)Parameters::instance()->odometryPace.sec() + 
+	    (double)Parameters::instance()->odometryPace.usec() / 1000000.)
   {
     DBG(cout << "Constructing FaulMotorConsumer." << endl);
     status_.position.point.x = 0.;
@@ -91,27 +96,31 @@ namespace FaulMotor
       if (pFaulMsg->wheel_ == FaulController::OdometryMessage::LEFT) {
 //	cout << "L: " << pFaulMsg->ticks_;
 	ticksL_ = pFaulMsg->ticks_;
+	clockL_ = pFaulMsg->clock_;
 	timeStampL_ = pFaulMsg->time();
       }
       else {
 //	cout << "R: " << pFaulMsg->ticks_;
 	ticksR_ = pFaulMsg->ticks_;
+	clockR_ = pFaulMsg->clock_;
 	timeStampR_ = pFaulMsg->time();
       }
 
-      if (prevTimeStampL_+ ACE_Time_Value(0, 10000) < timeStampR_ &&
-	  prevTimeStampR_+ ACE_Time_Value(0, 10000) < timeStampL_ &&
-	  prevTimeStampL_ != timeStampL_ &&
-	  prevTimeStampR_ != timeStampR_) {
+      ++oddWheel_; 
+      oddWheel_ &= 1;
+
+      if (!oddWheel_) {
 	if (init_ == 0) {
 	  double dL = -(ticksL_ - prevTicksL_) / params_->leftTicksPerMM;
 	  double dR = (ticksR_ - prevTicksR_) / params_->rightTicksPerMM;
 
-//	  cout << "dL: " << dL << " dR: " << dR << endl;
+	  // correct clock jitter from both wheels
+	  if (clockL_ != clockR_) {
+	    double mean = ((double)(clockL_ + clockR_)) / 2.;
 
-	  // reset tick counters to minimize overhead
-	  //if ((pFaulMsg->lPos < 3000) or (pFaulMsg->lPos > 10000) pConnection->setPos1(0);
-	  //if ((pFaulMsg->RPos < 3000) or (pFaulMsg->RPos > 10000) pConnection->setPos0(0);
+	    dL *= mean/((double)clockL_);
+	    dR *= mean/((double)clockR_);
+	  }
 
 	  // calculate new orientation
 	  double turn = (dR - dL) / wheelBase_;
@@ -123,9 +132,6 @@ namespace FaulMotor
 	  xPos_ += cos(status_.position.heading) * dist;
 	  yPos_ += sin(status_.position.heading) * dist;
 
-	  ACE_Time_Value timeDelta = timeStampR_ - prevTimeStampR_;
-
-	  double deltaT = (double)timeDelta.sec() + (double)timeDelta.usec() / 1000000.;
 
 	  // compose odometry message
 	  Miro::timeA2C(timeStampR_, status_.time);
@@ -144,8 +150,8 @@ namespace FaulMotor
 	       status_.position.point.y = (long) -xPos_;
 	    }
 	  }
-	  status_.velocity.translation = (long)(dist / deltaT);
-	  status_.velocity.rotation = turn / deltaT;
+	  status_.velocity.translation = (long)(dist / deltaT_);
+	  status_.velocity.rotation = turn / deltaT_;
 
 	  //cout << status_.time.sec<< "  " << status_.time.usec <<endl; //(dL+dR) / 2*dtime<<  endl;
 
