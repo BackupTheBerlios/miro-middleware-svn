@@ -207,6 +207,19 @@ namespace Miro
       sender_->disconnect();
       receiver_->disconnect();
     }
+    
+    void Adapter::setEventFilter(EventFilter * _event_filter)
+    {
+    	sender_->setEventFilter(_event_filter);
+    }
+    
+    void Adapter::changeSubscription(const CosNotification::EventTypeSeq & added,
+				     const CosNotification::EventTypeSeq & removed
+				     ACE_ENV_ARG_DECL_WITH_DEFAULTS)
+    {
+    	sender_->consumerAdmin_->subscription_change(added, removed);
+    }
+    
   } // NMC
 } // MIRO
 

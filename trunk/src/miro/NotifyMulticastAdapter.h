@@ -94,6 +94,7 @@ namespace Miro
     class EventHandler;
     class Sender;
     class Receiver;
+    class EventFilter;
 
     /**
      * class Adapter
@@ -143,6 +144,11 @@ namespace Miro
 
       void init();
       void fini();
+
+      void setEventFilter(EventFilter * _event_filter);
+      void changeSubscription(const CosNotification::EventTypeSeq & added,
+			      const CosNotification::EventTypeSeq & removed
+			      ACE_ENV_ARG_DECL_WITH_DEFAULTS);
 
     protected:
       Parameters * parameters_;
