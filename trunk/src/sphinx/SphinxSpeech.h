@@ -5,23 +5,24 @@
 #include "miro/ReactorTask.h"
 
 #include "SphinxSpeechImpl.h"
-//#include "SphinxSpeechTask.h"
 
 namespace Miro 
 {
 
-  class SphinxSpeechObject : public Miro::Server
+  //forward declaration
+  class StructuredPushSupplier;
+
+  class SphinxSpeechServer : public Miro::Server
   {
     typedef Miro::Server super;
 
   public:
-    SphinxSpeechObject(int argc, char *argv[]);
-    ~SphinxSpeechObject();
+    SphinxSpeechServer(int argc, char *argv[], StructuredPushSupplier * _supplier = NULL);
+    ~SphinxSpeechServer();
 
   protected:
     string miroRoot;
 
-    //    SphinxSpeechTask speechTask;
     SphinxSpeechImpl speechImpl;
     Miro::SphinxSpeech_var pSpeech;
   };

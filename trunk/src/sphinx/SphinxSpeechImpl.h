@@ -12,19 +12,22 @@ extern "C" {
 #include "miro/SphinxSpeechS.h"
 #include "SphinxSpeechTask.h"
 
+#include <orbsvcs/CosNotifyCommC.h>
+
 #include <list>
 #include <string>
 
 namespace Miro 
 {
 
-  //forward declaration
+  //forward declarations
   class FestivalSpeechImpl;
+  class StructuredPushSupplier;
 
   class SphinxSpeechImpl :public POA_Miro::SphinxSpeech
   {
   public:
-    SphinxSpeechImpl(std::string dictFileName, bool _halfDuplex=true);
+    SphinxSpeechImpl(std::string dictFileName, bool _halfDuplex=true, Miro::StructuredPushSupplier * _supplier = NULL);
     ~SphinxSpeechImpl();
 
     //sphinx
@@ -65,6 +68,8 @@ namespace Miro
 
     //sphinx
     SphinxSpeechTask speechTask;
+    Miro::StructuredPushSupplier *supplier;
+    CosNotification::StructuredEvent notifyEvent;
     SentenceIDL lastSentence;
     
     std::string dict;

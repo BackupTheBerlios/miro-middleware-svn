@@ -1,15 +1,22 @@
 
 #include "miro/Server.h"
+#include "miro/StructuredPushSupplier.h"
+
+#include "miro/Client.h"
 #include "SphinxSpeech.h"
+
 
 #include <string>
 
+using CosNotifyChannelAdmin::EventChannel;
+using CosNotifyChannelAdmin::EventChannel_var;
+
 namespace Miro
 {
-  SphinxSpeechObject::SphinxSpeechObject(int argc, char *argv[]) :
+  SphinxSpeechServer::SphinxSpeechServer(int argc, char *argv[], Miro::StructuredPushSupplier * _supplier) :
     super(argc,argv),
     miroRoot(getenv("MIRO_ROOT")),
-    speechImpl((miroRoot+"/etc/sphinx.dic").c_str()),
+    speechImpl((miroRoot+"/etc/sphinx.dic").c_str(),true,_supplier),
     pSpeech(speechImpl._this())
   {
     speechImpl.addLm((miroRoot+"/etc/sphinx.lm").c_str(),"default");
@@ -41,7 +48,7 @@ namespace Miro
     }
   }
 
-  SphinxSpeechObject::~SphinxSpeechObject()
+  SphinxSpeechServer::~SphinxSpeechServer()
   {
     try {
       CosNaming::Name n;
@@ -56,7 +63,7 @@ namespace Miro
     }
     catch (const CORBA::Exception& e) {
       cerr << "Caught CORBA exception on unbind: " << e << endl;
-      cerr << "Porbably the NameSevice went down while we ran." << endl;
+      cerr << "Probably the NameSevice went down while we ran." << endl;
     }
   }
 };
@@ -64,7 +71,21 @@ namespace Miro
 
 int main(int argc, char* argv[]) 
 {
-  Miro::SphinxSpeechObject speech(argc,argv);
+  Miro::Client * client=new Miro::Client(argc,argv);
+  EventChannel_var ec=NULL;
+  Miro::StructuredPushSupplier * pSupplier=NULL;
+  try {
+    ec=client->resolveName<EventChannel>("EventChannel");
+    pSupplier=new Miro::StructuredPushSupplier(ec.in(),client->namingContextName);
+  }
+  catch(...) {
+    ec=NULL;
+    pSupplier=NULL;
+  }
+
+  delete client;//not needed anymore
+
+  Miro::SphinxSpeechServer speech(argc,argv,pSupplier);
  
   try {
 #ifdef DEBUG

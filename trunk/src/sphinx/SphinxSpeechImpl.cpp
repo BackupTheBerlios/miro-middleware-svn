@@ -1,5 +1,8 @@
 #include "SphinxSpeechImpl.h"
 #include "FestivalSpeech.h"
+
+#include "miro/StructuredPushSupplier.h"
+
 #include <string>
 
 namespace Miro {
@@ -15,8 +18,9 @@ namespace Miro {
      duplex instead of full duplex.
   **/
   
-  SphinxSpeechImpl::SphinxSpeechImpl(string dictFileName, bool _halfDuplex) :
+  SphinxSpeechImpl::SphinxSpeechImpl(string dictFileName, bool _halfDuplex, StructuredPushSupplier * _supplier) :
     speechTask(this),
+    supplier(_supplier),
     dict(dictFileName),
     halfDuplex(_halfDuplex),
     initialized(false),
@@ -26,6 +30,17 @@ namespace Miro {
     festival = new FestivalSpeechImpl();
     lastSentence.sentence.length(0);
     lastSentence.valid=false;
+    if (supplier) {
+      notifyEvent.header.fixed_header.event_type.domain_name = 
+	CORBA::string_dup(supplier->domainName().c_str());
+      notifyEvent.header.fixed_header.event_type.type_name = 
+	CORBA::string_dup("Speech");
+      notifyEvent.header.fixed_header.event_name = CORBA::string_dup("");
+      notifyEvent.header.variable_header.length(0); // put nothing here
+      notifyEvent.filterable_data.length(0);        // put nothing here
+    } else {
+      cout << "Speech notification will not be available" << endl;
+    }
     speechTask.open(NULL);
     cout << "SphinxSpeechImpl initialized" << endl << flush;
   }
@@ -54,6 +69,13 @@ namespace Miro {
     lastSentence.sentence=data.sentence;
     lastSentence.timestamp=data.timestamp;
     lastSentence.valid=data.valid;
+    
+    if (supplier) {
+      notifyEvent.remainder_of_body <<= lastSentence;
+      supplier->sendEvent(notifyEvent);
+    }
+
+
   }
 
   /**
