@@ -14,7 +14,7 @@
 
 #include "miro/Server.h"
 
-#include <tao/qt_resource.h>
+//#include <tao/qt_resource.h>
 
 #include <qapplication.h>
 
@@ -24,7 +24,7 @@ int main (int argc, char * argv[])
 
   // Qt specific stuff for running with TAO
   QApplication app(argc, argv);
-  TAO_QtResource_Factory::set_context (&app);
+  //  TAO_QtResource_Factory::set_context (&app);
 
   try {
     Miro::Server server(argc, argv);
