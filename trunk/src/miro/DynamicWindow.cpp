@@ -165,7 +165,7 @@ namespace Miro
 	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -angle * SCALE_ANGLE);
       }  
     }
-    cout << "MAX POINT VALUE :::: " << maxPointValue << endl;
+    std::cout << "MAX POINT VALUE :::: " << maxPointValue << std::endl;
     
   }
   

@@ -74,10 +74,10 @@ namespace Miro
   void 
   MotionParameters::printToStream(std::ostream& _ostr) const
   {
-    _ostr << "min translation: " << minTranslation << endl
-	  << "max translation: " << maxTranslation << endl
-	  << "min rotation: " << minRotation << endl
-	  << "max rotation: " << maxRotation << endl;
+    _ostr << "min translation: " << minTranslation << std::endl
+	  << "max translation: " << maxTranslation << std::endl
+	  << "min rotation: " << minRotation << std::endl
+	  << "max rotation: " << maxRotation << std::endl;
   }
 
   DifferentialMotionParameters::DifferentialMotionParameters() :
@@ -142,10 +142,10 @@ namespace Miro
   {
     Super::printToStream(_ostr);
 
-    _ostr << "min left translation: " << minLTranslation << endl
-	  << "max left translation: " << maxLTranslation << endl
-	  << "min right translation: " << minRTranslation << endl
-	  << "max right translation: " << maxRTranslation << endl;
+    _ostr << "min left translation: " << minLTranslation << std::endl
+	  << "max left translation: " << maxLTranslation << std::endl
+	  << "min right translation: " << minRTranslation << std::endl
+	  << "max right translation: " << maxRTranslation << std::endl;
   }
 
 };

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -11,13 +11,16 @@
 
 
 #include "MainForm.h"
-#include <unistd.h>
-#include <qpainter.h>
-#include <qimage.h>
+
 #include "video/VideoDevice.h"
 
-using namespace Video;
+#include <qpainter.h>
+#include <qimage.h>
 
+#include <unistd.h>
+
+using namespace Video;
+using std::string;
 
   string path()
   {
@@ -156,9 +159,12 @@ MainForm::MainForm(int argc, char* argv[], QWidget *parent, const char *name) :
 
 MainForm::~MainForm()
 {
-  if (video!=NULL) video->release(imageIDL);
-  if (ppm!=NULL) free(ppm);
-  if (colorTable!=NULL) free(colorTable);
+  if (video.in()!=NULL)
+    video->release(imageIDL);
+  if (ppm!=NULL)
+    free(ppm);
+  if (colorTable!=NULL)
+    free(colorTable);
 }
 
 void MainForm::initDialog()

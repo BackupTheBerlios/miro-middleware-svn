@@ -32,16 +32,16 @@ namespace Miro
   }
 
   void
-  ArbiterMessage::printToConsole(ostream& ostr) const
+  ArbiterMessage::printToConsole(std::ostream& _ostr) const
   {
-    ostr << "id: " << id << endl
-	 << "active: " << active << endl;
+    _ostr << "id: " << id << std::endl
+	  << "active: " << active << std::endl;
   }
 
   std::ostream&
-  operator << (ostream& ostr, const ArbiterMessage& _message)
+  operator << (std::ostream& _ostr, const ArbiterMessage& _message)
   {
-    _message.printToConsole(ostr);
-    return ostr;
+    _message.printToConsole(_ostr);
+    return _ostr;
   }
 };

@@ -11,6 +11,7 @@
 
 
 #include "VideoParameters.h"
+#include "VideoDevice.h"
 
 #include <miro/TimeHelper.h>
 
@@ -18,7 +19,6 @@
 
 #include <iostream>
 #include <cmath>
-#include "video/VideoDevice.h"
 
 namespace Video
 {
@@ -65,11 +65,13 @@ namespace Video
 	    }
 	    else if (n1.nodeName() == "palette") {
 	      	palette = t.data() ;
-		if ((palette==string("rgb")) ||
-		    (palette==string("bgr"))) pixelSize=3;
-		else if ((palette==string("rgba")) ||
-			 (palette==string("abgr"))) pixelSize=4;
-		else if (palette==string("gray")) 
+		if ((palette == std::string("rgb")) ||
+		    (palette == std::string("bgr"))) 
+		  pixelSize=3;
+		else if ((palette == std::string("rgba")) ||
+			 (palette == std::string("abgr")))
+		  pixelSize=4;
+		else if (palette == std::string("gray")) 
 		  pixelSize=1;
 
 	    }

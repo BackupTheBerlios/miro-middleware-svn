@@ -21,6 +21,8 @@
 using std::cout;
 using std::cerr;
 using std::string;
+using std::max;
+using std::min;
 
 using CosNotifyChannelAdmin::EventChannel_ptr;
 using CosNotification::EventTypeSeq;

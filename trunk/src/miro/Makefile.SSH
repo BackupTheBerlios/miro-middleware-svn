@@ -26,7 +26,7 @@ SHLIB    = lib$(NAME).$(SOEXT)
 # ACE_SHLIBS = -lTAO
 
 ## specify your library files here
-IDL_FILES =	\
+IDL_FILES =
 
 
 IDL_SRC = \

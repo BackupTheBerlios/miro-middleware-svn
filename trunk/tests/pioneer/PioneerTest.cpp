@@ -99,7 +99,7 @@ void gripperMenu(Service& service)
 {
   bool loop=true;
   char c;
-  string str;
+  std::string str;
 
   while(loop) {
     cout << endl
@@ -189,7 +189,7 @@ void cameraMenu(Service& service)
 {
   bool loop=true;
   char c;
-  string str;
+  std::string str;
 
   cout << "camera limits:" << endl;
 
@@ -369,7 +369,7 @@ int main(int argc, char* argv[])
   
   bool loop = true;  
   char c;
-  string str;
+  std::string str;
   short k;
   int i;
     

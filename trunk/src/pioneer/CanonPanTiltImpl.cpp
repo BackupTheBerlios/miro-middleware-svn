@@ -150,6 +150,10 @@ namespace Canon
       Miro::Guard guard(pAnswer->mutex);       
       pAnswer->init();
       connection.sendCamera(getPanTilt);
+
+      // guillem: please use a Condition variable here
+      //          btw, usleep is wrapped by ACE_OS::sleep(ACE_Time_Value&)
+      //          if you need it.
       while (!pAnswer->errorCode()) usleep(1000); //wait until the error code is finished
       //if camera is initializing, wait and try again
       if (pAnswer->errorCode()==ERROR_BUSY) {
@@ -203,7 +207,8 @@ namespace Canon
 	Miro::Guard guard(pAnswer->mutex); 
 	pAnswer->init();
 	connection.sendCamera(panTiltValue);
-	while (!pAnswer->errorCode()) usleep(1000); //wait until the error code is finished
+	while (!pAnswer->errorCode()) 
+	  usleep(1000); //wait until the error code is finished
 	
 	//check if the format is OK and no errors are returned
 	//if there is an error, an exception will be thrown
@@ -221,11 +226,6 @@ namespace Canon
 	  throw (e);
 	}
 	catch (Miro::Exception& e) {
-	  currentPan=panTmp; //reset old values in case of error
-	  currentTilt=tiltTmp;
-	  throw (e);
-	}
-	catch (CORBA::Exception& e) {
 	  currentPan=panTmp; //reset old values in case of error
 	  currentTilt=tiltTmp;
 	  throw (e);

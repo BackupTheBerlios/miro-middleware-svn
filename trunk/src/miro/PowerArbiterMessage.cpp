@@ -33,10 +33,10 @@ namespace Miro
   }
 
   void
-  PowerArbiterMessage::printToConsole(std::ostream& ostr) const
+  PowerArbiterMessage::printToConsole(std::ostream& _ostr) const
   {
-    Super::printToConsole(ostr);
-    ostr << "left power (+/- 30000): " << left << endl
-	 << "right power (+/- 30000): " << right << endl;
+    Super::printToConsole(_ostr);
+    _ostr << "left power (+/- 30000): " << left << std::endl
+	  << "right power (+/- 30000): " << right << std::endl;
   }
 };

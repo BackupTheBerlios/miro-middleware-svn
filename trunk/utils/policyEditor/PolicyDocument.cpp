@@ -170,7 +170,7 @@ PolicyDocumentClass::saveXML(const QString& filename) const
 
 
 void 
-PolicyDocumentClass::loadDatabase(const std::string& filename) 
+PolicyDocumentClass::loadDatabase(const std::string& /* _filename */ ) 
 { 
   databaseVector_ = policyConfig.getBehaviours();
   arbiterVector = policyConfig.getArbiters();

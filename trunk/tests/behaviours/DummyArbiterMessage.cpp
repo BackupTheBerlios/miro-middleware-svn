@@ -25,8 +25,8 @@ DummyArbiterMessage::assign(const ArbiterMessage& _lhs)
 }
 
 void
-DummyArbiterMessage::printToConsole(std::ostream& ostr) const
+DummyArbiterMessage::printToConsole(std::ostream& _ostr) const
 {
-  Super::printToConsole(ostr);
-  ostr << "message: " << message << endl;
+  Super::printToConsole(_ostr);
+  _ostr << "message: " << message << std::endl;
 }
