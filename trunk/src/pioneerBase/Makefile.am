@@ -24,9 +24,9 @@ PioneerBase_SOURCES = \
 	PioneerBase.h
 
 PioneerBase_LDADD = \
-	-lpioneer \
-	-lpsos \
-	-lmiroSvc \
+	$(top_builddir)/lib/libpioneer.a \
+	$(top_builddir)/lib/libpsos.a \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroIDL \
 	-lmiro
 

@@ -20,7 +20,7 @@ bin_PROGRAMS = BatteryGet
 BatteryGet_SOURCES = BatteryGet.cpp
 
 BatteryGet_LDADD = \
-	-lmiroSvc \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)

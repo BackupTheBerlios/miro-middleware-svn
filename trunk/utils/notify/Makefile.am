@@ -36,7 +36,7 @@ NotifyLogPlayer_SOURCES = \
 	NotifyLogPlayer.h
 
 linkwithlibraries = \
-	-lmiroSvc \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)

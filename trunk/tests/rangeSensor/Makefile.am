@@ -20,7 +20,7 @@ bin_PROGRAMS = RangeSensorTest
 RangeSensorTest_SOURCES = RangeSensorTest.cpp
 
 RangeSensorTest_LDADD = \
-	-lmiroSvc \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)

@@ -30,7 +30,7 @@ DtlkSpeech_SOURCES = \
 
 
 DtlkSpeech_LDADD = \
-	-lmiroSvc \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroIDL \
 	-lmiro
 

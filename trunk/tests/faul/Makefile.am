@@ -22,11 +22,11 @@ bin_PROGRAMS = FaulTest
 FaulTest_SOURCES = FaulTest.cpp
 
 FaulTest_LDADD = \
-	-lfaulMotor \
-	-lfaulTty \
-	-lsparrow \
-	-lcan \
-	-lmiroSvc \
+	$(top_builddir)/lib/libfaulMotor.a \
+	$(top_builddir)/lib/libfaulTty.a \
+	$(top_builddir)/lib/libsparrow.a \
+	$(top_builddir)/lib/libcan.a \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)

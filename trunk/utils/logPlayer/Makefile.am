@@ -39,7 +39,7 @@ LogPlayer_SOURCES = $(sources) $(tomocsources) $(tomocsources:.cpp=.moc.cpp)
 
 LogPlayer_LDADD = \
 	-L../widgets/ -lmiroWidgets \
-	-lmiroSvc \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)

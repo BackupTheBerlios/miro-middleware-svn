@@ -22,7 +22,7 @@ ParameterExample_SOURCES = \
 	Parameters.xml
 
 ParameterExample_LDADD = \
-	-lmiroSvc \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)

@@ -25,24 +25,25 @@ bin_PROGRAMS = QtTouchPad
 
 
 sources = \
-	QtTouchPad.cpp
-
-tomocsources = \
+	QtTouchPad.cpp \
 	MainForm.cpp \
 	MainForm.h
 
-QtTouchPad_SOURCES = $(sources) $(tomocsources) $(tomocsources:.cpp=.moc.cpp)
+tomocsources = \
+	MainForm.moc.cpp
+
+QtTouchPad_SOURCES = $(sources) $(tomocsources)
 
 QtTouchPad_LDADD = \
 	-lTAO \
 	-lTAO_CosNaming \
-	-lmiroSvc \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)
 
-BUILT_SOURCES = $(tomocsources:.cpp=.moc.cpp)
-CLEANFILES = $(tomocsources:.cpp=.moc.cpp)
+BUILT_SOURCES = $(tomocsources)
+CLEANFILES = $(tomocsources)
 
 all-local:
 	$(INSTALLPROGRAMS)

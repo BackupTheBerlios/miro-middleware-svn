@@ -37,7 +37,7 @@ QtVideo_SOURCES = $(sources) $(tomocsources) $(tomocsources:.cpp=.moc.cpp)
 QtVideo_LDADD = \
 	-lTAO \
 	-lTAO_CosNaming \
-	-lmiroSvc \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)

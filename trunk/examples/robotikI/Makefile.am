@@ -34,7 +34,7 @@ linkwithlibraries = \
 	-lTAO \
 	-lTAO_CosNotification \
 	-lTAO_CosNaming \
-	-lmiroSvc \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)

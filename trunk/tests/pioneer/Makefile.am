@@ -22,9 +22,9 @@ bin_PROGRAMS = PioneerTest
 PioneerTest_SOURCES = PioneerTest.cpp
 
 PioneerTest_LDADD = \
-	-lpioneer \
-	-lpsos \
-	-lmiroSvc \
+	$(top_builddir)/lib/libpioneer.a \
+	$(top_builddir)/lib/libpsos.a \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)

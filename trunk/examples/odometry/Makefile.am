@@ -27,7 +27,7 @@ OdometryStream_SOURCES = OdometryStream.cpp OdometryStream.h
 linkwithlibraries = \
 	-lTAO \
 	-lTAO_CosNaming \
-	-lmiroSvc \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)

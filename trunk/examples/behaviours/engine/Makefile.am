@@ -30,7 +30,7 @@ RangeSensorBehaviourEngine_SOURCES = RangeSensorBehaviourEngine.cpp
 B21BehaviourEngine_SOURCES = B21BehaviourEngine.cpp
 
 globallibs = \
-	-lmiroSvc \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-L../simple/ -lmiroBehavioursSimple \
 	-L../rangeSensor/ -lmiroBehavioursRangeSensor \
 	-lmiroIDL \

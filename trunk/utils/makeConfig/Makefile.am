@@ -20,15 +20,15 @@ bin_PROGRAMS = MakeConfig
 MakeConfig_SOURCES = MakeConfig.cpp
 
 MakeConfig_LDADD = \
-	-lsparrow \
-	-lcan \
-	-lpioneer \
-	-lpsos \
-	-lbase \
-	-lmsp \
-	-labus \
-	-lmcp \
-	-lmiroSvc \
+	$(top_builddir)/lib/libsparrow.a \
+	$(top_builddir)/lib/libcan.a \
+	$(top_builddir)/lib/libpioneer.a \
+	$(top_builddir)/lib/libpsos.a \
+	$(top_builddir)/lib/libbase.a \
+	$(top_builddir)/lib/libmsp.a \
+	$(top_builddir)/lib/libabus.a \
+	$(top_builddir)/lib/libmcp.a \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS) \

@@ -32,8 +32,8 @@ if COND_IEEE1394
 endif 
 
 GrayVideoService_LDADD = \
-	-lmiroSvc \
-	-lmiroVideo \
+	$(top_builddir)/lib/libmiroSvc.a \
+	$(top_builddir)/lib/libmiroVideo.a \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS) \

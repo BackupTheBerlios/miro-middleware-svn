@@ -72,7 +72,7 @@ DynamicPolicyTest_SOURCES = \
 	Parameters.xml
 
 linkwithlibraries = \
-	-lmiroSvc \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)

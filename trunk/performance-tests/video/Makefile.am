@@ -24,7 +24,7 @@ GrabImages_SOURCES = GrabImages.cpp
 GrabImages_LDADD = \
 	-lTAO \
 	-lTAO_CosNaming \
-	-lmiroSvc \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)

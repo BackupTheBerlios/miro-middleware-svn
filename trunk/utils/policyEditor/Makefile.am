@@ -55,7 +55,7 @@ PolicyEditor_LDADD = \
 	-lTAO_CosNaming \
 	-L../widgets/ -lmiroWidgets \
 	-lmiroParams \
-	-lmiroSvc \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)

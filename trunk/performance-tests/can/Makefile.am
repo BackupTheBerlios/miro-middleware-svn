@@ -24,9 +24,9 @@ CanPerformance_SOURCES = CanPerformance.cpp
 CanPerformance_LDADD = \
 	-lTAO \
 	-lTAO_CosNaming \
-	-lsparrow \
-	-lcan \
-	-lmiroSvc \
+	$(top_builddir)/lib/libsparrow.a \
+	$(top_builddir)/lib/libcan.a \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)

@@ -27,7 +27,7 @@ SensorStream_SOURCES = SensorStream.cpp SensorStream.h
 linkwithlibraries = \
 	-lTAO \
 	-lTAO_CosNaming \
-	-lmiroSvc \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)

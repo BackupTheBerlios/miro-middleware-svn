@@ -50,7 +50,7 @@ MiroImage_LDADD = \
 	-lTAO_CosNotification \
 	-lTAO_CosNaming \
 	-lTAO \
-	-lmiroSvc \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroIDL \
 	-lmiro
 

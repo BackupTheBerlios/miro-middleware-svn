@@ -31,8 +31,8 @@ B21SelfTest_SOURCES = B21SelfTest.cpp
 linkwithlibraries = \
 	-lTAO \
 	-lTAO_CosNaming \
-	-lmiroSsh \
-	-lmiroSvc \
+	$(top_builddir)/lib/libmiroSvc.a \
+	$(top_builddir)/lib/libmiroSsh.a \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)

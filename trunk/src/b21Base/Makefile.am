@@ -24,12 +24,12 @@ B21Base_SOURCES = B21Base.cpp B21Base.h
 B21BaseDummy_SOURCES = B21BaseDummy.cpp B21BaseDummy.h
 
 linkwithlibraries = \
-	-lB21Buttons \
-	-lmsp \
-	-labus \
-	-lbase \
-	-lmcp \
-	-lmiroSvc \
+	$(top_builddir)/lib/libmiroSvc.a \
+	$(top_builddir)/lib/libB21Buttons.a \
+	$(top_builddir)/lib/libmsp.a \
+	$(top_builddir)/lib/libabus.a \
+	$(top_builddir)/lib/libbase.a \
+	$(top_builddir)/lib/libmcp.a \
         -lmiroIDL \
 	-lmiro
 

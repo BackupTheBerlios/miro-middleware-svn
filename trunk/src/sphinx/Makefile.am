@@ -27,7 +27,7 @@ SphinxSpeech_SOURCES = \
 	SphinxSpeechTask.cpp
 
 SphinxSpeech_LDADD = \
-	-lmiroSvc \
+	$(top_builddir)/lib/libmiroSvc.a \
 	$(FESTIVAL_LDFLAGS) $(FESTIVAL_LIBS) \
 	$(SPEECHTOOLS_LDFLAGS) $(SPEECHTOOLS_LIBS) \
 	$(SPHINX_LDFLAGS) $(SPHINX_LIBS) \

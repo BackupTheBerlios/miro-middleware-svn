@@ -22,7 +22,7 @@ bin_PROGRAMS = VideoBrokerTest
 VideoBrokerTest_SOURCES = VideoBrokerTest.cpp
 
 VideoBrokerTest_LDADD = \
-	-lmiroSvc \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)

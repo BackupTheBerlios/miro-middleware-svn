@@ -20,7 +20,7 @@ bin_PROGRAMS = BehaviourEngineTest
 BehaviourEngineTest_SOURCES = BehaviourEngineTest.cpp
 
 BehaviourEngineTest_LDADD = \
-	-lmiroSvc \
+	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)

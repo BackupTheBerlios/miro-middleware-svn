@@ -29,10 +29,10 @@ VideoExample_SOURCES = VideoExample.cpp
 linkwithlibraries = \
 	-lTAO \
 	-lTAO_CosNaming \
-	-lmiroVideo \
-	-lmiroSvc \
+	$(top_builddir)/lib/libmiroVideo.a \
 	-lmiroIDL \
 	-lmiro \
+	$(top_builddir)/lib/libmiroSvc.a \
 	$(QT_LIBS)
 
 if COND_IEEE1394
