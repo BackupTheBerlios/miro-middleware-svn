@@ -38,7 +38,7 @@ namespace
   using Miro::Pan_var;
   using Miro::Video;
   using Miro::Video_var;
-  using Miro::ImageHandleIDL;
+  using Miro::ImageHandleIDL_var;
 
   // global variables
   bool bgr = false;
@@ -175,15 +175,16 @@ int main(int argc, char *argv[])
     // get reference to video service
     Pan_var pan = client.resolveName<Pan>(panName.c_str());
     Video_var video = client.resolveName<Video>("Video");
-    ImageHandleIDL imageIDL;
+    CORBA::ULong id;
+    ImageHandleIDL_var imageIDL;
     char * imageData;
     char buffer[256];
     char c;
     double alpha;
     string angle;
 	
-    imageIDL = video->connect();
-    imageData = (char*)::shmat(imageIDL.key, NULL, 0);
+    imageIDL = video->connect(id);
+    imageData = (char*)::shmat(imageIDL->key, NULL, 0);
 
     if ((int)imageData == -1)
       throw Miro::EDevIO();
@@ -243,13 +244,14 @@ int main(int argc, char *argv[])
 	    first = false;
     
 	    // get image
-	    video->getWaitImage(imageIDL);
+	    CORBA::ULong imgOffset;
+	    video->acquireNextImage(id, imgOffset);
 	    
 	    // fill image structure
 	    Image image;
 	    image.fileName = path() + client.namingContextName + "_" + createFileName() + ".ppm";
-	    image.width = imageIDL.width;
-	    image.height = imageIDL.height;
+	    image.width = imageIDL->format.width;
+	    image.height = imageIDL->format.height;
 	    
 	    // fill image buffer
 	    image.buffer = new char[3 * image.width * image.height];
@@ -259,14 +261,14 @@ int main(int argc, char *argv[])
 	      int offset = 0;
 	      for (int i = 0; i < image.width; ++i) {
 		for (int j = 0; j < image.height; ++j, offset += 3) {
-		  image.buffer[offset + 0] = imageData[offset + 2]; // r
-		  image.buffer[offset + 1] = imageData[offset + 1]; // g
-		  image.buffer[offset + 2] = imageData[offset + 0]; // b
+		  image.buffer[offset + 0] = (imageData + imgOffset)[offset + 2]; // r
+		  image.buffer[offset + 1] = (imageData + imgOffset)[offset + 1]; // g
+		  image.buffer[offset + 2] = (imageData + imgOffset)[offset + 0]; // b
 		}
 	      }
 	    }
 	    else {
-	      std::memcpy(image.buffer, imageData, 3 * image.width * image.height);
+	      std::memcpy(image.buffer, imageData + imgOffset, 3 * image.width * image.height);
 	    }
 	    
 	    // save image to buffer
@@ -291,7 +293,7 @@ int main(int argc, char *argv[])
     }      
 
     ::shmdt((void*)imageData);
-    video->release(imageIDL);
+    video->disconnect(id);
     cout << endl;
 
   }

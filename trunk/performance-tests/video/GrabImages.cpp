@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 1999, 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -28,11 +28,12 @@ int main(int argc, char *argv[])
   try {
     last = ACE_OS::gettimeofday();
     Video_var	video = client.resolveName<Video>("Video");
-    ImageHandleIDL imageIDL;
+    CORBA::ULong id;
+    ImageHandleIDL_var imageIDL;
     char*		imageData;
 
-    imageIDL = video->connect();
-    imageData = (char*)::shmat(imageIDL.key, NULL, 0);
+    imageIDL = video->connect(id);
+    imageData = (char*)::shmat(imageIDL->key, NULL, 0);
     if ((int)imageData == -1)
       throw Miro::EDevIO();
     now = ACE_OS::gettimeofday();
@@ -41,10 +42,12 @@ int main(int argc, char *argv[])
     int	j;
 
     total = 0;
+    CORBA::ULong offset;
     for (j=0; j<50; j++)
     {
       last = ACE_OS::gettimeofday();
-      video->getWaitImage(imageIDL);
+      video->acquireNextImage(id, offset);
+      video->releaseImage(id, offset);
       now = ACE_OS::gettimeofday();
       total += (now - last);
     }
@@ -55,7 +58,8 @@ int main(int argc, char *argv[])
     for (j=0; j<50; j++)
     {
       last = ACE_OS::gettimeofday();
-      video->getImage(imageIDL);
+      video->acquireCurrentImage(id, offset);
+      video->releaseImage(id, offset);
       now = ACE_OS::gettimeofday();
       total += (now - last);
     }
@@ -66,20 +70,21 @@ int main(int argc, char *argv[])
     for (j=0; j<50; j++)
     {
       last = ACE_OS::gettimeofday();
-      video->getWaitImage(imageIDL);
+      video->acquireNextImage(id, offset);
 
       char	fname[128];
 
       std::sprintf(fname, "video%.5d.ppm", j);
-      FILE*	imgFile = std::fopen(fname, "wb");
+      FILE * imgFile = std::fopen(fname, "wb");
       if (imgFile)
       {
 	std::fprintf(imgFile, "P6\n");
-	std::fprintf(imgFile, "%d %d 255\n", (int)imageIDL.width, (int)imageIDL.height);
-	std::fwrite(imageData, 3*sizeof(char), (int)imageIDL.width * (int)imageIDL.height, imgFile);
+	std::fprintf(imgFile, "%d %d 255\n", (int)imageIDL->format.width, (int)imageIDL->format.height);
+	std::fwrite(imageData + offset, 3*sizeof(char), (int)imageIDL->format.width * (int)imageIDL->format.height, imgFile);
 	std::fclose(imgFile);
       }
 
+      video->releaseImage(id, offset);
       now = ACE_OS::gettimeofday();
       total += (now - last);
     }
@@ -90,7 +95,7 @@ int main(int argc, char *argv[])
     for (j=0; j<50; j++)
     {
       last = ACE_OS::gettimeofday();
-      video->getImage(imageIDL);
+      video->acquireCurrentImage(id, offset);
 
       char	fname[128];
 
@@ -99,11 +104,12 @@ int main(int argc, char *argv[])
       if (imgFile)
       {
 	std::fprintf(imgFile, "P6\n");
-	std::fprintf(imgFile, "%d %d 255\n", (int)imageIDL.width, (int)imageIDL.height);
-	std::fwrite(imageData, 3*sizeof(char), (int)imageIDL.width * (int)imageIDL.height, imgFile);
+	std::fprintf(imgFile, "%d %d 255\n", (int)imageIDL->format.width, (int)imageIDL->format.height);
+	std::fwrite(imageData + offset, 3*sizeof(char), (int)imageIDL->format.width * (int)imageIDL->format.height, imgFile);
 	std::fclose(imgFile);
       }
 
+      video->releaseImage(id, offset);
       now = ACE_OS::gettimeofday();
       total += (now - last);
     }
@@ -111,7 +117,7 @@ int main(int argc, char *argv[])
     cout << "ms per grabbing  via 'getImage' and saving :" << total.msec()/j << endl;
 
     ::shmdt((void*)imageData);
-    video->release(imageIDL);
+    video->disconnect(id);
     cout << endl;
   }
   catch (const Miro::ETimeOut& e)
