@@ -16,6 +16,7 @@
 globaldirs = \
 	nsIOR \
 	notify \
+	notifyObserver \
 	widgets \
 	logPlayer \
 	rangeSensor \

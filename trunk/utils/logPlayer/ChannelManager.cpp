@@ -29,6 +29,8 @@ ChannelManager::ChannelManager(int& argc, char * argv[],
     // Channel factory
     notifyFactory_ =
       TAO_Notify_EventChannelFactory_i::create(poa.in() ACE_ENV_ARG_PARAMETER);
+    
+    addToNameService(notifyFactory_, initialNamingContext, "NotifyEventChannelFactory");
   }
   if (unified_) {
     // Channel identifer.
