@@ -502,7 +502,7 @@ namespace Miro {
          *     _iovLen: Number of elements in IOVec
          */
         int Sender::sendData(iovec *_iov, size_t _iovLen) {
-            return configuration_->getSocket()->send(_iov, _iovLen);
+            return configuration_->getSocket()->send(_iov, (int)_iovLen);
         }
     };
 };

@@ -50,8 +50,6 @@ include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
 include $(ACE_ROOT)/include/makeinclude/macros.GNU
 include $(MIRO_ROOT)/include/makeinclude/macros.miro.GNU
 
-depend: $(MOC_SRC)
-
 include $(TAO_ROOT)/rules.tao.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.nonested.GNU
@@ -64,6 +62,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 #----------------------------------------------------------------------------
 .PRECIOUS: $(MOC_SRC)
 
+depend: $(MOC_SRC)
+
 realclean: clean
 	-$(RM) $(MOC_SRC)
 
@@ -71,23 +71,34 @@ realclean: clean
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
 
-.obj/MainForm.o .obj/MainForm.so .shobj/MainForm.o .shobj/MainForm.so: MainForm.cpp MainForm.h $(MIRO_ROOT)/src/miro/Client.h \
- $(MIRO_ROOT)/src/miro/Exception.h $(MIRO_ROOT)/src/miro/RobotParameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/PositionC.h $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/VideoC.i $(MIRO_ROOT)/src/video/VideoDevice.h
+.obj/MainForm.o .obj/MainForm.so .shobj/MainForm.o .shobj/MainForm.so: MainForm.cpp MainForm.h \
+ \
+ \
+ \
+ \
+ \
+ /home/hutz/Miro/src/miro/ExceptionC.i \
+ /home/hutz/Miro/src/miro/TimeC.i \
+ \
+ \
+ /home/hutz/Miro/src/miro/WorldPointC.i \
+ /home/hutz/Miro/src/miro/PositionC.i \
+ /home/hutz/Miro/src/miro/VideoC.i \
+
 
 .obj/MainForm.moc.o .obj/MainForm.moc.so .shobj/MainForm.moc.o .shobj/MainForm.moc.so: MainForm.moc.cpp MainForm.h \
- $(MIRO_ROOT)/src/miro/Client.h $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/RobotParameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/PositionC.h $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/VideoC.i
+ \
+ \
+ \
+ \
+ \
+ \
+ /home/hutz/Miro/src/miro/ExceptionC.i \
+ /home/hutz/Miro/src/miro/TimeC.i \
+ \
+ \
+ /home/hutz/Miro/src/miro/WorldPointC.i \
+ /home/hutz/Miro/src/miro/PositionC.i \
+ /home/hutz/Miro/src/miro/VideoC.i
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

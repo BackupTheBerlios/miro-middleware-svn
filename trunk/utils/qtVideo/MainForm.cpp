@@ -19,6 +19,8 @@
 
 #include <unistd.h>
 
+#include <strstream>
+
 using namespace Video;
 using std::string;
 
