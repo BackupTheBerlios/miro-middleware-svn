@@ -8,16 +8,16 @@
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-#ifndef DummyBehaviourC_h
-#define DummyBehaviourC_h
+#ifndef DummyBehaviourD_h
+#define DummyBehaviourD_h
 
 #include "miro/TimedBehaviour.h"
 
-class DummyBehaviourC : public Miro::TimedBehaviour
+class DummyBehaviourD : public Miro::TimedBehaviour
 {
 public:
-  DummyBehaviourC(const std::string& _transition = "Transition");
-  ~DummyBehaviourC();
+  DummyBehaviourD(const std::string& _transition = "Transition");
+  ~DummyBehaviourD();
 
   void action();
   const std::string& getBehaviourName() const;

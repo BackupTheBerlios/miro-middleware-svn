@@ -10,27 +10,27 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "Parameters.h"
-#include "DummyBehaviourC.h"
+#include "DummyBehaviourD.h"
 #include "DummyArbiterMessage.h"
 
-unsigned long DummyBehaviourC::counter_ = 0;
+unsigned long DummyBehaviourD::counter_ = 0;
 
-const std::string DummyBehaviourC::name_ = "DummyBehaviourC";
+const std::string DummyBehaviourD::name_ = "DummyBehaviourD";
 
-DummyBehaviourC::DummyBehaviourC(const std::string& _transition) :
+DummyBehaviourD::DummyBehaviourD(const std::string& _transition) :
   Super(*ACE_Reactor::instance()),
   transition_(_transition)
 {
   std::cout << "Constructing " << name_ << "." << endl;
 }
 
-DummyBehaviourC::~DummyBehaviourC()
+DummyBehaviourD::~DummyBehaviourD()
 {
   std::cout << "Destructing " << name_ << "." << endl;
 }
 
 void
-DummyBehaviourC::action()
+DummyBehaviourD::action()
 {
   std::cout << name_ << " action: " << counter_ << endl;
 
@@ -51,7 +51,7 @@ DummyBehaviourC::action()
 }
 
 const std::string&
-DummyBehaviourC::getBehaviourName() const
+DummyBehaviourD::getBehaviourName() const
 {
   return name_;
 }

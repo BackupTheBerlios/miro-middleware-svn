@@ -8,7 +8,7 @@
       <config_parameter name="dummy" type="int" default="0" />
     </config_item>
     <config_item name="DummyBehaviourB" parent="Miro::TimedBehaviour" final="false" />
-    <config_item name="DummyBehaviourC" parent="Miro::TimedBehaviour" final="true" />
+    <config_item name="DummyBehaviourD" parent="Miro::TimedBehaviour" final="true" />
     
     <config_item name="Behaviour0" parent="DummyBehaviour" dummy="true" />
     <config_item name="Behaviour1" parent="DummyBehaviour" dummy="true" />

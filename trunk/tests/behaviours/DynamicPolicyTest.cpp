@@ -10,7 +10,7 @@
 
 #include "DummyBehaviour.h"
 #include "DummyBehaviourB.h"
-#include "DummyBehaviourC.h"
+#include "DummyBehaviourD.h"
 #include "DummyArbiter.h"
 
 #include "miro/BehaviourRepository.h"
@@ -57,7 +57,7 @@ main(int, char**)
   DummyBehaviour behaviour0("Behaviour0");
   DummyBehaviour behaviour1("Behaviour1");
   DummyBehaviourB behaviourB("BehaviourB");
-  DummyBehaviourC behaviourC;
+  DummyBehaviourD behaviourD;
 
   // The behaviour parameters
   DummyBehaviourParameters * parameters00 = behaviour0.getParametersInstance();
@@ -68,7 +68,7 @@ main(int, char**)
   parameters0B->pace = ACE_Time_Value(2);
 
   Miro::TimedBehaviourParameters * parameters10 = behaviour0.getParametersInstance();
-  Miro::TimedBehaviourParameters * parameters11 = behaviourC.getParametersInstance();
+  Miro::TimedBehaviourParameters * parameters11 = behaviourD.getParametersInstance();
   Miro::TimedBehaviourParameters * parameters1B = behaviourB.getParametersInstance();
   parameters10->pace = ACE_Time_Value(1);
   parameters11->pace = ACE_Time_Value(2);
@@ -95,7 +95,7 @@ main(int, char**)
   pattern0.addTransition("Transition", &pattern1);
 
   pattern1.arbiter(&arbiter0, arbiter0.getParametersInstance());
-  pattern1.addBehaviour(&behaviourC, parameters11);
+  pattern1.addBehaviour(&behaviourD, parameters11);
   pattern1.addBehaviour(&behaviour1, parameters10);
   pattern1.addBehaviour(&behaviourB, parameters1B);
   pattern1.addTransition("Transition", &pattern0);

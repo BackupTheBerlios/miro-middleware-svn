@@ -73,57 +73,60 @@ PriorityArbitersTest.cpp PolicyParsingTest.cpp BehaviourEngineTest.cpp DynamicPo
 
 
 .obj/Parameters.o .obj/Parameters.so .shobj/Parameters.o .shobj/Parameters.so: Parameters.cpp Parameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h
+ \
+ \
+
 
 .obj/DummyBehaviour.o .obj/DummyBehaviour.so .shobj/DummyBehaviour.o .shobj/DummyBehaviour.so: DummyBehaviour.cpp DummyBehaviour.h Parameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- $(MIRO_ROOT)/src/miro/TimedBehaviour.h \
- $(MIRO_ROOT)/src/miro/Behaviour.h \
- $(MIRO_ROOT)/src/miro/DynamicWindow.h \
- $(MIRO_ROOT)/src/miro/ActionPattern.h \
- $(MIRO_ROOT)/src/miro/Policy.h \
- $(MIRO_ROOT)/src/miro/Arbiter.h DummyArbiterMessage.h \
- $(MIRO_ROOT)/src/miro/ArbiterMessage.h
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ DummyArbiterMessage.h \
+
 
 .obj/DummyBehaviourB.o .obj/DummyBehaviourB.so .shobj/DummyBehaviourB.o .shobj/DummyBehaviourB.so: DummyBehaviourB.cpp DummyBehaviourB.h \
- $(MIRO_ROOT)/src/miro/TimedBehaviour.h \
- $(MIRO_ROOT)/src/miro/Behaviour.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- $(MIRO_ROOT)/src/miro/DynamicWindow.h \
- $(MIRO_ROOT)/src/miro/ActionPattern.h \
- $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/Policy.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/Arbiter.h \
- $(MIRO_ROOT)/src/miro/Parameters.h DummyArbiterMessage.h \
- $(MIRO_ROOT)/src/miro/ArbiterMessage.h
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ DummyArbiterMessage.h \
 
-.obj/DummyBehaviourC.o .obj/DummyBehaviourC.so .shobj/DummyBehaviourC.o .shobj/DummyBehaviourC.so: DummyBehaviourC.cpp Parameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- DummyBehaviourC.h $(MIRO_ROOT)/src/miro/TimedBehaviour.h \
- $(MIRO_ROOT)/src/miro/Behaviour.h \
- $(MIRO_ROOT)/src/miro/DynamicWindow.h \
- $(MIRO_ROOT)/src/miro/ActionPattern.h \
- $(MIRO_ROOT)/src/miro/Policy.h \
- $(MIRO_ROOT)/src/miro/Arbiter.h DummyArbiterMessage.h \
- $(MIRO_ROOT)/src/miro/ArbiterMessage.h
+
+.obj/DummyBehaviourD.o .obj/DummyBehaviourD.so .shobj/DummyBehaviourD.o .shobj/DummyBehaviourD.so: DummyBehaviourD.cpp Parameters.h \
+ \
+ \
+ \
+ DummyBehaviourD.h \
+ \
+ \
+ \
+ \
+ \
+ DummyArbiterMessage.h \
+
 
 .obj/DummyArbiter.o .obj/DummyArbiter.so .shobj/DummyArbiter.o .shobj/DummyArbiter.so: DummyArbiter.cpp DummyArbiter.h \
- $(MIRO_ROOT)/src/miro/PriorityArbiter.h \
- $(MIRO_ROOT)/src/miro/Arbiter.h \
- $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- DummyArbiterMessage.h $(MIRO_ROOT)/src/miro/ArbiterMessage.h
+ \
+ \
+ \
+ \
+ \
+ \
+ DummyArbiterMessage.h \
+
 
 .obj/DummyArbiterMessage.o .obj/DummyArbiterMessage.so .shobj/DummyArbiterMessage.o .shobj/DummyArbiterMessage.so: DummyArbiterMessage.cpp DummyArbiterMessage.h \
- $(MIRO_ROOT)/src/miro/ArbiterMessage.h
+
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY
