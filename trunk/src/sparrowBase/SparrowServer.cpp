@@ -81,12 +81,12 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
   ec_(notifyFactory_->create_channel(initialQos_, initialAdmin_, id_)),
   structuredPushSupplier_(ec_.in(), namingContextName),
 
-  odometry(&structuredPushSupplier_),
+  odometry(&structuredPushSupplier_, true, true),
   pSonar_((Sparrow::Parameters::instance()->goalie)? 
 	  new Miro::RangeSensorImpl(Pioneer::Parameters::instance()->sonarDescription, 
-				    &structuredPushSupplier_) : NULL),
+				    &structuredPushSupplier_, true) : NULL),
   infrared(Sparrow::Parameters::instance()->infraredDescription,
-	   &structuredPushSupplier_),
+	   &structuredPushSupplier_, true),
 
   // Sparrow board initialization
   pSparrowConsumer(new Sparrow::Consumer(sparrowConnection,
@@ -141,12 +141,12 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
   ec_(notifyFactory_->create_channel(initialQos_, initialAdmin_, id_)),
   structuredPushSupplier_(ec_.in(), namingContextName),
 
-  odometry(&structuredPushSupplier_),
+  odometry(&structuredPushSupplier_, true, true),
   pSonar_((Sparrow::Parameters::instance()->goalie)? 
 	  new Miro::RangeSensorImpl(Pioneer::Parameters::instance()->sonarDescription, 
-				    &structuredPushSupplier_) : NULL),
+				    &structuredPushSupplier_, true) : NULL),
   infrared(Sparrow::Parameters::instance()->infraredDescription,
-	   &structuredPushSupplier_),
+	   &structuredPushSupplier_, true),
 
   // Sparrow board initialization
   pSparrowConsumer(new Sparrow::Consumer(sparrowConnection, 
