@@ -1,14 +1,109 @@
 #! /bin/sh
 
+
+# required versions
+REQUIRED_AUTOMAKE=1.5
+REQUIRED_AUTOCONF=2.13
+
+# search for the version strings
+AUTOMAKE=`automake --version | head -n 1 | sed 's/[^0-9.]*//' | sed 's/\([0-9.]*\).*/\1/'`
+AUTOCONF=`autoconf --version | head -n 1 | sed 's/[^0-9.]*//' | sed 's/\([0-9.]*\).*/\1/'`
+
+
+
+
+# don't change anything below this point
+
+
+
+
+equal_greater_then() {
+  MAJOR_A=`echo $1 | awk -F "." '{print $1}'`
+  MINOR_A=`echo $1 | awk -F "." '{print $2}'`
+  MAJOR_B=`echo $2 | awk -F "." '{print $1}'`
+  MINOR_B=`echo $2 | awk -F "." '{print $2}'`
+
+  if [ $MAJOR_A -gt $MAJOR_B ]; then return 1;
+  elif [ $MINOR_A -ge $MINOR_B ]; then return 1;
+  else return 0; fi
+}
+
+
+# check if default automake version is good enough
+
+equal_greater_then $AUTOMAKE $REQUIRED_AUTOMAKE
+# if not, try to call newer versions using automake-VERSION
+if [ $? == 0 ]; then
+  echo "default automake version is too old, locking for other installed ones."
+  DIR=`which automake`
+  DIR=`dirname $DIR`
+  VERS=$DIR/automake-*
+  USED_AUTOMAKE=
+  if [ "$VERS" != "automake-*" ]; then
+    for i in $VERS; do
+      VER=`basename $i | sed s/automake-//`
+      equal_greater_then $VER $REQUIRED_AUTOMAKE
+      if [ $? != 0 ]; then
+        USED_AUTOMAKE=automake-$VER
+      fi
+    done
+  fi
+
+  if [ x$USED_AUTOMAKE == "x" ]; then
+    echo "no suitable automake versions found, giving up"
+    exit -1
+  fi
+else
+  USED_AUTOMAKE=automake
+fi
+
+echo "using :" $USED_AUTOMAKE
+
+# check if corresponding aclocal version exists
+
+VER=`echo $USED_AUTOMAKE | grep [0-9]`
+if [ x$VER != "x" ]; then
+  # seems that autoconf is called with explicit version number, try the same for here  
+  VER=`echo $USED_AUTOMAKE | sed 's/automake-//'`
+  VER=`which aclocal-$VER`
+  if [ -e $VER ]; then
+    USED_ACLOCAL=`basename $VER`
+    echo "using :" $USED_ACLOCAL
+  else
+    echo "no corresponding aclocal found, giving up"
+    exit -1
+  fi
+else 
+  USED_ACLOCAL=aclocal
+  echo "using : " $USED_ACLOCAL
+fi
+
+# check autoconf version
+
+equal_greater_then $AUTOCONF $REQUIRED_AUTOCONF
+if [ $? == 0 ]; then
+  echo "no suitable automake versions found, giving up"
+  exit -1
+fi
+
+# remove config files in ./
+
 rm -f ./ltmain.sh && \
-rm -f ./config.guess && \
+rm -f ./config.guess  && \
 rm -f ./config.sub && \
-libtoolize --copy --force && \
+
+echo "libtoolize..." && libtoolize --copy --force && \
+
+# move newly created config files to config.
 if test -e ltmain.sh; then mv -f ltmain.sh config/; fi && \
 if test -e config.guess; then mv -f config.guess config/; fi && \
 if test -e config.sub; then mv -f config.sub config/; fi && \
-aclocal -I config  && \
-autoheader && \
-automake  --add-missing && \
-autoconf
+
+echo "aclocal..." && $USED_ACLOCAL -I config  && \
+echo "autoheader..." && autoheader && \
+echo "automake..." && $USED_AUTOMAKE --add-missing --warnings=none && \
+echo "autoconf..." && autoconf && \
+echo "finished successfully. type ./configure now" && echo
+exit 0
+
 
