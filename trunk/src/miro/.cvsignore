@@ -53,4 +53,8 @@ WindowArbiter.lo
 WindowArbiterViewer.lo
 WindowArbiterViewerTask.lo
 XmlParse.lo
+ConstraintArbiter.lo
+ConstraintArbiterViewer.lo
+ConstraintArbiterViewerTask.lo
+VelocitySpace.lo
 libmiro.la

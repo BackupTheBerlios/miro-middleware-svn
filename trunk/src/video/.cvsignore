@@ -28,4 +28,5 @@ VideoFilterYUV422toYUV.lo
 VideoFilterYUVbase.lo
 VideoImpl.lo
 VideoServer.lo
+VideoControlImpl.lo
 libmiroVideo.la

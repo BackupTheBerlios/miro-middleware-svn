@@ -330,4 +330,12 @@ WorldVectorS.cpp
 WorldVectorS.h
 WorldVectorS.i.h
 WorldVectorS.lo
+VideoControlC.cpp
+VideoControlC.h
+VideoControlC.i.h
+VideoControlC.lo
+VideoControlS.cpp
+VideoControlS.h
+VideoControlS.i.h
+VideoControlS.lo
 libmiroIDL.la
