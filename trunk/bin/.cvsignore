@@ -35,6 +35,7 @@ MakeParams
 Makefile
 Makefile.in
 McpPerformance
+MiroImage
 MotionStatusNotify
 MotionStatusPoll
 MotionTest
@@ -53,6 +54,7 @@ PioneerTest
 PolicyController
 PolicyEditor
 PolicyParsingTest
+PollImages
 PollInfrared
 PollPosition
 PollResponse
@@ -82,8 +84,11 @@ SparrowTest
 SparrowTest2003
 SpeechSimple
 SpeechTest
+SphinxSpeech
+SphinxTest
 StallPoll
 SynchroMotionTest
+TestImageClient
 TestRemoteVideoClient
 TestVideoClient
 VideoBrokerTest
