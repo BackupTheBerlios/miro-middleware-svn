@@ -74,6 +74,8 @@ IDL_FILES =	Time \
 		Buttons \
 		Video  \
 		\
+		Speech \
+		\
 		BehaviourEngine \
 		Joystick
 

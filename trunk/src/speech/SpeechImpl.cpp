@@ -147,6 +147,12 @@ SpeechImpl::insertText(const Miro::DtlkSpeechSettingsIDL& settings, const char* 
 }
 
 void 
+SpeechImpl::speak(const char * text) throw(EDevIO)
+{
+  insertText(getSettings(),text);
+}
+
+void 
 SpeechImpl::insertCommand(char command, char value) throw(EDevIO)
 {
   char buffer[8];

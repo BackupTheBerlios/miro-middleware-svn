@@ -56,6 +56,9 @@ public:
   virtual void insertText(const Miro::DtlkSpeechSettingsIDL& settings, const char * text) throw(Miro::EDevIO);
 
   /** IDL interface method, see IDL documentation for details. */
+  virtual void speak(const char * text) throw(Miro::EDevIO);
+
+  /** IDL interface method, see IDL documentation for details. */
   virtual void insertCommand(char command, char value) throw(Miro::EDevIO);
   virtual Miro::DtlkSpeechSettingsIDL getSettings() throw();
 

@@ -12,6 +12,7 @@
 #define DtlkSpeech_idl
 
 #include "Exception.idl"
+#include "Speech.idl"
 
 module Miro
 {
@@ -46,7 +47,7 @@ module Miro
    * Read the excellent DoubleTalk documentation for a longer
    * explanation of the possible operational modes.
    */
-  interface DtlkSpeech
+  interface DtlkSpeech: Speech
   {
     //! Speek character by character
     const char CHARACTER_MODE = '\000';
@@ -72,17 +73,17 @@ module Miro
     //! Add text to the output buffer.
     void insertText(in DtlkSpeechSettingsIDL settings, in string text) raises(EDevIO);
     //! Skip the next word.
-    void skip() raises(EDevIO);
+    //    void skip() raises(EDevIO);
     //! Clear the buffer.
-    void clear() raises(EDevIO);
+    //    void clear() raises(EDevIO);
     //! Reset the card to default values.
-    void reset() raises(EDevIO);
+    //    void reset() raises(EDevIO);
     //! Select a voice sceem. 
-    void setVoice(in char voice) raises(EDevIO, EOutOfBounds);
+    //    void setVoice(in char voice) raises(EDevIO, EOutOfBounds);
 
     //unsigned long insertMark();
 
-    //! Insert a raw commant into the output buffer.
+    //! Insert a raw command into the output buffer.
     void insertCommand(in char command, in char value) raises(EDevIO);
     //! Query the current settings of the speech device.
     DtlkSpeechSettingsIDL getSettings();
