@@ -35,7 +35,7 @@ MIRO_IDL_DIR = $(MIRO_ROOT)/idl
 MIRO_SRC_DIR = $(MIRO_ROOT)/src
 
 MIRO_IDLFLAGS  = -in -Ge 0
-MIRO_IDLFLAGS += -Sc -Wp,-I$(MIRO_IDL_DIR)
+MIRO_IDLFLAGS += -Sc -I$(MIRO_IDL_DIR) -Wp,-I$(MIRO_IDL_DIR)
 
 tao_dont_use_idl_make_rule = 1
 
