@@ -132,7 +132,6 @@ namespace Miro {
 
             /* Install handlers */
             if (reactor_ != 0) {
-		    std::cout << "Socket: " << configuration_.getSocket()->get_handle() << std::endl;
                 eventHandlerId_ = reactor_->register_handler(
                                       configuration_.getSocket()->get_handle(),
                                       eventHandler_,

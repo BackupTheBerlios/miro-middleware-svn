@@ -57,7 +57,8 @@ namespace Miro {
                 maxRetry_(5),
                 mutex_(),
                 localIPs_(),
-        droppedLocal_(0) {
+		droppedLocal_(0) 
+	{
             PRINT_DBG(DBG_INFO, "Initializing for domain " << configuration_->getDomain());
 
             shValid_ = false;
@@ -159,7 +160,7 @@ namespace Miro {
         int Receiver::handle_input() {
 //		std::cout << "Connected: " << connected_ << std::endl;
             if (connected_) {
-//		if (mutex_.acquire()) {
+	      Miro::Guard guard(mutex_);
                 CORBA::ULong  header[HEADER_SIZE / sizeof(CORBA::ULong) + ACE_CDR::MAX_ALIGNMENT];
                 EventData     eventData;
                 iovec         iov[1];
@@ -171,13 +172,11 @@ namespace Miro {
                     case -1:
                         PRINT_DBG(DBG_INFO, "handleInput: receiveData failed (-1)");
                         LOG(configuration_, "Receiver::handleInput(): receiveData failed (-1)");
-			mutex_.release();
                         return -1;
 
                     case 0:
                         PRINT_DBG(DBG_INFO, "handleInput: receiveData returned 0 bytes");
                         LOG(configuration_, "Receiver::handleInput(): receiveData returned 0 bytes");
-			mutex_.release();
                         return 0;
 
                     default:
@@ -203,7 +202,6 @@ namespace Miro {
                     if (droppedLocal_ == 0xffffffff)
                         LOG(configuration_, "Receiver::handle_input(): number of locally dropped packets reset to 0");
 
-		    mutex_.release();
                     return 0;
                 }
 
@@ -234,8 +232,6 @@ namespace Miro {
 
                 handle_event(eventData, iov);
             }
-//		mutex_.release();
-//	    }
 
             return 0;
         }
@@ -391,7 +387,7 @@ namespace Miro {
                 ACE_TRY_CHECK;
 
                 /* Drop packet if it's too old */
-                unsigned int time = ACE_OS::gettimeofday().msec();
+		// unsigned int time = ACE_OS::gettimeofday().msec();
 
 		PRINT_DBG(DBG_TOOMUCH,
 			"Receiver::handle_event(): Got event "
