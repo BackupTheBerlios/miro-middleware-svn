@@ -520,17 +520,33 @@ instance of each of these repositories, there do exist a global
 instance of each. A pointer to such an instance can be obtained by
 the classes static method {\tt instance()}.
 
-\subsection{A Behaviour Engine}
+\subsection{The Behaviour Factory}
 
 All the initialization stuff necessary before constructing an instance
 of the Policy class can be done within the main function of your
 program. This task consists mostly of obtaining the needed object
-references, instancing the behaviours and arbiters, instancing
+references, instancing
 behaviours and arbiters and registering them at their respective
 repositories.  This can be bundled within a so called behaviour factory
 class as can be seen in the behaviour example at:
 
 {\tt \$MIRO\_ROOT/examples/behaviours/simple/BehaviourFactory.cpp|h}
+
+It uses the simple base class:
+
+{\tt \$MIRO\_ROOT/src/miro/BAFactory.cpp|h}
+
+\subsection{The Behaviour Engine}
+
+There does exist a small CORBA based interface for interaction with
+the behaviour framework. It is the {\tt BehaviourEngine} interface and
+the {\tt PolicyController} (section \ref{SEC:POLICY_CONTROLLER}) is a
+simple GUI based client for this interface. To allow your own
+behaviour sets to be controlled via this interface, the policy
+controller implementation has to be instantiated within your
+executable. This can be seen in the example at:
+
+{\tt \$MIRO\_ROOT/examples/behaviours/engine/SimpleBehaviourEngine.cpp}
 
 \section{The Policy Editor}
 \label{SEC:POLICY_EDITOR}
@@ -719,6 +735,7 @@ behaviours associated Parameters class. See the previous chapter for
 details.
 
 \section{Policy Controller}
+\label{SEC:POLICY_CONTROLLER}
 
 The policy controller is some kind of remote control for the behaviour
 engine. It consists of a panel with four buttons and a menu bar. The
