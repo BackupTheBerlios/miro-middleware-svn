@@ -69,7 +69,6 @@ LogFile::parse()
 	 ( logReader_.version() < 3 &&
 	   ( notEof = logReader_.parseTimeStamp(timeStamp) ) ) ) {
 
-    std::cout << "." << std::flush;
     timeVector_.push_back(std::make_pair(timeStamp, logReader_.rdPtr()));
     
     logReader_.parseEventHeader(header);
@@ -100,7 +99,6 @@ LogFile::parse()
     if (!(timeVector_.size() % 2048))
       break;
   }
-  std::cout << std::endl;
 
   if (timeVector_.size() == 0)
     throw Miro::Exception("Logfile contains no data.");
@@ -132,8 +130,6 @@ LogFile::parse()
 
     rc = 100;
     parsed_ = true;
-
-    std::cout << "good bit" << logReader_.istr()->good_bit() << std::endl;
   }
   // End Of Work Packet
   else 
@@ -289,7 +285,6 @@ LogFile::validEvent()
   if (eDomain != exclude_.end()) {
     if (eDomain->second.find(event_.header.fixed_header.event_type.type_name) != 
 	eDomain->second.end()) {
-      std::cout << "invalid event" << std::endl;
       logReader_.skipEventBody();
       return false;
     }
