@@ -61,6 +61,9 @@ namespace Sparrow
   void
   PanTiltImpl::setPan(CORBA::Float _value) throw (EDevIO, EOutOfBounds)
   {
+    if (isnan(connection_->getPanPosition()))
+      return;
+
     ACE_Guard<ACE_Recursive_Thread_Mutex> guard(mutex_);
 
     if (_value != nextPosition) {
@@ -100,6 +103,10 @@ namespace Sparrow
   PanTiltImpl::panning(const Miro::TimeIDL& stamp) throw()
   {
     ACE_Guard<ACE_Recursive_Thread_Mutex> guard(mutex_);
+    if (!params_.servo) {
+      float pan = connection_->getPanPosition();
+      return fabs(targetPan_ - pan) > Miro::deg2Rad(2);
+    }
     ACE_Time_Value t;
     Miro::timeC2A(stamp, t);
     return prvPanning(t);

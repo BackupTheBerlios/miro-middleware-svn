@@ -120,6 +120,9 @@ namespace Sparrow
   void
   Connection2003::setPan(double _rad)
   {
+    if (panTicksPerDegree_ == 0)
+      return;
+
     CanMessage message;
 
     if (params_->pan.servo) {
@@ -176,6 +179,7 @@ namespace Sparrow
     message.length(0);
     message.id(CAN_PAN_RESET_2005);
     write(message);
+    panTicksPerDegree_ = 0;
   }
 
 

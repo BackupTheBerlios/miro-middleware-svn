@@ -360,7 +360,7 @@ namespace Sparrow
       double tpd;
       tpd = connection_->getPanTicksPerDegree();
       if (tpd != 0.0) {			// As long as we don't know about ticks/deg we cannot calc current position
-        connection_->setPanPosition(Miro::deg2Rad((double)message.longData(0)/tpd));
+        connection_->setPanPosition(-Miro::deg2Rad((double)message.longData(0)/tpd));
       }
       else {
         connection_->setPanPosition(NAN);
