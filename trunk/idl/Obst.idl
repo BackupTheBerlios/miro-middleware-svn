@@ -1,0 +1,56 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+//
+//////////////////////////////////////////////////////////////////////////////
+#ifndef Obst_idl
+#define Obst_idl
+
+#include "Exception.idl"
+#include "Time.idl"
+
+module Miro
+{
+  //! Interface for obst komunikation.
+
+  enum ObjectType {
+    FIRST,
+    SECOND
+  };
+
+   //! A vector of sensor readings.
+  typedef sequence<short> ObjectIDL;
+  typedef sequence<short> MovesIDL;
+
+
+  struct mirrorObject
+  {
+    //! The time the scan was accquired.
+    TimeIDL time;
+    //! The full scan of all sensor groups.
+    ObjectIDL data;
+  };
+
+  struct mirrorMoves
+  {
+    //! The time the scan was accquired.
+    TimeIDL time;
+    //! The full scan of all sensor groups.
+    MovesIDL data;
+  };
+
+
+
+  interface Obst
+  {
+    mirrorObject getObst(in ObjectType objectType);
+    //mirrorMoves getAktion();
+    void setObst(in mirrorObject ObstArt, in ObjectType objectType);
+  };
+};
+#endif // Obst_idl
