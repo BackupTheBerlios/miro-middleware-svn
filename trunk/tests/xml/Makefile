@@ -17,7 +17,8 @@
 #	Local macros
 #----------------------------------------------------------------------------
 
-INSTALL = $(VBIN:%=$(INSBIN)/%)
+# dont install: it'w work in progress (pre beta)
+# INSTALL = $(VBIN:%=$(INSBIN)/%)
 
 ## dynamic libraries if needed
 LDLIBS += -lmiroSvc -lmiro -lTAO_CosNaming -lTAO

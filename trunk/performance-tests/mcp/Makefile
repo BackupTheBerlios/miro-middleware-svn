@@ -17,7 +17,8 @@
 #	Local macros
 #----------------------------------------------------------------------------
 
-INSTALL = $(VBIN:%=$(INSBIN)/%)
+# dont install: it's too special
+# INSTALL = $(VBIN:%=$(INSBIN)/%)
 
 ## dynamic libraries if needed
 LDLIBS += -lbase -lmcp -lmiroSvc -lmiro -lTAO_CosNaming -lTAO
@@ -28,7 +29,6 @@ BIN 	= McpPerformance
 
 SRC	= $(addsuffix .cpp,$(FILES))
 OBJ	= $(addsuffix .o,$(FILES))
-DEPS   	= $(addsuffix .d,$(FILES) $(BIN))
 
 ## VLDLIBS = $(LDLIBS:%=%$(VAR))
 
@@ -49,7 +49,6 @@ include $(TAO_ROOT)/rules.tao.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.nonested.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.bin.GNU
-DEPS := $(addprefix $(VDIR),$(DEPS))
 include $(ACE_ROOT)/include/makeinclude/rules.local.GNU
 include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 

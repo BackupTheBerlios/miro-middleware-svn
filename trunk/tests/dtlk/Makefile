@@ -30,7 +30,6 @@ FILES	=
 
 SRC	= $(addsuffix .cpp,$(FILES))
 OBJ	= $(addsuffix .o,$(FILES))
-DEPS	= $(addsuffix .d,$(FILES) $(BIN))
 
 BUILD 	= $(VBIN)
 

@@ -17,7 +17,8 @@
 #	Local macros
 #----------------------------------------------------------------------------
 
-INSTALL = $(VBIN:%=$(INSBIN)/%)
+# dont install: it's deprecated
+# INSTALL = $(VBIN:%=$(INSBIN)/%)
 
 ## dynamic libraries if needed
 LDLIBS += -lmiro -lTAO_CosNaming -lTAO

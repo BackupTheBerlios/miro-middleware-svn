@@ -17,7 +17,8 @@
 #	Local macros
 #----------------------------------------------------------------------------
 
-INSTALL = $(VBIN:%=$(INSBIN)/%)
+# don't install - it's a very special test
+# INSTALL = $(VBIN:%=$(INSBIN)/%)
 
 ## dynamic libraries if needed
 LDLIBS += -lmiro -lTAO_CosNotification -lTAO_CosNaming -lTAO

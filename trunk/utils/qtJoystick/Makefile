@@ -35,7 +35,6 @@ FILES += $(QT_SRC)
 MOC_SRC	= $(addsuffix .moc.cpp, $(QT_SRC))
 SRC	= $(addsuffix .cpp,$(FILES)) $(MOC_SRC)
 OBJ	= $(addsuffix .o,$(FILES))
-DEPS	= $(addsuffix .d,$(FILES) $(BIN))
 
 BUILD 	= $(VBIN)
 
