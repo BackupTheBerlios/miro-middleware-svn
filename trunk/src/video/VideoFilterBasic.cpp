@@ -25,8 +25,7 @@ namespace Video
   void
   FilterCopy::process()
   {
-    std::cout << __PRETTY_FUNCTION__ << std::endl;
-    memcpy(outputBuffer(), inputBuffer(), imageSize_);
+     memcpy(outputBuffer(), inputBuffer(), imageSize_);
   }
 
   FilterSwap3::FilterSwap3(const Miro::ImageFormatIDL& _format) :
