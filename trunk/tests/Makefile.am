@@ -21,7 +21,8 @@ globaldirs = \
 	notify \
 	speech \
 	behaviours \
-	behaviourEngine
+	behaviourEngine \
+        log
 
 #	xml
 

@@ -11,7 +11,6 @@
 #ifndef laserPollTask_hh
 #define laserPollTask_hh
 
-#include "miro/Log.h"
 #include "miro/Thread.h"
 
 namespace Laser
@@ -26,7 +25,7 @@ namespace Miro
   class LaserEvent;
   class LaserStatistic;
 
-  class LaserPollTask : public Thread, public Log
+  class LaserPollTask : public Thread
   {
   public:
     //! Constructor

@@ -11,12 +11,9 @@
 
 
 #include "PanTiltConsumer.h"
+#include "miro/Log.h"
 
-#include <iostream>
-
-#include <netinet/in.h>
-
-// #undef DEBUG
+#include <string>
 
 namespace DpPanTilt
 {
@@ -29,7 +26,6 @@ namespace DpPanTilt
   // Consumer
   //
   Consumer::Consumer(Data& panTiltData_) :
-    Log(WARNING,"Consumer"),
     panTiltData(panTiltData_),
     packetsProcessed(0),
     packetsCorrupted(0)
@@ -45,13 +41,10 @@ namespace DpPanTilt
 
     ++packetsProcessed;
 
-
+    
     // show statistic rarely
     if (!(packetsProcessed % 5000)) {
-      log(INFO,"Statistics:");
-      cerr << "total : " << packetsProcessed << ", " 
-	   << (100.0 * packetsCorrupted / packetsProcessed) 
-	   << " % corrupted." << endl;
+      MIRO_LOG_OSTR(LL_NOTICE, "Statistics - total: "<< packetsProcessed << ", " << (100.0 * packetsCorrupted / packetsProcessed) <<"% corrupted.\n" );
     }
   }
 
@@ -63,14 +56,12 @@ namespace DpPanTilt
   {
     const Message& message = *static_cast<const Message *>(_message);
     
-//     cerr << "handleMessage |" << message << "|" <<endl;
-
     panTiltData.sync.acquire();
     panTiltData.failed = false;
 
     if (message.getErrorState()) {
-      log(ERROR, "received error message, last command probably failed, aborting it.");
-      cerr << "|" << message.getMessage()  << "|"  << endl;
+      MIRO_LOG(LL_ERROR, "Received error message, last command probably failed, aborting it.");
+      MIRO_LOG_OSTR(LL_NOTICE, message.getMessage().c_str());
       incStatistics( true );
       
       panTiltData.failed = true;
@@ -82,9 +73,9 @@ namespace DpPanTilt
 
     int opcode = FIRSTOPCODE;
     while (opcode<=LASTOPCODE) {
-      if ( message.getMessage().length() >= panTiltMessages[opcode].length() )
-	if ( string(message.getMessage(),0 , panTiltMessages[opcode].length()) == panTiltMessages[opcode]) {
-	  break;
+      if (message.getMessage().length() >= panTiltMessages[opcode].length()  &&
+	  std::string(message.getMessage(), 0, panTiltMessages[opcode].length()) == panTiltMessages[opcode]) {
+	break;
       }
 	
       ++opcode;
@@ -93,7 +84,7 @@ namespace DpPanTilt
     if (message.getMessage().length() == 1) {
       // special case, just a * <delim> packet
       // this happens after A(wait) commands
-      log(INFO,"got empty packet, interpreted as ack");
+      MIRO_LOG(LL_NOTICE, "Got empty packet, interpreted as ack.\n");
       panTiltData.sync.release();
       panTiltData.syncCond.broadcast();
       incStatistics( true );
@@ -101,15 +92,13 @@ namespace DpPanTilt
     }
 
     if (opcode > LASTOPCODE) {
-      log(ERROR,"ignored unknown or corrupted message :");
-      cerr << "|" << message.getMessage()  << "|"  << endl;
+      MIRO_LOG_OSTR(LL_WARNING, 
+		   "Ignored unknown or corrupted message : " << message.getMessage().c_str() << "\n");
       panTiltData.sync.release();
       incStatistics( false );
 
       return;
     }
-
-//     cerr << "found match for |" << panTiltMessages[opcode] << "|" << endl;
 
     // be optimistic
     bool gotdata = true;

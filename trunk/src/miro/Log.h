@@ -95,22 +95,22 @@
 
 #define MIRO_DBG(L, C, X) \
   do { \
-    if (::Miro::Log::level() >= L && \
-	::Miro::Log::enabled(C)) { \
+    if (::Miro::Log::level() >= ::Miro::Log::L && \
+	::Miro::Log::enabled(::Miro::Log::ll2LM(::Miro::Log::C))) { \
       ACE_Log_Msg *ace___ = ACE_Log_Msg::instance (); \
       ace___->conditional_set (__FILE__, __LINE__, 0, 0); \
-      ace___->log(static_cast<ACE_Log_Priority>(C), \
+      ace___->log(static_cast<ACE_Log_Priority>(::Miro::Log::ll2LM(::Miro::Log::C)), \
 		  ::Miro::Log::format(), X); \
     } \
   } while (0)
 #define MIRO_DBG_OSTR(L, C, O) \
   do { \
-    if (::Miro::Log::level() >= L && \
-	::Miro::Log::enabled(C)) { \
+    if (::Miro::Log::level() >= ::Miro::Log::L && \
+	::Miro::Log::enabled(::Miro::Log::ll2LM(::Miro::Log::C))) { \
       ACE_Log_Msg *ace___ = ACE_Log_Msg::instance (); \
       std::ostringstream ostr__; \
       ostr__ << O; \
-      ace___->log(static_cast<ACE_Log_Priority>(C), \
+      ace___->log(static_cast<ACE_Log_Priority>(::Miro::Log::ll2LM(::Miro::Log::C)), \
 		  ::Miro::Log::format(), ostr__.str().c_str()); \
     } \
   } while (0)
@@ -131,7 +131,7 @@
     if (::Miro::Log::level() >= ::Miro::Log::LL_CTOR_DTOR) { \
       ACE_Log_Msg *ace___ = ACE_Log_Msg::instance (); \
       ace___->conditional_set (__FILE__, __LINE__, 0, 0); \
-      ace___->log(LM_DEBUG, "Constructing " ## X ## ".\n"); \
+      ace___->log(LM_DEBUG, "Constructing " X ".\n"); \
     } \
   } while (0)
 // Constructor log message (Miro::Log::level() >= 1)
@@ -140,7 +140,7 @@
     if (::Miro::Log::level() >= ::Miro::Log::LL_CTOR_DTOR) { \
       ACE_Log_Msg *ace___ = ACE_Log_Msg::instance (); \
       ace___->conditional_set (__FILE__, __LINE__, 0, 0); \
-      ace___->log(LM_DEBUG, "Construction of " ## X ## " fininshed.\n"); \
+      ace___->log(LM_DEBUG, "Construction of " X " fininshed.\n"); \
     } \
   } while (0)
 // Destructor log message (Miro::Log::level() >= 1)
@@ -149,7 +149,7 @@
     if (::Miro::Log::level() >= ::Miro::Log::LL_CTOR_DTOR) { \
       ACE_Log_Msg *ace___ = ACE_Log_Msg::instance (); \
       ace___->conditional_set (__FILE__, __LINE__, 0, 0); \
-      ace___->log(LM_DEBUG, "Destructing " ## X ## ".\n"); \
+      ace___->log(LM_DEBUG, "Destructing "  X ".\n"); \
     } \
   } while (0)
 // Destructor log message (Miro::Log::level() >= 1)
@@ -158,7 +158,7 @@
     if (::Miro::Log::level() >= ::Miro::Log::LL_CTOR_DTOR) { \
       ACE_Log_Msg *ace___ = ACE_Log_Msg::instance (); \
       ace___->conditional_set (__FILE__, __LINE__, 0, 0); \
-      ace___->log(LM_DEBUG, "Destruction of " ## X ## " finished.\n"); \
+      ace___->log(LM_DEBUG, "Destruction of " X " finished.\n"); \
     } \
   } while (0)
 
@@ -187,21 +187,21 @@ namespace Miro
     static void format(char const * _format);
     static char const * format();
 
-    static int const MIRO =    0x00000800;
-    static int const VIDEO =   0x00001000;
-    static int const PSOS =    0x00002000;
-    static int const SPHINX =  0x00004000;
-    static int const PIONEER = 0x00010000;
-    static int const CAN =     0x00020000;
-    static int const FAUL =    0x00040000;
-    static int const SPARROW = 0x00080000;
-    static int const MCP =     0x00100000;
-    static int const ABUS =    0x00200000;
-    static int const MSP =     0x00300000;
-    static int const SICK =    0x00400000;
-    static int const DTLK =    0x00800000;
-    static int const DP =      0x01000000;
-    static int const B21 =     0x02000000;
+    static unsigned int const MIRO =    0x00000800;
+    static unsigned int const VIDEO =   0x00001000;
+    static unsigned int const PSOS =    0x00002000;
+    static unsigned int const SPHINX =  0x00004000;
+    static unsigned int const PIONEER = 0x00010000;
+    static unsigned int const CAN =     0x00020000;
+    static unsigned int const FAUL =    0x00040000;
+    static unsigned int const SPARROW = 0x00080000;
+    static unsigned int const MCP =     0x00100000;
+    static unsigned int const ABUS =    0x00200000;
+    static unsigned int const MSP =     0x00300000;
+    static unsigned int const SICK =    0x00400000;
+    static unsigned int const DTLK =    0x00800000;
+    static unsigned int const DP =      0x01000000;
+    static unsigned int const B21 =     0x02000000;
 
 
     static unsigned int const LL_EMERGENCY = 0;

@@ -12,12 +12,9 @@
 #define PanTiltConsumer_h
 
 #include "miro/DevConsumer.h"
-#include "miro/Log.h"
 
 #include "PanTiltData.h"
 #include "PanTiltMessage.h"
-
-#include <string>
 
 namespace DpPanTilt 
 {
@@ -29,8 +26,7 @@ namespace DpPanTilt
    * uses the reference to PanTiltImpl to signal the data
    * received via condition variables
    */
-  class Consumer : public Miro::DevConsumer,
-		   virtual public Miro::Log
+  class Consumer : public Miro::DevConsumer
   {
   public:
     /**
@@ -66,7 +62,7 @@ namespace DpPanTilt
      */
     long packetsCorrupted;
   };
-};
+}
 #endif
 
 

@@ -233,6 +233,7 @@ AC_CONFIG_FILES([Makefile
                  tests/sphinx/Makefile
                  tests/video/Makefile
                  tests/videoBroker/Makefile
+                 tests/log/Makefile
                  utils/Joystick/Makefile
                  utils/Makefile
                  utils/logPlayer/Makefile

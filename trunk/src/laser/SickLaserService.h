@@ -19,6 +19,7 @@
 
 #include "SickLaserConnection.h"
 #include "SickLaserStatistic.h"
+#include "SickLaserImpl.h"
 
 namespace Laser
 {
@@ -29,8 +30,7 @@ namespace Miro
 {
   class OdometryTracking;
 
-  class LaserServer : public Server, 
-		      public Log
+  class LaserServer : public Server
   {
     typedef LaserServer Self;
 
@@ -73,7 +73,7 @@ namespace Miro
 
     Miro::Laser_var pLaser;
   };
-};
+}
 #endif
 
 

@@ -22,8 +22,7 @@
 #include <cmath>
 
 #include "miro/Exception.h"
-
-#undef DEBUG
+#include "miro/Log.h"
 
 namespace Miro
 {
@@ -41,7 +40,6 @@ namespace Miro
   LaserConnection::LaserConnection(ACE_Reactor * _reactor,
 				   RangeSensorImpl& _rangeSenorI,
 				   LaserStatistic * _laserStatistic) :
-    Log(WARNING,"LaserConnection"),
     reactor_(_reactor),
     parameters_(*::Laser::Parameters::instance()),
     laserStatistic_(_laserStatistic),
@@ -85,14 +83,14 @@ namespace Miro
 
   LaserConnection::~LaserConnection()
   {
-    log(WARNING, "Destructing LaserConnection.");
+    MIRO_LOG_DTOR("LaserConnection");
 
     // before this destructor is called
     // do not delete this thread manager of ACE needs it
     //delete laserTask;
     //delete laserPollTask;
 
-    log(WARNING, "destructor done.");
+    MIRO_LOG_DTOR_END("LaserConnection");
   }
 
   void 
@@ -100,21 +98,21 @@ namespace Miro
   {
     serial_struct ss;
 
-    log(WARNING, "entered stoptasks.");
+    MIRO_DBG(SICK, LL_DEBUG, "entered stoptasks.");
 
     if (parameters_.continousMode) {
       // stop the laser from sending stuff all the time
       setPollingMode();
     } else {
       laserPollTask_->cancel();
-      log(INFO, " laserPollTask exited.");
+      MIRO_DBG(SICK, LL_DEBUG, " laserPollTask exited.");
     }
 
     // Stop hardware triggered communication
     // no more calls to event, and therefore task
     if (selectHandlerId != -1)
       reactor_->remove_handler(selectHandlerId);
-    log(WARNING, "removed fd handler.");
+    MIRO_DBG(SICK, LL_DEBUG, "removed fd handler.");
 
 #ifdef THREADEDWORKING
     // Insert a HANGUP message block
@@ -122,7 +120,7 @@ namespace Miro
     message = new ACE_Message_Block(0,0);
     message->msg_type (ACE_Message_Block::MB_HANGUP);
     laserTask->putq (message);
-    log(WARNING, "sent hangup to laserTask.");
+    MIRO_DBG(SICK, LL_DEBUG, "sent hangup to laserTask.");
 #endif
 
     syncModeChangeCond.broadcast();
@@ -132,25 +130,25 @@ namespace Miro
     // Wait for the threads of the Task to exit.
     // It is rather rude to let the Task go out of scope without doing this first.  
     laserTask->wait ();
-    log(WARNING, "laserTask exited.");
+    MIRO_DBG(SICK, LL_DEBUG,"laserTask exited.");
 #endif
 
     // restore settings and 
     // close file descriptor
     // get serial info
-    if ( ioctl(fd,TIOCGSERIAL,&ss) < 0 ) {
-      log(ERROR,"stopTasks: " + string(strerror(errno)));
+    if (ioctl(fd, TIOCGSERIAL, &ss) < 0 ) {
+      throw Miro::CException(errno, "stopTasks TIOCGSERIAL");
     }
     ss.custom_divisor = 0;
     ss.baud_base = 115200;
     ss.flags |= ASYNC_LOW_LATENCY;
     // set serial info
-    if ( ioctl(fd,TIOCSSERIAL,&ss) < 0 ) {
-      log(ERROR,"stopTasks: " + string(strerror(errno)));
+    if ( ioctl(fd, TIOCSSERIAL, &ss) < 0 ) {
+      throw Miro::CException(errno, "stopTasks TIOCSSERIAL");
     }
     
-    if (tcsetattr(fd,TCSANOW,&oldtio) < 0) {
-      throw Miro::CException(errno, "LaserConnection:~LaserConnection:tcsetattr "+string(strerror(errno)) );
+    if (tcsetattr(fd, TCSANOW, &oldtio) < 0) {
+      throw Miro::CException(errno, "LaserConnection::stopTask TCSANOW");
     } 
     if (fd >= 0)
       ::close(fd);
@@ -183,7 +181,7 @@ namespace Miro
       if (laserStatistic_)
 	laserStatistic_->timeouts++;
       laserEvent_->ackNack = false;
-      log(WARNING, "waitAckNack: timed out.");
+      MIRO_LOG(LL_WARNING, "waitAckNack: timed out.");
     }
 
     return laserEvent_->ackNack;
@@ -196,10 +194,7 @@ namespace Miro
     static const ACE_Time_Value STXDELAY(0,50);
     int i,n;
 
-    log(INFO, "LaserConnection::sendRaw: Sending message to laser. ");
-#ifdef DEBUG
-    cerr << lm << endl;
-#endif
+    MIRO_DBG(SICK, LL_DEBUG, "LaserConnection::sendRaw: Sending message to laser. ");
 
     i = 0;
     n = 0;
@@ -216,7 +211,6 @@ namespace Miro
     } while (n == 0);
   
     if (n<0) {
-      log(ERROR, "sendRaw: error writing STX");
       throw Miro::CException(errno, "sendRaw: error writing STX");
     }
     //
@@ -243,10 +237,7 @@ namespace Miro
     }
     laserEvent_->syncMutex.release();  
 
-#ifdef DEBUG
-    cerr << "LaserClass::sendRaw: wrote "<< n << " bytes, awaiting ACK/NACK" << endl;
-#endif
-  
+    MIRO_DBG_OSTR(SICK, LL_DEBUG, "LaserClass::sendRaw: wrote "<< n << " bytes, awaiting ACK/NACK" << endl);
   }
 
   bool 
@@ -271,7 +262,7 @@ namespace Miro
       if ((!ok) && (retries != 0)) {
 	// we have to wait at least 30msecs before we are allowed to retry
 	ACE_OS::sleep( RETRYDELAY );
-	log(WARNING, "LaserConnection::send: retring...");
+	MIRO_LOG(LL_WARNING, "LaserConnection::send: retring...\n");
       }
     } while ((!ok) && (retries != 0));
   
@@ -290,7 +281,7 @@ namespace Miro
     c[0] = 0;
     lm.fillMessage(0,LO_CHANGEMODE,9,c);
 
-    log(INFO, "setLaserBaudrate: Set scanner to admin mode.");
+    MIRO_DBG(SICK,LL_DEBUG, "setLaserBaudrate: Set scanner to admin mode.");
     if (!send(lm,5))
       throw Miro::Exception("LaserConnection::setLaserBaudrate: could not set setup mode");
   
@@ -322,7 +313,7 @@ namespace Miro
     }
 
     lm.fillMessage(0,LO_CHANGEMODE,9,c);
-    log(INFO, "setLaserBaudrate: changing baudrate ");
+    MIRO_DBG(SICK, LL_DEBUG, "setLaserBaudrate: changing baudrate ");
     if (!send(lm,5))
       throw Miro::Exception("LaserConnection::setLaserBaudrate: could not send baudrate request");
     modeChanged = false;
@@ -343,8 +334,8 @@ namespace Miro
     ACE_OS::sleep( ACE_Time_Value(5,0) ); 
 
     c[0]= 0x25; // polling mode
-    lm.fillMessage(0,LO_CHANGEMODE,1,c); // no password needed
-    log(INFO, "setLaserBaudrate: reset to normal operation");
+    lm.fillMessage(0, LO_CHANGEMODE, 1, c); // no password needed
+    MIRO_DBG(SICK, LL_DEBUG, "setLaserBaudrate: reset to normal operation");
     if (!send(lm,5))
       throw Miro::Exception("LaserConnection::setLaserBaudrate: could not set mode for normal operation ");
     modeChanged = false;
@@ -356,7 +347,7 @@ namespace Miro
 
     if (!modeChanged) 
       throw Miro::Exception("LaserConnection::setLaserBaudrate: laser failed to acknowledge mode change");
-    log(INFO, "setLaserBaudrate: done.");
+    MIRO_LOG(LL_NOTICE, "setLaserBaudrate: done.");
   }
 
   bool
@@ -394,15 +385,15 @@ namespace Miro
 	throw Miro::Exception("LaserConnection::setBaudrate: baudrate only supported with nonstandard crystal.");
 
       // get serial info
-      if ( ioctl(fd,TIOCGSERIAL,&ss) < 0 ) {
-	log(ERROR,"setBaudrate: " + string(strerror(errno)));
+      if (ioctl(fd, TIOCGSERIAL, &ss) < 0 ) {
+	throw Miro::CException(errno, "setBaudrate: TIOCGSERIAL");
       }
       ss.custom_divisor = 0;
       ss.baud_base = 115200;
       ss.flags |= ASYNC_LOW_LATENCY;
       // set serial info
-      if ( ioctl(fd,TIOCSSERIAL,&ss) < 0 ) {
-	log(ERROR,"setBaudrate: " + string(strerror(errno)));
+      if (ioctl(fd, TIOCSSERIAL, &ss) < 0 ) {
+	throw Miro::CException(errno, "setBaudrate: TIOCSSERIAL");
       }
     }
 
@@ -442,8 +433,8 @@ namespace Miro
 
     if ((baudrate != 500000) && (!parameters_.stdCrystal)) {
       // get serial info
-      if (ioctl(fd,TIOCGSERIAL,&ss) < 0 ) {
-	log(ERROR,"setBaudrate: " + string(strerror(errno)));
+      if (ioctl(fd, TIOCGSERIAL, &ss) < 0 ) {
+	throw Miro::CException(errno, "setBaudrate: TIOCGSERIAL");
       }
       ss.flags = ss.flags | ASYNC_SPD_CUST;
       if (baudrate == 9600) 
@@ -456,8 +447,8 @@ namespace Miro
       ss.baud_base = 1000000;
       ss.flags |= ASYNC_LOW_LATENCY;
       // set serial info
-      if (ioctl(fd,TIOCSSERIAL,&ss) < 0) {
-	log(ERROR,"setBaudrate: " + string(strerror(errno)));
+      if (ioctl(fd, TIOCSSERIAL, &ss) < 0) {
+	throw Miro::CException(errno, "setBaudrate: TIOCSSERIAL");
       }
     }
   }
@@ -485,36 +476,36 @@ namespace Miro
 	++i;
 	continue;
       }
-      log(INFO, "initHardware: trying connect with ",actual);
+      MIRO_LOG_OSTR(LL_NOTICE, "initHardware: trying connect with "<<actual<<"\n");
       ACE_OS::sleep( ACE_Time_Value(2,0) ); 
       if (checkConnection()) {
-	log(WARNING, "initHardware: connect succeeded for ",actual);
+	MIRO_LOG_OSTR(LL_NOTICE, "initHardware: connect succeeded for "<< actual<<"\n");
 	break;
-      } else {
-	log(WARNING, "initHardware: connect failed for ",actual);
+      }
+      else {
+	MIRO_LOG_OSTR(LL_NOTICE, "initHardware: connect failed with "<<actual<<"\n");
 	++i;
       }
 
     }
     if (i==4) {
-      log(FATAL_ERROR, "initHardware: without connection I can't program another baudrate");
       throw Miro::Exception("LaserConnection::initHardware could not determine laser baudrate.");
     }
 
-    log(INFO, "initHardware: connect ok.");
+    MIRO_LOG(LL_NOTICE, "initHardware: connect ok.\n");
 
     // change baudrate on laser if necessary ?
     // this will also adapt local baudrate !!
     if (destinationRate != actual) {
-      log(INFO, "initHardware: Trying to program new baudrate.");
+      MIRO_LOG(LL_NOTICE, "initHardware: Trying to program new baudrate.");
       setLaserBaudrate(destinationRate);
-      log(INFO, "initHardware: New baudrate set.");
+      MIRO_LOG(LL_NOTICE, "initHardware: New baudrate set.");
     }
 
     // wait 5 seconds
     ACE_OS::sleep( ACE_Time_Value(5,0) ); 
 
-    log(INFO, "initHardware: Final check of connection.");
+    MIRO_LOG(LL_NOTICE, "initHardware: Final check of connection.");
     // check whether we succeeded
     if (!checkConnection()) {
       throw Miro::Exception("LaserConnection::initHardware could not connect to laser.");
@@ -544,7 +535,7 @@ namespace Miro
     if (!send(lm,5))
       throw Miro::Exception("LaserConnection::setContinousMode: could not set mode in laser");
     
-    log(INFO, "setContinousMode: mode change send, waiting for answer.");;
+    MIRO_LOG(LL_NOTICE, "setContinousMode: mode change send, waiting for answer.");
     
     modeChanged = false;
     
@@ -569,7 +560,7 @@ namespace Miro
     if (!send(lm,5))
       throw Miro::Exception("LaserConnection::setPollingMode: could not set mode in laser");
 
-    log(INFO, "setPollingMode: mode change send, waiting for answer.");
+    MIRO_LOG(LL_NOTICE, "setPollingMode: mode change send, waiting for answer.");
 
     modeChanged = false;
 

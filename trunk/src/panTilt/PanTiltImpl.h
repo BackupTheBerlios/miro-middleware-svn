@@ -26,8 +26,6 @@
 #include <string>
 #include <cmath>
 
-#include <termios.h>
-
 namespace DpPanTilt 
 {
   // forward declarations
@@ -37,8 +35,7 @@ namespace DpPanTilt
   /**
    * PanTiltImpl
    */
-  class PanTiltImpl :  public virtual POA_Miro::DirectedPerceptionPanTilt,
-		       public Miro::Log
+  class PanTiltImpl :  public virtual POA_Miro::DirectedPerceptionPanTilt
   {
   public:
     Connection& connection;

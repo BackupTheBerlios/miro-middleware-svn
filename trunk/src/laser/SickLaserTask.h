@@ -12,7 +12,6 @@
 #define laserTask_hh
 
 #include "miro/Task.h"
-#include "miro/Log.h"
 
 namespace Miro 
 {
@@ -31,7 +30,7 @@ namespace Miro
    * uses the reference to LaserImpl to signal the data
    * received via condition variables
    */
-  class LaserTask : public Task, public Log
+  class LaserTask : public Task
   {
     /**
      * main super class

@@ -47,8 +47,7 @@ namespace Miro
   /**
    * LaserConnection
    */
-  class LaserConnection :  // public devConnection, 
-    public Log
+  class LaserConnection 
   {
   public:
     //! Constructor

@@ -2,35 +2,28 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "PanTiltImpl.h"
 #include "Parameters.h"
 
 #include "miro/Exception.h"
+#include "miro/Log.h"
 
 #include <ace/Reactor.h>
 #include <ace/Timer_Queue.h>
 
-#include <termios.h>
-#include <linux/serial.h>
-
-#include <iostream>
 #include <cmath>
-
-#undef DEBUG
 
 namespace DpPanTilt 
 {
   using std::string;
 
-  using Miro::Log;
   using Miro::PanTiltPositionIDL;
   using Miro::PanTiltSpdAccIDL;
   using Miro::PanTiltLimitsIDL;
@@ -43,20 +36,15 @@ namespace DpPanTilt
    ***************************************************************************/
 
   PanTiltImpl::PanTiltImpl(Connection& _connection, Data& _data) :
-    Log(WARNING,"PanTiltImpl"),
     connection(_connection),
     panTiltData(_data)
   {
+    MIRO_LOG_CTOR("DpPanTilt::PanTiltImpl");
   }
 
   PanTiltImpl::~PanTiltImpl()
   {
-    log(WARNING, "Destructing PanTiltImpl.");
-
-    // before this destructor is called
-
-    log(WARNING, "destructor done.");
-
+    MIRO_LOG_DTOR("DpPanTilt::PanTiltImpl");
   }
 
   double
@@ -66,7 +54,8 @@ namespace DpPanTilt
     ACE_Time_Value timeout(5,0); // 5 seconds for data request (far to long, but its just here to return sometime)
     ACE_Guard<ACE_Thread_Mutex> guard(panTiltData.sync);
 
-    log(Log::INFO, "getPan called.");
+    MIRO_LOG(LL_NOTICE, "getPan called.");
+    MIRO_DBG(B21, LL_DEBUG, "getPan called.");
 
     Message p1("PP");
     connection.writeMessage( p1 );
@@ -90,7 +79,7 @@ namespace DpPanTilt
     ACE_Time_Value timeout(5,0); // 5 seconds for data request (far to long, but its just here to return sometime)
     ACE_Guard<ACE_Thread_Mutex> guard(panTiltData.sync);
 
-    log(Log::INFO, "getTilt called.");
+    MIRO_DBG(B21, LL_DEBUG, "getTilt called.");
 
     Message p2("TP");
     connection.writeMessage( p2 );
@@ -112,7 +101,7 @@ namespace DpPanTilt
   {
     PanTiltPositionIDL result;
 
-    log(Log::INFO, "getPosition called.");
+    MIRO_DBG(B21, LL_DEBUG, "getPosition called.");
 
     result.panvalue = getPan();
     result.tiltvalue = getTilt();
@@ -158,7 +147,7 @@ namespace DpPanTilt
 
   void PanTiltImpl::setPosition(const PanTiltPositionIDL &dest) throw ()
   {
-    log(Log::INFO, "setPosition called.");
+    MIRO_DBG(B21, LL_DEBUG, "setPosition called.");
 
     PanTiltImpl::setPan(dest.panvalue);
     PanTiltImpl::setTilt(dest.tiltvalue);
@@ -167,7 +156,7 @@ namespace DpPanTilt
   void
   PanTiltImpl::setWaitPosition(const PanTiltPositionIDL &dest) throw ()
   {
-    log(Log::INFO, "setWaitPosition called.");
+    MIRO_DBG(B21, LL_DEBUG, "setWaitPosition called.");
 
     PanTiltImpl::setPan(dest.panvalue);
     PanTiltImpl::setTilt(dest.tiltvalue);
@@ -196,7 +185,7 @@ namespace DpPanTilt
 
     PanTiltSpdAccIDL result;
 
-    log(Log::INFO, "getSpdAcc called.");
+    MIRO_DBG(B21, LL_DEBUG, "getSpdAcc called.");
 
     Message p1( "PS" );
     connection.writeMessage( p1 );
@@ -312,7 +301,7 @@ namespace DpPanTilt
     ACE_Time_Value timeout(20,0); // 10 seconds for data request (far to long, but its just here to return sometime)
     ACE_Guard<ACE_Thread_Mutex> guard(panTiltData.sync);
 
-    log(Log::INFO, "setSpdAcc called.");    
+    MIRO_DBG(B21, LL_DEBUG, "setSpdAcc called.");    
 
     Message p1( "PS" );
     p1.addLong( rad2pan( dest.targetpanspeed ) );
@@ -425,7 +414,7 @@ namespace DpPanTilt
     ACE_Guard<ACE_Thread_Mutex> guard(panTiltData.sync);
 
     PanTiltLimitsIDL result;
-    log(Log::INFO, "getLimits called.");
+    MIRO_DBG(B21, LL_DEBUG, "getLimits called.");
 
     Message p1( "PN" );
     connection.writeMessage( p1 );
@@ -477,7 +466,7 @@ namespace DpPanTilt
     ACE_Time_Value timeout(20,0); // 10 seconds for data request (far to long, but its just here to return sometime)
     ACE_Guard<ACE_Thread_Mutex> guard(panTiltData.sync);
 
-    log(Log::INFO, "setPowers called.");
+    MIRO_DBG(B21, LL_DEBUG, "setPowers called.");
 
     Message p1( "PH" );
     if (dest.panhold == 0)
@@ -553,7 +542,7 @@ namespace DpPanTilt
     ACE_Guard<ACE_Thread_Mutex> guard(panTiltData.sync);
 
     PanTiltPowersIDL result;
-    log(Log::INFO, "getPowers called.");
+    MIRO_DBG(B21, LL_DEBUG, "getPowers called.");
 
     Message p1( "PH" );
     connection.writeMessage( p1 );

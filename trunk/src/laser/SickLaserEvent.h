@@ -31,7 +31,7 @@ namespace Miro {
    * it is provided with a log facility and inherits from 
    * E_Event_Handler
    */
-  class LaserEvent : public ACE_Event_Handler, public Log
+  class LaserEvent : public ACE_Event_Handler
   {
   public:
     /**

@@ -16,12 +16,11 @@
 #include "SickLaserStatistic.h"
 
 #include "miro/TimeHelper.h"
+#include "miro/Log.h"
 
 #include <iostream>
 
 #include <netinet/in.h>
-
-// #undef DEBUG
 
 namespace Miro
 {
@@ -36,16 +35,19 @@ namespace Miro
 		       RangeSensorImpl& _laserI, 
 		       LaserStatistic * _laserStatistic) :
     Super(),
-    Log(INFO,"LaserTask"),
     laser_(_laser),
     laserI_(_laserI),
     laserStatistic_(_laserStatistic)
-  {}
+  {
+    MIRO_LOG_CTOR("Miro::LaserTask");
+  }
 
   //////////////////////////////////////////////////////////////////////
   // ~LaserTask
   LaserTask::~LaserTask() 
-  {}
+  {
+    MIRO_LOG_DTOR("Miro::LaserTask");
+  }
 
   void 
   LaserTask::doPkt(LaserMessage *data) 
@@ -61,7 +63,7 @@ namespace Miro
 
       // show statistic rarely
       if (!((laserStatistic_->packetsProcessed) % 1000)) {
-	log(INFO,"Statistics:");
+	MIRO_LOG(LL_NOTICE,"Statistics:");
 	double mPerPkt = (double)laserStatistic_->recvTime.msec() / 
 	  ( laserStatistic_->packetsProcessed + 
 	    laserStatistic_->packetsWrongAddress + 
@@ -95,9 +97,7 @@ namespace Miro
   int 
   LaserTask::svc()
   {
-#ifdef DEBUG
-    ACE_DEBUG ((LM_DEBUG, "(%P|%t) Task 0x%x starts in thread %u\n", (void *) this, ACE_Thread::self ()));
-#endif
+    MIRO_DBG_OSTR(SICK, LL_DEBUG, "("<<(void *) this <<"|"<<ACE_Thread::self ()<<") Task 0x%x starts in thread %u\n");
 
     // Where we getq() the message
     ACE_Message_Block *message;
@@ -125,7 +125,7 @@ namespace Miro
       message->release ();
     }
 
-    log(INFO, "left service.");
+    MIRO_LOG(LL_NOTICE, "left service.");
 
     return (0);
   }
@@ -141,41 +141,41 @@ namespace Miro
     switch (message.cmd()) {
       
     case LR_LMS_TYPE:
-      log(INFO, "received LMS_TYPE MESSAGE");
+      MIRO_LOG(LL_NOTICE, "received LMS_TYPE MESSAGE");
       message.PrintDataOn(std::cerr);
       break;
 
     case LR_POWER_ON: 
-      log(INFO, "received POWER_ON MESSAGE");
+      MIRO_LOG(LL_NOTICE, "received POWER_ON MESSAGE");
       message.PrintDataOn(std::cerr);
       break;
 
     case LR_ACK_RESET: 
-      log(INFO, "received SW-RESET ACKNOWLEDGE MESSAGE");
+      MIRO_LOG(LL_NOTICE, "received SW-RESET ACKNOWLEDGE MESSAGE");
       break;
       
     case LR_NOT_ACK: 
-      log(WARNING, "received NOT ACKNOWLEDGE MESSAGE");
+      MIRO_LOG(LL_WARNING, "received NOT ACKNOWLEDGE MESSAGE");
       break;
 
     case LR_MODE_CHANGE: 
-      log(INFO, "received MODE CHANGE ACK");
+      MIRO_LOG(LL_NOTICE, "received MODE CHANGE ACK");
       laser_.syncModeChange.acquire();
       switch (message.getUnsignedByte(0)) {
       case 0: 
-	log(INFO, "Mode changed successfully");
+	MIRO_LOG(LL_NOTICE, "Mode changed successfully");
 	laser_.modeChanged = true;
 	break;
       case 1:
-	log(INFO, "Mode not changed, wrong password");
+	MIRO_LOG(LL_NOTICE, "Mode not changed, wrong password");
 	laser_.modeChanged = false;
 	break;
       case 2:
-	log(INFO, "Mode not changed, error in LMI/LMS");
+	MIRO_LOG(LL_NOTICE, "Mode not changed, error in LMI/LMS");
 	laser_.modeChanged = false;
 	break;
       default:
-	log(INFO, "Mode not changed, unknown error");
+	MIRO_LOG(LL_NOTICE, "Mode not changed, unknown error");
 	laser_.modeChanged = false;
 	break;
       }
@@ -185,8 +185,6 @@ namespace Miro
 
     case LR_REQ_DATA: 
       {
-	//log(INFO, "received sensor data");
-	//message.PrintDumpOn(std::cerr);
 	int vals = (message.getUnsignedShort(0) & 0x3fff);
       
 	// throw exception if not the expected number of data arrived
@@ -211,28 +209,28 @@ namespace Miro
 	break;
       }
       case LR_LMS_STATUS: 
-	log(INFO, "received sensor/LMI status");
+	MIRO_LOG(LL_NOTICE, "received sensor/LMI status");
 	laser_.syncStatusCond.broadcast();
 	// TODO further decode
 	break;
 
       case LR_ERROR_TEST: 
-	log(INFO, "received error/test");
+	MIRO_LOG(LL_NOTICE, "received error/test");
 	switch (message.getUnsignedByte(0)) {
 	case 0: 
-	  log(INFO, "No Error, Test OK");
+	  MIRO_LOG(LL_NOTICE, "No Error, Test OK");
 	  break;
 	case 1:
-	  log(INFO, "Info");
+	  MIRO_LOG(LL_NOTICE, "Info");
 	  break;
 	case 2:
-	  log(WARNING, "Warning");
+	  MIRO_LOG(LL_WARNING, "Warning");
 	  break;
 	case 3:
-	  log(ERROR, "Error");
+	  MIRO_LOG(LL_ERROR, "Error");
 	  break;
 	case 4:
-	  log(ERROR, "Fatal Error");
+	  MIRO_LOG(LL_ERROR, "Fatal Error");
 	  break;
 	}
 	// TODO further decode
@@ -240,267 +238,257 @@ namespace Miro
 	break;
 
       case LR_MEMORY_DUMP: 
-	log(INFO, "received memory dump");
+	MIRO_LOG(LL_NOTICE, "received memory dump");
 	// TODO further decode
 	break;
 
       case LR_AVERAGE_DATA: 
-	log(INFO, "received average data");
+	MIRO_LOG(LL_NOTICE, "received average data");
 	// TODO further decode
 	break;
 
       case LR_DATA_RANGE: 
-	log(INFO, "received data sub range");
+	MIRO_LOG(LL_NOTICE, "received data sub range");
 	// TODO further decode
 	break;
 
       case LR_LMI_CONF_DATA: 
-	log(INFO, "received lmi configuration");
+	MIRO_LOG(LL_NOTICE, "received lmi configuration");
 	// TODO further decode
 	break;
 
       case LR_LMI_HANDLE_DEFS: 
-	log(INFO, "received data definition");
+	MIRO_LOG(LL_NOTICE, "received data definition");
 	// TODO further decode
 	break;
 
       case LR_LMS_VARIANT_CHANGE: 
-	log(INFO, "received variant change");
+	MIRO_LOG(LL_NOTICE, "received variant change");
 	switch (message.getUnsignedByte(0)) {
 	case 0: 
-	  log(INFO, "variant change aborted");
+	  MIRO_LOG(LL_NOTICE, "variant change aborted");
 	  break;
 	case 1:
-	  log(INFO, "variant change done");
+	  MIRO_LOG(LL_NOTICE, "variant change done");
 	  break;
 	}
 
-	log(INFO, "angular scan range    :");
-	cerr << message.getUnsignedShort(1) << endl;
-	log(INFO, "single shot resolution:");
-	cerr << message.getUnsignedShort(3) << endl;
+	MIRO_LOG_OSTR(LL_NOTICE, "angular scan range    :"<< message.getUnsignedShort(1) << endl);
+	MIRO_LOG_OSTR(LL_NOTICE, "single shot resolution:"<< message.getUnsignedShort(3) << endl);
       
 	break;
 
       case LR_FIELD_CONF: 
-	log(INFO, "received field configuration :");
+	MIRO_LOG(LL_NOTICE, "received field configuration :");
 	switch (message.getUnsignedByte(0)) {
 	case 0: 
-	  log(INFO, "field conf aborted");
+	  MIRO_LOG(LL_NOTICE, "field conf aborted");
 	  break;
 	case 1:
-	  log(INFO, "field conf done");
+	  MIRO_LOG(LL_NOTICE, "field conf done");
 	  break;
 	}
 	//  TODO further decode
 	break;
 
       case LR_PASSWORD_CHANGE: 
-	log(INFO, "received password change ack:");
+	MIRO_LOG(LL_NOTICE, "received password change ack:");
 	switch (message.getUnsignedByte(0)) {
 	case 0: 
-	  log(INFO, "password change aborted");
+	  MIRO_LOG(LL_NOTICE, "password change aborted");
 	  break;
 	case 1:
-	  log(INFO, "password change done");
+	  MIRO_LOG(LL_NOTICE, "password change done");
 	  break;
 	case 2:
-	  log(INFO, "acknowledge of user expected");
+	  MIRO_LOG(LL_NOTICE, "acknowledge of user expected");
 	  break;
 	}
 	switch (message.getUnsignedByte(1)) {
 	case 0: 
-	  log(INFO, "password for SICK-SERVICE and authorized customers");
+	  MIRO_LOG(LL_NOTICE, "password for SICK-SERVICE and authorized customers");
 	  break;
 	case 1:
-	  log(INFO, "password for maintenance");
+	  MIRO_LOG(LL_NOTICE, "password for maintenance");
 	  break;
 	  break;
 	}
 	break;
       case LR_FIELD_CONF_DATA: 
-	log(INFO, "received field configuration data:");
+	MIRO_LOG(LL_NOTICE, "received field configuration data:");
 	//  TODO further decode
 	break;
 
       case LR_LEARN_FIELD_CONF: 
-	log(INFO, "received learn field configuration :");
+	MIRO_LOG(LL_NOTICE, "received learn field configuration :");
 	switch (message.getUnsignedByte(0)) {
 	case 0: 
-	  log(INFO, "learning aborted");
+	  MIRO_LOG(LL_NOTICE, "learning aborted");
 	  break;
 	case 1:
-	  log(INFO, "done, verification can start");
+	  MIRO_LOG(LL_NOTICE, "done, verification can start");
 	  break;
 	case 3:
-	  log(INFO, "learning active");
+	  MIRO_LOG(LL_NOTICE, "learning active");
 	  break;
 	}
-	log(INFO,"learning from LMS #:");
-	cerr << message.getUnsignedByte(1) << endl;
+	MIRO_LOG_OSTR(LL_NOTICE,"learning from LMS #:"<< message.getUnsignedByte(1) << endl);
 	break;
 
       case LR_CONF_DYN_RECT: 
-	log(INFO, "received configuration for dynamic rectangle:");
+	MIRO_LOG(LL_NOTICE, "received configuration for dynamic rectangle:");
 	//  TODO further decode
 	break;
 
       case LR_CONF_DYN_SEGMENT: 
-	log(INFO, "received dynamic segment configuration:");
+	MIRO_LOG(LL_NOTICE, "received dynamic segment configuration:");
 	//  TODO further decode
 	break;
 
       case LR_DYN_FIELD_INDEX_OR_SPEED: 
-	log(INFO, "received field index or speed configuration :");
+	MIRO_LOG(LL_NOTICE, "received field index or speed configuration :");
 	switch (message.getUnsignedByte(0)) {
 	case 0: 
-	  log(INFO, "switch aborted");
+	  MIRO_LOG(LL_NOTICE, "switch aborted");
 	  break;
 	case 1:
-	  log(INFO, "switch done.");
+	  MIRO_LOG(LL_NOTICE, "switch done.");
 	  break;
 	}
-	log(INFO,"Index of activated field #:");
-	cerr << message.getUnsignedShort(1) << endl;
+	MIRO_LOG_OSTR(LL_NOTICE,"Index of activated field #:" << message.getUnsignedShort(1) << endl);
 	break;
 
       case LR_SET_OUTPUT: 
-	log(INFO, "received set output active/inactive :");
+	MIRO_LOG(LL_NOTICE, "received set output active/inactive :");
 	switch (message.getUnsignedByte(0)) {
 	case 0: 
-	  log(INFO, "output switch aborted");
+	  MIRO_LOG(LL_NOTICE, "output switch aborted");
 	  break;
 	case 1:
-	  log(INFO, "output switch done.");
+	  MIRO_LOG(LL_NOTICE, "output switch done.");
 	  break;
 	}
-	log(INFO,"output #:");
-	cerr << message.getUnsignedShort(1) << endl;
-	log(INFO,"active (1) or inactive (0) :");
-	cerr << message.getUnsignedShort(2) << endl;
+	MIRO_LOG_OSTR(LL_NOTICE,"output #:" << message.getUnsignedShort(1) << endl);
+	MIRO_LOG_OSTR(LL_NOTICE,"active (1) or inactive (0) :" << message.getUnsignedShort(2) << endl);
       
 	break;
 
       case LR_LMI_INPUT: 
-	log(INFO, "received input data (bit 0..3:A..D, 4:restart):");
-	cerr << message.getUnsignedShort(0) << endl;
+	MIRO_LOG_OSTR(LL_NOTICE, "received input data (bit 0..3:A..D, 4:restart):" << message.getUnsignedShort(0) << endl);
 	break;
 
       case LR_SIMULATE_INPUT: 
-	log(INFO, "received simulate input:");
+	MIRO_LOG(LL_NOTICE, "received simulate input:");
 	//  TODO further decode
 	break;
 
       case LR_CALIBRATE: 
-	log(INFO, "received calibrate:");
+	MIRO_LOG(LL_NOTICE, "received calibrate:");
 	switch (message.getUnsignedByte(0)) {
 	case 0: 
-	  log(INFO, "calibration not ok");
+	  MIRO_LOG(LL_NOTICE, "calibration not ok");
 	  break;
 	case 1:
-	  log(INFO, "calibration ok");
+	  MIRO_LOG(LL_NOTICE, "calibration ok");
 	  break;
 	}
 	break;
 
       case LR_CHANGE_PERMANENT_BAUDRATE: 
-	log(INFO, "received acknowledge of permanent baudrate change:");
+	MIRO_LOG(LL_NOTICE, "received acknowledge of permanent baudrate change:");
 	switch (message.getUnsignedByte(0)) {
 	case 0: 
-	  log(INFO, "change of baudrate not accepted");
+	  MIRO_LOG(LL_NOTICE, "change of baudrate not accepted");
 	  break;
 	case 1:
-	  log(INFO, "change of baudrate accepted");
+	  MIRO_LOG(LL_NOTICE, "change of baudrate accepted");
 	  break;
 	}
 	switch (message.getUnsignedByte(1)) {
 	case 0: 
-	  log(INFO, "baudrate will be 9600 on poweron");
+	  MIRO_LOG(LL_NOTICE, "baudrate will be 9600 on poweron");
 	  break;
 	case 1:
-	  log(INFO, "baudrate will be unchanged on poweron");
+	  MIRO_LOG(LL_NOTICE, "baudrate will be unchanged on poweron");
 	  break;
 	}
 	break;
 
       case LR_CHANGE_ADDRESS: 
-	log(INFO, "received acknowledge of address definition :");
+	MIRO_LOG(LL_NOTICE, "received acknowledge of address definition :");
 	switch (message.getUnsignedByte(0)) {
 	case 0: 
-	  log(INFO, "change of address not accepted");
+	  MIRO_LOG(LL_NOTICE, "change of address not accepted");
 	  break;
 	case 1:
-	  log(INFO, "change of address accepted");
+	  MIRO_LOG(LL_NOTICE, "change of address accepted");
 	  break;
 	}
-	log(INFO,"new address is :");
-	cerr << message.getUnsignedByte(1) << endl;
+	MIRO_LOG_OSTR(LL_NOTICE,"new address is :" << message.getUnsignedByte(1) << endl);
 	break;
 
       case LR_ACTIVATE_SENDER: 
-	log(INFO, "received activate sender :");
+	MIRO_LOG(LL_NOTICE, "received activate sender :");
 	switch (message.getUnsignedByte(0)) {
 	case 0: 
-	  log(INFO, "activation of sender not accepted");
+	  MIRO_LOG(LL_NOTICE, "activation of sender not accepted");
 	  break;
 	case 1:
-	  log(INFO, "activation of sender accepted");
+	  MIRO_LOG(LL_NOTICE, "activation of sender accepted");
 	  break;
 	}
-	log(INFO,"activation is :");
-	cerr << message.getUnsignedByte(1) << endl;
+	MIRO_LOG_OSTR(LL_NOTICE,"activation is :" << message.getUnsignedByte(1) << endl);
 	break;
 
       case LR_LMI_CONF: 
-	log(INFO, "received LMI conf :");
+	MIRO_LOG(LL_NOTICE, "received LMI conf :");
 	switch (message.getUnsignedByte(0)) {
 	case 0: 
-	  log(INFO, "LMI conf not accepted");
+	  MIRO_LOG(LL_NOTICE, "LMI conf not accepted");
 	  break;
 	case 1:
-	  log(INFO, "LMI conf accepted");
+	  MIRO_LOG(LL_NOTICE, "LMI conf accepted");
 	  break;
 	}
-	log(INFO,"number of attached sensors :");
-	cerr << message.getUnsignedByte(1) << endl;
+	MIRO_LOG_OSTR(LL_NOTICE,"number of attached sensors :" << message.getUnsignedByte(1) << endl);
 	// TODO further decode 
 	break;
 
       case LR_HANDLE_DEFS: 
-	log(INFO, "received case definition :");
+	MIRO_LOG(LL_NOTICE, "received case definition :");
 	// TODO further decode 
 	break;
       case LR_PIXEL_ORIENTED: 
-	log(INFO, "received pixel oriented mode acknowledge:");
+	MIRO_LOG(LL_NOTICE, "received pixel oriented mode acknowledge:");
 	switch (message.getUnsignedByte(0)) {
 	case 0: 
-	  log(INFO, "state change not accepted");
+	  MIRO_LOG(LL_NOTICE, "state change not accepted");
 	  break;
 	case 1:
-	  log(INFO, "state change accepted");
+	  MIRO_LOG(LL_NOTICE, "state change accepted");
 	  break;
 	}
 	switch (message.getUnsignedByte(1)) {
 	case 0: 
-	  log(INFO, "state : not pixel oriented");
+	  MIRO_LOG(LL_NOTICE, "state : not pixel oriented");
 	  break;
 	case 1:
-	  log(INFO, "state : pixel oriented");
+	  MIRO_LOG(LL_NOTICE, "state : pixel oriented");
 	  break;
 	}
 	break;
       case LR_CARTESIAN: 
-	log(INFO, "received cartesian scan:");
+	MIRO_LOG(LL_NOTICE, "received cartesian scan:");
 	break;
 
       case LR_CONF_LMS: 
-	log(INFO, "received LMS configuration:");
+	MIRO_LOG(LL_NOTICE, "received LMS configuration:");
 	switch (message.getUnsignedByte(0)) {
 	case 0: 
-	  log(INFO, "conf not accepted");
+	  MIRO_LOG(LL_NOTICE, "conf not accepted");
 	  break;
 	case 1:
-	  log(INFO, "conf accepted");
+	  MIRO_LOG(LL_NOTICE, "conf accepted");
 	  break;
 	}
 	break;
@@ -510,7 +498,7 @@ namespace Miro
 	cerr << __FILE__  << " : " 
 	     << __LINE__ << ":" 
 	     << __FUNCTION__ ; 
-	log(WARNING, "() - Unhandled opcode in :");
+	MIRO_LOG(LL_WARNING, "() - Unhandled opcode in :");
 	message.PrintDumpOn(cerr);
       }
   }

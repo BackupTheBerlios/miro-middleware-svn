@@ -2,23 +2,22 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
+#include "SickLaserService.h"
 #include "SickLaserImpl.h"
 #include "Parameters.h"
-#include "SickLaserService.h"
 
-#include "miro/Utils.h"
 #include "miro/OdometryTracking.h"
+#include "miro/Utils.h"
+#include "miro/Log.h"
 
-#include <qfile.h>
-#include <qdom.h>
-
+#include <sstream>
 #include <iostream>
 
 using std::cerr;
@@ -29,7 +28,6 @@ namespace Miro
 {
   LaserServer::LaserServer(int argc, char *argv[]) :
     Miro::Server(argc, argv),
-    Log(INFO,"LaserServer"),
     schedparams_(ACE_SCHED_FIFO, 10),
     reactorTask_( this, 20, &schedparams_),
     ec_(::Laser::Parameters::instance()->notify?
@@ -47,15 +45,15 @@ namespace Miro
     connection_(reactorTask_.reactor(), laser_, laserStatistic_)
   {
     if (::Laser::Parameters::instance()->notify && CORBA::is_nil(ec_.in())) {
-      cerr << "Could not resolve event channel in naming context " 
-	   << namingContextName << "," << endl
-	   << "will not broadcast events.";
+      std::cerr << "Could not resolve event channel in naming context " 
+		<< namingContextName << "," << endl
+		<< "will not broadcast events.";
     }
 
     if (::Laser::Parameters::instance()->positionStamps && CORBA::is_nil(ec_.in())) {
-      cerr << "Could not resolve event channel in naming context "
-	   << namingContextName << "," << endl
-	   << "will not use position stamps." << endl;
+      std::cerr << "Could not resolve event channel in naming context "
+		<< namingContextName << "," << endl
+		<< "will not use position stamps." << endl;
     }
 
     if (laserStatistic_)
@@ -71,97 +69,95 @@ namespace Miro
     // this _CANNOT_ be done earlier as the reactorTask is not jet running
     connection_.initHardware();
   
-    log(INFO, "LaserServer initialized..");
+    MIRO_LOG_CTOR_END("Miro::LaserServer");
   }
 
   LaserServer::~LaserServer()
   {
-    log(INFO, "Destructing LaserServer.");
+    MIRO_LOG_DTOR("Miro::LaserServer");
     connection_.stopTasks();
-    log(INFO, "LaserServer tasks stopped.");
 
     // stop reactor task
     reactorTask_.cancel();
 
-    //   laser->syncLaserScan.release();
-    //   laser->syncModeChange.release();
-    //   laser->syncStatus.release();
-    //   laser->laserEvent->syncMutex.release(); 
-    //   laser->laserEvent->stateMutex.release();
-    //   laser->laserEvent->ackNackCond.broadcast();
-    //   laser->laserEvent->ackNackMutex.release();
-    //   reactorTask->wait ();
-    log(INFO, "reactorTask exited.");
-
     //  delete laser;
+
+    MIRO_LOG_DTOR_END("Miro::LaserServer");
   }
-
-  enum {INFO, WARNING, ERROR, FATAL_ERROR};
-
-  // TODO improve via loglevel
-  void log(int logLevel, std::string s) { 
-    //   cerr << __FILE__  << " : " 
-    // 	 << __LINE__ << ":" 
-    // 	 << __FUNCTION__<< s << endl;
-    ACE_Time_Value time;
-    time_t tt;
-
-    time = ACE_OS::gettimeofday();
-    tt = time.sec();
- 
-    std::string label[]={"[INFO]","[WARNING]","[ERROR]","[FATAL ERROR]"};
-    cerr  << "[main] " << label[logLevel] << " " << s << " " << ctime(&tt);
-  
-  }
-};
+}
 
 int
 main(int argc, char *argv[])
 {
+  int rc = 0;
 
   Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
   Laser::Parameters * parameters = Laser::Parameters::instance();
 
-  // Config file processing
-  Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
-  config->setSection("Robot");
-  config->getParameters("Robot", *robotParameters);
-  config->setSection("Sick");
-  config->getParameters("Laser", *parameters);
-  delete config;
-
-  log(Miro::INFO, "Initialize server daemon.");
-  Miro::LaserServer laserServer(argc, argv);
-
-#ifdef DEBUG
-  cout << "  robot parameters:" << endl << *robotParameters << endl;
-  cout << "  parameters:" << endl << *parameters << endl;
-#endif
-
   try {
-    log(Miro::INFO, "Ready for service.");
-    laserServer.run(8);
-    log(Miro::INFO, "Service loop ended, exiting.");
+    // Config file processing
+    Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
+    config->setSection("Robot");
+    config->getParameters("Robot", *robotParameters);
+    config->setSection("Sick");
+    config->getParameters("Laser", *parameters);
+    delete config;
+
+    if (Miro::Log::level() > 1) {
+      std::stringstream s;
+      s << "  robot parameters:" << endl << robotParameters << endl
+	<< "  parameters:" << endl << parameters << endl;
+      
+      MIRO_LOG_OSTR(LL_NOTICE, "Configuration:\n"<< s.str().c_str());
+    }
+
+    MIRO_LOG(LL_NOTICE, "Initialize server daemon.\n");
+    Miro::LaserServer laserServer(argc, argv);
+    
+    try {
+      MIRO_LOG(LL_NOTICE, "Loop forever handling events.\n");
+      laserServer.run(8);
+      MIRO_LOG(LL_NOTICE, "Server loop ended, exiting.\n");
+    }
+    catch (const Miro::EOutOfBounds& e) {
+      std::stringstream s;
+      s << "OutOfBounds exception: Wrong parameter for device initialization."
+	<< e << endl;
+      MIRO_LOG_OSTR(LL_CRITICAL, s.str().c_str());
+      rc = 1;
+    }
+    catch (const Miro::EDevIO& e) {
+      std::stringstream s;
+      s << "DevIO exception: Device access failed." 
+	<< e << endl;
+      MIRO_LOG_OSTR(LL_CRITICAL, s.str().c_str());
+      rc = 1;
+    }
+    catch (const CORBA::Exception & e) {
+      std::stringstream s;
+      s << "Uncaught CORBA exception: " << e << endl;
+      MIRO_LOG_OSTR(LL_CRITICAL, s.str().c_str());
+      rc = 1;
+    }
   }
   catch (const Miro::CException& e) {
-    log(Miro::FATAL_ERROR, "Miro exception: ");
-    cerr << e << endl;
-    return 1;
-  }
-  catch (const CORBA::Exception & e) {
-    log(Miro::FATAL_ERROR, "Uncaught CORBA exception: ");
-    cerr << e << endl;
-    return 1;
+    std::stringstream s;
+    s << "Miro C exception: " << e << endl;
+      MIRO_LOG_OSTR(LL_CRITICAL, s.str().c_str());
+    rc = 1;
   }
   catch (const Miro::Exception& e) {
-    log(Miro::FATAL_ERROR, "Miro exception: ");
-    cerr << e << endl;
-    return 1;
+    std::stringstream s;
+    s << "Miro exception: " << e << endl;
+      MIRO_LOG_OSTR(LL_CRITICAL, s.str().c_str());
+    rc = 1;
   }
   catch (...) {
-    log(Miro::FATAL_ERROR, "Uncaught exception.");
-    return 1;
+    std::stringstream s;
+    s << "Uncaught exception: " << endl;
+    MIRO_LOG_OSTR(LL_CRITICAL, s.str().c_str());
+    rc = 1;
   }
-  return 0;
+  return rc;
 }
 

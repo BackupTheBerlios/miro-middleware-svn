@@ -15,6 +15,7 @@
 #include "SickLaserMessage.h"
 
 #include "miro/Exception.h"
+#include "miro/Log.h"
 
 #include <algorithm>
 
@@ -27,7 +28,6 @@ namespace Miro
   // registered with the reactor
   //
   LaserEvent::LaserEvent(LaserTask* laserTask_, LaserStatistic *laserStatistic_) :
-    Log(INFO,"LaserEvent"),
     syncMutex(),
     ackNackMutex(),
     ackNackCond(ackNackMutex),
@@ -36,6 +36,7 @@ namespace Miro
     message(new ACE_Message_Block(sizeof(Miro::LaserMessage))),
     laserStatistic(laserStatistic_)
   {
+    MIRO_LOG_CTOR("Sick::LaserEvent");
     state = NOSYNC;
     data= 0;
     packData = 0;
@@ -46,14 +47,16 @@ namespace Miro
   //
   // Destructor
   //
-  LaserEvent::~LaserEvent() {	
-  
-    log(INFO, "broadcasting condition acknack.");
+  LaserEvent::~LaserEvent() 
+  {	
+    MIRO_LOG_DTOR("Sick::LaserEvent");
+
     ackNackCond.broadcast();
     syncMutex.release();
     ackNackMutex.release();
     stateMutex.release();
-    log(INFO, "Destructing LaserEvent.");
+
+    MIRO_LOG_DTOR_END("Sick::LaserEvent");
   }
 
   //
@@ -125,7 +128,7 @@ namespace Miro
 	  if (thisChar == LO_STX) {
 	    // this is a shortcut, but it is nearly never taken
 	    state = SYNC;
-	    log(WARNING, "  resynched on packetheader while expecting addr : ",(unsigned int)(thisChar));
+	    MIRO_LOG_OSTR(LL_WARNING, "  resynched on packetheader while expecting addr :"<<(unsigned int)(thisChar));
 	  } else {
 	    state = NOSYNC;
 	    syncMutex.release();
@@ -161,7 +164,7 @@ namespace Miro
 	
 	// rough sensibility check, to avoid long lossed with non synched data
 	if (packData > 1000) {
-	  log(WARNING, "      ignored large package :",packData);
+	  MIRO_LOG_OSTR(LL_WARNING, "      ignored large package :"<<packData);
 	  laserStatistic->packetsToLong++;
 
 	  // move actual input to get place for the packetpart to be reparsed
@@ -222,8 +225,9 @@ namespace Miro
 	
 #endif
 
-	  } else {
-	    log(ERROR,"        CRC ERRROR.");
+	  } 
+	  else {
+	    MIRO_LOG(LL_ERROR,"        CRC ERRROR.");
 	    laserStatistic->packetsCRCError++;
 #ifdef RESYNCONPARTS
 	    // try to chop a reasonable part of the packet for resynch
@@ -264,12 +268,12 @@ namespace Miro
 
   int LaserEvent::handle_close(ACE_HANDLE, ACE_Reactor_Mask) {
 
-    log(INFO, "LaserEvent handle_close called.");
+    MIRO_LOG(LL_NOTICE, "LaserEvent handle_close called.");
     return 0;
   }
 
   void LaserEvent::timeout() {
-    log(ERROR, "timeout called, flushing buffers.");
+    MIRO_LOG(LL_ERROR, "timeout called, flushing buffers.");
     // acquire mutex for state machine, avoid rare synch problems
     stateMutex.acquire();
     // rest state machine and assembled message
@@ -283,9 +287,9 @@ namespace Miro
     // now and the actual message is already gone
     if (lastfd != -1) {
       if (tcflush(lastfd, TCIFLUSH) < 0)
-	log(ERROR,"could not flush buffer.");
+	MIRO_LOG(LL_ERROR,"could not flush buffer.");
     } else {
-      log(ERROR, "could not flush buffer, because no lastfd set.");
+      MIRO_LOG(LL_ERROR, "could not flush buffer, because no lastfd set.");
     }
     stateMutex.release();
     syncMutex.release();

@@ -8,8 +8,8 @@
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-#ifndef panTiltServer_hh
-#define panTiltServer_hh
+#ifndef panTiltServer_h
+#define panTiltServer_h
 
 #include "miro/Server.h"
 #include "miro/ReactorTask.h"
@@ -22,17 +22,16 @@ namespace DpPanTilt
    * This class starts up the PanTiltImpl registers it at the
    * naming service and runs the orb.
    */
-  class PanTiltServer : public Miro::Server, 
-			public Miro::Log
+  class PanTiltServer : public Miro::Server
   {
-    typedef PanTiltServer Self;
+    typedef Miro::Server Super;
 
   public:
     // Initialization and Termination methods.
     /*
      * Constructor.
      */
-    PanTiltServer(int argc, char *argv[]);
+    PanTiltServer(int& argc, char *argv[]);
 
     /**
      * Destructor.
@@ -55,8 +54,8 @@ namespace DpPanTilt
      */
     PanTiltImpl *panTilt;
   };
-};
-#endif
+}
+#endif // panTiltServer_h
 
 
 
