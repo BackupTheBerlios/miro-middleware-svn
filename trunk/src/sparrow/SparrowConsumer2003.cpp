@@ -36,66 +36,9 @@ namespace Sparrow
   const int Consumer2003::INTEGRATION_NUMBER = 3;
 
 
-  Consumer2003::Consumer2003(Connection2003 * _connection,
-			     Miro::OdometryImpl * _pOdometry,
-			     Miro::RangeSensorImpl * _pIR1) :
-    connection(_connection),
-    pOdometry_(_pOdometry),
-    pIR1_(_pIR1),
-    IrValues(),
-    description_(),
-    params_(Parameters::instance()),
-    status_()
-  {
-    MIRO_LOG_CTOR("Sparrow::Consumer2003");
-
-    pAliveCollector = NULL;
-    faulConsumer = NULL;
-    status_.position.point.x = 0.;
-    status_.position.point.y = 0.;
-    status_.position.heading = 0.;
-    status_.velocity.translation = 0;
-    status_.velocity.rotation = 0.;
-
-    if (pOdometry_) {
-      Miro::PositionIDL origin;
-      origin.point.x = -params_->initialX;
-      origin.point.y = -params_->initialY;
-      origin.heading = -params_->initialHeading;
-
-      if (params_->goalie) {
-        origin.point.x += 125;
-        origin.point.y -= 85;
-      }
-      pOdometry_->setPosition(origin);
-    }
-
-    if(pIR1_){
-      description_ = pIR1_->getScanDescription();
-      IrValues.resize(5);
-      TimeIndex.resize(description_->group.length());
-
-      for(int k = 0; k < 5; k++){
-	IrValues[k].resize(description_->group.length());
-
-
-	for(unsigned int i = 0; i < description_->group.length(); i++){
-	  IrValues[k][i].resize(description_->group[i].sensor.length());
-	  TimeIndex[i] = 0;
-	  for(unsigned int j = 0; j < description_->group[i].sensor.length(); j++){
-
-	    IrValues[k][i][j] = -1;
-	  }
-	}
-      }
-    }
-  }
 
   Consumer2003::Consumer2003():
-    IrValues(),
-    description_(),
-    params_(Parameters::instance()),
-    status_()
+    params_(Parameters::instance())
   {
     MIRO_LOG_CTOR("Sparrow::Consumer2003");
 
@@ -120,12 +63,14 @@ namespace Sparrow
 				   Miro::OdometryImpl * _pOdometry,
 				   Miro::RangeSensorImpl * _pIR1,
 				   FaulMotor::Consumer * _faulConsumer,
+				   PanTiltImpl * _panTilt,
 				   AliveCollector * _aliveCollector)
   {
-    connection = _connection;
+    connection_ = _connection;
     pOdometry_ = _pOdometry;
     pIR1_ = _pIR1;
     faulConsumer = _faulConsumer;
+    panTilt_ = _panTilt;
     pAliveCollector = _aliveCollector;
 
     if (pOdometry_) {
@@ -142,20 +87,19 @@ namespace Sparrow
     }
 
     if(pIR1_){
-      description_ = pIR1_->getScanDescription();
-
-      IrValues.resize(5);
-      TimeIndex.resize(description_->group.length());
+      Miro::ScanDescriptionIDL_var description = pIR1_->getScanDescription();
+      irValues_.resize(5);
+      timeIndex_.resize(description->group.length());
 
       for(int k = 0; k < 5; k++){
-	IrValues[k].resize(description_->group.length());
+	irValues_[k].resize(description->group.length());
 
-	for(unsigned int i = 0; i < description_->group.length(); i++){
-	  IrValues[k][i].resize(description_->group[i].sensor.length());
-	  TimeIndex[i] = 0;
-	  for(unsigned int j = 0; j < description_->group[i].sensor.length(); j++){
+	for(unsigned int i = 0; i < description->group.length(); i++){
+	  irValues_[k][i].resize(description->group[i].sensor.length());
+	  timeIndex_[i] = 0;
+	  for(unsigned int j = 0; j < description->group[i].sensor.length(); j++){
 
-	    IrValues[k][i][j] = -1;
+	    irValues_[k][i][j] = -1;
 	  }
 	}
       }
@@ -171,7 +115,7 @@ namespace Sparrow
     // int tmp;
     // int versNr, versSub;
 
-    connection->boardReply = 1;
+    connection_->boardReply = 1;
 
     //Can::Parameters *CanParams = new Can::Parameters();
 
@@ -393,51 +337,58 @@ namespace Sparrow
       break;
     }
 
-	// Pan 2005 messages
+      // Pan 2005 messages
     case CAN_R_PAN_TICKSPERDEG_2005:
-	{
-		//TODO: store value in PanTilt parameters...
-		connection->setPanTicksPerDegree(message.longData(0));
-		break;
-	}
+      MIRO_DBG(SPARROW, LL_NOTICE, "SparrowConsumer2003: Received pan calibration message.");
+      connection_->setPanTicksPerDegree(message.longData(0));
+      break;
 
     case CAN_R_PAN_POSITION_2005:
-        {
-              	// TODO: store current pan position in PanTilt...
-		break;
-	}
+      // TODO: store current pan position in PanTilt...
+      break;
+      
+    case CAN_R_PAN_RESET_2005:
+      MIRO_DBG(SPARROW, LL_NOTICE, "SparrowConsumer2003: Received pan reset message.");
+      // register timer handler for pan calibration query
+      connection_->deferredQueryPanTicksPerDegree(ACE_Time_Value(5));
+      break;
 
     case CAN_PAN_ERROR_2005:
-  	{
-	 	switch(message.byteData(0))
-		{
-			case 0x01:	//ERR_UNKNOWN_COMMAND = 0x01;
-      				MIRO_DBG(SPARROW, LL_ERROR, "Unknown Command sent to Pan2005 controller");
-				break;
-			case 0x02:	//ERR_REPORT_VERSION = 0x02;
-                                MIRO_DBG(SPARROW, LL_NOTICE, "Pan2005 controller rebooted");
-                                break;
-			case 0x03:	//ERR_SER_RX_OVERFLOW = 0x03;  // serial rx buffer overflow
-                                MIRO_DBG(SPARROW, LL_ERROR, "RX buffer overflow on Pan2005 controller");
-                                break;
-			case 0x04:	//ERR_SER_TX_OVERFLOW = 0x04;  // serial tx buffer overflow
-                                MIRO_DBG(SPARROW, LL_ERROR, "TX buffer overflow on Pan2005 controller");
-                                break;
-			case 0x05:	//ERR_NOT_READY = 0x05;
-                                MIRO_DBG(SPARROW, LL_ERROR, "Pan2005 controller not ready for panning, still calibrating");
-                                break;
-			case 0x06:	//ERR_NODATA = 0x06;
-                                MIRO_DBG(SPARROW, LL_ERROR, "Pan2005 controller missing data for panning");
-                                break;
-			case 0x07:	//ERR_OUT_OF_BOUNDS = 0x07;
-                                MIRO_DBG(SPARROW, LL_ERROR, "Pan2005 reports out of panning range error");
-                                break;
-			case 0x08:	//ERR_NO_RESPONSE = 0x08;      // Debug Messages
-                                MIRO_DBG(SPARROW, LL_ERROR, "Pan2005 reports motorcontroller IO timeout");
-                                break;
-		}
-		break;
+      {
+	char const * err = NULL;
+	switch(message.byteData(0))
+	{
+	case 0x01:	//ERR_UNKNOWN_COMMAND = 0x01;
+	  err = "Unknown Command sent to Pan2005 controller";
+	  break;
+	case 0x02:	//ERR_REPORT_VERSION = 0x02;
+	  err = "Pan2005 controller rebooted";
+	  break;
+	case 0x03:	//ERR_SER_RX_OVERFLOW = 0x03;  // serial rx buffer overflow
+	  err = "RX buffer overflow on Pan2005 controller";
+	  break;
+	case 0x04:	//ERR_SER_TX_OVERFLOW = 0x04;  // serial tx buffer overflow
+	  err = "TX buffer overflow on Pan2005 controller";
+	  break;
+	case 0x05:	//ERR_NOT_READY = 0x05;
+	  connection_->deferredQueryPanTicksPerDegree(ACE_Time_Value(1));
+	  err = "Pan2005 controller not ready for panning, still calibrating";
+	  break;
+	case 0x06:	//ERR_NODATA = 0x06;
+	  err = "Pan2005 controller missing data for panning";
+	  break;
+	case 0x07:	//ERR_OUT_OF_BOUNDS = 0x07;
+	  err = "Pan2005 reports out of panning range error";
+	  break;
+	case 0x08:	//ERR_NO_RESPONSE = 0x08;      // Debug Messages
+	  err = "Pan2005 reports motorcontroller IO timeout";
+	  break;
+	default:
+	  err = "Pan2005 unknown pan error.";
 	}
+	MIRO_LOG(LL_ERROR, err);
+	break;
+      }
     default:
       MIRO_LOG_OSTR(LL_WARNING, 
 		    "SparrowConsumer2003: Unhandled can bus message: " << message);
@@ -449,17 +400,17 @@ namespace Sparrow
   Consumer2003::integrateIrValues(unsigned int group, unsigned int sensor, long value)
   {
 
-    IrValues[TimeIndex[group]][group][sensor] = value;
+    irValues_[timeIndex_[group]][group][sensor] = value;
     int counter = 0;
     long sum = 0;
     for (int i = 0; i < INTEGRATION_NUMBER; i++) {
-      if (IrValues[i][group][sensor] == -1) {
+      if (irValues_[i][group][sensor] == -1) {
 	++counter;
       }
-      sum += IrValues[i][group][sensor];
+      sum += irValues_[i][group][sensor];
     }
 
-    TimeIndex[group] = (TimeIndex[group] + 1) % INTEGRATION_NUMBER;
+    timeIndex_[group] = (timeIndex_[group] + 1) % INTEGRATION_NUMBER;
 
     if (counter >= 1) {
       return -1;

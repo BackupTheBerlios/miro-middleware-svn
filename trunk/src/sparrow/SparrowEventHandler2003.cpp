@@ -29,32 +29,35 @@
 
 namespace Sparrow
 {
-  EventHandler2003::EventHandler2003(Connection2003& connection_) :
-    connection(connection_)
+  EventHandler2003::EventHandler2003(Connection2003& _connection) :
+    connection_(_connection)
   {
-    MIRO_LOG_CTOR("Sparrow:EventHandler2003");
+    MIRO_LOG_CTOR("Sparrow::EventHandler2003");
   }
 
   EventHandler2003::~EventHandler2003()
   {
-    MIRO_LOG_DTOR("Sparrow:EventHandler2003");
+    MIRO_LOG_DTOR("Sparrow::EventHandler2003");
   }
 
   int
-  EventHandler2003::handle_timeout(const ACE_Time_Value &, const void * /*arg*/)
+  EventHandler2003::handle_timeout(ACE_Time_Value const &, void const * _arg)
   {
-    initCanConnection();
+    unsigned int task = *reinterpret_cast<unsigned int const *>(_arg);
+    switch (task) {
+    case INIT_TIMER:
+      MIRO_DBG(SPARROW, LL_DEBUG, "Sparrow::EventHandler2003 startup event.");
+      connection_.init();
+      MIRO_DBG(SPARROW, LL_DEBUG, "Sparrow::EventHandler2003 startup successfull.");
+      break;
+    case PAN_CALIBRATION_TIMER:
+      connection_.queryPanTicksPerDegree();
+      break;
+    default:
+      MIRO_LOG_OSTR(LL_ERROR,
+		    "Sparrow::EventHandler2003 - Unknown timer type: " << (int)task);
+    }
+    
     return 0;
-  }
-
-  void
-  EventHandler2003::initCanConnection() const
-  {
-    MIRO_DBG(SPARROW, LL_DEBUG, "Sparrow::EventHandler2003 startup event.");
-
-    // initialize can connection
-    connection.init();
-
-    MIRO_DBG(SPARROW, LL_DEBUG, "Sparrow::EventHandler2003 startup successfull.");
   }
 }

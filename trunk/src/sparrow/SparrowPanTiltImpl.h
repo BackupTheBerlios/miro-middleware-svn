@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2001, 2002, 2003
+// (c) 2001, 2002, 2003, 2004, 2005
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -23,7 +23,7 @@
 namespace Miro
 {
   class StructuredPushSupplier;
-};
+}
 
 namespace Sparrow
 {
@@ -43,26 +43,12 @@ namespace Sparrow
     //Destructor
     virtual ~PanTiltImpl();
 
-    //  virtual Miro::PanTiltPositionIDL getPosition()
-    //    throw (Miro::EDevIO, Miro::ETimeOut);
-    //  virtual void setPosition(const Miro::PanTiltPositionIDL& dest)
-    //    throw (Miro::EOutOfBounds,Miro::EDevIO);
-
     virtual void setPan(CORBA::Double value)
       throw (Miro::EDevIO, Miro::EOutOfBounds);
     virtual CORBA::Double getPan() throw (Miro::EDevIO);
 
-    //   inherited method is enough
-    //    virtual Miro::PanLimitsIDL getPanLimits() throw (Miro::EDevIO);
-
-    //  virtual void setTilt(CORBA::Double value)
-    //    throw (Miro::EDevIO, Miro::EOutOfBounds);
-    //  virtual CORBA::Double getTilt() throw (Miro::EDevIO);
-
     virtual CORBA::Boolean panning(const Miro::TimeIDL& stamp) throw();
     virtual Miro::PanPositionIDL currentPan(const Miro::TimeIDL& stamp) throw();
-
-    //  virtual CORBA::Boolean tilting();
 
   protected:
     bool prvPanning(const ACE_Time_Value& _t);
@@ -100,17 +86,6 @@ namespace Sparrow
       return false;
     }
   }
-
-  /*
-  inline
-  bool
-  PanTiltImpl::prvTilting() const
-  {
-    return ((ACE_OS::gettimeofday() - timeLastSet).msec() * params_.tiltRadPerMSec <
-	    fabs(nextPosition.tiltvalue - lastPosition.tiltvalue ));
-  }
-  */
-
 }
 
-#endif // sparrowPanTiltImpl_hh
+#endif // SparrowPanTiltImpl_h

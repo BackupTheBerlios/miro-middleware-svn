@@ -24,16 +24,16 @@ namespace Sparrow
 {
   using Can::Message;
 
-  const int Connection2003::LEFT_MOTOR = 0;
-  const int Connection2003::RIGHT_MOTOR = 1;
+  const int Connection2003::LEFT_MOTOR;
+  const int Connection2003::RIGHT_MOTOR;
 
   //------------------------//
   //----- constructors -----//
   //------------------------//
 
   Connection2003::Connection2003(ACE_Reactor* _reactor,
-			 Miro::DevEventHandler* _devEventHandler,
-			 Consumer2003 * _consumer) :
+				 Miro::DevEventHandler* _devEventHandler,
+				 Consumer2003 * _consumer) :
     Super(_reactor, _devEventHandler),
     consumer(_consumer),
     eventHandler(new EventHandler2003(*this)),
@@ -45,13 +45,14 @@ namespace Sparrow
     // So we start immediately after the start of the reactor
     ACE_Time_Value startReports(0, 1);
     if (reactor_->schedule_timer(eventHandler,
-				(void *)INIT_TIMER, // timer id
+				&INIT_TIMER, // timer id
 				startReports,       // delay
 				ACE_Time_Value::zero) // interval
 	== -1)
       throw Miro::ACE_Exception(errno, 
 				"Failed to register timer for status report startup.");
 
+    deferredQueryPanTicksPerDegree(ACE_Time_Value(0, 10000));
   }
 
   //----------------------//
@@ -67,10 +68,8 @@ namespace Sparrow
   void
   Connection2003::init()
   {
-    Parameters * params = Parameters::instance();
-
-    setInfrared1WaitTime(params->infraredPulse.msec());
-    setInfrared2WaitTime(params->infraredPulse.msec());
+    setInfrared1WaitTime(params_->infraredPulse.msec());
+    setInfrared2WaitTime(params_->infraredPulse.msec());
   }
 
   void
@@ -115,13 +114,43 @@ namespace Sparrow
   }
 
   void
-  Connection2003::setServo(unsigned char servo, double rad)
+  Connection2003::setPan(double _rad)
   {
     CanMessage message;
     message.length(5);
     message.id(CAN_PAN_GO_2005);
-    message.byteData(0, servo);                         // servo number
-    message.longData(1, (long)((double)getPanTicksPerDegree()*rad) );
+    message.byteData(0, 0); // servo number
+    message.longData(1, (long)((double)getPanTicksPerDegree()*_rad) );
+    write(message);
+  }
+
+  void
+  Connection2003::queryPanTicksPerDegree()
+  {
+    CanMessage message;
+    message.length(0);
+    message.id(CAN_PAN_TICKSPERDEG_2005);
+    write(message);
+  }
+
+  void
+  Connection2003::deferredQueryPanTicksPerDegree(ACE_Time_Value const& _delay)
+  {
+    if (reactor_->schedule_timer(eventHandler,
+				&PAN_CALIBRATION_TIMER, // timer id
+				_delay,       // delay
+				ACE_Time_Value::zero) // interval
+	== -1)
+      throw Miro::ACE_Exception(errno, 
+				"Failed to register timer for pan calibration.");
+  }
+
+  void
+  Connection2003::panReset()
+  {
+    CanMessage message;
+    message.length(0);
+    message.id(CAN_PAN_RESET_2005);
     write(message);
   }
 

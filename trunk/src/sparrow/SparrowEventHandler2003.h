@@ -27,9 +27,7 @@ namespace Sparrow
     virtual int handle_timeout(const ACE_Time_Value &tv, const void *arg);
 
   protected:
-    void initCanConnection() const;
-
-    Connection2003& connection;
+    Connection2003& connection_;
   };
 }
 

@@ -44,11 +44,22 @@ namespace Sparrow
     virtual void init();
     virtual void fini();
 
-    void setServo(unsigned char servo, double rad);
+    //! Move pan to absolut position.
+    void setPan(double _rad);
+    //! Query pan calibration parameters.
+    void queryPanTicksPerDegree();
+    //! Query pan calibration parameters via timer.
+    void deferredQueryPanTicksPerDegree(ACE_Time_Value const& _delay);
+    //! Trigger pan recalibration.
+    void panReset();
+
+    //! Kick
     void kick(unsigned char ventilatetime, unsigned char kicktime);
 
     void writeWheel(char const * constbuffer, int length, int motor);
     void writeFloodPing(unsigned short fnumber);
+
+    //! 
     void writeHostAlive();
     void writeAccVel(short accL, short accR, short velL, short velR);
 
@@ -72,8 +83,8 @@ namespace Sparrow
   public:
     int boardReply; // for watchdog / init
 
-    static const int LEFT_MOTOR;
-    static const int RIGHT_MOTOR;
+    static int const LEFT_MOTOR = 0;
+    static int const RIGHT_MOTOR = 1;
   };
 
   inline

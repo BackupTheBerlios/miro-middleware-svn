@@ -17,7 +17,10 @@
 namespace Sparrow
 {
   //! Types of timers registerd for Sparrow::EventHandler.
-  typedef enum { BUTTONS_TIMER, STALL_TIMER, INIT_TIMER } TimerType;
+  static unsigned int const BUTTONS_TIMER = 0;
+  static unsigned int const STALL_TIMER = 1;
+  static unsigned int const INIT_TIMER = 2;
+  static unsigned int const PAN_CALIBRATION_TIMER = 3;
 
   //! Different types of motion control for the Sparrow99
   typedef enum { LIMP, SPEED, SPEED_ROT, POWER } StateType;
