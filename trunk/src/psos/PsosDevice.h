@@ -2,10 +2,9 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 1999, 2000, 2001, 2002, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
@@ -97,6 +96,6 @@ namespace Psos
   extern const Message MSG_COMSETO;
 
   extern const Message MSG_COMSTEP;
-};
+}
 
-#endif
+#endif // PsosDevice_h

@@ -48,5 +48,5 @@ namespace Psos
 
     static const ACE_Time_Value writeTimeOut;
   };
-};
+}
 #endif

@@ -2,14 +2,13 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-
 
 #include "PsosMessage.h"
 #include "PsosDevice.h"
@@ -18,7 +17,6 @@
 
 namespace Psos
 {
-
   std::ostream& operator<< (std::ostream& ostr, const Message& rhs)
   {
     ostr.setf(ios::hex, ios::basefield);
@@ -101,4 +99,4 @@ namespace Psos
 
     return cs;
   }
-};
+}

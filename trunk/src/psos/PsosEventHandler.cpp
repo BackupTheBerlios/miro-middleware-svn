@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // 
@@ -15,30 +15,20 @@
 #include "PsosConnection.h"
 #include "PsosMessage.h"
 #include "PsosDevice.h"
+#include "Parameters.h"
+
+#include "miro/Log.h"
 
 #include <algorithm>
 
-#undef DEBUG
-
-#include <iostream>
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
-
 namespace Psos
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-  using std::hex;
-  using std::dec;
-
-  EventHandler::EventHandler(Miro::DevConsumer * _consumer, Connection& _connection) :
+  EventHandler::EventHandler(Miro::DevConsumer * _consumer, 
+			     Connection& _connection,
+			     Parameters const * _params) :
     Super(_consumer, new Message()),
     connection(_connection),
+    params_(_params),
     synchMutex(),
     synchCondition(synchMutex),
     synch(-1),
@@ -48,12 +38,12 @@ namespace Psos
     writePtr((unsigned char*)message_)
  
   {
-    DBG(cout << "Constructing PSOSEventHandler." << endl);
+    MIRO_LOG_CTOR("Psos::EventHandler");
   }
 
   EventHandler::~EventHandler() 
   {
-    DBG(cout << "Destructing PSOSEventHandler." << endl);
+    MIRO_LOG_DTOR("Psos::EventHandler");
 
     synchMutex.release();
     synchCondition.broadcast();
@@ -63,7 +53,7 @@ namespace Psos
   int
   EventHandler::handle_input (ACE_HANDLE fd) 
   {
-    DBG(cout << "PSOSEventHandler: handle_input" << endl);
+    MIRO_DBG(PIONEER, LL_PRATTLE, "Psos::EventHandler: handle_input");
 
     Message* msg = (Message*) message_;
 
@@ -84,13 +74,15 @@ namespace Psos
     buffPos = 0;
     int len, n;
 
-    DBG(cerr << "Read " << bytes << " bytes from PSOS" << endl);
+    MIRO_DBG_OSTR(PIONEER, LL_PRATTLE, "Read " << bytes << " bytes from PSOS");
 
     // while there ist data left to parse
     while ((buffPos < buffLen)) {
       thisChar = buff[buffPos];
-      DBG(cerr << "Working char " << buffPos 
-	  << " (0x" <<  hex << (0xff & (unsigned int)thisChar) << dec << ")" );
+      MIRO_DBG_OSTR(PIONEER, LL_PRATTLE,
+		    "Working char " << buffPos <<
+		    " (0x" <<  std::hex << (0xff & (unsigned int)thisChar) << 
+		    std::dec << ")" );
     
       // translate the PSOS message read from fd
       // into an PSOS message string:
@@ -105,19 +97,20 @@ namespace Psos
 
       switch(state) {
       case NO_STARTS:
-	DBG(cout << " - NO_START" << endl);
+	MIRO_DBG(PIONEER, LL_DEBUG, " - NO_START");
 	if (thisChar == START_1) {
 	  state = START_ONE;
 
 	}
 	else {
-	  cerr << "Unexpected char " << hex 
-	       << (0xff & (unsigned int)thisChar) << dec 
-	       << " before start1" << endl;
+	  MIRO_LOG_OSTR(LL_ERROR, 
+			"Psos::EventHandler: Unexpected char " << std::hex <<
+			(0xff & (unsigned int)thisChar) << std::dec <<
+			" before start1");
 	}
 	break;
       case START_ONE:
-	DBG(cout << " - ONE_START" << endl);
+	MIRO_DBG(PIONEER, LL_DEBUG, " - ONE_START");
 	if (thisChar == START_2) {
 	  state = GET_LENGTH;
 
@@ -125,24 +118,27 @@ namespace Psos
 	}
 	else {
 	  state = NO_STARTS; /* starts only count if in a pair */
-	  cerr << "Unexpected char " << hex << (int)thisChar << dec  << " after start1" << endl;
+	   MIRO_LOG_OSTR(LL_ERROR, 
+			 "Psos::EventHandler: Unexpected char " << std::hex << 
+			 (int)thisChar << std::dec  << 
+			 " after start1");
 	}
 	break;
       case GET_LENGTH:
-	DBG(cout << " - GET_LENGTH" << endl);
+	MIRO_DBG(PIONEER, LL_PRATTLE, " - GET_LENGTH");
 	state = IN_PROGRESS;
 
 	msg->length(thisChar);
 	writePtr = msg->data();
 
         if (thisChar == 0) {
-          DBG(cout << "Discarding zero length message" << endl);
+          MIRO_LOG(LL_NOTICE, "Psos::EventHandler: Discarding zero length message.");
           // reset base output parsing
           state = NO_STARTS;
         }
 	break;
       case IN_PROGRESS:
-	DBG(cout << " - IN_PROGRESS" << endl);
+	MIRO_DBG(PIONEER, LL_DEBUG, " - IN_PROGRESS");
 	len = msg->length() - (writePtr - msg->data());
 	n = std::min(len, buffLen - buffPos);
 	std::copy(&buff[buffPos], &buff[buffPos] + n, writePtr);
@@ -158,7 +154,7 @@ namespace Psos
       }
       ++buffPos;
     }
-    DBG(cout << "PSOSEventHandler: Done with select" << endl);
+    MIRO_DBG(PIONEER, LL_PRATTLE,"Psos::EventHandler: Done with select.");
 
     return 0;
   }
@@ -178,7 +174,8 @@ namespace Psos
 
 	switch (msg->id()) {
 	case SF_SYNC_0 : 
-	  DBG(cout << "PSOS synch state:" << synch << " - got sync0" << endl);
+	  MIRO_DBG_OSTR(PIONEER, LL_DEBUG,
+			"PSOS synch state:" << synch << " - got sync0.");
 	  if (synch == 0) {
 	    synch = 1;
 	    connection.writeMessage(MSG_SYNC_1);
@@ -187,7 +184,8 @@ namespace Psos
 	  synch = -1;
 	  break; 
 	case SF_SYNC_1 : 
-	  DBG(cout << "PSOS synch state:" << synch << " - got sync1" << endl);
+	  MIRO_DBG_OSTR(PIONEER, LL_DEBUG,
+			"PSOS synch state:" << synch << " - got sync1.");
 	  if (synch == 1) {
 	    synch = 2;
 	    connection.writeMessage(MSG_SYNC_2);
@@ -196,7 +194,8 @@ namespace Psos
 	  synch = -1;
 	  break; 
 	case SF_SYNC_2 :
-	  DBG(cout << "PSOS synch state:" << synch << " - got sync3/connected" << endl);
+	  MIRO_DBG_OSTR(PIONEER, LL_DEBUG,
+			"PSOS synch state:" << synch << " - got sync3/connected.");
 	  if (synch == 2) {
             parseSynchMessage(*msg);
 	    synch = 3;
@@ -207,13 +206,13 @@ namespace Psos
 	  synch = -1;
 	  break; 
 	default:
-	  DBG(cout << "non synch message within synch mode:" << endl);
+	  MIRO_LOG(LL_ERROR, "Psos::EventHandler: Non synch message within synch mode.");
 	  synch = -1;
 	}
       }
     }
     else {
-      cerr << "PSOSEventHandler: message with wrong checksum - discarded!" << endl;
+      MIRO_LOG(LL_ERROR, "Psos::EventHandler: message with wrong checksum - discarded!");
     }
   }
 
@@ -221,19 +220,19 @@ namespace Psos
   int
   EventHandler::handle_timeout(const ACE_Time_Value &, const void *arg) 
   {
-    DBG(cout << "PSOSEventHandler: handle timer event." << endl);
+    MIRO_DBG(PIONEER, LL_PRATTLE,"Psos::EventHandler: handle timer event.");
 
     Miro::Guard guard(synchMutex);
     switch ((const int)arg) {
     case SYNCH_TIMER:
-      DBG(cout << "Synch status: " << synch << endl);
+      MIRO_DBG_OSTR(PIONEER, LL_DEBUG, "Synch status: " << synch);
       if (synch < 3) {
-        DBG(cout << "Resynching" << endl);
+        MIRO_DBG(PIONEER, LL_DEBUG, "Resynching.");
 	synch = 0;
 	connection.writeMessage(MSG_SYNC_0);    // start synching
       }
       if (false /*synch == 3*/) {
-        cout << "cancelling connection" << endl;
+        MIRO_DBG(PIONEER, LL_DEBUG, "Cancelling connection.");
         synch = 4;
         connection.writeMessage(MSG_COMCLOSE);
       }
@@ -252,8 +251,9 @@ namespace Psos
   void
   EventHandler::parseSynchMessage(const Message& _message)
   {
-    DBG(cout << "id="  << _message.id() 
-	<< " length=" << _message.length() << endl);
+     MIRO_DBG_OSTR(PIONEER, LL_PRATTLE, 
+		   "Psos::parseSynchMessage: id="  << 
+		   _message.id() << " length=" << _message.length());
   
     char tmp[128];
     int len = 0;
@@ -268,9 +268,10 @@ namespace Psos
       strncpy(tmp, (char *)&_message.data()[len], 128);
       subclass = tmp;
 
-      cout << "PSOS Synch Name: " << name << endl;
-      cout << "PSOS Synch ClassName: " << classname << endl;
-      cout << "PSOS Synch Subclass: " << subclass << endl;
+      MIRO_LOG_OSTR(LL_NOTICE,
+		    "PSOS Synch Name: " << name << std::endl <<
+		    "PSOS Synch ClassName: " << classname << std::endl <<
+		    "PSOS Synch Subclass: " << subclass);
     }
   }
 
@@ -281,11 +282,15 @@ namespace Psos
     // start delivery of standard SIPs
     connection.writeMessage(MSG_COMOPEN);
 	    
-
     // if it's the Ppb request IOpac SIP
     if (true || classname == "ppb") {
       const Message IO_SIP(SF_COMIOREQ, (short)2);
       connection.writeMessage(IO_SIP);
     }
+
+    if (params_->enableMotors) {
+      const Message MOTOR_ENABLE(SF_COMENABLE, (short)1);
+      connection.writeMessage(MOTOR_ENABLE);
+    }
   }
-};
+}

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002, 2003
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // 
@@ -10,40 +10,25 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
-#include "idl/ExceptionC.h"
-#include "miro/Exception.h"
-#include "miro/Synch.h"
-
 #include "PsosConnection.h"
 #include "PsosEventHandler.h"
 #include "PsosMessage.h"
 #include "PsosDevice.h"
 #include "Parameters.h"
 
+#include "miro/Exception.h"
+#include "miro/Synch.h"
+#include "miro/Log.h"
+
+#include "idl/ExceptionC.h"
+
 #include <ace/Reactor.h>
-
-#include <iostream>
-
-// #undef DEBUG
- 
-#ifdef DEBUG
-#define DBG(x) x
-#define CSDBG(x) x
-#else
-#define DBG(x)
-#define CSDBG(x)
-#endif
-
-using Miro::ACE_Exception;
 
 namespace Psos
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
+  using Miro::ACE_Exception;
 
-  const ACE_Time_Value Connection::writeTimeOut(0, 100000);
+  ACE_Time_Value const Connection::writeTimeOut(0, 100000);
 
   Connection::Connection(ACE_Reactor * _reactor, 
 			 EventHandler * _eventHandler,
@@ -53,7 +38,7 @@ namespace Psos
     writeMutex(),
     lastWrite(0,0)
   {
-    DBG(cout << "Constructing PSOSConnection" << endl);
+    MIRO_LOG_CTOR("Psos::Connection");
 
     ACE_Time_Value synchDelay(0, 500000);
     ACE_Time_Value synchTimeout(1, 0);
@@ -79,7 +64,7 @@ namespace Psos
 
   Connection::~Connection()
   {
-    DBG(cout << "Destructing PSOSConnection" << endl);
+    MIRO_LOG_DTOR("Psos::Connection");
 
     // deregister timers
     if (synchTimerId != -1)
@@ -91,17 +76,21 @@ namespace Psos
   void 
   Connection::writeMessage(const Message& message)
   {
-    // cout << "PSOS Message: " << endl << message << endl;    // for debug 
-
     Miro::Guard guard(writeMutex);
     ACE_Time_Value time = ACE_OS::gettimeofday();
-/*
-    ACE_Time_Value delta = time - lastWrite;
-    if (delta < writeTimeOut) {
-      ACE_OS::sleep(writeTimeOut - delta);
-      time = ACE_OS::gettimeofday();
-    }
-*/
+    
+
+    /*
+     * This is some kind of flooding protection for the psos devie
+     * it seems not to be necessary, but maybe someone should
+     * write an explicit testcase and report his findings 
+     
+     * ACE_Time_Value delta = time - lastWrite;
+     * if (delta < writeTimeOut) {
+     *   ACE_OS::sleep(writeTimeOut - delta);
+     *   time = ACE_OS::gettimeofday();
+     * }
+     */
     int rc = ioBuffer.send_n(message.buffer(), message.length() + 3);
     lastWrite = time;
 
@@ -110,7 +99,8 @@ namespace Psos
   }
 
   bool
-  Connection::synched() const { 
+  Connection::synched() const 
+  { 
     return eventHandler->synch == 3; 
   }
   
@@ -141,4 +131,4 @@ namespace Psos
     writeMessage(MSG_COMCLOSE);
     ACE_OS::sleep(ACE_Time_Value(1));
   }
-};
+}

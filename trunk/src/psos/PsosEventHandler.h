@@ -22,6 +22,7 @@ namespace Psos
   // forward declarations
   class Message;
   class Connection;
+  class Parameters;
 
   class EventHandler : public Miro::DevEventHandler
   {
@@ -32,7 +33,9 @@ namespace Psos
     typedef enum { NO_STARTS, START_ONE, GET_LENGTH, IN_PROGRESS } state_type;
 
   public:
-    EventHandler(Miro::DevConsumer* _consumer, Connection& _connection);
+    EventHandler(Miro::DevConsumer* _consumer, 
+		 Connection& _connection,
+		 Parameters const * _params);
     // private:
     virtual ~EventHandler();
 
@@ -46,8 +49,9 @@ namespace Psos
     void initDevice();
 
     Connection& connection;
+    Parameters const * params_;
 
-  public:
+  public:    
     Miro::Mutex     synchMutex;
     Miro::Condition synchCondition;
     int synch;
