@@ -103,20 +103,20 @@ finding the naming service, and parsing other commands...
 
 \lstinputlisting[frame=tb, first=9, last=10]{SonarPoll1.cpp}
 
-This initializes a proxy object to the
-sonar service. This proxy object is used as if it was the sonar service
-itself. Let's look at the call a bit closer. \lstinline!Miro::RangeSensor\_var!
-is the CORBA equivalent of a standard C++ auto pointer for a
-\lstinline!Miro::RangeSensor! object. That is the proxy becomes automatically
-destroyed if the pointer goes auto of scope. The method
-{\tt resolveName()} is a template member function. Its argument
-specifies the name that shall be resolved in the default naming
-context of the naming service (see Chapter \ref{sec:using}). The
-\lstinline!Miro::RangeSensor! in French brackets specifies the type of
-reference that shall be returned by the call. Note that this will only
-succeed if the reference stored under the name of Sonar refers indeed
-to a {\tt Miro::RangeSensor} object or to a derived ancestor of this
-class.
+This initializes a proxy object to the sonar service. This proxy
+object is used as if it was the sonar service itself. Let's look
+at the call a bit closer. \lstinline!Miro::RangeSensor_var! is the
+CORBA equivalent of a standard C++ auto pointer for a
+\lstinline!Miro::RangeSensor! object. That is the proxy becomes
+automatically destroyed if the pointer goes out of scope. The
+method {\tt resolveName()} is a template member function. Its
+argument specifies the name that shall be resolved in the default
+naming context of the naming service (see Chapter
+\ref{sec:using}). The \lstinline!Miro::RangeSensor! in French
+brackets specifies the type of reference that shall be returned by
+the call. Note that this will only succeed if the reference stored
+under the name of Sonar refers indeed to a {\tt Miro::RangeSensor}
+object or to a derived ancestor of this class.
 
 \lstinputlisting[frame=tb, first=11, last=11]{SonarPoll1.cpp}
 
@@ -131,16 +131,17 @@ inheritance, just public data members.
 
 \lstinputlisting[frame=tb, first=13, last=13]{SonarPoll1.cpp}
 
-This gets a sonar scan from the service. Note, that we do not see where 
+This gets a sonar scan from the service. Note, that we do not see where
 the service runs.
 
 \lstinputlisting[frame=tb, first=15, last=20]{SonarPoll1.cpp}
 
-These line are used to print the received sonar scan to the console.
+These lines are used to print the received sonar scan to the
+console.
 
 %\lstinputlisting[frame=tb, first=22, last=22]{SonarPoll1.cpp}
 
-%Ends the program. Returning zero indicates, that no error occured.
+%Ends the program. Returning zero indicates, that no error occurred.
 
 %%\bigskip
 %%- Note the {\tt Miro::} prefixes which define the namespace ...
@@ -189,19 +190,19 @@ Since \miro defines ostream operators for every \lstinline!Miro::...IDL!
 type in \lstinline! miro/IO.h!, we include that file and abandon the
 handcrafted streaming of the sonar data.
 
-Note the different kinds off exceptions. There are \miro exceptions.
-Exception types defined in \miro are beginning with a big E as a
-naming convention. These indicate problems on the service side, like
-hardware problems (may be the batteries?), bad service calls (trying
-to accelerate the robot to warp 1?) or load problems. Then there are
-CORBA exceptions. Those occur if there arise some communication
-problems: A service went down, the robot is loosing the radio ethernet
-connection etc. Since all \miro
-exceptions derived from \lstinline!CORBA::UserException!, those also
-are catched within the first \lstinline!catch! block of the exsample
-code. You do not have to catch all exceptions. An uncaught exception
-will lead to program termination. Just as if you'd catch them at the
-end of main and exit...
+Note the different kinds off exceptions. There are \miro
+exceptions. Exception types defined in \miro are beginning with a
+big E as a naming convention. These indicate problems on the
+service side, like hardware problems (may be the batteries?), bad
+service calls (trying to accelerate the robot to warp 1?) or load
+problems. Then there are CORBA exceptions. Those occur if there
+arise some communication problems: A service went down, the robot
+is loosing the radio ethernet connection etc. Since all \miro
+exceptions derived from \lstinline!CORBA::UserException!, those
+also are catched within the first \lstinline!catch! block of the
+example code. You do not have to catch all exceptions. An uncaught
+exception will lead to program termination. Just as if you'd catch
+them at the end of main and exit...
 
 Note also, that the instantiation of Client isn't within the try/catch
 block. This is intentionally. Exceptions that can arise in the
@@ -212,7 +213,7 @@ will not exist after destruction of the Client --- and this would be
 done at the end of the try block. Therefore we catch exceptions within
 the constructor of Client, print them to stderr and exit. There is
 little to do for the client program anyhow, if it can't access the
-services. 
+services.
 
 \lstinputlisting[frame=tb, first=14, caption={examples/sonar/SonarPoll3.cpp}]{SonarPoll3.cpp}
 \label{lst:SonarPoll3}
@@ -221,21 +222,22 @@ services.
 \label{sec:notify}
 
 By now we were actively requesting for the data of a service. But
-think of polling for tactile events that way. Having a good collision
-avoidance, those events should hardly ever occure. Nevertheless, as
-soon as there is a tactile signalling a collision, the robot should
-emediately react to this event. By polling it would have to call the
-tactile interface thousands of times, just not to miss the one event
-it can't effort to miss. And since the sensors are actively collecting
-their data, shouldn't they be able to trigger the data processing
-within the robot? - Oh yes, they can.
+think of polling for tactile events that way. Having a good
+collision avoidance, those events should hardly ever occur.
+Nevertheless, as soon as there is a tactile signalling a
+collision, the robot should immediately react to this event. By
+polling it would have to call the tactile interface thousands of
+times, just not to miss the one event it can't effort to miss. And
+since the sensors are actively collecting their data, shouldn't
+they be able to trigger the data processing within the robot? - Oh
+yes, they can.
 
 For this purpose the notification framework within \miro does
-exist. It is based on the CORBA Notification Service \cite{OMG:00-5},
-and precustomized by some utility classes. They enable clients to
-subscribe to arbitary events of a notification channel. The data gets
-pulled to them as soon as it becomes available at the producer (e.g. a
-range sensor device).
+exist. It is based on the CORBA Notification Service
+\cite{OMG:00-5}, and precustomized by some utility classes. They
+enable clients to subscribe to arbitrary events of a notification
+channel. The data gets pulled to them as soon as it becomes
+available at the producer (e.g. a range sensor device).
 
 To show how asynchronous event processing works within \miro, lets
 look at a small example. First we look at the code to handle the
@@ -265,11 +267,11 @@ subscribing, the second list is empty.
 
 \lstinputlisting[frame=tb, first=33, last=35]{SonarNotify.cpp}
 
-Events are subsrcibed by \lstinline!domain_name! and
-\lstinline!type_name!. Never forget to set the length of a sequence
-explicitly. Specifying the length as a constructor parameter just
-reserves the number of elements, the length of the sequence is still
-zero.
+Events are subscribed by \lstinline!domain_name! and
+\lstinline!type_name!. Never forget to set the length of a
+sequence explicitly. Specifying the length as a constructor
+parameter just reserves the number of elements, the length of the
+sequence is still zero.
 
 \lstinputlisting[frame=tb, first=37, last=37]{SonarNotify.cpp}
 
@@ -293,12 +295,12 @@ Lets now have a look at the \lstinline!main! function:
 
 \lstinputlisting[frame=tb, first=57, last=57]{SonarNotify.cpp}
 
-Since a push consumer is called (pushed) by the event producer, it is
-actually a server instead of a client. Therefor the
+Since a push consumer is called (pushed) by the event producer, it
+is actually a server instead of a client. Therefor the
 \lstinline!Miro::Server!  class is instanciated. It performs the
-necessary calls to init the CORBA environment. It is basicly the same
-as the \lstinline!Miro::Client!  but we also need a POA to register
-the consumer object.
+necessary calls to init the CORBA environment. It is basically the
+same as the \lstinline!Miro::Client!  but we also need a POA to
+register the consumer object.
 
 \lstinputlisting[frame=tb, first=59, last=59]{SonarNotify.cpp}
 
@@ -315,7 +317,7 @@ initialization within its constructor.
 Now we enter the CORBA event loop. This will not return, until the
 process is signaled by SIGINT or SIGTERM.
 
-%%% Local Variables: 
+%%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "miro_manual"
-%%% End: 
+%%% End:
