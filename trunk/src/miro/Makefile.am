@@ -34,6 +34,7 @@ sources1 = \
 	Client.cpp \
 	Server.cpp \
 	IO.cpp \
+	ObjectVector.cpp \
 	TimeHelper.cpp \
 	TimeSeries.cpp \
 	VideoHelper.cpp \
