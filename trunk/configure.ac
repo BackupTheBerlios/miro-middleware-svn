@@ -72,6 +72,8 @@ AC_CHECK_PROG(ac_has_makeindex, makeindex, yes, no)
 AC_CHECK_PROG(ac_has_doxygen, doxygen, yes, no)
 AC_CHECK_PROG(ac_has_fig2dev, fig2dev, yes, no)
 
+AC_DETERMINE_ADDITIONAL
+
 # our own specific paket tests
 AC_CHECK_LIB(termcap, free)
 if test "x$ac_request_speech" = xyes; then
@@ -119,8 +121,6 @@ fi
 AM_CONDITIONAL(COND_BTTV, [test "x$ac_miro_has_bttv" = xyes])
 AM_CONDITIONAL(COND_METEOR, [test "x$ac_miro_has_meteor" = xyes])
 AM_CONDITIONAL(COND_IEEE1394, [test "x$ac_miro_has_1394" = xyes])
-
-AC_DETERMINE_ADDITIONAL
 
 if test "x$ac_request_docu" = xyes; then
 	if test "x$ac_has_bibtex" = xyes &&

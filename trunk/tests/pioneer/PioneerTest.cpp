@@ -220,6 +220,10 @@ void cameraMenu(Service& service)
 	 << "e - set Iris Value" << endl
          << "f - set Shutter Speed" << endl
          << "g - set AGC Gain " << endl
+         << "h - set White Balance Auto" << endl
+         << "i - set White Balance Lock" << endl 
+	 << "k - set White Balance Mamual" << endl
+	 << "l - set White Balance Value" << endl 
 	 << endl << "x - back" << endl;
     cin >> str;
     c = str[0];
@@ -377,10 +381,34 @@ void cameraMenu(Service& service)
       case 'g':
         {
           int gainValue;
-          cout << "New AGC Gain-value(0-155):" << endl;
+          cout << "New AGC Gain-value(0-255):" << endl;
           cin >> gainValue;
 
           service.canonCamera.setAGCGain(gainValue);
+          break;
+        }
+      case 'h':
+        {
+          service.canonCamera.setWBauto();
+          break;
+        }
+      case 'i':
+        {
+          service.canonCamera.setWBlock();
+          break;
+        }
+      case 'k':
+        {
+          service.canonCamera.setWBmanual();
+          break;
+        }
+      case 'l':
+        {
+          int wbValue;
+          cout << "New White Balance-value(0-255):" << endl;
+          cin >> wbValue;
+
+          service.canonCamera.setWBvalue(wbValue);
           break;
         }
 
