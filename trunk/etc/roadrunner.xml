@@ -269,6 +269,11 @@
 	  <parameter value="Device1394" name="Type" />
 	  <parameter name="Successor" >
 
+            <parameter name="Filter" >
+              <parameter value="Save" name="Type" />
+              <parameter value="Save" name="Name" />
+            </parameter>
+
 	    <parameter name="Filter" >
 	      <parameter value="FilterCopy" name="Type" />
 	      <parameter value="FilterCopy" name="Name" />
@@ -405,6 +410,23 @@
 		    </parameter>
 
 		    <parameter name="Filter" >
+		      <parameter value="RGBtoGrayForBall" name="Name" />
+		      <parameter value="RGBtoGray" name="Type" />
+		      <parameter name="BackLink" >
+			<parameter value="AttentionBall" />
+		      </parameter>
+		      <parameter name="Successor" >
+			<parameter name="Filter" >
+			  <parameter value="Sobel" name="Type" />
+			  <parameter value="SobelVerticalForBall" name="Name" />
+			</parameter>
+			<parameter name="Filter" >
+			  <parameter value="Sobel" name="Type" />
+			  <parameter value="SobelHorizontalForBall" name="Name" />
+			</parameter>
+		      </parameter>
+		    </parameter>
+		    <parameter name="Filter" >
 		      <parameter value="ColorHist" name="Name" />
 		      <parameter value="ColorHist" name="Type" />
 		      <parameter name="BackLink" >
@@ -415,8 +437,8 @@
 		      <parameter value="OrientHist" name="Name" />
 		      <parameter value="OrientHist" name="Type" />
 		      <parameter name="BackLink" >
-			<parameter value="SobelVertical" />
-			<parameter value="SobelHorizontal" />
+			<parameter value="SobelVerticalForBall" />
+			<parameter value="SobelHorizontalForBall" />
 			<parameter value="AttentionBall" />
 		      </parameter>
 		    </parameter>
@@ -429,6 +451,13 @@
 			<parameter value="AttentionBall" />
 		      </parameter>
 		    </parameter>
+                    <parameter name="Filter" >
+                      <parameter value="ROIVisual" name="Type" />
+                      <parameter value="ROIVisualBall" name="Name" />
+                      <parameter name="BackLink" >
+                        <parameter value="NeuralNetBall" />
+                      </parameter>
+                    </parameter>
 
 		    <parameter name="Filter" >
 		      <parameter value="CollectAllFeatures" name="Type" />
@@ -457,6 +486,13 @@
 		      </parameter>
 		    </parameter>
 
+                    <parameter name="Filter" >
+                      <parameter value="ROIVisual" name="Type" />
+                      <parameter value="ROIVisualBasic" name="Name" />
+                      <parameter name="BackLink" >
+                        <parameter value="CollectAllFeaturesBasic" />
+                      </parameter>
+                    </parameter>
 		    <parameter name="Filter" >
 		      <parameter value="ROIVisual" name="Type" />
 		      <parameter value="ROIVisual" name="Name" />
@@ -471,6 +507,12 @@
 	    </parameter>
 	  </parameter>
 	</parameter>
+      </parameter>
+
+      <parameter name="Save">
+        <parameter value="false" name="Activate" />
+        <parameter value="TEST_" name="Basename" />
+        <parameter value="5" name="Interval" />
       </parameter>
 
       <parameter name="YUV422toRGBIpp">
@@ -552,6 +594,15 @@
         <parameter value="180" name="HighThresh" />
       </parameter>
 
+      <parameter name="RGBtoGrayForBall">
+        <parameter value="1" name="UseROIFrom" />
+      </parameter>
+      <parameter name="SobelVerticalForBall">
+        <parameter value="VERTICAL" name="Orientation" />
+      </parameter>
+      <parameter name="SobelHorizontalForBall">
+        <parameter value="HORIZONTAL" name="Orientation" />
+      </parameter>
       <parameter name="OrientHist">
         <parameter value="3" name="UseROIFrom" />
         <parameter value="0.2" name="WideROI" />
@@ -576,6 +627,13 @@
 	<parameter value="2" name="UseOrientHistFrom" />
 	<parameter value="3" name="UseROIFrom" />
       </parameter>
+      <parameter name="ROIVisualBall">
+        <parameter value="true" name="VisText" />
+        <parameter value="true" name="InterfaceInstance" />
+        <parameter name="Interface" >
+          <parameter value="Ball" name="Name" />
+        </parameter>
+      </parameter>
 
       <parameter name="CollectAllFeaturesBasic" >
 	<parameter value="4" name="NumberBackLinks" />
@@ -589,6 +647,12 @@
 	<parameter value="VisionCollectorFull" name="InterfaceName" />
       </parameter>
 
+      <parameter name="ROIVisualBasic">
+        <parameter value="true" name="InterfaceInstance" />
+        <parameter name="Interface" >
+          <parameter value="Basic" name="Name" />
+        </parameter>
+      </parameter>
       <parameter name="ROIVisual">
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
