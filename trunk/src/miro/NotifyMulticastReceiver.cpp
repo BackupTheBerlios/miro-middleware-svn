@@ -383,24 +383,24 @@ namespace Miro {
                 /* Drop packet if it's too old */
                 unsigned int time = ACE_OS::gettimeofday().msec();
 
-                if (time - _eventData.timestamp > configuration_->getEventMaxAge()) {
-                PRINT_DBG(DBG_VERBOSE, "Packet " << _eventData.requestId << " dropped because it was too old");
-                    LOG(configuration_, "Receiver::handle_event(): message too old (" << time - _eventData.timestamp << ", dropped message");
-                    return 0;
-                }
-
                 /* pub/sub protocol hook */
                 if (!strcmp(event.header.fixed_header.event_type.type_name, "NotifyMulticast::offered")) {
-                    CosNotification::EventTypeSeq_var ets;
+                    CosNotification::EventTypeSeq *ets;
                     event.remainder_of_body >>= ets;
-                    sh_->handleOffers(ets);
+                    sh_->handleOffers(*ets);
 
                 } else if (!strcmp(event.header.fixed_header.event_type.type_name, "NotifyMulticast::subscribed")) {
-                    CosNotification::EventTypeSeq_var ets;
+                    CosNotification::EventTypeSeq *ets;
                     event.remainder_of_body >>= ets;
-                    sh_->handleSubscriptions(ets);
+                    sh_->handleSubscriptions(*ets);
                     
                 } else {
+                    if (time - _eventData.timestamp > configuration_->getEventMaxAge()) {
+                        PRINT_DBG(DBG_VERBOSE, "Packet " << _eventData.requestId << " dropped because it was too old");
+                        LOG(configuration_, "Receiver::handle_event(): message too old (" << time - _eventData.timestamp << ", dropped message");
+                        return 0;
+                    }
+
                     /* Send event to event channel */
                     sendEvent(event);
                 }

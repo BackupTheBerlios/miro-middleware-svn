@@ -23,9 +23,9 @@ namespace Miro {
                     const ACE_Time_Value &_tv,
                     const void *_act);
 
-                void handleOffers(CosNotification::EventTypeSeq_var ets);
+                void handleOffers(CosNotification::EventTypeSeq &ets);
 
-                void handleSubscriptions(CosNotification::EventTypeSeq_var ets);
+                void handleSubscriptions(CosNotification::EventTypeSeq &ets);
             
             protected:
                 static const int DEFAULT_LIVETIME = 10;
