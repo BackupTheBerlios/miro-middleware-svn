@@ -17,7 +17,8 @@
 #include <orbsvcs/Time_Utilities.h>
 
 #include <tao/Version.h>
-#if (TAO_MAJOR_VERSION > 1) || ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION >= 4))
+#if (TAO_MAJOR_VERSION > 1) || \
+  ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION >= 4))
 #include <tao/Any_Impl.h>
 #else
 #include <tao/Marshal.h>
@@ -163,8 +164,14 @@ namespace Miro
 	    typeId = typeRepository_.typeID(tc.in());
 	  }
 	  
-#if (TAO_MAJOR_VERSION > 1) || ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION >= 4))
+#if (TAO_MAJOR_VERSION > 1) || \
+  ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION >= 4)) || \
+  ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 3 && TAO_BETA_VERSION >= 5)) 
 
+	      //----------------------------------------------------------------
+	      // we have Any_Impl
+	      //----------------------------------------------------------------
+	      
 	  // if not type code repository full
 	  if (typeId != -2 && 
 	      // write type code id
@@ -189,7 +196,10 @@ namespace Miro
 				 _event.remainder_of_body._tao_byte_order ());
 	      
 #if ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 3))
-	      
+	      //----------------------------------------------------------------
+	      // we have ACE_ENV_ARG_PARAMETER
+	      //----------------------------------------------------------------
+	         
 	      CORBA::TypeCode::traverse_status status =
 		TAO_Marshal_Object::perform_append (tc.in(),
 						    &input,

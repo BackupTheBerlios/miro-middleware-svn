@@ -22,7 +22,8 @@
 #include <orbsvcs/CosNotificationC.h>
 
 #include <tao/Version.h>
-#if (TAO_MAJOR_VERSION > 1) || ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION >= 4))
+#if (TAO_MAJOR_VERSION > 1) || \
+  ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION >= 4))
 #include <tao/Any_Impl.h>
 #include <tao/Any_Unknown_IDL_Type.h>
 #else
@@ -207,7 +208,10 @@ namespace Miro
       // direct copies from TAO sources
       // read the any payload
 
-#if (TAO_MAJOR_VERSION > 1) || ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION >= 4))
+#if (TAO_MAJOR_VERSION > 1) || \
+  ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION >= 4)) || \
+  ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 3 && TAO_BETA_VERSION >= 5)) 
+
       try {
 
 	TAO::Unknown_IDL_Type *impl = new TAO::Unknown_IDL_Type (tc,
