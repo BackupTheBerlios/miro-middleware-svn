@@ -91,6 +91,10 @@ AM_CONDITIONAL(COND_PIONEER,   [test "x$ac_request_pioneer" = xyes])
 AM_CONDITIONAL(COND_B21,       [test "x$ac_request_b21" = xyes])
 AM_CONDITIONAL(COND_DEPRECATED,[test "x$ac_request_deprecated" = xyes])
 
+if test "x$ac_request_player" = xyes; then
+	AC_SEARCH_PLAYER
+fi
+
 AC_DETERMINE_VIDEODEVICES
 
 AH_TEMPLATE([MIRO_HAS_BTTV], [build with 1394 support.])
@@ -169,7 +173,12 @@ fi
 
 AM_CONDITIONAL(COND_SPEECH, [test "x$ac_compile_speech" = xyes])
 
+if test "x$ac_request_player" = xyes &&
+	test "x$ac_has_player" = xyes; then
+	ac_compile_player=yes
+fi
 
+AM_CONDITIONAL(COND_PLAYER, [test "x$ac_compile_player" = yes])
 
 AH_TEMPLATE([MIRO_NO_DEBUG], [build without debug info support.])
 AH_TEMPLATE([MIRO_NO_LOGGING], [build without log info support.])
@@ -210,6 +219,7 @@ AC_CONFIG_FILES([Makefile
                  src/speech/Makefile
                  src/sphinx/Makefile
                  src/video/Makefile
+                 src/playerBase/Makefile
                  examples/Makefile
                  examples/b21Motion/Makefile
                  examples/battery/Makefile
@@ -343,10 +353,18 @@ if test "x$ac_compile_speech" = xyes; then
 	echo "compiler flags:" $FESTIVAL_CPPFLAGS
 	echo "libraries used:" $FESTIVAL_LIBS
 fi
+if test x$ac_compile_player = xyes; then
+	echo ""
+	echo "Player-related results:"
+	echo "linker flags:  " $PLAYER_LDFLAGS
+	echo "compiler flags:" $PLAYER_CPPFLAGS
+	echo "libraries used:" $PLAYER_LIBS
+fi
 echo ""
 echo $ECHO_N "Sparrow99 support "; if test "x$ac_request_sparrow99" = xyes; then echo "enabled."; else echo "disabled."; fi
 echo $ECHO_N "Pioneer support "; if test "x$ac_request_pioneer" = xyes; then echo "enabled."; else echo "disabled."; fi
 echo $ECHO_N "B21 support "; if test "x$ac_request_b21" = xyes; then echo "enabled."; else echo "disabled."; fi
+echo $ECHO_N "Player simulator support "; if test "x$ac_compile_player" = xyes; then echo "enabled."; else echo "disabled."; fi
 echo ""
 echo $ECHO_N "BTTV support "; if test "x$ac_miro_has_bttv" = xyes; then echo "enabled."; else echo "disabled."; fi
 echo $ECHO_N "Meteor support "; if test "x$ac_miro_has_meteor" = xyes; then echo "enabled."; else echo "disabled."; fi

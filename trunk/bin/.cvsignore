@@ -53,6 +53,7 @@ PanTiltTest
 ParameterExample
 PioneerBase
 PioneerTest
+PlayerBase
 PolicyController
 PolicyEditor
 PolicyParsingTest

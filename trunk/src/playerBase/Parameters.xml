@@ -1,0 +1,118 @@
+<!DOCTYPE xml SYSTEM "PolicyEditor_behaviour.dtd">
+<config> 
+  <config_global name="namespace" value="Player" />
+  <config_global name="include" value="miro/SvcParameters.h" />
+  <!--config_global name="include" value="laser/Parameters.h" /-->
+
+  <config_group name="Player">
+    <config_item parent="Miro::Dev" instance="true">
+      <config_parameter name="motion" type="Miro::DifferentialMotionParameters" />
+      <constructor>
+        motion.minTranslation = -500;
+        motion.maxTranslation = 500;
+
+        motion.minLTranslation = -500;
+        motion.maxLTranslation = 500;
+        motion.minRTranslation = -500;
+        motion.maxRTranslation = 500;
+        motion.wheelBase = 350;
+      </constructor>
+
+      <config_parameter name="laser" type="bool" default="true" />
+       <config_parameter name="laserDescription" type="Miro::ScanDescriptionIDL" />
+      <constructor>
+        laserDescription.scanType = Miro::RangeSensor::GROUPWISE;
+        laserDescription.eventName = &quot;Laser&quot;;
+        laserDescription.group.length(1);
+        laserDescription.group[0].description.minRange = 50;
+        laserDescription.group[0].description.maxRange = 8000;
+        laserDescription.group[0].description.focus = 0.00435;
+        laserDescription.group[0].sensor.length(361);
+        for (unsigned int i = 0; i &lt; 361; ++i) {
+          laserDescription.group[0].sensor[i].height = 300;
+          laserDescription.group[0].sensor[i].distance = 0;
+          laserDescription.group[0].sensor[i].alpha = Miro::deg2Rad(-90. + (double)i * 0.5);
+          laserDescription.group[0].sensor[i].beta = 0;
+          laserDescription.group[0].sensor[i].gamma = 0;
+        }
+      </constructor>
+
+      <config_parameter name="sonar" type="bool" default="true" />
+      <config_parameter name="sonarDescription" type="Miro::ScanDescriptionIDL" />
+      <constructor>
+        static const int sonarDistance[8] = { 150, 150, 150, 150, 150, 150, 150, 150 };
+        static const int sonarAlpha[8] = { 90, 60, 15, 0, -15, -60, -90, 180 };
+        static const int sonarBeta[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+
+        sonarDescription.scanType = Miro::RangeSensor::BUNCHWISE;
+        sonarDescription.eventName = &quot;Sonar&quot;;
+        sonarDescription.group.length(1);
+        sonarDescription.group[0].description.minRange = 200;
+        sonarDescription.group[0].description.maxRange = 5000;
+        sonarDescription.group[0].description.focus = Miro::deg2Rad(30);
+        sonarDescription.group[0].sensor.length(8);
+        for (unsigned int i = 0; i &lt; 8; ++i) {
+          sonarDescription.group[0].sensor[i].height = 350;
+          sonarDescription.group[0].sensor[i].distance = sonarDistance[i];
+          sonarDescription.group[0].sensor[i].alpha = Miro::deg2Rad(sonarAlpha[i]);
+          sonarDescription.group[0].sensor[i].beta = Miro::deg2Rad(sonarBeta[i]);
+          sonarDescription.group[0].sensor[i].gamma = 0;
+        }
+      </constructor>
+
+      <config_parameter name="infrared" type="bool" default="false" />
+      <config_parameter name="infraredDescription" type="Miro::ScanDescriptionIDL" />
+      <constructor>
+        static const int infraredHeight[4] = { 100, 100, 150, 150 };
+        static const int infraredDistance[4] = { 150, 150, 150, 150 };
+        static const int infraredAlpha[4] = { 45, -45, 90, -90 };
+        static const int infraredBeta[4] = { 0, 0, 0, 0};
+        static const int infraredGamma[4] = { 70, 70, 90, 90};
+
+        infraredDescription.scanType = ::Miro::RangeSensor::GROUPWISE;
+        infraredDescription.eventName = &quot;Infrared &quot;;
+        infraredDescription.group.length(1);
+        infraredDescription.group[0].description.minRange = 0;
+        infraredDescription.group[0].description.maxRange = 500;
+        infraredDescription.group[0].description.focus = Miro::deg2Rad(5);
+        infraredDescription.group[0].sensor.length(4);
+        for (unsigned int i = 0; i &lt; 4; ++i) {
+          infraredDescription.group[0].sensor[i].height = infraredHeight[i];;
+          infraredDescription.group[0].sensor[i].distance = infraredDistance[i];
+          infraredDescription.group[0].sensor[i].alpha = Miro::deg2Rad(infraredAlpha[i]);
+          infraredDescription.group[0].sensor[i].beta = Miro::deg2Rad(infraredBeta[i]);
+          infraredDescription.group[0].sensor[i].gamma = Miro::deg2Rad(infraredGamma[i]);
+        }
+      </constructor>
+
+      <config_parameter name="tactile" type="bool" default="false" />
+      <config_parameter name="tactileDescription" type="Miro::ScanDescriptionIDL" />
+      <constructor>
+        static const int tactileDistance[10] = { 150, 150, 150, 150, 150, 150, 150, 150, 150, 150 };
+        static const int tactileAlpha[10] = { 90, 60, 15, 0, -15, -60, -90, 180, -180, -120 };
+        static const int tactileBeta[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+        tactileDescription.scanType = Miro::RangeSensor::BUNCHWISE;
+        tactileDescription.eventName = &quot;Tactile&quot;;
+        tactileDescription.group.length(1);
+        tactileDescription.group[0].description.minRange = 0;
+        tactileDescription.group[0].description.maxRange = 10;
+        tactileDescription.group[0].description.focus = Miro::deg2Rad(30);
+        tactileDescription.group[0].sensor.length(10);
+        for (unsigned int i = 0; i &lt; 10; ++i) {
+          tactileDescription.group[0].sensor[i].height = 350;
+          tactileDescription.group[0].sensor[i].distance = tactileDistance[i];
+          tactileDescription.group[0].sensor[i].alpha = Miro::deg2Rad(tactileAlpha[i]);
+          tactileDescription.group[0].sensor[i].beta = Miro::deg2Rad(tactileBeta[i]);
+          tactileDescription.group[0].sensor[i].gamma = 0;
+        }
+      </constructor>
+
+      <config_parameter name="channelSharing" type="bool" default="false" />
+      <config_parameter name="camera" type="bool" default="false" />
+      <config_parameter name="cameraUpsideDown" type="bool" default="false" />
+      <config_parameter name="cameraType" type="string" default="canon" />
+
+    </config_item>
+  </config_group>
+</config>

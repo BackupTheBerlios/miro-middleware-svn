@@ -34,6 +34,12 @@ AC_ARG_ENABLE(
 	ac_request_sparrow99=yes)
 
 AC_ARG_ENABLE(
+	Player,
+	AC_HELP_STRING([--enable-Player], [Turn on Player simulator support (default off)]),
+	ac_request_player=$enableval,
+	ac_request_player=no)
+
+AC_ARG_ENABLE(
 	Deprecated,
 	AC_HELP_STRING([--enable-Deprecated], [Turn on support for deprecated interfaces]),
 	ac_request_deprecated=$enableval,
