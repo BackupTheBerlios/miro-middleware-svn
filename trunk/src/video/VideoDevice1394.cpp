@@ -1,4 +1,5 @@
-/*! \file VideoDevice1394.cpp
+/* -*- c++ -*-
+ *  \file VideoDevice1394.cpp
  *  \brief Implementation for a firewire video device
  *
  * -----------------------------------------------------
@@ -14,6 +15,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.3  2003/05/13 10:56:34  hutz
+ * debugging fire wire support
+ *
  * Revision 1.2  2003/05/12 16:34:35  hutz
  * bug hunt on fire wire
  *
@@ -69,7 +73,7 @@
 
 #include <iostream>
 
-#undef DEBUG
+// #undef DEBUG
 
 #ifdef DEBUG
 #define DBG(x) x
@@ -146,7 +150,7 @@ namespace Video
     }
 
   protected:
-    Feature1394 feature_[NUM_FEATURES1394];
+    Feature1394  * feature_;
   };
 
 
@@ -193,6 +197,7 @@ namespace Video
 	
 	dc1394_dma_done_with_buffer(p_camera_);
 	
+      DBG(std::cout << "VideoDevice1394: grabImage done" << std::endl);
         return actual_start;
     }
     
@@ -261,7 +266,7 @@ namespace Video
 	p_camera_->node = camera_nodes[0];
 	DBG(std::cout << "VideoDevice1394::initDevice: node = " << p_camera_->node << "/" << num_nodes << std::endl);
 	if (p_camera_->node == num_nodes - 1)
-	    throw Miro::Exception("VideoDevice1394::initDevice: camera is highest numbered node.");
+	  throw Miro::Exception("VideoDevice1394::initDevice: camera is highest numbered node.");
 
         dc1394_stop_iso_transmission(handle_, p_camera_->node);
 
@@ -425,7 +430,7 @@ namespace Video
 	if (*(first->pValue) == -1) {
 	  dc1394_auto_on_off(handle_, p_camera_->node, first->code, 1);
 	}
-	else {
+	else if (*(first->pValue) >= 0) {
 	  if (first->set_function(handle_,
 				  p_camera_->node,
 				  (*first->pValue)) != DC1394_SUCCESS) {
@@ -442,7 +447,8 @@ namespace Video
 	  _params.whiteBalance1 == -1) {
 	dc1394_auto_on_off(handle_, p_camera_->node, FEATURE_WHITE_BALANCE, 1);
       }
-      else {
+      else if (_params.whiteBalance0 >= 0 &&
+	       _params.whiteBalance1 >= 0) {
 	if (dc1394_set_white_balance(handle_,
 				     p_camera_->node,
 				     _params.whiteBalance0,

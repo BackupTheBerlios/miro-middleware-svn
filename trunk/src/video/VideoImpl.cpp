@@ -118,8 +118,11 @@ namespace Miro
   TimeIDL
   VideoImpl::getWaitImage(Miro::ImageHandleIDL & img) throw()
   {
+      cout << "getWaitImage 0" << endl;
     checkImageHandle(img);
-    try {
+      cout << "getWaitImage 1" << endl;
+      try {
+      cout << "getWaitImage 2" << endl;
       return pConsumer->getWaitNextImage(pShmDataArray[img.handle]);
     }
     catch (Exception& e) {

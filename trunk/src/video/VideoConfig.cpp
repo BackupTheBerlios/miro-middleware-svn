@@ -14,7 +14,7 @@ namespace Video
     else if (fmt == "secam")    
       return formatSECAM;
    
-    throw Miro::Exception(string("Video::Parameters: unknown format: ") + fmt);
+    throw Miro::Exception(std::string("Video::Parameters: unknown format: ") + fmt);
   }
   
   VideoSource getSource(const std::string & src)
@@ -34,7 +34,7 @@ namespace Video
     else if (src == "1394")	
       return source1394;
 
-    throw Miro::Exception(string("Video::Parameters: unknown source: ") + src);
+    throw Miro::Exception(std::string("Video::Parameters: unknown source: ") + src);
   }
     
   VideoPalette getPalette(const std::string & pal)
@@ -53,7 +53,7 @@ namespace Video
     else if (pal == "yuv")  	
       return paletteYUV;
 	
-    throw Miro::Exception(string("Video::Parameters: unknown palette: ") + pal);
+    throw Miro::Exception(std::string("Video::Parameters: unknown palette: ") + pal);
   }
     
   VideoSubfield getSubfield(const std::string & sub)
@@ -65,6 +65,6 @@ namespace Video
     else if (sub == "even")	
       return subfieldEven;
     
-    throw Miro::Exception(string("Video::Parameters: unknown subfield: ") + sub);
+    throw Miro::Exception(std::string("Video::Parameters: unknown subfield: ") + sub);
   }
 };

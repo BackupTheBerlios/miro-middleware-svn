@@ -215,8 +215,10 @@ namespace Video
     timeout += maxWait;
     if (cond.wait(&timeout) == -1)
       throw Miro::ETimeOut();
-    copyImageData(data, pCurrentImageData);
-    return timeStamp_;
+      cout << "Consumer::getWaitNextImage 0" << endl;
+      copyImageData(data, pCurrentImageData);
+      cout << "Consumer::getWaitNextImage 1" << endl;
+      return timeStamp_;
   }
 
   void

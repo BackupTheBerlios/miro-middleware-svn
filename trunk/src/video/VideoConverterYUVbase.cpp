@@ -14,6 +14,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.2  2003/05/13 10:56:34  hutz
+ * debugging fire wire support
+ *
  * Revision 1.1  2003/05/12 11:48:05  hutz
  * added the fire wire dc support from graz
  * propagated changes and cleanups introduced by fire wire dc
@@ -42,6 +45,9 @@
 
 namespace Video
 {
+
+  using std::max;
+  using std::min;
 //---------------------------------------------------------------
     VideoConverterYUVbase::VideoConverterYUVbase()
     {
