@@ -255,7 +255,6 @@ namespace Miro {
 
                 return 0;
             }
-
             /* Index the incomplete (due to fragmentation) requests */
             RequestIndex     mapIndex(from, _eventData.requestId);
             RequestMapEntry *entry;
@@ -275,7 +274,6 @@ namespace Miro {
                     return 0;
                 }
             }
-
             /* Validate the message... */
             if (entry->int_id_->validateFragment(_eventData.byteOrder,
                                                  _eventData.requestSize,
@@ -287,29 +285,23 @@ namespace Miro {
 
                 return 0;
             }
-
             /* Already received this fragment */
             if (entry->int_id_->testReceived(_eventData.fragmentId) == 1) {
                 PRINT_DBG(DBG_VERBOSE, "Duplicate Fragment, dropping");
 
                 return 0;
             }
-
             /* Copy the payload into the fragment buffer */
             char *buffer = (char *)_iov[0].iov_base + HEADER_SIZE;
             int   bufferLen = _iov[0].iov_len - HEADER_SIZE;
-
             memcpy(entry->int_id_->fragmentBuffer(_eventData.fragmentOffset),
                    buffer,
                    bufferLen);
-
             /* Mark datagram fragment as received */
             entry->int_id_->markReceived(_eventData.fragmentId);
-
             /* If the message is not complete we must return... */
             if (!entry->int_id_->complete())
                 return 0;
-
             /* Demarshal datagram payload */
             ACE_DECLARE_NEW_CORBA_ENV;
             ACE_TRY {
