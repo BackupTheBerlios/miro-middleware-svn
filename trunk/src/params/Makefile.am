@@ -26,6 +26,10 @@ sources = \
 	TextErrorHandler.cpp
 
 libmiroParams_la_SOURCES = $(sources)
+libmiroParams_la_LIBADD = \
+	-lACE \
+	$(QT_LIBS)
+
 
 #BUILT_SOURCES = Parameters.cpp Parameters.h
 #CLEANFILES = $(BUILT_SOURCES)
