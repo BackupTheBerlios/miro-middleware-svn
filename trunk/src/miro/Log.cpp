@@ -51,6 +51,8 @@ namespace
 
   char const * const MIRO_LOG_LEVEL = "-MiroLogLevel";
   char const * const MIRO_LOG_FILTER = "-MiroLogFilter";
+  char const * const MIRO_LOG_LEVEL_SHORT = "-MLL";
+  char const * const MIRO_LOG_FILTER_SHORT = "-MLF";
   char const * const MIRO_LOG_DEVICE   = "-MiroLogDevice";
 
   std::string logDevice;
@@ -107,7 +109,8 @@ namespace Miro
     while (arg_shifter.is_anything_left ()) {
       const ACE_TCHAR *currentArg = arg_shifter.get_current ();
 
-      if (ACE_OS::strcasecmp(MIRO_LOG_LEVEL, currentArg) == 0) {
+      if (ACE_OS::strcasecmp(MIRO_LOG_LEVEL, currentArg) == 0 ||
+	  ACE_OS::strcasecmp(MIRO_LOG_LEVEL_SHORT, currentArg) == 0 ) {
 	arg_shifter.consume_arg();
 	if (arg_shifter.is_parameter_next()) {
 	  level_ = strtol(arg_shifter.get_current (), (char**)NULL, 10);
@@ -116,7 +119,8 @@ namespace Miro
 	  arg_shifter.consume_arg();
 	}
       }
-      else if (ACE_OS::strcasecmp(MIRO_LOG_FILTER, currentArg) == 0) {
+      else if (ACE_OS::strcasecmp(MIRO_LOG_FILTER, currentArg) == 0 ||
+	       ACE_OS::strcasecmp(MIRO_LOG_FILTER_SHORT, currentArg) == 0 ) {
 	arg_shifter.consume_arg();
 
 	while (arg_shifter.is_parameter_next()) {
