@@ -52,7 +52,8 @@ ifneq (,$(findstring Pioneer1,$(MIRO_COMPONENTS)))
 		gripper
 endif
 ifneq (,$(findstring Sparrow99,$(MIRO_COMPONENTS)))
-  DIRS +=	sparrow
+  DIRS +=	sparrow \
+		faul
 endif
 ifneq (,$(findstring Deprecated,$(MIRO_COMPONENTS)))
   DIRS +=	image

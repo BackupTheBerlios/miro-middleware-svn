@@ -5,7 +5,7 @@
 // for details copyright, usage and credits to other groups see Miro/COPYRIGHT
 // for documentation see Miro/doc
 // 
-// (c) 2000, 2001, 2002. 2003
+// (c) 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -15,13 +15,9 @@
 #include "faulMotor/FaulMotorConnection.h"
 #include "faulMotor/Parameters.h" 
 #include "faulMotor/FaulMotorConsumer.h"
-//#include "faulMotor/FaulMotorStallImpl.h"
-//#include "faulMotor/CanonPanTiltImpl.h"
-//#include "faulMotor/CanonCameraImpl.h"
-//#include "faulMotor/GripperImpl.h"
+#include "faulMotor/TimerEventHandler.h"
 
 #include "faulTty/FaulTtyEventHandler.h"
-#include "faulTty/TimerEventHandler.h"
 
 #include "miro/ReactorTask.h"
 #include "miro/IO.h"
@@ -30,6 +26,7 @@
 #include "miro/RangeSensorImpl.h"
 #include "miro/OdometryImpl.h"
 #include "miro/BatteryImpl.h"
+#include "miro/Exception.h"
 
 #include <iostream>
 #include <stdio.h>
@@ -70,8 +67,7 @@ struct Service
   //Canon::CanonPanTiltImpl canonPanTiltImpl;
   //Canon::CanonCameraImpl canonCamera;
   //Miro::GripperImpl gripper;
-  FaulTty::EventHandler * pEventHandler;
-  FaulTty::TimerEventHandler * pTimerEventHandler;
+  FaulMotor::TimerEventHandler * pTimerEventHandler;
   FaulMotor::Connection connection;
 
   Service();
@@ -80,18 +76,10 @@ struct Service
 
 Service::Service() :
   reactorTask(),
-  //pRangeSensorImpl(new Miro::RangeSensorImpl(FaulMotor::Parameters::instance()->sonarDescription)),
   pOdometryImpl(new Miro::OdometryImpl(NULL)),
-  //pBatteryImpl(new Miro::BatteryImpl()),
-  pConsumer(new FaulMotor::Consumer(pOdometryImpl)), //&canonPanTiltImpl)),
-  //pStallImpl(new FaulMotor::StallImpl()),
-  //canonPanTiltImpl(connection, FaulMotor::Parameters::instance()->cameraUpsideDown),
-  //canonCamera(connection, canonPanTiltImpl.getAnswer()),
-  //gripper(connection),
-  pEventHandler(new FaulTty::EventHandler(pConsumer, connection)),
-  pTimerEventHandler(new FaulTty::TimerEventHandler(connection)),
-  //pTimerEventHandler(new Psos::TimerEventHandler(connection)),
-  connection(reactorTask.reactor(), pEventHandler, pConsumer)
+  pConsumer(new FaulMotor::Consumer(pOdometryImpl)),
+  pTimerEventHandler(new FaulMotor::TimerEventHandler(connection)),
+  connection(reactorTask.reactor(), pConsumer)
 {}
 
 
@@ -326,8 +314,6 @@ int main(int argc, char* argv[])
   catch (...) {
     cerr << "Uncaught exception: " << endl;
   }
-
-  service.connection.close();
 
   service.reactorTask.cancel();
   return 0;
