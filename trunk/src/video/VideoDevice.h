@@ -51,7 +51,7 @@ namespace Video
     //--------------------------------------------------------------------------
     // static public constants
 
-    static const unsigned int NUM_PALETTE_ENTRIES = Miro::YUV_422 + 1;
+    static const unsigned int NUM_PALETTE_ENTRIES = Miro::YUV_420P + 1;
 
   protected:
     //--------------------------------------------------------------------------

@@ -33,6 +33,12 @@
 #ifdef MIRO_HAS_1394
 #include "VideoDevice1394.h"
 #endif
+#ifdef MIRO_HAS_QUICKCAM
+#include "VideoDeviceQuickCam.h"
+#include "VideoFilterYUV420PtoRGB.h"
+#include "VideoFilterOmni2Pan.h"
+#include "VideoFilterRGBtoSeg.h"
+#endif
 #include "VideoDeviceDummy.h"
 
 #include "VideoFilterRepository.h"
@@ -73,7 +79,7 @@ main(int argc, char *argv[])
 
   try {
     std::cout << "registered filters" << endl;
-    
+
     Video::FilterRepository * repo = Video::FilterRepository::instance();
     repo->registerFilter<Video::DeviceDummy>("DeviceDummy");
 
@@ -91,6 +97,13 @@ main(int argc, char *argv[])
     repo->registerFilter<Video::FilterYUV422toYUV>("FilterYUV422toYUV");
     repo->registerFilter<Video::FilterYUV411toRGB>("FilterYUV411toRGB");
     repo->registerFilter<Video::FilterYUV411toYUV>("FilterYUV411toYUV");
+#endif
+
+#ifdef MIRO_HAS_QUICKCAM
+    repo->registerFilter<Video::DeviceQuickCam>("DeviceQuickCam");
+    repo->registerFilter<Video::FilterYUV420PtoRGB>("FilterYUV420PtoRGB");
+    repo->registerFilter<Video::FilterOmni2Pan>("FilterOmni2Pan");
+    repo->registerFilter<Video::FilterRGBtoSeg>("FilterRGBtoSeg");
 #endif
 
     repo->registerFilter<Video::FilterCopy>("FilterCopy");

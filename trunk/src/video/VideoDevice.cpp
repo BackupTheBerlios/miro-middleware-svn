@@ -14,9 +14,9 @@
 #include "miro/Exception.h"
 
 
-namespace 
+namespace
 {
-  struct PalettePair 
+  struct PalettePair
   {
     std::string first;
     Miro::VideoPaletteIDL second;
@@ -33,7 +33,8 @@ namespace
     {"abgr",   Miro::BGR_32},
     {"yuv",    Miro::YUV_24},
     {"yuv411", Miro::YUV_411},
-    {"yuv422", Miro::YUV_422}
+    {"yuv422", Miro::YUV_422},
+    {"yuv420p", Miro::YUV_420P}
   };
 
 
@@ -87,9 +88,9 @@ namespace Video
   }
 
   //--------------------------------------------------------------------
-  Miro::VideoPaletteIDL 
+  Miro::VideoPaletteIDL
   Device::getPalette(const std::string & pal)
-  {  
+  {
     for (unsigned int i = 0; i < NUM_PALETTE_ENTRIES + 2; ++i) {
       if (pal == palette[i].first) {
 	return palette[i].second;

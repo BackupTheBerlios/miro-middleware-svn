@@ -51,6 +51,12 @@ meteorsources = \
 	VideoFilterYUV422toYUV.cpp \
 	VideoControlImpl.cpp
 
+quickcamsources = \
+	BufferManagerQuickCam.cpp \
+	VideoDeviceQuickCam.cpp \
+	VideoFilterYUV420PtoRGB.cpp \
+	VideoFilterOmni2Pan.cpp \
+	VideoFilterRGBtoSeg.cpp
 
 if COND_BTTV
 bttvsources_used = $(bttvsources)
@@ -62,7 +68,11 @@ endif
 
 if COND_IEEE1394
 1394sources_used = $(1394sources)
-endif 
+endif
+
+if COND_QUICKCAM
+quickcamsources_used = $(quickcamsources)
+endif
 
 
 
@@ -70,7 +80,8 @@ libmiroVideo_la_SOURCES = \
 	$(sources) \
 	$(bttvsources_used) \
 	$(meteorsources_used) \
-	$(1394sources_used)
+	$(1394sources_used) \
+	$(quickcamsources_used)
 
 
 
@@ -81,7 +92,7 @@ if COND_IEEE1394
 1394libraries = \
 	-lraw1394 \
 	-ldc1394_control
-endif 
+endif
 
 ## local version of libmiroVideo, because it is not installed at this point.
 VideoService_LDADD = \
@@ -105,7 +116,7 @@ extraheader = \
 BUILT_SOURCES = Parameters.cpp Parameters.h
 CLEANFILES = $(BUILT_SOURCES)
 
-includefiles1 = $(sources:.xml=.h) $(bttvsources:.xml=.h) $(meteorsources:.xml=.h) $(1394sources:.xml=.h) $(extraheader)
+includefiles1 = $(sources:.xml=.h) $(bttvsources:.xml=.h) $(meteorsources:.xml=.h) $(1394sources:.xml=.h) $(quickcamsources:.xml=.h) $(extraheader)
 includefiles2 = $(includefiles1:.cpp=.h)
 video_include_HEADERS = $(includefiles2)
 
