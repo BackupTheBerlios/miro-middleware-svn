@@ -15,29 +15,22 @@
 namespace Miro
 {
 
-  PanImpl::PanImpl(Miro::PanParameters panParameters_) :
-    panParameters(panParameters_)
+  PanImpl::PanImpl(const Miro::PanParameters& _panParameters) :
+    panParameters_(_panParameters)
   {}
 
   PanImpl::~PanImpl() {}
 
-  void PanImpl::setPan(double value) throw(Miro::EDevIO, Miro::EOutOfBounds)
+  double PanImpl::getTargetPan() throw() 
   {
-    if ((value>panParameters.rangeMax) || (value<panParameters.rangeMin)) {
-      throw Miro::EOutOfBounds();
-    }
-  }
-  
-  double PanImpl::getPan() throw(Miro::EDevIO) 
-  {
-    return (panParameters.rangeMin);
+    return targetPan_;
   }
 
   PanLimitsIDL PanImpl::getPanLimits() throw(Miro::EDevIO) {
     PanLimitsIDL result;
 
-    result.minpanposition=panParameters.rangeMin;
-    result.maxpanposition=panParameters.rangeMax;
+    result.minpanposition=panParameters_.rangeMin;
+    result.maxpanposition=panParameters_.rangeMax;
 
     return result;
   }

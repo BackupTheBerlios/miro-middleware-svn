@@ -54,6 +54,12 @@ module Miro
      */
     PanTiltPositionIDL getPosition() raises(EDevIO);
 
+    //! Get the target panTilt position. 
+    /**
+     * @return The target panning and tilting angles.
+     */
+    PanTiltPositionIDL getTargetPosition();
+
     //! Set the desired pantilt position.
     /**
      * @param destination The desired panning and tilting angles.

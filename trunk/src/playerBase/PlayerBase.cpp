@@ -46,9 +46,7 @@ using std::string;
 
 PlayerBase::PlayerBase(int argc, char *argv[],
 		       PlayerClient* client, 
-		       int playerId,
-		       Miro::PanParameters panParameters,
-		       Miro::TiltParameters tiltParameters
+		       int playerId
 		       ) throw (CORBA::Exception) :
   Super(argc, argv),
   reactorTask(client,playerId,&sonar,&laser,&infrared,&tactile,&odometry,&motion,&battery,&panTilt,&stall),
@@ -71,7 +69,7 @@ PlayerBase::PlayerBase(int argc, char *argv[],
   laser(new Miro::OdometryTracking(ec_.in(), namingContextName),
 	Laser::Parameters::instance()->laserDescription, 
     	&structuredPushSupplier_),
-  panTilt(panParameters,tiltParameters,Player::Parameters::instance()->cameraUpsideDown),
+  panTilt(Player::Parameters::instance()->panTiltParams,Player::Parameters::instance()->cameraParams.upsideDown),
   playerClient(client)
 { 
 
@@ -231,16 +229,13 @@ main(int argc, char *argv[])
     config->getParameters("Player::Parameters", *simBotParameters);
     config->setSection("Sick");
     config->getParameters("Laser::Parameters", *laserParameters);
-    config->setSection("Camera");
-    config->getParameters("Miro::PanParameters", panParameters);
-    config->getParameters("Miro::TiltParameters", tiltParameters);
     delete config;
 
     DBG(cout << "Initialize server daemon." << endl);
 
     playerClient=new PlayerClient(playerHost.c_str(),playerPort);
 
-    PlayerBase playerBase(argc, argv, playerClient,playerId, panParameters, tiltParameters);
+    PlayerBase playerBase(argc, argv, playerClient,playerId);
  
     try {
       DBG(cout << "Loop forever handling events." << endl);

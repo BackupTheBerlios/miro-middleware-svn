@@ -44,8 +44,7 @@ namespace Canon
   public:
     // Constructor/Destructor
     CanonPanTiltImpl(Pioneer::Connection& _connection,
-		     Miro::PanParameters _panParameters,
-		     Miro::TiltParameters _tiltParameters,
+		     Miro::PanTiltParameters _panTiltParameters,
 		     bool _upsideDown = false) throw(Miro::Exception);
     virtual ~CanonPanTiltImpl();
 

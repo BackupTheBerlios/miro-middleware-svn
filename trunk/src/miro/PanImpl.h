@@ -32,24 +32,33 @@ namespace Miro
   {
   public:
     //! Initializing constructor.
-    PanImpl(Miro::PanParameters panParameters);
+    PanImpl(const Miro::PanParameters& _panParameters);
     virtual ~PanImpl();
 
 
+   
+    void setTargetPan(double value);
     //! Pan interface method implementation.
-    virtual void setPan(double value) throw(Miro::EDevIO, Miro::EOutOfBounds);
-    //! Pan interface method implementation.
-    virtual double getPan() throw(Miro::EDevIO);
+    virtual double getTargetPan() throw();
     //! Pan interface method implementation.
     virtual PanLimitsIDL getPanLimits() throw(Miro::EDevIO);
 
+    bool testPan(double value);
 
   protected:
     //-------------------------------------------------------------------------
     // protected object data
     //-------------------------------------------------------------------------
-    Miro::PanParameters panParameters;
+    Miro::PanParameters panParameters_;
+    double targetPan_;
   };
+
+  inline bool PanImpl::testPan(double value) {
+    return ((value>=panParameters_.rangeMin) &&
+	    (value<=panParameters_.rangeMax));
+  }
+  inline void PanImpl::setTargetPan(double value) 
+  { targetPan_=value; }
 }
 
 #endif // PanImpl_h

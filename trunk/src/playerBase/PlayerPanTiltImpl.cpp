@@ -41,10 +41,9 @@ namespace Player
   // maximum wait time for cond.wait calls
   ACE_Time_Value PlayerPanTiltImpl::maxWait = ACE_Time_Value(0, 500000);
 
-  PlayerPanTiltImpl::PlayerPanTiltImpl(Miro::PanParameters _panParameters,
-				       Miro::TiltParameters _tiltParameters,
+  PlayerPanTiltImpl::PlayerPanTiltImpl(Miro::PanTiltParameters _panTiltParameters,
 				       bool _upsideDown) throw(Exception) :
-    Miro::PanTiltImpl(_panParameters,_tiltParameters),
+    Miro::PanTiltImpl(_panTiltParameters),
     playerPTZ(NULL),
     currentPan(0),
     currentTilt(0),
@@ -78,8 +77,7 @@ namespace Player
   {
     Miro::PanTiltPositionIDL dest;
 
-    if ((angle < panParameters.rangeMin) || 
-	(angle > panParameters.rangeMax)) {
+    if (!testPan(angle)) {
       throw Miro::EOutOfBounds();
     }
 
@@ -107,8 +105,7 @@ namespace Player
   {
     Miro::PanTiltPositionIDL dest;
 
-    if ((angle < tiltParameters.rangeMin) || 
-	(angle > tiltParameters.rangeMax)) {
+    if (!testTilt(angle)) {
       throw Miro::EOutOfBounds();
     }
 
@@ -153,10 +150,7 @@ namespace Player
   void 
   PlayerPanTiltImpl::setPosition(const Miro::PanTiltPositionIDL & dest) throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
-    if ((dest.panvalue>panParameters.rangeMax) || 
-	(dest.panvalue<panParameters.rangeMin) || 
-	(dest.tiltvalue>tiltParameters.rangeMax) || 
-        (dest.tiltvalue<tiltParameters.rangeMin)) {
+    if (!testPosition(dest)) {
       throw Miro::EOutOfBounds();
     }
 

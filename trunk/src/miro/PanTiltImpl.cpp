@@ -15,39 +15,26 @@
 namespace Miro
 {
 
-  PanTiltImpl::PanTiltImpl(Miro::PanParameters panParameters_,Miro::TiltParameters tiltParameters_) :
-    PanImpl(panParameters_),
-    TiltImpl(tiltParameters_)
+  PanTiltImpl::PanTiltImpl(const Miro::PanTiltParameters& _panTiltParameters):
+    PanImpl(_panTiltParameters.pan),
+    TiltImpl(_panTiltParameters.tilt)
   {
   }
 
   PanTiltImpl::~PanTiltImpl() {}
 
-  void PanTiltImpl::setPosition(const PanTiltPositionIDL& value) throw(Miro::EDevIO, Miro::EOutOfBounds)
+  PanTiltPositionIDL PanTiltImpl::getTargetPosition() throw() 
   {
-    if ((value.panvalue>panParameters.rangeMax) || 
-	(value.panvalue<panParameters.rangeMin) || 
-	(value.tiltvalue>tiltParameters.rangeMax) || 
-        (value.tiltvalue<tiltParameters.rangeMin)) {
-      throw Miro::EOutOfBounds();
-    }
-  }
-  
-  PanTiltPositionIDL PanTiltImpl::getPosition() throw(Miro::EDevIO) 
-  {
-    PanTiltPositionIDL result;
-    result.panvalue=panParameters.rangeMin;
-    result.tiltvalue=tiltParameters.rangeMin;
-    return result;
+    return targetPosition_;
   }
 
   PanTiltLimitsIDL PanTiltImpl::getPanTiltLimits() throw(Miro::EDevIO) {
     PanTiltLimitsIDL result;
 
-    result.minpanposition=panParameters.rangeMin;
-    result.maxpanposition=panParameters.rangeMax;
-    result.mintiltposition=tiltParameters.rangeMin;
-    result.maxtiltposition=tiltParameters.rangeMax;
+    result.minpanposition=panParameters_.rangeMin;
+    result.maxpanposition=panParameters_.rangeMax;
+    result.mintiltposition=tiltParameters_.rangeMin;
+    result.maxtiltposition=tiltParameters_.rangeMax;
 
     return result;
   }

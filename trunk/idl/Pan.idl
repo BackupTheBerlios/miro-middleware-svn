@@ -48,6 +48,12 @@ module Miro
      */
     double getPan() raises(EDevIO);
 
+    //! Get the target panning angle.
+    /**
+     * @return The target panning angle, specified in radiant.
+     */
+    double getTargetPan();
+
     //! Get the panning angle limits.
     /**
      * @return The angles within the pan unit works, specified in radiant.

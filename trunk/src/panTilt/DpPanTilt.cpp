@@ -35,13 +35,13 @@ namespace DpPanTilt
 {
   using Miro::ReactorTask;
 
-  PanTiltServer::PanTiltServer(int& argc, char *argv[],Miro::PanParameters panParameters, Miro::TiltParameters tiltParameters) :
+  PanTiltServer::PanTiltServer(int& argc, char *argv[],Miro::PanTiltParameters panTiltParameters) :
     Super(argc, argv),
     reactorTask(this),
     data_(),
     pEventHandler_(new EventHandler(connection_, new Consumer(data_))),
     connection_(reactorTask.reactor(), pEventHandler_, data_),
-    panTilt(new PanTiltImpl(connection_, data_, panParameters, tiltParameters))
+    panTilt(new PanTiltImpl(connection_, data_, panTiltParameters))
   {
     MIRO_LOG_CTOR("PanTiltServer");
 
@@ -67,8 +67,7 @@ int main(int argc, char *argv[])
 
   Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
   Parameters * params = Parameters::instance();
-  Miro::PanParameters panParameters;
-  Miro::TiltParameters tiltParameters;
+  Miro::PanTiltParameters panTiltParameters;
 
   try {
     Miro::Log::init(argc, argv);
@@ -81,8 +80,7 @@ int main(int argc, char *argv[])
     config->setSection("DirectedPerception");
     config->getParameters("DpPanTilt::Parameters", *params);
     config->setSection("Camera");
-    config->getParameters("Miro::PanParameters", panParameters);
-    config->getParameters("Miro::TiltParameters", tiltParameters);
+    config->getParameters("Miro::PanTiltParameters", panTiltParameters);
 
     MIRO_LOG_OSTR(LL_NOTICE, 
 		  "Configuration:\n" << 
@@ -92,7 +90,7 @@ int main(int argc, char *argv[])
 		  *params);
     
     MIRO_LOG(LL_NOTICE, "Initialize server daemon.");
-    PanTiltServer panTiltServer(argc, argv, panParameters, tiltParameters);
+    PanTiltServer panTiltServer(argc, argv, panTiltParameters);
 
     try {
       MIRO_LOG(LL_NOTICE, "Loop forever handling events.\n");

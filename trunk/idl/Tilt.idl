@@ -48,6 +48,12 @@ module Miro
      */
     double getTilt() raises(EDevIO);
 
+    //! Get the target tilting angle.
+    /**
+     * @return The target tilting angle, specified in radiant.
+     */
+    double getTargetTilt();
+
     //! Get the tilting angle limits.
     /**
      * @return The angles within the tilt unit works, specified in radiant.

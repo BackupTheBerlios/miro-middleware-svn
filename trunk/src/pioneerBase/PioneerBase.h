@@ -57,7 +57,7 @@ class PioneerBase : public Miro::Server
 
 public:
   // Initialization and Termination methods.
-  PioneerBase(int argc, char *argv[], Miro::PanParameters panParameters, Miro::TiltParameters tiltParameters);
+  PioneerBase(int argc, char *argv[]);
   // Constructor.
 
   ~PioneerBase();

@@ -90,11 +90,11 @@ struct Service
   Psos::EventHandler * pEventHandler;
   Pioneer::Connection connection;
   
-  Service(Miro::PanParameters panParameters, Miro::TiltParameters tiltParameters);
+  Service();
 };
 
 
-Service::Service(Miro::PanParameters panParameters, Miro::TiltParameters tiltParameters) :
+Service::Service() :
   reactorTask(),
   pRangeSensorImpl(new Miro::RangeSensorImpl(Pioneer::Parameters::instance()->sonarDescription)),
   pOdometryImpl(new Miro::OdometryImpl(NULL)),
@@ -102,7 +102,7 @@ Service::Service(Miro::PanParameters panParameters, Miro::TiltParameters tiltPar
   pConsumer(new Pioneer::Consumer(pRangeSensorImpl, NULL, NULL, NULL, pOdometryImpl, NULL, NULL, NULL, pPanTiltImpl)),
   pStallImpl(new Pioneer::StallImpl()),
   pTCM2Impl(new Pioneer::TCM2Impl(Pioneer::Parameters::instance()->tcm2Params, NULL)),
-  pPanTiltImpl(new Canon::CanonPanTiltImpl(connection, panParameters, tiltParameters, Pioneer::Parameters::instance()->cameraParams.upsideDown)),
+  pPanTiltImpl(new Canon::CanonPanTiltImpl(connection, Pioneer::Parameters::instance()->panTiltParams, Pioneer::Parameters::instance()->cameraParams.upsideDown)),
 #ifdef MIRO_HAS_DEPRECATED
   canonCamera(connection, pPanTiltImpl->getAnswer()),
 #endif
@@ -474,24 +474,16 @@ int main(int argc, char* argv[])
 {
   // Parameters to be passed to the services
   Pioneer::Parameters * pParams = Pioneer::Parameters::instance();
-  Miro::PanParameters panParameters;
-  Miro::TiltParameters tiltParameters;
 
   // Config file processing
   Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
   config->setSection("ActiveMedia");
   config->getParameters("PioneerBoard", *pParams);
 
-  config->setSection("Camera");
-  config->getParameters("Miro::PanParameters", panParameters);
-  config->getParameters("Miro::TiltParameters", tiltParameters);
   delete config;
 
 #ifdef DEBUG
   cout << "  Pioneer parameters:" << endl << *pParams << endl;
-  cout << "  Camera parameters:" << endl 
-       << "    Pan:  " << endl << panParameters << endl
-       << "    Tilt: " << endl << tiltParameters <<endl;
 #endif
 
 
@@ -499,7 +491,7 @@ int main(int argc, char* argv[])
 
 
   // Initialize server daemon.
-  Service service(panParameters,tiltParameters);
+  Service service;
   Event event;
 
   // Signal set to be handled by the event handler.

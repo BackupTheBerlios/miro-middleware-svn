@@ -39,7 +39,7 @@ class PlayerBase : public Miro::Server
 
 public:
   // Initialization and Termination methods.
-  PlayerBase(int argc, char *argv[],PlayerClient* client_, int playerId, Miro::PanParameters panParameters, Miro::TiltParameters tiltParameters) throw (CORBA::Exception);
+  PlayerBase(int argc, char *argv[],PlayerClient* client_, int playerId) throw (CORBA::Exception);
   // Constructor.
 
   ~PlayerBase();

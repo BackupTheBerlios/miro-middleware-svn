@@ -25,7 +25,7 @@
 #include <orbsvcs/Notify/Notify_Default_Collection_Factory.h>
 #include <orbsvcs/Notify/Notify_Default_EMO_Factory.h>
 
-PioneerBase::PioneerBase(int argc, char *argv[], Miro::PanParameters panParameters, Miro::TiltParameters tiltParameters) :
+PioneerBase::PioneerBase(int argc, char *argv[]) :
   Super(argc, argv),
   reactorTask(this),
 
@@ -89,8 +89,7 @@ PioneerBase::PioneerBase(int argc, char *argv[], Miro::PanParameters panParamete
       pCameraControl = pCameraControlImpl->_this();
       pPanTiltImpl=new 
 	Canon::CanonPanTiltImpl(pioneerConnection, 
-				panParameters, 
-				tiltParameters, 
+				Pioneer::Parameters::instance()->panTiltParams, 
 				Pioneer::Parameters::instance()->cameraParams.upsideDown);
       pPanTilt = pPanTiltImpl->_this();
 #ifdef MIRO_HAS_DEPRECATED
@@ -189,33 +188,22 @@ main(int argc, char *argv[])
     Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
     Pioneer::Parameters * pioneerParameters = Pioneer::Parameters::instance();
 
-    Miro::PanParameters panParameters;
-    Miro::TiltParameters tiltParameters;
-    
     // Config file processing
     Miro::ConfigDocument * config = Miro::Configuration::document();
     config->setSection("Robot");
     config->getParameters("Miro::RobotParameters", *robotParameters);
     config->setSection("ActiveMedia");
     config->getParameters("Pioneer::Parameters", *pioneerParameters);
-    config->setSection("Camera");
-    config->getParameters("Miro::PanParameters", panParameters);
-    config->getParameters("Miro::TiltParameters", tiltParameters);
       
     MIRO_LOG_OSTR(LL_NOTICE,
 		  "  robot parameters:" << std::endl <<
 		  *robotParameters << std::endl <<
 		  "  pioneer parameters:" << std::endl <<
-		  *pioneerParameters << std::endl <<
-		  "  camera parameters:" << std::endl <<
-		  "    Pan:" << std::endl <<
-		  panParameters <<std::endl <<
-		  "    Tilt:" <<std::endl <<
-		  tiltParameters << std::endl
+		  *pioneerParameters << std::endl
 		  );
       
     MIRO_LOG(LL_NOTICE, "Initialize server daemon.");
-    PioneerBase pioneerBase(argc, argv, panParameters, tiltParameters);
+    PioneerBase pioneerBase(argc, argv);
     try {
       MIRO_LOG(LL_NOTICE, "Loop forever handling events.");
       pioneerBase.run(8);

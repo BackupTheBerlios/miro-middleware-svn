@@ -32,24 +32,34 @@ namespace Miro
   {
   public:
     //! Initializing constructor.
-    TiltImpl(Miro::TiltParameters panParameters);
+    TiltImpl(const Miro::TiltParameters& _panParameters);
     virtual ~TiltImpl();
 
 
+    
+    void setTargetTilt(double value);
     //! Tilt interface method implementation.
-    virtual void setTilt(double value) throw(Miro::EDevIO, Miro::EOutOfBounds);
-    //! Tilt interface method implementation.
-    virtual double getTilt() throw(Miro::EDevIO);
+    virtual double getTargetTilt() throw();
     //! Tilt interface method implementation.
     virtual TiltLimitsIDL getTiltLimits() throw(Miro::EDevIO);
 
+    bool testTilt(double value);
 
   protected:
     //-------------------------------------------------------------------------
     // protected object data
     //-------------------------------------------------------------------------
-    Miro::TiltParameters tiltParameters;
+    Miro::TiltParameters tiltParameters_;
+    double targetTilt_;
   };
+
+  inline bool TiltImpl::testTilt(double value) {
+    return ((value>=tiltParameters_.rangeMin) &&
+	    (value<=tiltParameters_.rangeMax));
+  }
+  
+  inline void TiltImpl::setTargetTilt(double value)
+  { targetTilt_=value; }
 }
 
 #endif // TiltImpl_h

@@ -35,25 +35,35 @@ namespace Miro
   {
   public:
     //! Initializing constructor.
-    PanTiltImpl(
-		Miro::PanParameters panParameters, 
-		Miro::TiltParameters tiltParameters);
+    PanTiltImpl(const Miro::PanTiltParameters& _panTiltParameters);
     virtual ~PanTiltImpl();
 
 
+    virtual void setTargetPosition(const PanTiltPositionIDL& value);
     //! PanTilt interface method implementation.
-    virtual void setPosition(const PanTiltPositionIDL& value) throw(Miro::EDevIO, Miro::EOutOfBounds);
-    //! PanTilt interface method implementation.
-    virtual PanTiltPositionIDL getPosition() throw(Miro::EDevIO);
+    virtual PanTiltPositionIDL getTargetPosition() throw();
     //! PanTilt interface method implementation.
     virtual PanTiltLimitsIDL getPanTiltLimits() throw(Miro::EDevIO);
 
+    bool testPosition(const PanTiltPositionIDL& value);
 
   protected:
-    //-------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     // protected object data
-    //-------------------------------------------------------------------------
+    //------------------------------------------------------------------------
+    PanTiltPositionIDL targetPosition_;
   };
+
+  inline bool PanTiltImpl::testPosition(const PanTiltPositionIDL& value) {
+    return ((value.panvalue<=panParameters_.rangeMax) && 
+	(value.panvalue>=panParameters_.rangeMin) && 
+	(value.tiltvalue<=tiltParameters_.rangeMax) && 
+	    (value.tiltvalue>=tiltParameters_.rangeMin));
+  }
+  
+  inline void PanTiltImpl::setTargetPosition(const PanTiltPositionIDL& value)
+  { targetPosition_=value; }
+
 }
 
 #endif // PanTiltImpl_h

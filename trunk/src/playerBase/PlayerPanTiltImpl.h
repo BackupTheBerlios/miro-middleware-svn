@@ -34,7 +34,7 @@ namespace Player
     //-------------------------------------------------------------------------
   public:
     // Constructor/Destructor
-    PlayerPanTiltImpl(Miro::PanParameters _panParameters, Miro::TiltParameters _tiltParameters, bool _upsideDown = false) throw(Miro::Exception);
+    PlayerPanTiltImpl(Miro::PanTiltParameters _panTiltParameters, bool _upsideDown = false) throw(Miro::Exception);
     virtual ~PlayerPanTiltImpl();
 
     //-------------------------------------------------------------------------
@@ -44,11 +44,6 @@ namespace Player
       throw(Miro::EOutOfBounds, Miro::EDevIO);
     virtual double getPan()
       throw(Miro::EDevIO);
-    /**
-     * returns the pan angle limits
-     */
-    //   Inherited implementation is enough
-    //    virtual Miro::PanLimitsIDL getPanLimits() throw(Miro::EDevIO);
 
     //-------------------------------------------------------------------------
     // from tilt.idl
@@ -57,11 +52,6 @@ namespace Player
       throw(Miro::EOutOfBounds, Miro::EDevIO);
     virtual double getTilt()
       throw(Miro::EDevIO);
-    /**
-     * returns the tilt angle limits
-     */
-    //   Inherited implementation is enough
-    //    virtual Miro::TiltLimitsIDL getTiltLimits() throw(Miro::EDevIO);
 
     //-------------------------------------------------------------------------
     // from panTilt.idl
@@ -71,9 +61,6 @@ namespace Player
     virtual void setPosition(const Miro::PanTiltPositionIDL & dest) 
       throw(Miro::EOutOfBounds, Miro::EDevIO);
     
-    //   Inherited implementation is enough
-    //    virtual Miro::PanTiltLimitsIDL getPanTiltLimits() throw(Miro::EDevIO);
-
 
     void setPlayerPTZProxy(PtzProxy * _playerPTZ);
 
