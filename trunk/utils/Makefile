@@ -34,6 +34,7 @@ DIRS =		\
 		notify \
 		logPlayer \
 		rangeSensor \
+		liveVideo \
 		qtTouchPad \
 		qtJoystick \
 		policyEditor \
@@ -42,7 +43,7 @@ ifneq (,$(findstring Sparrow99,$(MIRO_COMPONENTS)))
   DIRS +=	sparrowBoard
 endif
 
-#currently under develpment
+#currently under development
 OTHERS = 	makeParams
 
 #----------------------------------------------------------------------------
