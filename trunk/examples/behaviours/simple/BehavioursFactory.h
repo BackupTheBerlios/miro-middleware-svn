@@ -20,6 +20,7 @@
 #include "Straight.h"
 #include "Wander.h"
 #include "Timer.h"
+#include "MoveToPoint.h"
 
 #include <orbsvcs/CosNotifyCommC.h>
 
@@ -66,6 +67,7 @@ private:
   Straight straight;
   Wander wander;
   Timer timer;
+  MoveToPoint moveToPoint;
 
   Miro::MotionArbiter ma;
 };

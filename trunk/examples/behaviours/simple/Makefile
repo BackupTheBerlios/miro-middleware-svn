@@ -32,6 +32,7 @@ FILES = Parameters \
 	Straight \
 	Wander \
 	Timer \
+	MoveToPoint \
 	BehavioursFactory
 DEFS  = $(addsuffix .h,$(FILES))
 LSRC  = $(addsuffix .cpp,$(FILES))

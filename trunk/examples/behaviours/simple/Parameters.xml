@@ -25,5 +25,17 @@
       <config_parameter  name="Time" type="ACE_Time_Value" default="10,0" measure="sec" />
     </config_item>
     
+    <config_item name="MoveToPoint" parent="Miro::EventBehaviour">
+      <config_parameter  name="FastTranslation" type="long" default="500" measure="mm/s"/>
+      <config_parameter  name="SlowTranslation" type="long" default="300" measure="mm/s"/>
+      <config_parameter  name="MaxRotation" type="angle" default="60" measure="&deg;/s"/>
+      <config_parameter  name="TargetX" type="double" default="0." measure="mm"/>
+      <config_parameter  name="TargetY" type="double" default="0." measure="mm"/>
+      <config_parameter  name="CorrectOrientation" type="bool" default="false" />
+      <config_parameter  name="Angle" type="Angle" default="0." measure="&deg;"/>
+      <config_parameter  name="Radius" type="double" default="200" measure="mm"/>
+      <config_parameter  name="Delta" type="Angle" default="10." measure="&deg;"/>
+    </config_item>
+    
   </config_group>
 </config>

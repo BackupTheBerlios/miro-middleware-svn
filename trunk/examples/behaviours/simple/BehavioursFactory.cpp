@@ -41,6 +41,7 @@ SimpleBehavioursFactory::SimpleBehavioursFactory(Server& _server,
   straight(reactor_),
   wander(reactor_),
   timer(reactor_),
+  moveToPoint(ec_.in(), server_.namingContextName),
 
   ma(motion_.in(), &supplier_)
 {
@@ -53,6 +54,7 @@ SimpleBehavioursFactory::SimpleBehavioursFactory(Server& _server,
   bf->registerBehaviour(&straight);
   bf->registerBehaviour(&wander);
   bf->registerBehaviour(&timer);
+  bf->registerBehaviour(&moveToPoint);
 
   af->registerArbiter(&ma);
 }
