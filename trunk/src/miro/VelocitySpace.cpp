@@ -111,7 +111,7 @@ namespace Miro
 
         v_dist = sqrt(left*left + right*right);
 	if (v_dist <= _maxSpeed){
-            axis_direction = (fabs(atan2(l_value, r_value)) > M_PI_2)?-1.0:1.0;
+            axis_direction = (fabs(atan2(r_value, l_value)) > M_PI_2)?-1.0:1.0;
             axis_value = ((axis_direction*v_dist)/abs(maxVelocity_) + 1.0)/2.0;
             velocitySpace_[l_index][r_index] =
 	    (int)rint(255. * (((1. +
@@ -139,9 +139,9 @@ namespace Miro
   // add evaluation for obstacle
   //
 
-  void 
+  void
   VelocitySpace::addEvalForObstacle(Polygon &_robot,
-				    Polygon &_obstacle) 
+				    Polygon &_obstacle)
   {
 
     const int CURV_CNT = 6; // count (6)
@@ -440,9 +440,9 @@ namespace Miro
 
   // get distance between two mounted polygons
   //
-  double 
+  double
   VelocitySpace::getDistanceBetweenPolygonAndPolygon(Polygon const& _polygon1,
-						     Polygon const& _polygon2) 
+						     Polygon const& _polygon2)
   {
     Polygon::const_iterator a1, a2, b1, b2;
     double distance, minDistance = 0.0;
@@ -452,7 +452,7 @@ namespace Miro
 
         distance = getDistanceBetweenLineAndLine(*a1, *a2, *b1, *b2);
 
-        if(( (a1 == _polygon1.begin()) && 
+        if(( (a1 == _polygon1.begin()) &&
 	     (b1 == _polygon2.begin()) ) ||
 	   (distance < minDistance)) {
           minDistance = distance;
@@ -468,7 +468,7 @@ namespace Miro
   //
   void
   VelocitySpace::rotateMountedPolygon(Polygon &_polygon,
-				      Vector2d const& _point, double _angle) 
+				      Vector2d const& _point, double _angle)
   {
     Polygon::iterator i;
 
