@@ -9,8 +9,8 @@
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-#ifndef sparrowBase_hh
-#define sparrowBase_hh
+#ifndef PioneerBase_hh
+#define PioneerBase_hh
 
 #include "miro/Server.h"
 #include "miro/ReactorTask.h"
@@ -94,7 +94,7 @@ private:
   Miro::CanonCamera_var pCanonCamera;
   Miro::Gripper_var pGripper;
 };
-#endif
+#endif // PioneerBase
 
 
 
