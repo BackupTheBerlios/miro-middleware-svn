@@ -86,4 +86,13 @@
       </sonar>
     </pioneerBoard>
   </Pioneer1>
+  <B21>
+    <video>
+      <device>/dev/video0</device>
+      <subfield>odd</subfield>
+      <palette>bgr</palette>
+    <!-- Parameter Section for Steffan -->
+
+    </video>
+  </B21>
 </xml>
