@@ -32,17 +32,17 @@ namespace Miro {
 
             /* only take non-local types for subscription list */
             std::vector<std::string> sublist;
+            std::cout << "NotifyMulticast: Subscription list:" << std::endl;
             for (unsigned int i = 0; i < sets->length(); i++) {
-                if (!strcmp((*sets)[i].domain_name, config_->getDomain().c_str())) {
+                if (strcmp((*sets)[i].domain_name, config_->getDomain().c_str())) {
+                    std::cout << "NotifyMulticast: + " << (*sets)[i].domain_name << "/" << (*sets)[i].type_name << std::endl;
                     sublist.push_back((const char *)(*sets)[i].type_name);
                 }
             }
 
             /* set alien types */
             sets->length(sublist.size());
-            std::cout << "NotifyMulticast: Subscription list:" << std::endl;
             for (unsigned int i = 0; i < sublist.size(); i++) {
-                std::cout << "NotifyMulticast: + " << sublist[i] << std::endl;
                 (*sets)[i].domain_name = CORBA::string_dup(config_->getDomain().c_str());
                 (*sets)[i].type_name = CORBA::string_dup(sublist[i].c_str());
             }
@@ -50,7 +50,7 @@ namespace Miro {
             /* print offerd list */
             std::cout << "NotifyMulticast: Offered list:" << std::endl;
             for (int i = 0; i < oets->length(); i++) {
-                std::cout << "NotifyMulticast: + " << (*oets)[i].type_name << std::endl;
+                std::cout << "NotifyMulticast: + " << (*oets)[i].domain_name << "/" << (*oets)[i].type_name << std::endl;
             }
             
             oe.header.fixed_header.event_type.domain_name = CORBA::string_dup(config_->getDomain().c_str());

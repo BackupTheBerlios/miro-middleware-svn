@@ -142,12 +142,14 @@ namespace Miro {
 
                 timeoutHandlerId_ = reactor_->schedule_timer(
                                         timeoutHandler_,
-                                        timeoutHandlerInterval_,
+                                        0,
+                                        ACE_Time_Value(0,0),
                                         timeoutHandlerInterval_);
 
                 shId_ = reactor_->schedule_timer(
                            sh_,
-                           shInterval_,
+                           0,
+                           ACE_Time_Value(0, 0),
                            shInterval_);
 
                 if (timeoutHandlerId_ == -1) {
@@ -199,7 +201,7 @@ namespace Miro {
             delete sh_;
             delete timeoutHandler_;
             delete eventHandler_;
-            // delete sender_;
+            delete sender_;
             delete receiver_;
 
             LOG(&configuration_, "NotifyMulticast successfully terminated");
