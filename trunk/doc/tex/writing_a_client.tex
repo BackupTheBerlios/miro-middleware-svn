@@ -70,7 +70,9 @@ directory, but beside that, most of the above section also applies
 here. The only exception is, that we have to distinguish between
 normal source files (variable \texttt{sources}) and files (variable
 \texttt{tomocsources}) that need to be compiled with Qt's Meta Object
-Compile (\texttt{moc}).
+Compile (\texttt{moc}). Be sure to \textbf{not} include the header
+files into the \texttt{tomocsources} variable, but to the
+\texttt{sources} variable, otherwise they get "cleaned".
 
 \subsection{Makefile.am.lib.a}
 This Makefile builds a static library. The name of the library can be
