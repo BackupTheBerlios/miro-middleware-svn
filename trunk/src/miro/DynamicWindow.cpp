@@ -50,32 +50,17 @@ namespace Miro
   // set preferred direction
   //  
   void DynamicWindow::setPreferredDirection(double _prefDir) {
-	
-    // const double WHEEL_DISTANCE = 390.;  // in mm
-    const double MAX_SPEED = 100.;  // in cm 
-		
-    double trans, rot;
+			
+    double value_left, value_right;
 
     for(int left = minLeft_; left <= maxLeft_; left++) {
       for(int right = minRight_; right <= maxRight_; right++) {
 
-      	trans = exp(-1 * (((MAX_SPEED - ((double)(left + right) / 2.)) / (2 * MAX_SPEED)) *
-			  ((MAX_SPEED - ((double)(left + right) / 2.)) / (2 * MAX_SPEED))) / .3);
-      	rot = (0.5 + (_prefDir / 2.) + atan((double)left / (double)right) / (M_PI / 2.));
+	value_left = cos(_prefDir - M_PI / 4.) * left - sin(_prefDir - M_PI / 4.) * right;
+	value_right = sin(_prefDir - M_PI / 4.) * left + cos(_prefDir - M_PI / 4.) * right;
 
-	if(rot > 1) {
-	  rot = fabs(rot - 2);
-	}
-	else {
-	  if(rot < -1) {
-	    rot = fabs(rot + 2);
-	  }
-	  else {
-	    rot = fabs(rot);
-	  }
-	}
+	velocitySpace_[left+100][right+100] = (int)(255. * (1. + atan((double)value_left / fabs((double)value_right)) / (M_PI / 2.)) / 2.);
 
-	velocitySpace_[left+100][right+100] = (int)(64. * (1.0 * rot + 1.0 * trans));
       }
     }
   }	
@@ -86,9 +71,9 @@ namespace Miro
   void DynamicWindow::collisionCheck(std::vector<Vector2d> &_robot, std::vector<Vector2d> &_obstacle) {
     
     const double WHEEL_DISTANCE  = 390.;  // in mm
-    const double MIN_DISTANCE = 10.; // in mm
     const double MAX_POLYGON_DISTANCE = 500.;  // in mm
     const double BREAK_ACCELERATION = 2000.;  // in mm/sec2
+    const double MIN_DISTANCE = 100.;
     const int RESOLUTION = 4;
 
     double offset, angle, pointValue, fLeft, fRight;
@@ -170,7 +155,8 @@ namespace Miro
     for(int left = minLeft_; left < maxLeft_; left++) {
       for(int right = minRight_; right < maxRight_; right++) {
       
-        if(velocitySpace_[left+100][right+100] > biggestVelocitySpaceValue)
+        if((velocitySpace_[left+100][right+100] >= biggestVelocitySpaceValue) &&
+	   (left + right > (int)(biggestVelocitySpaceValueVelocity.imag() + biggestVelocitySpaceValueVelocity.real())))
         {
           biggestVelocitySpaceValue = velocitySpace_[left+100][right+100];
           biggestVelocitySpaceValueVelocity = Vector2d(left, right);
