@@ -17,7 +17,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "miro/SphinxSpeechC.h"
+#include "idl/SphinxSpeechC.h"
 #include "miro/Client.h"
 
 #include <iostream>
@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 	if (!sentence->valid) cout << "No sentence available at the moment" << endl;
 	else {
 	  cout << "word   startFrame endFrame confidence aScore lScore latticeDen phonePerplex" << endl;
-	  for(int i=0; i<sentence->sentence.length(); i++) {
+	  for(unsigned int i=0; i<sentence->sentence.length(); i++) {
 	    cout << sentence->sentence[i].word << " "
 		 << sentence->sentence[i].startFrame << " "
 		 << sentence->sentence[i].endFrame << " "
