@@ -1,6 +1,6 @@
 This is a Player interface for Miro.
 
-It needs a running istance of Player and provides Miro services for some of 
+It needs a running instance of Player and provides Miro services for some of 
  the player devices. Currently offered services are:
 Odometry
 Motion
