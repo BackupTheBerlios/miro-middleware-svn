@@ -33,10 +33,12 @@ namespace Video
     Device(Miro::ImageFormatIDL const & _format);
     virtual ~Device();
 
-    FILTER_PARAMETERS_FACTORY(Device);
+    void enqueueBrokerRequest(BrokerRequest const& _request);
 
+    //--------------------------------------------------------------------------
     // inherited interface methods
 
+    FILTER_PARAMETERS_FACTORY(Device);
 
     //! Forbid instances of the video interface here.
     virtual bool interfaceAllowed() const throw ();
@@ -44,23 +46,36 @@ namespace Video
     //    virtual void init(const Video::FilterParameters *);
     //    virtual int svc();
     
+    //--------------------------------------------------------------------------
     // static methods
 
     static Miro::VideoPaletteIDL getPalette(std::string const & _pal);
 
+    //--------------------------------------------------------------------------
     // static public constants
 
     static const unsigned int NUM_PALETTE_ENTRIES = Miro::YUV_422 + 1;
 
   protected:
+    //--------------------------------------------------------------------------
     // protected methods
     int getPixelSize(const int) const;
 
+    //--------------------------------------------------------------------------
+    // protected inherited methods
+    virtual void setBrokerRequests();
+
+    //--------------------------------------------------------------------------
+    // protected types
+    
+    //--------------------------------------------------------------------------
     // protected data
     Miro::Mutex mutex_;
     Miro::Condition condition_;
 
     int paletteLookup[NUM_PALETTE_ENTRIES];
+
+    BrokerRequestVector brokerRequest_;
   };
 };
 #endif

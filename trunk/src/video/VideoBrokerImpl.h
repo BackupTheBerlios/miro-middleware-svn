@@ -15,7 +15,7 @@
 
 namespace Video
 {
-  class Filter;
+  class Device;
 }
 
 namespace Miro
@@ -26,7 +26,7 @@ namespace Miro
   public:
     //! Initializing constructor.
     /** @param filter The root of the filter tree. */
-    VideoBrokerImpl(::Video::Filter * _filter);
+    VideoBrokerImpl(::Video::Device * _device);
     //! Virtual destructor. 
     virtual ~VideoBrokerImpl();
   
@@ -44,7 +44,7 @@ namespace Miro
     virtual FilterTreeIDL * filterTreeStats() ACE_THROW_SPEC (());
 
   protected:
-    ::Video::Filter * filter_;
+    ::Video::Device * device_;
   };
 }
 

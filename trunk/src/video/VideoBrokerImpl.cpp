@@ -10,15 +10,18 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "VideoBrokerImpl.h"
-#include "VideoFilter.h"
+#include "VideoBrokerLink.h"
+#include "VideoImpl.h"
+#include "VideoDevice.h"
+#include "BufferManager.h"
 
 #include "miro/TimeHelper.h"
 
 namespace Miro
 {
   // Implementation skeleton constructor
-  VideoBrokerImpl::VideoBrokerImpl(::Video::Filter * _filter) :
-    filter_(_filter)
+  VideoBrokerImpl::VideoBrokerImpl(::Video::Device * _device) :
+    device_(_device)
   {
   }
   
@@ -39,58 +42,110 @@ namespace Miro
     // locking harness
     Mutex mutex;
     Condition cond(mutex);
+
     Guard guard(mutex);
+    
+    ::Video::BrokerRequestVector request;
 	
     // process all filters
-    ::Video::Filter * filter = NULL;
     for (unsigned int i = 0; i < connections.length(); ++i) {
       // find corresponding filter
       std::string name = (char const *)connections[i].filter;
-      filter = filter_->findByName(name);
+      ::Video::Filter * filter = device_->findByInterfaceName(name);
 
-      if (filter == NULL)
+      if (filter == NULL) {
+	::Video::BrokerRequestVector::const_iterator first, last = request.end();
+	for (first = request.begin(); first != last; ++first) {
+	  delete first->link;
+	}
 	throw EOutOfBounds("Unknown filter name.");
+      }
+
+      assert(filter->interface() != NULL);
+      filter->interface()->checkClientId(connections[i].id);
 
       // install a callback for each
-      //     filter->getForNextImage(mutex, cond, connections[i].id, buffer, processed);
+      ::Video::BrokerLink * link = new ::Video::BrokerLink(mutex, cond, buffers[i]);
+      request.push_back(::Video::BrokerRequest(filter, link));
+    }
+
+    ::Video::BrokerRequestVector::const_iterator first, last = request.end();
+    for (first = request.begin(); first != last; ++first) {
+      device_->enqueueBrokerRequest(*first);
     }
 
     // wait for completion of all filters
     ACE_Time_Value maxWait = ACE_OS::gettimeofday() + ACE_Time_Value(0, 100000);
     bool buffersPending;
     do {
-      if (cond.wait(&maxWait) == -1)
+      if (cond.wait(&maxWait) == -1) {
+	// This will leak the broker links!
+	// Even worse, the processed once will be dangling
 	throw ETimeOut();
+      }
+
       buffersPending = false;
-      for (unsigned int i = 0; i != buffers->length(); ++i) {
-	if (buffers[i] == 0) {  // FIXME: need to verify buffer
+      for (first = request.begin(); first != last; ++first) {
+	if (!first->link->protectedProcessed()) {
 	  buffersPending = true;
 	  break;
 	}
       }
-    } while (buffersPending);
+    }
+    while (buffersPending);
 
-    // get time stamp for images
-    TimeIDL t;
-    //     timeA2C(filter->timeStamp(), t);
-    return t;
+
+    //  get time stamp for images
+    ACE_Time_Value t;
+    first = request.begin();
+    first->filter->
+      interface()->bufferManager()->bufferTimeStamp(connections[0].id);
+    // check for filter synchronisation
+    for (++first; first != last; ++first) {
+      assert(first->filter->
+	     interface()->bufferManager()->bufferTimeStamp(connections[first - request.begin()].id)
+	     == t);
+      
+    }
+    TimeIDL stamp;
+    timeA2C(t, stamp);
+
+    // clean up filter links
+    for (first = request.begin(); first != last; ++first) {
+      delete first->link;
+    }
+
+    return stamp;
   }
   
   void 
-  VideoBrokerImpl::releaseImageSet(const ConnectionSetIDL & /* connections */,
-				   const BufferSetIDL & /* buffers */)
+  VideoBrokerImpl::releaseImageSet(const ConnectionSetIDL & connections,
+				   const BufferSetIDL & buffers)
     ACE_THROW_SPEC ((EOutOfBounds))
   {
-    //Add your implementation here
+    for (CORBA::ULong i = 0; i < connections.length(); ++i) {
+      // find corresponding filter
+      std::string name = (char const *)connections[i].filter;
+      ::Video::Filter * filter = device_->findByInterfaceName(name);
+
+      if (filter == NULL) {
+	throw EOutOfBounds("Unknown filter name.");
+      }
+
+      assert(filter->interface() != NULL);
+      // check for id
+      filter->interface()->checkClientId(connections[i].id);
+      // release buffer
+      filter->interface()->bufferManager()->releaseReadBuffer(buffers[i]);
+    }
   }
   
   FilterTreeIDL * 
   VideoBrokerImpl::filterTreeStats() ACE_THROW_SPEC (())
   {
-    //Add your implementation here
     FilterTreeIDL * tree = new FilterTreeIDL();
 
-    filter_->filterTreeStats(*tree);
+    device_->filterTreeStats(*tree);
 
     return tree;
   }

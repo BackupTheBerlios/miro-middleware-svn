@@ -13,6 +13,7 @@
 
 #include "Parameters.h"
 #include "VideoFilterLink.h"
+#include "VideoBrokerLink.h"
 
 #include "miro/TimeSeries.h"
 #include "idl/VideoC.h"
@@ -89,6 +90,7 @@ namespace Video
 
     //! Flag indicating whether setting up an instance of the Video interface for the filter is allowed.
     virtual bool interfaceAllowed() const throw ();
+    Miro::VideoImpl * interface() const throw();
 
     //! The input format the filter instance is working on.
     const Miro::ImageFormatIDL& inputFormat() const;
@@ -148,6 +150,14 @@ namespace Video
 
     //! Search the filter tree for a filter by its name.
     Filter * findByName(std::string const & _name);
+    //! Search the filter tree for a filter by its interface name.
+    Filter * findByInterfaceName(std::string const & _name);
+    //! Number of image buffers provided
+    /**
+     * This is actually a configuration parameter and mostly 
+     * needed by the Video interface.
+     */
+    unsigned int outputBuffers() const throw();
 
   protected:
     //--------------------------------------------------------------------------
@@ -178,7 +188,15 @@ namespace Video
     //! Get address of linked input buffer.
     void inputBufferLink(unsigned long _linkIndex,
 			 unsigned long _bufferIndex, unsigned char const * _buffer);
+    //! Set the image index of the pending video broker getNextImageSet requests.
+    virtual void setBrokerRequests();
 
+  public:
+    //! Add a broker request for the next image.
+    /** This is done synchronised by the Video::Device */
+    void addBrokerRequest(BrokerLink * _brokerRequest);
+
+  protected:
     //! Internal connect method (no locking).
     void protectedConnect();
     //! Internal disconnect method (no locking).
@@ -262,6 +280,9 @@ namespace Video
      * links, like soft links in a file system.
      */
     FilterSuccVector succLink_;
+    //! VideoBroker request queue.
+    BrokerLinkVector brokerLink_;
+
 
     // Connection management.
 
@@ -364,6 +385,19 @@ namespace Video
 			  unsigned long _bufferIndex, 
 			  unsigned char const * _buffer) {
     preLink_[_linkIndex].buffer(_bufferIndex, _buffer);
+  }
+
+  inline
+  unsigned int
+  Filter::outputBuffers() const throw() {
+    assert(params_ != NULL);
+    return params_->buffers;
+  }
+
+  inline
+  Miro::VideoImpl *
+  Filter::interface() const throw() {
+    return interface_;
   }
 }
 

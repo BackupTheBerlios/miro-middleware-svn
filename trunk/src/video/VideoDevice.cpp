@@ -60,6 +60,26 @@ namespace Video
   }
 
   //--------------------------------------------------------------------
+  void
+  Device::enqueueBrokerRequest(BrokerRequest const& _request)
+  {
+    Miro::Guard guard(mutex_);
+    brokerRequest_.push_back(_request);
+  }
+
+  //--------------------------------------------------------------------
+  void
+  Device::setBrokerRequests()
+  {
+    Miro::Guard guard(mutex_);
+    BrokerRequestVector::const_iterator first, last = brokerRequest_.end();
+    for (first = brokerRequest_.begin(); first != last; ++first) {
+      first->filter->addBrokerRequest(first->link);
+    }
+    brokerRequest_.clear();
+  }
+
+  //--------------------------------------------------------------------
   bool
   Device::interfaceAllowed() const throw ()
   {

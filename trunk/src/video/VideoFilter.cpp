@@ -62,6 +62,8 @@ namespace Video
     for (first = succ_.rbegin(); first != last; ++first) {
       delete (*first);
     }
+    delete interface_;
+    delete bufferManager_;
   }
 
   /**
@@ -78,7 +80,7 @@ namespace Video
   BufferManager * 
   Filter::bufferManagerInstance() const 
   {
-    return new BufferManager(2, getImageSize(outputFormat()));
+    return new BufferManager(params_->buffers, getImageSize(outputFormat()));
   }
 
   /**
@@ -244,7 +246,8 @@ namespace Video
     timeFilter_.stop();
 
     // cout << "relable write buffer as readbuffer for all successors" << endl;
-    bufferManager_->switchWrite2ReadBuffer(outputBufferIndex_, successors_);
+    bufferManager_->switchWrite2ReadBuffer(outputBufferIndex_, 
+					   successors_ + brokerLink_.size());
 
     // cout << "set input buffer for all successors." << endl;
     {
@@ -267,6 +270,9 @@ namespace Video
 	}
       }
     }
+
+    // cout << "set index of all pending broker requests" << endl;
+    setBrokerRequests();
 
     // cout << "release read buffer of predecessor" << endl;
     if (pre_)
@@ -436,8 +442,15 @@ namespace Video
     else {
       return findByNameDown(_name);
     }
+  }
 
-#ifdef FIND_BY_INTERFACE_NAME
+  /**
+   * @param name The filter name to find.
+   * @ret A pointer to the filter. NULL if no such filter is found.
+   */
+  Filter *
+  Filter::findByInterfaceName(std::string const & _name)
+  {
     Filter * filter = NULL;
     if (interface_ != NULL && 
 	interface_->name() == _name)
@@ -445,22 +458,21 @@ namespace Video
     else {
       FilterVector::const_iterator first, last = succ_.end();
       for (first = succ_.begin(); first != last; ++first) {
-	filter = (*first)->findByName(_name);
+	filter = (*first)->findByInterfaceName(_name);
 	if (filter != NULL) {
 	  break;
 	}
       }
     }
     return filter;
-#endif
   }
 
   Filter * 
   Filter::findByNameDown(std::string const & _name) {
+    Filter * filter = NULL;
     if (name_ == _name)
-      return this;
+      filter = this;
     else {
-      Filter * filter = NULL;
       FilterVector::iterator first, last = succ_.end();
       for (first = succ_.begin(); first != last; ++first) {
 	filter = (*first)->findByNameDown(_name);
@@ -468,7 +480,23 @@ namespace Video
 	  break;
 	}
       }
-      return filter;
     }
+    return filter;
+  }
+
+  void 
+  Filter::setBrokerRequests() 
+  {
+    BrokerLinkVector::const_iterator first, last = brokerLink_.end();
+    for (first = brokerLink_.begin(); first != last; ++first) {
+      (*first)->setIndex(outputBufferIndex_);
+    }
+    brokerLink_.clear();
+  }
+
+  void
+  Filter::addBrokerRequest(BrokerLink * _brokerRequest)
+  {
+    brokerLink_.push_back(_brokerRequest);
   }
 }

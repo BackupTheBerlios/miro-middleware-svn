@@ -11,7 +11,9 @@
 #ifndef VideoImpl_h
 #define VideoImpl_h
 
-#include "idl/VideoS.h"
+#include "Parameters.h"
+
+#include "miro/VideoS.h"
 #include "miro/Synch.h"
 
 #include <set>
@@ -22,7 +24,6 @@ namespace Video
 {
   class Filter;
   class BufferManager;
-  class VideoInterfaceParameters;
 };
 
 //------------------------ VideoImpl ---------------------------//
@@ -41,6 +42,7 @@ namespace Miro
     virtual ~VideoImpl();
 
     Video_ptr ior() const;
+    bool checkClientId(CORBA::ULong _id, bool _nothrow = false) const;
     unsigned int connections() const;
     const std::string&  name() const;
     ::Video::BufferManager * bufferManager();
@@ -83,15 +85,21 @@ namespace Miro
   };
 
   inline
-  ::Video::BufferManager *
-  VideoImpl::bufferManager() {
-    return pBufferManager_;
-  }
-
-  inline
   Video_ptr
   VideoImpl::ior() const {
     return pVideo;
+  }
+
+  inline
+  const std::string&
+  VideoImpl::name() const {
+    return params_.name;
+  }
+
+  inline
+  ::Video::BufferManager *
+  VideoImpl::bufferManager() {
+    return pBufferManager_;
   }
 }
 

@@ -41,7 +41,7 @@ namespace Miro
 
     imageHandle_.format = filter_->outputFormat();
     imageHandle_.key = shmget(0, 
-			      getImageSize(filter_->outputFormat()) * params_.buffers,
+			      getImageSize(filter_->outputFormat()) * filter_->outputBuffers(),
 			      IPC_CREAT|0x1ff);
     if (imageHandle_.key == -1) {
       throw Miro::CException(errno, "Failed creating shared memory segment!");
@@ -51,12 +51,12 @@ namespace Miro
 	  throw Miro::CException(errno, "Failed attaching shared memory segment!");
     }
 
-    imageHandle_.offset.length(params_.buffers);
-    for (unsigned int i = 0; i < params_.buffers; ++i) {
+    imageHandle_.offset.length(filter_->outputBuffers());
+    for (unsigned int i = 0; i < filter_->outputBuffers(); ++i) {
       imageHandle_.offset[i] = i * getImageSize(filter_->outputFormat());
     }
 
-    pBufferManager_ = new BufferManager(params_.buffers,
+    pBufferManager_ = new BufferManager(filter_->outputBuffers(),
 					getImageSize(filter_->outputFormat()),
 					pBufferArray_);
 
@@ -120,12 +120,7 @@ namespace Miro
     ACE_THROW_SPEC((EOutOfBounds))
   {
     TimeIDL stamp;
-
-    {
-      Guard guard(clientMutex_);
-      if (clientId_.find(_id) == clientId_.end())
-	throw Miro::EOutOfBounds("Unregistered client id.");
-    }
+    checkClientId(_id);
 
     _buffer = pBufferManager_->acquireCurrentReadBuffer();
     timeA2C(pBufferManager_->bufferTimeStamp(_buffer), stamp);
@@ -138,12 +133,7 @@ namespace Miro
     ACE_THROW_SPEC((EOutOfBounds, ETimeOut))
   {
     TimeIDL stamp;
-
-    {
-      Guard guard(clientMutex_);
-      if (clientId_.find(_id) == clientId_.end())
-	throw Miro::EOutOfBounds("Unregistered client id.");
-    }
+    checkClientId(_id);
 
     _buffer = pBufferManager_->acquireNextReadBuffer();
     timeA2C(pBufferManager_->bufferTimeStamp(_buffer), stamp);
@@ -155,11 +145,7 @@ namespace Miro
   VideoImpl::releaseImage(CORBA::ULong _id, CORBA::ULong _buffer)
     ACE_THROW_SPEC((EOutOfBounds))
   {
-    {
-      Guard guard(clientMutex_);
-      if (clientId_.find(_id) == clientId_.end())
-	throw Miro::EOutOfBounds("Unregistered client id.");
-    }
+    checkClientId(_id);
     pBufferManager_->releaseReadBuffer(_buffer);
   }
 
@@ -241,8 +227,13 @@ namespace Miro
     return subImage;
   }
 
-  const std::string&
-  VideoImpl::name() const {
-    return params_.name;
+  bool
+  VideoImpl::checkClientId(CORBA::ULong _id, bool _nothrow) const
+  {
+    Guard guard(clientMutex_);
+    bool found = clientId_.find(_id) != clientId_.end();
+    if (!found && !_nothrow)
+      throw Miro::EOutOfBounds("Unregistered client id.");
+    return found;
   }
-};
+}

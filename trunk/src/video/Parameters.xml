@@ -13,11 +13,11 @@
 
     <config_item name="VideoInterface" parent="Miro::Config" final="false">
       <config_parameter name="name" type="string" default="Video" />
-      <config_parameter name="buffers" type="unsigned int" default="4" />
     </config_item>
 
     <config_item name="Filter" parent="Miro::Config" final="false">
       <config_parameter name="name" type="string" default="Filter" />
+      <config_parameter name="buffers" type="unsigned int" default="4" />
       <config_parameter name="interfaceInstance" type="bool" default="false" />
       <config_parameter name="interface" type="VideoInterfaceParameters" />
     </config_item>
