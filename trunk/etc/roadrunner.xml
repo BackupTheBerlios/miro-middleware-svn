@@ -287,26 +287,28 @@
 		    <parameter name="Filter" >
 		      <parameter value="ROIListDummy" name="Name" />
 		      <parameter value="ROIListDummy" name="Type" />
+		    </parameter>
+
+		    <parameter name="Filter" >
+		      <parameter value="RGBtoGray" name="Name" />
+		      <parameter value="RGBtoGray" name="Type" />
+		      <parameter name="BackLink" >
+			<parameter value="ROIListDummy" />
+		      </parameter>
 		      <parameter name="Successor" >
 			<parameter name="Filter" >
-			  <parameter value="RGBtoGray" name="Name" />
-			  <parameter value="RGBtoGray" name="Type" />
+			  <parameter value="Sobel" name="Type" />
+			  <parameter value="SobelVertical" name="Name" />
+			</parameter>
+			<parameter name="Filter" >
+			  <parameter value="Sobel" name="Type" />
+			  <parameter value="SobelHorizontal" name="Name" />
 			  <parameter name="Successor" >
 			    <parameter name="Filter" >
-			      <parameter value="Sobel" name="Type" />
-			      <parameter value="SobelVertical" name="Name" />
-			    </parameter>
-			    <parameter name="Filter" >
-			      <parameter value="Sobel" name="Type" />
-			      <parameter value="SobelHorizontal" name="Name" />
-			      <parameter name="Successor" >
-				<parameter name="Filter" >
-				  <parameter value="Canny" name="Type" />
-				  <parameter value="Canny" name="Name" />
-				  <parameter name="BackLink" >
-				    <parameter value="SobelVertical" />
-				  </parameter>
-				</parameter>
+			      <parameter value="Canny" name="Type" />
+			      <parameter value="Canny" name="Name" />
+			      <parameter name="BackLink" >
+				<parameter value="SobelVertical" />
 			      </parameter>
 			    </parameter>
 			  </parameter>
@@ -341,7 +343,6 @@
 				<parameter value="RGBtoGray" />
 			      </parameter>
 			    </parameter>
-
 			    <parameter name="Filter" >
 			      <parameter value="AttentionBall" name="Type" />
 			      <parameter value="AttentionBall" name="Name" />
@@ -470,7 +471,7 @@
 		      <parameter value="CollectAllFeatures" name="Type" />
 		      <parameter value="CollectAllFeaturesBasic" name="Name" />
 		      <parameter name="BackLink" >
-			<parameter value="AttentionBall" />
+			<parameter value="NeuralNetBall" />
 			<parameter value="AttentionGoal" />
 			<parameter value="AttentionCornerPoles" />
 			<parameter value="ColorCount" />
@@ -481,7 +482,7 @@
 		      <parameter value="CollectAllFeatures" name="Type" />
 		      <parameter value="CollectAllFeaturesFull" name="Name" />
 		      <parameter name="BackLink" >
-			<parameter value="AttentionBall" />
+			<parameter value="NeuralNetBall" />
 			<parameter value="AttentionGoal" />
 			<parameter value="AttentionCornerPoles" />
 			<parameter value="BlueLeftPost" />
@@ -522,27 +523,22 @@
         <parameter value="5" name="Interval" />
       </parameter>
 
-      <parameter name="YUV422toRGBIpp">
-        <parameter value="true" name="InterfaceInstance" />
-	<parameter name="Interface" >
-	  <parameter value="RGB" name="Name" />
-	</parameter>
-      </parameter>
-
       <parameter name="ROIListDummy">
 	<parameter value="0" name="X" />
-	<parameter value="100" name="Y" />
+	<parameter value="80" name="Y" />
 	<parameter value="640" name="Width" />
-	<parameter value="380" name="Height" />
+	<parameter value="400" name="Height" />
       </parameter>
-
+      <parameter name="RGBtoGray">
+        <parameter value="1" name="UseROIFrom" />
+      </parameter>
       <parameter name="SobelVertical">
         <parameter value="VERTICAL" name="Orientation" />
       </parameter>
       <parameter name="SobelHorizontal">
         <parameter value="HORIZONTAL" name="Orientation" />
       </parameter>
-      
+
       <parameter name="Shrink4" >
 	<parameter value="NN" name="Interpolation" />
       </parameter>
@@ -561,10 +557,19 @@
       <parameter name="AttentionBall" >
 	<parameter value="false" name="Random" />
 	<parameter value="false" name="Rotate" />
+	<parameter value="false" name="LimitToOneBall" />
+	<parameter value="2" name="MinBlobWidth" />
+	<parameter value="2" name="MinBlobHeight" />
+	<parameter value="4" name="MinBlobPixels" />
+	<parameter value="0.5" name="MinBlobFill" />
       </parameter>
       <parameter name="AttentionCornerPoles">
 	<parameter value="false" name="Rotate" />
 	<parameter value="false" name="Random" />
+	<parameter value="2" name="MinBlobWidth" />
+	<parameter value="2" name="MinBlobHeight" />
+	<parameter value="4" name="MinBlobPixels" />
+	<parameter value="0.3" name="MinBlobFill" />
       </parameter>
 
       <parameter name="IndextoEdgeWhiteBlue">
