@@ -19,6 +19,8 @@
 #include <tao/Version.h>
 #if (TAO_MAJOR_VERSION > 1) || ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION >= 4))
 #include <tao/Any_Impl.h>
+#else
+#include <tao/Marshal.h>
 #endif
 
 #include <ace/FILE_Connector.h>
@@ -156,16 +158,12 @@ namespace Miro
 
 	  // obtain type code id
 	  CORBA::Long typeId = -1;
-	  if (_event.remainder_of_body.impl() != NULL) {
-	    CORBA::TypeCode_var tc = _event.remainder_of_body.type();
-	    if (tc.in() != CORBA::_tc_null) {
-	      typeId = typeRepository_.typeID(tc.in());
-	      //	      std::cout << "*" << std::flush;
-	    }
+	  CORBA::TypeCode_var tc = _event.remainder_of_body.type();
+	  if (tc.in() != CORBA::_tc_null) {
+	    typeId = typeRepository_.typeID(tc.in());
 	  }
 	  
 #if (TAO_MAJOR_VERSION > 1) || ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION >= 4))
-
 
 	  // if not type code repository full
 	  if (typeId != -2 && 

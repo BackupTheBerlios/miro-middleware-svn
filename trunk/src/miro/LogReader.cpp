@@ -25,6 +25,8 @@
 #if (TAO_MAJOR_VERSION > 1) || ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION >= 4))
 #include <tao/Any_Impl.h>
 #include <tao/Any_Unknown_IDL_Type.h>
+#else
+#include <tao/Marshal.h>
 #endif
 
 #include <cstdio>
@@ -256,7 +258,7 @@ namespace Miro
 	ACE_OS::memcpy (mb.rd_ptr (), begin, size);
 	
 	// Stick it into the Any. It gets duplicated there.
-	x._tao_replace (tc,
+	_event.remainder_of_body._tao_replace (tc,
 			istr_->byte_order (),
 			&mb);
       }
