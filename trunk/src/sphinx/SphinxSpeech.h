@@ -21,7 +21,7 @@ namespace Miro
     ~SphinxSpeechServer();
 
   protected:
-    string miroRoot;
+    std::string miroRoot;
 
     SphinxSpeechImpl speechImpl;
     Miro::SphinxSpeech_var pSpeech;

@@ -7,6 +7,8 @@
 
 namespace Miro {
  
+  using std::string;
+
   /**
      @param dictFileName Name (with full path) of the dictionary file for Sphinx
      
