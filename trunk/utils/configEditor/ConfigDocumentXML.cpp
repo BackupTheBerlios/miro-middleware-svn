@@ -25,9 +25,14 @@
 #include <qstring.h>
 
 #include <algorithm>
+#include <iostream>
 
 const QString ConfigDocumentXML::XML_DOCTYPE("MiroConfigDocument");
 const QString ConfigDocumentXML::XML_TAG("config");
+
+
+using std::cout;
+using std::endl;
 
 //------------------------------------------------------------------------------
 // public methods
@@ -57,7 +62,7 @@ ConfigDocumentXML::contextMenu(QPopupMenu& _menu)
   QListViewItem * item = listViewItem()->firstChild();
   while (item != NULL) {
     childSections.push_back(item->text(0));
-    cout << childSections.back() << endl;
+    std::cout << childSections.back() << std::endl;
     item = item->nextSibling();
   }
 

@@ -26,6 +26,10 @@
 #include <qmessagebox.h>
 
 #include <algorithm>
+#include <iostream>
+
+using std::cout;
+using std::endl;
 
 const QString Section::XML_TAG("section");
 
