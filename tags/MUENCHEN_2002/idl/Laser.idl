@@ -1,0 +1,88 @@
+// -*- idl -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
+// for documentation see Miro/doc
+// 
+// (c) 1999,2000
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// Authors: 
+//    Stefan Enderle, 
+//    Stefan Sablatnoeg, 
+//    Hans Utz
+// 
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef Laser_idl
+#define Laser_idl
+
+#include "Exception.idl"
+#include "Time.idl"
+#include "Position.idl"
+#include "RangeSensor.idl"
+
+module Miro
+{
+  /**
+   * Number of beams in a laser scan.
+   *
+   * Note: This constant may be deleted in a later version, when the
+   * @ref LaserScanDescriptionIDL is fully used.
+   */
+  const long LASER_NUM       =  361;
+
+  const long LASER_MAX_VALUE = 8000;
+
+  /**
+   * Struct representing a laser scan with @ref LASER_NUM distance
+   * readings. 
+   */
+  struct LaserScanIDL
+  {
+    /**
+     * Time stamp associated to the laser scan.
+     */
+    TimeIDL   time;
+    /**
+     * @ref Position stamp associated to the laser scan
+     */
+    PositionIDL position;
+    /**
+     * Validity of the positionstamp
+     */
+    boolean  positionValid;
+    /**
+     * Array of laser distance values.
+     */
+    long     value[LASER_NUM];
+  };
+
+  /**
+   * Interface to the laser scanner.
+   */
+  interface Laser : RangeSensor
+  {
+    /**
+     * Get the current laser scan. This call immediately
+     * returns the last available laser scan.
+     */
+    LaserScanIDL            getScan();
+
+    /**
+     * Get the next laser scan. This call blocks until the next laser
+     * scan is read and then returns this scan.
+     *
+     * @raises ETimeOut
+     */
+    LaserScanIDL            getWaitScan() raises(ETimeOut);
+  };
+};
+
+#endif
+
+
+
+

@@ -1,0 +1,54 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef SparrowPanTilt_idl
+#define SparrowPanTilt_idl
+
+#include "Pan.idl"
+
+module Miro
+{
+  //! The specialized pan position specification of the Sparrow99 pan unit.
+  struct PanPositionIDL
+  {
+    //! Panning angle in rad.
+    double angle;
+    //! The accuracy of the angle in rad.
+    /**
+     * The Sparrow99 pan can't tell, if the last setPan command is
+     * already completed. Therefore this value is derived from the
+     * last time setPan was called.
+     *
+     * (angle +/- accuracy) therefor is the range within which
+     * the actual panning angle resides.
+     */
+    double accuracy;
+  };
+
+  //! Specialized interface for the Sparrows99 pan unit.
+  /**
+   * Yes, the name is misleading. The Sparrow99 once had a pantilt unit. But
+   * it was downgraded to a simple pan unit...
+   */
+  interface SparrowPanTilt : Pan
+  {
+    //! Is the pan unit still in motion?
+    boolean panning();
+
+    //! Get pan position and accuracy.
+    PanPositionIDL currentPan();
+  };
+};
+
+#endif
+
+
+
+

@@ -1,0 +1,131 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef DirectedPerceptionPanTilt_idl
+#define DirectedPerceptionPanTilt_idl
+
+#include "PanTilt.idl"
+
+module Miro
+{
+  //! Struct representing a pantilt speed and acceleration configuration.
+  struct PanTiltSpdAccIDL
+  {
+    //! Target pan speed value in rad/s.
+    double     targetpanspeed;
+    //! Target tilt speed value in rad/s.
+    double     targettiltspeed;
+    //! Base pan speed value in rad/s.
+    double     panbasespeed;
+    //! Minimum pan speed value in rad/s.
+    double     panminspeed;
+    //! Maximum pan speed value in rad/s.
+    double     panmaxspeed;
+    //! Base tilt speed value in rad/s.
+    double     tiltbasespeed;
+    //! Minimum tilt speed value in rad/s.
+    double     tiltminspeed;
+    //! Maximum tilt speed value in rad/s.
+    double     tiltmaxspeed;
+    //! Pan acc value in rad/s^2.
+    double     panacc;
+    //! Tilt acc value in rad/s^2.
+    double     tiltacc;
+  };
+
+  //! Struct representing a pantilt limits  configuration.
+  struct PanTiltLimitsIDL
+  {
+    //! Minimal pan position.
+    double minpanposition;
+    //! Maximal pan position.
+    double maxpanposition;
+    //! Minimal tilt position.
+    double mintiltposition;
+    //! Maximal tilt position.
+    double maxtiltposition;
+  };
+
+  //! Struct representing a pantilt hold and move power configuration.
+  struct PanTiltPowersIDL 
+  {
+    //! Hold power pan.
+    /**
+     * Possible values are 0, 1, 2, corresponding to
+     * off, low, regular.
+     */
+    long panhold;
+
+    //! Hold power tilt.
+    /**
+     * Possible values are 0, 1, 2, corresponding to
+     * off, low, regular.
+     */
+    long tilthold;
+
+    //! Move power pan.
+    /**
+     * Possible values are 0, 1, 2, corresponding to
+     * off, low, regular.
+     */
+    long panmove;
+
+    //! Move power.
+    /**
+     * Possible values are 0, 1, 2, corresponding to
+     * off, low, regular.
+     */
+    long tiltmove;
+
+  };
+
+  //! Interface to the panTilt unit manufactured by Directed Perception.
+  /**
+   * This pantilt unit is mounted on the B21 robot.  It registers as
+   * "PanTilt" at the naming service in the specified naming context.
+   */
+  interface DirectedPerceptionPanTilt : PanTilt
+  {
+    //! Move the PTU to the specified destination.
+    /** The call awaits completion of the movement.
+     */
+    void setWaitPosition( in Miro::PanTiltPositionIDL dest) 
+      raises(Miro::EOutOfBounds, Miro::EDevIO);
+
+    //! Set the actual speed and acceleration settings.
+    void setSpdAcc( in PanTiltSpdAccIDL dest )
+      raises(Miro::EDevIO, Miro::ETimeOut);
+
+    //! Query the current speed and acceleration setting.
+    /**
+     * @return The actual speed and acceleration settings of the PTU.
+     */
+    PanTiltSpdAccIDL  getSpdAcc() raises(Miro::EDevIO, Miro::ETimeOut);
+
+    //! Query the limits of the PTU.
+    /**
+     * @return The actual limits settings of the PTU.
+     */
+    PanTiltLimitsIDL  getLimits() raises(Miro::EDevIO, Miro::ETimeOut);
+
+    //! Set the actual powers settings.
+    void setPowers( in PanTiltPowersIDL dest ) 
+      raises(Miro::EDevIO, Miro::ETimeOut);
+
+    //! Query the current power settings of the PTU.
+    /**
+     * @return The actual powers settings of the PTU.
+     */
+    PanTiltPowersIDL  getPowers() 
+      raises(Miro::EDevIO, Miro::ETimeOut);
+  };
+};
+
+#endif // DirectedPerceptionPanTilt_idl

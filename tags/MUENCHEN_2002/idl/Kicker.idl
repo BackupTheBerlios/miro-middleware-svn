@@ -1,0 +1,36 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef Kicker_idl
+#define Kicker_idl
+
+#include "Time.idl"
+#include "Exception.idl"
+
+module Miro
+{
+  //! Interface for a simple kicking device as used in the RoboCup scenario.
+  interface Kicker
+  {
+    //! The kick.
+    /**
+     * The kicking device is kicked once and stays that way for the
+     * specified amount of time.
+     *
+     * @param time The time to kick.
+     * @throw EOutOfBounds is thrown, if the kicking time is higher
+     * than the maximum allowed kicking time.
+     * @throw EDevIO is thrown to indicate low level device
+     * problems.
+     */
+    void kick(in TimeIDL time) raises(EOutOfBounds, EDevIO);
+  };
+};
+#endif // kicker_idl

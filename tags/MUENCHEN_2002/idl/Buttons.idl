@@ -1,0 +1,76 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef Buttons_idl
+#define Buttons_idl
+
+#include "Exception.idl"
+#include "Time.idl"
+
+module Miro
+{
+  //! Namespace holding type definitions for the Buttons interface.
+  module Button
+  {
+    //! Data type specifying the event type.
+    enum Event { ON_PRESS, ON_RELEASE };
+  };
+  
+  //! Data type holding the button status in case of a button event. 
+  /**
+   * This data type is shipped via the event channel.
+   */
+  struct ButtonStatusIDL 
+  {
+    //! Time the button event was created.
+    TimeIDL time;
+    //! The id of the button causing the event.
+    unsigned long number;
+    //! The type of event.
+    Button::Event event;
+  };
+
+  //! Interface to the buttons service.
+  /**
+   * Many robots have some buttons for simple user interaction.
+   * Press to start, press to stop, or what so ever.
+   *
+   * This is a simple polling interface that every buttons service
+   * should be able to support. All available buttons should be
+   * continuosly numbered, starting with zero.
+   *
+   * Note the all robots also can braodcast button events via 
+   * the notification service.
+   *
+   * Event declaration:
+   * - type name = Button
+   * - remainder of body = @ref ButtonStatusIDL
+   */
+  interface Buttons
+  {
+    //! Get the current state of a single button.
+    /**
+     * @param number The id of the button.
+     *
+     * @throw ETOutOfBounds is thrown, when number excedes the
+     * the number of buttons returned by @ref numberOfButtons.
+     * @throw EDevIO is thrown to indicate low level device problems.
+     * @return The state. True if pressed, false otherwise.
+     */
+    boolean isPressed(in unsigned long number) raises(EDevIO, EOutOfBounds);
+
+    //! Get the number of available buttons.
+    /**
+     * @return The number of buttons available on the specific platform.
+     */
+    unsigned long numberOfButtons();
+  };
+};
+#endif

@@ -1,0 +1,306 @@
+% detect interpreter: pdflatex or latex
+\newif\ifpdf
+\ifx\pdfoutput\undefined
+\pdffalse
+\else
+\pdftrue
+\fi
+
+\documentclass[10pt]{book}
+
+\ifpdf
+\usepackage{graphicx} % enhanced graphics usage
+\else
+\usepackage[dvips]{graphicx} % enhanced graphics usage
+\fi
+\usepackage{a4} % A4 paperformat
+\usepackage{isolatin1} % for input of 8 bits character
+\usepackage{makeidx} % enable indexing
+\usepackage{verbatim} % better verbatim environment
+\usepackage{epsfig}
+\usepackage{xspace} % add extra space at the end of the word if necessary
+\usepackage{color} % provides standard LaTeX colors
+\usepackage{fancyhdr}
+\usepackage{float} % float environment enhancements
+\usepackage{alltt} % defines alltt environment which is like verbatim, but allows some additional formating
+\usepackage{listings} % pritty print of code-listings
+\ifpdf
+% this package should be loaded last
+\usepackage[colorlinks=true,
+            pdfstartview=FitV,
+            linkcolor=blue,
+            citecolor=blue,
+            urlcolor=blue]{hyperref}
+\fi
+
+%% insert the common definitions
+\input{tex_definitions}
+
+%% special definitions
+\setcounter{tocdepth}{3}
+
+%% =============================================================================
+
+\begin{document}
+%\maketitle
+
+\thispagestyle{empty}   
+\begin{center}
+  \vfill
+  \ifpdf
+  \includegraphics[width=5in]{../fig/signature.png}\\
+  \else
+  \includegraphics[width=5in]{../fig/signature.ps}\\
+  \fi
+  \vspace{30 mm}
+  {\Xbombastic \miro}\\
+  \vspace{10 mm}
+  {\LARGE \textbf{Manual}}\\
+  \vspace{10 mm}
+  \textbf{Version 0.9.2}\\
+  \vspace{10 mm}
+  \today\\
+  \vfill
+\end{center}
+
+\newpage
+
+\begin{center}
+  \ifpdf
+  \includegraphics[width=5in]{../fig/pincolla.png}
+  \else
+  \includegraphics[width=5in]{../fig/pincolla.ps}
+  \fi
+  \bigskip 
+  For more paintings, see {\tt http://www.bcn.fjmiro.es/}
+\end{center}
+
+\pagestyle{headings}
+
+\newpage
+\tableofcontents
+
+%% =============================================================================
+
+\chapter{Introduction}
+
+\miro is a distributed object oriented framework for mobile robot
+control, based on CORBA (Common Object Request Broker
+Architecture) \cite{OMG:CORBA-standart} technology. The \miro core
+components have been developed in C++ for Linux. But due to the
+programming language independency of CORBA further components can be
+written in any language and on any platform that provides CORBA
+implementations.
+
+The \miro core components have been developed under the aid of ACE
+(Adaptive Communications Environment) \cite{ACE-Paper, ACE-Manual}, an
+object oriented multi-platform framework for OS-independent
+interprocess, network and real time communication. They use TAO (The
+ACE ORB) \cite{TAO-paper} as their ORB (Object Request Broker), a
+CORBA implementation designed for high performance and real time
+applications. Therefore \miro should be easily portable to any other
+OS, where ACE and TAO run on.  These are many Unix clones, Windows NT
+and some real time operating systems.
+
+\miro is currently available for the RWI B21 platform, the Activmedia
+Pioneer 1, and the \sparrow architecture developed at the University
+of Ulm, we are convinced, that other ports can be done straight
+forward.
+
+\miro was built since the existing robot control architectures didn't
+suffice our needs of usability, reliability, scalability and
+portability.
+
+We used C++ due to its advantages in big projects, since it was
+especially designed for big projects. We have learned the hard way,
+that this is a serious requirement, for projects like a mobile robot
+control architecture.
+
+We use multi processing, multithreading and the CORBA technology since
+most robotics applications are inherently concurrent and distributed.
+The hardware devices, like sensors and actuators run concurrently and
+due to the constant lack of computing power especially in computer
+vision, tend to reside on multiple computers. And as soon as
+cooperative behavior of multiple autonomous robots is of interest, the
+system as a whole is distributed anyways.
+
+%We used an object oriented approach, since real live objects are
+%concerned. And on the other hand, OO is just state of the art and you
+%need good arguments to start a new project ignoring object
+%orientation.
+
+And last but not least we use ACE and TAO since these are multi
+platform, high performance libraries which proved to be very
+sophisticated in terms of usability, portability and scalability. ---
+Additionally, they are open source libraries. They haven't
+disappointed us yet, to the contrary.
+
+\section{The \miro Group}
+
+The \miro core developers are (in alphabetical order): 
+\begin{itemize}
+  \item Stefan Enderle
+  \item Gerhard Kraetzschmar
+  \item Gerd Mayer
+  \item Stefan Sablatnög
+  \item Steffen Simon
+  \item Hans Utz
+\end{itemize}
+
+\section{Installation and Setup}
+
+Ask your system administrator if there exists a central installation,
+or whether it would be more convenient to prepare a central
+installation. Prerequisites for installing \miro is that you have a
+running QT (Version $>$ 2.2.x) as well as an ACE/TAO installation.
+
+\subsection{ACE and TAO Installation}
+
+ACE/TAO is a large software package with many configuration options
+affecting the build process as well as its runtime features. Therfore
+we summarize here our experience with the ACE/TAO installation.
+
+At the time of this writing we suggest always to use the
+latest beta of ACE/TAO instead of the latest stable version ---
+currently 5.2.2/1.2.2. TAO is under rapid development and \miro
+utilizes some of its latest features (like the CORBA Notification
+Service).
+
+The options that should be set additionally in the {\tt
+  platform\_macros.GNU} file (to be found under
+$<$ACE-directory$>$/include/makeinclude/) are the following:
+
+\begin{lstlisting}[frame=tb]{}
+debug=0
+qt_reactor=1
+\end{lstlisting}
+
+Additionally, for memory footprint reduction you might also add the 
+following:
+
+\begin{lstlisting}[frame=tb]{}
+DEFFLAGS=-DACE_USE_RCSID=0
+ACE_COMPONENTS=FOR_TAO
+\end{lstlisting}
+
+If you want to build \miro only for a specific platform, insert the desired
+name of one of the following supported platforms: B21, Pioneer1 or Sparrow99
+
+\begin{lstlisting}[frame=tb]{}
+MIRO_COMPONENTS=B21
+\end{lstlisting}
+
+We also recommend to read the installation instructions provided
+by ACE carefully. We admit, the installation isn't entirely trivial.
+
+To compile and run programs that use the ACE/TAO toolkit, also the
+environment variables {\tt ACE\_ROOT} and {\tt TAO\_ROOT} need
+to be set to the appropriate root directories of your ACE/TAO
+installation. For the bash shell the following lines in your local
+{\tt .bashrc} file should do the job:
+
+\begin{lstlisting}[frame=tb]{}
+export ACE_ROOT=<path to the ACE directory>
+export TAO_ROOT=$ACE_ROOT/TAO
+export LD_LIBRARY_PATH=$ACE_ROOT/ace/:$LD_LIBRARY_PATH
+\end{lstlisting}
+%%$
+
+Note that if you use a non-standard Qt installation, also the
+environment variable \texttt{QTDIR} has to point to the correct
+installation directory of the Qt library.
+
+
+\subsection{\miro installation}
+
+\miro additionally needs the environment variable MIRO\_ROOT to be set
+to the appropriate root directory of your \miro installation.  The
+variable MIRO\_LOG indicates the directory where log-files are stored
+automatically.  For the bash shell once again add the following lines
+to your {\tt .bashrc} file:
+
+\begin{lstlisting}[frame=tb]{}
+export MIRO_ROOT=<path to Miro>
+export MIRO_LOG=<path to log directory>
+export QTDIR=<path to qt>= 2.3>
+export LD_LIBRARY_PATH=$MIRO_ROOT/lib/:$LD_LIBARAY_PATH
+\end{lstlisting}
+
+After that, change to the \miro root directory and type {\tt make}. There
+is no additional configuration needed, as the configuration of ACE
+(compiler settings etc.) is inherited in the makefiles of \miro.
+
+
+\section{\miro Directory Structure}
+
+\miro comes with the full source code and documentation as well as a
+set of test programs and examples that should facilitate your first
+steps when writing your own programs. To help you navigate through the
+directory tree of a \miro distribution, we give a brief overview of
+the directories present in the \miro root directory:
+
+\begin{description}
+\item[bin:]
+  This directory contains links to the binaries of \miro.
+  For an explanation of the individual binaries, see Chapter
+  \ref{sec:services} about the robot services.
+\item[doc:]
+  Here, the available documentation is gathered. In the
+  subdirectory {\tt tex} you find the postscript version of this
+  manual and in the directory {\tt html} resides the auto generated
+  online documentation of all \miro classes and their methods
+  (the starting page of this documentation resides at: \\
+  {\tt \$MIRO\_ROOT/doc/html/idl/index.html} respectivly \\
+  {\tt \$MIRO\_ROOT/doc/html/cpp/index.html}).
+\item[etc:]
+  Config files for the individual robots.
+\item[examples:]
+  Examples on how to use individual interfaces of \miro. If you want
+  to write your own programs utilizing the \miro framework, this is a
+  good place to look for inspirations.
+\item[idl:]
+  The IDL sources of the CORBA interfaces and data types.
+\item[performance-tests:]
+  Some tests that measure the performance of \miro's
+  services. --- Not too much there at the moment.
+\item[scripts:]
+  Utilities for source code formatting and handling sequences of
+  datafiles.
+\item[src:]
+  Here, all sources of the \miro services reside. New services for
+  further robot platforms should go in here.
+\item[templates:]
+  Templates for Makefiles and the headers for source files. Copy the
+  corresponding template, if you want to start a new subproject within
+  the \miro source hierarchy. If you start your own new project on top
+  of \miro, the Makefile templates might still be useful for you. They
+  handle all the stuff concerning ACE/TAO and the multi-platform build
+  process. See Chapter \ref{sec:makefile} for details.
+\item[tests:]
+  Small test programs to monitor or test isolated interfaces of the
+  \miro robot control architecture.
+\item[utils:]
+  Utilities made for convenience. No magic to be expected here.
+\end{description}
+
+%=============================== Tutorial ====================================
+
+\input{definitions}
+\input{using}
+\input{servers}
+\input{clients}
+\input{writing_a_client}
+\input{behaviourEngine}
+\input{writing_a_server}
+
+%------------------------------------------------------------------------------
+
+
+\bibliography{miro_manual}
+\printindex
+
+\end{document}
+
+
+
+

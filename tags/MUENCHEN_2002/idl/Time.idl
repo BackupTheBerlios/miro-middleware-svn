@@ -1,0 +1,36 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef Time_idl
+#define Time_idl
+
+module Miro
+{
+  //! Struct holding a time value.
+  /**
+   * This structure is used to annotate a sensor reading with a 
+   * time stamp of its sampling time. It is convertible into an
+   * ACE_Time_Value object by the global helper functions defined
+   * in <miro/timeHelper.h>.
+   */
+  struct TimeIDL
+  {
+    //! Seconds of the time value.
+    long sec;
+    //! Microseconds of the time value.
+    long usec;
+  };
+};
+
+#endif // time_idl
+
+
+
+

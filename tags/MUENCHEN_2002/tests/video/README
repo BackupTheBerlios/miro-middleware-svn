@@ -1,0 +1,4 @@
+Small test for the video interface.
+
+Stores a burst of images from the video service to disk, measuring
+timings.

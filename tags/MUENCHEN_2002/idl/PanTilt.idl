@@ -1,0 +1,55 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef PanTilt_idl
+#define PanTilt_idl
+
+#include "Tilt.idl"
+#include "Pan.idl"
+
+module Miro
+{
+  //! Struct representing a pantilt position.
+  struct PanTiltPositionIDL
+  {
+    //! Pan value in rad.
+    double     panvalue;
+    //! Tilt value in rad.
+    double     tiltvalue;
+  };
+
+  //! Interface to a pantilt unit.
+  interface PanTilt : Pan, Tilt
+  {
+    //! Get the current panTilt position. 
+    /**
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    PanTiltPositionIDL getPosition() raises(EDevIO);
+
+    //! Set the desired pantilt position.
+    /**
+     * @param destination The desired panning and tilting angles.
+     * @throw EOutOfBounds
+     * if the thrown when the panning or tilting angle is beyond 
+     * the range of the pantilt unit.
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    void setPosition(in PanTiltPositionIDL destination) raises(EOutOfBounds, EDevIO);
+  };
+};
+
+#endif // pantTilt_idl
+
+
+
+

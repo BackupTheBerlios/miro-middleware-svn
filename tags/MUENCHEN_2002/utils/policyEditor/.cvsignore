@@ -1,0 +1,8 @@
+PolicyView.moc.cpp
+PatternWidget.moc.cpp
+BehaviourWidget.moc.cpp
+ArbiterWidget.moc.cpp
+ParamDialog.moc.cpp
+PolicyEditor.moc.cpp
+PolicyConfigurationDialog.moc.cpp
+PolicyEditor

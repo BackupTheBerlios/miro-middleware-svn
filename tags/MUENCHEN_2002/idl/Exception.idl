@@ -1,0 +1,66 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef Exception_idl
+#define Exception_idl
+
+//! The namespace of the Miro project.
+/**
+ * To not pollute the global namespace of users of Miro, all classes, structs
+ * and helper functions are encapsulated into the namespace Miro.
+ *
+ * For an introduction into the namespace feature of c++ see:
+ * - http://www.cplusplus.com/doc/tutorial/tut5-2.html 
+ * - http://www.mvps.org/windev/cpp/nspaces.html
+ * - Also the hard copy manual constains a short description of 
+ *   how namespaces are used in Miro.
+ * - And Stroustrup's C++ contains a longer description.
+ *
+ */
+module Miro
+{
+  //! Timeout within the server.
+  /**
+   * Indicates the timeout of a blocking call to an object of the @ref Miro 
+   * framework. Blocking calls (like @ref Odometry::getWaitStatus normally set a 
+   * timeout to five times the maximum time expected to complete the task. 
+   * Timeouts normally indicate hardware failure or very high work load
+   * on the PC hosting the object.
+   */
+  exception ETimeOut {
+    /** Message indicating what went wrong. */
+    string what;
+  };
+
+  //! Illigal parameter value.
+  /**
+   * Indicates that an invalid parameter was passed to an object of the
+   * Miro framework. For example the maximum translational speed of the
+   * base of a B21 is at about 1.0 m/s. Requesting for a speed higher than 
+   * 1.0 m/s raises this exception.
+   */
+  exception EOutOfBounds {
+    /** Message indicating what went wrong. */
+    string what;
+  };
+
+  //! Server side device problems.
+  /** 
+   * Indicates that something in the communication to the hardware device
+   * controlled by the server went wrong. Normally some read/write failure.
+   * Either the device is buggy or broken or just the software doesn't
+   * really know how to treat it right.
+   */
+  exception EDevIO {
+    /** Message indicating what went wrong. */
+    string what;
+  };
+};
+#endif /* exception_idl */

@@ -1,0 +1,156 @@
+
+<!DOCTYPE UlmSparrowsConfig >
+<xml>
+  <Robot>
+    <robot>
+      <type>Sparrow99</type>      <!-- B21, Pioneer1, Sparrow99 -->
+      <name>haeltnix</name>
+
+      <speech>none</speech>
+      <pantilt>sparrowPan</pantilt> <!-- none or dpPanTilt -->
+      <laser>none</laser> <!-- none or SICK -->
+      <framegrabber>bttv8</framegrabber> <!-- none, bttv8 or meteor -->
+    </robot>
+  </Robot>
+
+  <Sparrow99>
+    <sparrowBoard>
+      <device>/dev/can/0</device>
+      <channelsharing>true</channelsharing>
+      <ticksl>22</ticksl>
+      <ticksr>22</ticksr>
+      <diameter>1555</diameter>
+
+        <maxaccel> 15 </maxaccel> <!-- SollDistanz zum Torrueckwand 10 -->
+        <maxpower> 15 </maxpower> <!-- Vorfaktor turnfehler 15 -->
+        <maxtransvelocity> 1 </maxtransvelocity> <!-- Vorfaktor Distanzefehler 1 -->
+        <maxrotvelocity> 9 </maxrotvelocity> <!-- Unterreichweite fue  Turndoubler 6 -->
+
+     <!--
+        <stallthreshold></stallthreshold>
+        <stalla2></stalla2>
+        <stalla1></stalla1>
+        <stalla0></stalla0>
+      -->
+
+      <goalie>true</goalie>
+      <watchdogtimeout>2000</watchdogtimeout>
+      <buttonspollinterval>300</buttonspollinterval>
+
+      <servo0midpulse>3700</servo0midpulse>
+      <!--
+        <servo0midpulse></servo0midpulse>
+        <servo1midpulse></servo1midpulse>
+        <rad2servoticks></rad2servoticks>
+      -->
+      <writetable>false</writetable>
+      <infrared>
+         <scandescription>
+           <scantype>2</scantype>
+           <eventname>Infrared</eventname>
+           <sensorgroup height="400" distance="248" beta="0" gamma="0">
+             <description>
+               <minrange>40</minrange>
+               <maxrange>800</maxrange>
+               <focus>1</focus>
+             </description>
+             <sensor><alpha>180</alpha></sensor>
+             <sensor><alpha>150</alpha></sensor>
+             <sensor><alpha>120</alpha></sensor>
+             <sensor><alpha>90</alpha></sensor>
+             <sensor><alpha>60</alpha></sensor>
+             <sensor><alpha>30</alpha></sensor>
+             <sensor><alpha>0</alpha></sensor>
+             <sensor><alpha>-90</alpha></sensor>
+           </sensorgroup>
+         </scandescription>
+         <mask>1 1 0 1</mask>
+      </infrared>
+      <irscaling>
+        0 1.227 3 40
+        0 1.000 3 40
+        0 1.047 3 40
+        0 1.000 3 40
+        0 1.173 3 40
+        0 1.281 9 80
+        0 0.900 3 40
+        0 1.281 9 80
+      </irscaling>
+    </sparrowBoard>
+    <pioneerBoard>
+      <device>/dev/tts/0</device>
+      <baudrate>9600</baudrate>
+      <databits>8</databits>
+      <stopbits>1</stopbits>
+      <parityenb>0</parityenb>
+      <AngleConvFactor>0.0061359</AngleConvFactor>
+      <DistConvFactor>0.07979</DistConvFactor>
+      <VelConvFactor>0.079790</VelConvFactor>
+      <RangeConvFactor>0.1734</RangeConvFactor>
+      <DiffConvFactor>0.003333</DiffConvFactor>
+      <Vel2Divisor>4.000000</Vel2Divisor>
+
+      <sonar>
+         <scandescription>
+           <scantype>3</scantype>
+           <eventname>Sonar</eventname>
+           <sensorgroup height="400" distance="248" beta="0" gamma="0">
+             <description>
+               <minrange>100</minrange>
+               <maxrange>3000</maxrange>
+               <focus>30</focus>
+             </description>
+             <sensor><alpha>180</alpha></sensor>
+             <sensor><alpha>150</alpha></sensor>
+             <sensor><alpha>120</alpha></sensor>
+             <sensor><alpha>90</alpha></sensor>
+             <sensor><alpha>60</alpha></sensor>
+             <sensor><alpha>30</alpha></sensor>
+             <sensor><alpha>0</alpha></sensor>
+             <sensor><alpha>-90</alpha></sensor>
+           </sensorgroup>
+         </scandescription>
+      </sonar>
+    </pioneerBoard>
+    <Camera>
+      <ncx>786</ncx>
+      <nfx>384</nfx>
+      <dx>0.00625</dx>
+      <dy>0.0125</dy>
+      <cx>197.159465</cx>
+      <cy>139.645856</cy>
+      <sx>1</sx>
+      <f>4.043536</f>
+      <kappa>2.980936e-02</kappa>
+      <height>600</height>
+      <alpha>31.0</alpha>
+    </Camera>
+  </Sparrow99>
+  <Notification>
+    <logging>
+      <type_name>Infrared</type_name>
+      <type_name>Odometry</type_name>
+      <type_name>VisionData</type_name>
+      <type_name>LineSamples</type_name>
+      <type_name>GoalPosition</type_name>
+      <type_name>BallPosition</type_name>
+      <type_name>PatternChange</type_name>
+      <type_name>ArbitrateChange</type_name>
+      <type_name>PositionHypothesis</type_name>
+    </logging>
+    <NotifyMulticast>
+      <subscription>BallPosition</subscription>
+      <subscription>LocalizedPosition</subscription>
+      <messagetimeout>500</messagetimeout>
+      <multicastgroup>225.2.2.1:41006</multicastgroup>
+    </NotifyMulticast>
+  </Notification>
+  <B21>
+    <video>
+      <subfield>odd</subfield>
+      <palette>bgr</palette>
+    <!-- Parameter Section for Steffan -->
+
+    </video>
+  </B21>
+</xml>

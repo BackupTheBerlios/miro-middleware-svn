@@ -1,0 +1,34 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef Speech_idl
+#define Speech_idl
+
+#include "Exception.idl"
+
+module Miro
+{
+  //! Interface of the Speech services
+  /**
+   * It registers as "Speech" at the naming service
+   * within the selected naming context.
+   *
+   */
+  interface Speech
+  {
+    //! Add text to the output buffer.
+    void speak(in string text) raises(EDevIO);
+
+    //! Select a voice sceem. 
+    void setVoice(in char voice) raises(EDevIO, EOutOfBounds);
+
+  };
+};
+#endif // Speech_idl
