@@ -171,7 +171,6 @@ ConfigFile::parseDescriptionFiles()
       reader.setContentHandler( handler_ );
       reader.setErrorHandler( &errorHandler);
 
-      cout << "parsing " << fileName << endl;
       if (!reader.parse( source )) {
 	QString infoText("Error parsing behaviour description file:\n" +
 			 fileName + "\n" +
@@ -184,6 +183,6 @@ ConfigFile::parseDescriptionFiles()
     // parsing successfull
     okay = true;
 
-    cout << *generator_ << endl;
+    // std::cout << *generator_ << endl;
   }
 }

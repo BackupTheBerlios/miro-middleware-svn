@@ -76,3 +76,9 @@ DialogXML::accept(bool _accept)
   bool a = accept_ == 0;
   emit okay(a);
 }
+
+void
+DialogXML::accept()
+{
+  Super::accept();
+}

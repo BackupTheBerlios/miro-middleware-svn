@@ -188,11 +188,8 @@ DocumentView::saveDocumentAs()
   }
 
   // set new caption and document name
-  cout << "set title: " << filename << endl;
   setTitle(filename);
-  cout << "set name" << filename << endl;
   document_->setName(filename);
-  cout << "dot" << endl;
   return rc;
 }
 
@@ -231,7 +228,6 @@ void
 DocumentView::slotSaveAs()
 {
   if (saveDocumentAs()) {
-    cout << "save" << endl;
     saveDocument();
   }
 }

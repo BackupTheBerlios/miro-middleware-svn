@@ -71,4 +71,5 @@ protected:
   mutable bool accepted_;
 };
 
-#endif Validators_h
+#endif // Validators_h
+

@@ -37,6 +37,7 @@ public:
   bool modified() const;
   
 protected slots:
+  void accept();
   void accept(bool _accept);
 
 signals:
