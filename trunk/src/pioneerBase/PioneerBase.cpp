@@ -85,7 +85,7 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   addToNameService(pStall.in(), "Stall");
   addToNameService(pSonar.in(), "Sonar");
   addToNameService(pTactile.in(), "Tactile");
-  addToNameService(pTactile.in(), "Infrared");
+  addToNameService(pInfrared.in(), "Infrared");
   addToNameService(pBattery.in(), "Battery");
   addToNameService(ec_.in(), "EventChannel");
 

@@ -101,13 +101,13 @@ namespace Pioneer
     }
 
     //
-    // Tactile description defaults
+    // Infrared description defaults
     //
-    infraredDescription.scanType = ::Miro::RangeSensor::BUNCHWISE;
-    infraredDescription.eventName = "Tactile";
+    infraredDescription.scanType = ::Miro::RangeSensor::GROUPWISE;
+    infraredDescription.eventName = "Infrared";
     infraredDescription.group.length(1);
     infraredDescription.group[0].description.minRange = 0;
-    infraredDescription.group[0].description.maxRange = 10;
+    infraredDescription.group[0].description.maxRange = 100;
     infraredDescription.group[0].description.focus = deg2Rad(5);
     infraredDescription.group[0].sensor.length(4);
     for (unsigned int i = 0; i < 4; ++i) {
