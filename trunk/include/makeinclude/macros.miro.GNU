@@ -23,7 +23,7 @@ INSBIN  = $(MIRO_ROOT)/bin
 
 INCLDIRS += -I$(TAO_ROOT) -I$(TAO_ROOT)/orbsvcs -I$(MIRO_ROOT)/src -I$(QTDIR)/include
 
-CCFLAGS += -Woverloaded-virtual -DDEBUG
+CCFLAGS += -Woverloaded-virtual -DDEBUG -DQT_GENUINE_STR
 
 LDFLAGS +=  -L$(INSLIB) -L$(ACE_ROOT)/ace
 
