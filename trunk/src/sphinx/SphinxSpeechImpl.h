@@ -9,7 +9,7 @@ extern "C" {
 #include <sphinx2/fbs.h>
 }
 
-#include "miro/SpeechS.h"
+#include "miro/SphinxSpeechS.h"
 #include "SphinxSpeechTask.h"
 
 #include <list>
@@ -21,13 +21,16 @@ namespace Miro
   //forward declaration
   class FestivalSpeechImpl;
 
-  class SphinxSpeechImpl :public POA_Miro::Speech
+  class SphinxSpeechImpl :public POA_Miro::SphinxSpeech
   {
   public:
     SphinxSpeechImpl(std::string dictFileName, bool _halfDuplex=true);
     ~SphinxSpeechImpl();
 
     //sphinx
+    virtual SentenceIDL* getLastSentence() throw(Miro::EDevIO);
+
+    void integrateData(const SentenceIDL& data);
 
     void addLm(std::string lmFileName, std::string lmName);
     void setLm(std::string lmName);
@@ -36,26 +39,33 @@ namespace Miro
     //festival
     virtual void speak(const char *str) throw(Miro::EDevIO);
 
+    //Not implemented
     virtual void skip() throw(Miro::EDevIO);
+    //Not implemented
     virtual void clear() throw(Miro::EDevIO);
+    //Not implemented
     virtual void reset() throw(Miro::EDevIO);
+
+    //Not implemented
     virtual void setVoice(char voice) throw(Miro::EDevIO);
 
-    void play(const char *str, ...);
+    //Not implemented
+    void play(const char *str);
 
     //other
     bool isPlaying();
 
   protected:
     //sphinx
-    bool startRec(); //throw Miro::EDevIO;
-    bool stopRec(); //throw Miro::EDevIO;
+    bool startRec() throw (Miro::EDevIO);
+    bool stopRec() throw (Miro::EDevIO);
 
     //other
-    void internalCleanup();
+    void internalCleanup() throw(Miro::EDevIO);
 
     //sphinx
     SphinxSpeechTask speechTask;
+    SentenceIDL lastSentence;
     
     std::string dict;
     ad_rec_t * ad;

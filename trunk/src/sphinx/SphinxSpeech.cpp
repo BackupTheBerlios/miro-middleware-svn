@@ -6,7 +6,7 @@
 
 namespace Miro
 {
-  SphinxSpeech::SphinxSpeech(int argc, char *argv[]) :
+  SphinxSpeechObject::SphinxSpeechObject(int argc, char *argv[]) :
     super(argc,argv),
     miroRoot(getenv("MIRO_ROOT")),
     speechImpl((miroRoot+"/etc/sphinx.dic").c_str()),
@@ -39,10 +39,9 @@ namespace Miro
       
       throw(0);
     }
-    //    speechTask.open(NULL);
   }
 
-  SphinxSpeech::~SphinxSpeech()
+  SphinxSpeechObject::~SphinxSpeechObject()
   {
     try {
       CosNaming::Name n;
@@ -50,8 +49,6 @@ namespace Miro
       n.length(1);
       n[0].id = CORBA::string_dup("Speech");
       namingContext->unbind(n);
-      //    n[0].id = CORBA::string_dup("SpeechEC");
-      //    namingContext->unbind(n);
       
 #ifdef DEBUG
       cout << "Unbound objects from NamingSevice." << endl;
@@ -67,9 +64,8 @@ namespace Miro
 
 int main(int argc, char* argv[]) 
 {
-  
-  Miro::SphinxSpeech speech(argc,argv);
-
+  Miro::SphinxSpeechObject speech(argc,argv);
+ 
   try {
 #ifdef DEBUG
     cout << "Loop forever handling events." << endl;
@@ -95,6 +91,6 @@ int main(int argc, char* argv[])
     cerr << "Uncaught exception: " << endl;
     return 1;
   }
-  
+
   return 0;  
 }

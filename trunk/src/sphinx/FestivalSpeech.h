@@ -6,6 +6,7 @@ namespace Miro {
   class FestivalSpeechImpl {
   public:
     FestivalSpeechImpl();
+    ~FestivalSpeechImpl();
 
     void speak(const char * text);
   };

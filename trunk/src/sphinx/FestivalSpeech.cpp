@@ -12,6 +12,10 @@ namespace Miro {
     festival_initialize(TRUE, FESTIVAL_HEAP_SIZE);
   }
 
+  FestivalSpeechImpl::~FestivalSpeechImpl() {
+    festival_tidy_up();
+  }
+
   void FestivalSpeechImpl::speak(const char * text) //throw Miro::EDevIO
   {
     festival_say_text(text);

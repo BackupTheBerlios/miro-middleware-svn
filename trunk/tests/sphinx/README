@@ -1,8 +1,8 @@
-Test for the standard Speech interface.
+Test for the Sphinx/Festival Speech interfaces.
 
 Handy to verify the speech stuff.
 
-Start the Speech service. Then you can access the
+Start the SphinxSpeech service. Then you can access the
 Speech interfaces directly via these small test program. It offers
 a simple text interface for each method available within the
 interface.

@@ -38,7 +38,9 @@ namespace Miro
   //////////////////////////////////////////////////////////////////////
   // ~SphinxSpeechTask
   SphinxSpeechTask::~SphinxSpeechTask() 
-  {}
+  {
+    cout << "Destructing SpeechTask" << endl;
+  }
 
   
   ////////////////////////////////////////////////////////////////////////
@@ -58,6 +60,8 @@ namespace Miro
     string strtmp;
     string hmmDir=getenv("SPHINX_ROOT");
     hmmDir+="/model/hmm/6k";
+    search_hyp_t * result;
+    SentenceIDL sentence;
 
     char * argvtmp;
 
@@ -208,8 +212,71 @@ namespace Miro
       //get timestamp
       //TODO: add ACE timestamp to result
       ts=speechImpl->cont->read_ts;
+      //      Miro::TimeA2C(ACE_OS::gettimeofday(),sentence.timestamp);
 
-      cout << "Listening..." << endl;
+      while (1) {//will break inside...
+	
+	error = cont_ad_read(speechImpl->cont, adbuf, 4096);
+	if (error <0) break;
+	if (error == 0) {
+	  //No sound recorded. Check the silence length.
+	  //If greater than 1 sec, end of utterance
+
+	  if ((speechImpl->cont->read_ts - ts) > DEFAULT_SAMPLES_PER_SEC)
+	    break;
+	} else {
+	  ts = speechImpl->cont->read_ts;
+	}
+
+	// decode the last heard data
+	//non-blocking mode
+	//rem=remainin to be decoded
+	int32 rem=uttproc_rawdata(adbuf, error, 0);
+	
+	if ((rem == 0) && (error == 0)) usleep(10000); 
+	//if there is no work to do, just sit there and relax ;-)
+      }
+
+      //Utterance ended.
+      //Stop listening while decoding
+      ad_stop_rec(speechImpl->ad);
+      while (ad_read(speechImpl->ad,adbuf, 4096) >= 0); //flush buffer
+      cont_ad_reset(speechImpl->cont);
+
+      uttproc_end_utt();
+      if (uttproc_result_seg(&error, &result, 1) < 0) {
+	cerr << "uttproc_result failed" << endl;
+      }
+      string resultStr="";
+      sentence.sentence.length(10);
+      int i=0;
+      while (result!=NULL) {
+	if (resultStr.size()!=0) resultStr+=" ";
+	resultStr+=result->word;
+	sentence.sentence[i].word=result->word;
+	sentence.sentence[i].startFrame=result->sf;
+	sentence.sentence[i].endFrame=result->ef;
+	sentence.sentence[i].aScore=result->ascr;
+	sentence.sentence[i].lScore=result->lscr;
+	sentence.sentence[i].confidence=result->conf;
+	sentence.sentence[i].latticeDensity=result->latden;
+	sentence.sentence[i].phonePerplexity=result->phone_perp;
+	if ((i%10)==0) { //each 10 words, increase result length by 10
+	  sentence.sentence.length(i+10); 
+	  
+	}
+	i++;
+	result=result->next;
+      }
+      sentence.sentence.length(i);
+      //sentence.timestamp should already be there
+      sentence.valid=true;	
+      speechImpl->integrateData(sentence);
+      //      if (resultStr!="") cout << resultStr << endl << std::flush;
+      
+      ad_start_rec(speechImpl->ad);
+	
+
     }
     
     log(INFO, "left service.");

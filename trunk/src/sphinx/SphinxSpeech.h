@@ -10,20 +10,20 @@
 namespace Miro 
 {
 
-  class SphinxSpeech : public Miro::Server
+  class SphinxSpeechObject : public Miro::Server
   {
     typedef Miro::Server super;
 
   public:
-    SphinxSpeech(int argc, char *argv[]);
-    ~SphinxSpeech();
+    SphinxSpeechObject(int argc, char *argv[]);
+    ~SphinxSpeechObject();
 
   protected:
     string miroRoot;
 
     //    SphinxSpeechTask speechTask;
     SphinxSpeechImpl speechImpl;
-    Miro::Speech_var pSpeech;
+    Miro::SphinxSpeech_var pSpeech;
   };
 
 };

@@ -75,6 +75,7 @@ IDL_FILES =	Time \
 		Video  \
 		\
 		Speech \
+		SphinxSpeech \
 		\
 		BehaviourEngine \
 		Joystick

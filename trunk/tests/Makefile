@@ -37,8 +37,14 @@ DIRS =		odometry \
 		video \
 		notify \
 		behaviours \
-		speech \
-		xml
+		speech 
+
+ifdef SPHINX_ROOT
+  DIRS +=  	sphinx
+endif
+
+  DIRS +=	xml
+
 ifneq (,$(findstring B21,$(MIRO_COMPONENTS)))
   DIRS +=	b21 \
 		dpPanTilt \
