@@ -1,0 +1,34 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Nix (Nix Is eXtreme)
+//
+// (c) 2003
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+//
+//////////////////////////////////////////////////////////////////////////////
+#ifndef DistanceScan_idl
+#define DistanceScan_idl
+
+
+
+module Miro
+{
+
+  struct DistanceScanValueIDL
+  {
+    double angle;
+    double distance;
+
+  };
+
+  typedef sequence<DistanceScanValueIDL> ScanValuesIDL;
+
+  struct DistanceScanIDL
+  {
+    ScanValuesIDL values;
+  };
+};
+
+#endif // EgoMap_idl
