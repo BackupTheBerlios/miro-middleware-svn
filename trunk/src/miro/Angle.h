@@ -290,10 +290,15 @@ namespace Miro
   inline
   void 
   Angle::normalize(double& _alpha) { 
-    while (_alpha > M_PI) 
-      _alpha -= 2. * M_PI;
-    while (_alpha <= -M_PI) 
-      _alpha += 2. * M_PI;
+    if (_alpha < 10. && _alpha > -10) {
+      while (_alpha > M_PI) 
+	_alpha -= 2. * M_PI;
+      while (_alpha <= -M_PI) 
+	_alpha += 2. * M_PI;
+      return;
+    }
+
+    _alpha = asin(sin(_alpha));
   }  
 
   inline
@@ -308,8 +313,16 @@ namespace Miro
   inline
   void 
   Angle::normalize() { 
-    while (angle > M_PI) angle -= 2. * M_PI;
-    while (angle <= -M_PI) angle += 2. * M_PI;
+    if (angle < 10. && angle > -10) {
+      while (angle > M_PI) 
+	angle -= 2. * M_PI;
+      while (angle <= -M_PI)
+	angle += 2. * M_PI;
+    
+      return;
+    }
+
+    angle = asin(sin(angle));
   }  
 
   inline
