@@ -68,31 +68,20 @@ $(BIN): $(STATIC_DEPS)
 # DO NOT DELETE THIS LINE -- g++dep uses it.
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
-<<<<<<< Makefile
-=======
 
 .obj/SpeechConnection.o .obj/SpeechConnection.so .shobj/SpeechConnection.o .shobj/SpeechConnection.so: SpeechConnection.cpp SpeechConnection.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/Exception.h $(MIRO_ROOT)/src/miro/ExceptionC.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.i SpeechDevice.h \
 
 
 .obj/SpeechImpl.o .obj/SpeechImpl.so .shobj/SpeechImpl.o .shobj/SpeechImpl.so: SpeechImpl.cpp SpeechImpl.h \
- $(MIRO_ROOT)/src/miro/DtlkSpeechS.h \
- $(MIRO_ROOT)/src/miro/ExceptionS.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/ExceptionS.i \
- $(MIRO_ROOT)/src/miro/SpeechS.h \
- $(MIRO_ROOT)/src/miro/SpeechC.h \
- $(MIRO_ROOT)/src/miro/SpeechC.i \
- $(MIRO_ROOT)/src/miro/SpeechS.i \
- $(MIRO_ROOT)/src/miro/DtlkSpeechC.h \
- $(MIRO_ROOT)/src/miro/DtlkSpeechC.i \
- $(MIRO_ROOT)/src/miro/DtlkSpeechS.i \
- SpeechConnection.h \
- $(MIRO_ROOT)/src/miro/Exception.h SpeechDevice.h \
+ $(MIRO_ROOT)/src/miro/DtlkSpeechS.h $(MIRO_ROOT)/src/miro/ExceptionS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/ExceptionS.i $(MIRO_ROOT)/src/miro/SpeechS.h \
+ $(MIRO_ROOT)/src/miro/SpeechC.h $(MIRO_ROOT)/src/miro/SpeechC.i \
+ $(MIRO_ROOT)/src/miro/SpeechS.i $(MIRO_ROOT)/src/miro/DtlkSpeechC.h \
+ $(MIRO_ROOT)/src/miro/DtlkSpeechC.i $(MIRO_ROOT)/src/miro/DtlkSpeechS.i \
+ SpeechConnection.h $(MIRO_ROOT)/src/miro/Exception.h SpeechDevice.h \
 
 
->>>>>>> 1.8
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

@@ -75,9 +75,6 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 # DO NOT DELETE THIS LINE -- g++dep uses it.
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
-<<<<<<< Makefile
-=======
-
 .obj/OnButton.o .obj/OnButton.so .shobj/OnButton.o .shobj/OnButton.so: OnButton.cpp OnButton.h \
  $(MIRO_ROOT)/src/miro/EventBehaviour.h $(MIRO_ROOT)/src/miro/Behaviour.h \
  $(MIRO_ROOT)/src/miro/DynamicWindow.h \
@@ -245,5 +242,4 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
  $(MIRO_ROOT)/src/miro/KeyValueList.h $(MIRO_ROOT)/src/miro/Angle.h
 
->>>>>>> 1.9
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

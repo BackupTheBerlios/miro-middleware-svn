@@ -90,107 +90,65 @@ $(BIN): $(STATIC_DEPS)
 .obj/VideoConnection.o .obj/VideoConnection.so .shobj/VideoConnection.o .shobj/VideoConnection.so: VideoConnection.cpp VideoConnection.h VideoDevice.h \
  VideoConsumer.h $(MIRO_ROOT)/src/miro/Synch.h \
  $(MIRO_ROOT)/src/miro/Task.h VideoParameters.h \
- $(MIRO_ROOT)/src/miro/DevParameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/DevParameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/Exception.h
 
 .obj/VideoConsumer.o .obj/VideoConsumer.so .shobj/VideoConsumer.o .shobj/VideoConsumer.so: VideoConsumer.cpp VideoConsumer.h \
- $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/Task.h VideoConnection.h \
- VideoDevice.h VideoImpl.h \
- $(MIRO_ROOT)/src/video/VideoConsumer.h \
- $(MIRO_ROOT)/src/video/VideoParameters.h \
- $(MIRO_ROOT)/src/miro/DevParameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/VideoS.h \
- $(MIRO_ROOT)/src/miro/ExceptionS.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/ExceptionS.i \
- $(MIRO_ROOT)/src/miro/TimeS.h \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/TimeS.i \
- $(MIRO_ROOT)/src/miro/PositionS.h \
- $(MIRO_ROOT)/src/miro/WorldPointS.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/WorldPointS.i \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/PositionS.i \
- $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/miro/VideoS.i
+ $(MIRO_ROOT)/src/miro/Synch.h $(MIRO_ROOT)/src/miro/Task.h \
+ VideoConnection.h VideoDevice.h VideoImpl.h \
+ VideoConsumer.h \
+ VideoParameters.h \
+ $(MIRO_ROOT)/src/miro/DevParameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/VideoS.h $(MIRO_ROOT)/src/miro/ExceptionS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/ExceptionS.i $(MIRO_ROOT)/src/miro/TimeS.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/TimeS.i $(MIRO_ROOT)/src/miro/PositionS.h \
+ $(MIRO_ROOT)/src/miro/WorldPointS.h $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i $(MIRO_ROOT)/src/miro/WorldPointS.i \
+ $(MIRO_ROOT)/src/miro/PositionC.h $(MIRO_ROOT)/src/miro/PositionC.i \
+ $(MIRO_ROOT)/src/miro/PositionS.i $(MIRO_ROOT)/src/miro/VideoC.h \
+ $(MIRO_ROOT)/src/miro/VideoC.i $(MIRO_ROOT)/src/miro/VideoS.i
 
 .obj/VideoParameters.o .obj/VideoParameters.so .shobj/VideoParameters.o .shobj/VideoParameters.so: VideoParameters.cpp VideoParameters.h \
- $(MIRO_ROOT)/src/miro/DevParameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h VideoDevice.h
+ $(MIRO_ROOT)/src/miro/DevParameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
+ VideoDevice.h
 
-.obj/VideoImpl.o .obj/VideoImpl.so .shobj/VideoImpl.o .shobj/VideoImpl.so: VideoImpl.cpp \
- $(MIRO_ROOT)/src/video/VideoImpl.h \
- $(MIRO_ROOT)/src/video/VideoConsumer.h \
- $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/Task.h \
- $(MIRO_ROOT)/src/video/VideoParameters.h \
- $(MIRO_ROOT)/src/miro/DevParameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/VideoS.h \
- $(MIRO_ROOT)/src/miro/ExceptionS.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/ExceptionS.i \
- $(MIRO_ROOT)/src/miro/TimeS.h \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/TimeS.i \
- $(MIRO_ROOT)/src/miro/PositionS.h \
- $(MIRO_ROOT)/src/miro/WorldPointS.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/WorldPointS.i \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/PositionS.i \
- $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/miro/VideoS.i \
- $(MIRO_ROOT)/src/video/VideoDevice.h
+.obj/VideoImpl.o .obj/VideoImpl.so .shobj/VideoImpl.o .shobj/VideoImpl.so: VideoImpl.cpp VideoImpl.h \
+ VideoConsumer.h $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/Task.h VideoParameters.h \
+ $(MIRO_ROOT)/src/miro/DevParameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/VideoS.h $(MIRO_ROOT)/src/miro/ExceptionS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/ExceptionS.i $(MIRO_ROOT)/src/miro/TimeS.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/TimeS.i $(MIRO_ROOT)/src/miro/PositionS.h \
+ $(MIRO_ROOT)/src/miro/WorldPointS.h $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i $(MIRO_ROOT)/src/miro/WorldPointS.i \
+ $(MIRO_ROOT)/src/miro/PositionC.h $(MIRO_ROOT)/src/miro/PositionC.i \
+ $(MIRO_ROOT)/src/miro/PositionS.i $(MIRO_ROOT)/src/miro/VideoC.h \
+ $(MIRO_ROOT)/src/miro/VideoC.i $(MIRO_ROOT)/src/miro/VideoS.i \
+ VideoDevice.h
 
 .obj/VideoServer.o .obj/VideoServer.so .shobj/VideoServer.o .shobj/VideoServer.so: VideoServer.cpp VideoServer.h \
- $(MIRO_ROOT)/src/miro/Server.h \
- $(MIRO_ROOT)/src/miro/Client.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/RobotParameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/Singleton.h \
- $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/video/VideoConnection.h \
- $(MIRO_ROOT)/src/video/VideoDevice.h \
- $(MIRO_ROOT)/src/video/VideoConsumer.h \
- $(MIRO_ROOT)/src/miro/Task.h \
- $(MIRO_ROOT)/src/video/VideoImpl.h \
- $(MIRO_ROOT)/src/video/VideoParameters.h \
- $(MIRO_ROOT)/src/miro/DevParameters.h \
- $(MIRO_ROOT)/src/miro/VideoS.h \
- $(MIRO_ROOT)/src/miro/ExceptionS.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/ExceptionS.i \
- $(MIRO_ROOT)/src/miro/TimeS.h \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/TimeS.i \
- $(MIRO_ROOT)/src/miro/PositionS.h \
- $(MIRO_ROOT)/src/miro/WorldPointS.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/WorldPointS.i \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/PositionS.i \
- $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/VideoC.i \
+ $(MIRO_ROOT)/src/miro/Server.h $(MIRO_ROOT)/src/miro/Client.h \
+ $(MIRO_ROOT)/src/miro/Exception.h $(MIRO_ROOT)/src/miro/RobotParameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h $(MIRO_ROOT)/src/miro/Singleton.h \
+ $(MIRO_ROOT)/src/miro/Synch.h VideoConnection.h \
+ VideoDevice.h \
+ VideoConsumer.h $(MIRO_ROOT)/src/miro/Task.h \
+ VideoImpl.h \
+ VideoParameters.h \
+ $(MIRO_ROOT)/src/miro/DevParameters.h $(MIRO_ROOT)/src/miro/VideoS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionS.h $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i $(MIRO_ROOT)/src/miro/ExceptionS.i \
+ $(MIRO_ROOT)/src/miro/TimeS.h $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i $(MIRO_ROOT)/src/miro/TimeS.i \
+ $(MIRO_ROOT)/src/miro/PositionS.h $(MIRO_ROOT)/src/miro/WorldPointS.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h $(MIRO_ROOT)/src/miro/WorldPointC.i \
+ $(MIRO_ROOT)/src/miro/WorldPointS.i $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/PositionC.i $(MIRO_ROOT)/src/miro/PositionS.i \
+ $(MIRO_ROOT)/src/miro/VideoC.h $(MIRO_ROOT)/src/miro/VideoC.i \
  $(MIRO_ROOT)/src/miro/VideoS.i VideoParameters.h \
  $(MIRO_ROOT)/src/miro/Utils.h
 
