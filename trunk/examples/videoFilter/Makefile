@@ -45,8 +45,9 @@ BIN 	= GrayVideoService
 
 ## additional files
 FILES	=  \
-	FilterGray\
-	Parameters
+	Parameters \
+	FilterGray \
+	GrayVideoService
 
 SRC	= $(addsuffix .cpp,$(FILES))
 OBJ	= $(addsuffix .o,$(FILES))
@@ -77,31 +78,74 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
 
-.obj/FilterGray.o .obj/FilterGray.so .shobj/FilterGray.o .shobj/FilterGray.so: FilterGray.cpp FilterGray.h Parameters.h \
- $(MIRO_ROOT)/src/video/Parameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- $(MIRO_ROOT)/src/video/VideoFilter.h \
- $(MIRO_ROOT)/src/miro/TimeSeries.h \
- $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/miro/VideoHelper.h \
- $(MIRO_ROOT)/src/miro/TimeHelper.h \
- $(MIRO_ROOT)/src/miro/Exception.h
-
 .obj/Parameters.o .obj/Parameters.so .shobj/Parameters.o .shobj/Parameters.so: Parameters.cpp Parameters.h \
- $(MIRO_ROOT)/src/video/Parameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h
+ \
+ \
+ \
+
+
+.obj/FilterGray.o .obj/FilterGray.so .shobj/FilterGray.o .shobj/FilterGray.so: FilterGray.cpp FilterGray.h Parameters.h \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ /home/hutz/work/Miro.video/src/miro/ExceptionC.i \
+ \
+ /home/hutz/work/Miro.video/src/miro/TimeC.i \
+ \
+ \
+ /home/hutz/work/Miro.video/src/miro/WorldPointC.i \
+ /home/hutz/work/Miro.video/src/miro/PositionC.i \
+ /home/hutz/work/Miro.video/src/miro/VideoC.i \
+ \
+ \
+
+
+.obj/GrayVideoService.o .obj/GrayVideoService.so .shobj/GrayVideoService.o .shobj/GrayVideoService.so: GrayVideoService.cpp FilterGray.h Parameters.h \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ /home/hutz/work/Miro.video/src/miro/ExceptionC.i \
+ \
+ /home/hutz/work/Miro.video/src/miro/TimeC.i \
+ \
+ \
+ /home/hutz/work/Miro.video/src/miro/WorldPointC.i \
+ /home/hutz/work/Miro.video/src/miro/PositionC.i \
+ /home/hutz/work/Miro.video/src/miro/VideoC.i \
+ \
+ \
+ \
+ \
+ /home/hutz/work/Miro.video/src/miro/ExceptionS.i \
+ \
+ /home/hutz/work/Miro.video/src/miro/TimeS.i \
+ \
+ \
+ /home/hutz/work/Miro.video/src/miro/WorldPointS.i \
+ /home/hutz/work/Miro.video/src/miro/PositionS.i \
+ /home/hutz/work/Miro.video/src/miro/VideoS.i \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY
