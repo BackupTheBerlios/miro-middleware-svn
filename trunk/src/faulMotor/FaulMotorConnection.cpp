@@ -151,8 +151,8 @@ namespace FaulMotor
       enable();
 
     // calculate the new velocities
-    newSpeedL = lround(-_speedL * params_->speedConvFactor);//* 112;
-    newSpeedR = lround(_speedR * params_->speedConvFactor);//* 112;
+    newSpeedL = (int)rint(-_speedL * params_->speedConvFactor);//* 112;
+    newSpeedR = (int)rint(_speedR * params_->speedConvFactor);//* 112;
 
     // by default use maximum accelaration
     // acceleration conversion is hardcoded - sorry
@@ -174,8 +174,8 @@ namespace FaulMotor
       }
     }
 
-    newAccL = abs(lround(accL));
-    newAccR = abs(lround(accR));
+    newAccL = abs((int)rint(accL));
+    newAccR = abs((int)rint(accR));
 
     // if we did not write yet and have enough
     // time left: set the speed directly
