@@ -11,8 +11,9 @@
 
 #include "PolicyEditor.h"
 #include "PolicyView.h"
-#include "ConfigDialog.h"
 #include "ParameterDialog.h"
+
+#include "../widgets/FileListDialog.h"
 
 #include "miro/BehaviourEngineC.h"
 
@@ -33,7 +34,7 @@ PolicyEditorClass::PolicyEditorClass(Miro::Client& _client) :
   client_(_client),
   config_(*PolicyConfigClass::instance()),
   view_(new PolicyViewClass(this, document_)),
-  configDialog_(new ConfigDialog(this)),
+  configDialog_(new FileListDialog(this)),
   robot_(getenv("HOST"))
 {
   resize(600, 500);

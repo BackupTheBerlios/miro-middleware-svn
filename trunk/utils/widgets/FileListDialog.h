@@ -2,14 +2,14 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2002
+// (c) 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-#ifndef ConfigDialog_h
-#define ConfigDialog_h
+#ifndef FileListDialog_h
+#define FileListDialog_h
 
 #include <qdialog.h>
 
@@ -22,13 +22,13 @@ class QFileDialog;
 /**
  * This class shows a dialog for the behaviour parameters.
  */
-class ConfigDialog : public QDialog
+class FileListDialog : public QDialog
 {
   Q_OBJECT
 
 public:
-  ConfigDialog(QWidget* parent);
-  ~ConfigDialog();
+  FileListDialog(QWidget* parent);
+  ~FileListDialog();
 
   bool modified();
 
@@ -51,7 +51,7 @@ protected:
 
 inline
 bool
-ConfigDialog::modified() {
+FileListDialog::modified() {
   return modified_;
 }
 

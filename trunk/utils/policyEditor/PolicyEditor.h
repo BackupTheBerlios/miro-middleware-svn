@@ -18,7 +18,7 @@
 #include <qmainwindow.h>
 
 // forward declarattions
-class ConfigDialog;
+class FileListDialog;
 class PolicyViewClass;
 
 //! Main class of the PolicyEditor application 
@@ -57,7 +57,7 @@ protected:
   PolicyConfigClass   config_;
   PolicyDocumentClass document_;
   PolicyViewClass *   view_;
-  ConfigDialog *      configDialog_;
+  FileListDialog *      configDialog_;
 
   QString             robot_;
 };

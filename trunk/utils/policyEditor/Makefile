@@ -18,7 +18,7 @@
 INSTALL = $(VBIN:%=$(INSBIN)/%)
 
 ## dynamic libraries if needed
-LDLIBS += -lmiroParams -lmiro
+LDLIBS += -lmiroWidgets -lmiroParams -lmiro
 
 ## program to be built
 ## there has to exist a source file with the same name (mybinary.cc)
@@ -32,7 +32,6 @@ FILES	= \
 	PolicyConfig
 
 QT_SRC  = \
-	ConfigDialog \
 	PolicyView \
 	PatternWidget \
 	BehaviourWidget \
@@ -119,8 +118,8 @@ realclean: clean
  $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/BehaviourParameters.h PolicyView.h \
- ConfigDialog.h ParameterDialog.h ../params/Class.h \
- ../params/Parameter.h \
+ ParameterDialog.h ../params/Class.h ../params/Parameter.h \
+ ../widgets/FileListDialog.h \
  $(MIRO_ROOT)/src/miro/BehaviourEngineC.h \
  $(MIRO_ROOT)/src/miro/BehaviourEngineC.i
 

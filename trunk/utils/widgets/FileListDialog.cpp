@@ -9,7 +9,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "ConfigDialog.h"
+#include "FileListDialog.h"
 
 #include <qgroupbox.h>
 #include <qvgroupbox.h>
@@ -22,8 +22,8 @@
 #include <qstringlist.h>
 #include <qfiledialog.h>
 
-ConfigDialog::ConfigDialog(QWidget* parent) :
-  QDialog(parent, "ConfigDialog", TRUE),       // TRUE = modal dialog
+FileListDialog::FileListDialog(QWidget* parent) :
+  QDialog(parent, "FileListDialog", TRUE),       // TRUE = modal dialog
   list_(NULL),
   delButton_(NULL),
   fileDialog_(NULL),
@@ -76,12 +76,12 @@ ConfigDialog::ConfigDialog(QWidget* parent) :
   selectListItem();
 }
 
-ConfigDialog::~ConfigDialog()
+FileListDialog::~FileListDialog()
 {
 }
 
 void 
-ConfigDialog::init(const QStringList& _list)
+FileListDialog::init(const QStringList& _list)
 {
   // fill list with current parameters
   modified_ = false;
@@ -92,7 +92,7 @@ ConfigDialog::init(const QStringList& _list)
 }
 
 void
-ConfigDialog::selectListItem()
+FileListDialog::selectListItem()
 {
   if (list_->count() != 0) {
     int item = list_->currentItem();
@@ -105,7 +105,7 @@ ConfigDialog::selectListItem()
 }
 
 QStringList
-ConfigDialog::result() 
+FileListDialog::result() 
 {
   QStringList list;
 
@@ -116,7 +116,7 @@ ConfigDialog::result()
 }
 
 void 
-ConfigDialog::add()
+FileListDialog::add()
 {
   if (fileDialog_->exec() == QDialog::Accepted ) {
 
@@ -133,7 +133,7 @@ ConfigDialog::add()
 }
 
 void 
-ConfigDialog::del()
+FileListDialog::del()
 {
   int item; 
   if ((item = list_->currentItem()) != -1) {

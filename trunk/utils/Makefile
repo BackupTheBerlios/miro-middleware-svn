@@ -32,6 +32,7 @@ include $(ACE_ROOT)/include/makeinclude/macros.GNU
 DIRS =		\
 		nsIOR \
 		notify \
+		widgets \
 		logPlayer \
 		rangeSensor \
 		qtVideo \
