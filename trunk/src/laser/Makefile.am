@@ -18,35 +18,44 @@ include $(top_srcdir)/config/Make-rules
 
 bin_PROGRAMS = SickLaserService
 
+lib_LIBRARIES = libmiroLaser.a
 
-SickLaserService_SOURCES = \
+libmiroLaser_a_SOURCES = \
 	Parameters.xml \
-	SickLaserService.cpp \
-	SickLaserService.h \
 	SickLaserConnection.cpp \
-	SickLaserConnection.h \
 	SickLaserTask.cpp \
-	SickLaserTask.h \
 	SickLaserPollTask.cpp \
-	SickLaserPollTask.h \
 	SickLaserEvent.cpp \
+	SickLaserImpl.cpp
+
+laser_include_HEADERS = \
+	SickLaserConnection.h \
+	SickLaserTask.h \
+	SickLaserPollTask.h \
 	SickLaserEvent.h \
-	SickLaserImpl.cpp \
 	SickLaserImpl.h \
 	SickLaserMessage.h \
 	SickLaserStatistic.h \
-	SickLaserOpcodes.h
+	SickLaserOpcodes.h \
+	Parameters.h
+
+SickLaserService_SOURCES = \
+	SickLaserService.cpp \
+	SickLaserService.h
 
 BUILT_SOURCES = Parameters.cpp Parameters.h
 CLEANFILES = $(BUILT_SOURCES)
 
 SickLaserService_LDADD = \
+	libmiroLaser.a \
 	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroIDL \
 	-lmiro
 
 all-local:
+	$(INSTALLLIBRARIES)
 	$(INSTALLPROGRAMS)
 
 clean-local:
+	$(CLEANLIBRARIES)
 	$(CLEANPROGRAMS)
