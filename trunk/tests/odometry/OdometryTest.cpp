@@ -90,7 +90,7 @@ main(int argc, char * argv[])
 	  position.point.y = y;
 	  position.heading = theta;
 	
-	  odometry->setPosition(position);
+	  odometry->updatePosition(position);
 	  break;
 	case '4':
 	  velocity = odometry->getVelocity();
