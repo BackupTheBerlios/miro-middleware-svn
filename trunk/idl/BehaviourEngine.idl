@@ -54,7 +54,9 @@ module Miro
     //! Exception indicating that the transition is not registered for the actionpattern.
     exception EUnregisteredTransition {};
     //! Exception indicating that the actionpattern is not present in the policy.
-    exception EUnknownActionPattern {};
+    exception EUnknownActionPattern { string pattern; };
+    //! Exception indicating that the behaviour is not present in the action pattern.
+    exception EUnknownBehaviour { string behaviour; };
 
     //! Load a policy from a string.
     /**
