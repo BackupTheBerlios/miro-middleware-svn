@@ -139,7 +139,7 @@ int main(int argc, char * argv[])
 	cin >> num;
 	cout << "servo position (deg): " << flush;
 	cin >> rot;
-	rot = deg2Rad(rot);
+//	rot = deg2Rad(rot);
 	service.connection.setServo(num, rot);
 	break;
 
