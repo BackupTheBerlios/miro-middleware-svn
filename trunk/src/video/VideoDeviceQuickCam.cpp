@@ -231,11 +231,10 @@ namespace Video
     setContrast(params_->contrast);
 
     setVideoPicture();
-#ifdef asdfzzzz
     /* set pwc centric parameters */
     MIRO_DBG(VIDEO, LL_DEBUG, "Retrieving PWC information.");
-    getPWC();
-
+//    getPWC();
+#ifdef oaisfdh
     setWbMode(params_->whitebalance);
     setWbManualRed(params_->whitebalanceRed);
     setWbManualBlue(params_->whitebalanceBlue);
@@ -248,11 +247,8 @@ namespace Video
     setFM(params_->flickerlessMode);
     setDNR(params_->dynamicNoiseReduction);
     setCompression(params_->compression);
-
     setPWC();
 #endif
-    
-
     //	preparing buffers
 
 /*    delete gb;

@@ -50,15 +50,49 @@ namespace Video
     unsigned int length = inputFormat_.width * inputFormat_.height;
 
     for(unsigned int x = 0; x < length; ++x){
-       
 
           *(tgt_img++) =  (r_lookup[*(src_img++)] +  g_lookup[*(src_img++)] + b_lookup[*(src_img++)] < 80.0)?0:255;
 
-      
-
     }
-
-
+    
+    /*unsigned int * int_p = bitImage_;
+    unsigned int * tmp_p;
+    unsigned int mask;
+    
+    unsigned int zaehler = 0;
+    
+    int numInts = inputFormat_.height/32;
+    for(int y = 0; y < numInts; y++){
+       tmp_p = bitImage_ + y*inputFormat_.width;
+       for(int w = 0; w < 32; w++){
+          int_p = tmp_p;
+          for(unsigned int z = 0; z < inputFormat_.width; z++){
+          	  *int_p << 1;
+		  mask =  (r_lookup[*(src_img++)] +  g_lookup[*(src_img++)] + b_lookup[*(src_img++)] < 80.0)?0:0x00000001;
+	          *int_p |= mask;
+	          int_p++;
+		  zaehler++;
+	  }
+       }
+    }
+    int rest = inputFormat_.height % 32;
+    if(rest != 0){
+       tmp_p = bitImage_ + numInts*inputFormat_.width;
+       for(int w = 0; w < rest; w++){
+          int_p = tmp_p;
+          for(int z = 0; z < inputFormat_.width; z++){
+          	  *int_p << 1;
+		  mask =  (r_lookup[*(src_img++)] +  g_lookup[*(src_img++)] + b_lookup[*(src_img++)] < 80.0)?0:0x00000001;
+	          *int_p |= mask;
+	          int_p++;
+		  zaehler++;
+	  }
+       }
+    }
+    
+    //std::cout << "Debug output: RGBtoSeg Counter: " << zaehler << std::endl;
+        
+*/
 
   }
   

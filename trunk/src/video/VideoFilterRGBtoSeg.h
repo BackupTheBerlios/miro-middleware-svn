@@ -39,6 +39,8 @@ namespace Video
         float r_lookup[256];
 	float g_lookup[256];
 	float b_lookup[256];
+	
+	unsigned int bitImage_[360*4];
 
     };
 };
