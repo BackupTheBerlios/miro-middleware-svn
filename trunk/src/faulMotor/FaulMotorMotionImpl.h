@@ -11,7 +11,7 @@
 #ifndef faulMotionImpl_hh
 #define faulMotionImpl_hh
 
-#include "miro/MotionS.h"
+#include "miro/SparrowMotionS.h"
 #include "miro/OdometryC.h"
 #include "miro/DifferentialMotionImpl.h"
 #include "miro/Exception.h"
@@ -30,7 +30,7 @@ namespace FaulMotor
   class Consumer;
   class Parameters;
 
-  class MotionImpl :  public virtual POA_Miro::Motion,
+  class MotionImpl :  public virtual POA_Miro::SparrowMotion,
 		      public virtual Miro::DifferentialMotionImpl
   {
     //-------------------------------------------------------------------------
@@ -49,6 +49,9 @@ namespace FaulMotor
     void setVelocity(const Miro::VelocityIDL& vel)
       throw(Miro::EOutOfBounds, Miro::EDevIO);
     void setLRVelocity(CORBA::Long left, CORBA::Long right)
+      throw(Miro::EOutOfBounds, Miro::EDevIO);
+
+    void setLRPower(CORBA::Long, CORBA::Long)
       throw(Miro::EOutOfBounds, Miro::EDevIO);
 
   protected:

@@ -89,4 +89,10 @@ namespace FaulMotor
     setTargetVelocity(left, right);
     connection.setSpeed(left_, right_);
   };
+
+  void
+  MotionImpl::setLRPower(CORBA::Long , CORBA::Long )  throw(EOutOfBounds, EDevIO)
+  {
+    std::cerr << "set power not implemented" << endl;
+  };
 };
