@@ -25,11 +25,11 @@ bin_PROGRAMS = QtJoystick
 
 
 sources = \
-	QtJoystick.cpp
+	QtJoystick.cpp \
+	MainForm.h
 
 tomocsources = \
-	MainForm.cpp \
-	MainForm.h
+	MainForm.cpp 
 
 QtJoystick_SOURCES = $(sources) $(tomocsources) $(tomocsources:.cpp=.moc.cpp)
 
