@@ -14,22 +14,12 @@
 
 #include "mcp/McpMessage.h"
 #include "miro/OdometryImpl.h" // BaseReportIDL
+#include "miro/Log.h"
 
-#include <iostream>
 #include <cmath>
-
-#undef DEBUG
-
-// #define VERBOSE
 
 namespace Base
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-  using std::hex;
-  using std::dec;
-
   std::ostream& 
   operator << (std::ostream& out, const ReportData& report) 
   {
@@ -119,10 +109,7 @@ namespace Base
   Status::parseReport(const Mcp::Message& report)
   {
     const unsigned char* string_position = report.message();
-
-#ifdef DEBUG
-    cerr << "parsing base status report: ";
-#endif
+    MIRO_LOG(LL_NOTICE , "parsing base status report: " );
 
     // save previous status report for interpolation, etc.
     previousReport = currentReport;
@@ -137,107 +124,79 @@ namespace Base
     // for correctness of the report.
 
     if ((currentReport.Request & REPORT_EVERYTHING) != REPORT_EVERYTHING) {
-      cerr << "illegal status report!" << endl;
+      MIRO_LOG( LL_ERROR , "illegal status report!" );
       exit(1);
-      //    throw Miro::DevIO();
     }
 
     // these must remain in numerical order !!
     // as the base will pass them back that way
 
-#ifdef DEBUG
-    cout << "clock, ";
-#endif
+    MIRO_LOG( LL_NOTICE , "clock, " );
     currentReport.Clock = getULong(string_position);
     string_position += sizeof(unsigned long);
 
-#ifdef DEBUG
-    cout << "general, ";
-#endif
+    MIRO_LOG( LL_NOTICE , "general, ");
     currentReport.GeneralStatus = getUShort(string_position);
     string_position += sizeof(unsigned short);
 
-#ifdef DEBUG
-    cout << "x, ";
-#endif
+    MIRO_LOG( LL_NOTICE , "x, ");
     currentReport.Xpos = getUShort(string_position);
     string_position += sizeof(unsigned short);
 
+    MIRO_LOG( LL_NOTICE , "x, ");
     currentReport.Xpos = (unsigned long)((double)(currentReport.Xpos) 
 					 / POS_PER_CM * 10.0);
 
-#ifdef DEBUG
-    cout << "y, ";
-#endif
     currentReport.Ypos = getUShort(string_position);
     string_position += sizeof(unsigned short);
 
     currentReport.Ypos = (unsigned long)((double)(currentReport.Ypos) 
 					 / POS_PER_CM * 10.0);
 
-#ifdef DEBUG
-    cout << "heading, ";
-#endif
+    MIRO_LOG( LL_NOTICE , "heading, ");
     currentReport.Heading = getUShort(string_position);
     string_position += sizeof(unsigned short);
 
-#ifdef DEBUG
-    cout << "rel heading, ";
-#endif
+    MIRO_LOG( LL_NOTICE , "rel. heading, ");
     currentReport.BaseRelativeHeading = getUShort(string_position);
     string_position += sizeof(unsigned short);
 
-#ifdef DEBUG
-    cout << "trans error, ";
-#endif
+    MIRO_LOG( LL_NOTICE , "trans. error, ");
     currentReport.TranslateError = getUShort(string_position);
     string_position += sizeof(unsigned short);
     currentReport.TranslateError = (unsigned long) 
       ((double)currentReport.TranslateError / (ENC_PER_CM / 10.0));
 
-#ifdef DEBUG
-    cout << "trans vel, ";
-#endif
+    MIRO_LOG( LL_NOTICE , "trans. vel., ");
     currentReport.TranslateVelocity = getUShort(string_position);
     string_position += sizeof(unsigned short);
     currentReport.TranslateVelocity = (unsigned long) 
       ((double)currentReport.TranslateVelocity / (ENC_PER_CM / 10.0));
 
-#ifdef DEBUG
-    cout << "trans status, ";
-#endif
+    MIRO_LOG( LL_NOTICE , "trans. status, ");
     currentReport.TranslateStatus = getUShort(string_position);
     string_position += sizeof(unsigned short);
 
-#ifdef DEBUG
-    cout << "rot error, ";
-#endif
+    MIRO_LOG( LL_NOTICE , "rot. error, ");
     currentReport.RotateError = getUShort(string_position);
     string_position += sizeof(unsigned short);
 
-#ifdef DEBUG
-    cout << "rot vel, ";
-#endif
+    MIRO_LOG( LL_NOTICE , "rot. vel., ");
     currentReport.RotateVelocity = getUShort(string_position);
     string_position += sizeof(unsigned short);
 
-#ifdef DEBUG
-    cout << "rot status, ";
-#endif
+    MIRO_LOG( LL_NOTICE , "rot. status, ");
     currentReport.RotateStatus = getUShort(string_position);
     string_position += sizeof(unsigned short);
 
-#ifdef DEBUG
-    cout << "done" << endl;
-#endif
+    MIRO_LOG( LL_NOTICE , "done");
 
 #ifdef VERBOSE
-    cout << "report data: " << endl << currentReport << endl;
-
-    cout << "cosHeading = " << cosHeading << endl
-	 << "sinHeading = " << sinHeading << endl
-	 << "origin.point.x = " << origin.point.x << endl
-	 << "origin.point.y = " << origin.point.y << endl;
+    MIRO_DBG_OSTR( MIRO , LL_PRATTLE , "report data: " << endl << currentReport
+                << "\ncosHeading = " << currentReport.cosHeading 
+	        << "\nsinHeading = " << sinHeading
+	        << "\norigin.point.x = " << origin.point.x
+	        << "origin.point.y = " << origin.point.y );
 #endif
   }
 };
