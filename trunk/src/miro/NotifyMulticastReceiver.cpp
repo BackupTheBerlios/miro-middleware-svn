@@ -3,16 +3,17 @@
 //  NotifyMulticastReceiver
 //
 //
-//  (c) 2002
+//  (c) 2002, 2004
 //  Department of Neural Information Processing, University of Ulm, Germany
 //
 //
 //  Authors:
-//    Philipp Baer <phbaer@openums.org>
+//    Philipp Baer <phbaer@npw.net>
+//    Hans Utz <hans.utz@neuro.informatik.uni-ulm.de>
 //
 //
 //  Version:
-//    1.0.3
+//    1.1.0
 //
 //
 //  Todo:
@@ -26,6 +27,7 @@
 #include "NotifyMulticastDefines.h"
 #include "NotifyMulticastReceiver.h"
 #include "NotifyMulticastAdapter.h"
+#include "NotifyMulticastSH.h"
 
 #include <ace/OS.h>
 
@@ -47,31 +49,33 @@ namespace Miro {
          */
         Receiver::Receiver(Adapter *_main,
                            Config  *_configuration) :
-            Super(_configuration->getEventchannel(), _configuration->getDomain()),
-            main_(_main),
-            configuration_(_configuration),
-            maxRetry_(5),
-            mutex_(),
-	    localIPs_(),
-            droppedLocal_(0)
-        {
+                Super(_configuration->getEventchannel(), _configuration->getDomain()),
+                main_(_main),
+                configuration_(_configuration),
+                maxRetry_(5),
+                mutex_(),
+                localIPs_(),
+        droppedLocal_(0) {
             PRINT_DBG(DBG_INFO, "Initializing for domain " << configuration_->getDomain());
+
+            shValid_ = false;
 
             ACE_INET_Addr *locals;
             size_t         localsCount;
 
             ACE::get_ip_interfaces(localsCount, locals);
 
-	    LOG(configuration_, "Local ip interfaces determined by Receiver:");
+            LOG(configuration_, "Local ip interfaces determined by Receiver:");
 
-	    for (ACE_INET_Addr *i = locals; i != locals + localsCount; ++i) {
-		struct in_addr ia;
+            for (ACE_INET_Addr *i = locals; i != locals + localsCount; ++i) {
+
+                struct in_addr ia;
 
                 ia.s_addr = htonl(i->get_ip_address());
-		localIPs_.insert(i->get_ip_address());
+                localIPs_.insert(i->get_ip_address());
 
-		LOG(configuration_, "  " << inet_ntoa(ia));
-	    }
+                LOG(configuration_, "  " << inet_ntoa(ia));
+            }
 
             delete []locals;
 
@@ -101,11 +105,10 @@ namespace Miro {
          *     Push consumer is disconnected
          */
         void Receiver::disconnect_structured_push_supplier(ACE_ENV_SINGLE_ARG_DECL_NOT_USED)
-            throw(CORBA::SystemException)
-        {
-	    PRINT("Disconnected");
+        throw(CORBA::SystemException) {
+            PRINT("Disconnected");
 
-	    LOG(configuration_, "Receiver: push consumer disconnected!");
+            LOG(configuration_, "Receiver: push consumer disconnected!");
 
             connected_ = false;
         }
@@ -122,8 +125,7 @@ namespace Miro {
          *     event: Structured event that should be sent
          */
         void Receiver::sendEvent(const CosNotification::StructuredEvent& event)
-            throw(CosEventComm::Disconnected)
-        {
+        throw(CosEventComm::Disconnected) {
             if (connected_) {
                 Miro::Guard guard(connectedMutex_);
 
@@ -131,13 +133,13 @@ namespace Miro {
                     if (!CORBA::is_nil(proxyConsumer_.in()))
                         proxyConsumer_->push_structured_event(event);
                 } catch (...) {
-		    connected_ = false;
+                    connected_ = false;
 
-		    PRINT_DBG(DBG_INFO, "sendEvent(): cannot push structured event");
+                    PRINT_DBG(DBG_INFO, "sendEvent(): cannot push structured event");
 
-		    LOG(configuration_, "Receiver::sendEvent(): cannot push structured event");
+                    LOG(configuration_, "Receiver::sendEvent(): cannot push structured event");
 
-		    throw CosEventComm::Disconnected();
+                    throw CosEventComm::Disconnected();
                 }
 
             } else
@@ -161,55 +163,68 @@ namespace Miro {
                 ACE_INET_Addr from;
 
                 switch (receiveData(iov, from)) {
-                case -1:
-		    PRINT_DBG(DBG_INFO, "handleInput: receiveData failed (-1)");
-		    LOG(configuration_, "Receiver::handleInput(): receiveData failed (-1)");
-                    return -1;
 
-                case 0:
-                    PRINT_DBG(DBG_INFO, "handleInput: receiveData returned 0 bytes");
-		    LOG(configuration_, "Receiver::handleInput(): receiveData returned 0 bytes");
-		    return 0;
+                    case -1:
+                        PRINT_DBG(DBG_INFO, "handleInput: receiveData failed (-1)");
+                        LOG(configuration_, "Receiver::handleInput(): receiveData failed (-1)");
+                        return -1;
 
-                default:
-                    /* fall through */
-                    break;
+                    case 0:
+                        PRINT_DBG(DBG_INFO, "handleInput: receiveData returned 0 bytes");
+                        LOG(configuration_, "Receiver::handleInput(): receiveData returned 0 bytes");
+                        return 0;
+
+                    default:
+                        /* fall through */
+                        break;
                 }
 
                 /* Check if paket was sent locally and if so, drop it */
-		if (is_loopback(from)) {
-		    droppedLocal_++;
+                if (is_loopback(from)) {
+                    droppedLocal_++;
 
-		    if (droppedLocal_ % 100 == 99)
-			LOG(configuration_, "Receiver::handle_input(): dropped " << droppedLocal_ << " packets from myself");
+                    if (droppedLocal_ % 100 == 99)
+                        LOG(configuration_, "Receiver::handle_input(): dropped " << droppedLocal_ << " packets from myself");
 
-		    if (droppedLocal_ == 0xffffffff)
-			LOG(configuration_, "Receiver::handle_input(): number of locally dropped packets reset to 0");
+                    if (droppedLocal_ == 0xffffffff)
+                        LOG(configuration_, "Receiver::handle_input(): number of locally dropped packets reset to 0");
 
-		    return 0;
-		}
+                    return 0;
+                }
 
 #if DEBUG_LEVEL == DBG_TOOMUCH
+
                 struct in_addr ia;
+
                 ia.s_addr = htonl(from.get_ip_address());
 
                 PRINT("Datagram from " << inet_ntoa(ia) << ":" << from.get_port_number());
+
 #endif
 
                 /* Process packet */
                 memcpy(header, ((char *)iov[0].iov_base ), sizeof(header));
 
                 char         *buf = ACE_reinterpret_cast(char *, header);
+
                 TAO_InputCDR  headerCdr(buf, sizeof(header), (int)buf[0]);
 
                 eventData.systemTimestamp = ACE_OS::gettimeofday().msec();
+
                 headerCdr.read_boolean(eventData.byteOrder);
+
                 headerCdr.read_ulong(eventData.requestId);
+
                 headerCdr.read_ulong(eventData.requestSize);
+
                 headerCdr.read_ulong(eventData.fragmentSize);
+
                 headerCdr.read_ulong(eventData.fragmentOffset);
+
                 headerCdr.read_ulong(eventData.fragmentId);
+
                 headerCdr.read_ulong(eventData.fragmentCount);
+
                 headerCdr.read_ulong(eventData.timestamp);
 
                 handle_event(eventData, iov);
@@ -273,35 +288,38 @@ namespace Miro {
             ACE_INET_Addr from;
 
             /* Drop the packet if data doesn't fit */
+
             if ((_eventData.requestSize    <  _eventData.fragmentSize) ||
-                (_eventData.fragmentOffset >= _eventData.requestSize)  ||
-                (_eventData.fragmentId     >= _eventData.fragmentCount)) {
+                    (_eventData.fragmentOffset >= _eventData.requestSize)  ||
+                    (_eventData.fragmentId     >= _eventData.fragmentCount)) {
 
-		PRINT_DBG(DBG_INFO, "Dropping packet");
+                PRINT_DBG(DBG_INFO, "Dropping packet");
 
-		LOG(configuration_, "Receiver::handle_event(): Packet (id=" << _eventData.requestId << ") dropped due to errors:");
+                LOG(configuration_, "Receiver::handle_event(): Packet (id=" << _eventData.requestId << ") dropped due to errors:");
                 LOG(configuration_, "(requestSize >= fragmentSize) && (fragmentOffset < requestSize) && (fragmentId < fragmentCount)");
-		LOG(configuration_, "  requestSize   " << _eventData.requestSize);
+                LOG(configuration_, "  requestSize   " << _eventData.requestSize);
                 LOG(configuration_, "  fragmentSize  " << _eventData.fragmentSize);
                 LOG(configuration_, "  fragmentId    " << _eventData.fragmentId);
                 LOG(configuration_, "  fragmentCount " << _eventData.fragmentCount);
 
                 return 0;
-	    }
+            }
 
             /* Index the incomplete (due to fragmentation) requests */
             RequestIndex     mapIndex(from, _eventData.requestId);
+
             RequestMapEntry *entry;
 
             if (this->requestMap_.find(mapIndex, entry) == -1) {
 
                 /* Create an entry and insert it... */
                 RequestEntry *requestEntry = new RequestEntry(_eventData.byteOrder,
-                                                              _eventData.requestId,
-                                                              _eventData.requestSize,
-                                                              _eventData.fragmentCount);
+                                             _eventData.requestId,
+                                             _eventData.requestSize,
+                                             _eventData.fragmentCount);
 
                 /* Drop the packet if impossible to bind entry to map */
+
                 if ((requestEntry == 0) || (this->requestMap_.bind(mapIndex, requestEntry, entry) == -1)) {
                     PRINT_DBG(DBG_VERBOSE, "Unable to index, dropping");
 
@@ -309,7 +327,7 @@ namespace Miro {
                 }
             }
 
-	    /* Validate the message... */
+            /* Validate the message... */
             if (entry->int_id_->validateFragment(_eventData.byteOrder,
                                                  _eventData.requestSize,
                                                  _eventData.fragmentSize,
@@ -318,13 +336,13 @@ namespace Miro {
                                                  _eventData.fragmentCount) == 0) {
                 PRINT_DBG(DBG_VERBOSE, "Fragment rejected");
 
-		LOG(configuration_, "Receiver::handle_event(): Fragment (id=" << _eventData.fragmentId << ") rejected due to errors");
+                LOG(configuration_, "Receiver::handle_event(): Fragment (id=" << _eventData.fragmentId << ") rejected due to errors");
 
-		return 0;
-	    }
+                return 0;
+            }
 
-	    /* Already received this fragment */
-	    /* WAS: "if (false && entry->...)" */
+            /* Already received this fragment */
+            /* WAS: "if (false && entry->...)" */
             if (entry->int_id_->testReceived(_eventData.fragmentId) == 1) {
                 PRINT_DBG(DBG_VERBOSE, "Duplicate Fragment, dropping");
 
@@ -332,26 +350,29 @@ namespace Miro {
 
                 return 0;
             }
+
             /* Copy the payload into the fragment buffer */
             char *buffer = (char *)_iov[0].iov_base + HEADER_SIZE;
-	    int   bufferLen = _iov[0].iov_len - HEADER_SIZE;
+
+            int   bufferLen = _iov[0].iov_len - HEADER_SIZE;
 
             memcpy(entry->int_id_->fragmentBuffer(_eventData.fragmentOffset),
                    buffer,
                    bufferLen);
 
-	    /* Mark datagram fragment as received */
+            /* Mark datagram fragment as received */
             entry->int_id_->markReceived(_eventData.fragmentId);
 
-	    /* If the message is not complete we must return... */
-	    if (!entry->int_id_->complete()) {
+            /* If the message is not complete we must return... */
+            if (!entry->int_id_->complete()) {
                 LOG(configuration_, "Receiver::handle_event(): message incomplete, message dropped");
 
                 return 0;
-	    }
+            }
 
-	    /* Demarshal datagram payload */
+            /* Demarshal datagram payload */
             ACE_DECLARE_NEW_CORBA_ENV;
+
             ACE_TRY {
                 CosNotification::StructuredEvent event;
 
@@ -359,20 +380,36 @@ namespace Miro {
                 entry->int_id_->decode(event);
                 ACE_TRY_CHECK;
 
-		/* Drop packet if it's too old */
-		unsigned int time = ACE_OS::gettimeofday().msec();
-                if (time - _eventData.timestamp > configuration_->getEventMaxAge()) {
-                    PRINT_DBG(DBG_VERBOSE, "Packet " << _eventData.requestId << " dropped because it was too old");
-		    LOG(configuration_, "Receiver::handle_event(): message too old (" << time - _eventData.timestamp << ", dropped message");
-		    return 0;
-		}
+                /* Drop packet if it's too old */
+                unsigned int time = ACE_OS::gettimeofday().msec();
 
-                /* Send event to event channel */
-		sendEvent(event);
-		ACE_TRY_CHECK;
+                if (time - _eventData.timestamp > configuration_->getEventMaxAge()) {
+                PRINT_DBG(DBG_VERBOSE, "Packet " << _eventData.requestId << " dropped because it was too old");
+                    LOG(configuration_, "Receiver::handle_event(): message too old (" << time - _eventData.timestamp << ", dropped message");
+                    return 0;
+                }
+
+                /* pub/sub protocol hook */
+                if (!strcmp(event.header.fixed_header.event_type.type_name, "NotifyMulticast::offered")) {
+                    CosNotification::EventTypeSeq_var ets;
+                    event.remainder_of_body >>= ets;
+                    sh_->handleOffers(ets);
+
+                } else if (!strcmp(event.header.fixed_header.event_type.type_name, "NotifyMulticast::subscribed")) {
+                    CosNotification::EventTypeSeq_var ets;
+                    event.remainder_of_body >>= ets;
+                    sh_->handleSubscriptions(ets);
+                    
+                } else {
+                    /* Send event to event channel */
+                    sendEvent(event);
+                }
+
+                ACE_TRY_CHECK;
 
             } ACE_CATCHANY {
-		LOG(configuration_, "Receiver::handle_event(): Exception");
+
+                LOG(configuration_, "Receiver::handle_event(): Exception");
                 ACE_PRINT_EXCEPTION(ACE_ANY_EXCEPTION, "NotifyMulticastReceiver::handle_input");
             }
             ACE_ENDTRY;
@@ -444,5 +481,11 @@ namespace Miro {
             return configuration_->getSocket()->recv(_data, _dataLen, _from, _flags);
         }
 
+        void Receiver::setSH(SH *_sh) {
+            if (_sh != NULL) {
+                shValid_ = true;
+                sh_ = _sh;
+            }
+        }
     };
 };

@@ -42,23 +42,25 @@ namespace Miro {
     namespace NotifyMulticast {
 
         /* forward declaration */
+
         class Receiver;
+
         class Config;
 
         class EventHandler : public ACE_Event_Handler {
-            typedef ACE_Event_Handler Super;
+                typedef ACE_Event_Handler Super;
 
-        public:
-            /* default constructur */
-            EventHandler(Receiver *_receiver, Config *_configuration);
+            public:
+                /* default constructur */
+                EventHandler(Receiver *_receiver, Config *_configuration);
 
-            /* overloaded methods */
-            virtual int handle_input(ACE_HANDLE handle);
-            ACE_HANDLE get_handle() const;
+                /* overloaded methods */
+                virtual int handle_input(ACE_HANDLE handle);
+                ACE_HANDLE get_handle() const;
 
-        protected:
-            Receiver *receiver_;
-            Config   *config_;
+            protected:
+                Receiver *receiver_;
+                Config   *config_;
 
         };
     };

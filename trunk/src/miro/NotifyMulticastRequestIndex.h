@@ -35,35 +35,38 @@ namespace Miro {
     namespace NotifyMulticast {
 
         class RequestIndex {
-        public:
-            /* Default constructor */
-            RequestIndex(void) : requestId(0)
-            {};
 
-            /* Default copy constructor */
-            RequestIndex(const ACE_INET_Addr &_from, CORBA::ULong _requestId) : from(_from), requestId(_requestId)
-            {};
+            public:
+                /* Default constructor */
+                RequestIndex(void) : requestId(0) {}
 
-            /* return hash value */
-            inline u_long hash (void) const {
-                return ((from.get_ip_address() << 24)
-                        | (from.get_port_number () << 8)
-                        | (requestId & 0x000000ff));
-            }
+                ;
 
-            /* comparison operators */
-            inline int operator== (const RequestIndex &rhs) const {
-                return (this->from == rhs.from &&
-                        this->requestId == rhs.requestId);
-            }
+                /* Default copy constructor */
+                RequestIndex(const ACE_INET_Addr &_from, CORBA::ULong _requestId) : from(_from), requestId(_requestId) {}
 
-            inline int operator!= (const RequestIndex &rhs) const {
-                return !(*this == rhs);
-            }
+                ;
 
-        private:
-            ACE_INET_Addr from;
-            CORBA::ULong  requestId;
+                /* return hash value */
+                inline u_long hash (void) const {
+                    return ((from.get_ip_address() << 24)
+                            | (from.get_port_number () << 8)
+                            | (requestId & 0x000000ff));
+                }
+
+                /* comparison operators */
+                inline int operator== (const RequestIndex &rhs) const {
+                    return (this->from == rhs.from &&
+                            this->requestId == rhs.requestId);
+                }
+
+                inline int operator!= (const RequestIndex &rhs) const {
+                    return !(*this == rhs);
+                }
+
+            private:
+                ACE_INET_Addr from;
+                CORBA::ULong  requestId;
         };
     };
 };

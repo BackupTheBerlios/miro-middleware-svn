@@ -38,16 +38,16 @@ namespace Miro {
         class Receiver;
 
         class TimeoutHandler : public ACE_Event_Handler {
-            typedef ACE_Event_Handler Super;
+                typedef ACE_Event_Handler Super;
 
-        public:
-            TimeoutHandler(Receiver *_receiver);
+            public:
+                TimeoutHandler(Receiver *_receiver);
 
-            virtual int handle_timeout(const ACE_Time_Value &_tv,
-                                       const void           *_act);
+                virtual int handle_timeout(const ACE_Time_Value &_tv,
+                                           const void           *_act);
 
-        protected:
-            Receiver *receiver_;
+            protected:
+                Receiver *receiver_;
 
         };
     };

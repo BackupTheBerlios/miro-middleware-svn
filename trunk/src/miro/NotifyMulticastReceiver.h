@@ -3,16 +3,17 @@
 //  NotifyMulticast Receiver
 //
 //
-//  (c) 2002, 2003
+//  (c) 2002, 2003, 2004
 //  Department of Neural Information Processing, University of Ulm, Germany
 //
 //
 //  Authors:
-//    Philipp Baer <philipp.baer@informatik.uni-ulm.de>
+//    Philipp Baer <phbaer@npw.net>
+//    Hans Utz <hans.utz@neuro.informatik.uni-ulm.de>
 //
 //
 //  Version:
-//    1.0.4
+//    1.1.0
 //
 //
 //  Description:
@@ -25,6 +26,9 @@
 //
 //
 //  Changes:
+//
+//    1.1.0
+//    - added subscription support
 //
 //    1.0.4
 //    - added some debugging output
@@ -85,107 +89,126 @@ namespace Miro {
     namespace NotifyMulticast {
 
         class Adapter;
+
         class Config;
 
+        class SH;
+
         class Receiver : public Miro::StructuredPushSupplier {
-            typedef Miro::StructuredPushSupplier Super;
+                typedef Miro::StructuredPushSupplier Super;
 
-        public:
+            public:
 
-            // typedef std::map<std::string, ACE_Time_Value> PeerTime;
-            // typedef std::map<std::string, unsigned int> RunMap;
-            typedef std::set<unsigned long int> IPAddresses;
+                // typedef std::map<std::string, ACE_Time_Value> PeerTime;
+                // typedef std::map<std::string, unsigned int> RunMap;
 
-            /* Default constructor */
-            Receiver(Adapter *_main,
-                     Config  *_config);
+                typedef std::set
+                    <unsigned long int> IPAddresses;
 
-            /* Defaint destructor */
-            ~Receiver();
+                /* Default constructor */
+                Receiver(Adapter *_main,
+                         Config  *_config);
 
-            /* Called from EventHandler when input is available */
-            int handle_input();
+                /* Defaint destructor */
+                ~Receiver();
 
-            /* Called from TimeoutHandler */
-            int handle_timeout(const ACE_Time_Value &_tv,
-                               const void           *_act);
+                /* Called from EventHandler when input is available */
+                int handle_input();
 
-            /* Sends an event through the MC-Notification-Channel */
-            void sendEvent(const CosNotification::StructuredEvent &event)
+                /* Called from TimeoutHandler */
+                int handle_timeout(const ACE_Time_Value &_tv,
+                                   const void           *_act);
+
+                /* Sends an event through the MC-Notification-Channel */
+                void sendEvent(const CosNotification::StructuredEvent &event)
                 throw(CosEventComm::Disconnected);
 
-            /* Receive Data fram MC-Notification-Channel */
-            int receiveData(iovec         *_iov,
-                            int            _iovLen,
-                            ACE_INET_Addr &_from,
-                            int            _flags = 0);
+                /* Receive Data fram MC-Notification-Channel */
+                int receiveData(iovec         *_iov,
+                                int            _iovLen,
+                                ACE_INET_Addr &_from,
+                                int            _flags = 0);
 
-            /* Receive Data fram MC-Notification-Channel */
-            int receiveData(iovec         *_iov,
-                            ACE_INET_Addr &_from,
-                            int            _flags = 0);
+                /* Receive Data fram MC-Notification-Channel */
+                int receiveData(iovec         *_iov,
+                                ACE_INET_Addr &_from,
+                                int            _flags = 0);
 
-            /* Receive Data fram MC-Notification-Channel */
-            int receiveData(void          *_data,
-                            int            _dataLen,
-                            ACE_INET_Addr &_from,
-                            int            _flags = 0);
+                /* Receive Data fram MC-Notification-Channel */
+                int receiveData(void          *_data,
+                                int            _dataLen,
+                                ACE_INET_Addr &_from,
+                                int            _flags = 0);
 
-            // ACE_Time_Value timestamp(const std::string _name);
+                // ACE_Time_Value timestamp(const std::string _name);
 
-            friend class NotifyMulticast;
-            friend class NotifyMulticastSender;
+                void setSH(SH *_sh);
 
-        protected:
-            typedef ACE_Hash_Map_Manager<RequestIndex, RequestEntry*, TAO_SYNCH_MUTEX> RequestMap;
-            typedef ACE_Hash_Map_Entry<RequestIndex, RequestEntry*> RequestMapEntry;
+                friend class NotifyMulticast;
 
-            struct EventData {
-                ACE_SOCK_Dgram_Mcast *socket;
-                CORBA::Boolean        byteOrder;
-                CORBA::ULong          requestId;
-                CORBA::ULong          requestSize;
-                CORBA::ULong          fragmentSize;
-                CORBA::ULong          fragmentOffset;
-                CORBA::ULong          fragmentId;
-                CORBA::ULong          fragmentCount;
-                CORBA::ULong          timestamp;
-                CORBA::ULong          systemTimestamp;
-            };
+                friend class NotifyMulticastSender;
 
-            bool is_loopback(const ACE_INET_Addr &_from);
+                friend class SH;
 
-            int handle_event(EventData &_eventData, iovec *_iov);
+            protected:
+                typedef ACE_Hash_Map_Manager<RequestIndex, RequestEntry*, TAO_SYNCH_MUTEX> RequestMap;
 
-            /** StructuredUDPReceiver method */
-            virtual void disconnect_structured_push_supplier(ACE_ENV_SINGLE_ARG_DECL_WITH_DEFAULTS)
-            throw(CORBA::SystemException);
+                typedef ACE_Hash_Map_Entry<RequestIndex, RequestEntry*> RequestMapEntry;
 
-            Adapter              *main_;
+                struct EventData {
+                    ACE_SOCK_Dgram_Mcast *socket;
+                    CORBA::Boolean        byteOrder;
+                    CORBA::ULong          requestId;
+                    CORBA::ULong          requestSize;
+                    CORBA::ULong          fragmentSize;
+                    CORBA::ULong          fragmentOffset;
+                    CORBA::ULong          fragmentId;
+                    CORBA::ULong          fragmentCount;
+                    CORBA::ULong          timestamp;
+                    CORBA::ULong          systemTimestamp;
+                };
 
-            Config               *configuration_;
+                bool is_loopback(const ACE_INET_Addr &_from);
 
-            /* The map containing all the incoming requests which have been partially received. */
-            RequestMap            requestMap_;
-            bool                  running_;
+                int handle_event(EventData &_eventData, iovec *_iov);
 
-            int                   maxRetry_;
+                /** StructuredUDPReceiver method */
+                virtual void disconnect_structured_push_supplier(ACE_ENV_SINGLE_ARG_DECL_WITH_DEFAULTS)
+                throw(CORBA::SystemException);
 
-            Miro::Mutex           mutex_;
+                Adapter              *main_;
 
-            unsigned long int     eventsReceived_;
-            unsigned long int     eventsDropped_;
-            unsigned long int     controlTrafficOut_;
-            unsigned long int     controlTrafficIn_;
-            unsigned long int     bytesTransmitted_;
+                Config               *configuration_;
 
-            unsigned long int     maxAge_;
+                /* The map containing all the incoming requests which have been partially received. */
+                RequestMap            requestMap_;
 
-            unsigned char         dataId_;
+                bool                  running_;
 
-	    IPAddresses           localIPs_;
+                int                   maxRetry_;
 
-	    unsigned int          droppedLocal_;
+                Miro::Mutex           mutex_;
+
+                unsigned long int     eventsReceived_;
+
+                unsigned long int     eventsDropped_;
+
+                unsigned long int     controlTrafficOut_;
+
+                unsigned long int     controlTrafficIn_;
+
+                unsigned long int     bytesTransmitted_;
+
+                unsigned long int     maxAge_;
+
+                unsigned char         dataId_;
+
+                IPAddresses           localIPs_;
+
+                unsigned int          droppedLocal_;
+
+                bool shValid_;
+                SH *sh_;
         };
     };
 };

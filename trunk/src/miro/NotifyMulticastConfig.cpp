@@ -36,10 +36,10 @@ namespace Miro {
 
     namespace NotifyMulticast {
 
-	const char Config::months[13][4] = {
-	    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-	    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-	};
+        const char Config::months[13][4] = {
+                                               "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                               "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+                                           };
 
         /**
          * Config::Config()
@@ -48,26 +48,26 @@ namespace Miro {
          *     Default constructor
          */
         Config::Config() :
-            eventChannel_(),
-            socketAddress_(),
-            socket_(new ACE_SOCK_Dgram_Mcast()),
-            domain_(),
-	    subscribed_(false),
-            logfile_()
-        {
-	    Parameters *parameters = Parameters::instance();
+                eventChannel_(),
+                socketAddress_(),
+                socket_(new ACE_SOCK_Dgram_Mcast()),
+                domain_(),
+                subscribed_(false),
+        logfile_() {
+            Parameters *parameters = Parameters::instance();
 
-	    std::cout << "NotifyMulticast Logfile: " << parameters->logfile << std::endl;
-	    /* setup logfile */
-	    if (parameters->logfile.length() > 0) {
-		logfile_.open(parameters->logfile.c_str());
+            std::cout << "NotifyMulticast Logfile: " << parameters->logfile << std::endl;
+            /* setup logfile */
 
-		if (!logfile_.is_open()) {
-		    PRINT_ERR("Error opening/creating logfile " << parameters->logfile);
-		    useLogfile_ = false;
-		} else
+            if (parameters->logfile.length() > 0) {
+                logfile_.open(parameters->logfile.c_str());
+
+                if (!logfile_.is_open()) {
+                    PRINT_ERR("Error opening/creating logfile " << parameters->logfile);
+                    useLogfile_ = false;
+                } else
                     useLogfile_ = true;
-	    }
+            }
 
         }
 
@@ -211,30 +211,30 @@ namespace Miro {
         }
 
 
-	/**
-	 * Config::logfile()
-	 *
-	 *   Description:
-	 *     Return pointer to logfile
-	 */
+        /**
+         * Config::logfile()
+         *
+         *   Description:
+         *     Return pointer to logfile
+         */
         ofstream *Config::logfile() {
-	    return (useLogfile_ ? &logfile_ : NULL);
-	}
+            return (useLogfile_ ? &logfile_ : NULL);
+        }
 
 
-	std::string Config::datetime() {
-	    std::stringstream str;
+        std::string Config::datetime() {
+            std::stringstream str;
 
-	    dt_.update();
+            dt_.update();
 
-	    str << months[dt_.month()] << " "
-		<< (dt_.day() < 10 ? "0" : "") << dt_.day() << " "
-		<< (dt_.hour() < 10 ? "0" : "") << dt_.hour() << ":"
-		<< (dt_.minute() < 10 ? "0" : "") << dt_.minute() << ":"
-		<< (dt_.second() < 10 ? "0" : "") << dt_.second() << ": ";
+            str << months[dt_.month()] << " "
+            << (dt_.day() < 10 ? "0" : "") << dt_.day() << " "
+            << (dt_.hour() < 10 ? "0" : "") << dt_.hour() << ":"
+            << (dt_.minute() < 10 ? "0" : "") << dt_.minute() << ":"
+            << (dt_.second() < 10 ? "0" : "") << dt_.second() << ": ";
 
-	    return str.str();
-	}
+            return str.str();
+        }
 
     };
 };

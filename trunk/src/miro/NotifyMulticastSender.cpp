@@ -3,20 +3,17 @@
 //  NotifyMulticastSender
 //
 //
-//  (c) 2002, 2003
+//  (c) 2002, 2003, 2004
 //  Department of Neural Information Processing, University of Ulm, Germany
 //
 //
 //  Authors:
-//    Philipp Baer <philipp.baer@informatik.uni-ulm.de>
+//    Hans Utz <hans.utz@informatik.uni-ulm.de
+//    Philipp Baer <phbaer@npw.net>
 //
 //
 //  Version:
-//    1.0.4
-//
-//
-//  Todo:
-//    - Subscription vector
+//    1.1.0
 //
 //
 //  $Id$
@@ -33,17 +30,13 @@
 #include <ace/Message_Block.h>
 #include <ace/OS.h>
 
-/* g++lib includes */
-// #include <stream>
-
 #define DBG_CLASSNAME "NotifyMulticast::Sender"
 
-namespace Miro 
-{
-  namespace NotifyMulticast 
-  {
+namespace Miro {
 
-      using ::operator<<;
+    namespace NotifyMulticast {
+
+        using ::operator<<;
 
         /**
          * Sender::Sender()
@@ -55,13 +48,13 @@ namespace Miro
          *     _main:          Pointer to adapter instance
          *     _configuration: Pointer to configuration instance
          */
-        Sender::Sender(Adapter *_main,
-                       Config  *_configuration) :
-            Super(_configuration->getEventchannel()),
-            main_(_main),
-            configuration_(_configuration),
-            requestId_(0)
-        {
+        Sender::Sender(
+            Adapter *_main,
+            Config *_configuration) :
+                Super(_configuration->getEventchannel()),
+                main_(_main),
+                configuration_(_configuration),
+        requestId_(0) {
             PRINT_DBG(DBG_INFO, "Initializing");
 
             PRINT_DBG(DBG_MORE, "Initialized");
@@ -81,34 +74,36 @@ namespace Miro
         }
 
 
-	void Sender::init() {
-		
-	    try {
-		Parameters *parameters = Parameters::instance();
+        void Sender::init() {
+            try {
+                Parameters *parameters = Parameters::instance();
 
                 // TODO: Subscription changing
 
-		for (std::set<std::string>::iterator itr = parameters->subscription.begin();
-		     itr != parameters->subscription.end();
-		     itr++)
-                    subscribe(configuration_->getDomain(), *itr);
+                for (
+                    std::set
+                        <std::string>::iterator itr = parameters->subscription.begin();
 
-		//subscribe(configuration_->getDomain(), "BallPosition");
-                //subscribe(configuration_->getDomain(), "LocalizedPosition");
+                        itr != parameters->subscription.end();
+
+                        itr++) {
+                        subscribe(configuration_->getDomain(), *itr);
+                    }
             } catch (const CORBA::SystemException &e) {
-		LOG(configuration_, "Sender: Unable to subscribe to events");
-		PRINT_ERR("Unable to subscribe events: " << e);
+                LOG(configuration_, "Sender: Unable to subscribe to events");
+                PRINT_ERR("Unable to subscribe events: " << e);
                 PRINT_ERR("No events will be sent to the peers");
             } catch (const CosNotifyComm::InvalidEventType &e) {
-		LOG(configuration_, "Sender: Unable to subscribe to events");
+                LOG(configuration_, "Sender: Unable to subscribe to events");
                 PRINT_ERR("Unable to subscribe events: " << e);
                 PRINT_ERR("No events will be sent to the peers");
             } catch (...) {
-		LOG(configuration_, "Sender: Unable to subscribe to events, uncaught exception");
+                LOG(configuration_, "Sender: Unable to subscribe to events, uncaught exception");
                 PRINT_ERR("Unable to subscribe events: uncaught exception");
                 PRINT_ERR("No events will be sent to the peers");
-            } 
-	}
+            }
+        }
+
 
         /**
          * Sender::subscribe()
@@ -120,19 +115,19 @@ namespace Miro
          *     _domain: domain of events that are going to be subscribed
          *     _type:   type of event that are going to be subscribed
          */
-        void Sender::subscribe(const std::string _domain, const std::string _type)
-            throw(CORBA::SystemException, CosNotifyComm::InvalidEventType)
-        {
+        void Sender::subscribe(
+            const std::string _domain,
+            const std::string _type)
+        throw(CORBA::SystemException, CosNotifyComm::InvalidEventType) {
             /* change subscription */
             CosNotification::EventTypeSeq added(1);
             CosNotification::EventTypeSeq removed(0);
             added.length(1);
             added[0].domain_name = CORBA::string_dup(_domain.c_str());
             added[0].type_name   = CORBA::string_dup(_type.c_str());
-            //removed[0].domain_name = CORBA::string_dup("*");
-            //removed[0].type_name   = CORBA::string_dup("*");
-	    consumerAdmin_->subscription_change(added, removed ACE_ENV_ARG_PARAMETER);
-	    LOG(configuration_, "Sender: Subscribed to domain=" << _domain << ", type=" << _type);
+
+            consumerAdmin_->subscription_change(added, removed ACE_ENV_ARG_PARAMETER);
+            LOG(configuration_, "Sender: Subscribed to domain=" << _domain << ", type=" << _type);
         }
 
 
@@ -146,17 +141,19 @@ namespace Miro
          *     _domain: domain of events that are going to be unsubscribed
          *     _type:   type of events that are going to be unsubscribed
          */
-        void Sender::unsubscribe(const std::string _domain, const std::string _type)
-            throw(CORBA::SystemException, CosNotifyComm::InvalidEventType)
-        {
+        void Sender::unsubscribe(
+            const std::string _domain,
+            const std::string _type)
+        throw(CORBA::SystemException, CosNotifyComm::InvalidEventType) {
             /* change subscription */
             CosNotification::EventTypeSeq added(0);
             CosNotification::EventTypeSeq removed(1);
             removed.length(1);
             removed[0].domain_name = CORBA::string_dup(_domain.c_str());
             removed[0].type_name   = CORBA::string_dup(_type.c_str());
+
             consumerAdmin_->subscription_change(added, removed ACE_ENV_ARG_PARAMETER);
-	    LOG(configuration_, "Sender: Unsubscribed from domain=" << _domain << ", type=" << _type);
+            LOG(configuration_, "Sender: Unsubscribed from domain=" << _domain << ", type=" << _type);
         }
 
 
@@ -170,13 +167,15 @@ namespace Miro
          *   Parameters:
          *     _notification: Pointer to event object
          */
-        void Sender::push_structured_event(const CosNotification::StructuredEvent &_notification
-                                           ACE_ENV_ARG_DECL_NOT_USED)
-            throw(CORBA::SystemException, CosEventComm::Disconnected)
-        {
+        void Sender::push_structured_event(
+            const CosNotification::StructuredEvent &_notification
+            ACE_ENV_ARG_DECL_NOT_USED)
+        throw(CORBA::SystemException, CosEventComm::Disconnected) {
             /* Where is the event comming from? */
-            if (!ACE_OS::strcmp((const char *)_notification.header.fixed_header.event_type.domain_name, configuration_->getDomain().c_str()))
+
+            if (!ACE_OS::strcmp((const char *)_notification.header.fixed_header.event_type.domain_name, configuration_->getDomain().c_str())) {
                 marshalEvent(_notification);
+            }
         }
 
 
@@ -189,7 +188,7 @@ namespace Miro
         void Sender::disconnect_structured_push_consumer(ACE_ENV_SINGLE_ARG_DECL_NOT_USED)
         throw(CORBA::SystemException) {
             PRINT_DBG(DBG_INFO, "Consumer disconnected");
-	    LOG(configuration_, "Sender: Consumer disconnected!");
+            LOG(configuration_, "Sender: Consumer disconnected!");
 
             connected_ = false;
         }
@@ -208,9 +207,10 @@ namespace Miro
             TAO_OutputCDR cdr;
 
             /* marschal event */
+
             if (!(cdr << _event)) {
                 PRINT_ERR("Unable to marshal event, discarding!");
-		LOG(configuration_, "Sender: Unable to marshal event, discarding!");
+                LOG(configuration_, "Sender: Unable to marshal event, discarding!");
                 return;
             }
 
@@ -232,35 +232,39 @@ namespace Miro
         void Sender::sendCdrStream(TAO_OutputCDR &_cdr) {
             CORBA::ULong maxFragmentPayload = DEFAULT_MTU - HEADER_SIZE;
 
-            #if defined (ACE_HAS_BROKEN_DGRAM_SENDV)
+#if defined (ACE_HAS_BROKEN_DGRAM_SENDV)
 
             const int TAO_WRITEV_MAX = IOV_MAX - 1;
-            #else
+#else
 
             const int TAO_WRITEV_MAX = IOV_MAX;
-            #endif
+#endif
 
             iovec iov[TAO_WRITEV_MAX];
 
             CORBA::ULong totalLength = 0;
-            CORBA::ULong fragmentCount = getFragmentCount(_cdr.begin(),
-                                                          _cdr.end(),
-                                                          TAO_WRITEV_MAX,
-                                                          maxFragmentPayload,
-                                                          totalLength);
+            CORBA::ULong fragmentCount = getFragmentCount(
+                                             _cdr.begin(),
+                                             _cdr.end(),
+                                             TAO_WRITEV_MAX,
+                                             maxFragmentPayload,
+                                             totalLength);
 
             CORBA::ULong timestamp = ACE_OS::gettimeofday().msec();
 
             requestId_++;
 
-            int          iovcnt = 1;
+            int iovcnt = 1;
             CORBA::ULong fragmentId = 0;
             CORBA::ULong fragmentOffset = 0;
             CORBA::ULong fragmentSize = 0;
 
-            for (const ACE_Message_Block* b = _cdr.begin(); b != _cdr.end(); b = b->cont()) {
+            for (
+                const ACE_Message_Block* b = _cdr.begin();
+                b != _cdr.end();
+                b = b->cont()) {
                 CORBA::ULong  len = b->length();
-                char         *rdPtr = b->rd_ptr();
+                char *rdPtr = b->rd_ptr();
 
                 iov[iovcnt].iov_base = rdPtr;
                 iov[iovcnt].iov_len  = len;
@@ -269,21 +273,24 @@ namespace Miro
                 fragmentSize += len;
 
                 /* This fragment is full, we have to send it... */
+
                 while (fragmentSize > maxFragmentPayload) {
 
                     /* First adjust the last iov entry: */
                     unsigned long int lastMbLength =  maxFragmentPayload - (fragmentSize - len);
                     iov[iovcnt - 1].iov_len = lastMbLength;
 
-                    sendFragment(requestId_,
-                                 totalLength,
-                                 maxFragmentPayload,
-                                 fragmentOffset,
-                                 fragmentId,
-                                 fragmentCount,
-                                 timestamp,
-                                 iov,
-                                 iovcnt);
+                    sendFragment(
+                        requestId_,
+                        totalLength,
+                        maxFragmentPayload,
+                        fragmentOffset,
+                        fragmentId,
+                        fragmentCount,
+                        timestamp,
+                        iov,
+                        iovcnt);
+
                     ACE_CHECK;
 
                     fragmentId++;
@@ -310,6 +317,7 @@ namespace Miro
                                  timestamp,
                                  iov,
                                  iovcnt);
+
                     ACE_CHECK;
 
                     fragmentId++;
@@ -321,15 +329,17 @@ namespace Miro
 
                 /* We ran out of space in the iovec, send the fragment */
                 if (iovcnt == TAO_WRITEV_MAX) {
-                    sendFragment(requestId_,
-                                 totalLength,
-                                 fragmentSize,
-                                 fragmentOffset,
-                                 fragmentId,
-                                 fragmentCount,
-                                 timestamp,
-                                 iov,
-                                 iovcnt);
+                    sendFragment(
+                        requestId_,
+                        totalLength,
+                        fragmentSize,
+                        fragmentOffset,
+                        fragmentId,
+                        fragmentCount,
+                        timestamp,
+                        iov,
+                        iovcnt);
+
                     ACE_CHECK;
 
                     fragmentId++;
@@ -340,17 +350,19 @@ namespace Miro
                 }
             }
 
-            /* There is something left in the IOVec that we must send also... */
+            /* There is something left in the IOVec that we must send, too... */
             if (iovcnt != 1) {
-                sendFragment(requestId_,
-                             totalLength,
-                             fragmentSize,
-                             fragmentOffset,
-                             fragmentId,
-                             fragmentCount,
-                             timestamp,
-                             iov,
-                             iovcnt);
+                sendFragment(
+                    requestId_,
+                    totalLength,
+                    fragmentSize,
+                    fragmentOffset,
+                    fragmentId,
+                    fragmentCount,
+                    timestamp,
+                    iov,
+                    iovcnt);
+
                 ACE_CHECK;
 
                 fragmentId++;
@@ -374,11 +386,12 @@ namespace Miro
          *     _maxFragmentPeyload: Max. payload per fragment
          *     _totalLength:        Length of data
          */
-        unsigned long int Sender::getFragmentCount(const ACE_Message_Block *_begin,
-                                                   const ACE_Message_Block *_end,
-                                                   int                      _iovSize,
-                                                   CORBA::ULong             _maxFragmentPayload,
-                                                   CORBA::ULong            &_totalLength) {
+        unsigned long int Sender::getFragmentCount(
+            const ACE_Message_Block *_begin,
+            const ACE_Message_Block *_end,
+            int _iovSize,
+            CORBA::ULong _maxFragmentPayload,
+            CORBA::ULong &_totalLength) {
             CORBA::ULong fragmentCount = 0;
             CORBA::ULong fragmentSize = 0;
 
@@ -386,7 +399,11 @@ namespace Miro
 
             /* Reserve the first iovec for the header... */
             int iovcnt = 1;
-            for (const ACE_Message_Block* b = _begin; b != _end; b = b->cont ()) {
+
+            for (
+                const ACE_Message_Block* b = _begin;
+                b != _end;
+                b = b->cont ()) {
                 CORBA::ULong len = b->length();
 
                 _totalLength += len;
@@ -394,7 +411,8 @@ namespace Miro
 
                 iovcnt++;
 
-                /* Ran out of space, create fragment... */
+                /* Ran out of space, new fragment... */
+
                 while (fragmentSize > _maxFragmentPayload) {
                     fragmentCount++;
 
@@ -421,8 +439,9 @@ namespace Miro
             }
 
             /* Send the remaining data in another fragment */
-            if (iovcnt != 1)
+            if (iovcnt != 1) {
                 fragmentCount++;
+            }
 
             return fragmentCount;
         }
@@ -444,20 +463,19 @@ namespace Miro
          *     _iovec:          Data that is going to be sent
          *     _iovcnt:         Number of elements in IOVec
          */
-        void Sender::sendFragment(CORBA::ULong _requestId,
-                                  CORBA::ULong _requestSize,
-                                  CORBA::ULong _fragmentSize,
-                                  CORBA::ULong _fragmentOffset,
-                                  CORBA::ULong _fragmentId,
-                                  CORBA::ULong _fragmentCount,
-                                  CORBA::ULong _timestamp,
-                                  iovec        _iov[],
-                                  int          _iovcnt) {
-
+        void Sender::sendFragment(
+            CORBA::ULong _requestId,
+            CORBA::ULong _requestSize,
+            CORBA::ULong _fragmentSize,
+            CORBA::ULong _fragmentOffset,
+            CORBA::ULong _fragmentId,
+            CORBA::ULong _fragmentCount,
+            CORBA::ULong _timestamp,
+            iovec _iov[],
+            int _iovcnt) {
             CORBA::ULong header[HEADER_SIZE / sizeof(CORBA::ULong) + ACE_CDR::MAX_ALIGNMENT];
-
-            char          *buf = ACE_reinterpret_cast(char *, header);
-            TAO_OutputCDR  cdr(buf, sizeof(header));
+            char *buf = ACE_reinterpret_cast(char *, header);
+            TAO_OutputCDR cdr(buf, sizeof(header));
 
             /* create header */
             cdr.write_boolean(TAO_ENCAP_BYTE_ORDER);
@@ -483,20 +501,25 @@ namespace Miro
             _iov[0].iov_len  = cdr.begin()->length();
 
             switch (sendData(_iov, _iovcnt)) {
-            case -1:
-                PRINT_DBG(DBG_INFO, "send_fragment: send failed");
-		LOG(configuration_, "Sender: send_fragment: send failed (-1)");
-                throw CORBA::COMM_FAILURE();
-                break;
 
-            case 0:
-                PRINT_DBG(DBG_INFO, "send_fragment: EOF on send");
-		LOG(configuration_, "Sender: send_fragment: EOF on send (0)");
-                throw CORBA::COMM_FAILURE();
-                break;
+                case -1: {
+                        PRINT_DBG(DBG_INFO, "send_fragment: send failed");
+                        LOG(configuration_, "Sender: send_fragment: send failed (-1)");
+                        throw CORBA::COMM_FAILURE();
+                    }
 
-            default:
-                break;
+                    break;
+
+                case 0: {
+                        PRINT_DBG(DBG_INFO, "send_fragment: EOF on send");
+                        LOG(configuration_, "Sender: send_fragment: EOF on send (0)");
+                        throw CORBA::COMM_FAILURE();
+                    }
+
+                    break;
+
+                default:
+                    break;
             }
 
         }
@@ -515,6 +538,6 @@ namespace Miro
         int Sender::sendData(iovec *_iov, size_t _iovLen) {
             return configuration_->getSocket()->send(_iov, (int)_iovLen);
         }
-  }
+    }
 }
 

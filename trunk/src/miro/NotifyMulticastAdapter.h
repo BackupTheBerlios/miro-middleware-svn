@@ -3,17 +3,17 @@
 //  NotifyMulticast Adapter
 //
 //
-//  (c) 2001, 2002, 2003
+//  (c) 2001, 2002, 2003, 2004
 //  Department of Neural Information Processing, University of Ulm, Germany
 //
 //
 //  Authors:
-//    Philipp Baer <philipp.baer@informatik.uni-ulm.de>
+//    Philipp Baer <phbaer@npw.net>
 //    Hans Utz <hans.utz@informatik.uni-ulm.de>
 //
 //
 //  Version:
-//    1.0.4
+//    1.1.1
 //
 //
 //  Description:
@@ -39,6 +39,9 @@
 //
 //
 //  Changes:
+//
+//    1.1.0
+//    - added subscription protocol
 //
 //    1.0.4
 //    - removed code that was commented out
@@ -105,10 +108,16 @@ namespace Miro {
 
     namespace NotifyMulticast {
 
-      // forward declarations
+        // forward declarations
+
+        class SH;
+
         class TimeoutHandler;
+
         class EventHandler;
+
         class Sender;
+
         class Receiver;
 
         /**
@@ -121,60 +130,68 @@ namespace Miro {
          *     the necessary events are subscribed and arriving events are pushed into
          *     this EventChannel
          */
+
         class Adapter {
 
-        public:
-	    //! Initializing constructor.
-            Adapter(int                                      _argc,
-                    char                                    *_argv[],
-                    Miro::Client                            *_client,
-                    CosNotifyChannelAdmin::EventChannel_ptr  _eventChannel,
-		    unsigned int                             _eventMaxAge = 500,
-                    std::string                              _multicastAddress = "225.2.2.1")
-            throw(CORBA::Exception, Miro::Exception);
+            public:
+                //! Initializing constructor.
+                Adapter(
+                    int _argc,
+                    char *_argv[],
+                    Miro::Client *_client,
+                    CosNotifyChannelAdmin::EventChannel_ptr _eventChannel,
+                    unsigned int _eventMaxAge = 500,
+                    std::string _multicastAddress = "225.2.2.1")
+                throw(CORBA::Exception, Miro::Exception);
 
-	    //! Destructor
-            ~Adapter() throw(CORBA::Exception, Miro::Exception);
+                //! Destructor
+                ~Adapter() throw(CORBA::Exception, Miro::Exception);
 
-            void init();
-	    void fini();
-	    
-	    //! Returns pointer to sender.
-            Sender *getSender();
+                void init();
+                void fini();
 
-	    //! Returns pointer to receiver.
-	    Receiver *getReceiver();
+                //! Returns pointer to sender.
+                Sender *getSender();
 
-            /* Fried classes */
-            friend class Receiver;
-            friend class Sender;
+                //! Returns pointer to receiver.
+                Receiver *getReceiver();
 
-        protected:
-            Miro::Client                            *client_;
+                /* Fried classes */
 
-            ACE_Reactor                             *reactor_;
+                friend class Receiver;
 
-            Config                                   configuration_;
+                friend class Sender;
 
-            Sender                                  *sender_;
-            Receiver                                *receiver_;
+            protected:
+                Miro::Client *client_;
 
-            /* event handling */
-            int                                      eventHandlerId_;
-            EventHandler                            *eventHandler_;
+                ACE_Reactor *reactor_;
 
-            /* timeout handling */
-            int                                      timeoutHandlerId_;
-            TimeoutHandler                          *timeoutHandler_;
-	    ACE_Time_Value                           timeoutHandlerInterval_;
+                Config configuration_;
 
-            /* logfile */
-	    std::ofstream                            logfile_;
-	    bool                                     useLogfile_;
+                Sender *sender_;
+                Receiver *receiver_;
 
-	    ACE_Date_Time                            dt_;
+                /* event handling */
+                int eventHandlerId_;
+                EventHandler *eventHandler_;
 
-	    static const char                        months[13][4];
+                /* timeout handling */
+                int timeoutHandlerId_;
+                TimeoutHandler *timeoutHandler_;
+                ACE_Time_Value timeoutHandlerInterval_;
+
+                int shId_;
+                SH *sh_;
+                ACE_Time_Value shInterval_;
+
+                /* logfile */
+                std::ofstream logfile_;
+                bool useLogfile_;
+
+                ACE_Date_Time dt_;
+
+                static const char months[13][4];
 
         };
     };

@@ -64,53 +64,54 @@ namespace Miro {
     namespace NotifyMulticast {
 
         class Config {
-        public:
-            /* Default constructor */
-            Config();
 
-            /* Default destructor */
-            ~Config();
+            public:
+                /* Default constructor */
+                Config();
 
-            /* Set/Get Eventchannel */
-            void setEventchannel(CosNotifyChannelAdmin::EventChannel_ptr _eventChannel);
-            CosNotifyChannelAdmin::EventChannel_ptr getEventchannel();
+                /* Default destructor */
+                ~Config();
 
-            /* Set/Get socket and get its address */
-            void setSocket(ACE_INET_Addr &_address) throw(Miro::Exception);
-            ACE_SOCK_Dgram_Mcast *getSocket();
-            ACE_INET_Addr &getSocketAddress();
+                /* Set/Get Eventchannel */
+                void setEventchannel(CosNotifyChannelAdmin::EventChannel_ptr _eventChannel);
+                CosNotifyChannelAdmin::EventChannel_ptr getEventchannel();
 
-            /* Set/Get domain */
-            void setDomain(const std::string _domain);
-            const std::string getDomain();
+                /* Set/Get socket and get its address */
+                void setSocket(ACE_INET_Addr &_address) throw(Miro::Exception);
+                ACE_SOCK_Dgram_Mcast *getSocket();
+                ACE_INET_Addr &getSocketAddress();
 
-            /* Set/Get EventMaxAge */
-            void setEventMaxAge(unsigned long int _eventMaxAge);
-            unsigned long int getEventMaxAge();
+                /* Set/Get domain */
+                void setDomain(const std::string _domain);
+                const std::string getDomain();
 
-	    ofstream *logfile();
+                /* Set/Get EventMaxAge */
+                void setEventMaxAge(unsigned long int _eventMaxAge);
+                unsigned long int getEventMaxAge();
 
-	    std::string datetime();
+                ofstream *logfile();
 
-        protected:
-            CosNotifyChannelAdmin::EventChannel_var  eventChannel_;
+                std::string datetime();
 
-            ACE_INET_Addr                            socketAddress_;
-            ACE_SOCK_Dgram_Mcast                    *socket_;
+            protected:
+                CosNotifyChannelAdmin::EventChannel_var  eventChannel_;
 
-            std::string                              domain_;
+                ACE_INET_Addr                            socketAddress_;
+                ACE_SOCK_Dgram_Mcast                    *socket_;
 
-            unsigned long int                        eventMaxAge_;
+                std::string                              domain_;
 
-            bool                                     subscribed_;
+                unsigned long int                        eventMaxAge_;
 
-	    /* logfile */
-	    std::ofstream                            logfile_;
-	    bool                                     useLogfile_;
+                bool                                     subscribed_;
 
-	    ACE_Date_Time                            dt_;
+                /* logfile */
+                std::ofstream                            logfile_;
+                bool                                     useLogfile_;
 
-	    static const char                        months[13][4];
+                ACE_Date_Time                            dt_;
+
+                static const char                        months[13][4];
 
         };
     };

@@ -59,7 +59,16 @@ sources1 = \
 	TaskBehaviour.cpp \
 	TimedBehaviour.cpp \
 	Policy.cpp \
-	VelocitySpace.cpp
+	VelocitySpace.cpp \
+	NotifyMulticastParameters.xml \
+	NotifyMulticastRequestEntry.cpp \
+	NotifyMulticastSender.cpp \
+	NotifyMulticastReceiver.cpp \
+	NotifyMulticastTimeoutHandler.cpp \
+	NotifyMulticastEventHandler.cpp \
+	NotifyMulticastConfig.cpp \
+	NotifyMulticastAdapter.cpp \
+	NotifyMulticastSH.cpp
 
 sparrowsources1 = \
 	PowerArbiter.cpp \

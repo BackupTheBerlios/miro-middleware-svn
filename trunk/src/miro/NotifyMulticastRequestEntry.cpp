@@ -29,11 +29,9 @@
 
 #define DBG_CLASSNAME "NotifyMulticast::RequestEntry"
 
-namespace Miro 
-{
-  
-  namespace NotifyMulticast 
-  {
+namespace Miro {
+
+    namespace NotifyMulticast {
 
         /**
          * RequestEntry::RequestEntry()
@@ -65,12 +63,11 @@ namespace Miro
                                    CORBA::ULong   requestId,
                                    CORBA::ULong   requestSize,
                                    CORBA::ULong   fragmentCount) :
-            byteOrder_(byteOrder),
-            requestId_(requestId),
-            requestSize_(requestSize),
-            fragmentCount_(fragmentCount),
-            timeoutCounter_(0)
-        {
+                byteOrder_(byteOrder),
+                requestId_(requestId),
+                requestSize_(requestSize),
+                fragmentCount_(fragmentCount),
+        timeoutCounter_(0) {
             const int bitsPerUlong = sizeof(CORBA::ULong) * CHAR_BIT;
 
             ACE_CDR::grow(&payload_, requestSize_);
@@ -80,6 +77,7 @@ namespace Miro
             ownReceivedFragments_ = 0;
 
             receivedFragmentsSize_ = fragmentCount_ / bitsPerUlong + 1;
+
             if (receivedFragmentsSize_ > DEFAULT_FRAGMENT_BUFSIZ) {
                 ACE_NEW(receivedFragments_, CORBA::ULong[receivedFragmentsSize_]);
                 ownReceivedFragments_ = 1;
@@ -89,7 +87,9 @@ namespace Miro
                 receivedFragments_[i] = 0;
 
             CORBA::ULong idx = fragmentCount_ / bitsPerUlong;
+
             CORBA::ULong bit = fragmentCount_ % bitsPerUlong;
+
             receivedFragments_[idx] = (0xFFFFFFFF << bit);
         }
 
@@ -116,12 +116,12 @@ namespace Miro
                                            CORBA::ULong   fragmentCount) const {
 
             if (byteOrder     != byteOrder_ ||
-                requestSize   != requestSize_ ||
-                fragmentCount != fragmentCount_)
+                    requestSize   != requestSize_ ||
+                    fragmentCount != fragmentCount_)
                 return 0;
 
             if (fragmentOffset                >= requestSize ||
-                fragmentOffset + fragmentSize >  requestSize)
+                    fragmentOffset + fragmentSize >  requestSize)
                 return 0;
 
             return 1;
@@ -141,11 +141,14 @@ namespace Miro
             const int bitsPerUlong = sizeof(CORBA::ULong) * CHAR_BIT;
 
             // Assume out-of-range fragments as received, so they are dropped...
+
             if (fragmentId > fragmentCount_)
                 return 1;
 
             CORBA::ULong idx = fragmentId / bitsPerUlong;
+
             CORBA::ULong bit = fragmentId % bitsPerUlong;
+
             return ACE_BIT_ENABLED(receivedFragments_[idx], 1 << bit);
         }
 
@@ -163,11 +166,14 @@ namespace Miro
             const int bitsPerUlong = sizeof(CORBA::ULong) * CHAR_BIT;
 
             // Assume out-of-range fragments as received, so they are dropped...
+
             if (fragmentId > fragmentCount_)
                 return;
 
             CORBA::ULong idx = fragmentId / bitsPerUlong;
+
             CORBA::ULong bit = fragmentId % bitsPerUlong;
+
             ACE_SET_BITS(receivedFragments_[idx], 1 << bit);
         }
 
@@ -182,6 +188,7 @@ namespace Miro
             for (CORBA::ULong i = 0; i < receivedFragmentsSize_; ++i)
                 if (receivedFragments_[i] != 0xFFFFFFFF)
                     return 0;
+
             return 1;
         }
 
@@ -218,8 +225,8 @@ namespace Miro
             TAO_InputCDR cdr(&payload_, ACE_static_cast(int, byteOrder_));
 
             if (!(cdr >> event)) {
-	      std::cout << "Unable to demarshal" << std::endl;
-	      ACE_THROW(CORBA::MARSHAL());
+                std::cout << "Unable to demarshal" << std::endl;
+                ACE_THROW(CORBA::MARSHAL());
             }
         }
 

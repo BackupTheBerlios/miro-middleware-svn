@@ -68,7 +68,8 @@ namespace Miro {
          *     Returns ACE handle
          */
         ACE_HANDLE EventHandler::get_handle() const {
-            return config_->getSocket()->get_handle();;
+            return config_->getSocket()->get_handle();
+            ;
         }
     };
 };

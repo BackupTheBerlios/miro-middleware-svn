@@ -3,17 +3,17 @@
 //  NotifyMulticast Adapter
 //
 //
-//  (c) 2002, 2003
+//  (c) 2002, 2003, 2004
 //  Department of Neural Information Processing, University of Ulm, Germany
 //
 //
 //  Authors:
-//    Philipp Baer <philipp.baer@informatik.uni-ulm.de>
+//    Philipp Baer <phbaer@npw.net>
 //    Hans Utz <hans.utz@informatik.uni-ulm.de>
 //
 //
 //  Version:
-//    1.0.4
+//    1.1.0
 //
 //
 //  Todo:
@@ -30,6 +30,7 @@
 #include "NotifyMulticastReceiver.h"
 #include "NotifyMulticastEventHandler.h"
 #include "NotifyMulticastParameters.h"
+#include "NotifyMulticastSH.h"
 /* ACE includes */
 #include <ace/Arg_Shifter.h>
 #include <ace/Thread.h>
@@ -64,92 +65,112 @@ namespace Miro {
          *     CORBA::Exception
          *     Miro::Exception
          */
-	Adapter::Adapter(int                                      _argc,
-			 char                                    *_argv[],
-			 Miro::Client                            *_client,
-			 CosNotifyChannelAdmin::EventChannel_ptr  _eventChannel,
-			 unsigned int                             _eventMaxAge,
-			 // ACE_Time_Value                           _timeoutHandlerInterval,
-			 std::string                              _multicastAddress)
-	    throw(CORBA::Exception, Miro::Exception) :
-            client_(_client),
-            reactor_(_client->orb()->orb_core()->reactor()),
-            configuration_(),
-            eventHandlerId_(-1),
-            eventHandler_(NULL),
-            timeoutHandlerId_(-1),
-	    timeoutHandler_(NULL),
-	    timeoutHandlerInterval_(ACE_Time_Value(0, 50000)),
-            useLogfile_(false)
-        {
+        Adapter::Adapter(
+            int _argc,
+            char *_argv[],
+            Miro::Client *_client,
+            CosNotifyChannelAdmin::EventChannel_ptr _eventChannel,
+            unsigned int _eventMaxAge,
+            std::string _multicastAddress)
+        throw(CORBA::Exception, Miro::Exception) :
+                client_(_client),
+                reactor_(_client->orb()->orb_core()->reactor()),
+                configuration_(),
+                eventHandlerId_(-1),
+                eventHandler_(NULL),
+                timeoutHandlerId_(-1),
+                timeoutHandler_(NULL),
+                timeoutHandlerInterval_(ACE_Time_Value(0, 50000)),
+                shInterval_(ACE_Time_Value(5, 0)),
+        useLogfile_(false) {
             PRINT_DBG(DBG_INFO, "Initializing");
 
-	    Parameters *parameters = Parameters::instance();
+            Parameters *parameters = Parameters::instance();
 
-	    // remove!
-	    _eventMaxAge = 0;
-	    _multicastAddress = "";
+            // remove!
+            _eventMaxAge = 0;
+            _multicastAddress = "";
 
-	    /* set up configuration */
-	    configuration_.setSocket(parameters->multicastgroup);
-	    configuration_.setDomain(_client->namingContextName);
-	    configuration_.setEventchannel(_eventChannel);
-	    configuration_.setEventMaxAge(parameters->messagetimeout);
+            /* set up configuration */
+            configuration_.setSocket(parameters->multicastgroup);
+            configuration_.setDomain(_client->namingContextName);
+            configuration_.setEventchannel(_eventChannel);
+            configuration_.setEventMaxAge(parameters->messagetimeout);
 
-	    /* process parameters */
-	    ACE_Arg_Shifter arg_shifter(_argc, _argv);
+            /* process parameters */
+            ACE_Arg_Shifter arg_shifter(_argc, _argv);
 
-	    while (arg_shifter.is_anything_left()) {
+            while (arg_shifter.is_anything_left()) {
+                if (arg_shifter.is_option_next()) {
+                    if (!arg_shifter.cur_arg_strncasecmp("-mcastgroup")) {
+                        std::string temp (arg_shifter.get_the_parameter("-mcastgroup"));
+                        ACE_INET_Addr iaddr((temp + ":41006").c_str());
+                        configuration_.setSocket(iaddr);
+                        arg_shifter.consume_arg();
+                    } else {
+                        arg_shifter.ignore_arg();
+                    }
+                } else {
+                    arg_shifter.ignore_arg();
+                }
+            }
 
-		if (arg_shifter.is_option_next()) {
-		    if (!arg_shifter.cur_arg_strncasecmp("-mcastgroup")) {
-			std::string temp (arg_shifter.get_the_parameter("-mcastgroup"));
-			ACE_INET_Addr iaddr((temp + ":41006").c_str());
-			configuration_.setSocket(iaddr);
-			arg_shifter.consume_arg();
+            /* Setup sender and receiver */
+            sender_ = new Sender(this, &configuration_);
 
-		    } else
-			arg_shifter.ignore_arg();
+            receiver_ = new Receiver(this, &configuration_);
 
-		} else
-		    arg_shifter.ignore_arg();
-	    }
+            /* Create handlers */
+            timeoutHandler_ = new TimeoutHandler(receiver_);
 
-	    /* Setup sender and receiver */
-	    sender_   = new Sender(this, &configuration_);
-	    receiver_ = new Receiver(this, &configuration_);
+            eventHandler_   = new EventHandler(receiver_, &configuration_);
 
-	    /* Create handlers */
-	    timeoutHandler_ = new TimeoutHandler(receiver_);
-	    eventHandler_   = new EventHandler(receiver_, &configuration_);
+            sh_ = new SH(sender_, receiver_, &configuration_);
 
-	    /* Install handlers */
-	    if (reactor_ != 0) {
-	      
-		eventHandlerId_ = reactor_->register_handler(configuration_.getSocket()->get_handle(), eventHandler_, ACE_Event_Handler::READ_MASK);
-		if (eventHandlerId_ == -1)
-		    throw Exception("Cannot register event handler");
+            receiver_->setSH(sh_);
 
-		timeoutHandlerId_ = reactor_->schedule_timer(timeoutHandler_, timeoutHandlerInterval_, timeoutHandlerInterval_);
-		if (timeoutHandlerId_ == -1)
-		    throw Exception("Cannot schedule timeout handler");
+            /* Install handlers */
+            if (reactor_ != 0) {
+                eventHandlerId_ = reactor_->register_handler(
+                                      configuration_.getSocket()->get_handle(),
+                                      eventHandler_,
+                                      ACE_Event_Handler::READ_MASK);
 
-	    } else
-		throw Exception("Reactor not available");
+                if (eventHandlerId_ == -1) {
+                    throw Exception("Cannot register event handler");
+                }
 
-	    char group[255];
-	    parameters->multicastgroup.addr_to_string(group, sizeof(group));
+                timeoutHandlerId_ = reactor_->schedule_timer(
+                                        timeoutHandler_,
+                                        timeoutHandlerInterval_,
+                                        timeoutHandlerInterval_);
 
-	    PRINT("==================================");
-	    PRINT(" Initialized Multicast Forwarding");
-	    PRINT(" Multicast Group: " << group);
-	    PRINT("==================================");
+                shId_ = reactor_->schedule_timer(
+                           sh_,
+                           shInterval_,
+                           shInterval_);
+
+                if (timeoutHandlerId_ == -1) {
+                    throw Exception("Cannot schedule timeout handler");
+                }
+
+            } else {
+                throw Exception("Reactor not available");
+            }
+
+            char group[255];
+            parameters->multicastgroup.addr_to_string(group, sizeof(group));
+
+            PRINT("==================================");
+            PRINT(" Initialized Multicast Forwarding");
+            PRINT(" Multicast Group: " << group);
+            PRINT("==================================");
 
             /* log details */
-	    LOG(&configuration_, "NotifyMulticast successfully initialized:");
-	    LOG(&configuration_, "  EventHandler (reactor):   " << eventHandlerId_);
-	    LOG(&configuration_, "  TimeoutHandler (reactor): " << timeoutHandlerId_);
-	}
+            LOG(&configuration_, "NotifyMulticast successfully initialized:");
+            LOG(&configuration_, "  EventHandler (reactor):   " << eventHandlerId_);
+            LOG(&configuration_, "  TimeoutHandler (reactor): " << timeoutHandlerId_);
+        }
 
 
         /**
@@ -165,11 +186,17 @@ namespace Miro {
         Adapter::~Adapter() throw(CORBA::Exception, Exception) {
             PRINT_DBG(DBG_INFO, "Cleaning up");
 
-	    if (timeoutHandlerId_ != -1)
+            if (timeoutHandlerId_ != -1) {
                 reactor_->cancel_timer(timeoutHandlerId_);
+            }
+
+            if (shId_ != -1) {
+                reactor_->cancel_timer(shId_);
+            }
 
             reactor_->remove_handler(eventHandler_, ACE_Event_Handler::READ_MASK);
 
+            delete sh_;
             delete timeoutHandler_;
             delete eventHandler_;
             delete sender_;
@@ -181,17 +208,17 @@ namespace Miro {
         }
 
 
-	void Adapter::init() {
-	    PRINT_DBG(DBG_MORE, "Initializing subscriptions");
-	    sender_->init();
-	}
-	
-	void Adapter::fini() {
-	    PRINT_DBG(DBG_MORE, "Finalizing notify multicast adapter.");
-	    receiver_->disconnect();
-	}
-	
-	
+        void Adapter::init() {
+            PRINT_DBG(DBG_MORE, "Initializing subscriptions");
+            sender_->init();
+        }
+
+        void Adapter::fini() {
+            PRINT_DBG(DBG_MORE, "Finalizing notify multicast adapter.");
+            receiver_->disconnect();
+        }
+
+
         /**
          * Adapter::getSender()
          *
@@ -211,7 +238,7 @@ namespace Miro {
          */
         Receiver *Adapter::getReceiver() {
             return receiver_;
-	}
+        }
 
 
     };

@@ -3,26 +3,30 @@
 //  NotifyMulticastSender
 //
 //
-//  (c) 2002, 2003
+//  (c) 2002, 2003, 2004
 //  Department of Neural Information Processing, University of Ulm, Germany
 //
 //
 //  Authors:
-//    Philipp Baer <philipp.baer@informatik.uni-ulm.de>
+//    Hans Utz <hans.utz@neuro.informatik.uni-ulm.de>
+//    Philipp Baer <phbaer@npw.net>
 //
 //
 //  Version:
-//    1.0.4
+//    1.1.0
 //
 //
 //  Description:
 //
-//   push_structured_event is called when new event is sent over the
-//   EventChannel. Each event is serialized and sent to the peers
-//   using ip multicast.
+//   push_structured_event is called when new event is received from the
+//   EventChannel. Each event is serialized and sent to the peers using
+//   ip multicast.
 //
 //
 //  Changes:
+//
+//    1.1.0
+//     - added subscription framework
 //
 //    1.0.4
 //     - added some logging output
@@ -61,61 +65,75 @@ namespace Miro {
     namespace NotifyMulticast {
 
         class Config;
+
         class Adapter;
 
+        class SH;
+
         class Sender : public Miro::StructuredPushConsumer {
-            typedef Miro::StructuredPushConsumer Super;
 
-        public:
-            /* Default constructor */
-            Sender(Adapter *_main,
-                   Config  *configuration_);
+            public:
+                typedef Miro::StructuredPushConsumer Super;
 
-            /* Default destructor */
-            ~Sender();
+                /* Default constructor */
+                Sender(Adapter *_main,
+                       Config  *configuration_);
 
-	    void init();
-	    
-            friend class Adapter;
+                /* Default destructor */
+                ~Sender();
 
-            int sendData(iovec *_iov, size_t _iovLen);
+                void init();
 
-        protected:
-            void subscribe(const std::string _domain, const std::string _type)
-            throw(CORBA::SystemException, CosNotifyComm::InvalidEventType);
+                friend class Adapter;
 
-            void unsubscribe(const std::string _domain, const std::string _type)
-            throw(CORBA::SystemException, CosNotifyComm::InvalidEventType);
+                int sendData(iovec *_iov, size_t _iovLen);
 
-            void marshalEvent(const CosNotification::StructuredEvent &_event);
+                friend class SH;
 
-            void sendCdrStream(TAO_OutputCDR &cdr);
+            protected:
+                void subscribe(
+                    const std::string _domain,
+                    const std::string _type)
+                throw(CORBA::SystemException, CosNotifyComm::InvalidEventType);
 
-            unsigned long int getFragmentCount(const ACE_Message_Block *_begin,
-                                               const ACE_Message_Block *_end,
-                                               int                      _iovSize,
-                                               CORBA::ULong             _maxFragmentPayload,
-                                               CORBA::ULong            &_totalLength);
+                void unsubscribe(
+                    const std::string _domain,
+                    const std::string _type)
+                throw(CORBA::SystemException, CosNotifyComm::InvalidEventType);
 
-            void sendFragment(CORBA::ULong         _requestId,
-                              CORBA::ULong         _requestSize,
-                              CORBA::ULong         _fragmentSize,
-                              CORBA::ULong         _fragmentOffset,
-                              CORBA::ULong         _fragmentId,
-                              CORBA::ULong         _fragmentCount,
-                              CORBA::ULong         _timestamp,
-                              iovec                _iov[],
-                              int                  _iovcnt);
+                void marshalEvent(const CosNotification::StructuredEvent &_event);
 
-            void disconnect_structured_push_consumer(ACE_ENV_SINGLE_ARG_DECL_WITH_DEFAULTS)
-            throw(CORBA::SystemException);
+                void sendCdrStream(TAO_OutputCDR &cdr);
 
-            void push_structured_event(const CosNotification::StructuredEvent &_notification ACE_ENV_ARG_DECL_WITH_DEFAULTS)
-            throw(CORBA::SystemException, CosEventComm::Disconnected);
+                unsigned long int getFragmentCount(
+                    const ACE_Message_Block *_begin,
+                    const ACE_Message_Block *_end,
+                    int _iovSize,
+                    CORBA::ULong _maxFragmentPayload,
+                    CORBA::ULong &_totalLength);
 
-            Adapter           *main_;
-            Config            *configuration_;
-            unsigned long int  requestId_;
+                void sendFragment(
+                    CORBA::ULong _requestId,
+                    CORBA::ULong _requestSize,
+                    CORBA::ULong _fragmentSize,
+                    CORBA::ULong _fragmentOffset,
+                    CORBA::ULong _fragmentId,
+                    CORBA::ULong _fragmentCount,
+                    CORBA::ULong _timestamp,
+                    iovec _iov[],
+                    int _iovcnt);
+
+                void disconnect_structured_push_consumer(ACE_ENV_SINGLE_ARG_DECL_WITH_DEFAULTS)
+                throw(CORBA::SystemException);
+
+                void push_structured_event(
+                    const CosNotification::StructuredEvent &_notification
+                    ACE_ENV_ARG_DECL_WITH_DEFAULTS)
+                throw(CORBA::SystemException, CosEventComm::Disconnected);
+
+                Adapter *main_;
+                Config *configuration_;
+                unsigned long int requestId_;
         };
     };
 };
