@@ -22,7 +22,10 @@
 #include <qstringlist.h>
 #include <qfiledialog.h>
 
-FileListDialog::FileListDialog(QWidget* parent) :
+FileListDialog::FileListDialog(QWidget* parent,
+			       QString const& _dialogTitle,
+			       QString const& _listTitle,
+			       char const * _filters[]) :
   QDialog(parent, "FileListDialog", TRUE),       // TRUE = modal dialog
   list_(NULL),
   delButton_(NULL),
@@ -30,7 +33,7 @@ FileListDialog::FileListDialog(QWidget* parent) :
   modified_(false)
 {
   resize(300, 200);
-  setCaption("Config dialog");
+  setCaption(_dialogTitle);
 
   QVBoxLayout * topBox = new QVBoxLayout(this, 0, -1, "boxLayout");
 
@@ -45,7 +48,7 @@ FileListDialog::FileListDialog(QWidget* parent) :
 
   topBox->addSpacing(10);
   topBox->addWidget(fileBox);
-  fileBox->setTitle("Behaviour description files");
+  fileBox->setTitle(_listTitle);
 
   topBox->addSpacing(10);
   QHBoxLayout * dialogButtonsBox = new QHBoxLayout(topBox, -1, "hBoxLayout");
@@ -62,10 +65,10 @@ FileListDialog::FileListDialog(QWidget* parent) :
   
   okButton->setDefault(true);
 
-  static const char * filters[3] = { "all files (*)", "config files (*.xml)", NULL };
+  static const char * filters[3] = { "all files (*)", NULL };
 
-  fileDialog_->setCaption("Config file dialog");
-  fileDialog_->setFilters(filters);
+  fileDialog_->setCaption("File open dialog");
+  fileDialog_->setFilters((_filters == NULL)? filters : _filters);
 
   // connect the dialogs functionality  
   connect(okButton,     SIGNAL(clicked()), SLOT(accept()));
@@ -125,7 +128,7 @@ FileListDialog::add()
       modified_ = true;
     }
     else {
-      QMessageBox::warning(this, "Duplicated file", "Selected file is already part of the configuration.");
+      QMessageBox::warning(this, "Duplicated file", "Selected file is already part of the file list.");
     }
   }
 

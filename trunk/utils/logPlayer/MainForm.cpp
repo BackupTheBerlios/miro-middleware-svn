@@ -16,10 +16,7 @@
 
 #include "../widgets/FileListDialog.h"
 
-#include "miro/TimeHelper.h"
 #include "miro/Exception.h"
-
-#include <iostream>
 
 #include <qapplication.h>
 #include <qpopupmenu.h>
@@ -27,19 +24,35 @@
 #include <qstatusbar.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
-#include <qfont.h>
 #include <qslider.h>
 #include <qlcdnumber.h>
 #include <qtimer.h>
 #include <qdial.h>
 #include <qprogressdialog.h>
+#include <qmessagebox.h>
 
+#include <cstring>
 
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
+namespace 
+{
+  char const * filter[] = {
+    "log files (*.log)",
+    "all files (*)",
+    NULL
+  };
+};
+
+SubmenuEvent::SubmenuEvent(QObject * parent, char const * name) :
+  Super(parent, name),
+  parentId_(0)
+{}
+
+void
+SubmenuEvent::action(int _id)
+{
+  emit activated(parentId_, _id);
+}
+
 
 ACE_Time_Value const MainForm::MIN_TIME(0, 20000);
 
@@ -48,9 +61,12 @@ MainForm::MainForm(QApplication& _app, FileSet& _fileSet,
   Super(parent, name),
   app_(_app),
   fileSet_(_fileSet),
-  fileListDialog_(new FileListDialog(this)),
+  fileListDialog_(new FileListDialog(this, "File list dialog", "Log files", filter)),
   timer_(new QTimer()),
-  action_(false)
+  eventMenu_(new QPopupMenu( this )),
+  action_(false),
+  speed_(1),
+  domainNameMenuId_(0)
 {
   // the menu
   QPopupMenu *fileMenu = new QPopupMenu( this );
@@ -59,6 +75,7 @@ MainForm::MainForm(QApplication& _app, FileSet& _fileSet,
   fileMenu->insertItem( "&Quit", qApp, SLOT( quit() ) );
 
   menuBar()->insertItem( "&File", fileMenu );    
+  menuBar()->insertItem( "&Events", eventMenu_ );    
 
   // the widgets
   QWidget * cw = new QWidget(this, "central widget");
@@ -155,6 +172,7 @@ MainForm::MainForm(QApplication& _app, FileSet& _fileSet,
   enableButtons(fileSet_.size() != 0);
 }
 
+// TODO: implement exclude from command line
 void
 MainForm::addExclude(QString const& /*_eventName*/)
 {
@@ -178,6 +196,8 @@ MainForm::enableButtons(bool _flag)
     minLabel->display(0);
     speedDial->setValue(0);
   }
+
+  eventMenu_->setEnabled(eventMenu_->count() != 0);
 }
 
 void
@@ -227,7 +247,8 @@ MainForm::calcStartTime()
   timeCBase_ = fileSet_.coursorTime();
 }
 
-void MainForm::changed( int )
+void 
+MainForm::changed( int )
 {
   ACE_Time_Value t = fileSet_.coursorTime() - fileSet_.startTime();
 
@@ -236,44 +257,23 @@ void MainForm::changed( int )
   centiSecLabel->display( int(t.usec() / 10000 ) );
 }
 
-void MainForm::play() {
+void
+MainForm::play() 
+{
   calcStartTime();
   timer_->start(0);
 }
 
-void MainForm::stop() {
+void 
+MainForm::stop() 
+{
   timer_->stop();
   fileSet_.coursorTime(fileSet_.startTime());
 }
 
-void MainForm::pause() {
+void MainForm::pause() 
+{
   timer_->stop();
-}
-
-void MainForm::send() {
-#ifdef ASDF
-  TAO_InputCDR istr((char*)(timeVector[ timeVectorPos ].second), memoryMap.size());    
-  CosNotification::StructuredEvent event;
-  istr >> event;
-
-  const char * s = event.header.fixed_header.event_type.type_name;
-  std::string eventName = s;
-  for (StringVector::const_iterator i = exclude.begin(); i != exclude.end(); ++i)
-    if (*i == eventName)
-      return;
-
-if (eventName == "LineSamples")
-  event.header.fixed_header.event_type.type_name = CORBA::string_dup( "RawLineSamples" );
-
-  event.header.fixed_header.event_type.domain_name = CORBA::string_dup( context.c_str() );
-
-  cout << timeVector[ timeVectorPos ].first.sec() << ":" 
-       << timeVector[ timeVectorPos].first.usec() << "\t";    
-  cout << "  Domain:  " << event.header.fixed_header.event_type.domain_name << "\t"
-       << "  Type:    " << event.header.fixed_header.event_type.type_name << endl;
-
-  supplier.sendEvent(event);
-#endif
 }
 
 void
@@ -284,7 +284,10 @@ MainForm::next()
   }
 }
 
-void MainForm::prev() {
+// TODO: implement that
+void 
+MainForm::prev() 
+{
   if (!timer_->isActive()) {
 
   }
@@ -295,12 +298,8 @@ MainForm::step()
 {
   if (!action_) {
     
-    int speed = speedDial->value();
-    if (speed == 0)
-      speed = 1;
-
     ACE_Time_Value destTime = ACE_OS::gettimeofday() + MIN_TIME - timeBase_;
-    destTime *= (speed > 0)? (double)speed : (1. / (double)-speed);
+    destTime *= (speed_ > 0)? (double)speed_ : (1. / (double)-speed_);
     destTime += timeCBase_;
     destTime = std::min(destTime, fileSet_.coursorTime() + ACE_Time_Value(0, 200000));
    
@@ -309,7 +308,7 @@ MainForm::step()
     if (fileSet_.coursorTime() != fileSet_.endTime()) {
       // rescedule timer
       ACE_Time_Value nextTime = ACE_OS::gettimeofday() - timeBase_;
-      nextTime *= (speed > 0)? (double)speed : (1. / (double)-speed);
+      nextTime *= (speed_ > 0)? (double)speed_ : (1. / (double)-speed_);
       nextTime += timeCBase_;
 
       // TODO fix that too
@@ -331,7 +330,8 @@ MainForm::beginAction()
 }
 
 void 
-MainForm::endAction() {
+MainForm::endAction()
+{
   calcStartTime();
   action_ = false;
 }
@@ -344,8 +344,11 @@ MainForm::timeAction(int hsec )
 }
 
 void
-MainForm::speed( int ) 
+MainForm::speed( int _speed) 
 {
+  speed_ = _speed;
+  if (speed_ == 0)
+    speed_ = 1;
 }
 
 void 
@@ -380,12 +383,68 @@ MainForm::loadFile(QString const & _name )
     }
     catch (Miro::Exception const& e) {
       fileSet_.delFile(_name);
+      if (strcmp("canceled", e.what()) == 0)
+	statusBar()->message("loading file canceled.", 5000);
+      else
+	QMessageBox::warning(this, "Error parsing file:",
+			     QString("File ") + _name + QString(":\n") +
+			     QString(e.what()));
       rc = false;
     }
   }
   catch (Miro::CException const& e) {
-    cout << "C exception: " << e << endl;
+    QMessageBox::warning(this, "Error loading file:",
+			 QString("File ") + _name + QString(":\n") +
+			 QString(e.what()));
     rc = false;
   }
+  createEventMenu();
   enableButtons(fileSet_.size() != 0);
+}
+
+void
+MainForm::createEventMenu()
+{
+  FileSet::DNETMap m = fileSet_.typeNames();
+
+  fileSet_.clearExclude();
+  eventMenu_->clear();
+
+  FileSet::DNETMap::const_iterator first, last = m.end();
+  for (first = m.begin(); first != last; ++first) {
+    QPopupMenu *typeNames = new QPopupMenu(eventMenu_);
+    SubmenuEvent *submenuEvent = new SubmenuEvent(typeNames, "subEvent");
+
+    connect(typeNames, SIGNAL(activated(int)), submenuEvent, SLOT(action(int)));
+    connect(submenuEvent, SIGNAL(activated(int, int)), this, SLOT(toggleExcludeEvent(int, int)));
+
+    typeNames->setCheckable(true);
+    LogFile::CStringSet::const_iterator f, l = first->second.end();
+    for (f = first->second.begin(); f != l; ++f) {
+      int id = typeNames->insertItem(QString(*f));
+      typeNames->setItemChecked(id, true);
+    }
+
+    int id = eventMenu_->insertItem(first->first, typeNames);
+    submenuEvent->setParentId(id);
+  }
+}
+
+void
+MainForm::toggleExcludeEvent(int _domainNameId, int _eventTypeId)
+{
+  QString domainName = eventMenu_->text(_domainNameId);
+  QMenuItem * domainNameItem = eventMenu_->findItem(_domainNameId);
+  QPopupMenu * domainNameMenu = domainNameItem->popup();
+
+  domainNameMenu->setItemChecked(_eventTypeId, 
+				 !domainNameMenu->isItemChecked(_eventTypeId));
+  // enable event
+  if (domainNameMenu->isItemChecked(_eventTypeId)) {
+    fileSet_.delExclude(domainName, domainNameMenu->text(_eventTypeId));
+  }
+  // disable event
+  else {
+    fileSet_.addExclude(domainName, domainNameMenu->text(_eventTypeId));
+  }
 }

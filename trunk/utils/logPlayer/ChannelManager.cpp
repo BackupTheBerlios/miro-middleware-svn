@@ -80,7 +80,6 @@ ChannelManager::getEventChannel(QString const& _domainName)
       ec = notifyFactory_->create_channel(initialQos, initialAdmin, id);
 
       // Attempt to create naming context.
-      cout << "." << flush;
       CosNaming::NamingContext_var namingContext;
       n.length(1);
       n[0].id = CORBA::string_dup(_domainName.latin1());

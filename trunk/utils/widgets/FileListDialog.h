@@ -16,6 +16,7 @@
 // forward declarations
 class QListBox;
 class QPushButton;
+class QString;
 class QStringList;
 class QFileDialog;
 
@@ -27,7 +28,10 @@ class FileListDialog : public QDialog
   Q_OBJECT
 
 public:
-  FileListDialog(QWidget* parent);
+  FileListDialog(QWidget* parent,
+		 QString const& _dialogTitle = QString("File list dialog"),
+		 QString const& _listTitle = QString("Files"),
+		 char const * _filters[] = NULL);
   ~FileListDialog();
 
   bool modified();

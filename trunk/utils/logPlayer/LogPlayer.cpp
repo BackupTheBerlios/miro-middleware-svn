@@ -28,20 +28,17 @@
 
 #include <iostream>
 
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
-
-using std::cout;
-using std::cerr;
+namespace 
+{
+  bool verbose = false;
+};
 
 int
 main(int argc, char *argv[])
 {
   bool shared = false;
   const char colocatedOpt[] = "-shared_ec";
+  const char verboseOpt[] = "-v";
  
   // parse optional args
   ACE_Arg_Shifter arg_shifter (argc, argv);
@@ -51,7 +48,12 @@ main(int argc, char *argv[])
     if (ACE_OS::strcasecmp(current_arg, colocatedOpt) == 0) {
       arg_shifter.consume_arg();
       shared = false;
-      cout << "Using a shared event channel factory." << endl;
+      if (verbose)
+	std::cout << "Using a shared event channel factory." << endl;
+    } 
+    else if (ACE_OS::strcasecmp(current_arg, verboseOpt) == 0) {
+      arg_shifter.consume_arg();
+      verbose = true;
     } 
     else
       arg_shifter.ignore_arg ();
@@ -67,7 +69,8 @@ main(int argc, char *argv[])
   }
 
   // Create Miro server
-  DBG(std::cout << "Initialize server daemon." << endl);
+  if (verbose)
+    std::cout << "Initialize server daemon." << endl;
 
   ChannelManager channelManager(argc, argv, shared);
   try {
@@ -75,16 +78,20 @@ main(int argc, char *argv[])
     FileSet fileSet(&channelManager);
     MainForm mainWindow(app, fileSet);
 
-    DBG(std::cout << "adding excluded events" << endl);
+    // DOTO: implement that, please...
+    if (verbose)
+      std::cout << "adding excluded events" << endl;
     for (int i = 2; i < argc; ++i) {
-      DBG(std::cout << argv[i] << endl);
+      if (verbose)
+	std::cout << argv[i] << endl;
       mainWindow.addExclude(argv[i]);
     }
       
     // Scope operator to delimit the lifetime
     // of MyWidget, to prevent conflicts with CORBA cleanup
     {
-      DBG(std::cout << "set main widget" << endl);
+      if (verbose)
+	std::cout << "set main widget" << endl;
       app.setMainWidget( &mainWindow );
       QObject::connect(&app, SIGNAL(lastWindowClosed()), &app, SLOT(quit()));
       mainWindow.show();
@@ -92,11 +99,13 @@ main(int argc, char *argv[])
 
       // parse remaining args
       if (argc > 1) {
-	DBG(std::cout << "using file " << argv[1] << endl);
+	if (verbose)
+	  std::cout << "using file " << argv[1] << endl;
 	mainWindow.loadFile(argv[1]);
       }
     
-      DBG(std::cout << "exec application" << endl);
+      if (verbose)
+	std::cout << "exec application" << endl;
       app.exec();
     }
 
@@ -104,10 +113,10 @@ main(int argc, char *argv[])
     channelManager.wait();
   }
   catch (Miro::Exception const& e) {
-    cerr << "Miro exception: " << e << endl;
+    std::cerr << "Miro exception: " << e << endl;
   }
   catch (const CORBA::Exception& e) {
-    cerr << "CORBA exception: " << e << endl;
+    std::cerr << "CORBA exception: " << e << endl;
     return 1;
   }
   return 0;

@@ -153,3 +153,48 @@ FileSet::files() const
 
   return l;
 }
+
+FileSet::DNETMap 
+FileSet::typeNames() const 
+{
+  DNETMap tree;
+  FileVector::const_iterator first, last = file_.end();
+  for (first = file_.begin(); first != last; ++first) {
+    DNETMap::iterator iter = tree.find((*first)->domainName());
+    if (iter == tree.end())
+      tree.insert(std::make_pair((*first)->domainName(), (*first)->typeNames()));
+    else 
+      iter->second.insert((*first)->typeNames().begin(), (*first)->typeNames().end());
+  }
+  
+  return tree;
+}
+
+void
+FileSet::clearExclude()
+{
+  FileVector::const_iterator first, last = file_.end();
+  for (first = file_.begin(); first != last; ++first) {
+    (*first)->clearExclude();
+  }
+}
+
+void
+FileSet::addExclude(QString const& _domainName, QString const& _typeName)
+{
+  FileVector::const_iterator first, last = file_.end();
+  for (first = file_.begin(); first != last; ++first) {
+    if ((*first)->domainName() == _domainName)
+      (*first)->addExclude(_typeName);
+  }
+}
+
+void
+FileSet::delExclude(QString const& _domainName, QString const& _typeName)
+{
+  FileVector::const_iterator first, last = file_.end();
+  for (first = file_.begin(); first != last; ++first) {
+    if ((*first)->domainName() == _domainName)
+      (*first)->delExclude(_typeName);
+  }
+}

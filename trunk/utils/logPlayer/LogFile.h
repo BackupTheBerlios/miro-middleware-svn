@@ -18,11 +18,14 @@
 
 #include <qobject.h>
 #include <qstring.h>
+#include <qstringlist.h>
 
 #include <vector>
+#include <set>
 #include <algorithm>
 #include <functional>
 #include <utility>
+#include <cstring>
 
 // forward declaration
 class TAO_InputCDR ;
@@ -38,6 +41,29 @@ class LogFile : public QObject
 
 private:
   typedef QObject Super;
+
+protected:
+  typedef std::pair< ACE_Time_Value, char * > TimePair;
+  typedef std::vector< TimePair > TimeVector;
+  typedef std::vector< QString > QStringVector;
+
+  struct LtStr : public std::binary_function<char const *, char const *, bool>
+  {
+    bool operator()(char const * s1, char const * s2) const {
+      return strcmp(s1, s2) < 0;
+    }
+  };
+
+  struct TVLess : public std::binary_function<TimePair const&, TimePair const &, bool>
+  {
+    bool operator() (TimePair const & _lhs, TimePair const & _rhs) {
+      return _lhs.first < _rhs.first;
+    }
+  };
+
+public:
+  //  typedef std::set< char const *, LtStr > CStringSet;
+  typedef std::set< QString > CStringSet;
 
 public:
   LogFile(QString const& _name,
@@ -55,14 +81,18 @@ public:
   unsigned int parse();
   bool parsed() const;
 
+  void clearExclude();
+  void addExclude(QString const& _typeName);
+  void delExclude(QString const& _typeName);
+
+  QString const& domainName() const;
+  CStringSet const& typeNames() const;
+
 signals:
   void notifyEvent(const QString&);
  
-protected:
-  typedef std::pair< ACE_Time_Value, char * > TimePair;
-  typedef std::vector< TimePair > TimeVector;
-  typedef std::vector< QString > QStringVector;
 
+protected:
   QString name_;
   ChannelManager * const channelManager_;
 
@@ -72,6 +102,8 @@ protected:
   TimeVector::const_iterator coursor_;
 
   QString domainName_;
+  CStringSet typeNames_;
+
   CosNotifyChannelAdmin::EventChannel_var ec_;
   Miro::StructuredPushSupplier * supplier_;
 
@@ -82,12 +114,6 @@ protected:
 
   static const ACE_Time_Value T_NULL;
 
-  struct TVLess : public std::binary_function<TimePair const&, TimePair const &, bool>
-  {
-    bool operator() (TimePair const & _lhs, TimePair const & _rhs) {
-      return _lhs.first < _rhs.first;
-    }
-  };
 };
 
 inline
@@ -133,4 +159,19 @@ LogFile::parsed() const
 {
   return parsed_;
 }
+
+inline
+QString const&
+LogFile::domainName() const
+{
+  return domainName_;
+}
+
+inline
+LogFile::CStringSet const&
+LogFile::typeNames() const
+{
+  return typeNames_;
+}
+
 #endif

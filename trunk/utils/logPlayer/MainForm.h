@@ -21,10 +21,39 @@ class FileSet;
 class FileListDialog;
 
 class QApplication;
+class QPopupMenu;
 class QTimer;
 class QSlider;
 class QLCDNumber;
 class QDial;
+
+
+class SubmenuEvent : public QObject
+{
+  Q_OBJECT
+
+private:
+  typedef QObject Super;
+
+public:
+  SubmenuEvent(QObject * parent, char const * name);
+  void setParentId(int _id);
+
+public slots:
+  void action(int);
+
+signals:
+  void activated(int, int);
+
+protected:
+  int parentId_;
+};
+
+inline
+void
+SubmenuEvent::setParentId(int _id) {
+  parentId_ = _id;
+}
 
 class MainForm : public QMainWindow
 {
@@ -36,7 +65,6 @@ public:
 	   QWidget * parent = 0, const char * name = 0 );
 
   void loadFile(QString const & _name);
-  void send();
   void calcStartTime();
 
   void addExclude(QString const & _eventName);
@@ -58,13 +86,18 @@ public slots:
   void scaleSlider();
   void setSlider();
 
+  void toggleExcludeEvent(int, int);
+
 protected:
   void enableButtons(bool _flag);
+  void createEventMenu();
 
   QApplication& app_;
   FileSet& fileSet_;
   FileListDialog * fileListDialog_;
   QTimer * timer_;
+
+  QPopupMenu *eventMenu_;
 
   QWidget *playButton;
   QWidget *stopButton;
@@ -78,8 +111,11 @@ protected:
   QDial       *speedDial;
 
   bool action_;
+  int speed_;
   ACE_Time_Value timeBase_;
   ACE_Time_Value timeCBase_;
+
+  int domainNameMenuId_;
 
   static ACE_Time_Value const MIN_TIME;
 };

@@ -13,9 +13,11 @@
 
 #include "LogFile.h"
 
+#include <qstring.h>
 #include <qstringlist.h>
 
 #include <vector>
+#include <map>
 
 // forward declarations
 class ChannelManager;
@@ -26,6 +28,8 @@ class FileSet : public QObject
 
   typedef QObject Super;
 public:
+  typedef std::map<QString, LogFile::CStringSet> DNETMap; // domain_name type_came map
+
   FileSet(ChannelManager * _channelManager);
   ~FileSet();
 
@@ -44,6 +48,11 @@ public:
 
   void playEvent(ACE_Time_Value const& _t);
   void playLast();
+
+  DNETMap typeNames() const;
+  void clearExclude();
+  void addExclude(QString const& _domainName, QString const& _typeName);
+  void delExclude(QString const& _domainName, QString const& _typeName);
 
 signals:
   void intervalChange();

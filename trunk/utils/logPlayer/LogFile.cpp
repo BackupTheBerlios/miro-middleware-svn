@@ -27,7 +27,7 @@ LogFile::LogFile(QString const& _name,
   istr_(NULL),
   parsed_(false)
 {
-  memoryMap_.map( _name );
+  memoryMap_.map(_name, -1, O_RDONLY);
   if (0 == memoryMap_.handle())
     throw Miro::CException(errno, std::strerror(errno));    
 
@@ -64,6 +64,8 @@ LogFile::parse()
     
     // skip event
     (*istr_) >> event;
+
+    typeNames_.insert(QString(event.header.fixed_header.event_type.type_name));
 
     if (!(timeVector_.size() % 2048))
       break;
@@ -107,10 +109,18 @@ LogFile::playEvent()
   char const * const s = event.header.fixed_header.event_type.type_name;
   QString const eventName = s;
   QStringVector::const_iterator first, last = exclude_.end();
-  for (first = exclude_.begin(); first != last; ++first)
-    if (*first == eventName)
+  for (first = exclude_.begin(); first != last; ++first) {
+    if (*first == eventName) {
+      ++coursor_;
       return;
-  
+    }
+  }
+
+#ifdef DEBUG_LOCALIZATION  
+  if (eventName == "LineSamples")
+    event.header.fixed_header.event_type.type_name = CORBA::string_dup( "RawLineSamples" );
+#endif // DEBUG_LOCALIZATION
+
   emit notifyEvent(QString(event.header.fixed_header.event_type.domain_name) +
 		   QString(" - ") +
 		   QString(event.header.fixed_header.event_type.type_name));
@@ -120,3 +130,32 @@ LogFile::playEvent()
   ++coursor_;
 }
 
+void
+LogFile::clearExclude()
+{
+  exclude_.clear();
+}
+
+void
+LogFile::addExclude(QString const& _typeName)
+{
+  if (typeNames_.find(_typeName.latin1()) == typeNames_.end())
+    return;
+
+  assert(std::find(exclude_.begin(), exclude_.end(), _typeName) == exclude_.end());
+
+  exclude_.push_back(_typeName);
+}
+
+void
+LogFile::delExclude(QString const& _typeName)
+{
+  if (typeNames_.find(_typeName.latin1()) == typeNames_.end())
+    return;
+
+  QStringVector::iterator iter = 
+    std::find(exclude_.begin(), exclude_.end(), _typeName);
+  assert(iter != exclude_.end());
+
+  exclude_.erase(iter);
+}

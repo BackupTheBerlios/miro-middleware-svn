@@ -29,12 +29,22 @@
 #include <iostream>
 #include <sstream>
 
+namespace 
+{
+  const char * filters[3] = { 
+    "config files (*.xml)", 
+    "all files (*)", 
+    NULL 
+  };
+}
+
+
 PolicyEditorClass::PolicyEditorClass(Miro::Client& _client) :
   QMainWindow(NULL, "PolicyEditor"),
   client_(_client),
   config_(*PolicyConfigClass::instance()),
   view_(new PolicyViewClass(this, document_)),
-  configDialog_(new FileListDialog(this)),
+  configDialog_(new FileListDialog(this, "Config dialog", "Behaviour description files", filters)),
   robot_(getenv("HOST"))
 {
   resize(600, 500);
