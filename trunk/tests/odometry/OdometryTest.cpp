@@ -116,6 +116,8 @@ main(int argc, char * argv[])
 	  position = odometry->getWaitRawPosition();
 	  std::cout << "Current position: " << position << std::endl;
 	  break;
+	case 'q':
+	  break;
 	default:
 	  std::cerr << "Unknown command: " << input << std::endl;
 	  break;
