@@ -46,7 +46,6 @@ sparrow_include_HEADERS = $(includefiles2)
 
 EXTRA_DIST = \
 	IRLookupTable.h \
-	SparrowDevice2003.h \
 	SparrowDevice.h
 
 all-local:

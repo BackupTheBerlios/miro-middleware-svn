@@ -45,7 +45,7 @@ namespace Sparrow
   //------------------------//
   //----- constructors -----//
   //------------------------//
-  const int Consumer2003::INTEGRATION_NUMBER = 5;
+  const int Consumer2003::INTEGRATION_NUMBER = 3;
 
 
   Consumer2003::Consumer2003(Connection2003 * _connection,
