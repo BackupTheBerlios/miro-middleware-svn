@@ -39,10 +39,16 @@ namespace Miro
     out.usec = in.usec();
   }
 
-  std::string timeString(ACE_Time_Value const& _stamp = ACE_OS::gettimeofday());
-  std::string timeStringSec(ACE_Time_Value const& _stamp = ACE_OS::gettimeofday());
-  std::string timeStringMinute(ACE_Time_Value const& _stamp = ACE_OS::gettimeofday());
-};
+  std::string timeString();
+  std::string timeStringSec();
+  std::string timeStringMinute();
+
+#if ACE_MAJOR_VERSION > 5 || (ACE_MAJOR_VERSION == 5  && ACE_MINOR_VERSION >= 4)
+  std::string timeString(ACE_Time_Value const& _stamp);
+  std::string timeStringSec(ACE_Time_Value const& _stamp);
+  std::string timeStringMinute(ACE_Time_Value const& _stamp);
+#endif
+}
 
 #endif
 
