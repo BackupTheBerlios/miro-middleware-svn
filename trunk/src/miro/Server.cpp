@@ -69,6 +69,7 @@ namespace Miro
     rebind_(true),
     own_(true),
     shutdown_(false),
+    signals_(),
     worker_(&threadManager_, orb_.in(), shutdown_)
   {
     DBG(cerr << "Constructing Miro::Server." << endl);
@@ -94,9 +95,11 @@ namespace Miro
     poa_mgr = poa->the_POAManager();
         
     // register Signal handler for Ctr+C
+    signals_.sig_add(SIGINT);
+    signals_.sig_add(SIGTERM);
+
     pServer = this;
-    ACE_Sig_Action sa1 ((ACE_SignalHandler) handler, SIGINT);
-    ACE_Sig_Action sa2 ((ACE_SignalHandler) handler, SIGTERM);
+    ACE_Sig_Action sa ((ACE_SignalHandler) handler, signals_);
 
     // Activate the POA manager.
     poa_mgr->activate();
@@ -111,6 +114,7 @@ namespace Miro
     rebind_(_server.rebind_),
     own_(false),
     shutdown_(true),
+    signals_(),
     worker_(&threadManager_, orb_.in(), shutdown_)
   {
     DBG(cerr << "Copy constructing Miro::Server." << endl);
@@ -154,7 +158,7 @@ namespace Miro
       orb_->perform_work(timeSlice);
       cout << "Destroying the ORB." << endl;
       orb_->shutdown(1);
-          }
+    }
   }
 
   // Return the root POA reference

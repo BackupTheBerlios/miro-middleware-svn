@@ -111,6 +111,9 @@ namespace Miro
   private:
     bool shutdown_;
 
+    //! Signal set to be handled by the event handler.
+    ACE_Sig_Set signals_;
+
     ACE_Thread_Manager threadManager_;
 
     //! Shared worker thread pool.
