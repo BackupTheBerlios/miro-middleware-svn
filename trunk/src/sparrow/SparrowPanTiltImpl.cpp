@@ -23,7 +23,7 @@ namespace Sparrow
   using Miro::EOutOfBounds;
 
   // Implementation skeleton constructor
-  PanTiltImpl::PanTiltImpl(Connection2003 * _connection,
+  PanTiltImpl::PanTiltImpl(BaseConnection * _connection,
 			   Miro::StructuredPushSupplier * _pSupplier) :
     Miro::PanImpl(Parameters::instance()->pan),
     connection_(dynamic_cast<Connection2003 *>(_connection)),

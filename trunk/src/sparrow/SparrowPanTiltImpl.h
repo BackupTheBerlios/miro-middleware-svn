@@ -28,6 +28,7 @@ namespace Miro
 namespace Sparrow
 {
   // forward declaration
+  class BaseConnection;
   class Connection2003;
   class Parameters;
 
@@ -36,7 +37,7 @@ namespace Sparrow
   {
   public:
     //! Constructor
-    PanTiltImpl(Connection2003 * _connection,
+    PanTiltImpl(BaseConnection * _connection,
 		Miro::StructuredPushSupplier * _pSupplier = NULL);
 
     //! Destructor
