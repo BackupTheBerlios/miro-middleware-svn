@@ -13,6 +13,7 @@
 #include "FaulTtyConnection.h"
 #include "FaulTtyMessage.h"
 
+#include "miro/TimeHelper.h"
 #include <algorithm>
 
 #undef DEBUG
@@ -77,12 +78,13 @@ namespace FaulTty
       throw Miro::Exception("FaulTty file descriptor was called to read 0" \
 			    "bytes from the device. I can´t belief this!");
 
+    buff[bytes] = 0;
     //msg->time() = ACE_OS::gettimeofday();
-
     if (lrbytes==0) {
        posR=(long)atoi(buff);
 	if ((abs((int)(posR - prePosR))<25000) || (posinit == 0))
 	{
+cout << "R " << bytes << " " << buff;
 		lrbytes=0;
 		//cout << "byte1:  " << abs(posL-prePosL)<< endl;
 		prePosR=posR;
@@ -90,9 +92,12 @@ namespace FaulTty
 	}
       }
        else {
+
 	posL=(long)atoi(buff);
 	if ((abs((int)(posL-prePosL))<25000) || (posinit ==0))
 	{
+cout << "L " << bytes << " " << buff;
+
 		lrbytes=0;
 		//cout << "                                                                       byte2:  " << abs(posR-prePosR)<< endl;
 		msg->setPos(posL,posR);
