@@ -20,12 +20,12 @@ SUBDIRS = \
 	examples \
 	performance-tests \
 	utils \
-	doc \
 	dtd \
 	etc \
 	scripts \
 	bin \
-	lib
+	lib \
+	doc
 
 
 # configh_configdir = $(libdir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/include
