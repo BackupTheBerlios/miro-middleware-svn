@@ -39,7 +39,6 @@ namespace Miro
 
   SphinxSpeechTask::SphinxSpeechTask(SphinxSpeechImpl * _speechImpl) :
     Super(),
-    Log(INFO,"SphinxSpeechTask"),
     speechImpl(_speechImpl)
   {}
 
@@ -283,7 +282,7 @@ namespace Miro
 
     }
     
-    log(INFO, "left service.");
+    MIRO_LOG(LL_NOTICE, "[SphinxSpeechTask] left service.");
     
     return (0);
   }

@@ -23,6 +23,7 @@ bin_PROGRAMS = SphinxSpeech
 
 SphinxSpeech_SOURCES = \
 	FestivalSpeech.cpp \
+	SphinxSpeech.cpp \
 	SphinxSpeechImpl.cpp \
 	SphinxSpeechTask.cpp
 
@@ -31,7 +32,7 @@ SphinxSpeech_LDADD = \
 	$(FESTIVAL_LDFLAGS) $(FESTIVAL_LIBS) \
 	$(SPEECHTOOLS_LDFLAGS) $(SPEECHTOOLS_LIBS) \
 	$(SPHINX_LDFLAGS) $(SPHINX_LIBS) \
-	-lmiro
+	-lmiro -lmiroIDL 
 
 all-local:
 	$(INSTALLPROGRAMS)

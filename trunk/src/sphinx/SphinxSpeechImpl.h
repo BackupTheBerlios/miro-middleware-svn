@@ -9,7 +9,7 @@ extern "C" {
 #include <sphinx2/fbs.h>
 }
 
-#include "miro/SphinxSpeechS.h"
+#include "idl/SphinxSpeechS.h"
 #include "SphinxSpeechTask.h"
 
 #include <orbsvcs/CosNotifyCommC.h>
