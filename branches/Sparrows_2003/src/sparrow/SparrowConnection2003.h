@@ -42,15 +42,40 @@ namespace Sparrow
     void infraredGet(unsigned short msec, unsigned short times);
     bool infraredAlive();
 
+    void setServo(unsigned char servo, double rad);
+
 
   protected:
 
     Consumer2003 * consumer;
     EventHandler2003 * eventHandler;
 
+    short rad2servo0Ticks(double rad) const;
+    short rad2servo1Ticks(double rad) const;
+
   public:
     int boardReply; // for watchdog / init
   };
+
+  inline
+  short
+  Connection2003::rad2servo0Ticks(double rad) const
+  {
+    short pulse = params_->servo0MidPulse;
+    if (rad > 0.)
+      pulse += static_cast<short>(rint(rad * params_->deg2ServoTicksL * 180. / M_PI));
+    else
+      pulse += static_cast<short>(rint(rad * params_->deg2ServoTicksR * 180. / M_PI));
+    return pulse;
+  }
+
+  inline
+  short
+  Connection2003::rad2servo1Ticks(double rad) const
+  {
+    return params_->servo1MidPulse +
+      static_cast<short>(rint(rad * params_->deg2ServoTicksL * 180. / M_PI));
+  }
 };
 
 #endif

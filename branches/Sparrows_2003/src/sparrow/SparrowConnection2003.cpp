@@ -118,4 +118,16 @@ namespace Sparrow
      return true;
   }
 
+
+  void
+  Connection2003::setServo(unsigned char servo, double rad)
+  {
+    Message message;
+    message.length(3);
+    message.id(CAN_SERVO_GO);
+    message.byteData(0, servo);                         // servo number
+    message.shortData(1, (servo)? rad2servo1Ticks(rad) : rad2servo0Ticks(rad));
+    write(message);
+  }
+
 };
