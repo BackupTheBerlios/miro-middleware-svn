@@ -118,21 +118,26 @@ namespace FaulMotor
     int speedR = (short) (_speedR * params_->speedConvFactor);//* 112;
     double accL, accR;
 
-    accL = speedL / prevSpeedL;
-    accR = speedR / prevSpeedR;
-    if ((accL <= accR) && (accR != 0))
+    if ((speedL != 0) && (speedR != 0))
     {
-        accL = (accL / accR * params_-> maxPosAccel) * 90. / 320.;
-        accR = (params_-> maxPosAccel) * 90. / 320.;
-    }else
-    {
-        if (accL != 0)
+    	accL = speedL
+    	if (prevSpeedL != 0) accL = speedL / prevSpeedL;
+	accR = speedR;
+	if (prevSpeedR != 0) accR = speedR/ prevSpeedR;
+	if ((accL <= accR) && (accR != 0))
 	{
-	  accR = (accR / accL * params_-> maxPosAccel) * 90. / 320.;
-	  accL = (params_-> maxPosAccel) * 90. / 320.;
+		accL = (accL / accR * params_-> maxPosAccel) * 90. / 320.;
+		accR = (params_-> maxPosAccel) * 90. / 320.;
+	}else
+	{
+		if (accL != 0)
+		{
+		accR = (accR / accL * params_-> maxPosAccel) * 90. / 320.;
+		accL = (params_-> maxPosAccel) * 90. / 320.;
+		}
 	}
-    }
-    cout << "AccR: " << accR << " AccL: " << accL << endl;
+	cout << "AccR: " << accR << " AccL: " << accL << endl;
+     }
 
 
     sprintf(speedMessageL, "v%d\r\n", speedL); // build speed message
