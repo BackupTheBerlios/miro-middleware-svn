@@ -37,8 +37,13 @@ namespace Video
     leaderBuffer_ = Super::protectedAcquireNextWriteBuffer();
     int err = ::ioctl(fd_, VIDIOCMCAPTURE, &(gb_[leaderBuffer_]));
     if (err != -1) {
-      followerBuffer_ = Super::protectedAcquireNextWriteBuffer();
-      err = ::ioctl(fd_, VIDIOCMCAPTURE, &(gb_[followerBuffer_]));
+      if (buffers_ > 2) {
+	followerBuffer_ = Super::protectedAcquireNextWriteBuffer();
+	err = ::ioctl(fd_, VIDIOCMCAPTURE, &(gb_[followerBuffer_]));
+      }
+      else {
+	followerBuffer_ = leaderBuffer_;
+      }
     }
     if (err == -1)
       throw Miro::CException(errno, "BufferManagerBTTV::BufferManagerBTTV() - VIDIOCMCAPTURE");
@@ -53,6 +58,11 @@ namespace Video
   unsigned int
   BufferManagerBTTV::protectedAcquireNextWriteBuffer() throw (Miro::Exception)
   {
+    // if we have only two frames, we can't grab forward
+    if (buffers_ <= 2) {
+      leaderBuffer_ = followerBuffer_;
+    }
+
     // synch current image
     int err = ::ioctl(fd_, VIDIOCSYNC, &leaderBuffer_);
     if (err == -1) {
@@ -61,10 +71,6 @@ namespace Video
 
     // set time stamp
     bufferStatus_[leaderBuffer_].time = ACE_OS::gettimeofday();
-
-    // set buffer
-    // --> FIXME per init
-    // bufferStatus_[_index].buffer = map_ + gb_buffers.offsets[currentBuffer_];
 
     // update the leader/follower buffer index
     int index = leaderBuffer_;

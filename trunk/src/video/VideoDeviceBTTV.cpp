@@ -153,6 +153,21 @@ namespace Video
     std::cout << "buffersize/frame: " << gb_buffers.size/gb_buffers.frames << std::endl;
     std::cout << "frames: " << gb_buffers.frames << std::endl;
 
+    if (gb_buffers.frames < params_->buffers) {
+      throw Miro::Exception("Number of requested buffers in the configuration\n" \
+			    "exceeds the number of frames available by the device.");
+    }
+
+    if (gb_buffers.frames < 2) {
+      throw Miro::Exception("Only one frame available by the video device.\n" \
+			    "At least two are needed.");
+    }
+
+    if (params_->buffers < 2) {
+      throw Miro::Exception("Only one buffer available by the configuration.\n" \
+			    "At least two are needed.");
+    }
+
     probeAllFormats();
 
     setFormat();
