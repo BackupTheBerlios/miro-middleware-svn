@@ -2,7 +2,8 @@
 <config>
  <section name="Robot" >
   <parameter name="Robot" >
-   <parameter value="Sparow99" name="Type" />
+   <parameter value="siehtnix" name="Name" />
+   <parameter value="Sparrow99" name="Type" />
   </parameter>
  </section>
  <section name="Sparrow99" >
@@ -67,7 +68,7 @@
    <parameter value="1.000000" name="WatchdogTimeout" />
    <parameter value="400" name="PanMSecPerRad" />
    <parameter value="200" name="PanSwing" />
-   <parameter value="3650" name="Servo0MidPulse" />
+   <parameter value="3200" name="Servo0MidPulse" />
    <parameter value="200" name="MaxAccel" />
    <parameter value="2310" name="Diameter" />
    <parameter value="30720" name="MaxPower" />
@@ -94,7 +95,7 @@
   </parameter>
   <parameter name="Camera" >
    <parameter value="0.120000" name="Latency" />
-   <parameter value="36.0" name="Alpha" />
+   <parameter value="35.5" name="Alpha" />
    <parameter value="540" name="Height" />
    <parameter value="2.05152493e+02" name="Cx" />
    <parameter value="1.33894215e+02" name="Cy" />
@@ -104,7 +105,7 @@
    <parameter value="0.00625" name="Dx" />
    <parameter value="0.0125" name="Dy" />
    <parameter value="384" name="Nfx" />
-   <parameter value="768" name="Ncx" />
+   <parameter value="786" name="Ncx" />
   </parameter>
  </section>
  <section name="Notification" >
