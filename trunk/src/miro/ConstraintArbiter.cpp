@@ -146,7 +146,7 @@ namespace Miro
     // calculate new velocity using the content of the velocity space
     velocity = velocitySpace_.applyObjectiveFunctionToEval();
     
-    cout << "LEFT: " << velocity.real() << " ::: " << velocity.imag() << endl; 
+    std::cout << "LEFT: " << velocity.real() << " ::: " << velocity.imag() << endl; 
     
     // set steering commands
     pMotion_->setLRVelocity(velocity.real(), velocity.imag());

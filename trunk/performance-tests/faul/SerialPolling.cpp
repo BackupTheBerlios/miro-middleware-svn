@@ -88,7 +88,7 @@ int testParcours()
 
     return 1;
   }
-  std::cout << buffer << endl;
+  std::cout << buffer << std::endl;
 
   return 0;
 }
@@ -166,7 +166,7 @@ int main (int argc, char * argv[])
     std::cout << "start: " << start << std::endl;
     for (int i = 0; i < 100 && rc == 0; i++) {
       rc = testParcours();
-      std::cout<< i <<": "<< endl;
+      std::cout<< i <<": "<< std::endl;
     }
     std::cout << "stop: " << (ACE_OS::gettimeofday() - start) << std::endl;
 
