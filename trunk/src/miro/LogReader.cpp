@@ -27,6 +27,8 @@
 #include <tao/Any_Unknown_IDL_Type.h>
 #else
 #include <tao/Marshal.h>
+#include <tao/Typecode.h>
+#include <tao/Environment.h>
 #endif
 
 #include <cstdio>
@@ -259,8 +261,8 @@ namespace Miro
 	
 	// Stick it into the Any. It gets duplicated there.
 	_event.remainder_of_body._tao_replace (tc,
-			istr_->byte_order (),
-			&mb);
+					       istr_->byte_order (),
+					       &mb);
       }
       ACE_CATCH (CORBA_Exception, ex) {
 	eof_ = true;
