@@ -50,15 +50,11 @@ namespace Miro
     ACE_Reactor &reactor;
     int timerId;
     
-    // just as long as getVelocity doesn't work
-    int leftVelocity_, rightVelocity_;
     VelocityIDL currentVelocity_;
 
     DynamicWindow dynWindow_;
-    DynamicWindow dynWindowFinished_;
 
     WindowArbiterViewerTask * winArbViewTask_;
-
     bool winArbViewTaskCreated;
 
     CosNotification::StructuredEvent notifyEvent;
