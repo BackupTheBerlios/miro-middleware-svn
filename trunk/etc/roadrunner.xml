@@ -169,15 +169,19 @@
  </section>
 
  <section name="Video" >
-
   <parameter name="Video" >
    <parameter value="yuv422" name="Palette" />
    <parameter value="640" name="Width" />
    <parameter value="480" name="Height" />
+
    <parameter name="Filter">
     <parameter value="Device1394" name="Name" />
     <parameter value="Device1394" name="Type" />
     <parameter name="Successor" >
+     <parameter name="Filter" >
+      <parameter value="FilterYUV422Save" name="Name" />
+      <parameter value="FilterYUV422Save" name="Type" />
+     </parameter>
      <parameter name="Filter" >
       <parameter value="FilterYUV422toRGBIpp" name="Name" />
       <parameter value="FilterYUV422toRGBIpp" name="Type" />
@@ -190,7 +194,7 @@
           <parameter value="FilterGraytoCanny" name="Name" />
           <parameter value="FilterGraytoCanny" name="Type" />
          </parameter>
-        </parameter>
+	</parameter>
        </parameter>
        <parameter name="Filter" >
         <parameter value="FilterRGBtoIndex" name="Name" />
@@ -200,7 +204,7 @@
           <parameter value="FilterIndextoIndex" name="Name" />
           <parameter value="FilterIndextoIndex" name="Type" />
          </parameter>
-        </parameter>
+	</parameter>
        </parameter>
       </parameter>
      </parameter>
@@ -259,6 +263,16 @@
    <parameter value="128" name="Saturation" />
    <parameter value="-1" name="WhiteBalance0" />
    <parameter value="-1" name="WhiteBalance1" />
+  </parameter>
+
+  <parameter name="FilterYUV422Save" >
+   <parameter value="false" name="Activate" />
+   <parameter value="10" name="Interval" />
+   <parameter value="SchnulliBulli_" name="Basename" />
+   <parameter value="true" name="InterfaceInstance" />
+   <parameter name="Interface" >
+    <parameter value="VideoBla" name="Name" />
+   </parameter>
   </parameter>
 
   <parameter name="FilterYUV422toRGBIpp">
