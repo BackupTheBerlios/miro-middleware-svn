@@ -108,6 +108,13 @@ module Miro
      */
     PanTiltPowersIDL  getPowers() 
       raises(Miro::EDevIO, Miro::ETimeOut);
+
+    //! Query the limits of the PTU.
+    /**
+     * @return The actual limits settings of the PTU.
+     */
+    PanTiltLimitsIDL  getLimits() raises(Miro::EDevIO, Miro::ETimeOut);
+
   };
 };
 

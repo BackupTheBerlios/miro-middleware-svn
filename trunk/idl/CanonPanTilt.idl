@@ -61,11 +61,12 @@ module Miro
      */
     CanonPanTiltSpdAccIDL  getSpdAcc() raises(Miro::EDevIO, Miro::ETimeOut);
 
-    //! Query the limits of the PTU.
+    //! Query the limits of the PTU. DEPRECATED
     /**
-     * @return The actual limits settings of the PTU.
+     * getLimits() has been deprecated. Use gatPanTiltLimits() instead
      */
-    //   CanonPanTiltLimitsIDL  getLimits() raises(Miro::EDevIO, Miro::ETimeOut);
+    PanTiltLimitsIDL getLimits() raises(Miro::EDevIO, Miro::ETimeOut);
+
 
   };
 };

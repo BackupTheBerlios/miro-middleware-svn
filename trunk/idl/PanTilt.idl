@@ -75,12 +75,6 @@ module Miro
      */
     PanTiltLimitsIDL getPanTiltLimits() raises(Miro::EDevIO, Miro::ETimeOut);
 
-    //! Query the limits of the PTU. DEPRECATED
-    /**
-     * getLimits() has been deprecated. Use gatPanTiltLimits() instead
-     */
-    PanTiltLimitsIDL getLimits() raises(Miro::EDevIO, Miro::ETimeOut);
-
   };
 };
 
