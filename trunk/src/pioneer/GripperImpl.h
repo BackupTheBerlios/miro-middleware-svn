@@ -41,7 +41,7 @@ namespace Miro
 		    Pioneer::Consumer& _consumer) throw(Miro::Exception);
     virtual ~GripperImpl();
 
-    virtual void setGripPressure(double kg)
+    virtual void setGripPressure(short value)
       throw(Miro::EOutOfBounds, Miro::EDevIO);
     virtual void openGrip()
       throw(Miro::EDevIO);
@@ -53,8 +53,12 @@ namespace Miro
       throw(Miro::EDevIO);
     virtual void storeGrip()
       throw(Miro::EDevIO);
+    virtual void deployGrip()
+      throw(Miro::EDevIO);
     virtual void stopGrip()
       throw(Miro::EDevIO);
+    virtual void moveGrip(short ms)
+      throw(Miro::EOutOfBounds, Miro::EDevIO);
 
   protected:
     Pioneer::Connection&         connection; // encapsulating communication to hardware

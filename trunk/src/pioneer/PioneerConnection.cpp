@@ -199,12 +199,14 @@ namespace Pioneer
 
   void Connection::gripperCommand(unsigned short command)
   {
+    Guard guard(stateMutex);
     Message com(SF_COMGRIPPER,command);
     writeMessage(com);
   }
 
-  void Connection::gripperValue(unsigned short value)
+  void Connection::gripperValue(short value)
   {
+    Guard guard(stateMutex);
     Message com(SF_COMGVAL,value);
     writeMessage(com);
   }

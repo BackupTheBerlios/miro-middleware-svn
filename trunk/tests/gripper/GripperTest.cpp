@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 {
   int rc = 0;
   bool quit = false;
-  double pressure;
+  short pressure,time;
   char c, buffer[256];
 
   // Initialize server daemon.
@@ -45,12 +45,13 @@ int main(int argc, char *argv[])
     while(!quit) {
       cout << "Gripper test!" << endl
 	   << "Chose Command: " << endl
-	   << "  0 - set grip pressure" << endl
-	   << "  1 - open grip" << endl
-	   << "  2 - close grip" << endl
-	   << "  3 - raise gripper" << endl
-	   << "  4 - lower gripper" << endl
-	   << "  5 - stop gripper" << endl
+	   << "  0 - stop gripper" << endl
+	   << "  1 - set grip pressure" << endl
+	   << "  2 - open grip" << endl
+	   << "  3 - close grip" << endl
+	   << "  4 - raise gripper" << endl
+	   << "  5 - lower gripper" << endl
+	   << "  6 - move gripper (time)" << endl
 	   << " q to quit" << endl;
       cin.getline(buffer,256);
       c = buffer[0];
@@ -59,25 +60,29 @@ int main(int argc, char *argv[])
 
       switch (c) {
       case '0':
-	cout << "new grip pressure (Kg.): " << flush;
+	gripper->stopGrip();
+	break;
+      case '1':
+	cout << "new grip pressure (percentage): " << flush;
 	cin >> pressure;
 	gripper->setGripPressure(pressure);
 	break;
-      case '1':
+      case '2':
 	gripper->openGrip();
 	break;
-      case '2':
+      case '3':
 	gripper->closeGrip();
 	break;
-      case '3':
+      case '4':
 	gripper->raiseGrip();
 	break;
-      case '4':
+      case '5':
 	gripper->lowerGrip();
 	break;
-      case '5':
-	gripper->stopGrip();
-	break;
+      case '6':
+	cout << "time (ms): " << flush;
+	cin >> time;
+	gripper->moveGrip(time);
       case 'q':
 	quit = true;
       default:

@@ -78,7 +78,7 @@ namespace Pioneer
     void getCamera(unsigned short length); //get length bytes from AUX1
 
     void gripperCommand(unsigned short command); //send a command to the gripper
-    void gripperValue(unsigned short value); //send a value to the gripper
+    void gripperValue(short value); //send a value to the gripper
 
   protected:
     Consumer * consumer;

@@ -52,16 +52,13 @@ namespace Miro
   // IDL interface implementation
 
   void
-  GripperImpl::setGripPressure(double kg) throw(Miro::EOutOfBounds, Miro::EDevIO)
+  GripperImpl::setGripPressure(short value) throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
-    if ((kg<0) || (kg>2)) throw EOutOfBounds("Requested pressure exceeds capabilities");
-
-    unsigned short argument = int(kg*100/2); //! The formula is wrong, but is 
-    //the best approximation given the "good" explanation on the manual
-    if (argument==0) argument=1;
+    if ((value<0) || (value>100)) throw EOutOfBounds("Requested pressure exceeds capabilities");
+    if (value==0) value=1; //the real minimum is 1;
 
     connection.gripperCommand(16); //GRIPpress
-    connection.gripperValue(argument); //actual value
+    connection.gripperValue(value); //actual value
   }
   
   void
@@ -91,9 +88,26 @@ namespace Miro
     connection.gripperCommand(7); //GRIPstore
   }
   void
+  GripperImpl::deployGrip() throw(Miro::EDevIO)
+  {
+    connection.gripperCommand(8); //GRIPstore
+  }
+  void
   GripperImpl::stopGrip() throw(Miro::EDevIO)
   {
     connection.gripperCommand(15); //GRIPhalt
+  }
+  void
+  GripperImpl::moveGrip(short ms) throw(Miro::EOutOfBounds, Miro::EDevIO)
+  {
+    ms /= 20; //the gripper works in 20 ms increments
+
+    if (ms==0) return; //if it doesn't have to move, don't move ;-)
+
+    if (abs(ms)>255) throw Miro::EOutOfBounds();
+
+    connection.gripperCommand(17); //LIFTcarry
+    connection.gripperValue(ms);
   }
 
 };

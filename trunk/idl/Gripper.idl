@@ -24,12 +24,12 @@ module Miro
      * Sets the pressure that the gripper will apply when grasping objects
      * it is an approximation
      * 
-     * @param kg The pressure to be applied
+     * @param value The pressure to be applied in percentage
      * @throw EOutOfBounds is thrown, if the requested pressure is beyound
      * the device's capabilities
      * @throw EDevIO is thrown to indicate low level device problems
      */
-    void setGripPressure(in double kg) raises (EOutOfBounds, EDevIO);
+    void setGripPressure(in short value) raises (EOutOfBounds, EDevIO);
 
     //! Opens the grip paddles
     /**
@@ -66,12 +66,29 @@ module Miro
      */ 
     void storeGrip() raises (EDevIO);
 
+    //! Lowers the gripper to the bottom position and opens the paddles
+    /**
+     *
+     * @throw EDevIO is thrown to indicate low level device problems
+     */ 
+    void deployGrip() raises (EDevIO);
+
     //! Stops all gripper movement
     /**
      *
      * @throw EDevIO is thrown to indicate low level device problems
      */ 
     void stopGrip() raises (EDevIO);
+
+    //! Moves the gripper for a period of time
+    /**
+     *
+     * @param ms time to move the griper
+     * @throw EOutOfBounds is thrown, if the requested pressure is beyound
+     * the device's capabilities
+     * @throw EDevIO is thrown to indicate low level device problems
+     */
+    void moveGrip(in short ms) raises (EOutOfBounds, EDevIO);
     
   };
 };

@@ -104,13 +104,15 @@ void gripperMenu(Service& service)
   while(loop) {
     cout << endl
 	 << "*****  Gripper menu:  *****"<< endl
+	 << "0 - stop Grip" << endl
 	 << "1 - set Grip pressure" << endl
 	 << "2 - open Grip" << endl
 	 << "3 - close Grip" << endl
 	 << "4 - raise Grip" << endl
 	 << "5 - lower Grip" << endl
 	 << "6 - store Grip " << endl
-	 << "7 - stop Grip" << endl
+	 << "7 - deploy Grip " << endl
+	 << "8 - move Grip (time)" << endl
 	 << endl << "x - back" << endl;
     cin >> str;
     c = str[0];
@@ -119,13 +121,18 @@ void gripperMenu(Service& service)
     
     switch (c)
       {
+      case '0':
+	{
+	  service.gripper.stopGrip();
+	  break;
+	}
       case '1' :
 	{
-	  double pressure;
-	  cout << "pressure (0-2 Kg.): " << endl;
-	  cin >> pressure;
+	  int value;
+	  cout << "percentage: " << endl;
+	  cin >> value;
 
-	  service.gripper.setGripPressure(pressure);
+	  service.gripper.setGripPressure(value);
 	  break;
 	}
       case '2' :
@@ -155,7 +162,16 @@ void gripperMenu(Service& service)
 	}
       case '7':
 	{
-	  service.gripper.stopGrip();
+	  service.gripper.deployGrip();
+	  break;
+	}
+      case '8' :
+	{
+	  int value;
+	  cout << "time (ms): " << endl;
+	  cin >> value;
+
+	  service.gripper.moveGrip(value);
 	  break;
 	}
       case 'X':
