@@ -174,8 +174,7 @@ namespace Miro
     // If we could parse it, then it's a good policy   
     valid_ = true;
 
-    // if (debug())
-    std::cout << *this;
+    MIRO_DBG_OSTR(MIRO, LL_DEBUG, *this);
   }
 
   /**
