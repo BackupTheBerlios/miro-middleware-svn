@@ -108,6 +108,7 @@ sources2 = \
 	DevEventHandler.cpp \
 	DevConsumer.cpp \
 	TtyConnection.cpp \
+	LogNotifyConsumer.cpp \
 	RangeSensorImpl.cpp \
 	OdometryImpl.cpp \
 	MotionImpl.cpp \

@@ -22,6 +22,7 @@
 #include <iostream>
 #include <string>
 
+
 std::ostream& operator << (std::ostream& ostr, const ACE_Time_Value& rhs);
 std::istream& operator >> (std::istream& istr, ACE_Time_Value& rhs);
 
@@ -39,6 +40,8 @@ namespace Miro
   }
 
   std::string timeString(ACE_Time_Value const& _stamp = ACE_OS::gettimeofday());
+  std::string timeStringSec(ACE_Time_Value const& _stamp = ACE_OS::gettimeofday());
+  std::string timeStringMinute(ACE_Time_Value const& _stamp = ACE_OS::gettimeofday());
 };
 
 #endif

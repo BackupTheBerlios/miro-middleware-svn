@@ -50,8 +50,7 @@ namespace Miro
   std::string
   timeString(ACE_Time_Value const& _stamp)
   {
-    ACE_Date_Time dt;
-    dt.microsec(_stamp.usec());
+    ACE_Date_Time dt(_stamp);
 
     std::ostringstream ostr;
 
@@ -77,6 +76,58 @@ namespace Miro
 
     return ostr.str();
   }
+
+  std::string
+  timeStringSec(ACE_Time_Value const& _stamp)
+  {
+    ACE_Date_Time dt(_stamp);
+
+    std::ostringstream ostr;
+
+    ostr << dt.year() << ".";
+    ostr.width(2);
+    ostr.fill('0');
+    ostr << dt.month() << ".";
+    ostr.width(2);
+    ostr.fill('0');
+    ostr << dt.day() << "-";
+    ostr.width(2);
+    ostr.fill('0');
+    ostr << dt.hour() << ".";
+    ostr.width(2);
+    ostr.fill('0');
+    ostr << dt.minute() << ".";
+    ostr.width(2);
+    ostr.fill('0');
+    ostr << dt.second();
+
+    return ostr.str();
+  }
+
+  std::string
+  timeStringMinute(ACE_Time_Value const& _stamp)
+  {
+    ACE_Date_Time dt(_stamp);
+
+    std::ostringstream ostr;
+
+    ostr << dt.year() << ".";
+    ostr.width(2);
+    ostr.fill('0');
+    ostr << dt.month() << ".";
+    ostr.width(2);
+    ostr.fill('0');
+    ostr << dt.day() << "-";
+    ostr.width(2);
+    ostr.fill('0');
+    ostr << dt.hour() << ".";
+    ostr.width(2);
+    ostr.fill('0');
+    ostr << dt.minute();
+
+    return ostr.str();
+  }
+
 }
 
 
