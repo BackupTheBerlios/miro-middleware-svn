@@ -117,7 +117,7 @@ namespace FaulTty
 
   bool
   Connection::waitSynch(const ACE_Time_Value& maxWait) const {
-    /*Miro::Guard guard(eventHandler->synchMutex);
+    Miro::Guard guard(eventHandler->synchMutex);
     ACE_Time_Value timeout = ACE_OS::gettimeofday();
     timeout += maxWait;
     if (eventHandler->synch != 3)
