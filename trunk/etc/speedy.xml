@@ -39,7 +39,7 @@
       <parameter name="SparrowBoard" >
 	<parameter value="true" name="Faulhaber" />
 	<parameter value="true" name="Sparrow2003" />
-	<parameter value="true" name="Omnicam" />
+	<parameter value="false" name="Omnicam" />
 	<parameter value="/dev/pcan24" name="Device" />
 	<parameter value="pcan" name="Module" />
 	<parameter value="0.050000" name="PanLatency" />
@@ -176,7 +176,7 @@
 
       <parameter name="Camera" >
 	<parameter value="0.060000" name="Latency" />
-	<parameter value="35.0" name="Alpha" />
+	<parameter value="34.5" name="Alpha" />
 	<parameter value="670" name="Height" />
 
 	<parameter value=" 6.4000000000e+02" name="Ncx" />
@@ -304,12 +304,13 @@
 
       <parameter name="FilterRGBtoSeg">
 	<parameter value="true" name="InterfaceInstance" />
-	<parameter value="150.0" name="Threshold" />
-	<parameter value="0" name="FrontDir" />
+	<parameter value="80.0" name="Threshold" />
+	<parameter value="90" name="FrontDir" />
 	<parameter value="430" name="DistLookup0" />
 	<parameter value="1190" name="DistLookup40" />
 	<parameter value="1990" name="DistLookup80" />
 	<parameter value="2810" name="DistLookup120" />
+	<parameter value="5000" name="MaxDist" />
 	<parameter name="Interface" >
 	  <parameter value="VideoSeg" name="Name" />
 	</parameter>
