@@ -23,7 +23,9 @@ namespace Miro
      duplex instead of full duplex.
   **/
   
-  SphinxSpeechImpl::SphinxSpeechImpl(string dictFileName, bool _halfDuplex, StructuredPushSupplier * _supplier) :
+  SphinxSpeechImpl::SphinxSpeechImpl(std::string const& dictFileName, 
+				     bool _halfDuplex,
+				     StructuredPushSupplier * _supplier) :
     speechTask(this),
     supplier(_supplier),
     dict(dictFileName),
@@ -43,7 +45,14 @@ namespace Miro
       notifyEvent.header.fixed_header.event_name = CORBA::string_dup("");
       notifyEvent.header.variable_header.length(0); // put nothing here
       notifyEvent.filterable_data.length(0);        // put nothing here
-    } else {
+
+
+      CosNotification::EventTypeSeq offers;
+      offers.length(1);
+      offers[0] = notifyEvent.header.fixed_header.event_type;
+      supplier->addOffers(offers);
+    } 
+    else {
       cout << "Speech notification will not be available" << endl;
     }
     speechTask.open(NULL);

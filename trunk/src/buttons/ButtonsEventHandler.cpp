@@ -38,7 +38,8 @@ namespace B21Buttons
   // Constructors / Destructors
   //
 
-  EventHandler::EventHandler(Connection& _connection, Miro::StructuredPushSupplier& _supplier) :
+  EventHandler::EventHandler(Connection& _connection, 
+			     Miro::StructuredPushSupplier& _supplier) :
     connection(_connection),
     supplier_(_supplier),
     buttonStatus(0x00),
@@ -52,7 +53,7 @@ namespace B21Buttons
       button[i].event = Miro::Button::ON_RELEASE;
       button[i].mode = Miro::B21Button::TOGGLE_OFF;
     }
-
+    
     // Status Notify Event initialization
     notifyEvent.header.fixed_header.event_type.domain_name = 
       CORBA::string_dup(supplier_.domainName().c_str());
@@ -61,6 +62,11 @@ namespace B21Buttons
     notifyEvent.header.fixed_header.event_name = CORBA::string_dup("");
     notifyEvent.header.variable_header.length(0);   // put nothing here
     notifyEvent.filterable_data.length(0);          // put nothing here
+    
+    CosNotification::EventTypeSeq offers;
+    offers.length(1);
+    offers[0] = notifyEvent.header.fixed_header.event_type;
+    supplier_.addOffers(offers);
   }
   
   EventHandler::~EventHandler()

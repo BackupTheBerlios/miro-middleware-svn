@@ -35,14 +35,13 @@ namespace Sparrow
     totalLatency(params_.panLatency + params_.panSwing),
     sparrow2003_(Parameters::instance()->sparrow2003)
   {
-    if(sparrow2003_){
-       ((Connection2003 *)connection)->setServo(0, Miro::deg2Rad(0.));
+    if (sparrow2003_) {
+      ((Connection2003 *)connection)->setServo(0, Miro::deg2Rad(0.));
     }
-    else{
-       ((Connection *)connection)->setServo(0, Miro::deg2Rad(0.));
+    else {
+      ((Connection *)connection)->setServo(0, Miro::deg2Rad(0.));
     }
     //    connection.setServo(1, params_.farAngle);
-
 
     // Stall Notify Event initialization
     if (pSupplier_) {
@@ -53,6 +52,11 @@ namespace Sparrow
       notifyEvent.header.fixed_header.event_name = CORBA::string_dup("");
       notifyEvent.header.variable_header.length(0);   // put nothing here
       notifyEvent.filterable_data.length(0);          // put nothing here
+
+      CosNotification::EventTypeSeq offers;
+      offers.length(1);
+      offers[0] = notifyEvent.header.fixed_header.event_type;
+      pSupplier_->addOffers(offers);
     }
   }
 

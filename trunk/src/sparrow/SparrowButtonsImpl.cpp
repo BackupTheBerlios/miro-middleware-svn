@@ -51,6 +51,11 @@ namespace Sparrow
       notifyEvent.header.fixed_header.event_name = CORBA::string_dup("");
       notifyEvent.header.variable_header.length(0);   // put nothing here
       notifyEvent.filterable_data.length(0);          // put nothing here
+
+      CosNotification::EventTypeSeq offers;
+      offers.length(1);
+      offers[0] = notifyEvent.header.fixed_header.event_type;
+      pSupplier->addOffers(offers);
     }
   }
     

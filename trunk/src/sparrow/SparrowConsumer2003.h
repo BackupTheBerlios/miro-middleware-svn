@@ -23,9 +23,8 @@
 // forward decleration
 namespace Miro
 {
-  class StructuredPushSupplier;
   class RangeSensorImpl;
-};
+}
 
 namespace Sparrow
 {
@@ -119,6 +118,6 @@ namespace Sparrow
     short table1[ACCEL_TABLE_SIZE];
     short table2[ACCEL_TABLE_SIZE];*/
   };
-};
+}
 #endif
 

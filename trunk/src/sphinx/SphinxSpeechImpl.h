@@ -1,3 +1,13 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2003
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
 #ifndef SPHINX_SPEECH_IMPL_H
 #define SPHINX_SPEECH_IMPL_H
 
@@ -24,10 +34,12 @@ namespace Miro
   class FestivalSpeechImpl;
   class StructuredPushSupplier;
 
-  class SphinxSpeechImpl :public POA_Miro::SphinxSpeech
+  class SphinxSpeechImpl : public POA_Miro::SphinxSpeech
   {
   public:
-    SphinxSpeechImpl(std::string dictFileName, bool _halfDuplex=true, Miro::StructuredPushSupplier * _supplier = NULL);
+    SphinxSpeechImpl(std::string const & dictFileName, 
+		     bool _halfDuplex = true,
+		     Miro::StructuredPushSupplier * _supplier = NULL);
     ~SphinxSpeechImpl();
 
     //sphinx
@@ -92,7 +104,6 @@ namespace Miro
 
     friend class SphinxSpeechTask;
   };
-
-};
+}
 
 #endif

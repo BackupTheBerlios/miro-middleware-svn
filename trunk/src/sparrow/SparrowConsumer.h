@@ -21,7 +21,6 @@
 // forward decleration
 namespace Miro
 {
-  class StructuredPushSupplier;
   class RangeSensorImpl;
 };
 
