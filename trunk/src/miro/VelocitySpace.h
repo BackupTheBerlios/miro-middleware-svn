@@ -33,6 +33,9 @@ namespace Miro
     VelocitySpace();
     //! Copy constructor.
     VelocitySpace(VelocitySpace const& _rhs);
+
+    VelocitySpace(int _maxVelocity, int _spaceResolution,
+		  int _maxAccel, int _maxDecel, int _pace);
     //! Destructor cleaning up the velocity space.
     ~VelocitySpace();
 
