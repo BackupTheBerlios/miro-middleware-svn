@@ -81,6 +81,7 @@ namespace Psos
     header(START_12);
     length(2 + 2 + 2); // cmd/arg + 2 byte integer + 2 byte checksum
     id(cmd);
+    type(SF_ARGINT);
     userData()[0] = byte1;
     userData()[1] = byte2;
     checksum(calcChecksum());
