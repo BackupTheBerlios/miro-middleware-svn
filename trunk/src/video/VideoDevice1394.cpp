@@ -15,6 +15,15 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.7  2003/06/03 10:25:32  hutz
+ * complete revamp of the video service
+ * the interface changes slightly to allow for better access
+ * removed unnecessary copies
+ * added a complete filter framework for server side image processing
+ * added a library miroVideo.a for easy customization to own video service
+ * derivates
+ * the dummy video device now displays an image
+ *
  * Revision 1.6  2003/05/16 13:14:57  hutz
  * removing unused parameters and methods from VideoDevice
  *
@@ -73,12 +82,6 @@
 
 #ifdef HAVE_VIDEODEVICE1394
 
-#include "VideoConfig.h"
-#include "VideoConverterYUV411toRGB.h"
-#include "VideoConverterYUV422toRGB.h"
-#include "VideoConverterYUV411toYUV.h"
-#include "VideoConverterYUV422toYUV.h"
-
 #include <miro/Exception.h>
 
 #include <iostream>
@@ -91,13 +94,29 @@
 #define DBG(x)
 #endif
 
-#define NUM_BUFFERS 8
+#define NUM_BUFFERS 4
 #define DROP_FRAMES 1
 
 // #define RAW_RGB
 
-namespace Video
+namespace
 {
+  //---------------------------------------------------------------
+  struct Mode1394
+  {
+    Miro::ImageFormatIDL format;
+    int mode;
+  };
+
+  static Mode1394 mode1394[NUM_FORMAT0_MODES] = {
+    { {160, 120, Miro::YUV_24 }, MODE_160x120_YUV444},
+    { {320, 240, Miro::YUV_422}, MODE_320x240_YUV422},
+    { {640, 480, Miro::YUV_411}, MODE_640x480_YUV411},
+    { {640, 480, Miro::YUV_422}, MODE_640x480_YUV422},
+    { {640, 480, Miro::RGB_24 }, MODE_640x480_RGB},
+    { {640, 480, Miro::GREY_8 }, MODE_640x480_MONO},
+    { {640, 480, Miro::GREY_16}, MODE_640x480_MONO16}
+  };
 
   //---------------------------------------------------------------
   struct Feature1394
@@ -111,28 +130,27 @@ namespace Video
   };
 
   //---------------------------------------------------------------
-  static Feature1394 feature1394[12] =
-    {
-      { "brightness",  NULL, FEATURE_BRIGHTNESS,  dc1394_set_brightness },
-      { "exposure",    NULL, FEATURE_EXPOSURE,    dc1394_set_exposure },
-      { "focus",       NULL, FEATURE_FOCUS,	    dc1394_set_focus },
-      { "gain",        NULL, FEATURE_GAIN,	    dc1394_set_gain },
-      { "gamma",       NULL, FEATURE_GAMMA,	    dc1394_set_gamma },
-      { "hue",         NULL, FEATURE_HUE,	    dc1394_set_hue },
-      { "iris",        NULL, FEATURE_IRIS,	    dc1394_set_iris },
-      { "saturation",  NULL, FEATURE_SATURATION,  dc1394_set_saturation },
-      { "sharpness",   NULL, FEATURE_SHARPNESS,   dc1394_set_sharpness },
-      { "shutter",     NULL, FEATURE_SHUTTER,     dc1394_set_shutter },
-      { "temperature", NULL, FEATURE_TEMPERATURE, dc1394_set_temperature },
-      { "trigger",     NULL, FEATURE_TRIGGER,     dc1394_set_trigger_mode }
-    };
+  static Feature1394 feature1394[12] = {
+    { "brightness",  NULL, FEATURE_BRIGHTNESS,  dc1394_set_brightness },
+    { "exposure",    NULL, FEATURE_EXPOSURE,    dc1394_set_exposure },
+    { "focus",       NULL, FEATURE_FOCUS,	dc1394_set_focus },
+    { "gain",        NULL, FEATURE_GAIN,	dc1394_set_gain },
+    { "gamma",       NULL, FEATURE_GAMMA,	dc1394_set_gamma },
+    { "hue",         NULL, FEATURE_HUE,         dc1394_set_hue },
+    { "iris",        NULL, FEATURE_IRIS,	dc1394_set_iris },
+    { "saturation",  NULL, FEATURE_SATURATION,  dc1394_set_saturation },
+    { "sharpness",   NULL, FEATURE_SHARPNESS,   dc1394_set_sharpness },
+    { "shutter",     NULL, FEATURE_SHUTTER,     dc1394_set_shutter },
+    { "temperature", NULL, FEATURE_TEMPERATURE, dc1394_set_temperature },
+    { "trigger",     NULL, FEATURE_TRIGGER,     dc1394_set_trigger_mode }
+  };
 
   //---------------------------------------------------------------
   struct FeatureTable
   {
     static const unsigned int NUM_FEATURES1394 = 12;
 
-    FeatureTable(const FireWireParameters& _params) : 
+    FeatureTable(const Video::Device1394Parameters& _params) : 
       feature_(	feature1394 ) 
     {
       feature_[0].pValue = & (_params.brightness);
@@ -161,82 +179,83 @@ namespace Video
   protected:
     Feature1394  * feature_;
   };
+};
 
+namespace Video
+{
+  FILTER_PARAMETERS_FACTORY_IMPL(Device1394);
 
   //---------------------------------------------------------------
-  VideoDevice1394::VideoDevice1394(Parameters const * _params) :
-    Super(_params),
-    converter_(NULL),
+  Device1394::Device1394(const Miro::ImageFormatIDL& _inputFormat) :
+    Super(_inputFormat),
     is_open_(false),
     handle_(0),
     p_camera_(new dc1394_cameracapture()),
-    frame_buffers_(NULL),
-    frame_rate_(FRAMERATE_30)
+    frameRate_(FRAMERATE_30)
   {
-    DBG(std::cout << "Constructing VideoDevice1394." << std::endl);
+    DBG(std::cout << "Constructing Device1394." << std::endl);
+
+    paletteLookup[Miro::GREY_8] = 1;
+    paletteLookup[Miro::GREY_16] = 1;
+    paletteLookup[Miro::RGB_24] = 1;
+    paletteLookup[Miro::YUV_411] = 1;
+    paletteLookup[Miro::YUV_422] = 1;
+
   }
     
   //---------------------------------------------------------------
-  VideoDevice1394::~VideoDevice1394()
+  Device1394::~Device1394()
   {
-    disconnect();
+    fini();
     delete p_camera_;
-    delete converter_;
   } 
 
   //---------------------------------------------------------------
-  void * 
-  VideoDevice1394::grabImage(ACE_Time_Value& _stamp) const
+  void
+  Device1394::acquireOutputBuffer()
   {
-    DBG(std::cout << "VideoDevice1394: grabImage" << std::endl);
+    DBG(std::cout << "Device1394: acquireOutputBuffer" << std::endl);
 	
     dc1394_dma_single_capture(p_camera_);
-    _stamp = ACE_OS::gettimeofday();
+    timeStamp_ = ACE_OS::gettimeofday();
 
-    int next_buffer = (iCurrentBuffer + 1)%iNBuffers;
-    void * actual_start = frame_buffers_ + next_buffer*getImageSize();
-    if (converter_)
-      (*converter_)((const unsigned char *)p_camera_->capture_buffer,
-		    (unsigned char *)actual_start,
-		    imgWidth*imgHeight);
-    else
-      memcpy (actual_start, p_camera_->capture_buffer, getImageSize());
-    iCurrentBuffer = next_buffer;
-	
+    buffer_ = reinterpret_cast<unsigned char *>(p_camera_->capture_buffer);
+  }
+
+  //---------------------------------------------------------------
+  void
+  Device1394::releaseOutputBuffer()
+  {	
+    DBG(std::cout << "Device1394: releaseOutputBuffer" << std::endl);
+
     dc1394_dma_done_with_buffer(p_camera_);
-	
-    DBG(std::cout << "VideoDevice1394: grabImage done" << std::endl);
-    return actual_start;
   }
     
   //---------------------------------------------------------------
   void
-  VideoDevice1394::connect()
+  Device1394::init(FilterParameters const * _params)
   {
-    DBG(std::cout << "Connecting VideoDevice1394." << std::endl);
+    DBG(std::cout << "Connecting Device1394." << std::endl);
 	
+    params_ = dynamic_cast<Device1394Parameters const *>(_params);
+    assert(params_ != NULL);
+
     initDevice();
-    initSettings(params_->fireWire);
+    initSettings();
 	
-    setFormat(::Video::getFormat(params_->format));
-    setSource(::Video::getSource(params_->source));
-    setPalette(::Video::getPalette(params_->palette));
-    setSubfield(::Video::getSubfield(params_->subfield));
-    setSize(params_->width, params_->height);
-	
-    initBuffers(params_->buffers);
+    setImageFormat();
     initCapture();
   }
 
   //---------------------------------------------------------------
   void
-  VideoDevice1394::disconnect()
+  Device1394::fini()
   {
-    DBG(std::cout << "VideoDevice1394:handleDisconnect." << std::endl);
+    DBG(std::cout << "Device1394:handleDisconnect." << std::endl);
 	
     if (is_open_)
     {
-      DBG(std::cout << "VideoDevice1394::handleDisconnect: close" << std::endl);
+      DBG(std::cout << "Device1394::handleDisconnect: close" << std::endl);
       dc1394_stop_iso_transmission(handle_, p_camera_->node);
       dc1394_dma_unlisten(handle_, p_camera_);
       dc1394_dma_release_camera(handle_, p_camera_);
@@ -244,52 +263,47 @@ namespace Video
     }
 
     cleanupDevice();
-	
-    delete frame_buffers_;
-    frame_buffers_ = NULL;
   }
     
   //---------------------------------------------------------------
   void
-  VideoDevice1394::initDevice(int port)
+  Device1394::initDevice(int port)
   {
-    DBG(std::cout << "VideoDevice1394::initDevice " << port << std::endl);
+    DBG(std::cout << "Device1394::initDevice " << port << std::endl);
 
     handle_ = dc1394_create_handle(port);
-    if (!handle_)
-    {
-      DBG(std::cout << "VideoDevice1394::initDevice: unable to create handle" << std::endl);
-      throw Miro::Exception("VideoDevice1394::initDevice: unable to create handle");
+    if (!handle_) {
+      throw Miro::Exception("Device1394::initDevice: unable to create handle");
     }
 
     int num_nodes = raw1394_get_nodecount(handle_);
     int camera_count = 0;
     nodeid_t * camera_nodes = dc1394_get_camera_nodes(handle_, &camera_count, 1);
-    DBG(std::cout << "VideoDevice1394::initDevice: cameracount = " << camera_count << std::endl);
+
+    DBG(std::cout << "Device1394::initDevice: cameracount = " << camera_count << std::endl);
     if (camera_count < 1)
-      throw Miro::Exception("VideoDevice1394::initDevice: no camera found");
+      throw Miro::Exception("Device1394::initDevice: no camera found");
 
     p_camera_->node = camera_nodes[0];
-    DBG(std::cout << "VideoDevice1394::initDevice: node = " << p_camera_->node << "/" << num_nodes << std::endl);
+    DBG(std::cout << "Device1394::initDevice: node = " << p_camera_->node << "/" << num_nodes << std::endl);
     if (p_camera_->node == num_nodes - 1)
-      throw Miro::Exception("VideoDevice1394::initDevice: camera is highest numbered node.");
+      throw Miro::Exception("Device1394::initDevice: camera is highest numbered node.");
 
     dc1394_stop_iso_transmission(handle_, p_camera_->node);
 
     if (dc1394_get_camera_feature_set(handle_, p_camera_->node, &features_) != DC1394_SUCCESS)
-      throw Miro::Exception("VideoDevice1394::initDevice: unable to get camera features");
+      throw Miro::Exception("Device1394::initDevice: unable to get camera features");
 	
     DBG(dc1394_print_feature_set(&features_));
   }
 
   //---------------------------------------------------------------
   void 
-  VideoDevice1394::cleanupDevice()
+  Device1394::cleanupDevice()
   {
-    DBG(std::cout << "VideoDevice1394::cleanupDevice " << std::endl);
+    DBG(std::cout << "Device1394::cleanupDevice " << std::endl);
 
-    if (handle_)
-    {
+    if (handle_) {
       dc1394_destroy_handle(handle_);
       handle_ = 0;
     }
@@ -297,146 +311,60 @@ namespace Video
 
   //---------------------------------------------------------------
   void
-  VideoDevice1394::setFormat(VideoFormat fmt)
+  Device1394::setImageFormat()
   {
-    DBG(std::cout << "VideoDevice1394::setFormat" << std::endl);
-  }
+    DBG(std::cout << "Device1394::setImageFormat" << std::endl);
 
-  //---------------------------------------------------------------
-  void
-  VideoDevice1394::setSource(VideoSource src)
-  {
-    DBG(std::cout << "VideoDevice1394::setSource" << std::endl);
-    if (src != source1394)
-      throw Miro::Exception("VideoDevice1394::setSource: unsupported source requested");
-  }
-
-  //---------------------------------------------------------------
-  void
-  VideoDevice1394::setPalette(VideoPalette pal)
-  {
-    DBG(std::cout << "VideoDevice1394::setPalette" << std::endl);
-    requestedPaletteID = pal;
-    if (pal == paletteBGR)
-      devicePaletteID = paletteRGB;
-    else
-      devicePaletteID = pal;
-    if (devicePaletteID != paletteRGB && devicePaletteID != paletteYUV)
-      throw Miro::Exception("VideoDevice1394::setPalette: unsupported palette requested");
-  }
-
-  //---------------------------------------------------------------
-  void
-  VideoDevice1394::setSubfield(VideoSubfield sub)
-  {
-    DBG(std::cout << "VideoDevice1394::setSubfield" << std::endl);
-    requestedSubfieldID = sub;
-    if (sub != subfieldAll)
-      throw Miro::Exception("VideoDevice1394::setSubfield: subfields not supported yet");
-    deviceSubfieldID = subfieldAll;
-  }
-
-  //---------------------------------------------------------------
-  void
-  VideoDevice1394::setSize(int w, int h)
-  {
-    DBG(std::cout << "VideoDevice1394::setSize" << std::endl);
-    imgWidth = w;
-    imgHeight = h;
-	
-    if (converter_) delete converter_;
-    converter_ = 0;
-
-#ifdef RAW_RGB
-    if (w != 640 || h != 480 || devicePaletteID != paletteRGB)
-      throw Miro::Exception("VideoDevice1394::setSize: RGB supports only 640x480");
-    image_format_ = MODE_640x480_RGB;
-    if (frame_rate_ == FRAMERATE_30) frame_rate_ = FRAMERATE_15;
-#else
-    if (w == 640 && h == 480)
-    {
-      image_format_ = MODE_640x480_YUV411;
-      if (devicePaletteID == paletteRGB)
-	converter_ = new VideoConverterYUV411toRGB;
-      else	 
-	converter_ = new VideoConverterYUV411toYUV;
+    unsigned int i;
+    for (i = 0; i < NUM_FORMAT0_MODES; ++i) {
+      if (inputFormat_.width  == mode1394[i].format.width &&
+	  inputFormat_.height == mode1394[i].format.height &&
+	  inputFormat_.palette == mode1394[i].format.palette ) {
+	imageFormat_ = mode1394[i].mode;
+	break;
+      }
     }
-    else if (w == 320 && h == 240)
-    {
-      image_format_ = MODE_320x240_YUV422;
-      if (devicePaletteID == paletteRGB)
-	converter_ = new VideoConverterYUV422toRGB;
-      else
-	converter_ = new VideoConverterYUV422toYUV;
-    }
-    else
-      throw Miro::Exception("VideoDevice1394::setSize: unsupported image size");
-#endif
+    if (i == NUM_FORMAT0_MODES)
+      throw Miro::Exception("Device1394::setImageFormat - Unsupported image format requested.");
   }
 
   //---------------------------------------------------------------
   void
-  VideoDevice1394::initBuffers(int buf_cnt)
-  {
-    delete frame_buffers_;
-
-    iNBuffers = buf_cnt;
-    iCurrentBuffer = iNBuffers-1;
-    frame_buffers_ = new char [getImageSize()*iNBuffers];
-  }
-
-  //---------------------------------------------------------------
-  void
-  VideoDevice1394::initCapture()
+  Device1394::initCapture()
   {
     unsigned int channel;
     unsigned int speed;
 
     if (dc1394_get_iso_channel_and_speed(handle_, p_camera_->node, &channel, &speed) != DC1394_SUCCESS)
-      throw Miro::Exception("VideoDevice1394:initDevice: unable to get iso channel number");
+      throw Miro::Exception("Device1394:initDevice: unable to get iso channel number");
     std::cout << "ISO channel: " << channel << std::endl;
     std::cout << "    speed: " << speed << std::endl;
     channel = 1;
 
-#ifdef RAW_RGB		
     if (dc1394_dma_setup_capture(handle_,
 				 p_camera_->node,
 				 channel,
 				 FORMAT_VGA_NONCOMPRESSED,
-				 image_format_,
+				 imageFormat_,
 				 SPEED_400,
-				 frame_rate_,
+				 frameRate_,
 				 NUM_BUFFERS,
 				 DROP_FRAMES,
 				 params_->device.c_str(),
 				 p_camera_) != DC1394_SUCCESS)
-      throw Miro::Exception("VideoDevice1394::handleConnect: unable to setup camera (RAW_RGB)");
-#else
-    if (dc1394_dma_setup_capture(handle_,
-				 p_camera_->node,
-				 channel,
-				 FORMAT_VGA_NONCOMPRESSED,
-				 image_format_,
-				 SPEED_400,
-				 frame_rate_,
-				 NUM_BUFFERS,
-				 DROP_FRAMES,
-				 params_->device.c_str(),
-				 p_camera_) != DC1394_SUCCESS)
-      throw Miro::Exception("VideoDevice1394::handleConnect: unable to setup camera");
-#endif
+      throw Miro::Exception("Device1394::handleConnect: unable to setup camera");
 	
     if (dc1394_start_iso_transmission(handle_, p_camera_->node) != DC1394_SUCCESS)
-      throw Miro::Exception("VideoDevice1394::handleConnect: unable to start camera iso transmission");
+      throw Miro::Exception("Device1394::handleConnect: unable to start camera iso transmission");
     is_open_ = true;
   }
 
   //---------------------------------------------------------------
   void
-  VideoDevice1394::initSettings(const FireWireParameters & _params)
+  Device1394::initSettings()
   {
     // set standartized features
-    FeatureTable featureTable(_params);
+    FeatureTable featureTable(*params_);
     Feature1394 const * first;
     Feature1394 const * last = featureTable.end();
     for (first = featureTable.begin(); first != last; ++first) {
@@ -456,36 +384,36 @@ namespace Video
     }
 
     // white balance
-    if (_params.whiteBalance0 == -1 ||
-	_params.whiteBalance1 == -1) {
+    if (params_->whiteBalance0 == -1 ||
+	params_->whiteBalance1 == -1) {
       dc1394_auto_on_off(handle_, p_camera_->node, FEATURE_WHITE_BALANCE, 1);
     }
-    else if (_params.whiteBalance0 >= 0 &&
-	     _params.whiteBalance1 >= 0) {
+    else if (params_->whiteBalance0 >= 0 &&
+	     params_->whiteBalance1 >= 0) {
       if (dc1394_set_white_balance(handle_,
 				   p_camera_->node,
-				   _params.whiteBalance0,
-				   _params.whiteBalance1) != DC1394_SUCCESS) {
+				   params_->whiteBalance0,
+				   params_->whiteBalance1) != DC1394_SUCCESS) {
 	std::cout << "WARNING: Feature "
 		  << "WhiteBalance = " 
-		  << _params.whiteBalance0 << ":" << _params.whiteBalance1
+		  << params_->whiteBalance0 << ":" << params_->whiteBalance1
 		  << " not set." << std::endl;
       }
       dc1394_auto_on_off(handle_, p_camera_->node, FEATURE_WHITE_BALANCE, 0);
     }
 
     // set framerate
-    int value = _params.framerate;
+    int value = params_->framerate;
     if (value <= 1)	   
-      frame_rate_ = FRAMERATE_1_875;
+      frameRate_ = FRAMERATE_1_875;
     else if (value <= 3)
-      frame_rate_ = FRAMERATE_3_75;
+      frameRate_ = FRAMERATE_3_75;
     else if (value <= 7)
-      frame_rate_ = FRAMERATE_7_5;
+      frameRate_ = FRAMERATE_7_5;
     else if (value <= 15)
-      frame_rate_ = FRAMERATE_15;
+      frameRate_ = FRAMERATE_15;
     else
-      frame_rate_ = FRAMERATE_30;
+      frameRate_ = FRAMERATE_30;
   }
 };
 

@@ -14,7 +14,7 @@
 // extern "C" {
 #include "ioctl_meteor.h"
 // }
-#include "VideoDevice.h"
+#include "VideoAVDevice.h"
 
 #include <ace/DEV_Connector.h>
 
@@ -23,35 +23,37 @@ namespace Video
   //--------------------------------------------------------------------------
   // Hardware specifica
   //--------------------------------------------------------------------------
-  class VideoDeviceMeteor  :public VideoDevice
+  class DeviceMeteor  : public AVDevice
   {
-    typedef VideoDevice Super;
+    typedef AVDevice Super;
 
   public:
-    VideoDeviceMeteor(Parameters const * _params = Parameters::instance());
-    virtual ~VideoDeviceMeteor();
+    DeviceMeteor(const Miro::ImageFormatIDL& _inputFormatParameters);
+    virtual ~DeviceMeteor();
 
-    virtual void * grabImage(ACE_Time_Value& _timeStamp) const;
+    virtual void init(FilterParameters const * _params);
+    virtual void fini();
 
-    virtual void connect();
-    virtual void disconnect();
+    virtual void acquireOutputBuffer();
+    virtual void releaseOutputBuffer();
 
   protected:
-    virtual	void	setFormat(int);
-    virtual	void	setSource(int);
-    virtual	void	setPalette(int);
-    virtual	void	setSize(int, int);
+    void setFormat();
+    void setSource();
+    void setPalette();
+    void setSize();
 
     int getCurrentErrorCount() const;
+
+    // protected data
+
+    AVDeviceParameters const * params_;
 
     ACE_DEV_Addr devName_;
     ACE_DEV_IO ioBuffer_;
     ACE_DEV_Connector connector_;
 
     meteor_geomet	meteorGeometry;
-
-    int			videoFd;
-    char*		map;
   };
 };
 #endif

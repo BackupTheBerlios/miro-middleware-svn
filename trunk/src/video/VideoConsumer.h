@@ -18,8 +18,7 @@
 namespace Video
 {
   // forward declerations
-  class VideoImpl;
-  class VideoDevice;
+  class Device;
 
   /**
    * Class for using the Video robot
@@ -29,16 +28,13 @@ namespace Video
     typedef Miro::Thread Super;
     
   public:
-    Consumer(Video::VideoDevice& _device, 
+    Consumer(Device& _device, 
 	     ACE_Sched_Params * pschedp = NULL);
     ~Consumer();
 
     virtual int svc();
 
-    int getImageSize() const;
     int getPaletteSize() const;
-    Miro::TimeIDL getCurrentImage(void *);
-    Miro::TimeIDL getWaitNextImage(void *);
     void getWaitNextSubImage(unsigned char *, const int, const int);
 
   protected:
@@ -54,7 +50,7 @@ namespace Video
     void swapLine3(void*, const void*, const int);
     void swapLine4(void*, const void*, const int);
 
-    Video::VideoDevice&     videoDevice;
+    Device&     videoDevice;
     Miro::Mutex      mutex;
     Miro::Condition  cond;
     void *           pCurrentImageData;

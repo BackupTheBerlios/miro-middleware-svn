@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // 
@@ -13,12 +13,10 @@
 #include "VideoServer.h"
 #include "VideoDevice.h"
 #include "VideoConsumer.h"
-#include "VideoDeviceDummy.h"
-#include "VideoDeviceBTTV.h"
-#include "VideoDeviceMeteor.h"
-#include "VideoDevice1394.h"
+#include "VideoFilterRepository.h"
 #include "Parameters.h"
 
+#include "miro/Server.h"
 #include "miro/ExceptionC.h"
 #include "miro/Exception.h"
 #include "miro/Utils.h"
@@ -31,77 +29,81 @@
 #define DBG(x)
 #endif
 
-using std::cout;
-using std::cerr;
-
-VideoService::VideoService(int argc, char *argv[]) :
-  Super(argc, argv),
-  schedparams_(ACE_SCHED_FIFO, 10),
-  pVideoDevice(NULL),
-  pConsumer(NULL),
-  pGrabber(NULL)
+namespace Video
 {
-  init();
-  DBG(cout << "VideoService initialized.." << endl);
-}
+  Service::Service(Miro::Server& _server, 
+		   Miro::ConfigDocument * _config) :
+    schedparams_(ACE_SCHED_FIFO, 10),
+    pVideoDevice_(NULL),
+    pConsumer_(NULL)
+  {
+    DBG(std::cout << "VideoService initializing.." << endl);
 
-VideoService::VideoService(Server& _server) :
-  Super(_server),
-  schedparams_(ACE_SCHED_FIFO, 10),
-  pVideoDevice(NULL),
-  pConsumer(NULL),
-  pGrabber(NULL)
-{
-  init();
-  DBG(cout << "VideoService initialized.." << endl);
-}
+    Parameters * videoParameters = Parameters::instance();
 
-void
-VideoService::init()
-{
-  if (Video::Parameters::instance()->grabber == "bttv")
-    pVideoDevice = new Video::VideoDeviceBTTV();
-  //else if (Video::Parameters::instance()->grabber == "v4l")
-  //	pVideoDevice = new  VideoDeviceV4L;
-  else if (Video::Parameters::instance()->grabber== "meteor")
-      pVideoDevice = new Video::VideoDeviceMeteor();
-#ifdef HAVE_VIDEODEVICE1394
-  else if (Video::Parameters::instance()->grabber == "1394")
-    pVideoDevice = new  Video::VideoDevice1394();
-#endif // HAVE_VIDEODEVICE1394
-  else if (Video::Parameters::instance()->grabber == "dummy")
-    pVideoDevice = new  Video::VideoDeviceDummy();
-  else
-    throw Miro::Exception(std::string("VideoDevice::constructor: unknown device: ") + 
-			  Video::Parameters::instance()->grabber);
-  pConsumer = new Video::Consumer(*pVideoDevice, &schedparams_);
-  pGrabber = new Miro::VideoImpl(pConsumer);
+    std::cout << "Setting up filter tree." << endl;
+    
+    Miro::ImageFormatIDL format;
+    format.width = videoParameters->width;
+    format.height = videoParameters->height;
+    format.palette = Video::Device::getPalette(videoParameters->palette);
+    Filter * filter = buildFilterTree(_server,
+				      NULL,
+				      format,
+				      _config,
+				      videoParameters->filter);
 
-  pVideoDevice->connect();
-  pConsumer->open(NULL);
+    pVideoDevice_ = dynamic_cast<Video::Device *>(filter);
+    assert (pVideoDevice_ != NULL);
 
-  // register the grabber interface at the POA
-  pVideo = pGrabber->_this();
+    pConsumer_ = new Video::Consumer(*pVideoDevice_, &schedparams_);
+    pConsumer_->open(NULL);
+  }
 
-  addToNameService(pVideo, "Video");
-}
+  Service::~Service()
+  {
+    DBG(std::cout << "Destructing VideoService." << endl);
 
-VideoService::~VideoService()
-{
-  DBG(cout << "Destructing VideoService." << endl);
+    pConsumer_->cancel();
+    pVideoDevice_->fini();
 
-  pConsumer->cancel();
-  pVideoDevice->disconnect();
+    delete pConsumer_;
+    delete pVideoDevice_;
+  }
 
-  // Deactivate the interfaces.
-  // we have to do this manually for none owned orbs,
-  // as the class goes out of scope before
-  // the orb is shut down
-  PortableServer::ObjectId_var oid;
-  oid =  poa->reference_to_id (pVideo);
-  poa->deactivate_object (oid.in());
+  Video::Filter *
+  Service::buildFilterTree(Miro::Server& _server,
+			   Video::Filter * _pre,
+			   Miro::ImageFormatIDL const& _format,
+			   Miro::ConfigDocument * _config,
+			   Video::FilterTreeParameters const& _tree) 
+  {
+    FilterRepository * repo = Video::FilterRepository::instance();
+  
+    Filter * filter = repo->getInstance( _tree.type, _format);
+    FilterParameters * params = filter->getParametersInstance();
 
-  delete pGrabber;
-  delete pConsumer;
-  delete pVideoDevice;
-}
+    _config->getParameters(_tree.name, *params);
+
+    std::cout << _tree.name << endl;
+    std::cout << *params << endl;
+
+    filter->init(params);
+    if (_pre) {
+      filter->setPredecessor(_pre);
+      _pre->addSuccessor(filter);
+    }
+    if (params->interfaceInstance)
+      filter->setInterface(_server, params->interface);
+  
+    for (unsigned int i = 0; i < _tree.successor.size(); ++i)
+      buildFilterTree(_server,
+		      filter,
+		      filter->outputFormat(),
+		      _config,
+		      _tree.successor[i]);
+  
+    return filter;
+  }
+
+};

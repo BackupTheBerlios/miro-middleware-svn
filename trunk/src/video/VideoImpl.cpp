@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -10,9 +10,14 @@
 //////////////////////////////////////////////////////////////////////////////
 #include "VideoImpl.h"
 #include "VideoDevice.h"
-#include "VideoConfig.h"
+#include "VideoConsumer.h"
+#include "BufferManager.h"
+#include "Parameters.h"
 
-#include <miro/Exception.h>
+#include "miro/Server.h"
+#include "miro/TimeHelper.h"
+#include "miro/VideoHelper.h"
+#include "miro/Exception.h"
 
 #include <sys/ipc.h>
 #include <sys/shm.h>
@@ -21,141 +26,172 @@ using namespace Video;
 
 namespace Miro 
 {
-  VideoImpl::VideoImpl(::Video::Consumer* _pconsumer) :
-    pConsumer(_pconsumer), 
-    parameters(*Parameters::instance())
+
+  CORBA::Long VideoImpl::idCounter = 0;
+
+  VideoImpl::VideoImpl(Server& _server, 
+		       ::Video::VideoInterfaceParameters const & _params,
+		       Miro::ImageFormatIDL const & _format) :
+    server_(_server),
+    params_(_params),
+    format_(_format),
+    pBufferManager_(NULL)
   {
     cout << "Constructing VideoImpl." << endl;
 
-    iMaxConnections = parameters.connections;
-    pHandleArray = new ImageHandleIDL[iMaxConnections];
-    pShmDataArray = new void*[iMaxConnections];
-
-    for (int i = 0; i < iMaxConnections; i++)
-    {
-      pHandleArray[i].width = parameters.width;
-      pHandleArray[i].height = parameters.height;
-      if (parameters.palette == "gray") {
-	pHandleArray[i].palette = ::Video::paletteGrey;
-      } 
-      else if (parameters.palette == "yuv") {
-	pHandleArray[i].palette = ::Video::paletteYUV;
-      }
-      else if (parameters.palette == "rgb") {
-	pHandleArray[i].palette = ::Video::paletteRGB;
-      } 
-      else if (parameters.palette == "bgr") {
-	pHandleArray[i].palette = ::Video::paletteBGR;
-      } 
-      else if (parameters.palette == "rgba") {
-	pHandleArray[i].palette = ::Video::paletteRGBA;
-      }
-      else if (parameters.palette == "abgr") {
-	pHandleArray[i].palette = ::Video::paletteABGR;
-      }
-      //	pHandleArray[i].source = parameters.source;
-      pHandleArray[i].key = -1;
-      pHandleArray[i].handle = -1;
-      pShmDataArray[i] = NULL;
+    imageHandle_.format = _format;
+    imageHandle_.key = shmget(0, 
+			      getImageSize(format_) * params_.buffers,
+			      IPC_CREAT|0x1ff);
+    if (imageHandle_.key == -1) {
+      throw Miro::CException(errno, "Failed creating shared memory segment!");
     }
-  }
+    pBufferArray_ = (unsigned char*)shmat(imageHandle_.key, 0, 0);
+    if (pBufferArray_ == (void*)-1) {
+	  throw Miro::CException(errno, "Failed attaching shared memory segment!");
+    }
 
+    imageHandle_.offset.length(params_.buffers);
+    for (unsigned int i = 0; i < params_.buffers; ++i) {
+      imageHandle_.offset[i] = i * getImageSize(format_);
+    }
+
+    pBufferManager_ = new BufferManager(params_.buffers,
+					getImageSize(format_),
+					pBufferArray_);
+
+    // register the video interface at the POA
+    pVideo = this->_this();
+    server_.addToNameService(pVideo, params_.name.c_str());
+  }
+  
   VideoImpl::~VideoImpl()
   {
     cout << "Destructing VideoImpl." << endl;
 
-    delete[] pShmDataArray;
-    delete[] pHandleArray;
+    // Deactivate the interfaces.
+    // we have to do this manually for none owned orbs,
+    // as the class goes out of scope before
+    // the orb is shut down
+    PortableServer::ObjectId_var oid;
+    oid =  server_.poa->reference_to_id(pVideo);
+    server_.poa->deactivate_object(oid.in());
+
+    // clean up shared memory
+    delete pBufferManager_;
+    shmdt(pBufferArray_);
+    shmctl(imageHandle_.key, IPC_RMID, NULL);
   }
-	
-  Miro::ImageHandleIDL 
-  VideoImpl::connect() throw()
+  
+  Miro::ImageHandleIDL *
+  VideoImpl::connect(CORBA::ULong& _id) ACE_THROW_SPEC(())
   {
-    for (int i = 0; i < iMaxConnections; ++i) {
-      if (pHandleArray[i].handle == -1) {
-	pHandleArray[i].key = shmget(0, pConsumer->getImageSize(), IPC_CREAT|0x1ff);
-	if (pHandleArray[i].key == -1) {
-	  cout << "failed creating shared memory segment!" << endl;
-	  throw Miro::EOutOfBounds();
-	}
-
-	pShmDataArray[i] = shmat(pHandleArray[i].key, 0, 0);
-	if (pShmDataArray[i] == (void*)-1) {
-	  cout << "failed attaching shared memory segment!" << endl;
-	  throw Miro::EOutOfBounds();
-	}
-
-	pHandleArray[i].handle = i;
-	return pHandleArray[i];
-      }
-    }
-    throw Miro::EOutOfBounds();
+    _id = ++idCounter;
+    return new Miro::ImageHandleIDL(imageHandle_);
   }
 
-
-  void 
-  VideoImpl::release(const Miro::ImageHandleIDL & img) throw()
+  void
+  VideoImpl::disconnect(CORBA::ULong /*_id*/) 
+    ACE_THROW_SPEC((EOutOfBounds))
   {
-    checkImageHandle(img);
-    shmdt(pShmDataArray[img.handle]);
-    shmctl(pHandleArray[img.handle].key, IPC_RMID, NULL);
-    pHandleArray[img.handle].key = -1;
-    pHandleArray[img.handle].handle = -1;
   }
 
   TimeIDL
-  VideoImpl::getImage(Miro::ImageHandleIDL & img) throw()
+  VideoImpl::acquireCurrentImage(CORBA::ULong /*_id*/, CORBA::ULong& _buffer) 
+    ACE_THROW_SPEC((EOutOfBounds))
   {
-    checkImageHandle(img);
-    try {
-      return pConsumer->getCurrentImage(pShmDataArray[img.handle]);
-    }
-    catch (...) {
-      throw Miro::EDevIO();
-    }
+    TimeIDL stamp;
+
+    _buffer = pBufferManager_->acquireCurrentReadBuffer();
+    timeA2C(pBufferManager_->bufferTimeStamp(_buffer), stamp);
+
+    cout << "got current image" << endl;
+
+    return stamp;
   }
 
   TimeIDL
-  VideoImpl::getWaitImage(Miro::ImageHandleIDL & img) throw()
+  VideoImpl::acquireNextImage(CORBA::ULong /*_id*/, CORBA::ULong& _buffer) 
+    ACE_THROW_SPEC((EOutOfBounds, ETimeOut))
   {
-      cout << "getWaitImage 0" << endl;
-    checkImageHandle(img);
-      cout << "getWaitImage 1" << endl;
-      try {
-      cout << "getWaitImage 2" << endl;
-      return pConsumer->getWaitNextImage(pShmDataArray[img.handle]);
-    }
-    catch (Exception& e) {
-      cout << "VideoImpl::getWaitImage() caught exception: " << e << endl;
-      throw Miro::EDevIO();
-    }
+    TimeIDL stamp;
+
+    cout << "wait for next image" << endl;
+
+    _buffer = pBufferManager_->acquireNextReadBuffer();
+    timeA2C(pBufferManager_->bufferTimeStamp(_buffer), stamp);
+
+    cout << "got next image" << endl;
+
+    return stamp;
+  }
+
+  void
+  VideoImpl::releaseImage(CORBA::ULong /*_id*/, CORBA::ULong _buffer)
+    ACE_THROW_SPEC((EOutOfBounds))
+  {
+    pBufferManager_->releaseReadBuffer(_buffer);
+    cout << "released image" << endl;
   }
 
   SubImageDataIDL *
-  VideoImpl::exportWaitSubImage (CORBA::Long x, CORBA::Long y)
-    ACE_THROW_SPEC ((CORBA::SystemException, Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut))
+  VideoImpl::exportWaitSubImage(CORBA::ULong& x, CORBA::ULong& y)
+    ACE_THROW_SPEC((EOutOfBounds, EDevIO, ETimeOut))
   {
-    int             bufferSize = pConsumer->getPaletteSize() * (int)x * (int)y;
-    unsigned char   * buffer   = new unsigned char[bufferSize];
-    SubImageDataIDL * subImage = new SubImageDataIDL(bufferSize, bufferSize, buffer, 1);
+    int             bufferSize = ::Miro::getImageSize(format_);
+    unsigned char   * dst   = new unsigned char[bufferSize];
+    SubImageDataIDL * subImage = new SubImageDataIDL(bufferSize, bufferSize, dst, 1);
 
-    try {
-      pConsumer->getWaitNextSubImage(buffer, (int)x, (int)y);
+    unsigned int bufferId = pBufferManager_->acquireNextReadBuffer();
+    unsigned char const * src = pBufferManager_->bufferAddr(bufferId);
+
+    unsigned int srcWidth  = imageHandle_.format.width;
+    unsigned int srcHeight = imageHandle_.format.height;
+
+    // do not expand
+    x = std::min(srcWidth, x);
+    y = std::min(srcHeight, y);
+
+    // src pixels per requested pixel
+    double intervalWidth  = (double)srcWidth  / (double)x;
+    double intervalHeight = (double)srcHeight / (double)y;
+
+    const int paletteSize = getPixelSize(imageHandle_.format.palette);
+    unsigned long * tileValueSum = new unsigned long[paletteSize];
+
+    for (unsigned int req_h = 0; req_h < y; ++req_h) {
+      double low_h = (double)(req_h) * intervalHeight;
+      double up_h  = (double)(req_h + 1) * intervalHeight;
+		
+      for (unsigned int req_w = 0; req_w < x; ++req_w) {
+	double low_w = (double)(req_w) * intervalWidth;
+	double up_w  = (double)(req_w + 1) * intervalWidth;
+
+	long num_in_tile = 0;
+	for (int palette = 0; palette < paletteSize; ++palette) 
+	  tileValueSum[palette] = 0;
+			
+	for (int src_h = (int)low_h; src_h < (int)up_h; ++src_h) {
+	  for (int src_w = (int)low_w; src_w < (int)up_w; ++src_w) {
+	    for (int palette = 0; palette < paletteSize; ++palette) {
+	      tileValueSum[palette] += 
+		src[paletteSize * (src_h * srcWidth + src_w) + palette];
+	    }
+	    ++num_in_tile;
+	  }
+	}
+
+	for (int palette = 0; palette < paletteSize; ++palette) {
+	  tileValueSum[palette] /= num_in_tile;
+	  dst[paletteSize * (req_h * x + req_w) + palette] = 
+	    (unsigned char)tileValueSum[palette];
+	}
+      }
     }
-    catch (...) {
-      throw Miro::EDevIO();
-    }
+
+    delete tileValueSum;
+
+    pBufferManager_->releaseReadBuffer(bufferId);
     return subImage;
-  }
-
-  void 
-  VideoImpl::checkImageHandle(const Miro::ImageHandleIDL & img)
-  {
-    if ((img.handle < 0) || 
-	(img.handle >= iMaxConnections) || 
-	(pHandleArray[img.handle].key == -1) ||
-	(img.key != pHandleArray[img.handle].key) || 
-	(pShmDataArray[img.handle] == NULL))
-      throw Miro::EOutOfBounds();
   }
 };

@@ -4,7 +4,48 @@
   <config_global name="include" value="miro/Parameters.h" />
 
   <config_group name="video">
-    <config_item name="FireWire" parent="Miro::Config" final="false">
+    <config_item name="FilterTree" parent="Miro::Config" final="false">
+      <config_parameter name="name" type="string" default="DeviceBTTV" />
+      <config_parameter name="type" type="string" default="DeviceBTTV" />
+      <config_parameter name="successor" type="std::vector&lt;FilterTreeParameters&gt;" />
+    </config_item>
+
+    <config_item name="VideoInterface" parent="Miro::Config" final="false">
+      <config_parameter name="name" type="string" default="Video" />
+      <config_parameter name="buffers" type="unsigned int" default="4" />
+    </config_item>
+
+    <config_item name="Filter" parent="Miro::Config" final="false">
+      <config_parameter name="name" type="string" default="Filter" />
+      <config_parameter name="interfaceInstance" type="bool" default="false" />
+      <config_parameter name="interface" type="VideoInterfaceParameters" />
+    </config_item>
+
+    <config_item name="Device" parent="Filter" final="false">
+      <config_parameter name="device" type="string" default="/dev/v4l/video0" />
+    </config_item>
+
+    <config_item name="DeviceDummy" parent="Device" final="true">
+      <config_parameter name="timeout" type="ACE_Time_Value" default="1, 0" />
+    </config_item>
+
+    <config_item name="AVDevice" parent="Device" final="true">
+      <config_parameter name="device" type="string" inherited="true" default="/dev/meteor" />
+
+      <config_parameter name="format" type="string" default="pal" />
+      <config_parameter name="source" type="string" default="composite1" />
+    </config_item>
+
+    <config_item name="DeviceBTTV" parent="AVDevice" final="true">
+      <config_parameter name="device" type="string" inherited="true" default="/dev/video/0" />
+
+      <config_parameter name="subfield" type="string" default="all" />
+    </config_item>
+
+    <config_item name="Device1394" parent="Device" final="true">
+      <config_parameter name="device" type="string" inherited="true" default="/dev/video1394/0" />
+
+      <config_parameter name="buffers" type="int" default="4" />
 
       <config_parameter name="brightness" type="int" default="324" />
       <config_parameter name="exposure" type="int" default="511" />
@@ -24,24 +65,12 @@
 
     </config_item>
 
-    <config_item parent="Miro::Dev" instance="true">
-      <config_parameter name="device" type="string" inherited="true" default="/dev/v4l/video0" />
-
-      <config_parameter name="grabber" type="string" default="bttv" />
-      <config_parameter name="format" type="string" default="pal" />
-      <config_parameter name="source" type="string" default="composite1" />
-      <config_parameter name="palette" type="string" default="rgb" />
-      <config_parameter name="subfield" type="string" default="all" />
-
+    <config_item parent="Miro::Config" instance="true">
       <config_parameter name="width" type="int" default="384" measure="pixel" />
       <config_parameter name="height" type="int" default="288" measure="pixel" />
-      <config_parameter name="connections" type="int" default="16" />
-      <config_parameter name="buffers" type="int" default="16" />
-      <config_parameter name="byteorder" type="int" default="1" />
-      <config_parameter name="upsideDown" type="bool" default="false" />
-      <config_parameter name="pixelSize" type="int" default="3" measure="bytes" />
+      <config_parameter name="palette" type="string" default="rgb" />
 
-      <config_parameter name="fireWire" type="FireWireParameters" />
+      <config_parameter name="filter" type="FilterTreeParameters" />
     </config_item>
   </config_group>
 </config>

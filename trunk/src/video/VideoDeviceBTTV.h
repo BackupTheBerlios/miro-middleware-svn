@@ -15,7 +15,7 @@ extern "C" {
 #include <linux/videodev.h>
 }
 
-#include "VideoDevice.h"
+#include "VideoAVDevice.h"
 
 #include <ace/DEV_Connector.h>
 
@@ -24,32 +24,48 @@ namespace Video
   //--------------------------------------------------------------------------
   // Hardware specifica
   //--------------------------------------------------------------------------
-  class VideoDeviceBTTV : public VideoDevice
+  class DeviceBTTV : public AVDevice
   {
-    typedef VideoDevice Super;
-
+    typedef AVDevice Super;
   public:
-    VideoDeviceBTTV(Parameters const * _params = Parameters::instance());
-    virtual ~VideoDeviceBTTV();
+    enum VideoSubfield {
+        SUBFIELD_ALL,
+        SUBFIELD_ODD,
+        SUBFIELD_EVEN
+    };
 
-    virtual void connect();
-    virtual void disconnect();
+    DeviceBTTV(const Miro::ImageFormatIDL& _inputFormatParameters);
+    virtual ~DeviceBTTV();
 
-    virtual void * grabImage(ACE_Time_Value& _timeStamp) const;
+    FILTER_PARAMETERS_FACTORY(DeviceBTTV);
+
+    virtual void init(FilterParameters const * _params);
+    virtual void fini();
+
+    virtual void acquireOutputBuffer();
+    virtual void releaseOutputBuffer();
+
+    static const unsigned int NUM_SUBFIELD_ENTRIES = SUBFIELD_EVEN + 1;
 
   protected:
-    virtual void setFormat(int);
-    virtual void setSource(int);
-    virtual void setPalette(int);
-    virtual void setSize(int, int);
 
-    virtual void getCapabilities();
-    virtual void getChannels();
+    // methods
+    void setFormat();
+    void setSource();
+    void setPalette();
+    void setSize();
 
-    virtual bool probeFormat(int format);
-    virtual int probeAllFormats();
+    void getCapabilities();
+    void getChannels();
 
-    // protected data
+    bool probeFormat(int format);
+    int probeAllFormats();
+
+    // static methods
+    static VideoSubfield getSubfield(std::string const & _sub);
+
+    // data
+    DeviceBTTVParameters const * params_;
 
     ACE_DEV_Addr devName_;
     ACE_DEV_IO ioBuffer_;
@@ -59,11 +75,11 @@ namespace Video
     struct video_mbuf gb_buffers;
     struct video_capability capability;
     struct video_channel * channels;
-    //	struct video_buffer		ov_fbuf;
-    //	struct video_picture		pict;
 
-    int videoFd;
-    char * map_;
+    unsigned char * map_;
+
+    int		iNBuffers;
+    mutable int	iCurrentBuffer;
 
     mutable int currentBuffer_;
     mutable int nextBuffer_;

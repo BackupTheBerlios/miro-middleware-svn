@@ -15,6 +15,15 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.5  2003/06/03 10:25:32  hutz
+ * complete revamp of the video service
+ * the interface changes slightly to allow for better access
+ * removed unnecessary copies
+ * added a complete filter framework for server side image processing
+ * added a library miroVideo.a for easy customization to own video service
+ * derivates
+ * the dummy video device now displays an image
+ *
  * Revision 1.4  2003/05/13 21:58:49  hutz
  * removing the bridge pattern between VideoDevice and VideoDeviceBase
  * making VideoDevice* a direct descendant of VideoDevice
@@ -61,21 +70,22 @@
 
 namespace Video
 {
-  class VideoConverter;
-
   //! Firewire camera support.
-  class VideoDevice1394 : public VideoDevice
+  class Device1394 : public Device
   {
-    typedef VideoDevice Super;
+    typedef Device Super;
     
   public:
-    VideoDevice1394(Parameters const * _params = Parameters::instance());
-    virtual ~VideoDevice1394();
+    Device1394(const Miro::ImageFormatIDL& _inputFormat);
+    virtual ~Device1394();
 	
-    virtual void connect();
-    virtual void disconnect();
+    FILTER_PARAMETERS_FACTORY(Device1394);
+
+    virtual void init(FilterParameters const * _params);
+    virtual void fini();
     
-    virtual void * grabImage(ACE_Time_Value& _timeStamp) const;
+    virtual void acquireOutputBuffer();
+    virtual void releaseOutputBuffer();
 
   protected:
     //! Detect and initialize the camera.
@@ -83,24 +93,17 @@ namespace Video
     //! Close device-driver handles.
     void cleanupDevice();
 	
-    void setFormat(VideoFormat fmt);
-    void setSource(VideoSource src);
-    void setPalette(VideoPalette pal);
-    void setSubfield(VideoSubfield sub);
-    void setSize(int w, int h);
+    void setImageFormat();
 
     //! set extra (and device specific) camera parameters.
-    void initSettings(const Video::FireWireParameters & _params);
-	
-    //! Allocate and setup the framebuffer memory.
-    void initBuffers(int buf_cnt);
+    void initSettings();
 	
     //! Initialize dma transmission
     void initCapture();
 
-  private:
-    VideoConverter *        converter_;
+    Device1394Parameters const * params_;
 
+  private:
     //! Flag to indicate that the device is initialized.
     bool                    is_open_;
     //! Real device handle.
@@ -110,11 +113,9 @@ namespace Video
     //! Camera capture data structure.
     dc1394_cameracapture *  p_camera_;
     //! Selected image format.
-    long                    image_format_;
-    //! Pointer to framebuffer memory.
-    char *                  frame_buffers_;
+    long                    imageFormat_;
     //! Framerate
-    int                     frame_rate_;
+    int                     frameRate_;
   };
 };
 

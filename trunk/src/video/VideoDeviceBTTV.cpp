@@ -11,11 +11,11 @@
 #include <ace/OS.h>
 
 #include "VideoDeviceBTTV.h"
-#include "VideoConfig.h"
 
 #include "miro/Exception.h"
 
 #include <iostream>
+#include <string>
 
 #undef DEBUG
 
@@ -25,26 +25,43 @@
 #define DBG(x)
 #endif
 
+namespace 
+{
+  struct SubfieldPair
+  {
+    std::string first;
+    Video::DeviceBTTV::VideoSubfield second;
+  };
+
+  SubfieldPair subfield[Video::DeviceBTTV::NUM_SUBFIELD_ENTRIES] = {
+    { "all", Video::DeviceBTTV::SUBFIELD_ALL },
+    { "odd", Video::DeviceBTTV:: SUBFIELD_ODD},
+    { "even", Video::DeviceBTTV:: SUBFIELD_EVEN}
+  };
+};
+
 namespace Video
 {
+  FILTER_PARAMETERS_FACTORY_IMPL(DeviceBTTV);
+
+
   //--------------------------------------------------------------------------
   // Hardware specifica
   //--------------------------------------------------------------------------
-  int VideoDeviceBTTV::gb_pal[64];
+  int DeviceBTTV::gb_pal[64];
 
-  VideoDeviceBTTV::VideoDeviceBTTV(Parameters const * _params) :
-    Super(_params),
-    devName_(params_->device.c_str()),
+  DeviceBTTV::DeviceBTTV(const Miro::ImageFormatIDL& _inputFormat) :
+    Super(_inputFormat),
+    devName_(),
     ioBuffer_(),
     connector_(),
     gb(NULL),
     channels(NULL),
-    videoFd(-1),
-    map_((char*)-1),
+    map_(NULL),
     currentBuffer_(0),
     nextBuffer_(0)
   {
-    DBG(std::cout << "Constructing VideoDeviceBTTV." << std::endl);
+    DBG(std::cout << "Constructing DeviceBTTV." << std::endl);
 
     /**
        cleanup supported format lookup table
@@ -52,40 +69,40 @@ namespace Video
     for (int i = 0; i < 64; ++i)
       gb_pal[i] = 0;
 
-    formatLookup[formatAuto] = VIDEO_MODE_AUTO;
-    formatLookup[formatPAL] = VIDEO_MODE_PAL;
-    formatLookup[formatNTSC] = VIDEO_MODE_NTSC;
-    formatLookup[formatSECAM] = VIDEO_MODE_SECAM;
+    formatLookup[FORMAT_AUTO] = VIDEO_MODE_AUTO;
+    formatLookup[FORMAT_PAL] = VIDEO_MODE_PAL;
+    formatLookup[FORMAT_NTSC] = VIDEO_MODE_NTSC;
+    formatLookup[FORMAT_SECAM] = VIDEO_MODE_SECAM;
 
-    paletteLookup[paletteGrey] = VIDEO_PALETTE_GREY;
-    paletteLookup[paletteRGB] = VIDEO_PALETTE_RGB24;
-    paletteLookup[paletteRGBA] = VIDEO_PALETTE_RGB32;
-    paletteLookup[paletteBGR] = VIDEO_PALETTE_RGB24;
-    paletteLookup[paletteABGR] = VIDEO_PALETTE_RGB32;
+    paletteLookup[Miro::GREY_8] = VIDEO_PALETTE_GREY;
+    paletteLookup[Miro::RGB_24] = VIDEO_PALETTE_RGB24;
+    paletteLookup[Miro::RGB_32] = VIDEO_PALETTE_RGB32;
+    paletteLookup[Miro::BGR_24] = VIDEO_PALETTE_RGB24;
+    paletteLookup[Miro::BGR_32] = VIDEO_PALETTE_RGB32;
 
-    sourceLookup[sourceComposite1] = 1;
-    sourceLookup[sourceComposite2] = 3;
-    sourceLookup[sourceComposite3] = -1;
-    sourceLookup[sourceSVideo] = 2;
-    sourceLookup[sourceTuner] = 0;
-    sourceLookup[sourceUSB] = -1;
-    sourceLookup[source1394] = -1;
+    sourceLookup[SOURCE_COMPOSITE1] = 1;
+    sourceLookup[SOURCE_COMPOSITE2] = 3;
+    sourceLookup[SOURCE_SVIDEO] = 2;
+    sourceLookup[SOURCE_TUNER] = 0;
   }
 
-  VideoDeviceBTTV::~VideoDeviceBTTV()
+  DeviceBTTV::~DeviceBTTV()
   {
-    disconnect();
+    fini();
     delete gb;
   }
 
-
   void 
-  VideoDeviceBTTV::connect()
+  DeviceBTTV::init(FilterParameters const * _params)
   {
-    int	err;
+    int	err = 0;
 
-    DBG(std::cout << "Connecting VideoDeviceBTTV." << std::endl);
+    DBG(std::cout << "Connecting DeviceBTTV." << std::endl);
 
+    params_ = dynamic_cast<DeviceBTTVParameters const *>(_params);
+    assert(params_ != NULL);
+
+    devName_.set(params_->device.c_str());
     if (connector_.connect(ioBuffer_, 
 			  devName_, 
 			  0, ACE_Addr::sap_any, 0, O_RDWR) == -1) {
@@ -94,21 +111,21 @@ namespace Video
       throw Miro::CException(errno, std::strerror(errno));
     }
 
-    videoFd = ioBuffer_.get_handle();
+    fcntl(ioBuffer_.get_handle(), F_SETFD, FD_CLOEXEC);
 
-    fcntl(videoFd, F_SETFD, FD_CLOEXEC);
     /* video capabilities */
     getCapabilities();
+
     /* video channels aka inputs */
     getChannels();
 
     if (capability.type & VID_TYPE_CAPTURE) {
-      err = ioctl(videoFd, VIDIOCGMBUF, &gb_buffers);
+      err = ioctl(ioBuffer_.get_handle(), VIDIOCGMBUF, &gb_buffers);
       if (err == -1)
-	throw Miro::CException(errno, "VideoDeviceBTTV::handleConnect() - VIDIOCGMBUF");
-      map_ = (char*)mmap(0,gb_buffers.size, PROT_READ,MAP_SHARED, videoFd, 0);
-      if (map_ == (char*)-1)
-	throw Miro::CException(errno, "VideoDeviceBTTV::handleConnect() - mmap()");
+	throw Miro::CException(errno, "DeviceBTTV::handleConnect() - VIDIOCGMBUF");
+      map_ = (unsigned char*)mmap(0, gb_buffers.size, PROT_READ, MAP_SHARED, ioBuffer_.get_handle(), 0);
+      if ((int)map_ == -1)
+	throw Miro::CException(errno, "DeviceBTTV::handleConnect() - mmap()");
     }
 
     iNBuffers = gb_buffers.frames;
@@ -119,10 +136,10 @@ namespace Video
 
     probeAllFormats();
 
-    setFormat(Video::getFormat(params_->format));
-    setSource(Video::getSource(params_->source));
-    setPalette(Video::getPalette(params_->palette));
-    setSize(params_->width, params_->height);
+    setFormat();
+    setSource();
+    setPalette();
+    setSize();
 
     //	preparing buffers
 
@@ -130,19 +147,15 @@ namespace Video
     gb = new struct video_mmap[gb_buffers.frames];
 
     for (int i = 0; i < gb_buffers.frames; ++i) {
-      gb[i].width  = imgWidth;
-      gb[i].height = imgHeight;
-      gb[i].format = paletteLookup[devicePaletteID];
+      gb[i].width  = outputFormat_.width;
+      gb[i].height = outputFormat_.height;
+      gb[i].format = paletteLookup[outputFormat_.palette];
       gb[i].frame = i;
     }
 
-    requestedSubfieldID = Video::getSubfield(params_->subfield);
+    VideoSubfield subfield = getSubfield(params_->subfield);
 
-    if (requestedSubfieldID != subfieldAll) {
-      for (int i = 0; i < gb_buffers.frames; ++i) {
-	gb[i].height = 2*imgHeight;
-      }
-
+    if (subfield != SUBFIELD_ALL) {
       if (capability.type & VID_TYPE_SUBCAPTURE) {
 
 	struct video_capture vc;
@@ -152,112 +165,116 @@ namespace Video
 	vc.width = gb[0].width;
 	vc.height = gb[0].height;
 	vc.decimation = 1;
-	vc.flags = (requestedSubfieldID == subfieldOdd)? VIDEO_CAPTURE_ODD : VIDEO_CAPTURE_EVEN;
+	vc.flags = (subfield == SUBFIELD_ODD)? VIDEO_CAPTURE_ODD : VIDEO_CAPTURE_EVEN;
 
-	err = ioctl(videoFd, VIDIOCSCAPTURE, &vc);
+	err = ioctl(ioBuffer_.get_handle(), VIDIOCSCAPTURE, &vc);
 	if (err == -1)
-	  throw Miro::CException(errno, "VideoDeviceBTTV::handleConnect() - VIDIOCGMBUF");
-
-	deviceSubfieldID = requestedSubfieldID;
+	  throw Miro::CException(errno, "DeviceBTTV::handleConnect() - VIDIOCGMBUF");
       }
-     else {
-	std::cout << "Warning: hardware doesn't support subfields ;-(" << std::endl;
-	deviceSubfieldID = subfieldAll;
+      else {
+	throw Miro::Exception("Hardware doesn't support subfields.");
       }
     }
 
-    err = ioctl(videoFd, VIDIOCMCAPTURE, &(gb[nextBuffer_]));
+    err = ioctl(ioBuffer_.get_handle(), VIDIOCMCAPTURE, &(gb[nextBuffer_]));
     ++nextBuffer_;
     if (err != -1 && iNBuffers > 2) {
-      err = ioctl(videoFd, VIDIOCMCAPTURE, &(gb[nextBuffer_]));
+      err = ioctl(ioBuffer_.get_handle(), VIDIOCMCAPTURE, &(gb[nextBuffer_]));
       ++nextBuffer_;
     }
     if (err == -1)
-      throw Miro::CException(errno, "VideoDeviceBTTV::handleConnect() - VIDIOCMCAPTURE");
+      throw Miro::CException(errno, "DeviceBTTV::handleConnect() - VIDIOCMCAPTURE");
   }
 
-  void VideoDeviceBTTV::disconnect()
+  void DeviceBTTV::fini()
   {
-    DBG(std::cout << "VideoDeviceBTTV." << std::endl);
+    DBG(std::cout << "DeviceBTTV." << std::endl);
 
     delete[] channels;
     channels = NULL;
 
-    if (map_ != (char*)-1) {
+    if ((int)map_ != -1 && map_ != NULL) {
       munmap(map_, gb_buffers.size);
-      map_ = (char*)-1;
+      map_ = NULL;
     }
-    videoFd = -1;
     ioBuffer_.close();
   }
 
 
-  void VideoDeviceBTTV::setFormat(int id)
+  void DeviceBTTV::setFormat()
   {
-    DBG(std::cout << "VideoDeviceBTTV: setFormat" << std::endl);
-
+    DBG(std::cout << "DeviceBTTV: setFormat" << std::endl);
+    
+    VideoFormat id = getFormat(params_->format);
     if (formatLookup[id] == -1)
-      throw Miro::Exception("VideoDeviceBTTV::setFormat");
+      throw Miro::Exception(std::string("DeviceBTTV::setFormat - Unsupported format: ") + 
+			    params_->format);
   }
 
-  void VideoDeviceBTTV::setSource(int id)
+  void DeviceBTTV::setSource()
   {
-    DBG(std::cout << "VideoDeviceBTTV: setSource" << std::endl);
+    DBG(std::cout << "DeviceBTTV: setSource" << std::endl);
 
-    if ((sourceLookup[id] != -1) && (sourceLookup[id] < capability.channels)) {
-      int err = ioctl(videoFd, VIDIOCSCHAN, &channels[sourceLookup[id]]);
+    VideoSource id = getSource(params_->source);
+
+    if ((sourceLookup[id] != -1) && 
+	(sourceLookup[id] < capability.channels)) {
+      int err = ioctl(ioBuffer_.get_handle(), VIDIOCSCHAN, &channels[sourceLookup[id]]);
       if (err == -1)
-	throw Miro::CException(errno, "VideoDeviceBTTV::setSource() - VIDIOCSCHAN");
+	throw Miro::CException(errno, "DeviceBTTV::setSource() - VIDIOCSCHAN");
     }
     else
-      throw Miro::Exception("VideoDeviceBTTV::setSource");
+      throw Miro::Exception(std::string("DeviceBTTV::setSource - Unsupported source: ") + 
+			    params_->source);
   }
 
-  void VideoDeviceBTTV::setPalette(int id)
+  void DeviceBTTV::setPalette()
   {
-    DBG(std::cout << "VideoDeviceBTTV: setPalette" << std::endl);
+    DBG(std::cout << "DeviceBTTV: setPalette" << std::endl);
 
-    requestedPaletteID = id;
+    Miro::VideoPaletteIDL id = inputFormat_.palette;
 
-    if (id == paletteRGB)
-      id =  paletteBGR;
-    else if (id == paletteRGBA)
-      id =  paletteABGR;
+    // as we have intels byte order...
+    if (id == Miro::RGB_24)
+      id = Miro::BGR_24;
+    else if (id == Miro::RGB_32)
+      id = Miro::BGR_32;
 
     if (gb_pal[paletteLookup[id]] == 1)
-      devicePaletteID = id;
+      outputFormat_.palette = id;
     else
-      throw Miro::Exception("VideoDeviceBTTV::setPalette");
+      throw Miro::Exception("DeviceBTTV::setPalette");
   }
 
-  void VideoDeviceBTTV::setSize(int w, int h)
+  void 
+  DeviceBTTV::setSize()
   {
-    DBG(std::cout << "VideoDeviceBTTV: setSize" << std::endl);
+    DBG(std::cout << "DeviceBTTV: setSize" << std::endl);
 
-    if ((w>=capability.minwidth) && (w <= capability.maxwidth))
-      imgWidth = w;
-    else
-      throw Miro::Exception("VideoDeviceBTTV::setSize: illegal width");
+    if (((int)outputFormat_.width <= capability.minwidth) ||
+	((int)outputFormat_.width >= capability.maxwidth))
+      throw Miro::Exception("DeviceBTTV::setSize: illegal width");
 
-    if ((h >= capability.minheight) && (h <= capability.maxheight))
-      imgHeight = h;
-    else
-      throw Miro::Exception("VideoDeviceBTTV::setSize: illegal height");
+    if (((int)outputFormat_.height <= capability.minheight) ||
+	((int)outputFormat_.height >= capability.maxheight))
+      throw Miro::Exception("DeviceBTTV::setSize: illegal height");
   }
 
-  void* VideoDeviceBTTV::grabImage(ACE_Time_Value& _timeStamp) const
+  void
+  DeviceBTTV::acquireOutputBuffer()
   {
-    DBG(std::cout << "VideoDeviceBTTV: grabImage" << std::endl);
+    DBG(std::cout << "DeviceBTTV: acquireOutputBuffer" << std::endl);
 
     // synch current image
-    int err = ioctl(videoFd, VIDIOCSYNC, &currentBuffer_);
+    int err = ioctl(ioBuffer_.get_handle(), VIDIOCSYNC, &currentBuffer_);
     if (err == -1) {
-      throw Miro::CException(errno, "VideoDeviceBTTV::grabImage() - VIDIOCSYNC");
+      throw Miro::CException(errno, "DeviceBTTV::grabImage() - VIDIOCSYNC");
     }
-    // set time stamp
-    _timeStamp = ACE_OS::gettimeofday();
 
-    void * buffer = map_ + gb_buffers.offsets[currentBuffer_];
+    // set time stamp
+    timeStamp_ = ACE_OS::gettimeofday();
+    // set buffer
+    buffer_ = map_ + gb_buffers.offsets[currentBuffer_];
 
     // update the follower buffer pointer
     ++currentBuffer_;
@@ -265,50 +282,49 @@ namespace Video
       currentBuffer_ = 0;
 
     // grab next image
-    err = ioctl(videoFd, VIDIOCMCAPTURE, &(gb[nextBuffer_]));
+    err = ioctl(ioBuffer_.get_handle(), VIDIOCMCAPTURE, &(gb[nextBuffer_]));
     if (err == -1) {
-      throw Miro::CException(errno, "VideoDeviceBTTV::grabImage() - VIDIOCMCAPTURE");
+      throw Miro::CException(errno, "DeviceBTTV::grabImage() - VIDIOCMCAPTURE");
     }
 
     // update the leader buffer pointer
     ++nextBuffer_;
     if (nextBuffer_ == iNBuffers)
       nextBuffer_ = 0;
-    
-    return buffer;
   }
 
-  void VideoDeviceBTTV::getCapabilities()
+  void
+  DeviceBTTV::releaseOutputBuffer()
   {
-    DBG(std::cout << "VideoDeviceBTTV: getCapabilities" << std::endl);
+  }
 
-    int	err = ioctl(videoFd, VIDIOCGCAP, &capability);
+  void DeviceBTTV::getCapabilities()
+  {
+    DBG(std::cout << "DeviceBTTV: getCapabilities" << std::endl);
+
+    int	err = ioctl(ioBuffer_.get_handle(), VIDIOCGCAP, &capability);
     if (err == -1)
-      throw Miro::CException(errno, "VideoDeviceBTTV::getCapabilities() - VIDIOCAP");
+      throw Miro::CException(errno, "DeviceBTTV::getCapabilities() - VIDIOCAP");
   }
 
-  void VideoDeviceBTTV::getChannels()
+  void DeviceBTTV::getChannels()
   {
-    DBG(std::cout << "VideoDeviceBTTV: getChannels" << std::endl);
-
-    int	i;
-    int	err;
+    DBG(std::cout << "DeviceBTTV: getChannels" << std::endl);
 
     /* input sources */
     channels = new struct video_channel[capability.channels];
-    for (i = 0; i < capability.channels; i++) {
+    for (int i = 0; i < capability.channels; i++) {
       channels[i].channel = i;
-      err = ioctl(videoFd, VIDIOCGCHAN, &channels[i]);
+      int err = ioctl(ioBuffer_.get_handle(), VIDIOCGCHAN, &channels[i]);
       if (err == -1)
-	throw Miro::CException(errno, "VideoDeviceBTTV::getChannels() - VIDIOCGCHAN");
+	throw Miro::CException(errno, "DeviceBTTV::getChannels() - VIDIOCGCHAN");
     }
   }
 
-
   bool
-  VideoDeviceBTTV::probeFormat(int format)
+  DeviceBTTV::probeFormat(int format)
   {
-    DBG(std::cout << "VideoDeviceBTTV: probeFormat" << std::endl);
+    DBG(std::cout << "DeviceBTTV: probeFormat" << std::endl);
 
     struct video_mmap gb;
     int	err;
@@ -321,13 +337,13 @@ namespace Video
     gb.height = 48;
     gb.format = format;
 
-    err = ioctl(videoFd, VIDIOCMCAPTURE, &gb);
+    err = ioctl(ioBuffer_.get_handle(), VIDIOCMCAPTURE, &gb);
     if (err == -1) {
       gb_pal[format] = 2;
       goto done;
     }
 
-    err = ioctl(videoFd, VIDIOCSYNC, &gb);
+    err = ioctl(ioBuffer_.get_handle(), VIDIOCSYNC, &gb);
     if (err == -1) {
       gb_pal[format] = 3;
       goto done;
@@ -340,15 +356,27 @@ namespace Video
   }
 
   int 
-  VideoDeviceBTTV::probeAllFormats()
+  DeviceBTTV::probeAllFormats()
   {
     int	count = 0;
-
     for (int i = 0; i < 64; ++i) {
       if (probeFormat(i))
 	++count;
     }
     return count;
   }
+
+  DeviceBTTV::VideoSubfield 
+  DeviceBTTV::getSubfield(std::string const& _sub)
+  {
+    for (unsigned int i = 0; i < NUM_SUBFIELD_ENTRIES + 2; ++i) {
+      if (_sub == subfield[i].first) {
+	return subfield[i].second;
+      }
+    }
+
+    throw Miro::Exception(std::string("Video::Parameters: unknown subfield: ") + _sub);
+  }
+
 };
 

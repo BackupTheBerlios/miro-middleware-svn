@@ -11,8 +11,7 @@
 #ifndef VideoDevice_h
 #define VideoDevice_h
 
-#include "VideoConfig.h"
-#include "Parameters.h"
+#include "VideoFilter.h"
 
 // forward declarations
 class ACE_Time_Value;
@@ -22,45 +21,27 @@ namespace Video
   //--------------------------------------------------------------------------
   //! VideoDevice
   //--------------------------------------------------------------------------
-  class VideoDevice
+  class Device : public Filter
   {
+    typedef Filter Super;
+
   public:
-    VideoDevice(Parameters const * _params = Parameters::instance());
-    virtual ~VideoDevice();
+    Device(Miro::ImageFormatIDL const & _format);
+    virtual ~Device();
 
-    virtual void connect() = 0;
-    virtual void disconnect() = 0;
-    virtual void * grabImage(ACE_Time_Value& _timeStamp) const = 0;
+    FILTER_PARAMETERS_FACTORY(Device);
 
-    virtual int getDevicePalette() const;
-    virtual int getRequestedPalette() const;
-    virtual int getDeviceSubfield() const;
-    virtual int getRequestedSubfield() const;
+    virtual void setBuffer(unsigned char *);
+    virtual void setInterface(Miro::Server&, VideoInterfaceParameters const &);
 
-    virtual int	getImageWidth() const;
-    virtual int	getImageHeight() const;
-    virtual int	getImageSize() const;
-    virtual int	getDeviceImageSize() const;
+    static Miro::VideoPaletteIDL getPalette(std::string const & _pal);
+
+    static const unsigned int NUM_PALETTE_ENTRIES = Miro::YUV_422 + 1;
 
   protected:
     int getPixelSize(const int) const;
 
-    Parameters const * params_;
-
-    int		requestedPaletteID;
-    int		devicePaletteID;
-    int		requestedSubfieldID;
-    int		deviceSubfieldID;
-
-    int		imgWidth;
-    int		imgHeight;
-	
-    int		iNBuffers;
-    mutable int	iCurrentBuffer;
-
-    int		formatLookup[numFormatEntries];
-    int		paletteLookup[numPaletteEntries];
-    int		sourceLookup[numSourceEntries];
+    int paletteLookup[NUM_PALETTE_ENTRIES];
   };
 };
 #endif

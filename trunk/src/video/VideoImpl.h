@@ -11,39 +11,64 @@
 #ifndef VideoImpl_h
 #define VideoImpl_h
 
-#include "VideoConsumer.h"
-#include "Parameters.h"
-
 #include "miro/VideoS.h"
+
+// forward declarartions
+namespace Video
+{
+  class BufferManager;
+  class VideoInterfaceParameters;
+};
 
 //------------------------ VideoImpl ---------------------------//
 
 namespace Miro 
 {
+  // forward declarartions
+  class Server;
+
   class VideoImpl :  public virtual POA_Miro::Video
   {
   public:
-    VideoImpl(::Video::Consumer*);
+    VideoImpl(Miro::Server& _server, 
+	      ::Video::VideoInterfaceParameters const& _params,
+	      Miro::ImageFormatIDL const & _format);
     virtual ~VideoImpl();
 
-    virtual Miro::ImageHandleIDL connect() throw();
-    virtual void release(const Miro::ImageHandleIDL & img) ACE_THROW_SPEC (());
+    ::Video::BufferManager * bufferManager();
 
-    virtual Miro::TimeIDL getImage(Miro::ImageHandleIDL & img) ACE_THROW_SPEC (());
-    virtual Miro::TimeIDL getWaitImage(Miro::ImageHandleIDL & img) ACE_THROW_SPEC (());
+    virtual ImageHandleIDL * connect(CORBA::ULong& id) ACE_THROW_SPEC (());
+    virtual void disconnect(CORBA::ULong id) 
+      ACE_THROW_SPEC ((EOutOfBounds));
 
-    virtual SubImageDataIDL * exportWaitSubImage(CORBA::Long x, CORBA::Long y)  ACE_THROW_SPEC ((CORBA::SystemException, Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut));
+    virtual TimeIDL acquireCurrentImage(CORBA::ULong id, CORBA::ULong& buffer) 
+      ACE_THROW_SPEC ((EOutOfBounds));
+    virtual TimeIDL acquireNextImage(CORBA::ULong id, CORBA::ULong& buffer)
+      ACE_THROW_SPEC ((EOutOfBounds, ETimeOut));
+    virtual void releaseImage(CORBA::ULong id, CORBA::ULong buffer) 
+      ACE_THROW_SPEC((EOutOfBounds));
+
+    virtual SubImageDataIDL * exportWaitSubImage(CORBA::ULong& x, CORBA::ULong& y)  
+      ACE_THROW_SPEC ((EOutOfBounds, EDevIO, ETimeOut));
 
   protected:
-    void checkImageHandle(const Miro::ImageHandleIDL & img);
+    Server& server_;
+    ::Video::VideoInterfaceParameters const& params_;
+    Miro::ImageFormatIDL format_;
+    Miro::Video_ptr pVideo;
 
-    ::Video::Consumer*  pConsumer;
-    const ::Video::Parameters&  parameters;
-  	
-    int	iMaxConnections;
-    void** pShmDataArray;
-    Miro::ImageHandleIDL*	pHandleArray;
+    unsigned char * pBufferArray_;
+    ImageHandleIDL imageHandle_;
+    ::Video::BufferManager * pBufferManager_;
+
+    static CORBA::Long idCounter;
   };
+
+  inline
+  ::Video::BufferManager *
+  VideoImpl::bufferManager() {
+    return pBufferManager_;
+  }
 };
 
 #endif

@@ -13,112 +13,77 @@
 
 #include "miro/Exception.h"
 
+
+namespace 
+{
+  struct PalettePair 
+  {
+    std::string first;
+    Miro::VideoPaletteIDL second;
+  };
+
+  PalettePair palette[Video::Device::NUM_PALETTE_ENTRIES + 2] = {
+    {"grey",   Miro::GREY_8},
+    {"gray",   Miro::GREY_8},
+    {"grey16", Miro::GREY_16},
+    {"gray16", Miro::GREY_16},
+    {"rgb",    Miro::RGB_24},
+    {"bgr",    Miro::BGR_24},
+    {"rgba",   Miro::RGB_32},
+    {"abgr",   Miro::BGR_32},
+    {"yuv",    Miro::YUV_24},
+    {"yuv411", Miro::YUV_411},
+    {"yuv422", Miro::YUV_422}
+  };
+
+
+};
+
 namespace Video
 {
-  //--------------------------------------------------------------------------
-  // Hardware specifica
-  //--------------------------------------------------------------------------
+  FILTER_PARAMETERS_FACTORY_IMPL(Device);
 
   //--------------------------------------------------------------------
-  VideoDevice::VideoDevice(Parameters const * _params) :
-    params_(_params),
-    requestedPaletteID(0),
-    devicePaletteID(0),
-    requestedSubfieldID(0),
-    deviceSubfieldID(0),
-    imgWidth(0),
-    imgHeight(0)
+  Device::Device(const Miro::ImageFormatIDL& _format) :
+    Super(_format)
   {
+    // clear table of supported palettes
+    for (unsigned int i = 0; i < NUM_PALETTE_ENTRIES; ++i)
+      paletteLookup[i] = -1;
   }
 
   //--------------------------------------------------------------------
-  VideoDevice::~VideoDevice()
+  Device::~Device()
   {
+    FilterVector::iterator first, last = succ_.end();
+    for (first = succ_.begin(); first != last; ++last)
+      delete (*first);
   }
 
   //--------------------------------------------------------------------
-  int
-  VideoDevice::getDevicePalette() const
+  void 
+  Device::setBuffer(unsigned char *)
   {
-    return devicePaletteID;
+    throw Miro::Exception("Device::setBuffer not supported.");
+  }
+  //--------------------------------------------------------------------
+  void
+  Device::setInterface(Miro::Server&, VideoInterfaceParameters const &)
+  {
+    throw Miro::Exception("Device::setInterface not supported.");    
   }
 
   //--------------------------------------------------------------------
-  int
-  VideoDevice::getRequestedPalette() const
-  {
-    return requestedPaletteID;
-  }
-
-  //--------------------------------------------------------------------
-  int
-  VideoDevice::getDeviceSubfield() const
-  {
-    return deviceSubfieldID;
-  }
-
-  //--------------------------------------------------------------------
-  int
-  VideoDevice::getRequestedSubfield() const
-  {
-    return requestedSubfieldID;
-  }
-
- 
-  //--------------------------------------------------------------------
-  int
-  VideoDevice::getImageWidth() const
-  {
-    return imgWidth;
-  }
-
-  //--------------------------------------------------------------------
-  int
-  VideoDevice::getImageHeight() const
-  {
-    return imgHeight;
-  }
-
-  //--------------------------------------------------------------------
-  int
-  VideoDevice::getImageSize() const
-  {
-    return imgWidth * imgHeight * getPixelSize(requestedPaletteID);
-  }
-
-  //--------------------------------------------------------------------
-  int
-  VideoDevice::getDeviceImageSize() const
-  {
-    return imgWidth * imgHeight * getPixelSize(devicePaletteID);
-  }
-
-
-  //--------------------------------------------------------------------
-  int
-  VideoDevice::getPixelSize(const int pal) const
-  {
-    int	pixelSize = 0;
-
-    switch (pal)
-    {
-    case paletteGrey:	//	gray
-      pixelSize = 1;
-      break;
-    case paletteYUV:    //      yuv24:
-    case paletteRGB:	//	rgb24:
-    case paletteBGR:	//	bgr24:
-      pixelSize = 3;
-      break;
-    case paletteRGBA:	//	rgb32:
-    case paletteABGR:	//	bgr32:
-      pixelSize = 4;
-      break;
-    default:
-      throw Miro::Exception("VideoDevice::getImageSize: unknown palette.\n");
-      break;
+  Miro::VideoPaletteIDL 
+  Device::getPalette(const std::string & pal)
+  {  
+    for (unsigned int i = 0; i < NUM_PALETTE_ENTRIES + 2; ++i) {
+      if (pal == palette[i].first) {
+	return palette[i].second;
+      }
     }
-    return pixelSize;
+
+    throw Miro::Exception(std::string("Video::Parameters: unknown palette: ") + pal);
   }
 };
 

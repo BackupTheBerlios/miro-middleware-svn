@@ -14,6 +14,15 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.5  2003/06/03 10:25:32  hutz
+ * complete revamp of the video service
+ * the interface changes slightly to allow for better access
+ * removed unnecessary copies
+ * added a complete filter framework for server side image processing
+ * added a library miroVideo.a for easy customization to own video service
+ * derivates
+ * the dummy video device now displays an image
+ *
  * Revision 1.4  2003/05/16 13:14:57  hutz
  * removing unused parameters and methods from VideoDevice
  *
@@ -45,60 +54,135 @@
  */
 
 #include "VideoDeviceDummy.h"
+#include "miro/VideoHelper.h"
 
 namespace Video
 {
-//--------------------------------------------------------------------
-  VideoDeviceDummy::VideoDeviceDummy(Parameters const * _params) :
-    Super(_params),
-    is_connected_(false),
-    buffer_(NULL) 
+  FILTER_PARAMETERS_FACTORY_IMPL(DeviceDummy);
+
+
+  //--------------------------------------------------------------------
+  DeviceDummy::DeviceDummy(const Miro::ImageFormatIDL& _inputFormat) :
+    Super(_inputFormat),
+    is_connected_(false)
   {
   }
     
 //--------------------------------------------------------------------
-  VideoDeviceDummy::~VideoDeviceDummy()
+  DeviceDummy::~DeviceDummy()
   {
     delete buffer_;
   }
 	
   //--------------------------------------------------------------------
-  void * 
-  VideoDeviceDummy::grabImage(ACE_Time_Value & _timeStamp) const
+  void
+  DeviceDummy::acquireOutputBuffer()
   {
     if (is_connected_) {
-      _timeStamp = ACE_OS::gettimeofday();
-      iCurrentBuffer = (iCurrentBuffer + 1) % iNBuffers;
-      return buffer_ + iCurrentBuffer*getImageSize();
+      ACE_OS::sleep(ACE_Time_Value(0, 100000));
+      timeStamp_ = ACE_OS::gettimeofday();
     }
-    return 0;
+  }
+
+  //--------------------------------------------------------------------
+  void
+  DeviceDummy::releaseOutputBuffer()
+  {
   }
     
-//--------------------------------------------------------------------
+  //--------------------------------------------------------------------
   void
-  VideoDeviceDummy::connect()
+  DeviceDummy::init(FilterParameters const * _params)
   {
-    requestedPaletteID = ::Video::getPalette(params_->palette);
-    devicePaletteID = ::Video::getPalette(params_->palette);
-    requestedSubfieldID = ::Video::getSubfield(params_->subfield);
-    deviceSubfieldID = ::Video::getSubfield(params_->subfield);
-    imgWidth = params_->width;
-    imgHeight = params_->height;
-    iNBuffers = params_->buffers;
-    iCurrentBuffer = 0;
+    DeviceParameters const * params = dynamic_cast<DeviceParameters const *>(_params);
+    assert(params != NULL);
+
     is_connected_ = true;
 	
     delete buffer_;
-    buffer_ = new char [iNBuffers*getImageSize()];
-    memset(buffer_, 0, iNBuffers*getImageSize());
     
-    for (int i= 0; i < iNBuffers; i++)
-      memset(buffer_+i*getImageSize(), 255, 5*getPixelSize(requestedPaletteID));
+    FILE * file;
+    if ((file = fopen(params->device.c_str(), "r")) != NULL) {
+
+      // copied from Nix
+      
+      int rawflag = 0;
+      int xdim;
+      int ydim;
+      int colordepth;
+      
+      // read header
+      char magic[1024];
+      char k;
+
+      // format identifer
+      fscanf(file,"%s", magic);
+      if ((!strcmp("P6", magic)) || 
+	  (!strcmp("P3", magic))) {
+	
+	// raw format
+	if (!strcmp("P6",magic))
+	  rawflag = 1;
+	
+	fscanf(file,"%s", magic);
+	while (!strcmp("#", magic)) {
+	  // skip newlines
+	  while ( (k = fgetc(file)) != '\n'); 
+	  fscanf(file, "%s", magic);
+	}
+	
+	xdim = atoi(magic);
+	fscanf(file, "%d \n%d", &ydim, &colordepth);
+	
+	// skip pending newlines
+	while (fgetc(file) != (int)'\n');
+      }
+
+      // read image
+      buffer_ = new unsigned char[xdim * ydim * 3];
+      
+      if (rawflag) {
+	for (int i=0; i < xdim * ydim; ++i) {
+	  buffer_[i*3 + 0] = fgetc(file);
+	  buffer_[i*3 + 1] = fgetc(file);
+	  buffer_[i*3 + 2] = fgetc(file);
+	}
+      } 
+      else {
+	int red, green, blue;
+	for (int i=0; i < xdim * ydim; ++i) {
+	  fscanf(file, "%d %d %d", &red, &green, &blue);
+	  if (colordepth > 255) {
+	    red = int((double)red * 255.0 / (double)colordepth);
+	    green = int((double)green * 255.0 / (double)colordepth);
+	    blue = int((double)blue * 255.0 / (double)colordepth);
+	  }
+	  buffer_[i*3 + 0] = red;
+	  buffer_[i*3 + 1] = green;
+	  buffer_[i*3 + 2] = blue;
+	}
+	colordepth = 255;
+      }
+
+      fclose(file);
+
+      inputFormat_.width = xdim;
+      inputFormat_.height = ydim;
+      inputFormat_.palette = Miro::RGB_24;
+
+      outputFormat_ = inputFormat_;
+    }
+    else {
+      buffer_ = new unsigned char [Miro::getImageSize(outputFormat_)];
+      memset(buffer_, 0, Miro::getImageSize(outputFormat_));
+
+      std::cout << "Cannot open file " + params->device << endl;
+    }
   }
         
-//--------------------------------------------------------------------
+  //--------------------------------------------------------------------
   void
-  VideoDeviceDummy::disconnect()
+  DeviceDummy::fini()
   {
     is_connected_ = false;
   }

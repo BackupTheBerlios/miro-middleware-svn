@@ -18,7 +18,7 @@
 #include <ace/OS.h>
 
 #include "VideoDeviceMeteor.h"
-#include "VideoConfig.h"
+#include "miro/VideoHelper.h"
 
 #undef DEBUG
 
@@ -34,42 +34,43 @@ namespace Video
   // Hardware specifica
   //--------------------------------------------------------------------------
 
-  VideoDeviceMeteor::VideoDeviceMeteor(Parameters const * _params) :
-    Super(_params),
-    devName_(params_->device.c_str()),
+  DeviceMeteor::DeviceMeteor(const Miro::ImageFormatIDL& _inputFormat) :
+    Super(_inputFormat),
+    devName_(),
     ioBuffer_(),
     connector_()
   {
-    formatLookup[formatAuto] = METEOR_FMT_AUTOMODE;
-    formatLookup[formatPAL] = METEOR_FMT_PAL;
-    formatLookup[formatNTSC] = METEOR_FMT_NTSC;
-    formatLookup[formatSECAM] = METEOR_FMT_SECAM;
+    formatLookup[FORMAT_AUTO]  = METEOR_FMT_AUTOMODE;
+    formatLookup[FORMAT_PAL]   = METEOR_FMT_PAL;
+    formatLookup[FORMAT_NTSC]  = METEOR_FMT_NTSC;
+    formatLookup[FORMAT_SECAM] = METEOR_FMT_SECAM;
 
-    paletteLookup[paletteGrey] = METEOR_GEO_YUV_PLANAR;
-    paletteLookup[paletteYUV] = -1;
-    paletteLookup[paletteRGB] = METEOR_GEO_RGB24;
-    paletteLookup[paletteRGBA] = METEOR_GEO_RGB24;
-    paletteLookup[paletteBGR] = METEOR_GEO_RGB24;
-    paletteLookup[paletteABGR] = METEOR_GEO_RGB24;
+    paletteLookup[Miro::GREY_8] = METEOR_GEO_YUV_PLANAR;
+    paletteLookup[Miro::RGB_24] = METEOR_GEO_RGB24;
+    paletteLookup[Miro::RGB_32] = METEOR_GEO_RGB24;
+    paletteLookup[Miro::BGR_24] = METEOR_GEO_RGB24;
+    paletteLookup[Miro::BGR_32] = METEOR_GEO_RGB24;
 
-    sourceLookup[sourceComposite1] = METEOR_INPUT_DEV1;
-    sourceLookup[sourceComposite2] = METEOR_INPUT_DEV2;
-    sourceLookup[sourceComposite3] = METEOR_INPUT_DEV3;
-    sourceLookup[sourceSVideo] = METEOR_INPUT_DEV_SVIDEO;
-    sourceLookup[sourceTuner] = -1;
-    sourceLookup[sourceUSB] = -1;
-    sourceLookup[source1394] = -1;
+    sourceLookup[SOURCE_COMPOSITE1] = METEOR_INPUT_DEV1;
+    sourceLookup[SOURCE_COMPOSITE2] = METEOR_INPUT_DEV2;
+    sourceLookup[SOURCE_COMPOSITE3] = METEOR_INPUT_DEV3;
+    sourceLookup[SOURCE_SVIDEO] =     METEOR_INPUT_DEV_SVIDEO;
   }
 
-  VideoDeviceMeteor::~VideoDeviceMeteor()
+  DeviceMeteor::~DeviceMeteor()
   {
-    disconnect();
+    fini();
   }
 
-  void VideoDeviceMeteor::connect()
+  void
+  DeviceMeteor::init(FilterParameters const * _params)
   {
-    DBG(cout << "Connecting VideoDeviceMeteor." << endl);
+    DBG(cout << "Connecting DeviceMeteor." << endl);
 
+    params_ = dynamic_cast<AVDeviceParameters const *>(_params);
+    assert(params_ != NULL);
+
+    devName_.set(params_->device.c_str());
     if (connector_.connect(ioBuffer_, 
 			  devName_, 
 			  0, ACE_Addr::sap_any, 0, O_RDWR) == -1) {
@@ -78,81 +79,46 @@ namespace Video
       throw Miro::CException(errno, std::strerror(errno));
     }
 
-    videoFd = ioBuffer_.get_handle();
+    fcntl(ioBuffer_.get_handle(), F_SETFD, FD_CLOEXEC);
 
-    fcntl(videoFd, F_SETFD, FD_CLOEXEC);
-
-    setPalette(getPalette(params_->palette));
-    setSize(params_->width, params_->height);
+    setPalette();
+    setSize();
 
     meteorGeometry.frames = 1;
-    if (::ioctl(videoFd, METEORSETGEO, &meteorGeometry) < 0)
+    if (::ioctl(ioBuffer_.get_handle(), METEORSETGEO, &meteorGeometry) < 0)
       throw Miro::Exception("METEORSETGEO");
 
-    setSource(Video::getSource(params_->source));
-    setFormat(Video::getFormat(params_->format));
+    setSource();
+    setFormat();
 
-    map = (char*)mmap(0,getDeviceImageSize(),PROT_READ,MAP_SHARED,videoFd,0);
-    if (map == (char*)-1)
+    buffer_ = (unsigned char*)mmap(0, 
+				   Miro::getImageSize(outputFormat_),
+				   PROT_READ, MAP_SHARED,
+				   ioBuffer_.get_handle(),
+				   0);
+    if ((int)buffer_ == -1)
       throw Miro::Exception("mmap()");
   }
 
-  void VideoDeviceMeteor::disconnect()
+  void
+  DeviceMeteor::fini()
   {
-    DBG(cout << "VideoDeviceBTTV." << endl);
+    DBG(cout << "DeviceBTTV." << endl);
 
-    if (map != (char*)-1)
-    {
-      munmap(map,getDeviceImageSize());
-      map = (char*)-1;
+    if ((int)buffer_ != -1 && buffer_ != NULL) {
+      munmap(buffer_, Miro::getImageSize(outputFormat_));
+      buffer_ = NULL;
     }
-    videoFd = -1;
     ioBuffer_.close();
   }
 
-
-  void VideoDeviceMeteor::setFormat(int id)
-  {
-    if (formatLookup[id] != -1)
-    {
-      if (::ioctl(videoFd, METEORSFMT, &formatLookup[id]) < 0)
-	throw Miro::Exception("METEORSFMT");
-    }
-    else
-      throw Miro::Exception();
-  }
-
-  void VideoDeviceMeteor::setSource(int id)
-  {
-    DBG(cout << "VideoDeviceMeteor: setSource" << endl);
-
-    int	err = ioctl(videoFd, METEORSINPUT, &sourceLookup[id]);
-    if (err == -1)
-      throw Miro::Exception("METEORSINPUT");
-  }
-
-  void VideoDeviceMeteor::setPalette(int id)
-  {
-    requestedPaletteID = id;
-    if (id == paletteRGB)
-      id =  paletteRGBA;
-    devicePaletteID = paletteLookup[id];
-    meteorGeometry.oformat = METEOR_GEO_YUV_PLANAR;
-  }
-
-  void VideoDeviceMeteor::setSize(int w, int h)
-  {
-    imgWidth = w;
-    imgHeight = h;
-    meteorGeometry.rows =  h;
-    meteorGeometry.columns = w;
-  }
-
-  void* VideoDeviceMeteor::grabImage(ACE_Time_Value& _timeStamp) const
+  void
+  DeviceMeteor::acquireOutputBuffer()
   {
     int		iNTries = 0;
     int		iNCaptureRetries = 16;
     bool	done = false;
+
     //	capture one frame
 #ifdef DEBUG
     std::cout << "capture one frame" << std::endl;
@@ -161,35 +127,90 @@ namespace Video
     int	command = METEOR_CAP_SINGLE;
     int	errorCount = getCurrentErrorCount();
 
-    if (::ioctl(videoFd, METEORCAPTUR, &command) < 0)
+    if (::ioctl(ioBuffer_.get_handle(), METEORCAPTUR, &command) < 0)
       throw Miro::Exception("METEORCAPTUR");
 
-    while (!done && iNCaptureRetries && (iNTries < iNCaptureRetries))
-    {
-      int	currentErrorCount = getCurrentErrorCount();
-      if (currentErrorCount == errorCount)
+    while (!done && 
+	   iNCaptureRetries && 
+	   iNTries < iNCaptureRetries) {
+      int currentErrorCount = getCurrentErrorCount();
+      if (currentErrorCount == errorCount) {
 	done = true;
-      else
-      {
+      }
+      else {
 	iNTries++;
 	errorCount = currentErrorCount;
 	command = METEOR_CAP_SINGLE;
-	if (ioctl(videoFd, METEORCAPTUR, &command) < 0)
+	if (ioctl(ioBuffer_.get_handle(), METEORCAPTUR, &command) < 0)
 	  throw Miro::Exception("METEORCAPTUR");
       }
     }
 
-    _timeStamp = ACE_OS::gettimeofday();
+    timeStamp_ = ACE_OS::gettimeofday();
 
     if (!done)
-      throw Miro::Exception("VideoDeviceMeteor::grabImage");
-    return map;
+      throw Miro::Exception("DeviceMeteor::grabImage");
   }
 
-  int VideoDeviceMeteor::getCurrentErrorCount() const
+  void
+  DeviceMeteor::releaseOutputBuffer()
   {
-    struct meteor_counts	cnts;
-    if (::ioctl(videoFd, METEORGCOUNT, &cnts) < 0)
+  }
+
+
+  void 
+  DeviceMeteor::setFormat()
+  {
+    VideoFormat id = getFormat(params_->format);
+    
+    if (formatLookup[id] != -1)
+    {
+      if (::ioctl(ioBuffer_.get_handle(), METEORSFMT, &formatLookup[id]) < 0)
+	throw Miro::Exception("METEORSFMT");
+    }
+    else
+      throw Miro::Exception();
+  }
+
+  void 
+  DeviceMeteor::setSource()
+  {
+    DBG(cout << "DeviceMeteor: setSource" << endl);
+
+    VideoSource id = getSource(params_->source);
+    if (sourceLookup[id] == -1)
+      throw Miro::Exception(std::string("DeviceMeteor::setSource - Unsupported source: ") +
+			    params_->source);
+    
+    int	err = ioctl(ioBuffer_.get_handle(), METEORSINPUT, &sourceLookup[id]);
+    if (err == -1)
+      throw Miro::CException(errno, "METEORSINPUT");
+  }
+  
+  void
+  DeviceMeteor::setPalette()
+  {
+    if (inputFormat_.palette == Miro::RGB_24)
+      outputFormat_.palette =  Miro::RGB_32;
+    
+    if (paletteLookup[outputFormat_.palette] == -1)
+      throw Miro::Exception("DeviceMeteor::setPalette - Unsupported palette. ");
+      
+    meteorGeometry.oformat = METEOR_GEO_YUV_PLANAR;
+  }
+  
+  void
+  DeviceMeteor::setSize()
+  {
+    meteorGeometry.rows =  outputFormat_.width;
+    meteorGeometry.columns = outputFormat_.height;
+  }
+  
+  int 
+  DeviceMeteor::getCurrentErrorCount() const
+  {
+    struct meteor_counts cnts;
+    if (ioctl(ioBuffer_.get_handle(), METEORGCOUNT, &cnts) < 0)
       throw Miro::Exception("METEORGCOUNT");
     return cnts.fifo_errors + cnts.dma_errors;
   }

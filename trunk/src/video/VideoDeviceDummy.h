@@ -15,6 +15,15 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.4  2003/06/03 10:25:32  hutz
+ * complete revamp of the video service
+ * the interface changes slightly to allow for better access
+ * removed unnecessary copies
+ * added a complete filter framework for server side image processing
+ * added a library miroVideo.a for easy customization to own video service
+ * derivates
+ * the dummy video device now displays an image
+ *
  * Revision 1.3  2003/05/13 21:58:49  hutz
  * removing the bridge pattern between VideoDevice and VideoDeviceBase
  * making VideoDevice* a direct descendant of VideoDevice
@@ -46,24 +55,24 @@ namespace Video
   /** Dummy video device for testing the interface
    */
 
-  class VideoDeviceDummy : public VideoDevice
+  class DeviceDummy : public Device
   {
-    typedef VideoDevice Super;
+    typedef Device Super;
 
   public:
-    VideoDeviceDummy(Parameters const * _params = Parameters::instance());
-    virtual ~VideoDeviceDummy();
+    DeviceDummy(const Miro::ImageFormatIDL& _inputFormatParameters);
+    virtual ~DeviceDummy();
 	    	    
-    virtual void connect();
-    virtual void disconnect();
-		
-    virtual void * grabImage(ACE_Time_Value & _timeStamp) const;
+    FILTER_PARAMETERS_FACTORY(DeviceDummy);
+
+    virtual void init(FilterParameters const * _params);
+    virtual void fini();
+    virtual void acquireOutputBuffer();
+    virtual void releaseOutputBuffer();
 
   private:
     //! connection simulation flag
     bool is_connected_;
-    //! indirect framebuffer
-    char * buffer_;
   };
 };
 

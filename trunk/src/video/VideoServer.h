@@ -8,50 +8,56 @@
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-#ifndef videoService_hh
-#define videoService_hh
-
-#include "miro/Server.h"
+#ifndef VideoServer_h
+#define VideoServer_h
 
 #include "VideoImpl.h"
 
+#include <ace/Sched_Params.h>
+
 // forward declarations
-namespace Video
+namespace Miro
 {
-  class Parameters;
-  class VideoDevice;
-  class Consumer;
+  class Server;
+  class ConfigDocument;
+  class ImageFormatIDL;
 };
 
-class VideoService : public Miro::Server
+namespace Video
 {
-  typedef Miro::Server Super;
+  // forward declarations
+  class Filter;
+  class Device;
+  class Consumer;
+  class FilterTreeParameters;
 
-  // = DESCRIPTION
-  //    This class starts up the ServiceImpl registers it at the
-  //    naming service and runs the orb
+  class Service 
+  {
+    //    This class starts up the ServiceImpl registers it at the
+    //    naming service and runs the orb
+  public:
+    // Constructor
+    Service(Miro::Server& _server,
+	    Miro::ConfigDocument * _config);
+    // Destructor.
+    virtual ~Service();
 
-public:
-  // Initialization and Termination methods.
-
-  // Constructor
-  VideoService(int argc, char *argv[]);
-  VideoService(Server& _server);
-
-  // Destructor.
-  ~VideoService();
-
-  void init();
+    
+  protected:
+    Filter * buildFilterTree(Miro::Server& _server,
+			     Video::Filter * _pre,
+			     Miro::ImageFormatIDL const& _format,
+			     Miro::ConfigDocument * _config,
+			     Video::FilterTreeParameters const& _tree);
 
 private:
   /** Sceduling parameters for a realtime thread */
   ACE_Sched_Params schedparams_;
-  Video::VideoDevice * pVideoDevice;
-  Video::Consumer * pConsumer;
-  Miro::VideoImpl * pGrabber;
-  Miro::Video_ptr pVideo;
+  Video::Device * pVideoDevice_;
+  Video::Consumer * pConsumer_;
 };
-#endif
+};
+#endif // VideoServer_h
 
 
 
