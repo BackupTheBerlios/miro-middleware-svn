@@ -216,15 +216,15 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
   \
   \
   \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   \
-  /home/gmayer/Miro/src/miro/TimeC.i \
-  /home/gmayer/Miro/src/miro/RangeEventC.i \
-  /home/gmayer/Miro/src/miro/RangeSensorC.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i \
+  $(MIRO_ROOT)/src/miro/RangeEventC.i \
+  $(MIRO_ROOT)/src/miro/RangeSensorC.i \
   \
   \
  
@@ -397,7 +397,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i
 
 .obj/MspDevice.o .obj/MspDevice.o .obj/MspDevice.o .obj/MspDevice.o: MspDevice.cpp MspDevice.h
 
@@ -633,25 +633,25 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ScanDescriptionC.i \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
   \
   \
   \
-  /home/gmayer/Miro/src/miro/TimeC.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointC.i \
-  /home/gmayer/Miro/src/miro/PositionC.i \
+  $(MIRO_ROOT)/src/miro/WorldPointC.i \
+  $(MIRO_ROOT)/src/miro/PositionC.i \
   \
-  /home/gmayer/Miro/src/miro/VelocityC.i \
-  /home/gmayer/Miro/src/miro/MotionStatusC.i \
+  $(MIRO_ROOT)/src/miro/VelocityC.i \
+  $(MIRO_ROOT)/src/miro/MotionStatusC.i \
   \
-  /home/gmayer/Miro/src/miro/RangeEventC.i \
-  \
-  \
+  $(MIRO_ROOT)/src/miro/RangeEventC.i \
   \
   \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  \
+  \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   $(TAO_ROOT)/tao/PortableServer/PortableServer.h \
   $(TAO_ROOT)/tao/PortableServer/portableserver_export.h \
   $(TAO_ROOT)/tao/PortableServer/PortableServerC.h \
@@ -667,15 +667,15 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/PortableServer/Collocated_Object.i \
   $(TAO_ROOT)/tao/PortableServer/ThruPOA_Object_Proxy_Impl.h \
   $(TAO_ROOT)/tao/PortableServer/Direct_Object_Proxy_Impl.h \
-  /home/gmayer/Miro/src/miro/ExceptionS.i \
+  $(MIRO_ROOT)/src/miro/ExceptionS.i \
   \
-  /home/gmayer/Miro/src/miro/ScanDescriptionS.i \
+  $(MIRO_ROOT)/src/miro/ScanDescriptionS.i \
   \
-  /home/gmayer/Miro/src/miro/TimeS.i \
-  /home/gmayer/Miro/src/miro/RangeEventS.i \
+  $(MIRO_ROOT)/src/miro/TimeS.i \
+  $(MIRO_ROOT)/src/miro/RangeEventS.i \
   \
-  /home/gmayer/Miro/src/miro/RangeSensorC.i \
-  /home/gmayer/Miro/src/miro/RangeSensorS.i \
+  $(MIRO_ROOT)/src/miro/RangeSensorC.i \
+  $(MIRO_ROOT)/src/miro/RangeSensorS.i \
   \
   $(ACE_ROOT)/ace/Sched_Params.h \
   $(ACE_ROOT)/ace/Sched_Params.i $(ACE_ROOT)/ace/Task.h \

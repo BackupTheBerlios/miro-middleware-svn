@@ -195,7 +195,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   $(ACE_ROOT)/ace/FILE_Connector.h \
   $(ACE_ROOT)/ace/FILE_IO.h $(ACE_ROOT)/ace/FILE.h \
   $(ACE_ROOT)/ace/IO_SAP.h $(ACE_ROOT)/ace/IO_SAP.i \
@@ -205,9 +205,9 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(ACE_ROOT)/ace/FILE_Connector.i ButtonsEventHandler.h \
   \
   \
-  /home/gmayer/Miro/src/miro/TimeC.i \
-  /home/gmayer/Miro/src/miro/ButtonsC.i \
-  /home/gmayer/Miro/src/miro/B21ButtonsC.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i \
+  $(MIRO_ROOT)/src/miro/ButtonsC.i \
+  $(MIRO_ROOT)/src/miro/B21ButtonsC.i \
   \
   \
   $(TAO_ROOT)/orbsvcs/orbsvcs/CosNotifyChannelAdminS.h \
@@ -414,10 +414,10 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/StringSeqC.i \
   \
   \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
-  /home/gmayer/Miro/src/miro/TimeC.i \
-  /home/gmayer/Miro/src/miro/ButtonsC.i \
-  /home/gmayer/Miro/src/miro/B21ButtonsC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i \
+  $(MIRO_ROOT)/src/miro/ButtonsC.i \
+  $(MIRO_ROOT)/src/miro/B21ButtonsC.i \
   \
   \
   $(TAO_ROOT)/orbsvcs/orbsvcs/CosNotifyChannelAdminS.h \
@@ -625,7 +625,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   $(TAO_ROOT)/tao/PortableServer/PortableServer.h \
   $(TAO_ROOT)/tao/PortableServer/portableserver_export.h \
   $(TAO_ROOT)/tao/PortableServer/PortableServerC.h \
@@ -641,15 +641,15 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/PortableServer/Collocated_Object.i \
   $(TAO_ROOT)/tao/PortableServer/ThruPOA_Object_Proxy_Impl.h \
   $(TAO_ROOT)/tao/PortableServer/Direct_Object_Proxy_Impl.h \
-  /home/gmayer/Miro/src/miro/ExceptionS.i \
+  $(MIRO_ROOT)/src/miro/ExceptionS.i \
   \
-  /home/gmayer/Miro/src/miro/TimeC.i /home/gmayer/Miro/src/miro/TimeS.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i $(MIRO_ROOT)/src/miro/TimeS.i \
   \
-  /home/gmayer/Miro/src/miro/ButtonsC.i \
-  /home/gmayer/Miro/src/miro/ButtonsS.i \
+  $(MIRO_ROOT)/src/miro/ButtonsC.i \
+  $(MIRO_ROOT)/src/miro/ButtonsS.i \
   \
-  /home/gmayer/Miro/src/miro/B21ButtonsC.i \
-  /home/gmayer/Miro/src/miro/B21ButtonsS.i \
+  $(MIRO_ROOT)/src/miro/B21ButtonsC.i \
+  $(MIRO_ROOT)/src/miro/B21ButtonsS.i \
   ButtonsDevice.h \
   ButtonsConnection.h $(ACE_ROOT)/ace/FILE_Connector.h \
   $(ACE_ROOT)/ace/FILE_IO.h $(ACE_ROOT)/ace/FILE.h \

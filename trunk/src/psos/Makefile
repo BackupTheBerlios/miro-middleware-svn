@@ -314,7 +314,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   \
   PsosConnection.h \
   \

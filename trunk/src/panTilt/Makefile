@@ -318,17 +318,17 @@ $(BIN): $(STATIC_DEPS)
   \
   \
   \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
-  /home/gmayer/Miro/src/miro/ExceptionS.i \
-  /home/gmayer/Miro/src/miro/TiltC.i \
-  /home/gmayer/Miro/src/miro/TiltS.i \
-  /home/gmayer/Miro/src/miro/PanC.i \
-  /home/gmayer/Miro/src/miro/PanS.i \
-  /home/gmayer/Miro/src/miro/PanTiltC.i \
-  /home/gmayer/Miro/src/miro/PanTiltS.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionS.i \
+  $(MIRO_ROOT)/src/miro/TiltC.i \
+  $(MIRO_ROOT)/src/miro/TiltS.i \
+  $(MIRO_ROOT)/src/miro/PanC.i \
+  $(MIRO_ROOT)/src/miro/PanS.i \
+  $(MIRO_ROOT)/src/miro/PanTiltC.i \
+  $(MIRO_ROOT)/src/miro/PanTiltS.i \
   \
-  /home/gmayer/Miro/src/miro/DirectedPerceptionPanTiltC.i \
-  /home/gmayer/Miro/src/miro/DirectedPerceptionPanTiltS.i PanTiltData.h \
+  $(MIRO_ROOT)/src/miro/DirectedPerceptionPanTiltC.i \
+  $(MIRO_ROOT)/src/miro/DirectedPerceptionPanTiltS.i PanTiltData.h \
   PanTiltMessage.h PanTiltOpcodes.h \
   PanTiltConnection.h \
   \
@@ -554,7 +554,7 @@ $(BIN): $(STATIC_DEPS)
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   \
   PanTiltConnection.h \
   \
@@ -861,7 +861,7 @@ $(BIN): $(STATIC_DEPS)
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   $(TAO_ROOT)/tao/PortableServer/PortableServer.h \
   $(TAO_ROOT)/tao/PortableServer/portableserver_export.h \
   $(TAO_ROOT)/tao/PortableServer/PortableServerC.h \
@@ -877,16 +877,16 @@ $(BIN): $(STATIC_DEPS)
   $(TAO_ROOT)/tao/PortableServer/Collocated_Object.i \
   $(TAO_ROOT)/tao/PortableServer/ThruPOA_Object_Proxy_Impl.h \
   $(TAO_ROOT)/tao/PortableServer/Direct_Object_Proxy_Impl.h \
-  /home/gmayer/Miro/src/miro/ExceptionS.i \
-  /home/gmayer/Miro/src/miro/TiltC.i \
-  /home/gmayer/Miro/src/miro/TiltS.i \
-  /home/gmayer/Miro/src/miro/PanC.i \
-  /home/gmayer/Miro/src/miro/PanS.i \
-  /home/gmayer/Miro/src/miro/PanTiltC.i \
-  /home/gmayer/Miro/src/miro/PanTiltS.i \
+  $(MIRO_ROOT)/src/miro/ExceptionS.i \
+  $(MIRO_ROOT)/src/miro/TiltC.i \
+  $(MIRO_ROOT)/src/miro/TiltS.i \
+  $(MIRO_ROOT)/src/miro/PanC.i \
+  $(MIRO_ROOT)/src/miro/PanS.i \
+  $(MIRO_ROOT)/src/miro/PanTiltC.i \
+  $(MIRO_ROOT)/src/miro/PanTiltS.i \
   \
-  /home/gmayer/Miro/src/miro/DirectedPerceptionPanTiltC.i \
-  /home/gmayer/Miro/src/miro/DirectedPerceptionPanTiltS.i PanTiltData.h \
+  $(MIRO_ROOT)/src/miro/DirectedPerceptionPanTiltC.i \
+  $(MIRO_ROOT)/src/miro/DirectedPerceptionPanTiltS.i PanTiltData.h \
   PanTiltMessage.h PanTiltOpcodes.h \
   \
   PanTiltConnection.h \

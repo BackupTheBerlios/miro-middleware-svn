@@ -203,7 +203,7 @@ $(BIN): $(STATIC_DEPS)
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   $(ACE_ROOT)/ace/DEV_Connector.h $(ACE_ROOT)/ace/DEV_IO.h \
   $(ACE_ROOT)/ace/DEV.h $(ACE_ROOT)/ace/IO_SAP.h \
   $(ACE_ROOT)/ace/IO_SAP.i $(ACE_ROOT)/ace/DEV_Addr.h \
@@ -347,7 +347,7 @@ $(BIN): $(STATIC_DEPS)
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   $(TAO_ROOT)/tao/PortableServer/PortableServer.h \
   $(TAO_ROOT)/tao/PortableServer/portableserver_export.h \
   $(TAO_ROOT)/tao/PortableServer/PortableServerC.h \
@@ -363,14 +363,14 @@ $(BIN): $(STATIC_DEPS)
   $(TAO_ROOT)/tao/PortableServer/Collocated_Object.i \
   $(TAO_ROOT)/tao/PortableServer/ThruPOA_Object_Proxy_Impl.h \
   $(TAO_ROOT)/tao/PortableServer/Direct_Object_Proxy_Impl.h \
-  /home/gmayer/Miro/src/miro/ExceptionS.i \
+  $(MIRO_ROOT)/src/miro/ExceptionS.i \
   \
   \
-  /home/gmayer/Miro/src/miro/SpeechC.i \
-  /home/gmayer/Miro/src/miro/SpeechS.i \
+  $(MIRO_ROOT)/src/miro/SpeechC.i \
+  $(MIRO_ROOT)/src/miro/SpeechS.i \
   \
-  /home/gmayer/Miro/src/miro/DtlkSpeechC.i \
-  /home/gmayer/Miro/src/miro/DtlkSpeechS.i SpeechConnection.h \
+  $(MIRO_ROOT)/src/miro/DtlkSpeechC.i \
+  $(MIRO_ROOT)/src/miro/DtlkSpeechS.i SpeechConnection.h \
   \
   $(ACE_ROOT)/ace/DEV_Connector.h $(ACE_ROOT)/ace/DEV_IO.h \
   $(ACE_ROOT)/ace/DEV.h $(ACE_ROOT)/ace/IO_SAP.h \

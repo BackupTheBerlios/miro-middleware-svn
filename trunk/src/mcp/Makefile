@@ -216,7 +216,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/TimeC.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i \
   \
  
 
@@ -390,7 +390,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   McpConnection.h \
   \
   \
@@ -568,7 +568,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ExceptionC.i McpDevice.h McpMessage.h \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i McpDevice.h McpMessage.h \
  
 
 .obj/McpEventHandler.o .obj/McpEventHandler.o .obj/McpEventHandler.o .obj/McpEventHandler.o: McpEventHandler.cpp McpEventHandler.h \
@@ -714,7 +714,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ExceptionC.i McpDevice.h McpMessage.h \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i McpDevice.h McpMessage.h \
   McpConsumer.h \
   Parameters.h \
   \
