@@ -90,6 +90,8 @@
           infraredDescription.group[0].sensor[i].alpha = Miro::deg2Rad(alpha[i]);
           infraredDescription.group[0].sensor[i].beta = Miro::deg2Rad(beta[i]);
           infraredDescription.group[0].sensor[i].gamma = 0;
+          infraredDescription.group[0].sensor[i].masked = false;
+
         }
       </constructor>
 
@@ -112,6 +114,7 @@
           infraredDescription2003.group[0].sensor[i].alpha = Miro::deg2Rad(alpha2003[i]);
           infraredDescription2003.group[0].sensor[i].beta = Miro::deg2Rad(beta2003[i]);
           infraredDescription2003.group[0].sensor[i].gamma = 0;
+          infraredDescription2003.group[0].sensor[i].masked = false;
         }
         infraredDescription2003.group[1].description.minRange = 0;
         infraredDescription2003.group[1].description.maxRange = 800;
@@ -123,6 +126,7 @@
           infraredDescription2003.group[1].sensor[i].alpha = Miro::deg2Rad(alpha2003[i+8]);
           infraredDescription2003.group[1].sensor[i].beta = Miro::deg2Rad(beta2003[i+8]);
           infraredDescription2003.group[1].sensor[i].gamma = 0;
+          infraredDescription2003.group[1].sensor[i].masked = false;
         }
       </constructor>
 
