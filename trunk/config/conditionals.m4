@@ -59,8 +59,14 @@ AC_ARG_ENABLE(
 AC_ARG_ENABLE(
 	IEEE1394,
 	AC_HELP_STRING([--enable-IEEE1394], [Turn on IEEE1394 support (default on)]),
-	ac_request_ieee1394=$enableval, 
+	ac_request_ieee1394=$enableval,
 	ac_request_ieee1394=yes)
+
+AC_ARG_ENABLE(
+	QuickCam,
+	AC_HELP_STRING([--enable-QuickCam], [Turn on QuickCam support (default off)]),
+	ac_request_quickcam=$enableval,
+	ac_request_quickcam=no)
 ])
 
 
