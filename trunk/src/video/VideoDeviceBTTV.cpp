@@ -97,7 +97,7 @@ namespace Video
     }
 
     iNBuffers = gb_buffers.frames;
-    iCurrentBuffer = iNBuffers-1;
+    iCurrentBuffer = iNBuffers-2;
 
     std::cout << "buffersize: " << gb_buffers.size << std::endl;
     std::cout << "buffersize/frame: " << gb_buffers.size/gb_buffers.frames << std::endl;
@@ -154,7 +154,10 @@ namespace Video
       }
     }
 
-    err = ioctl(videoFd, VIDIOCMCAPTURE, gb + iCurrentBuffer);
+    err = ioctl(videoFd, VIDIOCMCAPTURE, &(gb[iCurrentBuffer]));
+    if (err == -1)
+      throw Miro::CException(errno, "VideoDeviceBTTV::handleConnect() - VIDIOCMCAPTURE");
+    err = ioctl(videoFd, VIDIOCMCAPTURE, &(gb[iCurrentBuffer + 1]));
     if (err == -1)
       throw Miro::CException(errno, "VideoDeviceBTTV::handleConnect() - VIDIOCMCAPTURE");
   }
@@ -241,7 +244,7 @@ namespace Video
     ACE_Time_Value beginTime = ACE_OS::gettimeofday();
 
     int	err = 0;
-    int	nextBuffer = (iCurrentBuffer + 1) % iNBuffers;
+    int	nextBuffer = (iCurrentBuffer + 2) % iNBuffers;
 
     err = ioctl(videoFd, VIDIOCSYNC, &iCurrentBuffer);
     if (err == -1)
@@ -267,7 +270,7 @@ namespace Video
     iNFramesCaptured++;
 
     //	std::cout << "grabbing buffer #" << gb.frame << std::endl;
-    iCurrentBuffer = nextBuffer;
+    iCurrentBuffer = (iCurrentBuffer + 1) % iNBuffers; 
     return map + gb_buffers.offsets[iCurrentBuffer];
   }
 
