@@ -83,7 +83,8 @@ int main(int argc, char *argv[])
   MainForm * mainForm = new MainForm(client);
 
   a.setMainWidget(mainForm);
-  mainForm->setCaption("QtVideo");
+  std::string caption = "QtVideo - Interface: "+MainForm::interfaceName;
+  mainForm->setCaption(caption.c_str());
   mainForm->show();
 
   return a.exec();
