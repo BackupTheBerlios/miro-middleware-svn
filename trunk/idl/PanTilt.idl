@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2000, 2001, 2002
+// (c) 2000, 2001, 2002, 2003, 2004, 2005
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -19,24 +19,20 @@ module Miro
   //! Struct representing a pantilt position.
   struct PanTiltPositionIDL
   {
-    //! Pan value in rad.
-    double     panvalue;
-    //! Tilt value in rad.
-    double     tiltvalue;
+    //! Pan anlge in rad.
+    float     panValue;
+    //! Tilt anlge in rad.
+    float     tiltValue;
   };
 
 
   //! Struct representing a pantilt limits  configuration.
   struct PanTiltLimitsIDL
   {
-    //! Minimal pan position.
-    double minpanposition;
-    //! Maximal pan position.
-    double maxpanposition;
-    //! Minimal tilt position.
-    double mintiltposition;
-    //! Maximal tilt position.
-    double maxtiltposition;
+    //! Panning limits.
+    PanLimitsIDL pan;
+    //! Tilting limit
+    TiltLimitsIDL tilt;
   };
 
 
@@ -74,13 +70,8 @@ module Miro
     //! Query the limits of the PTU.
     /**
      * @return The actual limits settings of the PTU.
-     * @throw EDevIO
-     * is thrown to indicate low level device problems.
-     * @throw ETimeOut
-     * is thrown to when no answer was received within the allowed time.
      */
-    PanTiltLimitsIDL getPanTiltLimits() raises(Miro::EDevIO, Miro::ETimeOut);
-
+    PanTiltLimitsIDL getPanTiltLimits();
   };
 };
 

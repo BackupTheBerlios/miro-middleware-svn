@@ -15,13 +15,13 @@
 
 module Miro
 {
-  //! Struct representing a panning limits  configuration.
+  //! Struct representing a panning limits configuration.
   struct PanLimitsIDL
   {
-    //! Minimal pan position.
-    double minpanposition;
-    //! Maximal pan position.
-    double maxpanposition;
+    //! Minimal pan angle (in rad).
+    float minAngle;
+    //! Maximal pan angle (in rad).
+    float maxAngle;
   };
 
 
@@ -39,28 +39,26 @@ module Miro
      * @throw EDevIO
      * is thrown to indicate low level device problems.
      */
-    void setPan(in double value) raises(EDevIO, EOutOfBounds);
+    void setPan(in float value) raises(EDevIO, EOutOfBounds);
     //! Get the current panning angle.
     /**
      * @return The panning angle, specified in radiant.
      * @throw EDevIO
      * is thrown to indicate low level device problems.
      */
-    double getPan() raises(EDevIO);
+    float getPan() raises(EDevIO);
 
     //! Get the target panning angle.
     /**
      * @return The target panning angle, specified in radiant.
      */
-    double getTargetPan();
+    float getTargetPan();
 
     //! Get the panning angle limits.
     /**
      * @return The angles within the pan unit works, specified in radiant.
-     * @throw EDevIO
-     * is thrown to indicate low level device problems.
      */
-    PanLimitsIDL getPanLimits() raises(EDevIO);
+    PanLimitsIDL getPanLimits();
   };
 };
 #endif // Pan_idl

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2000, 2001, 2002
+// (c) 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -18,10 +18,10 @@ module Miro
   //! Struct representing a tilting limits  configuration.
   struct TiltLimitsIDL
   {
-    //! Minimal tilt position.
-    double mintiltposition;
-    //! Maximal tilt position.
-    double maxtiltposition;
+    //! Minimal tilt angle (in rad).
+    double minAngle;
+    //! Maximal tilt angle (in rad).
+    double maxAngle;
   };
 
 
@@ -39,29 +39,27 @@ module Miro
      * @throw EDevIO
      * is thrown to indicate low level device problems.
      */
-    void setTilt(in double value) raises(EDevIO, EOutOfBounds);
+    void setTilt(in float value) raises(EDevIO, EOutOfBounds);
+
     //! Get the current tilting angle.
     /**
      * @return The tilting angle, specified in radiant.
      * @throw EDevIO
      * is thrown to indicate low level device problems.
      */
-    double getTilt() raises(EDevIO);
+    float getTilt() raises(EDevIO);
 
     //! Get the target tilting angle.
     /**
      * @return The target tilting angle, specified in radiant.
      */
-    double getTargetTilt();
+    float getTargetTilt();
 
     //! Get the tilting angle limits.
     /**
      * @return The angles within the tilt unit works, specified in radiant.
-     * @throw EDevIO
-     * is thrown to indicate low level device problems.
      */
-    TiltLimitsIDL getTiltLimits() raises(EDevIO);
-
+    TiltLimitsIDL getTiltLimits();
   };
 };
 
