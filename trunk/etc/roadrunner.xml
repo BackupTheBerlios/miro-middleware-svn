@@ -270,185 +270,192 @@
 	  <parameter name="Successor" >
 
 	    <parameter name="Filter" >
-	      <parameter value="YUV422toRGBIpp" name="Type" />
-	      <parameter value="YUV422toRGBIpp" name="Name" />
+	      <parameter value="FilterCopy" name="Type" />
+	      <parameter value="FilterCopy" name="Name" />
 	      <parameter name="Successor" >
 
 		<parameter name="Filter" >
-		  <parameter value="RGBtoGray" name="Name" />
-		  <parameter value="RGBtoGray" name="Type" />
+		  <parameter value="YUV422toRGBIpp" name="Type" />
+		  <parameter value="YUV422toRGBIpp" name="Name" />
 		  <parameter name="Successor" >
+
 		    <parameter name="Filter" >
-		      <parameter value="Sobel" name="Type" />
-		      <parameter value="SobelVertical" name="Name" />
-		    </parameter>
-		    <parameter name="Filter" >
-		      <parameter value="Sobel" name="Type" />
-		      <parameter value="SobelHorizontal" name="Name" />
+		      <parameter value="RGBtoGray" name="Name" />
+		      <parameter value="RGBtoGray" name="Type" />
 		      <parameter name="Successor" >
 			<parameter name="Filter" >
-			  <parameter value="Canny" name="Type" />
-			  <parameter value="Canny" name="Name" />
-			  <parameter name="BackLink" >
-			    <parameter value="SobelVertical" />
+			  <parameter value="Sobel" name="Type" />
+			  <parameter value="SobelVertical" name="Name" />
+			</parameter>
+			<parameter name="Filter" >
+			  <parameter value="Sobel" name="Type" />
+			  <parameter value="SobelHorizontal" name="Name" />
+			  <parameter name="Successor" >
+			    <parameter name="Filter" >
+			      <parameter value="Canny" name="Type" />
+			      <parameter value="Canny" name="Name" />
+			      <parameter name="BackLink" >
+				<parameter value="SobelVertical" />
+			      </parameter>
+			    </parameter>
 			  </parameter>
 			</parameter>
 		      </parameter>
 		    </parameter>
-		  </parameter>
-		</parameter>
-
-		<parameter name="Filter" >
-		  <parameter value="Shrink4" name="Type" />
-		  <parameter value="Shrink4" name="Name" />
-		  <parameter name="Successor" >
 
 		    <parameter name="Filter" >
-		      <parameter value="RGBtoIndex" name="Type" />
-		      <parameter value="RGBtoIndex" name="Name" />
+		      <parameter value="Shrink4" name="Type" />
+		      <parameter value="Shrink4" name="Name" />
 		      <parameter name="Successor" >
 
 			<parameter name="Filter" >
-			  <parameter value="IndextoIndex" name="Type" />
-			  <parameter value="IndextoIndex" name="Name" />
-			</parameter>
-
-			<parameter name="Filter" >
-			  <parameter value="AttentionRobots" name="Type" />
-			  <parameter value="AttentionRobots" name="Name" />
-			  <parameter name="BackLink" >
-			    <parameter value="RGBtoGray" />
-			  </parameter>
-			</parameter>
-
-			<parameter name="Filter" >
-			  <parameter value="AttentionBall" name="Type" />
-			  <parameter value="AttentionBall" name="Name" />
-			</parameter>
-
-			<parameter name="Filter" >
-			  <parameter value="AttentionGoal" name="Type" />
-			  <parameter value="AttentionGoal" name="Name" />
-			</parameter>
-
-			<parameter name="Filter" >
-			  <parameter value="AttentionCornerPoles" name="Type" />
-			  <parameter value="AttentionCornerPoles" name="Name" />
-			</parameter>
-
-			<parameter name="Filter" >
-			  <parameter value="IndextoCanny" name="Type" />
-			  <parameter value="IndextoCannyWhiteBlue" name="Name" />
+			  <parameter value="RGBtoIndex" name="Type" />
+			  <parameter value="RGBtoIndex" name="Name" />
 			  <parameter name="Successor" >
+
 			    <parameter name="Filter" >
-			      <parameter value="AttentionGoalPosts" name="Type" />
-			      <parameter value="BlueLeftPost" name="Name" />
+			      <parameter value="IndextoIndex" name="Type" />
+			      <parameter value="IndextoIndex" name="Name" />
 			    </parameter>
-			  </parameter>
-			</parameter>
-			<parameter name="Filter" >
-			  <parameter value="IndextoCanny" name="Type" />
-			  <parameter value="IndextoCannyBlueWhite" name="Name" />
-			  <parameter name="Successor" >
-			    <parameter name="Filter" >
-			      <parameter value="AttentionGoalPosts" name="Type" />
-			      <parameter value="BlueRightPost" name="Name" />
-			    </parameter>
-			  </parameter>
-			</parameter>
-			<parameter name="Filter" >
-			  <parameter value="IndextoCanny" name="Type" />
-			  <parameter value="IndextoCannyWhiteYellow" name="Name" />
-			  <parameter name="Successor" >
-			    <parameter name="Filter" >
-			      <parameter value="AttentionGoalPosts" name="Type" />
-			      <parameter value="YellowLeftPost" name="Name" />
-			    </parameter>
-			  </parameter>
-			</parameter>
-			<parameter name="Filter" >
-			  <parameter value="IndextoCanny" name="Type" />
-			  <parameter value="IndextoCannyYellowWhite" name="Name" />
-			  <parameter name="Successor" >
-			    <parameter name="Filter" >
-			      <parameter value="AttentionGoalPosts" name="Type" />
-			      <parameter value="YellowRightPost" name="Name" />
-			    </parameter>
-			  </parameter>
-			</parameter>
 
-			<parameter name="Filter" >
-			  <parameter value="IndextoCanny" name="Type" />
-			  <parameter value="IndextoCannyGreenWhite" name="Name" />
-			  <parameter name="Successor" >
 			    <parameter name="Filter" >
-			      <parameter value="Enlarge4" name="Type" />
-			      <parameter value="Enlarge4" name="Name" />
+			      <parameter value="AttentionRobots" name="Type" />
+			      <parameter value="AttentionRobots" name="Name" />
+			      <parameter name="BackLink" >
+				<parameter value="RGBtoGray" />
+			      </parameter>
+			    </parameter>
+
+			    <parameter name="Filter" >
+			      <parameter value="AttentionBall" name="Type" />
+			      <parameter value="AttentionBall" name="Name" />
+			    </parameter>
+
+			    <parameter name="Filter" >
+			      <parameter value="AttentionGoal" name="Type" />
+			      <parameter value="AttentionGoal" name="Name" />
+			    </parameter>
+
+			    <parameter name="Filter" >
+			      <parameter value="AttentionCornerPoles" name="Type" />
+			      <parameter value="AttentionCornerPoles" name="Name" />
+			    </parameter>
+
+			    <parameter name="Filter" >
+			      <parameter value="IndextoCanny" name="Type" />
+			      <parameter value="IndextoCannyWhiteBlue" name="Name" />
 			      <parameter name="Successor" >
 				<parameter name="Filter" >
-				  <parameter value="Multiply" name="Type" />
-				  <parameter value="Multiply" name="Name" />
-				  <parameter name="BackLink" >
-				    <parameter value="Canny" />
-				  </parameter>
+				  <parameter value="AttentionGoalPosts" name="Type" />
+				  <parameter value="BlueLeftPost" name="Name" />
+				</parameter>
+			      </parameter>
+			    </parameter>
+			    <parameter name="Filter" >
+			      <parameter value="IndextoCanny" name="Type" />
+			      <parameter value="IndextoCannyBlueWhite" name="Name" />
+			      <parameter name="Successor" >
+				<parameter name="Filter" >
+				  <parameter value="AttentionGoalPosts" name="Type" />
+				  <parameter value="BlueRightPost" name="Name" />
+				</parameter>
+			      </parameter>
+			    </parameter>
+			    <parameter name="Filter" >
+			      <parameter value="IndextoCanny" name="Type" />
+			      <parameter value="IndextoCannyWhiteYellow" name="Name" />
+			      <parameter name="Successor" >
+				<parameter name="Filter" >
+				  <parameter value="AttentionGoalPosts" name="Type" />
+				  <parameter value="YellowLeftPost" name="Name" />
+				</parameter>
+			      </parameter>
+			    </parameter>
+			    <parameter name="Filter" >
+			      <parameter value="IndextoCanny" name="Type" />
+			      <parameter value="IndextoCannyYellowWhite" name="Name" />
+			      <parameter name="Successor" >
+				<parameter name="Filter" >
+				  <parameter value="AttentionGoalPosts" name="Type" />
+				  <parameter value="YellowRightPost" name="Name" />
+				</parameter>
+			      </parameter>
+			    </parameter>
+
+			    <parameter name="Filter" >
+			      <parameter value="IndextoCanny" name="Type" />
+			      <parameter value="IndextoCannyGreenWhite" name="Name" />
+			      <parameter name="Successor" >
+				<parameter name="Filter" >
+				  <parameter value="Enlarge4" name="Type" />
+				  <parameter value="Enlarge4" name="Name" />
 				  <parameter name="Successor" >
 				    <parameter name="Filter" >
-				      <parameter value="AttentionLines" name="Type" />
-				      <parameter value="AttentionLines" name="Name" />
+				      <parameter value="Multiply" name="Type" />
+				      <parameter value="Multiply" name="Name" />
+				      <parameter name="BackLink" >
+					<parameter value="Canny" />
+				      </parameter>
+				      <parameter name="Successor" >
+					<parameter name="Filter" >
+					  <parameter value="AttentionLines" name="Type" />
+					  <parameter value="AttentionLines" name="Name" />
+					</parameter>
+				      </parameter>
 				    </parameter>
 				  </parameter>
 				</parameter>
 			      </parameter>
 			    </parameter>
+
 			  </parameter>
 			</parameter>
-
 		      </parameter>
 		    </parameter>
+
+		    <parameter name="Filter" >
+		      <parameter value="CollectAllFeatures" name="Type" />
+		      <parameter value="CollectAllFeatures" name="Name" />
+		      <parameter name="BackLink" >
+			<parameter value="AttentionBall" />
+			<parameter value="AttentionGoal" />
+			<parameter value="AttentionCornerPoles" />
+			<!--
+			<parameter value="BlueLeftPost" />
+			<parameter value="BlueRightPost" />
+			<parameter value="YellowLeftPost" />
+			<parameter value="YellowRightPost" />
+			<parameter value="AttentionRobots" />
+			-->
+		      </parameter>
+		    </parameter>
+
+		    <parameter name="Filter" >
+		      <parameter value="ROIVisual" name="Type" />
+		      <parameter value="ROIVisual" name="Name" />
+		      <parameter name="BackLink" >
+			<parameter value="CollectAllFeatures" />
+		      </parameter>
+		    </parameter>
+
+		    <parameter name="Filter" >
+		      <parameter value="ROIVisual" name="Type" />
+		      <parameter value="ROIVisualLines" name="Name" />
+		      <parameter name="BackLink" >
+			<parameter value="AttentionLines" />
+		      </parameter>
+		    </parameter>
+
+		    <parameter name="Filter" >
+		      <parameter value="ROIVisual" name="Type" />
+		      <parameter value="ROIVisualGoal" name="Name" />
+		      <parameter name="BackLink" >
+			<parameter value="AttentionGoal" />
+		      </parameter>
+		    </parameter>
+
 		  </parameter>
 		</parameter>
-
-		<parameter name="Filter" >
-		  <parameter value="CollectAllFeatures" name="Type" />
-		  <parameter value="CollectAllFeatures" name="Name" />
-		  <parameter name="BackLink" >
-                    <parameter value="AttentionBall" />
-		    <parameter value="AttentionGoal" />
-		    <parameter value="AttentionCornerPoles" />
-		    <!--
-		    <parameter value="BlueLeftPost" />
-		    <parameter value="BlueRightPost" />
-		    <parameter value="YellowLeftPost" />
-		    <parameter value="YellowRightPost" />
-		    <parameter value="AttentionRobots" />
-		    -->
-		  </parameter>
-		</parameter>
-
-		<parameter name="Filter" >
-		  <parameter value="ROIVisual" name="Type" />
-		  <parameter value="ROIVisual" name="Name" />
-		  <parameter name="BackLink" >
-		    <parameter value="CollectAllFeatures" />
-		  </parameter>
-		</parameter>
-
-		<parameter name="Filter" >
-		  <parameter value="ROIVisual" name="Type" />
-		  <parameter value="ROIVisualLines" name="Name" />
-		  <parameter name="BackLink" >
-		    <parameter value="AttentionLines" />
-		  </parameter>
-		</parameter>
-
-                <parameter name="Filter" >
-                  <parameter value="ROIVisual" name="Type" />
-                  <parameter value="ROIVisualGoal" name="Name" />
-                  <parameter name="BackLink" >
-                    <parameter value="AttentionGoal" />
-                  </parameter>
-                </parameter>
-
 	      </parameter>
 	    </parameter>
 	  </parameter>
