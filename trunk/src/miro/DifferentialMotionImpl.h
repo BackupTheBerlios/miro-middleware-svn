@@ -85,8 +85,10 @@ namespace Miro
 	_left > params_.maxLTranslation ||
 	_right < params_.minRTranslation ||
 	_right > params_.maxRTranslation) {
-      cout << "DifferentialMotion: left - " << _left << " right - " << _right << endl;
-      throw EOutOfBounds();
+      char buffer[50];
+      sprintf(buffer, 
+	      "Left wheel: %d\nRight wheel: %d", _left, _right);
+      throw EOutOfBounds(buffer);
     }
   }
 

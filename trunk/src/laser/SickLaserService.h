@@ -48,7 +48,8 @@ namespace Miro
 
   protected:
 
-  
+    /** Sceduling parameters for a realtime thread */
+    ACE_Sched_Params schedparams_;
     /**
      * we have put the reactor that runs in seperate task, 
      * for providing concurrency.

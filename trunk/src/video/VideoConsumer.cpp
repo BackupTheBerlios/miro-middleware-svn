@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -15,7 +15,9 @@
 #include "VideoDevice.h"
 #include "VideoImpl.h"
 
-#include <miro/Exception.h>
+#include "miro/Exception.h"
+#include "miro/TimeHelper.h"
+
 #include <algorithm>
 
 #undef DEBUG
@@ -37,17 +39,20 @@ namespace Video
   //----- constructors -----//
   //------------------------//
   Consumer::Consumer(Connection& _connection,
-		     VideoImpl * _pGrabber) :
+		     VideoImpl * _pGrabber, 
+		     ACE_Sched_Params * pschedp) :
     connection(_connection),
     pGrabber(_pGrabber),
     mutex(),
     cond(mutex),
-    running(false),
-    pCurrentImageData(NULL)
+    pCurrentImageData(NULL),
+    schedp_(ACE_SCHED_OTHER, 0)
 
-   {
+  {
     DBG(cout << "Constructing VideoConsumer." << endl);
-   }
+    if (pschedp) 
+      schedp_ = (*pschedp);
+  }
 
 
   //----------------------//
@@ -59,28 +64,6 @@ namespace Video
 
   }
 
-  int
-  Consumer::open(void *)
-  {
-    running = true;
-    return Super::open(0);
-  };
-  
-  void
-  Consumer::cancel()
-  {
-    cout << "VideoConsumer::cancel" << endl;
-  
-  running = false;
-
-    // Wait for the thread of this Task to exit.
-    // It is rather rude to let the Task go out of scope without doing 
-    // this first.
-    wait();
-
-    DBG(cout << "VideoConsumer Task ended." << endl);
-  }
-
   int 
   Consumer::svc()
   {
@@ -89,10 +72,21 @@ namespace Video
 
     int pixelSize=connection.parameters.pixelSize;
 
-    while (running)
+    if (ACE_OS::sched_params(schedp_) == -1) {
+      std::cerr << "[Video::Consumer] Could not set sched parameters." << endl 
+		<< "[Video::Consumer] Maybe suid root is missing." << endl
+		<< "[Video::Consumer] Will work on default sched policy" << endl;
+    }
+
+    ACE_Time_Value prevTimeStamp = ACE_OS::gettimeofday();
+    int counter = 49;
+    double deltaT[50];
+    while (!canceled())
     {
+      ACE_Time_Value timeStamp;
       try {
-	void*	pNextImageData = connection.videoDevice.grabImage();
+	void * pNextImageData = connection.videoDevice.grabImage(timeStamp);
+	Miro::timeA2C(timeStamp, timeStamp_);
 
 	/**************
 	 *
@@ -138,304 +132,328 @@ namespace Video
 	cout << "VideoConsumer::svc() caught Miro::Exception: " << e << endl;
       }
       cond.broadcast();
+
+      // jitter statistics
+      ACE_Time_Value dT = timeStamp - prevTimeStamp;
+      deltaT[counter] = (double)dT.sec() + (double)dT.usec() / 1000000.;
+      --counter;
+
+      if (counter < 0) {
+	double mean = deltaT[0];
+	for (int i = 49; i > 0; --i)
+	  mean += deltaT[i];
+	mean /= 50.;
+
+	double var = 0.;
+	for (int i = 49; i >= 0; --i)
+	  var += (deltaT[i] - mean) * (deltaT[i] - mean);
+	var /= 49.;
+	cout << "VideoConsumer: mean=" << mean << "usec \t var=" << var << endl;
+      }
+      counter = 49;
     }
 
     cout << "VideoConsumer::svc() exiting." << endl;
     return 0;
   }
 
-int Consumer::getImageSize() const
-	{
-	return connection.videoDevice.getImageSize();
-	}
+  int Consumer::getImageSize() const
+  {
+    return connection.videoDevice.getImageSize();
+  }
 
-int Consumer::getPaletteSize() const
-	{
-	switch (connection.videoDevice.getDevicePalette())
-	        {
-		case paletteGrey:
-		        return 1;
-			break;
+  int Consumer::getPaletteSize() const
+  {
+    switch (connection.videoDevice.getDevicePalette())
+    {
+    case paletteGrey:
+      return 1;
+      break;
 			
-		case paletteRGB:
-		case paletteBGR:
-		        return 3;
-			break;
+    case paletteRGB:
+    case paletteBGR:
+      return 3;
+      break;
 			
-		case paletteRGBA:
-		case paletteABGR:
-		        return 4;
-			break;
+    case paletteRGBA:
+    case paletteABGR:
+      return 4;
+      break;
 			
-		default:
-		        throw Miro::Exception("can't get palette size: illegal image palette");
-		}
-	}
+    default:
+      throw Miro::Exception("can't get palette size: illegal image palette");
+    }
+  }
 
-void Consumer::getCurrentImage(void* data)
-	{
-	Miro::Guard guard(mutex);
+  Miro::TimeIDL
+  Consumer::getCurrentImage(void * data)
+  {
+    Miro::Guard guard(mutex);
 
-	if (!pCurrentImageData && running)
-	// we were too fast ;-)
-		{
-		ACE_Time_Value	timeout(ACE_OS::gettimeofday());
-		timeout += maxWait;
-		if (cond.wait(&timeout) == -1)
-			throw Miro::ETimeOut();
-		}
-	copyImageData(data, pCurrentImageData);
-	}
+    if (!pCurrentImageData && !canceled())
+      // we were too fast ;-)
+    {
+      ACE_Time_Value timeout(ACE_OS::gettimeofday());
+      timeout += maxWait;
+      if (cond.wait(&timeout) == -1)
+	throw Miro::ETimeOut();
+    }
+    copyImageData(data, pCurrentImageData);
+    return timeStamp_;
+  }
 
-void Consumer::getWaitNextImage(void* data)
-	{
-	Miro::Guard guard(mutex);
-	ACE_Time_Value	timeout(ACE_OS::gettimeofday());
-	timeout += maxWait;
-	if (cond.wait(&timeout) == -1)
-		throw Miro::ETimeOut();
-	copyImageData(data, pCurrentImageData);
-	}
+  Miro::TimeIDL
+  Consumer::getWaitNextImage(void * data)
+  {
+    Miro::Guard guard(mutex);
+    ACE_Time_Value timeout(ACE_OS::gettimeofday());
+    timeout += maxWait;
+    if (cond.wait(&timeout) == -1)
+      throw Miro::ETimeOut();
+    copyImageData(data, pCurrentImageData);
+    return timeStamp_;
+  }
 
-void Consumer::getWaitNextSubImage(unsigned char * dst, const int reqWidth, const int reqHeight)
-	{
-	Miro::Guard guard(mutex);
-	ACE_Time_Value	timeout(ACE_OS::gettimeofday());
-	timeout += maxWait;
-	if (cond.wait(&timeout) == -1)
-		throw Miro::ETimeOut();
+  void
+  Consumer::getWaitNextSubImage(unsigned char * dst, const int reqWidth, const int reqHeight)
+  {
+    Miro::Guard guard(mutex);
+    ACE_Time_Value timeout(ACE_OS::gettimeofday());
+    timeout += maxWait;
+    if (cond.wait(&timeout) == -1)
+      throw Miro::ETimeOut();
 
-        unsigned char * src = new unsigned char[getPaletteSize()
-					       * connection.videoDevice.getImageWidth()
-					       * connection.videoDevice.getImageHeight()];
+    unsigned char * src = new unsigned char[getPaletteSize()
+					    * connection.videoDevice.getImageWidth()
+					    * connection.videoDevice.getImageHeight()];
 
-	copyImageData(src, pCurrentImageData);
-        shrinkImageData(dst, src, reqWidth, reqHeight);
+    copyImageData(src, pCurrentImageData);
+    shrinkImageData(dst, src, reqWidth, reqHeight);
 
-	delete src;
-	}
+    delete src;
+  }
 
-void Consumer::shrinkImageData(unsigned char *dst, unsigned char *src, int reqWidth, int reqHeight)
-        {
-	int srcWidth  = connection.videoDevice.getImageWidth();
-	int srcHeight = connection.videoDevice.getImageHeight();
+  void Consumer::shrinkImageData(unsigned char *dst, unsigned char *src, int reqWidth, int reqHeight)
+  {
+    int srcWidth  = connection.videoDevice.getImageWidth();
+    int srcHeight = connection.videoDevice.getImageHeight();
 
-	// do not expand
-        reqWidth      = (reqWidth  > srcWidth)  ? srcWidth  : reqWidth;
-        reqHeight     = (reqHeight > srcHeight) ? srcHeight : reqHeight;
+    // do not expand
+    reqWidth      = (reqWidth  > srcWidth)  ? srcWidth  : reqWidth;
+    reqHeight     = (reqHeight > srcHeight) ? srcHeight : reqHeight;
 
-	// src pixels per requested pixel
-	double intervalWidth  = (double)srcWidth  / (double)reqWidth;
-	double intervalHeight = (double)srcHeight / (double)reqHeight;
+    // src pixels per requested pixel
+    double intervalWidth  = (double)srcWidth  / (double)reqWidth;
+    double intervalHeight = (double)srcHeight / (double)reqHeight;
 
-	const int paletteSize = getPaletteSize();
-	unsigned long * tileValueSum = new unsigned long[paletteSize];
+    const int paletteSize = getPaletteSize();
+    unsigned long * tileValueSum = new unsigned long[paletteSize];
 
-	for (int req_h = 0; req_h < reqHeight; ++req_h)
-	        {
-		double low_h = (double)(req_h)     * intervalHeight;
-		double up_h  = (double)(req_h + 1) * intervalHeight;
+    for (int req_h = 0; req_h < reqHeight; ++req_h)
+    {
+      double low_h = (double)(req_h)     * intervalHeight;
+      double up_h  = (double)(req_h + 1) * intervalHeight;
 		
-		for (int req_w = 0; req_w < reqWidth; ++req_w)
-		        {
-			double low_w = (double)(req_w)     * intervalWidth;
-			double up_w  = (double)(req_w + 1) * intervalWidth;
+      for (int req_w = 0; req_w < reqWidth; ++req_w)
+      {
+	double low_w = (double)(req_w)     * intervalWidth;
+	double up_w  = (double)(req_w + 1) * intervalWidth;
 
-			long num_in_tile = 0;
-			for (int palette = 0; palette < paletteSize; ++palette)
-				tileValueSum[palette] = 0;
+	long num_in_tile = 0;
+	for (int palette = 0; palette < paletteSize; ++palette)
+	  tileValueSum[palette] = 0;
 			
-			for (int src_h = (int)low_h; src_h < (int)up_h; ++src_h)
-			        {
-				for (int src_w = (int)low_w; src_w < (int)up_w; ++src_w)
-				        {
-					for (int palette = 0; palette < paletteSize; ++palette)
-					        tileValueSum[palette] += src[paletteSize * (src_h * srcWidth + src_w) + palette];
-					num_in_tile += 1;
-					}
-				}
-
-			for (int palette = 0; palette < paletteSize; ++palette)
-			        {
-				tileValueSum[palette] /= num_in_tile;
-				dst[paletteSize * (req_h * reqWidth + req_w) + palette] = (unsigned char)tileValueSum[palette];
-				}
-			}
-		}
-
-	delete tileValueSum;
+	for (int src_h = (int)low_h; src_h < (int)up_h; ++src_h)
+	{
+	  for (int src_w = (int)low_w; src_w < (int)up_w; ++src_w)
+	  {
+	    for (int palette = 0; palette < paletteSize; ++palette)
+	      tileValueSum[palette] += src[paletteSize * (src_h * srcWidth + src_w) + palette];
+	    num_in_tile += 1;
+	  }
 	}
 
-void Consumer::copyImageData(void* dst, const void* src)
+	for (int palette = 0; palette < paletteSize; ++palette)
 	{
-	if (connection.videoDevice.getRequestedPalette() == connection.videoDevice.getDevicePalette())
-		{
-		switch (connection.videoDevice.getDevicePalette())
-			{
-			case paletteGrey:
-				copy(dst, src, 1);
-				break;
+	  tileValueSum[palette] /= num_in_tile;
+	  dst[paletteSize * (req_h * reqWidth + req_w) + palette] = (unsigned char)tileValueSum[palette];
+	}
+      }
+    }
 
-			case paletteRGB:
-			case paletteBGR:
-				copy(dst, src, 3);
-				break;
+    delete tileValueSum;
+  }
 
-			case paletteRGBA:
-			case paletteABGR:
-				copy(dst, src, 4);
-				break;
+  void Consumer::copyImageData(void* dst, const void* src)
+  {
+    if (connection.videoDevice.getRequestedPalette() == connection.videoDevice.getDevicePalette())
+    {
+      switch (connection.videoDevice.getDevicePalette())
+      {
+      case paletteGrey:
+	copy(dst, src, 1);
+	break;
 
-			default:
-				throw Miro::Exception("can't copy image: illegal image palette");
-			}
-		}
+      case paletteRGB:
+      case paletteBGR:
+	copy(dst, src, 3);
+	break;
+
+      case paletteRGBA:
+      case paletteABGR:
+	copy(dst, src, 4);
+	break;
+
+      default:
+	throw Miro::Exception("can't copy image: illegal image palette");
+      }
+    }
+    else
+    {
+      switch (connection.videoDevice.getDevicePalette())
+      {
+      case paletteRGB:
+	if (connection.videoDevice.getRequestedPalette() == paletteBGR)
+	  swap3(dst, src);
 	else
-		{
-		switch (connection.videoDevice.getDevicePalette())
-			{
-			case paletteRGB:
-				if (connection.videoDevice.getRequestedPalette() == paletteBGR)
-					swap3(dst, src);
-				else
-					throw Miro::Exception("can't copy image: incompatible image palette");
-				break;
+	  throw Miro::Exception("can't copy image: incompatible image palette");
+	break;
 
-			case paletteBGR:
-				if (connection.videoDevice.getRequestedPalette() == paletteRGB)
-					swap3(dst, src);
-				else
-					throw Miro::Exception("can't copy image: incompatible image palette");
-				break;
+      case paletteBGR:
+	if (connection.videoDevice.getRequestedPalette() == paletteRGB)
+	  swap3(dst, src);
+	else
+	  throw Miro::Exception("can't copy image: incompatible image palette");
+	break;
 
-			case paletteRGBA:
-				if (connection.videoDevice.getRequestedPalette() == paletteABGR)
-					swap4(dst, src);
-				else
-					throw Miro::Exception("can't copy image: incompatible image palette");
-				break;
+      case paletteRGBA:
+	if (connection.videoDevice.getRequestedPalette() == paletteABGR)
+	  swap4(dst, src);
+	else
+	  throw Miro::Exception("can't copy image: incompatible image palette");
+	break;
 
-			case paletteABGR:
-				if (connection.videoDevice.getRequestedPalette() == paletteRGBA)
-					swap4(dst, src);
-				else
-					throw Miro::Exception("can't copy image: incompatible image palette");
-				break;
-			default:
-				throw Miro::Exception("can't copy image: incompatible image palette");
-			}
-		}
-	}
+      case paletteABGR:
+	if (connection.videoDevice.getRequestedPalette() == paletteRGBA)
+	  swap4(dst, src);
+	else
+	  throw Miro::Exception("can't copy image: incompatible image palette");
+	break;
+      default:
+	throw Miro::Exception("can't copy image: incompatible image palette");
+      }
+    }
+  }
 
-void Consumer::copy(void* dst, const void* src, const int pixSize)
-	{
-	char*	start = (char*)src;
-	char*	target = (char*)dst;
-	int		h = connection.videoDevice.getImageHeight();
-	int		w = connection.videoDevice.getImageWidth();
- 	int		bytesPerLine = w*pixSize;
+  void Consumer::copy(void* dst, const void* src, const int pixSize)
+  {
+    char*	start = (char*)src;
+    char*	target = (char*)dst;
+    int		h = connection.videoDevice.getImageHeight();
+    int		w = connection.videoDevice.getImageWidth();
+    int		bytesPerLine = w*pixSize;
 
- 	if ((connection.videoDevice.getRequestedSubfield() != subfieldAll) &&
-		(connection.videoDevice.getDeviceSubfield() == subfieldAll))
-		{
-		int	srcOffset = 2*bytesPerLine;
-		if (connection.videoDevice.getRequestedSubfield() == subfieldOdd)
-			start += srcOffset;
-		for (int i=0; i<h; i++)
-			{
-			memcpy(target, start, bytesPerLine);
-			start += srcOffset;
-			target += bytesPerLine;
-			}
-		}
- 	else
-		memcpy(target, start, bytesPerLine * h);
-	}
+    if ((connection.videoDevice.getRequestedSubfield() != subfieldAll) &&
+	(connection.videoDevice.getDeviceSubfield() == subfieldAll))
+    {
+      int	srcOffset = 2*bytesPerLine;
+      if (connection.videoDevice.getRequestedSubfield() == subfieldOdd)
+	start += srcOffset;
+      for (int i=0; i<h; i++)
+      {
+	memcpy(target, start, bytesPerLine);
+	start += srcOffset;
+	target += bytesPerLine;
+      }
+    }
+    else
+      memcpy(target, start, bytesPerLine * h);
+  }
 
-void Consumer::swap3(void* dst, const void* src)
-	{
-	char*	start = (char*)src;
-	char*	target = (char*)dst;
-	int		h = connection.videoDevice.getImageHeight();
-	int		w = connection.videoDevice.getImageWidth();
-	int		srcOffset = w*3;
-	int		targetOffset = srcOffset;
+  void Consumer::swap3(void* dst, const void* src)
+  {
+    char*	start = (char*)src;
+    char*	target = (char*)dst;
+    int		h = connection.videoDevice.getImageHeight();
+    int		w = connection.videoDevice.getImageWidth();
+    int		srcOffset = w*3;
+    int		targetOffset = srcOffset;
 
-	if ((connection.videoDevice.getRequestedSubfield() != subfieldAll) &&
-		(connection.videoDevice.getDeviceSubfield() == subfieldAll))
-		{
-		if (connection.videoDevice.getRequestedSubfield() == subfieldOdd)
-			start += srcOffset;
-		srcOffset *= 2;
-		}
-	for (int i=0; i<h; i++)
-		{
-		swapLine3(target, start, w);
-		start += srcOffset;
-		target += targetOffset;
-		}
-	}
+    if ((connection.videoDevice.getRequestedSubfield() != subfieldAll) &&
+	(connection.videoDevice.getDeviceSubfield() == subfieldAll))
+    {
+      if (connection.videoDevice.getRequestedSubfield() == subfieldOdd)
+	start += srcOffset;
+      srcOffset *= 2;
+    }
+    for (int i=0; i<h; i++)
+    {
+      swapLine3(target, start, w);
+      start += srcOffset;
+      target += targetOffset;
+    }
+  }
 
-void Consumer::swap4(void* dst, const void* src)
-	{
-	char*	start = (char*)src;
-	char*	target = (char*)dst;
-	int		h = connection.videoDevice.getImageHeight();
-	int		w = connection.videoDevice.getImageWidth();
-	int		srcOffset = w*4;
-	int		targetOffset = srcOffset;
+  void Consumer::swap4(void* dst, const void* src)
+  {
+    char*	start = (char*)src;
+    char*	target = (char*)dst;
+    int		h = connection.videoDevice.getImageHeight();
+    int		w = connection.videoDevice.getImageWidth();
+    int		srcOffset = w*4;
+    int		targetOffset = srcOffset;
 
-	if ((connection.videoDevice.getRequestedSubfield() != subfieldAll) &&
-		(connection.videoDevice.getDeviceSubfield() == subfieldAll))
-		{
-		if (connection.videoDevice.getRequestedSubfield() == subfieldOdd)
-			start += srcOffset;
-		srcOffset *= 2;
-		}
-	for (int i=0; i<h; i++)
-		{
-		swapLine4(target, start, w);
-		start += srcOffset;
-		target += targetOffset;
-		}
-	}
+    if ((connection.videoDevice.getRequestedSubfield() != subfieldAll) &&
+	(connection.videoDevice.getDeviceSubfield() == subfieldAll))
+    {
+      if (connection.videoDevice.getRequestedSubfield() == subfieldOdd)
+	start += srcOffset;
+      srcOffset *= 2;
+    }
+    for (int i=0; i<h; i++)
+    {
+      swapLine4(target, start, w);
+      start += srcOffset;
+      target += targetOffset;
+    }
+  }
 
-void Consumer::swapLine3(void* dst, const void* src, const int n)
-	{
-	char*	start = (char*)src;
-	char*	top = start + (3*n);
-	char*	target = (char*)dst;
-	char		r, g, b;
+  void Consumer::swapLine3(void* dst, const void* src, const int n)
+  {
+    char*	start = (char*)src;
+    char*	top = start + (3*n);
+    char*	target = (char*)dst;
+    char		r, g, b;
 
-	while (start<top)
-		{
-		b = *start++;
-		g = *start++;
-		r = *start++;
-		*target++ = r;
-		*target++ = g;
-		*target++ = b;
-		}
-	}
+    while (start<top)
+    {
+      b = *start++;
+      g = *start++;
+      r = *start++;
+      *target++ = r;
+      *target++ = g;
+      *target++ = b;
+    }
+  }
 
-void Consumer::swapLine4(void* dst, const void* src, const int n)
-	{
-	char*	start = (char*)src;
-	char*	top = start + (4*n);
-	char*	target = (char*)dst;
-	char		r, g, b, a;
+  void Consumer::swapLine4(void* dst, const void* src, const int n)
+  {
+    char*	start = (char*)src;
+    char*	top = start + (4*n);
+    char*	target = (char*)dst;
+    char		r, g, b, a;
 
-	while (start<top)
-		{
-		a = *start++;
-		b = *start++;
-		g = *start++;
-		r = *start++;
+    while (start<top)
+    {
+      a = *start++;
+      b = *start++;
+      g = *start++;
+      r = *start++;
 
-		*target++ = r;
-		*target++ = g;
-		*target++ = b;
-		*target++ = a;
-		}
-	}
+      *target++ = r;
+      *target++ = g;
+      *target++ = b;
+      *target++ = a;
+    }
+  }
 };

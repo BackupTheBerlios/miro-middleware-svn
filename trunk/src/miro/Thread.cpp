@@ -35,15 +35,13 @@ using std::cout;
 
 namespace Miro
 {
-  Thread::Thread(ACE_Sched_Params *pschedp) :  
+  Thread::Thread(long _flags, long _priority) :  
     Super(),
-    schedp_(ACE_SCHED_OTHER, 0),
+    flags_(_flags),
+    priority_(_priority),
     canceled_(true)
   {
     DBG(cout << "Constructing [Miro::Thread]." << endl);
-    if (pschedp) 
-      schedp_ = (*pschedp);
-  
   }
 
   Thread::~Thread()
@@ -56,13 +54,8 @@ namespace Miro
   {
     canceled_ = false;
 
-    if (activate(THR_NEW_LWP | THR_JOINABLE, 1) != 0)
+    if (activate(flags_, 1, 0, priority_) != 0)
       throw Exception("[Miro::Thread] Cannot activate client thread");
-
-    // set the given thread scheduling policy
-    if (ACE_OS::sched_params(schedp_) == -1) {
-      DBG(cerr << "[Miro::Thread] Could not set sched parameters. (maybe suid root is missing)" << endl);
-    }
 
     return 0;
   }
@@ -72,8 +65,8 @@ namespace Miro
   {
     canceled_ = false;
 
-    if (activate(THR_NEW_LWP | THR_JOINABLE, _nthreads) != 0)
-      throw Exception("[Miro::Thread] Cannot activate client threads");
+    if (activate(flags_, _nthreads, 0, priority_) != 0)
+      throw Exception("[Miro::Thread] Cannot activate client thread");
   }
 
   void

@@ -61,14 +61,14 @@ module Miro
      * @throw EDevIO is thrown to indicate low level device problems.
      */
     //! Get the current image. 
-    void getImage(inout ImageHandleIDL img) raises(EOutOfBounds, EDevIO);
+    TimeIDL getImage(inout ImageHandleIDL img) raises(EOutOfBounds, EDevIO);
     //! Get the next image. 
     /**
      * This call waits and returns the next grabbed image.
      *
      * @throw EDevIO is thrown to indicate low level device problems.
      */
-    void getWaitImage(inout ImageHandleIDL img) raises(EOutOfBounds, EDevIO, ETimeOut);
+    TimeIDL getWaitImage(inout ImageHandleIDL img) raises(EOutOfBounds, EDevIO, ETimeOut);
 
     //! Get all the pixels of the current image, downsized to width=x height=y
     SubImageDataIDL exportWaitSubImage(in long x, in long y) raises(EOutOfBounds, EDevIO, ETimeOut);

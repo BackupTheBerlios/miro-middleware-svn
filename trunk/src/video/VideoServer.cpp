@@ -30,9 +30,9 @@ using std::cerr;
 
 VideoService::VideoService(int argc, char *argv[]) :
   Super(argc, argv),
-
+  schedparams_(ACE_SCHED_FIFO, 10),
   // Video board initialization
-  consumer(connection /*, &grabber */),
+  consumer(connection, NULL, &schedparams_),
   connection(&consumer),
   grabber(&consumer)
 
@@ -44,9 +44,9 @@ VideoService::VideoService(int argc, char *argv[]) :
 
 VideoService::VideoService(Server& _server) :
   Super(_server),
-
+  schedparams_(ACE_SCHED_FIFO, 10),
   // Video board initialization
-  consumer(connection /*, &grabber */),
+  consumer(connection, NULL, &schedparams_),
   connection(&consumer),
   grabber(&consumer)
 

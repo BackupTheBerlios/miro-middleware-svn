@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -12,7 +12,8 @@
 #define VideoConsumer_h
 
 #include "miro/Synch.h"
-#include "miro/Task.h"
+#include "miro/Thread.h"
+#include "miro/TimeC.h"
 //#include "miro/DevConsumer.h"
 
 
@@ -25,45 +26,45 @@ namespace Video
   /**
    * Class for using the Video robot
    */
-  class Consumer : public Miro::Task
+  class Consumer : public Miro::Thread
   {
-    typedef Miro::Task Super;
+    typedef Miro::Thread Super;
     
   public:
     Consumer(Connection& _connection, 
-	     VideoImpl * _pGrabber = NULL);
+	     VideoImpl * _pGrabber = NULL, 
+	     ACE_Sched_Params * pschedp = NULL);
     ~Consumer();
 
     virtual int svc();
 
-    virtual int open(void *);
-    virtual void cancel();
-
     int getImageSize() const;
     int getPaletteSize() const;
-    void getCurrentImage(void*);
-    void getWaitNextImage(void*);
-    void getWaitNextSubImage(unsigned char*, const int, const int);
+    Miro::TimeIDL getCurrentImage(void *);
+    Miro::TimeIDL getWaitNextImage(void *);
+    void getWaitNextSubImage(unsigned char *, const int, const int);
 
   protected:
-        void shrinkImageData(unsigned char*, unsigned char*, int, int);
+    void shrinkImageData(unsigned char*, unsigned char*, int, int);
 
-  	void copyImageData(void*, const void*);
+    void copyImageData(void*, const void*);
 
-	void copy(void*, const void*, const int);
+    void copy(void*, const void*, const int);
 
-	void swap3(void*, const void*);
- 	void swap4(void*, const void*);
+    void swap3(void*, const void*);
+    void swap4(void*, const void*);
 
-	void swapLine3(void*, const void*, const int);
-	void swapLine4(void*, const void*, const int);
+    void swapLine3(void*, const void*, const int);
+    void swapLine4(void*, const void*, const int);
 
-	Connection&	connection;
-	VideoImpl*       pGrabber;
-	Miro::Mutex      mutex;
-	Miro::Condition  cond;
-	bool             running;
-	void*           pCurrentImageData;
+    Connection&	connection;
+    VideoImpl*       pGrabber;
+    Miro::Mutex      mutex;
+    Miro::Condition  cond;
+    void *           pCurrentImageData;
+    Miro::TimeIDL    timeStamp_;
+
+    ACE_Sched_Params schedp_;
 
   private:
     static ACE_Time_Value maxWait;

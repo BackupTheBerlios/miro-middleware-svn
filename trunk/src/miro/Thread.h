@@ -33,7 +33,8 @@ namespace Miro
     typedef Thread Self;
 
   public:
-    Thread(ACE_Sched_Params * pschedp = NULL);
+    Thread(long _flags = THR_NEW_LWP | THR_JOINABLE,
+	   long _priority = ACE_DEFAULT_THREAD_PRIORITY);
     virtual ~Thread();
 
     void detach(int nthreads = 1);
@@ -45,7 +46,8 @@ namespace Miro
     virtual int close(u_long flags = 0);
 
   protected:
-    ACE_Sched_Params schedp_;
+    long flags_;
+    long priority_;
     bool canceled_;
   };
 

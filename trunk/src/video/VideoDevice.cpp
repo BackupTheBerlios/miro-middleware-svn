@@ -254,13 +254,13 @@ int VideoDevice::getDeviceImageSize() const
 	return workerDevice->imgWidth * workerDevice->imgHeight * getPixelSize(workerDevice->devicePaletteID);
 	}
 
-void* VideoDevice::grabImage() const
+void* VideoDevice::grabImage(ACE_Time_Value& _timeStamp) const
 	{
  	#ifdef DEBUG
 	if (!workerDevice)
 		throw Miro::Exception("VideoDevice::grabImage: no worker device");
  	#endif // DEBUG
-	return workerDevice->grabImage();
+	return workerDevice->grabImage(_timeStamp);
 	}
 
 int VideoDevice::getPixelSize(const int pal) const

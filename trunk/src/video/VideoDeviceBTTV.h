@@ -28,7 +28,7 @@ namespace Video
     VideoDeviceBTTV();
     virtual ~VideoDeviceBTTV();
 
-    virtual void * grabImage() const;
+    virtual void * grabImage(ACE_Time_Value& _timeStamp) const;
 
   protected:
     virtual void handleConnect(int fd, int buffers, int fmt, int src, int pal, int sub, int w, int h);

@@ -136,7 +136,7 @@ namespace Video
     meteorGeometry.columns = w;
   }
 
-  void* VideoDeviceMeteor::grabImage() const
+  void* VideoDeviceMeteor::grabImage(ACE_Time_Value& _timeStamp) const
   {
     int		iNTries = 0;
     int		iNCaptureRetries = 16;
@@ -166,6 +166,8 @@ namespace Video
 	  throw Miro::Exception("METEORCAPTUR");
       }
     }
+
+    _timeStamp = ACE_OS::gettimeofday();
 
     if (!done)
       throw Miro::Exception("VideoDeviceMeteor::grabImage");

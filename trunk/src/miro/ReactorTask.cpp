@@ -2,25 +2,16 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999,2000
+// (c) 1999, 2000, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "miro/ExceptionC.h"
-#include "miro/Server.h"
 #include "miro/ReactorTask.h"
+#include "miro/Server.h"
 #include "miro/Exception.h"
 
 #include <iostream>
@@ -46,15 +37,13 @@ namespace Miro
     Super(),
     pServer_(_pServer),
     reactor_(),
-    schedp_(ACE_SCHED_OTHER, 0),
-    shutdown_(false)
+    schedp_(ACE_SCHED_OTHER, 0)
   {
     DBG(cout << "Constructing [Miro::ReactorTask]." << endl);
     reactor(&reactor_);
     reactor_.open(size);
     if (pschedp) 
       schedp_ = (*pschedp);
-  
   }
 
   ReactorTask::~ReactorTask()
@@ -62,22 +51,6 @@ namespace Miro
     DBG(cout << "Destructing [Miro::ReactorTask]." << endl);
     reactor_.close();
     reactor(NULL);
-  }
-
-  int
-  ReactorTask::open(void *)
-  {
-    if (activate(THR_NEW_LWP | THR_JOINABLE, 1) != 0)
-      throw Exception("[Miro::ReactorTask] Cannot activate client thread");
-
-    return 0;
-  }
-
-  void
-  ReactorTask::detach(int nthreads)
-  {
-    if (activate(THR_NEW_LWP | THR_JOINABLE, nthreads) != 0)
-      throw Exception("[Miro::ReactorTask] Cannot activate client threads");
   }
 
   //
@@ -88,21 +61,22 @@ namespace Miro
   {
     ACE_DEBUG ((LM_DEBUG, "(%P|%t) [Miro::ReactorTask] 0x%x starts in thread %u\n", (void *) this, ACE_Thread::self()));
 
-    ACE_Time_Value timeout(0, 800000); // wait for 1/10 sec 
+    ACE_Time_Value timeout(0, 100000); // wait for 100 msec 
     ACE_Time_Value delta;              // uninitialized time value
 
     // set the given thread scheduling policy
 
     if (ACE_OS::sched_params(schedp_) == -1) {
-      DBG(cerr << "[MiroreactorTask] Could not set sched parameters." << endl 
-	       << "(maybe suid root is missing)" << endl);
+      std::cerr << "[Miro::ReactorTask] Could not set sched parameters." << endl 
+		<< "[Miro::ReactorTask] Maybe suid root is missing." << endl
+		<< "[Miro::ReactorTask] Will work on default scheduling policy." << endl;
     }
 
     // set the thread to be the owner of the reactor, 
     //otherwise we will get errors
     reactor_.owner(ACE_OS::thr_self());
 
-    while (!shutdown_) {
+    while (!canceled()) {
       // set delta to timeout
       // handle_events decrements the timeout
       delta = timeout;
@@ -147,24 +121,5 @@ namespace Miro
       }
     } 
     return 0;
-  }
-
-  void
-  ReactorTask::shutdown() 
-  {
-    shutdown_ = true;
-  }
-
-  void
-  ReactorTask::cancel()
-  {
-    shutdown();
-
-    // Wait for the threads of the Task to exit.
-    // It is rather rude to let the Task go out of scope without doing 
-    // this first.
-    wait();
-
-    DBG(cout << "[Miro::ReactorTask] ended." << endl);
   }
 };

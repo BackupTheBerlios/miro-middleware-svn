@@ -236,7 +236,7 @@ namespace Video
       throw Miro::Exception("VideoDeviceBTTV::setSize: illegal height");
   }
 
-  void* VideoDeviceBTTV::grabImage() const
+  void* VideoDeviceBTTV::grabImage(ACE_Time_Value& _timeStamp) const
   {
     DBG(std::cout << "VideoDeviceBTTV: grabImage" << std::endl);
 
@@ -245,6 +245,8 @@ namespace Video
     if (err == -1) {
       throw Miro::CException(errno, "VideoDeviceBTTV::grabImage() - VIDIOCSYNC");
     }
+    // set time stamp
+    _timeStamp = ACE_OS::gettimeofday();
 
     void * buffer = map_ + gb_buffers.offsets[currentBuffer_];
 

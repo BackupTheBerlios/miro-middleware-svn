@@ -29,7 +29,8 @@ namespace Miro
   LaserServer::LaserServer(int argc, char *argv[]) :
     Miro::Server(argc, argv),
     Log(INFO,"LaserServer"),
-    reactorTask_( this, 20, new ACE_Sched_Params(ACE_SCHED_FIFO,10) ),
+    schedparams_(ACE_SCHED_FIFO, 10),
+    reactorTask_( this, 20, &schedparams_),
     ec_(::Laser::Parameters::instance()->notify?
 	tryResolveName<CosNotifyChannelAdmin::EventChannel>("EventChannel") : 
 	CosNotifyChannelAdmin::EventChannel::_nil()),

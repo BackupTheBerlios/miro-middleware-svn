@@ -45,6 +45,8 @@ public:
   void init();
 
 private:
+  /** Sceduling parameters for a realtime thread */
+  ACE_Sched_Params schedparams_;
   Video::Consumer consumer;
   Video::Connection connection;
   Miro::VideoImpl grabber;
