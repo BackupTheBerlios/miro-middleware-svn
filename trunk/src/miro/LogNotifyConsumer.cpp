@@ -89,12 +89,14 @@ namespace Miro
     Guard guard(mutex_);
 
     if (connected_) {
-      totalLength_ = ostr_.total_length();
     
       ostr_ << time;
       ostr_ << notification;
 
-      if (ostr_.total_length() > parameters_.maxFileSize) {
+      if (ostr_.total_length() <= parameters_.maxFileSize) {
+	totalLength_ = ostr_.total_length();
+      }
+      else {
 	MIRO_LOG_OSTR(Log::LL_NOTICE, 
 		      "Disconnecting event log consumer since max file size reached:" << 
 		      totalLength_ );
