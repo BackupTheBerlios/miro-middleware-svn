@@ -211,6 +211,8 @@ namespace Miro
 	    MIRO_LOG(LL_NOTICE, 
 		     "NMC::Receiver::handle_input(): number of locally dropped packets reset to 0");
 
+	  delete[] reinterpret_cast<char const *>(iov[0].iov_base);
+
 	  return 0;
 	}
 
