@@ -8,11 +8,7 @@
 
 \documentclass[10pt]{book}
 
-\ifpdf
 \usepackage{graphicx} % enhanced graphics usage
-\else
-\usepackage[dvips]{graphicx} % enhanced graphics usage
-\fi
 \usepackage{a4} % A4 paperformat
 \usepackage{isolatin1} % for input of 8 bits character
 \usepackage{makeidx} % enable indexing
@@ -33,11 +29,7 @@
             urlcolor=blue]{hyperref}
 \fi
 
-%\ifpdf
 \graphicspath{{../fig/}}
-%\else
-%\graphicspath{{pics/eps/}}
-%\fi
 
 %% insert the common definitions
 \input{tex_definitions}
@@ -141,7 +133,7 @@ The \miro core developers are (in alphabetical order):
   \item Gerhard Kraetzschmar
   \item Gerd Mayer
   \item Guillem Pages
-  \item Stefan Sablatnög
+  \item Stefan Sablatn,Av(Bg
   \item Steffen Simon
   \item Hans Utz
 \end{itemize}
@@ -476,9 +468,13 @@ autoconf
 ./configure
 \end{lstlisting}
 
+For every consecutive step, you can simply call the resulting
+\texttt{config.status} script, that rerun the configure procedure with
+the used configuration values.
+
 Normally, it should be enough, to use the available examples within
 \miro to add some small additions to the build process, but sometimes
-a deper understanding of the used tools might be necessary. Please
+a deeper understanding of the used tools might be necessary. Please
 have a look at the manuals, available e.g.\ directly from the GNU
 homepage: \texttt{http://www.gnu.org/manual/} or read the freely
 available book on \texttt{http://sources.redhat.com/autobook/}.
