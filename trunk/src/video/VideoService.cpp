@@ -48,8 +48,8 @@ main(int argc, char *argv[])
     delete config;
     
 #ifdef DEBUG
-    cout << "  robot parameters:" << endl << robotParameters << endl;
-    cout << "  video paramters:" << endl << videoParameters << endl;
+    cout << "  robot parameters:" << endl << *robotParameters << endl;
+    cout << "  video paramters:" << endl << *videoParameters << endl;
 #endif
     
     DBG(cout << "Initialize server daemon." << endl);

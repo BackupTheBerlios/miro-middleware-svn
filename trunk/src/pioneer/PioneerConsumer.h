@@ -13,11 +13,10 @@
 #define PioneerConsumer_h
 
 #include <orbsvcs/CosNotifyCommC.h>
+
 #include "miro/Synch.h"
-
 #include "miro/DevConsumer.h"
-
-#include "PioneerStatus.h"
+#include "miro/MotionStatusC.h"
 
 // forward declarations
 namespace Miro

@@ -251,10 +251,12 @@ cout << velL << "\t" << velR << endl;
       // SERAUXpac SIP
       //-------------------------------------------------------------------
       else if (pPsosMsg->id() == 0xb0) { //SERAUXpac SIP
+	cout << "serial answer" << endl;
 	if (pAnswer) {
 	  Miro::Guard guard(pAnswer->mutex);
-	  for (int i=4; i < 4 + pPsosMsg->buffer()[2] - 3; ++i) 
+	  for (int i = 4; i < 4 + pPsosMsg->buffer()[2] - 3; ++i) 
 	    pAnswer->add(pPsosMsg->buffer()[i]);
+	  pAnswer->cond.broadcast();
 	}
       }
 
@@ -285,12 +287,13 @@ cout << velL << "\t" << velR << endl;
 	}
       }
       else {
-       std::cerr << "Unkown message header: " << hex << pPsosMsg->header() << dec
-       << endl;
+       std::cerr << "Unkown message header: "
+		 << hex << pPsosMsg->header() << dec << endl;
       }
     }
     else {
-      std::cerr << "Unkown message header: " << hex << pPsosMsg->header() << dec << endl;
+      std::cerr << "Unkown message header: "
+		<< hex << pPsosMsg->header() << dec << endl;
     }
   }
 };

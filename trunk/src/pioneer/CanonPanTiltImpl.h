@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // 
@@ -34,7 +34,7 @@ namespace Pioneer
 namespace Canon
 {
   class CanonPanTiltImpl :  public virtual POA_Miro::CanonPanTilt,
-		      public virtual ::Miro::PanTilt
+			    public virtual ::Miro::PanTilt
   {
     //-------------------------------------------------------------------------
     // public methods
@@ -42,7 +42,7 @@ namespace Canon
   public:
     // Constructor/Destructor
     CanonPanTiltImpl(Pioneer::Connection& _connection,
-		     bool _upsideDown=false) throw(Miro::Exception);
+		     bool _upsideDown = false) throw(Miro::Exception);
     virtual ~CanonPanTiltImpl();
 
     //-------------------------------------------------------------------------
@@ -119,7 +119,9 @@ namespace Canon
 
   };
 
-  inline Answer* CanonPanTiltImpl::getAnswer() {return &answer;}
+  inline Answer* CanonPanTiltImpl::getAnswer() {
+    return &answer;
+  }
 };
 
 #endif

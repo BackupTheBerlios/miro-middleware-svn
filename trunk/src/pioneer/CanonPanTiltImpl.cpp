@@ -10,7 +10,6 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "pioneer/CanonPanTiltImpl.h"
 #include "pioneer/PioneerConnection.h"
 #include "pioneer/PioneerConsumer.h"
@@ -72,7 +71,7 @@ namespace Canon
   CanonPanTiltImpl::~CanonPanTiltImpl()
   {
     DBG(cout << "Destructing CanonPanTiltImpl" << endl);
-      }
+  }
   
   void
   CanonPanTiltImpl::done() 
@@ -105,7 +104,7 @@ namespace Canon
     Miro::PanTiltPositionIDL pos=getPosition();
     return pos.panvalue;
     
-}
+  }
   
   //-------------------------------------------------------------------------
   // from tilt.idl
@@ -153,30 +152,35 @@ namespace Canon
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
 	timeout+=maxWait;
 
-	if (pAnswer->cond.wait(&timeout)==-1) throw ETimeOut(); 
+	if (pAnswer->cond.wait(&timeout) == -1) 
+	  throw ETimeOut(); 
 	    //wait until the error code is finished or timeout
       }
       //if camera is initializing, wait and try again
-      if (pAnswer->errorCode()==ERROR_BUSY) {
+      if (pAnswer->errorCode() == ERROR_BUSY) {
 	continue;
       }
 
-      if (pAnswer->errorCode()==ERROR_NO_ERROR) {
+      if (pAnswer->errorCode() == ERROR_NO_ERROR) {
 	connection.getCamera(8); //get the rest of the answer
       }
       
       checkAnswer(); //wait for completion and check
-      if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
+      if (pAnswer->errorCode() == ERROR_NO_ERROR)
+	done = true;
     }
-    result.panvalue=deg2Rad(double(str2int(pAnswer->parameter(),4)-0x8000)*panPulseRatio);
-    result.tiltvalue=deg2Rad(double(str2int(pAnswer->parameter()+4,4)-0x8000)*tiltPulseRatio);
+
+    result.panvalue =
+      deg2Rad(double(str2int(pAnswer->parameter(),4)-0x8000) * panPulseRatio);
+    result.tiltvalue =
+      deg2Rad(double(str2int(pAnswer->parameter()+4,4)-0x8000) * tiltPulseRatio);
 
     if (upsideDown) {
       //if inverse mounting, switch directions
-      result.tiltvalue=-result.tiltvalue;
+      result.tiltvalue = -result.tiltvalue;
     } else {
       //Miro's horitzontal standart is opposite to camera's !!!
-      result.panvalue=-result.panvalue;
+      result.panvalue = -result.panvalue;
     }
 
     return result;
@@ -185,15 +189,16 @@ namespace Canon
   void 
   CanonPanTiltImpl::setPosition(const Miro::PanTiltPositionIDL & dest) throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
-    bool done=false;
-    double panTmp=currentPan,tiltTmp=currentTilt; //to reset value in case of error
+    bool done = false;
+    double panTmp = currentPan;
+    double tiltTmp = currentTilt; //to reset value in case of error
 
     waitInitialize();
 
     //if camera in inverse position, change sign for pan/tilt
     //Miro's pan works opposite to camera's!!!
-    currentPan=dest.panvalue*(!upsideDown?-1:1);
-    currentTilt=dest.tiltvalue*(upsideDown?-1:1);
+    currentPan = dest.panvalue*(!upsideDown?-1:1);
+    currentTilt = dest.tiltvalue*(upsideDown?-1:1);
     
     char angleASCII[9];
     Canon::Message panTiltValue(PAN_TILT_SET_POSITION,
@@ -211,9 +216,10 @@ namespace Canon
 	try {
 	  while (!pAnswer->errorCode()) {
 	    ACE_Time_Value timeout(ACE_OS::gettimeofday());
-	    timeout+=maxWait;
+	    timeout += maxWait;
 	    
-	    if (pAnswer->cond.wait(&timeout)==-1) throw ETimeOut(); 
+	    if (pAnswer->cond.wait(&timeout) == -1) 
+	      throw ETimeOut(); 
 	    //wait until the error code is finished or timeout
 	  }
 	  
@@ -222,28 +228,29 @@ namespace Canon
 	  checkAnswer();
 	}
 	catch (Miro::ETimeOut& e) {
-	  currentPan=panTmp; //reset old values in case of error
-	  currentTilt=tiltTmp;
+	  currentPan = panTmp; //reset old values in case of error
+	  currentTilt = tiltTmp;
 	  throw (e);
 	}
 	catch (Miro::EOutOfBounds& e) {
-	  currentPan=panTmp; //reset old values in case of error
-	  currentTilt=tiltTmp;
+	  currentPan = panTmp; //reset old values in case of error
+	  currentTilt = tiltTmp;
 	  throw (e);
 	}
 	catch (Miro::EDevIO& e) {
-	  currentPan=panTmp; //reset old values in case of error
-	  currentTilt=tiltTmp;
+	  currentPan = panTmp; //reset old values in case of error
+	  currentTilt = tiltTmp;
 	  throw (e);
 	}
 	catch (Miro::Exception& e) {
-	  currentPan=panTmp; //reset old values in case of error
-	  currentTilt=tiltTmp;
+	  currentPan = panTmp; //reset old values in case of error
+	  currentTilt = tiltTmp;
 	  throw (e);
 	}
       }//scope for mutex end
-      if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
-      if (pAnswer->errorCode()==ERROR_BUSY) {
+      if (pAnswer->errorCode() == ERROR_NO_ERROR) 
+	done = true;
+      if (pAnswer->errorCode() == ERROR_BUSY) {
 	Miro::Guard guard(pAnswer->mutex); 
 	pAnswer->init();
 	Message stop(PAN_TILT_STOP,0x30);
@@ -263,43 +270,47 @@ namespace Canon
   {
     Miro::PanTiltPositionIDL goal,dest;
 
-    goal.panvalue=currentPan;
-    goal.tiltvalue=currentTilt;
+    goal.panvalue = currentPan;
+    goal.tiltvalue = currentTilt;
 
     //if the camera is inverse mounted, must change the sign
     if (upsideDown) {
-      goal.tiltvalue=-goal.tiltvalue;
+      goal.tiltvalue = -goal.tiltvalue;
     } else {
       //Miro's pan standart is opposite to camera's !!!
-      goal.panvalue=-goal.panvalue;
+      goal.panvalue = -goal.panvalue;
     }
     do {
       //test if finished
       dest=getPosition();
-    } while ((fabs(goal.panvalue-dest.panvalue)>0.01)||(fabs(goal.tiltvalue-dest.tiltvalue)>0.01));
+    } 
+    while ( (fabs(goal.panvalue-dest.panvalue) > 0.01) || 
+	    (fabs(goal.tiltvalue-dest.tiltvalue) > 0.01) );
       //0.01 rad tolerance (aprox 0.6 deg)
   }
   
   void
-  CanonPanTiltImpl::setWaitPosition(const Miro::PanTiltPositionIDL & dest) throw(Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut)
+  CanonPanTiltImpl::setWaitPosition(const Miro::PanTiltPositionIDL & dest) 
+    throw(Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut)
   {
     setPosition(dest);
     waitCompletion();
   }
   
   void
-  CanonPanTiltImpl::setSpdAcc(const CanonPanTiltSpdAccIDL & dest) throw(Miro::ETimeOut, Miro::EDevIO, Miro::EOutOfBounds)
+  CanonPanTiltImpl::setSpdAcc(const CanonPanTiltSpdAccIDL & dest) 
+    throw(Miro::ETimeOut, Miro::EDevIO, Miro::EOutOfBounds)
   {
     waitInitialize();
-    int panspeed,tiltspeed;
+    int panspeed, tiltspeed;
 
-    panspeed=int(rad2Deg(dest.targetpanspeed)/panPulseRatio);
-    tiltspeed=int(rad2Deg(dest.targettiltspeed)/tiltPulseRatio);
+    panspeed = int(rad2Deg(dest.targetpanspeed) / panPulseRatio);
+    tiltspeed = int(rad2Deg(dest.targettiltspeed) / tiltPulseRatio);
     
     char tmp[4];
 
-    Message setPanSpeed(SET_PAN_SPEED,int2str(tmp,panspeed,3));
-    Message setTiltSpeed(SET_TILT_SPEED,int2str(tmp,tiltspeed,3));
+    Message setPanSpeed(SET_PAN_SPEED, int2str(tmp, panspeed, 3));
+    Message setTiltSpeed(SET_TILT_SPEED, int2str(tmp, tiltspeed, 3));
 
     {//scope for mutex
       Miro::Guard guard(pAnswer->mutex); 
@@ -324,7 +335,8 @@ namespace Canon
   CanonPanTiltImpl::getSpdAcc() throw(Miro::EDevIO, Miro::ETimeOut)
   {
     CanonPanTiltSpdAccIDL result;
-    if (!initialized) initialize();
+    if (!initialized)
+      initialize();
 
     Message getPanSpeed(GET_PAN_SPEED,0x30);
     Message getTiltSpeed(GET_TILT_SPEED,0x31);
@@ -341,15 +353,17 @@ namespace Canon
       //wait for error code completion
       while (!pAnswer->errorCode()) {
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
-	timeout+=maxWait;
+	timeout += maxWait;
 	
-	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	if (pAnswer->cond.wait(&timeout) == -1)
+	  throw Miro::ETimeOut(); 
 	//wait until the error code is finished or timeout
       }
       //get the rest
-      if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
+      if (pAnswer->errorCode() == ERROR_NO_ERROR)
+	connection.getCamera(3);
       checkAnswer(); //wait for completion
-      result.targetpanspeed=deg2Rad(double(str2int(pAnswer->parameter(),3))*panPulseRatio);
+      result.targetpanspeed = deg2Rad(double(str2int(pAnswer->parameter(),3))*panPulseRatio);
     }//scope for mutex
 
     {//Scope for mutex
@@ -362,14 +376,16 @@ namespace Canon
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
 	timeout+=maxWait;
 	
-	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	if (pAnswer->cond.wait(&timeout) == -1) 
+	  throw Miro::ETimeOut(); 
 	//wait until the error code is finished or timeout
       }
 
       //get the rest
-      if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
+      if (pAnswer->errorCode() == ERROR_NO_ERROR)
+	connection.getCamera(3);
       checkAnswer(); //wait for completion
-      result.targettiltspeed=deg2Rad(double(str2int(pAnswer->parameter(),3))*tiltPulseRatio);
+      result.targettiltspeed = deg2Rad(double(str2int(pAnswer->parameter(),3))*tiltPulseRatio);
     }//scope for mutex
 
     if (panMinSpeed<0) {
@@ -381,13 +397,15 @@ namespace Canon
       //wait for error code completion
       while (!pAnswer->errorCode()) {
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
-	timeout+=maxWait;
+	timeout += maxWait;
 	
-	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	if (pAnswer->cond.wait(&timeout) == -1)
+	  throw Miro::ETimeOut(); 
 	//wait until the error code is finished or timeout
       }
       //get the rest
-      if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
+      if (pAnswer->errorCode() == ERROR_NO_ERROR)
+	connection.getCamera(3);
       checkAnswer(); //wait for completion
       panMinSpeed=deg2Rad(double(str2int(pAnswer->parameter(),3))*panPulseRatio);
     }
@@ -403,14 +421,17 @@ namespace Canon
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
 	timeout+=maxWait;
 	
-	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	if (pAnswer->cond.wait(&timeout) == -1)
+	  throw Miro::ETimeOut(); 
 	//wait until the error code is finished or timeout
       }
 
       //get the rest
-      if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
+      if (pAnswer->errorCode() == ERROR_NO_ERROR)
+	connection.getCamera(3);
       checkAnswer(); //wait for completion
-      tiltMinSpeed=deg2Rad(double(str2int(pAnswer->parameter(),3))*tiltPulseRatio);
+      tiltMinSpeed =
+	deg2Rad(double(str2int(pAnswer->parameter(),3))*tiltPulseRatio);
     }
     result.tiltminspeed=tiltMinSpeed;
 
@@ -425,16 +446,18 @@ namespace Canon
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
 	timeout+=maxWait;
 	
-	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	if (pAnswer->cond.wait(&timeout) == -1) 
+	  throw Miro::ETimeOut(); 
 	//wait until the error code is finished or timeout
       }
 
       //get the rest
-      if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
+      if (pAnswer->errorCode() == ERROR_NO_ERROR)
+	connection.getCamera(3);
       checkAnswer(); //wait for completion
-      panMaxSpeed=deg2Rad(double(str2int(pAnswer->parameter(),3))*panPulseRatio);
+      panMaxSpeed = deg2Rad(double(str2int(pAnswer->parameter(),3))*panPulseRatio);
     }
-    result.panmaxspeed=panMaxSpeed;
+    result.panmaxspeed = panMaxSpeed;
 
     if (tiltMaxSpeed<0) {
       Miro::Guard guard(pAnswer->mutex); 
@@ -446,12 +469,14 @@ namespace Canon
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
 	timeout+=maxWait;
 	
-	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	if (pAnswer->cond.wait(&timeout) == -1) 
+	  throw Miro::ETimeOut(); 
 	//wait until the error code is finished or timeout
       }
 
       //get the rest
-      if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
+      if (pAnswer->errorCode() == ERROR_NO_ERROR)
+	connection.getCamera(3);
       checkAnswer(); //wait for completion
       tiltMaxSpeed=deg2Rad(double(str2int(pAnswer->parameter(),3))*tiltPulseRatio);
     }
@@ -481,13 +506,15 @@ namespace Canon
       //wait for error code completion
       while (!pAnswer->errorCode()) {
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
-	timeout+=maxWait;
+	timeout += maxWait;
 	
-	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	if (pAnswer->cond.wait(&timeout) == -1)
+	  throw Miro::ETimeOut(); 
 	//wait until the error code is finished or timeout
       }
       //get the rest
-      if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
+      if (pAnswer->errorCode( )== ERROR_NO_ERROR)
+	connection.getCamera(4);
       checkAnswer(); //wait for completion
       minPan=deg2Rad(double(str2int(pAnswer->parameter(),4)-0x8000)*panPulseRatio);
     }
@@ -506,7 +533,8 @@ namespace Canon
 	//wait until the error code is finished or timeout
       }
       //get the rest
-      if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
+      if (pAnswer->errorCode() == ERROR_NO_ERROR)
+	connection.getCamera(4);
       checkAnswer(); //wait for completion
       minTilt=deg2Rad(double(str2int(pAnswer->parameter(),4)-0x8000)*tiltPulseRatio);
     }
@@ -521,11 +549,13 @@ namespace Canon
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
 	timeout+=maxWait;
 	
-	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	if (pAnswer->cond.wait(&timeout)==-1)
+	  throw Miro::ETimeOut(); 
 	//wait until the error code is finished or timeout
       }
       //get the rest
-      if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
+      if (pAnswer->errorCode() == ERROR_NO_ERROR)
+	connection.getCamera(4);
       checkAnswer(); //wait for completion
       maxPan=deg2Rad(double(str2int(pAnswer->parameter(),4)-0x8000)*panPulseRatio);
     }
@@ -540,11 +570,13 @@ namespace Canon
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
 	timeout+=maxWait;
 	
-	if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+	if (pAnswer->cond.wait(&timeout) == -1)
+	  throw Miro::ETimeOut(); 
 	//wait until the error code is finished or timeout
       }
       //get the rest
-      if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
+      if (pAnswer->errorCode() == ERROR_NO_ERROR) 
+	connection.getCamera(4);
       checkAnswer(); //wait for completion
       maxTilt=deg2Rad(double(str2int(pAnswer->parameter(),4)-0x8000)*tiltPulseRatio);
     }
@@ -574,10 +606,12 @@ namespace Canon
    
     pAnswer->init();
     connection.sendCamera(getRatio);
-    while (!pAnswer->errorCode()) pAnswer->cond.wait(); //wait until the error code is finished
+    while (!pAnswer->errorCode()) 
+      pAnswer->cond.wait(); //wait until the error code is finished
     
     //if there is no error, read the rest of the parameters
-    if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
+    if (pAnswer->errorCode() == ERROR_NO_ERROR)
+      connection.getCamera(4);
 
     //check if the format is OK and no errors are returned
     //if there is an error, an exception will be thrown
@@ -599,16 +633,18 @@ namespace Canon
 
     pAnswer->init();
     connection.sendCamera(getRatio);
-    while (!pAnswer->errorCode()) pAnswer->cond.wait(); //wait until the error code is finished
+    while (!pAnswer->errorCode()) 
+      pAnswer->cond.wait(); //wait until the error code is finished
     
     //if there is no error, read the rest of the parameters
-    if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
+    if (pAnswer->errorCode() == ERROR_NO_ERROR)
+      connection.getCamera(4);
 
     //check if the format is OK and no errors are returned
     //if there is an error, an exception will be thrown
     checkAnswer();
 
-    tiltPulseRatio=double(str2int(pAnswer->parameter(),4))/100000.0;
+    tiltPulseRatio = double(str2int(pAnswer->parameter(),4))/100000.0;
     
     return tiltPulseRatio;
   }
@@ -647,35 +683,44 @@ namespace Canon
     //   no reinitialization asked
     //   and no need to wait
     // then exit
-    if (!forceWait&&!force&&initialized) return;
+    if (!forceWait && !force && initialized)
+      return;
 
     //initialize only if not initialized
     //or asked for initialization
-    if (force||!initialized) initialize();
+    if (force || !initialized) 
+      initialize();
     do {
-      done=true;
+      done = true;
       try {
 	usleep(1000);
 	waitCompletion(); //wait until initialization is done
       }
       catch (Miro::EDevIO & e) {
 	// avoid "mode" errors
-	     done=false;
+	done = false;
       }
     } while(!done);
   }
 
-void CanonPanTiltImpl::checkAnswer() throw (Miro::EDevIO,Miro::EOutOfBounds, Miro::ETimeOut)
+  void 
+  CanonPanTiltImpl::checkAnswer() 
+    throw (Miro::EDevIO, Miro::EOutOfBounds, Miro::ETimeOut)
   {
     while (!pAnswer->isValid()) { //try to get the whole answer
       ACE_Time_Value timeout(ACE_OS::gettimeofday());
       timeout+=maxWait;
-	  
-      if (pAnswer->cond.wait(&timeout)==-1) throw Miro::ETimeOut(); 
+      
+      if (pAnswer->cond.wait(&timeout) == -1) 
+	throw Miro::ETimeOut(); 
       //wait until the answer is finished or timeout
     }
-    if (pAnswer->header()!=ANSWER_HEADER) throw Miro::EDevIO("[CanonPanTiltImpl] Erroneous header in answer");
-    if (pAnswer->errorCode()==ERROR_PARAMETER) throw Miro::EOutOfBounds("[CanonPanTiltImpl] Parameter Error");
-    if (pAnswer->errorCode()==ERROR_MODE) throw Miro::EDevIO("[CanonPanTiltImpl] Mode Error");
+    
+    if (pAnswer->header() != ANSWER_HEADER) 
+      throw Miro::EDevIO("[CanonPanTiltImpl] Erroneous header in answer");
+    if (pAnswer->errorCode() == ERROR_PARAMETER) 
+      throw Miro::EOutOfBounds("[CanonPanTiltImpl] Parameter Error");
+    if (pAnswer->errorCode() == ERROR_MODE)
+      throw Miro::EDevIO("[CanonPanTiltImpl] Mode Error");
   }
 };
