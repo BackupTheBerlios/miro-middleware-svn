@@ -2,29 +2,19 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999,2000
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
-#undef DEBUG
-
 #include "miro/Client.h"
+#include "miro/Debug.h"
 
 #include <ace/Arg_Shifter.h>
-#include <tao/Strategies/advanced_resource.h>
 
+#include <tao/Strategies/advanced_resource.h>
 
 #include <iostream>
 #include <cstring>
@@ -50,6 +40,8 @@ namespace
   const char * const namingKey = "-MiroNamingContext";
   const char * const shortNamingKey = "-MNC";
   const char * const noNamingKey = "-MiroNoNaming";
+  const char * const debug = "-MiroDbug";
+  const char * const debugLevel = "-MiroDebugLevel";
 };
 
 namespace Miro
@@ -61,7 +53,7 @@ namespace Miro
     noNaming_(false),
     namingContextName(params_.name)
   {
-    DBG(cout << "Constructing Miro::Client" << endl);
+    MIRO_LOG_CTOR("Miro::Client\n");
 
     // resolve the used naming context
     ACE_Arg_Shifter arg_shifter (argc, argv);
@@ -117,12 +109,12 @@ namespace Miro
     namingContext(_client.namingContext),
     namingContextName(_client.namingContextName)
   {
-    DBG(cout << "Constructing Miro::Client copy" << endl);
+    MIRO_LOG_CTOR("Miro::Client copy ctor\n");
   }
 
   Client::~Client()
   {
-    DBG(cout << "Destructing Miro::Client" << endl);
+    MIRO_LOG_DTOR("Miro::Client\n");
   }
   
   // Return the corba orb reference.
@@ -133,11 +125,3 @@ namespace Miro
   }
 
 };
-
-// template class std::string;
-// template NamingContext::_ptr_type Miro::Client::resolveInit<NamingContext>(const char *);
-
-// #pragma instantiate std::string;
-// #pragma instantiate Miro::Client::resolveInit<CosNaming::NamingContext>
-
-  
