@@ -1,0 +1,102 @@
+// -*- idl -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
+// for documentation see Miro/doc
+// 
+// (c) 1999,2000
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// Authors: 
+//    Stefan Enderle, 
+//    Stefan Sablatnoeg, 
+//    Hans Utz
+// 
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef Video_idl
+#define Video_idl
+
+#include "Exception.idl"
+#include "Time.idl"
+#include "Position.idl"
+
+module Miro
+{
+  struct ImageHandleIDL
+	{
+    /**
+     * Time stamp associated to the image.
+     */
+    TimeIDL   time;
+    /**
+     * @ref Position stamp associated to the image
+     */
+    PositionIDL position;
+    /**
+     * Validity of the positionstamp
+     */
+	long		width;
+	/**
+	 * Image width (columns).
+	 */
+	long		height;
+	/**
+	 * Image height (rows).
+	 */
+	long		palette;
+	/**
+	 * Image palette (gray,rgb).
+	 */
+	long		source;
+	/**
+	 * Image source (composite/svideo).
+	 */
+	long		key;
+	/**
+	 * Shared memory key to image data
+	 */
+	long		handle;
+	/**
+	 * Shared memory key to image data
+	 */
+	};
+
+/**
+* Interface to the frame grabber devices.
+*/
+  interface Video
+	{
+		/**
+		 * Get the current image. This call immediately
+		 * returns the last grabbed image.
+		 *
+		 * @raises EDevIO
+		 */
+		ImageHandleIDL	connect() raises(EOutOfBounds, EDevIO);
+		/**
+		 * Get the current image. This call immediately
+		 * returns the last grabbed image.
+		 *
+		 * @raises EDevIO
+		 */
+		void	release(in ImageHandleIDL img) raises(EOutOfBounds, EDevIO);
+		/**
+		 * Get the current image. This call immediately
+		 * returns the last grabbed image.
+		 *
+		 * @raises EDevIO
+		 */
+		void	getImage(inout ImageHandleIDL img) raises(EOutOfBounds, EDevIO);
+		/**
+		 * Get the next available image.
+		 *
+		 * @raises EDevIO, ETimeOut
+		 */
+		void	getWaitImage(inout ImageHandleIDL img) raises(EOutOfBounds, EDevIO, ETimeOut);
+	};
+};
+
+#endif

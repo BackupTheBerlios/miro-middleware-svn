@@ -1,0 +1,215 @@
+\documentclass[10pt]{book}
+
+%% insert the common definitions
+\input{tex_definitions}
+
+%% special definitions
+\usepackage{doxygen} % special package for the reference-part created by doxygen
+\setcounter{tocdepth}{1}
+
+%% =============================================================================
+
+\begin{document}
+%\maketitle
+
+\thispagestyle{empty}   
+\begin{center}
+  \vfill
+  \includegraphics[width=5in]{../fig/signature.ps}\\
+  \vspace{30 mm}
+  {\Xbombastic \miro}\\
+  \vspace{10 mm}
+  {\Large \textbf{Reference Manual}}\\
+  \vspace{10 mm}
+  \textbf{Version 0.7}\\
+  \vspace{10 mm}
+  \today\\
+  \vfill
+\end{center}
+
+\newpage
+
+\begin{center}
+  \includegraphics[width=5in]{../fig/pincolla.ps}
+  \bigskip 
+  For more paintings, see {\tt http://www.bcn.fjmiro.es/}
+\end{center}
+
+\pagestyle{headings}
+
+\newpage
+\tableofcontents
+
+%% =============================================================================
+
+\chapter{Introduction}
+
+\section{The \miro Group}
+
+The \miro developers are (in alphabetical order): 
+\begin{itemize}
+  \item Stefan Enderle
+  \item Gerhard Kraetzschmar
+  \item Stefan Sablatnög
+  \item Steffen Simon
+  \item Hans Utz
+\end{itemize}
+
+%% =============================================================================
+
+\chapter{Requirements}
+
+\begin{itemize}
+  \item The Linux-kernel must be compiled with multicast enabled.
+  \item ACE 5.1.x and TAO 1.1.x (we currently recommend the latest beta)
+  \item gcc 2.95.3 
+  \item QT 2.3 (and above)
+  \item doxygen / LaTeX (for documentation)
+  \item {\tt /soft/ACE\_wrappers/ace} must be part of {\tt LD\_LIBRARY\_PATH}
+\end{itemize}
+
+%% =============================================================================
+
+\chapter{Directory Structure}
+
+\begin{verbatim}
+Miro
+  |
+  +--- idl                        all idl descriptions
+  +--- include (*)                all include files
+  |      |
+  |      +-- auto_idl (*)        header files automatically produced by the idl compiler
+  +--- src
+  |      |
+  |      +-- abus                 abus utilities
+  |      +-- miro                 miro utilities
+  |      +-- c1lib                c1  utilities  (RENAME!)
+  |      +-- mcp                  mcp utilities
+  |      +-- msp                  msp utilities
+  |      +-- base                 base server (sonar, IR, tactile servers)
+  |      +-- laser                laser server
+  |      +-- auto_idl (*)        source files automatically produced by the idl compiler
+  +--- bin (*)                    all binaries (except demos)
+  +--- demo                       
+  |      |
+  |      +-- qtLaser              a simple graphical laser client
+  |      +-- qtSonar              a simple graphical sonar client
+  +--- doc
+  |      |
+  |      +-- html                 html documentation (miro.html)
+  |      +-- tex                  TeX documentation (miro.ps)
+  +--- lib (*)                    all libraries
+\end{verbatim}
+
+Note: \\ 
+The directories marked with {\tt (*)} are not part of the \miro
+repository but are dynamically built when calling
+{\tt make}.
+
+%% =============================================================================
+
+\chapter{Make}
+
+The following targets can be called in the main Makefile:
+\begin{itemize}
+  \item all
+  \item clean 
+  \item distclean 
+  \item depclean 
+\end{itemize}
+
+Simply typing {\tt make} calls the target {\em all}.
+
+
+\section{Target: build}
+
+The main {\tt Makefile} calls 
+\begin{itemize}
+  \item {\tt idl/Makefile}
+  \item {\tt src/Makefile}
+  \item {\tt doc/Makefile}
+\end{itemize}
+
+
+{\tt idl/Makefile} creates the directories
+{\tt include/auto\_idl} and {\tt src/auto\_idl}. Then it calls
+the idl-compiler in order to translate all idl-files. The generated
+.hh- and .cc-files are moved to the created directories.
+
+{\tt src/Makefile} calls make in all subdirectories.
+
+{\tt doc/Makefile} generates both HTML and \TeX documentation by
+invoking {\em doxygen} and \LaTeX.
+
+
+\section{Target: clean}
+
+- *.o 
+
+
+\section{Target: distclean}
+
+- dependency files
+
+- libs
+
+- binaries
+
+%% =============================================================================
+
+\chapter{Styleguide}
+\input{styleguide}
+
+%% =============================================================================
+
+\chapter{Source Code Documentation}
+
+doxygen is used
+
+Example:
+
+\begin{lstlisting}[frame=tb]{}
+/**
+ * Some comments about this class are written here.
+ * You can use multiple lines.
+ *
+ * An empty line produces a new paragraph.
+ *      
+ * @author Stefan Enderle  (an author can be given!)
+ */
+class MyClass : public some other class
+{
+private:
+  /**
+   *  say something about this variable
+   */
+  double d;
+
+public:
+  /**
+   *  say something about this method 
+   *
+   * @exception SOME_EXCEPTION                    
+   *
+   * @param a This param is used for something nice
+   */
+  bool method(int a);
+};
+\end{lstlisting}
+
+%% =============================================================================
+
+\input{refman}
+
+%% !!! Be sure, that no other stuff comes here. particularly no \end{document}
+
+%\chapter{Class Reference}
+%\label{SEC_CLASS_REFERENCE}
+%\input{miro_class_reference.nh}
+%\input{miro_idl_reference.nh}
+%\printindex
+%\end{document}
+
+
+
+

@@ -1,0 +1,34 @@
+Basic Installation
+==================
+
+This software package depends heavily on ACE and TAO. Therefor its
+installation instructions are simmilar to that package. If you already
+installed ACE and TAO, the installing instructions should sound
+familiar to you.
+
+The libraries Miro depends on are ACE (>= 5.1.7), TAO (>= 1.1.7) and
+qt (>= 2.2.4). These should be installed first. The environment
+variables ACE_ROOT, TAO_ROOT, QTDIR and LD_LIBRARY_PATH should be set
+accoringly.
+
+Now. Set the environment variable MIRO_ROOT to the base directory of
+your Miro directory tree (/usr/local/Miro for example) and add
+$MIRO_ROOT/lib to your LD_LIBRARY_PATH.
+
+Switch to the directory $MIRO_ROOT and simply call make.
+
+Note: The build process of Miro recycles the Makefiles of
+ACE. Therefor the options specified in platform-macros.GNU also apply
+to Miro. Some of the submakes of miro try to override the defaults for
+some ACE build flags like >debug< or >optimize<. If you want to allow
+them to do so, you should write your changes in platform-macros.GNU
+like following. Instead of
+
+debug = 1
+
+write
+
+ifeq (,$(optimize))
+  optimize = 1
+endif
+

@@ -1,0 +1,91 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef ScanDescription_idl
+#define ScanDescription_idl
+
+module Miro
+{
+  //! Struct describing the properties of a range sensor device.
+  struct SensorDescriptionIDL
+  {
+    //! The minimal measurable distance (mm).
+    long minRange;
+    //! The maximal measurable distance (mm).
+    long maxRange;
+    //! The focus of the sensor (rad).
+    double focus;
+  };
+
+  //! Constant indicating an invalid scan value. 
+  /**
+   * The specific sensor is either masked out or didn't provide usefull data. 
+   */
+  const long INVALID_RANGE = -2;
+  //! Constant indicating a range beyond the scope of the sensor.
+  /** 
+   * The scan value is bigger than the maximum distance the range
+   * sensor can measure.
+   */
+  const long HORIZON_RANGE = -1;
+
+  //! Struct representing the position of an individual sensor.
+  struct SensorPositionIDL
+  {
+    //! Sensor height above ground (mm).
+    long height;
+    //! Sensor distance from central axis (mm).
+    long distance;
+    //! angle relative to robot heading (rad).
+    double alpha;
+    //! angle relative to the distance vector (rad).
+    double beta;
+    //! angle realtive to the horizon (rad).
+    double gamma;
+    //! Is the sensor currently masked out?
+    /**
+     * That is, the sensor will always report INVALID_RANGE.
+     * This was introduced to handle temporarily broken sensors.
+     */
+    boolean masked;
+  };
+
+  //! Struct holding the data of a single sensor group.
+  struct SensorGroupIDL
+  {
+    //! The general properties of the group of sensors.
+    SensorDescriptionIDL        description;
+    //! The individual positions of the sensors.
+    sequence<SensorPositionIDL> sensor;
+  };
+
+  const long NONE_PUSHING = 0;
+  const long FULL = 1;
+  const long GROUPWISE = 2;
+  const long BUNCHWISE = 3;
+  const long SPORADIC = 4;
+
+  //! Description of a range sensor scan.
+  /**
+   * Range sensors scans like sonar, laser, infrared and (well)
+   * tactile scans are described with this data structure in a uniform
+   * manner.
+   */
+  struct ScanDescriptionIDL
+  {
+    //! Which kind of events are produced by the sensory device.
+    long scanType;
+    //! The name under which these events are published.
+    string eventName;
+    //! The descriptions of each sensor group.
+    sequence<SensorGroupIDL> group;
+  };
+};
+#endif // scanDescription_idl
