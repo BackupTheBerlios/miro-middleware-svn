@@ -11,6 +11,8 @@
 
 #include "NotifyMulticastSH.h"
 
+#include <tao/Exception.h>
+
 namespace Miro 
 {
   namespace NMC

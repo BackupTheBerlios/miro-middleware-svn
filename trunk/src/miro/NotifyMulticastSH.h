@@ -11,10 +11,11 @@
 #ifndef NotifyMulticastSH_h
 #define NotifyMulticastSH_h
 
-#include <ace/Event_Handler.h>
 #include "NotifyMulticastSender.h"
 #include "NotifyMulticastReceiver.h"
 #include "NotifyMulticastConfig.h"
+
+#include <ace/Event_Handler.h>
 
 namespace Miro 
 {
