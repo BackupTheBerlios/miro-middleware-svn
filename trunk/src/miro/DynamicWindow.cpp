@@ -72,10 +72,11 @@ namespace Miro
 
   void DynamicWindow::collisionCheckDeluxe(std::vector<Vector2d> &_robot, std::vector<Vector2d> &_obstacle) {
 
-    const int CURV_CNT = 6; // count
-    const int CURV_RES = 6; // count
-    const int CURV_LEN = 600; // mm
+    const int CURV_CNT = 8; // count
+    const int CURV_RES = 8; // count
+    const int CURV_LEN = 500; // mm
     const int CURV_SMOOTH_LEN = 300; // mm
+    const int CURV_DELAY = 2; // count
     const double WHEEL_DISTANCE  = 390.; // mm
     const double BREAK_ACCEL = 2000.; // in mm/sec2
 
@@ -134,13 +135,40 @@ namespace Miro
       }
       else { // left==right ==> robot moves straight forward/backward
 	for(seg = 0; seg < 2*CURV_RES+1 ; seg++) {
+	  CURV[count][seg] = 0;
 	  fprintf(logFile1,"%d\n",0);	// INCOMPLETE!!!!!!!!!!!!!!!!!!!!!!!!!!
 	}
       }
      
-      // SMOOTHING CURVATURE SPACE
+      // CLEANING AND SMOOTHING CURVATURE SPACE
       //
     
+      // cleaning curvature space
+      front = CURV_RES;
+      frontObstacle = false;
+      while(front < 2*CURV_RES+1) {
+	if(CURV[count][front] == 0) {
+	  frontObstacle = true;
+	}
+	if(frontObstacle == true) {
+	  CURV[count][front] = 0;
+	}
+	front++;
+      }
+
+      back = CURV_RES;
+      backObstacle = false;
+      while(back > -1) {
+	if(CURV[count][back] == 0) {
+	  backObstacle = true;
+	}
+	if(backObstacle == true) {
+	  CURV[count][back] = 0;
+	}
+	back--;
+      }
+  
+
       // search curvature space for obstacles (obstacle = 0)
       front = CURV_RES;
       while((front < 2*CURV_RES+1) && (CURV[count][front] != 0)) {
@@ -184,11 +212,11 @@ namespace Miro
 	  break_dist = left_break;
 	else
 	  break_dist = right_break;
+
+	target = CURV_RES  + CURV_DELAY + (int)(break_dist  * (double)CURV_RES / (double)CURV_LEN);
 	
-	target = CURV_RES  + (int)(break_dist  * (double)CURV_RES / (double)CURV_LEN);
-	
-	velocitySpace_[left+100][right+100] = (double)CURV[std::max(0,std::min(2*CURV_CNT,curv))][std::max(0,std::min(2*CURV_RES,target))] * (double)velocitySpace_[left+100][right+100] / 250.;
-	// velocitySpace_[left+100][right+100] = std::min(CURV[std::max(0,std::min(2*CURV_CNT,curv))][std::max(0,std::min(2*CURV_RES,target))], velocitySpace_[left+100][right+100]);
+	// velocitySpace_[left+100][right+100] = (double)CURV[std::max(0,std::min(2*CURV_CNT,curv))][std::max(0,std::min(2*CURV_RES,target))] * (double)velocitySpace_[left+100][right+100] / 250.;
+	velocitySpace_[left+100][right+100] = std::min(CURV[std::max(0,std::min(2*CURV_CNT,curv))][std::max(0,std::min(2*CURV_RES,target))], 255); // velocitySpace_[left+100][right+100]);
 	
       }
     }
@@ -281,10 +309,11 @@ namespace Miro
   //
   Vector2d DynamicWindow::calcNewVelocity() {
 
-    int biggestVelocitySpaceValue = 0;
+    int biggestVelocitySpaceValue = 10;
     double biggestVelocitySpaceRadius = 0.;
     Vector2d biggestVelocitySpaceValueVelocity(0,0);
-    
+    bool found = false;
+    int temp_left, temp_right;
 
     for(int left = minLeft_; left < maxLeft_; left++) {
       for(int right = minRight_; right < maxRight_; right++) {
@@ -295,11 +324,40 @@ namespace Miro
           biggestVelocitySpaceValue = velocitySpace_[left+100][right+100];
 	  biggestVelocitySpaceRadius = (left * left) + (right * right);
 	  biggestVelocitySpaceValueVelocity = Vector2d(left,right);
+	  found = true;
 	  
         }
       }
     }
 
+    if(found==false) {
+      if(minLeft_ < 0) {
+	if(maxLeft_ < 0) {
+	  temp_left = maxLeft_;
+	}
+	else {
+	  temp_left = 0;
+	}
+      }
+      else {
+	temp_left = minLeft_;
+      }
+      if(minRight_ < 0) {
+	if(maxRight_ < 0) {
+	  temp_right = maxRight_;
+	}
+	else {
+	  temp_right = 0;
+	}
+      }
+      else {
+	temp_right = minRight_;
+      }
+
+      biggestVelocitySpaceValueVelocity = Vector2d(temp_left, temp_right);
+
+    }
+          
     setNewDynamicWindow(biggestVelocitySpaceValueVelocity);
 
     return biggestVelocitySpaceValueVelocity;
