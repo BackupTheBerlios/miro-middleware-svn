@@ -4,9 +4,9 @@
 //
 // (c) 2003
 // Department of Neural Information Processing, University of Ulm, Germany
-// 
+//
 // $Id$
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
 #ifndef FaulMotorConnection_h
 #define FaulMotorConnection_h
@@ -29,7 +29,7 @@ namespace FaulMotor
     typedef FaulTty::Connection Super;
 
   public:
-    Connection(ACE_Reactor * _reactor, 
+    Connection(ACE_Reactor * _reactor,
 	       FaulTty::EventHandler * _eventHandler,
 	       Consumer * _consumer);
     virtual ~Connection();
@@ -43,6 +43,8 @@ namespace FaulMotor
     void getSpeed();
     void getTicks();
     void setBefehl(char* befehl);
+    void setPos0(short pos);
+   void setPos1(short pos);
 
   protected:
     Consumer * consumer;

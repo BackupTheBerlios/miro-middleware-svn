@@ -46,7 +46,8 @@ namespace FaulTty
 
   {
     DBG(cout << "Constructing FaulTtyEventHandler." << endl);
-    lrbytes = 0; //init für die zwei daten wegen multiplexer
+    lrbytes=0; //init für die zwei daten wegen multiplexer
+    posinit = 0;
   }
 
   EventHandler::~EventHandler()
@@ -79,29 +80,44 @@ namespace FaulTty
     //msg->time() = ACE_OS::gettimeofday();
 
     if (lrbytes==0) {
-      posL=(long)atoi(buff);
-      lrbytes=1;
-    }
-    else {
-      posR=(long)atoi(buff);
-      lrbytes=0;
-      msg->setPos(posL,posR);
-      msg->time() = ACE_OS::gettimeofday();
-      //cout <<ACE_OS::gettimeofday()<< endl;
-      dispatchMessage();
-    }
+       posR=(long)atoi(buff);
+	if ((abs(posR-prePosR)<25000) or (posinit == 0))
+	{
+		lrbytes=0;
+		//cout << "byte1:  " << abs(posL-prePosL)<< endl;
+		prePosR=posR;
+		lrbytes=1;
+	}
+      }
+       else {
+	posL=(long)atoi(buff);
+	if ((abs(posL-prePosL)<25000) or (posinit ==0))
+	{
+		lrbytes=0;
+		//cout << "                                                                       byte2:  " << abs(posR-prePosR)<< endl;
+		msg->setPos(posL,posR);
+		msg->time() = ACE_OS::gettimeofday();
+		//cout <<ACE_OS::gettimeofday()<< endl;
+		//cout << "posL: " << posL << " PosR: " << posR << endl;
+		prePosL = posL;   //alte daten sichern fuer vergleich mit neuen werten
+		prePosR = posR;
+		posinit = 1;  // in bertieb
+		dispatchMessage();
+	}
 
-   
+       }
+
+
 
     //cout << "hab daten gelesen!!!!!!!" << bytes << "   " <<buff<< endl;
 
     DBG(cerr << "Read " << bytes << " bytes from FaulTty" << endl);
 
 
-	  
 
-    dispatchMessage();
-	
+
+	  //dispatchMessage();
+
     DBG(cout << "FaulTtyEventHandler: Done with select" << endl);
 
     return 0;
@@ -112,18 +128,18 @@ namespace FaulTty
   {
     Message* msg = (Message*) message_;
 
- 
+
     Super::dispatchMessage();
-    
+
   }
 
   // timer callback
   int
-  EventHandler::handle_timeout(const ACE_Time_Value &, const void *arg) 
+  EventHandler::handle_timeout(const ACE_Time_Value &, const void *arg)
   {
     DBG(cout << "FaulTtyEventHandler: handle timer event." << endl);
 
-   
+
     return 0;
   }
 
@@ -131,12 +147,12 @@ namespace FaulTty
   void
   EventHandler::parseSynchMessage(const Message& _message)
   {
-   
+
   }
 
-  void 
+  void
   EventHandler::initDevice()
   {
-  
+
   }
 };

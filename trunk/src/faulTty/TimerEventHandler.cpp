@@ -49,13 +49,14 @@ namespace FaulTty
   int
   TimerEventHandler::handle_timeout(const ACE_Time_Value &, const void *arg)
   {
-    
+    ACE_Time_Value ace_time;
     char buffer[10];
 
     strcpy(buffer,"0pos\r\n\0");
     Message speedMessageL(buffer); // build speed packet
     connection.writeMessage(speedMessageL);             // send it
-
+    ace_time.msec(5); //15 GEHT
+    ACE_OS::sleep(ace_time);
     strcpy(buffer,"1pos\r\n\0");
     Message speedMessageR(buffer); // build speed packet
     connection.writeMessage(speedMessageR);

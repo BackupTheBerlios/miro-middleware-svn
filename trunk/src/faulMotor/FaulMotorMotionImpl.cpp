@@ -67,7 +67,7 @@ namespace FaulMotor
 
     Miro::Guard guard(mutex_);
     setTargetVelocity(v);
-    //connection.setVelocity(0,0);
+    connection.setSpeed(0);
   }
 
   void
@@ -78,6 +78,16 @@ namespace FaulMotor
     Miro::Guard guard(mutex_);
     setTargetVelocity(vel);
 
+    //right_ = (targetVelocity_.translation)-((targetVelocity_.rotation*385)/2); //muss noch in parameterfile integriert werden
+    //left_ = (targetVelocity_.translation) - ((targetVelocity_.rotation*385)/2); //385 radabstand
+    left_ = vel.translation;
+    right_ = vel.translation;
+
+    int delta = (int) rint(vel.rotation * 385 * .5 /*.25*/ );
+
+    left_ -= delta;
+    right_ += delta;
+    connection.setSpeed(left_, right_);
     //connection.setSpeedRot(targetVelocity_.translation, rad2ticks(targetVelocity_.rotation));
   }
 

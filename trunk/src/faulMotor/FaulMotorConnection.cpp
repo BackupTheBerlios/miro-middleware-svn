@@ -44,6 +44,10 @@ namespace FaulMotor
     params_(Parameters::instance())
   { 
     DBG(cout << "Constructing FaulMotorConnection." << endl);
+    char buffer[20];
+    strcpy(buffer,"ac20\r\n\0");
+    Message speedMessage(buffer); // build speed packet
+    writeMessage(speedMessage);
   }
 
 
@@ -69,11 +73,12 @@ namespace FaulMotor
     char buffer[20];
 
     if (speed<10) {       // zum bremsen grosse beschl.
-	strcpy(buffer,"ac90\r\n\0");
+	strcpy(buffer,"ac20\r\n\0");
 	Message speedMessage(buffer); // build speed packet
     	writeMessage(speedMessage);
     }
 
+    speed = speed *4.2;//* 112;
     strcpy(buffer,"0v\0");
     sprintf(strbuff, "%d", speed);
     strcat(buffer, strbuff);
@@ -98,6 +103,8 @@ namespace FaulMotor
     char strbuff[20];
     char buffer[20];
 
+    speedR = speedR *4.2; //* 112;
+    speedL = speedL *4.2; // * 112;
     strcpy(buffer,"0v\0");
     sprintf(strbuff, "%d", speedL);
     strcat(buffer, strbuff);
@@ -149,6 +156,40 @@ namespace FaulMotor
 
     strcat(befehl,"\r\n\0");
     Message speedMessageR(befehl);
+    writeMessage(speedMessageR);
+  }
+
+  void
+  Connection::setPos0(short pos)
+  {
+    char buffer[10];
+    char strbuff[20];
+    if (pos ==0) {
+    	strcat(buffer,"ho");
+	}else{
+		strcpy(buffer,"0ho\0");
+    		sprintf(strbuff, "%d", pos);
+    		strcat(buffer, strbuff);
+    		strcat(buffer, "\r\n");
+	}
+    Message speedMessageR(buffer);
+    writeMessage(speedMessageR);
+  }
+
+  void
+  Connection::setPos1(short pos)
+  {
+    char buffer[10];
+    char strbuff[20];
+    if (pos ==0) {
+    	strcat(buffer,"ho");
+	}else{
+		strcpy(buffer,"1ho\0");
+    		sprintf(strbuff, "%d", pos);
+    		strcat(buffer, strbuff);
+    		strcat(buffer, "\r\n");
+	}
+    Message speedMessageR(buffer);
     writeMessage(speedMessageR);
   }
 

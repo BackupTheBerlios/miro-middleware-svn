@@ -61,6 +61,8 @@ namespace FaulTty
     int  buffPos;
     int  lrbytes;
     long posL, posR;
+    long prePosL, prePosR;
+    long posinit;
 
     unsigned char * writePtr;
 

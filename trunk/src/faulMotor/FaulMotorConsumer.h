@@ -16,6 +16,7 @@
 
 #include "miro/DevConsumer.h"
 #include "miro/MotionStatusC.h"
+#include <ace/OS.h>
 
 // forward declarations
 namespace Miro
@@ -34,18 +35,25 @@ namespace FaulMotor
   class Consumer : public Miro::DevConsumer
   {
     typedef Miro::DevConsumer Super;
-    
+
   public:
     Consumer(Miro::OdometryImpl * _pOdometry = NULL);
     ~Consumer();
 
     virtual void handleMessage(const Miro::DevMessage * _message);
+
   protected:
     FaulMotor::Parameters * params_;
     Miro::OdometryImpl * pOdometry_;
     Miro::MotionStatusIDL status_;
     short prevX, prevY;
-    long  prevPosL, prevPosR;
+    long  prevPosL, prevPosR;//, test1, test2;
+
+
+    //unsigned short bumpers_;
+    //int infrared_;
+    int init;
+    long prevSec, prevUsec;
   };
 };
 #endif
