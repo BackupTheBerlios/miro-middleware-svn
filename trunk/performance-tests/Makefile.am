@@ -24,8 +24,9 @@ endif
 
 if COND_SPARROW99
 sparrowdirs = \
-	can\
-	response
+	can \
+	response \
+	faul
 endif
 
 if COND_DEPRECATED
