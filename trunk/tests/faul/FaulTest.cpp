@@ -116,6 +116,7 @@ int main(int argc, char* argv[])
   short k, l;
   long uptimer;
   int i;
+  int stallId;
 
 
   // register Signal handler for Ctr+C
@@ -128,10 +129,17 @@ int main(int argc, char* argv[])
   cout << "updaterate? (usec) " << endl;
   cin >> uptimer;
   ACE_Time_Value tv(0,uptimer);
+  ACE_Time_Value t0(0,0);
+
    //ACE_Time_Value tv(0,15000);
 
 //  service.reactorTask.reactor()->schedule_timer(service.pTimerEventHandler, NULL, tv ,tv);
+/*
+    stallId = service.reactorTask.reactor()->schedule_Timer(service.pTimerEventHandler, NULL, t0, t0);
 
+
+
+    */
 
   service.reactorTask.open(NULL);
 
@@ -153,6 +161,8 @@ int main(int argc, char* argv[])
       cout << "Odo:__" << odoData << endl;
       */
       //service.connection.setSpeed(0);
+
+      //service.connection.setStallId(stallId);
       while(loop)
 	{
 	  cout << endl
