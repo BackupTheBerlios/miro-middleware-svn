@@ -40,6 +40,8 @@ main(int argc, char * argv[])
   ::Miro::Log::mask(0xFFFFFFFF);
   ::Miro::Log::level(::Miro::Log::MAX_DBG_LEVEL);
 
+  ::Miro::Log::init(argc, argv);
+
   cout << "Testing log levels\n";
   MIRO_LOG(LL_EMERGENCY,"MIRO_LOG LL_EMERGENCY");
   MIRO_LOG(LL_ALERT,"MIRO_LOG LL_ALERT");
