@@ -38,6 +38,7 @@ video_tomocsources = \
 	MainForm.cpp
 
 control_sources = \
+	VideoControlDialogImp.h \
 	QtVideoControl.cpp
 
 control_tomocsources = \
@@ -62,11 +63,12 @@ QtVideoControl_LDADD = \
 	-lmiro \
 	$(QT_LIBS)
 
-VideoControlTest_SOURCES = VideoControlTest.cpp VideoControlTestImpl.cpp
+VideoControlTest_SOURCES = VideoControlTest.cpp VideoControlTestImpl.cpp VideoControlTestImpl.h
 VideoControlTest_LDADD = -lTAO $(top_builddir)/lib/libmiroSvc.a -lmiroIDL -lmiro
 
 BUILT_SOURCES = $(video_tomocsources:.cpp=.moc.cpp) $(control_tomocsources:.cpp=.moc.cpp)
 CLEANFILES = $(BUILT_SOURCES)
+EXTRA_DIST = VideoControlDialog.ui
 
 all-local:
 	$(INSTALLPROGRAMS)
