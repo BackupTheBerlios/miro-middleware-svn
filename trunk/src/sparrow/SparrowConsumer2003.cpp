@@ -339,7 +339,7 @@ namespace Sparrow
 
       // Pan 2005 messages
     case CAN_R_PAN_TICKSPERDEG_2005:
-      MIRO_DBG(SPARROW, LL_NOTICE, "SparrowConsumer2003: Received pan calibration message.");
+      MIRO_LOG_OSTR(LL_NOTICE, "SparrowConsumer2003: Received Pan2005 calibration message - Ticks per degree: " << message.longData(0));
       connection_->setPanTicksPerDegree(message.longData(0));
       break;
 
@@ -348,7 +348,7 @@ namespace Sparrow
       break;
       
     case CAN_R_PAN_RESET_2005:
-      MIRO_DBG(SPARROW, LL_NOTICE, "SparrowConsumer2003: Received pan reset message.");
+      MIRO_LOG(LL_NOTICE, "SparrowConsumer2003: Received Pan2005 reset message.");
       // register timer handler for pan calibration query
       connection_->deferredQueryPanTicksPerDegree(ACE_Time_Value(5));
       break;
