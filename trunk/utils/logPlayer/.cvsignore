@@ -1,2 +1,4 @@
 LogPlayer
-LogPlayer.moc.cpp
+LogFile.moc.cpp
+MainForm.moc.cpp
+FileSet.moc.cpp
