@@ -276,7 +276,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/PositionS.i \
  $(MIRO_ROOT)/src/miro/VideoC.h \
  $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/miro/VideoS.i VideoDevice.h VideoFilter.h \
+ $(MIRO_ROOT)/src/miro/VideoS.i \
+ $(MIRO_ROOT)/src/miro/Synch.h VideoDevice.h VideoFilter.h \
  Parameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/BehaviourParameters.h VideoConsumer.h \
@@ -307,7 +308,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/PositionS.i \
  $(MIRO_ROOT)/src/miro/VideoC.h \
  $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/miro/VideoS.i VideoDevice.h VideoFilter.h \
+ $(MIRO_ROOT)/src/miro/VideoS.i \
+ $(MIRO_ROOT)/src/miro/Synch.h VideoDevice.h VideoFilter.h \
  Parameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/BehaviourParameters.h VideoConsumer.h \

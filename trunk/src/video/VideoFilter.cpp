@@ -47,6 +47,21 @@ namespace Video
     }
   }
 
+  bool 
+  Filter::active() const {
+    if (interface_ != NULL && interface_->connections() > 0)
+      return true;
+
+    // are any succerssors active?
+    FilterVector::const_iterator first, last = succ_.end();
+    for (first = succ_.begin(); first != last; ++first) {
+      if ((*first)->active()) {
+	return true;
+      }
+    }
+    return false;
+  }
+
   void
   Filter::finiTree()
   {
@@ -165,9 +180,11 @@ namespace Video
     // process successors
     FilterVector::const_iterator first, last = succ_.end();
     for (first = succ_.begin(); first != last; ++first) {
-      (*first)->acquireWriteBuffer();
-      (*first)->process();
-      (*first)->releaseWriteBuffer();
+      if ((*first)->active()) {
+	(*first)->acquireWriteBuffer();
+	(*first)->process();
+	(*first)->releaseWriteBuffer();
+      }
     }
 
     // release read buffer
@@ -175,6 +192,8 @@ namespace Video
 
     // process succerssors trees
     for (first = succ_.begin(); first != last; ++first)
-      (*first)->processFilterTree();
+      if ((*first)->active()) {
+	(*first)->processFilterTree();
+      }
   }
 };

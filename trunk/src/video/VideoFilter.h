@@ -60,6 +60,7 @@ namespace Video
     const Miro::ImageFormatIDL& outputFormat() const;
 
     bool inplace() const;
+    bool active() const;
     virtual void init(FilterParameters const *);
     virtual void fini();
     void finiTree();

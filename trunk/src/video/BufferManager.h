@@ -40,6 +40,7 @@ namespace Video
 		  unsigned char * _memory);
     ~BufferManager();
 
+    unsigned int buffers() const;
     unsigned char * bufferAddr(unsigned int _index);
     const ACE_Time_Value& bufferTimeStamp(unsigned int _index) const;
     void bufferTimeStamp(unsigned int _index, ACE_Time_Value const& _stamp);
@@ -64,6 +65,12 @@ namespace Video
     unsigned int currentBuffer_;
     BufferVector bufferStatus_;
   };
+
+  inline
+  unsigned int
+  BufferManager::buffers() const {
+    return buffers_;
+  }
 
   inline 
   unsigned char * 

@@ -12,6 +12,9 @@
 #define VideoImpl_h
 
 #include "miro/VideoS.h"
+#include "miro/Synch.h"
+
+#include <set>
 
 // forward declarartions
 namespace Video
@@ -35,6 +38,7 @@ namespace Miro
 	      Miro::ImageFormatIDL const & _format);
     virtual ~VideoImpl();
 
+    unsigned int connections() const;
     ::Video::BufferManager * bufferManager();
 
     virtual ImageHandleIDL * connect(CORBA::ULong& id) ACE_THROW_SPEC (());
@@ -52,6 +56,8 @@ namespace Miro
       ACE_THROW_SPEC ((EOutOfBounds, EDevIO, ETimeOut));
 
   protected:
+    typedef std::set<CORBA::ULong> ClientIdVector;
+
     Server& server_;
     ::Video::VideoInterfaceParameters const& params_;
     Miro::ImageFormatIDL format_;
@@ -60,6 +66,9 @@ namespace Miro
     unsigned char * pBufferArray_;
     ImageHandleIDL imageHandle_;
     ::Video::BufferManager * pBufferManager_;
+
+    mutable Mutex clientMutex_;
+    ClientIdVector clientId_;
 
     static CORBA::Long idCounter;
   };

@@ -125,7 +125,6 @@ namespace Video
     }
 
     throw Miro::Exception("Next current buffer not free.");
-
   }
 
   void

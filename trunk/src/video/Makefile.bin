@@ -111,6 +111,7 @@ $(BIN): $(STATIC_DEPS)
  $(MIRO_ROOT)/src/miro/VideoC.h \
  $(MIRO_ROOT)/src/miro/VideoC.i \
  $(MIRO_ROOT)/src/miro/VideoS.i \
+ $(MIRO_ROOT)/src/miro/Synch.h \
  $(MIRO_ROOT)/src/miro/Server.h \
  $(MIRO_ROOT)/src/miro/Client.h \
  $(MIRO_ROOT)/src/miro/Exception.h \

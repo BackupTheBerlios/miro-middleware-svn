@@ -82,56 +82,73 @@ namespace Miro
     shmdt(pBufferArray_);
     shmctl(imageHandle_.key, IPC_RMID, NULL);
   }
+
+  unsigned int
+  VideoImpl::connections() const
+  {
+    Guard guard(clientMutex_);
+    return clientId_.size();
+  }
   
   Miro::ImageHandleIDL *
   VideoImpl::connect(CORBA::ULong& _id) ACE_THROW_SPEC(())
   {
+    Guard guard(clientMutex_);
     _id = ++idCounter;
+    clientId_.insert(_id);
+
     return new Miro::ImageHandleIDL(imageHandle_);
   }
 
   void
-  VideoImpl::disconnect(CORBA::ULong /*_id*/) 
+  VideoImpl::disconnect(CORBA::ULong _id) 
     ACE_THROW_SPEC((EOutOfBounds))
   {
+    if (clientId_.erase(_id) == 0)
+      throw Miro::EOutOfBounds("Unregistered client id.");
   }
 
   TimeIDL
-  VideoImpl::acquireCurrentImage(CORBA::ULong /*_id*/, CORBA::ULong& _buffer) 
+  VideoImpl::acquireCurrentImage(CORBA::ULong _id, CORBA::ULong& _buffer) 
     ACE_THROW_SPEC((EOutOfBounds))
   {
     TimeIDL stamp;
 
+    Guard guard(clientMutex_);
+    if (clientId_.find(_id) == clientId_.end())
+      throw Miro::EOutOfBounds("Unregistered client id.");
+
     _buffer = pBufferManager_->acquireCurrentReadBuffer();
     timeA2C(pBufferManager_->bufferTimeStamp(_buffer), stamp);
-
-    cout << "got current image" << endl;
 
     return stamp;
   }
 
   TimeIDL
-  VideoImpl::acquireNextImage(CORBA::ULong /*_id*/, CORBA::ULong& _buffer) 
+  VideoImpl::acquireNextImage(CORBA::ULong _id, CORBA::ULong& _buffer) 
     ACE_THROW_SPEC((EOutOfBounds, ETimeOut))
   {
     TimeIDL stamp;
 
-    cout << "wait for next image" << endl;
+    Guard guard(clientMutex_);
+    if (clientId_.find(_id) == clientId_.end())
+      throw Miro::EOutOfBounds("Unregistered client id.");
 
     _buffer = pBufferManager_->acquireNextReadBuffer();
     timeA2C(pBufferManager_->bufferTimeStamp(_buffer), stamp);
-
-    cout << "got next image" << endl;
 
     return stamp;
   }
 
   void
-  VideoImpl::releaseImage(CORBA::ULong /*_id*/, CORBA::ULong _buffer)
+  VideoImpl::releaseImage(CORBA::ULong _id, CORBA::ULong _buffer)
     ACE_THROW_SPEC((EOutOfBounds))
   {
+    Guard guard(clientMutex_);
+    if (clientId_.find(_id) == clientId_.end())
+      throw Miro::EOutOfBounds("Unregistered client id.");
+
     pBufferManager_->releaseReadBuffer(_buffer);
-    cout << "released image" << endl;
   }
 
   SubImageDataIDL *
