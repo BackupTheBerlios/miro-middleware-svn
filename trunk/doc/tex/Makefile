@@ -121,7 +121,7 @@ manual: miro_manual.ps miro_manual.pdf
 
 clean:
 	$(MIRO_ROOT)/scripts/doclinks_delete.sh
-	-rm -f *.aux *.log *.ind *.idx *.ilg *.toc *.dvi *.bbl *.blg
+	-rm -f *.aux *.log *.ind *.idx *.ilg *.toc *.dvi *.bbl *.blg *.out
 	-rm -f latex_ref/*.tex latex_ref/*.eps latex_ref/*.log latex_ref/doxygen.sty latex_ref/Makefile
 #	-rmdir latex_ref
 #	-rm -f $(DOXYCONF)
