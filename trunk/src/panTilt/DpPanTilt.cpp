@@ -22,9 +22,11 @@
 
 #include <sstream>
 
+
 using Miro::ConfigDocument;
 using DpPanTilt::Parameters;
 using DpPanTilt::PanTiltServer;
+using std::endl;
 
 namespace DpPanTilt
 {
@@ -74,8 +76,8 @@ int main(int argc, char *argv[])
 
     if (Miro::Log::level() > 1) {
       std::stringstream s;
-      s << "  robot parameters:" << endl << *robotParameters << endl
-	<< "  pantilt paramters:" << endl << *params << endl;
+      s << "  robot parameters:" << endl << *robotParameters << std::endl
+	<< "  pantilt paramters:" << endl << *params << std::endl;
 
       MIRO_LOG_OSTR(LL_NOTICE, "Configuration:\n" << s);
     }

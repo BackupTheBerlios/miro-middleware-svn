@@ -13,6 +13,7 @@
 
 #include <ace/Log_Msg.h>
 #include <sstream>
+#include <cassert>
 
 // Macro definitions for logging and debug information
 //
