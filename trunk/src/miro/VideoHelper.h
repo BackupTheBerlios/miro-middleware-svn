@@ -47,6 +47,8 @@ namespace Miro
     /** Disconnects from the video object. */
     ~VideoConnection();
 
+    unsigned char const * bufferAddr(CORBA::ULong _index) const;
+    
   public:
     //! Pointer to the Video object connected to.
     Miro::Video_var video;
@@ -60,12 +62,18 @@ namespace Miro
      * This is NULL if the client is not colocated with the
      * VideoService on the same machine.
      */
-    unsigned char * memory;
+    unsigned char const * memory;
 
   private:
     //! Private copy constructor to avoid accidental usage.
     VideoConnection(VideoConnection const &) {}
   };
+
+  inline
+  unsigned char const *
+  VideoConnection::bufferAddr(CORBA::ULong _index) const {
+    memory + handle->offset[_index];
+  }
 
   //! Helper class for video image acquisition management.
   /**
@@ -100,7 +108,7 @@ namespace Miro
     ~VideoAcquireImage();
 
     //! Pointer to the acquired image.
-    unsigned char * buffer;
+    unsigned char const * buffer;
     //! Time stamp of the image.
     ACE_Time_Value time;
 
@@ -128,7 +136,7 @@ namespace Miro
       connection_.video->acquireCurrentImage(connection_.id, index_) :
       connection_.video->acquireNextImage(connection_.id, index_);
     timeC2A(t, this->time);
-    this->buffer = connection_.memory + connection_.handle->offset[index_];
+    this->buffer = connection_.bufferAddr(index_);
   }
 
   inline
