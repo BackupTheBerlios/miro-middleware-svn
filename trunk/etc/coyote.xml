@@ -285,7 +285,7 @@
 	    <parameter value="20" name="Offset" />
 	  </parameter>
 	  <parameter>
-	    <parameter value="500" name="MaxDistance" />
+	    <parameter value="400" name="MaxDistance" />
 	    <parameter value="30" name="MinDistance" />
 	    <parameter value="0.971" name="Scaling" />
 	    <parameter value="20" name="Offset" />
