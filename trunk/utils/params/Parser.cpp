@@ -220,6 +220,8 @@ bool Parser::startElement( const QString&,
 	}
 	else if (type == "std::string")
 	  fullDef = "\"" + def + "\"";
+ 	else if (type == "Miro::Angle")
+	  fullDef = "Miro::deg2Rad(" + def + ")";
  	else if (type == "angle")
 	  fullDef = "Miro::deg2Rad(" + def + ")";
 	else if (type == "char")
