@@ -140,7 +140,7 @@
       <config_parameter name="rangeMin" type="angle" measure="&deg;" default="0" />
       <config_parameter name="rangeMax" type="angle" measure="&deg;" default="0" />
     </config_item>
-    <config_item name="Camera::" parent="Config" final="true">
+    <config_item name="CameraControl" parent="Config" final="true">
       <config_parameter name="zoom" type="Miro::ZoomParameters"/>
       <config_parameter name="focus" type="Miro::FocusParameters"/>
       <config_parameter name="shutter" type="Miro::ShutterParameters"/>
