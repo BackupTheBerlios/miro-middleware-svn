@@ -52,8 +52,7 @@ sparrowdirs = \
 endif
 
 if COND_DEPRECATED
-deprecateddirs = \
-
+deprecateddirs = 
 endif
 
 if COND_PLAYER
