@@ -91,6 +91,8 @@ namespace Pioneer
       tactileDescription.group[0].sensor[i].beta = Miro::deg2Rad(tactileBeta[i]);
       tactileDescription.group[0].sensor[i].gamma = 0;
     }
+    camera=false;
+    cameraUpsideDown=false;
   }
 
   void
@@ -130,6 +132,22 @@ namespace Pioneer
 		n2 = n2.nextSibling();
 	      }
 	    }
+	    else if (n1.nodeName() == "Camera") {
+	      QDomText t = n2.toText();
+	      if (!t.isNull()) {
+		cout << "camera" << t.data() << endl;
+		if ((t.data()=="normal")||(t.data()=="yes")) {
+		  camera=true;
+		  cameraUpsideDown=false;
+		}
+		else if ((t.data()=="inverse") || (t.data()=="upsideDown")) {
+		  camera=true;
+		  cameraUpsideDown=true;
+		} else {
+		  camera=false;
+		}
+	      }
+	    }
 	  }
 	}
 	n1 = n1.nextSibling();
@@ -142,7 +160,13 @@ namespace Pioneer
   {
     ostr << static_cast<const Parameters::Super&>(desc) << endl
 	 << "sonar" << desc.sonarDescription << endl
-         << "motion " << endl << desc.motion << endl;
+	 << "tactile" << desc.tactileDescription << endl
+	 << "infrared" << desc.infraredDescription << endl
+	 << "motion" << endl << desc.motion << endl
+	 << "camera: ";
+    if (!desc.camera) ostr << "none" << endl;
+    else if (!desc.cameraUpsideDown) ostr << "normal mounted" << endl;
+    else ostr << "inverse mounted" << endl;
 
     return ostr;
   }

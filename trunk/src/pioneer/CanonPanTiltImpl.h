@@ -77,17 +77,19 @@ namespace Canon
     virtual void setWaitPosition(const Miro::PanTiltPositionIDL & dest) 
       throw(Miro::EOutOfBounds, Miro::EDevIO);
     virtual void setSpdAcc(const Miro::CanonPanTiltSpdAccIDL & dest)
-      throw(Miro::ETimeOut, Miro::EDevIO);
+      throw(Miro::ETimeOut, Miro::EDevIO, Miro::EOutOfBounds);
     virtual Miro::CanonPanTiltSpdAccIDL getSpdAcc()
       throw(Miro::EDevIO, Miro::ETimeOut);
     virtual Miro::CanonPanTiltLimitsIDL getLimits()
       throw(Miro::EDevIO, Miro::ETimeOut);
 
     Answer * getAnswer();
-    //    unsigned char * getAnswer();
     void addAnswer(unsigned char val);
-    void newAnswer();
     void checkAnswer() throw(Miro::EDevIO,Miro::EOutOfBounds);
+
+    //closes the connection and returns control to Remote Controller
+    void done();
+
 
   protected:
     Answer * pAnswer;
@@ -101,28 +103,24 @@ namespace Canon
     double tiltPulseRatio;
     double currentPan;
     double currentTilt;
+    double panMinSpeed;
+    double panMaxSpeed;
+    double tiltMinSpeed;
+    double tiltMaxSpeed;
+    double minPan;
+    double maxPan;
+    double minTilt;
+    double maxTilt;
     bool upsideDown;
-
-    //    unsigned char answer[20];
-    //    int answerIndex;
-    //    bool answerValid;
 
     double getPanPulseRatio();
     double getTiltPulseRatio();
     void initialize();
+    void waitInitialize(bool force=false,bool forceWait=false);
 
   };
 
   inline Answer* CanonPanTiltImpl::getAnswer() {return pAnswer;}
-  //  inline unsigned char * CanonPanTiltImpl::getAnswer() {return answer;}
-
-  inline void CanonPanTiltImpl::newAnswer() {
-    cout << "new answer" << endl;
-    connection.getCamera(0); //flush buffers
-    //  answerValid=false; 
-    //    answerIndex=0; 
-    pAnswer->init();
-  }
 };
 
 #endif

@@ -38,6 +38,8 @@ namespace Pioneer
     Miro::ScanDescriptionIDL sonarDescription;
     Miro::ScanDescriptionIDL tactileDescription;
     Miro::ScanDescriptionIDL infraredDescription;
+    bool camera;
+    bool cameraUpsideDown;
 
     friend
     std::ostream&

@@ -65,7 +65,10 @@ namespace Pioneer
     Miro::OdometryImpl * pOdometry;
     Miro::BatteryImpl * pBattery;
     Pioneer::StallImpl * pStall;
+    //public:
+    //must be public in order for the connection to close the camera
     Canon::CanonPanTiltImpl * pCanonPanTilt;
+    //protected:
     Canon::Answer *pAnswer;
     
 

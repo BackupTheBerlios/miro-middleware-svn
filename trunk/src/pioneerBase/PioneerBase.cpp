@@ -47,7 +47,13 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   battery(),
 
   // Pioneer board initialization
-  pPioneerConsumer(new Pioneer::Consumer(&sonar, &tactile, &odometry, &battery,NULL,&canonPanTilt)),
+  pPioneerConsumer(new Pioneer::Consumer(&sonar, 
+					 &tactile, 
+					 &odometry, 
+					 &battery,
+					 NULL, //stall
+					 //only add the camera if really present
+					 (Pioneer::Parameters::instance()->camera?&canonPanTilt:NULL))),
   pPsosEventHandler(new Psos::EventHandler(pPioneerConsumer, pioneerConnection)),
   pioneerConnection(reactorTask.reactor(), pPsosEventHandler, pPioneerConsumer),
 
@@ -56,7 +62,7 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   stall(/*pioneerConnection*/),
   sonar(Pioneer::Parameters::instance()->sonarDescription, &structuredPushSupplier_),
   tactile(Pioneer::Parameters::instance()->tactileDescription, &structuredPushSupplier_),
-  canonPanTilt(pioneerConnection, *pPioneerConsumer)
+  canonPanTilt(pioneerConnection, *pPioneerConsumer,Pioneer::Parameters::instance()->cameraUpsideDown)
 {
   pOdometry = odometry._this();
   pMotion = motion._this();
@@ -73,7 +79,10 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   addToNameService(pTactile.in(), "Tactile");
   addToNameService(pBattery.in(), "Battery");
   addToNameService(ec_.in(), "EventChannel");
-  addToNameService(pCanonPanTilt.in(), "PanTilt");
+
+  //only add the pantilt if the camera is actually present
+  if (Pioneer::Parameters::instance()->camera)
+    addToNameService(pCanonPanTilt.in(), "PanTilt");
 
   // start the asychronous consumer listening for the hardware
   reactorTask.open(0);

@@ -56,6 +56,14 @@ namespace Canon
     tiltPulseRatio(0.1125),
     currentPan(0),
     currentTilt(0),
+    panMinSpeed(-1),
+    panMaxSpeed(-1),
+    tiltMinSpeed(-1),
+    tiltMaxSpeed(-1),
+    minPan(-1e10),
+    maxPan(-1e10),
+    minTilt(-1e10),
+    maxTilt(-1e10),
     upsideDown(_upsideDown)
   {
     DBG(cout << "Constructing CanonPanTiltImpl" << endl);
@@ -64,6 +72,11 @@ namespace Canon
   CanonPanTiltImpl::~CanonPanTiltImpl()
   {
     DBG(cout << "Destructing CanonPanTiltImpl" << endl);
+  }
+
+  void
+  CanonPanTiltImpl::done() 
+  {
     Canon::Message msg(LOCAL_CONTROL_MODE,0x31);
     connection.sendCamera(msg);
   }
@@ -79,8 +92,10 @@ namespace Canon
   CanonPanTiltImpl::setPan(double angle) throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
     Miro::PanTiltPositionIDL dest;
+    //if camera is inverse mounted, change sign for current saved value
+    //as it will be changed again on setPosition
     dest.panvalue=angle;
-    dest.tiltvalue=currentTilt;
+    dest.tiltvalue=(upsideDown?-currentTilt:currentTilt);
     setPosition(dest);
   }
   
@@ -99,7 +114,9 @@ namespace Canon
   CanonPanTiltImpl::setTilt(double angle) throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
     Miro::PanTiltPositionIDL dest;
-    dest.panvalue=currentPan;
+    //if camera is inverse mounted, change sign for current saved value
+    //as it will be changed again on setPosition
+    dest.panvalue=(upsideDown?-currentPan:currentPan);
     dest.tiltvalue=angle;
     setPosition(dest);
   }
@@ -121,20 +138,7 @@ namespace Canon
     Miro::PanTiltPositionIDL result;
     bool done=false;
 
-    if (!initialized) {
-      initialize();
-      do {
-	done=true;
-	try {
-	  waitCompletion(); //wait until initialization is done
-	}
-	catch (Miro::EDevIO & e) {
-	  // avoid "mode" errors
-	  done=false;
-	}
-      } while(!done);
-    }
-    done=false;
+    waitInitialize();
 
     Canon::Message getPanTilt(PAN_TILT_GET_POSITION);
     
@@ -156,6 +160,13 @@ namespace Canon
     }
     result.panvalue=deg2Rad(double(str2int(pAnswer->parameter(),4)-0x8000)*panPulseRatio);
     result.tiltvalue=deg2Rad(double(str2int(pAnswer->parameter()+4,4)-0x8000)*tiltPulseRatio);
+
+    if (upsideDown) {
+      //if inverse mounting, switch directions
+      result.panvalue=-result.panvalue;
+      result.tiltvalue=-result.tiltvalue;
+    }
+
     return result;
   }
 
@@ -163,24 +174,13 @@ namespace Canon
   CanonPanTiltImpl::setPosition(const Miro::PanTiltPositionIDL & dest) throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
     bool done=false;
-    double panTmp,tiltTmp; //to reset value in case of error
+    double panTmp=currentPan,tiltTmp=currentTilt; //to reset value in case of error
 
-    if (!initialized) {
-      initialize();
-      do {
-	done=true;
-	try {
-	  waitCompletion(); //wait until initialization is done
-	}
-	catch (Miro::EDevIO & e) {
-	  // avoid "mode" errors
-	  done=false;
-	}
-      } while(!done);
-    }
-    done=false;
-    currentPan=dest.panvalue;
-    currentTilt=dest.tiltvalue;
+    waitInitialize();
+
+    //if camera in inverse position, change sign for pan/tilt
+    currentPan=dest.panvalue*(upsideDown?-1:1);
+    currentTilt=dest.tiltvalue*(upsideDown?-1:1);
     
     char angleASCII[9];
     Canon::Message panTiltValue(PAN_TILT_SET_POSITION,
@@ -241,10 +241,15 @@ namespace Canon
     goal.panvalue=currentPan;
     goal.tiltvalue=currentTilt;
 
+    //if the camera is inverse mounted, must change the sign
+    if (upsideDown) {
+      goal.panvalue=-goal.panvalue;
+      goal.tiltvalue=-goal.tiltvalue;
+    }
+
     do {
       //test if finished
       dest=getPosition();
-      cout << "." << endl;
     } while ((fabs(goal.panvalue-dest.panvalue)>0.01)||(fabs(goal.tiltvalue-dest.tiltvalue)>0.01));
       //0.01 rad tolerance (aprox 0.6 deg)
   }
@@ -257,22 +262,117 @@ namespace Canon
   }
   
   void
-  CanonPanTiltImpl::setSpdAcc(const CanonPanTiltSpdAccIDL & dest) throw(Miro::ETimeOut, Miro::EDevIO)
+  CanonPanTiltImpl::setSpdAcc(const CanonPanTiltSpdAccIDL & dest) throw(Miro::ETimeOut, Miro::EDevIO, Miro::EOutOfBounds)
   {
+    waitInitialize();
+    int panspeed,tiltspeed;
 
-    //TODO
-    if (!initialized) initialize();
+    panspeed=int(rad2Deg(dest.targetpanspeed)/panPulseRatio);
+    tiltspeed=int(rad2Deg(dest.targettiltspeed)/tiltPulseRatio);
+    
+    char tmp[4];
 
-    int i=(int)dest.targetpanspeed;
-    i++; //really useless...
+    Message setPanSpeed(SET_PAN_SPEED,int2str(tmp,panspeed,3));
+    Message setTiltSpeed(SET_TILT_SPEED,int2str(tmp,tiltspeed,3));
+
+    pAnswer->init();
+    connection.sendCamera(setPanSpeed);
+    //wait for completion
+    checkAnswer();
+
+    pAnswer->init();
+    connection.sendCamera(setTiltSpeed);
+    //wait for completion
+    checkAnswer();
+
   }
   
   CanonPanTiltSpdAccIDL 
   CanonPanTiltImpl::getSpdAcc() throw(Miro::EDevIO, Miro::ETimeOut)
   {
-    //TODO
     CanonPanTiltSpdAccIDL result;
     if (!initialized) initialize();
+
+    Message getPanSpeed(GET_PAN_SPEED,0x30);
+    Message getTiltSpeed(GET_TILT_SPEED,0x31);
+    Message minPanSpeed(GET_PAN_MIN_SPEED,0x30);
+    Message maxPanSpeed(GET_PAN_MAX_SPEED,0x31);
+    Message minTiltSpeed(GET_TILT_MIN_SPEED,0x32);
+    Message maxTiltSpeed(GET_TILT_MAX_SPEED,0x33);
+
+    pAnswer->init();
+    connection.sendCamera(getPanSpeed);
+    //wait for error code completion
+    while (!pAnswer->errorCode()) usleep(1000);
+    //get the rest
+    if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
+    checkAnswer(); //wait for completion
+    result.targetpanspeed=deg2Rad(double(str2int(pAnswer->parameter(),3))*panPulseRatio);
+
+    pAnswer->init();
+    connection.sendCamera(getTiltSpeed);
+    //wait for error code completion
+    while (!pAnswer->errorCode()) usleep(1000);
+    //get the rest
+    if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
+    checkAnswer(); //wait for completion
+    result.targettiltspeed=deg2Rad(double(str2int(pAnswer->parameter(),3))*tiltPulseRatio);
+
+
+    if (panMinSpeed<0) {
+      //if not initialized, get it from the camera;
+      pAnswer->init();
+      connection.sendCamera(minPanSpeed);
+      //wait for error code completion
+      while (!pAnswer->errorCode()) usleep(1000);
+      //get the rest
+      if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
+      checkAnswer(); //wait for completion
+      panMinSpeed=deg2Rad(double(str2int(pAnswer->parameter(),3))*panPulseRatio);
+    }
+    result.panminspeed=panMinSpeed;
+ 
+    if (tiltMinSpeed<0) {
+      //if not initialized, get it from the camera
+      pAnswer->init();
+      connection.sendCamera(minTiltSpeed);
+      //wait for error code completion
+      while (!pAnswer->errorCode()) usleep(1000);
+      //get the rest
+      if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
+      checkAnswer(); //wait for completion
+      tiltMinSpeed=deg2Rad(double(str2int(pAnswer->parameter(),3))*tiltPulseRatio);
+    }
+    result.tiltminspeed=tiltMinSpeed;
+
+
+    if (panMaxSpeed<0) {
+      //if not initialized, get it from the camera
+      pAnswer->init();
+      connection.sendCamera(maxPanSpeed);
+      //wait for error code completion
+      while (!pAnswer->errorCode()) usleep(1000);
+      //get the rest
+      if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
+      checkAnswer(); //wait for completion
+      panMaxSpeed=deg2Rad(double(str2int(pAnswer->parameter(),3))*panPulseRatio);
+    }
+    result.panmaxspeed=panMaxSpeed;
+
+    if (tiltMaxSpeed<0) {
+      //if not initialized, get it from the camera
+      pAnswer->init();
+      connection.sendCamera(maxTiltSpeed);
+      //wait for error code completion
+      while (!pAnswer->errorCode()) usleep(1000);
+      //get the rest
+      if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
+      checkAnswer(); //wait for completion
+      tiltMaxSpeed=deg2Rad(double(str2int(pAnswer->parameter(),3))*tiltPulseRatio);
+    }
+    result.tiltmaxspeed=tiltMaxSpeed;
+
+    waitInitialize(false,true); //don't force reinit but wait
 
     return result;
   }
@@ -283,6 +383,66 @@ namespace Canon
     CanonPanTiltLimitsIDL result;
     if (!initialized) initialize();
 
+    Message getMinPan(GET_ANGLE_LIMITS,0x30);
+    Message getMaxPan(GET_ANGLE_LIMITS,0x31);
+    Message getMinTilt(GET_ANGLE_LIMITS,0x32);
+    Message getMaxTilt(GET_ANGLE_LIMITS,0x33);
+
+    if (minPan<=-1e10) {
+      //if not initialized, get it from the camera;
+      pAnswer->init();
+      connection.sendCamera(getMinPan);
+      //wait for error code completion
+      while (!pAnswer->errorCode()) usleep(1000);
+      //get the rest
+      if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
+      checkAnswer(); //wait for completion
+      minPan=deg2Rad(double(str2int(pAnswer->parameter(),4)-0x8000)*panPulseRatio);
+    }
+ 
+    if (minTilt<=-1e10) {
+      //if not initialized, get it from the camera
+      pAnswer->init();
+      connection.sendCamera(getMinTilt);
+      //wait for error code completion
+      while (!pAnswer->errorCode()) usleep(1000);
+      //get the rest
+      if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
+      checkAnswer(); //wait for completion
+      minTilt=deg2Rad(double(str2int(pAnswer->parameter(),4)-0x8000)*tiltPulseRatio);
+    }
+
+    if (maxPan<=-1e10) {
+      //if not initialized, get it from the camera
+      pAnswer->init();
+      connection.sendCamera(getMaxPan);
+      //wait for error code completion
+      while (!pAnswer->errorCode()) usleep(1000);
+      //get the rest
+      if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
+      checkAnswer(); //wait for completion
+      maxPan=deg2Rad(double(str2int(pAnswer->parameter(),4)-0x8000)*panPulseRatio);
+    }
+
+    if (maxTilt<=-1e10) {
+      //if not initialized, get it from the camera
+      pAnswer->init();
+      connection.sendCamera(getMaxTilt);
+      //wait for error code completion
+      while (!pAnswer->errorCode()) usleep(1000);
+      //get the rest
+      if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
+      checkAnswer(); //wait for completion
+      maxTilt=deg2Rad(double(str2int(pAnswer->parameter(),4)-0x8000)*tiltPulseRatio);
+    }
+
+    //if in inverse mounting, the max and min values must be switched
+    result.minpanposition=(upsideDown?-maxPan:minPan);
+    result.maxpanposition=(upsideDown?-minPan:maxPan);
+    result.mintiltposition=(upsideDown?-maxTilt:minTilt);
+    result.maxtiltposition=(upsideDown?-minTilt:maxTilt);
+
+    waitInitialize(false,true); //don't force reinit but wait
     return result;
   }
   
@@ -307,7 +467,6 @@ namespace Canon
     checkAnswer();
 
     panPulseRatio=double(str2int(pAnswer->parameter(),4))/100000.0;
-    //    DBG(cout << "[CanonPanTilt] New pan Pulse Ratio=" << panPulseRatio << endl;)
 
     return panPulseRatio;
   }
@@ -330,7 +489,6 @@ namespace Canon
     checkAnswer();
 
     tiltPulseRatio=double(str2int(pAnswer->parameter(),4))/100000.0;
-    //    DBG(cout << "[CanonPanTilt] New tilt Pulse Ratio=" << tiltPulseRatio << endl;)
     
     return tiltPulseRatio;
   }
@@ -343,17 +501,47 @@ namespace Canon
       pAnswer->init();
       connection.sendCamera(msg);
       checkAnswer();
-      getPanPulseRatio();
-      getTiltPulseRatio();
     }
     Canon::Message initMsg(INITIALIZE1,0x030);
     pAnswer->init();
     connection.sendCamera(initMsg);
     checkAnswer();
+    if (!initialized) {
+      getPanPulseRatio();
+      getTiltPulseRatio();
+    }
     initialized=true;
   }
   
-  void CanonPanTiltImpl::addAnswer(unsigned char val)
+  void
+  CanonPanTiltImpl::waitInitialize(bool force,bool forceWait)
+  {
+    bool done;
+    
+    //if it is already initialized,
+    //   no reinitialization asked
+    //   and no need to wait
+    // then exit
+    if (!forceWait&&!force&&initialized) return;
+
+    //initialize only if not initialized
+    //or asked for initialization
+    if (force||!initialized) initialize();
+    do {
+      done=true;
+      try {
+	usleep(1000);
+	waitCompletion(); //wait until initialization is done
+      }
+      catch (Miro::EDevIO & e) {
+	// avoid "mode" errors
+	done=false;
+      }
+    } while(!done);
+  }
+
+  void 
+  CanonPanTiltImpl::addAnswer(unsigned char val)
   {
     pAnswer->add(val);
   }

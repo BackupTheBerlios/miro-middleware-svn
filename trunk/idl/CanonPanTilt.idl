@@ -22,14 +22,10 @@ module Miro
     double     targetpanspeed;
     //! Target tilt speed value in rad/s.
     double     targettiltspeed;
-    //! Base pan speed value in rad/s.
-    double     panbasespeed;
     //! Minimum pan speed value in rad/s.
     double     panminspeed;
     //! Maximum pan speed value in rad/s.
     double     panmaxspeed;
-    //! Base tilt speed value in rad/s.
-    double     tiltbasespeed;
     //! Minimum tilt speed value in rad/s.
     double     tiltminspeed;
     //! Maximum tilt speed value in rad/s.
@@ -68,7 +64,7 @@ module Miro
 
     //! Set the actual speed and acceleration settings.
     void setSpdAcc( in CanonPanTiltSpdAccIDL dest )
-      raises(Miro::EDevIO, Miro::ETimeOut);
+      raises(Miro::EDevIO, Miro::ETimeOut, Miro::EOutOfBounds);
 
     //! Query the current speed and acceleration setting.
     /**

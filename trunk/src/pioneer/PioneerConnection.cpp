@@ -15,6 +15,7 @@
 #include "PioneerConnection.h"
 #include "PioneerConsumer.h"
 #include "PioneerParameters.h"
+#include "CanonPanTiltImpl.h"
 
 #include "psos/PsosMessage.h"
 
@@ -56,6 +57,9 @@ namespace Pioneer
   Connection::~Connection()
   { 
     DBG(cout << "Destructing PioneerConnection." << endl);
+
+    //if there is a camera, close the connection
+    if (consumer->pCanonPanTilt!=NULL) consumer->pCanonPanTilt->done();
   }
 
   //-------------------//

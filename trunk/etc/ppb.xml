@@ -84,6 +84,7 @@
 
     <!-- There are infrareds just as well -->
 
+      <Camera>inverse</Camera> <!-- The camera is mounted the wrong way...-->
     </pioneerBoard>
   </Pioneer1>
   <B21> <!-- TODO: this is a missleading Tag -->
