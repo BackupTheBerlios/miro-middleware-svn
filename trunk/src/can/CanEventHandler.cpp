@@ -74,18 +74,19 @@ namespace Can
        canmsg * msg;
        msg_->canMessage((int **) &msg);
        count = ACE_OS::read(fd, msg, sizeof(canmsg));
+
+      if (count == 0) {
+        MIRO_LOG(LL_WARNING,
+                 "Can::EventHandler: handle_input() called with no data!");
+       return 0;
+      }
+
        if (count != sizeof(canmsg)) {
          MIRO_LOG_OSTR(LL_ERROR,
 		       "Can::EventHandler: read() != sizeof(canmsg): " <<
 		       count << " != " << sizeof(canmsg));
          return 0;
        }
-    }
-
-    if (count == 0) {
-      MIRO_LOG(LL_WARNING,
-	       "Can::EventHandler: handle_input() called with no data!");
-      return 0;
     }
 
     msg_->time() = ACE_OS::gettimeofday(); // set time stamp
