@@ -2,6 +2,10 @@
 #include "miro/SphinxSpeechC.h"
 #include "miro/TimeHelper.h"
 
+#include <string>
+
+using std::string;
+
 int
 main(int argc, char **argv)
 {
