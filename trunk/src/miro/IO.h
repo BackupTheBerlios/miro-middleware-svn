@@ -74,6 +74,15 @@ namespace Miro
   OSTR_OPERATOR_DECL(RangeBunchEventIDL);
   OSTR_OPERATOR_DECL(RangeGroupEventIDL);
   OSTR_OPERATOR_DECL(RangeScanEventIDL);
+
+  OSTR_OPERATOR_DECL(FieldStrengthIDL);
+  OSTR_OPERATOR_DECL(InclinationIDL);
+
+  OSTR_OPERATOR_DECL(CompassEventIDL);
+  OSTR_OPERATOR_DECL(InclinometerEventIDL);
+  OSTR_OPERATOR_DECL(MagnetometerEventIDL);
+  OSTR_OPERATOR_DECL(ThermometerEventIDL);
+  OSTR_OPERATOR_DECL(TCM2EventIDL);
 }
 
 #endif

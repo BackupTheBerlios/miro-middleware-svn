@@ -68,6 +68,23 @@
       <config_parameter name="wheelBase" type="long" default="400" measure="mm" />
     </config_item>
 
+    <config_item name="Inclinometer" final="false">
+      <config_parameter name="minPitch" type="angle" default="-180" measure="&deg;" />
+      <config_parameter name="maxPitch" type="angle" default="180" measure="&deg;" />
+      <config_parameter name="minRoll" type="angle" default="-180" measure="&deg;" />
+      <config_parameter name="maxRoll" type="angle" default="180" measure="&deg;" />
+    </config_item>
+
+    <config_item name="Magnetometer" final="false">
+      <config_parameter name="minFieldStrength" type="double" default="-80" measure="&micro;T" />
+      <config_parameter name="maxFieldStrength" type="double" default="80" measure="&micro;T" />
+    </config_item>
+
+    <config_item name="Thermometer" final="false">
+      <config_parameter name="minTemperature" type="double" default="-20" measure="&deg;C" />
+      <config_parameter name="maxTemperature" type="double" default="70" measure="&deg;C" />
+    </config_item>
+
   </config_group>
 
   <config_group name="Miro">

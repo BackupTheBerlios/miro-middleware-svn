@@ -20,6 +20,13 @@
 #include "idl/MotionStatusC.h"
 #include "idl/RangeEventC.h"
 #include "idl/PanTiltC.h"
+#include "idl/FieldStrengthC.h"
+#include "idl/InclinationC.h"
+#include "idl/CompassEventC.h"
+#include "idl/InclinometerEventC.h"
+#include "idl/MagnetometerEventC.h"
+#include "idl/ThermometerEventC.h"
+#include "idl/TCM2EventC.h"
 
 #include "Angle.h"
 #include "TimeHelper.h"
@@ -237,6 +244,59 @@ namespace Miro
   {
     ostr << rhs.time << std::endl 
 	 << rhs. range;
+    return ostr;
+  }
+
+  std::ostream &
+  operator<<(std::ostream &ostr, const FieldStrengthIDL &rhs) 
+  {
+    ostr << "(" << rhs.x << "," << rhs.y << "," << rhs.z << ")";
+    return ostr;
+  }
+
+  std::ostream &
+  operator<<(std::ostream &ostr, const InclinationIDL &rhs) 
+  {
+    ostr << "(" << rad2Deg(rhs.pitch) << "°," << rad2Deg(rhs.roll) << "°)";
+    return ostr;
+  }
+
+  std::ostream &
+  operator<<(std::ostream &ostr, const CompassEventIDL &rhs)
+  {
+    ostr << rhs.time << " " << rad2Deg(rhs.heading) << "°";
+    return ostr;
+  }
+
+  std::ostream &
+  operator<<(std::ostream &ostr, const InclinometerEventIDL &rhs)
+  {
+    ostr << rhs.time << " " << rhs.inclination;
+    return ostr;
+  }
+
+  std::ostream &
+  operator<<(std::ostream &ostr, const MagnetometerEventIDL &rhs)
+  {
+    ostr << rhs.time << " " << rhs.fieldstrength;
+    return ostr;
+  }
+
+  std::ostream &
+  operator<<(std::ostream &ostr, const ThermometerEventIDL &rhs)
+  {
+    ostr << rhs.time << " " << rhs.temperature << "°C";
+    return ostr;
+  }
+
+  std::ostream &
+  operator<<(std::ostream &ostr, const TCM2EventIDL &rhs)
+  {
+    ostr << rhs.time << " ";
+    ostr << rad2Deg(rhs.heading) << "° ";
+    ostr << rhs.inclination << " ";
+    ostr << rhs.fieldstrength << "µT ";
+    ostr << rhs.temperature << "°C";
     return ostr;
   }
 }

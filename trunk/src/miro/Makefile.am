@@ -119,7 +119,11 @@ sources2 = \
 	MotionImpl.cpp \
 	DifferentialMotionImpl.cpp \
 	BatteryImpl.cpp \
-	BehaviourEngineImpl.cpp 
+	BehaviourEngineImpl.cpp \
+	CompassImpl.cpp \
+	InclinometerImpl.cpp \
+	MagnetometerImpl.cpp \
+	ThermometerImpl.cpp
 
 libmiroSvc_a_SOURCES = $(sources2)
 
