@@ -8,6 +8,7 @@
     <imageSize>640 480</imageSize>
     <updateRate>10</updateRate>
     <displayRays>true</displayRays>
+    <renderMethod>glx</renderMethod>
   </model:ObserverCam>
 
   <model:GroundPlane>
@@ -26,6 +27,7 @@
     <model:SonyVID30>
       <id>camera2</id>
       <xyz>0 0 0.0</xyz>
+      <renderMethod>glx</renderMethod>
     </model:SonyVID30>
   </model:Pioneer2DX>
 
@@ -41,6 +43,7 @@
     <model:SonyVID30>
       <id>camera1</id>
       <xyz>0 0 0.2</xyz>
+      <renderMethod>glx</renderMethod>
     </model:SonyVID30>
   </model:Pioneer2DX>
 
