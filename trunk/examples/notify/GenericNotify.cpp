@@ -72,17 +72,21 @@ main(int argc, char *argv[])
   Miro::Server server(argc, argv);
 
   if (argc < 2) {
-    cout << "usage: " << argv[0] << " <TypeName>" << endl;
+    cout << "usage: " << argv[0] << " <TypeName> [DomainName]" << endl;
     return 1;
   }
     
+  std::string domainName = server.namingContextName;
+  if (argc > 2)
+    domainName = argv[2];
+  
   try {
     // The one channel that we create using the factory.
     EventChannel_var ec(server.resolveName<EventChannel>("EventChannel"));
     
     // The consumer, that gets the events
     GenericNotify pushConsumer(ec.in(), 
-			       server.namingContextName.c_str(),
+			       domainName.c_str(),
 			       argv[1]);
     
     cout << "Loop forever handling events." << endl;
