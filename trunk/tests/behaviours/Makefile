@@ -105,8 +105,8 @@ PriorityArbitersTest.cpp PolicyParsingTest.cpp BehaviourEngineTest.cpp DynamicPo
 .obj/DummyBehaviourC.o .obj/DummyBehaviourC.so .shobj/DummyBehaviourC.o .shobj/DummyBehaviourC.so: DummyBehaviourC.cpp Parameters.h \
  $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h DummyBehaviourC.h \
- $(MIRO_ROOT)/src/miro/TimedBehaviour.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
+ DummyBehaviourC.h $(MIRO_ROOT)/src/miro/TimedBehaviour.h \
  $(MIRO_ROOT)/src/miro/Behaviour.h \
  $(MIRO_ROOT)/src/miro/DynamicWindow.h \
  $(MIRO_ROOT)/src/miro/ActionPattern.h \

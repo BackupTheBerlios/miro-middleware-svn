@@ -87,7 +87,8 @@ realclean: clean
  $(MIRO_ROOT)/src/miro/WorldPointC.i \
  $(MIRO_ROOT)/src/miro/PositionC.i \
  $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/video/VideoDevice.h
+ $(MIRO_ROOT)/src/miro/VideoHelper.h \
+ $(MIRO_ROOT)/src/miro/TimeHelper.h
 
 .obj/MainForm.moc.o .obj/MainForm.moc.so .shobj/MainForm.moc.o .shobj/MainForm.moc.so: MainForm.moc.cpp MainForm.h \
  $(MIRO_ROOT)/src/miro/Client.h \

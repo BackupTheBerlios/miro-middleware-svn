@@ -133,7 +133,33 @@ Parameters.cpp: Parameters.xml
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/BehaviourParameters.h
 
+.obj/MoveToPoint.o .obj/MoveToPoint.so .shobj/MoveToPoint.o .shobj/MoveToPoint.so: MoveToPoint.cpp MoveToPoint.h \
+ $(MIRO_ROOT)/src/miro/EventBehaviour.h \
+ $(MIRO_ROOT)/src/miro/Behaviour.h \
+ $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
+ $(MIRO_ROOT)/src/miro/DynamicWindow.h \
+ $(MIRO_ROOT)/src/miro/ActionPattern.h \
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/Policy.h \
+ $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
+ $(MIRO_ROOT)/src/miro/Arbiter.h \
+ $(MIRO_ROOT)/src/miro/StructuredPushConsumer.h Parameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.i \
+ $(MIRO_ROOT)/src/miro/PositionC.i \
+ $(MIRO_ROOT)/src/miro/VelocityC.h \
+ $(MIRO_ROOT)/src/miro/VelocityC.i \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.i \
+ $(MIRO_ROOT)/src/miro/MotionArbiterMessage.h \
+ $(MIRO_ROOT)/src/miro/ArbiterMessage.h
+
 .obj/BehavioursFactory.o .obj/BehavioursFactory.so .shobj/BehavioursFactory.o .shobj/BehavioursFactory.so: BehavioursFactory.cpp BehavioursFactory.h \
+ $(MIRO_ROOT)/src/miro/BAFactory.h \
  $(MIRO_ROOT)/src/miro/MotionC.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.i \
@@ -159,7 +185,10 @@ Parameters.cpp: Parameters.xml
  $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
  $(MIRO_ROOT)/src/miro/MotionArbiterMessage.h \
  $(MIRO_ROOT)/src/miro/ArbiterMessage.h \
- $(MIRO_ROOT)/src/miro/StructuredPushSupplier.h TactileStop.h \
+ $(MIRO_ROOT)/src/miro/StructuredPushSupplier.h \
+ $(MIRO_ROOT)/src/miro/Server.h \
+ $(MIRO_ROOT)/src/miro/Client.h \
+ $(MIRO_ROOT)/src/miro/Exception.h TactileStop.h \
  $(MIRO_ROOT)/src/miro/EventBehaviour.h \
  $(MIRO_ROOT)/src/miro/Behaviour.h \
  $(MIRO_ROOT)/src/miro/DynamicWindow.h \
@@ -167,10 +196,6 @@ Parameters.cpp: Parameters.xml
  $(MIRO_ROOT)/src/miro/Policy.h \
  $(MIRO_ROOT)/src/miro/StructuredPushConsumer.h Parameters.h \
  Straight.h $(MIRO_ROOT)/src/miro/TimedBehaviour.h Wander.h \
- Timer.h $(MIRO_ROOT)/src/miro/Server.h \
- $(MIRO_ROOT)/src/miro/Client.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/BehaviourRepository.h \
- $(MIRO_ROOT)/src/miro/ArbiterRepository.h
+ Timer.h MoveToPoint.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

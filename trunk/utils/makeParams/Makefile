@@ -59,6 +59,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 
 .obj/MakeParams.o .obj/MakeParams.so .shobj/MakeParams.o .shobj/MakeParams.so: MakeParams.cpp ../params/Parser.h ../params/Class.h \
- ../params/Parameter.h ../params/Generator.h
+ ../params/Parameter.h ../params/Generator.h \
+ ../params/TextErrorHandler.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

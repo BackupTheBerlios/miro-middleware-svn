@@ -72,4 +72,6 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 .obj/Generator.o .obj/Generator.so .shobj/Generator.o .shobj/Generator.so: Generator.cpp Generator.h Class.h Parameter.h
 
+.obj/TextErrorHandler.o .obj/TextErrorHandler.so .shobj/TextErrorHandler.o .shobj/TextErrorHandler.so: TextErrorHandler.cpp TextErrorHandler.h
+
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

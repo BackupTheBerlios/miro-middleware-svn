@@ -27,7 +27,7 @@ using namespace Miro;
 
 int parseArgs(int& argc, char* argv[])
 {
-  ACE_Get_Opt get_opts (argc, argv, "ri:v?");
+  ACE_Get_Opt get_opts (argc, argv, "rn:v?");
   
   int rc = 0;
   int c;

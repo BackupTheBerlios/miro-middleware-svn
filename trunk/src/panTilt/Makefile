@@ -74,27 +74,39 @@ $(BIN): $(STATIC_DEPS)
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
 
-.obj/DpPanTilt.o .obj/DpPanTilt.so .shobj/DpPanTilt.o .shobj/DpPanTilt.so: DpPanTilt.cpp DpPanTilt.h $(MIRO_ROOT)/src/miro/Server.h \
- $(MIRO_ROOT)/src/miro/Client.h $(MIRO_ROOT)/src/miro/Exception.h \
+.obj/DpPanTilt.o .obj/DpPanTilt.so .shobj/DpPanTilt.o .shobj/DpPanTilt.so: DpPanTilt.cpp DpPanTilt.h \
+ $(MIRO_ROOT)/src/miro/Server.h \
+ $(MIRO_ROOT)/src/miro/Client.h \
+ $(MIRO_ROOT)/src/miro/Exception.h \
  $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- $(MIRO_ROOT)/src/miro/ReactorTask.h PanTiltImpl.h \
+ $(MIRO_ROOT)/src/miro/ReactorTask.h \
+ $(MIRO_ROOT)/src/miro/Thread.h PanTiltImpl.h \
  $(MIRO_ROOT)/src/miro/DirectedPerceptionPanTiltS.h \
- $(MIRO_ROOT)/src/miro/PanTiltS.h $(MIRO_ROOT)/src/miro/TiltS.h \
- $(MIRO_ROOT)/src/miro/ExceptionS.h $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i $(MIRO_ROOT)/src/miro/ExceptionS.i \
- $(MIRO_ROOT)/src/miro/TiltC.h $(MIRO_ROOT)/src/miro/TiltC.i \
- $(MIRO_ROOT)/src/miro/TiltS.i $(MIRO_ROOT)/src/miro/PanS.h \
- $(MIRO_ROOT)/src/miro/PanC.h $(MIRO_ROOT)/src/miro/PanC.i \
- $(MIRO_ROOT)/src/miro/PanS.i $(MIRO_ROOT)/src/miro/PanTiltC.h \
- $(MIRO_ROOT)/src/miro/PanTiltC.i $(MIRO_ROOT)/src/miro/PanTiltS.i \
+ $(MIRO_ROOT)/src/miro/PanTiltS.h \
+ $(MIRO_ROOT)/src/miro/TiltS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/ExceptionS.i \
+ $(MIRO_ROOT)/src/miro/TiltC.h \
+ $(MIRO_ROOT)/src/miro/TiltC.i \
+ $(MIRO_ROOT)/src/miro/TiltS.i \
+ $(MIRO_ROOT)/src/miro/PanS.h \
+ $(MIRO_ROOT)/src/miro/PanC.h \
+ $(MIRO_ROOT)/src/miro/PanC.i \
+ $(MIRO_ROOT)/src/miro/PanS.i \
+ $(MIRO_ROOT)/src/miro/PanTiltC.h \
+ $(MIRO_ROOT)/src/miro/PanTiltC.i \
+ $(MIRO_ROOT)/src/miro/PanTiltS.i \
  $(MIRO_ROOT)/src/miro/DirectedPerceptionPanTiltC.h \
  $(MIRO_ROOT)/src/miro/DirectedPerceptionPanTiltC.i \
- $(MIRO_ROOT)/src/miro/DirectedPerceptionPanTiltS.i PanTiltData.h \
- PanTiltMessage.h PanTiltOpcodes.h $(MIRO_ROOT)/src/miro/DevMessage.h \
- PanTiltConnection.h $(MIRO_ROOT)/src/miro/TtyConnection.h \
- PanTiltConsumer.h $(MIRO_ROOT)/src/miro/DevConsumer.h \
+ $(MIRO_ROOT)/src/miro/DirectedPerceptionPanTiltS.i \
+ PanTiltData.h PanTiltMessage.h PanTiltOpcodes.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h PanTiltConnection.h \
+ $(MIRO_ROOT)/src/miro/TtyConnection.h PanTiltConsumer.h \
+ $(MIRO_ROOT)/src/miro/DevConsumer.h \
  $(MIRO_ROOT)/src/miro/Log.h PanTiltEventHandler.h \
  $(MIRO_ROOT)/src/miro/DevEventHandler.h Parameters.h \
  $(MIRO_ROOT)/src/miro/Utils.h
@@ -105,48 +117,63 @@ $(BIN): $(STATIC_DEPS)
  $(MIRO_ROOT)/src/miro/BehaviourParameters.h
 
 .obj/PanTiltConnection.o .obj/PanTiltConnection.so .shobj/PanTiltConnection.o .shobj/PanTiltConnection.so: PanTiltConnection.cpp \
- $(MIRO_ROOT)/src/miro/ExceptionC.h $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/Exception.h $(MIRO_ROOT)/src/miro/Synch.h \
- PanTiltConnection.h $(MIRO_ROOT)/src/miro/TtyConnection.h \
- PanTiltEventHandler.h $(MIRO_ROOT)/src/miro/DevEventHandler.h \
- PanTiltMessage.h PanTiltOpcodes.h $(MIRO_ROOT)/src/miro/DevMessage.h \
- PanTiltData.h Parameters.h $(MIRO_ROOT)/src/miro/Parameters.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/Synch.h PanTiltConnection.h \
+ $(MIRO_ROOT)/src/miro/TtyConnection.h PanTiltEventHandler.h \
+ $(MIRO_ROOT)/src/miro/DevEventHandler.h PanTiltMessage.h \
+ PanTiltOpcodes.h $(MIRO_ROOT)/src/miro/DevMessage.h \
+ PanTiltData.h Parameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
  $(MIRO_ROOT)/src/miro/BehaviourParameters.h
 
 .obj/PanTiltConsumer.o .obj/PanTiltConsumer.so .shobj/PanTiltConsumer.o .shobj/PanTiltConsumer.so: PanTiltConsumer.cpp PanTiltConsumer.h \
- $(MIRO_ROOT)/src/miro/DevConsumer.h $(MIRO_ROOT)/src/miro/Log.h \
- PanTiltData.h PanTiltMessage.h PanTiltOpcodes.h \
- $(MIRO_ROOT)/src/miro/DevMessage.h $(MIRO_ROOT)/src/miro/Exception.h
+ $(MIRO_ROOT)/src/miro/DevConsumer.h \
+ $(MIRO_ROOT)/src/miro/Log.h PanTiltData.h PanTiltMessage.h \
+ PanTiltOpcodes.h $(MIRO_ROOT)/src/miro/DevMessage.h \
+ $(MIRO_ROOT)/src/miro/Exception.h
 
 .obj/PanTiltEventHandler.o .obj/PanTiltEventHandler.so .shobj/PanTiltEventHandler.o .shobj/PanTiltEventHandler.so: PanTiltEventHandler.cpp PanTiltEventHandler.h \
- $(MIRO_ROOT)/src/miro/DevEventHandler.h $(MIRO_ROOT)/src/miro/Synch.h \
- PanTiltConnection.h $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/DevEventHandler.h \
+ $(MIRO_ROOT)/src/miro/Synch.h PanTiltConnection.h \
+ $(MIRO_ROOT)/src/miro/Exception.h \
  $(MIRO_ROOT)/src/miro/TtyConnection.h PanTiltConsumer.h \
- $(MIRO_ROOT)/src/miro/DevConsumer.h $(MIRO_ROOT)/src/miro/Log.h \
- PanTiltData.h PanTiltMessage.h PanTiltOpcodes.h \
- $(MIRO_ROOT)/src/miro/DevMessage.h
+ $(MIRO_ROOT)/src/miro/DevConsumer.h \
+ $(MIRO_ROOT)/src/miro/Log.h PanTiltData.h PanTiltMessage.h \
+ PanTiltOpcodes.h $(MIRO_ROOT)/src/miro/DevMessage.h
 
 .obj/PanTiltData.o .obj/PanTiltData.so .shobj/PanTiltData.o .shobj/PanTiltData.so: PanTiltData.cpp PanTiltData.h
 
 .obj/PanTiltImpl.o .obj/PanTiltImpl.so .shobj/PanTiltImpl.o .shobj/PanTiltImpl.so: PanTiltImpl.cpp PanTiltImpl.h \
  $(MIRO_ROOT)/src/miro/DirectedPerceptionPanTiltS.h \
- $(MIRO_ROOT)/src/miro/PanTiltS.h $(MIRO_ROOT)/src/miro/TiltS.h \
- $(MIRO_ROOT)/src/miro/ExceptionS.h $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i $(MIRO_ROOT)/src/miro/ExceptionS.i \
- $(MIRO_ROOT)/src/miro/TiltC.h $(MIRO_ROOT)/src/miro/TiltC.i \
- $(MIRO_ROOT)/src/miro/TiltS.i $(MIRO_ROOT)/src/miro/PanS.h \
- $(MIRO_ROOT)/src/miro/PanC.h $(MIRO_ROOT)/src/miro/PanC.i \
- $(MIRO_ROOT)/src/miro/PanS.i $(MIRO_ROOT)/src/miro/PanTiltC.h \
- $(MIRO_ROOT)/src/miro/PanTiltC.i $(MIRO_ROOT)/src/miro/PanTiltS.i \
+ $(MIRO_ROOT)/src/miro/PanTiltS.h \
+ $(MIRO_ROOT)/src/miro/TiltS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionS.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/ExceptionS.i \
+ $(MIRO_ROOT)/src/miro/TiltC.h \
+ $(MIRO_ROOT)/src/miro/TiltC.i \
+ $(MIRO_ROOT)/src/miro/TiltS.i \
+ $(MIRO_ROOT)/src/miro/PanS.h \
+ $(MIRO_ROOT)/src/miro/PanC.h \
+ $(MIRO_ROOT)/src/miro/PanC.i \
+ $(MIRO_ROOT)/src/miro/PanS.i \
+ $(MIRO_ROOT)/src/miro/PanTiltC.h \
+ $(MIRO_ROOT)/src/miro/PanTiltC.i \
+ $(MIRO_ROOT)/src/miro/PanTiltS.i \
  $(MIRO_ROOT)/src/miro/DirectedPerceptionPanTiltC.h \
  $(MIRO_ROOT)/src/miro/DirectedPerceptionPanTiltC.i \
- $(MIRO_ROOT)/src/miro/DirectedPerceptionPanTiltS.i PanTiltData.h \
- PanTiltMessage.h PanTiltOpcodes.h $(MIRO_ROOT)/src/miro/DevMessage.h \
+ $(MIRO_ROOT)/src/miro/DirectedPerceptionPanTiltS.i \
+ PanTiltData.h PanTiltMessage.h PanTiltOpcodes.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h \
  $(MIRO_ROOT)/src/miro/Exception.h PanTiltConnection.h \
  $(MIRO_ROOT)/src/miro/TtyConnection.h PanTiltConsumer.h \
- $(MIRO_ROOT)/src/miro/DevConsumer.h $(MIRO_ROOT)/src/miro/Log.h \
- PanTiltEventHandler.h $(MIRO_ROOT)/src/miro/DevEventHandler.h \
+ $(MIRO_ROOT)/src/miro/DevConsumer.h \
+ $(MIRO_ROOT)/src/miro/Log.h PanTiltEventHandler.h \
+ $(MIRO_ROOT)/src/miro/DevEventHandler.h \
  $(MIRO_ROOT)/src/miro/Synch.h Parameters.h \
  $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/ArbiterParameters.h \

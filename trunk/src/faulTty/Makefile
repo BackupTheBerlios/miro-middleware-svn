@@ -67,12 +67,14 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 .obj/FaulTtyConnection.o .obj/FaulTtyConnection.o .obj/FaulTtyConnection.o .obj/FaulTtyConnection.o: FaulTtyConnection.cpp FaulTtyConnection.h \
  $(MIRO_ROOT)/src/miro/TtyConnection.h FaulTtyEventHandler.h \
  $(MIRO_ROOT)/src/miro/DevEventHandler.h FaulTtyMessage.h \
- $(MIRO_ROOT)/src/miro/DevMessage.h $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.i
 
 .obj/FaulTtyEventHandler.o .obj/FaulTtyEventHandler.o .obj/FaulTtyEventHandler.o .obj/FaulTtyEventHandler.o: FaulTtyEventHandler.cpp FaulTtyEventHandler.h \
  $(MIRO_ROOT)/src/miro/DevEventHandler.h FaulTtyMessage.h \
  $(MIRO_ROOT)/src/miro/DevMessage.h FaulTtyConnection.h \
- $(MIRO_ROOT)/src/miro/TtyConnection.h $(MIRO_ROOT)/src/miro/Exception.h
+ $(MIRO_ROOT)/src/miro/TtyConnection.h \
+ $(MIRO_ROOT)/src/miro/Exception.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

@@ -280,6 +280,60 @@ realclean: clean
 
 .obj/JoystickC.o .obj/JoystickC.so .shobj/JoystickC.o .shobj/JoystickC.so: JoystickC.cpp JoystickC.h JoystickC.i
 
+.obj/ImageDefinitionsC.o .obj/ImageDefinitionsC.so .shobj/ImageDefinitionsC.o .shobj/ImageDefinitionsC.so: ImageDefinitionsC.cpp ImageDefinitionsC.h \
+ ExceptionC.h ExceptionC.i TimeC.h TimeC.i PositionC.h WorldPointC.h \
+ WorldPointC.i PositionC.i ImageDefinitionsC.i
+
+.obj/ImageC.o .obj/ImageC.so .shobj/ImageC.o .shobj/ImageC.so: ImageC.cpp ImageC.h ImageDefinitionsC.h ExceptionC.h \
+ ExceptionC.i TimeC.h TimeC.i PositionC.h WorldPointC.h WorldPointC.i \
+ PositionC.i ImageDefinitionsC.i ImageC.i
+
+.obj/PioneerStallC.o .obj/PioneerStallC.so .shobj/PioneerStallC.o .shobj/PioneerStallC.so: PioneerStallC.cpp PioneerStallC.h StallC.h StallC.i \
+ PioneerStallC.i
+
+.obj/PioneerMotionC.o .obj/PioneerMotionC.so .shobj/PioneerMotionC.o .shobj/PioneerMotionC.so: PioneerMotionC.cpp PioneerMotionC.h \
+ DifferentialMotionC.h MotionC.h ExceptionC.h ExceptionC.i VelocityC.h \
+ VelocityC.i MotionC.i DifferentialMotionC.i ClosedMotionC.h \
+ ClosedMotionC.i PioneerMotionC.i
+
+.obj/GripperC.o .obj/GripperC.so .shobj/GripperC.o .shobj/GripperC.so: GripperC.cpp GripperC.h TimeC.h TimeC.i ExceptionC.h \
+ ExceptionC.i GripperC.i
+
+.obj/KickerC.o .obj/KickerC.so .shobj/KickerC.o .shobj/KickerC.so: KickerC.cpp KickerC.h TimeC.h TimeC.i ExceptionC.h \
+ ExceptionC.i KickerC.i
+
+.obj/SparrowPanTiltC.o .obj/SparrowPanTiltC.so .shobj/SparrowPanTiltC.o .shobj/SparrowPanTiltC.so: SparrowPanTiltC.cpp SparrowPanTiltC.h PanC.h \
+ ExceptionC.h ExceptionC.i PanC.i TimeC.h TimeC.i SparrowPanTiltC.i
+
+.obj/SparrowStallC.o .obj/SparrowStallC.so .shobj/SparrowStallC.o .shobj/SparrowStallC.so: SparrowStallC.cpp SparrowStallC.h StallC.h StallC.i \
+ SparrowStallC.i
+
+.obj/SparrowMotionC.o .obj/SparrowMotionC.so .shobj/SparrowMotionC.o .shobj/SparrowMotionC.so: SparrowMotionC.cpp SparrowMotionC.h \
+ DifferentialMotionC.h MotionC.h ExceptionC.h ExceptionC.i VelocityC.h \
+ VelocityC.i MotionC.i DifferentialMotionC.i SparrowMotionC.i
+
+.obj/LaserC.o .obj/LaserC.so .shobj/LaserC.o .shobj/LaserC.so: LaserC.cpp LaserC.h ExceptionC.h ExceptionC.i TimeC.h \
+ TimeC.i PositionC.h WorldPointC.h WorldPointC.i PositionC.i \
+ RangeSensorC.h ScanDescriptionC.h ScanDescriptionC.i RangeEventC.h \
+ RangeEventC.i RangeSensorC.i LaserC.i
+
+.obj/DtlkSpeechC.o .obj/DtlkSpeechC.so .shobj/DtlkSpeechC.o .shobj/DtlkSpeechC.so: DtlkSpeechC.cpp DtlkSpeechC.h ExceptionC.h ExceptionC.i \
+ SpeechC.h SpeechC.i DtlkSpeechC.i
+
+.obj/DirectedPerceptionPanTiltC.o .obj/DirectedPerceptionPanTiltC.so .shobj/DirectedPerceptionPanTiltC.o .shobj/DirectedPerceptionPanTiltC.so: DirectedPerceptionPanTiltC.cpp \
+ DirectedPerceptionPanTiltC.h PanTiltC.h TiltC.h ExceptionC.h \
+ ExceptionC.i TiltC.i PanC.h PanC.i PanTiltC.i \
+ DirectedPerceptionPanTiltC.i
+
+.obj/B21ButtonsC.o .obj/B21ButtonsC.so .shobj/B21ButtonsC.o .shobj/B21ButtonsC.so: B21ButtonsC.cpp B21ButtonsC.h ButtonsC.h ExceptionC.h \
+ ExceptionC.i TimeC.h TimeC.i ButtonsC.i B21ButtonsC.i
+
+.obj/B21MotionC.o .obj/B21MotionC.so .shobj/B21MotionC.o .shobj/B21MotionC.so: B21MotionC.cpp B21MotionC.h SynchroMotionC.h MotionC.h \
+ ExceptionC.h ExceptionC.i VelocityC.h VelocityC.i MotionC.i \
+ SynchroMotionC.i ClosedMotionC.h ClosedMotionC.i OdometryC.h \
+ PositionC.h WorldPointC.h WorldPointC.i PositionC.i MotionStatusC.h \
+ TimeC.h TimeC.i MotionStatusC.i OdometryC.i B21MotionC.i
+
 .obj/XmlParse.o .obj/XmlParse.so .shobj/XmlParse.o .shobj/XmlParse.so: XmlParse.cpp XmlParse.h Exception.h Angle.h
 
 .obj/Parameters.o .obj/Parameters.so .shobj/Parameters.o .shobj/Parameters.so: Parameters.cpp Parameters.h ArbiterParameters.h \
@@ -303,10 +357,12 @@ realclean: clean
 
 .obj/Task.o .obj/Task.so .shobj/Task.o .shobj/Task.so: Task.cpp Task.h
 
-.obj/ReactorTask.o .obj/ReactorTask.so .shobj/ReactorTask.o .shobj/ReactorTask.so: ReactorTask.cpp ExceptionC.h \
+.obj/ReactorTask.o .obj/ReactorTask.so .shobj/ReactorTask.o .shobj/ReactorTask.so: ReactorTask.cpp \
+ ExceptionC.h \
  ExceptionC.i \
  ReactorTask.h \
- Thread.h Server.h \
+ Thread.h \
+ Server.h \
  Client.h \
  Exception.h \
  Parameters.h \
@@ -329,7 +385,8 @@ realclean: clean
 .obj/IO.o .obj/IO.so .shobj/IO.o .shobj/IO.so: IO.cpp IO.h \
  ExceptionC.h \
  ExceptionC.i \
- TimeC.h TimeC.i \
+ TimeC.h \
+ TimeC.i \
  WorldPointC.h \
  WorldPointC.i \
  PositionC.h \
@@ -340,18 +397,23 @@ realclean: clean
  MotionStatusC.i \
  RangeEventC.h \
  RangeEventC.i \
- PanTiltC.h TiltC.h \
- TiltC.i PanC.h \
- PanC.i PanTiltC.i \
+ PanTiltC.h \
+ TiltC.h \
+ TiltC.i \
+ PanC.h \
+ PanC.i \
+ PanTiltC.i \
  Angle.h
 
-.obj/TimeHelper.o .obj/TimeHelper.so .shobj/TimeHelper.o .shobj/TimeHelper.so: TimeHelper.cpp TimeHelper.h \
- TimeC.h TimeC.i
+.obj/TimeHelper.o .obj/TimeHelper.so .shobj/TimeHelper.o .shobj/TimeHelper.so: TimeHelper.cpp \
+ TimeHelper.h \
+ TimeC.h \
+ TimeC.i
 
 .obj/VideoHelper.o .obj/VideoHelper.so .shobj/VideoHelper.o .shobj/VideoHelper.so: VideoHelper.cpp VideoHelper.h VideoC.h ExceptionC.h \
  ExceptionC.i TimeC.h TimeC.i PositionC.h WorldPointC.h WorldPointC.i \
- PositionC.i VideoC.i TimeHelper.h TimeC.h \
- Exception.h
+ PositionC.i VideoC.i TimeHelper.h \
+ TimeC.h Exception.h
 
 .obj/ScanDescriptionHelper.o .obj/ScanDescriptionHelper.so .shobj/ScanDescriptionHelper.o .shobj/ScanDescriptionHelper.so: ScanDescriptionHelper.cpp \
  ScanDescriptionHelper.h ScanDescriptionC.h ScanDescriptionC.i \
@@ -386,8 +448,8 @@ realclean: clean
 .obj/ArbiterMessage.o .obj/ArbiterMessage.so .shobj/ArbiterMessage.o .shobj/ArbiterMessage.so: ArbiterMessage.cpp ArbiterMessage.h
 
 .obj/ArbiterRepository.o .obj/ArbiterRepository.so .shobj/ArbiterRepository.o .shobj/ArbiterRepository.so: ArbiterRepository.cpp ArbiterRepository.h \
- Singleton.h Synch.h Exception.h Arbiter.h \
- Synch.h
+ Singleton.h Synch.h Exception.h \
+ Arbiter.h Synch.h
 
 .obj/PriorityArbiter.o .obj/PriorityArbiter.so .shobj/PriorityArbiter.o .shobj/PriorityArbiter.so: PriorityArbiter.cpp PriorityArbiter.h Arbiter.h \
  Synch.h Parameters.h ArbiterParameters.h BehaviourParameters.h \
@@ -435,9 +497,9 @@ realclean: clean
 .obj/BehaviourParameters.o .obj/BehaviourParameters.so .shobj/BehaviourParameters.o .shobj/BehaviourParameters.so: BehaviourParameters.cpp BehaviourParameters.h
 
 .obj/BehaviourRepository.o .obj/BehaviourRepository.so .shobj/BehaviourRepository.o .shobj/BehaviourRepository.so: BehaviourRepository.cpp BehaviourRepository.h \
- Singleton.h Synch.h Exception.h Behaviour.h \
- BehaviourParameters.h DynamicWindow.h ActionPattern.h Synch.h \
- Policy.h ArbiterParameters.h Arbiter.h
+ Singleton.h Synch.h Exception.h \
+ Behaviour.h BehaviourParameters.h DynamicWindow.h ActionPattern.h \
+ Synch.h Policy.h ArbiterParameters.h Arbiter.h
 
 .obj/BAFactory.o .obj/BAFactory.so .shobj/BAFactory.o .shobj/BAFactory.so: BAFactory.cpp BAFactory.h
 
@@ -452,12 +514,13 @@ realclean: clean
 .obj/TimedBehaviour.o .obj/TimedBehaviour.so .shobj/TimedBehaviour.o .shobj/TimedBehaviour.so: TimedBehaviour.cpp TimedBehaviour.h Behaviour.h \
  BehaviourParameters.h DynamicWindow.h ActionPattern.h Synch.h \
  Policy.h ArbiterParameters.h Arbiter.h Parameters.h TimeHelper.h \
- TimeC.h TimeC.i
+ TimeC.h \
+ TimeC.i
 
 .obj/Policy.o .obj/Policy.so .shobj/Policy.o .shobj/Policy.so: Policy.cpp BehaviourEngineC.h BehaviourEngineC.i Policy.h \
  Synch.h ActionPattern.h ArbiterParameters.h ArbiterRepository.h \
- Singleton.h Synch.h Exception.h Arbiter.h \
- Behaviour.h BehaviourParameters.h DynamicWindow.h \
+ Singleton.h Synch.h Exception.h \
+ Arbiter.h Behaviour.h BehaviourParameters.h DynamicWindow.h \
  BehaviourRepository.h
 
 .obj/DynamicWindow.o .obj/DynamicWindow.so .shobj/DynamicWindow.o .shobj/DynamicWindow.so: DynamicWindow.cpp DynamicWindow.h
