@@ -53,7 +53,7 @@ namespace B21Buttons
     notifyEvent.header.fixed_header.event_type.domain_name = 
       CORBA::string_dup(supplier_.domainName().c_str());
     notifyEvent.header.fixed_header.event_type.type_name = 
-      CORBA::string_dup("B21ButtonStatusIDL");
+      CORBA::string_dup("Button");
     notifyEvent.header.fixed_header.event_name = CORBA::string_dup("");
     notifyEvent.header.variable_header.length(0);   // put nothing here
     notifyEvent.filterable_data.length(0);          // put nothing here
