@@ -9,11 +9,11 @@
  <section name="Sparrow99" >
   <parameter name="SparrowBoard" >
    <parameter value="/dev/can/0" name="Device" />
-   <parameter value="0.050000" name="PanLatency" />
-   <parameter value="0.0800000" name="PanSwing" />
+   <parameter value="0.060000" name="PanLatency" />
+   <parameter value="0.200000" name="PanSwing" />
    <parameter value="10" name="PanSwingAccuracy" />
-   <parameter value="245" name="PanRadPerSec" />
-   <parameter value="3." name="PanAccuracy" />
+   <parameter value="300" name="PanRadPerSec" />
+   <parameter value="5." name="PanAccuracy" />
    <parameter name="InfraredDescription" >
     <parameter value="2" name="ScanType" />
     <parameter value="Infrared" name="EventName" />
@@ -149,8 +149,8 @@
    <parameter value="1.0776" name="TransFactor" />
    <parameter value="26.0" name="Deg2ServoTicks" />
    <parameter value="1.000000" name="WatchdogTimeout" />
-   <parameter value="3950" name="Servo0MidPulse" />
-   <parameter value="15" name="MaxAccel" /><!-- SollDistanz zum Torrueckwand 10 -->
+   <parameter value="3850" name="Servo0MidPulse" />
+   <parameter value="13" name="MaxAccel" /><!-- SollDistanz zum Torrueckwand 13 -->
    <parameter value="1555" name="Diameter" />
    <parameter value="15" name="MaxPower" /><!-- Vorfaktor turnfehler 15 -->
    <parameter value="22" name="TicksL" />
@@ -160,7 +160,7 @@
    <parameter name="Motion" >
     <parameter value="180" name="MaxRotation" />
     <parameter value="-180" name="MinRotation" /><!-- Unterreichweite fue  Turndoubler 9 (6) -->
-    <parameter value="300" name="MaxTranslation" /><!-- Vorfaktor Distanzefehler 1 -->
+    <parameter value="1000" name="MaxTranslation" /><!-- Vorfaktor Distanzefehler 300 -->
     <parameter value="-1000" name="MinTranslation" />
     <parameter value="450" name="WheelBase" />
     <parameter value="1000" name="MaxLTranslation" />
