@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002, 2003
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -21,21 +21,10 @@
 #include "BufferManagerMeteor.h"
 
 #include "miro/VideoHelper.h"
-
-#undef DEBUG
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
+#include "miro/Log.h"
 
 namespace Video
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-
   //--------------------------------------------------------------------------
   // Hardware specifica
   //--------------------------------------------------------------------------
@@ -79,7 +68,7 @@ namespace Video
   void
   DeviceMeteor::init(Miro::Server& _server, FilterParameters const * _params)
   {
-    DBG(cout << "Connecting DeviceMeteor." << endl);
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video::DeviceMeteor: Connecting DeviceMeteor.");
 
     params_ = dynamic_cast<AVDeviceParameters const *>(_params);
     assert(params_ != NULL);
@@ -88,8 +77,9 @@ namespace Video
     if (connector_.connect(ioBuffer_, 
 			  devName_, 
 			  0, ACE_Addr::sap_any, 0, O_RDWR) == -1) {
-      cerr << "Failed to open device: " << params_->device << endl
-	   << "Propably running on the wrong machine?" << endl;
+      MIRO_DBG_OSTR(LL_ERROR, 
+		    "Video::DeviceMeteor: Failed to open device: " << params_->device <<
+		    "\nPropably running on the wrong machine?");
       throw Miro::CException(errno, std::strerror(errno));
     }
 
@@ -119,7 +109,7 @@ namespace Video
   void
   DeviceMeteor::fini()
   {
-    DBG(cout << "DeviceBTTV." << endl);
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video::DeviceMeteor::fini()");
 
     if ((int)buffer_ != -1 && buffer_ != NULL) {
       munmap(buffer_, Miro::getImageSize(outputFormat_));
@@ -148,7 +138,7 @@ namespace Video
   void 
   DeviceMeteor::setSource()
   {
-    DBG(cout << "DeviceMeteor: setSource" << endl);
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video::DeviceMeteor::setSource()");
 
     VideoSource id = getSource(params_->source);
     if (sourceLookup[id] == -1)

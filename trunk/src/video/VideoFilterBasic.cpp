@@ -143,7 +143,7 @@ namespace Video
 	bytesPerPixel = 4;
 	break;
       default:
-	std::cout << "cannot handle YUV" << std::endl;
+	MIRO_LOG(LL_CRITICAL, "cannot handle YUV");
 	exit(-1);
       }
   }

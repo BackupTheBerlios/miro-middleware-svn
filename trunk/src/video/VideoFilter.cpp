@@ -17,6 +17,7 @@
 #include "idl/VideoC.h"
 #include "miro/VideoHelper.h"
 #include "miro/ConfigDocument.h"
+#include "miro/Log.h"
 
 namespace Video
 {
@@ -63,8 +64,8 @@ namespace Video
    */
   Filter::~Filter()
   {
-    std::cout << "deleting filter " << this->name() << std::endl;
-    std::cout << "deleting successor filters" << std::endl;
+    MIRO_LOG_DTOR("Video::Filter");
+    MIRO_DBG(VIDEO, LL_DEBUG, "deleting successor filters");
     FilterVector::const_reverse_iterator first, last = succ_.rend();
     for (first = succ_.rbegin(); first != last; ++first) {
       delete (*first);
@@ -97,7 +98,7 @@ namespace Video
   void
   Filter::init(Miro::Server& _server, FilterParameters const * _params)
   {
-    std::cout << "Filter::init" << std::endl;
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video::Filter::init()");
 
     // safe instance, as we have to clean it up.
     params_ = _params;
@@ -121,13 +122,13 @@ namespace Video
       bufferManager_ = bufferManagerInstance();
     }
 
-    std::cout << "Filter::init end" << std::endl;
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video::Filter::init() end");
   }
 
   void
   Filter::initTree(Miro::Server& _server, Miro::ConfigDocument& _config) 
   {
-    std::cout << "initTree: " << name() << std::endl;
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video::Filter::initTree()");
 
     // create an instance of the the filters parameters
     FilterParameters * params = this->getParametersInstance();
@@ -137,8 +138,7 @@ namespace Video
     _config.getInstance(this->name(), *params);
 
     // debug output
-    std::cout << name() << std::endl;
-    std::cout << *params << std::endl;
+    MIRO_LOG_OSTR(LL_NOTICE, name() << std::endl << *params);
 
     // initialize the filter instance with its parameters
     this->init(_server, params);

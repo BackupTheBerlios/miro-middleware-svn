@@ -15,17 +15,9 @@
 #include "BufferManagerBTTV.h"
 
 #include "miro/Exception.h"
+#include "miro/Log.h"
 
-#include <iostream>
 #include <string>
-
-#undef DEBUG
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
 
 namespace 
 {
@@ -40,14 +32,10 @@ namespace
     { "odd", Video::DeviceBTTV:: SUBFIELD_ODD},
     { "even", Video::DeviceBTTV:: SUBFIELD_EVEN}
   };
-};
+}
 
 namespace Video
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-
   FILTER_PARAMETERS_FACTORY_IMPL(DeviceBTTV);
 
 
@@ -66,7 +54,7 @@ namespace Video
     currentBuffer_(0),
     nextBuffer_(0)
   {
-    DBG(std::cout << "Constructing DeviceBTTV." << std::endl);
+    MIRO_LOG_CTOR("Video::DeviceBTTV");
 
     /**
        cleanup supported format lookup table
@@ -93,6 +81,7 @@ namespace Video
 
   DeviceBTTV::~DeviceBTTV()
   {
+    MIRO_LOG_DTOR("Video::DeviceBTTV");
   }
 
   BufferManager * 
@@ -117,7 +106,7 @@ namespace Video
   {
     int	err = 0;
 
-    DBG(std::cout << "Connecting DeviceBTTV." << std::endl);
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video::DeviceBTTV: Connecting DeviceBTTV.");
 
     params_ = dynamic_cast<DeviceBTTVParameters const *>(_params);
     assert(params_ != NULL);
@@ -126,8 +115,9 @@ namespace Video
     if (connector_.connect(ioBuffer_, 
 			  devName_, 
 			  0, ACE_Addr::sap_any, 0, O_RDWR) == -1) {
-      cerr << "Failed to open device: " << params_->device << endl
-	   << "Propably running on the wrong machine?" << endl;
+      MIRO_LOG_OSTR(LL_ERROR,
+		    "Failed to open device: " << params_->device <<
+		    "\nPropably running on the wrong machine?");
       throw Miro::CException(errno, std::strerror(errno));
     }
 
@@ -150,9 +140,9 @@ namespace Video
 
     iNBuffers = gb_buffers.frames;
 
-    std::cout << "buffersize: " << gb_buffers.size << std::endl;
-    std::cout << "buffersize/frame: " << gb_buffers.size/gb_buffers.frames << std::endl;
-    std::cout << "frames: " << gb_buffers.frames << std::endl;
+    MIRO_DBG_OSTR(VIDEO, LL_DEBUG, "Video::DeviceBTTV: buffersize: " << gb_buffers.size <<
+		  "\nbuffersize/frame: " << gb_buffers.size/gb_buffers.frames <<
+		  "\nframes: " << gb_buffers.frames);
 
     if (gb_buffers.frames < (int)params_->buffers) {
       throw Miro::Exception("Number of requested buffers in the configuration\n" \
@@ -206,7 +196,7 @@ namespace Video
 
   void DeviceBTTV::fini()
   {
-    DBG(std::cout << "DeviceBTTV." << std::endl);
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video::DeviceBTTV::fini()");
 
     delete[] channels;
     channels = NULL;
@@ -221,7 +211,7 @@ namespace Video
 
   void DeviceBTTV::setFormat()
   {
-    DBG(std::cout << "DeviceBTTV: setFormat" << std::endl);
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video::DeviceBTTV::setFormat()");
     
     VideoFormat id = getFormat(params_->format);
     if (formatLookup[id] == -1)
@@ -231,7 +221,7 @@ namespace Video
 
   void DeviceBTTV::setSource()
   {
-    DBG(std::cout << "DeviceBTTV: setSource" << std::endl);
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video::DeviceBTTV::setSource()");
 
     VideoSource id = getSource(params_->source);
 
@@ -248,7 +238,7 @@ namespace Video
 
   void DeviceBTTV::setPalette()
   {
-    DBG(std::cout << "DeviceBTTV: setPalette" << std::endl);
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video::DeviceBTTV::setPalette()");
 
     Miro::VideoPaletteIDL id = inputFormat_.palette;
 
@@ -267,7 +257,7 @@ namespace Video
   void 
   DeviceBTTV::setSize()
   {
-    DBG(std::cout << "DeviceBTTV: setSize" << std::endl);
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video::DeviceBTTV::setSize()");
 
     if (((int)outputFormat_.width < capability.minwidth) ||
 	((int)outputFormat_.width > capability.maxwidth))
@@ -280,7 +270,7 @@ namespace Video
 
   void DeviceBTTV::getCapabilities()
   {
-    DBG(std::cout << "DeviceBTTV: getCapabilities" << std::endl);
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video::DeviceBTTV: getCapabilities()");
 
     int	err = ioctl(ioBuffer_.get_handle(), VIDIOCGCAP, &capability);
     if (err == -1)
@@ -289,7 +279,7 @@ namespace Video
 
   void DeviceBTTV::getChannels()
   {
-    DBG(std::cout << "DeviceBTTV: getChannels" << std::endl);
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video::DeviceBTTV::getChannels()");
 
     /* input sources */
     channels = new struct video_channel[capability.channels];
@@ -304,7 +294,7 @@ namespace Video
   bool
   DeviceBTTV::probeFormat(int format)
   {
-    DBG(std::cout << "DeviceBTTV: probeFormat" << std::endl);
+    MIRO_DBG(VIDEO, LL_DEBUG, "Video::DeviceBTTV::probeFormat()");
 
     struct video_mmap gb;
     int	err;

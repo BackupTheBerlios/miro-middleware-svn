@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002, 2003
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -12,6 +12,7 @@
 #include "miro/TimeHelper.h"
 #include "miro/VideoHelper.h"
 #include "miro/Exception.h"
+#include "miro/Log.h"
 
 #include "VideoImpl.h"
 #include "VideoFilter.h"
@@ -22,13 +23,9 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 
-using namespace Video;
-
 namespace Miro 
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
+  using namespace Video;
 
   CORBA::Long VideoImpl::idCounter = 0;
 
@@ -40,7 +37,7 @@ namespace Miro
     filter_(_filter),
     pBufferManager_(NULL)
   {
-    cout << "Constructing VideoImpl." << endl;
+    MIRO_LOG_CTOR("Miro::VideoImpl");
 
     imageHandle_.format = filter_->outputFormat();
     imageHandle_.key = shmget(0, 
@@ -71,7 +68,7 @@ namespace Miro
   
   VideoImpl::~VideoImpl()
   {
-    cout << "Destructing VideoImpl." << endl;
+    MIRO_LOG_DTOR("Miro::VideoImpl");
 
     // Deactivate the interfaces.
     // we have to do this manually for none owned orbs,

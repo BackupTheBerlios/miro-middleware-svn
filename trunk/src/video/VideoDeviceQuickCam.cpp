@@ -108,24 +108,25 @@ namespace Video
     features.dynamicNoiseReduction = getDNR();
     features.compression = getCompression();
 
-    std::cout << "fps: " << features.framerate << std::endl
-	      << "brightness: " << features.brightness << std::endl
-	      << "hue: " << features.hue << std::endl
-	      << "contrast: " << features.contrast << std::endl
-	      << "whitebalance: " << features.whitebalance << std::endl
-	      << "wb manual red: " << features.whitebalanceManualRed << std::endl
-	      << "wb blue: " << features.whitebalanceManualBlue << std::endl
-	      << "wb read red: " << features.whitebalanceReadRed << std::endl
-	      << "wb read blue: " << features.whitebalanceReadBlue << std::endl
-	      << "wb speed: " << features.whitebalanceSpeed << std::endl
-	      << "wb delay: " << features.whitebalanceDelay << std::endl
-	      << "gain control: " << features.autoGainControl << std::endl
-	      << "shutter: " << features.shutterSpeed << std::endl
-	      << "sharpness: " << features.sharpness << std::endl
-	      << "backlichtCompensation: " << features.backlightCompensation << std::endl
-	      << "flickerless mode: " << features.flickerlessMode << std::endl
-	      << "dynamic noise red:" << features.dynamicNoiseReduction << std::endl
-	      << "compression: " << features.compression  << std::endl;
+    MIRO_LOG_OSTR(LL_NOTICE, 
+		  "Video::DeviceQuickCam:\nfps: " << features.framerate << 
+		  "\nbrightness: " << features.brightness << 
+		  "\nhue: " << features.hue << 
+		  "\ncontrast: " << features.contrast << 
+		  "\nwhitebalance: " << features.whitebalance << 
+		  "\nwb manual red: " << features.whitebalanceManualRed <<
+		  "\nwb blue: " << features.whitebalanceManualBlue << 
+		  "\nwb read red: " << features.whitebalanceReadRed << 
+		  "\nwb read blue: " << features.whitebalanceReadBlue << 
+		  "\nwb speed: " << features.whitebalanceSpeed << 
+		  "\nwb delay: " << features.whitebalanceDelay << 
+		  "\ngain control: " << features.autoGainControl << 
+		  "\nshutter: " << features.shutterSpeed << 
+		  "\nsharpness: " << features.sharpness << 
+		  "\nbacklichtCompensation: " << features.backlightCompensation << 
+		  "\nflickerless mode: " << features.flickerlessMode << 
+		  "\ndynamic noise red:" << features.dynamicNoiseReduction << 
+		  "\ncompression: " << features.compression  << std::endl);
 
     return true;
   }

@@ -54,7 +54,6 @@ namespace Miro
     MIRO_DBG(VIDEO, LL_PRATTLE, "VideoBroker: process all filters");
 
     for (unsigned int i = 0; i < connections.length(); ++i) {
-      std::cout << "find corresponding filter" << std::endl;
       std::string name = (char const *)connections[i].filter;
       ::Video::Filter * filter = device_->findByInterfaceName(name);
 

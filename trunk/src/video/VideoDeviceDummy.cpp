@@ -14,6 +14,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.13  2005/01/09 21:40:34  hutz
+ * switching debug output to use the Log.h macros.
+ *
  * Revision 1.12  2004/11/02 18:04:09  gmayer
  * should handle images with blank lines (as comments) now correct
  *
@@ -178,10 +181,6 @@ namespace
 
 namespace Video
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-
   FILTER_PARAMETERS_FACTORY_IMPL(DeviceDummy);
 
 
@@ -209,7 +208,7 @@ namespace Video
     }    
     if (counter_ < files_.size()) {
       // do work
-      std::cout << "Next image: " << files_[counter_] << std::endl;
+      MIRO_LOG_OSTR(LL_NOTICE, "Next image: " << files_[counter_]);
       getPpm(files_[counter_], 
 	     inputFormat_.width,
 	     inputFormat_.height,
@@ -217,7 +216,7 @@ namespace Video
       bufferManager_->bufferTimeStamp(outputBufferIndex_, 
 				      ACE_OS::gettimeofday());
       ++counter_;
-      std::cout << "Done." << std::endl;
+      MIRO_LOG(LL_NOTICE, "Done.");
     }
     else {
       throw Miro::Exception("No more images.");
@@ -225,7 +224,7 @@ namespace Video
 
     ACE_Time_Value diff = ACE_OS::gettimeofday() - now;
     if (diff < params_->timeout) {
-      std::cout << "Sleeping." << std::endl;
+      MIRO_LOG(LL_NOTICE, "Sleeping.");
       ACE_OS::sleep(params_->timeout - diff);
     }
   }
@@ -239,15 +238,17 @@ namespace Video
     params_ = dynamic_cast<DeviceDummyParameters const *>(_params);
     assert(params_ != NULL);
 	
-    cout << "loading file" << endl;;
+    MIRO_LOG(LL_NOTICE, "Video::DeviceDummy: loading file");
     
     struct stat buf;
     stat(params_->device.c_str(), &buf);
     if (S_ISREG(buf.st_mode)) { // if the name is a file just use this
       files_.push_back(params_->device);
-      cout << "single file: " << params_->device << endl;
+      MIRO_LOG_OSTR(LL_NOTICE, 
+		    "Video::DeviceDummy: single file: " << params_->device);
 
-    } else if (S_ISDIR(buf.st_mode)) { // if the name is a directory, use each regular file in it
+    }
+    else if (S_ISDIR(buf.st_mode)) { // if the name is a directory, use each regular file in it
       DIR * dir;
       if ((dir = opendir(params_->device.c_str())) != NULL) {
         struct dirent * entries;
@@ -255,13 +256,12 @@ namespace Video
 	  stat((params_->device + entries->d_name).c_str(), &buf);
           if (S_ISREG(buf.st_mode)) {
             files_.push_back(params_->device + entries->d_name);
-            cout << "direntry: " << entries->d_name << endl;
+	    MIRO_LOG_OSTR(LL_NOTICE, 
+			  "Video::DeviceDummy: direntry: " << entries->d_name);
           }
         }
         closedir(dir);
       }
     }
-
-    cout << "DeviceDummy::init end" << endl;
   }
 }
