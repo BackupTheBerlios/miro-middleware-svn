@@ -56,14 +56,10 @@ namespace Miro
     BehaviourMap behaviours_;
 
     friend std::ostream& operator << (std::ostream&, const BehaviourRepository&);
-
-#if GCC_MAJOR_VERSION >= 3
-    friend class Singleton<BehaviourRepository>::ACE_Singleton_Type;
+    //! The singleton implementation in charge: calls the private ctor.
+    friend class ACE_Singleton<BehaviourRepository, ACE_Recursive_Thread_Mutex>;
 
   private:
-#else
-  public:
-#endif
     //! There is only one BehaviourRepository instance.
     BehaviourRepository();
     //! Copy construction is prohibited

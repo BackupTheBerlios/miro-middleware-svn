@@ -57,14 +57,10 @@ namespace Miro
     ArbiterMap arbiters_;
 
     friend std::ostream& operator << (std::ostream&, const ArbiterRepository&);
-
-#if GCC_MAJOR_VERSION >= 3
-    friend class Singleton<ArbiterRepository>::ACE_Singleton_Type;
+    //! The singleton implementation in charge: calls the private ctor.
+    friend class ACE_Singleton<ArbiterRepository, ACE_Recursive_Thread_Mutex>;
 
   private:
-#else
-  public:
-#endif
     //! There is only one ArbiterRepository instance.
     ArbiterRepository();
     //! Copy construction is prohibited
