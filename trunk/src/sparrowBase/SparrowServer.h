@@ -66,7 +66,6 @@ class SparrowBase
 
 public:
   SparrowBase(Miro::Server& _server, 
-	      Miro::PanParameters _panParameters,
 	      bool startReactorTask = true);
 
   // Constructor.

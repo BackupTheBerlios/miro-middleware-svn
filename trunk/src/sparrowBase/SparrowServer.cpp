@@ -51,7 +51,7 @@ FaulhaberHardware::~FaulhaberHardware()
 }
 
 
-SparrowBase::SparrowBase(Miro::Server& _server, Miro::PanParameters _panParameters, bool _startReactorTask) :
+SparrowBase::SparrowBase(Miro::Server& _server, bool _startReactorTask) :
   server_(_server),
   schedparams_(ACE_SCHED_FIFO, 10),
   reactorTask( &_server, 20, &schedparams_),
@@ -107,7 +107,8 @@ SparrowBase::SparrowBase(Miro::Server& _server, Miro::PanParameters _panParamete
     sparrowStall = 
       new Sparrow::StallImpl(sparrowConnection2003, &structuredPushSupplier_);
     sparrowPanTilt = 
-      new Sparrow::PanTiltImpl(sparrowConnection2003, _panParameters, &panPushSupplier_);
+      new Sparrow::PanTiltImpl(sparrowConnection2003, 
+			       &panPushSupplier_);
     
     pSparrowConsumer2003->
       registerInterfaces(sparrowConnection2003,
@@ -140,7 +141,6 @@ SparrowBase::SparrowBase(Miro::Server& _server, Miro::PanParameters _panParamete
     sparrowButtons = new Sparrow::ButtonsImpl(&structuredPushSupplier_);
     sparrowStall = new Sparrow::StallImpl(sparrowConnection, &structuredPushSupplier_);
     sparrowPanTilt = new Sparrow::PanTiltImpl(sparrowConnection, 
-					      _panParameters,
 					      &panPushSupplier_);
     
     pFaulhaber = ((Sparrow::Parameters::instance()->faulhaber)?

@@ -47,7 +47,6 @@ main(int argc, char *argv[])
     Sparrow::Parameters * pSparrowParameters = Sparrow::Parameters::instance();
     FaulMotor::Parameters * pFaulMotorParameters = NULL;
     Miro::NMC::Parameters * notifyMulticastParameters = Miro::NMC::Parameters::instance();
-    Miro::PanParameters panParameters;
     
     // Config file processing
     Miro::ConfigDocument * config =  Miro::Configuration::document();
@@ -66,9 +65,6 @@ main(int argc, char *argv[])
     config->getParameters("Miro::NMC::Parameters", *notifyMulticastParameters);
     config->fini();
 
-    config->setSection("Camera");
-    config->getParameters("Miro::PanParameters", panParameters);
-
     MIRO_LOG_OSTR(LL_NOTICE,
 		  "  robot parameters:\n" << robotParameters <<
 		  "\n  sparrow parameters:\n" << *pSparrowParameters);
@@ -77,16 +73,12 @@ main(int argc, char *argv[])
 		    "\n  faulhaber parameters:\n" << *pFaulMotorParameters);
     MIRO_LOG_OSTR(LL_NOTICE,
 		  "  NotifyMulticast parameters:\n" << *notifyMulticastParameters);
-    MIRO_LOG_OSTR(LL_NOTICE,
-		  "  Camera parameters: \n" << 
-		  "    Pan Parameters: \n" << panParameters
-		  );
 
 
     MIRO_LOG(LL_NOTICE, "Initialize server daemon.");
     Miro::Server server(argc, argv);
     try {
-      SparrowBase sparrowBase(server,panParameters);
+      SparrowBase sparrowBase(server);
 	     
       MIRO_LOG(LL_NOTICE, "Initialize server daemon.");
       server.run(4);
