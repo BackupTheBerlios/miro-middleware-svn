@@ -6,7 +6,7 @@
 
     <config_item name="RangeSensorBehaviour" parent="Miro::EventBehaviour" final="false">
       <config_parameter name="SensorName" type="string" default="Infrared" />
-      <config_parameter name="History" type="ACE_Time_Value" default="0.5" measure="sec" />
+      <config_parameter name="History" type="ACE_Time_Value" default="0,5" measure="sec" />
     </config_item>
     
     <config_item name="RangeSensorWallFollow" parent="RangeSensorBehaviour">

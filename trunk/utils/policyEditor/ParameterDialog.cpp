@@ -261,6 +261,7 @@ ParameterDialog::result() const
   LineEditVector::const_iterator first, last = lineEdits_.end();
   for (first = lineEdits_.begin(); first != last; ++first) {
     QString key   = (*first)->name();
+    key[0] = key[0].upper();
     QString value = (*first)->text();
 
     if (!value.isEmpty() && !key.isEmpty()) {

@@ -67,6 +67,7 @@ int main(int argc, char *argv[])
     server.run(5);
 
     cout << "Server stoped, exiting." << endl;
+    server.detach(1);
 
     engineImpl.closePolicy();
 
@@ -74,10 +75,14 @@ int main(int argc, char *argv[])
     supplier_.disconnect();
 
     task->cancel();
+
   }
   catch (const CORBA::Exception & e) {
     cerr << "Uncaught CORBA exception: " << e << endl;
     return 1;
   }
+
+  server.shutdown();
+  server.wait();
   return 0;
 }
