@@ -28,7 +28,7 @@ all-local:
 	(cd cpp && ./installdox -lMiroIDL.tag@../idl/ -lACE.tag@http://doc.ece.uci.edu/Doxygen/Current/html/ace/ -lTAO.tag@http://doc.ece.uci.edu/Doxygen/Current/html/tao/)
 
 install-data-local:
-	AS_MKDIR_P $(datadir)/html/idl $(datadir)/html/cpp
+	mkdir -p $(datadir)/html/idl $(datadir)/html/cpp
 	cp idl/* $(datadir)/html/idl
 	cp cpp/* $(datadir)/html/cpp
 

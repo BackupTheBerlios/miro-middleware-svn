@@ -61,7 +61,7 @@ todo = \
 	latex miro_manual.tex; \
 	makeindex miro_manual; \
 	latex miro_manual.tex; \
-	dvips miro_manual.dvi
+	dvips miro_manual.dvi -o miro_manual.ps
 install = \
 	miro_manual.ps
 endif
@@ -74,7 +74,7 @@ clean-local:
 	-rm -f miro_manual.pdf miro_manual.ps
 
 install-data-local:
-	AS_MKDIR_P $(datadir)/doc
+	mkdir -p $(datadir)/doc
 	cp $(install) $(datadir)/doc
 
 EXTRA_DIST = $(texsources)
