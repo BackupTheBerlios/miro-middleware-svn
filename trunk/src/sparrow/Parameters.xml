@@ -14,6 +14,7 @@
     <config_item name="Pan" parent="Miro::Pan" final="false">
       <config_parameter name="servo" type="bool" default="false" />
       <config_parameter name="ticksPerDegree" type="int" default="775" />
+      <config_parameter name="offset" type="angle" default="0" measure="&deg;"/>
       <config_parameter name="rangeMin" type="angle" inherited="true" default="-160" />
       <config_parameter name="rangeMax" type="angle" inherited="true" default="160" />
       <config_parameter name="panLatency" type="ACE_Time_Value" default="0, 50000" measure="sec" />
