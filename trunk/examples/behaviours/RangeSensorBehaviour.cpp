@@ -132,6 +132,7 @@ RangeSensorBehaviour::action()
       Miro::timeC2A(pBunchScan->time, timeStamp);
       timeStamp = ACE_OS::gettimeofday();
       for (int i = pBunchScan->sensor.length() - 1; i >= 0; --i) {
+	//	if (pBunchScan->sensor[i].group == 0)
 	evalSensor(timeStamp,
 		   pBunchScan->sensor[i].group,
 		   pBunchScan->sensor[i].index,
@@ -291,7 +292,7 @@ RangeSensorBehaviour::evalScan()
     Vector2d p(first->point);
     p -= position_;
     p *= alpha;
-    egoMap_.insert(std::make_pair(arg(first->point), first->point));
+    egoMap_.insert(std::make_pair(arg(p), p));
   }
 }
 

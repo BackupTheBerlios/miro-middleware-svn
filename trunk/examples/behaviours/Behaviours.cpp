@@ -71,7 +71,11 @@ int main(int argc, char *argv[])
     cout << "Resolving event channel." << endl;
     EventChannel_var ec = server.resolveName<EventChannel>("EventChannel");
     
-    Miro::StructuredPushSupplier supplier(ec.in(), server.namingContextName);
+    Miro::StructuredPushSupplier supplier0(ec.in(), server.namingContextName, false);
+    Miro::StructuredPushSupplier supplier1(ec.in(), server.namingContextName, false);
+    Miro::StructuredPushSupplier supplier2(ec.in(), server.namingContextName, false);
+    Miro::StructuredPushSupplier supplier3(ec.in(), server.namingContextName, false);
+    Miro::StructuredPushSupplier supplier4(ec.in(), server.namingContextName, false);
     
     // optain references
     cout << "Resolving sensor and actuator services." << endl;
@@ -80,14 +84,14 @@ int main(int argc, char *argv[])
     // construct all available behaviours
     cout << "Constructing Behaviours and Arbiters." << endl;
     TactileStop tactileStop(motion.in(), ec.in(), server.namingContextName);
-    RangeSensorAvoid avoid1(server, ec.in(), "AvoidOne", server.namingContextName, &supplier);
-    RangeSensorAvoid avoid2(server, ec.in(), "AvoidTwo", server.namingContextName, &supplier);
-    WallFollow wallFollow(server, ec.in(), "WallFollow", server.namingContextName, &supplier);
+    RangeSensorAvoid avoid1(server, ec.in(), "AvoidOne", server.namingContextName, &supplier0);
+    RangeSensorAvoid avoid2(server, ec.in(), "AvoidTwo", server.namingContextName, &supplier1);
+    WallFollow wallFollow(server, ec.in(), "WallFollow", server.namingContextName, &supplier2);
     Straight straight(*task->reactor());
     Wander wander(*task->reactor());
     OnButton onButton(ec.in(), server.namingContextName);
 
-    MotionArbiter ma(motion.in(), &supplier);
+    MotionArbiter ma(motion.in(), &supplier3);
   
     // polpulating the repositories
     BehaviourRepository * bf = BehaviourRepository::instance();
@@ -104,7 +108,7 @@ int main(int argc, char *argv[])
     af->registerArbiter(&ma);
 
     // Init behaviour infrastructure
-    Miro::BehaviourEngineImpl engineImpl(&supplier);
+    Miro::BehaviourEngineImpl engineImpl(&supplier4);
     Miro::BehaviourEngine_var engineInterface = engineImpl._this();
     server.addToNameService(engineInterface.in(), "BehaviourEngine");
 
@@ -114,6 +118,13 @@ int main(int argc, char *argv[])
     // start timed behaviour sceduler
     task->open(NULL);
 
+
+    supplier0.connect();
+    supplier1.connect();
+    supplier2.connect();
+    supplier3.connect();
+    supplier4.connect();
+
     cout << "Loop forever handling events." << endl;
     server.run(5);
 
@@ -121,13 +132,17 @@ int main(int argc, char *argv[])
 
     engineImpl.closePolicy();
 
-    supplier.disconnect();
-
     tactileStop.disconnect();
     avoid1.disconnect();;
     avoid2.disconnect();
     wallFollow.disconnect();
     onButton.disconnect();
+
+    supplier0.disconnect();
+    supplier1.disconnect();
+    supplier2.disconnect();
+    supplier3.disconnect();
+    supplier4.disconnect();
 
     task->cancel();
   }

@@ -41,7 +41,7 @@ Straight::action()
   message.id = this;
   message.active = true;
   message.velocity.translation = params->translation;
-  message.velocity.rotation = 0.;
+  message.velocity.rotation = params->rotation;
 
   arbitrate(message);
 }

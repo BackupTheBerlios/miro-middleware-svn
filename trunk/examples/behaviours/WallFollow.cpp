@@ -36,7 +36,7 @@ WallFollow::WallFollow(Miro::Client& _client,
 		       const string& _name,
 		       const string& _domainName,
 		       Miro::StructuredPushSupplier * _pSupplier) :
-  Super(_client, _ec, _name, _domainName, _pSupplier)
+  Super(_client, _ec, _name, _domainName, NULL)
 {
   cout << "Constructing " << _name << endl;
 }
@@ -77,7 +77,7 @@ WallFollow::action()
   rL = regressionsGerade(Miro::deg2Rad(30), Miro::deg2Rad(150), Miro::deg2Rad(90), mL, bL);
   //    rL = regressionsGerade(leftFront_, Miro::deg2Rad(45), mL, bL);
 
-  rR = regressionsGerade(Miro::deg2Rad(-150), Miro::deg2Rad(-300), Miro::deg2Rad(-90), mR, bR);
+  rR = regressionsGerade(Miro::deg2Rad(-150), Miro::deg2Rad(-30), Miro::deg2Rad(-90), mR, bR);
   //    rR = regressionsGerade(rightFront_, Miro::deg2Rad(-45), mR, bR);
 
   //  cout << name_ << ": selecting action" << endl;
@@ -129,7 +129,6 @@ WallFollow::action()
 				    max(-params->rotation, alpha));
   }
 
-  //  cout << name_ << ": action." << endl;
   arbitrate(message);
 }
 
@@ -152,8 +151,10 @@ WallFollow::regressionsGerade(double _alpha, double _beta, double delta,
     //    cout << "x =" << first->real() << "\t y=" << first->imag() << endl;
   }
 
-  if (scan.size() < 5) // too litle data
+  if (scan.size() < 5) { // too litle data
+    cout << "too little data" << endl;
     return false;
+  }
 
   // Geradengleichung y = m*x + b
   Vector2d sum = std::accumulate(scan.begin(), scan.end(), Vector2d());
@@ -165,7 +166,6 @@ WallFollow::regressionsGerade(double _alpha, double _beta, double delta,
   double ymean = sum.imag() / n;
   double sxy = 0.;
   double ssqx = 0.;
-
 
   std::vector<Vector2d>::const_iterator i, iEnd = scan.end();
   for (i = scan.begin(); i != iEnd; ++i) {

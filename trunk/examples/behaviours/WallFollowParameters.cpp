@@ -19,7 +19,9 @@ using Miro::KeyValueList;
 
 WallFollowParameters::WallFollowParameters() :
   minDistance(600),
-  maxDistance(800)
+  maxDistance(800),
+  translation(500),
+  rotation(Miro::deg2Rad(45))
 {}
 
 void
@@ -38,7 +40,7 @@ WallFollowParameters::operator <<= (const KeyValueList& _params)
     translation = str.toInt();
   str = _params.getValue("Rotation");
   if (str.length() != 0)
-    rotation = str.toInt();
+    rotation = Miro::deg2Rad(str.toDouble());
 }
 
 void
@@ -46,5 +48,7 @@ WallFollowParameters::printToStream(std::ostream& ostr) const
 {
   Super::printToStream(ostr);
   ostr << "minimal distance: " << minDistance << "mm" << endl
-       << "maximum distane: " << maxDistance << "mm" << endl;
+       << "maximum distane: " << maxDistance << "mm" << endl
+       << "translation: " << translation << "mm/s" << endl
+       << "rotation: " << Miro::rad2Deg(rotation) << "°/s" << endl;
 }
