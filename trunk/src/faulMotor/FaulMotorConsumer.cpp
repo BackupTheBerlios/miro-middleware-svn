@@ -113,10 +113,10 @@ namespace FaulMotor
 	//if ((pFaulMsg->RPos < 3000) or (pFaulMsg->RPos > 10000) pConnection->setPos0(0);
 
 	status_.position.heading =(status_.position.heading -(dL-dR)/d);
-	if (test <= -M_PI)
-	status_.position.heading += 2 * M_PI;
-      else if (status_.position.heading > M_PI)
-	status_.position.heading -= 2 * M_PI;
+	if (status_.position.heading <= -M_PI)
+	  status_.position.heading += 2. * M_PI;
+	else if (status_.position.heading > M_PI)
+	  status_.position.heading -= 2. * M_PI;
 
 	//status_.position.heading =test;
 	//if (test>=M_PI) status_.position.heading =test-M_PI;
@@ -154,8 +154,8 @@ namespace FaulMotor
 	//cout << "r: " << r << "  egoX: " << egoX << " egoY: " << egoY<< " winkel bogen "<< status_.position.heading<<endl;
 
 	*/
-	status_.position.point.x = status_.position.point.x + cos(status_.position.heading) * (dL+dR) / 2;
-	status_.position.point.y = status_.position.point.y - sin(status_.position.heading) * (dL+dR) / 2;
+	status_.position.point.x = status_.position.point.x - sin(status_.position.heading) * (dL+dR) / 2;
+	status_.position.point.y = status_.position.point.y + cos(status_.position.heading) * (dL+dR) / 2; 
 	//status_.position.point.x = 0.;
         //status_.position.point.y = 0.;
         //status_.velocity.translation = 0;
