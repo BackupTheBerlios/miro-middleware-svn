@@ -2,7 +2,7 @@
 ##
 ## This file is part of Miro (The Middleware For Robots)
 ##
-## (c) 2003
+## (c) 2003, 2004
 ## Department of Neural Information Processing, University of Ulm, Germany
 ##
 ## $Id$
@@ -11,10 +11,10 @@
 ##
 ##############################################################################
 
-AC_INIT(Miro, 2.0.0)
+AC_INIT(Miro, 2.1.0)
 AC_CONFIG_AUX_DIR(config)
 # AM_INIT_AUTOMAKE() # for never automake versions
-AM_INIT_AUTOMAKE(Miro, 2.0.0) 
+AM_INIT_AUTOMAKE(Miro, 2.1.0) 
 
 AM_CONFIG_HEADER(config.h)
 
@@ -240,6 +240,7 @@ AC_CONFIG_FILES([Makefile
                  performance-tests/response/Makefile
                  performance-tests/video/Makefile
 		 performance-tests/faul/Makefile
+		 performance-tests/logging/Makefile
                  tests/Makefile
                  tests/b21/Makefile
                  tests/behaviourEngine/Makefile
