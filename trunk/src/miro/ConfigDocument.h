@@ -11,7 +11,7 @@
 #ifndef Miro_ConfigDocument_h
 #define Miro_ConfigDocument_h
 
-#include <Exception.h>
+#include "Exception.h"
 
 #include <string>
 #include <vector>
