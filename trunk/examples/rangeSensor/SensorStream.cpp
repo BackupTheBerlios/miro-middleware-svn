@@ -13,6 +13,8 @@
 #include "SensorStream.h"
 
 #include "miro/Server.h"
+#include "miro/Log.h"
+
 #include "idl/RangeEventC.h"
 
 #include <map>
@@ -113,17 +115,17 @@ SensorStream::push_structured_event(const StructuredEvent & notification
     }
   }
   else
-    cerr << "No SensorIDL message." << endl;
+    MIRO_LOG_OSTR("SensorStream",LM_ERROR, "No SensorIDL message." << endl);
 }
 
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
   Miro::Server server(argc, argv);
 
   if( argc <= 2 ) {
     cout << "usage: " << argv[0] << " <sensor name> <sensor #1> <sensor #2> ...<-group group#>" << endl;
     cout << "prints sensor values of the specified sensor." << endl;
+
     return 0;
   }
   group = 0;
@@ -132,7 +134,8 @@ main(int argc, char *argv[])
   if(argc >=4 && (strcmp(argv[argc-2], "-group") == 0)){
      group = atoi(argv[argc-1]);
      group_en = true;
-     cout << "Group: " << group << endl;
+
+     MIRO_LOG_OSTR("SensorStream",LM_INFO, "Group: " << group << endl);
 
   }
 
@@ -144,7 +147,8 @@ main(int argc, char *argv[])
     // The one channel that we create using the factory.
     EventChannel_var ec(server.resolveName<EventChannel>("EventChannel"));
 
-    cerr << "press return to start..." << flush;
+    cout << "press return to start..." << flush;
+
     getchar();
 
     // The consumer, that gets the events
@@ -152,16 +156,16 @@ main(int argc, char *argv[])
 			      server.namingContextName,
 			      std::string(argv[1]) );
 
-    cerr << "Loop forever handling events." << endl;
+    MIRO_LOG_OSTR("SensorStream",LM_INFO, "Loop forever handling events." << endl);
     server.run();
-    cerr << "Server stoped, exiting." << endl;
+    MIRO_LOG_OSTR("SensorStream",LM_INFO, "Server stopped, exiting." << endl);
   }
   catch (const CORBA::Exception & e) {
-    cerr << "Uncaught CORBA exception: " << e << endl;
+    MIRO_LOG_OSTR("SensorStream",LM_CRITICAL, "Uncaught CORBA exception: " << e << endl);
     return 1;
   }
   catch (...) {
-    cerr << "Uncaught exception!" << endl;
+    MIRO_LOG_OSTR("SensorStream",LM_CRITICAL, "Uncaught exception!" << endl);
     return 1;
   }
   return 0;

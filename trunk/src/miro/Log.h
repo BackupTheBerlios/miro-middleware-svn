@@ -16,37 +16,27 @@
 #include <string>
 #include <sstream>
 
+
 //
 // a log facility, providing loglevels and log filters
 //
 
 #if defined (MIRO_NO_LOGGING)
 
-#define MIRO_LOG(C, X) do {} while (0)
-#define MIRO_LOG_OSTR(C, L, O) do {} while (0)
+#define MIRO_LOG_OSTR(Category, LogPriority, Out) do {} while (0)
 #define MIRO_DBG(C, X) do {} while (0)
 #define MIRO_DBG_OSTR(C, L, O) do {} while (0)
 
 #else // !MIRO_NO_LOGGING
 
-#define MIRO_LOG(C, X) \
+#define MIRO_LOG_OSTR(Category, LogPriority, Out) \
   do { \
-    unsigned int n__ = C; \
-    if (::Miro::Log::level() >= n__) { \
-      ACE_Log_Msg *ace___ = ACE_Log_Msg::instance (); \
-      ace___->conditional_set (__FILE__, __LINE__, 0, 0); \
-      ace___->log X; \
-    } \
-  } while (0)
-#define MIRO_LOG_OSTR(C, L, O) \
-  do { \
-    unsigned int n__ = C; \
-    if (::Miro::Log::level() >= n__) { \
+    char* cat = Category; \
+    if (1) { \
       ACE_Log_Msg *ace___ = ACE_Log_Msg::instance (); \
       std::ostringstream ostr__; \
-      ostr__ << O; \
-      ace___->conditional_set (__FILE__, __LINE__, 0, 0); \
-      ace___->log (L, "%c", ostr__.str().c_str()); \
+      ostr__ << Out; \
+      ace___->log (LogPriority, "[%s] %s", Category , ostr__.str().c_str()); \
     } \
   } while (0)
 
@@ -66,15 +56,14 @@
       ace___->log X; \
     } \
   } while (0)
-#define MIRO_DBG_OSTR(C, L, O) \
+#define MIRO_DBG_OSTR(Category, LogPriority, Out) \
   do { \
-    unsigned int n__ = C; \
-    if (::Miro::Log::level() >= n__) { \
+    char* cat = Category; \
+    if (1) { \
       ACE_Log_Msg *ace___ = ACE_Log_Msg::instance (); \
       std::ostringstream ostr__; \
-      ostr__ << O; \
-      ace___->conditional_set (__FILE__, __LINE__, 0, 0); \
-      ace___->log (L, "%c", ostr__.str().c_str()); \
+      ostr__ << Out; \
+      ace___->log (LogPriority, "[%s] [%s:%i] %s", Category, __FILE__,__LINE__, ostr__.str().c_str()); \
     } \
   } while (0)
 
@@ -115,9 +104,16 @@ namespace Miro
     static void level(unsigned int _level) throw();
     static unsigned int mask() throw();
     static void mask(unsigned int _mask) throw();
-
+     
+     
     Log(int visibleLoglevel_, std::string objectName_);
     virtual ~Log();
+
+
+    /**
+     * log categories
+     */
+    typedef enum {MIRO_GENERIC,NIX_GENERIC} LogCategory;
 
     /**
      * log levels
