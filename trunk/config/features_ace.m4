@@ -63,7 +63,7 @@ make -f conftest.Makefile.bin >> conftest.run
 # I'm quite sure, that I earn the useless use of cat/echo/back-ticks award, 
 # but hey, it works.
 ac_feature_acetao_symbols=`for i in \`cat conftest.run \`; do expr $i : '\(-D.*\)'; done | grep -v ^$ | sort -u`
-ac_feature_acetao_warnings=`for i in \`cat conftest.run \`; do expr $i : '\(-W.*\)'; done | grep -v ^$ | sort -u`
+# ac_feature_acetao_warnings=`for i in \`cat conftest.run \`; do expr $i : '\(-W.*\)'; done | grep -v ^$ | sort -u`
 ac_feature_acetao_libs=`for i in \`cat conftest.run \`; do expr $i : '\(-l.*\)'; done | grep -v ^$ | sort -u`
 ac_feature_acetao_libdirs=`for i in \`cat conftest.run \`; do expr $i : '\(-L.*\)'; done | grep -v ^$ | sort -u`
 ac_feature_acetao_incldirs=`for i in \`cat conftest.run \`; do expr $i : '\(-I.*\)'; done | grep -v ^$ | sort -u`
@@ -97,10 +97,10 @@ ac_feature_acetao_libs=`echo $ac_feature_acetao_libs | sed 's/-lqt-mt//' | sed '
 	AC_SUBST(INHERITED_CFLAGS, ["$ac_feature_acetao_incldirs"])
 	AC_SUBST(INHERITED_LIBS, ["$ac_feature_acetao_libs"])
 
-ac_feature_acetao_warnings=`echo $ac_feature_acetao_warnings`
+# ac_feature_acetao_warnings=`echo $ac_feature_acetao_warnings`
 ac_feature_acetao_symbols=`echo $ac_feature_acetao_symbols`
 
-	AC_SUBST(INHERITED_WARNINGS, ["$ac_feature_acetao_warnings"])
+#	AC_SUBST(INHERITED_WARNINGS, ["$ac_feature_acetao_warnings"])
 	AC_SUBST(INHERITED_SYMBOLS, ["$ac_feature_acetao_symbols"])
 
 	AC_MSG_RESULT([yes])

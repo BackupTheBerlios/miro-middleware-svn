@@ -67,9 +67,11 @@ AC_CHECK_PROG(ac_has_doxygen, doxygen, yes, no)
 
 # our own specific paket tests
 AC_CHECK_LIB(termcap, free)
-AC_SEARCH_SPEECHTOOLS
-AC_SEARCH_SPHINX
-AC_SEARCH_FESTIVAL
+if test "x$ac_request_speech" = xyes; then
+	AC_SEARCH_SPEECHTOOLS
+	AC_SEARCH_SPHINX
+	AC_SEARCH_FESTIVAL
+fi
 AC_SEARCH_QT
 AC_SEARCH_ACE
 AC_SEARCH_TAO
@@ -263,7 +265,7 @@ echo ""
 echo "inherited compilation values from ACE/TAO:"
 echo ""
 echo "symbols:   " $ac_feature_acetao_symbols
-echo "warnings:  " $ac_feature_acetao_warnings
+# echo "warnings:  " $ac_feature_acetao_warnings
 echo "libraries: " $ac_feature_acetao_libs
 echo "lib-dirs:  " $ac_feature_acetao_libdirs
 echo "incl-dirs: " $ac_feature_acetao_incldirs
