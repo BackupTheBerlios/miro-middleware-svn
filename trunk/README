@@ -4,13 +4,12 @@ The layout of this this software is organized as follows:
 
 $(MIRO_ROOT)/
 
- bin       : this where the executables are installed
+ bin       : this is, where the executables are installed
  include   : collects symbolic links to all relevant header files 
  lib       : collects symbolic links to all libraries
 
  idl       : contains idl sources
  src       : contains the source code of all components of miro
- demo      : contains subdirectories with demo code
  examples  : contains subdirectories with example code (as simple as possible)
  performance-tests : contains subdirectories with performace-test code 
  tests     : contains subdirectories with test code
