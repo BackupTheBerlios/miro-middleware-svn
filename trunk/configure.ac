@@ -237,6 +237,7 @@ AC_CONFIG_FILES([Makefile
                  examples/sonar/Makefile
                  examples/speechSimple/Makefile
                  examples/stall/Makefile
+                 examples/tcm2/Makefile
                  examples/video/Makefile
                  examples/videoFilter/Makefile
                  examples/behaviours/Makefile
