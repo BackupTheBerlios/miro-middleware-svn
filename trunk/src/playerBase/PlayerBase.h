@@ -22,6 +22,7 @@
 #include "PlayerReactorTask.h"
 #include "PlayerMotionImpl.h"
 #include "PlayerPanTiltImpl.h"
+#include "PlayerCameraControlImpl.h"
 #include "PlayerStallImpl.h"
 
 #include <orbsvcs/CosNotifyChannelAdminS.h>
@@ -76,7 +77,7 @@ private:
   Miro::RangeSensorImpl infrared;
   Miro::LaserImpl laser;
   Player::PlayerPanTiltImpl panTilt;
-  //  Player::PlayerCameraImpl camera;
+  Player::CameraControlImpl cameraControl;
   //  Miro::GripperImpl gripper;
 
   Miro::Odometry_var pOdometry;
@@ -89,7 +90,7 @@ private:
   Miro::Laser_var pLaser;
   Miro::Battery_var pBattery;
   Miro::PanTilt_var pPanTilt;
-  //  Miro::Camera_var pCamera;
+  Miro::CameraControl_var pCameraControl;
   //  Miro::Gripper_var pGripper;
 
   PlayerClient* playerClient;

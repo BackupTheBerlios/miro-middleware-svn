@@ -2,7 +2,9 @@
 #include "Parameters.h"
 #include "PlayerLaserImpl.h"
 #include "PlayerMotionImpl.h"
+#include "PlayerConnection.h"
 #include "PlayerPanTiltImpl.h"
+#include "PlayerCameraControlImpl.h"
 #include "PlayerStallImpl.h"
 
 #include "miro/RangeSensorImpl.h"
@@ -34,19 +36,21 @@ namespace Miro {
 				       OdometryImpl * _pOdometry, 
 				       PlayerMotionImpl * _pMotion, 
 				       BatteryImpl * _pBattery, 
-				       PlayerPanTiltImpl * _pPanTilt, 
+				       PlayerPanTiltImpl * _pPanTilt,
+				       Player::CameraControlImpl * _pCameraControl,
 				       Player::StallImpl * _pStall
 				       ) throw (CORBA::Exception) :
     Super(),
-    pSonar(_pSonar),
-    pLaser(_pLaser),
-    pInfrared(_pInfrared),
-    pTactile(_pTactile),
-    pOdometry(_pOdometry),
-    pMotion(_pMotion),
-    pBattery(_pBattery),
-    pPanTilt(_pPanTilt),
-    pStall(_pStall),
+    pSonar_(_pSonar),
+    pLaser_(_pLaser),
+    pInfrared_(_pInfrared),
+    pTactile_(_pTactile),
+    pOdometry_(_pOdometry),
+    pMotion_(_pMotion),
+    pBattery_(_pBattery),
+    pPanTilt_(_pPanTilt),
+    pCameraControl_(_pCameraControl),
+    pStall_(_pStall),
     params_(::Player::Parameters::instance()),
     playerClient(client),
     playerSonar(NULL),
@@ -119,11 +123,19 @@ namespace Miro {
     int sonarReadings=16;
     string robotName="Robot";
 
-    assert(pMotion!=NULL);
-      pMotion->setPlayerPositionProxy(playerPosition);
+    assert(pMotion_!=NULL);
+    pMotion_->setPlayerPositionProxy(playerPosition);
+    
 
-    if (pPanTilt) 
-      pPanTilt->setPlayerPTZProxy(playerPTZ);
+    Player::PlayerConnection * playerConnection=NULL;
+    if (playerPTZ) 
+      playerConnection=new Player::PlayerConnection(playerPTZ);
+    
+    if (pPanTilt_ && playerConnection)
+      pPanTilt_->setPlayerConnection(playerConnection);
+
+    if (pCameraControl_ && playerConnection)
+      pCameraControl_->setPlayerConnection(playerConnection);
 
     while (!done) {
     
@@ -138,7 +150,7 @@ namespace Miro {
 	timestamp.sec=playerClient->timestamp.tv_sec;
 	timestamp.usec=playerClient->timestamp.tv_usec;
 
-	if ((pLaser!=NULL) && (playerLaser!=NULL)) {
+	if ((pLaser_!=NULL) && (playerLaser!=NULL)) {
 	  int laserReadings=playerLaser->RangeCount();
 
 	  RangeBunchEventIDL * pLaserEvent = new RangeBunchEventIDL();
@@ -171,10 +183,10 @@ namespace Miro {
 	  }
 
 	  pLaserEvent->time=timestamp;
-	  pLaser->integrateData(pLaserEvent);
+	  pLaser_->integrateData(pLaserEvent);
 	  
 	} // Laser end
-	if ((pSonar!=NULL) && (playerSonar!=NULL)) {
+	if ((pSonar_!=NULL) && (playerSonar!=NULL)) {
 	  RangeBunchEventIDL * pSonarEvent = new RangeBunchEventIDL();
 
 	  pSonarEvent->sensor.length(sonarReadings);
@@ -202,11 +214,11 @@ namespace Miro {
 	      pSonarEvent->sensor[i].range=params_->sonarDescription.group[group].description.minRange;
 	  }
 	  pSonarEvent->time=timestamp;
-	  pSonar->integrateData(pSonarEvent);
+	  pSonar_->integrateData(pSonarEvent);
 	  
 	}
 	
-	if ((pOdometry!=NULL) && (playerPosition!=NULL)) {
+	if ((pOdometry_!=NULL) && (playerPosition!=NULL)) {
 
 	  status.position.point.x=long(playerPosition->Xpos()*1000); //m to mm
 	  status.position.point.y=long(playerPosition->Ypos()*1000); //m to mm
@@ -218,43 +230,18 @@ namespace Miro {
 
 	  status.time=timestamp;
 
-	  pOdometry->integrateData(status);
+	  pOdometry_->integrateData(status);
 
-	  if (pStall!=NULL) {
-	    pStall->integrateData(playerPosition->Stall());
+	  if (pStall_!=NULL) {
+	    pStall_->integrateData(playerPosition->Stall());
 	  }
 
 	} // odometry end
-	if ((pBattery!=NULL) && (playerPower != NULL)) {
-	  pBattery->integrateData(playerPower->Charge());
+	if ((pBattery_!=NULL) && (playerPower != NULL)) {
+	  pBattery_->integrateData(playerPower->Charge());
 	} // battery end
       }
     }
-
-    while(!done && 0) {
-      //TODO: set the delays acording to the sensor frequency got from the xml file
-      TimeIDL timestamp;
-
-      //TODO: get timestamp from simulator and not real time
-      timeA2C(ACE_OS::gettimeofday(),timestamp);
-
-      try {
-
-	//TODO: check whether the delay between sensor readings is enough
-	if (pSonar!=NULL) {
-	  
-	} // Sonar end
-
-      }
-      catch (const CORBA::Exception & e) {
-	cerr << "CORBA Exception: ";
-	//	::operator<<(cerr,e);
-	cerr << endl;
-	cerr << "Ending..." << endl;
-	throw;
-      }
-
-    } //while end
 
     return 1;
   }

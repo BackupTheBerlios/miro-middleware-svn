@@ -18,8 +18,8 @@
 #include "miro/Exception.h"
 
 // forward declarations
-class PtzProxy;
 class ACE_Reactor;
+
 namespace Miro
 {
   class Exception;
@@ -27,6 +27,8 @@ namespace Miro
 
 namespace Player
 {
+  class PlayerConnection;
+
   class PlayerPanTiltImpl : public virtual POA_Miro::PanTilt , 
 			    public virtual Miro::PanTiltImpl
   {
@@ -63,12 +65,12 @@ namespace Player
       throw(Miro::EOutOfBounds, Miro::EDevIO);
     
 
-    void setPlayerPTZProxy(PtzProxy * _playerPTZ);
+    void setPlayerConnection(PlayerConnection * _playerConnection);
 
 
   protected:
 
-    PtzProxy * playerPTZ;
+    PlayerConnection * playerConnection_;
     
     static ACE_Time_Value maxWait;
     double currentPan;

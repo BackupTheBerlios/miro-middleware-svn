@@ -49,7 +49,7 @@ PlayerBase::PlayerBase(int argc, char *argv[],
 		       int playerId
 		       ) throw (CORBA::Exception) :
   Super(argc, argv),
-  reactorTask(client,playerId,&sonar,&laser,&infrared,&tactile,&odometry,&motion,&battery,&panTilt,&stall),
+  reactorTask(client,playerId,&sonar,&laser,&infrared,&tactile,&odometry,&motion,&battery,&panTilt,&cameraControl,&stall),
 
   // Notification Channel
   notifyFactory_(TAO_Notify_EventChannelFactory_i::create(poa.in() ACE_ENV_ARG_PARAMETER)),
@@ -70,6 +70,7 @@ PlayerBase::PlayerBase(int argc, char *argv[],
 	Laser::Parameters::instance()->laserDescription, 
     	&structuredPushSupplier_),
   panTilt(Player::Parameters::instance()->panTiltParams,Player::Parameters::instance()->cameraParams.upsideDown),
+  cameraControl(Player::Parameters::instance()->cameraParams),
   playerClient(client)
 { 
 
@@ -82,7 +83,7 @@ PlayerBase::PlayerBase(int argc, char *argv[],
   pLaser = laser._this();
   pBattery = battery._this();
   pPanTilt = panTilt._this();
-  //  pCamera = camera._this();
+  pCameraControl = cameraControl._this();
   //  pGripper = gripper._this();
 
   addToNameService(pOdometry.in(), "Odometry");
@@ -102,6 +103,9 @@ PlayerBase::PlayerBase(int argc, char *argv[],
   addToNameService(ec_.in(), "EventChannel");
   if (reactorTask.panTiltBound())
     addToNameService(pPanTilt.in(),"PanTilt");
+  if (reactorTask.cameraControlBound())
+    addToNameService(pCameraControl.in(),"CameraControl");
+
 
   //  if (reactorTask.gripperBound())
   //    addToNameService(pGripper.in(), "Gripper");

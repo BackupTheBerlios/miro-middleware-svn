@@ -30,6 +30,7 @@ PlayerBase_SOURCES = \
 	PlayerLaserImpl.cpp \
 	PlayerMotionImpl.cpp \
 	PlayerPanTiltImpl.cpp \
+	PlayerCameraControlImpl.cpp \
 	PlayerStallImpl.cpp
 
 PlayerBase_LDADD = \

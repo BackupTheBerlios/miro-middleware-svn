@@ -15,6 +15,7 @@
 #include "miro/Angle.h"
 #include "miro/Log.h"
 
+#include "PlayerConnection.h"
 #include "PlayerPanTiltImpl.h"
 
 #include <playerclient.h>
@@ -37,7 +38,7 @@ namespace Player
   PlayerPanTiltImpl::PlayerPanTiltImpl(const Miro::PanTiltParameters& _panTiltParameters,
 				       bool _upsideDown) throw(Exception) :
     Miro::PanTiltImpl(_panTiltParameters),
-    playerPTZ(NULL),
+    playerConnection_(NULL),
     currentPan(0),
     currentTilt(0),
     panMinSpeed(-1),
@@ -122,8 +123,8 @@ namespace Player
   {
     Miro::PanTiltPositionIDL result;
 
-    result.tiltValue=playerPTZ->tilt;
-    result.panValue=playerPTZ->pan;
+    result.tiltValue=playerConnection_->getTilt();
+    result.panValue=playerConnection_->getPan();
 
     if (upsideDown) {
       //if inverse mounting, switch directions
@@ -148,14 +149,17 @@ namespace Player
     currentPan = dest.panValue *  (upsideDown? -1 :  1);
     currentTilt = dest.tiltValue* (upsideDown?  1 : -1);
     
-    playerPTZ->SetCam(currentPan,currentTilt,playerPTZ->zoom);
-    setTargetPosition(dest);
+    if (!playerConnection_->setPanTilt(currentPan,currentTilt)) {
+      throw Miro::EDevIO("Error on Player PanTilt device.");
+    } else {
+      setTargetPosition(dest);
+    }
   }
 
   void
-  PlayerPanTiltImpl::setPlayerPTZProxy(PtzProxy * _playerPTZ)
+  PlayerPanTiltImpl::setPlayerConnection(PlayerConnection * _playerConnection)
   {
-    playerPTZ = _playerPTZ;
+    playerConnection_ = _playerConnection;
   }
   
 };

@@ -21,6 +21,7 @@ class PtzProxy;
 namespace Player {
   class Parameters;
   class PlayerPanTiltImpl;
+  class CameraControlImpl;
   class StallImpl;
 }
 
@@ -46,19 +47,13 @@ namespace Miro {
 		      PlayerMotionImpl * _pMotion=NULL,
 		      BatteryImpl * _pBattery=NULL,
 		      Player::PlayerPanTiltImpl * _pPanTilt=NULL,
+		      Player::CameraControlImpl * _pCameraControl=NULL,
 		      Player::StallImpl * _pStall=NULL
 		      ) throw (CORBA::Exception);
 
     virtual ~PlayerReactorTask();
 
     virtual int svc() throw (CORBA::Exception);
-
-    void setSonar(RangeSensorImpl * _pSonar);
-    void setLaser(LaserImpl * _pLaser);
-    void setInfrared(RangeSensorImpl * _pInfrared);
-    void setTactile(RangeSensorImpl * _pTactile);
-    void setOdometry(OdometryImpl * _pOdometry);
-    void setMotion(PlayerMotionImpl * _pMotion);
 
     bool sonarBound();
     bool laserBound();
@@ -69,20 +64,23 @@ namespace Miro {
     bool stallBound();
     bool batteryBound();
     bool panTiltBound();
+    bool cameraControlBound();
 
     static bool done;
 
   private:
 
-    RangeSensorImpl * pSonar;
-    LaserImpl * pLaser;
-    RangeSensorImpl * pInfrared;
-    RangeSensorImpl * pTactile;
-    OdometryImpl * pOdometry;
-    PlayerMotionImpl * pMotion;
-    BatteryImpl * pBattery;
-    ::Player::PlayerPanTiltImpl * pPanTilt;
-    ::Player::StallImpl * pStall;
+    RangeSensorImpl * pSonar_;
+    LaserImpl * pLaser_;
+    RangeSensorImpl * pInfrared_;
+    RangeSensorImpl * pTactile_;
+    OdometryImpl * pOdometry_
+;
+    PlayerMotionImpl * pMotion_;
+    BatteryImpl * pBattery_;
+    ::Player::PlayerPanTiltImpl * pPanTilt_;
+    ::Player::CameraControlImpl * pCameraControl_;
+    ::Player::StallImpl * pStall_;
 
     PositionIDL position;
     VelocityIDL velocity;
@@ -101,20 +99,16 @@ namespace Miro {
     
   };
   
-  inline void PlayerReactorTask::setSonar(RangeSensorImpl * _pSonar) { pSonar=_pSonar; }
-  inline void PlayerReactorTask::setLaser(LaserImpl * _pLaser) {pLaser=_pLaser; }
-  inline void PlayerReactorTask::setInfrared(RangeSensorImpl * _pInfrared) { pInfrared=_pInfrared; }
-  inline void PlayerReactorTask::setTactile(RangeSensorImpl * _pTactile) { pTactile=_pTactile; }
-  inline void PlayerReactorTask::setOdometry(OdometryImpl * _pOdometry) {pOdometry=_pOdometry;}
-  inline void PlayerReactorTask::setMotion(PlayerMotionImpl * _pMotion) {pMotion = _pMotion; }
-
-  inline bool PlayerReactorTask::sonarBound() { return (pSonar !=NULL ) && (playerSonar != NULL); }
-  inline bool PlayerReactorTask::laserBound() { return (pLaser !=NULL ) && (playerLaser != NULL); }
-  inline bool PlayerReactorTask::infraredBound() { return (pInfrared !=NULL ) && (playerInfrared != NULL); }
-  inline bool PlayerReactorTask::tactileBound() { return (pTactile !=NULL ) && (playerBumper != NULL); }
-  inline bool PlayerReactorTask::batteryBound() { return (pBattery != NULL) && (playerPower != NULL); }
-  inline bool PlayerReactorTask::stallBound() { return (pStall != NULL ) && (playerPosition != NULL); }
-  inline bool PlayerReactorTask::panTiltBound() { return (pPanTilt != NULL) && (playerPTZ != NULL); }
+  inline bool PlayerReactorTask::sonarBound() { return (pSonar_ !=NULL ) && (playerSonar != NULL); }
+  inline bool PlayerReactorTask::laserBound() { return (pLaser_ !=NULL ) && (playerLaser != NULL); }
+  inline bool PlayerReactorTask::infraredBound() { return (pInfrared_ !=NULL ) && (playerInfrared != NULL); }
+  inline bool PlayerReactorTask::tactileBound() { return (pTactile_ !=NULL ) && (playerBumper != NULL); }
+  inline bool PlayerReactorTask::odometryBound() { return (pOdometry_ !=NULL ) && (playerPosition != NULL); }
+  inline bool PlayerReactorTask::motionBound() { return (pMotion_ !=NULL ) && (playerPosition != NULL); }
+  inline bool PlayerReactorTask::batteryBound() { return (pBattery_ != NULL) && (playerPower != NULL); }
+  inline bool PlayerReactorTask::stallBound() { return (pStall_ != NULL ) && (playerPosition != NULL); }
+  inline bool PlayerReactorTask::panTiltBound() { return (pPanTilt_ != NULL) && (playerPTZ != NULL); }
+  inline bool PlayerReactorTask::cameraControlBound() { return (pCameraControl_ != NULL) && (playerPTZ != NULL); }
 };
 
 #endif
