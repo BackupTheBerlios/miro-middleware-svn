@@ -221,6 +221,8 @@ SparrowBase::init(bool _startReactorTastk)
   // start the asychronous consumer listening for the hardware
   if (_startReactorTastk)
     reactorTask.open(0);
+
+  mcAdapter_->init();
 }
 
 SparrowBase::~SparrowBase()
