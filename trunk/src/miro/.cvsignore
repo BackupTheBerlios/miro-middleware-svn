@@ -257,3 +257,10 @@ NotifyMulticastParameters.cpp
 libmiro.so
 libmiroSvc.a
 libmiroSsh.a
+SparrowAliveC.cpp
+SparrowAliveC.h
+SparrowAliveC.i
+SparrowAliveS.cpp
+SparrowAliveS.h
+SparrowAliveS.i
+
