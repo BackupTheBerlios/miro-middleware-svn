@@ -156,7 +156,7 @@
 	<parameter value="29" name="TicksR" />
 	<parameter value="22.0" name="Deg2ServoTicksL"/>
 	<parameter value="19.0" name="Deg2ServoTicksR"/>
-	<parameter value="true" name="ChannelSharing" />
+	<parameter value="false" name="ChannelSharing" />
 	<parameter name="Motion" >
 	  <parameter value="180" name="MaxRotation" />
 	  <parameter value="-180" name="MinRotation" />
@@ -175,7 +175,7 @@
 
       <parameter name="Camera" >
 	<parameter value="0.060000" name="Latency" />
-	<parameter value="31.5" name="Alpha" />
+	<parameter value="34.0" name="Alpha" />
 	<parameter value="595" name="Height" />
 
 	<parameter value=" 6.4000000000e+02" name="Ncx" />
