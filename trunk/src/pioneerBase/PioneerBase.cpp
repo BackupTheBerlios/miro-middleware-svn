@@ -124,18 +124,19 @@ int
 main(int argc, char *argv[])
 {
   int rc = 0;
-
-  // Init TAO Factories
-  TAO_Notify_Default_CO_Factory::init_svc();
-  TAO_Notify_Default_POA_Factory::init_svc();
-  TAO_Notify_Default_Collection_Factory::init_svc();
-  TAO_Notify_Default_EMO_Factory::init_svc();
-
-  // Parameters to be passed to the services
-  Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
-  Pioneer::Parameters * pioneerParameters = Pioneer::Parameters::instance();
-
   try {
+    Miro::Log::init(argc, argv);
+
+    // Init TAO Factories
+    TAO_Notify_Default_CO_Factory::init_svc();
+    TAO_Notify_Default_POA_Factory::init_svc();
+    TAO_Notify_Default_Collection_Factory::init_svc();
+    TAO_Notify_Default_EMO_Factory::init_svc();
+    
+    // Parameters to be passed to the services
+    Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
+    Pioneer::Parameters * pioneerParameters = Pioneer::Parameters::instance();
+    
     // Config file processing
     Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
     config->setSection("Robot");
@@ -143,12 +144,12 @@ main(int argc, char *argv[])
     config->setSection("ActiveMedia");
     config->getParameters("PioneerBoard", *pioneerParameters);
     delete config;
-    
+      
 #ifdef DEBUG
     cout << "  robot parameters:" << endl << *robotParameters << endl;
     cout << "  pioneer parameters:" << endl << *pioneerParameters << endl;
 #endif
-    
+      
     DBG(cout << "Initialize server daemon." << endl);
     PioneerBase pioneerBase(argc, argv);
     try {
@@ -167,18 +168,11 @@ main(int argc, char *argv[])
       rc = 1;
     }
   }
-  catch (const Miro::CException& e) {
-    cerr << "Miro exception: " << e << endl;
-    rc = 1;
-  }
   catch (const Miro::Exception& e) {
     cerr << "Miro exception: " << e << endl;
     rc = 1;
   }
-  catch (...) {
-    cerr << "Uncaught exception: " << endl;
-    rc = 1;
-  }
+
   return rc;
 }
 

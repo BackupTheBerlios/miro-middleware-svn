@@ -91,8 +91,8 @@ namespace Miro
   void
   Log::init(int& argc, char * argv[]) 
   {
-
-    // register all logging cathegories at the log record
+    mask_ = 0;
+   // register all logging cathegories at the log record
     for (unsigned int i = 0; i < NUM_CATHEGORIES; ++i) {
       ACE_Log_Record::priority_name((ACE_Log_Priority)cathegories[i].priority, 
 				    cathegories[i].name);
@@ -115,14 +115,22 @@ namespace Miro
       else if (ACE_OS::strcasecmp(MIRO_LOG_FILTER, currentArg) == 0) {
 	arg_shifter.consume_arg();
 
-	mask_ = 0;
 	while (arg_shifter.is_parameter_next()) {
-	  for (unsigned int i = 0; i < NUM_CATHEGORIES; ++i) {
-	    if (ACE_OS::strcasecmp(cathegories[i].name, currentArg) == 0) {
-	      mask_ |= cathegories[i].priority;
+	  unsigned int i;
+	  for (i = 0; i < NUM_CATHEGORIES; ++i) {
+	    if (ACE_OS::strcasecmp(cathegories[i].name, arg_shifter.get_current ()) == 0) {
+	      unsigned long p;
+	      ACE_Log_Msg *l = ACE_Log_Msg::instance ();
+	      p = l->priority_mask(ACE_Log_Msg::PROCESS);
+	      p |= cathegories[i].priority;
+	      l->priority_mask(p, ACE_Log_Msg::PROCESS);
+
 	      break;
 	    }
 	  }
+	  if (i == NUM_CATHEGORIES)
+	    throw Miro::Exception(std::string("Unknown parameter for -MiroLogFilter: ") + 
+				  arg_shifter.get_current ());
 
 	  arg_shifter.consume_arg();
 	}
@@ -134,8 +142,20 @@ namespace Miro
 	  logDevice = arg_shifter.get_current ();
 	}
       }
-      else
+      else {
 	arg_shifter.ignore_arg ();
+      }
     }
+
+    mask_ = ACE_Log_Msg::instance()->priority_mask(ACE_Log_Msg::PROCESS);
+  
+//     for (unsigned int i = 0; i < 32; ++i) {
+//       unsigned long p = 1UL << i;
+//       if (mask_ & p) {
+// 	std::cout << "logged cathegory: " 
+// 		  << ACE_Log_Record::priority_name((ACE_Log_Priority) p) 
+// 		  << std::endl;
+//       }
+//    }
   }
 }

@@ -58,6 +58,14 @@ int
 main(int argc, char *argv[])
 {
   int rc = 0;
+  try {
+    Miro::Log::init(argc, argv);
+  }
+  catch (Miro::Exception const & e) {
+    std::cerr << "Initialization of logging failed: " << std::endl
+	      << e << std::endl;
+    return 1;
+  }
 
   // Parameters to be passed to the services
   Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();

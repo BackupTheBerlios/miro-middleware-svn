@@ -50,10 +50,12 @@ namespace Miro
   int
   Server::Worker::svc()
   {
+    MIRO_LOG(LL_NOTICE, "Entering (detached) server loop.");
     while (!shutdown_) {
       ACE_Time_Value timeSlice(0, 200000);
       orb_->perform_work(timeSlice);
     }
+    MIRO_LOG(LL_NOTICE, "Leaving (detached) server loop.");
     return 0;
   }
 

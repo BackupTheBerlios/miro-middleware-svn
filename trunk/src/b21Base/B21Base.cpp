@@ -113,19 +113,20 @@ int
 main(int argc, char *argv[])
 {
   int rc = 0;
-
-  // Init TAO Factories
-  TAO_Notify_Default_CO_Factory::init_svc();
-  TAO_Notify_Default_POA_Factory::init_svc();
-  TAO_Notify_Default_Collection_Factory::init_svc();
-  TAO_Notify_Default_EMO_Factory::init_svc();
-
-  // Parameters to be passed to the services
-  Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
-  Base::Parameters * baseParameters = Base::Parameters::instance();
-  Msp::Parameters * mspParameters = Msp::Parameters::instance();
-
   try {
+    Miro::Log::init(argc, argv);
+
+    // Init TAO Factories
+    TAO_Notify_Default_CO_Factory::init_svc();
+    TAO_Notify_Default_POA_Factory::init_svc();
+    TAO_Notify_Default_Collection_Factory::init_svc();
+    TAO_Notify_Default_EMO_Factory::init_svc();
+
+    // Parameters to be passed to the services
+    Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
+    Base::Parameters * baseParameters = Base::Parameters::instance();
+    Msp::Parameters * mspParameters = Msp::Parameters::instance();
+    
     // Config file processing
     Miro::ConfigDocument *config = new Miro::ConfigDocument(argc, argv);
     config->setSection("Robot");
@@ -161,16 +162,8 @@ main(int argc, char *argv[])
       rc = 1;
     }
   }
-  catch (const Miro::CException& e) {
-    cerr << "Miro exception: " << e << endl;
-    rc = 1;
-  }
   catch (const Miro::Exception& e) {
     cerr << "Miro exception: " << e << endl;
-    rc = 1;
-  }
-  catch (...) {
-    cerr << "Uncaught exception: " << endl;
     rc = 1;
   }
   return rc;
