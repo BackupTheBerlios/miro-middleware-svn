@@ -35,8 +35,11 @@ namespace Miro
 				       BufferSetIDL_out buffers)
     ACE_THROW_SPEC ((EOutOfBounds, EDevIO, ETimeOut))
   {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
+
     if (connections.length() == 0)
       throw EOutOfBounds("Empty connection set.");
+    buffers = new BufferSetIDL;
     buffers->length(connections.length());
 
     // locking harness
@@ -47,9 +50,10 @@ namespace Miro
     
     ::Video::BrokerRequestVector request;
 	
-    // process all filters
+    std::cout << "process all filters" << std::endl;
+
     for (unsigned int i = 0; i < connections.length(); ++i) {
-      // find corresponding filter
+      std::cout << "find corresponding filter" << std::endl;
       std::string name = (char const *)connections[i].filter;
       ::Video::Filter * filter = device_->findByInterfaceName(name);
 
@@ -64,7 +68,7 @@ namespace Miro
       assert(filter->interface() != NULL);
       filter->interface()->checkClientId(connections[i].id);
 
-      // install a callback for each
+      std::cout << "install a callback for each" << std::endl;
       ::Video::BrokerLink * link = new ::Video::BrokerLink(mutex, cond, buffers[i]);
       request.push_back(::Video::BrokerRequest(filter, link));
     }
@@ -74,8 +78,8 @@ namespace Miro
       device_->enqueueBrokerRequest(*first);
     }
 
-    // wait for completion of all filters
-    ACE_Time_Value maxWait = ACE_OS::gettimeofday() + ACE_Time_Value(0, 100000);
+    std::cout << "wait for completion of all filters" << std::endl;
+    ACE_Time_Value maxWait = ACE_OS::gettimeofday() + ACE_Time_Value(1, 100000);
     bool buffersPending;
     do {
       if (cond.wait(&maxWait) == -1) {
@@ -95,15 +99,16 @@ namespace Miro
     while (buffersPending);
 
 
-    //  get time stamp for images
+    std::cout << "get time stamp for images" << std::endl;
     ACE_Time_Value t;
+    CORBA::ULong index = 0;
     first = request.begin();
     first->filter->
-      interface()->bufferManager()->bufferTimeStamp(connections[0].id);
-    // check for filter synchronisation
-    for (++first; first != last; ++first) {
+      interface()->bufferManager()->bufferTimeStamp(buffers[index]);
+    std::cout << "check for filter synchronisation" << std::endl;
+    for (++index, ++first; first != last; ++first, ++index) {
       assert(first->filter->
-	     interface()->bufferManager()->bufferTimeStamp(connections[first - request.begin()].id)
+	     interface()->bufferManager()->bufferTimeStamp(buffers[index])
 	     == t);
       
     }
@@ -114,6 +119,9 @@ namespace Miro
     for (first = request.begin(); first != last; ++first) {
       delete first->link;
     }
+
+    std::cout << __PRETTY_FUNCTION__  << " end" << std::endl;
+
 
     return stamp;
   }
