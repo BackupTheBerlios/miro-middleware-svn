@@ -68,7 +68,8 @@ namespace FaulMotor
   void
   Connection::setSpeed(short _speed)
   {
-    char speedMessage[20];
+    char speedMessageL[20];
+    char speedMessageR[20];
 
     if (_speed < 10) {       // zum bremsen grosse beschl.
       char const * const speedMessage = "ac20\r\n\0";
@@ -78,9 +79,10 @@ namespace FaulMotor
 
     int speed = (short) (_speed * params_->speedConvFactor);//* 112;
 
-    sprintf(speedMessage, "v%d\r\n", speed); // build speed message
-    leftWheel_.writeMessage(speedMessage);
-    rightWheel_.writeMessage(speedMessage);             // send it
+    sprintf(speedMessageL, "v%d\r\n", -speed); // build speed message
+    sprintf(speedMessageR, "v%d\r\n", speed); // build speed message
+    leftWheel_.writeMessage(speedMessageL);
+    rightWheel_.writeMessage(speedMessageR);             // send it
   }
 
   void
@@ -89,7 +91,7 @@ namespace FaulMotor
     char speedMessageL[20];
     char speedMessageR[20];
 
-    int speedL = (short) (_speedL * params_->speedConvFactor);//* 112;
+    int speedL = (short) (-_speedL * params_->speedConvFactor);//* 112;
     int speedR = (short) (_speedR * params_->speedConvFactor);//* 112;
 
     sprintf(speedMessageL, "v%d\r\n", speedL); // build speed message
@@ -123,6 +125,8 @@ namespace FaulMotor
     strncpy(buffer, befehl, 253);
     strcat(buffer,"\r\n\0");
     leftWheel_.writeMessage(buffer);
+
+    // FIXME: we need to specify the wheel to send the command to
   }
 
   void
