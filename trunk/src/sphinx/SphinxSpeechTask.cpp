@@ -29,6 +29,9 @@ namespace Miro
   //////////////////////////////////////////////////////////////////////
   // SphinxSpeechTask
   //
+
+  bool SphinxSpeechTask::done=false;
+
   SphinxSpeechTask::SphinxSpeechTask(SphinxSpeechImpl * _speechImpl) :
     Super(),
     Log(INFO,"SphinxSpeechTask"),
@@ -160,7 +163,7 @@ namespace Miro
     cont_ad_calib(speechImpl->cont);
 
 
-    while (true) {
+    while (!done) {
       //test if the LM must be changed
       if (newLm.size() > 0 && newLm != currentLm)
       {
@@ -213,7 +216,7 @@ namespace Miro
       ts=speechImpl->cont->read_ts;
       Miro::timeA2C(ACE_OS::gettimeofday(),sentence.timestamp);
 
-      while (1) {//will break inside...
+      while (!done) {//will break inside...
 	
 	error = cont_ad_read(speechImpl->cont, adbuf, 4096);
 	if (error <0) break;
@@ -248,12 +251,9 @@ namespace Miro
       if (uttproc_result_seg(&error, &result, 1) < 0) {
 	cerr << "uttproc_result failed" << endl;
       }
-//      string resultStr="";
       sentence.sentence.length(10);
       int i=0;
       while (result!=NULL) {
-//	if (resultStr.size()!=0) resultStr+=" ";
-//	resultStr+=result->word;
 	sentence.sentence[i].word=result->word;
 	sentence.sentence[i].startFrame=result->sf;
 	sentence.sentence[i].endFrame=result->ef;
@@ -262,7 +262,7 @@ namespace Miro
 	sentence.sentence[i].confidence=result->conf;
 	sentence.sentence[i].latticeDensity=result->latden;
 	sentence.sentence[i].phonePerplexity=result->phone_perp;
-	if ((i%10)==0) { //each 10 words, increase result length by 10
+	if ((i%10)==0) { //each 10 words, increase result length (allocated memory) by 10
 	  sentence.sentence.length(i+10); 
 	}
 	i++;
@@ -272,7 +272,6 @@ namespace Miro
       //sentence.timestamp should already be there
       sentence.valid=true;	
       speechImpl->integrateData(sentence);
-      //      if (resultStr!="") cout << resultStr << endl << std::flush;
       
       ad_start_rec(speechImpl->ad);
 	

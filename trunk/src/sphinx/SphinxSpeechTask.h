@@ -70,6 +70,8 @@ namespace Miro
     std::string getLm();
 
 
+    static bool done;
+
   protected:
     SphinxSpeechImpl * speechImpl;
 

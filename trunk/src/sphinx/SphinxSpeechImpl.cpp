@@ -50,6 +50,9 @@ namespace Miro {
     stopRec();
     internalCleanup();
     if (festival !=NULL) delete festival;
+    speechTask.done=true;
+    //wait for the task to finish
+    speechTask.wait();
   }
   
   SentenceIDL *SphinxSpeechImpl::getLastSentence() throw(EDevIO)
