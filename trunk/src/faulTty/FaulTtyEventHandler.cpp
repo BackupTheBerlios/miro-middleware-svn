@@ -39,7 +39,8 @@ namespace FaulController
 
   EventHandler::EventHandler(Miro::DevConsumer * _consumer, OdometryMessage::Wheel _wheel) :
     Super(_consumer, new OdometryMessage(_wheel)),
-    negate_(false)
+    negate_(false),
+    firstMessage_(true)
   {
     DBG(cout << "Constructing FaulTtyEventHandler." << endl);
   }
@@ -61,18 +62,23 @@ namespace FaulController
     OdometryMessage * msg = static_cast<OdometryMessage *>(message_);
 
     // read data from the Faul device if we do not have some left
-    int bytes = ACE_OS::read(fd, buff_, 511);
+    int bytes = ACE_OS::read(fd, buff_, 5);
 
     if (bytes == -1)
       throw Miro::CException(errno, "Error on FaulTty file descriptor read.");
 
     if (bytes == 0)
       throw Miro::Exception("FaulTty file descriptor was called to read 0" \
-			    "bytes from the device. I can,A4(Bt belief this!");
+			    "bytes from the device. I can't belief this!");
 
-    DBG(buff_[bytes] = 0);
-    DBG(cout << "FaulTty message: " << buff_ << endl);
+    msg->time() = ACE_OS::gettimeofday();
+    msg->ticks_ = *(reinterpret_cast<long int *>(&buff_[0]));
+    if (!firstMessage_)
+      dispatchMessage();
+    else 
+      firstMessage_ = false;
 
+#ifdef ASCII_MODE
     char const * last = buff_ + bytes;
     for (char const * first = buff_; first != last; ++first) {
       if (msg->ticks_ == 0)
@@ -98,10 +104,10 @@ namespace FaulController
 	msg->ticks_ = 0;
       }
     }
+#endif
     DBG(cerr << "Read " << bytes << " bytes from FaulTty" << endl);
     DBG(cout << "FaulTtyEventHandler: Done with select" << endl);
 
     return 0;
   }
-
-};
+}

@@ -45,10 +45,11 @@ namespace FaulMotor
   int
   TimerEventHandler::handle_timeout(const ACE_Time_Value &, const void *)
   {
-
     if (Connection::gotTicks_ == 0)
       std::cerr << "odometry stall" << endl;
     Connection::gotTicks_ = 0;
+
+    connection_.getTicks();
     return 0;
   }
-};
+}

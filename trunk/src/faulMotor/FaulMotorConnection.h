@@ -39,6 +39,7 @@ namespace FaulMotor
     // motor functions //
     //-----------------//
     //void stop();                              // stop, motor remain enabled
+
     void setSpeed(short speedL, short speedR);
     void getSpeed();
     void getTicks();
@@ -70,8 +71,7 @@ namespace FaulMotor
   public:
     static unsigned int gotTicks_;
   };
-
-};
+}
 
 #endif
 

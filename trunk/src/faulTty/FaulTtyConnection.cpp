@@ -40,17 +40,29 @@ namespace FaulController
   FaulTtyConnection::FaulTtyConnection(ACE_Reactor * _reactor,
 			 EventHandler * _eventHandler,
 			 const Miro::TtyParameters& _parameters) :
-    eventHandler(_eventHandler)
+    ttyConnection_(_reactor, _eventHandler, _parameters)
   {
     DBG(cout << "Constructing FaulTtyConnection" << endl);
-    ttyConnection = new Miro::TtyConnection(_reactor, _eventHandler, _parameters);
   }
 
 
   FaulTtyConnection::~FaulTtyConnection()
   {
     DBG(cout << "Destructing FaulTtyConnection" << endl);
-    delete ttyConnection;
+  }
+
+  void
+  FaulTtyConnection::writeBinary(char const * const _buffer, int _len)
+  {
+    ACE_Time_Value av(ACE_OS::gettimeofday() + ACE_Time_Value(1));
+    if (mutex_.acquire(av) == -1)
+      throw Miro::CException(errno, "Error writing faulTty device.");
+
+    int rc = ttyConnection_.ioBuffer.send_n(_buffer, _len);
+    mutex_.release();
+
+    if (rc == -1)
+      throw Miro::EDevIO("Error writing FaulTty device.");
   }
 
   void
@@ -92,7 +104,7 @@ namespace FaulController
 
     unsigned int len = dest - buffer;
     if (len) {
-      rc = ttyConnection->ioBuffer.send_n(buffer, len);
+      rc = ttyConnection_.ioBuffer.send_n(buffer, len);
       lastWrite_ = ACE_OS::gettimeofday();
       // std::cout << "faulTTy: " << buffer << "end" << endl;
     }
@@ -102,4 +114,4 @@ namespace FaulController
     if (rc == -1)
       throw Miro::EDevIO("Error writing FaulTty device.");
   }
-};
+}

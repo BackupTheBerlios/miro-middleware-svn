@@ -104,4 +104,4 @@ namespace FaulMotor
   {
     std::cerr << "init max  not implemented" << endl;
   };
-};
+}

@@ -49,6 +49,33 @@ namespace FaulController
   }
 
   void
+  FaulCanConnection::writeBinary(char const * buffer, int _len)
+  {
+    ACE_Time_Value av(ACE_OS::gettimeofday() + ACE_Time_Value(1));
+
+    if (mutex_.acquire(av) == -1)
+      throw Miro::CException(errno, "Error writing faulCan device.");
+
+    ACE_Time_Value t = ACE_OS::gettimeofday();
+    ACE_Time_Value delta = t - lastWrite_;
+
+    if (delta < TIME_OUT) {
+      // is this sleep necessary ???
+      // well, yes
+
+      ACE_OS::sleep(TIME_OUT - delta); // this is at least 10usec thanks to linux
+    }
+
+    int index = 0;
+    while (_len > index) {
+      connection2003_->writeWheel(buffer + index, std::min(8, _len - index), motor_);
+      index += 8;
+    }
+    mutex_.release();
+  }
+
+
+  void
   FaulCanConnection::writeMessage(char const * const _message[])
   {
     ACE_Time_Value av(ACE_OS::gettimeofday() + ACE_Time_Value(1));
@@ -73,4 +100,4 @@ namespace FaulController
     }
     mutex_.release();
   }
-};
+}

@@ -43,13 +43,13 @@ namespace
 {
   char const * const DEF_ACC_MSG[2] = { "ac50", NULL}; // default acceleration
   char const * const GET_SPPED_MSG[2] = { "gn", NULL };
-  char const * const GET_TICKS_MSG[2] = { "pos", NULL };
+  char const GET_TICKS_MSG[1] = { (char const)201 };
   char const * const MOTOR_ENABLE_MSG[2] = { "en", NULL };
   char const * const MOTOR_DISABLE_MSG[2] = { "di", NULL };
   char const * const DISABLE_ODO_MSG[2] = { "jmp1", NULL };
   char const * const ENABLE_ODO_MSG[2] = { "jmp2", NULL };
   char const * const STOP_MSG[2] = { "jmp3", NULL };
-};
+}
 
 namespace FaulMotor
 {
@@ -105,13 +105,13 @@ namespace FaulMotor
 
 
     disable();
-    jmp2();
+    //    jmp2();
   }
 
   Connection::~Connection()
   {
     DBG(cout << "Destructing FaulMotorConnection." << endl);
-    jmp1();
+    //    jmp1();
     disable();
   }
 
@@ -209,8 +209,8 @@ namespace FaulMotor
 
     gotTicks_ = 0;
     
-    leftWheel_->writeMessage(GET_TICKS_MSG); // send it
-    rightWheel_->writeMessage(GET_TICKS_MSG);
+    leftWheel_->writeBinary(GET_TICKS_MSG, 1); // send it
+    rightWheel_->writeBinary(GET_TICKS_MSG, 1);
   }
 
   void
@@ -291,4 +291,4 @@ namespace FaulMotor
     leftWheel_->writeMessage(STOP_MSG);             // send it
     rightWheel_->writeMessage(STOP_MSG);
   }
-};
+}

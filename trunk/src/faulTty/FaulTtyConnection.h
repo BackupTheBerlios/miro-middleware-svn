@@ -36,17 +36,16 @@ namespace FaulController
 	       const Miro::TtyParameters& _parameters);
     virtual ~FaulTtyConnection();
 
-    void writeMessage(char const * const _message[]);
+    virtual void writeBinary(char const * _message, int _len);
+    virtual void writeMessage(char const * const _message[]);
 
   protected:
-    EventHandler* eventHandler;
-
-    Miro::TtyConnection * ttyConnection;
+    Miro::TtyConnection ttyConnection_;
 
     Miro::Mutex mutex_;
     ACE_Time_Value lastWrite_;
 
     friend class FaulMotor::Connection;
   };
-};
+}
 #endif
