@@ -225,7 +225,7 @@ $(BIN): $(STATIC_DEPS)
   $(TAO_ROOT)/tao/ObjectIDList.i \
   $(TAO_ROOT)/tao/StringSeqC.h \
   $(TAO_ROOT)/tao/StringSeqC.i \
-  /home/gmayer/Miro/src/miro/ExceptionC.i \
+  $(MIRO_ROOT)/src/miro/ExceptionC.i \
   $(TAO_ROOT)/tao/PortableServer/PortableServer.h \
   $(TAO_ROOT)/tao/PortableServer/portableserver_export.h \
   $(TAO_ROOT)/tao/PortableServer/PortableServerC.h \
@@ -241,19 +241,19 @@ $(BIN): $(STATIC_DEPS)
   $(TAO_ROOT)/tao/PortableServer/Collocated_Object.i \
   $(TAO_ROOT)/tao/PortableServer/ThruPOA_Object_Proxy_Impl.h \
   $(TAO_ROOT)/tao/PortableServer/Direct_Object_Proxy_Impl.h \
-  /home/gmayer/Miro/src/miro/ExceptionS.i \
+  $(MIRO_ROOT)/src/miro/ExceptionS.i \
   \
-  /home/gmayer/Miro/src/miro/TimeC.i /home/gmayer/Miro/src/miro/TimeS.i \
+  $(MIRO_ROOT)/src/miro/TimeC.i $(MIRO_ROOT)/src/miro/TimeS.i \
   \
   \
   \
-  /home/gmayer/Miro/src/miro/WorldPointC.i \
-  /home/gmayer/Miro/src/miro/WorldPointS.i \
+  $(MIRO_ROOT)/src/miro/WorldPointC.i \
+  $(MIRO_ROOT)/src/miro/WorldPointS.i \
   \
-  /home/gmayer/Miro/src/miro/PositionC.i \
-  /home/gmayer/Miro/src/miro/PositionS.i \
-  /home/gmayer/Miro/src/miro/VideoC.i \
-  /home/gmayer/Miro/src/miro/VideoS.i \
+  $(MIRO_ROOT)/src/miro/PositionC.i \
+  $(MIRO_ROOT)/src/miro/PositionS.i \
+  $(MIRO_ROOT)/src/miro/VideoC.i \
+  $(MIRO_ROOT)/src/miro/VideoS.i \
   $(ACE_ROOT)/ace/Sched_Params.h \
   $(ACE_ROOT)/ace/Sched_Params.i \
   \
