@@ -30,6 +30,7 @@
 #include "NotifyMulticastSH.h"
 
 #include "Log.h"
+#include "TimeHelper.h"
 
 #include <iostream>
 #include <ace/OS.h>
@@ -420,10 +421,13 @@ namespace Miro
                     
 	  // Drop packet if it's too old
 	  ACE_Time_Value now = ACE_OS::gettimeofday();
-	  ACE_Time_Value timestamp;
-	  timestamp.msec(_eventData.timestamp);
-	  ACE_Time_Value delta = 
-	    (now > timestamp)? now - timestamp : timestamp - now;
+	  unsigned long nowmsec = now.msec();
+	  unsigned long deltamsec = 
+	    (nowmsec > _eventData.timestamp)? 
+            nowmsec - _eventData.timestamp : 
+            _eventData.timestamp - nowmsec;
+          ACE_Time_Value delta;
+          delta.msec(deltamsec);
 
 	  if (params_->messageTimeout != ACE_Time_Value::zero &&
 	      delta > params_->messageTimeout) {
