@@ -273,10 +273,10 @@ namespace Video
       }
     }
 
-    std::cout << "set index of all pending broker requests" << std::endl;
+    // std::cout << "set index of all pending broker requests" << std::endl;
     setBrokerRequests();
 
-    std::cout << "release read buffer of predecessor" << std::endl;
+    // std::cout << "release read buffer of predecessor" << std::endl;
     if (pre_)
       pre_->bufferManager_->releaseReadBuffer(inputBufferIndex_);
 
@@ -489,7 +489,7 @@ namespace Video
   void 
   Filter::setBrokerRequests() 
   {
-    std::cout << __PRETTY_FUNCTION__ << std::endl;
+    // std::cout << __PRETTY_FUNCTION__ << std::endl;
 
     BrokerLinkVector::const_iterator first, last = brokerLink_.end();
     for (first = brokerLink_.begin(); first != last; ++first) {
@@ -501,7 +501,7 @@ namespace Video
   void
   Filter::addBrokerRequest(BrokerLink * _brokerRequest)
   {
-    std::cout << __PRETTY_FUNCTION__ << std::endl;
+    // std::cout << __PRETTY_FUNCTION__ << std::endl;
 
     brokerLink_.push_back(_brokerRequest);
   }

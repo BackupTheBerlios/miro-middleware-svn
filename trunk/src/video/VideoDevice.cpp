@@ -76,7 +76,7 @@ namespace Video
   void
   Device::setBrokerRequests()
   {
-    std::cout << __PRETTY_FUNCTION__ << std::endl;
+    // std::cout << __PRETTY_FUNCTION__ << std::endl;
 
     Miro::Guard guard(mutex_);
     BrokerRequestVector::const_iterator first, last = brokerRequest_.end();
