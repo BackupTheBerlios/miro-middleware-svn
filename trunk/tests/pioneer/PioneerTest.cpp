@@ -214,9 +214,10 @@ void cameraMenu(Service& service)
 	 << "9 - set Focus position" << endl
 	 << "0 - get Focus position" << endl
 	 << "a - set AutoFocus" << endl
-	 << "b - set AF Lock OFF" << endl
-	 << "c - set AF Lock ON" << endl
-	 << "d - set AF Value" << endl
+	 << "b - set AE Lock OFF" << endl
+	 << "c - set AE Lock ON" << endl
+	 << "d - set AE Value" << endl
+	 << "e - set Iris Value" << endl
 	 << endl << "x - back" << endl;
     cin >> str;
     c = str[0];
@@ -350,15 +351,24 @@ void cameraMenu(Service& service)
 	  cout << "New AE-value(16-255):" << endl;
 	  cin >> aeValue;
 
-	  service.canonCamera.setFocus(aeValue);
+	  service.canonCamera.setAE(aeValue);
+	  break;
+	}
+      case 'e':
+	{
+	  int irisValue;
+	  cout << "New Iris-value(2-10):" << endl;
+	  cin >> irisValue;
+
+	  service.canonCamera.setIrisAssignment(irisValue);
 	  break;
 	}
       case 'X':
       case 'x' : loop=false;break;
       default: cout << "gibts doch gar net!!!" << endl;
-	
+
       }//switch(c)
-    
+
   } //while(loop)
 }
 
