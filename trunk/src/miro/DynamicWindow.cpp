@@ -259,10 +259,10 @@ namespace Miro
 	
 	// lines definitely don't intersect beyond this point, so calculate line distance
 	
-	distance = min(getDistanceBetweenPointAndLine(*b1, *a1, *a2),
-		       getDistanceBetweenPointAndLine(*b2, *a1, *a2));
-	distance = min(distance, getDistanceBetweenPointAndLine(*a1, *b1, *b2));
-	distance = min(distance, getDistanceBetweenPointAndLine(*a2, *b1, *b2));
+	distance = min(getBetterDistanceBetweenPointAndLine(*b1, *a1, *a2),
+		       getBetterDistanceBetweenPointAndLine(*b2, *a1, *a2));
+	distance = min(distance, getBetterDistanceBetweenPointAndLine(*a1, *b1, *b2));
+	distance = min(distance, getBetterDistanceBetweenPointAndLine(*a2, *b1, *b2));
 	
 	// minDistance = distance, in the first run and everytime when distance < minDistance
 	if(((a1 == _polygon1.begin()) && (b1 == _polygon2.begin())) || (distance < minDistance)) {
@@ -292,7 +292,6 @@ namespace Miro
     
   }
   
-  
   void DynamicWindow::moveMountedPolygon(std::vector<Vector2d> &_polygon, Vector2d _distance) {
     
     std::vector<Vector2d>::iterator i;
@@ -302,7 +301,6 @@ namespace Miro
     }
     
   }
-  
 
   double DynamicWindow::getAngleBetweenVectors(Vector2d _v1, Vector2d _v2) {
 
@@ -321,31 +319,28 @@ namespace Miro
     
   }
   
+  double getBetterDistanceBetweenPointAndLine(Vector2d &_l1, Vector2d &_l2, const Vector2d &_p1) {
 
-  double DynamicWindow::getBetterDistanceBetweenPointAndLine(Vector2d _p1, Vector2d _l1, Vector2d _l2) {
-    
-    double distance, l1_l2_length, l1_p1_length, l2_p1_length;
     Vector2d l1_l2, l1_p1, l2_p1;
-    
+
     l1_l2 = _l2 - _l1;
-    l1_l2_length = sqrt(l1_l2.real() * l1_l2.real() + l1_l2.imag() * l1_l2.imag());
     l1_p1 = _p1 - _l1;
-    l1_p1_length = sqrt(l1_p1.real() * l1_p1.real() + l1_p1.imag() * l1_p1.imag());
+
+    if(l1_l2.real() * l1_p1.real() + l1_l2.imag() * l1_p1.imag() < 0) {
+      return sqrt(l1_p1.real() * l1_p1.real() + l1_p1.imag() * l1_p1.imag());
+    }
+
     l2_p1 = _p1 - _l2;
-    l2_p1_length = sqrt(l2_p1.real() * l2_p1.real() + l2_p1.imag() * l2_p1.imag());
-    
-    distance = (l1_l2.real() * l1_p1.imag() - l1_l2.imag() * l1_p1.real()) / l1_l2_length;
 
-    if(std::acos((l1_l2.real() * l1_p1.real() + l1_l2.imag() * l1_p1.imag()) / (l1_l2_length * l1_p1_length)) > M_PI)
-      distance = l1_p1_length;
+    if(-l1_l2.real() * l2_p1.real() + -l1_l2.imag() * l2_p1.imag() < 0) {
+      return sqrt(l2_p1.real() * l2_p1.real() + l2_p1.imag() * l2_p1.imag());
+    }
 
-    if(std::acos((-l1_l2.real() * l2_p1.real() + -l1_l2.imag() * l2_p1.imag()) / (l1_l2_length * l2_p1_length)) > M_PI)
-      distance = l2_p1_length;
-
-    return distance;
+    return (l1_l2.real() * l1_p1.imag() - l1_l2.imag() * l1_p1.real())
+      / sqrt(l1_l2.real() * l1_l2.real() + l1_l2.imag() * l1_l2.imag());
 
   }
-  
+
   double DynamicWindow::getDistanceBetweenPointAndLine(Vector2d _p1, Vector2d _l1, Vector2d _l2) {		
     
     Vector2d a, b, c, d, e, f, g;
