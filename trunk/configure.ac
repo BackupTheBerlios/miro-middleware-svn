@@ -80,7 +80,7 @@ fi
 AC_SEARCH_QT
 AC_SEARCH_ACE
 AC_SEARCH_TAO
-AC_FEATURES_COMPILE_ACE
+# AC_FEATURES_COMPILE_ACE
 
 # conditional compilation
 
@@ -131,12 +131,6 @@ if test "x$ac_request_meteor" = xyes; then
 	AC_DEFINE(MIRO_HAS_METEOR)
 	ac_miro_has_meteor=yes
 fi
-
-#if test "x$ac_request_ieee1394" = xyes; then
-#	AC_CHECK_LIB(raw1394, raw1394_get_libversion, [ac_have_libraw1394=yes], [ac_have_libraw1394=no])
-#	AC_CHECK_LIB(dc1394_control, dc1394_print_feature_set, [ac_have_libdc1394=yes], [ac_have_libdc1394=no], [-lraw1394])
-#	AC_DETERMINE_LIBDC_VERSION
-#fi
 
 if test "x$ac_request_ieee1394" = xyes; then
 	AC_CHECK_LIB(raw1394, raw1394_get_libversion, [ac_have_libraw1394=yes], [ac_have_libraw1394=no])
@@ -214,9 +208,12 @@ fi
 
 
 AC_DETERMINE_GCC_VERSION
+AC_DETERMINE_PCH # be sure, that this is called last (at least after AC_DETERMINE_GCC_VERSION)
+
 
 AC_CONFIG_FILES([Makefile
                  idl/Makefile
+                 pch/Makefile
                  src/Makefile
                  src/params/Makefile
                  src/makeParams/Makefile
@@ -349,7 +346,6 @@ echo "used idl comp: " $TAO_IDL
 echo ""
 echo "inherited compilation values from ACE/TAO:"
 echo "symbols:   " $ac_feature_acetao_symbols
-# echo "warnings:  " $ac_feature_acetao_warnings
 echo "libraries: " $ac_feature_acetao_libs
 echo "lib-dirs:  " $ac_feature_acetao_libdirs
 echo "incl-dirs: " $ac_feature_acetao_incldirs

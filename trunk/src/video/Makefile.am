@@ -21,7 +21,7 @@ bin_PROGRAMS = VideoService
 
 
 sources = \
-	Parameters.xml \
+	Parameters.cpp \
 	AsynchLinkManager.cpp \
 	AsynchBufferSet.cpp \
 	AsynchPreLink.cpp \
@@ -90,6 +90,8 @@ if COND_QUICKCAM
 quickcamsources_used = $(quickcamsources)
 endif
 
+Parameters.cpp: Parameters.xml
+
 
 
 libmiroVideo_la_SOURCES = \
@@ -99,12 +101,17 @@ libmiroVideo_la_SOURCES = \
 	$(1394sources_used) \
 	$(quickcamsources_used) \
 	$(playersources_used)
+if COND_PCH
+libmiroVideo_la_CPPFLAGS = -include $(top_builddir)/pch/all_shared.h $(CPPFLAGS) $(AM_CPPFLAGS)
+endif
 
 
 VideoService_SOURCES = VideoService.cpp
+if COND_PCH
+VideoService_CPPFLAGS = -include $(top_builddir)/pch/all_static.h $(CPPFLAGS) $(AM_CPPFLAGS)
+endif
 
-# VideoService_DEPENDENCIES = libmiroVideo.la
-
+## local version of libmiroVideo, because it is not installed at this point.
 if COND_IEEE1394
 1394libraries = \
 	-lraw1394 \
@@ -115,7 +122,6 @@ if COND_PLAYER
 playerlibraries = $(PLAYER_LDFLAGS) $(PLAYER_LIBS)
 endif
 
-## local version of libmiroVideo, because it is not installed at this point.
 VideoService_LDADD = \
 	$(top_builddir)/lib/libmiroSvc.a \
 	./libmiroVideo.la \
@@ -124,6 +130,7 @@ VideoService_LDADD = \
 	$(QT_LIBS) \
 	$(1394libraries) \
 	$(playerlibraries)
+
 
 extraheader = \
 	VideoFilterFactory.h \

@@ -18,7 +18,16 @@
 #include <ace/Signal.h>
 #include <ace/Task.h>
 
+#include <tao/Version.h>
+#if TAO_MAJOR_VERSION > 1 || \
+	        ( TAO_MAJOR_VERSION == 1 && TAO_MINOR_VERSION > 4 ) || \
+        ( TAO_MAJOR_VERSION == 1 && TAO_MINOR_VERSION == 4 && TAO_BETA_VERSION >= 3 )
+#include <orbsvcs/Naming/Naming_Client.h>
+#include <orbsvcs/Naming/Naming_Server.h>
+#else
 #include <orbsvcs/Naming/Naming_Utils.h>
+#endif
+
 #include <orbsvcs/CosNamingC.h>
 
 #include <vector>

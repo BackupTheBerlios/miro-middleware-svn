@@ -14,15 +14,13 @@
 ##############################################################################
 
 include $(top_srcdir)/config/Make-rules
-# AM_LDFLAGS += -version-info `echo $(VERSION) | sed 's/\./:/g'`
-
 
 lib_LTLIBRARIES = libmiro.la
 lib_LIBRARIES = libmiroSvc.a libmiroSsh.a
 
 
 sources1 = \
-	Parameters.xml \
+	Parameters.cpp \
 	XmlParse.cpp \
 	Exception.cpp \
 	Angle.cpp \
@@ -63,7 +61,7 @@ sources1 = \
 	TimedBehaviour.cpp \
 	Policy.cpp \
 	VelocitySpace.cpp \
-	NotifyMulticastParameters.xml \
+	NotifyMulticastParameters.cpp \
 	NotifyMulticastRequestEntry.cpp \
 	NotifyMulticastSender.cpp \
 	NotifyMulticastReceiver.cpp \
@@ -83,27 +81,28 @@ endif
 
 pioneersources1 = 
 
-
 if COND_PIONEER
 pioneersources1_used = $(pioneersources1)
 endif
 
-libmiro_la_SOURCES = $(sources1) $(sparrowsources1_used) $(pioneersources1_used)
+Parameters.cpp: Parameters.xml
+NotifyMulticastParameters.cpp: NotifyMulticastParameters.xml
 
+libmiro_la_SOURCES = $(sources1) $(sparrowsources1_used) $(pioneersources1_used)
+if COND_PCH
+libmiro_la_CPPFLAGS = -include $(top_builddir)/pch/all_shared.h $(CPPFLAGS) $(AM_CPPFLAGS)
+endif
 libmiro_la_LIBADD = \
-	-lTAO_CosNotification \
-	-lTAO_CosNaming \
-	-lTAO \
-	-lACE \
-	-lTAO_Strategies \
-	-lmiroIDL \
-	$(INHERITED_LIBS) \
-	$(QT_LIBS)
+	$(ACE_LIBS) \
+	$(TAO_LIBS) \
+        -lmiroIDL \
+        $(INHERITED_LIBS) \
+        $(QT_LIBS)
 
 
 
 sources2 = \
-	SvcParameters.xml \
+	SvcParameters.cpp \
 	DevConnection.cpp \
 	DevEventHandler.cpp \
 	DevConsumer.cpp \
@@ -129,16 +128,21 @@ sources2 = \
 	PanTiltImpl.cpp \
 	CameraControlImpl.cpp
 
-libmiroSvc_a_SOURCES = $(sources2)
+SvcParameters.cpp: SvcParameters.xml
 
+libmiroSvc_a_SOURCES = $(sources2)
+if COND_PCH
+libmiroSvc_a_CPPFLAGS = -include $(top_builddir)/pch/all_static.h $(CPPFLAGS) $(AM_CPPFLAGS)
+endif
 
 
 sources3 = \
 	Ssh.cpp
 
 libmiroSsh_a_SOURCES = $(sources3)
-
-
+if COND_PCH
+libmiroSsh_a_CPPFLAGS = -include $(top_builddir)/pch/all_static.h $(CPPFLAGS) $(AM_CPPFLAGS)
+endif
 
 extraheader = \
 	Singleton.h \
@@ -157,6 +161,7 @@ BUILT_SOURCES = \
 	Parameters.cpp Parameters.h \
 	NotifyMulticastParameters.cpp NotifyMulticastParameters.h \
 	SvcParameters.cpp SvcParameters.h
+
 CLEANFILES = $(BUILT_SOURCES)
 
 includefiles1 = \

@@ -13,8 +13,14 @@
 
 include $(top_srcdir)/config/Make-rules
 
+if COND_PCH
+pchdir = pch
+endif
+
+
 SUBDIRS = \
 	. \
+	$(pchdir) \
 	idl \
 	src \
 	tests \

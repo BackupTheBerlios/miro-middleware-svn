@@ -13,6 +13,10 @@
 
 include $(top_srcdir)/config/Make-rules
 # AM_LDFLAGS += -version-info `echo $(VERSION) | sed 's/\./:/g'`
+if COND_PCH
+CPPFLAGS+=-include $(top_builddir)/pch/all_shared.h
+endif
+
 
 SUFFIXES = .h .moc.cpp
 

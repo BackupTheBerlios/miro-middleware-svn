@@ -14,6 +14,9 @@
 ##############################################################################
 
 include $(top_srcdir)/config/Make-rules
+if COND_PCH
+CPPFLAGS+=-include $(top_builddir)/pch/all_static.h
+endif
 
 
 bin_PROGRAMS = FaulTest

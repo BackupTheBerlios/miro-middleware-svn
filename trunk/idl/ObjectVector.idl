@@ -36,9 +36,9 @@ module Miro
 
   interface ObjectVector
   {
-    mirrorObject getObjectVector(in ObjectType objectType);
+    mirrorObject getObjectVector(in ObjectType _objectType);
     //mirrorMoves getAktion();
-    void setObjectVector(in mirrorObject ObstArt, in ObjectType objectType);
+    void setObjectVector(in mirrorObject ObstArt, in ObjectType _objectType);
   };
 };
 //#endif // Obst_idl

@@ -13,6 +13,9 @@
 
 include $(top_srcdir)/config/Make-rules
 # AM_LDFLAGS += -version-info `echo $(VERSION) | sed 's/\./:/g'`
+if COND_PCH
+CPPFLAGS+=-include $(top_builddir)/pch/all_shared.h
+endif
 
 
 lib_LTLIBRARIES = libmiroParams.la
@@ -27,7 +30,9 @@ sources = \
 
 libmiroParams_la_SOURCES = $(sources)
 libmiroParams_la_LIBADD = \
-	-lACE \
+	$(ACE_LIBS) \
+	$(TAO_LIBS) \
+        $(INHERITED_LIBS) \
 	$(QT_LIBS)
 
 

@@ -13,6 +13,10 @@
 
 include $(top_srcdir)/config/Make-rules
 # AM_LDFLAGS += -version-info `echo $(VERSION) | sed 's/\./:/g'`
+if COND_PCH
+CPPFLAGS+=-include $(top_builddir)/pch/all_shared.h
+endif
+
 
 SUFFIXES = .idl C.cpp C.h C.i.h S.cpp S.h S.i.h
 
@@ -140,9 +144,9 @@ builtsources = \
 
 libmiroIDL_la_SOURCES = $(builtsources)
 
-libmiroIDL_la_LIBADD = \
-	-lTAO \
-	-lACE
+#libmiroIDL_la_LIBADD = \
+#	-lTAO \
+#	-lACE
 
 BUILT_SOURCES = $(builtsources)
 CLEANFILES = $(builtsources)
