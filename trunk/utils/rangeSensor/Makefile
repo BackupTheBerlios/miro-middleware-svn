@@ -44,6 +44,9 @@ BUILD 	= $(VBIN)
 include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
 include $(ACE_ROOT)/include/makeinclude/macros.GNU
 include $(MIRO_ROOT)/include/makeinclude/macros.miro.GNU
+
+depend: $(MOC_SRC)
+
 include $(TAO_ROOT)/rules.tao.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.nonested.GNU
@@ -71,14 +74,13 @@ realclean: clean
  $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/RangeSensorC.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i \
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
- $(MIRO_ROOT)/src/miro/ScanDescriptionC.i.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
  $(MIRO_ROOT)/src/miro/RangeEventC.h \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i.h \
- $(MIRO_ROOT)/src/miro/RangeEventC.i.h \
- $(MIRO_ROOT)/src/miro/RangeSensorC.i.h
+ $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/RangeEventC.i \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.i
 
 .obj/QtRangeSensor.moc.o .obj/QtRangeSensor.moc.so .shobj/QtRangeSensor.moc.o .shobj/QtRangeSensor.moc.so: QtRangeSensor.moc.cpp QtRangeSensor.h \
  $(MIRO_ROOT)/src/miro/Client.h \
@@ -87,13 +89,12 @@ realclean: clean
  $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/RangeSensorC.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i \
  $(MIRO_ROOT)/src/miro/ScanDescriptionC.h \
- $(MIRO_ROOT)/src/miro/ScanDescriptionC.i.h \
+ $(MIRO_ROOT)/src/miro/ScanDescriptionC.i \
  $(MIRO_ROOT)/src/miro/RangeEventC.h \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i.h \
- $(MIRO_ROOT)/src/miro/RangeEventC.i.h \
- $(MIRO_ROOT)/src/miro/RangeSensorC.i.h
+ $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/RangeEventC.i \
+ $(MIRO_ROOT)/src/miro/RangeSensorC.i
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

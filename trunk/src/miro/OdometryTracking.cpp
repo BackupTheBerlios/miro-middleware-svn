@@ -2,13 +2,12 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-
 
 #include "OdometryTracking.h"
 #include "TimeHelper.h"
@@ -23,6 +22,14 @@
 
 namespace Miro
 {
+  /**
+   * @param _ec The event channel at which the consumer will
+   * subscribe itself for the events.
+   *
+   * @param _domainName The domain name of the events. This is the
+   * same as the name of the naming context, within which the robot
+   * registers its services.
+   */
   OdometryTracking::OdometryTracking(CosNotifyChannelAdmin::EventChannel_ptr _ec,
 				     const std::string& _domainName) :
     Super(_ec),
@@ -49,6 +56,10 @@ namespace Miro
     DBG(std::cout << "finished" << std::endl);
   }
 
+  /**
+   * Consumer for the Odometry and RawPosition events.
+   * The incomeing events become stored in a bounded queue.
+   */
   void
   OdometryTracking::push_structured_event(const CosNotification::StructuredEvent & notification
 					  ACE_ENV_ARG_DECL_NOT_USED)

@@ -76,10 +76,10 @@ module Miro
      * requeseted rotational velocity.
      *
      */
-    void getMinMaxVeclocity(out long minTranslation,
-			    out long maxTranslation,
-			    out double minRotation,
-			    out double maxRotation);
+    void getMinMaxVelocity(out long minTranslation,
+			   out long maxTranslation,
+			   out double minRotation,
+			   out double maxRotation);
 
     //! Get the current target velocity of the mobile base.
     /**

@@ -2,13 +2,12 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-
 
 #include "DifferentialMotionImpl.h"
 
@@ -23,10 +22,10 @@ namespace Miro
   }
 
   void
-  DifferentialMotionImpl::getMinMaxLRVeclocity(CORBA::Long& minLTranslation,
-					       CORBA::Long& maxLTranslation,
-					       CORBA::Long& minRTranslation,
-					       CORBA::Long& maxRTranslation) throw()
+  DifferentialMotionImpl::getMinMaxLRVelocity(CORBA::Long& minLTranslation,
+					      CORBA::Long& maxLTranslation,
+					      CORBA::Long& minRTranslation,
+					      CORBA::Long& maxRTranslation) throw()
   {
     minLTranslation = params_.minLTranslation;
     maxLTranslation = params_.maxLTranslation;
@@ -45,9 +44,9 @@ namespace Miro
   }
 
   void
-  DifferentialMotionImpl::setTargetVelocity(Miro::VelocityIDL& velocity) 
+  DifferentialMotionImpl::setTargetVelocity(const Miro::VelocityIDL& _velocity) 
   {
-    Guard guard(mutex_);
+    Miro::VelocityIDL velocity(_velocity);
 
     CORBA::Long left;
     CORBA::Long right;
@@ -55,11 +54,11 @@ namespace Miro
     velocity2lr(velocity, left, right);
 
     // TODO: adjust velocties
-	  double fastWheel = velocity.translation + 225 * velocity.rotation;
-	  if (fastWheel > 900)
-	    velocity.translation = (int)(900 - 225 * velocity.rotation);
+    double fastWheel = velocity.translation + 225 * velocity.rotation;
+    if (fastWheel > 900)
+      velocity.translation = (int)(900 - 225 * velocity.rotation);
 
-    setTargetVelocity(velocity);
+    targetVelocity_ = velocity;
 
     left_ = left;
     right_ = right;
@@ -68,13 +67,8 @@ namespace Miro
   void
   DifferentialMotionImpl::setTargetVelocity(CORBA::Long left, CORBA::Long right) 
   {
-    Guard guard(mutex_);
-
-    Miro::VelocityIDL velocity;
-    lr2velocity(left, right, velocity);
-    setTargetVelocity(velocity);
-
     left_ = left;
     right_ = right;
+    lr2velocity(left_, right_, targetVelocity_);
   }
 };

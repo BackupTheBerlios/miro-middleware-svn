@@ -2,18 +2,21 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "MotionImpl.h"
 
 namespace Miro
 {
+  /**
+   * @param _params Reference to the MotionParameters for the
+   * motion device.
+   */
   MotionImpl::MotionImpl(const MotionParameters& _params) :
     params_(_params)
   {
@@ -22,10 +25,10 @@ namespace Miro
   }
 
   void
-  MotionImpl::getMinMaxVeclocity(CORBA::Long& minTranslation,
-				 CORBA::Long& maxTranslation,
-				 double& minRotation,
-				 double& maxRotation) throw()
+  MotionImpl::getMinMaxVelocity(CORBA::Long& minTranslation,
+				CORBA::Long& maxTranslation,
+				double& minRotation,
+				double& maxRotation) throw()
   {
     minTranslation = params_.minTranslation;
     maxTranslation = params_.maxTranslation;
@@ -41,9 +44,8 @@ namespace Miro
   }
 
   void
-  MotionImpl::setTargetVelocity(VelocityIDL& _velocity) 
+  MotionImpl::setTargetVelocity(const VelocityIDL& _velocity) 
   {
-    Guard guard(mutex_);
     targetVelocity_ = _velocity;
   }
 };

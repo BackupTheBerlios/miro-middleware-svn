@@ -64,17 +64,23 @@ namespace Pioneer
   void 
   MotionImpl::limp() throw(EDevIO)
   {
+    Miro::VelocityIDL v;
+    v.translation = 0;
+    v.rotation = 0.;
+
+    Miro::Guard guard(mutex_);
+    setTargetVelocity(v);
     connection.setSpeed2(0,0);
   }
 
   void 
   MotionImpl::setVelocity(const Miro::VelocityIDL& vel) throw(EOutOfBounds, EDevIO)
   {
-    //    if (abs(vel.translation) > Description::instance()->maxTransVelocity ||
-    //	abs(vel.rotation) > Description::instance()->maxRotVelocity)
-    //      throw EOutOfBounds();
+    testVelocityBounds(vel);
 
-    connection.setSpeedRot(vel.translation, vel.rotation);
+    Miro::Guard guard(mutex_);
+    setTargetVelocity(vel);
+    connection.setSpeedRot(targetVelocity_.translation, targetVelocity_.rotation);
   }
 
   //--------------------------------------------------------------------------
@@ -86,6 +92,10 @@ namespace Pioneer
   MotionImpl::setLRVelocity(CORBA::Long left, CORBA::Long right)
     throw(EDevIO)
   {
+    testVelocityLRBounds(left, right);
+
+    Miro::Guard guard(mutex_);
+    setTargetVelocity(left, right);
     connection.setSpeed2(left, right);
   }
   
@@ -97,6 +107,13 @@ namespace Pioneer
   MotionImpl::rotateToPosition(CORBA::Double /* heading*/)
     throw(EOutOfBounds, EDevIO)
   {
+    Miro::VelocityIDL v;
+    v.translation = 0;
+    v.rotation = 0.;
+
+    Miro::Guard guard(mutex_);
+    setTargetVelocity(v);
+
     //Add your implementation here
   }
   
@@ -104,12 +121,25 @@ namespace Pioneer
   MotionImpl::rotateRelative(CORBA::Double relative)
     throw(EOutOfBounds, EDevIO)
   {
+    Miro::VelocityIDL v;
+    v.translation = 0;
+    v.rotation = 0.;
+
+    Miro::Guard guard(mutex_);
+    setTargetVelocity(v);
     connection.turn(relative * 180 / M_PI);
   }
 
-  void MotionImpl::translateRelative(CORBA::Long /* heading*/)
+  void MotionImpl::translateRelative(CORBA::Long /* distance*/)
     throw(EOutOfBounds, EDevIO)
   {
+    Miro::VelocityIDL v;
+    v.translation = 0;
+    v.rotation = 0.;
+
+    Miro::Guard guard(mutex_);
+    setTargetVelocity(v);
+
     //Add your implementation here
   }
   

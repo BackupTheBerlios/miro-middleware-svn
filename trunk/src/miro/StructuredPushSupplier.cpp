@@ -2,21 +2,12 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999,2000
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-
 
 #include "StructuredPushSupplier.h"
 
@@ -29,14 +20,20 @@
 
 namespace Miro
 {
-using CosNotifyComm::StructuredPushSupplier_var;
-using CosNotifyChannelAdmin::EventChannel;
-using CosNotifyChannelAdmin::EventChannel_ptr;
-using CosNotifyChannelAdmin::SupplierAdmin_ptr;
-using CosNotifyChannelAdmin::ProxyConsumer_var;
-using CosNotifyChannelAdmin::StructuredProxyPushConsumer;
-
-
+  using CosNotifyComm::StructuredPushSupplier_var;
+  using CosNotifyChannelAdmin::EventChannel;
+  using CosNotifyChannelAdmin::EventChannel_ptr;
+  using CosNotifyChannelAdmin::SupplierAdmin_ptr;
+  using CosNotifyChannelAdmin::ProxyConsumer_var;
+  using CosNotifyChannelAdmin::StructuredProxyPushConsumer;
+  
+  /**
+   * @param _ec Reference to the event channel.
+   * @param _domainName The domain name of the event header.
+   * This is equal to the robots naming context name
+   * @param _connect Connect the Supplier to the EventChannel.
+   * Creates a new proxy supplier and connects to it.
+   */
   StructuredPushSupplier::StructuredPushSupplier(EventChannel_ptr _ec,
 						 const std::string& _domainName,
 						 bool _connect) :
@@ -54,6 +51,9 @@ using CosNotifyChannelAdmin::StructuredProxyPushConsumer;
       connect();
   }
 
+  /**
+   * Disconnect the supplier from the proxy consumer.
+   */
   StructuredPushSupplier::~StructuredPushSupplier()
   {
     DBG(cout << "Destructing StructuredPushSupplier." << endl);
@@ -61,6 +61,10 @@ using CosNotifyChannelAdmin::StructuredProxyPushConsumer;
     disconnect();
   }
 
+  /**
+   * As this method becomes called within the ctor, it can't be
+   * virtual!
+   */
   void
   StructuredPushSupplier::connect() 
   {

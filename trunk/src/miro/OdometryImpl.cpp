@@ -2,13 +2,12 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-
 
 #include "OdometryImpl.h"
 
@@ -19,11 +18,20 @@
 
 namespace Miro
 {
-  // maximum wait time for cond_.wait calls
+  /** Maximum wait time for cond_.wait calls. */
   ACE_Time_Value OdometryImpl::maxWait_(1, 0);
 
-  // Implementation skeleton constructor
-  OdometryImpl::OdometryImpl(Miro::StructuredPushSupplier * _supplier,
+  /**
+   * Implementation skeleton constructor.
+   *
+   * @param _supplier A pointer to the StructuredPushSupplier to use
+   * for event emittion. If a NULL pointer is passed, the OdometryImpl
+   * will not emit any events.
+   *
+   * @param _rawPositionEvents When set to true the OdometryImpl will
+   * also emit RawPosition events.
+   */
+  OdometryImpl::OdometryImpl(StructuredPushSupplier * _supplier,
 			     bool _rawPositionEvents) :
     supplier_(_supplier),
     rawPositionEvents_(_rawPositionEvents),
@@ -74,9 +82,18 @@ namespace Miro
   // Implementation skeleton destructor
   OdometryImpl::~OdometryImpl()
   {
+    // try to unblock all waiting threads.
     cond_.broadcast();
   }
   
+  /**
+   * Integrates new odometry data from the low-level device layer
+   * into the OdometryImpl.
+   *
+   * @param data The new odometry position. The data provided is in
+   * the raw coordinate frame. That is the origin of the coordinate frame
+   * is arbitary, only the frame has to be eucledian.
+   */
   void 
   OdometryImpl::integrateData(const MotionStatusIDL& data)
   {
@@ -85,24 +102,26 @@ namespace Miro
       
       // set all the data
       
-    status_.time = data.time;
-    status_.velocity = data.velocity;
+      status_.time = data.time;
+      status_.velocity = data.velocity;
     
-    // save robots own position for coordinate frame adjustions
-    position_ = data.position;
+      // save robots own position for coordinate frame adjustions
+      position_ = data.position;
     
-    // get position from status report
-    // compute new world position of robot
-    double x = data.position.point.x - origin_.point.x;
-    double y = data.position.point.y - origin_.point.y;
+      // get position from status report
+      // compute new world position of robot
+      double x = data.position.point.x - origin_.point.x;
+      double y = data.position.point.y - origin_.point.y;
     
-    // rotate position by heading of origin 
-    status_.position.point.x = x * cosHeading_ - y * sinHeading_;
-    status_.position.point.y = x * sinHeading_ + y * cosHeading_;
-    status_.position.heading = data.position.heading + origin_.heading;
+      // rotate position by heading of origin 
+      status_.position.point.x = x * cosHeading_ - y * sinHeading_;
+      status_.position.point.y = x * sinHeading_ + y * cosHeading_;
+      status_.position.heading = data.position.heading + origin_.heading;
 
-    cond_.broadcast();
+      cond_.broadcast();
     }
+
+    // send events
     if (supplier_) {
       notifyEvent_.remainder_of_body <<= status_;
       supplier_->sendEvent(notifyEvent_);

@@ -1,13 +1,12 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-
 
 #include "RangeSensorImpl.h"
 #include "Exception.h"
@@ -22,8 +21,20 @@
 
 namespace Miro
 {
-  ACE_Time_Value RangeSensorImpl::maxWait(0, 500000);
+  /** Maximum wait time for condition_.wait calls. */
+  ACE_Time_Value RangeSensorImpl::maxWait_(0, 500000);
 
+  /**
+   * Implementation skeleton constructor.
+   *
+   * @param _description The description of the range sensor instance.
+   * All sensor position, the sensors minimum and maximum measurable
+   * distance as well as the scanning mode.
+   *
+   * @param _supplier A pointer to the StructuredPushSupplier to use
+   * for event emittion. If a NULL pointer is passed, the RangeSensorImpl
+   * will not any events.
+   */
   RangeSensorImpl::RangeSensorImpl(const ScanDescriptionIDL& _description,
 				   StructuredPushSupplier * _supplier) :
     supplier_(_supplier),
@@ -36,7 +47,7 @@ namespace Miro
     DBG(cout << "Constructing Miro::RangeSensorImpl." << endl);
 
     if (_description.group.length() == 0) 
-      throw Exception("Empty Scan Description");
+      throw Exception("RangeSensorImpl: Empty Scan Description");
 
     scan_.range.length(description_.group.length());
     for (unsigned int i = 0; i < scan_.range.length(); ++i) {
@@ -51,13 +62,13 @@ namespace Miro
 
     if (supplier_) {
       // Notify Event initialization
-      notifyEvent.header.fixed_header.event_type.domain_name =
+      notifyEvent_.header.fixed_header.event_type.domain_name =
 	CORBA::string_dup(supplier_->domainName().c_str());
-      notifyEvent.header.fixed_header.event_type.type_name = 
+      notifyEvent_.header.fixed_header.event_type.type_name = 
 	CORBA::string_dup(_description.eventName);
-      notifyEvent.header.fixed_header.event_name = CORBA::string_dup("");
-      notifyEvent.header.variable_header.length(0);   // put nothing here
-      notifyEvent.filterable_data.length(0);          // put nothing here
+      notifyEvent_.header.fixed_header.event_name = CORBA::string_dup("");
+      notifyEvent_.header.variable_header.length(0);   // put nothing here
+      notifyEvent_.filterable_data.length(0);          // put nothing here
     }
   }
 
@@ -82,8 +93,8 @@ namespace Miro
     scan_ = *_data;
 
     if (supplier_) {
-      notifyEvent.remainder_of_body <<= _data;
-      supplier_->sendEvent(notifyEvent);
+      notifyEvent_.remainder_of_body <<= _data;
+      supplier_->sendEvent(notifyEvent_);
     }
     condition_.broadcast();
   }
@@ -100,8 +111,8 @@ namespace Miro
     scan_.range[_data->group] = _data->range;
 
     if (supplier_) {
-      notifyEvent.remainder_of_body <<= _data;
-      supplier_->sendEvent(notifyEvent);
+      notifyEvent_.remainder_of_body <<= _data;
+      supplier_->sendEvent(notifyEvent_);
     }
     condition_.broadcast();
   }
@@ -126,8 +137,8 @@ namespace Miro
       condition_.broadcast();
     }
     if (supplier_) {
-      notifyEvent.remainder_of_body <<= _data;
-      supplier_->sendEvent(notifyEvent);
+      notifyEvent_.remainder_of_body <<= _data;
+      supplier_->sendEvent(notifyEvent_);
     }
   }
 
@@ -138,8 +149,11 @@ namespace Miro
   }
 
   RangeGroupEventIDL *
-  RangeSensorImpl::getGroup(CORBA::Long id) throw()
+  RangeSensorImpl::getGroup(CORBA::ULong id) throw(EOutOfBounds)
   {
+    if (id >= description_.group.length())
+      throw EOutOfBounds();
+
     Guard guard(mutex_);
     RangeGroupEventIDL_var event = new RangeGroupEventIDL();
     
@@ -151,11 +165,14 @@ namespace Miro
   }
 
   RangeGroupEventIDL *
-  RangeSensorImpl::getWaitGroup(CORBA::Long id) throw(Miro::ETimeOut)
+  RangeSensorImpl::getWaitGroup(CORBA::ULong id) throw(EOutOfBounds, ETimeOut)
   {
+    if (id >= description_.group.length())
+      throw EOutOfBounds();
+
     Guard guard(mutex_);
     ACE_Time_Value timeout(ACE_OS::gettimeofday());
-    timeout += maxWait;
+    timeout += maxWait_;
 
     if (condition_.wait(&timeout) == -1)
       throw ETimeOut();
@@ -181,7 +198,7 @@ namespace Miro
   {
     Guard guard(mutex_);
     ACE_Time_Value timeout(ACE_OS::gettimeofday());
-    timeout += maxWait;
+    timeout += maxWait_;
 
     if (condition_.wait(&timeout) == -1)
       throw ETimeOut();

@@ -21,7 +21,7 @@
 INSTALL = $(VBIN:%=$(INSBIN)/%)
 
 ## dynamic libraries if needed
-LDLIBS += -lmiro -lTAO_CosNaming -lTAO
+LDLIBS += -lmiro
 
 ## program to be built
 ## there has to exist a source file with the same name (mybinary.cc)
@@ -42,7 +42,7 @@ BUILD 	= $(VBIN)
 
 ## you can toggle the debug and optimize flags at this point
 # debug = 1
-optimize = 0
+# optimize = 0
 
 include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
 include $(ACE_ROOT)/include/makeinclude/macros.GNU

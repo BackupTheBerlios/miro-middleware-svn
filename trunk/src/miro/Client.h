@@ -2,22 +2,14 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999,2000
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-#ifndef miroClient_hh
-#define miroClient_hh
+#ifndef miroClient_h
+#define miroClient_h
 
 #include <orbsvcs/Naming/Naming_Utils.h>
 #include <orbsvcs/CosNamingC.h>
@@ -28,29 +20,15 @@
 #include "Exception.h"
 #include "RobotParameters.h"
 
-/**
- * The namespace of the Miro project.
- *
- * To not pollute the global namespace of users of Miro, all classes, structs
- * and helper functions are encapsulated into the namespace Miro. See the
- * hard copy manual for a short description of namespaces and Stroustrup's
- * C++ for a longer one.
- *
- * If you don't want to know anything about namespaces, just say:
- *
- * using namespace Miro;
- *
- * at the beginning of all of you .cc files to map everything of the Miro
- * namespace into the global one. This way you won't need any prefixes.
- */
 namespace Miro
 {
   // forward declaration
   class Client;
 
-  /**
-   * Helper functions to resolve names from the name service,
-   * using the clients naming context.
+  //! Global helper function for resolution of a CORBA object from the naming service.
+  /** This function resolves a name from the CORBA naming service,
+   * using the naming context of the client and narrows it to the specified
+   * type.
    *
    * See "Advanced CORBA programming in C++" for details.
    */
@@ -58,9 +36,8 @@ namespace Miro
     typename T::_ptr_type resolve_name(const Client& client, const char * name) 
       throw(CORBA::Exception);
 
+  //! Base class for all Miro client applications.
   /**
-   * Base class for all Miro client applications.
-   *
    * It tries to encapsulate the CORBA stuff, so that you need
    * only to have a minimal idea of what CORBA is to use Miro.
    * Anyhow, it doesn't restrict you in the use of CORBA, since
@@ -71,8 +48,12 @@ namespace Miro
   {
   public:
 
+    //! Default constructor.
     /**
-     * Constructor
+     * The ORB is initialized on construction of this class.  The argc
+     * and argv are passed on the CORBA::ORB_init() global helper
+     * function and the ORB specific command line options are removed
+     * from the argument vector.
      */
     Client(int& argc, char *argv[], 
 	   const RobotParameters& _params = RobotParameters());
@@ -83,48 +64,48 @@ namespace Miro
      */
     virtual ~Client();
 
-    CORBA::ORB_ptr orb() const;
-    // Accessor which returns the ORB pointer.  Following the normal
-    // CORBA memory management rules of return values from functions,
-    // this function duplicates the orb return value before returning
-    // it.
-
+    //! Accessor which returns the ORB pointer.  
     /**
-     * Helper functions to resolve initial contexts from the ORB.
-     *
+     * Following the normal CORBA memory management rules of return
+     * values from functions, this function duplicates the orb return
+     * value before returning it.
+     */
+    CORBA::ORB_ptr orb() const;
+
+    //! Helper functions to resolve initial contexts from the ORB.
+    /**
      * See "Advanced CORBA programming in C++" for details.
      */
     template<class T>
     typename T::_ptr_type resolveInit(const char * id) 
       const throw(CORBA::Exception, Miro::Exception);
 
-
-  /**
-   * Helper functions to resolve names from the name service,
-   * using the clients naming context.
-   *
-   * See "Advanced CORBA programming in C++" for details.
-   */
+    /**
+     * Helper functions to resolve names from the name service,
+     * using the clients naming context.
+     *
+     * See "Advanced CORBA programming in C++" for details.
+     */
     template<class T>
     typename T::_ptr_type resolveName(const char * name) 
       const throw(CORBA::Exception);
 
-  /**
-   * Helper functions to resolve names from the name service,
-   * using the clients naming context.
-   *
-   * See "Advanced CORBA programming in C++" for details.
-   */
+    /**
+     * Helper functions to resolve names from the name service,
+     * using the clients naming context.
+     *
+     * See "Advanced CORBA programming in C++" for details.
+     */
     template<class T>
     typename T::_ptr_type tryResolveName(const char * name) 
       const throw(CORBA::Exception);
 
-  /**
-   * Helper functions to resolve names from the name service,
-   * using some user provided absolute naming path.
-   *
-   * See "Advanced CORBA programming in C++" for details.
-   */
+    /**
+     * Helper functions to resolve names from the name service,
+     * using some user provided absolute naming path.
+     *
+     * See "Advanced CORBA programming in C++" for details.
+     */
     template<class T>
     typename T::_ptr_type resolveName(const CosNaming::Name& name) 
       const throw(CORBA::Exception); 

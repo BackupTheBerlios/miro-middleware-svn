@@ -89,12 +89,24 @@ namespace Base
   void 
   Impl::limp() throw(EDevIO)
   {
+    Miro::VelocityIDL v;
+    v.translation = 0;
+    v.rotation = 0.;
+
+    Miro::Guard guard(mutex_);
+    setTargetVelocity(v);
     connection.limp();
   }
 
   void
   Impl::halt() throw(EDevIO)
   {
+    Miro::VelocityIDL v;
+    v.translation = 0;
+    v.rotation = 0.;
+
+    Miro::Guard guard(mutex_);
+    setTargetVelocity(v);
     connection.halt();
   }
 
@@ -142,12 +154,16 @@ namespace Base
   void 
   Impl::rotateLimp() throw(EDevIO)
   {
+    Miro::Guard guard(mutex_);
+    targetVelocity_.rotation = 0.;
     connection.rotateLimp();
   }
 
   void
   Impl::rotateHalt() throw(EDevIO)
   {
+    Miro::Guard guard(mutex_);
+    targetVelocity_.rotation = 0.;
     connection.rotateHalt();
   }
 
@@ -234,12 +250,16 @@ namespace Base
   void
   Impl::translateLimp() throw(EDevIO)
   {
+    Miro::Guard guard(mutex_);
+    targetVelocity_.translation = 0;
     connection.translateLimp();
   }
 
   void
   Impl::translateHalt() throw(EDevIO)
   {
+    Miro::Guard guard(mutex_);
+    targetVelocity_.translation = 0;
     connection.translateHalt();
   }
 
@@ -362,9 +382,10 @@ namespace Base
   void 
   Impl::setVelocity(const Miro::VelocityIDL& vel) throw(EOutOfBounds, EDevIO)
   {
-    if (abs(vel.translation) > parameters.maxTransVelocity ||
-	fabs(vel.rotation) > parameters.maxRotVelocity)
-      throw EOutOfBounds();
+    testVelocityBounds(vel);
+
+    Miro::Guard guard(mutex_);
+    setTargetVelocity(vel);
 
     connection.setRotateVelocity(abs(rad2base(vel.rotation)));
 

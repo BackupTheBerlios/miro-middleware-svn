@@ -159,6 +159,8 @@ LSRC  =  $(IDL_SRC) $(addsuffix .cpp,$(FILES))
 
 default: all
 
+depend: $(IDL_SRC)
+
 include $(TAO_ROOT)/rules.tao.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.nonested.GNU
@@ -181,193 +183,181 @@ realclean: clean
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
 
-.obj/TimeC.o .obj/TimeC.so .shobj/TimeC.o .shobj/TimeC.so: TimeC.cpp TimeC.h TimeC.i.h
+.obj/TimeC.o .obj/TimeC.so .shobj/TimeC.o .shobj/TimeC.so: TimeC.cpp TimeC.h TimeC.i
 
-.obj/ExceptionC.o .obj/ExceptionC.so .shobj/ExceptionC.o .shobj/ExceptionC.so: ExceptionC.cpp ExceptionC.h ExceptionC.i.h
+.obj/ExceptionC.o .obj/ExceptionC.so .shobj/ExceptionC.o .shobj/ExceptionC.so: ExceptionC.cpp ExceptionC.h ExceptionC.i
 
-.obj/WorldPointC.o .obj/WorldPointC.so .shobj/WorldPointC.o .shobj/WorldPointC.so: WorldPointC.cpp WorldPointC.h WorldPointC.i.h
+.obj/WorldPointC.o .obj/WorldPointC.so .shobj/WorldPointC.o .shobj/WorldPointC.so: WorldPointC.cpp WorldPointC.h WorldPointC.i
 
-.obj/WorldVectorC.o .obj/WorldVectorC.so .shobj/WorldVectorC.o .shobj/WorldVectorC.so: WorldVectorC.cpp WorldVectorC.h WorldVectorC.i.h
+.obj/WorldVectorC.o .obj/WorldVectorC.so .shobj/WorldVectorC.o .shobj/WorldVectorC.so: WorldVectorC.cpp WorldVectorC.h WorldVectorC.i
 
-.obj/PositionC.o .obj/PositionC.so .shobj/PositionC.o .shobj/PositionC.so: PositionC.cpp PositionC.h WorldPointC.h WorldPointC.i.h \
- PositionC.i.h
+.obj/PositionC.o .obj/PositionC.so .shobj/PositionC.o .shobj/PositionC.so: PositionC.cpp PositionC.h WorldPointC.h WorldPointC.i \
+ PositionC.i
 
-.obj/VelocityC.o .obj/VelocityC.so .shobj/VelocityC.o .shobj/VelocityC.so: VelocityC.cpp VelocityC.h VelocityC.i.h
+.obj/VelocityC.o .obj/VelocityC.so .shobj/VelocityC.o .shobj/VelocityC.so: VelocityC.cpp VelocityC.h VelocityC.i
 
-.obj/MotionStatusC.o .obj/MotionStatusC.so .shobj/MotionStatusC.o .shobj/MotionStatusC.so: MotionStatusC.cpp MotionStatusC.h TimeC.h TimeC.i.h \
- PositionC.h WorldPointC.h WorldPointC.i.h PositionC.i.h VelocityC.h \
- VelocityC.i.h MotionStatusC.i.h
+.obj/MotionStatusC.o .obj/MotionStatusC.so .shobj/MotionStatusC.o .shobj/MotionStatusC.so: MotionStatusC.cpp MotionStatusC.h TimeC.h TimeC.i \
+ PositionC.h WorldPointC.h WorldPointC.i PositionC.i VelocityC.h \
+ VelocityC.i MotionStatusC.i
 
-.obj/OdometryC.o .obj/OdometryC.so .shobj/OdometryC.o .shobj/OdometryC.so: OdometryC.cpp OdometryC.h ExceptionC.h ExceptionC.i.h \
- PositionC.h WorldPointC.h WorldPointC.i.h PositionC.i.h \
- MotionStatusC.h TimeC.h TimeC.i.h VelocityC.h VelocityC.i.h \
- MotionStatusC.i.h OdometryC.i.h
+.obj/OdometryC.o .obj/OdometryC.so .shobj/OdometryC.o .shobj/OdometryC.so: OdometryC.cpp OdometryC.h ExceptionC.h ExceptionC.i \
+ PositionC.h WorldPointC.h WorldPointC.i PositionC.i MotionStatusC.h \
+ TimeC.h TimeC.i VelocityC.h VelocityC.i MotionStatusC.i OdometryC.i
 
-.obj/MotionC.o .obj/MotionC.so .shobj/MotionC.o .shobj/MotionC.so: MotionC.cpp MotionC.h ExceptionC.h ExceptionC.i.h \
- VelocityC.h VelocityC.i.h MotionC.i.h
+.obj/MotionC.o .obj/MotionC.so .shobj/MotionC.o .shobj/MotionC.so: MotionC.cpp MotionC.h ExceptionC.h ExceptionC.i VelocityC.h \
+ VelocityC.i MotionC.i
 
 .obj/ClosedMotionC.o .obj/ClosedMotionC.so .shobj/ClosedMotionC.o .shobj/ClosedMotionC.so: ClosedMotionC.cpp ClosedMotionC.h ExceptionC.h \
- ExceptionC.i.h ClosedMotionC.i.h
+ ExceptionC.i ClosedMotionC.i
 
 .obj/SynchroMotionC.o .obj/SynchroMotionC.so .shobj/SynchroMotionC.o .shobj/SynchroMotionC.so: SynchroMotionC.cpp SynchroMotionC.h MotionC.h \
- ExceptionC.h ExceptionC.i.h VelocityC.h VelocityC.i.h MotionC.i.h \
- SynchroMotionC.i.h
+ ExceptionC.h ExceptionC.i VelocityC.h VelocityC.i MotionC.i \
+ SynchroMotionC.i
 
 .obj/DifferentialMotionC.o .obj/DifferentialMotionC.so .shobj/DifferentialMotionC.o .shobj/DifferentialMotionC.so: DifferentialMotionC.cpp DifferentialMotionC.h \
- MotionC.h ExceptionC.h ExceptionC.i.h VelocityC.h VelocityC.i.h \
- MotionC.i.h DifferentialMotionC.i.h
+ MotionC.h ExceptionC.h ExceptionC.i VelocityC.h VelocityC.i MotionC.i \
+ DifferentialMotionC.i
 
-.obj/StallC.o .obj/StallC.so .shobj/StallC.o .shobj/StallC.so: StallC.cpp StallC.h StallC.i.h
+.obj/StallC.o .obj/StallC.so .shobj/StallC.o .shobj/StallC.so: StallC.cpp StallC.h StallC.i
 
 .obj/ScanDescriptionC.o .obj/ScanDescriptionC.so .shobj/ScanDescriptionC.o .shobj/ScanDescriptionC.so: ScanDescriptionC.cpp ScanDescriptionC.h \
- ScanDescriptionC.i.h
+ ScanDescriptionC.i
 
-.obj/RangeEventC.o .obj/RangeEventC.so .shobj/RangeEventC.o .shobj/RangeEventC.so: RangeEventC.cpp RangeEventC.h TimeC.h TimeC.i.h \
- RangeEventC.i.h
+.obj/RangeEventC.o .obj/RangeEventC.so .shobj/RangeEventC.o .shobj/RangeEventC.so: RangeEventC.cpp RangeEventC.h TimeC.h TimeC.i \
+ RangeEventC.i
 
 .obj/RangeSensorC.o .obj/RangeSensorC.so .shobj/RangeSensorC.o .shobj/RangeSensorC.so: RangeSensorC.cpp RangeSensorC.h ExceptionC.h \
- ExceptionC.i.h ScanDescriptionC.h ScanDescriptionC.i.h RangeEventC.h \
- TimeC.h TimeC.i.h RangeEventC.i.h RangeSensorC.i.h
+ ExceptionC.i ScanDescriptionC.h ScanDescriptionC.i RangeEventC.h \
+ TimeC.h TimeC.i RangeEventC.i RangeSensorC.i
 
-.obj/PanC.o .obj/PanC.so .shobj/PanC.o .shobj/PanC.so: PanC.cpp PanC.h ExceptionC.h ExceptionC.i.h PanC.i.h
+.obj/PanC.o .obj/PanC.so .shobj/PanC.o .shobj/PanC.so: PanC.cpp PanC.h ExceptionC.h ExceptionC.i PanC.i
 
-.obj/TiltC.o .obj/TiltC.so .shobj/TiltC.o .shobj/TiltC.so: TiltC.cpp TiltC.h ExceptionC.h ExceptionC.i.h TiltC.i.h
+.obj/TiltC.o .obj/TiltC.so .shobj/TiltC.o .shobj/TiltC.so: TiltC.cpp TiltC.h ExceptionC.h ExceptionC.i TiltC.i
 
-.obj/PanTiltC.o .obj/PanTiltC.so .shobj/PanTiltC.o .shobj/PanTiltC.so: PanTiltC.cpp PanTiltC.h TiltC.h ExceptionC.h \
- ExceptionC.i.h TiltC.i.h PanC.h PanC.i.h PanTiltC.i.h
+.obj/PanTiltC.o .obj/PanTiltC.so .shobj/PanTiltC.o .shobj/PanTiltC.so: PanTiltC.cpp PanTiltC.h TiltC.h ExceptionC.h ExceptionC.i \
+ TiltC.i PanC.h PanC.i PanTiltC.i
 
-.obj/ButtonsC.o .obj/ButtonsC.so .shobj/ButtonsC.o .shobj/ButtonsC.so: ButtonsC.cpp ButtonsC.h ExceptionC.h ExceptionC.i.h \
- TimeC.h TimeC.i.h ButtonsC.i.h
+.obj/ButtonsC.o .obj/ButtonsC.so .shobj/ButtonsC.o .shobj/ButtonsC.so: ButtonsC.cpp ButtonsC.h ExceptionC.h ExceptionC.i TimeC.h \
+ TimeC.i ButtonsC.i
 
-.obj/VideoC.o .obj/VideoC.so .shobj/VideoC.o .shobj/VideoC.so: VideoC.cpp VideoC.h ExceptionC.h ExceptionC.i.h TimeC.h \
- TimeC.i.h PositionC.h WorldPointC.h WorldPointC.i.h PositionC.i.h \
- VideoC.i.h
+.obj/VideoC.o .obj/VideoC.so .shobj/VideoC.o .shobj/VideoC.so: VideoC.cpp VideoC.h ExceptionC.h ExceptionC.i TimeC.h \
+ TimeC.i PositionC.h WorldPointC.h WorldPointC.i PositionC.i VideoC.i
 
 .obj/ImageDefinitionsC.o .obj/ImageDefinitionsC.so .shobj/ImageDefinitionsC.o .shobj/ImageDefinitionsC.so: ImageDefinitionsC.cpp ImageDefinitionsC.h \
- ExceptionC.h ExceptionC.i.h TimeC.h TimeC.i.h PositionC.h \
- WorldPointC.h WorldPointC.i.h PositionC.i.h ImageDefinitionsC.i.h
+ ExceptionC.h ExceptionC.i TimeC.h TimeC.i PositionC.h WorldPointC.h \
+ WorldPointC.i PositionC.i ImageDefinitionsC.i
 
 .obj/ImageC.o .obj/ImageC.so .shobj/ImageC.o .shobj/ImageC.so: ImageC.cpp ImageC.h ImageDefinitionsC.h ExceptionC.h \
- ExceptionC.i.h TimeC.h TimeC.i.h PositionC.h WorldPointC.h \
- WorldPointC.i.h PositionC.i.h ImageDefinitionsC.i.h ImageC.i.h
+ ExceptionC.i TimeC.h TimeC.i PositionC.h WorldPointC.h WorldPointC.i \
+ PositionC.i ImageDefinitionsC.i ImageC.i
 
-.obj/PioneerStallC.o .obj/PioneerStallC.so .shobj/PioneerStallC.o .shobj/PioneerStallC.so: PioneerStallC.cpp PioneerStallC.h StallC.h StallC.i.h \
- PioneerStallC.i.h
+.obj/PioneerStallC.o .obj/PioneerStallC.so .shobj/PioneerStallC.o .shobj/PioneerStallC.so: PioneerStallC.cpp PioneerStallC.h StallC.h StallC.i \
+ PioneerStallC.i
 
 .obj/PioneerMotionC.o .obj/PioneerMotionC.so .shobj/PioneerMotionC.o .shobj/PioneerMotionC.so: PioneerMotionC.cpp PioneerMotionC.h \
- DifferentialMotionC.h MotionC.h ExceptionC.h ExceptionC.i.h \
- VelocityC.h VelocityC.i.h MotionC.i.h DifferentialMotionC.i.h \
- ClosedMotionC.h ClosedMotionC.i.h PioneerMotionC.i.h
+ DifferentialMotionC.h MotionC.h ExceptionC.h ExceptionC.i VelocityC.h \
+ VelocityC.i MotionC.i DifferentialMotionC.i ClosedMotionC.h \
+ ClosedMotionC.i PioneerMotionC.i
 
-.obj/KickerC.o .obj/KickerC.so .shobj/KickerC.o .shobj/KickerC.so: KickerC.cpp KickerC.h TimeC.h TimeC.i.h ExceptionC.h \
- ExceptionC.i.h KickerC.i.h
+.obj/KickerC.o .obj/KickerC.so .shobj/KickerC.o .shobj/KickerC.so: KickerC.cpp KickerC.h TimeC.h TimeC.i ExceptionC.h \
+ ExceptionC.i KickerC.i
 
 .obj/SparrowPanTiltC.o .obj/SparrowPanTiltC.so .shobj/SparrowPanTiltC.o .shobj/SparrowPanTiltC.so: SparrowPanTiltC.cpp SparrowPanTiltC.h PanC.h \
- ExceptionC.h ExceptionC.i.h PanC.i.h SparrowPanTiltC.i.h
+ ExceptionC.h ExceptionC.i PanC.i SparrowPanTiltC.i
 
-.obj/SparrowStallC.o .obj/SparrowStallC.so .shobj/SparrowStallC.o .shobj/SparrowStallC.so: SparrowStallC.cpp SparrowStallC.h StallC.h StallC.i.h \
- SparrowStallC.i.h
+.obj/SparrowStallC.o .obj/SparrowStallC.so .shobj/SparrowStallC.o .shobj/SparrowStallC.so: SparrowStallC.cpp SparrowStallC.h StallC.h StallC.i \
+ SparrowStallC.i
 
 .obj/SparrowMotionC.o .obj/SparrowMotionC.so .shobj/SparrowMotionC.o .shobj/SparrowMotionC.so: SparrowMotionC.cpp SparrowMotionC.h \
- DifferentialMotionC.h MotionC.h ExceptionC.h ExceptionC.i.h \
- VelocityC.h VelocityC.i.h MotionC.i.h DifferentialMotionC.i.h \
- SparrowMotionC.i.h
+ DifferentialMotionC.h MotionC.h ExceptionC.h ExceptionC.i VelocityC.h \
+ VelocityC.i MotionC.i DifferentialMotionC.i SparrowMotionC.i
 
-.obj/LaserC.o .obj/LaserC.so .shobj/LaserC.o .shobj/LaserC.so: LaserC.cpp LaserC.h ExceptionC.h ExceptionC.i.h TimeC.h \
- TimeC.i.h PositionC.h WorldPointC.h WorldPointC.i.h PositionC.i.h \
- RangeSensorC.h ScanDescriptionC.h ScanDescriptionC.i.h RangeEventC.h \
- RangeEventC.i.h RangeSensorC.i.h LaserC.i.h
+.obj/LaserC.o .obj/LaserC.so .shobj/LaserC.o .shobj/LaserC.so: LaserC.cpp LaserC.h ExceptionC.h ExceptionC.i TimeC.h \
+ TimeC.i PositionC.h WorldPointC.h WorldPointC.i PositionC.i \
+ RangeSensorC.h ScanDescriptionC.h ScanDescriptionC.i RangeEventC.h \
+ RangeEventC.i RangeSensorC.i LaserC.i
 
-.obj/DtlkSpeechC.o .obj/DtlkSpeechC.so .shobj/DtlkSpeechC.o .shobj/DtlkSpeechC.so: DtlkSpeechC.cpp DtlkSpeechC.h ExceptionC.h \
- ExceptionC.i.h DtlkSpeechC.i.h
+.obj/DtlkSpeechC.o .obj/DtlkSpeechC.so .shobj/DtlkSpeechC.o .shobj/DtlkSpeechC.so: DtlkSpeechC.cpp DtlkSpeechC.h ExceptionC.h ExceptionC.i \
+ DtlkSpeechC.i
 
 .obj/DirectedPerceptionPanTiltC.o .obj/DirectedPerceptionPanTiltC.so .shobj/DirectedPerceptionPanTiltC.o .shobj/DirectedPerceptionPanTiltC.so: DirectedPerceptionPanTiltC.cpp \
  DirectedPerceptionPanTiltC.h PanTiltC.h TiltC.h ExceptionC.h \
- ExceptionC.i.h TiltC.i.h PanC.h PanC.i.h PanTiltC.i.h \
- DirectedPerceptionPanTiltC.i.h
+ ExceptionC.i TiltC.i PanC.h PanC.i PanTiltC.i \
+ DirectedPerceptionPanTiltC.i
 
 .obj/B21ButtonsC.o .obj/B21ButtonsC.so .shobj/B21ButtonsC.o .shobj/B21ButtonsC.so: B21ButtonsC.cpp B21ButtonsC.h ButtonsC.h ExceptionC.h \
- ExceptionC.i.h TimeC.h TimeC.i.h ButtonsC.i.h B21ButtonsC.i.h
+ ExceptionC.i TimeC.h TimeC.i ButtonsC.i B21ButtonsC.i
 
 .obj/B21MotionC.o .obj/B21MotionC.so .shobj/B21MotionC.o .shobj/B21MotionC.so: B21MotionC.cpp B21MotionC.h SynchroMotionC.h MotionC.h \
- ExceptionC.h ExceptionC.i.h VelocityC.h VelocityC.i.h MotionC.i.h \
- SynchroMotionC.i.h ClosedMotionC.h ClosedMotionC.i.h OdometryC.h \
- PositionC.h WorldPointC.h WorldPointC.i.h PositionC.i.h \
- MotionStatusC.h TimeC.h TimeC.i.h MotionStatusC.i.h OdometryC.i.h \
- B21MotionC.i.h
+ ExceptionC.h ExceptionC.i VelocityC.h VelocityC.i MotionC.i \
+ SynchroMotionC.i ClosedMotionC.h ClosedMotionC.i OdometryC.h \
+ PositionC.h WorldPointC.h WorldPointC.i PositionC.i MotionStatusC.h \
+ TimeC.h TimeC.i MotionStatusC.i OdometryC.i B21MotionC.i
 
-.obj/Exception.o .obj/Exception.so .shobj/Exception.o .shobj/Exception.so: Exception.cpp \
- $(MIRO_ROOT)/src/miro/Exception.h
+.obj/Exception.o .obj/Exception.so .shobj/Exception.o .shobj/Exception.so: Exception.cpp Exception.h
 
-.obj/Angle.o .obj/Angle.so .shobj/Angle.o .shobj/Angle.so: Angle.cpp $(MIRO_ROOT)/src/miro/Angle.h
+.obj/Angle.o .obj/Angle.so .shobj/Angle.o .shobj/Angle.so: Angle.cpp Angle.h
 
-.obj/Utils.o .obj/Utils.so .shobj/Utils.o .shobj/Utils.so: Utils.cpp $(MIRO_ROOT)/src/miro/Utils.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/DevParameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h
+.obj/Utils.o .obj/Utils.so .shobj/Utils.o .shobj/Utils.so: Utils.cpp Utils.h \
+ Exception.h \
+ DevParameters.h \
+ Parameters.h
 
-.obj/Log.o .obj/Log.so .shobj/Log.o .shobj/Log.so: Log.cpp $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/Log.h
+.obj/Log.o .obj/Log.so .shobj/Log.o .shobj/Log.so: Log.cpp Exception.h \
+ Log.h
 
-.obj/Thread.o .obj/Thread.so .shobj/Thread.o .shobj/Thread.so: Thread.cpp $(MIRO_ROOT)/src/miro/Thread.h \
- $(MIRO_ROOT)/src/miro/Exception.h
+.obj/Thread.o .obj/Thread.so .shobj/Thread.o .shobj/Thread.so: Thread.cpp Thread.h \
+ Exception.h
 
-.obj/Task.o .obj/Task.so .shobj/Task.o .shobj/Task.so: Task.cpp $(MIRO_ROOT)/src/miro/Task.h
+.obj/Task.o .obj/Task.so .shobj/Task.o .shobj/Task.so: Task.cpp Task.h
 
-.obj/ReactorTask.o .obj/ReactorTask.so .shobj/ReactorTask.o .shobj/ReactorTask.so: ReactorTask.cpp \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
- $(MIRO_ROOT)/src/miro/Server.h \
- $(MIRO_ROOT)/src/miro/Client.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/RobotParameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ReactorTask.h
+.obj/ReactorTask.o .obj/ReactorTask.so .shobj/ReactorTask.o .shobj/ReactorTask.so: ReactorTask.cpp ExceptionC.h \
+ ExceptionC.i \
+ Server.h Client.h \
+ Exception.h \
+ RobotParameters.h \
+ Parameters.h \
+ Singleton.h Synch.h \
+ ReactorTask.h
 
 .obj/RobotParameters.o .obj/RobotParameters.so .shobj/RobotParameters.o .shobj/RobotParameters.so: RobotParameters.cpp RobotParameters.h Parameters.h
 
-.obj/Client.o .obj/Client.so .shobj/Client.o .shobj/Client.so: Client.cpp $(MIRO_ROOT)/src/miro/Client.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/RobotParameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h
+.obj/Client.o .obj/Client.so .shobj/Client.o .shobj/Client.so: Client.cpp Client.h \
+ Exception.h \
+ RobotParameters.h \
+ Parameters.h
 
-.obj/Server.o .obj/Server.so .shobj/Server.o .shobj/Server.so: Server.cpp $(MIRO_ROOT)/src/miro/Server.h \
- $(MIRO_ROOT)/src/miro/Client.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/RobotParameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h
+.obj/Server.o .obj/Server.so .shobj/Server.o .shobj/Server.so: Server.cpp Server.h \
+ Client.h \
+ Exception.h \
+ RobotParameters.h \
+ Parameters.h \
+ Singleton.h Synch.h
 
-.obj/IO.o .obj/IO.so .shobj/IO.o .shobj/IO.so: IO.cpp $(MIRO_ROOT)/src/miro/IO.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i.h \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/PositionC.i.h \
- $(MIRO_ROOT)/src/miro/VelocityC.h \
- $(MIRO_ROOT)/src/miro/VelocityC.i.h \
- $(MIRO_ROOT)/src/miro/MotionStatusC.h \
- $(MIRO_ROOT)/src/miro/MotionStatusC.i.h \
- $(MIRO_ROOT)/src/miro/RangeEventC.h \
- $(MIRO_ROOT)/src/miro/RangeEventC.i.h \
- $(MIRO_ROOT)/src/miro/PanTiltC.h \
- $(MIRO_ROOT)/src/miro/TiltC.h \
- $(MIRO_ROOT)/src/miro/TiltC.i.h \
- $(MIRO_ROOT)/src/miro/PanC.h \
- $(MIRO_ROOT)/src/miro/PanC.i.h \
- $(MIRO_ROOT)/src/miro/PanTiltC.i.h \
- $(MIRO_ROOT)/src/miro/Angle.h
+.obj/IO.o .obj/IO.so .shobj/IO.o .shobj/IO.so: IO.cpp IO.h \
+ ExceptionC.h \
+ ExceptionC.i \
+ TimeC.h TimeC.i \
+ WorldPointC.h \
+ WorldPointC.i \
+ PositionC.h \
+ PositionC.i \
+ VelocityC.h \
+ VelocityC.i \
+ MotionStatusC.h \
+ MotionStatusC.i \
+ RangeEventC.h \
+ RangeEventC.i \
+ PanTiltC.h TiltC.h \
+ TiltC.i PanC.h \
+ PanC.i PanTiltC.i \
+ Angle.h
 
-.obj/TimeHelper.o .obj/TimeHelper.so .shobj/TimeHelper.o .shobj/TimeHelper.so: TimeHelper.cpp \
- $(MIRO_ROOT)/src/miro/TimeHelper.h \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i.h
+.obj/TimeHelper.o .obj/TimeHelper.so .shobj/TimeHelper.o .shobj/TimeHelper.so: TimeHelper.cpp TimeHelper.h \
+ TimeC.h TimeC.i
 
 .obj/ScanDescriptionHelper.o .obj/ScanDescriptionHelper.so .shobj/ScanDescriptionHelper.o .shobj/ScanDescriptionHelper.so: ScanDescriptionHelper.cpp \
- ScanDescriptionHelper.h ScanDescriptionC.h ScanDescriptionC.i.h \
- Angle.h
+ ScanDescriptionHelper.h ScanDescriptionC.h ScanDescriptionC.i Angle.h
 
 .obj/StructuredPushSupplier.o .obj/StructuredPushSupplier.so .shobj/StructuredPushSupplier.o .shobj/StructuredPushSupplier.so: StructuredPushSupplier.cpp \
  StructuredPushSupplier.h Synch.h
@@ -376,10 +366,10 @@ realclean: clean
  StructuredPushConsumer.h Synch.h
 
 .obj/OdometryTracking.o .obj/OdometryTracking.so .shobj/OdometryTracking.o .shobj/OdometryTracking.so: OdometryTracking.cpp OdometryTracking.h \
- MotionStatusC.h TimeC.h TimeC.i.h PositionC.h WorldPointC.h \
- WorldPointC.i.h PositionC.i.h VelocityC.h VelocityC.i.h \
- MotionStatusC.i.h StructuredPushConsumer.h Synch.h TimeHelper.h \
- $(MIRO_ROOT)/src/miro/TimeC.h
+ MotionStatusC.h TimeC.h TimeC.i PositionC.h WorldPointC.h \
+ WorldPointC.i PositionC.i VelocityC.h VelocityC.i MotionStatusC.i \
+ StructuredPushConsumer.h Synch.h TimeHelper.h \
+ TimeC.h
 
 .obj/ActionPattern.o .obj/ActionPattern.so .shobj/ActionPattern.o .shobj/ActionPattern.so: ActionPattern.cpp ActionPattern.h Synch.h \
  MotionArbiterParameters.h ArbiterParameters.h Behaviour.h \
@@ -393,45 +383,44 @@ realclean: clean
  MotionArbiterParameters.h Arbiter.h
 
 .obj/ArbiterMessage.o .obj/ArbiterMessage.so .shobj/ArbiterMessage.o .shobj/ArbiterMessage.so: ArbiterMessage.cpp ArbiterMessage.h MotionC.h \
- ExceptionC.h ExceptionC.i.h VelocityC.h VelocityC.i.h MotionC.i.h
+ ExceptionC.h ExceptionC.i VelocityC.h VelocityC.i MotionC.i
 
 .obj/ArbiterRepository.o .obj/ArbiterRepository.so .shobj/ArbiterRepository.o .shobj/ArbiterRepository.so: ArbiterRepository.cpp ArbiterRepository.h \
- $(MIRO_ROOT)/src/miro/Singleton.h \
- $(MIRO_ROOT)/src/miro/Synch.h Arbiter.h
+ Singleton.h Synch.h \
+ Arbiter.h
 
 .obj/MotionArbiter.o .obj/MotionArbiter.so .shobj/MotionArbiter.o .shobj/MotionArbiter.so: MotionArbiter.cpp MotionArbiter.h MotionC.h \
- ExceptionC.h ExceptionC.i.h VelocityC.h VelocityC.i.h MotionC.i.h \
- Synch.h Arbiter.h MotionArbiterMessage.h ArbiterMessage.h \
+ ExceptionC.h ExceptionC.i VelocityC.h VelocityC.i MotionC.i Synch.h \
+ Arbiter.h MotionArbiterMessage.h ArbiterMessage.h \
  MotionArbiterParameters.h ArbiterParameters.h Behaviour.h \
  DynamicWindow.h ActionPattern.h IO.h StructuredPushSupplier.h
 
 .obj/MotionArbiterMessage.o .obj/MotionArbiterMessage.so .shobj/MotionArbiterMessage.o .shobj/MotionArbiterMessage.so: MotionArbiterMessage.cpp \
- MotionArbiterMessage.h VelocityC.h VelocityC.i.h ArbiterMessage.h \
- MotionC.h ExceptionC.h ExceptionC.i.h MotionC.i.h
+ MotionArbiterMessage.h VelocityC.h VelocityC.i ArbiterMessage.h \
+ MotionC.h ExceptionC.h ExceptionC.i MotionC.i
 
 .obj/MotionArbiterParameters.o .obj/MotionArbiterParameters.so .shobj/MotionArbiterParameters.o .shobj/MotionArbiterParameters.so: MotionArbiterParameters.cpp \
  MotionArbiterParameters.h ArbiterParameters.h Behaviour.h \
  DynamicWindow.h ActionPattern.h Synch.h Arbiter.h \
- BehaviourRepository.h Singleton.h \
- $(MIRO_ROOT)/src/miro/Synch.h
+ BehaviourRepository.h Singleton.h Synch.h
 
 .obj/WindowArbiter.o .obj/WindowArbiter.so .shobj/WindowArbiter.o .shobj/WindowArbiter.so: WindowArbiter.cpp ActionPattern.h Synch.h \
  MotionArbiterParameters.h ArbiterParameters.h WindowArbiter.h \
- MotionC.h ExceptionC.h ExceptionC.i.h VelocityC.h VelocityC.i.h \
- MotionC.i.h Arbiter.h WindowArbiterMessage.h ArbiterMessage.h \
+ MotionC.h ExceptionC.h ExceptionC.i VelocityC.h VelocityC.i MotionC.i \
+ Arbiter.h WindowArbiterMessage.h ArbiterMessage.h \
  WindowArbiterParameters.h MotionArbiterMessage.h \
  WindowArbiterViewerTask.h WindowArbiterViewer.h DynamicWindow.h \
  Behaviour.h IO.h StructuredPushSupplier.h
 
 .obj/WindowArbiterMessage.o .obj/WindowArbiterMessage.so .shobj/WindowArbiterMessage.o .shobj/WindowArbiterMessage.so: WindowArbiterMessage.cpp \
- WindowArbiterMessage.h VelocityC.h VelocityC.i.h ArbiterMessage.h \
- MotionC.h ExceptionC.h ExceptionC.i.h MotionC.i.h
+ WindowArbiterMessage.h VelocityC.h VelocityC.i ArbiterMessage.h \
+ MotionC.h ExceptionC.h ExceptionC.i MotionC.i
 
 .obj/WindowArbiterParameters.o .obj/WindowArbiterParameters.so .shobj/WindowArbiterParameters.o .shobj/WindowArbiterParameters.so: WindowArbiterParameters.cpp \
  WindowArbiterParameters.h ArbiterParameters.h Behaviour.h \
  DynamicWindow.h ActionPattern.h Synch.h MotionArbiterParameters.h \
  Arbiter.h BehaviourRepository.h Singleton.h \
- $(MIRO_ROOT)/src/miro/Synch.h
+ Synch.h
 
 .obj/WindowArbiterViewer.o .obj/WindowArbiterViewer.so .shobj/WindowArbiterViewer.o .shobj/WindowArbiterViewer.so: WindowArbiterViewer.cpp WindowArbiterViewer.h \
  DynamicWindow.h
@@ -449,7 +438,7 @@ realclean: clean
  KeyValueList.h
 
 .obj/BehaviourRepository.o .obj/BehaviourRepository.so .shobj/BehaviourRepository.o .shobj/BehaviourRepository.so: BehaviourRepository.cpp BehaviourRepository.h \
- Singleton.h $(MIRO_ROOT)/src/miro/Synch.h Behaviour.h \
+ Singleton.h Synch.h Behaviour.h \
  DynamicWindow.h ActionPattern.h Synch.h MotionArbiterParameters.h \
  ArbiterParameters.h Arbiter.h
 
@@ -464,27 +453,24 @@ realclean: clean
 .obj/TimedBehaviour.o .obj/TimedBehaviour.so .shobj/TimedBehaviour.o .shobj/TimedBehaviour.so: TimedBehaviour.cpp TimedBehaviour.h Behaviour.h \
  DynamicWindow.h ActionPattern.h Synch.h MotionArbiterParameters.h \
  ArbiterParameters.h Arbiter.h TimedBehaviourParameters.h \
- BehaviourParameters.h TimeHelper.h \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i.h
+ BehaviourParameters.h TimeHelper.h TimeC.h \
+ TimeC.i
 
 .obj/TimedBehaviourParameters.o .obj/TimedBehaviourParameters.so .shobj/TimedBehaviourParameters.o .shobj/TimedBehaviourParameters.so: TimedBehaviourParameters.cpp \
  TimedBehaviourParameters.h BehaviourParameters.h TimeHelper.h \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i.h KeyValueList.h
+ TimeC.h TimeC.i \
+ KeyValueList.h
 
 .obj/Policy.o .obj/Policy.so .shobj/Policy.o .shobj/Policy.so: Policy.cpp Policy.h ActionPattern.h Synch.h \
  MotionArbiterParameters.h ArbiterParameters.h ArbiterRepository.h \
- $(MIRO_ROOT)/src/miro/Singleton.h \
- $(MIRO_ROOT)/src/miro/Synch.h Arbiter.h Behaviour.h \
- DynamicWindow.h BehaviourRepository.h Singleton.h \
- BehaviourParameters.h KeyValueList.h Exception.h
+ Singleton.h Synch.h \
+ Arbiter.h Behaviour.h DynamicWindow.h BehaviourRepository.h \
+ Singleton.h BehaviourParameters.h KeyValueList.h Exception.h
 
 .obj/DynamicWindow.o .obj/DynamicWindow.so .shobj/DynamicWindow.o .shobj/DynamicWindow.so: DynamicWindow.cpp DynamicWindow.h
 
 .obj/CameraParameters.o .obj/CameraParameters.so .shobj/CameraParameters.o .shobj/CameraParameters.so: CameraParameters.cpp CameraParameters.h \
- Parameters.h Singleton.h $(MIRO_ROOT)/src/miro/Synch.h \
- Angle.h
+ Parameters.h Singleton.h Synch.h Angle.h
 
 .obj/NotifyMulticastRequestEntry.o .obj/NotifyMulticastRequestEntry.so .shobj/NotifyMulticastRequestEntry.o .shobj/NotifyMulticastRequestEntry.so: NotifyMulticastRequestEntry.cpp \
  NotifyMulticastRequestEntry.h NotifyMulticastRequestIndex.h
@@ -516,7 +502,7 @@ realclean: clean
 
 .obj/NotifyMulticastParameters.o .obj/NotifyMulticastParameters.so .shobj/NotifyMulticastParameters.o .shobj/NotifyMulticastParameters.so: NotifyMulticastParameters.cpp \
  NotifyMulticastParameters.h Parameters.h Singleton.h \
- $(MIRO_ROOT)/src/miro/Synch.h Angle.h
+ Synch.h Angle.h
 
 .obj/NotifyMulticastAdapter.o .obj/NotifyMulticastAdapter.so .shobj/NotifyMulticastAdapter.o .shobj/NotifyMulticastAdapter.so: NotifyMulticastAdapter.cpp \
  NotifyMulticastDefines.h NotifyMulticastAdapter.h Exception.h \

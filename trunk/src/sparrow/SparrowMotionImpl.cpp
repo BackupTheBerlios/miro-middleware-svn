@@ -37,8 +37,6 @@ namespace Sparrow
   using Miro::ETimeOut;
   using Miro::EOutOfBounds;
 
-  ACE_Time_Value MotionImpl::maxWait;
-
   MotionImpl::MotionImpl(Connection& _connection,
 			 Consumer& _consumer) throw(Exception) :
     Miro::DifferentialMotionImpl(Parameters::instance()->motion),
@@ -47,22 +45,6 @@ namespace Sparrow
     consumer(_consumer)
   {
     DBG(cout << "Constructing SparrowMotionImpl" << endl);
-
-    // maximum wait time for cond.wait calls
-    maxWait = ACE_Time_Value(0, 500000);
-
-    // initialize the internal position
-    // management of the base hardware
-    // set the robot into the middle, so we have 
-    // 650m to drive in each direction befor overflow
-    // of the counters - I don´t think the batteries will do it that long
-    //  connection.loadHeading(0);
-    //  connection.loadPosition(INITIAL_XPOS, INITIAL_YPOS);
-
-    // we should initialize server side position management
-    // still work to do!
-
-    // position.setPosition(0x8000, 0x8000);
   }
 
   MotionImpl::~MotionImpl()
@@ -80,28 +62,42 @@ namespace Sparrow
   void 
   MotionImpl::limp() throw(EDevIO)
   {
+    Miro::VelocityIDL v;
+    v.translation = 0;
+    v.rotation = 0.;
+
+    Miro::Guard guard(mutex_);
+    setTargetVelocity(v);
     connection.setPower(0,0);
   }
 
   void 
   MotionImpl::setVelocity(const Miro::VelocityIDL& vel) throw(EOutOfBounds, EDevIO)
   {
-    if (abs(vel.translation) > params_->maxTransVelocity ||
-    	fabs(vel.rotation) > params_->maxRotVelocity)
-          throw EOutOfBounds();
+    testVelocityBounds(vel);
+
+    Miro::Guard guard(mutex_);
+    setTargetVelocity(vel);
 
     connection.setSpeedRot(vel.translation, rad2ticks(vel.rotation));
   }
 
   void
-  MotionImpl::setLRPower(CORBA::Long left, CORBA::Long right) throw()
+  MotionImpl::setLRPower(CORBA::Long left, CORBA::Long right) throw(EOutOfBounds, EDevIO)
   {
+    if (abs(left) > 30000 || abs(right) > 30000)
+      throw EOutOfBounds();
+
     connection.setPower(left, right);
   };
 
   void
-  MotionImpl::setLRVelocity(CORBA::Long left, CORBA::Long right)  throw()
+  MotionImpl::setLRVelocity(CORBA::Long left, CORBA::Long right)  throw(EOutOfBounds, EDevIO)
   {
+    testVelocityLRBounds(left, right);
+
+    Miro::Guard guard(mutex_);
+    setTargetVelocity(left, right);
     connection.setSpeed(left, right);
   };
 };

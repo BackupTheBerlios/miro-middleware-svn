@@ -54,7 +54,7 @@ module Miro
     //! Query the layout of a range sensor type. 
     ScanDescriptionIDL getScanDescription();
     //! Query a range sensor group.
-    RangeGroupEventIDL getGroup(in long id);
+    RangeGroupEventIDL getGroup(in unsigned long id) raises(EOutOfBounds);
     //! Wait and query a range sensor group.
     /**
      * Wait and get the next incomming report of the specified
@@ -65,7 +65,7 @@ module Miro
      * period. This usually indicates a crash of the controller board
      * or a too high system load.
      */
-    RangeGroupEventIDL getWaitGroup(in long id) raises(ETimeOut);
+    RangeGroupEventIDL getWaitGroup(in unsigned long id) raises(EOutOfBounds, ETimeOut);
     //! Query a range sensor.
     RangeScanEventIDL getFullScan();
     //! Wait and query a range sensor.

@@ -30,10 +30,7 @@ LDLIBS += $(addprefix -l, $(STATIC_LIBS))
 
 
 ## dynamic libraries if needed
-LDLIBS += 	-lmiro \
-		-lTAO_CosNotification \
-		-lTAO_CosNaming \
-		-lTAO
+LDLIBS += 	-lmiro
 
 ## program to be built
 ## there has to exist a source file with the same name (mybinary.cc)
@@ -66,6 +63,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 #	Local targets
 #----------------------------------------------------------------------------
 
+$(BIN): $(STATIC_DEPS)
+
 # DO NOT DELETE THIS LINE -- g++dep uses it.
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
@@ -73,19 +72,19 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 .obj/SpeechConnection.o .obj/SpeechConnection.so .shobj/SpeechConnection.o .shobj/SpeechConnection.so: SpeechConnection.cpp SpeechConnection.h \
  $(MIRO_ROOT)/src/miro/Exception.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i.h SpeechDevice.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i SpeechDevice.h \
 
 
 .obj/SpeechImpl.o .obj/SpeechImpl.so .shobj/SpeechImpl.o .shobj/SpeechImpl.so: SpeechImpl.cpp SpeechImpl.h \
  $(MIRO_ROOT)/src/miro/DtlkSpeechS.h \
  $(MIRO_ROOT)/src/miro/ExceptionS.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
- $(MIRO_ROOT)/src/miro/ExceptionS.i.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i \
+ $(MIRO_ROOT)/src/miro/ExceptionS.i \
  $(MIRO_ROOT)/src/miro/DtlkSpeechC.h \
- $(MIRO_ROOT)/src/miro/DtlkSpeechC.i.h \
- $(MIRO_ROOT)/src/miro/DtlkSpeechS.i.h \
- SpeechConnection.h $(MIRO_ROOT)/src/miro/Exception.h \
- SpeechDevice.h
+ $(MIRO_ROOT)/src/miro/DtlkSpeechC.i \
+ $(MIRO_ROOT)/src/miro/DtlkSpeechS.i SpeechConnection.h \
+ $(MIRO_ROOT)/src/miro/Exception.h SpeechDevice.h \
+
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

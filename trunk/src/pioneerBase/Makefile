@@ -29,9 +29,7 @@ STATIC_DEPS = $(addprefix $(MIRO_ROOT)/lib/lib, $(addsuffix .a,$(STATIC_LIBS)))
 LDLIBS += $(addprefix -l, $(STATIC_LIBS))
 
 ## dynamic libraries if needed
-LDLIBS += 	-lmiro \
-		-lTAO_CosNaming \
-		-lTAO
+LDLIBS += -lmiro
 
 ## program to be built
 ## there has to exist a source file with the same name (mybinary.cc)
@@ -63,6 +61,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 #	Local targets
 #----------------------------------------------------------------------------
 
+$(BIN): $(STATIC_DEPS)
 
 # DO NOT DELETE THIS LINE -- g++dep uses it.
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.

@@ -2,34 +2,24 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999,2000
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
+#include "miro/Server.h"
+#include "miro/Exception.h"
 
 #include <ace/Synch.h>
 #include <ace/Arg_Shifter.h>
 
 #include <tao/ORB_Core.h>
 
-#include "miro/Server.h"
-#include "miro/Exception.h"
-
 #include <iostream>
 
 // #undef DEBUG
-
 
 #ifdef DEBUG
 #define DBG(x) x
@@ -59,7 +49,20 @@ namespace Miro
 
     return 0;
   }
+  
+  int
+  Server::Event::handle_close (ACE_HANDLE, ACE_Reactor_Mask) 
+  {
+    cout << "Miro server handle_close called." << endl;
+    return 0;
+  }
 
+  //  Singleton<Server::Worker> Server::Worker::instance;
+
+  /**
+   * @param orb      The Object request broker.
+   * @param shutdown Cooperative shutdown indicator.
+   */
   Server::Worker::Worker (CORBA::ORB_ptr orb, bool& shutdown) :
     orb_ (CORBA::ORB::_duplicate (orb)),
     shutdown_(shutdown)
@@ -78,7 +81,7 @@ namespace Miro
 
   Server::Server(int& argc, char *argv[],
 		 const RobotParameters& _params) :
-    super(argc, argv, _params),
+    Super(argc, argv, _params),
     rebind_(false),
     own_(true),
     shutdown_(false),
@@ -123,8 +126,8 @@ namespace Miro
   }
 
   Server::Server(const Server& _server) :
-    super(_server),
-    poa(_server.root_poa()),
+    Super(_server),
+    poa(_server.rootPoa()),
     poa_mgr(_server.poa_mgr),
     rebind_(_server.rebind_),
     own_(false),
@@ -184,14 +187,25 @@ namespace Miro
   }
 
   // Return the root POA reference
+  /**
+   * Following the normal CORBA memory management rules of return
+   * values from functions, this function duplicates the poa return
+   * value before returning it.
+   */
   PortableServer::POA_ptr
-  Server::root_poa() const
+  Server::rootPoa() const
   {
     return PortableServer::POA::_duplicate(poa.in());
   }
 
+  /**
+   * Starts the server main loop as a parallel threadpool. Returns
+   * emediately.
+   *
+   * @param nthreads Number of threads in the threadpool.
+   */
   void 
-  Server::detach(int nthreads)
+  Server::detach(unsigned   int nthreads)
   {
     if (worker_.activate(THR_NEW_LWP | THR_JOINABLE, nthreads) != 0)
       throw Miro::Exception("Miro::Server: Cannot activate client threads");
@@ -203,9 +217,15 @@ namespace Miro
   {
     worker_.wait();
   }
-
+  
+  /**
+   * Starts the server main loop, waits for shutdown
+   * of the server.
+   *
+   * @param nthreads Number of threads in the threadpool.
+   */
   void
-  Server::run(int nthreads)
+  Server::run(unsigned int nthreads)
   {
     if (nthreads > 1) {
       detach(nthreads);
@@ -218,6 +238,10 @@ namespace Miro
     // poa_mgr->deactivate();
   }
 
+  /**
+   * Adds an IOR at the naming service in the servers 
+   * naming context.
+   */
   void
   Server::addToNameService(CORBA::Object_ptr _object, const std::string& _name)
   {
@@ -252,6 +276,10 @@ namespace Miro
     }      
   }
 
+  /**
+   * Signals the server main loop to stop. The call returns
+   * emediately.  Use @ref wait() to wait for completion.
+   */
   void
   Server::shutdown()
   {
@@ -259,6 +287,12 @@ namespace Miro
     shutdown_ = true;
   }
 
+  /**
+   * Be careful to use this reactor with any mutex protected servant
+   * code. It's easy to deadlock. Create your own reactor task
+   * instead.  Anyhow, as long as you just want to use some timers
+   * etc. go ahead.
+   */
   ACE_Reactor *
   Server::reactor()
   {

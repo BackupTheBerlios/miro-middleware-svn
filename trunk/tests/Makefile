@@ -30,9 +30,12 @@ include $(ACE_ROOT)/include/makeinclude/macros.GNU
 ## list all the sub directories in this variable
 ##
 
-DIRS =		notify \
+DIRS =		odometry \
+		motion \
+		rangeSensor \
 		panTilt \
 		video \
+		notify \
 		xml
 ifneq (,$(findstring B21,$(MIRO_COMPONENTS)))
   DIRS +=	b21 \

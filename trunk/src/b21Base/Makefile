@@ -29,7 +29,7 @@ STATIC_DEPS = $(addprefix $(MIRO_ROOT)/lib/lib, $(addsuffix .a,$(STATIC_LIBS)))
 LDLIBS += $(addprefix -l, $(STATIC_LIBS))
 
 ## dynamic libraries if needed
-LDLIBS += -lmiro -lTAO_CosNotification -lTAO_CosNaming -lTAO
+LDLIBS += -lmiro
 
 ## program to be built
 ## there has to exist a source file with the same name (mybinary.cc)
@@ -46,10 +46,6 @@ BUILD 	= $(VBIN)
 #	Include macros and targets
 #----------------------------------------------------------------------------
 
-## you can toggle the debug and optimize flags at this point
-# debug = 1
-optimize = 1
-
 include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
 include $(ACE_ROOT)/include/makeinclude/macros.GNU
 include $(MIRO_ROOT)/include/makeinclude/macros.miro.GNU
@@ -64,7 +60,7 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 #	Local targets
 #----------------------------------------------------------------------------
 
-
+$(BIN): $(STATIC_DEPS)
 
 # DO NOT DELETE THIS LINE -- g++dep uses it.
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.

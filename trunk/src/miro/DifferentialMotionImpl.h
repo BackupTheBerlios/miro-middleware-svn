@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -19,40 +19,71 @@
 
 namespace Miro
 {
+  //! Base implementation for the DifferentialMotion interface.
+  /**
+   * This class provides generic support for the query
+   * methods of the DifferetialMotion interface and can
+   * be used as a mix in class for a robots specialized
+   * DifferentialMotion interface implementation.
+   *
+   * Note that it inherits also the base implementation for the 
+   * generalized Motion interface.
+   */
   class DifferentialMotionImpl : public virtual POA_Miro::DifferentialMotion,
 				 public MotionImpl
   {
   public:
+    //! Initializing constructor.
     DifferentialMotionImpl(const DifferentialMotionParameters& _params);
 
-    virtual void getMinMaxLRVeclocity(CORBA::Long& minLTranslation,
-				      CORBA::Long& maxLTranslation,
-				      CORBA::Long& minRTranslation,
-				      CORBA::Long& maxRTranslation) throw();
+    //! DifferentialMotion interface method implementation.
+    virtual void getMinMaxLRVelocity(CORBA::Long& minLTranslation,
+				     CORBA::Long& maxLTranslation,
+				     CORBA::Long& minRTranslation,
+				     CORBA::Long& maxRTranslation) throw();
+    //! DifferentialMotion interface method implementation.
     virtual void getTargetLRVelocity(CORBA::Long& left, CORBA::Long& right) throw();
 
   protected:
-    virtual void setTargetVelocity(VelocityIDL& _velocity);
-    virtual void setTargetVelocity(CORBA::Long left, CORBA::Long right);
+    //! Memorize target velocity.
+    virtual void setTargetVelocity(const VelocityIDL& _velocity);
+    //! Memorize target velocity.
+    virtual void setTargetVelocity(CORBA::Long _left, CORBA::Long _right);
 
-    void testVelocityLRBounds(CORBA::Long left, CORBA::Long right) throw (EOutOfBounds);
+    //! Generalized test for wheel velocity parameter correctness.
+    void testVelocityLRBounds(CORBA::Long _left, CORBA::Long _right) throw (EOutOfBounds);
+    //! Convert per wheel velocities in translation/rotation.
     void lr2velocity(CORBA::Long left, CORBA::Long right, VelocityIDL& velocity);
-    void velocity2lr(const VelocityIDL& velocity, CORBA::Long& left, CORBA::Long& right);
+    //! Convert translation/rotation into per wheel velocities.
+    void velocity2lr(const VelocityIDL& _velocity, CORBA::Long& _left, CORBA::Long& _right);
 
+    //! Reference to DifferentialMotion parameters
     const DifferentialMotionParameters& params_;
+    //! Current target velocity of left wheel.
     CORBA::Long left_;
+    //! Current target velocity of right wheel.
     CORBA::Long right_;
   };
 
+  //--------------------------------------------------------------------------
+  // inlines
+  //--------------------------------------------------------------------------
+
+  /**
+   * @param _left    Velocity to test for left whell.
+   * @param _right   Velocity to test for right whell.
+   * @throw EOutOfBounds if a per wheel velocity excedes the bounds 
+   * specified in @ref params_.
+   */
   inline
   void
-  DifferentialMotionImpl::testVelocityLRBounds(CORBA::Long left,
-					       CORBA::Long right) throw (EOutOfBounds)
+  DifferentialMotionImpl::testVelocityLRBounds(CORBA::Long _left,
+					       CORBA::Long _right) throw (EOutOfBounds)
   {
-    if (left < params_.minLTranslation ||
-	left > params_.maxLTranslation ||
-	right < params_.minRTranslation ||
-	right > params_.maxRTranslation)
+    if (_left < params_.minLTranslation ||
+	_left > params_.maxLTranslation ||
+	_right < params_.minRTranslation ||
+	_right > params_.maxRTranslation)
       throw EOutOfBounds();
   }
 
@@ -78,4 +109,4 @@ namespace Miro
   }
 };
 
-#endif // differentialMotionImpl_hh
+#endif // DifferentialMotionImpl_h

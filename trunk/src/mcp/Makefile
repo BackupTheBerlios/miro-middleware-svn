@@ -70,23 +70,21 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 .obj/McpParameters.o .obj/McpParameters.o .obj/McpParameters.o .obj/McpParameters.o: McpParameters.cpp McpParameters.h \
  $(MIRO_ROOT)/src/miro/TtyParameters.h \
  $(MIRO_ROOT)/src/miro/DevParameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h McpDevice.h \
- McpMessage.h $(MIRO_ROOT)/src/miro/DevMessage.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h McpDevice.h McpMessage.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h \
  $(MIRO_ROOT)/src/miro/TimeHelper.h \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i.h
+ $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i
 
 .obj/McpMessage.o .obj/McpMessage.o .obj/McpMessage.o .obj/McpMessage.o: McpMessage.cpp McpMessage.h \
  $(MIRO_ROOT)/src/miro/DevMessage.h
 
 .obj/McpConnection.o .obj/McpConnection.o .obj/McpConnection.o .obj/McpConnection.o: McpConnection.cpp \
  $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i \
  $(MIRO_ROOT)/src/miro/Exception.h McpConnection.h \
  $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/TtyConnection.h McpDevice.h \
- McpMessage.h $(MIRO_ROOT)/src/miro/DevMessage.h \
- McpEventHandler.h \
+ $(MIRO_ROOT)/src/miro/TtyConnection.h McpDevice.h McpMessage.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h McpEventHandler.h \
  $(MIRO_ROOT)/src/miro/DevEventHandler.h McpParameters.h \
  $(MIRO_ROOT)/src/miro/TtyParameters.h \
  $(MIRO_ROOT)/src/miro/DevParameters.h \
@@ -98,8 +96,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/TtyConnection.h \
  $(MIRO_ROOT)/src/miro/Exception.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i.h McpDevice.h \
- McpMessage.h $(MIRO_ROOT)/src/miro/DevMessage.h
+ $(MIRO_ROOT)/src/miro/ExceptionC.i McpDevice.h McpMessage.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h
 
 .obj/McpEventHandler.o .obj/McpEventHandler.o .obj/McpEventHandler.o .obj/McpEventHandler.o: McpEventHandler.cpp McpEventHandler.h \
  $(MIRO_ROOT)/src/miro/DevEventHandler.h McpConnection.h \
@@ -107,10 +105,10 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
  $(MIRO_ROOT)/src/miro/TtyConnection.h \
  $(MIRO_ROOT)/src/miro/Exception.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i.h McpDevice.h \
- McpMessage.h $(MIRO_ROOT)/src/miro/DevMessage.h \
- McpConsumer.h $(MIRO_ROOT)/src/miro/DevConsumer.h \
- McpParameters.h $(MIRO_ROOT)/src/miro/TtyParameters.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i McpDevice.h McpMessage.h \
+ $(MIRO_ROOT)/src/miro/DevMessage.h McpConsumer.h \
+ $(MIRO_ROOT)/src/miro/DevConsumer.h McpParameters.h \
+ $(MIRO_ROOT)/src/miro/TtyParameters.h \
  $(MIRO_ROOT)/src/miro/DevParameters.h \
  $(MIRO_ROOT)/src/miro/Parameters.h
 

@@ -44,11 +44,14 @@ BUILD 	= $(VBIN)
 
 ## you can toggle the debug and optimize flags at this point
 # debug = 1
-optimize = 0
+# optimize = 0
 
 include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
 include $(ACE_ROOT)/include/makeinclude/macros.GNU
 include $(MIRO_ROOT)/include/makeinclude/macros.miro.GNU
+
+depend: $(MOC_SRC)
+
 include $(TAO_ROOT)/rules.tao.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.nonested.GNU
@@ -69,17 +72,16 @@ realclean: clean
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
 
-.obj/MainForm.o .obj/MainForm.so .shobj/MainForm.o .shobj/MainForm.so: MainForm.cpp MainForm.h \
- $(MIRO_ROOT)/src/miro/Client.h \
+.obj/MainForm.o .obj/MainForm.so .shobj/MainForm.o .shobj/MainForm.so: MainForm.cpp MainForm.h $(MIRO_ROOT)/src/miro/Client.h \
  $(MIRO_ROOT)/src/miro/Exception.h \
  $(MIRO_ROOT)/src/miro/RobotParameters.h \
  $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/MotionC.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i \
  $(MIRO_ROOT)/src/miro/VelocityC.h \
- $(MIRO_ROOT)/src/miro/VelocityC.i.h \
- $(MIRO_ROOT)/src/miro/MotionC.i.h
+ $(MIRO_ROOT)/src/miro/VelocityC.i \
+ $(MIRO_ROOT)/src/miro/MotionC.i
 
 .obj/MainForm.moc.o .obj/MainForm.moc.so .shobj/MainForm.moc.o .shobj/MainForm.moc.so: MainForm.moc.cpp MainForm.h \
  $(MIRO_ROOT)/src/miro/Client.h \
@@ -88,9 +90,9 @@ realclean: clean
  $(MIRO_ROOT)/src/miro/Parameters.h \
  $(MIRO_ROOT)/src/miro/MotionC.h \
  $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i \
  $(MIRO_ROOT)/src/miro/VelocityC.h \
- $(MIRO_ROOT)/src/miro/VelocityC.i.h \
- $(MIRO_ROOT)/src/miro/MotionC.i.h
+ $(MIRO_ROOT)/src/miro/VelocityC.i \
+ $(MIRO_ROOT)/src/miro/MotionC.i
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

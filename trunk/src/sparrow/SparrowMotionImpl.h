@@ -44,16 +44,15 @@ namespace Sparrow
     void limp() throw(Miro::EDevIO);
     void setVelocity(const Miro::VelocityIDL& vel)
       throw(Miro::EOutOfBounds, Miro::EDevIO);
-
-    void setLRVelocity(CORBA::Long left, CORBA::Long right) throw();
-    void setLRPower(CORBA::Long left, CORBA::Long right) throw();
+    void setLRVelocity(CORBA::Long left, CORBA::Long right) 
+      throw(Miro::EOutOfBounds, Miro::EDevIO);
+    void setLRPower(CORBA::Long left, CORBA::Long right)
+      throw(Miro::EOutOfBounds, Miro::EDevIO);
 
     // protected:
     const Parameters *  params_; 
     Connection&         connection; // encapsulating communication to hardware
     Consumer&           consumer;   // asynchronous processing of sparrow output
-
-    static ACE_Time_Value maxWait;
   };
 };
 

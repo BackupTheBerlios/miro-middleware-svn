@@ -22,61 +22,91 @@ namespace Miro
   // forward decleration
   class StructuredPushSupplier;
 
-  //Class OdometryImpl
+  //! Implementation of the Odometry interface.
+  /**
+   * This class offers a generic implementation for the Odometry
+   * interface. Simply pass the lowlevel odometry sensor data through
+   * the integrateData method and all the rest will be taken care for
+   * you.
+   */
   class  OdometryImpl : public virtual POA_Miro::Odometry
   {
   public:
-    //Constructor 
+    //! Initializing constructor.
     OdometryImpl(Miro::StructuredPushSupplier * _supplier,
 		 bool _rawPositionEvents = true);
-  
-    //Destructor 
     virtual ~OdometryImpl();
 
+    //! Method to pass raw odometry data from the device into the OdometryImpl class.
     void integrateData(const MotionStatusIDL & data);
   
+    //! Odometry interface method implementation.
     virtual void setPosition(const Miro::PositionIDL & pos) throw();
+    //! Odometry interface method implementation.
     virtual void updatePosition(const Miro::PositionIDL & dPos) throw();
+    //! Odometry interface method implementation.
     virtual PositionIDL getPosition() throw();  
+    //! Odometry interface method implementation.
     virtual PositionIDL getWaitPosition() throw (ETimeOut);
+    //! Odometry interface method implementation.
     virtual PositionIDL getRawPosition() throw();  
+    //! Odometry interface method implementation.
     virtual PositionIDL getWaitRawPosition() throw (ETimeOut);
+    //! Odometry interface method implementation.
     virtual VelocityIDL getVelocity() throw();    
+    //! Odometry interface method implementation.
     virtual VelocityIDL getWaitVelocity() throw (ETimeOut);
+    //! Odometry interface method implementation.
     virtual MotionStatusIDL getStatus() throw();    
+    //! Odometry interface method implementation.
     virtual MotionStatusIDL getWaitStatus() throw (ETimeOut);
 
   protected:
     //-------------------------------------------------------------------------
     // protected methods
     //-------------------------------------------------------------------------
-
-    // non - thread safe set postion stuff
+    
+    //! None-thread safe set postion stuff.
     void protectedSetPosition(const PositionIDL& robot);
+    //! Calculate sine and cosine of the origin heading.
     void setTransformation();
 
     //-------------------------------------------------------------------------
     // protected object data
     //-------------------------------------------------------------------------
+
+    //! Supplier for events.
     StructuredPushSupplier * supplier_;
+    //! True if also RawPosition events shall be emitted.
     bool rawPositionEvents_;
 
+    //! Lock
     Mutex mutex_;
+    //! Condition for getWaitPosition etc.
     Condition cond_;
+    //! Current motion status.
     MotionStatusIDL status_;
+    //! Preinitialized data structure for Odometry event.
     CosNotification::StructuredEvent notifyEvent_;
+    //! Preinitialized data structure for RawPosition events.
     CosNotification::StructuredEvent notifyRawEvent_;
 
+    //! Origin of the coordinate frame.
     PositionIDL origin_;
+    //! Raw position as reported by integrateData.
     PositionIDL position_;
 
-    double sinHeading_, cosHeading_;
+    //! Catched sine of the origin heading.
+    double sinHeading_;
+    //! Catched cosine of the origin heading.
+    double cosHeading_;
 
+    //! Timeout for getWaitPosition etc.
     static ACE_Time_Value maxWait_;
   };
 
   //---------------------------------------------------------------------------
-  // protected methods
+  // inline methods
   //---------------------------------------------------------------------------
   inline
   void
@@ -85,4 +115,4 @@ namespace Miro
     cosHeading_ = cos(origin_.heading);
   }
 };
-#endif // odometryImpl_hh
+#endif // OdometryImpl_h

@@ -33,7 +33,7 @@ namespace Miro
     RangeSensorImpl(_description, _supplier),
     odoTracking_(_odoTracking)
   {
-    maxWait = ACE_Time_Value(5); // five seconds
+    maxWait_ = ACE_Time_Value(5); // five seconds
   }
 
 
@@ -59,7 +59,7 @@ namespace Miro
     Miro::LaserScanIDL scan;
 
     ACE_Time_Value timeout = ACE_OS::gettimeofday();
-    timeout += maxWait;
+    timeout += maxWait_;
 
     if (condition_.wait(&timeout) < 0) 
       throw Miro::ETimeOut("LaserImpl::getWaitScan");
