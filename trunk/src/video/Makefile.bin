@@ -12,6 +12,14 @@
 ##############################################################################
 
 #----------------------------------------------------------------------------
+#	Include macros
+#----------------------------------------------------------------------------
+
+include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
+include $(ACE_ROOT)/include/makeinclude/macros.GNU
+include $(MIRO_ROOT)/include/makeinclude/macros.miro.GNU
+
+#----------------------------------------------------------------------------
 #	Local macros
 #----------------------------------------------------------------------------
 
@@ -62,12 +70,9 @@ BUILD 	= $(VBIN)
 
 
 #----------------------------------------------------------------------------
-#	Include macros and targets
+#	Include targets
 #----------------------------------------------------------------------------
 
-include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
-include $(ACE_ROOT)/include/makeinclude/macros.GNU
-include $(MIRO_ROOT)/include/makeinclude/macros.miro.GNU
 include $(TAO_ROOT)/rules.tao.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.nonested.GNU

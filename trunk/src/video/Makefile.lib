@@ -11,6 +11,21 @@
 ##
 ##############################################################################
 
+#----------------------------------------------------------------------------
+#	Include macros
+#----------------------------------------------------------------------------
+
+# Only build static library 
+static_libs_only = 1
+
+include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
+include $(ACE_ROOT)/include/makeinclude/macros.GNU
+include $(MIRO_ROOT)/include/makeinclude/macros.miro.GNU
+
+#----------------------------------------------------------------------------
+#	Local macros
+#----------------------------------------------------------------------------
+
 ## this is the name of the resulting library
 NAME     = miroVideo
 
@@ -61,19 +76,13 @@ DEFS  = $(addsuffix .h,$(FILES))
 LSRC  = $(addsuffix .cpp,$(FILES))
 
 #----------------------------------------------------------------------------
-#	Include macros and targets
+#	Include targets
 #----------------------------------------------------------------------------
 
 ## you can toggle the debug and optimize flags at this point
 # debug = 1
 # optimize = 0
 
-# Only build static library 
-static_libs_only = 1
-
-include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
-include $(ACE_ROOT)/include/makeinclude/macros.GNU
-include $(MIRO_ROOT)/include/makeinclude/macros.miro.GNU
 include $(TAO_ROOT)/rules.tao.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.nonested.GNU
