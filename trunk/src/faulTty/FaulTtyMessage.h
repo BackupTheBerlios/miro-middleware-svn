@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -22,7 +22,13 @@ namespace FaulController
     enum Wheel { LEFT, RIGHT };
 
     OdometryMessage(Wheel _wheel);
-    void setTimestamp(ACE_Time_Value const& _timestamp);
+
+    Wheel wheel() const;
+    long ticks() const;
+    unsigned char clock() const;
+
+    void setTicks(long _ticks);
+    void setClock(unsigned char _clock);
 
     Wheel wheel_;
     long ticks_;
@@ -37,9 +43,30 @@ namespace FaulController
   {}
 
   inline
-  void 
-  OdometryMessage::setTimestamp(ACE_Time_Value const& _timestamp) {
-     time_ = _timestamp;
+  OdometryMessage::Wheel
+  OdometryMessage::wheel() const {
+    return wheel_;
+  }
+  inline
+  long
+  OdometryMessage::ticks() const {
+    return ticks_;
+  }
+  inline
+  unsigned char
+  OdometryMessage::clock() const {
+    return clock_;
+  }
+
+  inline
+  void
+  OdometryMessage::setTicks(long _ticks) {
+    ticks_ = _ticks;
+  }
+  inline
+  void
+  OdometryMessage::setClock(unsigned char _clock) {
+    clock_ = _clock;
   }
 }
 #endif 

@@ -48,7 +48,7 @@ namespace FaulController
   EventHandler::~EventHandler()
   {
     DBG(cout << "Destructing FaulTtyEventHandler." << endl);
-    if (static_cast<OdometryMessage *>(message_)->wheel_ == 
+    if (static_cast<OdometryMessage *>(message_)->wheel() == 
         OdometryMessage::LEFT)
 	          consumer_ = NULL;
   }
@@ -82,7 +82,7 @@ namespace FaulController
 	Miro::Log::enabled(Miro::Log::FAUL)) {
 
       std::ostringstream s;
-      std::string wheel = (msg->wheel_ == OdometryMessage::LEFT)? "left  " : "right ";
+      std::string wheel = (msg->wheel() == OdometryMessage::LEFT)? "left  " : "right ";
       s << wheel << "length: " << bytes << std::endl << std::hex << wheel;
       for (int i = 0; i < bytes; ++i) {
 	s.width(2);
@@ -94,12 +94,12 @@ namespace FaulController
     }
     
     msg->time() = ACE_OS::gettimeofday();
-    msg->ticks_ = *(reinterpret_cast<long int *>(&buff_[0]));
-    msg->clock_ = buff_[4];
+    msg->setTicks(*(reinterpret_cast<long int *>(&buff_[0])));
+    msg->setClock(*(reinterpret_cast<unsigned char *>(&buff_[4])));
 
     dispatchMessage();
 
-#ifdef ASCII_MODE
+#ifdef FAUL_TTY_USES_ASCII_MODE
     char const * last = buff_ + bytes;
     for (char const * first = buff_; first != last; ++first) {
       if (msg->ticks_ == 0)
