@@ -72,26 +72,26 @@ namespace Miro
 
   void DynamicWindow::collisionCheckDeluxe(std::vector<Vector2d> &_robot, std::vector<Vector2d> &_obstacle) {
 
-    const double CURV_COUNT = 42;
-    const double CURV_SEGS = 42;
+    const double CURV_COUNT = 41;
+    const double CURV_SEGS = 41;
     const double CURV_SEG_LEN = 50;  // in mm
     const double WHEEL_DISTANCE  = 390.;  // in mm
     const double MIN_DISTANCE = 10; // in mm
 
-    int CURV[42][21];	// curvature space
+    int CURV[41][41];	// curvature space
     int count, seg;
     double fLeft, fRight, offset, angle, rel;
 
     std::FILE *logFile;
     logFile = std::fopen("Curvature.log","w");
 
-    for(count = 1; count <= CURV_COUNT / 2; count++) {
+    for(count = 0; count < CURV_COUNT; count++) {
 
-      rel = tan((double)count * M_PI / (2 * ((CURV_COUNT / 2) + 1)));
+      rel = tan(((M_PI/2) * count / CURV_COUNT) - (M_PI/4));
 
-      if(rel != 1.) {
+      if(fabs(rel)!=1) {
 
-	if(rel>=1) {
+	if(fabs(rel)>=1) {
           fLeft = CURV_SEG_LEN;
           fRight = fLeft / rel;
         }
@@ -104,15 +104,11 @@ namespace Miro
         angle = (180. * (fLeft - fRight)) / (WHEEL_DISTANCE * M_PI);
 
 	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -1 * angle * (CURV_SEGS + 1) / 2);
-	
-        for(seg = 1; seg <= CURV_SEGS; seg++) {
-        	
+        for(seg = 0; seg < CURV_SEGS; seg++) {  	
 	  rotateMountedPolygon(_robot, Vector2d(-offset, 0.), angle);
-          getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) < MIN_DISTANCE ? CURV[count-1][seg-1] = 1 : CURV[count-1][seg-1] = 0;
-	  fprintf(logFile,"%d\n",CURV[count-1][seg-1]);
-
-        }
-
+          getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) < MIN_DISTANCE ? CURV[count][seg] = 1 : CURV[count][seg] = 0;
+	  fprintf(logFile,"%d\n",CURV[count][seg]);
+	}
 	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -1 * angle * (CURV_SEGS - 1) / 2);
 	
       }
