@@ -16,6 +16,12 @@
 
 module Miro
 {
+  struct PanEventIDL
+  {
+    TimeIDL time;
+    double newAngle;
+  };
+
   //! The specialized pan position specification of the Sparrow99 pan unit.
   struct PanPositionIDL
   {

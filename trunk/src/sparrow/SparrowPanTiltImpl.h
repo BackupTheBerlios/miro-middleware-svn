@@ -17,6 +17,13 @@
 
 #include "sparrow/Parameters.h"
 
+#include <orbsvcs/CosNotifyCommC.h>
+
+namespace Miro
+{
+  class StructuredPushSupplier;
+};
+
 namespace Sparrow
 {
   // forward declaration
@@ -27,7 +34,8 @@ namespace Sparrow
   {
   public:
     //Constructor
-    PanTiltImpl(BaseConnection * _connection);
+    PanTiltImpl(BaseConnection * _connection,
+		Miro::StructuredPushSupplier * _pSupplier = NULL);
 
     //Destructor
     virtual ~PanTiltImpl();
@@ -57,6 +65,9 @@ namespace Sparrow
     BaseConnection *         connection;
     const Parameters&        params_;
     Miro::Mutex              mutex;
+
+    Miro::StructuredPushSupplier * pSupplier_;
+    CosNotification::StructuredEvent notifyEvent;
 
     double lastPosition;
     double nextPosition;
@@ -94,6 +105,6 @@ namespace Sparrow
   }
   */
 
-};
+}
 
 #endif // sparrowPanTiltImpl_hh

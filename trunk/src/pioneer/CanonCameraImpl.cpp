@@ -296,7 +296,6 @@ namespace Canon
   void
   CanonCameraImpl::setAE(short value) throw(Miro::EDevIO, Miro::ETimeOut)
   {
-    bool done=false;
     char tmp[4];
     char fixChar[4];
 
@@ -324,7 +323,6 @@ cout << " error" << pAnswer->errorCode() << endl;
   void
   CanonCameraImpl::setIrisAssignment(short value) throw(Miro::EDevIO, Miro::ETimeOut)
   {
-    bool done=false;
     char tmp[3];
     char fixChar[4];
 
@@ -351,7 +349,6 @@ cout << "Error:" <<pAnswer->errorCode() << endl;
   void
   CanonCameraImpl::setAGCGain(short value)
   {
-    bool done=false;
     char tmp[4];
     char fixChar[4];
 
@@ -377,7 +374,6 @@ cout << "error" << pAnswer->errorCode()<< endl;
   void
   CanonCameraImpl::setShutterSpeed(short value)
   {
-    bool done=false;
     char tmp[4];
     char fixChar[4];
 
@@ -452,7 +448,6 @@ cout << "error" <<pAnswer->errorCode()<< endl;
 
   void CanonCameraImpl::setWBvalue(short value)
   {
-    bool done=false;
     char tmp[4];
     char fixChar[4];
 

@@ -262,6 +262,7 @@
  <section name="Notification" >
   <parameter name="Logging" >
    <parameter name="TypeName">
+     <parameter value="Pan" />
      <parameter value="Infrared" />
      <parameter value="Odometry" />
      <parameter value="RawPosition" />

@@ -15,6 +15,7 @@
 
 #include "miro/TimeHelper.h"
 #include "miro/Angle.h"
+#include "miro/StructuredPushSupplier.h"
 
 namespace Sparrow
 {
@@ -23,9 +24,11 @@ namespace Sparrow
   using Miro::EOutOfBounds;
 
   // Implementation skeleton constructor
-  PanTiltImpl::PanTiltImpl(BaseConnection* _connection) :
+  PanTiltImpl::PanTiltImpl(BaseConnection* _connection,
+			   Miro::StructuredPushSupplier * _pSupplier) :
     connection(_connection),
     params_(*Parameters::instance()),
+    pSupplier_(_pSupplier),
     lastPosition(Miro::deg2Rad(90.)),
     nextPosition(0.),
     timeLastSet(ACE_OS::gettimeofday()),
@@ -39,6 +42,18 @@ namespace Sparrow
        ((Connection *)connection)->setServo(0, Miro::deg2Rad(0.));
     }
     //    connection.setServo(1, params_.farAngle);
+
+
+    // Stall Notify Event initialization
+    if (pSupplier_) {
+      notifyEvent.header.fixed_header.event_type.domain_name = 
+        CORBA::string_dup(pSupplier_->domainName().c_str());
+      notifyEvent.header.fixed_header.event_type.type_name = 
+  	  CORBA::string_dup("Pan");
+      notifyEvent.header.fixed_header.event_name = CORBA::string_dup("");
+      notifyEvent.header.variable_header.length(0);   // put nothing here
+      notifyEvent.filterable_data.length(0);          // put nothing here
+    }
   }
 
   // Implementation skeleton destructor
@@ -98,6 +113,15 @@ namespace Sparrow
       lastPosition = currentPosition(t).angle;
       nextPosition = value;
       timeLastSet = t;
+
+      if (pSupplier_) {
+	Miro::PanEventIDL panEvent;
+	Miro::timeA2C(t, panEvent.time);
+	panEvent.newAngle = value;
+	
+	notifyEvent.remainder_of_body <<= panEvent;
+	pSupplier_->sendEvent(notifyEvent);
+      }
     }
   }
 

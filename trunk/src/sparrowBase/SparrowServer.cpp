@@ -83,6 +83,7 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
   id_(),
   ec_(notifyFactory_->create_channel(initialQos_, initialAdmin_, id_)),
   structuredPushSupplier_(ec_, namingContextName),
+  panPushSupplier_(ec_, namingContextName),
 
   odometry(&structuredPushSupplier_, true, true),
   pSonar_((Sparrow::Parameters::instance()->goalie && !Sparrow::Parameters::instance()->sparrow2003)?
@@ -144,7 +145,7 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
    sparrowKicker = new Sparrow::KickerImpl(sparrowConnection2003);
    sparrowButtons = new Sparrow::ButtonsImpl(&structuredPushSupplier_);
    sparrowStall = new Sparrow::StallImpl(sparrowConnection2003, &structuredPushSupplier_);
-   sparrowPanTilt = new Sparrow::PanTiltImpl(sparrowConnection2003);
+   sparrowPanTilt = new Sparrow::PanTiltImpl(sparrowConnection2003, &panPushSupplier_);
    pFaulhaber =  new FaulhaberHardware(reactorTask.reactor(), &odometry, sparrowConnection2003);
 
    pSparrowConsumer2003->registerInterfaces(sparrowConnection2003,
@@ -180,7 +181,7 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
    sparrowKicker = new Sparrow::KickerImpl(sparrowConnection);
    sparrowButtons = new Sparrow::ButtonsImpl(&structuredPushSupplier_);
    sparrowStall = new Sparrow::StallImpl(sparrowConnection, &structuredPushSupplier_);
-   sparrowPanTilt = new Sparrow::PanTiltImpl(sparrowConnection);
+   sparrowPanTilt = new Sparrow::PanTiltImpl(sparrowConnection, &panPushSupplier_);
 
    pFaulhaber = ((Sparrow::Parameters::instance()->faulhaber)?
 	   new FaulhaberHardware(reactorTask.reactor(), &odometry, NULL) : NULL),
@@ -217,6 +218,7 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
   id_(),
   ec_(notifyFactory_->create_channel(initialQos_, initialAdmin_, id_)),
   structuredPushSupplier_(ec_, namingContextName),
+  panPushSupplier_(ec_, namingContextName),
 
   odometry(&structuredPushSupplier_, true, true),
   pSonar_((Sparrow::Parameters::instance()->goalie && !Sparrow::Parameters::instance()->sparrow2003)?
@@ -278,7 +280,7 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
    sparrowKicker = new Sparrow::KickerImpl(sparrowConnection2003);
    sparrowButtons = new Sparrow::ButtonsImpl(&structuredPushSupplier_);
    sparrowStall = new Sparrow::StallImpl(sparrowConnection2003, &structuredPushSupplier_);
-   sparrowPanTilt = new Sparrow::PanTiltImpl(sparrowConnection2003);
+   sparrowPanTilt = new Sparrow::PanTiltImpl(sparrowConnection2003, &panPushSupplier_);
 
 
 
@@ -319,7 +321,7 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
    sparrowKicker = new Sparrow::KickerImpl(sparrowConnection);
    sparrowButtons = new Sparrow::ButtonsImpl(&structuredPushSupplier_);
    sparrowStall = new Sparrow::StallImpl(sparrowConnection, &structuredPushSupplier_);
-   sparrowPanTilt = new Sparrow::PanTiltImpl(sparrowConnection);
+   sparrowPanTilt = new Sparrow::PanTiltImpl(sparrowConnection, &panPushSupplier_);
 
    pFaulhaber = ((Sparrow::Parameters::instance()->faulhaber)?
 	   new FaulhaberHardware(reactorTask.reactor(), &odometry, NULL) : NULL),

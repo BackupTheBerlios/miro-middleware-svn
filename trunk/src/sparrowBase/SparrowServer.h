@@ -118,6 +118,7 @@ public:
   CosNotifyChannelAdmin::EventChannel_ptr ec_;
 
   Miro::StructuredPushSupplier structuredPushSupplier_;
+  Miro::StructuredPushSupplier panPushSupplier_;
 
   Miro::OdometryImpl odometry;
   Miro::RangeSensorImpl * pSonar_;
