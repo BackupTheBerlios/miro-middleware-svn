@@ -47,7 +47,7 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   battery(),
 
   // Pioneer board initialization
-  pPioneerConsumer(new Pioneer::Consumer(&sonar, &tactile, &odometry, &battery)),
+  pPioneerConsumer(new Pioneer::Consumer(&sonar, &tactile, &odometry, &battery,NULL,&canonPanTilt)),
   pPsosEventHandler(new Psos::EventHandler(pPioneerConsumer, pioneerConnection)),
   pioneerConnection(reactorTask.reactor(), pPsosEventHandler, pPioneerConsumer),
 
@@ -55,7 +55,8 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   motion(pioneerConnection, *pPioneerConsumer),
   stall(/*pioneerConnection*/),
   sonar(Pioneer::Parameters::instance()->sonarDescription, &structuredPushSupplier_),
-  tactile(Pioneer::Parameters::instance()->tactileDescription, &structuredPushSupplier_)
+  tactile(Pioneer::Parameters::instance()->tactileDescription, &structuredPushSupplier_),
+  canonPanTilt(pioneerConnection, *pPioneerConsumer)
 {
   pOdometry = odometry._this();
   pMotion = motion._this();
@@ -63,6 +64,7 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   pSonar = sonar._this();
   pTactile = tactile._this();
   pBattery = battery._this();
+  pCanonPanTilt = canonPanTilt._this();
 
   addToNameService(pOdometry.in(), "Odometry");
   addToNameService(pMotion.in(), "Motion");
@@ -71,6 +73,7 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   addToNameService(pTactile.in(), "Tactile");
   addToNameService(pBattery.in(), "Battery");
   addToNameService(ec_.in(), "EventChannel");
+  addToNameService(pCanonPanTilt.in(), "PanTilt");
 
   // start the asychronous consumer listening for the hardware
   reactorTask.open(0);

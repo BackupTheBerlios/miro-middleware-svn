@@ -13,6 +13,7 @@
 #define PioneerConnection_h
 
 #include "psos/PsosConnection.h"
+#include "pioneer/CanonPanTiltMessage.h"
 
 //------------------------ PioneerClass ---------------------------//
 
@@ -72,6 +73,9 @@ namespace Pioneer
     //    void setPosition(short x, short y, short theta_rad);
     //    void setOdometryRate(unsigned short ms);
 
+    void sendCamera(Canon::Message cameraMessage);
+    void getCamera(unsigned short length); //get length bytes from AUX1
+
   protected:
     Consumer * consumer;
 
@@ -83,6 +87,7 @@ namespace Pioneer
     // short             transSpeed;     // speed set in last setSpeed command
     // short             servoPulse;     // servo position set in last setServo
   };
+
 };
 
 #endif

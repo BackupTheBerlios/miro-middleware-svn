@@ -21,6 +21,7 @@
 #include "pioneer/PioneerParameters.h"
 #include "pioneer/PioneerConsumer.h"
 #include "pioneer/PioneerStallImpl.h"
+#include "pioneer/CanonPanTiltImpl.h"
 
 #include "psos/PsosEventHandler.h"
 
@@ -45,7 +46,7 @@ public:
   //  private:
   virtual ~Event() {}
 public:
-
+  
   virtual int handle_signal (int signum, siginfo_t *, ucontext_t *);
 };
 
@@ -66,9 +67,10 @@ struct Service
   Miro::BatteryImpl * pBatteryImpl;
   Pioneer::Consumer * pConsumer;
   Pioneer::StallImpl * pStallImpl;
+  Canon::CanonPanTiltImpl * pCanonPanTiltImpl;
   Psos::EventHandler * pEventHandler;
   Pioneer::Connection connection;
-
+  
   Service();
 };
 
@@ -80,6 +82,7 @@ Service::Service() :
   pBatteryImpl(new Miro::BatteryImpl()),
   pConsumer(new Pioneer::Consumer(pRangeSensorImpl, NULL, pOdometryImpl)),
   pStallImpl(new Pioneer::StallImpl()),
+  pCanonPanTiltImpl(new Canon::CanonPanTiltImpl(connection, *pConsumer)),
   pEventHandler(new Psos::EventHandler(pConsumer, connection)),
   connection(reactorTask.reactor(), pEventHandler, pConsumer)
 {}
@@ -140,7 +143,7 @@ int main(int argc, char* argv[])
       Miro::PositionIDL odoData;
       
       pSonarEvent = service.pRangeSensorImpl->getGroup(0);
-      //service.pOdometryImpl->setPosition(odoData);
+      service.pOdometryImpl->setPosition(odoData);
       odoData = service.pOdometryImpl->getWaitPosition();
       k=100;
       odoData = service.pOdometryImpl->getWaitPosition();

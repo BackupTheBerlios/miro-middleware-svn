@@ -31,7 +31,9 @@ FILES = 	PioneerConnection \
 		PioneerStatus \
 		PioneerMotionImpl  \
 		PioneerStallImpl  \
-		PioneerParameters 
+		PioneerParameters \
+		CanonPanTiltImpl \
+		CanonPanTiltMessage
 
 DEFS  = $(addsuffix .h,$(FILES))
 LSRC  = $(addsuffix .cpp,$(FILES))

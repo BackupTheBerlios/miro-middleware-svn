@@ -43,14 +43,15 @@ namespace Psos
     checksum(calcChecksum());
   }
 
-  Message::Message(char cmd, const char * msg)
+  Message::Message(char cmd, const char * msg, int msgLength)
   {
     header(START_12);
-    length(strlen(msg) + 2);
+    if (msgLength==0) msgLength=strlen(msg);
+    length(msgLength + 5);
     id(cmd);
     type(SF_ARGSTR);
-    strcpy((char *)userData(), msg);
-    userData()[strlen(msg)] = '\0'; // 0 termination
+    *userData()=(unsigned char)msgLength;
+    memcpy((char *)userData()+1, msg, msgLength);
     checksum(calcChecksum());
   }
 

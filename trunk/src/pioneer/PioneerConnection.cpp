@@ -169,4 +169,18 @@ namespace Pioneer
     writeMessage(kickMessage);               // send it
   }
 
+  void Connection::sendCamera(Canon::Message cameraMessage)
+  {
+    getCamera(0); //flush buffer
+    Message camMsg(SF_COMTTY2,(char*)cameraMessage.buffer(),cameraMessage.length());
+    writeMessage(camMsg);
+    getCamera(6); //get minimum answer 
+  }
+
+  void Connection::getCamera(unsigned short length)
+  {
+    Message answer(SF_COMGETAUX,length);
+    writeMessage(answer);
+  }
+
 };

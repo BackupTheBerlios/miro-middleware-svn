@@ -68,8 +68,8 @@ namespace Psos
   static const char SF_COMIOREQ   = 0x28; // IO SIP
   static const char SF_COMPTUPOS  = 0x29; // servo pulse
 
-  static const char SF_COMTTY2    = 0x2a; //write to aux1
-  static const char SF_COMGETAUX  = 0x2b; //read from aux1
+  static const char SF_COMTTY2    = 0x2a; // write to aux1
+  static const char SF_COMGETAUX  = 0x2b; // read from aux1
 
   static const char SF_COMBSTALL  = 0x2c; // stall on bump
 
@@ -77,6 +77,9 @@ namespace Psos
   static const char SF_COMESTALL  = 0x38; // emergency button mode
 
   static const char SF_COMSTEP    = 0x40; // simulator
+
+  static const char SF_COMTTY3    = 0x42; // write to aux2
+  static const char SF_COMGETAUX2 = 0x42; // read from aux2
 
   // PSOS 4.6 client command types
   static const char SF_ARGINT     = 0x3b;

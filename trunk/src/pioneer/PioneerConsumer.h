@@ -27,6 +27,12 @@ namespace Miro
   class BatteryImpl;
 };
 
+namespace Canon
+{
+  class CanonPanTiltImpl;
+  class Answer;
+}
+
 namespace Pioneer
 {
   // forward declarations
@@ -47,17 +53,21 @@ namespace Pioneer
 	     Miro::RangeSensorImpl * _pTactile = NULL,
 	     Miro::OdometryImpl * _pOdometry = NULL,
 	     Miro::BatteryImpl * _pBattery = NULL,
-	     Pioneer::StallImpl * _pStall = NULL);
+	     Pioneer::StallImpl * _pStall = NULL,
+	     Canon::CanonPanTiltImpl * _pCanonPanTilt=NULL);
     ~Consumer();
 
     virtual void handleMessage(const Miro::DevMessage * _message);
-
+    
     // protected:
     Miro::RangeSensorImpl * pSonar;
     Miro::RangeSensorImpl * pTactile;
     Miro::OdometryImpl * pOdometry;
     Miro::BatteryImpl * pBattery;
     Pioneer::StallImpl * pStall;
+    Canon::CanonPanTiltImpl * pCanonPanTilt;
+    Canon::Answer *pAnswer;
+    
 
     Miro::MotionStatusIDL status_;
     short prevX, prevY;

@@ -26,6 +26,7 @@
 #include "pioneer/PioneerConsumer.h"
 #include "pioneer/PioneerMotionImpl.h"
 #include "pioneer/PioneerStallImpl.h"
+#include "pioneer/CanonPanTiltImpl.h"
 #include "miro/RangeSensorImpl.h"
 
 #include <orbsvcs/CosNotifyChannelAdminS.h>
@@ -78,6 +79,7 @@ private:
   Pioneer::StallImpl  stall;
   Miro::RangeSensorImpl sonar;
   Miro::RangeSensorImpl tactile;
+  Canon::CanonPanTiltImpl canonPanTilt;
 
   Miro::Odometry_var pOdometry;
   Miro::Motion_var pMotion;
@@ -85,6 +87,7 @@ private:
   Miro::RangeSensor_var pSonar;
   Miro::RangeSensor_var pTactile;
   Miro::Battery_var pBattery;
+  Miro::CanonPanTilt_var pCanonPanTilt;
 };
 #endif
 

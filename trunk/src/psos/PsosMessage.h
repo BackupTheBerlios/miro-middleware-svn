@@ -30,7 +30,7 @@ namespace Psos
   public:
     Message() {} // default get message
     Message(char cmd);
-    Message(char cmd, const char * msg);
+    Message(char cmd, const char * msg, int msgLength=0);
     explicit Message(char cmd, short val);
     explicit Message(char cmd, unsigned short val);
     Message(char cmd, char byte1, char byte2);
