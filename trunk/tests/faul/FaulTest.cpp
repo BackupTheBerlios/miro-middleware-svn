@@ -91,8 +91,8 @@ int main(int argc, char* argv[])
 
   // Config file processing
   Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
-  config->setSection("ActiveMedia");
-  config->getParameters("FaulMotorBoard", *pParams);
+  config->setSection("Faulhaber");
+  config->getParameters("FaulMotor", *pParams);
   delete config;
 
 #ifdef DEBUG
