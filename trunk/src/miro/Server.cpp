@@ -82,7 +82,7 @@ namespace Miro
   Server::Server(int& argc, char *argv[],
 		 const RobotParameters& _params) :
     Super(argc, argv, _params),
-    rebind_(false),
+    rebind_(true),
     own_(true),
     shutdown_(false),
     event_(new Event(*this)),

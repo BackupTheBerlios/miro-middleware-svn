@@ -22,8 +22,13 @@ main(int argc, char * argv[])
 {
   Miro::Client client(argc, argv);
 
+  if (argc < 2) {
+    std::cout << "usage: " << argv[0] << " <Sensor Name>" << std::endl;
+    return 1;
+  }
+
   try {
-    Miro::RangeSensor_var rangeSensor = client.resolveName<Miro::RangeSensor>("RangeSensor");
+    Miro::RangeSensor_var rangeSensor = client.resolveName<Miro::RangeSensor>(argv[1]);
     Miro::ScanDescriptionIDL_var description;
     Miro::RangeGroupEventIDL_var group;
     Miro::RangeScanEventIDL_var scan;
