@@ -39,6 +39,7 @@ namespace Pioneer
     //-----------------//
     // motor functions //
     //-----------------//
+    void stop();                              // stop, motor remain enabled
     void setSpeed(short speed);
     void setSpeed2(short left, short right);  // set both wheel's speed
     void setRotVel(short rotvel);             // set rotation velocity
@@ -86,6 +87,8 @@ namespace Pioneer
 
     // short             transSpeed;     // speed set in last setSpeed command
     // short             servoPulse;     // servo position set in last setServo
+
+    const Parameters * params_;
   };
 
 };

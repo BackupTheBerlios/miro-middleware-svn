@@ -41,8 +41,9 @@ namespace Pioneer
 			 Consumer * _consumer) : 
     Super(_reactor, _eventHandler, *Parameters::instance()),
     consumer(_consumer),
-    servoMidPulse(129)     // default for servo middle position pulse (org 800)
-                           // 129 getestet 19.12.2001
+    servoMidPulse(129),    // default for servo middle position pulse (org 800)
+                           // 129 getestet 19.12.2001 TODO: make it a parameter...
+    params_(Parameters::instance())
   { 
     DBG(cout << "Constructing PioneerConnection." << endl);
   }
@@ -63,6 +64,13 @@ namespace Pioneer
 
   //----------- commands ----------- //
 
+  // stop,
+  // motors remain enabled
+  void
+  Connection::stop() {
+    Message stopMessage(SF_COMSTOP);
+    writeMessage(stopMessage);
+  }
 
   // set absolute speed in mm/sec,
   // positive values are forward, negatives backward
@@ -80,7 +88,9 @@ namespace Pioneer
   void
   Connection::setSpeed2(short left, short right)
   {
-    Message speed2Message(SF_COMVEL2, right/4, left/4); // build speed packet
+    Message speed2Message(SF_COMVEL2,  // build speed packet
+			  (short)((double)right / params_->vel2Divisor), 
+			  (short)((double)left / params_->vel2Divisor));
     writeMessage(speed2Message);                        // send it
     //cout << "setSpeed2 right_ left_:_ " << right << "--"<< left << endl
     //        << speed2Message << endl;
