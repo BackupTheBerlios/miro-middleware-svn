@@ -307,8 +307,10 @@ int main(int argc, char *argv[])
     video->release(imageIDL);
     cout << endl;
 
-    for (ImageVector::const_iterator i = v.begin(); i != v.end(); ++i)
+    for (ImageVector::const_iterator i = v.begin(); i != v.end(); ++i) {
       i->writePpm();
+      delete i->buffer;
+    }
   }
   catch (const Miro::ETimeOut& e) {
     cerr << "Miro Timeout Exception: " << endl;

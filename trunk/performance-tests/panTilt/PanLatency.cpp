@@ -276,8 +276,10 @@ int main(int argc, char *argv[])
 	  // write images to disc
 	  if (verbose)
 	    cout << "Write images to disc." << endl;
-	  for (ImageVector::const_iterator i = v.begin(); i != v.end(); ++i)
+	  for (ImageVector::const_iterator i = v.begin(); i != v.end(); ++i) {
 	    i->writePpm();
+	    delete i->buffer;
+	  }
 	  v.clear();
 	  break;
 	}
