@@ -58,8 +58,10 @@ namespace Video
     unsigned char * tgtImgEnd = tgtImg + IMAGE_WIDTH * IMAGE_HEIGHT * 3;
     int * srcOffset = srcOffset_;
 
-    for (; tgtImg != tgtImgEnd; ++tgtImg, ++srcOffset) {
-      *tgtImg = *(srcImg + *srcOffset);
+    for (; tgtImg != tgtImgEnd; ++srcOffset) {
+      *tgtImg++ = *(srcImg + *srcOffset);
+      *tgtImg++ = *(srcImg + *srcOffset + 1);
+      *tgtImg++ = *(srcImg + *srcOffset + 2);
     }
   }
 
@@ -74,12 +76,9 @@ namespace Video
     int * srcOffset = srcOffset_;
     for (unsigned int dist = 0; dist < outputFormat_.height; dist++) {
       for (unsigned int angle = 0; angle < outputFormat_.width; angle++) {
-	for(int color = 0; color < 3; color++) {
-	  *(srcOffset++) = 
-	    (middleX_ + (int)floor(dist * cosLookup_[angle])) * 3 +
-	    (middleY_ + (int)floor(dist * sinLookup_[angle])) * 3 * inputFormat_.width + 
-	    color;
-	}
+	*(srcOffset++) = 
+	  (middleX_ + (int)floor(dist * cosLookup_[angle])) * 3 +
+	  (middleY_ + (int)floor(dist * sinLookup_[angle])) * 3 * inputFormat_.width;
       }
     }
   }
