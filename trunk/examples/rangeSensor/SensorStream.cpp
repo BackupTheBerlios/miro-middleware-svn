@@ -115,7 +115,7 @@ SensorStream::push_structured_event(const StructuredEvent & notification
     }
   }
   else
-    MIRO_LOG_OSTR("SensorStream",LM_ERROR, "No SensorIDL message." << endl);
+    MIRO_LOG_OSTR(LL_ERROR, "No SensorIDL message." << endl);
 }
 
 int main(int argc, char *argv[])
@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
      group = atoi(argv[argc-1]);
      group_en = true;
 
-     MIRO_LOG_OSTR("SensorStream",LM_INFO, "Group: " << group << endl);
+     MIRO_LOG_OSTR(LL_NOTICE, "Group: " << group << endl);
 
   }
 
@@ -156,16 +156,16 @@ int main(int argc, char *argv[])
 			      server.namingContextName,
 			      std::string(argv[1]) );
 
-    MIRO_LOG_OSTR("SensorStream",LM_INFO, "Loop forever handling events." << endl);
+    MIRO_LOG_OSTR(LL_NOTICE, "Loop forever handling events." << endl);
     server.run();
-    MIRO_LOG_OSTR("SensorStream",LM_INFO, "Server stopped, exiting." << endl);
+    MIRO_LOG_OSTR(LL_NOTICE, "Server stopped, exiting." << endl);
   }
   catch (const CORBA::Exception & e) {
-    MIRO_LOG_OSTR("SensorStream",LM_CRITICAL, "Uncaught CORBA exception: " << e << endl);
+    MIRO_LOG_OSTR(LL_CRITICAL, "Uncaught CORBA exception: " << e << endl);
     return 1;
   }
   catch (...) {
-    MIRO_LOG_OSTR("SensorStream",LM_CRITICAL, "Uncaught exception!" << endl);
+    MIRO_LOG_OSTR(LL_CRITICAL, "Uncaught exception!" << endl);
     return 1;
   }
   return 0;

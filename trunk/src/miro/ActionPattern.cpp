@@ -20,6 +20,7 @@
 #include "StructuredPushSupplier.h"
 
 #include <qdom.h>
+#include "miro/Log.h"
 
 namespace Miro
 {
@@ -208,31 +209,31 @@ namespace Miro
   void
   ActionPattern::open() 
   {
-    std::cout << "ActionPattern: New Pattern: " << getActionPatternName() << std::endl;
+    MIRO_LOG_OSTR(LL_NOTICE, "New Pattern:" << getActionPatternName() << std::endl);
 
     if (currentActionPattern() != NULL) {
       // disable behaviours which are not needed anymore
       currentActionPattern()->close(this);
     }
 
-    std::cout << "ActionPattern: Init arbiter." << std::endl;
+    MIRO_LOG_OSTR(LL_NOTICE, "Init arbiter." << std::endl);
     arbiter_->init(arbiterParameters_);
 
     policy_->currentActionPattern(this);
     
     if (!(arbiter_->isActive())) {
-      std::cout << "ActionPattern: Activate arbiter: " << arbiter_->getName() << std::endl;
+      MIRO_LOG_OSTR(LL_NOTICE, "Activate arbiter." << arbiter_->getName() << std::endl);
       arbiter_->open();
     }
 	
     //enable all current behaviours		
-    std::cout <<"ActionPattern: Enabling behaviours." << std::endl;
+    MIRO_LOG_OSTR(LL_NOTICE, "Enabling behaviours." << std::endl);
     BehaviourMap::const_iterator i;
     for(i = behaviourMap_.begin(); i != behaviourMap_.end(); i++) {
       i->second.first->init(i->second.second);
       // if a behaviour is active, check for disabling
       if (!(i->second.first->isActive())) {
-	std::cout << "Enabling Behaviour: " << i->second.first->getBehaviourName() << std::endl;
+        MIRO_LOG_OSTR(LL_NOTICE, "Enabling Behaviour: " << i->second.first->getBehaviourName() << std::endl);
 	i->second.first->open();			
       }
     }
@@ -257,7 +258,7 @@ namespace Miro
   void
   ActionPattern::close(ActionPattern * nextPattern)
   {
-    std::cout << "Disabling behaviours." << std::endl;
+    MIRO_LOG_OSTR(LL_NOTICE, "Disabling behaviours." << std::endl);
     BehaviourMap::const_iterator i;
     // disable behaviours which are not needed anymore
     for(i = behaviourMap().begin(); i != behaviourMap().end(); ++i) {
@@ -267,14 +268,14 @@ namespace Miro
 	if (nextPattern == NULL || 
 	    nextPattern->getBehaviour(i->first) == NULL) {
 	  //disable behaviour
-	  std::cout << "Disabling Behaviour: " << i->second.first->getBehaviourName() << std::endl;
+          MIRO_LOG_OSTR(LL_NOTICE, "Disabling Behaviour: " << i->second.first->getBehaviourName() << std::endl);
 	  i->second.first->close();			
 	}
       }
     }
     if (nextPattern == NULL || 
 	nextPattern->arbiter() != arbiter_) {
-      std::cout << "Disabling arbiter: " << arbiter_->getName() << std::endl;
+      MIRO_LOG_OSTR(LL_NOTICE, "Disabling arbiter: " << arbiter_->getName() << std::endl);
       arbiter_->close();
     }
 
@@ -366,20 +367,19 @@ namespace Miro
 
     if (policy_->transitionMutex_.acquire(t) == -1) {
       // this can happen due to Reactor/Timed-Behaviour upcalls.
-      std::cerr << "Transition mutex blocked!" << std::endl;
+      MIRO_LOG_OSTR(LL_ERROR, "Transition mutex blocked!"  << std::endl);
       return;
     }
     // make sure this is still the current action pattern
     if (currentActionPattern() == this) {
-      std::cout << "ActionPattern: Transition " << message << std::endl;
+      MIRO_LOG_OSTR(LL_NOTICE, "Transition " << message  << std::endl);
 
       ActionPattern* ap = getTransitionPattern(message);
       if (ap != currentActionPattern()) { 
 	if (ap != NULL)
 	  ap->open();
 	else {
-	   std::cerr << "ActionPattern: no transition registered for message! \a" 
-	       << std::endl;
+           MIRO_LOG_OSTR(LL_ERROR, "no transition registered for message! \a"  << std::endl);
 	}
       }
     }
