@@ -24,6 +24,8 @@
 #include <iostream>
 #include <cstdio>
 
+#include <sys/shm.h>
+
 using namespace Miro;
 
 using std::cout;
