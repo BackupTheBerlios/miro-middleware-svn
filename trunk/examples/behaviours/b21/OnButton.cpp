@@ -59,7 +59,7 @@ OnButton::action()
   }
   else {
     // somthing went seriously wrong
-    std::cerr << "OnButton: No ButtonStatusIDL message." << endl;
+    std::cerr << "OnButton: No ButtonStatusIDL message." << std::endl;
   }
 }
 

@@ -12,6 +12,8 @@
 
 #include "miro/MotionArbiterMessage.h"
 
+using std::endl;
+
 const std::string TactileStop::name_ = "TactileStop";
 
 BEHAVIOUR_PARAMETERS_FACTORY_IMPL(TactileStop, TactileStopParameters);

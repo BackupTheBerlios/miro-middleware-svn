@@ -27,6 +27,7 @@
 
 using std::cout;
 using std::cerr;
+using std::endl;
 using std::string;
 
 using CosNotifyChannelAdmin::EventChannel_ptr;
@@ -275,7 +276,7 @@ RangeSensorBehaviour::evalSensor(const ACE_Time_Value& _time,
 
 
   addBuffer(_time,p);
-  //  cout << "abs(p)=" << abs(p) << "\targ(p)=" << Miro::rad2Deg(arg(p)) << "°" << endl;
+  //  cout << "abs(p)=" << abs(p) << "\targ(p)=" << Miro::rad2Deg(arg(p)) << ",A0(B" << endl;
 }
 
 void

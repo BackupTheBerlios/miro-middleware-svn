@@ -20,6 +20,7 @@
 
 using std::cout;
 using std::cerr;
+using std::endl;
 using std::string;
 using std::max;
 using std::min;
@@ -89,17 +90,17 @@ RangeSensorWallFollow::action()
     double dist = cos(alpha) * bL;
 
     cout << name_ << " left: alpha=" << Miro::rad2Deg(alpha) 
-	 << "°\t d=" << dist << "mm" << endl;
+	 << ",A0(B\t d=" << dist << "mm" << endl;
 
     message.active = true;        // yes, we do something
     
     if (dist < params->minDistance) { // we are too near
-      alpha -= M_PI / 6.; // -30°
-      cout << name_ << " left: too near alpha" << Miro::rad2Deg(alpha) << "°" << endl;
+      alpha -= M_PI / 6.; // -30,A0(B
+      cout << name_ << " left: too near alpha" << Miro::rad2Deg(alpha) << ",A0(B" << endl;
     }
     else if (dist > params->maxDistance) { // we are too far
-      alpha += M_PI / 6.; // +30°
-      cout << name_ << " left: too far alpha" << Miro::rad2Deg(alpha) << "°" << endl;
+      alpha += M_PI / 6.; // +30,A0(B
+      cout << name_ << " left: too far alpha" << Miro::rad2Deg(alpha) << ",A0(B" << endl;
     }
 
     message.velocity.rotation = min(params->rotation, 
@@ -110,17 +111,17 @@ RangeSensorWallFollow::action()
     double dist = cos(alpha) * bR;
 
     cout << name_ << " right: alpha=" << Miro::rad2Deg(alpha)
-	 << "°\t d=" << dist << "mm" << endl;
+	 << ",A0(B\t d=" << dist << "mm" << endl;
 
     message.active = true;
 
     if (dist < params->minDistance) { // we are too near
-      alpha += M_PI / 6.; // +30°
-      cout << name_ << " right: too near alpha" << Miro::rad2Deg(alpha) << "°" << endl;
+      alpha += M_PI / 6.; // +30,A0(B
+      cout << name_ << " right: too near alpha" << Miro::rad2Deg(alpha) << ",A0(B" << endl;
     }
     else if (dist > params->maxDistance) { // we are too far
-      alpha -= M_PI / 6.; // -30°
-      cout << name_ << " right: too far alpha" << Miro::rad2Deg(alpha) << "°"  << endl;
+      alpha -= M_PI / 6.; // -30,A0(B
+      cout << name_ << " right: too far alpha" << Miro::rad2Deg(alpha) << ",A0(B"  << endl;
     }
 
     message.velocity.rotation = min(params->rotation, 

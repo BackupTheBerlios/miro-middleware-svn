@@ -37,7 +37,7 @@ B21BehavioursFactory::B21BehavioursFactory(Server& _server,
   sonarAvoid(sonar_.in(), ec_.in(), server_.namingContextName),
   laserAvoid(reactor_, laser_.in())
 {
-  cout << "Constructing B21BehavioursFactory." << endl;
+  std::cout << "Constructing B21BehavioursFactory." << std::endl;
 
   BehaviourRepository * bf = BehaviourRepository::instance();
 

@@ -28,6 +28,7 @@ using Miro::ReactorTask;
 
 using std::cout;
 using std::cerr;
+using std::endl;
 
 int main(int argc, char *argv[])
 {
@@ -59,7 +60,7 @@ int main(int argc, char *argv[])
     // start timed behaviour sceduler
     task->open(NULL);
 
-    simpleBehaviours.open();
+    simpleBehaviours.connect();
     supplier_.connect();
 
     cout << "Loop forever handling events." << endl;
@@ -69,7 +70,7 @@ int main(int argc, char *argv[])
 
     engineImpl.closePolicy();
 
-    simpleBehaviours.close();
+    simpleBehaviours.disconnect();
     supplier_.disconnect();
 
     task->cancel();

@@ -24,7 +24,7 @@ SonarAvoid::SonarAvoid(Miro::RangeSensor_ptr _rangeSensor,
   domainName_(_domainName),
   sensor_()
 {
-  cout << "Constructing SonarAvoid behaviour." << endl;
+  std::cout << "Constructing SonarAvoid behaviour." << std::endl;
 
   // set up the sensor scan buffer
   Miro::ScanDescriptionIDL_var scanDescription = 
@@ -104,7 +104,7 @@ SonarAvoid::action()
   }
   else {
     // Range Sensor Event type mismatch !
-    std::cerr << "SonarAvoid: No RangeBunchEventIDL message." << endl;
+    std::cerr << "SonarAvoid: No RangeBunchEventIDL message." << std::endl;
   }
 }
 

@@ -18,6 +18,7 @@
 // #include <algorithm>
 #include <cmath>
 
+using std::endl;
 using CosNotifyChannelAdmin::EventChannel_ptr;
 using CosNotification::EventTypeSeq;
 
