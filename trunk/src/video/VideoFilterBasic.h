@@ -21,6 +21,7 @@ namespace Video
   public:
     FilterCopy(const Miro::ImageFormatIDL& _inputFormat);
     virtual void process();
+
   protected:
     unsigned int imageSize_;
   };
@@ -31,6 +32,7 @@ namespace Video
   public:
     FilterSwap3(const Miro::ImageFormatIDL& _inputFormat);
     virtual void process();
+
   protected:
     unsigned int imageSize_;
   };
@@ -41,6 +43,7 @@ namespace Video
   public:
     FilterSwap4(const Miro::ImageFormatIDL& _inputFormat);
     virtual void process();
+
   protected:
     unsigned int imageSize_;
   };
@@ -51,6 +54,7 @@ namespace Video
   public:
     FilterFlip(const Miro::ImageFormatIDL& _inputFormat);
     virtual void process();
+
   protected:
     unsigned int rowSize_;
   };
@@ -63,15 +67,14 @@ namespace Video
 
     FILTER_PARAMETERS_FACTORY(FilterHalfImage);
 
-    virtual void init(FilterParameters const *);
+    virtual void init(Miro::Server& _server, FilterParameters const * _params);
     virtual void process();
-  protected:
-    FilterHalfImageParameters const * params_;
 
+  protected:
     unsigned int rowSize_;
     unsigned int rowSize2_;
     unsigned int offset_;
   };
-};
+}
 
 #endif

@@ -25,6 +25,7 @@ namespace Video
   void
   FilterCopy::process()
   {
+    cout << __PRETTY_FUNCTION__ << endl;
     memcpy(outputBuffer(), inputBuffer(), imageSize_);
   }
 
@@ -121,12 +122,15 @@ namespace Video
   }
 
   void
-  FilterHalfImage::init(FilterParameters const * _params)
+  FilterHalfImage::init(Miro::Server& _server, FilterParameters const * _params)
   {
-    params_ = dynamic_cast<FilterHalfImageParameters const *>(_params);
-    assert(params_ != NULL);
+    Super::init(_server, _params);
+    
+    FilterHalfImageParameters const *
+      params = dynamic_cast<FilterHalfImageParameters const *>(_params);
+    assert(params != NULL);
 
-    if (params_->odd)
+    if (params->odd)
       offset_ = rowSize_;
   }
 
@@ -142,4 +146,4 @@ namespace Video
       dst += rowSize_;
     }
   }
-};
+}

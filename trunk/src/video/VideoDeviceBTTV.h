@@ -39,15 +39,12 @@ namespace Video
 
     FILTER_PARAMETERS_FACTORY(DeviceBTTV);
 
-    virtual void init(FilterParameters const * _params);
-    virtual void fini();
-
-    virtual void acquireOutputBuffer();
-    virtual void releaseOutputBuffer();
-
     static const unsigned int NUM_SUBFIELD_ENTRIES = SUBFIELD_EVEN + 1;
 
   protected:
+    virtual BufferManager * bufferManagerInstance() const;
+    virtual void init(Miro::Server& _server, FilterParameters const * _params);
+    virtual void fini();
 
     // methods
     void setFormat();
@@ -71,7 +68,6 @@ namespace Video
     ACE_DEV_IO ioBuffer_;
     ACE_DEV_Connector connector_;
 
-    mutable struct video_mmap * gb;
     struct video_mbuf gb_buffers;
     struct video_capability capability;
     struct video_channel * channels;

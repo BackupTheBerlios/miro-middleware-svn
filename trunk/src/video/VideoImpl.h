@@ -15,10 +15,12 @@
 #include "miro/Synch.h"
 
 #include <set>
+#include <string>
 
 // forward declarartions
 namespace Video
 {
+  class Filter;
   class BufferManager;
   class VideoInterfaceParameters;
 };
@@ -35,10 +37,12 @@ namespace Miro
   public:
     VideoImpl(Miro::Server& _server, 
 	      ::Video::VideoInterfaceParameters const& _params,
-	      Miro::ImageFormatIDL const & _format);
+	      ::Video::Filter * _filter);
     virtual ~VideoImpl();
 
+    Video_ptr ior() const;
     unsigned int connections() const;
+    const std::string&  name() const;
     ::Video::BufferManager * bufferManager();
 
     virtual ImageHandleIDL * connect(CORBA::ULong& id) ACE_THROW_SPEC (());
@@ -65,7 +69,7 @@ namespace Miro
 
     Server& server_;
     ::Video::VideoInterfaceParameters const& params_;
-    Miro::ImageFormatIDL format_;
+    ::Video::Filter * filter_;
     Miro::Video_ptr pVideo;
 
     unsigned char * pBufferArray_;
@@ -83,7 +87,13 @@ namespace Miro
   VideoImpl::bufferManager() {
     return pBufferManager_;
   }
-};
+
+  inline
+  Video_ptr
+  VideoImpl::ior() const {
+    return pVideo;
+  }
+}
 
 #endif
 

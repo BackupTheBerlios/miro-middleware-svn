@@ -8,16 +8,16 @@
 // $Id$
 //
 //////////////////////////////////////////////////////////////////////////////
-#include "VideoImpl.h"
-#include "VideoDevice.h"
-#include "VideoConsumer.h"
-#include "BufferManager.h"
-#include "Parameters.h"
-
 #include "miro/Server.h"
 #include "miro/TimeHelper.h"
 #include "miro/VideoHelper.h"
 #include "miro/Exception.h"
+
+#include "VideoImpl.h"
+#include "VideoFilter.h"
+#include "VideoConsumer.h"
+#include "BufferManager.h"
+#include "Parameters.h"
 
 #include <sys/ipc.h>
 #include <sys/shm.h>
@@ -31,17 +31,17 @@ namespace Miro
 
   VideoImpl::VideoImpl(Server& _server, 
 		       ::Video::VideoInterfaceParameters const & _params,
-		       Miro::ImageFormatIDL const & _format) :
+		       ::Video::Filter * _filter) :
     server_(_server),
     params_(_params),
-    format_(_format),
+    filter_(_filter),
     pBufferManager_(NULL)
   {
     cout << "Constructing VideoImpl." << endl;
 
-    imageHandle_.format = _format;
+    imageHandle_.format = filter_->outputFormat();
     imageHandle_.key = shmget(0, 
-			      getImageSize(format_) * params_.buffers,
+			      getImageSize(filter_->outputFormat()) * params_.buffers,
 			      IPC_CREAT|0x1ff);
     if (imageHandle_.key == -1) {
       throw Miro::CException(errno, "Failed creating shared memory segment!");
@@ -53,11 +53,11 @@ namespace Miro
 
     imageHandle_.offset.length(params_.buffers);
     for (unsigned int i = 0; i < params_.buffers; ++i) {
-      imageHandle_.offset[i] = i * getImageSize(format_);
+      imageHandle_.offset[i] = i * getImageSize(filter_->outputFormat());
     }
 
     pBufferManager_ = new BufferManager(params_.buffers,
-					getImageSize(format_),
+					getImageSize(filter_->outputFormat()),
 					pBufferArray_);
 
     // register the video interface at the POA
@@ -99,6 +99,8 @@ namespace Miro
       clientId_.insert(_id);
     }
 
+    filter_->connect();
+
     return new Miro::ImageHandleIDL(imageHandle_);
   }
 
@@ -109,6 +111,8 @@ namespace Miro
     Miro::Guard guard(clientMutex_);
     if (clientId_.erase(_id) == 0)
       throw Miro::EOutOfBounds("Unregistered client id.");
+
+    filter_->disconnect();
   }
 
   TimeIDL
@@ -177,7 +181,7 @@ namespace Miro
   VideoImpl::localExportSubImage(CORBA::ULong& x, CORBA::ULong& y, bool _wait)
     ACE_THROW_SPEC((EOutOfBounds, EDevIO, ETimeOut))
   {
-    int             bufferSize = ::Miro::getImageSize(format_);
+    int             bufferSize = ::Miro::getImageSize(filter_->outputFormat());
     unsigned char   * dst   = new unsigned char[bufferSize];
     SubImageDataIDL * subImage = new SubImageDataIDL(bufferSize, bufferSize, dst, 1);
 
@@ -235,5 +239,10 @@ namespace Miro
 
     pBufferManager_->releaseReadBuffer(bufferId);
     return subImage;
+  }
+
+  const std::string&
+  VideoImpl::name() const {
+    return params_.name;
   }
 };

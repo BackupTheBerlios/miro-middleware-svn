@@ -18,6 +18,8 @@
 #include <ace/OS.h>
 
 #include "VideoDeviceMeteor.h"
+#include "BufferManagerMeteor.h"
+
 #include "miro/VideoHelper.h"
 
 #undef DEBUG
@@ -61,8 +63,16 @@ namespace Video
   {
   }
 
+  BufferManager * 
+  DeviceMeteor::bufferManagerInstance() const 
+  {
+    return new BufferManagerMeteor(ioBuffer_.get_handle(),
+				   Miro::getImageSize(outputFormat_), 
+				   buffer_);
+  }
+
   void
-  DeviceMeteor::init(FilterParameters const * _params)
+  DeviceMeteor::init(Miro::Server& _server, FilterParameters const * _params)
   {
     DBG(cout << "Connecting DeviceMeteor." << endl);
 
@@ -96,7 +106,9 @@ namespace Video
 				   ioBuffer_.get_handle(),
 				   0);
     if ((int)buffer_ == -1)
-      throw Miro::Exception("mmap()");
+      throw Miro::CException(errno, "mmap()");
+
+    Super::init(_server, _params);
   }
 
   void
@@ -113,52 +125,6 @@ namespace Video
     // removing buffer ptr
     buffer_ = NULL;
   }
-
-  void
-  DeviceMeteor::acquireOutputBuffer()
-  {
-    int		iNTries = 0;
-    int		iNCaptureRetries = 16;
-    bool	done = false;
-
-    //	capture one frame
-#ifdef DEBUG
-    std::cout << "capture one frame" << std::endl;
-#endif
-
-    int	command = METEOR_CAP_SINGLE;
-    int	errorCount = getCurrentErrorCount();
-
-    if (::ioctl(ioBuffer_.get_handle(), METEORCAPTUR, &command) < 0)
-      throw Miro::Exception("METEORCAPTUR");
-
-    while (!done && 
-	   iNCaptureRetries && 
-	   iNTries < iNCaptureRetries) {
-      int currentErrorCount = getCurrentErrorCount();
-      if (currentErrorCount == errorCount) {
-	done = true;
-      }
-      else {
-	iNTries++;
-	errorCount = currentErrorCount;
-	command = METEOR_CAP_SINGLE;
-	if (ioctl(ioBuffer_.get_handle(), METEORCAPTUR, &command) < 0)
-	  throw Miro::Exception("METEORCAPTUR");
-      }
-    }
-
-    timeStamp_ = ACE_OS::gettimeofday();
-
-    if (!done)
-      throw Miro::Exception("DeviceMeteor::grabImage");
-  }
-
-  void
-  DeviceMeteor::releaseOutputBuffer()
-  {
-  }
-
 
   void 
   DeviceMeteor::setFormat()
@@ -207,15 +173,5 @@ namespace Video
     meteorGeometry.rows =  outputFormat_.width;
     meteorGeometry.columns = outputFormat_.height;
   }
-  
-  int 
-  DeviceMeteor::getCurrentErrorCount() const
-  {
-    struct meteor_counts cnts;
-    if (ioctl(ioBuffer_.get_handle(), METEORGCOUNT, &cnts) < 0)
-      throw Miro::Exception("METEORGCOUNT");
-    return cnts.fifo_errors + cnts.dma_errors;
-  }
-
-};
+}
 

@@ -13,6 +13,7 @@
 #include "VideoServer.h"
 #include "VideoDevice.h"
 #include "VideoConsumer.h"
+#include "VideoBrokerImpl.h"
 #include "VideoFilterRepository.h"
 #include "Parameters.h"
 
@@ -35,7 +36,8 @@ namespace Video
 		   Miro::ConfigDocument * _config) :
     schedparams_(ACE_SCHED_FIFO, 10),
     pVideoDevice_(NULL),
-    pConsumer_(NULL)
+    pConsumer_(NULL),
+    pBroker_(NULL)
   {
     DBG(std::cout << "VideoService initializing.." << endl);
 
@@ -48,17 +50,21 @@ namespace Video
     format.width = videoParameters->width;
     format.height = videoParameters->height;
     format.palette = Video::Device::getPalette(videoParameters->palette);
-    Filter * filter = buildFilterTree(_server,
-				      NULL,
+    Filter * filter = buildFilterTree(NULL,
 				      format,
-				      _config,
 				      videoParameters->filter);
 
     pVideoDevice_ = dynamic_cast<Video::Device *>(filter);
     assert (pVideoDevice_ != NULL);
 
+    pVideoDevice_->initTree(_server, *_config);
+
     pConsumer_ = new Video::Consumer(*pVideoDevice_, &schedparams_);
     pConsumer_->open(NULL);
+
+    pBroker_ = new Miro::VideoBrokerImpl(pVideoDevice_);
+    broker_ = pBroker_->_this();
+    _server.addToNameService(broker_, "VideoBroker");
   }
 
   Service::~Service()
@@ -68,12 +74,11 @@ namespace Video
     pConsumer_->cancel();
 
     std::cout << "Video::Device thread canceled." << endl;
-    pVideoDevice_->finiTree();
 
+    pVideoDevice_->finiTree();
     std::cout << "Video::FilterTree finished." << endl;
 
     delete pConsumer_;
-
     std::cout << "Video: deleted consumer thread" << endl;
 
     delete pVideoDevice_;
@@ -81,40 +86,36 @@ namespace Video
   }
 
   Video::Filter *
-  Service::buildFilterTree(Miro::Server& _server,
-			   Video::Filter * _pre,
+  Service::buildFilterTree(Video::Filter * _pre,
 			   Miro::ImageFormatIDL const& _format,
-			   Miro::ConfigDocument * _config,
 			   Video::FilterTreeParameters const& _tree) 
   {
+    cout << "get the filter repository instance" << endl;
     FilterRepository * repo = Video::FilterRepository::instance();
-  
+    cout << " create a new filter instance. " << endl;
     Filter * filter = repo->getInstance( _tree.type, _format);
-    FilterParameters * params = filter->getParametersInstance();
 
-    _config->getParameters(_tree.name, *params);
-
-    std::cout << _tree.name << endl;
-    std::cout << *params << endl;
-
+    cout << "set the filter name " << _tree.name << endl;
     filter->name(_tree.name);
-    filter->init(params);
-
+    // set predecessor if available
     if (_pre) {
+      cout << "set predecessor." << endl;
       filter->setPredecessor(_pre);
-      _pre->addSuccessor(filter);
     }
-    if (params->interfaceInstance)
-      filter->setInterface(_server, params->interface);
-  
+
+    // set predecessor links
+    std::vector<std::string>::const_iterator first, last = _tree.backLink.end();
+    for (first = _tree.backLink.begin(); first != last; ++first) 
+      filter->addPredecessorLink(filter->findByName(*first));
+
+    // build successor filters
     for (unsigned int i = 0; i < _tree.successor.size(); ++i)
-      buildFilterTree(_server,
-		      filter,
+      buildFilterTree(filter,
 		      filter->outputFormat(),
-		      _config,
 		      _tree.successor[i]);
   
     return filter;
   }
+
 
 };

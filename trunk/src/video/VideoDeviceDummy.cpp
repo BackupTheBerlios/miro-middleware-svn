@@ -14,6 +14,20 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.7  2003/10/17 13:31:42  hutz
+ * big video service update
+ * we now support filters with multiple input buffers
+ * we also support the first version of a video broker interface for
+ * synchronised image access and filter tree monitoring
+ * - it is not yet implementation complete...
+ * we now release buffers for reading as soon as all processing is done
+ * we now free buffers as soon as all successors are done
+ * added buffer manager for the individual devices
+ * connection management is now thread safe (at least has one severe bug less)
+ * TODO: documentation update
+ * TODO: video broker impl
+ * TODO: multiple devices
+ *
  * Revision 1.6  2003/06/03 13:36:27  hutz
  * trying to remove segfaults on shutdown
  *
@@ -57,7 +71,10 @@
  */
 
 #include "VideoDeviceDummy.h"
+#include "BufferManager.h"
+
 #include "miro/VideoHelper.h"
+#include "miro/Exception.h"
 
 namespace Video
 {
@@ -78,37 +95,36 @@ namespace Video
 	
   //--------------------------------------------------------------------
   void
-  DeviceDummy::acquireOutputBuffer()
+  DeviceDummy::process()
   {
+    cout << "processing dummy" << endl;
     if (is_connected_) {
       ACE_OS::sleep(ACE_Time_Value(0, 100000));
-      timeStamp_ = ACE_OS::gettimeofday();
+      cout << "sleeping dummy" << endl;
     }
   }
 
   //--------------------------------------------------------------------
   void
-  DeviceDummy::releaseOutputBuffer()
+  DeviceDummy::init(Miro::Server& _server, FilterParameters const * _params)
   {
-  }
-    
-  //--------------------------------------------------------------------
-  void
-  DeviceDummy::init(FilterParameters const * _params)
-  {
+    Super::init(_server, _params);
+
     DeviceParameters const * params = dynamic_cast<DeviceParameters const *>(_params);
     assert(params != NULL);
 
     is_connected_ = true;
 	
+    cout << "loading file" << endl;;
+
     FILE * file;
     if ((file = fopen(params->device.c_str(), "r")) != NULL) {
 
       // copied from Nix
       
       int rawflag = 0;
-      int xdim;
-      int ydim;
+      unsigned int xdim;
+      unsigned int ydim;
       int colordepth;
       
       // read header
@@ -137,29 +153,39 @@ namespace Video
 	// skip pending newlines
 	while (fgetc(file) != (int)'\n');
       }
+      else
+	throw Miro::Exception("Unsupported ppm file format.");
 
       // read image
-      buffer_ = new unsigned char[xdim * ydim * 3];
+
+      if (xdim != outputFormat_.width ||
+	  ydim != outputFormat_.height)
+	throw Miro::Exception("Image dimensions differ from output format.");
+
+      cout << "get buffer" << endl;
+      unsigned int index = bufferManager_->acquireNextWriteBuffer();
+      cout << "get buffer address" << endl;
+      unsigned char * buffer = bufferManager_->bufferAddr(index);
       
       if (rawflag) {
-	for (int i=0; i < xdim * ydim; ++i) {
-	  buffer_[i*3 + 0] = fgetc(file);
-	  buffer_[i*3 + 1] = fgetc(file);
-	  buffer_[i*3 + 2] = fgetc(file);
+	for (unsigned int i = 0; i < xdim * ydim; ++i) {
+	  buffer[i*3 + 0] = fgetc(file);
+	  buffer[i*3 + 1] = fgetc(file);
+	  buffer[i*3 + 2] = fgetc(file);
 	}
       } 
       else {
 	int red, green, blue;
-	for (int i=0; i < xdim * ydim; ++i) {
+	for (unsigned int i=0; i < xdim * ydim; ++i) {
 	  fscanf(file, "%d %d %d", &red, &green, &blue);
 	  if (colordepth > 255) {
 	    red = int((double)red * 255.0 / (double)colordepth);
 	    green = int((double)green * 255.0 / (double)colordepth);
 	    blue = int((double)blue * 255.0 / (double)colordepth);
 	  }
-	  buffer_[i*3 + 0] = red;
-	  buffer_[i*3 + 1] = green;
-	  buffer_[i*3 + 2] = blue;
+	  buffer[i*3 + 0] = red;
+	  buffer[i*3 + 1] = green;
+	  buffer[i*3 + 2] = blue;
 	}
 	colordepth = 255;
       }
@@ -171,13 +197,15 @@ namespace Video
       inputFormat_.palette = Miro::RGB_24;
 
       outputFormat_ = inputFormat_;
+
+      cout << "release buffer" << endl;
+      bufferManager_->switchWrite2ReadBuffer(index, 0);
     }
     else {
-      buffer_ = new unsigned char [Miro::getImageSize(outputFormat_)];
-      memset(buffer_, 0, Miro::getImageSize(outputFormat_));
-
-      std::cout << "Cannot open file " + params->device << endl;
+      throw Miro::CException(errno, "Cannot open file." );
     }
+
+    cout << "DeviceDummy::init end" << endl;
   }
         
   //--------------------------------------------------------------------
@@ -186,6 +214,4 @@ namespace Video
   {
     is_connected_ = false;
   }
-};
-
-
+}

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2002
+// (c) 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -12,81 +12,142 @@
 #define Video_BufferManager_h
 
 #include "miro/Synch.h"
+#include "miro/Exception.h"
+#include "miro/ExceptionC.h"
 
 #include <vector>
+#include <exception>
 
 namespace Video
 {
-  struct BufferEntry
-  {
-    enum State {FREE, WRITING, READING};
-
-    ACE_Time_Value time;
-    State state;
-    unsigned int readers;
-    unsigned char * buffer;
-
-    BufferEntry() : state(FREE), readers(0) {}
-  };
-
+  //! Class for managing an array of memory buffers.
   class BufferManager
   {
   public:
+    //! Initializing constructor.
     BufferManager(unsigned int _buffers, 
 		  unsigned int _bufferSize, 
-		  unsigned char * _memory = NULL);
+		  unsigned char * _memory = NULL) throw (std::bad_alloc);
+    //! Initializing constructor.
     BufferManager(unsigned int _buffers,
-		  unsigned char * _bufferAddr[], 
-		  unsigned char * _memory);
-    ~BufferManager();
+		  unsigned char * _bufferAddr[]);
+    //! Cleaning up.
+    virtual ~BufferManager();
 
-    unsigned int buffers() const;
-    unsigned char * bufferAddr(unsigned int _index);
-    const ACE_Time_Value& bufferTimeStamp(unsigned int _index) const;
-    void bufferTimeStamp(unsigned int _index, ACE_Time_Value const& _stamp);
+    //! Number of managed buffers.
+    unsigned int buffers() const throw ();
+    //! Address of a buffer.
+    /** @param index The index of the buffer in the buffer array. */
+    unsigned char * bufferAddr(unsigned int _index) throw ();
+    //! The time stamp of a buffer.
+    /** @param index The index of the buffer in the buffer array. */
+    const ACE_Time_Value& bufferTimeStamp(unsigned int _index) const throw ();
+    //! Set the time stamp of a buffer.
+    /** @param index The index of the buffer in the buffer array. */
+    void bufferTimeStamp(unsigned int _index, ACE_Time_Value const& _stamp) throw ();
 
-    unsigned int acquireNextWriteBuffer();
-    void releaseWriteBuffer(unsigned int _index);
+    //! Acquire a buffer for writing.
+    unsigned int acquireNextWriteBuffer() throw (Miro::Exception);
+    //! Relable a write buffer into a read buffer with n readers
+    void switchWrite2ReadBuffer(unsigned int _index, unsigned int _n) 
+      throw (Miro::EOutOfBounds);
 
-    unsigned int acquireCurrentReadBuffer();
-    unsigned int acquireNextReadBuffer();
-    void releaseReadBuffer(unsigned int _index);
+    //! Acquire the current buffer for reading.
+    unsigned int acquireCurrentReadBuffer() throw (Miro::Exception);
+    //! Acquire the next written buffer for reading.
+    unsigned int acquireNextReadBuffer() throw (Miro::Exception);
+    //! Release a buffer that was aquired for reading.
+    void releaseReadBuffer(unsigned int _index) throw (Miro::EOutOfBounds);
     
   protected:
+    //! Acquire a buffer for writing.
+    virtual unsigned int protectedAcquireNextWriteBuffer() 
+      throw (Miro::Exception);
+
+    //! Relable a write buffer into a read buffer with n readers
+    virtual void protectedSwitchWrite2ReadBuffer(unsigned int _index, 
+						 unsigned int _n) 
+      throw (Miro::EOutOfBounds);
+
+    //! Acquire the current buffer for reading.
+    virtual unsigned int protectedAcquireCurrentReadBuffer() 
+      throw (Miro::Exception);
+    //! Acquire the next written buffer for reading.
+    virtual unsigned int protectedAcquireNextReadBuffer()
+      throw (Miro::Exception);
+    //! Release a buffer that was aquired for reading.
+    virtual void protectedReleaseReadBuffer(unsigned int _index) 
+      throw (Miro::EOutOfBounds);
+    
+    //! Struct for managing entries of a image array buffer.
+    struct BufferEntry
+    {
+      //! State of the buffer.
+      enum State {FREE, WRITING, READING};
+
+      //! Time stamp of the entry.
+      ACE_Time_Value time;
+      //! State of the entry.
+      State state;
+      //! Number of reading clients.
+      unsigned int readers;
+      //! Pointer to the manged buffer.
+      unsigned char * buffer;
+
+      //! Default constructor.
+      /** 
+       * By default, the state of a buffer entry is free and it has 0
+       * readers. 
+       */
+      BufferEntry() throw () : state(FREE), readers(0) {}
+    };
+
     typedef std::vector<BufferEntry> BufferVector;
 
+    //! Number of buffers.
     unsigned int buffers_;
+    //! Size of each buffer.
     unsigned int bufferSize_;
+    //! The memory used to store the buffers.
     unsigned char * memory_;
+    //! If true, the instance will delete the memory_ on destruction.
     bool owner_;
 
+    //! For thread safety.
     Miro::Mutex mutex_;
+    //! For waiting on the next buffer.
     Miro::Condition cond_;
+    //! The index of the current buffer.
     unsigned int currentBuffer_;
+    //! The status of each managed buffer in the buffer array.
     BufferVector bufferStatus_;
   };
 
   inline
   unsigned int
-  BufferManager::buffers() const {
+  BufferManager::buffers() const throw () {
     return buffers_;
   }
 
   inline 
   unsigned char * 
-  BufferManager::bufferAddr(unsigned int _index) {
+  BufferManager::bufferAddr(unsigned int _index) throw () {
+    assert(_index < buffers_);
     return bufferStatus_[_index].buffer;
   }
   inline 
   const ACE_Time_Value&
-  BufferManager::bufferTimeStamp(unsigned int _index) const {
+  BufferManager::bufferTimeStamp(unsigned int _index) const throw () {
+    assert(_index < buffers_);
     return bufferStatus_[_index].time;
   }
   inline 
   void
-  BufferManager::bufferTimeStamp(unsigned int _index, ACE_Time_Value const& _stamp){
+  BufferManager::bufferTimeStamp(unsigned int _index, 
+				 ACE_Time_Value const& _stamp) throw () {
+    assert(_index < buffers_);
     bufferStatus_[_index].time = _stamp;
   }
-};
+}
 
 #endif // Video_BufferManager_h

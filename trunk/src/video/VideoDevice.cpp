@@ -45,7 +45,9 @@ namespace Video
 
   //--------------------------------------------------------------------
   Device::Device(const Miro::ImageFormatIDL& _format) :
-    Super(_format)
+    Filter(_format),
+    mutex_(),
+    condition_(mutex_)
   {
     // clear table of supported palettes
     for (unsigned int i = 0; i < NUM_PALETTE_ENTRIES; ++i)
@@ -58,16 +60,10 @@ namespace Video
   }
 
   //--------------------------------------------------------------------
-  void 
-  Device::setBuffer(unsigned char *)
+  bool
+  Device::interfaceAllowed() const throw ()
   {
-    throw Miro::Exception("Device::setBuffer not supported.");
-  }
-  //--------------------------------------------------------------------
-  void
-  Device::setInterface(Miro::Server&, VideoInterfaceParameters const &)
-  {
-    throw Miro::Exception("Device::setInterface not supported.");    
+    return false;
   }
 
   //--------------------------------------------------------------------

@@ -91,36 +91,39 @@ $(BIN): $(STATIC_DEPS)
 
 
 .obj/VideoService.o .obj/VideoService.so .shobj/VideoService.o .shobj/VideoService.so: VideoService.cpp VideoServer.h VideoImpl.h \
- $(MIRO_ROOT)/src/miro/VideoS.h \
- $(MIRO_ROOT)/src/miro/ExceptionS.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.h \
- $(MIRO_ROOT)/src/miro/ExceptionC.i \
- $(MIRO_ROOT)/src/miro/ExceptionS.i \
- $(MIRO_ROOT)/src/miro/TimeS.h \
- $(MIRO_ROOT)/src/miro/TimeC.h \
- $(MIRO_ROOT)/src/miro/TimeC.i \
- $(MIRO_ROOT)/src/miro/TimeS.i \
- $(MIRO_ROOT)/src/miro/PositionS.h \
- $(MIRO_ROOT)/src/miro/WorldPointS.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.h \
- $(MIRO_ROOT)/src/miro/WorldPointC.i \
- $(MIRO_ROOT)/src/miro/WorldPointS.i \
- $(MIRO_ROOT)/src/miro/PositionC.h \
- $(MIRO_ROOT)/src/miro/PositionC.i \
- $(MIRO_ROOT)/src/miro/PositionS.i \
- $(MIRO_ROOT)/src/miro/VideoC.h \
- $(MIRO_ROOT)/src/miro/VideoC.i \
- $(MIRO_ROOT)/src/miro/VideoS.i \
- $(MIRO_ROOT)/src/miro/Synch.h \
- $(MIRO_ROOT)/src/miro/Server.h \
- $(MIRO_ROOT)/src/miro/Client.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/ArbiterParameters.h \
- $(MIRO_ROOT)/src/miro/BehaviourParameters.h \
- $(MIRO_ROOT)/src/miro/Utils.h Parameters.h VideoDevice.h \
- VideoFilter.h VideoDeviceBTTV.h VideoAVDevice.h VideoDeviceMeteor.h \
- ioctl_meteor.h VideoDevice1394.h VideoDeviceDummy.h \
+ \
+ \
+ \
+ /home/hutz/work/Miro.video/src/miro/ExceptionC.i \
+ /home/hutz/work/Miro.video/src/miro/ExceptionS.i \
+ \
+ \
+ /home/hutz/work/Miro.video/src/miro/TimeC.i \
+ /home/hutz/work/Miro.video/src/miro/TimeS.i \
+ \
+ \
+ \
+ /home/hutz/work/Miro.video/src/miro/WorldPointC.i \
+ /home/hutz/work/Miro.video/src/miro/WorldPointS.i \
+ \
+ /home/hutz/work/Miro.video/src/miro/PositionC.i \
+ /home/hutz/work/Miro.video/src/miro/PositionS.i \
+ \
+ /home/hutz/work/Miro.video/src/miro/VideoC.i \
+ /home/hutz/work/Miro.video/src/miro/VideoS.i \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ \
+ Parameters.h \
+ VideoDevice.h VideoFilter.h VideoFilterLink.h \
+ \
+ VideoDeviceBTTV.h \
+ VideoAVDevice.h VideoDeviceMeteor.h ioctl_meteor.h VideoDeviceDummy.h \
  VideoFilterRepository.h VideoFilterFactory.h VideoFilterBasic.h \
  VideoFilterYUV422toYUV.h VideoFilterYUV422toRGB.h \
  VideoFilterYUVbase.h VideoFilterYUV411toRGB.h \

@@ -15,6 +15,20 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.10  2003/10/17 13:31:42  hutz
+ * big video service update
+ * we now support filters with multiple input buffers
+ * we also support the first version of a video broker interface for
+ * synchronised image access and filter tree monitoring
+ * - it is not yet implementation complete...
+ * we now release buffers for reading as soon as all processing is done
+ * we now free buffers as soon as all successors are done
+ * added buffer manager for the individual devices
+ * connection management is now thread safe (at least has one severe bug less)
+ * TODO: documentation update
+ * TODO: video broker impl
+ * TODO: multiple devices
+ *
  * Revision 1.9  2003/06/03 13:36:27  hutz
  * trying to remove segfaults on shutdown
  *
@@ -82,6 +96,7 @@
 #include <ace/OS.h>
 
 #include "VideoDevice1394.h"
+#include "BufferManager1394.h"
 
 #include <miro/Exception.h>
 
@@ -210,30 +225,15 @@ namespace Video
     delete p_camera_;
   } 
 
-  //---------------------------------------------------------------
-  void
-  Device1394::acquireOutputBuffer()
+  BufferManager * 
+  Device1394::bufferManagerInstance() const 
   {
-    DBG(std::cout << "Device1394: acquireOutputBuffer" << std::endl);
-	
-    dc1394_dma_single_capture(p_camera_);
-    timeStamp_ = ACE_OS::gettimeofday();
-
-    buffer_ = reinterpret_cast<unsigned char *>(p_camera_->capture_buffer);
+    return new BufferManager1394(p_camera_);
   }
 
   //---------------------------------------------------------------
   void
-  Device1394::releaseOutputBuffer()
-  {	
-    DBG(std::cout << "Device1394: releaseOutputBuffer" << std::endl);
-
-    dc1394_dma_done_with_buffer(p_camera_);
-  }
-    
-  //---------------------------------------------------------------
-  void
-  Device1394::init(FilterParameters const * _params)
+  Device1394::init(Miro::Server& _server, FilterParameters const * _params)
   {
     DBG(std::cout << "Connecting Device1394." << std::endl);
 	
@@ -245,6 +245,8 @@ namespace Video
 	
     setImageFormat();
     initCapture();
+
+    Super::init(_server, _params);
   }
 
   //---------------------------------------------------------------
@@ -263,9 +265,6 @@ namespace Video
     }
 
     cleanupDevice();
-
-    // removing buffer ptr
-    buffer_ = NULL;
   }
     
   //---------------------------------------------------------------

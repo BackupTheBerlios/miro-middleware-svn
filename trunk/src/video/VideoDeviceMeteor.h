@@ -31,19 +31,15 @@ namespace Video
     DeviceMeteor(const Miro::ImageFormatIDL& _inputFormatParameters);
     virtual ~DeviceMeteor();
 
-    virtual void init(FilterParameters const * _params);
+  protected:
+    virtual BufferManager * bufferManagerInstance() const;
+    virtual void init(Miro::Server& _server, FilterParameters const * _params);
     virtual void fini();
 
-    virtual void acquireOutputBuffer();
-    virtual void releaseOutputBuffer();
-
-  protected:
     void setFormat();
     void setSource();
     void setPalette();
     void setSize();
-
-    int getCurrentErrorCount() const;
 
     // protected data
 
@@ -54,6 +50,8 @@ namespace Video
     ACE_DEV_Connector connector_;
 
     meteor_geomet	meteorGeometry;
+
+    unsigned char * buffer_;
   };
 };
 #endif

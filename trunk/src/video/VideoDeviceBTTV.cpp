@@ -11,6 +11,7 @@
 #include <ace/OS.h>
 
 #include "VideoDeviceBTTV.h"
+#include "BufferManagerBTTV.h"
 
 #include "miro/Exception.h"
 
@@ -55,7 +56,6 @@ namespace Video
     devName_(),
     ioBuffer_(),
     connector_(),
-    gb(NULL),
     channels(NULL),
     map_(NULL),
     currentBuffer_(0),
@@ -88,11 +88,26 @@ namespace Video
 
   DeviceBTTV::~DeviceBTTV()
   {
-    delete gb;
+  }
+
+  BufferManager * 
+  DeviceBTTV::bufferManagerInstance() const 
+  {
+    unsigned char * bufferAddr[gb_buffers.frames];
+
+    for (int i = 0; i < gb_buffers.frames; ++i)
+      bufferAddr[i] = map_ + gb_buffers.offsets[i];
+
+    return new BufferManagerBTTV(ioBuffer_.get_handle(),
+				 outputFormat_.width,
+				 outputFormat_.height,
+				 paletteLookup[outputFormat_.palette],
+				 gb_buffers.frames, 
+				 bufferAddr);
   }
 
   void 
-  DeviceBTTV::init(FilterParameters const * _params)
+  DeviceBTTV::init(Miro::Server& _server, FilterParameters const * _params)
   {
     int	err = 0;
 
@@ -142,16 +157,6 @@ namespace Video
 
     //	preparing buffers
 
-    delete gb;
-    gb = new struct video_mmap[gb_buffers.frames];
-
-    for (int i = 0; i < gb_buffers.frames; ++i) {
-      gb[i].width  = outputFormat_.width;
-      gb[i].height = outputFormat_.height;
-      gb[i].format = paletteLookup[outputFormat_.palette];
-      gb[i].frame = i;
-    }
-
     VideoSubfield subfield = getSubfield(params_->subfield);
 
     if (subfield != SUBFIELD_ALL) {
@@ -161,8 +166,8 @@ namespace Video
 
 	vc.x = 0;
 	vc.y = 0;
-	vc.width = gb[0].width;
-	vc.height = gb[0].height;
+	vc.width = outputFormat_.width;
+	vc.height = outputFormat_.height;
 	vc.decimation = 1;
 	vc.flags = (subfield == SUBFIELD_ODD)? VIDEO_CAPTURE_ODD : VIDEO_CAPTURE_EVEN;
 
@@ -175,14 +180,7 @@ namespace Video
       }
     }
 
-    err = ioctl(ioBuffer_.get_handle(), VIDIOCMCAPTURE, &(gb[nextBuffer_]));
-    ++nextBuffer_;
-    if (err != -1 && iNBuffers > 2) {
-      err = ioctl(ioBuffer_.get_handle(), VIDIOCMCAPTURE, &(gb[nextBuffer_]));
-      ++nextBuffer_;
-    }
-    if (err == -1)
-      throw Miro::CException(errno, "DeviceBTTV::handleConnect() - VIDIOCMCAPTURE");
+    Super::init(_server, _params);
   }
 
   void DeviceBTTV::fini()
@@ -197,9 +195,6 @@ namespace Video
       map_ = NULL;
     }
     ioBuffer_.close();
-
-    // removing buffer ptr
-    buffer_ = NULL;
   }
 
 
@@ -260,44 +255,6 @@ namespace Video
     if (((int)outputFormat_.height <= capability.minheight) ||
 	((int)outputFormat_.height >= capability.maxheight))
       throw Miro::Exception("DeviceBTTV::setSize: illegal height");
-  }
-
-  void
-  DeviceBTTV::acquireOutputBuffer()
-  {
-    DBG(std::cout << "DeviceBTTV: acquireOutputBuffer" << std::endl);
-
-    // synch current image
-    int err = ioctl(ioBuffer_.get_handle(), VIDIOCSYNC, &currentBuffer_);
-    if (err == -1) {
-      throw Miro::CException(errno, "DeviceBTTV::grabImage() - VIDIOCSYNC");
-    }
-
-    // set time stamp
-    timeStamp_ = ACE_OS::gettimeofday();
-    // set buffer
-    buffer_ = map_ + gb_buffers.offsets[currentBuffer_];
-
-    // update the follower buffer pointer
-    ++currentBuffer_;
-    if (currentBuffer_ == iNBuffers)
-      currentBuffer_ = 0;
-
-    // grab next image
-    err = ioctl(ioBuffer_.get_handle(), VIDIOCMCAPTURE, &(gb[nextBuffer_]));
-    if (err == -1) {
-      throw Miro::CException(errno, "DeviceBTTV::grabImage() - VIDIOCMCAPTURE");
-    }
-
-    // update the leader buffer pointer
-    ++nextBuffer_;
-    if (nextBuffer_ == iNBuffers)
-      nextBuffer_ = 0;
-  }
-
-  void
-  DeviceBTTV::releaseOutputBuffer()
-  {
   }
 
   void DeviceBTTV::getCapabilities()

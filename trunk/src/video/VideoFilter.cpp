@@ -15,108 +15,199 @@
 #include "BufferManager.h"
 
 #include "miro/VideoHelper.h"
+#include "miro/VideoC.h"
+#include "miro/ConfigDocument.h"
 
 namespace Video
 {
+  Miro::Mutex Filter::connectionMutex_;
+
   FILTER_PARAMETERS_FACTORY_IMPL(Filter);
 
+
+  /**
+   * The constructor of the derived filter is responsible for
+   * checking, whether the requested input format is valid. Also, it
+   * is responsible, that the member struct outputFormat_ is
+   * initialized correctly. The base class just copies the value of
+   * the provided input format into the member outputFormat_.
+   *
+   * @param inputFormat The requested input format for the filter,
+   * as defined by the @ref outputFormat() of the predecessor
+   * filter. For root filters, it is defined by the configuration
+   * file.
+   *
+   * @throw Miro::Exception is thrown to indicate, that the
+   * inputFormat is not supported by the filter.
+   */
   Filter::Filter(const Miro::ImageFormatIDL& _inputFormat) :
     inputFormat_(_inputFormat),
     outputFormat_(_inputFormat),
     inplace_(false),
-    buffer_(new unsigned char[getImageSize(outputFormat_)]),
-    interface_(NULL)
+    params_(NULL),
+    bufferManager_(NULL),
+    interface_(NULL),
+    connections_(0),
+    connected_(false)
   {}
 
+  /**
+   * Deletes all successor filters in reverse order of construction.
+   */
   Filter::~Filter()
   {
     std::cout << "deleting filter " << this->name() << endl;
     std::cout << "deleting successor filters" << endl;
-    FilterVector::const_iterator first, last = succ_.end();
-    for (first = succ_.begin(); first != last; ++first) {
+    FilterVector::const_reverse_iterator first, last = succ_.rend();
+    for (first = succ_.rbegin(); first != last; ++first) {
       delete (*first);
     }
+  }
 
-    if (interface_ == NULL) {
-      std::cout << "deleting buffer" << endl;
-      delete buffer_;
+  /**
+   * This method is virtual to allow overriding it by filters
+   * that can not have an instance of the Video interface.
+   * I.e. video devices.
+   */
+  bool
+  Filter::interfaceAllowed() const throw()
+  {
+    return true;
+  }
+
+  BufferManager * 
+  Filter::bufferManagerInstance() const 
+  {
+    return new BufferManager(2, getImageSize(outputFormat()));
+  }
+
+  /**
+   * After construction of the filter tree, all filters are
+   * initialized in depth first order of the filter tree description
+   * of the configuration file.
+   *
+   * @param server The reference to a Miro::Server object for
+   * accessing the ORB, POA and NamingService.
+   *
+   * @param params The filter parameters as specified in the
+   * configuration file. The type is that returned by the filter
+   * parameter factory method of the class.
+   */
+  void
+  Filter::init(Miro::Server& _server, FilterParameters const * _params)
+  {
+    cout << "Filter::init" << endl;
+
+    // safe instance, as we have to clean it up.
+    params_ = _params;
+
+    // Test for inplace:
+    // FIXME: We can't do inplace up till now.
+    if (inplace_) {
+	inplace_ = false;
+    }
+
+    // create the interface.
+    if (_params->interfaceInstance) {
+      if (interfaceAllowed()) {
+	interface_ = new Miro::VideoImpl(_server, _params->interface, this);
+	bufferManager_ = interface_->bufferManager();
+      }
+      else
+	throw Miro::Exception("Device::setInterface not supported.");    
     }
     else {
-      std::cout << "deleting interface" << endl;
-      delete interface_;
+      bufferManager_ = bufferManagerInstance();
     }
+
+    cout << "Filter::init end" << endl;
   }
 
-  bool 
-  Filter::active() const {
-    if (interface_ != NULL && interface_->connections() > 0)
-      return true;
+  void
+  Filter::initTree(Miro::Server& _server, Miro::ConfigDocument& _config) 
+  {
+    cout << "initTree: " << name() << endl;
 
-    // are any succerssors active?
+    // create an instance of the the filters parameters
+    FilterParameters * params = this->getParametersInstance();
+
+    // initialize the parameter instance from the config file
+    _config.getParameters(this->name(), *params);
+
+    // debug output
+    std::cout << name() << endl;
+    std::cout << *params << endl;
+
+    // initialize the filter instance with its parameters
+    this->init(_server, params);
+
+    // initialize successors
     FilterVector::const_iterator first, last = succ_.end();
     for (first = succ_.begin(); first != last; ++first) {
-      if ((*first)->active()) {
-	return true;
-      }
+      (*first)->initTree(_server, _config);
     }
-    return false;
   }
 
-  void
-  Filter::finiTree()
-  {
-    // finish successors
-    FilterVector::const_iterator first, last = succ_.end();
-    for (first = succ_.begin(); first != last; ++first) {
-      (*first)->finiTree();
-    }
-    // finish myself
-    fini();
-  };
-
-  void
-  Filter::setInterface(Miro::Server& _server, VideoInterfaceParameters const & _params)
-  {
-    if (interface_ == NULL)
-      delete buffer_;
-    else
-      delete interface_;
-    interface_ = new Miro::VideoImpl(_server, _params, outputFormat_);
-    inplace_ = false;
-  }
-
-  void
-  Filter::init(FilterParameters const *)
-  {
-
-  }
-
+  /**
+   * Before destruction of the filter tree, all filters are
+   * finalized in reversed prefix depth first order of the filter
+   * tree description of the configuration file.
+   */
   void
   Filter::fini()
   {
+    delete interface_;
+    if (interface_ == NULL) {
+      delete bufferManager_;
+    }
+    delete params_;
+    
+    interface_ = NULL;
+    bufferManager_ = NULL;
+    params_ = NULL;
   }
 
-  unsigned char const *
-  Filter::inputBuffer() {
-    assert(pre_ != NULL);
-    return pre_->outputBuffer();
-  }
-
-  unsigned char *
-  Filter::outputBuffer() {
-    return buffer_;
-  }
-
+  /**
+   * It uses the reversed prefix depth first traversion of the tree,
+   * taking this filter as root.
+   */
   void
-  Filter::setBuffer(unsigned char * _buffer)
+  Filter::finiTree()
   {
-    buffer_ = _buffer;
-  }
+    // finalize successors
+    FilterVector::const_reverse_iterator first, last = succ_.rend();
+    for (first = succ_.rbegin(); first != last; ++first) {
+      (*first)->finiTree();
+    }
+    // finalize myself
+    fini();
+  };
 
+  /** 
+   * Only to be used by Video::Service::buildFilterTree() on filter 
+   * construction.
+   */
   void
   Filter::setPredecessor(Filter * _pre)
   {
+    assert(_pre != NULL);
+
     pre_ = _pre;
+    pre_->addSuccessor(this);
+  }
+
+  /** 
+   * Only to be used by Video::Service::buildFilterTree() on filter 
+   * construction.
+   */
+  void
+  Filter::addPredecessorLink(Filter * _pre)
+  {
+    assert(_pre != NULL);
+
+    // double link
+    preLink_.push_back(FilterPreLink(_pre));
+    _pre->addSuccessorLink(this, preLink_.size() - 1);
   }
 
   void
@@ -126,47 +217,9 @@ namespace Video
   }
 
   void
-  Filter::acquireOutputBuffer()
+  Filter::addSuccessorLink(Filter * _succ, unsigned long _index)
   {
-    timeStamp_ = (pre_)? pre_->timeStamp() : ACE_OS::gettimeofday();
-
-#ifdef ASDF
-    if (interface_) {
-      bufferIndex_ = interface_->bufferManager()->acquireCurrentReadBuffer();
-      buffer_ = interface_->bufferManager()->bufferAddr(bufferIndex_);
-    }    
-#endif
-  }
-
-  void
-  Filter::releaseOutputBuffer()
-  {
-#ifdef ASDF
-    if (interface_) {
-      interface_->bufferManager()->bufferTimeStamp(bufferIndex_, timeStamp_);
-      interface_->bufferManager()->releaseReadBuffer(bufferIndex_);
-    }
-#endif
-  }
-
-  void
-  Filter::acquireWriteBuffer()
-  {
-    timeStamp_ = (pre_)? pre_->timeStamp() : ACE_OS::gettimeofday();
-
-    if (interface_) {
-      bufferIndex_ = interface_->bufferManager()->acquireNextWriteBuffer();
-      buffer_ = interface_->bufferManager()->bufferAddr(bufferIndex_);
-    }    
-  }
-
-  void
-  Filter::releaseWriteBuffer()
-  {
-    if (interface_) {
-      interface_->bufferManager()->bufferTimeStamp(bufferIndex_, timeStamp_);
-      interface_->bufferManager()->releaseWriteBuffer(bufferIndex_);
-    }
+    succLink_.push_back(FilterSuccLink(_succ, _index));
   }
 
   void
@@ -174,31 +227,248 @@ namespace Video
   {
   }
 
-
+  /**
+   * It uses the prefix depth first traversion of the tree,
+   * taking this filter as root.
+   */
   void
   Filter::processFilterTree() 
   {
-    // acquire read buffer
-    acquireOutputBuffer();
+    // cout << "aquire output buffer" << endl;
+    outputBufferIndex_ = bufferManager_->acquireNextWriteBuffer();
+    outputBuffer_ = bufferManager_->bufferAddr(outputBufferIndex_);
 
-    // process successors
-    FilterVector::const_iterator first, last = succ_.end();
-    for (first = succ_.begin(); first != last; ++first) {
-      if ((*first)->active()) {
-	(*first)->acquireWriteBuffer();
-	(*first)->process();
-	(*first)->processFilterTree();
-	(*first)->releaseWriteBuffer();
+    // cout << "process buffer" << endl;
+    timeFilter_.start();
+    process();
+    timeFilter_.stop();
+
+    // cout << "relable write buffer as readbuffer for all successors" << endl;
+    bufferManager_->switchWrite2ReadBuffer(outputBufferIndex_, successors_);
+
+    // cout << "set input buffer for all successors." << endl;
+    {
+      FilterVector::const_iterator first, last = succ_.end();
+      for (first = succ_.begin(); first != last; ++first) {
+	if ((*first)->active()) {
+	  (*first)->inputBuffer(outputBufferIndex_, outputBuffer_);
+	}
       }
     }
 
-    // release read buffer
-    releaseOutputBuffer();
+    // cout << "set input buffer for all successor links." << endl;
+    {
+      FilterSuccVector::iterator first, last = succLink_.end();
+      for (first = succLink_.begin(); first != last; ++first) {
+	if (first->filter()->active()) {
+	  first->filter()->inputBufferLink(first->index(), 
+					   outputBufferIndex_,
+					   outputBuffer_);
+	}
+      }
+    }
 
-    // process succerssors trees
-//    for (first = succ_.begin(); first != last; ++first)
-//      if ((*first)->active()) {
-//	(*first)->processFilterTree();
-//      }
+    // cout << "release read buffer of predecessor" << endl;
+    if (pre_)
+      pre_->bufferManager_->releaseReadBuffer(inputBufferIndex_);
+
+    // cout << "release read buffer of all predecessor links" << endl;
+    {
+      FilterPreVector::const_iterator first, last = preLink_.end();
+      for (first = preLink_.begin(); first != last; ++first) {
+	first->filter()->bufferManager_->releaseReadBuffer(first->index());
+      }
+    }
+
+    // cout << "process successors" << endl;
+    {
+      timeFilterTree_.start();
+      FilterVector::const_iterator first, last = succ_.end();
+      for (first = succ_.begin(); first != last; ++first) {
+	if ((*first)->active()) {
+	  (*first)->processFilterTree();
+	}
+      }
+      timeFilterTree_.stop();
+    }
   }
-};
+
+  /**
+   * It uses the prefix depth first traversion of the tree,
+   * taking this filter as root.
+   *
+   * @param tree The filter statistics tree, to store the data.
+   */
+  void
+  Filter::filterTreeStats(Miro::FilterTreeIDL& _tree) const
+  {
+    _tree.name = CORBA::string_dup(name_.c_str());
+    _tree.connections = connections_;
+    _tree.videoInterface.ior = Miro::Video::_nil();
+
+    Miro::TimeStats t;
+
+    timeFilter_.eval(t);
+    Miro::timeA2C(t.min, _tree.timeFilter.min);
+    Miro::timeA2C(t.max, _tree.timeFilter.max);
+    Miro::timeA2C(t.mean, _tree.timeFilter.mean);
+    Miro::timeA2C(t.var, _tree.timeFilter.var);
+
+    timeFilterTree_.eval(t);
+    Miro::timeA2C(t.min, _tree.timeSubtree.min);
+    Miro::timeA2C(t.max, _tree.timeSubtree.max);
+    Miro::timeA2C(t.mean, _tree.timeSubtree.mean);
+    Miro::timeA2C(t.var, _tree.timeSubtree.var);
+
+    if (interface_ != NULL) {
+      _tree.videoInterface.ior = Miro::Video::_duplicate(interface_->ior());
+      _tree.videoInterface.connections = interface_->connections();
+      _tree.videoInterface.name = CORBA::string_dup(interface_->name().c_str());
+    }
+
+    _tree.successorLinks.length(succLink_.size());
+    for (unsigned int i = 0; i != _tree.successorLinks.length(); ++i) {
+      _tree.successorLinks[i] = CORBA::string_dup(succLink_[i].filter()->name().c_str());
+    }
+
+    _tree.successors.length(succ_.size());
+    for (unsigned int i = 0; i != _tree.successors.length(); ++i) {
+      succ_[i]->filterTreeStats(_tree.successors[i]);
+    }
+  }
+
+  void 
+  Filter::connect()
+  {
+    Miro::Guard guard(connectionMutex_);
+    protectedConnect();
+  }
+  
+
+  void
+  Filter::disconnect()
+  {
+    Miro::Guard guard(connectionMutex_);
+    protectedDisconnect();
+  }
+
+  /**
+   * Due to synchronization and locking issues this has to be
+   * calculated before processing a filter tree.
+   */
+  void
+  Filter::calcConnectivity()
+  {
+    Miro::Guard guard(connectionMutex_);
+    protectedCalcConnectivity();
+  }
+
+
+  void
+  Filter::protectedConnect() 
+  {
+    // process filter connection
+    ++connections_;
+
+    // process predecessor connection
+    if (pre_)
+      pre_->protectedConnect();
+
+    // process predecessor link connections
+    FilterPreVector::iterator first, last = preLink_.end();
+    for (first = preLink_.begin(); first != last; ++first) {
+      first->filter()->protectedConnect();
+    }
+  }
+
+  void
+  Filter::protectedDisconnect() 
+  {
+    // process predecessor link connections
+    FilterPreVector::iterator first, last = preLink_.end();
+    for (first = preLink_.begin(); first != last; ++first) {
+      first->filter()->protectedDisconnect();
+    }
+
+    // process predecessor connection
+    if (pre_)
+      pre_->protectedDisconnect();
+    
+    // process filter connection
+    --connections_;
+  }
+
+  void
+  Filter::protectedCalcConnectivity()
+  {
+    connected_ = connections_ > 0;
+    FilterVector::const_iterator first, last = succ_.end();
+    for (first = succ_.begin(); first != last; ++first) {
+      (*first)->protectedCalcConnectivity();
+    }
+
+    successors_ = 0;
+    for (first = succ_.begin(); first != last; ++first) {
+      if ((*first)->connected_ > 0) {
+	++successors_;
+      }
+    }
+	
+    FilterSuccVector::const_iterator f, l = succLink_.end();
+    for (f = succLink_.begin(); f != l; ++f) {
+      if (f->filter()->connected_ > 0) {
+	++successors_;
+      }
+    }
+  }
+
+  /**
+   * @param name The filter name to find.
+   * @ret A pointer to the filter. NULL if no such filter is found.
+   */
+  Filter *
+  Filter::findByName(std::string const & _name)
+  {
+    // climb up the filter tree
+    if (pre_ != NULL) {
+      return pre_->findByName(_name);
+    }
+    else {
+      return findByNameDown(_name);
+    }
+
+#ifdef FIND_BY_INTERFACE_NAME
+    Filter * filter = NULL;
+    if (interface_ != NULL && 
+	interface_->name() == _name)
+      filter = this;
+    else {
+      FilterVector::const_iterator first, last = succ_.end();
+      for (first = succ_.begin(); first != last; ++first) {
+	filter = (*first)->findByName(_name);
+	if (filter != NULL) {
+	  break;
+	}
+      }
+    }
+    return filter;
+#endif
+  }
+
+  Filter * 
+  Filter::findByNameDown(std::string const & _name) {
+    if (name_ == _name)
+      return this;
+    else {
+      Filter * filter = NULL;
+      FilterVector::iterator first, last = succ_.end();
+      for (first = succ_.begin(); first != last; ++first) {
+	filter = (*first)->findByNameDown(_name);
+	if (filter != NULL) {
+	  break;
+	}
+      }
+      return filter;
+    }
+  }
+}

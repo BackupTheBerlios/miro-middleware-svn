@@ -11,14 +11,18 @@
 
 #include "BufferManager.h"
 
-#include "miro/Exception.h"
-#include "miro/ExceptionC.h"
-
 namespace Video
 {
+  /**
+   * @param buffers Number of buffers.
+   * @param bufferSize The size of each buffer.
+   * @param memory Memory area, holding space for all buffers.  If
+   * NULL, the BufferManager will allocate and manage the memory by
+   * himself.
+   */
   BufferManager::BufferManager(unsigned int _buffers, 
 			       unsigned int _bufferSize,
-			       unsigned char * _memory) :
+			       unsigned char * _memory)  throw (std::bad_alloc) :
     buffers_(_buffers),
     bufferSize_(_bufferSize),
     memory_(_memory),
@@ -40,12 +44,17 @@ namespace Video
     }
   }
 
+  /**
+   * @param buffers Number of buffers.
+   * @param bufferAddr An array of size buffers, holding the
+   *  address for each of the buffers.
+   * @param memory Base address of the memory area, holding space for all buffers.
+   */
   BufferManager::BufferManager(unsigned int _buffers, 
-			      unsigned char * _bufferAddr[], 
-			      unsigned char * _memory) :
+			       unsigned char * _bufferAddr[]) :
     buffers_(_buffers),
     bufferSize_(0),
-    memory_(_memory),
+    memory_(NULL),
     owner_(false),
     cond_(mutex_),
     currentBuffer_(0),
@@ -59,6 +68,7 @@ namespace Video
     }
   }
 
+  /** Deleting memory_ if it is its own_. */
   BufferManager::~BufferManager() 
   {
     cond_.broadcast();
@@ -66,10 +76,75 @@ namespace Video
       delete[] memory_;
   }
 
+  /** 
+   * Only a buffer of state FREE can be aquired for writing.
+   * Its state is set to WRITE.
+   *
+   * @return The index of the acquired buffer. 
+   */
   unsigned int 
-  BufferManager::acquireNextWriteBuffer()
+  BufferManager::acquireNextWriteBuffer() throw (Miro::Exception)
   {
     Miro::Guard guard(mutex_);
+    return protectedAcquireNextWriteBuffer();
+  }
+
+  /**
+   * @param index The index of the acquired buffer. 
+   * @param n The number of readers.
+   */
+  void 
+  BufferManager::switchWrite2ReadBuffer(unsigned int _index, unsigned int _n) 
+    throw (Miro::EOutOfBounds)
+  {
+    assert(_index < buffers_);
+    Miro::Guard guard(mutex_);
+    protectedSwitchWrite2ReadBuffer(_index, _n);
+  }
+
+  /**
+   * A Buffer of state FREE or READ can be aquired for reading.
+   * Its state is set to WRITE.
+   *
+   * @return The index of the acquired buffer. 
+   */
+  unsigned int 
+  BufferManager::acquireCurrentReadBuffer() throw (Miro::Exception)
+  {
+    Miro::Guard guard(mutex_);
+    return protectedAcquireCurrentReadBuffer();
+  }
+   
+  /**
+   * A Buffer of state FREE or READ can be aquired for reading.
+   * Its state is set to WRITE.
+   *
+   * @return The index of the acquired buffer. 
+   */
+  unsigned int 
+  BufferManager::acquireNextReadBuffer() throw (Miro::Exception)
+  {
+    Miro::Guard guard(mutex_);
+    return protectedAcquireNextReadBuffer();
+  }
+
+  /** 
+   * @param index The index of the acquired buffer. 
+   */
+  void
+  BufferManager::releaseReadBuffer(unsigned int _index) 
+    throw (Miro::EOutOfBounds)
+  {
+    assert(_index < buffers_);
+    Miro::Guard guard(mutex_);
+    protectedReleaseReadBuffer(_index);
+  }
+
+  // synchronised methods.
+
+  unsigned int 
+  BufferManager::protectedAcquireNextWriteBuffer() throw (Miro::Exception)
+  {
     unsigned int index = currentBuffer_;
     do {
       ++index;
@@ -85,12 +160,13 @@ namespace Video
   }
 
   void 
-  BufferManager::releaseWriteBuffer(unsigned int _index)
+  BufferManager::protectedSwitchWrite2ReadBuffer(unsigned int _index, unsigned int _n) 
+    throw (Miro::EOutOfBounds)
   {
-    Miro::Guard guard(mutex_);
     if (bufferStatus_[_index].state == BufferEntry::WRITING) {
-      bufferStatus_[_index].readers = 0;
-      bufferStatus_[_index].state = BufferEntry::FREE;
+     bufferStatus_[_index].state = 
+	(_n != 0)? BufferEntry::READING : BufferEntry::FREE;
+      bufferStatus_[_index].readers = _n;
       currentBuffer_ = _index;
       cond_.broadcast();
     }
@@ -99,13 +175,12 @@ namespace Video
   }
 
   unsigned int 
-  BufferManager::acquireCurrentReadBuffer()
+  BufferManager::protectedAcquireCurrentReadBuffer() throw (Miro::Exception)
   {
-    Miro::Guard guard(mutex_);
     if (bufferStatus_[currentBuffer_].state == BufferEntry::FREE ||
 	bufferStatus_[currentBuffer_].state == BufferEntry::READING ) {
-      ++bufferStatus_[currentBuffer_].readers;
       bufferStatus_[currentBuffer_].state = BufferEntry::READING;
+      ++bufferStatus_[currentBuffer_].readers;
       return currentBuffer_;
     }
 
@@ -113,9 +188,8 @@ namespace Video
   }
    
   unsigned int 
-  BufferManager::acquireNextReadBuffer()
+  BufferManager::protectedAcquireNextReadBuffer() throw (Miro::Exception)
   {
-    Miro::Guard guard(mutex_);
     cond_.wait();
     if (bufferStatus_[currentBuffer_].state == BufferEntry::FREE ||
 	bufferStatus_[currentBuffer_].state == BufferEntry::READING ) {
@@ -128,9 +202,9 @@ namespace Video
   }
 
   void
-  BufferManager::releaseReadBuffer(unsigned int _index)
+  BufferManager::protectedReleaseReadBuffer(unsigned int _index) 
+    throw (Miro::EOutOfBounds)
   {
-    Miro::Guard guard(mutex_);
     if (bufferStatus_[_index].readers == 1) {
       bufferStatus_[_index].readers = 0;
       bufferStatus_[_index].state = BufferEntry::FREE;
@@ -138,5 +212,7 @@ namespace Video
     else if (bufferStatus_[_index].readers > 1) {
       --bufferStatus_[_index].readers;
     }
+    else
+      throw Miro::EOutOfBounds("Trying to free wrong buffer.");
   }
-};
+}

@@ -21,6 +21,7 @@ namespace Miro
   class Server;
   class ConfigDocument;
   class ImageFormatIDL;
+  class VideoBrokerImpl;
 };
 
 namespace Video
@@ -44,18 +45,18 @@ namespace Video
 
     
   protected:
-    Filter * buildFilterTree(Miro::Server& _server,
-			     Video::Filter * _pre,
+    Filter * buildFilterTree(Video::Filter * _pre,
 			     Miro::ImageFormatIDL const& _format,
-			     Miro::ConfigDocument * _config,
 			     Video::FilterTreeParameters const& _tree);
 
-private:
-  /** Sceduling parameters for a realtime thread */
-  ACE_Sched_Params schedparams_;
-  Video::Device * pVideoDevice_;
-  Video::Consumer * pConsumer_;
-};
+  private:
+    /** Sceduling parameters for a realtime thread */
+    ACE_Sched_Params schedparams_;
+    Video::Device * pVideoDevice_;
+    Video::Consumer * pConsumer_;
+    Miro::VideoBrokerImpl * pBroker_;
+    Miro::VideoBroker_ptr broker_;
+  };
 };
 #endif // VideoServer_h
 

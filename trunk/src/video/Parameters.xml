@@ -8,6 +8,7 @@
       <config_parameter name="name" type="string" default="DeviceBTTV" />
       <config_parameter name="type" type="string" default="DeviceBTTV" />
       <config_parameter name="successor" type="std::vector&lt;FilterTreeParameters&gt;" />
+      <config_parameter name="backLink" type="std::vector&lt;std::string&gt;" />
     </config_item>
 
     <config_item name="VideoInterface" parent="Miro::Config" final="false">

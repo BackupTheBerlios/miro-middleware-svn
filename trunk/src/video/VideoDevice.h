@@ -13,14 +13,18 @@
 
 #include "VideoFilter.h"
 
+#include "miro/Thread.h"
+#include "miro/Synch.h"
+
 // forward declarations
 class ACE_Time_Value;
 
 namespace Video
 {
-  //--------------------------------------------------------------------------
-  //! VideoDevice
-  //--------------------------------------------------------------------------
+  //! Base class of all video devices.
+  /**
+   * 
+   */
   class Device : public Filter
   {
     typedef Filter Super;
@@ -31,15 +35,30 @@ namespace Video
 
     FILTER_PARAMETERS_FACTORY(Device);
 
-    virtual void setBuffer(unsigned char *);
-    virtual void setInterface(Miro::Server&, VideoInterfaceParameters const &);
+    // inherited interface methods
+
+
+    //! Forbid instances of the video interface here.
+    virtual bool interfaceAllowed() const throw ();
+
+    //    virtual void init(const Video::FilterParameters *);
+    //    virtual int svc();
+    
+    // static methods
 
     static Miro::VideoPaletteIDL getPalette(std::string const & _pal);
+
+    // static public constants
 
     static const unsigned int NUM_PALETTE_ENTRIES = Miro::YUV_422 + 1;
 
   protected:
+    // protected methods
     int getPixelSize(const int) const;
+
+    // protected data
+    Miro::Mutex mutex_;
+    Miro::Condition condition_;
 
     int paletteLookup[NUM_PALETTE_ENTRIES];
   };

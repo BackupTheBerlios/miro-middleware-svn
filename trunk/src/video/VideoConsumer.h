@@ -34,32 +34,9 @@ namespace Video
 
     virtual int svc();
 
-    int getPaletteSize() const;
-    void getWaitNextSubImage(unsigned char *, const int, const int);
-
   protected:
-    void shrinkImageData(unsigned char*, unsigned char*, int, int);
-
-    void copyImageData(void*, const void*);
-
-    void copy(void*, const void*, const int);
-
-    void swap3(void*, const void*);
-    void swap4(void*, const void*);
-
-    void swapLine3(void*, const void*, const int);
-    void swapLine4(void*, const void*, const int);
-
-    Device&     videoDevice;
-    Miro::Mutex      mutex;
-    Miro::Condition  cond;
-    void *           pCurrentImageData;
-    Miro::TimeIDL    timeStamp_;
-
+    Device& videoDevice;
     ACE_Sched_Params schedp_;
-
-  private:
-    static ACE_Time_Value maxWait;
   };
 };
 #endif

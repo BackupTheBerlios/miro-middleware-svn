@@ -15,6 +15,20 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.5  2003/10/17 13:31:42  hutz
+ * big video service update
+ * we now support filters with multiple input buffers
+ * we also support the first version of a video broker interface for
+ * synchronised image access and filter tree monitoring
+ * - it is not yet implementation complete...
+ * we now release buffers for reading as soon as all processing is done
+ * we now free buffers as soon as all successors are done
+ * added buffer manager for the individual devices
+ * connection management is now thread safe (at least has one severe bug less)
+ * TODO: documentation update
+ * TODO: video broker impl
+ * TODO: multiple devices
+ *
  * Revision 1.4  2003/06/03 10:25:32  hutz
  * complete revamp of the video service
  * the interface changes slightly to allow for better access
@@ -65,10 +79,10 @@ namespace Video
 	    	    
     FILTER_PARAMETERS_FACTORY(DeviceDummy);
 
-    virtual void init(FilterParameters const * _params);
+  protected:
+    virtual void init(Miro::Server& _server, FilterParameters const * _params);
+    virtual void process();
     virtual void fini();
-    virtual void acquireOutputBuffer();
-    virtual void releaseOutputBuffer();
 
   private:
     //! connection simulation flag

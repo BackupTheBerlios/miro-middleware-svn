@@ -15,6 +15,20 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.7  2003/10/17 13:31:42  hutz
+ * big video service update
+ * we now support filters with multiple input buffers
+ * we also support the first version of a video broker interface for
+ * synchronised image access and filter tree monitoring
+ * - it is not yet implementation complete...
+ * we now release buffers for reading as soon as all processing is done
+ * we now free buffers as soon as all successors are done
+ * added buffer manager for the individual devices
+ * connection management is now thread safe (at least has one severe bug less)
+ * TODO: documentation update
+ * TODO: video broker impl
+ * TODO: multiple devices
+ *
  * Revision 1.6  2003/06/03 11:03:36  hutz
  * fixed copy paste error in macros.miro.GNU
  * removed the HAVE_* macros in VideoDevice1394.*
@@ -79,13 +93,11 @@ namespace Video
 	
     FILTER_PARAMETERS_FACTORY(Device1394);
 
-    virtual void init(FilterParameters const * _params);
+  protected:
+    virtual BufferManager * bufferManagerInstance() const;
+    virtual void init(Miro::Server& _server, FilterParameters const * _params);
     virtual void fini();
     
-    virtual void acquireOutputBuffer();
-    virtual void releaseOutputBuffer();
-
-  protected:
     //! Detect and initialize the camera.
     void initDevice(int port = 0);
     //! Close device-driver handles.
