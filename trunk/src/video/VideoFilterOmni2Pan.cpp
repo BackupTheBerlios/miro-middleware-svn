@@ -37,9 +37,10 @@ namespace Video
     Super(_inputFormat)
   {
     MIRO_LOG_CTOR("Video::FilterOmni2Pan");
-    if (_inputFormat.palette != Miro::RGB_24)
+    if ((_inputFormat.palette != Miro::RGB_24) &&
+	(_inputFormat.palette != Miro::GREY_8))
       throw Miro::Exception("Incompatible input format for FilterOmni2Pan.");
-    outputFormat_.palette = Miro::RGB_24;
+    outputFormat_.palette = _inputFormat.palette;
     outputFormat_.width = IMAGE_WIDTH;
     outputFormat_.height = IMAGE_HEIGHT;
   }
@@ -55,13 +56,21 @@ namespace Video
   {
     unsigned char const * srcImg = inputBuffer();
     unsigned char * tgtImg = outputBuffer();
-    unsigned char * tgtImgEnd = tgtImg + IMAGE_WIDTH * IMAGE_HEIGHT * 3;
     int * srcOffset = srcOffset_;
 
-    for (; tgtImg != tgtImgEnd; ++srcOffset) {
-      *tgtImg++ = *(srcImg + *srcOffset);
-      *tgtImg++ = *(srcImg + *srcOffset + 1);
-      *tgtImg++ = *(srcImg + *srcOffset + 2);
+    if (outputFormat_.palette == Miro::RGB_24) {
+      unsigned char * tgtImgEnd = tgtImg + IMAGE_WIDTH * IMAGE_HEIGHT * 3;
+      for (; tgtImg != tgtImgEnd; ++srcOffset) {
+	*tgtImg++ = *(srcImg + *srcOffset);
+	*tgtImg++ = *(srcImg + *srcOffset + 1);
+	*tgtImg++ = *(srcImg + *srcOffset + 2);
+      }
+    }
+    else {
+      unsigned char * tgtImgEnd = tgtImg + IMAGE_WIDTH * IMAGE_HEIGHT;
+      for (; tgtImg != tgtImgEnd; ++srcOffset) {
+	*tgtImg++ = *(srcImg + *srcOffset);
+      }
     }
   }
 
@@ -74,17 +83,31 @@ namespace Video
     }
 
     double scaleFactor = (double)radius_/(double)outputFormat_.height;
-
     int * srcOffset = srcOffset_;
-    for (unsigned int dist = 0; dist < outputFormat_.height; dist++) {
-      for (unsigned int angle = 0; angle < outputFormat_.width; angle++) {
-	*(srcOffset++) = 
-	  std::min((int)inputFormat_.width-1,
-		   std::max(0,
-			    (middleX_ + (int)floor((double)dist*scaleFactor*cosLookup_[angle])))) * 3 +
-	  std::min((int)inputFormat_.height-1,
-		   std::max(0,
-			    (middleY_ + (int)floor((double)dist*scaleFactor*sinLookup_[angle])))) * 3 * inputFormat_.width;
+
+    if (outputFormat_.palette == Miro::RGB_24) {
+      for (unsigned int dist = 0; dist < outputFormat_.height; dist++) {
+	for (unsigned int angle = 0; angle < outputFormat_.width; angle++) {
+	  *(srcOffset++) = 
+	    std::min((int)inputFormat_.width-1,
+		     std::max(0,
+			      (middleX_ + (int)floor((double)dist*scaleFactor*cosLookup_[angle])))) * 3 +
+	    std::min((int)inputFormat_.height-1,
+		     std::max(0,
+			      (middleY_ + (int)floor((double)dist*scaleFactor*sinLookup_[angle])))) * 3 * inputFormat_.width;
+	}
+      }
+    } else {
+      for (unsigned int dist = 0; dist < outputFormat_.height; dist++) {
+	for (unsigned int angle = 0; angle < outputFormat_.width; angle++) {
+	  *(srcOffset++) = 
+	    std::min((int)inputFormat_.width-1,
+		     std::max(0,
+			      (middleX_ + (int)floor((double)dist*scaleFactor*cosLookup_[angle])))) +
+	    std::min((int)inputFormat_.height-1,
+		     std::max(0,
+			      (middleY_ + (int)floor((double)dist*scaleFactor*sinLookup_[angle])))) * inputFormat_.width;
+	}
       }
     }
   }
