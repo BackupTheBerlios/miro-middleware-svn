@@ -110,7 +110,7 @@ SSH::~SSH()
 
 //IMPORTANT: Don't forget to close the conections before ending the program!
 //Otherwise it will hang up waiting for the connection to end
-void SSH::open(string remoteMachine)
+void SSH::open(std::string remoteMachine)
 {
   string SSHVersion="SSH";
 
@@ -243,7 +243,7 @@ void SSH::close()
   killZombies();
 } //closeSSH
 
-void SSH::execSilent(string command)
+void SSH::execSilent(std::string command)
 {
   if (pipeID==0) opened=false;
   if (!opened) throw("The SSH is not opened");
@@ -254,7 +254,7 @@ void SSH::execSilent(string command)
 }
 
 //the ssh needs to be opened with stdout redirected to input
-string SSH::exec(string command, int timeout)
+string SSH::exec(std::string command, int timeout)
 {
   string result="";
 
@@ -304,7 +304,7 @@ bool SSH::ping(int timeout)
 
 // Returns the pid of the first occurrence of the corresponding process
 // or 0 if it is not running
-int SSH::isRunning(string command)
+int SSH::isRunning(std::string command)
 {
   if (!opened) return 0;
 
@@ -380,7 +380,7 @@ int SSH::isRunning(string command)
 
 }
 
-void SSH::kill(string command,int timeout)
+void SSH::kill(std::string command,int timeout)
 {
   int pid=0;
   int pidOld=0;

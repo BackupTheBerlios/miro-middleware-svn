@@ -31,7 +31,7 @@
 using std::string;
 
 namespace Miro {
-  Log::Log(int visibleLoglevel_, string objectName_) :
+  Log::Log(int visibleLoglevel_, std::string objectName_) :
     visibleLoglevel(visibleLoglevel_),
     objectName(objectName_)
   {
@@ -40,7 +40,7 @@ namespace Miro {
   Log::~Log()
   {}
 
-  void Log::log(int logLevel, string logmsg) const 
+  void Log::log(int logLevel, std::string logmsg) const 
   { 
     ACE_Time_Value time;
     time_t tt;
@@ -58,7 +58,7 @@ namespace Miro {
     }
   }
 
-  void Log::log(int logLevel, string logmsg, int param) const 
+  void Log::log(int logLevel, std::string logmsg, int param) const 
   { 
     ACE_Time_Value time;
     time_t tt;
@@ -76,7 +76,7 @@ namespace Miro {
     }
   }
 
-  void Log::log(int logLevel, string logmsg, double param) const 
+  void Log::log(int logLevel, std::string logmsg, double param) const 
   { 
     ACE_Time_Value time;
     time_t tt;
@@ -94,7 +94,7 @@ namespace Miro {
     }
   }
   
-  void Log::log(int logLevel, string logmsg, size_t param) const 
+  void Log::log(int logLevel, std::string logmsg, size_t param) const 
   { 
     ACE_Time_Value time;
     time_t tt;

@@ -390,7 +390,7 @@ namespace Miro
   }
 
   void 
-  ActionPattern::printToStream(ostream& ostr) const
+  ActionPattern::printToStream(std::ostream& ostr) const
   {
     ostr << "ActionPattern: " << getActionPatternName() << endl;
  		

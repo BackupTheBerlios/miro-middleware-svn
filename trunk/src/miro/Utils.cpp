@@ -73,7 +73,7 @@ namespace Miro
 				 char * argv[], 
 				 const std::string& defaultname, 
 				 const std::string& documentname,
-				 const vector<string> &userPath ) :
+				 const std::vector<std::string> &userPath ) :
     document( documentname.c_str() )
   {
 

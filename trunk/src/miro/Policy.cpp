@@ -264,7 +264,7 @@ namespace Miro
    * if it does not exist.
    */
   ActionPattern * 
-  Policy::getActionPattern(const string& _name) 
+  Policy::getActionPattern(const std::string& _name) 
   {
     ActionPatternMap::const_iterator i = actionPatterns_.find(_name);
     if (i != actionPatterns_.end())
@@ -279,7 +279,7 @@ namespace Miro
    * if it does not exist.
    */
   ActionPattern const * const 
-  Policy::getActionPattern(const string& _name) const
+  Policy::getActionPattern(const std::string& _name) const
   {
     ActionPatternMap::const_iterator i = actionPatterns_.find(_name);
     if (i != actionPatterns_.end())
