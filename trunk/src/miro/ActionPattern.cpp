@@ -89,7 +89,7 @@ namespace Miro
 	if (e.tagName()=="arbiter") {
 	  if (arbiter_ == NULL) {
 	    if (!attribute.isNull() && !attribute.value().isEmpty()) {
-	      std::string name(attribute.value());
+	      std::string name(attribute.value().latin1());
 	      Arbiter* a;
 	      if ((a = ar->getArbiter(name)) != 0) {
 		ArbiterParameters * params = a->getParametersInstance();
@@ -111,7 +111,8 @@ namespace Miro
 	}
 	// syntax checking 
 	else if (e.tagName() != "behaviour" && e.tagName() != "transition") {
-	  std::string error("Unknown tag name: " + std::string(e.tagName()));
+	  std::string error("Unknown tag name: " + 
+		            std::string(e.tagName().latin1()));
 	  throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup(error.c_str()));
 	}
       }
@@ -137,7 +138,7 @@ namespace Miro
 	// retrieve behaviours
 	if (e.tagName() == "behaviour") {
 	  if (!attribute.isNull() && !attribute.value().isEmpty()) {
-	    std::string name(attribute.value());
+	    std::string name(attribute.value().latin1());
 
 	    Behaviour * behaviour;
 	    BehaviourParameters * parameters;
@@ -163,7 +164,7 @@ namespace Miro
 	  std::string message;
 
 	  if (!attrMessage.isNull() && !attrMessage.value().isEmpty()) {
-	    message = std::string(attrMessage.value());
+	    message = std::string(attrMessage.value().latin1());
 	  } 
 	  else {
 	    throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup("Transition without message."));
@@ -171,7 +172,7 @@ namespace Miro
 	  
 	  QDomAttr attrPattern = e.attributeNode("target");
 	  if (!attrPattern.isNull() && !attrPattern.value().isEmpty()) {
-	    std::string patternname(attrPattern.value());
+	    std::string patternname(attrPattern.value().latin1());
 	    ActionPatternMap::const_iterator iter = _apMap.find(patternname);
 
 	    if (iter != _apMap.end())

@@ -125,7 +125,7 @@ namespace Miro
 
   void operator <<= (std::string& lhs, const QDomNode& node)
   {
-    lhs = getAttribute(node, QString("value"));
+    lhs = getAttribute(node, QString("value")).latin1();
   }
 
   QDomElement operator >>= (const std::string& lhs, QDomNode& _node)

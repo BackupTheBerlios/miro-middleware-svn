@@ -121,7 +121,7 @@ namespace Miro
 	  ActionPattern* actionPattern;
 	  QDomAttr attribute = e.attributeNode("name");
 	  if (!attribute.isNull() && !attribute.value().isEmpty()) {
-	    string actionPatternName(attribute.value());
+	    string actionPatternName(attribute.value().latin1());
 	    actionPattern = new ActionPattern(actionPatternName, pSupplier_);
 	    registerActionPattern(actionPattern);
 	  } 
@@ -129,14 +129,15 @@ namespace Miro
 	    throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup("ActionPattern without a name."));
 	  }
 	
-	  attribute = e.attributeNode ("start");
+	  attribute = e.attributeNode("start");
 	  if (!attribute.isNull()) {
-	    if (string(attribute.value()) == "true")
+	    if (attribute.value() == "true")
 		startPattern_ = actionPattern;
 	  }	
 	} 
 	else {
-	  std::string error("Non-actionpattern tag: " + string(e.tagName()));
+	  std::string error("Non-actionpattern tag: " + 
+		            string(e.tagName().latin1()));
 	  throw BehaviourEngine::EMalformedPolicy(CORBA::string_dup(error.c_str()));
 	}
       }
@@ -159,7 +160,7 @@ namespace Miro
 
 	assert(!attribute.isNull());
 
-	string actionPatternName(attribute.value());
+	string actionPatternName(attribute.value().latin1());
 	ActionPattern*  actionPattern = getActionPattern(actionPatternName);
 
 	assert(actionPattern != NULL);
