@@ -10,31 +10,35 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "AliveEventHandler.h"
+#include "AliveCollector.h"
+#include "SparrowConnection2003.h"
+
+#include "miro/StructuredPushSupplier.h"
+
 #include <idl/SparrowAliveC.h>
 
 namespace Sparrow
 {
-
-  AliveEventHandler::AliveEventHandler(AliveCollector * collector_, 
-				       Connection2003 * connection_,
-				       Miro::StructuredPushSupplier * pSupplier_) :
-    ACE_Event_Handler(),
-    connection(connection_),
-    collector(collector_),
-    pSupplier(pSupplier_)
+  AliveEventHandler::AliveEventHandler(AliveCollector * _collector, 
+				       Connection2003 * _connection,
+				       Miro::StructuredPushSupplier * _pSupplier) :
+    Super(),
+    connection_(_connection),
+    collector_(_collector),
+    pSupplier_(_pSupplier)
   {
-    if (pSupplier) {
-      notifyEvent.header.fixed_header.event_type.domain_name =
-        CORBA::string_dup(pSupplier->domainName().c_str());
-      notifyEvent.header.fixed_header.event_type.type_name =
+    if (pSupplier_) {
+      notifyEvent_.header.fixed_header.event_type.domain_name =
+        CORBA::string_dup(pSupplier_->domainName().c_str());
+      notifyEvent_.header.fixed_header.event_type.type_name =
 	CORBA::string_dup("SparrowAlive");
-      notifyEvent.header.fixed_header.event_name = CORBA::string_dup("");
-      notifyEvent.header.variable_header.length(0);   // put nothing here
-      notifyEvent.filterable_data.length(0);          // put nothing here
+      notifyEvent_.header.fixed_header.event_name = CORBA::string_dup("");
+      notifyEvent_.header.variable_header.length(0);   // put nothing here
+      notifyEvent_.filterable_data.length(0);          // put nothing here
 
       CosNotification::EventTypeSeq offers;
       offers.length(1);
-      offers[0] = notifyEvent.header.fixed_header.event_type;
+      offers[0] = notifyEvent_.header.fixed_header.event_type;
       pSupplier_->addOffers(offers);
     }
   }
@@ -44,17 +48,18 @@ namespace Sparrow
 				     const void */*act*/) 
   {
     Miro::SparrowAliveIDL aliveIDL;
-    aliveIDL.MotorAlive = collector->motorAlive();
-    aliveIDL.KickerAlive = collector->kickAlive();
-    aliveIDL.Infrared1Alive = collector->infrared1Alive();
-    aliveIDL.Infrared2Alive = collector->infrared2Alive();
-    aliveIDL.PanAlive = collector->panAlive();
 
-    connection->writeHostAlive();
+    aliveIDL.MotorAlive = collector_->motorAlive();
+    aliveIDL.KickerAlive = collector_->kickAlive();
+    aliveIDL.Infrared1Alive = collector_->infrared1Alive();
+    aliveIDL.Infrared2Alive = collector_->infrared2Alive();
+    aliveIDL.PanAlive = collector_->panAlive();
+
+    connection_->writeHostAlive();
     
-    notifyEvent.remainder_of_body <<= aliveIDL;
-    if(pSupplier)
-      pSupplier->sendEvent(notifyEvent);
+    notifyEvent_.remainder_of_body <<= aliveIDL;
+    if(pSupplier_)
+      pSupplier_->sendEvent(notifyEvent_);
     
     return 0;
   }

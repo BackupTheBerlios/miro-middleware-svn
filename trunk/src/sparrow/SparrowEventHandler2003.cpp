@@ -43,6 +43,7 @@ namespace Sparrow
   int
   EventHandler2003::handle_timeout(const ACE_Time_Value &, const void * /*arg*/)
   {
+    initCanConnection();
     return 0;
   }
 
@@ -52,7 +53,6 @@ namespace Sparrow
     MIRO_DBG(SPARROW, LL_DEBUG, "Sparrow::EventHandler2003 startup event.");
 
     // initialize can connection
-    connection.Can::Connection::init();
     connection.init();
 
     MIRO_DBG(SPARROW, LL_DEBUG, "Sparrow::EventHandler2003 startup successfull.");

@@ -16,10 +16,6 @@
 
 namespace Sparrow
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-
   //  Parameters* EventHandler::sparrowParam; // sparrow parameters
 
   EventHandler::EventHandler(Connection& connection_) :
@@ -47,11 +43,11 @@ namespace Sparrow
     case INIT_TIMER: {
       // set contiuous mode for status reports
       if (connection.boardReply < 0) { // init
-	std::cerr << endl << endl << "!!!!! SparrowBoard connect" << endl << endl;
+	MIRO_LOG(LL_NOTICE, "Sparrow::EventHandler SparrowBoard connect.");
 	initSparrowBoard();
       }
       else if (connection.boardReply <= -3) {
-	std::cerr << endl << endl << "!!!!! SparrowBoard died!" << endl << endl;
+	MIRO_LOG(LL_CRITICAL, "Sparro::EventHandler SparrowBoard died!");
 	abort();  // board died!
       }
       else { // test
@@ -69,7 +65,6 @@ namespace Sparrow
   EventHandler::initSparrowBoard() const
   {
     // initialize can connection
-    connection.Can::Connection::init();
     connection.init();
 
     Parameters * params = Parameters::instance();

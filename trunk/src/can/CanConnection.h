@@ -41,22 +41,21 @@ namespace Can
   public:
     Connection(ACE_Reactor* _reactor, 
 	       Miro::DevEventHandler* _eventHandler,
-	       const Parameters& _parameters);
-
-    void init() const;
+	       Parameters const& _parameters);
 
     /** write up to 8 bytes to a 29bits long id */
     void write(Message& message);
 
-    ACE_Time_Value lastWrite;
     static ACE_Time_Value canTimeOut;
 
   protected:
-    const Parameters& parameters_;
+    // initialization
+    void initDevice() const;
+
+    Parameters const& parameters_;
     Miro::Mutex writeMutex;
 
-    static void deadHandler(int);
+    ACE_Time_Value lastWrite;
   };
-
-};
+}
 #endif

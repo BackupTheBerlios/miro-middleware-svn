@@ -15,20 +15,18 @@
 #include "FaulControllerConnection.h"
 #include "sparrow/SparrowConnection2003.h"
 
-#include <miro/Synch.h>
+#include "miro/Synch.h"
 
-namespace FaulMotor
-{
+// forward declarations
+namespace FaulMotor {
   class Connection;
-};
+}
 
 namespace FaulController
 {
-  // forward declarations
-
-
   class FaulCanConnection : public Connection
   {
+    //! Super class accessor.
     typedef Connection Super;
 
   public:

@@ -24,7 +24,6 @@ namespace Sparrow
   BaseConnection::BaseConnection(ACE_Reactor* _reactor,
 				 Miro::DevEventHandler* _devEventHandler):
     Super(_reactor, _devEventHandler, *Parameters::instance()),
-    reactor(_reactor),
     params_(Parameters::instance())
   {
     MIRO_LOG_CTOR("BaseConnection");
@@ -33,11 +32,5 @@ namespace Sparrow
   BaseConnection::~BaseConnection()
   {
     MIRO_LOG_DTOR("BaseConnection");
-  }
-
-  void
-  BaseConnection::init()
-  {
-
   }
 }

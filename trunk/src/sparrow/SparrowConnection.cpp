@@ -61,20 +61,21 @@ namespace Sparrow
     // Complete initialization after entering of the reactor processing loop.
     // So we start immediately after the start of the reactor
     ACE_Time_Value startReports(0, 1);
-    if (reactor->schedule_timer(eventHandler,
-				(void *)INIT_TIMER, // timer id
-				startReports,       // delay
-				ACE_Time_Value(5)) // interval
+    if (reactor_->schedule_timer(eventHandler,
+				 (void *)INIT_TIMER, // timer id
+				 startReports,       // delay
+				 ACE_Time_Value(5)) // interval
 	== -1)
       throw Miro::ACE_Exception(errno, "Failed to register timer for status report startup.");
 
 
     MIRO_DBG_OSTR(SPARROW, LL_DEBUG,
 		  "Polling buttons every " << params_->buttonsPollInterval << "sec");
-    if ( (buttonsPollTimerId = reactor->schedule_timer(eventHandler,
-				(void *)BUTTONS_TIMER, // timer id
-				params_->buttonsPollInterval, // delay
-				params_->buttonsPollInterval) ) // interval
+    if ( (buttonsPollTimerId =
+	  reactor_->schedule_timer(eventHandler,
+				   (void *)BUTTONS_TIMER, // timer id
+				   params_->buttonsPollInterval, // delay
+				   params_->buttonsPollInterval) ) // interval
 	== -1)
       throw Miro::ACE_Exception(errno, "Failed to register timer for buttons polling.");
   }
@@ -121,7 +122,7 @@ namespace Sparrow
       setSpeed(0, 0);
 
     ACE_OS::sleep(1);
-    reactor->cancel_timer(buttonsPollTimerId);
+    reactor_->cancel_timer(buttonsPollTimerId);
   }
 
   //-------------------//
@@ -452,9 +453,9 @@ namespace Sparrow
   Connection::stallTimerStart()
   {
     if ( (eventHandler->stallTimerId =
-	  reactor->schedule_timer(eventHandler,
-				  (void *)STALL_TIMER, // timer id
-				  stallReset) )         // delay
+	  reactor_->schedule_timer(eventHandler,
+				   (void *)STALL_TIMER, // timer id
+				   stallReset) )         // delay
 	 == -1 )
       throw Miro::ACE_Exception(errno, "Failed to register timer for stall flag clearing.");
   }
@@ -469,7 +470,7 @@ namespace Sparrow
   Connection::unstall()
   {
     if (eventHandler->stallTimerId) {
-      reactor->cancel_timer(eventHandler->stallTimerId);
+      reactor_->cancel_timer(eventHandler->stallTimerId);
       eventHandler->stallTimerId = 0;
 
       // send unstall to sparrowBoard - look in documentation

@@ -44,20 +44,14 @@ namespace Sparrow
     // Complete initialization after entering of the reactor processing loop.
     // So we start immediately after the start of the reactor
     ACE_Time_Value startReports(0, 1);
-    if (reactor->schedule_timer(eventHandler,
+    if (reactor_->schedule_timer(eventHandler,
 				(void *)INIT_TIMER, // timer id
 				startReports,       // delay
 				ACE_Time_Value::zero) // interval
 	== -1)
-      throw Miro::ACE_Exception(errno, "Failed to register timer for status report startup.");
+      throw Miro::ACE_Exception(errno, 
+				"Failed to register timer for status report startup.");
 
-  }
-
-  void
-  Connection2003::init()
-  {
-     setInfrared1WaitTime(40);
-     setInfrared2WaitTime(40);
   }
 
   //----------------------//
@@ -68,6 +62,22 @@ namespace Sparrow
     MIRO_LOG_DTOR("SparrowConnection2003");
 
     delete eventHandler;
+  }
+
+  void
+  Connection2003::init()
+  {
+    Parameters * params = Parameters::instance();
+
+    setInfrared1WaitTime(params->infraredPulse.msec());
+    setInfrared2WaitTime(params->infraredPulse.msec());
+  }
+
+  void
+  Connection2003::fini()
+  {
+    setInfrared1WaitTime(0);
+    setInfrared2WaitTime(0);
   }
 
   //-------------------//
@@ -145,7 +155,6 @@ namespace Sparrow
     message.id(CAN_IR_SET_FREQ1_2003);
     message.byteData(0, 1);
     message.byteData(1, waittime);
-
     write(message);
   }
 
@@ -180,6 +189,5 @@ namespace Sparrow
     message.id(CAN_HOST_ALIVE_2003);
     message.byteData(0,0);
     write(message);
-
   }
 }

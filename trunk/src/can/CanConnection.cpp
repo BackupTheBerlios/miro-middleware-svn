@@ -5,7 +5,7 @@
 // for details copyright, usage and credits to other groups see Miro/COPYRIGHT
 // for documentation see Miro/doc
 //
-// (c) 1999,2000, 2003
+// (c) 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -16,6 +16,7 @@
 #include "CanConnection.h"
 #include "Parameters.h"
 #include "PCanMessage.h"
+#include "miro/Log.h"
 
 // extern "C"
 // {
@@ -53,7 +54,7 @@ namespace
   // the mcp. If the mcp is off, dead, etc the alarm will expire and
   // we can bag out.  If not, we reset the alarm and continue
   static const unsigned int INITIAL_WAIT_TIME = 5;
-  };
+}
 
 namespace Can
 {
@@ -65,16 +66,18 @@ namespace Can
     Super(_reactor, _eventHandler, _parameters),
     parameters_(_parameters)
   {
-    init();
+    initDevice();
   }
 
   void
-  Connection::init() const
+  Connection::initDevice() const
   {
 
-    std::cout << "CanConnectionInit: " << parameters_.module << " " << parameters_.device << std::endl;
+    MIRO_DBG_OSTR(SPARROW, LL_DEBUG, 
+		  "CanConnection::initDevice() " << 
+		  parameters_.module << " " << parameters_.device);
 
-    if(parameters_.module == "Can"){
+    if (parameters_.module == "Can") {
        CanConfig cfg;
 
        //Message::driver=OLD;
@@ -104,7 +107,7 @@ namespace Can
 
 
     /* PCAN Driver by peak-system  http://www.peak-system.com */
-    if(parameters_.module == "pcan") {
+    else if (parameters_.module == "pcan") {
 	TPCANInit caninit;
 	caninit.wBTR0BTR1 = CAN_BAUD_250K; // Hier evtl. noch SJW1 und SJW0 setzen,
 	                                   // d. h. Synchronization Jump Width
@@ -143,8 +146,6 @@ namespace Can
        pcanmsg * msgp;
        message.canMessage((int **) &msgp);
        msgp->msg.msgtype = MSGTYPE_EXTENDED;
-       //for(int i = 0; i < msgp->msg.len; i++)
-       //   std::cout << msgp->msg.data[i];
        rc = ioctl(ioBuffer_.get_handle(), PCAN_WRITE_MSG, msgp);
     }
     else {
@@ -159,14 +160,4 @@ namespace Can
     if (rc == -1)
       throw Miro::CException(errno, "Error writing can device.");
   }
-
-  void
-  Connection::deadHandler(int)
-  {
-    static std::string errorMessage = "SparrowBoard write failed." \
-      "\nThe SparrowBoard probably crashed.";
-    std::cerr << "\n\n" << errorMessage <<"\n\n";
-    abort();
-    //    throw Miro::Exception(errorMessage);
-  }
-};
+}

@@ -96,9 +96,6 @@ namespace Sparrow
     Miro::Mutex     irAliveMutex;
     Miro::Condition irAliveCond;
 
-    Miro::Mutex     accelMutex;
-    Miro::Condition accelCond;
-
     short xPos_;
     short yPos_;
     double phi_;
@@ -112,11 +109,6 @@ namespace Sparrow
 
     short distanceL;
     short distanceR;
-
-  protected:
-    int index_;
-    short table1[ACCEL_TABLE_SIZE];
-    short table2[ACCEL_TABLE_SIZE];
   };
 } // SparrowConsumer_h
 #endif

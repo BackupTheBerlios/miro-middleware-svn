@@ -17,21 +17,27 @@
 
 namespace Sparrow
 {
+  // forward declaration
   class Parameters;
 
+  //! Base class for a connection to the sparrow hardware.
   class BaseConnection : public Can::Connection
   {
+    //! Super class accessor.
     typedef Can::Connection Super;
 
   public:
+    //! Initializing constructor.
     BaseConnection(ACE_Reactor * _reactor,
 		   Miro::DevEventHandler * _eventHandler);
-
+    //! Cleaning up.
     virtual ~BaseConnection();
-    virtual void init();
+    //! Init method to be called once by the event handler.
+    virtual void init() = 0;
+    virtual void fini() = 0;
 
   protected:
-    ACE_Reactor * reactor;
+    //! Pointer to the parameters.
     Parameters const * const params_;
   };
 }

@@ -2,17 +2,9 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999,2000
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
@@ -27,13 +19,12 @@
 #include "McpDevice.h"
 #include "McpMessage.h"
 
-#include <string>
-
 // forward declerations
 class ACE_Reactor;
 
 namespace Mcp
 {
+  // forward declerations
   class EventHandler;
   class Parameters;
 
@@ -92,7 +83,6 @@ namespace Mcp
     unsigned long reportPeriod;
     
     void setBinaryMode() const throw(Miro::CException);
-    static void deadHandler(int);
   };
 
   //---------------------------------------------------------------------------
@@ -201,7 +191,7 @@ namespace Mcp
     OutMessage message(OP_WATCH_DOG, interval);
     sendCmd(&message);
   }
-};
+}
 #endif
 
 

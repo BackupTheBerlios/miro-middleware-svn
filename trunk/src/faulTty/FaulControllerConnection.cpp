@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 // 
 // $Id$
@@ -10,26 +10,17 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "FaulControllerConnection.h"
-#include <iostream>
-
-// #undef DEBUG
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
+#include "miro/Log.h"
 
 namespace FaulController
 {
   Connection::Connection()
   {
-    DBG(std::cout << "Constructing FaulControllerConnection" << std::endl);
+    MIRO_LOG_CTOR("FaulController::Connection");
   }
-
 
   Connection::~Connection()
   {
-    DBG(std::cout << "Destructing FaulControllerConnection" << std::endl);
+    MIRO_LOG_DTOR("FaulController::Connection");
   }
 }

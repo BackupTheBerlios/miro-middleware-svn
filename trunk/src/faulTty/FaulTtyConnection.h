@@ -12,14 +12,14 @@
 #ifndef FaulTtyConnection_h
 #define FaulTtyConnection_h
 
-#include "miro/Synch.h"
 #include "FaulControllerConnection.h"
+
+#include "miro/Synch.h"
 #include "miro/TtyConnection.h"
 
-namespace FaulMotor
-{
+namespace FaulMotor {
   class Connection;
-};
+}
 
 namespace FaulController
 {

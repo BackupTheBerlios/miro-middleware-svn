@@ -231,12 +231,4 @@ namespace Mcp
     }
     while((rc = ioBuffer.recv(buffer, 20)));
   }
-
-  void 
-  Connection::deadHandler(int)
-  {
-    static string errorMessage = "Motor controller did not respond." \
-      "\nPerhaps the base/arm needs to be reset.";
-    throw Miro::Exception(errorMessage);
-  }
 }

@@ -65,11 +65,8 @@ namespace Sparrow
     analogCond(analogMutex),
     irAliveMutex(),
     irAliveCond(irAliveMutex),
-    accelMutex(),
-    accelCond(accelMutex),
     x_(0.),
-    y_(0.),
-    index_(0)
+    y_(0.)
   {
     MIRO_LOG_CTOR("Sparrow::Consumer");
 
@@ -118,11 +115,8 @@ namespace Sparrow
     analogCond(analogMutex),
     irAliveMutex(),
     irAliveCond(irAliveMutex),
-    accelMutex(),
-    accelCond(accelMutex),
     x_(0.),
-    y_(0.),
-    index_(0)
+    y_(0.)
   {
     MIRO_LOG_CTOR("Sparrow::Consumer");
 
@@ -200,7 +194,6 @@ namespace Sparrow
   Consumer::handleMessage(const Miro::DevMessage * _message)
   {
     const Can::Message& message = *((Can::Message*)_message);
-    int tmp;
     int versNr, versSub;
 
     connection->boardReply = 1;
@@ -232,31 +225,9 @@ namespace Sparrow
       break;
     }
 
-    case CAN_R_GET_ACCELS: {
+    case CAN_R_GET_ACCELS: 
       MIRO_DBG_OSTR(SPARROW, LL_PRATTLE,
 		    "Consumer::receiveThread:  received message: GET_ACCELS");
-
-      Miro::Guard guard(accelMutex);
-
-      tmp = index_;
-      if (message.shortData(0) != index_) {
-	MIRO_LOG_OSTR(LL_ERROR, 
-		      "GET_ACCELS lost entries: " << std::endl
-		      << "expected entry: " << index_
-		      << "recieved entry: " << message.shortData(0));
-      }
-
-      index_ = message.shortData(0);
-      table1[index_] = message.shortData(2);
-      table2[index_] = message.shortData(4);
-
-
-      ++index_;
-      index_ %= ACCEL_TABLE_SIZE;
-      if (index_ < tmp) // we got a whole table
-	accelCond.broadcast();
-      break;
-    }
 
       // Odometry Messages
     case CAN_R_GET_POS:

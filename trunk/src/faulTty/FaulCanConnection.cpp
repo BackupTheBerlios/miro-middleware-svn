@@ -12,16 +12,6 @@
 #include "FaulCanConnection.h"
 
 #include "miro/Log.h"
-#include <iostream>
-
-// #undef DEBUG
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
-
 
 namespace
 {
@@ -30,24 +20,18 @@ namespace
 
 namespace FaulController
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-
   FaulCanConnection::FaulCanConnection(Sparrow::Connection2003 * _connection2003, 
 				       int _motor) :
     connection2003_(_connection2003),
     motor_(_motor)
   {
-    DBG(cout << "Constructing FaulCanConnection" << endl);
-
+    MIRO_LOG_CTOR("FaulController::FaulCanConnection");
   }
 
 
   FaulCanConnection::~FaulCanConnection()
   {
-    DBG(cout << "Destructing FaulCanConnection" << endl);
-
+    MIRO_LOG_DTOR("FaulController::FaulCanConnection");
   }
   
   void 

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -16,23 +16,18 @@
 
 namespace Sparrow
 {
-  // types of timers registerd for Sparrow::EventHandler
+  //! Types of timers registerd for Sparrow::EventHandler.
   typedef enum { BUTTONS_TIMER, STALL_TIMER, INIT_TIMER } TimerType;
 
-  //--------------------------------------------------------------------------
-  // Motion status
-  //--------------------------------------------------------------------------
+  //! Different types of motion control for the Sparrow99
   typedef enum { LIMP, SPEED, SPEED_ROT, POWER } StateType;
-
-  static const int ACCEL_TABLE_SIZE = 648;
 
   //--------------------------------------------------------------------------
   // Hardware specifica
   //--------------------------------------------------------------------------
 
+  //! Number of buttons of the Sparrow99
   static const unsigned long NUMBER_OF_BUTTONS = 2;
-
-  static const int SERVO_FACTOR = 27;
 
   inline
   unsigned short rad2ticks(double rad) {
@@ -191,5 +186,5 @@ namespace Sparrow
   static const unsigned long CAN_OMNIPAN_QUERY   = 0x8e010107;   // query device version/status
   static const unsigned long CAN_OMNIPAN_DATA    = 0x81010107;   // send data to motor controller
 
-};
+}
 #endif

@@ -39,7 +39,10 @@ namespace Sparrow
 	       Consumer2003 * _consumer);
     virtual ~Connection2003();
 
-    void init();
+    // Inherited method.
+    /** Startup event. */
+    virtual void init();
+    virtual void fini();
 
     void setServo(unsigned char servo, double rad);
     void kick(unsigned char ventilatetime, unsigned char kicktime);

@@ -39,8 +39,9 @@ namespace Sparrow
 	       Consumer * _consumer);
     virtual ~Connection();
 
-    void init();
-    void fini();
+    //! Inherited method.
+    virtual void init();
+    virtual void fini();
 
     //------------------------------------------------------------------------
     // motor methods

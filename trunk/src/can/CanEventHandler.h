@@ -27,25 +27,33 @@ namespace Can
   class Message;
   class Parameters;
 
+  //! Event handler for reading can messages from a device.
+  /** Can messages never come fragmented and can therefore be read at once. */
   class EventHandler : public Miro::DevEventHandler
   {
+    //! Super class accessor.
     typedef Miro::DevEventHandler Super;
 
   public:
+    //! Initializing constructor.
     EventHandler(Miro::DevConsumer* _consumer,
 		 Parameters const * _params);
-    // private:
+    //private:
     virtual ~EventHandler();
 
+    //! Inherited method.
+    /** Called to handle a pending can message, when returning from select. */
     virtual int handle_input (ACE_HANDLE fd); // fd select
 
+    //! Factory method for can messages.
+    /** Needed as we support two different can drivers. */
     static Message * newMessage(Parameters const * _params);
 
   protected:
-    Message * msg;
+    Message * msg_;
     Parameters const * params_;
   };
-};
+}
 #endif
 
 
