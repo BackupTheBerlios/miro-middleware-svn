@@ -87,7 +87,8 @@
    </parameter>
    <parameter value="0.050000" name="ButtonsPollInterval" />
    <parameter value="1.0776" name="TransFactor" />
-   <parameter value="25.7" name="Deg2ServoTicks" />
+   <parameter value="25.7" name="Deg2ServoTicksL" />
+   <parameter value="25.7" name="Deg2ServoTicksR" />
    <parameter value="1.000000" name="WatchdogTimeout" />
    <parameter value="3100" name="Servo0MidPulse" />
    <parameter value="200" name="MaxAccel" />
