@@ -54,7 +54,7 @@ namespace FaulMotor
 
     Consumer * consumer;
 
-    int prevSpeedL,prevSpeedR;
+    short prevSpeedL, prevSpeedR;
     Miro::Mutex mutex_;
   };
 
