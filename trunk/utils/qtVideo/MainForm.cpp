@@ -13,6 +13,7 @@
 #include "MainForm.h"
 
 #include "video/VideoDevice.h"
+#include "video/VideoConfig.h"
 
 #include <qpainter.h>
 #include <qimage.h>
