@@ -380,6 +380,40 @@
 	<parameter value="184" name="WhiteBalance1" />
       </parameter>
 
+      <parameter name="VideoOmniCam" >
+        <parameter value="yuv420p" name="Palette" />
+        <parameter value="320" name="Width" />
+        <parameter value="240" name="Height" />
+        <parameter name="Filter">
+          <parameter value="DeviceQuickCam" name="Name" />
+          <parameter value="DeviceQuickCam" name="Type" />
+          <parameter name="Successor" >
+            <parameter name="Filter" >
+              <parameter value="FilterYUV420PtoRGB" name="Name" />
+              <parameter value="FilterYUV420PtoRGB" name="Type" />
+              <parameter name="Successor" >
+                <parameter name="Filter" >
+                  <parameter value="FilterOmni2Pan" name="Name" />
+                  <parameter value="FilterOmni2Pan" name="Type" />
+                  <parameter name="Successor" >
+                    <parameter name="Filter" >
+                      <parameter value="FilterRGBtoSeg" name="Name" />
+                      <parameter value="FilterRGBtoSeg" name="Type" />
+                      <parameter name="Successor" >
+                        <parameter name="Filter" >
+                          <parameter value="FilterDistanceScan" name="Name" />
+                          <parameter value="FilterDistanceScan" name="Type" />
+                        </parameter>
+                      </parameter>
+                    </parameter>
+                  </parameter>
+                </parameter>
+              </parameter>
+            </parameter>
+          </parameter>
+        </parameter>
+      </parameter>
+
       <parameter name="Video" >
 	<parameter value="640" name="Width" />
 	<parameter value="480" name="Height" />
@@ -388,6 +422,11 @@
 	  <parameter value="Device1394" name="Name" />
 	  <parameter value="Device1394" name="Type" />
 	  <parameter name="Successor" >
+
+            <parameter name="Filter" >
+              <parameter value="Save" name="Type" />
+              <parameter value="Save" name="Name" />
+            </parameter>
 
 	    <parameter name="Filter" >
 	      <parameter value="FilterCopy" name="Type" />
@@ -400,8 +439,16 @@
 		  <parameter name="Successor" >
 
 		    <parameter name="Filter" >
+		      <parameter value="ROIListDummy" name="Name" />
+		      <parameter value="ROIListDummy" name="Type" />
+		    </parameter>
+
+		    <parameter name="Filter" >
 		      <parameter value="RGBtoGray" name="Name" />
 		      <parameter value="RGBtoGray" name="Type" />
+		      <parameter name="BackLink" >
+			<parameter value="ROIListDummy" />
+		      </parameter>
 		      <parameter name="Successor" >
 			<parameter name="Filter" >
 			  <parameter value="Sobel" name="Type" />
@@ -439,23 +486,25 @@
 			    </parameter>
 
 			    <parameter name="Filter" >
+			      <parameter value="ColorCount" name="Type" />
+			      <parameter value="ColorCount" name="Name" />
+			    </parameter>
+
+			    <parameter name="Filter" >
 			      <parameter value="AttentionRobots" name="Type" />
 			      <parameter value="AttentionRobots" name="Name" />
 			      <parameter name="BackLink" >
 				<parameter value="RGBtoGray" />
 			      </parameter>
 			    </parameter>
-
 			    <parameter name="Filter" >
 			      <parameter value="AttentionBall" name="Type" />
 			      <parameter value="AttentionBall" name="Name" />
 			    </parameter>
-
 			    <parameter name="Filter" >
 			      <parameter value="AttentionGoal" name="Type" />
 			      <parameter value="AttentionGoal" name="Name" />
 			    </parameter>
-
 			    <parameter name="Filter" >
 			      <parameter value="AttentionCornerPoles" name="Type" />
 			      <parameter value="AttentionCornerPoles" name="Name" />
@@ -503,6 +552,7 @@
 				      <parameter value="Multiply" name="Name" />
 				      <parameter name="BackLink" >
 					<parameter value="Canny" />
+					<parameter value="ROIListDummy" />
 				      </parameter>
 				      <parameter name="Successor" >
 					<parameter name="Filter" >
@@ -522,12 +572,63 @@
 		    </parameter>
 
 		    <parameter name="Filter" >
+		      <parameter value="RGBtoGrayForBall" name="Name" />
+		      <parameter value="RGBtoGray" name="Type" />
+		      <parameter name="BackLink" >
+			<parameter value="AttentionBall" />
+		      </parameter>
+		      <parameter name="Successor" >
+			<parameter name="Filter" >
+			  <parameter value="Sobel" name="Type" />
+			  <parameter value="SobelVerticalForBall" name="Name" />
+			</parameter>
+			<parameter name="Filter" >
+			  <parameter value="Sobel" name="Type" />
+			  <parameter value="SobelHorizontalForBall" name="Name" />
+			</parameter>
+		      </parameter>
+		    </parameter>
+		    <parameter name="Filter" >
+		      <parameter value="ColorHist" name="Name" />
+		      <parameter value="ColorHist" name="Type" />
+		      <parameter name="BackLink" >
+			<parameter value="AttentionBall" />
+		      </parameter>
+		    </parameter>
+		    <parameter name="Filter" >
+		      <parameter value="OrientHist" name="Name" />
+		      <parameter value="OrientHist" name="Type" />
+		      <parameter name="BackLink" >
+			<parameter value="SobelVerticalForBall" />
+			<parameter value="SobelHorizontalForBall" />
+			<parameter value="AttentionBall" />
+		      </parameter>
+		    </parameter>
+		    <parameter name="Filter" >
+		      <parameter value="NeuralNetBall" name="Type" />
+		      <parameter value="NeuralNetBall" name="Name" />
+		      <parameter name="BackLink" >
+			<parameter value="ColorHist" />
+			<parameter value="OrientHist" />
+			<parameter value="AttentionBall" />
+		      </parameter>
+		    </parameter>
+                    <parameter name="Filter" >
+                      <parameter value="ROIVisual" name="Type" />
+                      <parameter value="ROIVisualBall" name="Name" />
+                      <parameter name="BackLink" >
+                        <parameter value="NeuralNetBall" />
+                      </parameter>
+                    </parameter>
+
+		    <parameter name="Filter" >
 		      <parameter value="CollectAllFeatures" name="Type" />
 		      <parameter value="CollectAllFeaturesBasic" name="Name" />
 		      <parameter name="BackLink" >
-			<parameter value="AttentionBall" />
+			<parameter value="NeuralNetBall" />
 			<parameter value="AttentionGoal" />
 			<parameter value="AttentionCornerPoles" />
+			<parameter value="ColorCount" />
 		      </parameter>
 		    </parameter>
 
@@ -535,7 +636,7 @@
 		      <parameter value="CollectAllFeatures" name="Type" />
 		      <parameter value="CollectAllFeaturesFull" name="Name" />
 		      <parameter name="BackLink" >
-			<parameter value="AttentionBall" />
+			<parameter value="NeuralNetBall" />
 			<parameter value="AttentionGoal" />
 			<parameter value="AttentionCornerPoles" />
 			<parameter value="BlueLeftPost" />
@@ -543,9 +644,17 @@
 			<parameter value="YellowLeftPost" />
 			<parameter value="YellowRightPost" />
 			<parameter value="AttentionLines" />
+			<parameter value="ColorCount" />
 		      </parameter>
 		    </parameter>
 
+                    <parameter name="Filter" >
+                      <parameter value="ROIVisual" name="Type" />
+                      <parameter value="ROIVisualBasic" name="Name" />
+                      <parameter name="BackLink" >
+                        <parameter value="CollectAllFeaturesBasic" />
+                      </parameter>
+                    </parameter>
 		    <parameter name="Filter" >
 		      <parameter value="ROIVisual" name="Type" />
 		      <parameter value="ROIVisual" name="Name" />
@@ -562,20 +671,28 @@
 	</parameter>
       </parameter>
 
-      <parameter name="YUV422toRGBIpp">
-        <parameter value="true" name="InterfaceInstance" />
-	<parameter name="Interface" >
-	  <parameter value="RGB" name="Name" />
-	</parameter>
+      <parameter name="Save">
+        <parameter value="false" name="Activate" />
+        <parameter value="TEST_" name="Basename" />
+        <parameter value="5" name="Interval" />
       </parameter>
-      
+
+      <parameter name="ROIListDummy">
+	<parameter value="0" name="X" />
+	<parameter value="80" name="Y" />
+	<parameter value="640" name="Width" />
+	<parameter value="400" name="Height" />
+      </parameter>
+      <parameter name="RGBtoGray">
+        <parameter value="1" name="UseROIFrom" />
+      </parameter>
       <parameter name="SobelVertical">
         <parameter value="VERTICAL" name="Orientation" />
       </parameter>
       <parameter name="SobelHorizontal">
         <parameter value="HORIZONTAL" name="Orientation" />
       </parameter>
-      
+
       <parameter name="Shrink4" >
 	<parameter value="NN" name="Interpolation" />
       </parameter>
@@ -591,15 +708,22 @@
         <parameter value="false" name="Rotate" />
         <parameter value="false" name="Random" />
       </parameter>
-
       <parameter name="AttentionBall" >
 	<parameter value="false" name="Random" />
 	<parameter value="false" name="Rotate" />
+	<parameter value="false" name="LimitToOneBall" />
+	<parameter value="2" name="MinBlobWidth" />
+	<parameter value="2" name="MinBlobHeight" />
+	<parameter value="4" name="MinBlobPixels" />
+	<parameter value="0.5" name="MinBlobFill" />
       </parameter>
-
       <parameter name="AttentionCornerPoles">
 	<parameter value="false" name="Rotate" />
 	<parameter value="false" name="Random" />
+	<parameter value="2" name="MinBlobWidth" />
+	<parameter value="2" name="MinBlobHeight" />
+	<parameter value="4" name="MinBlobPixels" />
+	<parameter value="0.3" name="MinBlobFill" />
       </parameter>
 
       <parameter name="IndextoEdgeWhiteBlue">
@@ -643,25 +767,138 @@
         <parameter value="180" name="HighThresh" />
       </parameter>
 
+      <parameter name="Multiply">
+        <parameter value="2" name="UseROIFrom" />
+      </parameter>
+
+      <parameter name="RGBtoGrayForBall">
+        <parameter value="1" name="UseROIFrom" />
+      </parameter>
+      <parameter name="SobelVerticalForBall">
+        <parameter value="VERTICAL" name="Orientation" />
+      </parameter>
+      <parameter name="SobelHorizontalForBall">
+        <parameter value="HORIZONTAL" name="Orientation" />
+      </parameter>
+      <parameter name="OrientHist">
+        <parameter value="3" name="UseROIFrom" />
+        <parameter value="0.2" name="WideROI" />
+        <parameter value="0.0" name="XOverlap" />
+        <parameter value="0.0" name="YOverlap" />
+        <parameter value="2" name="XSubwin" />
+        <parameter value="2" name="YSubwin" />
+        <parameter value="8" name="Discrete" />
+      </parameter>
+      <parameter name="ColorHist">
+        <parameter value="1" name="UseROIFrom" />
+        <parameter value="0.0" name="WideROI" />
+        <parameter value="0.0" name="XOverlap" />
+        <parameter value="0.0" name="YOverlap" />
+        <parameter value="1" name="XSubwin" />
+        <parameter value="2" name="YSubwin" />
+        <parameter value="8" name="Discrete" />
+      </parameter>
+      <parameter name="NeuralNetBall">
+	<parameter value="Ball.net" name="File" />
+	<parameter value="1" name="UseColorHistFrom" />
+	<parameter value="2" name="UseOrientHistFrom" />
+	<parameter value="3" name="UseROIFrom" />
+      </parameter>
+      <parameter name="ROIVisualBall">
+        <parameter value="true" name="VisText" />
+        <parameter value="true" name="InterfaceInstance" />
+        <parameter name="Interface" >
+          <parameter value="Ball" name="Name" />
+        </parameter>
+      </parameter>
+
       <parameter name="CollectAllFeaturesBasic" >
-	<parameter value="3" name="NumberBackLinks" />
+	<parameter value="4" name="NumberBackLinks" />
 	<parameter value="false" name="DynamicConnection" />
 	<parameter value="VisionCollectorBasic" name="InterfaceName" />
       </parameter>
 
       <parameter name="CollectAllFeaturesFull" >
-	<parameter value="8" name="NumberBackLinks" />
+	<parameter value="9" name="NumberBackLinks" />
 	<parameter value="true" name="DynamicConnection" />
 	<parameter value="VisionCollectorFull" name="InterfaceName" />
       </parameter>
 
+      <parameter name="ROIVisualBasic">
+        <parameter value="true" name="InterfaceInstance" />
+        <parameter name="Interface" >
+          <parameter value="Basic" name="Name" />
+        </parameter>
+      </parameter>
       <parameter name="ROIVisual">
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
 	  <parameter value="ROI" name="Name" />
 	</parameter>
       </parameter>
-   </section>
+
+      <parameter name="DeviceQuickCam" >
+        <parameter value="20" name="Framerate" />
+        <parameter name="Contrast" value="27648" />
+        <parameter name="Brightness" value="-20992" />
+        <parameter name="Hue" value="-1"/>
+
+        <!-- pwc centric -->
+        <!-- indoor = 0, outdoor = 1, flourecence = 2, manual = 3, auto = 4 -->
+        <parameter name="Whitebalance" value="2" />
+        <!-- BEGIN only available in whitebalance=manual -->
+        <parameter name="WhitebalanceRed" value="0" />
+        <parameter name="WhitebalanceBlue" value="0" />
+        <!-- END -->
+        <!-- BEGIN only available in writebalance=auto -->
+        <parameter name="WhitebalanceSpeed" value="2032" />
+        <parameter name="WhitebalanceDelay" value="0" />
+        <!-- END -->
+        <!-- autoGainControl < 0 ? auto : fixed (0..65535) -->
+        <parameter name="AutoGainControl" value="31744" />
+        <!-- shutterSpeed < 0 ? auto : fixed (0..65535) -->
+        <parameter name="ShutterSpeed" value="0" />
+        <!-- sharpness < 0 ? auto : fixed (0..65535) -->
+        <parameter name="Sharpness" value="-1" />
+        <!-- backlightCompensation == 0 ? off : on -->
+        <parameter name="BacklightCompensation" value="0" />
+        <!-- flickerlessMode == 0 ? off : on -->
+        <parameter name="FlickerlessMode" value="0" />
+        <!-- dynamicNoiseReduction == 0 ? off : fixed (1..3) -->
+        <parameter name="DynamicNoiseReduction" value="1" />
+        <!-- compression == 0 ? off : fixed (1..3) -->
+        <parameter name="Compression" value="0" />
+      </parameter>
+
+      <parameter name="FilterYUV420PtoRGB">
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="VideoOmniCam" name="Name" />
+	</parameter>
+      </parameter>
+
+      <parameter name="FilterOmni2Pan">
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="VideoPanorama" name="Name" />
+	</parameter>
+      </parameter>
+
+      <parameter name="FilterRGBtoSeg">
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="VideoSeg" name="Name" />
+	</parameter>
+      </parameter>
+
+      <parameter name="FilterDistanceScan">
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="DistanceScan" name="Name" />
+	</parameter>
+      </parameter>
+
+    </section>
 
 
     <section name="Notification" >
