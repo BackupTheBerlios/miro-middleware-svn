@@ -17,7 +17,7 @@ AM_CXXFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/ -I$(top_builddir)/src -I$(top
 AM_CXXFLAGS += $(ACE_CFLAGS) $(TAO_CFLAGS) $(QT_CFLAGS)
 AM_CXXFLAGS += $(INHERITED_CPPFLAGS) $(INHERITED_SYMBOLS)
 # $(INHERITED_WARNINGS)
-AM_CXXFLAGS += -Woverloaded-virtual -DDEBUG -DQT_GENUINE_STR
+AM_CXXFLAGS += -W -Wall -Woverloaded-virtual -DDEBUG -DQT_GENUINE_STR
 
 # lib search path
 
