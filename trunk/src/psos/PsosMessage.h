@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // 
@@ -77,6 +77,7 @@ namespace Psos
     short lVel() const { return *(short *)(&buffer_[10]); }
     short rVel() const { return *(short *)(&buffer_[12]); }
     unsigned char battery() const { return buffer_[14]; }
+    unsigned short bumpers() const { return *(unsigned short *)(&buffer_[15]); }
     unsigned char lBumper() const { return buffer_[15]; }
     unsigned char rBumper() const { return buffer_[16]; }
     short control() const { return *(short *)(&buffer_[17]); }

@@ -79,7 +79,7 @@ namespace Pioneer
     
     switch (pPsosMsg->header()) {
 
-    case 0xfafb: 
+    case 0xfbfa: 
       {
 	
 	const ServerInfoMessage * message = static_cast<const ServerInfoMessage *>(_message);
@@ -184,9 +184,9 @@ namespace Pioneer
 	//------------------------------
 
 	cout << "Bumpers: ";
-	unsigned short flags = message->flags();
+	unsigned short bumpers = message->bumpers();
 	for (unsigned int i = 0; i < 16; ++i) {
-	  cout << ((flags >> i) & 1) << " ";
+	  cout << ((bumpers >> i) & 1) << " ";
 	}
 	cout << endl;
 	
