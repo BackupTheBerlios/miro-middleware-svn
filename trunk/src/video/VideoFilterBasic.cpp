@@ -123,7 +123,7 @@ namespace Video
 	bytesPerPixel = 2;
 	break;
       case Miro::GREY_32:
-	bytesPerPixel = 3;
+	bytesPerPixel = 4;
 	break;
       case Miro::RGB_24:
 	bytesPerPixel = 3;
