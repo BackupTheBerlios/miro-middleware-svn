@@ -27,26 +27,30 @@ namespace Miro
   {
     cout << "Constructing VideoImpl." << endl;
 
-    int	i;
-	
     iMaxConnections = parameters.connections;
     pHandleArray = new ImageHandleIDL[iMaxConnections];
     pShmDataArray = new void*[iMaxConnections];
-    for (i=0; i<iMaxConnections; i++)
+
+    for (int i = 0; i < iMaxConnections; i++)
     {
       pHandleArray[i].width = parameters.width;
       pHandleArray[i].height = parameters.height;
-      if (parameters.palette=="gray") {
+      if (parameters.palette == "gray") {
 	pHandleArray[i].palette = ::Video::paletteGrey;
-      } else if (parameters.palette=="yuv") {
+      } 
+      else if (parameters.palette == "yuv") {
 	pHandleArray[i].palette = ::Video::paletteYUV;
-      } else if (parameters.palette=="rgb") {
+      }
+      else if (parameters.palette == "rgb") {
 	pHandleArray[i].palette = ::Video::paletteRGB;
-      } else if (parameters.palette=="bgr") {
+      } 
+      else if (parameters.palette == "bgr") {
 	pHandleArray[i].palette = ::Video::paletteBGR;
-      } else if (parameters.palette=="rgba") {
+      } 
+      else if (parameters.palette == "rgba") {
 	pHandleArray[i].palette = ::Video::paletteRGBA;
-      } else if (parameters.palette=="abgr") {
+      }
+      else if (parameters.palette == "abgr") {
 	pHandleArray[i].palette = ::Video::paletteABGR;
       }
       //	pHandleArray[i].source = parameters.source;
@@ -67,24 +71,20 @@ namespace Miro
   Miro::ImageHandleIDL 
   VideoImpl::connect() throw()
   {
-    int	i;
-	
-    for (i=0; i<iMaxConnections; i++)
-    {
-      if (pHandleArray[i].handle == -1)
-      {
+    for (int i = 0; i < iMaxConnections; ++i) {
+      if (pHandleArray[i].handle == -1) {
 	pHandleArray[i].key = shmget(0, pConsumer->getImageSize(), IPC_CREAT|0x1ff);
-	if (pHandleArray[i].key == -1)
-	{
+	if (pHandleArray[i].key == -1) {
 	  cout << "failed creating shared memory segment!" << endl;
 	  throw Miro::EOutOfBounds();
 	}
+
 	pShmDataArray[i] = shmat(pHandleArray[i].key, 0, 0);
-	if (pShmDataArray[i] == (void*)-1)
-	{
+	if (pShmDataArray[i] == (void*)-1) {
 	  cout << "failed attaching shared memory segment!" << endl;
 	  throw Miro::EOutOfBounds();
 	}
+
 	pHandleArray[i].handle = i;
 	return pHandleArray[i];
       }
@@ -107,12 +107,10 @@ namespace Miro
   VideoImpl::getImage(Miro::ImageHandleIDL & img) throw()
   {
     checkImageHandle(img);
-    try
-    {
+    try {
       return pConsumer->getCurrentImage(pShmDataArray[img.handle]);
     }
-    catch (...)
-    {
+    catch (...) {
       throw Miro::EDevIO();
     }
   }
@@ -121,12 +119,10 @@ namespace Miro
   VideoImpl::getWaitImage(Miro::ImageHandleIDL & img) throw()
   {
     checkImageHandle(img);
-    try
-    {
+    try {
       return pConsumer->getWaitNextImage(pShmDataArray[img.handle]);
     }
-    catch (Exception& e)
-    {
+    catch (Exception& e) {
       cout << "VideoImpl::getWaitImage() caught exception: " << e << endl;
       throw Miro::EDevIO();
     }
@@ -139,21 +135,24 @@ namespace Miro
     int             bufferSize = pConsumer->getPaletteSize() * (int)x * (int)y;
     unsigned char   * buffer   = new unsigned char[bufferSize];
     SubImageDataIDL * subImage = new SubImageDataIDL(bufferSize, bufferSize, buffer, 1);
-    try
-    {
+
+    try {
       pConsumer->getWaitNextSubImage(buffer, (int)x, (int)y);
     }
-    catch (...)
-    {
+    catch (...) {
       throw Miro::EDevIO();
     }
     return subImage;
   }
 
-  void VideoImpl::checkImageHandle(const Miro::ImageHandleIDL & img)
+  void 
+  VideoImpl::checkImageHandle(const Miro::ImageHandleIDL & img)
   {
-    if ((img.handle < 0) || (img.handle >= iMaxConnections) || (pHandleArray[img.handle].key == -1) ||
-	(img.key != pHandleArray[img.handle].key) || (pShmDataArray[img.handle] == NULL))
+    if ((img.handle < 0) || 
+	(img.handle >= iMaxConnections) || 
+	(pHandleArray[img.handle].key == -1) ||
+	(img.key != pHandleArray[img.handle].key) || 
+	(pShmDataArray[img.handle] == NULL))
       throw Miro::EOutOfBounds();
   }
 };

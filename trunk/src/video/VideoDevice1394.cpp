@@ -14,6 +14,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.2  2003/05/12 16:34:35  hutz
+ * bug hunt on fire wire
+ *
  * Revision 1.1  2003/05/12 11:48:05  hutz
  * added the fire wire dc support from graz
  * propagated changes and cleanups introduced by fire wire dc
@@ -173,7 +176,7 @@ namespace Video
 //---------------------------------------------------------------
     void * VideoDevice1394::grabImage(ACE_Time_Value& _stamp) const
     {
-//	DBG(std::cout << "VideoDevice1394: grabImage" << std::endl);
+      DBG(std::cout << "VideoDevice1394: grabImage" << std::endl);
 	
 	dc1394_dma_single_capture(p_camera_);
 	_stamp = ACE_OS::gettimeofday();

@@ -14,6 +14,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.2  2003/05/12 16:34:35  hutz
+ * bug hunt on fire wire
+ *
  * Revision 1.1  2003/05/12 11:48:05  hutz
  * added the fire wire dc support from graz
  * propagated changes and cleanups introduced by fire wire dc
@@ -59,10 +62,10 @@ namespace Video
         VideoDevice1394();
         virtual ~VideoDevice1394();
 	
-	virtual	void*	grabImage(ACE_Time_Value& _timeStamp) const;
-	virtual	void	handleConnect(const int fd, const Parameters& params);
+	virtual	void handleConnect(const int fd, const Parameters& params);
+	virtual	void handleDisconnect();
 
-	virtual	void	handleDisconnect();
+	virtual	void * grabImage(ACE_Time_Value& _timeStamp) const;
 
     protected:
         //! Detect and initialize the camera.

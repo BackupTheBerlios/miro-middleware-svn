@@ -21,7 +21,7 @@
 
 #include <algorithm>
 
-#undef DEBUG
+// #undef DEBUG
 #ifndef DEBUG
 #define DEBUG
 #endif
@@ -62,7 +62,6 @@ namespace Video
   Consumer::~Consumer()
   { 
     DBG(cout << "Destructing VideoConsumer." << endl);
-
   }
 
   int 
@@ -71,7 +70,7 @@ namespace Video
     cout << "Image size:" << getImageSize() << endl;
     pCurrentImageData = NULL;
 
-    int pixelSize=connection.parameters.pixelSize;
+    int pixelSize = connection.parameters.pixelSize;
 
     if (ACE_OS::sched_params(schedp_) == -1) {
       std::cerr << "[Video::Consumer] Could not set sched parameters." << endl 
@@ -80,8 +79,10 @@ namespace Video
     }
 
     ACE_Time_Value prevTimeStamp = ACE_OS::gettimeofday();
+
     int counter = 49;
     double deltaT[50];
+
     while (!canceled())
     {
       ACE_Time_Value timeStamp;
@@ -199,8 +200,10 @@ namespace Video
       timeout += maxWait;
       if (cond.wait(&timeout) == -1)
 	throw Miro::ETimeOut();
+      copyImageData(data, pCurrentImageData);
     }
-    copyImageData(data, pCurrentImageData);
+    else 
+      cout << "no images available" << endl;
     return timeStamp_;
   }
 
@@ -288,8 +291,10 @@ namespace Video
 
   void Consumer::copyImageData(void* dst, const void* src)
   {
-    if (connection.videoDevice.getRequestedPalette() == connection.videoDevice.getDevicePalette())
-    {
+    if (connection.videoDevice.getRequestedPalette() == 
+	connection.videoDevice.getDevicePalette()) {
+
+      cout << "Video::Consumer: plain copy" << endl;
       switch (connection.videoDevice.getDevicePalette())
       {
       case paletteGrey:
@@ -310,8 +315,9 @@ namespace Video
 	throw Miro::Exception("can't copy image: illegal image palette");
       }
     }
-    else
-    {
+    else {
+      cout << "Video::Consumer: swap copy" << endl;
+
       switch (connection.videoDevice.getDevicePalette())
       {
       case paletteRGB:
@@ -347,7 +353,8 @@ namespace Video
     }
   }
 
-  void Consumer::copy(void* dst, const void* src, const int pixSize)
+  void 
+  Consumer::copy(void* dst, const void* src, const int pixSize)
   {
     char*	start = (char*)src;
     char*	target = (char*)dst;
@@ -358,11 +365,10 @@ namespace Video
     if ((connection.videoDevice.getRequestedSubfield() != subfieldAll) &&
 	(connection.videoDevice.getDeviceSubfield() == subfieldAll))
     {
-      int	srcOffset = 2*bytesPerLine;
+      int srcOffset = 2*bytesPerLine;
       if (connection.videoDevice.getRequestedSubfield() == subfieldOdd)
 	start += srcOffset;
-      for (int i=0; i<h; i++)
-      {
+      for (int i = 0; i < h; i++) {
 	memcpy(target, start, bytesPerLine);
 	start += srcOffset;
 	target += bytesPerLine;
@@ -372,7 +378,8 @@ namespace Video
       memcpy(target, start, bytesPerLine * h);
   }
 
-  void Consumer::swap3(void* dst, const void* src)
+  void 
+  Consumer::swap3(void* dst, const void* src)
   {
     char*	start = (char*)src;
     char*	target = (char*)dst;
