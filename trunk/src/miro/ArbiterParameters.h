@@ -30,6 +30,9 @@ namespace Miro
   operator << (std::ostream& ostr, const ArbiterParameters& _params);
 
   //! Base class for all parameter classes of derived Arbiters.
+  /**
+   * @author Hans Utz
+   */
   struct ArbiterParameters
   {
     //! Mapping of behaviour id's to the registration order.

@@ -15,24 +15,34 @@
 
 namespace Miro
 {
+  //! Implementation of the Battery interface.
+  /**
+   * This class offers a generic implementation for the Battery
+   * interface. Simply pass the lowlevel battery sensor data through
+   * the integrateData method and all the rest will be taken care for
+   * you.
+   *
+   * @author Hans Utz
+   */
   class BatteryImpl : public virtual POA_Miro::Battery
   {
   public:
-    //Constructor 
+    //! Default constructor .
     BatteryImpl();
   
-    //Destructor 
+    //! Virtual destructor.
     virtual ~BatteryImpl();
   
-    //------------------------------------------------------------------------
-    // IDL interface definition
-    //------------------------------------------------------------------------
-    void integrateData(double _voltage);
-    virtual CORBA::Double getVoltage() throw();
+    //! Method to pass raw battery data from the device into the BatteryImpl class.
+    void integrateData(double _voltage)  ACE_THROW_SPEC(());
+
+    //! Battery interface method implementation.
+    virtual CORBA::Double getVoltage() ACE_THROW_SPEC(());
 
   protected:
+    //! The current battery voltage.
     double voltage_;
   };
 };
 
-#endif /* pioneerStallImpl_hh  */
+#endif // BatteryImpl_h

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -17,6 +17,9 @@
 module Miro
 {
   //! Interface for a simple kicking device as used in the RoboCup scenario.
+  /** 
+   * @author Hans Utz
+   */
   interface Kicker
   {
     //! The kick.
@@ -33,4 +36,4 @@ module Miro
     void kick(in TimeIDL time) raises(EOutOfBounds, EDevIO);
   };
 };
-#endif // kicker_idl
+#endif // Kicker_idl

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -16,6 +16,9 @@
 module Miro
 {
   //! Basic interface for a tilting unit.
+  /** 
+   * @author Hans Utz
+   */
   interface Tilt 
   {
     //! Set the tilting angle.
@@ -37,4 +40,4 @@ module Miro
   };
 };
 
-#endif /* tilt_idl */
+#endif // Tilt_idl

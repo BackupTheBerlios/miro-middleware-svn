@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -15,18 +15,20 @@
 
 module Miro
 {
-
   //! Struct representing the focus limits in the current zoom position
   struct FocusRangeIDL
   {
-    //minimal focus position (far)
+    //! Minimal focus position (far).
     short min;
-    //maximal focus position (near)
+    //! Maximal focus position (near).
     short max;
   };
     
   
   //! Interface for a zoom camera.
+  /** 
+   * @author Guillem Pages Gassull
+   */
   interface CanonCamera
     {
     //! Set the zoom factor.
@@ -68,7 +70,7 @@ module Miro
      * is thrown to indicate low level device problems.
      */
     void autoFocus() raises(EDevIO, ETimeOut);
-    //! get the focusing range for the current zoom position
+    //! Get the focusing range for the current zoom position
     /*
      * @return The focusing range for the current position
      * @throw EDevIO

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -16,10 +16,17 @@
 module Miro
 {
   //! Interface for battery montoring.
+  /** 
+   * Currently only the battery voltage can be queried. Further functionality
+   * would be automatic voltage monitoring and the sending of battery low
+   * warning messages etc.
+   *
+   * @author Hans Utz
+   */
   interface Battery
   {
     //! Get the current battery voltage (in volt).
     double getVoltage();
   };
 };
-#endif // kicker_idl
+#endif // Bettery_idl

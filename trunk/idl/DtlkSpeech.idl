@@ -46,6 +46,8 @@ module Miro
    *
    * Read the excellent DoubleTalk documentation for a longer
    * explanation of the possible operational modes.
+   *
+   * @author Hans Utz
    */
   interface DtlkSpeech: Speech
   {

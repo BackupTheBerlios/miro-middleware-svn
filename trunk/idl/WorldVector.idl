@@ -27,7 +27,7 @@ module Miro
   };
 };
 
-#endif // worldVector_idl
+#endif // WorldVector_idl
 
 
 

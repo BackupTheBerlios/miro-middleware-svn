@@ -25,13 +25,13 @@ namespace Miro
   }
   
   void
-  BatteryImpl::integrateData(double _voltage)
+  BatteryImpl::integrateData(double _voltage) ACE_THROW_SPEC(())
   {
     voltage_ = _voltage;
   }
 
   CORBA::Double 
-  BatteryImpl::getVoltage() throw()
+  BatteryImpl::getVoltage() ACE_THROW_SPEC(())
   {
     return voltage_;
   }

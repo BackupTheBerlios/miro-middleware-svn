@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -16,6 +16,9 @@
 module Miro
 {
   //! Basic interface for a panning unit.
+  /** 
+   * @author Hans Utz
+   */
   interface Pan 
   {
     //! Set the panning angle.
@@ -36,4 +39,4 @@ module Miro
     double getPan() raises(EDevIO);
   };
 };
-#endif /* pan_idl */
+#endif // Pan_idl

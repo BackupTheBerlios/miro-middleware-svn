@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -20,6 +20,7 @@ module Miro
    * It registers as "Speech" at the naming service
    * within the selected naming context.
    *
+   * @author Guillem Pages Gassull 
    */
   interface Speech
   {

@@ -37,6 +37,9 @@ module Miro
   };
 
   //! Interface to the frame grabber devices.
+  /** 
+   * @author Steffen Simon
+   */
   interface Video
   {
     //! Connect to the service. 
@@ -67,4 +70,4 @@ module Miro
   };
 };
 
-#endif
+#endif // Video_idl

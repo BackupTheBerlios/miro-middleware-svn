@@ -28,7 +28,7 @@ module Miro
   };
 };
 
-#endif // worldPoint_idl
+#endif // WorldPoint_idl
 
 
 

@@ -23,6 +23,8 @@ module Miro
    *
    * Note that most robots provide their own specialization of this
    * interface.
+   *
+   * @author Hans Utz
    */
   interface Motion
   {
@@ -93,7 +95,7 @@ module Miro
 
   };
 };
-#endif /* motion_idl */
+#endif // Motion_idl
 
 
 

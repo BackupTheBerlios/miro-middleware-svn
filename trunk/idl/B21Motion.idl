@@ -18,6 +18,9 @@
 module Miro
 {
   //! The specialized motion interface of the B21 robot.
+  /** 
+   * @author Hans Utz
+   */
   interface B21Motion : SynchroMotion, ClosedMotion
   {
     //-------------------------------------------------------------------------

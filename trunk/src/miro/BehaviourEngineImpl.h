@@ -22,6 +22,9 @@ namespace Miro
   class Policy;
 
   //! Implementation of the BehaviourEngine CORBA interface.
+  /**
+   * @author Hans Utz
+   */
   class BehaviourEngineImpl : public virtual POA_Miro::BehaviourEngine
   {
   public:
@@ -40,7 +43,6 @@ namespace Miro
     const Policy& policy() const;
     //! Get reference to the policy.
     Policy& policy();
-
   
     //! BehaviourEngine interface method implementation.
     virtual void loadPolicy (const char * policy)

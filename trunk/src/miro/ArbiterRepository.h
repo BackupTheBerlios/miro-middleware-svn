@@ -33,6 +33,8 @@ namespace Miro
   /**
    * Arbiters have to be registered at the repository before
    * a Policy can be initialized.
+   *
+   * @author Hans Utz
    */
   class ArbiterRepository 
   {

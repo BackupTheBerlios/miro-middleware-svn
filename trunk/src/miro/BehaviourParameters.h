@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -24,6 +24,10 @@ namespace Miro
   std::ostream& operator << (std::ostream& ostr, const BehaviourParameters&);
 
   //! Base class for all parameter classes for derived Behaviours.
+  /**
+   * @author Ingmar Baetge
+   * @author Hans Utz
+   */
   struct BehaviourParameters
   {
     //! Default constructor.

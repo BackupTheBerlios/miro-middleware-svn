@@ -34,6 +34,8 @@ module Miro
    * forms a policy. Policies can be edited graphically, resulting in
    * an XML based description file, that is loadable by the behaviour
    * engine.
+   *
+   * @author Hans Utz
    */
   interface BehaviourEngine
   {
@@ -82,14 +84,14 @@ module Miro
      * The policy will begin by activating the start pattern
      * specified in the policy configuration.
      *
-     * @throw is thrown, when no policy is currently loaded,
+     * @throw ENoPolicy is thrown, when no policy is currently loaded,
      *        or the previous attempt to do so failed.
      */
     void openPolicy() raises(ENoPolicy);
     //! Close the current policy.
     /**
      *
-     * @throw is thrown, when no policy is currently active.
+     * @throw ENoPolicy is thrown, when no policy is currently active.
      */
     void closePolicy() raises(ENoPolicy);
 

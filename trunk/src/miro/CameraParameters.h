@@ -18,6 +18,10 @@
 
 namespace Miro
 {
+  //! Camera parameters.
+  /**
+   * @author Hans Utz
+   */
   class CameraParameters : public Parameters
   {
     typedef Parameters Super;
@@ -34,14 +38,22 @@ namespace Miro
     double f;
     double kappa;
 
+    //! Height of the camera.
     double height;
+    //! Angle against the horizon.
     double alpha;
 
+    //! Latency of the video subsystem.
+    /** 
+     * The time for transferring the image from the real worl
+     * into the memory of the process.
+     */
     ACE_Time_Value latency;
 
     CameraParameters();
     virtual void operator <<= (const QDomNode& node);
 
+    //! Singleton instance.
     static Singleton<CameraParameters> instance;
   };
 

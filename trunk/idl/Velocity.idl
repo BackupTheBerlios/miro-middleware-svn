@@ -23,7 +23,7 @@ module Miro
   };
 };
 
-#endif // velcity_idl
+#endif // Velcity_idl
 
 
 

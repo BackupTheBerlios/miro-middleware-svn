@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -17,6 +17,9 @@
 module Miro
 {
   //! Interface for a simple gripper device.
+  /** 
+   * @author Guillem Pages Gassull
+   */
   interface Gripper
   {
     //! Set the gripping pressure
@@ -96,4 +99,4 @@ module Miro
     
   };
 };
-#endif // gripper_idl
+#endif // Gripper_idl

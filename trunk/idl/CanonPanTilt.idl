@@ -50,6 +50,8 @@ module Miro
   /**
    * This pantilt unit is mounted on the PeopleBot robot.  It registers as
    * "PanTilt" at the naming service in the specified naming context.
+   * 
+   * @author Guillem Pages Gassull
    */
   interface CanonPanTilt : Miro::PanTilt
   {

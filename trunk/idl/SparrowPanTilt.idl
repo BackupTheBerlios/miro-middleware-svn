@@ -36,6 +36,8 @@ module Miro
   /**
    * Yes, the name is misleading. The Sparrow99 once had a pantilt unit. But
    * it was downgraded to a simple pan unit...
+   *
+   * @author Hans Utz
    */
   interface SparrowPanTilt : Pan
   {
@@ -47,7 +49,7 @@ module Miro
   };
 };
 
-#endif
+#endif // SparrowPanTilt_idl
 
 
 

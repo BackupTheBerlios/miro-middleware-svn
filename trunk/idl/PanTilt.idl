@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -26,6 +26,9 @@ module Miro
   };
 
   //! Interface to a pantilt unit.
+  /** 
+   * @author Hans Utz
+   */
   interface PanTilt : Pan, Tilt
   {
     //! Get the current panTilt position. 
@@ -48,7 +51,7 @@ module Miro
   };
 };
 
-#endif // pantTilt_idl
+#endif // PantTilt_idl
 
 
 

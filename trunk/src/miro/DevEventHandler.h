@@ -2,17 +2,9 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999,2000
+// (c) 1999, 2000
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
@@ -40,6 +32,8 @@ namespace Miro
    * file descriptor by read(), copy the data into the ACE_Message_Block
    * provided by this class and pass the message on to the consumer
    * task by a call to dispatchMessage().
+   *
+   * @author Hans Utz
    */
   class DevEventHandler : public ::ACE_Event_Handler
   {

@@ -31,6 +31,8 @@ namespace Miro
    * interface. Simply pass the lowlevel odometry sensor data through
    * the integrateData method and all the rest will be taken care for
    * you.
+   *
+   * @author Hans Utz
    */
   class  OdometryImpl : public virtual POA_Miro::Odometry
   {

@@ -90,6 +90,8 @@ module Miro
   /**
    * This pantilt unit is mounted on the B21 robot.  It registers as
    * "PanTilt" at the naming service in the specified naming context.
+   * 
+   * @author Steffan Sablatnoeg
    */
   interface DirectedPerceptionPanTilt : PanTilt
   {

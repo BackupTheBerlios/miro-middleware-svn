@@ -65,6 +65,8 @@ namespace Miro
    * Init the action pattern from the XML description of the policy.
    *
    * @param _node Node within the XML-Tree containing the behaviour.
+   * @param _apMap Map of the other existing action patterns of the policy,
+   * for transition links.
    */
   void
   ActionPattern::xmlInit(const QDomNode& _node, const ActionPatternMap& _apMap) 
@@ -282,6 +284,13 @@ namespace Miro
     cout << "Disabling done." << endl;
   }
 
+  /**
+   * Adding a behaviour to the action pattern consists of:
+   * - initializing the pattern pointer of the  parameters
+   *   to this.
+   * - insert the behaviour and the parameters into the behaviourMap_.
+   * - register the behaviour at the arbiter.
+   */
   void
   ActionPattern::addBehaviour(Behaviour * _behaviour,
 			      BehaviourParameters * _parameters) 

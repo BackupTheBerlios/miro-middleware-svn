@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -17,10 +17,6 @@
 
 module Miro
 {
-  // forward declarations
-  //  forward struct PositionIDL;
-  //  struct MotionStatusIDL;
-
   //! The basic odometry interface.
   /** 
    * Note that all robots also broadcast position status reports via
@@ -41,7 +37,8 @@ module Miro
    * Event declaration:
    * - type name = RawPosition
    * - remainder of body = @ref RawPositionIDL
-
+   *
+   * @author Hans Utz
    */
   interface Odometry
   {
@@ -153,7 +150,7 @@ module Miro
     MotionStatusIDL getWaitStatus() raises(ETimeOut);
   };
 };
-#endif
+#endif // Odometry_idl
 
 
 

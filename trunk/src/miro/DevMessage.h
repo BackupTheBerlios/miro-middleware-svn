@@ -2,17 +2,9 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
 // (c) 1999,2000
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
-//   Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
@@ -34,21 +26,17 @@ namespace Miro
    * data coming via its message queue to be a descendant of this
    * class and the only way to stop him would have been, to 
    * templatize @ref Connection, @ref Task and @ref Event.
+   *
+   * @author Hans Utz
    */
   class DevMessage 
   {
-    /** 
-     * Time the message was issued by the device.
-     */
+    //! Time the message was produced by the device.
     ACE_Time_Value  time_;
   public:
-    /**
-     * Get a constant reference to the time value.
-     */
+    //! Get a constant reference to the time value.
     const ACE_Time_Value& time() const { return time_;}
-    /**
-     * Get a non constant reference to the time value.
-     */
+    //! Get a non constant reference to the time value.
     ACE_Time_Value& time() { return time_;}
   };
 };

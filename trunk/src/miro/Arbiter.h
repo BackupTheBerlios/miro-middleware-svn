@@ -25,6 +25,9 @@ namespace Miro
   /**
    * All behaviours send their actuatory requests to an
    * arbiter. It then has to decide what to do.
+   * 
+   * @author Ingmar Baetge
+   * @author Hans Utz
    */
   class Arbiter 
   {
@@ -61,9 +64,10 @@ namespace Miro
     Mutex mutex_;
     //! Active flag.
     bool active_;
-    //! Vector of arbitration messages
+    //! Vector of arbitration messages.
     MessageVector message_;
-
+    //! Pointer to the parameter set of the arbiter.
+    /** This is exchanged on transitions between action patterns. */
     const ArbiterParameters * params_;
   private:
     //! Copy contruction is prohibited.

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -16,6 +16,9 @@
 module Miro
 {
   //! The specialized motion interface of the Sparrow 99 robot. 
+  /** 
+   * @author Hans Utz
+   */
   interface SparrowMotion : DifferentialMotion
   {
     //-----------------------------------------------------------------------
@@ -38,7 +41,7 @@ module Miro
   };
 };
 
-#endif // sparrowMotion_idl
+#endif // SparrowMotion_idl
 
 
 

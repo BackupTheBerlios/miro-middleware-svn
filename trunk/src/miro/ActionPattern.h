@@ -21,8 +21,6 @@
 #include <string>
 #include <iostream>
 
-// forward declarations
-
 namespace Miro
 {
 
@@ -38,10 +36,12 @@ namespace Miro
   //! Ostream operator for debug purposes.
   std::ostream& operator << (std::ostream& ostr, const ActionPattern&);
 
+  //! Class representing an ation pattern.
   /** 
    * This class represents an action pattern, which consists of a set of 
    * behaviours, an arbiters and their parameters
    * @author Ingmar Baetge
+   * @author Hans Utz
    */
   class ActionPattern 
   {
@@ -53,7 +53,7 @@ namespace Miro
     //! A map matching transitions to the following ActionPattern.
     typedef std::map<std::string, ActionPattern*> TransitionMap;
     //! A map of existing action pattern to link transitions to.
-    /** Should go back into Policy. With the second parsing run. */
+    /** @todo Should go back into Policy,along with the second parsing run. */
     typedef std::map<std::string, ActionPattern*> ActionPatternMap;
 
     //! Initializing constructor.
@@ -78,10 +78,8 @@ namespace Miro
     void addTransition(const std::string&, ActionPattern *);
     //! Set the arbiter of the action pattern.
     void arbiter(Arbiter * _a, ArbiterParameters * _p);
-    Arbiter * arbiter();
     //! Lookup a behaviour of the action pattern by name.
     Behaviour * getBehaviour(const std::string &);
-    const BehaviourMap& behaviourMap() const;
   
     //! Send a transition message, switching to another action pattern.
     void sendMessage(Behaviour const * const sender, 
@@ -92,7 +90,9 @@ namespace Miro
     //! Send a transition message, switching to another action pattern.
     void sendTransitionMessage(const std::string& message);
 
-  protected:
+    //! Get the arbiter.
+    Arbiter * arbiter();
+   protected:
     //! Retrieve the current action pattern.
     ActionPattern * const currentActionPattern();
 
@@ -100,11 +100,11 @@ namespace Miro
     void open();
     //! Deactivate the action pattern.
     void close(ActionPattern * nextPattern);
-    //! Get the action pattern the transition is linked to.
     //! Dump action pattern configuration to ostream for debugging.
     virtual void printToStream(std::ostream& ostr) const;
 
-    // class data
+    const BehaviourMap& behaviourMap() const;
+   // class data
 
     //! Policy the action pattern belongs to.
     Policy * policy_;

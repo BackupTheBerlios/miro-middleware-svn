@@ -19,6 +19,8 @@ module Miro
    * time stamp of its sampling time. It is convertible into an
    * ACE_Time_Value object by the global helper functions defined
    * in <miro/timeHelper.h>.
+   *
+   * @todo Convert this to a CORBA::Time_T thingy.
    */
   struct TimeIDL
   {
@@ -29,7 +31,7 @@ module Miro
   };
 };
 
-#endif // time_idl
+#endif // Time_idl
 
 
 

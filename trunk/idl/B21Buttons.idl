@@ -72,6 +72,8 @@ module Miro
    *
    * The state of the buttons is also broadcasted via the notification
    * service as described in the @ref Button interface.
+   *
+   * @author Hans Utz
    */
   interface B21Buttons : Buttons
   {

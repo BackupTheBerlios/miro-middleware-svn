@@ -42,6 +42,11 @@ namespace Miro
   class BehaviourParameters;
   class ArbiterMessage;
 
+  //! Base class of all behaviours.
+  /**
+   * @author Ingmar Baetge
+   * @author Hand Utz
+   */
   class Behaviour {
   public:
     //! Default constructor.
@@ -74,8 +79,11 @@ namespace Miro
     //! Returns true if the behaviour is in active state.
     bool isActive();
 
+    //! Hook for the WindowArbiter
+    /** @todo replace by a method pointer within the arbitration message. */
     virtual void calcDynamicWindow(DynamicWindow *);
 
+    //! Initiate a memory cleanup during dynamic policy reconfiguration.
     void deleteParametersOnTransition();
   protected:
     //! Send a transition message to the policy.
@@ -93,10 +101,16 @@ namespace Miro
 				    const std::string& _behaviour, 
 				    BehaviourParameters * _parameters);
 
+    //! Flag indicating the behaviour to be active.
     /** Default is false. */
     bool active_;
-    /** Default is the NULL-Pointer. */
+    //! Parameter set of the behaviour.
+    /** 
+     * This is exchanged on a transition to another action pattern.
+     * Default is the NULL-Pointer. 
+     */
     const BehaviourParameters * params_;
+    //! Hold the old parameters for cleanup on dynamic policy reconfiguartion.
     /** Default is NULL. */
     const BehaviourParameters * oldParams_;
   };

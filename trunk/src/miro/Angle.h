@@ -80,6 +80,8 @@ namespace Miro
    * The internal representation of the data type is a double, 
    * storing the angle in the radiant representation.
    * Conversion to and from degree is provided.
+   *
+   * @author Hans Utz
    */
   class Angle
   {

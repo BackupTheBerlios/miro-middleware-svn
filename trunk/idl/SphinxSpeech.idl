@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -17,10 +17,12 @@
 
 module Miro
 {
-  struct WordIDL {
-    string word;
-    long startFrame, endFrame; //start and end frame within utterance for this word
-    long aScore, lScore; //acoustic and LM scores (not always used!)
+  struct WordIDL 
+  {
+    long startFrame;
+    long endFrame;       //start and end frame within utterance for this word
+    long aScore;
+    long lScore; //acoustic and LM scores (not always used!)
     float confidence;    // confidence measure (roughly prob(correct)) for this word
                          // NOT FILLED IN BY THE RECOGNIZER at the moment (sphinx2)
     long latticeDensity; // Average lattice density in segment. 
@@ -31,12 +33,14 @@ module Miro
                             // Larger values imply more confusion and 
                             // less certainty about the result.
                             // To use it for rejection, cutoffs must be found independently
+    string word;
   };
 
-  struct SentenceIDL {
-    sequence<WordIDL> sentence;
+  struct SentenceIDL 
+  {
     TimeIDL timestamp;
     boolean valid;
+    sequence<WordIDL> sentence;
   };
 
 
@@ -46,10 +50,11 @@ module Miro
    * within the selected naming context.
    * It includes the Festival speech production module
    *
+   * @author Guillem Pages Gassull 
    */
   interface SphinxSpeech : Speech
   {
-    //! Returns the last recognized sentence
+    //! Returns the last recognized sentence.
     SentenceIDL getLastSentence() raises(EDevIO);
   };
 };
