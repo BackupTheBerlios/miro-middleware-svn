@@ -204,11 +204,9 @@ namespace Miro
   Server::run(unsigned int nthreads)
   {
     if (nthreads > 1) {
-      detach(nthreads);
-      wait();
+      detach(nthreads - 1);
     }
-    else
-      worker_.svc();
+    worker_.svc();
   
     // Dectivate the POA manager.
     // poa_mgr->deactivate();
