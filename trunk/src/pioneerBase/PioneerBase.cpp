@@ -133,7 +133,7 @@ main(int argc, char *argv[])
     delete config;
     
 #ifdef DEBUG
-    cout << "  pioneer paramters:" << endl << *pioneerParameters << endl;
+    cout << "  pioneer parameters:" << endl << *pioneerParameters << endl;
 #endif
     
     DBG(cout << "Initialize server daemon." << endl);
@@ -144,10 +144,10 @@ main(int argc, char *argv[])
       DBG(cout << "pioneerBase ended, exiting." << endl);
     }
     catch (const Miro::EOutOfBounds& e) {
-      cerr << "OutOfBounds excetpion: Wrong parameter for device initialization." << endl;
+      cerr << "OutOfBounds exception: Wrong parameter for device initialization." << endl;
     }
     catch (const Miro::EDevIO& e) {
-      cerr << "DevIO excetpion: Device access failed." << endl;
+      cerr << "DevIO exception: Device access failed." << endl;
     }
     catch (const CORBA::Exception & e) {
       cerr << "Uncaught CORBA exception: " << e << endl;
