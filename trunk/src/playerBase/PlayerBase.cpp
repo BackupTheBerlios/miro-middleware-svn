@@ -14,6 +14,7 @@
 #include "miro/Exception.h"
 #include "miro/Utils.h"
 #include "miro/Synch.h"
+#include "miro/Configuration.h"
 
 #include "Parameters.h"
 
@@ -26,6 +27,8 @@
 #include <orbsvcs/Notify/Notify_Default_EMO_Factory.h>
 
 #include <playerclient.h>
+
+#include <ace/Arg_Shifter.h>
 
 #include <iostream>
 
@@ -40,9 +43,9 @@ using std::cerr;
 using std::endl;
 using std::string;
 
-PlayerBase::PlayerBase(int argc, char *argv[],PlayerClient* client) throw (CORBA::Exception) :
+PlayerBase::PlayerBase(int argc, char *argv[],PlayerClient* client, int playerId) throw (CORBA::Exception) :
   Super(argc, argv),
-  reactorTask(client,&sonar,&laser,&infrared,&tactile,&odometry,&motion,&battery,&panTilt),
+  reactorTask(client,playerId,&sonar,&laser,&infrared,&tactile,&odometry,&motion,&battery,&panTilt,&stall),
 
   // Notification Channel
   notifyFactory_(TAO_Notify_EventChannelFactory_i::create(poa.in() ACE_ENV_ARG_PARAMETER)),
@@ -54,8 +57,8 @@ PlayerBase::PlayerBase(int argc, char *argv[],PlayerClient* client) throw (CORBA
   odometry(&structuredPushSupplier_),
   battery(),
   motion(Player::Parameters::instance()->motion),
-  //  stall(/*pioneerConnection*/),
-    sonar(Player::Parameters::instance()->sonarDescription, &structuredPushSupplier_),
+  stall(&structuredPushSupplier_),
+  sonar(Player::Parameters::instance()->sonarDescription, &structuredPushSupplier_),
   tactile(Player::Parameters::instance()->tactileDescription, &structuredPushSupplier_),
   //TODO: infrared, not sonar description!
   infrared(Player::Parameters::instance()->sonarDescription, &structuredPushSupplier_),
@@ -68,7 +71,7 @@ PlayerBase::PlayerBase(int argc, char *argv[],PlayerClient* client) throw (CORBA
 
   pOdometry = odometry._this();
   pMotion = motion._this();
-  //  pStall = stall._this();
+  pStall = stall._this();
   pSonar = sonar._this();
   pTactile = tactile._this();
   pInfrared = infrared._this();
@@ -80,8 +83,8 @@ PlayerBase::PlayerBase(int argc, char *argv[],PlayerClient* client) throw (CORBA
 
   addToNameService(pOdometry.in(), "Odometry");
   addToNameService(pMotion.in(), "Motion");
-  //  if (reactorTask.stallBound())
-  //    addToNameService(pStall.in(), "Stall");
+  if (reactorTask.stallBound())
+    addToNameService(pStall.in(), "Stall");
   if (reactorTask.sonarBound())
     addToNameService(pSonar.in(), "Sonar");
   if (reactorTask.tactileBound())
@@ -142,6 +145,43 @@ PlayerBase::~PlayerBase()
   DBG(cout << "reactor Task ended" << endl);
 }
 
+int parseArgs(int& argc, char* argv[], string& playerHost,int& playerPort, int& playerId)
+{
+  ACE_Arg_Shifter get_opts(argc, argv);
+  
+  int rc = 0;
+  
+  get_opts.ignore_arg();
+
+  while (get_opts.is_anything_left()) 
+  {
+    if ((get_opts.cur_arg_strncasecmp("help")>=0)  ||
+	(get_opts.cur_arg_strncasecmp("?")>=0) ){
+      cout << "usage: " << "argv[0]" << " [-h=hostname] [-p=port] [-i=id] [-?]" << endl
+ 	   << "  -h=hostname: host running Player (default localhost)" << endl
+ 	   << "  -p=port:     Player port to connect to (default 6665)" << endl
+ 	   << "  -i=id:       instance id of Player devices (default 0)" << endl
+ 	   << "  -?:          emit this text and stop" << endl;
+      rc = 1;
+      get_opts.consume_arg();
+    } else if (get_opts.cur_arg_strncasecmp("-h")>=0) {
+      playerHost=get_opts.get_the_parameter("-h");
+      get_opts.consume_arg();
+    } else if (get_opts.cur_arg_strncasecmp("-p")>=0) {
+      playerPort=atoi(get_opts.get_the_parameter("-p"));
+      get_opts.consume_arg();
+    } else if (get_opts.cur_arg_strncasecmp("-i")>=0) {
+      playerId=atoi(get_opts.get_the_parameter("-i"));
+      get_opts.consume_arg();
+    } else {
+      get_opts.ignore_arg();
+    }
+  }
+
+  return rc;
+}
+
+
 int
 main(int argc, char *argv[])
 {
@@ -149,6 +189,7 @@ main(int argc, char *argv[])
 
   string playerHost="localhost";
   int playerPort=PLAYER_PORTNUM;
+  int playerId=0;
 
   // Init TAO Factories
   TAO_Notify_Default_CO_Factory::init_svc();
@@ -156,11 +197,24 @@ main(int argc, char *argv[])
   TAO_Notify_Default_Collection_Factory::init_svc();
   TAO_Notify_Default_EMO_Factory::init_svc();
 
+  try {
+    Miro::Log::init(argc, argv);
+    Miro::Configuration::init(argc, argv);
+  }
+  catch (Miro::Exception const & e) {
+    std::cerr << "Initialization of logging failed: " << std::endl
+	      << e << std::endl;
+    return 1;
+  }
+
   // Parameters to be passed to the services
   Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
   Player::Parameters * simBotParameters = Player::Parameters::instance();
 
   PlayerClient * playerClient=NULL;
+
+  if ((rc=parseArgs(argc,argv,playerHost,playerPort,playerId)) != 0) 
+    return rc;
 
   try {
     // Config file processing
@@ -175,7 +229,7 @@ main(int argc, char *argv[])
 
     playerClient=new PlayerClient(playerHost.c_str(),playerPort);
 
-    PlayerBase playerBase(argc, argv,playerClient);
+    PlayerBase playerBase(argc, argv, playerClient,playerId);
  
     try {
       DBG(cout << "Loop forever handling events." << endl);

@@ -26,7 +26,8 @@ PlayerBase_SOURCES = \
 	PlayerReactorTask.cpp \
 	PlayerLaserImpl.cpp \
 	PlayerMotionImpl.cpp \
-	PlayerPanTiltImpl.cpp
+	PlayerPanTiltImpl.cpp \
+	PlayerStallImpl.cpp
 
 PlayerBase_LDADD = \
 	-lmiroIDL \

@@ -22,7 +22,7 @@
 #include "PlayerReactorTask.h"
 #include "PlayerMotionImpl.h"
 #include "PlayerPanTiltImpl.h"
-
+#include "PlayerStallImpl.h"
 
 #include <orbsvcs/CosNotifyChannelAdminS.h>
 #include <orbsvcs/CosNotifyCommC.h>
@@ -39,7 +39,7 @@ class PlayerBase : public Miro::Server
 
 public:
   // Initialization and Termination methods.
-  PlayerBase(int argc, char *argv[],PlayerClient* client_) throw (CORBA::Exception);
+  PlayerBase(int argc, char *argv[],PlayerClient* client_, int playerId) throw (CORBA::Exception);
   // Constructor.
 
   ~PlayerBase();
@@ -70,7 +70,7 @@ private:
 
   Miro::PlayerMotionImpl motion;
 
-  //  Pioneer::StallImpl  stall;
+  Player::StallImpl  stall;
   Miro::RangeSensorImpl sonar;
   Miro::RangeSensorImpl tactile;
   Miro::RangeSensorImpl infrared;
@@ -82,7 +82,7 @@ private:
   Miro::Odometry_var pOdometry;
   Miro::Motion_var pMotion;
 
-  //  Miro::Stall_var pStall;
+  Miro::Stall_var pStall;
   Miro::RangeSensor_var pSonar;
   Miro::RangeSensor_var pTactile;
   Miro::RangeSensor_var pInfrared;

@@ -3,6 +3,7 @@
 #include "PlayerLaserImpl.h"
 #include "PlayerMotionImpl.h"
 #include "PlayerPanTiltImpl.h"
+#include "PlayerStallImpl.h"
 
 #include "miro/RangeSensorImpl.h"
 #include "miro/OdometryImpl.h"
@@ -24,7 +25,18 @@ namespace Miro {
 
   bool PlayerReactorTask::done=false;
 
-  PlayerReactorTask::PlayerReactorTask(PlayerClient * client, RangeSensorImpl * _pSonar, LaserImpl * _pLaser, RangeSensorImpl * _pInfrared, RangeSensorImpl * _pTactile, OdometryImpl * _pOdometry, PlayerMotionImpl * _pMotion, BatteryImpl * _pBattery, PlayerPanTiltImpl * _pPanTilt) throw (CORBA::Exception) :
+  PlayerReactorTask::PlayerReactorTask(PlayerClient * client,
+				       int playerId,
+				       RangeSensorImpl * _pSonar, 
+				       LaserImpl * _pLaser, 
+				       RangeSensorImpl * _pInfrared, 
+				       RangeSensorImpl * _pTactile, 
+				       OdometryImpl * _pOdometry, 
+				       PlayerMotionImpl * _pMotion, 
+				       BatteryImpl * _pBattery, 
+				       PlayerPanTiltImpl * _pPanTilt, 
+				       Player::StallImpl * _pStall
+				       ) throw (CORBA::Exception) :
     Super(),
     pSonar(_pSonar),
     pLaser(_pLaser),
@@ -34,6 +46,7 @@ namespace Miro {
     pMotion(_pMotion),
     pBattery(_pBattery),
     pPanTilt(_pPanTilt),
+    pStall(_pStall),
     params_(::Player::Parameters::instance()),
     playerClient(client),
     playerSonar(NULL),
@@ -45,13 +58,13 @@ namespace Miro {
     playerPTZ(NULL)
   {
 
-    playerLaser=new LaserProxy(playerClient,0,'r');
-    playerSonar=new SonarProxy(playerClient,0,'r');
-    playerPosition=new PositionProxy(playerClient,0,'a');
-    playerPower=new PowerProxy(playerClient,0,'r');
-    playerPTZ=new PtzProxy(playerClient,0,'a');
+    playerSonar=new SonarProxy(playerClient,playerId,'r');
+    playerLaser=new LaserProxy(playerClient,playerId,'a');
+    playerPosition=new PositionProxy(playerClient,playerId,'a');
+    playerPower=new PowerProxy(playerClient,playerId,'r');
+    playerPTZ=new PtzProxy(playerClient,playerId,'a');
 
-    if (!playerLaser || playerLaser->GetAccess() != 'r') {
+    if (!playerLaser || playerLaser->GetAccess() != 'a') {
       cerr << "WARNING: Could not get reference to Player Laser. No Laser available" << endl;
       delete playerLaser;
       playerLaser=NULL;
@@ -197,6 +210,10 @@ namespace Miro {
 	  status.time=timestamp;
 
 	  pOdometry->integrateData(status);
+
+	  if (pStall!=NULL) {
+	    pStall->integrateData(playerPosition->Stall());
+	  }
 
 	} // odometry end
 	if ((pBattery!=NULL) && (playerPower != NULL)) {

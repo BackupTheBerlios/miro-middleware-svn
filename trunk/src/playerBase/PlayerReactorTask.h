@@ -21,6 +21,7 @@ class PtzProxy;
 namespace Player {
   class Parameters;
   class PlayerPanTiltImpl;
+  class StallImpl;
 }
 
 namespace Miro {
@@ -36,6 +37,7 @@ namespace Miro {
   public: 
 
     PlayerReactorTask(PlayerClient * client, 
+		      int playerId=0,
 		      RangeSensorImpl * _pSonar=NULL, 
 		      LaserImpl * _pLaser=NULL, 
 		      RangeSensorImpl * _pInfrared=NULL,
@@ -43,7 +45,8 @@ namespace Miro {
 		      OdometryImpl * _pOdometry=NULL, 
 		      PlayerMotionImpl * _pMotion=NULL,
 		      BatteryImpl * _pBattery=NULL,
-		      Player::PlayerPanTiltImpl * _pPanTilt=NULL
+		      Player::PlayerPanTiltImpl * _pPanTilt=NULL,
+		      Player::StallImpl * _pStall=NULL
 		      ) throw (CORBA::Exception);
 
     virtual ~PlayerReactorTask();
@@ -78,7 +81,8 @@ namespace Miro {
     OdometryImpl * pOdometry;
     PlayerMotionImpl * pMotion;
     BatteryImpl * pBattery;
-    Player::PlayerPanTiltImpl * pPanTilt;
+    ::Player::PlayerPanTiltImpl * pPanTilt;
+    ::Player::StallImpl * pStall;
 
     PositionIDL position;
     VelocityIDL velocity;
@@ -109,7 +113,7 @@ namespace Miro {
   inline bool PlayerReactorTask::infraredBound() { return (pInfrared !=NULL ) && (playerInfrared != NULL); }
   inline bool PlayerReactorTask::tactileBound() { return (pTactile !=NULL ) && (playerBumper != NULL); }
   inline bool PlayerReactorTask::batteryBound() { return (pBattery != NULL) && (playerPower != NULL); }
-  inline bool PlayerReactorTask::stallBound() { return false; } //(pStall != NULL ) && (playerPosition != NULL); }
+  inline bool PlayerReactorTask::stallBound() { return (pStall != NULL ) && (playerPosition != NULL); }
   inline bool PlayerReactorTask::panTiltBound() { return (pPanTilt != NULL) && (playerPTZ != NULL); }
 };
 
