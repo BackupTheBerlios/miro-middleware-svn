@@ -127,9 +127,9 @@ namespace Miro
   VelocitySpace::addEvalForPreferredDirection(double _prefDir, double _maxSpeed)
   {
     double l_value, r_value, left, right;
-    if(fabs(_prefDir) < M_PI_2)
+    if(fabs(_prefDir) <= M_PI_2)
 	_prefDir = -_prefDir;
-
+    std::cout << "addEvalForPrefferredDirection" << std::endl;
     for(int l_index = minDynWinLeft_; l_index <= maxDynWinLeft_; l_index++) {
       for(int r_index = minDynWinRight_; r_index <= maxDynWinRight_; r_index++) {
 
@@ -157,6 +157,7 @@ namespace Miro
 	  velocitySpace_[l_index][r_index] = 0;
       }
     }
+    std::cout << "addEvalForPrefferedDingens end" << std::endl;
   }
 
   void VelocitySpace::addEvalForStraightVelocity(double _prefDir, double _maxSpeed)

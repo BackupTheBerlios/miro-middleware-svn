@@ -16,6 +16,7 @@
 #include "ConstraintArbiterViewer.h"
 #include "Behaviour.h"
 #include "StructuredPushSupplier.h"
+#include "TimeHelper.h"
 #include "Log.h"
 
 #include <complex>
