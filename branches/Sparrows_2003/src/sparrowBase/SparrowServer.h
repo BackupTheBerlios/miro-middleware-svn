@@ -120,9 +120,9 @@ public:
   Miro::StructuredPushSupplier structuredPushSupplier_;
 
   Miro::OdometryImpl odometry;
-//  Miro::RangeSensorImpl * pSonar_;
+  Miro::RangeSensorImpl * pSonar_;
   Miro::RangeSensorImpl infrared;
-  Miro::RangeSensorImpl * infrared2;
+  //Miro::RangeSensorImpl * infrared2;
 
   // Sparrow board hardware abstraction
   Sparrow::Consumer * pSparrowConsumer;
@@ -152,7 +152,7 @@ public:
   Miro::SparrowPanTilt_ptr pPanTilt;
   Miro::RangeSensor_ptr pInfrared;
 
-//  Miro::RangeSensor_ptr pSonar;
+  Miro::RangeSensor_ptr pSonar;
 
   /* NotifyMulticast */
   Miro::NotifyMulticast::Adapter *mcAdapter_;

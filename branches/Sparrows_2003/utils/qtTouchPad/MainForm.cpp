@@ -73,7 +73,7 @@ void MainForm::mouseMoveEvent(QMouseEvent * mouse)
 
   Miro::VelocityIDL speed;
 
-  speed.translation=-(y*950)/200;
+  speed.translation=-(y*20); //950)/200;
   speed.rotation=-double(x)*3.1415927/200;
 
   motion->setVelocity(speed);

@@ -84,9 +84,9 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
   structuredPushSupplier_(ec_, namingContextName),
 
   odometry(&structuredPushSupplier_, true, true),
-//  pSonar_((Sparrow::Parameters::instance()->goalie && !Sparrow::Parameters::instance()->sparrow2003)?
-//	  new Miro::RangeSensorImpl(Pioneer::Parameters::instance()->sonarDescription,
-//				    &structuredPushSupplier_, true) : NULL),
+  pSonar_((Sparrow::Parameters::instance()->goalie && !Sparrow::Parameters::instance()->sparrow2003)?
+	  new Miro::RangeSensorImpl(Pioneer::Parameters::instance()->sonarDescription,
+				    &structuredPushSupplier_, true) : NULL),
   infrared((Sparrow::Parameters::instance()->sparrow2003)?Sparrow::Parameters::instance()->infraredDescription2003:
                                                           Sparrow::Parameters::instance()->infraredDescription,
 	   &structuredPushSupplier_, true),
@@ -105,9 +105,9 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 		    pSparrowConsumer)),*/
 
   // Pioneer board initialization
-  //pPioneer((Sparrow::Parameters::instance()->goalie && !Sparrow::Parameters::instance()->sparrow2003)?
-  //	   new PioneerHardware(reactorTask.reactor(), pSonar_.get()) : NULL),
-  pPioneer(NULL),
+  pPioneer((Sparrow::Parameters::instance()->goalie && !Sparrow::Parameters::instance()->sparrow2003)?
+  	   new PioneerHardware(reactorTask.reactor(), pSonar_) : NULL),
+  //pPioneer(NULL),
 
   // Faulhaber board initialization
 
@@ -123,10 +123,10 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 
    if(Sparrow::Parameters::instance()->sparrow2003){
        std::cout << "Sparrow2003-Base-Constructor" << std::endl;
-   //aCollector = new Sparrow::AliveCollector();
+   aCollector = new Sparrow::AliveCollector();
 
-  infrared2 = new Miro::RangeSensorImpl(Sparrow::Parameters::instance()->infraredDescription2003,
-                                                                   &structuredPushSupplier_, true);
+  //infrared2 = new Miro::RangeSensorImpl(Sparrow::Parameters::instance()->infraredDescription2003,
+   //                                                                &structuredPushSupplier_, false);
   pSparrowConsumer2003 = new Sparrow::Consumer2003();/**sparrowConnection,
 					 /*( (Sparrow::Parameters::instance()->faulhaber)?
 					   NULL :
@@ -141,10 +141,10 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 
 
    std::cout << "Hier 1" << flush;
-   //sparrowKicker = new Sparrow::KickerImpl(sparrowConnection2003);
-   //sparrowButtons = new Sparrow::ButtonsImpl(*pSparrowConsumer2003, &structuredPushSupplier_);
-   //sparrowStall = new Sparrow::StallImpl(*sparrowConnection2003, &structuredPushSupplier_);
-   //sparrowPanTilt = new Sparrow::PanTiltImpl(sparrowConnection2003);
+   sparrowKicker = new Sparrow::KickerImpl(sparrowConnection2003);
+   sparrowButtons = new Sparrow::ButtonsImpl(&structuredPushSupplier_);
+   sparrowStall = new Sparrow::StallImpl(sparrowConnection2003, &structuredPushSupplier_);
+   sparrowPanTilt = new Sparrow::PanTiltImpl(sparrowConnection2003);
    pFaulhaber =  new FaulhaberHardware(reactorTask.reactor(), &odometry, sparrowConnection2003);
 
    std::cout << "Hier 2" << flush;
@@ -153,15 +153,15 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 					   NULL :
 					   &odometry),
 					   &infrared,
-					   infrared2,
+					   NULL,
 					   pFaulhaber->pConsumer,
-					   NULL);
+					   aCollector);
 
 
    pSparrowMotion = (POA_Miro::Motion *) new FaulMotor::MotionImpl(pFaulhaber->connection);
 
-   //aEventHandler = new Sparrow::AliveEventHandler(aCollector, sparrowConnection2003);
-   //(reactorTask.reactor())->schedule_timer(aEventHandler, NULL, delay,interval);
+   aEventHandler = new Sparrow::AliveEventHandler(aCollector, sparrowConnection2003, &structuredPushSupplier_);
+   (reactorTask.reactor())->schedule_timer(aEventHandler, NULL, delay,interval);
 
    }
    else{
@@ -179,8 +179,8 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 		    pSparrowConsumer);
 
    sparrowKicker = new Sparrow::KickerImpl(sparrowConnection);
-   sparrowButtons = new Sparrow::ButtonsImpl(*pSparrowConsumer, &structuredPushSupplier_);
-   sparrowStall = new Sparrow::StallImpl(*sparrowConnection, &structuredPushSupplier_);
+   sparrowButtons = new Sparrow::ButtonsImpl(&structuredPushSupplier_);
+   sparrowStall = new Sparrow::StallImpl(sparrowConnection, &structuredPushSupplier_);
    sparrowPanTilt = new Sparrow::PanTiltImpl(sparrowConnection);
 
    pFaulhaber = ((Sparrow::Parameters::instance()->faulhaber)?
@@ -220,9 +220,9 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
   structuredPushSupplier_(ec_, namingContextName),
 
   odometry(&structuredPushSupplier_, true, true),
-  //pSonar_((Sparrow::Parameters::instance()->goalie && !Sparrow::Parameters::instance()->sparrow2003)?
-//	  new Miro::RangeSensorImpl(Pioneer::Parameters::instance()->sonarDescription,
-//				    &structuredPushSupplier_, true) : NULL),
+  pSonar_((Sparrow::Parameters::instance()->goalie && !Sparrow::Parameters::instance()->sparrow2003)?
+	  new Miro::RangeSensorImpl(Pioneer::Parameters::instance()->sonarDescription,
+				    &structuredPushSupplier_, true) : NULL),
   infrared((Sparrow::Parameters::instance()->sparrow2003)?Sparrow::Parameters::instance()->infraredDescription2003:
                                                           Sparrow::Parameters::instance()->infraredDescription,
 	   &structuredPushSupplier_, true),
@@ -241,9 +241,9 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 		    pSparrowConsumer)),
 
   // Pioneer board initialization*/
-  //pPioneer((Sparrow::Parameters::instance()->goalie && !Sparrow::Parameters::instance()->sparrow2003)?
-//	   new PioneerHardware(reactorTask.reactor(), pSonar_.get()) : NULL),
-  pPioneer(NULL),
+  pPioneer((Sparrow::Parameters::instance()->goalie && !Sparrow::Parameters::instance()->sparrow2003)?
+	   new PioneerHardware(reactorTask.reactor(), pSonar_) : NULL),
+  //pPioneer(NULL),
   // Faulhaber board initialization
 
   // Service initialization
@@ -258,9 +258,9 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 
    if(Sparrow::Parameters::instance()->sparrow2003){
 
-   //aCollector = new Sparrow::AliveCollector();
-   infrared2 = new Miro::RangeSensorImpl(Sparrow::Parameters::instance()->infraredDescription2003,
-                                                                   &structuredPushSupplier_, true);
+   aCollector = new Sparrow::AliveCollector();
+   //infrared2 = new Miro::RangeSensorImpl(Sparrow::Parameters::instance()->infraredDescription2003,
+   //                                                                &structuredPushSupplier_, true);
    pSparrowConsumer2003 = new Sparrow::Consumer2003(); /**sparrowConnection,
 					 ( (Sparrow::Parameters::instance()->faulhaber)?
 					   NULL :
@@ -277,8 +277,8 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 
 
    sparrowKicker = new Sparrow::KickerImpl(sparrowConnection2003);
-   //sparrowButtons = new Sparrow::ButtonsImpl(*pSparrowConsumer2003, &structuredPushSupplier_);
-   //sparrowStall = new Sparrow::StallImpl(*sparrowConnection2003, &structuredPushSupplier_);
+   sparrowButtons = new Sparrow::ButtonsImpl(&structuredPushSupplier_);
+   sparrowStall = new Sparrow::StallImpl(sparrowConnection2003, &structuredPushSupplier_);
    sparrowPanTilt = new Sparrow::PanTiltImpl(sparrowConnection2003);
 
 
@@ -291,16 +291,16 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 					   NULL :
 					   &odometry),
 					 &infrared,
-					 infrared2,
+					 NULL,
 					 pFaulhaber->pConsumer,
-					 NULL);
+					 aCollector);
 
    pSparrowMotion = (POA_Miro::Motion *) new FaulMotor::MotionImpl(pFaulhaber->connection);
 
-   //aEventHandler = new Sparrow::AliveEventHandler(aCollector, sparrowConnection2003);
+   aEventHandler = new Sparrow::AliveEventHandler(aCollector, sparrowConnection2003, &structuredPushSupplier_);
 
 
-   //(reactorTask.reactor())->schedule_timer(aEventHandler, NULL, delay,interval);*/
+   (reactorTask.reactor())->schedule_timer(aEventHandler, NULL, delay,interval);
 
 
    }
@@ -318,8 +318,8 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 		    pSparrowConsumer);
 
    sparrowKicker = new Sparrow::KickerImpl(sparrowConnection);
-   sparrowButtons = new Sparrow::ButtonsImpl(*pSparrowConsumer, &structuredPushSupplier_);
-   sparrowStall = new Sparrow::StallImpl(*sparrowConnection, &structuredPushSupplier_);
+   sparrowButtons = new Sparrow::ButtonsImpl(&structuredPushSupplier_);
+   sparrowStall = new Sparrow::StallImpl(sparrowConnection, &structuredPushSupplier_);
    sparrowPanTilt = new Sparrow::PanTiltImpl(sparrowConnection);
 
    pFaulhaber = ((Sparrow::Parameters::instance()->faulhaber)?
@@ -355,29 +355,33 @@ SparrowBase::init(bool _startReactorTastk)
   pOdometry = odometry._this();
   pMotion = pSparrowMotion->_this();
   pInfrared = infrared._this();
+  pKicker = sparrowKicker->_this();
+  pPanTilt = sparrowPanTilt->_this();
 
-  if(!Sparrow::Parameters::instance()->sparrow2003){
-    pKicker = sparrowKicker->_this();
+  //if(!Sparrow::Parameters::instance()->sparrow2003){
+
     pButtons = sparrowButtons->_this();
     pStall = sparrowStall->_this();
-    pPanTilt = sparrowPanTilt->_this();
-  }
+
+  //}
 
   addToNameService(ec_, "EventChannel");
   addToNameService(pOdometry, "Odometry");
   addToNameService(pMotion, "Motion");
   addToNameService(pInfrared, "Infrared");
-  if(!Sparrow::Parameters::instance()->sparrow2003){
-    addToNameService(pKicker, "Kicker");
+  addToNameService(pKicker, "Kicker");
+  addToNameService(pPanTilt, "PanTilt");
+  //if(!Sparrow::Parameters::instance()->sparrow2003){
+
     addToNameService(pButtons, "Buttons");
     addToNameService(pStall, "Stall");
-    addToNameService(pPanTilt, "PanTilt");
-  }
 
-/*  if (pSonar_.get() != NULL) {
+  //}
+
+  if (Sparrow::Parameters::instance()->goalie  && !Sparrow::Parameters::instance()->sparrow2003) {
     pSonar = pSonar_->_this();
     addToNameService(pSonar, "Sonar");
-  }*/
+  }
 
   // start the asychronous consumer listening for the hardware
   if (_startReactorTastk)
@@ -403,9 +407,9 @@ SparrowBase::~SparrowBase()
      infrared.cancel();
 
   DBG(cout << "Infrared dispatching canceled." << endl);
- /* if (pSonar_.get() != NULL) {
+  if (Sparrow::Parameters::instance()->goalie  && !Sparrow::Parameters::instance()->sparrow2003) {
     pSonar_->cancel();
-  }*/
+  }
 
   DBG(cout << "removing objects from POA" << endl);
 
@@ -420,20 +424,22 @@ SparrowBase::~SparrowBase()
   poa->deactivate_object (oid.in());
   oid =  poa->reference_to_id (pInfrared);
   poa->deactivate_object (oid.in());
-  if(!Sparrow::Parameters::instance()->sparrow2003){
-    oid =  poa->reference_to_id (pKicker);
-    poa->deactivate_object (oid.in());
+  oid =  poa->reference_to_id (pKicker);
+   poa->deactivate_object (oid.in());
+  oid =  poa->reference_to_id (pPanTilt);
+  poa->deactivate_object (oid.in());
+  //if(!Sparrow::Parameters::instance()->sparrow2003){
+
     oid =  poa->reference_to_id (pButtons);
     poa->deactivate_object (oid.in());
     oid = poa->reference_to_id ( pStall);
     poa->deactivate_object (oid.in());
-    oid =  poa->reference_to_id (pPanTilt);
-    poa->deactivate_object (oid.in());
-  }
-  /*if (pSonar_.get() != NULL) {
+
+  //}
+  if (Sparrow::Parameters::instance()->goalie  && !Sparrow::Parameters::instance()->sparrow2003) {
     oid = poa->reference_to_id (pSonar);
     poa->deactivate_object(oid.in());
-  }*/
+  }
 //  cout << "." << flush;
 //  oid = poa->reference_to_id (notifyFactory_);
 //  poa->deactivate_object (oid.in());

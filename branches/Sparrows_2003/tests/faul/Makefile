@@ -21,7 +21,7 @@ INSTALL = $(VBIN:%=$(INSBIN)/%)
 
 ## static libraries
 ##STATIC_LIBS = faulMotor faulTty miroSvc
-STATIC_LIBS = faulTty faulMotor  miroSvc
+STATIC_LIBS = can sparrow faulTty faulMotor  miroSvc
 
 ## performing the magic
 
@@ -30,7 +30,7 @@ LDLIBS += $(addprefix -l, $(STATIC_LIBS))
 
 
 ## dynamic libraries if needed
-LDLIBS += -lmiro
+LDLIBS += -lmiro 
 
 ## program to be built
 BIN 	= FaulTest

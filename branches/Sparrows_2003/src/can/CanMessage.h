@@ -76,7 +76,7 @@ namespace Can
     static drivertype driver;
 
     void canMessage(canmsg ** msg_ )  { *msg_= message_; }
-    void canMessage(pcanmsg ** msg_)  { *msg_=messagep_; std::cout << "messagep_ " << (void *) messagep_ << endl; }
+    void canMessage(pcanmsg ** msg_)  { *msg_=messagep_; }
   protected:
     canmsg * message_;
     pcanmsg * messagep_;

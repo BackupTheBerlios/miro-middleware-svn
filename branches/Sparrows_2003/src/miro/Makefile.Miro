@@ -76,7 +76,8 @@ IDL_FILES =	Time \
 		SphinxSpeech \
 		\
 		BehaviourEngine \
-		Joystick
+		Joystick \
+		SparrowAlive
 
 ifneq (,$(findstring Deprecated,$(MIRO_COMPONENTS)))
   IDL_FILES += 	ImageDefinitions \

@@ -6,13 +6,14 @@
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
 #ifndef SparrowStallImpl_h
 #define SparrowStallImpl_h
 
 #include "miro/StallS.h"
 #include "miro/Exception.h"
+#include "SparrowBaseConnection.h"
 
 #include <orbsvcs/CosNotifyCommC.h>
 
@@ -26,7 +27,7 @@ namespace Miro
 namespace Sparrow
 {
   // forward declerations
-  class Connection;
+
   class Consumer;
 
   class StallImpl :  public virtual POA_Miro::Stall
@@ -36,7 +37,7 @@ namespace Sparrow
     //-------------------------------------------------------------------------
   public:
     // Constructor/Destructor
-    StallImpl(Connection& _connection,
+    StallImpl(BaseConnection * _connection,
 	      Miro::StructuredPushSupplier * _pSupplier)
       throw(Miro::Exception);
     virtual ~StallImpl();
@@ -50,7 +51,7 @@ namespace Sparrow
     virtual void unstall() throw();
 
   protected:
-    Connection& connection; // encapsulating communication to hardware
+    BaseConnection * connection; // encapsulating communication to hardware
     Miro::StructuredPushSupplier * pSupplier;
     CosNotification::StructuredEvent notifyEvent;
   };

@@ -66,14 +66,14 @@ namespace Can
   {
 
     DBG(cout << "canEventHandler: handle_input" << endl);
-    cout << "CanEventHandler vor ReadMessage" << endl;
+    //cout << "CanEventHandler vor ReadMessage" << endl;
     int count;
     Parameters * params_ = new Parameters();
     if(params_->module == "pcan"){
        pcanmsg * msgp_;
-       std::cout << "msgp " << (void *) msgp_ << endl;
+//       std::cout << "msgp " << (void *) msgp_ << endl;
        msg->canMessage(&msgp_);
-       std::cout << "msgp " << (void *) msgp_ << endl;
+//       std::cout << "msgp " << (void *) msgp_ << endl;
        count = ioctl(fd, PCAN_READ_MSG, msgp_);
 
     }
@@ -82,7 +82,7 @@ namespace Can
        msg->canMessage(&msg_);
        count = ACE_OS::read(fd, msg_, sizeof(canmsg));
     }
-    std::cout << "Count " << count << " Errno " << errno << endl;
+ //   std::cout << "Count " << count << " Errno " << errno << endl;
 
     // since we are called by the ACE_Reactor, we dont emit exceptions
     // but just return on error. - We could return and deregister the

@@ -33,13 +33,13 @@ namespace Sparrow
   static const unsigned long NUMBER_OF_BUTTONS = 2;
 
   static const int SERVO_FACTOR = 27;
-  
+
   inline
-  unsigned short rad2ticks(double rad) { 
+  unsigned short rad2ticks(double rad) {
     int ticks = (int)rint(rad * 512. / M_PI);
     ticks = (ticks < 0)? -((-ticks)  % 1024) : ticks % 1024;
 
-    return (unsigned short) ticks; 
+    return (unsigned short) ticks;
   }
 
   inline
@@ -77,7 +77,7 @@ namespace Sparrow
   static const unsigned long CAN_MOTOR_INIT    = 0x8c010102;
   static const unsigned long CAN_MOTOR_ALL_OFF = 0x8e010102;
   //static const unsigned long CAN_MOTOR_ALIVE   = 0x8f010102;
-  static const unsigned long CAN_R_MOTOR_ALIVE = 0x8f810201;
+  static const unsigned long CAN_R_MOTOR_ALIVE = 0x8f020201;
 
   // odometry messages
 
@@ -113,7 +113,7 @@ namespace Sparrow
   static const unsigned long CAN_KICK_IF_BALL  = 0x82010103;
   static const unsigned long CAN_KICK_ALL_OFF  = 0x8e010103;
   //static const unsigned long CAN_KICK_ALIVE    = 0x8f010103;
-  static const unsigned long CAN_R_KICK_ALIVE  = 0x8f810301;
+  static const unsigned long CAN_R_KICK_ALIVE  = 0x9e0f0301;
 
   // servo messages
 
@@ -124,18 +124,18 @@ namespace Sparrow
 
   // infrared messages
 
-  static const unsigned long CAN_IR_GET_CONT1   = 0x81050102;
-  static const unsigned long CAN_R_IR_GET_CONT1 = 0x83810502;
-  static const unsigned long CAN_IR_ALIVE1      = 0x8f050102;
-  static const unsigned long CAN_R_IR_ALIVE1    = 0x8f850201;
+  //static const unsigned long CAN_IR_GET_CONT1   = 0x81050102;
+  static const unsigned long CAN_R_IR_GET_CONT1 = 0x83810501;
+  //static const unsigned long CAN_IR_ALIVE1      = 0x8f050102;
+  static const unsigned long CAN_R_IR_ALIVE1    = 0x9e0f0501;
 
-  static const unsigned long CAN_IR_GET_CONT2   = 0x81060102;
-  static const unsigned long CAN_R_IR_GET_CONT2 = 0x00000002; //noch unbekannt
-  static const unsigned long CAN_IR_ALIVE2      = 0x8f060102;
-  static const unsigned long CAN_R_IR_ALIVE2    = 0x00000004; //noch unbekannt
+  //static const unsigned long CAN_IR_GET_CONT2   = 0x81060102;
+  static const unsigned long CAN_R_IR_GET_CONT2 = 0x83810601; //noch unbekannt
+  //static const unsigned long CAN_IR_ALIVE2      = 0x8f060102;
+  static const unsigned long CAN_R_IR_ALIVE2    = 0x9e0f0601; //noch unbekannt
 
   // pan messages
-  static const unsigned long CAN_PAN_ALIVE      = 0x00000001;  // noch unbekannt
+  static const unsigned long CAN_R_PAN_ALIVE      = 0x9e0f0401;  // noch unbekannt
 
   // debug messages
 

@@ -167,14 +167,18 @@ namespace Can
     // will definitely choke if base is off
     int rc;
     if(parameters_.module == "pcan"){
-       std::cout << "First" << endl;
+     //  std::cout << "First" << endl;
        pcanmsg * msgp;
        message.canMessage(&msgp);
-       std::cout << "Second" << endl;
+     //  std::cout << "Second" << endl;
        msgp->Msg.MSGTYPE = MSGTYPE_EXTENDED;
-       std::cout << "Vor ioctl" << endl;
+    //   std::cout << "Vor ioctl" << endl;
+       std::cout << "CanMessage ";
+       for(int i = 0; i < msgp->Msg.LEN; i++)
+          std::cout << msgp->Msg.DATA[i];
+       std::cout << " " << endl;
        rc = ioctl(ioBuffer.get_handle(), PCAN_WRITE_MSG, msgp);
-       std::cout << "Nach ioctl" << endl;
+
     }
     else{
        canmsg * msg;
@@ -183,7 +187,7 @@ namespace Can
           msg->type = EXTENDED;
        }*/
        rc = ioBuffer.send_n(msg, sizeof(canmsg));
-       std::cout << "message " << msg->d[0] << msg->d[1] << endl;
+     //  std::cout << "message " << msg->d[0] << msg->d[1] << endl;
     }
 
 

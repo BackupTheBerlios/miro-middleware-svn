@@ -25,12 +25,19 @@ namespace FaulTty
 
     Wheel wheel_;
     long ticks_;
-  }; 
+    void setTimestamp(ACE_Time_Value timestamp);
+  };
 
-  inline 
+  inline
   OdometryMessage::OdometryMessage(Wheel _wheel) :
     wheel_(_wheel),
     ticks_(0)
   {}
+
+  inline
+  void OdometryMessage::setTimestamp(ACE_Time_Value timestamp){
+     time_ = timestamp;
+
+  }
 };
 #endif 

@@ -4,18 +4,23 @@
 //
 // for details copyright, usage and credits to other groups see Miro/COPYRIGHT
 // for documentation see Miro/doc
-// 
+//
 // (c) 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
 
 #include "faulMotor/FaulMotorConnection.h"
-#include "faulMotor/Parameters.h" 
+#include "faulMotor/Parameters.h"
 #include "faulMotor/FaulMotorConsumer.h"
 #include "faulMotor/TimerEventHandler.h"
+#include "sparrow/Parameters.h"
+#include "sparrow/SparrowConnection2003.h"
+#include "can/CanEventHandler.h"
+#include "sparrow/SparrowConsumer2003.h"
+//#include "sparrowBase/SparrowServer.h"
 
 #include "faulTty/FaulTtyEventHandler.h"
 
@@ -30,10 +35,46 @@
 
 #include <iostream>
 #include <stdio.h>
- 
+
 bool canceled = false;
 
 using Miro::deg2Rad;
+
+
+struct FaulhaberHardware
+{
+  // Faulhaber hardware abstraction
+  ACE_Reactor * reactor;
+  int timerId;
+  FaulMotor::Consumer * pConsumer;
+  FaulMotor::TimerEventHandler * pTimerEventHandler;
+  FaulMotor::Connection connection;
+
+  FaulhaberHardware(ACE_Reactor * _reactor,
+		    Miro::OdometryImpl * _pOdometryImpl,
+		    Sparrow::Connection2003 * connection2003_);
+  ~FaulhaberHardware();
+};
+
+FaulhaberHardware::FaulhaberHardware(ACE_Reactor * _reactor,
+				     Miro::OdometryImpl * _pOdometryImpl,
+				     Sparrow::Connection2003 * connection2003_) :
+  reactor(_reactor),
+  timerId(-1),
+  pConsumer(new FaulMotor::Consumer(_pOdometryImpl)),
+  pTimerEventHandler(new FaulMotor::TimerEventHandler(connection)),
+  connection(_reactor, pConsumer, connection2003_)
+{
+  ACE_Time_Value tv(0,50000);
+
+  timerId = reactor->schedule_timer(pTimerEventHandler, NULL, tv ,tv);
+}
+
+FaulhaberHardware::~FaulhaberHardware()
+{
+  reactor->cancel_timer(timerId);
+
+}
 
 // we need to shut down the faulMotor board properly on sig term
 class Event : public ACE_Event_Handler
@@ -43,7 +84,7 @@ public:
   //  private:
   virtual ~Event() {}
 public:
-  
+
   virtual int handle_signal (int signum, siginfo_t *, ucontext_t *);
 };
 
@@ -55,20 +96,26 @@ Event::handle_signal(int, siginfo_t *, ucontext_t *)
   return 0;
 }
 
- 
+
 struct Service
 {
-  Miro::ReactorTask reactorTask;
+  Miro::ReactorTask  reactorTask;
   //Miro::RangeSensorImpl * pRangeSensorImpl;
   Miro::OdometryImpl * pOdometryImpl;
   //Miro::BatteryImpl * pBatteryImpl;
-  FaulMotor::Consumer * pConsumer;
+  //FaulMotor::Consumer * pConsumer;
   //FaulMotor::StallImpl * pStallImpl;
   //Canon::CanonPanTiltImpl canonPanTiltImpl;
   //Canon::CanonCameraImpl canonCamera;
   //Miro::GripperImpl gripper;
-  FaulMotor::TimerEventHandler * pTimerEventHandler;
-  FaulMotor::Connection connection;
+  //FaulMotor::TimerEventHandler * pTimerEventHandler;
+  //FaulMotor::Connection connection;
+
+  FaulhaberHardware * pFaulhaber;
+
+  Sparrow::Connection2003 * connection2003;
+  Can::EventHandler * pCanEventHandler;
+  Sparrow::Consumer2003 * consumer2003;
 
   Service();
 };
@@ -76,11 +123,27 @@ struct Service
 
 Service::Service() :
   reactorTask(),
-  pOdometryImpl(new Miro::OdometryImpl(NULL)),
-  pConsumer(new FaulMotor::Consumer(pOdometryImpl)),
-  pTimerEventHandler(new FaulMotor::TimerEventHandler(connection)),
-  connection(reactorTask.reactor(), pConsumer)
-{}
+  pOdometryImpl(new Miro::OdometryImpl(NULL))
+  //pConsumer(new FaulMotor::Consumer(pOdometryImpl)),
+  //pTimerEventHandler(new FaulMotor::TimerEventHandler(connection)),
+  //consumer2003(new Sparrow::Consumer2003()),//connection2003, NULL, NULL, NULL, pConsumer, NULL)),
+  //pCanEventHandler(new Can::EventHandler(consumer2003)),
+  //connection2003(new Sparrow::Connection2003(reactorTask.reactor(),
+ // 										pCanEventHandler,
+//										consumer2003)),
+
+  //connection(reactorTask.reactor(), pConsumer,
+
+  //(Sparrow::Parameters::instance()->sparrow2003)?connection2003:NULL)
+{
+   consumer2003 = new Sparrow::Consumer2003();
+   pCanEventHandler = new Can::EventHandler(consumer2003);
+   connection2003 = new Sparrow::Connection2003(reactorTask.reactor(), pCanEventHandler, consumer2003);
+   pFaulhaber =  new FaulhaberHardware(reactorTask.reactor(), pOdometryImpl, (Sparrow::Parameters::instance()->sparrow2003)?connection2003:NULL);
+
+
+    consumer2003->registerInterfaces(connection2003, NULL, NULL, NULL, pFaulhaber->pConsumer, NULL);
+}
 
 
 
@@ -126,10 +189,10 @@ int main(int argc, char* argv[])
   if (service.reactorTask.reactor()->register_handler(sigs, &event) == -1) {
     throw Miro::ACE_Exception(errno, "failed to register signal handler");
   }
-  cout << "updaterate? (usec) " << endl;
-  cin >> uptimer;
-  ACE_Time_Value tv(0,uptimer);
-  ACE_Time_Value t0(0,0);
+  //cout << "updaterate? (usec) " << endl;
+  //cin >> uptimer;
+  //ACE_Time_Value tv(0,uptimer);
+  //ACE_Time_Value t0(0,0);
 
    //ACE_Time_Value tv(0,15000);
 
@@ -179,7 +242,7 @@ int main(int argc, char* argv[])
 	       << "0 - all motors off!!!" << endl
 	       << "g - get vel" << endl
 	       << "p - get pos" << endl
-               << "t - test endlosschleife" << endl
+               //<< "t - test endlosschleife" << endl
 	       << "x - Program end!!!" << endl;
 	  cin >> str;
           c = str[0];
@@ -194,7 +257,7 @@ int main(int argc, char* argv[])
 	     cin >> k;
 	     cout << "what speed rechts? (mm/sec) " << endl;
 	     cin >> l;
-	     service.connection.setSpeed(k, l);
+	     service.pFaulhaber->connection.setSpeed(k, l);
 	     break;
 	   }
 
@@ -202,7 +265,7 @@ int main(int argc, char* argv[])
 	   {
 	     cout << "what speed? (mm/sec) " << endl;
 	     cin >> k;
-	     service.connection.setSpeed(k);break;
+	     service.pFaulhaber->connection.setSpeed(k);break;
 	     /*
 	     cout << "how long?  (mmsec)" << endl;
 	     cin >> i;
@@ -218,7 +281,7 @@ int main(int argc, char* argv[])
 	   {
 	     cout << "Befehleingeben: " << endl;
 	     cin >> eing;
-	     service.connection.setBefehl(eing);
+	     service.pFaulhaber->connection.setBefehl(eing);
 	     //service.connection.turn(k);
 	     break;
 	   }
@@ -280,7 +343,7 @@ int main(int argc, char* argv[])
 
 	 case '0' :
 	   {
-	     service.connection.setSpeed(0);
+	     service.pFaulhaber->connection.setSpeed(0);
 	     //service.connection.setSpeed(0);
 	     //service.connection.stop();
 	     break;
@@ -292,35 +355,35 @@ int main(int argc, char* argv[])
 	   }
 	 case 't' :
 	   {
-             cout << "how long?  (msec)" << endl;
+             /*cout << "how long?  (msec)" << endl;
              cin >> i;
              ace_time.msec(i);
 
 	     while(true)
 	     {
-		service.connection.setSpeed(100);
+		service.pFaulhaber->connection.setSpeed(100);
                 ACE_OS::sleep(ace_time);
-                service.connection.setSpeed(0);
+                service.pFaulhaber->connection.setSpeed(0);
                 ACE_OS::sleep(ace_time);
-                
-             }
+
+             }*/
 	     break;
 	   }
 	  case 'g' :
 	   {
-	     service.connection.getSpeed();
+	     service.pFaulhaber->connection.getSpeed();
 	     break;
 	   }
 	 case 'p' :
 	   {
-	     service.connection.getTicks();
+	     service.pFaulhaber->connection.getTicks();
 	     break;
 	   }
 	 case 'X':
-	 case 'x' : 
+	 case 'x' :
 	   loop = false;
 	   break;
-	 default: 
+	 default:
 	   cout << "gibts doch gar net!!!" << endl;
 
 	 }//switch(c)

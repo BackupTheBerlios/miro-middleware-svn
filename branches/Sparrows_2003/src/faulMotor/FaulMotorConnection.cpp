@@ -199,7 +199,7 @@ namespace FaulMotor
 	connection2003->writeLeftWheel(speedMessageL, strlen(speedMessageL));
 	connection2003->writeRightWheel(speedMessageR, strlen(speedMessageR));
 
-	// ACE_OS::sleep(ACE_Time_Value(2));
+	//ACE_OS::sleep(ACE_Time_Value(2));
 	sprintf(speedMessageL, "v%d", speedL); // build speed message
 	sprintf(speedMessageR, "v%d", speedR); // build speed message
 	connection2003->writeLeftWheel(speedMessageL, strlen(speedMessageL));
@@ -219,7 +219,7 @@ namespace FaulMotor
 	rightWheel_->writeMessage(speedMessageR);             // send it
     }
     prevSpeedL = -speedL;
-    prevSpeedR = speedR;
+    prevSpeedR = speedR;  
   }
 
   void

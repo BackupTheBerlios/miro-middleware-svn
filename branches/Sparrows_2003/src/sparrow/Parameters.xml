@@ -96,7 +96,7 @@
       <config_parameter name="infraredDescription2003" type="Miro::ScanDescriptionIDL" />
       <constructor>
         static const int distance2003[16] = { 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210 };
-        static const int alpha2003[16] = { 124, 101, 79, 56, 34, 11, -11, -34, -56, -79, -101, -124, -146, -169,  169, 146 };
+        static const int alpha2003[16] = { -34, -11, 11, 34, 56, 79, 101, 124, 146, 169, -169, -146, -124, -101,  -79, -56 };
         static const int beta2003[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
         infraredDescription2003.scanType = ::Miro::RangeSensor::GROUPWISE;

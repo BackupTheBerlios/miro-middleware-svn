@@ -35,6 +35,10 @@ namespace Sparrow
   class Consumer2003 : public Miro::DevConsumer
   {
     typedef Miro::DevConsumer Super;
+    typedef std::vector<long> sensorv_;
+    typedef std::vector<sensorv_> groupv_;
+    typedef std::vector<groupv_> irvalues_;
+    typedef std::vector<int> timeindex_;
 
   public:
     Consumer2003(Connection2003 * _connection,
@@ -48,7 +52,7 @@ namespace Sparrow
     virtual void registerInterfaces(Connection2003 * _connection,
 	     				Miro::OdometryImpl * _pOdometry,
 	     				Miro::RangeSensorImpl * _pIR1,
-					Miro::RangeSensorImpl * _pIR2, 
+					Miro::RangeSensorImpl * _pIR2,
 					FaulMotor::Consumer * _faulConsumer,
 					AliveCollector * _aliveCollector);
 
@@ -61,6 +65,11 @@ namespace Sparrow
     Miro::RangeSensorImpl * pIR1_;
     Miro::RangeSensorImpl * pIR2_;
 
+    irvalues_ IrValues;
+    timeindex_ TimeIndex;
+
+    Miro::ScanDescriptionIDL_var description_;
+
     Parameters const * params_;
 
     Miro::MotionStatusIDL status_;
@@ -68,7 +77,7 @@ namespace Sparrow
 
     AliveCollector * pAliveCollector;
 
-
+    long integrateIrValues(unsigned int group, unsigned int sensor, long value);
   public:
     unsigned char   digital[8];
     unsigned short  analog[16];

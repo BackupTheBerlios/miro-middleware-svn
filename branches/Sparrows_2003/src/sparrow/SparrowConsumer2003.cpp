@@ -49,6 +49,8 @@ namespace Sparrow
     pOdometry_(_pOdometry),
     pIR1_(_pIR1),
     pIR2_(_pIR2),
+    IrValues(),
+    description_(),
     params_(Parameters::instance()),
     status_()
 
@@ -82,9 +84,31 @@ namespace Sparrow
       }
       pOdometry_->setPosition(origin);
     }
+
+    description_ = pIR1_->getScanDescription();
+    IrValues.resize(3);
+
+    for(int k = 0; k < 3; k++){
+    IrValues[k].resize(description_->group.length());
+    TimeIndex.resize(description_->group.length());
+
+    for(unsigned int i = 0; i < description_->group.length(); i++){
+       IrValues[k][i].resize(description_->group[i].sensor.length());
+       TimeIndex[i] = 0;
+       for(unsigned int j = 0; j < description_->group[i].sensor.length(); j++){
+
+	  IrValues[k][i][j] = -1;
+       }
+   }
+   }
+
+
+
   }
 
   Consumer2003::Consumer2003():
+    IrValues(),
+    description_(),
     params_(Parameters::instance()),
     status_()
 
@@ -158,8 +182,22 @@ namespace Sparrow
       pOdometry_->setPosition(origin);
     }
 
+    description_ = pIR1_->getScanDescription();
 
+    IrValues.resize(3);
 
+    for(int k = 0; k < 3; k++){
+    IrValues[k].resize(description_->group.length());
+    TimeIndex.resize(description_->group.length());
+    for(unsigned int i = 0; i < description_->group.length(); i++){
+       IrValues[k][i].resize(description_->group[i].sensor.length());
+       TimeIndex[i] = 0;
+       for(unsigned int j = 0; j < description_->group[i].sensor.length(); j++){
+
+	  IrValues[k][i][j] = -1;
+       }
+   }
+   }
 
 
 
@@ -196,14 +234,20 @@ namespace Sparrow
 	data->group = 0;
 	data->range.length(8);
 	for (int i = 7; i >= 0; --i)  {
-        calRange = IR_LOOKUP_TABLE[message.byteData(i)];
+	  calRange = IR_LOOKUP_TABLE[message.byteData(i)];
 
-        // -1 wenn Entfernung >= 50cm
-	if (calRange == 500) {
-	  calRange = -1;
-	}
+	  calRange = (calRange - param->irScaling[i].offset);
+	    calRange = calRange - param->irScaling[i].minDistance;
+	    calRange = (long) (calRange * param->irScaling[i].scaling);
+	    calRange = calRange + param->irScaling[i].minDistance ;
+	    if (calRange < param->irScaling[i].minDistance)
+	       calRange = -2;
 
-	  data->range[i] = calRange;
+	    if(calRange > param->irScaling[i].maxDistance)
+	      calRange = -1;
+
+
+	    data->range[i] = integrateIrValues(0, i, calRange);
 	}
 	pIR1_->integrateData(data);
       }
@@ -211,42 +255,33 @@ namespace Sparrow
       break;
       }
 
-      case CAN_IR_GET_CONT2:{
+      case CAN_R_IR_GET_CONT2:{
       DBG(cout << "Consumer::receiveThread: receiveThread message: IR_CONT2" << endl);
 
-      if (pIR2_) {
+      if (pIR1_) {
 	Sparrow::Parameters * param = Sparrow::Parameters::instance(); //uli
 	long calRange;
 	Miro::RangeGroupEventIDL * data = new Miro::RangeGroupEventIDL();
 	Miro::timeA2C(message.time(), data->time);
 	data->group = 1;
 	data->range.length(8);
-	for (int i = 7; i >= 0; --i)  {
-	/*  if (message.charData(i) != -1) {
+	for (int i = 8; i < 16; ++i)  {
 
+	  calRange = IR_LOOKUP_TABLE[message.byteData(i-8)];
 
-	    calRange = ((int)message.charData(i) * 10 - param->irScaling[i].offset);
+	  calRange = (calRange - param->irScaling[i].offset);
 	    calRange = calRange - param->irScaling[i].minDistance;
 	    calRange = (long) (calRange * param->irScaling[i].scaling);
 	    calRange = calRange + param->irScaling[i].minDistance ;
-	    if ((calRange < param->irScaling[i].minDistance) ||
-		(calRange > param->irScaling[i].maxDistance)) {
+	    if (calRange < param->irScaling[i].minDistance)
+	       calRange = -2;
+
+	    if(calRange > param->irScaling[i].maxDistance)
 	      calRange = -1;
-	    }
-	  }
-	  else {
-	    calRange = -1;
-	  } */
 
-	  calRange = IR_LOOKUP_TABLE[message.byteData(i)];
-
-        // -1 wenn Entfernung >= 50cm
-	if (calRange == 500) {
-	  calRange = -1;
+	  data->range[i-8] = integrateIrValues(1, i-8, calRange);
 	}
-	  data->range[i] = calRange;
-	}
-	pIR2_->integrateData(data);
+	pIR1_->integrateData(data);
       }
       break;
       }
@@ -255,15 +290,15 @@ namespace Sparrow
 
     case CAN_R_IR_ALIVE1:{
       DBG(cout << "Consumer::receiveThread:  received message: IR_ALIVE1" << endl);
-      //pAliveCollector->setLastInfraredAlive(ACE_OS::gettimeofday());
+      pAliveCollector->setLastInfrared1Alive(ACE_OS::gettimeofday());
 
       break;
     }
 
 
-    case CAN_IR_ALIVE2:{
+    case CAN_R_IR_ALIVE2:{
       DBG(cout << "Consumer::receiveThread:  received message: IR_ALIVE2" << endl);
-      //pAliveCollector->setLastInfraredAlive(ACE_OS::gettimeofday());
+      pAliveCollector->setLastInfrared2Alive(ACE_OS::gettimeofday());
 
       break;
     }
@@ -271,15 +306,15 @@ namespace Sparrow
 
     case CAN_R_MOTOR_ALIVE:{
       DBG(cout << "Consumer::receiveThread:  received message: MOTOR_ALIVE" << endl);
-      //pAliveCollector->setLastMotorAlive(ACE_OS::gettimeofday());
+      pAliveCollector->setLastMotorAlive(ACE_OS::gettimeofday());
 
       break;
     }
 
 
-    case CAN_PAN_ALIVE:{
-      DBG(cout << "Consumer::receiveThread:  received message: PAN_ALIVE" << endl);
-      //pAliveCollector->setLastPanAlive(ACE_OS::gettimeofday());
+    case CAN_R_PAN_ALIVE:{
+      DBG(cout << "Consumer::receivedThread:  received message: PAN_ALIVE" << endl);
+      pAliveCollector->setLastPanAlive(ACE_OS::gettimeofday());
 
       break;
     }
@@ -287,7 +322,7 @@ namespace Sparrow
 
     case CAN_R_KICK_ALIVE:{
       DBG(cout << "Consumer::receiveThread:  received message: KICK_ALIVE" << endl);
-      //pAliveCollector->setLastKickAlive(ACE_OS::gettimeofday());
+      pAliveCollector->setLastKickAlive(ACE_OS::gettimeofday());
 
       break;
     }
@@ -296,16 +331,19 @@ namespace Sparrow
       FaulTty::OdometryMessage odoMessage(FaulTty::OdometryMessage::LEFT);
       if(CanParams->module == "pcan"){
          Can::pcanmsg * msgp_;
+	 long tickTmp;
 	 message.canMessage(&msgp_);
-         memcpy((void *) &(odoMessage.ticks_),(void *) (msgp_->Msg.DATA),  4);
-      }
+         //memcpy((void *) &(odoMessage.ticks_),(void *) (msgp_->Msg.DATA),  4);
+	 odoMessage.ticks_ = message.longData(0);
+	}
       else{
          canmsg * msg_;
 	 message.canMessage(&msg_);
 	 memcpy((void *) &(odoMessage.ticks_),(void *) (msg_->d),  4);
       }
+      odoMessage.setTimestamp(ACE_OS::gettimeofday());
       faulConsumer->handleMessage(&odoMessage);
-      std::cout << "MotorTicksLeft" << message << endl;
+      //std::cout << "MotorTicksLeft" << message << endl;
 
 
        break;
@@ -317,15 +355,17 @@ namespace Sparrow
        if(CanParams->module == "pcan"){
          Can::pcanmsg * msgp_;
 	 message.canMessage(&msgp_);
-         memcpy((void *) &(odoMessage2.ticks_),(void *) (msgp_->Msg.DATA),  4);
+        //memcpy((void *) &(odoMessage2.ticks_),(void *) (msgp_->Msg.DATA),  4);
+	odoMessage2.ticks_ = message.longData(0);
       }
       else{
          canmsg * msg_;
 	 message.canMessage(&msg_);
 	 memcpy((void *) &(odoMessage2.ticks_),(void *) (msg_->d),  4);
       }
+       odoMessage2.setTimestamp(ACE_OS::gettimeofday());
        faulConsumer->handleMessage(&odoMessage2);
-       std::cout << "MotorTicksRight" << message << endl;
+       //std::cout << "MotorTicksRight" << message << endl;
        break;
 
    }
@@ -337,7 +377,8 @@ namespace Sparrow
 
 
     default:
-      cerr << "SparrowConsumer: Unhandled can bus message: "
+
+     cout << "SparrowConsumer2003: Unhandled can bus message: "
 	   << message << endl;
     }
   }
@@ -353,5 +394,19 @@ namespace Sparrow
   {
     return table2;
   }*/
+  long Consumer2003::integrateIrValues(unsigned int group, unsigned int sensor, long value){
 
+     IrValues[TimeIndex[group]][group][sensor] = value;
+     int counter = 0;
+     for(int i = 0; i < 3; i++){
+        if(IrValues[i][group][sensor] == -1)
+	   counter++;
+     }
+     TimeIndex[group] = (TimeIndex[group] + 1) % 3;
+     if(counter >= 1)
+        return -1;
+     else
+        return value;
+
+  }
 };
