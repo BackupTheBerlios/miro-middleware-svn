@@ -60,15 +60,9 @@ namespace Can
 
     virtual void canMessage(int ** msg_) = NULL;
 //       std::cout << "normal canMessage" << std::endl;
-    
-    
-
-
 
   protected:
 
-  };
-
-  
-};
+  }; 
+}
 #endif
