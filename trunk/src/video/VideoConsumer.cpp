@@ -136,6 +136,7 @@ namespace Video
       // jitter statistics
       ACE_Time_Value dT = timeStamp - prevTimeStamp;
       deltaT[counter] = (double)dT.sec() + (double)dT.usec() / 1000000.;
+      prevTimeStamp = timeStamp;
       --counter;
 
       if (counter < 0) {
@@ -148,9 +149,9 @@ namespace Video
 	for (int i = 49; i >= 0; --i)
 	  var += (deltaT[i] - mean) * (deltaT[i] - mean);
 	var /= 49.;
-	cout << "VideoConsumer: mean=" << mean << "usec \t var=" << var << endl;
+	cout << "VideoConsumer: mean=" << mean << "sec \t var=" << sqrt(var) << endl;
+	counter = 49;
       }
-      counter = 49;
     }
 
     cout << "VideoConsumer::svc() exiting." << endl;
