@@ -11,7 +11,7 @@
 ##
 ##############################################################################
 
-AC_DEFUN(AC_SEARCH_SPHINX,
+AC_DEFUN([AC_SEARCH_SPHINX],
 [
 	AC_ARG_WITH(Sphinx,
 		AC_HELP_STRING([--with-Sphinx=DIR], [root directory of Sphinx installation]),
@@ -37,7 +37,7 @@ AC_DEFUN(AC_SEARCH_SPHINX,
 
 
 # subfunction for easier reuse
-AC_DEFUN(AC_SEARCH_SPHINX_LOCAL,
+AC_DEFUN([AC_SEARCH_SPHINX_LOCAL],
 [
 	OLD_LDFLAGS=$LDFLAGS
 	OLD_CFLAGS=$CFLAGS

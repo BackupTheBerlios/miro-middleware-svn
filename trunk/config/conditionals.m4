@@ -13,7 +13,7 @@
 
 ## platforms
 
-AC_DEFUN(AC_DETERMINE_PLATFORMS,
+AC_DEFUN([AC_DETERMINE_PLATFORMS],
 [
 AC_ARG_ENABLE(
 	B21,
@@ -42,7 +42,7 @@ AC_ARG_ENABLE(
 
 ## video devices
 
-AC_DEFUN(AC_DETERMINE_VIDEODEVICES,
+AC_DEFUN([AC_DETERMINE_VIDEODEVICES],
 [
 AC_ARG_ENABLE(
 	BTTV,
@@ -72,7 +72,7 @@ AC_ARG_ENABLE(
 
 ## additional stuff (e.g. documentation)
 
-AC_DEFUN(AC_DETERMINE_ADDITIONAL,
+AC_DEFUN([AC_DETERMINE_ADDITIONAL],
 [
 AC_ARG_ENABLE(
 	Documentation,
@@ -88,7 +88,7 @@ AC_ARG_ENABLE(
 ])
 
 
-AC_DEFUN(AC_DETERMINE_GCC_VERSION,
+AC_DEFUN([AC_DETERMINE_GCC_VERSION],
 [
 if test "x$GCC" = "xyes"; then
 	dnl cut out the version number (additional (blank) lines are eliminated)
@@ -112,7 +112,7 @@ fi
 ])
 
 
-AC_DEFUN(AC_DETERMINE_LOGGING,
+AC_DEFUN([AC_DETERMINE_LOGGING],
 [
 AC_ARG_ENABLE(
 	DebugInfo,

@@ -11,7 +11,7 @@
 ##
 ##############################################################################
 
-AC_DEFUN(AC_SEARCH_FESTIVAL,
+AC_DEFUN([AC_SEARCH_FESTIVAL],
 [
 
 	AC_ARG_WITH(Festival,
@@ -38,7 +38,7 @@ AC_DEFUN(AC_SEARCH_FESTIVAL,
 
 
 # subfunction for easier reuse
-AC_DEFUN(AC_SEARCH_FESTIVAL_LOCAL,
+AC_DEFUN([AC_SEARCH_FESTIVAL_LOCAL],
 [
 	OLD_LDFLAGS=$LDFLAGS
 	OLD_CFLAGS=$CFLAGS

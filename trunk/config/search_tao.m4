@@ -11,7 +11,7 @@
 ##
 ##############################################################################
 
-AC_DEFUN(AC_SEARCH_TAO,
+AC_DEFUN([AC_SEARCH_TAO],
 [
 	AC_ARG_WITH(TAO,
 		AC_HELP_STRING([--with-TAO=DIR], [root directory of TAO installation]),
@@ -37,7 +37,7 @@ AC_DEFUN(AC_SEARCH_TAO,
 
 
 # subfunction for easier reuse
-AC_DEFUN(AC_SEARCH_TAO_LOCAL,
+AC_DEFUN([AC_SEARCH_TAO_LOCAL],
 [
 	OLD_LDFLAGS=$LDFLAGS
 	OLD_CFLAGS=$CFLAGS

@@ -11,7 +11,7 @@
 ##
 ##############################################################################
 
-AC_DEFUN(AC_SEARCH_SPEECHTOOLS,
+AC_DEFUN([AC_SEARCH_SPEECHTOOLS],
 [
 	AC_ARG_WITH(Speechtools,
 		AC_HELP_STRING([--with-Speechtools=DIR], [root directory of Speechtools installation]),
@@ -37,7 +37,7 @@ AC_DEFUN(AC_SEARCH_SPEECHTOOLS,
 
 
 # subfunction for easier reuse
-AC_DEFUN(AC_SEARCH_SPEECHTOOLS_LOCAL,
+AC_DEFUN([AC_SEARCH_SPEECHTOOLS_LOCAL],
 [
 	OLD_LDFLAGS=$LDFLAGS
 	OLD_CFLAGS=$CFLAGS

@@ -11,7 +11,7 @@
 ##
 ##############################################################################
 
-AC_DEFUN(AC_SEARCH_QT,
+AC_DEFUN([AC_SEARCH_QT],
 [
 	ac_with_Qt=no
 	ac_Qt_include=$QTDIR/include
@@ -56,7 +56,7 @@ AC_DEFUN(AC_SEARCH_QT,
 
 
 # subfunction for easier reuse
-AC_DEFUN(AC_SEARCH_QT_LOCAL,
+AC_DEFUN([AC_SEARCH_QT_LOCAL],
 [
 	OLD_LDFLAGS=$LDFLAGS
 	OLD_CFLAGS=$CFLAGS

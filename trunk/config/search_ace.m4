@@ -11,7 +11,7 @@
 ##
 ##############################################################################
 
-AC_DEFUN(AC_SEARCH_ACE,
+AC_DEFUN([AC_SEARCH_ACE],
 [
 	AC_ARG_WITH(ACE,
 		AC_HELP_STRING([--with-ACE=DIR], [root directory of ACE installation]),
@@ -37,7 +37,7 @@ AC_DEFUN(AC_SEARCH_ACE,
 
 
 # subfunction for easier reuse
-AC_DEFUN(AC_SEARCH_ACE_LOCAL,
+AC_DEFUN([AC_SEARCH_ACE_LOCAL],
 [
 	OLD_LDFLAGS=$LDFLAGS
 	OLD_CFLAGS=$CFLAGS

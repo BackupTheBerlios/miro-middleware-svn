@@ -11,7 +11,7 @@
 ##
 ##############################################################################
 
-AC_DEFUN(AC_FEATURES_COMPILE_ACE,
+AC_DEFUN([AC_FEATURES_COMPILE_ACE],
 [
 	AC_LANG_PUSH(C++)
 	AC_MSG_CHECKING(for options in ACE/TAO)
