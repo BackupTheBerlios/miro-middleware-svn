@@ -15,6 +15,7 @@
 #include <sys/stat.h>
 #include <sys/mman.h>
 #include <miro/Exception.h>
+#include <ace/OS.h>
 #include "VideoDeviceMeteor.h"
 
 #undef DEBUG
