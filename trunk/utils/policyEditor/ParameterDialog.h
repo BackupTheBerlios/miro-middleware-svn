@@ -107,7 +107,7 @@ signals:
 protected:
   PolicyConfigClass * config_;
   const Class * class_;
-  const Class::ParameterSet& params_;
+  Class::ParameterSet params_;
   bool modified_;
   int accept_;
   

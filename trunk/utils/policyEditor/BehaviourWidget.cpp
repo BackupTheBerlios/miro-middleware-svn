@@ -16,6 +16,7 @@
 #include <qmap.h>
 #include <qcursor.h>
 #include <qstring.h>
+#include <qmessagebox.h>
 
 BehaviourWidget::BehaviourWidget(QWidget* parent, const QString& name) :
   Super(parent, "behaviourwidget")
@@ -91,14 +92,20 @@ BehaviourWidget::onSetParameters()
   QString patternName = getPatternWidget().getPatternName();
 
   // fill dialog with current parameters //
-  QMap<QString, QString> paramMap = getDocument().getParameters(patternName, 
-								text());
-  ParameterDialog paramDialog(text(), paramMap, this);
+  QMap<QString, QString> paramMap = 
+    getDocument().getParameters(patternName, text());
 
-  // OK pressed ? //
-  if (paramDialog.exec()) {
-    QMap<QString, QString> paramMap = paramDialog.result();
-    getDocument().setParameters(patternName, text(), paramMap);
+  try {
+    ParameterDialog paramDialog(text(), paramMap, this);
+
+    // OK pressed ? //
+    if (paramDialog.exec()) {
+      QMap<QString, QString> paramMap = paramDialog.result();
+      getDocument().setParameters(patternName, text(), paramMap);
+    }
+  }
+  catch (const QString& e) {
+    QMessageBox::warning(this, "Couln't create parameter dialog:", e);
   }
 }
 

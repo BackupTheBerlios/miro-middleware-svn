@@ -124,6 +124,9 @@
 
   <config_group name="behaviour">
     
+    <config_item name="Behaviour" final="false" dummy="true">
+    </config_item>
+    
     <config_item name="EventBehaviour" parent="Behaviour" final="false">
     </config_item>
     

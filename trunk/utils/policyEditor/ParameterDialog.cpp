@@ -25,6 +25,7 @@
 #include <qlineedit.h>
 #include <qpushbutton.h>
 #include <qtooltip.h>
+#include <qmessagebox.h>
 
 #include <climits>
 
@@ -107,10 +108,31 @@ ParameterDialog::ParameterDialog(const QString& _name,
   QDialog(_parent, "ParamDialog", TRUE),
   config_(PolicyConfigClass::instance()),
   class_(config_->description().getClass(_name)),
-  params_(class_->parameterSet()),
   modified_(false),
   accept_(0)
 {
+  if (class_ == NULL) {
+    throw QString("Parameter description for " + 
+		  _name +
+		  " not found.\nCheck whether the relevant description file is loaded.");
+  }
+  params_ = class_->parameterSet();
+
+  const Class * parent = class_;
+  while (!parent->parent().isEmpty()) {
+    const Class * tmp = config_->description().getClass(parent->parent());
+    if (tmp == NULL) {
+      QMessageBox::warning(this, 
+			   "Error constructing parameter dialog:",
+			   QString("Parameter description for " + 
+				   parent->parent() +
+				   " not found.\nCheck whether the relevant description file is loaded."));
+      break;
+    }
+    parent = tmp;
+    params_.insert(parent->parameterSet().begin(), parent->parameterSet().end());
+  }
+
   setCaption(_name);
 
   QVBoxLayout * topBox = new QVBoxLayout(this, 0, -1, "boxLayout");

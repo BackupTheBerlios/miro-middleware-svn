@@ -32,8 +32,11 @@ public:
   bool isExtern() const;
   void setName(const QString& _name);
   const QString& name() const;
+  QString fullName() const;
   void setParent(const QString& _parent);
   const QString& parent() const;
+  void setNameSpace(const QString& _nameSpace);
+  const QString& nameSpace() const;
 
   void addStatic(const QString& _type, const QString& _name);
   void addParameter(const Parameter& _parameter);
@@ -58,6 +61,7 @@ protected:
 
   QString name_;
   QString parent_;
+  QString nameSpace_;
 
   bool final_;
   bool dummy_;
@@ -125,6 +129,12 @@ Class::name() const {
 }
 
 inline
+QString
+Class::fullName() const {
+  return nameSpace_ + name_ + "Parameters";
+}
+
+inline
 void
 Class::setParent(const QString& _parent) {
   parent_ = _parent;
@@ -134,6 +144,18 @@ inline
 const QString&
 Class::parent() const {
   return parent_;
+}
+
+inline
+void
+Class::setNameSpace(const QString& _nameSpace) {
+  nameSpace_ = _nameSpace;
+}
+
+inline
+const QString&
+Class::nameSpace() const {
+  return nameSpace_;
 }
 
 #endif

@@ -67,6 +67,11 @@ void
 Generator::addClass(const QString& _group, const Class& _class)
 {
   class_.push_back(_class);
+  QString nameSpace;
+  QStringVector::const_iterator first, last = namespace_.end();
+  for (first = namespace_.begin(); first != last; ++first)
+    nameSpace += (*first) + "::";
+  class_.back().setNameSpace(nameSpace);
   groups_.insert(std::make_pair(_group, _class));
 }
 
@@ -228,7 +233,9 @@ Generator::getClass(const QString& _name) const
 {
   ClassVector::const_iterator first, last = class_.end();
   for (first = class_.begin(); first != last; ++first)
-    if (first->name() == _name)
+    if (first->name() == _name ||
+	first->name() + "Parameters" == _name ||
+	first->fullName() == _name)
 #if __GNUC__ > 2
       return first.base();
 #else
