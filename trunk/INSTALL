@@ -2,14 +2,14 @@ Basic Installation
 ==================
 
 This software package depends heavily on ACE and TAO. Therefor its
-installation instructions are simmilar to that package. If you already
+installation instructions are similar to that package. If you already
 installed ACE and TAO, the installing instructions should sound
 familiar to you.
 
 The libraries Miro depends on are ACE (>= 5.2), TAO (>= 1.2) and qt
 (>= 2.3). These should be installed first. The environment variables
 ACE_ROOT, TAO_ROOT, QTDIR and LD_LIBRARY_PATH should be set
-accoringly. Qt is installed on most unix systems anyway, since KDE
+accordingly. Qt is installed on most Unix systems anyway, since KDE
 relies on it.
 
 Now. Set the environment variable MIRO_ROOT to the base directory of
@@ -20,7 +20,7 @@ Switch to the directory $MIRO_ROOT and simply call make.
 
 Note: The build process of Miro recycles the Makefiles of
 ACE. Therefor the options specified in platform-macros.GNU also apply
-to Miro. Some of the submakes of miro try to override the defaults for
+to Miro. Some of the submakes of Miro try to override the defaults for
 some ACE build flags like >debug< or >optimize<. If you want to allow
 them to do so, you should write your changes in platform-macros.GNU
 like following. Instead of
@@ -55,8 +55,8 @@ Supported platforms:
   stable, regarding the interfaces. All of the robots hardware
   components are supported by Miro.
 
-- The Sparrow99 robots are our RoboCup soccer robots. They are our
-  testbed for multirobot programming. Therefore most new technology
+- The Sparrow99 robots are our soccer robots. They are our
+  testbed for multi-robot programming. Therefore most new technology
   is first tested on this platform. - So even as you do not have a
   Sparrow99 robot (we built them ourselfs), it might be interesting
   to look at the sources for this robot if you are looking for group
@@ -70,5 +70,5 @@ Supported platforms:
     is not used at the lab anymore.
   * The Performance PeopleBot is in active development and already
     mostly complete. Motors, Sonars, Bumpers and Video are working.
-    PanTilt/Zoom and Gripper are to come next.
+    PanTilt and Gripper are experimental, Zoom is to come next.
 

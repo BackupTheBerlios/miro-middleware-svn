@@ -4,7 +4,7 @@ The configuration files are located in the directory etc. Sample
 configurations are available for the supported platforms. They are
 named <platform>.xml.
 
-To get a cofiguration file for your robot just copy or link the
+To get a configuration file for your robot just copy or link the
 according configuration file to a file named after the robots name:
 
 cp <platform>.xml $HOST.xml
@@ -12,3 +12,7 @@ cp <platform>.xml $HOST.xml
 or 
 
 ln -s <platform>.xml $HOST.xml
+
+The full set of options is currently only visible by browsing the
+source.  Namely they are located in the *Parameters.cpp/h files. Sorry
+for the inconvenience.
