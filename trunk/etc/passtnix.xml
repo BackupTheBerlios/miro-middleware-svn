@@ -29,68 +29,68 @@
   <parameter name="SparrowBoard" >
    <parameter value="true" name="Faulhaber" />
    <parameter value="/dev/can/0" name="Device" />
-   <parameter value="0.050000" name="PanLatency" />
-   <parameter value="0.500000" name="PanSwing" />
-   <parameter value="245" name="PanRadPerSec" />
+   <parameter value="0.060000" name="PanLatency" />
+   <parameter value="0.560000" name="PanSwing" />
+   <parameter value="220" name="PanRadPerSec" />
    <parameter value="3." name="PanAccuracy" />
    <parameter value="0.040000" name="InfraredPulse" />
    <parameter value="0.040000" name="OdometryPulse" />
    <parameter name="IrScaling" >
     <parameter>
-     <parameter value="380" name="MaxDistance" />
-     <parameter value="40" name="MinDistance" />
-     <parameter value="1" name="Scaling" />
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="1.063" name="Scaling" />
      <parameter value="0" name="Offset" />
     </parameter>
     <parameter>
      <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="0.956" name="Scaling" />
+     <parameter value="1.000" name="Scaling" />
      <parameter value="0" name="Offset" />
     </parameter>
     <parameter>
      <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1" name="Scaling" />
+     <parameter value="0.944" name="Scaling" />
      <parameter value="0" name="Offset" />
     </parameter>
     <parameter>
      <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.222" name="Scaling" />
+     <parameter value="1.063" name="Scaling" />
      <parameter value="0" name="Offset" />
     </parameter>
     <parameter>
      <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1" name="Scaling" />
+     <parameter value="1.000" name="Scaling" />
      <parameter value="0" name="Offset" />
     </parameter>
     <parameter>
      <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="0.956" name="Scaling" />
+     <parameter value="1.000" name="Scaling" />
      <parameter value="0" name="Offset" />
     </parameter>
     <parameter>
      <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.157" name="Scaling" />
+     <parameter value="0.944" name="Scaling" />
      <parameter value="0" name="Offset" />
     </parameter>
     <parameter>
      <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1" name="Scaling" />
+     <parameter value="0.944" name="Scaling" />
      <parameter value="0" name="Offset" />
     </parameter>
    </parameter>
    <parameter value="0.050000" name="ButtonsPollInterval" />
    <parameter value="1.0776" name="TransFactor" />
    <parameter value="26.2" name="Deg2ServoTicksL" />
-   <parameter value="20.7" name="Deg2ServoTicksR" />
+   <parameter value="26.2" name="Deg2ServoTicksR" />
    <parameter value="1.000000" name="WatchdogTimeout" />
-   <parameter value="3450" name="Servo0MidPulse" />
+   <parameter value="3100" name="Servo0MidPulse" />
    <parameter value="200" name="MaxAccel" />
    <parameter value="2310" name="Diameter" />
    <parameter value="30720" name="MaxPower" />
