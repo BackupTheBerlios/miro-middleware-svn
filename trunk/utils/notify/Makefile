@@ -59,6 +59,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
 .PRECIOUS: Parameters.cpp Parameters.h
 
+LogNotify.cpp LogTruncate.cpp NotifyLogPlayer.cpp: Parameters.cpp Parameters.h
+
 # DO NOT DELETE THIS LINE -- g++dep uses it.
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 

@@ -28,13 +28,13 @@
 
 #include <climits>
 
-MyIntValidator::MyIntValidator(QObject * parent, const char *name) :
+MyIntValidator::MyIntValidator(QWidget * parent, const char *name) :
   Super(parent, name),
   accepted_(true)
 {}
 
 MyIntValidator::MyIntValidator(int bottom, int top,
-			       QObject * parent, const char *name) :
+			       QWidget * parent, const char *name) :
   Super(bottom, top, parent, name),
   accepted_(true)
 {}
@@ -51,13 +51,13 @@ MyIntValidator::validate( QString & input, int & pos) const
   return s;
 }
 
-MyDoubleValidator::MyDoubleValidator(QObject * parent, const char *name) :
+MyDoubleValidator::MyDoubleValidator(QWidget * parent, const char *name) :
   Super(parent, name),
   accepted_(true)
 {}
 
 MyDoubleValidator::MyDoubleValidator(double bottom, double top, int decimals,
-				     QObject * parent, const char *name) :
+				     QWidget * parent, const char *name) :
   Super(bottom, top, decimals, parent, name),
   accepted_(true)
 {}
@@ -75,7 +75,7 @@ MyDoubleValidator::validate( QString & input, int & pos) const
   return s;
 }
 
-MyBoolValidator::MyBoolValidator(QObject * parent, const char *name) :
+MyBoolValidator::MyBoolValidator(QWidget * parent, const char *name) :
   Super(parent, name),
   accepted_(true)
 {}

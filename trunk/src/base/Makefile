@@ -62,6 +62,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 #       Local targets (and local hacks)
 #----------------------------------------------------------------------------
 
+.PRECIOUS: Parameters.cpp Parameters.h
+
 # DO NOT DELETE THIS LINE -- g++dep uses it.
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 

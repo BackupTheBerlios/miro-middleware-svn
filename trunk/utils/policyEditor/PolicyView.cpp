@@ -26,6 +26,7 @@
 #include <qinputdialog.h>
 #include <qmessagebox.h>
 #include <qobjectlist.h>
+#include <qobjcoll.h>
 
 #include <algorithm>
 
@@ -127,10 +128,10 @@ PolicyViewClass::drawContents(QPainter * p, int clipx, int clipy, int clipw, int
 {
   p->fillRect(clipx, clipy, clipw, cliph, white);
 
-  const QPtrList<QObject> * childs = viewport()->children();
+  const QObjectList * childs = viewport()->children();
 
   if (childs) {
-    QPtrListIterator<QObject> iter(*childs);
+    QObjectListIt iter(*childs);
     while (iter.current() != NULL) {
       PatternWidgetClass * pattern = 
 	dynamic_cast<PatternWidgetClass *>(iter.current());
@@ -202,7 +203,8 @@ PolicyViewClass::endAddTransition(PatternWidgetClass* patternWidget)
     if ( ok && !message.isEmpty() ) {
       QString target  = patternWidget->getPatternName();
       if (document.addTransition(pickedPattern, message, target))
-	updateContents();
+	updateContents(contentsX(), contentsY(),
+		       contentsWidth(), contentsHeight());
       else
 	QMessageBox::warning(this, 
 			     "Add Transition", 

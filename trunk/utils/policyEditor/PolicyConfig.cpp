@@ -144,7 +144,7 @@ PolicyConfigClass::parseDescriptionFiles()
     delete handler_;
     handler_ = new Parser(*generator_);
     
-    QStringList::iterator first, last = descriptionFiles_.end();
+    QStringList::Iterator first, last = descriptionFiles_.end();
     for (first = descriptionFiles_.begin(); first != last ; ++first) {
       QString fileName = *first;
       QFile xmlFile( fileName );
@@ -153,7 +153,7 @@ PolicyConfigClass::parseDescriptionFiles()
 		       fileName + "\n" +
 		       "File not found.");
       QMessageBox::information(0, "Policy Editor", infoText);
-      descriptionFiles_.erase(first);
+      descriptionFiles_.remove(first);
       break;
       }
       QXmlInputSource source( xmlFile );
@@ -169,7 +169,7 @@ PolicyConfigClass::parseDescriptionFiles()
 			 fileName + "\n" +
 			 errorHandler.errorString());
 	QMessageBox::information(0, "Policy Editor", infoText);
-	descriptionFiles_.erase(first);
+	descriptionFiles_.remove(first);
 	break;
       }
     }

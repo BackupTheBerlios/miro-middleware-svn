@@ -62,9 +62,10 @@ ConfigDialog::ConfigDialog(QWidget* parent) :
   
   okButton->setDefault(true);
 
+  static const char * filters[3] = { "all files (*)", "config files (*.xml)", NULL };
+
   fileDialog_->setCaption("Config file dialog");
-  fileDialog_->setFilter("all files (*)");
-  fileDialog_->addFilter("config files (*.xml)");
+  fileDialog_->setFilters(filters);
 
   // connect the dialogs functionality  
   connect(okButton,     SIGNAL(clicked()), SLOT(accept()));

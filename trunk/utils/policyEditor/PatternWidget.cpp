@@ -203,7 +203,11 @@ PatternWidgetClass::drawArrow(QPainter * p,
 void
 PatternWidgetClass::mouseReleaseEvent(QMouseEvent *)
 {
-  getView().updateContents();
+  getView().updateContents(getView().contentsX(), 
+			   getView().contentsY(),
+			   getView().contentsWidth(),
+			   getView().contentsHeight());
+
 }
 
 void
@@ -415,6 +419,10 @@ PatternWidgetClass::renameTransition(const QString& nameOfPattern)
 			   "Transition " + message + " dropped.");
       }
     }
-    getView().updateContents();
+    getView().updateContents(getView().contentsX(), 
+			     getView().contentsY(),
+			     getView().contentsWidth(), 
+			     getView().contentsHeight());
+
   } 
 } 

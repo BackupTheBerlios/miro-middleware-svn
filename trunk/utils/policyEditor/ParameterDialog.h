@@ -30,9 +30,9 @@ class MyIntValidator : public QIntValidator
   
   typedef QIntValidator Super;
 public:
-  MyIntValidator(QObject * parent, const char *name = 0 );
+  MyIntValidator(QWidget * parent, const char *name = 0 );
   MyIntValidator(int bottom, int top,
-		 QObject * parent, const char *name = 0 );
+		 QWidget * parent, const char *name = 0 );
 		   
   QValidator::State validate( QString &, int & ) const;
 
@@ -49,9 +49,9 @@ class MyDoubleValidator : public QDoubleValidator
   
   typedef QDoubleValidator Super;
 public:
-  MyDoubleValidator(QObject * parent, const char *name = 0 );
+  MyDoubleValidator(QWidget * parent, const char *name = 0 );
   MyDoubleValidator(double bottom, double top, int decimals,
-		    QObject * parent, const char *name = 0 );
+		    QWidget * parent, const char *name = 0 );
 		   
   QValidator::State validate( QString &, int & ) const;
     
@@ -68,7 +68,7 @@ class MyBoolValidator : public QValidator
   
   typedef QValidator Super;
 public:
-  MyBoolValidator(QObject * parent, const char *name = 0 );
+  MyBoolValidator(QWidget * parent, const char *name = 0 );
 		   
   QValidator::State validate( QString &, int & ) const;
     
