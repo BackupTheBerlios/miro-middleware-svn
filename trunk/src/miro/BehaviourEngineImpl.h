@@ -36,6 +36,10 @@ namespace Miro
     bool openOnLoad() const;
     //! Set wheter the behaviour engine is to start automatically an policy after loading.
     void openOnLoad(bool flag);
+    //! Get const reference to the policy.
+    const Policy& policy() const;
+    //! Get reference to the policy.
+    Policy& policy();
 
   
     //! BehaviourEngine interface method implementation.
@@ -85,6 +89,17 @@ namespace Miro
   BehaviourEngineImpl::openOnLoad(bool flag) {
     openOnLoad_ = flag;
   }
+  inline
+  const Policy&
+  BehaviourEngineImpl::policy() const {
+    return policy_;
+  }
+  inline
+  Policy&
+  BehaviourEngineImpl::policy() {
+    return policy_;
+  }
+
 };
 
 #endif // BehaviourEngineImpl_h
