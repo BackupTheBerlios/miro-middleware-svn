@@ -68,6 +68,11 @@ namespace FaulMotor
   // reads incoming packets from the faulhaber connection and stores the values
   // in the local (class internal) variables.
 
+  double deltaTR[50];
+  double deltaTL[50];
+  double deltaTLR[50];
+  int counter = 49;
+
   void
   Consumer::handleMessage(const Miro::DevMessage * _message)
   {
@@ -86,7 +91,10 @@ namespace FaulMotor
 	timeStampR_ = pFaulMsg->time();
       }
 
-      if (prevTimeStampL_+ACE_Time_Value(0.10000) < timeStampR_ && prevTimeStampR_+ACE_Time_Value(0.10000) < timeStampL_) {
+      if (prevTimeStampL_+ ACE_Time_Value(0, 10000) < timeStampR_ && 
+	  prevTimeStampR_+ ACE_Time_Value(0, 10000) < timeStampL_ &&
+	  prevTimeStampL_ != timeStampL_ &&
+	  prevTimeStampR_ != timeStampR_) {
 	if (init_ == 0) {
 	  double dL = -(ticksL_ - prevTicksL_) / params_->leftTicksPerMM;
 	  double dR = (ticksR_ - prevTicksR_) / params_->rightTicksPerMM;
@@ -123,99 +131,57 @@ namespace FaulMotor
 	  //cout << status_.time.sec<< "  " << status_.time.usec <<endl; //(dL+dR) / 2*dtime<<  endl;
 	  
 // berechnung 
-	   double deltaTR[50];
-	   double deltaTL[50];
-           double deltaTLR[50];
 
-	   //int counter = 49;
-	   if ( timeStampR_ != prevTimeStampR_ )
-	   {
-	     ACE_Time_Value dTR = timeStampR_ - prevTimeStampR_;
-	      --counterR;
-	     deltaTR[counterR] = (double)dTR.sec() + (double)dTR.usec() /1000000.;
-	     cout << "dTR: "<<dTR<< endl;
-	   }
-
-	   if ( timeStampL_ != prevTimeStampL_ )
-           {
-             ACE_Time_Value dTL = timeStampL_ - prevTimeStampL_;
-              --counterL;
-             deltaTL[counterL] = (double)dTL.sec() + (double)dTL.usec()/1000000.;
-             cout << "dTL: "<<dTL<< endl;
-           }
-
-
+	  ACE_Time_Value dTR = timeStampR_ - prevTimeStampR_;
+	  deltaTR[counter] = (double)dTR.sec() + (double)dTR.usec() / 1000000.;
+	  
+	  ACE_Time_Value dTL = timeStampL_ - prevTimeStampL_;
+	  deltaTL[counter] = (double)dTL.sec() + (double)dTL.usec()/ 1000000.;
 	   
-           ACE_Time_Value dTLR = timeStampL_ - timeStampR_;
+	  ACE_Time_Value dTLR = timeStampL_ - timeStampR_;
+	  deltaTLR[counter] = (double)dTLR.sec() + (double)dTLR.usec()/ 1000000.;
 
-            //deltaTLR[counterL] = (double)dTL.sec() + (double)dTL.usec() / 1000000.;
+	  cout << "dTR: " << dTR << " \tdTL: " << dTL << " \tdTLR: " << dTLR;
 
-      //prevTimeStamp = timeStamp;
-      //--counter;
-      int i;
-      if (counterL < 0) {
-        double meanL = deltaTL[0];
-	//double meanR = deltaTR[0];
-        //double meanLR = deltaTLR[0];
-        for ( i = 49; i > 0; --i)
-         { meanL += deltaTL[i];
-	   //meanR += deltaTR[i];
-	   //meanLR += deltaTR[i];	
-         }
+	  int i;
+	  if (counter ==  0) {
+	    double meanL = deltaTL[0];
+	    double meanR = deltaTR[0];
+	    double meanLR = deltaTLR[0];
 
-        meanL /= 50.;
-	//meanR /= 50.;
-	//meanR /= 50.;
+	    for ( i = 49; i > 0; --i) {
+	      meanL += deltaTL[i];
+	      meanR += deltaTR[i];
+	      meanLR += deltaTR[i];	
+	    }
 
+	    meanL /= 50.;
+	    meanR /= 50.;
+	    meanR /= 50.;
 
-        double varL = 0.;
-	//double varR = 0.;
+	    double varL = 0.;
+	    double varR = 0.;
+	    double varLR = 0.;
 
-        for ( i = 49; i >= 0; --i)
-          varL += (deltaTL[i] - meanL) * (deltaTL[i] - meanL);
-	  //varR += (deltaTR[i] - meanR) * (deltaTR[i] - meanR);
+	    for ( i = 49; i >= 0; --i) {
+	      varL += (deltaTL[i] - meanL) * (deltaTL[i] - meanL);
+	      varR += (deltaTR[i] - meanR) * (deltaTR[i] - meanR);
+	      varLR += (deltaTLR[i] - meanLR) * (deltaTLR[i] - meanLR);
+	    }
 
-        varL /= 49.;
-	//varR /= 49.;
-        cout << "TimerOdoL: mean=" << meanL << "sec \t var=" <<sqrt(varL)<< endl;
-	//cout << "TimerOdoR: mean=" << meanR << "sec \t var=" <<sqrt(varR)<< endl;
-	//cout << "TimerOdoL-R: mean=" << meanLR << endl;
-        counterL = 49;
-      }
+	    varL /= 49.;
+	    varR /= 49.;
+	    varLR /= 49.;
 
-	if (counterR < 0) {
-        //double meanL = deltaTL[0];
-        double meanR = deltaTR[0];
-        //double meanLR = deltaTLR[0];
-        for ( i = 49; i > 0; --i)
-         { //meanL += deltaTL[i];
-           meanR += deltaTR[i];
-           //meanLR += deltaTR[i];
-         }
+	    cout << "TimerOdoL: mean=" << meanL << "sec \t var=" <<sqrt(varL)<< endl;
+	    cout << "TimerOdoR: mean=" << meanR << "sec \t var=" <<sqrt(varR)<< endl;
+	    cout << "TimerOdoL-R: mean=" << meanLR << endl;
 
-        //meanL /= 50.;
-        meanR /= 50.;
-        //meanR /= 50.;
+	    counter = 50;
+	  }
 
-
-        //double varL = 0.;
-        double varR = 0.;
-
-        for ( i = 49; i >= 0; --i)
-          //varL += (deltaTL[i] - meanL) * (deltaTL[i] - meanL);
-          varR += (deltaTR[i] - meanR) * (deltaTR[i] - meanR);
-
-        //varL /= 49.;
-        varR /= 49.;
-        //cout << "TimerOdoL: mean=" << meanL << "sec \t var=" <<sqrt(varL)<<endl;
-        cout << "TimerOdoR: mean=" << meanR << "sec \t var="<<sqrt(varR)<< endl;
-        //cout << "TimerOdoL-R: mean=" << meanLR << endl;
-        counterR = 49;
-      }
-
-
-
-
+	  
+	  --counter;
 
 	  // save current values for next iteration
 	  prevTimeStampL_ = timeStampL_;
