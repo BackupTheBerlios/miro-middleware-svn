@@ -2,10 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999, 2000
+// (c) 1999, 2000, 2001, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // Authors: 
@@ -19,7 +16,7 @@
 
 #include "DevConnection.h"
 #include "DevEventHandler.h"
-#include "Parameters.h"
+#include "SvcParameters.h"
 #include "Exception.h"
 #include "Log.h"
 

@@ -107,7 +107,7 @@ namespace Video
   BufferManager::switchWrite2ReadBuffer(unsigned int _index, unsigned int _n) 
     throw (Miro::EOutOfBounds)
   {
-    assert(_index < buffers_);
+    MIRO_ASSERT(_index < buffers_);
     Miro::Guard guard(mutex_);
     protectedSwitchWrite2ReadBuffer(_index, _n);
   }
@@ -145,7 +145,7 @@ namespace Video
   BufferManager::releaseReadBuffer(unsigned int _index) 
     throw (Miro::EOutOfBounds)
   {
-    assert(_index < buffers_);
+    MIRO_ASSERT(_index < buffers_);
     Miro::Guard guard(mutex_);
     protectedReleaseReadBuffer(_index);
   }

@@ -29,7 +29,6 @@ MakeConfig_LDADD = \
 	$(top_builddir)/lib/libabus.a \
 	$(top_builddir)/lib/libmcp.a \
 	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS) \
 	../notify/Parameters.o

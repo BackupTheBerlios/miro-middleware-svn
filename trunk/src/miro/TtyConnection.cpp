@@ -11,7 +11,7 @@
 
 #include "TtyConnection.h"
 #include "DevEventHandler.h"
-#include "Parameters.h"
+#include "SvcParameters.h"
 #include "Exception.h"
 #include "miro/Log.h"
 

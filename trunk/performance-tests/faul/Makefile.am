@@ -20,7 +20,7 @@ bin_PROGRAMS = SerialPolling
 SerialPolling_SOURCES  = SerialPolling.cpp
 
 ## you may add libraries to be linked here
-SerialPolling_LDADD  = -lmiro -lmiroIDL -lmiroSvc
+SerialPolling_LDADD  = -lmiro -lmiroSvc
 
 all-local:
 	$(INSTALLPROGRAMS)

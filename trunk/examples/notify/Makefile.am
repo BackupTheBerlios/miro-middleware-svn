@@ -22,13 +22,7 @@ bin_PROGRAMS = GenericNotify
 GenericNotify_SOURCES = GenericNotify.cpp GenericNotify.h
 
 GenericNotify_LDADD = \
-	-lTAO \
-	-lTAO_CosNotification \
-	-lTAO_CosNaming \
-	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
-	-lmiro \
-	$(QT_LIBS)
+	-lmiro
 
 all-local:
 	$(INSTALLPROGRAMS)

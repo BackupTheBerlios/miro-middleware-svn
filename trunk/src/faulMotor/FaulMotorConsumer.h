@@ -12,11 +12,10 @@
 #ifndef FaulMotorConsumer_h
 #define FaulMotorConsumer_h
 
-#include <orbsvcs/CosNotifyCommC.h>
-
 #include "miro/DevConsumer.h"
 #include "idl/MotionStatusC.h"
-#include <ace/OS.h>
+
+#include <ace/Time_Value.h>
 
 // forward declarations
 namespace Miro

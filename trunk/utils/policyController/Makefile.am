@@ -31,10 +31,6 @@ tomocsources = \
 PolicyController_SOURCES = $(sources) $(tomocsources) $(tomocsources:.cpp=.moc.cpp)
 
 PolicyController_LDADD = \
-	-lTAO \
-	-lTAO_CosNaming \
-	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)
 

@@ -47,24 +47,16 @@ control_tomocsources = \
 
 QtVideo_SOURCES = $(video_sources) $(video_tomocsources) $(video_tomocsources:.cpp=.moc.cpp)
 QtVideo_LDADD = \
-	-lTAO \
-	-lTAO_CosNaming \
-	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)
 
 QtVideoControl_SOURCES = $(control_sources) $(control_tomocsources) $(control_tomocsources:.cpp=.moc.cpp)
 QtVideoControl_LDADD = \
-	-lTAO \
-	-lTAO_CosNaming \
-	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)
 
 VideoControlTest_SOURCES = VideoControlTest.cpp VideoControlTestImpl.cpp VideoControlTestImpl.h
-VideoControlTest_LDADD = -lTAO $(top_builddir)/lib/libmiroSvc.a -lmiroIDL -lmiro
+VideoControlTest_LDADD = -lmiro
 
 BUILT_SOURCES = $(video_tomocsources:.cpp=.moc.cpp) $(control_tomocsources:.cpp=.moc.cpp)
 CLEANFILES = $(BUILT_SOURCES)

@@ -25,13 +25,7 @@ ButtonsPoll_SOURCES = ButtonsPoll.cpp
 ButtonsNotify_SOURCES = ButtonsNotify.cpp ButtonsNotify.h
 
 linkwithlibraries = \
-	-lTAO \
-	-lTAO_CosNotification \
-	-lTAO_CosNaming \
-	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
-	-lmiro \
-	$(QT_LIBS)
+	-lmiro
 
 ButtonsPoll_LDADD = $(linkwithlibraries)
 ButtonsNotify_LDADD = $(linkwithlibraries)

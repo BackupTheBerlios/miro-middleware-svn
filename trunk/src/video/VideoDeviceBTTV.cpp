@@ -8,6 +8,7 @@
 // $Id$
 //
 //////////////////////////////////////////////////////////////////////////////
+#include <cmath>
 #include <ace/OS.h>
 
 #include "VideoDeviceBTTV.h"
@@ -153,7 +154,7 @@ namespace Video
     std::cout << "buffersize/frame: " << gb_buffers.size/gb_buffers.frames << std::endl;
     std::cout << "frames: " << gb_buffers.frames << std::endl;
 
-    if (gb_buffers.frames < params_->buffers) {
+    if (gb_buffers.frames < (int)params_->buffers) {
       throw Miro::Exception("Number of requested buffers in the configuration\n" \
 			    "exceeds the number of frames available by the device.");
     }

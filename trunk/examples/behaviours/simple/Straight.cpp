@@ -11,6 +11,7 @@
 #include "Straight.h"
 
 #include "miro/MotionArbiterMessage.h"
+#include "miro/Log.h"
 
 const std::string Straight::name_ = "Straight";
 
@@ -28,7 +29,7 @@ Straight::action()
   const StraightParameters * params = 
     dynamic_cast<const StraightParameters *>(params_);
   // make sure nothing went wrong
-  assert(params != NULL);
+  MIRO_ASSERT(params != NULL);
 
   // create arbiter message
   Miro::MotionArbiterMessage message;

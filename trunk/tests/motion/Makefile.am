@@ -40,10 +40,7 @@ SynchroMotionTest_SOURCES = \
 	MotionInterface.h
 
 linkwithlibraries = \
-	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
-	-lmiro \
-	$(QT_LIBS)
+	-lmiro
 
 MotionTest_LDADD = $(linkwithlibraries)
 DifferentialMotionTest_LDADD = $(linkwithlibraries)

@@ -89,3 +89,7 @@ VideoExample
 VideoLatency
 VideoService
 LogTest
+MakeConfig
+NotifyObserver
+SerialPolling
+

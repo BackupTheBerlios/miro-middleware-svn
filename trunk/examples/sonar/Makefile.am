@@ -29,13 +29,7 @@ SonarPoll3_SOURCES = SonarPoll3.cpp
 SonarNotify_SOURCES = SonarNotify.cpp
 
 linkwithlibraries = \
-	-lTAO \
-	-lTAO_CosNotification \
-	-lTAO_CosNaming \
-	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
-	-lmiro \
-	$(QT_LIBS)
+	-lmiro
 
 SonarPoll1_LDADD = $(linkwithlibraries)
 SonarPoll2_LDADD = $(linkwithlibraries)

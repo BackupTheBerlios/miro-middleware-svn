@@ -15,19 +15,19 @@
 
 globaldirs = \
 	nsIOR \
+	widgets \
 	notify \
 	notifyObserver \
-	widgets \
 	logPlayer \
 	rangeSensor \
 	qtVideo \
 	qtTouchPad \
 	qtJoystick \
 	policyEditor \
-	policyController
+	policyController \
+	makeConfig
 
 #	sparrowBoard
-#	makeConfig
 
 if COND_SPARROW99
 sparrowdirs = \

@@ -22,12 +22,7 @@ bin_PROGRAMS = DpPanTiltTest
 DpPanTiltTest_SOURCES = DpPanTiltTest.cpp
 
 DpPanTiltTest_LDADD = \
-	-lTAO \
-	-lTAO_CosNaming \
-	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
-	-lmiro \
-	$(QT_LIBS)
+	-lmiro
 
 all-local:
 	$(INSTALLPROGRAMS)

@@ -12,6 +12,10 @@
 #include "VideoHelper.h"
 #include "Exception.h"
 
+// #include <ace/Shared_Memory.h>
+
+#include <sys/shm.h>
+
 #include <cmath>
 
 namespace Miro

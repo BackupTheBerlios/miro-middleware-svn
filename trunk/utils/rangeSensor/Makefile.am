@@ -33,10 +33,6 @@ tomocsources = \
 QtRangeSensor_SOURCES = $(sources) $(tomocsources) $(sources:.cpp=.h) $(tomocsources:.cpp=.moc.cpp)
 
 QtRangeSensor_LDADD = \
-	-lTAO \
-	-lTAO_CosNaming \
-	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)
 

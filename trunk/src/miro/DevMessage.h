@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999,2000
+// (c) 1999, 2000, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -11,6 +11,7 @@
 #ifndef DevMessage_h
 #define DevMessage_h
 
+#include <cmath>  // work around for ACE_OS bug with headers
 #include <ace/OS.h>
 
 namespace Miro
@@ -39,7 +40,7 @@ namespace Miro
     //! Get a non constant reference to the time value.
     ACE_Time_Value& time() { return time_;}
   };
-};
+}
 
 #endif
 

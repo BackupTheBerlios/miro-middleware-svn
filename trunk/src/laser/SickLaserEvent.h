@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -14,6 +14,8 @@
 #include <ace/Event_Handler.h>
 #include <ace/Synch.h>
 #include <ace/Message_Block.h>
+#include <cmath>
+#include <ace/OS.h>
 
 #include "SickLaserTask.h"
 #include "SickLaserStatistic.h"

@@ -73,9 +73,7 @@ DynamicPolicyTest_SOURCES = \
 
 linkwithlibraries = \
 	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
-	-lmiro \
-	$(QT_LIBS)
+	-lmiro
 
 PriorityArbitersTest_LDADD = $(linkwithlibraries)
 PolicyParsingTest_LDADD = $(linkwithlibraries)

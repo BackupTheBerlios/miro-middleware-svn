@@ -44,72 +44,8 @@ a line in \texttt{configure.ac} to the macro named
 \texttt{AC\_CONFIG\_FILES} to let automake and autoconf know, that they
 have to build a \texttt{Makefile} (\texttt{Makefile.in} respectively).
 
-\subsection{Makefile.am.dir}
-This Makefile starts subbuilds in the specified directories. It is an
-example for conditional compilation (depending on the
-configuration). If you don't have conditional branches, you can left
-the second variable empty or reduce the Makefile.am to a single line,
-like e.g. \texttt{SUBDIRS = firstDir secondDir}.
-
-\subsection{Makefile.am.bin}
-This Makefile builds a single or several binaries. The name of the
-binaries to be built are specified in the variable {\tt bin\_PROGRAMS}.
-There have to be an extra line for each binary to be build starting
-with the name of the binary itself and an additional
-\texttt{\_SOURCES}-suffix. The sources are specified with their suffix
-(.cpp). Please also list all the header files here, otherwise they
-don't get distributed by an call to \texttt{make dist}. If the
-programs need to be linked against several libraries, there is again
-one line per binary containing the name of the binary plus an
-additional \texttt{\_LDADD}-suffix.
-
-\subsection{Makefile.am.qt}
-This is a special Makefile.am template for Qt programs. For
-simplicity, the Makefile is designed for a single binary per
-directory, but beside that, most of the above section also applies
-here. The only exception is, that we have to distinguish between
-normal source files (variable \texttt{sources}) and files (variable
-\texttt{tomocsources}) that need to be compiled with Qt's Meta Object
-Compile (\texttt{moc}). Be sure to \textbf{not} include the header
-files into the \texttt{tomocsources} variable, but to the
-\texttt{sources} variable, otherwise they get "cleaned".
-
-\subsection{Makefile.am.lib.a}
-This Makefile builds a static library. The name of the library can be
-specified in the variable \texttt{lib\_LIBRARIES}, the files building
-the library in the variable \texttt{sources} (with the .cpp suffix; or
-.xml in case of an xml-file for \miro's parameter framework). Headers
-that are not automatically considered because they don't have a
-corresponding cpp-file should be specified in the variable
-\texttt{extraheader}. Don't forget to name the prefix for the
-\texttt{\_SOURCES}-macro with the name of the resulting library.
-Therefore please substitued all occuring dots with underscores (e.g.\ 
-the usual \texttt{.a} a the end of an static library).  Additionally,
-replace the prefix for the macro \texttt{\_include\_HEADERS} with the
-name of the directory, to which the header files should be installed
-(see also the description of \texttt{Make-rules} below).
-
-\subsection{Makefile.am.lib.so}
-Makefiles for shared libraries look quite the same as for static
-libraries, to most of the above applies here too. The only difference
-from a users perspective is the name of the variable
-\texttt{lib\_LTLIBRARIES} where you name your library (note the
-\texttt{LT} within the variable (and the targets at the end of the
-\texttt{Makefile.am}) which indicates that the library is build using
-the libtool package).
-
-If you programs or libraries need to be compiled differently depending
-on configuration options, please have a look at an existing
-\texttt{Makefile.am}, e.g.\ in
-\texttt{\$MIRO\_ROOT/\-examples/\-behaviours/\-engine/} or
-\texttt{\$MIRO\_ROOT/\-src/\-miro/}.
-
-\subsection{Make-rules}
-Last you may have a look at the \texttt{Make-rules} file within the
-\texttt{\$MIRO\_ROOT/config/} directory. This file is included into each
-\texttt{Makefile.am}, so rules or variables that are needed globally,
-can be inserted here. If you want to define additional installation
-subdirectories for the header files, you can see examples here.
+The Makefile templates are explained in more detail in the appendix
+\ref{sec:new_project}.
 
 
 \section{A Simple Sonar Client}

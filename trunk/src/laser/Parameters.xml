@@ -1,7 +1,7 @@
 <!DOCTYPE xml SYSTEM "PolicyEditor_behaviour.dtd">
 <config> 
   <config_global name="namespace" value="Laser" />
-  <config_global name="include" value="miro/Parameters.h" />
+  <config_global name="include" value="miro/SvcParameters.h" />
 
   <config_group name="Sick">
     <config_item parent="Miro::Tty" instance="true">

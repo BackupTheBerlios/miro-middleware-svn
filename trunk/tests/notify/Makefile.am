@@ -24,13 +24,7 @@ NotifyTest_SOURCES = \
 	NotifyTest.h
 
 NotifyTest_LDADD = \
-	-lTAO \
-	-lTAO_CosNotification \
-	-lTAO_CosNaming \
-	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
-	-lmiro \
-	$(QT_LIBS)
+	-lmiro
 
 all-local:
 	$(INSTALLPROGRAMS)

@@ -20,10 +20,7 @@ bin_PROGRAMS = PanLatency
 PanLatency_SOURCES = PanLatency.cpp
 
 PanLatency_LDADD = \
-	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
-	-lmiro \
-	$(QT_LIBS)
+	-lmiro
 
 all-local:
 	$(INSTALLPROGRAMS)

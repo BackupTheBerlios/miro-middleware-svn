@@ -22,14 +22,10 @@ bin_PROGRAMS = McpPerformance
 McpPerformance_SOURCES = McpPerformance.cpp McpPerformance.h
 
 McpPerformance_LDADD = \
-	-lTAO \
-	-lTAO_CosNaming \
 	$(top_builddir)/lib/libbase.a \
 	$(top_builddir)/lib/libmcp.a \
 	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
-	-lmiro \
-	$(QT_LIBS)
+	-lmiro
 
 all-local:
 	$(INSTALLPROGRAMS)

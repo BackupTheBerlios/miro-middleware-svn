@@ -20,10 +20,7 @@ bin_PROGRAMS = OdometryTest
 OdometryTest_SOURCES = OdometryTest.cpp
 
 OdometryTest_LDADD = \
-	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
-	-lmiro \
-	$(QT_LIBS)
+	-lmiro
 
 all-local:
 	$(INSTALLPROGRAMS)

@@ -12,6 +12,7 @@
 #include "miro/ActionPattern.h"
 #include "miro/Arbiter.h"
 #include "miro/MotionArbiterMessage.h"
+#include "miro/Log.h"
 
 #include "LaserAvoid.h"
 
@@ -35,7 +36,7 @@ LaserAvoid::action()
   const LaserAvoidParameters * params =
     dynamic_cast<const LaserAvoidParameters *>(params_);
   // make sure nothing went wrong
-  assert(params != NULL);
+  MIRO_ASSERT(params != NULL);
 
   // get laser scan
   Miro::RangeGroupEventIDL * scan = laser_->getGroup(0);

@@ -17,6 +17,8 @@
 #include <qpainter.h>
 #include <qimage.h>
 
+#include <sys/shm.h>
+
 using std::cout;
 using std::cerr;
 using std::endl;

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002, 2003
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -177,50 +177,116 @@ namespace Miro
   class Log
   {
   public:
+    //! Initializethe logging module.
     static void init(int& argc, char * argv[]);
+    //! Query the current logging level.
     static int level() throw();
+    //! Set the current logging level.
     static void level(int _level) throw();
+    //! Query the current logging maks.
     static unsigned int mask() throw();
+    //! Set the current logging level.
     static void mask(unsigned int _mask) throw();
+    //! Query if selected priority is currently enabled.
     static bool enabled(int _prioriy);
+    //! Query if Miro was compiled with logging support.
     static bool compiledWithLog();
+    //! Query if Miro was compiled with debug support.
+    /** This requires logging support. */
     static bool compiledWithDebug();
+    //! Helper method to convert a Miro LogLevel into an ACE LogMessage
     static ACE_Log_Priority ll2LM(int _level);
+    //! Setting the log format.
     static void format(char const * _format);
+    //! Accessor returning a pointer to the current log format.
     static char const * format();
 
+    //! Log cathegory of the miro core components.
     static unsigned int const MIRO =    0x00000800;
+    //! Log cathegory of the video components.
     static unsigned int const VIDEO =   0x00001000;
+    //! Log cathegory of the psos components.
+    /** The Pioneer low level protocol. */
     static unsigned int const PSOS =    0x00002000;
+    //! Log cathegory of the Sphinx Speech components.
     static unsigned int const SPHINX =  0x00004000;
+    //! Log cathegory of the Pioneer components.
     static unsigned int const PIONEER = 0x00010000;
+    //! Log cathegory of the can components.
+    /** The Sparrow low level communication bus. */
     static unsigned int const CAN =     0x00020000;
+    //! Log cathegory of the faulhaber components.
     static unsigned int const FAUL =    0x00040000;
+    //! Log cathegory of the Sparrow components.
     static unsigned int const SPARROW = 0x00080000;
+    //! Log cathegory of the mcp components.
+    /** A tty protocol of the B21. */
     static unsigned int const MCP =     0x00100000;
+    //! Log cathegory of the access bus components.
+    /** A B21 communications bus. */
     static unsigned int const ABUS =    0x00200000;
+    //! Log cathegory of the msp components.
+    /** The abus communication protocol of the B21. */
     static unsigned int const MSP =     0x00300000;
+    //! Log cathegory of the Sick laser range finder components.
     static unsigned int const SICK =    0x00400000;
+    //! Log cathegory of the DoubleTalk components.
     static unsigned int const DTLK =    0x00800000;
+    //! Log cathegory of the DirectedPerception components.
+    /** The pantilt unit of the B21. */
     static unsigned int const DP =      0x01000000;
+    //! Log cathegory of the miro core components
     static unsigned int const B21 =     0x02000000;
 
-
+    //! Log level of messages reporting an emergency.
+    /** 
+     * Your robot is on fire etc. This log level is not maskable,
+     * except if you turn of logging at configure time.
+     */
     static signed int const LL_EMERGENCY = 0;
+    //! Log level of messages reporting an alert.
     static signed int const LL_ALERT = 1;
+    //! Log level of messages reporting a critical condition.
+    /**
+     * This usually is an unrecoverable error, that leads to
+     * the termination of reporting program.
+     */
     static signed int const LL_CRITICAL = 2;
+    //! Log level of messages reporting an error.
+    /**
+     * This indicates a real error, but the program will usually
+     * try to contiue anyway.
+     */
     static signed int const LL_ERROR = 3;
+    //! Log level of messages reporting a warning.
+    /**
+     * A warning should be fixed, but the program will work anyways.
+     */
     static signed int const LL_WARNING = 4;
+    //! Log level of messages reporting a notice.
+    /** Make a postit and add it to the other 500 ones. */
     static signed int const LL_NOTICE = 5;
+    //! Debug level of messages reporting a constructor/destructor entry.
+    /**
+     * This debug level is designed to hunt segfaults on startup and
+     * exit. - This is when all the big ctors/dtors are run.
+     */
     static signed int const LL_CTOR_DTOR = 6;
+    //! Log level of messages reporting debug output.
     static signed int const LL_DEBUG = 7;
+    //! Log level of messages reporting program trace output.
     static signed int const LL_TRACE = 8;
+    //! Log level of messages reporting really verbose execution comments.
     static signed int const LL_PRATTLE = 9;
 
+    //! The highest log level.
     static signed int const MAX_LOG_LEVEL = LL_NOTICE;
+    //! The lowest deug level.
     static signed int const MIN_DBG_LEVEL = LL_CTOR_DTOR;
+    //! The highest debug level.
     static signed int const MAX_DBG_LEVEL = LL_PRATTLE;
 
+    //! Helper class for method traces.
     class Trace
     {
     public:
@@ -229,19 +295,30 @@ namespace Miro
 	    char const * _fun = __PRETTY_FUNCTION__);
       ~Trace();
     protected:
+      //! Remember the log level for the dtor.
       unsigned int level_;
+      //! Remember the cathegory for the dtor.
       int priority_;
+      //! Remember the method name for the dtor.
       char const * const fun_;
     };
 
   protected:
 
+    //! Default is LL_WARNING - 4.
     static unsigned int level_;
+    //! Default is MIRO.
     static unsigned int mask_;
     static char const * format_;
     static ACE_Log_Priority aceLM_[MAX_DBG_LEVEL + 1];
   };
 
+  /**
+   * It reports to the logging framework in its ctor and dtor.
+   * Instance this class via the MIRO_TRACE macro on the beginning
+   * of your method and you'll have trace log messages on every
+   * execution of the method.
+   */
   inline
   Log::Trace::Trace(unsigned int _level, int _priority, char const * _fun) :
     level_(_level),
@@ -254,11 +331,13 @@ namespace Miro
   Log::Trace::~Trace() {
 //    MIRO_DBG(level_, priority_, std::string("Leaving ") + fun_);
   }
+  /** The default logging level is @ref LL_WARNING (4). */
   inline
   int
   Log::level() throw() {
     return level_;
   }
+  /** This is usually done by the command line option -MiroLogLevel. */
   inline
   void
   Log::level(int _level) throw() {

@@ -22,12 +22,8 @@ bin_PROGRAMS = GrabImages
 GrabImages_SOURCES = GrabImages.cpp
 
 GrabImages_LDADD = \
-	-lTAO \
-	-lTAO_CosNaming \
 	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
-	-lmiro \
-	$(QT_LIBS)
+	-lmiro
 
 all-local:
 	$(INSTALLPROGRAMS)

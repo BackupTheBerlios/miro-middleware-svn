@@ -11,6 +11,7 @@
 #ifndef miro_ConfigDocument_h
 #define miro_ConfigDocument_h
 
+#include <cmath>
 #include <ace/OS.h>
 
 #include <string>

@@ -17,6 +17,8 @@
 #include "miro/Client.h"
 #include "miro/TimeHelper.h"
 #include "miro/VideoHelper.h"
+#include "miro/Angle.h"
+
 #include <ace/Date_Time.h>
 #include <ace/Get_Opt.h>
 
@@ -180,7 +182,6 @@ int main(int argc, char *argv[])
     // get reference to video service
     Pan_var pan = client.resolveName<Pan>(panName.c_str());
     Video_var video = client.resolveName<Video>("Video");
-    char * imageData;
     char buffer[256];
     char c;
     double alpha;

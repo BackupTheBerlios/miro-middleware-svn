@@ -51,12 +51,8 @@ tomocsources = \
 PolicyEditor_SOURCES = $(sources) $(tomocsources) $(tomocsources:.cpp=.moc.cpp)
 
 PolicyEditor_LDADD = \
-	-lTAO \
-	-lTAO_CosNaming \
-	-L../widgets/ -lmiroWidgets \
+	-lmiroWidgets \
 	-lmiroParams \
-	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)
 

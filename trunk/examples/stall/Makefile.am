@@ -20,12 +20,7 @@ bin_PROGRAMS = StallPoll
 StallPoll_SOURCES = StallPoll.cpp
 
 StallPoll_LDADD = \
-	-lTAO \
-	-lTAO_CosNaming \
-	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
-	-lmiro \
-	$(QT_LIBS)
+	-lmiro
 
 all-local:
 	$(INSTALLPROGRAMS)

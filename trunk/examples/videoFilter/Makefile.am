@@ -32,11 +32,8 @@ if COND_IEEE1394
 endif 
 
 GrayVideoService_LDADD = \
-	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiroVideo \
-	-lmiroIDL \
 	-lmiro \
-	$(QT_LIBS) \
         $(1394libraries)
 
 BUILT_SOURCES = Parameters.cpp Parameters.h

@@ -31,13 +31,7 @@ SonarStream_SOURCES = SonarStream.cpp
 SonarStream2_SOURCES = SonarStream2.cpp SonarStream2.h
 
 linkwithlibraries = \
-	-lTAO \
-	-lTAO_CosNotification \
-	-lTAO_CosNaming \
-	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
-	-lmiro \
-	$(QT_LIBS)
+	-lmiro
 
 LaserGet_LDADD = $(linkwithlibraries)
 LaserStream_LDADD = $(linkwithlibraries)

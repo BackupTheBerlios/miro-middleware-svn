@@ -22,10 +22,6 @@ bin_PROGRAMS = Xml-parse
 Xml_parse_SOURCES = Xml-parse.cpp
 
 Xml_parse_LDADD = \
-	-lTAO \
-	-lTAO_CosNaming \
-	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
 	-lmiro \
 	$(QT_LIBS)
 

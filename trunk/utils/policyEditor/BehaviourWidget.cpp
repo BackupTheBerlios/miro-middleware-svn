@@ -12,6 +12,8 @@
 #include "BehaviourWidget.h"
 #include "ParameterDialog.h"
 
+#include "miro/Log.h"
+
 #include <qpopupmenu.h>
 #include <qmap.h>
 #include <qcursor.h>
@@ -32,7 +34,7 @@ PatternWidgetClass&
 BehaviourWidget::getPatternWidget() const
 {
   PatternWidgetClass * ptr = dynamic_cast<PatternWidgetClass *>(parentWidget());
-  assert(ptr != NULL);
+  MIRO_ASSERT(ptr != NULL);
   return *ptr; 
 }
 

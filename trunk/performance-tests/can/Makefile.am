@@ -22,14 +22,10 @@ bin_PROGRAMS = CanPerformance
 CanPerformance_SOURCES = CanPerformance.cpp
 
 CanPerformance_LDADD = \
-	-lTAO \
-	-lTAO_CosNaming \
 	$(top_builddir)/lib/libsparrow.a \
 	$(top_builddir)/lib/libcan.a \
 	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
-	-lmiro \
-	$(QT_LIBS)
+	-lmiro
 
 all-local:
 	$(INSTALLPROGRAMS)

@@ -22,6 +22,7 @@ lib_LIBRARIES = libmiroSvc.a libmiroSsh.a
 
 
 sources1 = \
+	Parameters.xml \
 	XmlParse.cpp \
 	Exception.cpp \
 	Angle.cpp \
@@ -58,15 +59,7 @@ sources1 = \
 	TaskBehaviour.cpp \
 	TimedBehaviour.cpp \
 	Policy.cpp \
-	VelocitySpace.cpp \
-	NotifyMulticastParameters.xml \
-	NotifyMulticastRequestEntry.cpp \
-	NotifyMulticastSender.cpp \
-        NotifyMulticastReceiver.cpp \
-        NotifyMulticastTimeoutHandler.cpp \
-        NotifyMulticastEventHandler.cpp \
-        NotifyMulticastConfig.cpp \
-	NotifyMulticastAdapter.cpp
+	VelocitySpace.cpp
 
 sparrowsources1 = \
 	PowerArbiter.cpp \
@@ -84,13 +77,14 @@ libmiro_la_LIBADD = \
 	-lTAO \
 	-lACE \
 	-lTAO_Strategies \
+	-lmiroIDL \
 	$(INHERITED_LIBS) \
 	$(QT_LIBS)
 
 
 
 sources2 = \
-	Parameters.xml \
+	SvcParameters.xml \
 	DevConnection.cpp \
 	DevEventHandler.cpp \
 	DevConsumer.cpp \
@@ -100,7 +94,15 @@ sources2 = \
 	MotionImpl.cpp \
 	DifferentialMotionImpl.cpp \
 	BatteryImpl.cpp \
-	BehaviourEngineImpl.cpp
+	BehaviourEngineImpl.cpp \
+	NotifyMulticastParameters.xml \
+	NotifyMulticastRequestEntry.cpp \
+	NotifyMulticastSender.cpp \
+        NotifyMulticastReceiver.cpp \
+        NotifyMulticastTimeoutHandler.cpp \
+        NotifyMulticastEventHandler.cpp \
+        NotifyMulticastConfig.cpp \
+	NotifyMulticastAdapter.cpp
 
 libmiroSvc_a_SOURCES = $(sources2)
 

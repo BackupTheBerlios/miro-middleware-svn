@@ -19,6 +19,7 @@
 #ifndef McpMessage_h
 #define McpMessage_h
 
+#include <cmath>
 #include <ace/OS.h>
 
 #include "miro/DevMessage.h"

@@ -20,9 +20,7 @@ bin_PROGRAMS = LogTest
 LogTest_SOURCES = LogTest.cpp
 
 LogTest_LDADD = \
-	-lmiro \
-	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL
+	-lmiro
 
 all-local:
 	$(INSTALLPROGRAMS)

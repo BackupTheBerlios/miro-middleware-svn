@@ -43,6 +43,12 @@ namespace
     {Miro::Log::B21, "B21"}
   };
 
+  struct Pair2
+  {
+    char const * name;
+    int priority;
+  };
+
   char const * const MIRO_LOG_LEVEL = "-MiroLogLevel";
   char const * const MIRO_LOG_FILTER = "-MiroLogFilter";
   char const * const MIRO_LOG_DEVICE   = "-MiroLogDevice";
@@ -56,10 +62,8 @@ namespace
 
 namespace Miro 
 {
-  using std::string;
-
-  unsigned int Log::level_;
-  unsigned int Log::mask_;
+  unsigned int Log::level_ = LL_WARNING;
+  unsigned int Log::mask_ = MIRO;
   char const * Log::format_ = "%s\n";
   ACE_Log_Priority Log::aceLM_[MAX_DBG_LEVEL + 1] = {
     LM_EMERGENCY,
@@ -74,6 +78,16 @@ namespace Miro
     LM_DEBUG
   };
 
+
+  /**
+   * Adds the log cathegory clear names corresponding to the cathegory
+   * integer constants to the ACE_Log_Record.
+   *
+   * Parses the argument vector for the Miro command line option:
+   * -MiroLogLevel, -MiroLogFilter and -MiroLogDevice.
+   *
+   * @TODO -MiroLogDevice has no effect. - Needs to be implemented.
+   */
   void
   Log::init(int& argc, char * argv[]) 
   {

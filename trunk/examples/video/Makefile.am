@@ -27,13 +27,7 @@ VideoLatency_SOURCES = VideoLatency.cpp
 VideoExample_SOURCES = VideoExample.cpp
 
 linkwithlibraries = \
-	-lTAO \
-	-lTAO_CosNaming \
-	-lmiroVideo \
-	-lmiroIDL \
-	-lmiro \
-	$(top_builddir)/lib/libmiroSvc.a \
-	$(QT_LIBS)
+	-lmiro
 
 if COND_IEEE1394
 1394libraries = \

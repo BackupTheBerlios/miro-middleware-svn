@@ -29,13 +29,9 @@ B21ButtonsTest_SOURCES = B21ButtonsTest.cpp
 B21SelfTest_SOURCES = B21SelfTest.cpp
 
 linkwithlibraries = \
-	-lTAO \
-	-lTAO_CosNaming \
 	$(top_builddir)/lib/libmiroSvc.a \
 	$(top_builddir)/lib/libmiroSsh.a \
-	-lmiroIDL \
-	-lmiro \
-	$(QT_LIBS)
+	-lmiro
 
 B21BaseTest_LDADD = $(linkwithlibraries)
 B21StressBase_LDADD = $(linkwithlibraries)

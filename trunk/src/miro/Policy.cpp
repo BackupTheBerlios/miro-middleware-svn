@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2000, 2001, 2002
+// (c) 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -19,6 +19,7 @@
 #include "Behaviour.h"
 #include "BehaviourRepository.h"
 #include "BehaviourParameters.h"
+#include "Log.h"
 
 #include <qdom.h>
 #include <qfile.h>
@@ -154,16 +155,16 @@ namespace Miro
       QDomElement e = n.toElement(); // try to convert the node to an element.
       if( !e.isNull() ) {            // the node was really an element.
 
-	assert(e.tagName() == "actionpattern");
+	MIRO_ASSERT(e.tagName() == "actionpattern");
 
 	QDomAttr attribute = e.attributeNode("name");
 
-	assert(!attribute.isNull());
+	MIRO_ASSERT(!attribute.isNull());
 
 	string actionPatternName(attribute.value().latin1());
 	ActionPattern*  actionPattern = getActionPattern(actionPatternName);
 
-	assert(actionPattern != NULL);
+	MIRO_ASSERT(actionPattern != NULL);
 
 	actionPattern->xmlInit(n, actionPatterns_);
       }

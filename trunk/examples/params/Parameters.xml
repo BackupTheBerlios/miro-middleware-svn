@@ -4,7 +4,7 @@
   <config_global name="namespace" value="Test" />
 
   <!-- include for the Miro::Parameters base class -->
-  <config_global name="include" value="miro/Parameters.h" />
+  <config_global name="include" value="miro/SvcParameters.h" />
   <config_global name="Include" value="vector" />
   <config_global name="Include" value="set" />
 

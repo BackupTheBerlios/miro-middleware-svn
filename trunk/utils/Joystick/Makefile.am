@@ -25,12 +25,7 @@ Joystick_SOURCES = Joystick.cpp Joystick.h
 JoystickService_SOURCES = JoystickService.cpp JoystickService.h
 
 linkwithlibraries = \
-	-lTAO \
-	-lTAO_CosNaming \
-	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
-	-lmiro \
-	$(QT_LIBS)
+	-lmiro
 
 Joystick_LDADD = $(linkwithlibraries)
 JoystickService_LDADD = $(linkwithlibraries)

@@ -1,3 +1,4 @@
+Item.moc.cpp
 FileListDialog.moc.cpp
 Makefile.in
 Makefile
@@ -5,4 +6,6 @@ Makefile
 .libs
 FileListDialog.lo
 FileListDialog.moc.lo
+Item.lo
+Item.moc.lo
 libmiroWidgets.la

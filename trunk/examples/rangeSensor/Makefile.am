@@ -25,12 +25,7 @@ SensorGet_SOURCES = SensorGet.cpp
 SensorStream_SOURCES = SensorStream.cpp SensorStream.h
 
 linkwithlibraries = \
-	-lTAO \
-	-lTAO_CosNaming \
-	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
-	-lmiro \
-	$(QT_LIBS)
+	-lmiro
 
 ScanDescription_LDADD = $(linkwithlibraries)
 SensorGet_LDADD = $(linkwithlibraries)

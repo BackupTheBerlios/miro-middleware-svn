@@ -55,7 +55,7 @@ tomocsources = \
 ## the prefix of the two following macros must have the same name as the respective binary
 NotifyObserver_SOURCES = $(sources) $(tomocsources) $(tomocsources:.cpp=.moc.cpp)
 ## you may add libraries to be linked here
-NotifyObserver_LDADD = -lmiro -lmiroSvc -lmiroIDL -lmiroWidgets
+NotifyObserver_LDADD = -lmiro -lmiroWidgets
 
 BUILT_SOURCES = $(tomocsources:.cpp=.moc.cpp)
 CLEANFILES = $(BUILT_SOURCES)

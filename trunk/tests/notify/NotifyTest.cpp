@@ -18,6 +18,7 @@
 #include "miro/Task.h"
 
 #include <ace/Arg_Shifter.h>
+#include <ace/OS.h>
 
 #include <orbsvcs/Notify/Notify_EventChannelFactory_i.h>
 #include <orbsvcs/Notify/Notify_Default_CO_Factory.h>

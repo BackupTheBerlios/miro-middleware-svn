@@ -123,6 +123,10 @@ builtsources = \
 libmiroIDL_la_DEPENDENCIES = $(sources)
 nodist_libmiroIDL_la_SOURCES = $(builtsources)
 
+libmiroIDL_la_LIBADD = \
+	-lTAO \
+	-lACE
+
 BUILT_SOURCES = $(builtsources)
 CLEANFILES = $(builtsources)
 

@@ -12,8 +12,10 @@
 #include "ParameterDialog.h"
 #include "PolicyConfig.h"
 
-#include "../../src/params/Class.h"
-#include "../../src/params/Generator.h"
+#include "src/params/Class.h"
+#include "src/params/Generator.h"
+
+#include "miro/Log.h"
 
 #include <qgroupbox.h>
 #include <qvgroupbox.h>
@@ -299,7 +301,7 @@ ParameterDialog::accept(bool _accept)
 {
   accept_ += (_accept)? -1 : 1;
 
-  assert(accept_ >= 0);
+  MIRO_ASSERT(accept_ >= 0);
 
   bool a = accept_ == 0;
   emit okay(a);

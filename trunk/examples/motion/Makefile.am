@@ -25,13 +25,7 @@ MotionStatusPoll_SOURCES = MotionStatusPoll.cpp
 MotionStatusNotify_SOURCES = MotionStatusNotify.cpp MotionStatusNotify.h
 
 linkwithlibraries = \
-	-lTAO \
-	-lTAO_CosNotification \
-	-lTAO_CosNaming \
-	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
-	-lmiro \
-	$(QT_LIBS)
+	-lmiro
 
 MotionStatusPoll_LDADD = $(linkwithlibraries)
 MotionStatusNotify_LDADD = $(linkwithlibraries)

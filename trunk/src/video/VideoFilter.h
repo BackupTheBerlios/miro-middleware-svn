@@ -16,6 +16,7 @@
 #include "VideoBrokerLink.h"
 
 #include "miro/TimeSeries.h"
+#include "miro/Log.h"
 #include "idl/VideoC.h"
 
 #include <vector>
@@ -391,7 +392,7 @@ namespace Video
   inline
   unsigned char const *
   Filter::inputBuffer() const {
-    assert(pre_ != NULL);
+    MIRO_ASSERT(pre_ != NULL);
     return inputBuffer_;
   }
 
@@ -404,7 +405,7 @@ namespace Video
   inline
   FilterImageParameters const *
   Filter::inputBufferParameters() const {
-    assert(pre_ != NULL);
+    MIRO_ASSERT(pre_ != NULL);
     return inputParameters_;
   }
 
@@ -454,7 +455,7 @@ namespace Video
   inline
   unsigned int
   Filter::outputBuffers() const throw() {
-    assert(params_ != NULL);
+    MIRO_ASSERT(params_ != NULL);
     return params_->buffers;
   }
 

@@ -13,6 +13,7 @@
 
 #include "miro/Synch.h"
 #include "miro/Exception.h"
+#include "miro/Log.h"
 #include "idl/ExceptionC.h"
 
 #include <vector>
@@ -143,26 +144,26 @@ namespace Video
   inline 
   unsigned char * 
   BufferManager::bufferAddr(unsigned int _index) throw () {
-    assert(_index < buffers_);
+    MIRO_ASSERT(_index < buffers_);
     return bufferStatus_[_index].buffer;
   }
   inline 
   const ACE_Time_Value&
   BufferManager::bufferTimeStamp(unsigned int _index) const throw () {
-    assert(_index < buffers_);
+    MIRO_ASSERT(_index < buffers_);
     return bufferStatus_[_index].time;
   }
   inline 
   void
   BufferManager::bufferTimeStamp(unsigned int _index, 
 				 ACE_Time_Value const& _stamp) throw () {
-    assert(_index < buffers_);
+    MIRO_ASSERT(_index < buffers_);
     bufferStatus_[_index].time = _stamp;
   }
   inline 
   FilterImageParameters * 
   BufferManager::imageParameters(unsigned int _index) throw () {
-    assert(_index < buffers_);
+    MIRO_ASSERT(_index < buffers_);
     return bufferStatus_[_index].params;
   }
 }

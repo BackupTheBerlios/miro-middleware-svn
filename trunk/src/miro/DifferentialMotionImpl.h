@@ -13,7 +13,7 @@
 
 #include "idl/DifferentialMotionS.h"
 #include "MotionImpl.h"
-#include "miro/Parameters.h"
+#include "SvcParameters.h"
 
 #include <cmath>
 

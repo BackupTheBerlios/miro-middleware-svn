@@ -11,6 +11,8 @@
 #ifndef LogFile_h
 #define LogFile_h
 
+#include "miro/Log.h"
+
 #include <orbsvcs/CosNotifyChannelAdminC.h>
 
 #include <ace/Mem_Map.h>

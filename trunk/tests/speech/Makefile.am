@@ -22,12 +22,7 @@ bin_PROGRAMS = SpeechTest
 SpeechTest_SOURCES = SpeechTest.cpp
 
 SpeechTest_LDADD = \
-	-lTAO \
-	-lTAO_CosNaming \
-	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
-	-lmiro \
-	$(QT_LIBS)
+	-lmiro
 
 all-local:
 	$(INSTALLPROGRAMS)

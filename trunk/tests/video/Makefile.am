@@ -23,12 +23,7 @@ TestVideoClient_SOURCES = TestVideoClient.cpp
 TestRemoteVideoClient_SOURCES = TestRemoteVideoClient.cpp
 
 linkwithlibraries = \
-	-lTAO \
-	-lTAO_CosNaming \
-	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
-	-lmiro \
-	$(QT_LIBS)
+	-lmiro
 
 TestVideoClient_LDADD = $(linkwithlibraries)
 TestRemoteVideoClient_LDADD = $(linkwithlibraries)

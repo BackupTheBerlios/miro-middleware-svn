@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -10,10 +10,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BaseImpl_h
 #define BaseImpl_h
-
-#include <ace/OS.h>
-
-// #include <termios.h>
 
 #include "idl/B21MotionS.h"
 #include "miro/MotionImpl.h"

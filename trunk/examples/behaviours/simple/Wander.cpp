@@ -10,6 +10,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #include "Wander.h"
 
+#include "miro/Log.h"
+
 namespace {
   // get random number between 0 and 1
   inline
@@ -40,7 +42,7 @@ Wander::action()
   const WanderParameters * params = 
     dynamic_cast<const WanderParameters *>(params_);
   // make sure nothing went wrong
-  assert(params != NULL);
+  MIRO_ASSERT(params != NULL);
 
   // set the arbiter message to random values
   double r = rand01();

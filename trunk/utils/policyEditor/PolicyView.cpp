@@ -12,6 +12,8 @@
 #include "PolicyView.h"
 #include "PatternWidget.h"
 
+#include "miro/Log.h"
+
 #include <qpainter.h>
 #include <qpopupmenu.h>
 #include <qdialog.h>
@@ -136,7 +138,7 @@ PolicyViewClass::drawContents(QPainter * p, int clipx, int clipy, int clipw, int
       PatternWidgetClass * pattern = 
 	dynamic_cast<PatternWidgetClass *>(iter.current());
 
-      assert (pattern != NULL);
+      MIRO_ASSERT (pattern != NULL);
 
       pattern->drawArrows(p);
       ++iter;

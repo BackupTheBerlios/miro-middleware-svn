@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2002
+// (c) 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -11,7 +11,6 @@
 
 #include <ace/Date_Time.h>
 #include <ace/Get_Opt.h>
-#include <ace/OS.h>
 
 #include <iostream>
 #include <sstream>

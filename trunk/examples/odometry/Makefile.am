@@ -25,12 +25,7 @@ SetPosition_SOURCES = SetPosition.cpp
 OdometryStream_SOURCES = OdometryStream.cpp OdometryStream.h
 
 linkwithlibraries = \
-	-lTAO \
-	-lTAO_CosNaming \
-	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
-	-lmiro \
-	$(QT_LIBS)
+	-lmiro
 
 PollPosition_LDADD = $(linkwithlibraries)
 SetPosition_LDADD = $(linkwithlibraries)

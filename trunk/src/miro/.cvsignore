@@ -1,5 +1,7 @@
 Parameters.h
 Parameters.cpp
+SvcParameters.h
+SvcParameters.cpp
 NotifyMulticastParameters.h
 NotifyMulticastParameters.cpp
 Makefile.in
@@ -34,6 +36,7 @@ NotifyMulticastRequestEntry.lo
 NotifyMulticastSender.lo
 NotifyMulticastTimeoutHandler.lo
 OdometryTracking.lo
+Parameters.lo
 Policy.lo
 PowerArbiter.lo
 PowerArbiterMessage.lo

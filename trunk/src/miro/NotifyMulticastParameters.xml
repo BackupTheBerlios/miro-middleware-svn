@@ -2,7 +2,7 @@
 <config> 
   <config_global name="namespace" value="Miro" />
   <config_global name="namespace" value="NotifyMulticast" />
-  <config_global name="include" value="Parameters.h" />
+  <config_global name="include" value="SvcParameters.h" />
   <config_global name="Include" value="ace/INET_Addr.h" />
 
   <config_group name="config">

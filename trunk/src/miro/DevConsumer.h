@@ -40,7 +40,7 @@ namespace Miro
    */
     virtual void handleMessage(const DevMessage * message);
   };
-};
+}
 #endif
 
 

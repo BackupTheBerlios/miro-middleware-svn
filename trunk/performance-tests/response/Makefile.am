@@ -27,14 +27,10 @@ PollResponse_SOURCES = PollResponse.cpp
 NotifyResponse_SOURCES = NotifyResponse.cpp
 
 linkwithlibraries = \
-	-lTAO \
-	-lTAO_CosNaming \
 	$(top_builddir)/lib/libsparrow.a \
 	$(top_builddir)/lib/libcan.a \
 	$(top_builddir)/lib/libmiroSvc.a \
-	-lmiroIDL \
-	-lmiro \
-	$(QT_LIBS)
+	-lmiro
 
 SparrowResponse_LDADD = $(linkwithlibraries)
 PollResponse_LDADD = $(linkwithlibraries)

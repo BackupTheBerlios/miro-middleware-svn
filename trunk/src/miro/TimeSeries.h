@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2000, 2001, 2002, 2003
+// (c) 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -11,6 +11,7 @@
 #ifndef Miro_TimeSeries_h
 #define Miro_TimeSeries_h
 
+#include "Log.h"
 #include <ace/Time_Value.h>
 
 namespace Miro
@@ -88,7 +89,7 @@ namespace Miro
   TimeSeries<N>::stop(const ACE_Time_Value& _stamp)
   {
     // prevent nonsense
-    assert(started_);
+    MIRO_ASSERT(started_);
 
     *next_++ = _stamp - start_;
     started_ = false;
