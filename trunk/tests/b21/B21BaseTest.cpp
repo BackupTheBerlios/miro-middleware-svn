@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
       motion->setRotateVelocity(M_PI/6);
       cout << "waiting for motion to stop" << endl;
       motion->waitRotateHalt();
-      cout << "rotate left 90,A0(B" << endl;
+      cout << "rotate left 90°" << endl;
       motion->rotateRelative(M_PI/2);
       cout << "waiting for base to stop" << endl;
       motion->waitRotateHalt();
@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
       cout << "limp" << endl;
       motion->rotateLimp();
 
-      cout << "rotate right 90,A0(B" << endl;
+      cout << "rotate right 90°" << endl;
       motion->rotateRelative(-M_PI/2);
       cout << "waiting for base to stop" << endl;
       motion->waitRotateHalt();

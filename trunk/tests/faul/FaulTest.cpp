@@ -322,7 +322,7 @@ int main(int argc, char* argv[])
 	   {
 	     cout << "Servosetting:" << endl
 		  << "  0: middle Setting " << endl
-		  << "  +/- 90,A0(B " << endl;
+		  << "  +/- 90°" << endl;
 	     cin >> k;
 	     //service.connection.setServo(k);
 	     break;

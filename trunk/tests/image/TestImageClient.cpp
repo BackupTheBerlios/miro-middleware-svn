@@ -25,6 +25,8 @@
 #include "miro/Client.h"
 #include "miro/IO.h"
 
+#include <sys/shm.h>
+
 using namespace Miro;
 
 using std::cout;

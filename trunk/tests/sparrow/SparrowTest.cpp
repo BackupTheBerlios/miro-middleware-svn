@@ -150,7 +150,7 @@ int main(int argc, char * argv[])
 	cin >> power;
 	cout << "maxSpeed (1000): " << flush;
 	cin >> speed;
-	cout << "maxRotation (180,A0(B): " << flush;
+	cout << "maxRotation (180°): " << flush;
 	cin >> rot;
 	rot = deg2Rad(rot);;
 	service.connection.initMax(accel, power, speed, rot);
@@ -299,7 +299,7 @@ int main(int argc, char * argv[])
 	alpha = service.odometryImpl->getWaitPosition().heading;
 	beta += alpha - gamma;
 	
-	cout << "turned angle: " << rad2Deg(beta) << ",A0(B" <<endl;
+	cout << "turned angle: " << rad2Deg(beta) << "°" <<endl;
 	break;
       case 'p':
 	cout << "current position is: " 

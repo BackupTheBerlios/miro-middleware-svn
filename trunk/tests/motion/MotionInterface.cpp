@@ -50,7 +50,7 @@ MotionInterface::evalCommand(char c)
     motion_->getMinMaxVelocity(minTrans, maxTrans, minRot, maxRot);
     std::cout << "Velocity bounds: " << std::endl
 	      << "Translation: " << minTrans << "mm/s to " << maxTrans << "mm/s" << std::endl
-	      << "Rotation: "<< Miro::rad2Deg(minRot) << ",A0(B to " << Miro::rad2Deg(maxRot) << ",A0(B" << std::endl;
+	      << "Rotation: "<< Miro::rad2Deg(minRot) << "° to " << Miro::rad2Deg(maxRot) << "°" << std::endl;
     break;
   case '1':
     velocity = motion_->getTargetVelocity();
@@ -60,7 +60,7 @@ MotionInterface::evalCommand(char c)
     std::cout << "Set velocity: " << std::endl
 	      << "translation (mm/s) : " << std::flush;
     std::cin >> trans;
-    std::cout << "rotation (,A0(B/s) : " << std::flush;
+    std::cout << "rotation (°/s) : " << std::flush;
     std::cin >> rot;
     std::cout << "time befor stop (msec) : " << std::flush;
     std::cin >> msec;

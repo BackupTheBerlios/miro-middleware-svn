@@ -66,7 +66,7 @@ SynchroMotionInterface::evalCommand(char c)
     break;
   case '6':
     std::cout << "Set rotational velocity: " << endl
-	      << "rotation (,A0(B/s) : " << flush;
+	      << "rotation (°/s) : " << flush;
     std::cin >> rot;
     std::cout << "time before stop (msec) : " << flush;
     std::cin >> msec;
