@@ -47,6 +47,10 @@
 // It uses the ctor/dtor of a local variable to 
 // set/reset the trace depth.
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #if defined (MIRO_NO_DEBUG)
 #define MIRO_ASSERT(X) do {} while (0)
 #elif !defined (MIRO_ASSERT)

@@ -104,3 +104,19 @@ if test "x$ac_gcc_version" != "x"; then
 	AC_DEFINE_UNQUOTED(GCC_MINOR_VERSION, $ac_gcc_minor)
 fi
 ])
+
+
+AC_DEFUN(AC_DETERMINE_LOGGING,
+[
+AC_ARG_ENABLE(
+	DebugInfo,
+	AC_HELP_STRING([--enable-DebugInfo], [Enable Miro debug information (default on)]),
+	ac_request_debuginfo=$enableval,
+	ac_request_debuginfo=yes)
+
+AC_ARG_ENABLE(
+	LogInfo,
+	AC_HELP_STRING([--enable-LogInfo], [Enable Miro logging information (default on)]),
+	ac_request_loginfo=$enableval,
+	ac_request_loginfo=yes)
+])

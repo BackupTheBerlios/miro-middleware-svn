@@ -157,6 +157,20 @@ fi
 
 AM_CONDITIONAL(COND_SPEECH, [test "x$ac_compile_speech" = xyes])
 
+
+
+AH_TEMPLATE([MIRO_NO_DEBUG], [build without debug info support.])
+AH_TEMPLATE([MIRO_NO_LOGGING], [build without log info support.])
+
+AC_DETERMINE_LOGGING
+if test "x$ac_request_debuginfo" = xno; then
+	AC_DEFINE(MIRO_NO_DEBUG)
+fi
+if test "x$ac_request_loginfo" = xno; then
+	AC_DEFINE(MIRO_NO_LOGGING)
+fi
+
+
 AC_DETERMINE_GCC_VERSION
 
 AC_CONFIG_FILES([Makefile
@@ -272,6 +286,8 @@ echo ""
 if test "x$ac_gcc_version" != "x"; then
 	echo $ECHO_N "gcc version" $ac_gcc_version "is used."; fi
 echo ""
+echo $ECHO_N "Debug information "; if test "x$ac_request_debuginfo" = xyes; then echo "enabled."; else echo "disabled."; fi
+echo $ECHO_N "Logging information "; if test "x$ac_request_loginfo" = xyes; then echo "enabled."; else echo "disabled."; fi
 echo ""
 echo "ACE-related results:"
 echo "linker flags:  " $ACE_LDFLAGS
