@@ -82,16 +82,21 @@ namespace FaulMotor
     int speed = (short) (_speed * params_->speedConvFactor);//* 112;
    double accL, accR;
     				// maxPosAccel,  maxNegAccel parameter setzen
-    accL = speed / prevSpeedL;
-    accR = speed / prevSpeedR;
-    if (accL <= accR)
+    accL = speed;
+    accR = speed;
+    if (prevSpeedL != 0) accL = speed / prevSpeedL;
+    if (prevSpeedR != 0) accL = speed / prevSpeedR;
+    if ((accL <= accR) && (accR != 0))
     {
 	accL = (accL / accR * params_-> maxPosAccel) * 90 / 320;
 	accR = (params_-> maxPosAccel) * 90 / 320;
     }else
     {
-	accR = (accR / accL * params_-> maxPosAccel) * 90 / 320;
-	accL = (params_-> maxPosAccel) * 90 / 320;
+	if (accL != 0) //was machen wenn true????
+	{
+		accR = (accR / accL * params_-> maxPosAccel) * 90 / 320;
+		accL = (params_-> maxPosAccel) * 90 / 320;
+	}
     }
     cout << "AccR: " << (int)accR << " AccL: " << (int)accL << endl;
     
