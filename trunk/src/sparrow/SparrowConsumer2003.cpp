@@ -356,7 +356,7 @@ namespace Sparrow
 
     case CAN_R_PAN_POSITION_2005: {
       // store current pan position ...
-      MIRO_LOG_OSTR(LL_NOTICE, "SparrowConsumer2003: Received Pan2005 position");
+      MIRO_DBG_OSTR(SPARROW, LL_DEBUG, "SparrowConsumer2003: Received Pan2005 position");
       double tpd;
       tpd = connection_->getPanTicksPerDegree();
       if (tpd != 0.0) {			// As long as we don't know about ticks/deg we cannot calc current position
