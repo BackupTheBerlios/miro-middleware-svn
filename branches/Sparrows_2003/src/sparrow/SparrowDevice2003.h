@@ -17,7 +17,7 @@
 namespace Sparrow
 {
   // types of timers registerd for Sparrow::EventHandler
-  typedef enum { BUTTONS_TIMER, STALL_TIMER, INIT_TIMER } TimerType;
+  typedef enum { BUTTONS_TIMER, STALL_TIMER, INIT_TIMER} TimerType;
 
   //--------------------------------------------------------------------------
   // Motion status

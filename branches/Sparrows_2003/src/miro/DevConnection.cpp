@@ -55,11 +55,12 @@ namespace Miro
     devName(_parameters.device.c_str()),
     ioBuffer(),
     connector(),
-    selectHandlerId(-1)
+    selectHandlerId(-1),
+    tv(0,0)
   {
     DBG(cout << "DevConnection intizialising" << endl);
 
-    if (connector.connect(ioBuffer, devName, 0, ACE_Addr::sap_any, 0, O_RDWR) == -1) {
+    if (connector.connect(ioBuffer, devName, &tv, ACE_Addr::sap_any, 0, O_RDWR) == -1) {
       cerr << "Failed to open device." << endl
 	   << "Propably running on the wrong machine?" << endl;
       throw CException(errno, std::strerror(errno));
@@ -67,7 +68,7 @@ namespace Miro
 
     // we need a handler to listen to the asynchronous file handler
     // of the device
-    selectHandlerId = 
+    selectHandlerId =
       reactor->register_handler(ioBuffer.get_handle(),
 				eventHandler, ::ACE_Event_Handler::READ_MASK);
     if (selectHandlerId == -1)

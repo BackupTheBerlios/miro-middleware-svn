@@ -26,6 +26,8 @@ SHLIB    = lib$(NAME).$(SOEXT)
 ## specify your library files here
 FILES = 	\
 		Parameters \
+		AliveCollector \
+		AliveEventHandler \
 		SparrowBaseConnection \
 		SparrowConnection \
 		SparrowConnection2003 \

@@ -9,7 +9,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 #ifndef SparrowConnection2003_h
-#define SparrowConnection2003_hh
+#define SparrowConnection2003_h
 
 #include "SparrowDevice2003.h"
 #include "Parameters.h"
@@ -45,7 +45,7 @@ namespace Sparrow
     void setServo(unsigned char servo, double rad);
     void kick(unsigned char ventilatetime, unsigned char kicktime);
 
-
+    void alivetimeout();
 
   protected:
 

@@ -18,6 +18,7 @@
 #include <tao/ORB_Core.h>
 
 #include "sparrow/Parameters.h"
+#include "sparrow/SparrowDevice2003.h"
 #include "pioneer/Parameters.h"
 #include "faulMotor/FaulMotorMotionImpl.h"
 
@@ -116,10 +117,14 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 
   mcAdapter_((Sparrow::Parameters::instance()->channelSharing)?
              new Miro::NotifyMulticast::Adapter(argc, argv, this, ec_) :
-	     0)
+	     0),
+  delay(0,0),
+  interval(0, 500000)
 {
 
    if(Sparrow::Parameters::instance()->sparrow2003){
+
+   aCollector = new Sparrow::AliveCollector();
 
    pSparrowConsumer2003 = new Sparrow::Consumer2003();/**sparrowConnection,
 					 ( (Sparrow::Parameters::instance()->faulhaber)?
@@ -133,6 +138,8 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 		    pCanEventHandler,
 		    pSparrowConsumer2003);
 
+
+
    sparrowKicker = new Sparrow::KickerImpl(sparrowConnection2003);
    //sparrowButtons = new Sparrow::ButtonsImpl(*pSparrowConsumer2003, &structuredPushSupplier_);
    //sparrowStall = new Sparrow::StallImpl(*sparrowConnection2003, &structuredPushSupplier_);
@@ -142,10 +149,13 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 					( (Sparrow::Parameters::instance()->faulhaber)?
 					   NULL :
 					   &odometry),
-					   &infrared);
+					   &infrared,
+					   pFaulhaber->pConsumer);
 
    pSparrowMotion = (POA_Miro::Motion *) new FaulMotor::MotionImpl(pFaulhaber->connection);
 
+   aEventHandler = new Sparrow::AliveEventHandler(aCollector, sparrowConnection2003);
+   //(reactorTask.reactor())->schedule_timer(aEventHandler, NULL, delay,interval);
 
    }
    else{
@@ -233,10 +243,14 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 
   mcAdapter_((Sparrow::Parameters::instance()->channelSharing)?
              new Miro::NotifyMulticast::Adapter(0, NULL, this, ec_) :
-	     NULL)
+	     NULL),
+  delay(0,0),
+  interval(0, 500000)
 {
 
    if(Sparrow::Parameters::instance()->sparrow2003){
+
+   aCollector = new Sparrow::AliveCollector();
    pSparrowConsumer2003 = new Sparrow::Consumer2003(); /**sparrowConnection,
 					 ( (Sparrow::Parameters::instance()->faulhaber)?
 					   NULL :
@@ -263,11 +277,15 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 					( (Sparrow::Parameters::instance()->faulhaber)?
 					   NULL :
 					   &odometry),
-					 &infrared);
+					 &infrared,
+					 pFaulhaber->pConsumer);
 
    pSparrowMotion = (POA_Miro::Motion *) new FaulMotor::MotionImpl(pFaulhaber->connection);
 
+   aEventHandler = new Sparrow::AliveEventHandler(aCollector, sparrowConnection2003);
 
+
+   //(reactorTask.reactor())->schedule_timer(aEventHandler, NULL, delay,interval);
 
 
    }

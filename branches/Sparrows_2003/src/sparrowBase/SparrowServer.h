@@ -4,9 +4,9 @@
 //
 // (c) 1999, 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
-// 
+//
 // $Id$
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
 #ifndef sparrowBase_hh
 #define sparrowBase_hh
@@ -19,6 +19,8 @@
 #include "miro/OdometryImpl.h"
 
 #include "can/CanEventHandler.h"
+#include "sparrow/AliveCollector.h"
+
 #include "sparrow/SparrowConnection.h"
 #include "sparrow/SparrowConnection2003.h"
 #include "sparrow/SparrowConsumer.h"
@@ -28,7 +30,7 @@
 #include "sparrow/SparrowButtonsImpl.h"
 #include "sparrow/SparrowStallImpl.h"
 #include "sparrow/SparrowPanTiltImpl.h"
-
+#include "sparrow/AliveEventHandler.h"
 #include "psos/PsosEventHandler.h"
 #include "pioneer/PioneerConnection.h"
 #include "pioneer/PioneerConsumer.h"
@@ -152,6 +154,11 @@ public:
 
   /* NotifyMulticast */
   Miro::NotifyMulticast::Adapter *mcAdapter_;
+
+  Sparrow::AliveCollector * aCollector;
+  Sparrow::AliveEventHandler * aEventHandler;
+  ACE_Time_Value delay;
+  ACE_Time_Value interval;
 };
 
 inline
@@ -159,7 +166,7 @@ Miro::NotifyMulticast::Adapter *
 SparrowBase::notifyMulticast() {
   return mcAdapter_;
 }
-  
+
 #endif
 
 

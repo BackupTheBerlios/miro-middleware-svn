@@ -9,7 +9,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 #ifndef SparrowConnection_h
-#define SparrowConnection_hh
+#define SparrowConnection_h
 
 #include "SparrowDevice.h"
 #include "Parameters.h"

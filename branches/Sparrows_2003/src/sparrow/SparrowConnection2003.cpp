@@ -143,4 +143,14 @@ namespace Sparrow
 
   }
 
+  void
+  Connection2003::alivetimeout()
+  {
+    Message message;
+    message.length(1);
+    message.id(CAN_READ_PORTS);
+    message.byteData(0,0);
+    write(message);
+  }
+
 };

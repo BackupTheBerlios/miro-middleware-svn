@@ -14,6 +14,7 @@
 
 #include "SparrowConsumer2003.h"
 #include "SparrowConnection2003.h"
+#include "IRLookupTable.h"
 #include "miro/RangeSensorImpl.h"
 #include "miro/TimeHelper.h"
 #include "can/Parameters.h"
@@ -121,7 +122,8 @@ namespace Sparrow
 
   void Consumer2003::registerInterfaces(Connection2003 * _connection,
 	     				Miro::OdometryImpl * _pOdometry,
-	     				Miro::RangeSensorImpl * _pIR)
+	     				Miro::RangeSensorImpl * _pIR,
+					FaulMotor::Consumer * _faulConsumer)
   {
 
 
@@ -129,6 +131,7 @@ namespace Sparrow
      connection = _connection;
      pOdometry_ = _pOdometry;
      pIR_ = _pIR;
+     faulConsumer = _faulConsumer;
 
      if (pOdometry_) {
       Miro::PositionIDL origin;
@@ -182,20 +185,14 @@ namespace Sparrow
 	data->group = 0;
 	data->range.length(8);
 	for (int i = 7; i >= 0; --i)  {
-	  if (message.charData(i) != -1) {
 
-	    calRange = ((int)message.charData(i) * 10 - param->irScaling[i].offset);
-	    calRange = calRange - param->irScaling[i].minDistance;
-	    calRange = (long) (calRange * param->irScaling[i].scaling);
-	    calRange = calRange + param->irScaling[i].minDistance ;
-	    if ((calRange < param->irScaling[i].minDistance) ||
-		(calRange > param->irScaling[i].maxDistance)) {
-	      calRange = -1;
-	    }
-	  }
-	  else {
-	    calRange = -1;
-	  }
+        calRange = IR_LOOKUP_TABLE[message.charData(i)];
+
+        // -1 wenn Entfernung >= 50cm
+	if (calRange == 500) {
+	  calRange = -1;
+	}
+
 	  data->range[i] = calRange;
 	}
 	pIR_->integrateData(data);
@@ -213,7 +210,7 @@ namespace Sparrow
 	data->group = 1;
 	data->range.length(8);
 	for (int i = 7; i >= 0; --i)  {
-	  if (message.charData(i) != -1) {
+	/*  if (message.charData(i) != -1) {
 
 	    calRange = ((int)message.charData(i) * 10 - param->irScaling[i].offset);
 	    calRange = calRange - param->irScaling[i].minDistance;
@@ -226,7 +223,14 @@ namespace Sparrow
 	  }
 	  else {
 	    calRange = -1;
-	  }
+	  } */
+
+	  calRange = IR_LOOKUP_TABLE[message.charData(i)];
+
+        // -1 wenn Entfernung >= 50cm
+	if (calRange == 500) {
+	  calRange = -1;
+	}
 	  data->range[i] = calRange;
 	}
 	pIR_->integrateData(data);
