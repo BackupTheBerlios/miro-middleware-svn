@@ -74,18 +74,19 @@ namespace Miro
 
     const int CURV_CNT = 8; // count
     const int CURV_RES = 8; // count
-    const int CURV_LEN = 500; // mm
-    const int CURV_SMOOTH_LEN = 300; // mm
-    const int CURV_DELAY = 2; // count
+    const int CURV_LEN = 700; // mm
+    const int CURV_SMOOTH_LEN = 100; // mm
+    const int CURV_DELAY = 4; // count
     const double WHEEL_DISTANCE  = 390.; // mm
-    const double BREAK_ACCEL = 2000.; // in mm/sec2
+    const double BREAK_ACCEL = 2500.; // in mm/sec2
 
     int CURV[2*CURV_CNT+1][2*CURV_RES+1]; // curvature space
     
     int count, seg, left, right, curv, target, front, back;
     bool frontObstacle, backObstacle;
     double fLeft, fRight, offset, angle, rel, break_dist, left_break, right_break;
-
+    std::vector<Vector2d>::iterator a;
+    
     std::FILE *logFile1;
     logFile1 = std::fopen("curvature.log","a");
     
@@ -115,11 +116,19 @@ namespace Miro
         angle = (180. * (fLeft - fRight)) / (WHEEL_DISTANCE * M_PI);
 	
 	// rotate completely backwards
-	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -angle * (CURV_RES + 1));
+	rotateMountedPolygon(_robot, Vector2d(offset, 0.), angle * (CURV_RES + 1));
 	
 	// rotate stepwise forwards and check for collisions
 	for(seg = 0; seg < 2*CURV_RES+1; seg++) {
-	  rotateMountedPolygon(_robot, Vector2d(-offset, 0.), angle);
+	  rotateMountedPolygon(_robot, Vector2d(offset, 0.), -angle);
+	  cout << endl << "REL:" << rel << endl;
+	  cout << endl << "ROBOT:" << flush;
+	  for(a = _robot.begin(); a < _robot.end(); a++) {
+	    cout << a->real() << "_" << a->imag() << "|" << flush;
+	  }
+	  cout << endl;
+	  if(seg==CURV_RES)
+	    cout << "SEG finished!!!!!!!" << endl;
           if(getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) == 0) {
 	    CURV[count][seg] = 0;
 	  }
@@ -130,7 +139,7 @@ namespace Miro
 	}
 	
 	// rotate backwards to middle position
-	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -angle * CURV_RES);
+	rotateMountedPolygon(_robot, Vector2d(offset, 0.), angle * CURV_RES);
 	
       }
       else { // left==right ==> robot moves straight forward/backward
