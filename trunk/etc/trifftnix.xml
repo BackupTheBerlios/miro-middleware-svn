@@ -86,7 +86,7 @@
    <parameter value="0.050000" name="ButtonsPollInterval" />
    <parameter value="1.0776" name="TransFactor" />
    <parameter value="1.000000" name="WatchdogTimeout" />
-   <parameter value="3050" name="Servo0MidPulse" />
+   <parameter value="3975" name="Servo0MidPulse" />
    <parameter value="26" name="Deg2ServoTicks" />
    <parameter value="200" name="MaxAccel" />
    <parameter value="2350" name="Diameter" />
@@ -114,7 +114,7 @@
   </parameter>
   <parameter name="Camera" >
    <parameter value="0.060000" name="Latency" />
-   <parameter value="32.55" name="Alpha" />
+   <parameter value="32.00" name="Alpha" />
    <parameter value="530" name="Height" />
    <parameter value="1.82316246e+02" name="Cx" />
    <parameter value="1.36687831e+02" name="Cy" />
