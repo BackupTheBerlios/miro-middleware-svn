@@ -246,18 +246,18 @@
     <parameter name="UpsideDown" value="false" />
     <parameter name="Zoom">
      <parameter name="Present" value="true"/>
-     <parameter name="RangeMin" value="-135"/>
-     <parameter name="RangeMax" value="135"/>
+     <parameter name="RangeMin" value="6"/>
+     <parameter name="RangeMax" value="60"/>
     </parameter>
    </parameter>
    <parameter name="PanTiltParams">
     <parameter name="Pan">
-     <parameter name="RangeMin" value="-90"/>
-     <parameter name="RangeMax" value="90"/>
+     <parameter name="RangeMin" value="-55"/>
+     <parameter name="RangeMax" value="55"/>
     </parameter>
     <parameter name="Tilt">
-     <parameter name="RangeMin" value="-90"/>
-     <parameter name="RangeMax" value="90"/>
+     <parameter name="RangeMin" value="-35"/>
+     <parameter name="RangeMax" value="35"/>
     </parameter>
    </parameter>
   </parameter>
