@@ -1,0 +1,78 @@
+\usepackage{a4} % A4 paperformat
+\usepackage{isolatin1} % for input of 8 bits character
+\usepackage{makeidx} % enable indexing
+\usepackage{verbatim} % better verbatim environment
+\usepackage{epsfig}
+\usepackage{xspace} % add extra space at the end of the word if necessary
+\usepackage{color} % provides standard LaTeX colors
+\usepackage{graphicx} % enhanced graphics usage
+\usepackage{fancyhdr}
+\usepackage{float} % float environment enhancements
+\usepackage{alltt} % defines alltt environment which is like verbatim, but allows some additional formating
+\usepackage{listings} % pritty print of code-listings
+
+%\usepackage[german]{babel} % multilingual package
+%\usepackage[normal]{subfigure} % support for the inclusion of small subfigures
+%\usepackage{latexsym} % some extra mathematical symbols
+%\usepackage{exscale} % implements scaling of the `cmex' fonts
+
+
+% configure the listings-environment
+\lstloadlanguages{C++}
+\lstset{
+  basicstyle=\sf,
+  commentstyle=\hfill \sl,
+  language=C++,
+  defaultdialect=ANSI,
+  flexiblecolumns=true,
+  indent=\parindent,
+  extendedchars
+  %%  texcl
+  %% formfeed={}
+}
+
+
+% command definitions
+
+% logo of the miro-software writing
+\newcommand{\miro}{\textit{Miro}\xspace}
+% logo of the sparrow writing
+\newcommand{\sparrow}{\textit{Sparrow-99}\xspace}
+% logo of the b21 writing
+\newcommand{\bXXI}{\textit{B21}\xspace}
+
+
+% font definitions
+\newcommand{\Xbombastic}{\fontfamily{ppl}\fontseries{b}\fontsize{1.5in}{1.8in}\selectfont}
+
+
+% color definitions
+\definecolor{LightGrey}{rgb}{0.9,0.9,0.9}
+
+
+% page definitions
+\setlength{\parindent}{0pt} % Keine Absatzeinrückung
+\setlength{\parskip}{7pt plus 1pt minus 1pt} % Absatz Abstand 7pt
+
+
+% misc
+\makeindex
+\bibliographystyle{plain}
+
+%=============================== Examples ====================================
+
+%% code-parts as an extra paragraph
+%% \begin{lstlisting}[frame=tb]{}
+%% for (unsigned int i = 0; i < sonarScan.length(); ++i)
+%%   cout << sonarScan.[i] << " ";
+%% \end{lstlisting}
+
+%% Included code-parts from a file
+%% \lstinputlisting[frame=tb]{simpleTestClient.cc}
+
+%=============================== Examples (end) ====================================
+
+%%% Local Variables:  
+%%% mode: latex
+%%% TeX-master: "miro_manual"
+%%% End: 

@@ -1,0 +1,41 @@
+<!DOCTYPE UlmSparrowsConfig >
+<xml>
+  <robot>
+    <type>Pioneer1</type>      <!-- B21, Pioneer1, Sparrow99 -->
+    <speech>none</speech>
+    <pantilt>none</pantilt> <!-- none or dpPanTilt -->
+    <laser>none</laser> <!-- none or SICK -->
+    <framegrabber>bttv8</framegrabber> <!-- none, bttv8 or meteor -->
+  </robot>
+
+  <Pioneer1>
+    <pioneerBoard>
+      <device>/dev/ttyS1</device>
+      <baudrate>9600</baudrate>
+      <databits>8</databits>
+      <stopbits>1</stopbits>
+      <parityenb>0</parityenb>
+      <sonar>
+         <scandescription>
+           <scantype>3</scantype>
+           <sensorgroup height="400" distance="248" beta="0" gamma="0">
+             <description>
+               <minrange>100</minrange>
+               <maxrange>3000</maxrange>
+               <focus>0.26180</focus>
+             </description>
+             <sensor><alpha>180</alpha></sensor>
+             <sensor><alpha>150</alpha></sensor>
+             <sensor><alpha>120</alpha></sensor>
+             <sensor><alpha>90</alpha></sensor>
+             <sensor><alpha>90</alpha></sensor>
+             <sensor><alpha>60</alpha></sensor>
+             <sensor><alpha>30</alpha></sensor>
+             <sensor><alpha>0</alpha></sensor>
+           </sensorgroup>
+         </scandescription>
+         <mask>1 1 0 1</mask>
+      </sonar>
+    </pioneerBoard>
+  </Pioneer1>
+</xml>

@@ -1,0 +1,51 @@
+// -*- idl -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
+// for documentation see Miro/doc
+// 
+// (c) 1999, 2000, 2001
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// Authors: 
+//    Stefan Enderle, 
+//    Stefan Sablatnoeg, 
+//    Hans Utz
+// 
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef PioneerStall_idl
+#define PioneerStall_idl
+
+#include "Stall.idl"
+
+module Miro
+{
+  struct PioneerStallEventIDL
+  {
+    Stall::Status status;
+    short wheel;
+  };
+  
+  /**
+   * Interface to the stall detection of the Pioneer 1 robot.
+   */
+  interface PioneerStall : Stall
+  {
+    const short LEFT_WHEEL = 1;
+    const short RIGHT_WHEEL = 2;
+    
+    /** 
+     * Query the stall status of the wheels.
+     *
+     * The status of the two wheels is ored together.  Therefor 0 is
+     * none stalled, 1 is left stalled, 2 is right stalled and 3 means
+     * both are stalled. 
+     */
+    short getStalledWheels();
+  };
+};
+
+#endif

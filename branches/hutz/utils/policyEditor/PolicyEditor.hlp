@@ -1,0 +1,176 @@
+PolicyEditor-Dokumentation
+
+
+I Einführung
+
+Ein Möglichkeit, einem Roboter "intelligentes" Verhalten beizubringen,besteht
+darin, elementare Verhaltensmuster zu programmieren und diese miteinander zu
+kombinieren, um komplexere Verhaltensstrukturen zu erreichen. Bei RoboCup
+könnten solche elementare Verhaltensmuster (Behaviours) zum Beispiel sein:
+Suche_Ball, Fahre_zum_Ball, Drehe_zum_Tor und Schieße_Ball. Kombiniert man diese
+vier so erhält man schon das recht komplexe Verhalten Schieße_Tor. Der Wechsel
+von einem elementaren Verhalten in ein anderes wird durch z.B. durch äußere
+Einflüsse, aufgefangen durch die Sensoren,angestoßen. So würde der Roboter von
+Suche_Ball- in den Fahre_zum_Ball-Zustand wechseln, sobald die Vision in dem von
+der Kamera aufgenommenen Bild den roten Ball wahrnehmen würde. 
+
+
+
+II Der PolicyEditor
+
+Der PolicyEditor ist nun ein Werkzeug, mit dem so ein komplexes Verhaltensmuster
+aus elementaren Behaviours per Mausklick zusammengestellt werden kann.
+
+Im folgenden werde ich die Funktionsweise des Editors erklären, indem ich ein kurzes 
+BeispielBehaviour entwickle.
+
+II.1 Programmstart
+==================
+Der PolicyEditor kann mit dem Befehl "PolicyEditor" gestartet werden. Der Editor
+startet dann mit einem leeren Arbeitsblatt, d.h. es kann nun ein neues
+Verhaltensmuster entworfen werden. Würde aber in der Kommandozeile zusätlich zu
+dem Kommando "PolicyEditor" noch ein gültige PolicyDatei angegeben werden, so
+würde sofort diese PolicyDatei geladen werden.  
+
+
+II.2 neues Dokument anlegen
+===========================
+Jederzeit läßt sich mit dem Menübefehl "New" im Menü "File" ein neues Dokument anlegen.
+Sollte davor noch eine Dokument, das geändert wurde, geladen sein, so wird der
+Benutzer noch gefragt, ob dies gespeichert werden muß. Danach erscheint eine leere
+Arbeitsfläche, sprich: ein neues Dokument wurde begonnen.
+
+II.3 vorhandenes Dokument laden
+===============================
+Mit dem Menübefehl "Open..." kann ein schon vorhandenes Dokument geladen werden - es
+wird in der Arbeitsfläche angezeigt. Sollte jedoch keine Graphik sichtbar sein, so
+kann es daran liegen, daß die Objekte außerhalb des sichtbaren Bereiches liegen. Mit
+den Scrollbars am unteren und rechten Fensterrand kann der sichtbare Bereich des
+Dokumentes verschoben werden. 
+
+II.4 speichern des Dokumentes
+=============================
+Es gibt zwei Möglichkeit um ein Dokument zu speichern, zum einen mit dem Menüpunkt "Save
+as..." zum anderen mit dem Menüpunkt "Save"
+
+II.4.1 Save as...
+=================
+Mit "Save as..." wird das aktuelle Dokument unter dem Dateiname abgespeichert, der in dem
+sich öffnenden Datei-Speichern-Unter-Dialog einzugeben ist.
+
+!!!Vorsicht: Existiert in dem selben Verzeichnis unter dem angegebenen Dateinamen bereits
+eine Datei, so wird diese (momentan noch) ohne Vorwarnung überschrieben!!!
+
+II.4.2 Save
+===========
+Mit "Save" wird das aktuelle Dokument sofort in die Datei gespeichert, aus der es
+geladen wurde. Sollte es sich aber noch um ein neues Dokument handeln, so verhält sich
+"Save" wie "Save as..." (siehe II.4.1).
+
+
+II. Beenden
+============
+Das Programm kann mit dem Befehl "Quit" beendet werden. Wurden an dem Dokument, das geschlossen
+werden soll, irgendwelche Änderungen vorgenommen, so wird der Benutzer noch gefragt, ob er die
+Modifikationen speichern will. 
+
+
+II.5 Hinzufügen eines Patterns
+==============================
+Ein neues Pattern wird hinzugefügt, indem man mit der rechten Maustaste auf eine freie Stelle des
+Dokumentes klickt und dann in dem sich öffnenden Popup-Menü den Menüpunkt "Add pattern" aufruft.
+Nachdem man in einem Dialog den Namen des Pattern eingegeben hat, wird dieses im Dokument als ein
+rechteckiges Element (in Zukunft als Pattern-Element bezeichnet), bestehend aus einem roten und
+einem gründen Feld dargestellt. Das rote Feld beinhalten den zuvor eingegebenen Namen, das gründe
+den nun auszuwählenden Arbiter. Das Element kann an einer anderen Stelle des Dokumentes platziert
+werden, indem die Maus bei gedrückter rechter Maustaste in die gewünschte Richtung bewegt wird. Die
+Taste mußte auf dem roten Feld niedergedrückt worden sein.
+
+II.6 Arbiter auswählen
+======================
+Ein Arbiter wird ausgewählt, indem auf das grüne Element mit der rechten Maustaste geklickt wird.
+Es öffnet sich ein Popup-Menü, bestehend aus zwei Menüpunkten:
+- "Set arbiter"
+- "Delete arbiter"
+
+II.6.1 Menüpunkt "Set arbiter"
+============================
+Der Menüpunkt "Set arbiter" öffnet ein Untermenü, indem alle dem PolicyEditor bekannten Arbiter
+aufgeführt werden. Ein Klick mit der linken Maustaste macht den ensprechenden Arbiter zum aktuellen
+Arbiter des Pattern. Der Name wird dann auch im grünen Feld des Pattern-Elements angezeigt. 
+Arbiter werden dem PolicyEditor bekannt gemacht, indem sie in die aktuelle
+Behaviour-Description-Datei eingetragen werden, bzw. es wird eine neue behaviour-Description-Datei
+geladen. 
+
+II.6.2 Menüpunkt "Delete arbiter"
+===============================
+noch nicht implementiert
+
+
+II.7 Startpattern auswählen
+===========================
+Jede Policy benötigt ein Pattern, das als erstens aktiviert wird, sobald die Policy geladen wird.
+Ein Pattern-Element wird dadurch zum (neuen) Startpattern, indem darin mit der rechten Maustaste
+auf das rote Feld geklickt wird und dann der Menüpunkt "Start pattern" aufgerufen wird. Der Name des
+Pattern-Elements wird dann in Sternchen (*) eingeschlossen: z. B. *wander*.
+
+
+II.8 Behaviours
+===============
+Nun können dem Pattern die einzelnen Elementarverhalten, kurz Behaviours, hinzugefügt werden.
+
+II.8.1 Hinzufügen von Behaviours
+==============================
+Im Popup-Menü, das sich durch einen Klick mit der rechten Maustaste in das rote Feld öffnet, gibt es
+das Untermenü "Add behaviour". Dieses enthält alle zur Verfügung stehenden Behaviours, abzüglich
+derer, die schon in dem aktuellen Pattern aktiviert wurden. Nachdem eines ausgewählt wurde, wird es
+im Pattern-Element in einer grau hinterlegten Liste dargestellt. Es können beliebig viele Behaviours
+dem Pattern zugeordnet werden. Die zur Verfügung stehenden Behaviour sind, wie die Arbiter, in der   
+Behaviour-Description-Datei registriert.
+
+II.8.2 Einstellen der Parameter
+===============================
+Bei vielen Behaviour muß man zusätzlich bestimmte Werte setzten. Dazu muß man in der Liste der zum
+Pattern zugeordneten Behaviours auf den entsprechenden Eintrag mit der rechten Maustaste klicken.
+Damit öffnet sich ein Dialog, der eine Tabelle mit den einstellbaren Parameter (1. Spalte) enthält.
+In der zweiten Spalte kann dann der Wert eingetragen werden, der mit dem Typ, der in der dritten
+Spalte angegeben ist, übereinstimmen muß. Wäre dies nicht der Fall, so würde beim Schließen des
+Dialoges der Benutzer darauf hingewiesen werden, das eine oder mehrere Typverletztung(en)
+(type-missmatch) aufgetreten wäre(n) und die entsprechenden Werte würden verworfen werden. Die vierte
+Spalte gibt noch einen Hinweis auf die Einheit des einzugebenden Wertes.
+
+II.8.3 Ändern der Parameter
+===========================
+Die Parameter können abgeändert werden, indem der in II.8.2 beschriebene Dialog erneut aufgerufen
+wird und die entsprechenden Werte abgeändert werden.
+
+
+II.8.4 Ändern der Reihenfolge der Behaviour
+===========================================
+Die Position eines Behaviours in der Liste des Pattern-Elements kann durch die Menüpunkte "Up" und   
+"Down" des Popupmenüs geändert werden. "Up" bewegt den markierten Eintrag um eins nach oben, "Down" um 
+eine Position nach unten. Die zwei Menüpunkte können nur ausgewählt werden, wenn auch die entsprechende 
+Operation ausführbar ist, ansonsten sind sie gesperrt. 
+
+II.8.5 Löschen von Behaviour
+============================
+Ein markiertes Behaviour wird aus dem Pattern-Element gelöscht, indem der Eintrag "Delete behaviour" im
+Popup-Menü ausgewählt wird.
+
+II.9 Transition
+=================
+Der Wechsel von einem Pattern zu einem anderen aufgrund eines eingetretenen Ereignisses wird graphisch
+durch einen Transition-Vektor modelliert. Der Anfangspunkt des Vektors bezeichnet das Pattern, in
+welchem auf das Ereignis reagiert werden soll, die Spitze zeigt auf das Pattern, das aufgrund
+des Ereignisses aktiviert werden soll. Die Beschriftung gibt bezeichnet das Ereignis, auf das reagiert
+werden soll. 
+
+II.9.1 Hinzufügen der Transition
+================================
+Um den unter II.9 erklärten Vektor, der die Transition darstellt, zu erzeugen, muß man im zuerst im
+Popup-Menü des roten Feldes 
+
+
+
+
+

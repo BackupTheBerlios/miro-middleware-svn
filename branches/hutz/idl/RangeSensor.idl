@@ -1,0 +1,63 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef RangeSensor_idl
+#define RangeSensor_idl
+
+#include "Exception.idl"
+#include "ScanDescription.idl"
+#include "RangeEvent.idl"
+
+module Miro
+{
+  //! General range sensor interface.
+  /**
+   * It provides a uniform way to query the layout of range
+   * sensors and query their data. This is especially usefull in
+   * conjunction with the notification service. All range sensors
+   * broadcast their data periodically via the event channel (named
+   * "EventChannel" at the naming service) in a unified data format
+   * (see @ref RangeScanEventIDL, @ref RangeGroupEventIDL and
+   * @ref RangeBunchEventIDL), allowing for generalized range sensor data
+   * processing.
+   */
+  interface RangeSensor
+  {
+    //! Query the layout of a range sensor type. 
+    ScanDescriptionIDL getScanDescription();
+    //! Query a range sensor group.
+    RangeGroupEventIDL getGroup(in long id);
+    //! Wait and query a range sensor group.
+    /**
+     * Wait and get the next incomming report of the specified
+     * range sensor group.
+     *
+     * @throw ETimeOut This exception is thrown, when no report is
+     * received for longer than 5 times of the sensors status report
+     * period. This usually indicates a crash of the controller board
+     * or a too high system load.
+     */
+    RangeGroupEventIDL getWaitGroup(in long id) raises(ETimeOut);
+    //! Query a range sensor.
+    RangeScanEventIDL getFullScan();
+    //! Wait and query a range sensor.
+    /**
+     * Wait and get the next incomming report of the sensor.
+     *
+     * @throw ETimeOut This exception is thrown, when no report is
+     * received for longer than 5 times of the sensors status report
+     * period. This usually indicates a crash of the controller board
+     * or a too high system load.
+     */
+    RangeScanEventIDL getWaitFullScan() raises(ETimeOut);
+  };
+};
+
+#endif // rangeSensor_idl

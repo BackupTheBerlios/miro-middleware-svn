@@ -1,0 +1,41 @@
+// -*- idl -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef Position_idl
+#define Position_idl
+
+#include "WorldPoint.idl"
+
+module Miro 
+{
+  //! World position in (x, y, theta)
+  /**
+   * Struct holding a point and an angle, representing the robots current 
+   * position. 
+   *
+   * This struct can be converted to a WorldPosition object.
+   */
+  struct PositionIDL
+  {
+    //! Current robot point in world coordinates.
+    WorldPointIDL point;
+    //! Direction the robot points to.
+    /**
+     * (-PI < heading <= PI)
+     */
+    double heading;
+  };
+};
+
+#endif // position_idl
+
+
+
+
