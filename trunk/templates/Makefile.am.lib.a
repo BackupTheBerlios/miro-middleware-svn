@@ -1,0 +1,41 @@
+## -*- Makefile -*- ##########################################################
+##
+## This file is part of Miro (The Middleware For Robots)
+##
+## (c) 1999, 2000, 2001, 2002, 2003
+## Department of Neural Information Processing, University of Ulm, Germany
+##
+## Miro/templates/Makefile.am.lib.a
+##
+##############################################################################
+
+include $(top_srcdir)/config/Make-rules
+
+
+## static library to be built
+lib_LIBRARIES = libmyLibrary.a
+
+## sourcefiles needed for the library to be built
+sources = myParameterFile.xml mySourceFile.cpp
+
+## the prefix of the following macro must have the same name as the respective library
+## (replace dots with underscores)
+libmyLibrary_a_SOURCES = $(sources)
+
+## if there are headers without a associated cpp-file
+extraheader = myExtraHeader.h
+
+## automatically builded files (depends on your source files)
+BUILT_SOURCES = myParameterFile.cpp myParameterFile.h
+CLEANFILES = $(BUILT_SOURCES)
+
+includefiles1 = $(sources:.xml=.h) $(extraheader)
+includefiles2 = $(includefiles1:.cpp=.h)
+## the prefix of the following macro indicates the installation directory
+myInstallDir_include_HEADERS = $(includefiles2)
+
+all-local:
+	$(INSTALLLIBRARIES)
+
+clean-local:
+	$(CLEANLIBRARIES)
