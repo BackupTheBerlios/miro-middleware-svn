@@ -39,7 +39,8 @@ DIRS =		odometry \
 		battery \
 		notify \
 		infrared \
-		behaviours
+		behaviours \
+		speechSimple
 ifneq (,$(findstring B21,$(MIRO_COMPONENTS)))
   DIRS +=	robotikI \
 		b21Motion \
