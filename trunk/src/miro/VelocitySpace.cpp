@@ -214,10 +214,12 @@ namespace Miro
 
 	   if (fabs(left) < _maxSpeed && fabs(right) < _maxSpeed){//v_dist <= _maxSpeed){
                axis_direction = (fabs(atan2(r_value, l_value)) > M_PI_2)?-1.0:1.0;
-               axis_value = ((axis_direction*v_dist)/(abs(maxVelocity_)/sqrt(2.0)) + 1.0)/2.0;
-               velocitySpace_[l_index][r_index] =
-	       (255. * (((1. +
-			      atan2(fabs(l_value), fabs(r_value)) / M_PI_2) / 2.)*axis_value));
+               //axis_value = ((axis_direction*v_dist)/(abs(maxVelocity_)/sqrt(2.0)) + 1.0)/2.0;
+	       axis_value = (l_value/(abs(maxVelocity_)/sqrt(2.0)) + 1.0)/2.0;
+               //velocitySpace_[l_index][r_index] =
+	       //(255. * (((1. +
+		//	      atan2(fabs(l_value), 10.0*fabs(r_value)) / M_PI_2) / 2.)*axis_value));
+	       velocitySpace_[l_index][r_index] = 255.0 * exp(-(r_value*r_value)/(40.0*40.0)) * axis_value;
 
            }
 	   else
