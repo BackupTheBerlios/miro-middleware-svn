@@ -121,21 +121,21 @@ dm    </config_item>
 
       <config_parameter name="buffers" type="unsigned int" default="4" />
 
-      <config_parameter name="brightness" type="int" default="324" />
-      <config_parameter name="exposure" type="int" default="511" />
+      <config_parameter name="brightness" type="int" default="128" />
+      <config_parameter name="exposure" type="int" default="128" />
       <config_parameter name="focus" type="int" default="-1" />
       <config_parameter name="framerate" type="int" default="30" />
-      <config_parameter name="gain" type="int" default="140" />
-      <config_parameter name="gamma" type="int" default="1" />
-      <config_parameter name="hue" type="int" default="-1" />
+      <config_parameter name="gain" type="int" default="0" />
+      <config_parameter name="gamma" type="int" default="128" />
+      <config_parameter name="hue" type="int" default="128" />
       <config_parameter name="iris" type="int" default="-1" />
-      <config_parameter name="saturation" type="int" default="78" />
-      <config_parameter name="sharpness" type="int" default="104" />
-      <config_parameter name="shutter" type="int" default="0" />
-      <config_parameter name="temperature" type="int" default="130" />
+      <config_parameter name="saturation" type="int" default="128" />
+      <config_parameter name="sharpness" type="int" default="128" />
+      <config_parameter name="shutter" type="int" default="2048" />
+      <config_parameter name="temperature" type="int" default="-1" />
       <config_parameter name="trigger" type="int" default="-1" />
-      <config_parameter name="whiteBalance0" type="int" default="90" />
-      <config_parameter name="whiteBalance1" type="int" default="90" />
+      <config_parameter name="whiteBalance0" type="int" default="162" />
+      <config_parameter name="whiteBalance1" type="int" default="184" />
 
     </config_item>
 
