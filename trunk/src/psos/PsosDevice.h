@@ -21,7 +21,7 @@ namespace Psos
   typedef enum { PING_TIMER, SYNCH_TIMER } TimerType;
 
   // factors for Info packet metric translations
-  const double RANGE_CONV_FACTOR = 0.1734;
+  const double RANGE_CONV_FACTOR = 1.0; // <- people bot, pioneer 1 : 0.1734;
   const double DIST_CONV_FACTOR  = 0.07979;    // 5in*PI/5000  => mm
   const double VEL_CONV_FACTOR 	 = 3.9898;     //mm/sec per encoder count per 1/50 sec
   const double ANGLE_CONV_FACTOR = 0.0061359;

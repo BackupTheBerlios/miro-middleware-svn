@@ -151,9 +151,9 @@ namespace Pioneer
 
           // peoplebot sonars
           if (index >= 8) {
-            index -= 8;
             if (index < 16)
               ++group;
+            index -= 8;
           }
 
 	  pSonarEvent->sensor[i].group = group;
