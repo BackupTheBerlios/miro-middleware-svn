@@ -72,7 +72,7 @@ namespace Psos
     unsigned char status() const { return buffer_[3] & 0x0f; }
     short xPos() const { return (*(unsigned short *)(&buffer_[4])) & 0x7fff; }
     short yPos() const { return (*(unsigned short *)(&buffer_[6])) & 0x7fff; }
-    short theta() const { return *(short *)(&buffer_[8]); }
+    short theta() const { return *(short *)(&buffer_[8]) & 1023; }
     short lVel() const { return *(short *)(&buffer_[10]); }
     short rVel() const { return *(short *)(&buffer_[12]); }
     double battery() const { return (double)buffer_[14] / 10.; }

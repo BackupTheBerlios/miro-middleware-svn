@@ -281,6 +281,10 @@ namespace Pioneer
 	  }
 	}
       }
+      else {
+       std::cerr << "Unkown message header: " << hex << pPsosMsg->header() << dec
+       << endl;
+      }
     }
     else {
       std::cerr << "Unkown message header: " << hex << pPsosMsg->header() << dec << endl;

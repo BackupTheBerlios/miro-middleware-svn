@@ -283,7 +283,7 @@ namespace Psos
 
     // if it's the Ppb request IOpac SIP
     if (true || classname == "ppb") {
-      const Message IO_SIP(SF_COMIOREQ, (unsigned short)2);
+      const Message IO_SIP(SF_COMIOREQ, (short)2);
       connection.writeMessage(IO_SIP);
     }
   }
