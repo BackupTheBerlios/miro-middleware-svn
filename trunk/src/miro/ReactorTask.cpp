@@ -111,22 +111,22 @@ namespace Miro
 	reactor_.handle_events(delta);
       }
       catch (const ETimeOut& e) {
-	cerr << "Miro Timeout exception: " << e << endl;
+	cerr << "ReactorTask.handleMessage() - Miro Timeout exception: " << e << endl;
 	if(pServer_)
 	    pServer_->shutdown();
       }
       catch (const EDevIO& e) {
-	cerr << "Miro Device I/O exception: " << e << endl;
+	cerr << "ReactorTask.handleMessage() - Miro Device I/O exception: " << e << endl;
 	if(pServer_)
 	  pServer_->shutdown();
       }
       catch (const EOutOfBounds& e) {
-	cerr << "Miro out of bounds exception: " << e << endl;
+	cerr << "ReactorTask.handleMessage() - Miro out of bounds exception: " << e << endl;
 	if(pServer_)
 	  pServer_->shutdown();
       }
       catch (const CORBA::Exception& e) {
-	cerr << "Uncaught CORBA exception: " << e << endl;
+	cerr << "ReactorTask.handleMessage() - Uncaught CORBA exception: " << e << endl;
 	if(pServer_)
 	  pServer_->shutdown();
       }
