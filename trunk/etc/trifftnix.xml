@@ -87,10 +87,10 @@
    </parameter>
    <parameter value="0.050000" name="ButtonsPollInterval" />
    <parameter value="1.0776" name="TransFactor" />
-   <parameter value="27" name="Deg2ServoTicksL" />
-   <parameter value="27" name="Deg2ServoTicksR" />
+   <parameter value="26.5" name="Deg2ServoTicksL" />
+   <parameter value="25" name="Deg2ServoTicksR" />
    <parameter value="1.000000" name="WatchdogTimeout" />
-   <parameter value="3835" name="Servo0MidPulse" />
+   <parameter value="3735" name="Servo0MidPulse" />
    <parameter value="200" name="MaxAccel" />
    <parameter value="2310" name="Diameter" />
    <parameter value="30720" name="MaxPower" />
@@ -240,8 +240,8 @@
 <!-- parameter fuer neue (haeltnix) camera -->
   <parameter name="Camera" >
    <parameter value="0.060000" name="Latency" />
-   <parameter value="33.5" name="Alpha" />
-   <parameter value="550" name="Height" />
+   <parameter value="35.0" name="Alpha" />
+   <parameter value="515" name="Height" />
    <parameter value="197.159465" name="Cx" />
    <parameter value="139.645856" name="Cy" />
    <parameter value="4.043536" name="F" />
