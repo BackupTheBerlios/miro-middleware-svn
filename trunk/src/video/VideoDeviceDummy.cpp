@@ -14,6 +14,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.10  2004/03/09 16:28:58  roadrunner
+ * Ouch! entrys->entries
+ *
  * Revision 1.9  2003/10/27 13:19:21  hutz
  * making DummyDevice capable of playing image series
  *
@@ -242,12 +245,12 @@ namespace Video
     } else if (S_ISDIR(buf.st_mode)) { // if the name is a directory, use each regular file in it
       DIR * dir;
       if ((dir = opendir(params_->device.c_str())) != NULL) {
-        struct dirent * entrys;
-        while ((entrys = readdir(dir)) != NULL) {
-	  stat((params_->device + entrys->d_name).c_str(), &buf);
+        struct dirent * entries;
+        while ((entries = readdir(dir)) != NULL) {
+	  stat((params_->device + entries->d_name).c_str(), &buf);
           if (S_ISREG(buf.st_mode)) {
-            files_.push_back(params_->device + entrys->d_name);
-            cout << "direntry: " << entrys->d_name << endl;
+            files_.push_back(params_->device + entries->d_name);
+            cout << "direntry: " << entries->d_name << endl;
           }
         }
         closedir(dir);
