@@ -57,13 +57,13 @@ namespace Can
      if(_params->module == "pcan"){
 
         msg = new PCanMessage();
-
+//	std::cout << "PcanMessage created !!!" << endl;
      }
      else{
-
+//        std::cout << "normal CanMessage created!!!" << endl;
         msg = new Can0Message();
      }
-
+     return msg;
 
   }
 
@@ -72,7 +72,7 @@ namespace Can
     msg(static_cast<Message *>(message_)),
     params_(_params)
   {
-    DBG(cout << "Constructing CanEventHandler." << endl);
+	  std::cout << "Constructing CanEventHandler." << endl;
   }
 
   EventHandler::~EventHandler()
@@ -86,15 +86,16 @@ namespace Can
   {
 
     DBG(cout << "canEventHandler: handle_input" << endl);
-    //cout << "CanEventHandler vor ReadMessage" << endl;
+  //  std::cout << "CanEventHandler vor ReadMessage" << endl;
     int count;
     if(params_->module == "pcan"){
        pcanmsg * msgp_;
-//       std::cout << "msgp " << (void *) msgp_ << endl;
+    //   std::cout << "msgp " << (void *) msgp_ << flush;
+    //   std::cout << "CanMessage Pointer msg " << (void *) msg << flush;
        msg->canMessage((int **) &msgp_);
-//       std::cout << "msgp " << (void *) msgp_ << endl;
+    //   std::cout << "msgp " << (void *) msgp_ << flush;
        count = ioctl(fd, PCAN_READ_MSG, msgp_);
-       if (count == 0) {
+       if (count < 0) {
          cerr << "Pcan handle_input failed!" << endl;
          return 0;
        }

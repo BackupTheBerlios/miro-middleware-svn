@@ -15,6 +15,7 @@
 #define CanMessage_h
 
 #include "miro/DevMessage.h"
+#include <iostream>
 
 // extern "C"
 // {
@@ -57,7 +58,10 @@ namespace Can
 
     //static drivertype driver;
 
-    virtual void canMessage(int ** msg_) { };
+    virtual void canMessage(int ** msg_) {
+//       std::cout << "normal canMessage" << std::endl;
+    
+    };
 
 
 

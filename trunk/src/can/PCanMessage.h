@@ -15,6 +15,7 @@
 #define PCanMessage_h
 
 #include "CanMessage.h"
+#include <iostream>
 
 namespace Can
 {
@@ -45,7 +46,11 @@ namespace Can
     void           id(CanId _id);
 
     
-    virtual void canMessage(int ** msg_) { *msg_ = (int *) messagep_; };// { *msg_=messagep_; }
+    virtual void canMessage(int ** msg_) { 
+//	    std::cout << "canMessage in PCan" << std::endl;   
+	    *msg_ = (int *) messagep_; 
+    
+    };// { *msg_=messagep_; }
 
   protected:
     pcanmsg * messagep_;
