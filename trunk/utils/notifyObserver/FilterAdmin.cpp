@@ -12,7 +12,8 @@
 #include "FilterAdmin.h"
 
 FilterAdmin::FilterAdmin(CosNotifyFilter::FilterAdmin_ptr _filterAdmin,
+			 QListViewItem * _parentItem,
 			 QObject * _parent, const char * _name) :
-  Super(_parent, _name),
+  Super(_parentItem, NULL, _parent, _name),
   filterAdmin_(CosNotifyFilter::FilterAdmin::_duplicate(_filterAdmin))
 {}

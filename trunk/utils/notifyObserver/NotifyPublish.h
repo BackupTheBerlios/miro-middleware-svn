@@ -24,6 +24,7 @@ class NotifyPublish : public Item
 
 public:
   NotifyPublish(CosNotifyComm::NotifyPublish_ptr _notifyPublish,
+		QListViewItem * _parentItem,
 		QObject * _parent = 0, const char * _name = 0);
 
   void contextMenu(QPopupMenu& _menu);

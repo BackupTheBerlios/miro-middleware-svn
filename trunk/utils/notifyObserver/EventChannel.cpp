@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -25,7 +25,7 @@ EventChannel::EventChannel(CosNotifyChannelAdmin::EventChannel_ptr _ec,
 			   CosNotifyChannelAdmin::AdminID _id,
 			   QListViewItem * _parentItem,
 			   QObject * _parent, char const * _name) :
-  Super(_parent, _name),
+  Super(_parentItem, NULL, _parent, _name),
   ec_(CosNotifyChannelAdmin::EventChannel::_duplicate(_ec)),
   id_(_id)
 {
@@ -33,7 +33,6 @@ EventChannel::EventChannel(CosNotifyChannelAdmin::EventChannel_ptr _ec,
   n.setNum(id_);
   setName(n);
 
-  setListViewItem(new QListViewItem(_parentItem));
   listViewItem()->setText(0, name());
   listViewItem()->setText(1, className());
 

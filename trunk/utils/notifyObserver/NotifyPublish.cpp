@@ -17,8 +17,9 @@
 #include <sstream>
 
 NotifyPublish::NotifyPublish(CosNotifyComm::NotifyPublish_ptr _notifyPublish,
+			    QListViewItem * _parentItem,
 			     QObject * _parent, const char * _name) :
-  Super(_parent, _name),
+  Super(_parentItem, NULL, _parent, _name),
   notifyPublish_(CosNotifyComm::NotifyPublish::_duplicate(_notifyPublish))
 {
 }

@@ -24,6 +24,7 @@ class FilterAdmin : public Item
 
 public:
   FilterAdmin(CosNotifyFilter::FilterAdmin_ptr _filterAdmin,
+	      QListViewItem * _parentItem,
 	      QObject * _parent = NULL, const char * _name = NULL);
 
 protected:

@@ -25,7 +25,7 @@ ProxySupplier::ProxySupplier(CosNotifyChannelAdmin::ProxySupplier_ptr _ps,
 			     CosNotifyChannelAdmin::ProxyID _id,
 			     QListViewItem * _parentItem,
 			     QObject * _parent, char const * _name) :
-  Super(_parent, _name),
+  Super(_parentItem, NULL, _parent, _name),
   ps_(CosNotifyChannelAdmin::ProxySupplier::_duplicate(_ps)),
   id_(_id)
 {
@@ -33,7 +33,6 @@ ProxySupplier::ProxySupplier(CosNotifyChannelAdmin::ProxySupplier_ptr _ps,
   n.setNum(id_);
   setName(n);
 
-  setListViewItem(new QListViewItem(_parentItem));
   listViewItem()->setText(0, n);
   listViewItem()->setText(1, className());
 }

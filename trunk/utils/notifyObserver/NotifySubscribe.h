@@ -23,6 +23,7 @@ class NotifySubscribe : public Item
 
 public:
   NotifySubscribe(CosNotifyComm::NotifySubscribe_ptr _notifySubscribe,
+		  QListViewItem * _parentItem,
 		  QObject * _parent = 0, const char * _name = 0);
 
   void contextMenu(QPopupMenu& _menu);

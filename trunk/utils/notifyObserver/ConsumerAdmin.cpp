@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -23,8 +23,10 @@
 ConsumerAdmin::ConsumerAdmin(CosNotifyChannelAdmin::ConsumerAdmin_ptr _ca,
 			     QListViewItem * _parentItem,
 			     QObject * _parent, char const * _name) :
-  Super(_parent, _name),
-  notifySubscribe_(new NotifySubscribe(_ca, this, "notify_subscribe")),
+  Super(_parentItem, NULL, _parent, _name),
+  notifySubscribe_(new NotifySubscribe(_ca, 
+				       listViewItem(),
+				       this, "notify_subscribe")),
   ca_(CosNotifyChannelAdmin::ConsumerAdmin::_duplicate(_ca)),
   id_(ca_->MyID())
 {
@@ -32,7 +34,6 @@ ConsumerAdmin::ConsumerAdmin(CosNotifyChannelAdmin::ConsumerAdmin_ptr _ca,
   n.setNum(id_);
   setName(n);
 
-  setListViewItem(new QListViewItem(_parentItem));
   listViewItem()->setText(0, n);  listViewItem()->setText(0, name());
   listViewItem()->setText(1, className());
 

@@ -24,6 +24,7 @@ class QoSAdmin : public Item
 
 public:
   QoSAdmin(CosNotification::QoSAdmin_ptr _qosAdmin,
+	   QListViewItem * _parentItem,
 	   QObject * _parent = NULL, const char * _name = NULL);
   
 protected:

@@ -18,8 +18,9 @@
 #include <sstream>
 
 NotifySubscribe::NotifySubscribe(CosNotifyComm::NotifySubscribe_ptr _notifySubscribe,
+				 QListViewItem * _parentItem,
 				 QObject * _parent, const char * _name) :
-  Super(_parent, _name),
+  Super(_parentItem, NULL, _parent, _name),
   notifySubscribe_(CosNotifyComm::NotifySubscribe::_duplicate(_notifySubscribe))
 {
 }
