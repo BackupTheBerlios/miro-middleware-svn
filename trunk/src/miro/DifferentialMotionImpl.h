@@ -48,6 +48,8 @@ namespace Miro
     void lr2velocity(CORBA::Long left, CORBA::Long right, VelocityIDL& velocity);
     //! Convert translation/rotation into per wheel velocities.
     void velocity2lr(const VelocityIDL& _velocity, CORBA::Long& _left, CORBA::Long& _right);
+    //! Report the wheelbase.
+    double getWheelBase() throw();
 
   protected:
     //! Memorize target velocity.
@@ -112,6 +114,6 @@ namespace Miro
     left -= delta;
     right += delta;
   }
-};
+}
 
 #endif // DifferentialMotionImpl_h

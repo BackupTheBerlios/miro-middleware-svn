@@ -82,4 +82,10 @@ namespace Miro
     right_ = _right;
     lr2velocity(left_, right_, targetVelocity_);
   }
-};
+
+  double
+  DifferentialMotionImpl::getWheelBase() throw()
+  {
+    return params_.wheelBase;
+  }
+}
