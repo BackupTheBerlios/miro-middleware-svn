@@ -128,7 +128,7 @@ Task::svc()
   Miro::RangeBunchEventIDL     sonarStatus;
   Miro::ButtonStatusIDL buttonStatus;
   
-  buttonStatus.id = 1;
+  buttonStatus.number = 1;
   buttonStatus.event = Miro::Button::ON_PRESS;
     
   motionEvent.header.fixed_header.event_type.domain_name = CORBA::string_dup(supplier_->domainName().c_str());
