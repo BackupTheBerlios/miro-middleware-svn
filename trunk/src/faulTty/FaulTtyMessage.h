@@ -19,7 +19,7 @@ namespace FaulController
   class OdometryMessage : public Miro::DevMessage
   {
   public:
-    enum Wheel { LEFT, RIGHT };
+    enum Wheel { LEFT, RIGHT, DELTA_LEFT, DELTA_RIGHT };
 
     OdometryMessage(Wheel _wheel);
 

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -11,6 +11,7 @@
 
 #include "FaulCanConnection.h"
 
+#include "miro/Log.h"
 #include <iostream>
 
 // #undef DEBUG
@@ -33,7 +34,8 @@ namespace FaulController
   using std::cerr;
   using std::endl;
 
-  FaulCanConnection::FaulCanConnection(Sparrow::Connection2003 * _connection2003, int _motor) :
+  FaulCanConnection::FaulCanConnection(Sparrow::Connection2003 * _connection2003, 
+				       int _motor) :
     connection2003_(_connection2003),
     motor_(_motor)
   {
@@ -47,6 +49,20 @@ namespace FaulController
     DBG(cout << "Destructing FaulCanConnection" << endl);
 
   }
+  
+  void 
+  FaulCanConnection::sendAccVelTicks(short, short)
+  {
+    MIRO_ASSERT(false);
+  }
+
+  void 
+  FaulCanConnection::sendAccVelTicks(short accL, short accR, 
+				     short velL, short velR)
+  {
+    connection2003_->writeAccVel(accL, accR, velL, velR);
+  }
+
 
   void
   FaulCanConnection::writeBinary(char const * buffer, int _len)

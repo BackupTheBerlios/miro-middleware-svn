@@ -35,6 +35,10 @@ namespace FaulController
     FaulCanConnection(Sparrow::Connection2003 * _connection2003, int _motor);
     virtual ~FaulCanConnection();
 
+    virtual void sendAccVelTicks(short accL, short accR, 
+				 short velL, short velR);
+    virtual void sendAccVelTicks(short acc, short vel);
+
     virtual void writeBinary(char const * buffer, int _len);
     virtual void writeMessage(char const * const _message[]);
 

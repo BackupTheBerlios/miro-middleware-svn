@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 // 
 // $Id$
@@ -13,9 +13,11 @@
 #include "FaulTtyEventHandler.h"
 #include "FaulTtyMessage.h"
 
+#include "miro/Log.h"
 #include "miro/Exception.h"
 #include "idl/ExceptionC.h"
 
+#include <cstring>
 #include <iostream>
 
 // #undef DEBUG
@@ -49,6 +51,32 @@ namespace FaulController
   FaulTtyConnection::~FaulTtyConnection()
   {
     DBG(cout << "Destructing FaulTtyConnection" << endl);
+  }
+
+  void
+  FaulTtyConnection::sendAccVelTicks(short, short, short, short)
+  {
+    MIRO_ASSERT(false);
+  }
+
+  void
+  FaulTtyConnection::sendAccVelTicks(short _acc, short _vel)
+  {
+    char message[32];
+    memset(message, 0, 32);
+
+    int acc = _acc;
+    int vel = _vel;
+
+    sprintf(message, 
+	    "ac%d\r\nv%d\r\n%c", 
+	    acc, vel, 201);
+    
+    Miro::Guard guard(mutex_);
+    int rc = ttyConnection_.ioBuffer.send_n(message, strlen(message));
+    
+    if (rc == -1)
+      throw Miro::CException(errno, "Error writing FaulTty device.");
   }
 
   void

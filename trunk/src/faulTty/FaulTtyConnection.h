@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 //
@@ -36,6 +36,9 @@ namespace FaulController
 	       const Miro::TtyParameters& _parameters);
     virtual ~FaulTtyConnection();
 
+    virtual void sendAccVelTicks(short _accL, short _accR, 
+				 short _velL, short _velR);
+    virtual void sendAccVelTicks(short _acc, short _vel);
     virtual void writeBinary(char const * _message, int _len);
     virtual void writeMessage(char const * const _message[]);
 

@@ -21,6 +21,10 @@ namespace FaulController
     Connection();
     virtual ~Connection();
 
+    virtual void sendAccVelTicks(short _accL, short _accR, 
+				 short _velL, short _velR) = 0;
+    virtual void sendAccVelTicks(short _acc, short _vel) = 0;
+
     //! Write binary controller commands.
     virtual void writeBinary(char const * _message, int _len) = 0;
     //! Write ascii message vectors.
