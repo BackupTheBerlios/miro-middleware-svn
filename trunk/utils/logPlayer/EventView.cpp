@@ -74,6 +74,11 @@ EventView::insertEvent(QString const& _stamp,
 {
   internalSetSelection_ = true;
 
+  if (list_->selectedItem() == NULL &&
+      list_->firstChild() != NULL) {
+    list_->setSelected(list_->firstChild(), true);
+  }
+
   // insert at the beginning
   if (list_->firstChild() == NULL ||
       _stamp < list_->firstChild()->text(0)) {
@@ -95,10 +100,11 @@ EventView::insertEvent(QString const& _stamp,
   }
 
   // insert somewher in between
-  else if (list_->selectedItem()->text(0) != _stamp) {
+  else if (list_->selectedItem() != NULL &&
+	   list_->selectedItem()->text(0) != _stamp) {
     QListViewItem * item = list_->selectedItem();
     MIRO_ASSERT(item != NULL);
-
+    
     // after current selection
     if(_stamp > item->text(0)) {
 
@@ -175,7 +181,7 @@ EventView::pruneHistory()
     delete list_->firstChild();
     --overlap;
   }
-
+  /*
   if (overlap > 0) {
     QListViewItem * item = list_->firstChild();
     for (unsigned int i = 0; i < history_; ++i) {
@@ -193,6 +199,7 @@ EventView::pruneHistory()
       v.pop_back();
     }
   }
+  */
 }
 
 void
