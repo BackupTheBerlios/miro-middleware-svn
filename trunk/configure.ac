@@ -313,6 +313,7 @@ echo "linker flags:  " $QT_LDFLAGS
 echo "compiler flags:" $QT_CPPFLAGS
 echo "libraries used:" $QT_LIBS
 echo "used moc comp: " $QT_MOC
+echo "used uic comp: " $QT_UIC
 if test "x$ac_compile_speech" = xyes; then
 	echo ""
 	echo "Sphinx-related results:"

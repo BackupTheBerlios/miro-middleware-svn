@@ -15,6 +15,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.12  2004/02/09 17:28:56  graz
+ * Added control-interface to VideoDevice1394 & Dialog.
+ *
  * Revision 1.11  2003/10/27 08:52:41  hutz
  * added the filter meta information functionality:
  * for each buffer we have an additional pointer, holding a child
@@ -104,8 +107,10 @@
 
 #include "VideoDevice1394.h"
 #include "BufferManager1394.h"
+#include "VideoControlImpl.h"
 
 #include <miro/Exception.h>
+#include <miro/Server.h>
 
 #include <iostream>
 
@@ -223,7 +228,6 @@ namespace Video
     paletteLookup[Miro::RGB_24] = 1;
     paletteLookup[Miro::YUV_411] = 1;
     paletteLookup[Miro::YUV_422] = 1;
-
   }
     
   //---------------------------------------------------------------
@@ -243,15 +247,19 @@ namespace Video
   Device1394::init(Miro::Server& _server, FilterParameters const * _params)
   {
     DBG(std::cout << "Connecting Device1394." << std::endl);
-	
-    params_ = dynamic_cast<Device1394Parameters const *>(_params);
-    assert(params_ != NULL);
+
+    if (_params)
+        params_ = *(dynamic_cast<Device1394Parameters const *>(_params));
 
     initDevice();
     initSettings();
 	
     setImageFormat();
     initCapture();
+
+    control_ = new ControlImpl(this);
+    Video::Control_var control = control_->_this();
+    _server.addToNameService(control.in(), "VideoControl");
 
     Super::init(_server, _params);
   }
@@ -359,7 +367,7 @@ namespace Video
 				 frameRate_,
 				 NUM_BUFFERS,
 				 DROP_FRAMES,
-				 params_->device.c_str(),
+				 params_.device.c_str(),
 				 p_camera_) != DC1394_SUCCESS)
       throw Miro::Exception("Device1394::handleConnect: unable to setup camera");
 	
@@ -372,8 +380,8 @@ namespace Video
   void
   Device1394::initSettings()
   {
-    // set standartized features
-    FeatureTable featureTable(*params_);
+    // set standardized features
+    FeatureTable featureTable(params_);
     Feature1394 const * first;
     Feature1394 const * last = featureTable.end();
     for (first = featureTable.begin(); first != last; ++first) {
@@ -393,26 +401,26 @@ namespace Video
     }
 
     // white balance
-    if (params_->whiteBalance0 == -1 ||
-	params_->whiteBalance1 == -1) {
+    if (params_.whiteBalance0 == -1 ||
+	params_.whiteBalance1 == -1) {
       dc1394_auto_on_off(handle_, p_camera_->node, FEATURE_WHITE_BALANCE, 1);
     }
-    else if (params_->whiteBalance0 >= 0 &&
-	     params_->whiteBalance1 >= 0) {
+    else if (params_.whiteBalance0 >= 0 &&
+	     params_.whiteBalance1 >= 0) {
       if (dc1394_set_white_balance(handle_,
 				   p_camera_->node,
-				   params_->whiteBalance0,
-				   params_->whiteBalance1) != DC1394_SUCCESS) {
+				   params_.whiteBalance0,
+				   params_.whiteBalance1) != DC1394_SUCCESS) {
 	std::cout << "WARNING: Feature "
 		  << "WhiteBalance = " 
-		  << params_->whiteBalance0 << ":" << params_->whiteBalance1
+		  << params_.whiteBalance0 << ":" << params_.whiteBalance1
 		  << " not set." << std::endl;
       }
       dc1394_auto_on_off(handle_, p_camera_->node, FEATURE_WHITE_BALANCE, 0);
     }
 
     // set framerate
-    int value = params_->framerate;
+    int value = params_.framerate;
     if (value <= 1)	   
       frameRate_ = FRAMERATE_1_875;
     else if (value <= 3)
@@ -424,5 +432,46 @@ namespace Video
     else
       frameRate_ = FRAMERATE_30;
   }
+//---------------------------------------------------------------
+    bool Device1394::setFeatures(const FeatureSet & features)
+    {
+        params_.brightness = features.brightness;
+        params_.exposure = features.exposure;
+        params_.focus = features.focus;
+        params_.gain = features.gain;
+        params_.gamma = features.gamma;
+        params_.hue = features.hue;
+        params_.iris = features.iris;
+        params_.saturation = features.saturation;
+        params_.sharpness = features.sharpness;
+        params_.shutter = features.shutter;
+        params_.temperature = features.temperature;
+        params_.trigger = features.trigger;
+	params_.whiteBalance0 = features.white_balance.first;
+	params_.whiteBalance1 = features.white_balance.second;
+	initSettings();
+        return true;
+    }
+    
+//---------------------------------------------------------------
+    bool Device1394::getFeatures(FeatureSet & features) const
+    {
+        features.brightness = params_.brightness;
+        features.exposure = params_.exposure;
+        features.focus = params_.focus;
+        features.gain = params_.gain;
+        features.gamma = params_.gamma;
+        features.hue = params_.hue;
+        features.iris = params_.iris;
+        features.saturation = params_.saturation;
+        features.sharpness = params_.sharpness;
+        features.shutter = params_.shutter;
+        features.temperature = params_.temperature;
+        features.trigger = params_.trigger;
+	features.white_balance.first = params_.whiteBalance0;
+	features.white_balance.second = params_.whiteBalance1;
+        return true;
+    }
+
 };
 

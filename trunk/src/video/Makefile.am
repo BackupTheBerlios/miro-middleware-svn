@@ -48,8 +48,8 @@ meteorsources = \
 	VideoFilterYUV411toRGB.cpp \
 	VideoFilterYUV411toYUV.cpp \
 	VideoFilterYUV422toRGB.cpp \
-	VideoFilterYUV422toYUV.cpp
-
+	VideoFilterYUV422toYUV.cpp \
+	VideoControlImpl.cpp
 
 
 if COND_BTTV

@@ -15,6 +15,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.8  2004/02/09 17:28:56  graz
+ * Added control-interface to VideoDevice1394 & Dialog.
+ *
  * Revision 1.7  2003/10/17 13:31:42  hutz
  * big video service update
  * we now support filters with multiple input buffers
@@ -76,12 +79,15 @@
 #define VIDEODEVICE1394_H
 
 #include "VideoDevice.h"
+#include "idl/VideoControlC.h"
 
 #include <libraw1394/raw1394.h>
 #include <libdc1394/dc1394_control.h>
 
 namespace Video
 {
+  class ControlImpl;
+
   //! Firewire camera support.
   class Device1394 : public Device
   {
@@ -92,6 +98,9 @@ namespace Video
     virtual ~Device1394();
 	
     FILTER_PARAMETERS_FACTORY(Device1394);
+
+    bool setFeatures(const FeatureSet & features);
+    bool getFeatures(FeatureSet & features) const;
 
   protected:
     virtual BufferManager * bufferManagerInstance() const;
@@ -111,7 +120,7 @@ namespace Video
     //! Initialize dma transmission
     void initCapture();
 
-    Device1394Parameters const * params_;
+    Device1394Parameters    params_;
 
   private:
     //! Flag to indicate that the device is initialized.
@@ -126,6 +135,8 @@ namespace Video
     long                    imageFormat_;
     //! Framerate
     int                     frameRate_;
+    //! Pointer to Control-Interface.
+    ControlImpl *           control_;
   };
 };
 #endif // VIDEODEVICE1394_H

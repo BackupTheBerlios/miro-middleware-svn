@@ -1,0 +1,1224 @@
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<class>VideoControlDialog</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>VideoControlDialog</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>429</width>
+            <height>594</height>
+        </rect>
+    </property>
+    <property name="sizePolicy">
+        <sizepolicy>
+            <hsizetype>5</hsizetype>
+            <vsizetype>5</vsizetype>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+    </property>
+    <property name="caption">
+        <string>VideoControl</string>
+    </property>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>TextLabel1_3</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>290</x>
+                <y>100</y>
+                <width>90</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Focus</string>
+        </property>
+    </widget>
+    <widget class="QLineEdit">
+        <property name="name">
+            <cstring>LCD_Shutter</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>210</x>
+                <y>380</y>
+                <width>61</width>
+                <height>30</height>
+            </rect>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>TextLabel1_3</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>290</x>
+                <y>140</y>
+                <width>90</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Gain</string>
+        </property>
+    </widget>
+    <widget class="QSlider">
+        <property name="name">
+            <cstring>Slider_WhiteBalanceRed</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>51</x>
+                <y>540</y>
+                <width>140</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="orientation">
+            <enum>Horizontal</enum>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>TextLabel1_10</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>290</x>
+                <y>420</y>
+                <width>90</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Temperature</string>
+        </property>
+    </widget>
+    <widget class="QLineEdit">
+        <property name="name">
+            <cstring>LCD_WhiteBalanceBlue</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>210</x>
+                <y>500</y>
+                <width>61</width>
+                <height>30</height>
+            </rect>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>TextLabel1</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>290</x>
+                <y>21</y>
+                <width>90</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Brightness</string>
+        </property>
+    </widget>
+    <widget class="QLineEdit">
+        <property name="name">
+            <cstring>LCD_Saturation</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>210</x>
+                <y>300</y>
+                <width>61</width>
+                <height>30</height>
+            </rect>
+        </property>
+    </widget>
+    <widget class="QSlider">
+        <property name="name">
+            <cstring>Slider_Sharpness</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>51</x>
+                <y>340</y>
+                <width>140</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="orientation">
+            <enum>Horizontal</enum>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>TextLabel1_2</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>290</x>
+                <y>60</y>
+                <width>90</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Exposure</string>
+        </property>
+    </widget>
+    <widget class="QLineEdit">
+        <property name="name">
+            <cstring>LCD_Temperature</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>210</x>
+                <y>420</y>
+                <width>61</width>
+                <height>30</height>
+            </rect>
+        </property>
+    </widget>
+    <widget class="QLineEdit">
+        <property name="name">
+            <cstring>LCD_Gamma</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>210</x>
+                <y>180</y>
+                <width>61</width>
+                <height>30</height>
+            </rect>
+        </property>
+    </widget>
+    <widget class="QSlider">
+        <property name="name">
+            <cstring>Slider_Temperature</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>51</x>
+                <y>420</y>
+                <width>140</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="orientation">
+            <enum>Horizontal</enum>
+        </property>
+    </widget>
+    <widget class="QLineEdit">
+        <property name="name">
+            <cstring>LCD_Hue</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>210</x>
+                <y>220</y>
+                <width>61</width>
+                <height>30</height>
+            </rect>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>TextLabel1_12</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>290</x>
+                <y>500</y>
+                <width>120</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>White Balance Blue</string>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>TextLabel1_5</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>290</x>
+                <y>220</y>
+                <width>90</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Hue</string>
+        </property>
+    </widget>
+    <widget class="QLineEdit">
+        <property name="name">
+            <cstring>LCD_Iris</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>211</x>
+                <y>260</y>
+                <width>61</width>
+                <height>30</height>
+            </rect>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>TextLabel1_12_2</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>290</x>
+                <y>540</y>
+                <width>120</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>White Balance Red</string>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>TextLabel1_6</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>290</x>
+                <y>260</y>
+                <width>90</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Iris</string>
+        </property>
+    </widget>
+    <widget class="QSlider">
+        <property name="name">
+            <cstring>Slider_WhiteBalanceBlue</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>51</x>
+                <y>500</y>
+                <width>140</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="orientation">
+            <enum>Horizontal</enum>
+        </property>
+    </widget>
+    <widget class="QSlider">
+        <property name="name">
+            <cstring>Slider_Gain</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>51</x>
+                <y>140</y>
+                <width>140</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="orientation">
+            <enum>Horizontal</enum>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>TextLabel1_4</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>290</x>
+                <y>180</y>
+                <width>90</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Gamma</string>
+        </property>
+    </widget>
+    <widget class="QLineEdit">
+        <property name="name">
+            <cstring>LCD_Brightness</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>211</x>
+                <y>21</y>
+                <width>60</width>
+                <height>30</height>
+            </rect>
+        </property>
+    </widget>
+    <widget class="QSlider">
+        <property name="name">
+            <cstring>Slider_Saturation</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>51</x>
+                <y>300</y>
+                <width>140</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="orientation">
+            <enum>Horizontal</enum>
+        </property>
+    </widget>
+    <widget class="QSlider">
+        <property name="name">
+            <cstring>Slider_Trigger</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>51</x>
+                <y>460</y>
+                <width>140</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="orientation">
+            <enum>Horizontal</enum>
+        </property>
+    </widget>
+    <widget class="QSlider">
+        <property name="name">
+            <cstring>Slider_Hue</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>51</x>
+                <y>220</y>
+                <width>140</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="orientation">
+            <enum>Horizontal</enum>
+        </property>
+    </widget>
+    <widget class="QSlider">
+        <property name="name">
+            <cstring>Slider_Exposure</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>51</x>
+                <y>60</y>
+                <width>140</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="orientation">
+            <enum>Horizontal</enum>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>TextLabel1_9</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>290</x>
+                <y>380</y>
+                <width>90</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Shutter</string>
+        </property>
+    </widget>
+    <widget class="QSlider">
+        <property name="name">
+            <cstring>Slider_Shutter</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>51</x>
+                <y>380</y>
+                <width>140</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="orientation">
+            <enum>Horizontal</enum>
+        </property>
+    </widget>
+    <widget class="QSlider">
+        <property name="name">
+            <cstring>Slider_Iris</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>51</x>
+                <y>260</y>
+                <width>140</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="orientation">
+            <enum>Horizontal</enum>
+        </property>
+    </widget>
+    <widget class="QSlider">
+        <property name="name">
+            <cstring>Slider_Brightness</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>51</x>
+                <y>20</y>
+                <width>140</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="orientation">
+            <enum>Horizontal</enum>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>TextLabel1_8</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>290</x>
+                <y>340</y>
+                <width>90</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Sharpness</string>
+        </property>
+    </widget>
+    <widget class="QLineEdit">
+        <property name="name">
+            <cstring>LCD_WhiteBalanceRed</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>210</x>
+                <y>540</y>
+                <width>61</width>
+                <height>30</height>
+            </rect>
+        </property>
+    </widget>
+    <widget class="QLineEdit">
+        <property name="name">
+            <cstring>LCD_Gain</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>210</x>
+                <y>140</y>
+                <width>61</width>
+                <height>30</height>
+            </rect>
+        </property>
+    </widget>
+    <widget class="QSlider">
+        <property name="name">
+            <cstring>Slider_Gamma</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>51</x>
+                <y>180</y>
+                <width>140</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="orientation">
+            <enum>Horizontal</enum>
+        </property>
+    </widget>
+    <widget class="QSlider">
+        <property name="name">
+            <cstring>Slider_Focus</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>51</x>
+                <y>100</y>
+                <width>140</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="orientation">
+            <enum>Horizontal</enum>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>TextLabel1_7</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>290</x>
+                <y>300</y>
+                <width>90</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Saturation</string>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>TextLabel1_11</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>290</x>
+                <y>460</y>
+                <width>90</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Trigger</string>
+        </property>
+    </widget>
+    <widget class="QLineEdit">
+        <property name="name">
+            <cstring>LCD_Focus</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>210</x>
+                <y>100</y>
+                <width>61</width>
+                <height>30</height>
+            </rect>
+        </property>
+    </widget>
+    <widget class="QLineEdit">
+        <property name="name">
+            <cstring>LCD_Trigger</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>210</x>
+                <y>460</y>
+                <width>61</width>
+                <height>30</height>
+            </rect>
+        </property>
+    </widget>
+    <widget class="QLineEdit">
+        <property name="name">
+            <cstring>LCD_Sharpness</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>210</x>
+                <y>340</y>
+                <width>61</width>
+                <height>30</height>
+            </rect>
+        </property>
+    </widget>
+    <widget class="QLineEdit">
+        <property name="name">
+            <cstring>LCD_Exposure</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>210</x>
+                <y>60</y>
+                <width>61</width>
+                <height>30</height>
+            </rect>
+        </property>
+    </widget>
+    <widget class="QCheckBox">
+        <property name="name">
+            <cstring>CB_Brightness</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>20</x>
+                <y>20</y>
+                <width>20</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>auto</string>
+        </property>
+    </widget>
+    <widget class="QCheckBox">
+        <property name="name">
+            <cstring>CB_Focus</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>20</x>
+                <y>100</y>
+                <width>20</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>auto</string>
+        </property>
+    </widget>
+    <widget class="QCheckBox">
+        <property name="name">
+            <cstring>CB_Gain</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>20</x>
+                <y>140</y>
+                <width>20</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>auto</string>
+        </property>
+    </widget>
+    <widget class="QCheckBox">
+        <property name="name">
+            <cstring>CB_Gamma</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>20</x>
+                <y>180</y>
+                <width>20</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>auto</string>
+        </property>
+    </widget>
+    <widget class="QCheckBox">
+        <property name="name">
+            <cstring>CB_Hue</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>20</x>
+                <y>220</y>
+                <width>20</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>auto</string>
+        </property>
+    </widget>
+    <widget class="QCheckBox">
+        <property name="name">
+            <cstring>CB_Iris</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>20</x>
+                <y>260</y>
+                <width>20</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>auto</string>
+        </property>
+    </widget>
+    <widget class="QCheckBox">
+        <property name="name">
+            <cstring>CB_Saturation</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>20</x>
+                <y>300</y>
+                <width>20</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>auto</string>
+        </property>
+    </widget>
+    <widget class="QCheckBox">
+        <property name="name">
+            <cstring>CB_Sharpness</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>20</x>
+                <y>340</y>
+                <width>20</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>auto</string>
+        </property>
+    </widget>
+    <widget class="QCheckBox">
+        <property name="name">
+            <cstring>CB_Shutter</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>20</x>
+                <y>380</y>
+                <width>20</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>auto</string>
+        </property>
+    </widget>
+    <widget class="QCheckBox">
+        <property name="name">
+            <cstring>CB_Temperature</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>20</x>
+                <y>420</y>
+                <width>20</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>auto</string>
+        </property>
+    </widget>
+    <widget class="QCheckBox">
+        <property name="name">
+            <cstring>CB_Trigger</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>20</x>
+                <y>460</y>
+                <width>20</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>auto</string>
+        </property>
+    </widget>
+    <widget class="QCheckBox">
+        <property name="name">
+            <cstring>CB_WhiteBalanceBlue</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>20</x>
+                <y>500</y>
+                <width>20</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>auto</string>
+        </property>
+    </widget>
+    <widget class="QCheckBox">
+        <property name="name">
+            <cstring>CB_WhiteBalanceRed</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>20</x>
+                <y>540</y>
+                <width>20</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>auto</string>
+        </property>
+    </widget>
+    <widget class="QCheckBox">
+        <property name="name">
+            <cstring>CB_Exposure</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>20</x>
+                <y>60</y>
+                <width>20</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>auto</string>
+        </property>
+    </widget>
+</widget>
+<connections>
+    <connection>
+        <sender>Slider_Brightness</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>ValueChangedBrightness(int)</slot>
+    </connection>
+    <connection>
+        <sender>Slider_Exposure</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>ValueChangedExposure(int)</slot>
+    </connection>
+    <connection>
+        <sender>Slider_Focus</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>ValueChangedFocus(int)</slot>
+    </connection>
+    <connection>
+        <sender>Slider_Gain</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>ValueChangedGain(int)</slot>
+    </connection>
+    <connection>
+        <sender>Slider_Gamma</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>ValueChangedGamma(int)</slot>
+    </connection>
+    <connection>
+        <sender>Slider_Hue</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>ValueChangedHue(int)</slot>
+    </connection>
+    <connection>
+        <sender>Slider_Iris</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>ValueChangedIris(int)</slot>
+    </connection>
+    <connection>
+        <sender>Slider_Saturation</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>ValueChangedSaturation(int)</slot>
+    </connection>
+    <connection>
+        <sender>Slider_Sharpness</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>ValueChangedSharpness(int)</slot>
+    </connection>
+    <connection>
+        <sender>Slider_Shutter</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>ValueChangedShutter(int)</slot>
+    </connection>
+    <connection>
+        <sender>Slider_Temperature</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>ValueChangedTemperature(int)</slot>
+    </connection>
+    <connection>
+        <sender>Slider_Trigger</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>ValueChangedTrigger(int)</slot>
+    </connection>
+    <connection>
+        <sender>Slider_WhiteBalanceBlue</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>ValueChangedWhiteBalanceBlue(int)</slot>
+    </connection>
+    <connection>
+        <sender>Slider_WhiteBalanceRed</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>ValueChangedWhiteBalanceRed(int)</slot>
+    </connection>
+    <connection>
+        <sender>LCD_Brightness</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>TextChangedBrightness(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>LCD_Exposure</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>TextChangedExposure(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>LCD_Focus</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>TextChangedFocus(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>LCD_Gain</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>TextChangedGain(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>LCD_Gamma</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>TextChangedGamma(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>LCD_Hue</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>TextChangedHue(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>LCD_Iris</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>TextChangedIris(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>LCD_Saturation</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>TextChangedSaturation(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>LCD_Sharpness</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>TextChangedSharpness(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>LCD_Shutter</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>TextChangedShutter(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>LCD_Temperature</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>TextChangedTemperature(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>LCD_Trigger</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>TextChangedTrigger(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>LCD_WhiteBalanceBlue</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>TextChangedWhiteBalanceBlue(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>LCD_WhiteBalanceRed</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>TextChangedWhiteBalanceRed(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>CB_Brightness</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>AutoChangedBrightness(int)</slot>
+    </connection>
+    <connection>
+        <sender>CB_Exposure</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>AutoChangedExposure(int)</slot>
+    </connection>
+    <connection>
+        <sender>CB_Focus</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>AutoChangedFocus(int)</slot>
+    </connection>
+    <connection>
+        <sender>CB_Gain</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>AutoChangedGain(int)</slot>
+    </connection>
+    <connection>
+        <sender>CB_Gamma</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>AutoChangedGamma(int)</slot>
+    </connection>
+    <connection>
+        <sender>CB_Hue</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>AutoChangedHue(int)</slot>
+    </connection>
+    <connection>
+        <sender>CB_Iris</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>AutoChangedIris(int)</slot>
+    </connection>
+    <connection>
+        <sender>CB_Saturation</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>AutoChangedSaturation(int)</slot>
+    </connection>
+    <connection>
+        <sender>CB_Sharpness</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>AutoChangedSharpness(int)</slot>
+    </connection>
+    <connection>
+        <sender>CB_Shutter</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>AutoChangedShutter(int)</slot>
+    </connection>
+    <connection>
+        <sender>CB_Temperature</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>AutoChangedTemperature(int)</slot>
+    </connection>
+    <connection>
+        <sender>CB_Trigger</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>AutoChangedTrigger(int)</slot>
+    </connection>
+    <connection>
+        <sender>CB_WhiteBalanceBlue</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>AutoChangedWhiteBalanceBlue(int)</slot>
+    </connection>
+    <connection>
+        <sender>CB_WhiteBalanceRed</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>VideoControlDialog</receiver>
+        <slot>AutoChangedWhiteBalanceRed(int)</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>CB_Brightness</tabstop>
+    <tabstop>Slider_Brightness</tabstop>
+    <tabstop>LCD_Brightness</tabstop>
+    <tabstop>CB_Exposure</tabstop>
+    <tabstop>Slider_Exposure</tabstop>
+    <tabstop>LCD_Exposure</tabstop>
+    <tabstop>CB_Focus</tabstop>
+    <tabstop>Slider_Focus</tabstop>
+    <tabstop>LCD_Focus</tabstop>
+    <tabstop>CB_Gain</tabstop>
+    <tabstop>Slider_Gain</tabstop>
+    <tabstop>LCD_Gain</tabstop>
+    <tabstop>CB_Gamma</tabstop>
+    <tabstop>Slider_Gamma</tabstop>
+    <tabstop>LCD_Gamma</tabstop>
+    <tabstop>CB_Hue</tabstop>
+    <tabstop>Slider_Hue</tabstop>
+    <tabstop>LCD_Hue</tabstop>
+    <tabstop>CB_Iris</tabstop>
+    <tabstop>Slider_Iris</tabstop>
+    <tabstop>LCD_Iris</tabstop>
+    <tabstop>CB_Saturation</tabstop>
+    <tabstop>Slider_Saturation</tabstop>
+    <tabstop>LCD_Saturation</tabstop>
+    <tabstop>CB_Sharpness</tabstop>
+    <tabstop>Slider_Sharpness</tabstop>
+    <tabstop>LCD_Sharpness</tabstop>
+    <tabstop>CB_Shutter</tabstop>
+    <tabstop>Slider_Shutter</tabstop>
+    <tabstop>LCD_Shutter</tabstop>
+    <tabstop>CB_Temperature</tabstop>
+    <tabstop>Slider_Temperature</tabstop>
+    <tabstop>LCD_Temperature</tabstop>
+    <tabstop>CB_Trigger</tabstop>
+    <tabstop>Slider_Trigger</tabstop>
+    <tabstop>LCD_Trigger</tabstop>
+    <tabstop>CB_WhiteBalanceBlue</tabstop>
+    <tabstop>Slider_WhiteBalanceBlue</tabstop>
+    <tabstop>LCD_WhiteBalanceBlue</tabstop>
+    <tabstop>CB_WhiteBalanceRed</tabstop>
+    <tabstop>Slider_WhiteBalanceRed</tabstop>
+    <tabstop>LCD_WhiteBalanceRed</tabstop>
+</tabstops>
+<slots>
+    <slot>AutoChangedBrightness(int)</slot>
+    <slot>AutoChangedExposure(int)</slot>
+    <slot>AutoChangedFocus(int)</slot>
+    <slot>AutoChangedGain(int)</slot>
+    <slot>AutoChangedGamma(int)</slot>
+    <slot>AutoChangedHue(int)</slot>
+    <slot>AutoChangedIris(int)</slot>
+    <slot>AutoChangedSaturation(int)</slot>
+    <slot>AutoChangedSharpness(int)</slot>
+    <slot>AutoChangedShutter(int)</slot>
+    <slot>AutoChangedTemperature(int)</slot>
+    <slot>AutoChangedTrigger(int)</slot>
+    <slot>AutoChangedWhiteBalanceBlue(int)</slot>
+    <slot>AutoChangedWhiteBalanceRed(int)</slot>
+    <slot>ValueChangedBrightness(int)</slot>
+    <slot>ValueChangedExposure(int)</slot>
+    <slot>ValueChangedFocus(int)</slot>
+    <slot>ValueChangedGain(int)</slot>
+    <slot>ValueChangedGamma(int)</slot>
+    <slot>ValueChangedHue(int)</slot>
+    <slot>ValueChangedIris(int)</slot>
+    <slot>ValueChangedSaturation(int)</slot>
+    <slot>ValueChangedSharpness(int)</slot>
+    <slot>ValueChangedShutter(int)</slot>
+    <slot>ValueChangedTemperature(int)</slot>
+    <slot>ValueChangedTrigger(int)</slot>
+    <slot>ValueChangedWhiteBalanceBlue(int)</slot>
+    <slot>ValueChangedWhiteBalanceRed(int)</slot>
+    <slot>TextChangedBrightness(const QString&amp;)</slot>
+    <slot>TextChangedExposure(const QString&amp;)</slot>
+    <slot>TextChangedFocus(const QString&amp;)</slot>
+    <slot>TextChangedGain(const QString&amp;)</slot>
+    <slot>TextChangedGamma(const QString&amp;)</slot>
+    <slot>TextChangedHue(const QString&amp;)</slot>
+    <slot>TextChangedIris(const QString&amp;)</slot>
+    <slot>TextChangedSaturation(const QString&amp;)</slot>
+    <slot>TextChangedSharpness(const QString&amp;)</slot>
+    <slot>TextChangedShutter(const QString&amp;)</slot>
+    <slot>TextChangedTemperature(const QString&amp;)</slot>
+    <slot>TextChangedTrigger(const QString&amp;)</slot>
+    <slot>TextChangedWhiteBalanceBlue(const QString&amp;)</slot>
+    <slot>TextChangedWhiteBalanceRed(const QString&amp;)</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

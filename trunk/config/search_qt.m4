@@ -117,10 +117,19 @@ AC_DEFUN(AC_SEARCH_QT_LOCAL,
 	fi
 
 # moc test
-	# AC_CHECK_PROG(ac_qtbindir, moc, yes)
-	AC_PATH_PROG(ac_qtbindir, moc, no)
-	if test "x$ac_qtbindir" != xno; then
-		AC_SUBST(QT_MOC, "$ac_qtbindir")
+	# AC_CHECK_PROG(ac_qtmocdir, moc, yes)
+	AC_PATH_PROG(ac_qtmocdir, moc, no)
+	if test "x$ac_qtmocdir" != xno; then
+		AC_SUBST(QT_MOC, "$ac_qtmocdir")
+	else
+		AC_MSG_ERROR(Qt not (properly) installed. Get a (free) recent version from: http://www.trolltech.com)
+	fi
+
+# uic test
+	# AC_CHECK_PROG(ac_qtuicdir, uic, yes)
+	AC_PATH_PROG(ac_qtuicdir, uic, no)
+	if test "x$ac_qtuicdir" != xno; then
+		AC_SUBST(QT_UIC, "$ac_qtuicdir")
 	else
 		AC_MSG_ERROR(Qt not (properly) installed. Get a (free) recent version from: http://www.trolltech.com)
 	fi

@@ -48,6 +48,7 @@ globalsources = \
 	CanonCamera.idl \
 	Buttons.idl \
 	Video.idl \
+	VideoControl.idl \
 	Speech.idl \
 	SphinxSpeech.idl \
 	BehaviourEngine.idl \
