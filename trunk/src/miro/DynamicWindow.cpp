@@ -50,7 +50,7 @@ namespace Miro
   // set preferred direction
   //  
   void DynamicWindow::setPreferredDirection(double _prefDir) {
-			
+
     double value_left, value_right;
 
     for(int left = minLeft_; left <= maxLeft_; left++) {
@@ -63,13 +63,58 @@ namespace Miro
 
       }
     }
-  }	
-  
+  }
+
+
+  // check for collisions DELUXE
+  //
+
+  void DynamicWindow::collisionCheckDeluxe(std::vector<Vector2d> &_robot, std::vector<Vector2d> &_obstacle) {
+
+    const double CURV_COUNT = 42;
+    const double CURV_SEGS = 21;
+    const double CURV_SEG_LEN = 50;  // in mm
+    const double WHEEL_DISTANCE  = 390.;  // in mm
+    const double MIN_DISTANCE = 10; // in mm
+
+    bool CURV[CURV_COUNT,CURV_SEGS];	// curvature space
+    int count, seg, rel;
+    double fLeft, fRight;
+
+    for(count = 1; count++; count <= CURV_COUNT / 2) {
+
+      rel = tan(count * M_PI / (2 * ((CURV_COUNT / 2) + 1)));
+      if(rel != 1)
+        if(rel>=1) {
+          fLeft = CURV_SEG_LEN;
+          fRight = fLeft / rel;
+        }
+        else {
+          fRight = CURV_SEG_LEN;
+          fLeft = fRight / rel;
+        }
+
+        offset = (WHEEL_DISTANCE / 2.) * ((fLeft + fRight) / (fLeft - fRight));
+        angle = (180. * (fLeft - fRight)) / (WHEEL_DISTANCE * M_PI);
+
+	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -1 * angle * (CURV_SEGS - 1) / 2);
+	getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) < MIN_DISTANCE ? CURV[count,0] = false : CURV[count,seg] = true;
+        for(seg = 1; seg++; seg <= CURV_SEGS)
+          rotateMountedPolygon(_robot, Vector2d(-offset, 0.), angle);
+          getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) < MIN_DISTANCE ? CURV[count,seg] = false : CURV[count,seg] = true;
+        }
+	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -1 * angle * (CURV_SEGS - 1) / 2);
+      }
+
+    }
+
+  }
+
 
   // check for collisions
   //
   void DynamicWindow::collisionCheck(std::vector<Vector2d> &_robot, std::vector<Vector2d> &_obstacle) {
-    
+
     const double WHEEL_DISTANCE  = 390.;  // in mm
     const double MAX_POLYGON_DISTANCE = 500.;  // in mm
     const double BREAK_ACCELERATION = 2000.;  // in mm/sec2
@@ -77,10 +122,10 @@ namespace Miro
     const int RESOLUTION = 4;
 
     double offset, angle, pointValue, fLeft, fRight;
-    
+
     for(int left = minLeft_; left <= maxLeft_; left += RESOLUTION) {
       for(int right = minRight_ ; right <= maxRight_; right += RESOLUTION ) {
-  
+
 	if(left == right) {
 	  fLeft = 100. * (double)(abs(left) * left) / BREAK_ACCELERATION;
 	  fRight = 100. * (double)(abs(right) * right) / BREAK_ACCELERATION;
@@ -95,12 +140,12 @@ namespace Miro
 	    fLeft = ((double)(left) / double(right)) * fRight;
 	    }
 	}
-  
+
         if(left != right) {
-                      
+
           offset = (WHEEL_DISTANCE / 2.) * ((fLeft + fRight) / (fLeft - fRight));
           angle = (180. * (fLeft - fRight)) / (WHEEL_DISTANCE * M_PI);
-          rotateMountedPolygon(_robot, Vector2d(-offset, 0.), angle);       
+          rotateMountedPolygon(_robot, Vector2d(-offset, 0.), angle);
 
 	  if(getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) < MIN_DISTANCE) {
 	    pointValue = 0;
@@ -114,12 +159,12 @@ namespace Miro
 	      velocitySpace_[left+100+x][right+100+y] = (int)(velocitySpace_[left+100+x][right+100+y] * pointValue);
 	    }
 	  }
-          
+
           rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -angle);
-          
+
         }
         else {  // (left == right)
-          
+
           moveMountedPolygon(_robot, Vector2d(0., (fLeft + fRight) / 2.));
 
           if(getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) < MIN_DISTANCE) {
@@ -134,15 +179,15 @@ namespace Miro
 	      velocitySpace_[left+100+x][right+100+y] =	(int)(velocitySpace_[left+100+x][right+100+y] * pointValue);
             }
           }
-          
-          moveMountedPolygon(_robot, Vector2d(0., -1 * (fLeft + fRight) / 2.)); 
-          
+
+          moveMountedPolygon(_robot, Vector2d(0., -1 * (fLeft + fRight) / 2.));
+
         }
-        
-      } 
-    }  
-    
-  } 
+
+      }
+    }
+
+  }
 
 
   // calc new velocity
@@ -151,17 +196,17 @@ namespace Miro
 
     int biggestVelocitySpaceValue = 10;
     Vector2d biggestVelocitySpaceValueVelocity(0, 0);
-    
+
     for(int left = minLeft_; left < maxLeft_; left++) {
       for(int right = minRight_; right < maxRight_; right++) {
-      
+
         if((velocitySpace_[left+100][right+100] >= biggestVelocitySpaceValue) &&
 	   (left + right > (int)(biggestVelocitySpaceValueVelocity.imag() + biggestVelocitySpaceValueVelocity.real())))
         {
           biggestVelocitySpaceValue = velocitySpace_[left+100][right+100];
           biggestVelocitySpaceValueVelocity = Vector2d(left, right);
         }
-        
+
       }
     }
 
