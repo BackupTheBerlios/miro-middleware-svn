@@ -363,7 +363,7 @@ namespace Sparrow
         connection_->setPanPosition(Miro::deg2Rad((double)message.longData(0)/tpd));
       }
       else {
-        connection_->setPanPosition(0.0);
+        connection_->setPanPosition(NAN);
       }
       break;
     }
@@ -371,7 +371,7 @@ namespace Sparrow
     case CAN_R_PAN_RESET_2005:
       MIRO_LOG_OSTR(LL_WARNING, "SparrowConsumer2003: Pan2005 Controller rebooted (FW ver. " << message.byteData(0) << ")" );
       // register timer handler for pan calibration query
-      connection_->deferredQueryPanTicksPerDegree(ACE_Time_Value(5));
+      // connection_->deferredQueryPanTicksPerDegree(ACE_Time_Value(5));
       break;
 
     case CAN_PAN_ERROR_2005:

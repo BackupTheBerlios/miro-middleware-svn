@@ -38,6 +38,7 @@ namespace Sparrow
     consumer(_consumer),
     eventHandler(new EventHandler2003(*this)),
     panTicksPerDegree_(0),
+    currentPanPos_(NAN),
     boardReply(-1)
   {
     MIRO_LOG_CTOR("SparrowConnection2003");
@@ -54,7 +55,7 @@ namespace Sparrow
 				"Failed to register timer for status report startup.");
 
     if (params_->pan.servo)
-      deferredQueryPanTicksPerDegree(ACE_Time_Value(0, 10000));
+      deferredQueryPanTicksPerDegree(ACE_Time_Value(5));
   }
 
   //----------------------//
@@ -72,6 +73,7 @@ namespace Sparrow
   {
     setInfrared1WaitTime(params_->infraredPulse.msec());
     setInfrared2WaitTime(params_->infraredPulse.msec());
+    panReset();
   }
 
   void
@@ -175,21 +177,6 @@ namespace Sparrow
     message.id(CAN_PAN_RESET_2005);
     write(message);
   }
-
-  void
-  Connection2003::setPanPosition(float _pos)
-  {
-    currentPanPos = _pos;
-  }
-
-  float
-  Connection2003::getPanPosition()
-  {
-    return(currentPanPos);
-  }
-
-  
-
 
 
   /********************

@@ -82,7 +82,7 @@ namespace Sparrow
     EventHandler2003 * eventHandler;
     
     unsigned int panTicksPerDegree_;
-    float currentPanPos;			// Pan position as rad
+    float currentPanPos_;			// Pan position as rad
 
     short rad2servo0Ticks(double rad) const;
     short rad2servo1Ticks(double rad) const;
@@ -93,6 +93,18 @@ namespace Sparrow
     static int const LEFT_MOTOR = 0;
     static int const RIGHT_MOTOR = 1;
   };
+
+  inline
+  void
+  Connection2003::setPanPosition(float _pos) {
+    currentPanPos_ = _pos;
+  }
+
+  inline
+  float
+  Connection2003::getPanPosition() {
+    return currentPanPos_;
+  }
 
   inline
   short
