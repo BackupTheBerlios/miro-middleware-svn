@@ -178,7 +178,7 @@ namespace DpPanTilt
     case ASCIITERSE: 
       panTiltData.verbose = false;
       break; 
-    case VERSION: 
+    case PANVERSION: 
       break; 
     case PANHOLDLOW: 
       panTiltData.panHold = 1;
