@@ -332,7 +332,7 @@ env CPPFLAGS=-I/usr/local/include LDFLAGS=-s ./configure
 
 On runtime, some applications rely on two environment variables,
 namely \texttt{MIRO\_ROOT} (the base directory) and \texttt{MIRO\_LOG}
-(directory, where logging data are stored), so please set these
+(directory, where logging data is stored), so please set these
 variables to the appropriate values too.
 
 Additionally, you can enable or disable several features, like the
@@ -343,12 +343,12 @@ Supported robot platforms:
 \item The B21 port is the oldest one and should therefore be the most
   stable, regarding the interfaces. All of the robots hardware
   components are supported by \miro.
-\item The Sparrow99 robots are our soccer robots. They are our testbed
-  for multi-robot programming. Therefore most new technology is first
-  tested on this platform. So even as you do not have a Sparrow99
-  robot (we built them ourselfs), it might be interesting to look at
-  the sources for this robot if you are looking for group
-  communication technology etc.
+\item The Sparrow99 and Sparrow2003 robots are our soccer robots. They
+  are our testbed for multi-robot programming. Therefore most new
+  technology is first tested on this platform. So even as you do not
+  have a Sparrow99 robot (we built them ourselfs), it might be
+  interesting to look at the sources for this robot if you are looking
+  for group communication technology etc.
 \item The Pioneer1 platform is a complete port for the ActiveMedia
   robot series, based on the PSOS, P2OS and AROS protocols. But we
   could only test and extend it to the platforms available to us.
