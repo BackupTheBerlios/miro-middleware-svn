@@ -206,20 +206,23 @@
 	</parameter>
       </instance>
 
-      <parameter name="Miro::CameraParameters" >
-	<parameter value="0.120000" name="Latency" />
-	<parameter value="31.0" name="Alpha" />
-	<parameter value="600" name="Height" />
-	<parameter value="197.159465" name="Cx" />
-	<parameter value="139.645856" name="Cy" />
-	<parameter value="4.043536" name="F" />
-	<parameter value="2.980936e-02" name="Kappa" />
-	<parameter value="1" name="Sx" />
-	<parameter value="0.00625" name="Dx" />
-	<parameter value="0.0125" name="Dy" />
-	<parameter value="384" name="Nfx" />
-	<parameter value="768" name="Ncx" />
-      </parameter>
+      <instance type="DeviceBTTV" name="DeviceBTTV">
+	<parameter name="Miro::CameraParameters" >
+	  <parameter value="0.120000" name="Latency" />
+	  <parameter value="31.0" name="Alpha" />
+	  <parameter value="600" name="Height" />
+	  <parameter value="197.159465" name="Cx" />
+	  <parameter value="139.645856" name="Cy" />
+	  <parameter value="4.043536" name="F" />
+	  <parameter value="2.980936e-02" name="Kappa" />
+	  <parameter value="1" name="Sx" />
+	  <parameter value="0.00625" name="Dx" />
+	  <parameter value="0.0125" name="Dy" />
+	  <parameter value="384" name="Nfx" />
+	  <parameter value="768" name="Ncx" />
+	</parameter>
+      </instance>
+
     </section>
 
     <section name="Notification" >
