@@ -77,9 +77,7 @@ sparrowsources = \
 	SparrowMotion.idl \
 	SparrowAlive.idl
 
-deprecatedsources = \
-	ImageDefinitions.idl \
-	Image.idl
+deprecatedsources = 
 
 
 

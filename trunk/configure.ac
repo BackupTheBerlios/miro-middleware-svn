@@ -197,7 +197,6 @@ AC_CONFIG_FILES([Makefile
                  src/can/Makefile
                  src/faulMotor/Makefile
                  src/faulTty/Makefile
-                 src/image/Makefile
                  src/laser/Makefile
                  src/mcp/Makefile
                  src/miro/Makefile
@@ -234,7 +233,6 @@ AC_CONFIG_FILES([Makefile
                  examples/behaviours/simple/Makefile
                  performance-tests/Makefile
                  performance-tests/can/Makefile
-                 performance-tests/image/Makefile
                  performance-tests/mcp/Makefile
                  performance-tests/panTilt/Makefile
                  performance-tests/response/Makefile
@@ -249,7 +247,6 @@ AC_CONFIG_FILES([Makefile
                  tests/dtlk/Makefile
                  tests/faul/Makefile
                  tests/gripper/Makefile
-                 tests/image/Makefile
                  tests/motion/Makefile
                  tests/notify/Makefile
                  tests/notifyMulticast/Makefile

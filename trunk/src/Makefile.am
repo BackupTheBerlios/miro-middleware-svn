@@ -52,8 +52,7 @@ sparrowdirs = \
 endif
 
 if COND_DEPRECATED
-deprecateddirs = \
-	image
+deprecateddirs = 
 endif
 
 
