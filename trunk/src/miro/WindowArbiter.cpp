@@ -48,6 +48,9 @@ namespace Miro
       notifyEvent.header.variable_header.length(0);   // put nothing here
       notifyEvent.filterable_data.length(0);          // put nothing here
     }
+
+    fileHandler = fopen("windowArbiter.log","w");
+
   }
 
   WindowArbiter::~WindowArbiter() {
@@ -55,6 +58,8 @@ namespace Miro
       delete winArbViewTask_;
       winArbViewTaskCreated = false; 
     }
+
+    fclose(fileHandler);
   }
 
 #ifdef WE_ACTUALLY_NEED_IT
@@ -131,6 +136,12 @@ namespace Miro
     BehaviourVector::const_iterator k;
     for(k = bv.begin(); k != bv.end(); k++) {
       (*k)->calcDynamicWindow(&dynWindow_);
+    }
+
+    for(int left = 0; left < 201; left++) {
+      for(int right = 0; right < 201; right++) {
+        fprintf(fileHandler,"%d\n",dynWindow_.velocitySpace_[left][right]);
+      }
     }
 
     // calculate new velocity using the content of the dynamicWindow    

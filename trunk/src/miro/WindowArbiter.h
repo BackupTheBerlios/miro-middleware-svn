@@ -19,6 +19,8 @@
 
 #include <ace/Reactor.h>
 
+#include <stdio.h>
+
 #include <orbsvcs/CosNotifyCommC.h>
 
 namespace Miro
@@ -47,6 +49,8 @@ namespace Miro
     
     DifferentialMotion_var pMotion_;
     StructuredPushSupplier * pSupplier_;
+
+    FILE *fileHandler;
 
     ACE_Reactor &reactor;
     int timerId;

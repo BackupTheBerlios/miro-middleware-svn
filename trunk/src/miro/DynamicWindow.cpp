@@ -86,7 +86,8 @@ namespace Miro
   void DynamicWindow::collisionCheck(std::vector<Vector2d> &_robot, std::vector<Vector2d> &_obstacle) {
     
     const double WHEEL_DISTANCE  = 390.;  // in mm
-    const double MAX_POLYGON_DISTANCE = 500.;  // in mm
+    const double MIN_DISTANCE = 10.; // in mm
+    const double MAX_POLYGON_DISTANCE = 200.;  // in mm
     const double BREAK_ACCELERATION = 2000.;  // in mm/sec2
     const int RESOLUTION = 4;
 
@@ -115,8 +116,14 @@ namespace Miro
           offset = (WHEEL_DISTANCE / 2.) * ((fLeft + fRight) / (fLeft - fRight));
           angle = (180. * (fLeft - fRight)) / (WHEEL_DISTANCE * M_PI);
           rotateMountedPolygon(_robot, Vector2d(-offset, 0.), angle);       
-	  pointValue = std::min(1., getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) / MAX_POLYGON_DISTANCE);
-          
+
+	  if(getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) < MIN_DISTANCE) {
+	    pointValue = 0;
+	  }
+	  else {
+	    pointValue = std::min(1., getFrontDistanceBetweenPolygonAndPolygon(_robot, _obstacle) / MAX_POLYGON_DISTANCE);
+	  }
+
           for(int x = 0; (x < RESOLUTION) && (x+left <= maxLeft_); x++) {
             for(int y = 0; (y < RESOLUTION) && (y+right <= maxRight_); y++) {
 	      velocitySpace_[left+100+x][right+100+y] = (int)(velocitySpace_[left+100+x][right+100+y] * pointValue);
@@ -129,7 +136,13 @@ namespace Miro
         else {  // (left == right)
           
           moveMountedPolygon(_robot, Vector2d(0., (fLeft + fRight) / 2.));
-          pointValue = std::min(1., getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) / MAX_POLYGON_DISTANCE);
+
+          if(getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) < MIN_DISTANCE) {
+	    pointValue = 0;
+	  }
+	  else {
+	    pointValue = std::min(1., getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) / MAX_POLYGON_DISTANCE);
+	  }
 
           for(int x = 0; (x < RESOLUTION) && (x+left <= maxLeft_); x++) {
             for(int y = 0; (y < RESOLUTION) && (y+right <= maxRight_); y++) {
@@ -266,8 +279,32 @@ namespace Miro
     return minDistance;
     
   }  
-
   
+  
+  // get front distance between robot and obstacle
+  // 
+  double DynamicWindow::getFrontDistanceBetweenPolygonAndPolygon(std::vector<Vector2d> &_polygon1, std::vector<Vector2d> &_polygon2) {
+    
+    std::vector<Vector2d>::iterator a1, a2, b1, b2;
+    double distance, minDistance;
+
+    for(a1 = _polygon1.begin() + 2, a2 = _polygon1.begin() + 3; a2 < _polygon1.begin() + 5; a1++, a2++) {
+      for(b1 = _polygon2.begin() + 4, b2 = _polygon2.begin() + 5; b2 < _polygon2.begin() + 7; b1++, b2++) {
+  
+        distance = getDistanceBetweenLineAndLine(*a1, *a2, *b1, *b2);
+            
+        if(((a1 == _polygon1.begin() + 2) && (b1 == _polygon2.begin() + 4)) || (distance < minDistance)) {
+          minDistance = distance;
+        }
+        
+      }
+    }
+    
+    return minDistance;
+    
+  }  
+
+
   // rotate mounted polygon around offset by given angle
   // 
   void DynamicWindow::rotateMountedPolygon(std::vector<Vector2d> &_polygon, Vector2d _point, double _angle) {
@@ -287,13 +324,45 @@ namespace Miro
   }
   
   
-  // move the given polygon by given distance
+  // move the given mounted polygon by given distance
   // 
   void DynamicWindow::moveMountedPolygon(std::vector<Vector2d> &_polygon, Vector2d _distance) {
     
     std::vector<Vector2d>::iterator i;
     
     for(i = _polygon.begin() + 1; i < _polygon.end(); i++) {
+      *i = Vector2d(i->real() + _distance.real(), i->imag() + _distance.imag());
+    }
+    
+  }
+
+
+  // rotate polygon around offset by given angle
+  // 
+  void DynamicWindow::rotatePolygon(std::vector<Vector2d> &_polygon, Vector2d _point, double _angle) {
+    
+    std::vector<Vector2d>::iterator i;
+    
+    double cosAngle = cos(M_PI * _angle / 180.);
+    double sinAngle = sin(M_PI * _angle / 180.);
+    
+    for(i = _polygon.begin(); i < _polygon.end(); i++) {
+      double temp_x, temp_y;
+      temp_x = (i->real() - _point.real()) * cosAngle + (i->imag() - _point.imag()) * -sinAngle;
+      temp_y = (i->real() - _point.real()) * sinAngle + (i->imag() - _point.imag()) * cosAngle;  
+      *i = Vector2d(temp_x + _point.real(), temp_y + _point.imag());
+    }
+    
+  }
+  
+  
+  // move the given polygon by given distance
+  // 
+  void DynamicWindow::movePolygon(std::vector<Vector2d> &_polygon, Vector2d _distance) {
+    
+    std::vector<Vector2d>::iterator i;
+    
+    for(i = _polygon.begin(); i < _polygon.end(); i++) {
       *i = Vector2d(i->real() + _distance.real(), i->imag() + _distance.imag());
     }
     

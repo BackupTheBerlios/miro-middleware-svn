@@ -3,7 +3,7 @@
  <section name="Robot" >
   <parameter name="Robot" >
    <parameter value="passtnix" name="Name" />
-   <parameter value="Sparow99" name="Type" />
+   <parameter value="Sparrow99" name="Type" />
   </parameter>
  </section>
  <section name="Sparrow99" >
