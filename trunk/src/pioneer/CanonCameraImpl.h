@@ -58,9 +58,9 @@ namespace Canon
     virtual Miro::FocusRangeIDL getFocusRange()
       throw(Miro::EDevIO, Miro::ETimeOut);
     virtual void setAEoff()
-      throw(Miro::EDevIO, Miro::EOutOfBounds, Miro::ETimeOut);
+      throw(Miro::EDevIO, Miro::ETimeOut);
     virtual void setAEon()
-      throw(Miro::EDevIO, Miro::EOutOfBounds, Miro::ETimeOut);
+      throw(Miro::EDevIO, Miro::ETimeOut);
     virtual void setAE(short factor)
       throw(Miro::EOutOfBounds, Miro::EDevIO, Miro::ETimeOut);
 
