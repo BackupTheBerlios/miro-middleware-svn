@@ -14,8 +14,8 @@
 include $(top_srcdir)/config/Make-rules
 
 CLEANFILES = \
-	idl/*.html idl/*.gif idl/*.css idl/installdox idl/MiroIDL.tag \
-	cpp/*.html cpp/*.gif cpp/*.css cpp/installdox cpp/MiroCpp.tag 
+	idl/*.html idl/*.png idl/*.gif idl/*.css idl/installdox idl/MiroIDL.tag \
+	cpp/*.html cpp/*.png cpp/*.gif cpp/*.css cpp/installdox cpp/MiroCpp.tag 
 
 #clean-local: 
 #	test -d idl && rmdir idl
