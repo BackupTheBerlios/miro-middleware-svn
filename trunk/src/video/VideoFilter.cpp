@@ -410,22 +410,32 @@ namespace Video
   void
   Filter::protectedCalcConnectivity()
   {
-    connected_ = connections_ > 0;
+    // Depth first recursion
     FilterVector::const_iterator first, last = succ_.end();
     for (first = succ_.begin(); first != last; ++first) {
       (*first)->protectedCalcConnectivity();
     }
 
+    // The filter is connected, if it has any connections.
+    // This includes successors and successor links.
+    connected_ = connections_ > 0;
+
+    // Calculate the number of successors.
     successors_ = 0;
+    // Test all direct successors.
     for (first = succ_.begin(); first != last; ++first) {
-      if ((*first)->connected_ > 0) {
+      if ((*first)->connected_) {
 	++successors_;
       }
     }
-	
+    // Test all successor links.
     FilterSuccVector::const_iterator f, l = succLink_.end();
     for (f = succLink_.begin(); f != l; ++f) {
-      if (f->filter()->connected_ > 0) {
+      // As connected_ is not yet be initialized on a 
+      // forward link we have to check connections_ and
+      // not connected_
+      // This is only valid as we hold the lock.
+      if (f->filter()->connections_ > 0) {
 	++successors_;
       }
     }

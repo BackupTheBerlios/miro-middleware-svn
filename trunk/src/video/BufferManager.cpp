@@ -42,8 +42,8 @@ namespace Video
     BufferVector::iterator first, last = bufferStatus_.end();
     for (first = bufferStatus_.begin(); first != last; ++first) {
       first->buffer = memory_ + offset;
-      offset += bufferSize_;
       first->params = _filter->getImageParametersInstance();
+      offset += bufferSize_;
     }
   }
 
@@ -68,8 +68,8 @@ namespace Video
     BufferVector::iterator first, last = bufferStatus_.end();
     for (first = bufferStatus_.begin(); first != last; ++first) {
       first->buffer = _bufferAddr[index];
-      ++index;
       first->params = _filter->getImageParametersInstance();
+      ++index;
     }
   }
 
