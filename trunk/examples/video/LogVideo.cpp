@@ -12,8 +12,8 @@
 #include "miro/VideoC.h"
 #include "miro/Client.h"
 #include "miro/TimeHelper.h"
+#include "miro/VideoHelper.h"
 
-#include <ace/Date_Time.h>
 #include <ace/Get_Opt.h>
 
 #include <iostream>
@@ -27,7 +27,6 @@
 namespace 
 {
   using std::string;
-  using std::ostringstream;
 
   using Miro::Client;
   using Miro::Video;
@@ -43,6 +42,7 @@ namespace
   bool verbose = false;
   int interval = 0;
   int stop = 5000;
+  std::string interfaceName;
 
   string path()
   {
@@ -58,40 +58,9 @@ namespace
   }
 
 
-  string createFileName()
-  {
-    ACE_Date_Time dt;
-    dt.microsec(ACE_OS::gettimeofday().usec());
-
-    ostringstream ostr;
-
-    ostr << dt.year() << ".";
-    ostr.width(2);
-    ostr.fill('0');
-    ostr << dt.month() << ".";
-    ostr.width(2);
-    ostr.fill('0');
-    ostr << dt.day() << "-";
-    ostr.width(2);
-    ostr.fill('0');
-    ostr << dt.hour() << ".";
-    ostr.width(2);
-    ostr.fill('0');
-    ostr << dt.minute() << ".";
-    ostr.width(2);
-    ostr.fill('0');
-    ostr << dt.second() << ".";
-    ostr.width(2);
-    ostr.fill('0');
-    ostr << (dt.microsec() / 10000)
-	 << ".ppm";
-
-    return ostr.str();
-  }
-
   int parseArgs(int& argc, char* argv[])
   {
-    ACE_Get_Opt get_opts (argc, argv, "i:rst:v?");
+    ACE_Get_Opt get_opts (argc, argv, "i:n:rst:v?");
 
     int rc = 0;
     int c;
@@ -100,6 +69,9 @@ namespace
       switch (c) {
       case 'i':
 	interval = ACE_OS::atoi(get_opts.optarg);
+	break;
+      case 'n':
+	interfaceName = get_opts.optarg;
 	break;
       case 'r':
 	bgr = true;
@@ -116,6 +88,7 @@ namespace
       case '?':
       default:
 	cout << "usage: " << argv[0] << " [-r] [-s [-i=msec] [-t=msec]] [-?]" << endl
+	     << "  -n interface name (default: Video)" << endl
 	     << "  -r reverse byte order: BGR palette" << endl
 	     << "  -s streaming mode: continuos grabbing" << endl
 	     << "  -i interval: stop between each frame (default is 0)" << endl
@@ -214,14 +187,7 @@ int main(int argc, char *argv[])
     
     // get reference to video service
     Video_var video = client.resolveName<Video>("Video");
-    ImageHandleIDL imageIDL;
-    char * imageData;
-	
-    imageIDL = video->connect();
-    imageData = (char*)::shmat(imageIDL.key, NULL, 0);
-
-    if ((int)imageData == -1)
-      throw Miro::EDevIO();
+    Miro::VideoConnection connection(video.in());
 
     ACE_Time_Value start;
     while(!canceled) {
@@ -242,47 +208,50 @@ int main(int argc, char *argv[])
 	  break;
       }
 
-      // get image
-      if (interval)
-	video->getImage(imageIDL);
-      else
-	video->getWaitImage(imageIDL);
+      {
+	// get image
+	Miro::VideoAcquireImage 
+	  frame(connection, 
+		(interval)?
+		Miro::VideoAcquireImage::Current :
+		Miro::VideoAcquireImage::Next);
 
-      // fill image structure
-      Image image;
-      image.fileName = path() + client.namingContextName + "_" + createFileName();
-      image.width = imageIDL.width;
-      image.height = imageIDL.height;
+	// fill image structure
+	Image image;
+	image.fileName = path() + client.namingContextName + "_" + Miro::timeString() + ".ppm";
+	image.width = connection.handle->format.width;
+	image.height = connection.handle->format.height;
+	
+	// fill image buffer
+	if (!bgr && !streaming)
+	  image.buffer = (char*) frame.buffer;
+	else {
+	  image.buffer = new char[3 * image.width * image.height];
 
-      // fill image buffer
-      if (!bgr && !streaming)
-	image.buffer = imageData;
-      else {
-	image.buffer = new char[3 * image.width * image.height];
-
-	// byte swapping
-	if (bgr) {
-	  int offset = 0;
-	  for (int i = 0; i < image.width; ++i) {
-	    for (int j = 0; j < image.height; ++j, offset += 3) {
-	      image.buffer[offset + 0] = imageData[offset + 2]; // r
-	      image.buffer[offset + 1] = imageData[offset + 1]; // g
-	      image.buffer[offset + 2] = imageData[offset + 0]; // b
+	  // byte swapping
+	  if (bgr) {
+	    int offset = 0;
+	    for (int i = 0; i < image.width; ++i) {
+	      for (int j = 0; j < image.height; ++j, offset += 3) {
+		image.buffer[offset + 0] = frame.buffer[offset + 2]; // r
+		image.buffer[offset + 1] = frame.buffer[offset + 1]; // g
+		image.buffer[offset + 2] = frame.buffer[offset + 0]; // b
+	      }
 	    }
 	  }
+	  else
+	    std::memcpy(image.buffer, frame.buffer, 3 * image.width * image.height);
 	}
-	else
-	  std::memcpy(image.buffer, imageData, 3 * image.width * image.height);
+	
+	// save image
+	if (!streaming) {
+	  image.writePpm();
+	  if (bgr)
+	    delete[] image.buffer;
+	}
+	else 
+	  v.push_back(image);
       }
-
-      // save image
-      if (!streaming) {
-	image.writePpm();
-	if (bgr)
-	  delete[] image.buffer;
-      }
-      else 
-	v.push_back(image);
 
       // sleep
       if (interval) {
@@ -292,10 +261,6 @@ int main(int argc, char *argv[])
       }
     }
     cout << "exiting on signal" << endl;
-
-    ::shmdt((void*)imageData);
-    video->release(imageIDL);
-    cout << endl;
 
     for (ImageVector::const_iterator i = v.begin(); i != v.end(); ++i) {
       i->writePpm();
