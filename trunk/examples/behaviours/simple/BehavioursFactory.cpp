@@ -50,7 +50,7 @@ SimpleBehavioursFactory::connect()
 void
 SimpleBehavioursFactory::disconnect()
 {
-  supplier_.disconnect();
   Super::disconnect();
+  supplier_.disconnect();
 }
 

@@ -24,6 +24,7 @@ public:
   TactileStop(Miro::Motion_ptr _motion,
 	      CosNotifyChannelAdmin::EventChannel_ptr _ec,
 	      const std::string& _domainName);
+  ~TactileStop();
 
   BEHAVIOUR_PARAMETERS_FACTORY(TactileStopParameters);
 

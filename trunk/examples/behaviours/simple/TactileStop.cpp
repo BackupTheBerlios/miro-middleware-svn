@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2000, 2001, 2002
+// (c) 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -23,6 +23,8 @@ TactileStop::TactileStop(Miro::Motion_ptr _motion,
   motion_(Miro::Motion::_duplicate(_motion)),
   domainName_(_domainName)
 {
+  std::cout << "Constructing TactileStop behaviour." << endl;
+
   // Tell the event channel to push us Tactile events
   
   CosNotification::EventTypeSeq added;
@@ -37,6 +39,11 @@ TactileStop::TactileStop(Miro::Motion_ptr _motion,
   removed[0].type_name = CORBA::string_dup("*");
 
   consumer.consumerAdmin_->subscription_change(added, removed);
+}
+
+TactileStop::~TactileStop()
+{
+  std::cout << "Destructing TactileStop behaviour." << endl;
 }
 
 void
