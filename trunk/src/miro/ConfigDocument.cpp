@@ -190,7 +190,7 @@ namespace Miro
 
   void 
   ConfigDocument::getParameters(const std::string& _category, 
-				ConfigParameters& parameters)
+				ConfigParameters& _parameters)
   {
     unsigned int processed = 0;
 
@@ -213,10 +213,10 @@ namespace Miro
 	      ( (n2.nodeName() == "parameter" &&
 	         e2.attribute("name") == category) ||
 		(n2.nodeName() == category))) {
-	    parameters <<= n2;
+	    _parameters <<= n2;
+	    ++processed;
 	  }
 	  n2 = n2.nextSibling();
-	  ++processed;
 	}
       }
       n1 = n1.nextSibling();
@@ -238,7 +238,7 @@ namespace Miro
   void 
   ConfigDocument::getType(const std::string& _type, 
 			  const std::string& _name, 
-			  ConfigParameters& parameters)
+			  ConfigParameters& _parameters)
   {
     unsigned int processed = 0;
 
@@ -262,7 +262,7 @@ namespace Miro
 	      n2.nodeName() == "instance" &&
 	      e2.attribute("name") == name &&
 	      e2.attribute("type") == type) {
-	    parameters <<= n2;
+	    _parameters <<= n2;
 	    ++processed;
 	  }
 	  n2 = n2.nextSibling();
@@ -286,7 +286,7 @@ namespace Miro
 
   void 
   ConfigDocument::getInstance(const std::string& _name, 
-			      ConfigParameters& parameters)
+			      ConfigParameters& _parameters)
   {
     unsigned int processed = 0;
 
@@ -308,8 +308,8 @@ namespace Miro
 	  if (!e2.isNull() &&
 	      n2.nodeName() == "instance" &&
 	      e2.attribute("name") == name) {
-	    parameters <<= n2;
-	    ++ processed;
+	    _parameters <<= n2;
+	    ++processed;
 	  }
 	  n2 = n2.nextSibling();
 	}
