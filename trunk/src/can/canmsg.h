@@ -21,15 +21,10 @@ typedef unsigned long CanId;
 typedef struct 
 {
   CanId id;
-  int type;
   int rtr;					/* remote transmission	*/
   int len;					/* data length 0..8 	*/
   unsigned char d[8];
-  union {
-      unsigned long jiffies;  /* jiffies ...        */
-      struct timeval tv;      /* timeval              */
-  } timestamp;
-
+  unsigned long timestamp;
 } canmsg;
 
 /* controller configuration structure */
