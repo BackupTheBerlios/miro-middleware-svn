@@ -117,7 +117,7 @@ namespace Video
     int z = 0;
     
     for(int i = 0; i < inputFormat_.width; i++){
-       int_p = bitImage_ + (numInts -1)*inputFormat_.width;
+       int_p = bitImage_ + (numInts -1)*inputFormat_.width + i;
        z = 0;
        index = 0;
        tmpInd = 0;
