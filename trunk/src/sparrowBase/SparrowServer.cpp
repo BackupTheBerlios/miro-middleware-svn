@@ -46,7 +46,7 @@ FaulhaberHardware::FaulhaberHardware(ACE_Reactor * _reactor,
   pTimerEventHandler(new FaulMotor::TimerEventHandler(connection)),
   connection(_reactor, pConsumer)
 {
-  ACE_Time_Value tv(0,50000);
+  ACE_Time_Value tv(0,500000);
 
   timerId = reactor->schedule_timer(pTimerEventHandler, NULL, tv ,tv);
 }

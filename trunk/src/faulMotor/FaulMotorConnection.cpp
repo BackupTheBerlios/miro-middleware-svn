@@ -60,11 +60,13 @@ namespace FaulMotor
     rightWheel_.writeMessage(accMessage);
 
     disable();
+    jmp2();
   }
 
   Connection::~Connection()
   { 
     DBG(cout << "Destructing FaulMotorConnection." << endl);
+    jmp1();
     disable();
   }
 
@@ -147,14 +149,12 @@ namespace FaulMotor
 
     gotTicks_ = 0;
 
-#ifdef ASD
     ACE_Time_Value now = ACE_OS::gettimeofday();
-    ACE_Time_Value nextWrite = std::min(leftWheel_.lastWrite, rightWheel_.lastWrite)
+    ACE_Time_Value nextWrite = std::min(leftWheel_.lastWrite_, rightWheel_.lastWrite_)
       + ACE_Time_Value(0, 18000);
 
     if (nextWrite > now)
       ACE_OS::sleep(nextWrite - now);
-#endif
 
     leftWheel_.writeMessage(getTicksMessage);            // send it
     rightWheel_.writeMessage(getTicksMessage);
@@ -207,8 +207,6 @@ namespace FaulMotor
     disabled_ = false;
     leftWheel_.writeMessage(getSpeedMessage);             // send it
     rightWheel_.writeMessage(getSpeedMessage);
-    jmp2();
-
   }
 
   void
@@ -219,7 +217,6 @@ namespace FaulMotor
     disabled_ = true;
     leftWheel_.writeMessage(getSpeedMessage);             // send it
     rightWheel_.writeMessage(getSpeedMessage);
-    jmp1();
   }
 
   void
