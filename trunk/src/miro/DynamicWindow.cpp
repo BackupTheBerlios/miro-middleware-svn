@@ -72,14 +72,14 @@ namespace Miro
 
   void DynamicWindow::collisionCheckDeluxe(std::vector<Vector2d> &_robot, std::vector<Vector2d> &_obstacle) {
 
-    const int CURV_COUNT = 15; // = 2n+1
-    const int CURV_SEGS = 15; // = 2n+1
+    const int CURV_COUNT = 17; // = 2n+1
+    const int CURV_SEGS = 17; // = 2n+1
     const int CURV_SEG_LEN = 50;  // in mm
     const int CURV_SEG_SMOOTH = 30;
     const double WHEEL_DISTANCE  = 390.;  // in mm
     const double BREAK_ACCELERATION = 1500.;  // in mm/sec2
 
-    int CURV[21][21];	// curvature space
+    int CURV[17][17];	// curvature space
     int count, seg, left, right, curv, target, k, l;
     bool kObst, lObst;
     double fLeft, fRight, offset, angle, rel, breaklen, left_break, right_break;
@@ -121,22 +121,22 @@ namespace Miro
 	}
       }
       k = (CURV_SEGS - 1) / 2;
-      while((k <= CURV_SEGS) && (CURV[count][k] != 0)) {
+      while((k < CURV_SEGS) && (CURV[count][k] != 0)) {
 	k++;
       }
       l = (CURV_SEGS - 1) / 2;
-      while((l >= 0) && (CURV[count][l] != 0)) {
+      while((l > 0) && (CURV[count][l] != 0)) {
 	l--;
       }
-      (k == (CURV_SEGS + 1)) ? kObst = false : kObst = true;
-      (l == -1) ? lObst = false : lObst = true;
+      (k == CURV_SEGS) ? kObst = false : kObst = true;
+      (l == 0) ? lObst = false : lObst = true;
 
-      while((kObst && k > 0) || (lObst && l < CURV_SEGS)) {
-	if(kObst && k > 0) {
+      while((kObst && (k > 0)) || (lObst && (l < CURV_SEGS))) {
+	if(kObst && (k > 0)) {
 	  CURV[count][k-1] = std::min(CURV[count][k-1],std::min(250, CURV[count][k] + CURV_SEG_SMOOTH));
 	  k--;
 	}
-	if(lObst && l < CURV_SEGS) {
+	if(lObst && (l < CURV_SEGS)) {
 	  CURV[count][l+1] = std::min(CURV[count][l+1],std::min(250, CURV[count][l] + CURV_SEG_SMOOTH));
 	  l++;
 	}
@@ -155,7 +155,7 @@ namespace Miro
 	target = 10 + (int)(breaklen / CURV_SEG_LEN);
 	fprintf(logFile2,"%d %d\n",curv,target);
 
-	velocitySpace_[left+100][right+100] = ((double)CURV[std::max(0,std::min(CURV_COUNT-1,curv))][std::max(0,std::min(CURV_SEGS-1,target))] / 250.) * velocitySpace_[left+100][right+100];
+	velocitySpace_[left+100][right+100] = ((double)CURV[std::max(0,std::min(CURV_COUNT-1,curv))][std::max(0,std::min(CURV_SEGS-1,target))] / 250.) * 250; // velocitySpace_[left+100][right+100];
       }
     }
 
