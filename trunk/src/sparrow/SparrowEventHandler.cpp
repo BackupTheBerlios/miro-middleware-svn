@@ -54,10 +54,14 @@ namespace Sparrow
       break;
     case INIT_TIMER: {
       // set contiuous mode for status reports
-      if (!connection.boardReply)
+      if (connection.boardReply == -1) // init
 	initSparrowBoard();
-      else
-	connection.boardReply = false;
+      else if (connection.boardReply == 0) {
+	std::cerr << endl << endl << "!!!!! SparrowBoard died!" << endl << endl;
+	abort();  // board died!
+      }
+      else if (connection.boardReply == 1) // test
+	connection.boardReply = 0;
       break;
     }
     default: 

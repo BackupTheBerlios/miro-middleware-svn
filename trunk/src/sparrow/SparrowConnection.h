@@ -154,7 +154,7 @@ namespace Sparrow
     short rightPower;
 
   public:
-    bool boardReply; // for watchdog / init
+    int boardReply; // for watchdog / init
   };
 
   inline

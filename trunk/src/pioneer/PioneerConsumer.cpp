@@ -50,7 +50,7 @@ namespace Pioneer
     prevX(0),
     prevY(0),
     prevTheta(0.),
-    bumpers_(0),
+    bumpers_(0x3e3e),
     params_(Parameters::instance())
   { 
     DBG(cout << "Constructing PioneerConsumer." << endl);

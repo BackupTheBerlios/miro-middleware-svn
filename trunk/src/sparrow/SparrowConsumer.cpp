@@ -140,7 +140,7 @@ namespace Sparrow
     int tmp;
     int versNr, versSub;
 
-    connection.boardReply = true;
+    connection.boardReply = 1;
 
     switch (message.id()) {
 

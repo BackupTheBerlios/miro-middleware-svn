@@ -63,7 +63,7 @@ namespace Sparrow
     rightSpeed(0),
     leftPower(0),
     rightPower(0),
-    boardReply(false)
+    boardReply(-1)
   { 
     DBG(cout << "Constructing SparrowConnection." << endl);
 
