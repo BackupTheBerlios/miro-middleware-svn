@@ -36,7 +36,24 @@ behaviour engine also support the hierarchical decomposition of
 behaviour sets by allowing them to be grouped in so called action
 patterns that can be activated alternately by so called transition
 messages. A set of action patterns is called a policy within the \miro
-framework.
+framework. 
+
+There do exist two different kinds of transitions within the behaviour
+framework: local and global transitions. Local transitions are emitted
+by the behaviours by name. For example a transition named
+``GoalReached创 might be emitted by a behaviour when it decides, it
+has fullfilled its task. Within an action pattern a transition is
+linked to the successor pattern, that will be activated as the
+transition message occurs. That way totally different actionpatterns
+can be activated, when the behaviour emits the ``GoalReached创
+transition message within different action patterns. Global
+transitions are somehow simpler. They contain directly the action
+pattern, that is to be activated next. This mechanism is designed for
+modules of the robot, that are external to the behaviour framework.
+For example if a task planner decided it would be time for the robot
+to go home, it might activate the ``GoHome创 pattern just by issuing a
+global ``GoHome创 transition. The robot will then switch to its GoHome
+pattern regardless of what it was doing before.
 
 \section{Introductory Examples}
 
@@ -123,7 +140,7 @@ the above mentioned wander behaviour - which doesn't use any sensory
 information would be best implemented as a child of the
 {\tt Miro::TimedBehaviour} class.
 
-See {\tt \$MIRO\_ROOT/examples/B21Behaviours/wander.cpp|h} for a
+See {\tt \$MIRO\_ROOT/examples/b21Behaviours/Wander.cpp|h} for a
 complete source code example.
 
 \subsection{Miro::EventBehaviour}
@@ -140,7 +157,7 @@ have to poll excessively as a timed behaviour in order to minimize the
 latency between a bumper pressing a the actual stop, while it would
 only need to call an arbitration method in very rare occasions.
 
-See {\tt \$MIRO\_ROOT/examples/B21Behaviours/tactileStop.cpp|h} for a
+See {\tt \$MIRO\_ROOT/examples/b21Behaviours/TactileStop.cpp|h} for a
 complete source code example.
 
 \subsection{Miro::TaskBehaviour}
@@ -169,8 +186,21 @@ framework and are expected to be static during the run of an entire
 policy. (How to handle dynamic parameters like destination coordinates
 of a 'move to position' behaviour is explained in section \ref{sec:init})
 
-Each behaviour is expected to have its own {\tt BehaviourParameters}
-class factory method, for dynamic instantiation. In the constructor,
+Behaviours, which subclass the {\tt BehaviourParameters} class,
+need to have their own {\tt BehaviourParameters}
+subclass factory methods, for dynamic instantiation. This is captured by
+the two macros:
+\begin{itemize}
+\item BEHAVIOUR\_PARAMETERS\_FACTORY(X)
+\item BEHAVIOUR\_PARAMETERS\_FACTORY\_IMPL(Y, X)
+\end{itemize}
+X denotes the name of the behaviour parameters class and Y denotes the
+name of the behaviour class. The first macro has to be placed within
+the call definition and the second within the cpp-file containing the
+behaviour implementation.
+
+
+In the default constructor of the parameters class,
 the default settings of the parameters are expected to be set. There
 are two more methods for each {\tt BehaviourParameters} class to be
 populated. The first is a method to parse its parameters from an xml
@@ -185,13 +215,13 @@ about it too much.
 \label{sec:init}
 
 Before an action pattern becomes activated all its behaviours {\tt
-  init()} methods are called after the call to its {\tt init()}
-method.. This allows behaviours to initialize their per task
-parameters (like destination coordinates) in a convenient way. Note
-however, that the {\tt init()} method can be called while the
-behaviour is already active (see section \ref{sec:active-inactive} and
-so its {\tt action()} method can be concurrently running. Therefore a mutex
-is needed to avoid race conditions.
+  init()} methods are called successively. This allows behaviours to
+initialize their per task parameters (like destination coordinates) in
+a convenient way. Note however, that the {\tt init()} method can be
+called while the behaviour is already active (see section
+\ref{sec:active-inactive} and so its {\tt action()} method can be
+concurrently running. Therefore a mutex is needed to avoid race
+conditions.
 
 Parameters that are valid for the whole lifetime of a behaviour, such
 as references to the robots services or other objects within the
@@ -215,6 +245,36 @@ Note also, that the {\tt close()} method can be called while the behaviour
 is concurrently within the {\tt action()} method. --- Its call to the
 arbiter will then just be ignored. On the call of {\tt open()} however it
 is guaranteed that the behaviour currently is not running.
+
+\subsection{Changing Behaviour Parameters within an Action Pattern}
+
+Another way for interaction with the behaviour framework from outside
+is by changing the parameters of a behaviour within an action pattern
+during execution of the behaviour engine. In this case the behaviour
+name as well as the action pattern it belongs to has to be known. You
+can then query as well as set the behaviour parameters instance via
+the interface of the policy.
+
+However there are some issues that have to be take care of. First, the
+type of the derived behaviour parameters struct has to be known, as
+you get a pointer to a BehaviourParameters instance, that has to be
+down casted aproprietly. Second, to avoid memory leaks and
+segmentation faults, the memory handling has to be understood. When
+querying the parameters, the caller takes ownership of the object
+returned. When setting the parameters, the action pattern takes
+ownership of the passed parameters instance. - Therefore the object
+has to be allocated on the heap (that is, with {\tt new}). But
+actually that's not too much of a problem, if you stick to the
+intendet protocol: 
+If you first retrieve the parameters instance by querying the policy,
+change the parameters and write them back by the set method,
+everything works okay.
+
+A similar interface exists for the behaviours themselfs. But they only
+can query and set the parameters of behaviours in action patterns that
+are linked to the current action pattern by a local transition. The
+behaviours can therefore only query the parameters by the transition
+name instead of the action pattern name.
 
 \section{Arbiters}
 
@@ -322,7 +382,7 @@ behaviours and arbiters and registering them at their respective
 repositories.  This can be bundled within a so called behaviour engine
 class as can be seen in the behaviour example at:
 
-{\tt \$MIRO\_ROOT/examples/B21Behaviours/behaviourEngine.cpp|h}
+{\tt \$MIRO\_ROOT/examples/b21Behaviours/BehaviourEngine.cpp|h}
 
 \section{The Policy Editor}
 
@@ -331,7 +391,119 @@ offers an GUI based editor, with which you can build and edit your
 policies. You can also edit the parameters defined within the
 Parameters classes of your behaviours.
 
+The policy editor can be started with no parameters or with the policy
+file to edit as first parameter. It has a menue bar and displays the
+policy graph within the big scroll view area of the program.
+
+\subsection{The Menu}
+
+\subsubsection{File}
+\begin{itemize}
+\item New \\
+  Create a new policy.
+\item Open ... \\
+  Open a policy file. The file dialog will be displayed.
+\item Save \\
+  Save the current policy to disc. If no file name is yet specified,
+  Save as will be invoked instead.
+\item Save as ... \\
+  Save the current policy under a new file name. The file dialog will be
+  displayed.
+\item Send to ... \\
+  Send the current policy to a robot. A dialog box will be displayed to
+  enter the robots name (the naming context, its behaviour engine is
+  registered at). The behaviours and arbiters within the policy have to
+  be present within the behaviour and arbiter repositories in the
+  behaviour engine running on the robot. - Otherwise the parsing will
+  fail.
+\item Quit \\
+  Quit the policy editor.
+\end{itemize}
+\subsubsection{Options}
+\begin{itemize}
+\item Behaviour-Description-Filename \\
+  Display the name of the currently loaded behaviour description file.
+  This is the file, describing the available behaviours, arbiters and
+  parameters to the policy editor. Its syntax is described in section
+  \ref{SEC:BehaviourDescription}.
+\item Load Behaviour-Description-File \\
+  Load a behaviour description
+  file. The file dialog will be displayed. Note that the selected file
+  has to contain a valid behaviour description. - Verifying, wheter
+  the load was successfull is currently only possible, by quering the
+  behaviour description file name via the menu item above. On the
+  positive side the currently loaded description is memoriezed in the
+  file .PolicyEditorConfig.xml file in the users home directory for
+  further runns of the policy editor.
+\end{itemize}
+\subsubsection{Help}
+Currently this menu only contains two about dialogs.
+
+\subsection{Editing the Policy Graph}
+
+Clicking with the right mouse button into the editing area produces
+a popup menu with the option to place a new action pattern. Enter the
+name of the new pattern in the dialog box.
+
+Clicking with the right mouse button into the name of an action
+pattern produces a popup menu with the following options.
+\begin{itemize}
+\item Star pattern \\
+  Select the pattern to be the start pattern. That is the pattern, the
+  policy will begin with by default. Every policy has to have exactly
+  one start pattern. The start pattern is marked with two asterix
+  around the pattern name.
+\item Add behaviour \\
+  Add a behaviour to the action pattern. A list of available behaviour
+  will pop up. Every behaviour can be instanciated only once per
+  action pattern.
+\item Add transition \\
+  Click on another action pattern to link the two pattern with a
+  transition. A dialog box will appear to enter the transtion name.
+\item Rename pattern \\
+  A dialog box will appear to enter the new name of the action
+  pattern.
+\item Rename transition \\
+  A dialog box will appear with the name and the target of the
+  transitions. You can also delete a transition by deleting the name
+  as well as the target of the transition. - Be carfull, the new entry
+  will only be accepted, if you left the entry field by clicking on
+  another entry before hitting the okay button.
+\item Delete pattern \\
+  Deletes the pattern.
+\end{itemize}
+
+Clicking with the right mouse button into the green area of an action
+pattern produces a popup menu with the following options.
+\begin{itemize}
+\item Set arbiter \\
+  Select the arbiter for to the action pattern. A list of available arbiters
+  will pop up. Every action pattern has to have an arbiter.
+\item Delete arbiter \\
+  Deletes the arbiter from the action pattern.
+\end{itemize}
+
+Clicking with the right mouse button onto a behaviour within an action
+pattern produces a popup menu with the following options.
+\begin{itemize}
+\item Up \\
+  Move the behaviour up one position in the list of behaviours. The
+  position in the behaviour list represents the priority of the
+  behaviour at the arbiter. - The higher, the better.
+\item Down \\
+  Move the behaviour down one position in the list of behaviours.
+\item Set parameters \\
+  A dialog box will appear with the name and the value of the
+  behaviours parameters along with the type and the measure they
+  represent. - Please only edit the value field. Also, be carfull, the
+  new entry will only be accepted, if you left the entry field by
+  clicking on another entry before hitting the okay button.
+\item Delete behaviour \\
+  Deletes the behaviour from the action pattern.
+\end{itemize}
+
 \subsection{Describing the Available Behaviours}
+\label{SEC:BehaviourDescription}
 
 To be able to use your own behaviours within the PolicyEditor, you
 have to describe their properties (name and parameters) within another
@@ -401,6 +573,50 @@ behaviours associated Parameters class. This is done by the tool {\tt
   makeParams} which will be soon available within the \miro bin
 directory.
 
+\section{Policy Controller}
+
+The policy controller is some kind of remote control for the behaviour
+engine. It consists of a panel with four buttons and a menu bar. The
+buttons allow to start, stop, suspend and resume the behaviour engine.
+
+\subsection{The Menu}
+
+\subsubsection{File}
+\begin{itemize}
+\item Connect robot \\
+  Connect the policy controller with a behaviour
+  engine of a robot. A dialog box will be displayed to enter the
+  robots name (the naming context, its behaviour engine is registered
+  at).
+\item Load policy \\
+  Load a policy file into the behaviour engine. A dialog box will be
+  displayed to enter the file name. The file has to be locally
+  accessible by the robots behaviour engine.
+\item Send policy \\
+  Send a policy to the robot.  The file dialog will be displayed to
+  select the policy. The behaviours and arbiters within the policy
+  have to be present within the behaviour and arbiter repositories in
+  the behaviour engine running on the robot. - Otherwise the parsing
+  will fail.
+\item Quit \\
+  Quit the policy editor.
+\end{itemize}
+
+\subsubsection{Edit}
+\begin{itemize}
+\item Send transition \\
+  Send a transition to the behaviour engine. A dialog box will be
+  displayed to enter the transition name. This is for debug purposes
+  only, as the transition will only succede if it is registered at the
+  currently active action pattern - which in turn can change any time.
+  There will be also no feedback whether the transition succeded or
+  not.
+\item Send gloabal transition \\
+  Send a global transtition to the behaviour engine. A dialog box will be
+  displayed to enter the action pattern to activate. The action
+  pattern has to be present within the current policy, otherwise the
+  transition will fail.
+\end{itemize}
 
 %%% Local Variables: 
 %%% mode: latex
