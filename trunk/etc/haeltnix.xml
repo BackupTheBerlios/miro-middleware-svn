@@ -9,8 +9,9 @@
  <section name="Sparrow99" >
   <parameter name="SparrowBoard" >
    <parameter value="/dev/can/0" name="Device" />
-   <parameter value="0.050000" name="PanLatency" />
-   <parameter value="0.500000" name="PanSwing" />
+   <parameter value="0.110000" name="PanLatency" />
+   <parameter value="0.0800000" name="PanSwing" />
+   <parameter value="225" name="PanRadPerSecSwing" />
    <parameter value="3." name="PanAccuracy" />
    <parameter name="InfraredDescription" >
     <parameter value="2" name="ScanType" />
