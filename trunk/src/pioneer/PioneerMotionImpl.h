@@ -12,8 +12,8 @@
 #ifndef motionImpl_hh
 #define motionImpl_hh
 
-#include "miro/MotionS.h"
-#include "miro/OdometryC.h"
+#include "idl/MotionS.h"
+#include "idl/OdometryC.h"
 #include "miro/DifferentialMotionImpl.h"
 #include "miro/Exception.h"
 

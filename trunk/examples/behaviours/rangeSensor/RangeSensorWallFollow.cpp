@@ -10,8 +10,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #include "RangeSensorWallFollow.h"
 
-#include "miro/RangeSensorC.h"
-#include "miro/RangeEventC.h"
+#include "idl/RangeSensorC.h"
+#include "idl/RangeEventC.h"
 #include "miro/Client.h"
 #include "miro/MotionArbiterMessage.h"
 #include "miro/Angle.h"

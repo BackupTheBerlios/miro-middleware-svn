@@ -11,7 +11,7 @@
 #ifndef PanTiltImpl_h
 #define PanTiltImpl_h
 
-#include "miro/DirectedPerceptionPanTiltS.h"
+#include "idl/DirectedPerceptionPanTiltS.h"
 
 #include "PanTiltData.h"
 #include "PanTiltMessage.h"

@@ -11,7 +11,7 @@
 #ifndef SonarAvoid_h
 #define SonarAvoid_h
 
-#include "miro/RangeSensorC.h"
+#include "idl/RangeSensorC.h"
 #include "miro/EventBehaviour.h"
 
 #include "Parameters.h"

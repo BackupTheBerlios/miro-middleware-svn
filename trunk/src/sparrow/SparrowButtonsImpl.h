@@ -13,7 +13,7 @@
 
 #include "SparrowDevice.h"
 
-#include "miro/ButtonsS.h"
+#include "idl/ButtonsS.h"
 
 #include <orbsvcs/CosNotifyCommC.h>
 

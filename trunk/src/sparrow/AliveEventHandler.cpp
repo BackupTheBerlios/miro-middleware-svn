@@ -1,5 +1,5 @@
 #include "AliveEventHandler.h"
-#include <miro/SparrowAliveC.h>
+#include <idl/SparrowAliveC.h>
 
 
 namespace Sparrow{

@@ -17,8 +17,8 @@
 #include <qpushbutton.h>
 
 #include "miro/Client.h"
-#include "miro/MotionC.h"
-#include "miro/OdometryC.h"
+#include "idl/MotionC.h"
+#include "idl/OdometryC.h"
 
 class MainForm : public QDialog  
 {

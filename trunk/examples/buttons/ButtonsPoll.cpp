@@ -9,7 +9,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "miro/ButtonsC.h"
+#include "idl/ButtonsC.h"
 #include "miro/Client.h"
 
 using std::cout;

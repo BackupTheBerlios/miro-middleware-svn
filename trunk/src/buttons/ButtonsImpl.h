@@ -19,7 +19,7 @@
 #ifndef ButtonsImpl_h
 #define ButtonsImpl_h
 
-#include "miro/B21ButtonsS.h"
+#include "idl/B21ButtonsS.h"
 #include "miro/Exception.h"
 
 // forward declerations

@@ -11,7 +11,7 @@
 #ifndef BaseDummyImpl_h
 #define BaseDummyImpl_h
 
-#include "miro/B21MotionS.h"
+#include "idl/B21MotionS.h"
 #include "miro/MotionImpl.h"
 #include "miro/Synch.h"
 

@@ -11,7 +11,7 @@
 #ifndef BehaviourEngineImpl_h
 #define BehaviourEngineImpl_h
 
-#include "BehaviourEngineS.h"
+#include "idl/BehaviourEngineS.h"
 #include "Policy.h"
 #include "Synch.h"
 

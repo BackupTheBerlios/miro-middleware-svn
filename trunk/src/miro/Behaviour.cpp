@@ -9,7 +9,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "BehaviourEngineC.h"
+#include "idl/BehaviourEngineC.h"
 #include "Behaviour.h"
 #include "BehaviourParameters.h"
 #include "ActionPattern.h"

@@ -11,7 +11,7 @@
 #ifndef PioneerStallImpl_h
 #define PioneerStallImpl_h
 
-#include "miro/PioneerStallS.h"
+#include "idl/PioneerStallS.h"
 
 namespace Pioneer
 {

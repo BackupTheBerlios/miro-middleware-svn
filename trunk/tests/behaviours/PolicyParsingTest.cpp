@@ -13,7 +13,7 @@
 #include "DummyBehaviourB.h"
 #include "DummyArbiter.h"
 
-#include "miro/BehaviourEngineC.h"
+#include "idl/BehaviourEngineC.h"
 #include "miro/BehaviourRepository.h"
 #include "miro/ArbiterRepository.h"
 #include "miro/ActionPattern.h"

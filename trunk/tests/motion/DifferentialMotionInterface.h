@@ -13,7 +13,7 @@
 
 #include "MotionInterface.h"
 
-#include "miro/DifferentialMotionC.h"
+#include "idl/DifferentialMotionC.h"
 
 class DifferentialMotionInterface : MotionInterface
 {

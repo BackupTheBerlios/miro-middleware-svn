@@ -11,7 +11,7 @@
 #ifndef MiroVideoHelper_h
 #define MiroVideoHelper_h
 
-#include "VideoC.h"
+#include "idl/VideoC.h"
 #include "TimeHelper.h"
 
 namespace Miro

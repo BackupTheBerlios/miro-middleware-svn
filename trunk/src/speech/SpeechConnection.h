@@ -12,7 +12,7 @@
 #define SpeechConnection_h
 
 #include "miro/Exception.h"
-#include "miro/ExceptionC.h"
+#include "idl/ExceptionC.h"
 
 #include <ace/DEV_Connector.h>
 

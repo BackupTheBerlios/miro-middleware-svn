@@ -13,9 +13,9 @@
 
 #include "PolicyConfig.h"
 
-#include "../params/Parser.h"
-#include "../params/Generator.h"
-#include "../params/TextErrorHandler.h"
+#include "../../src/params/Parser.h"
+#include "../../src/params/Generator.h"
+#include "../../src/params/TextErrorHandler.h"
 
 #include <qfile.h>
 #include <qdom.h>

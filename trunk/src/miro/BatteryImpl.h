@@ -11,7 +11,7 @@
 #ifndef MiroBatteryImpl_h
 #define MiroBatteryImpl_h
 
-#include "BatteryS.h"
+#include "idl/BatteryS.h"
 
 namespace Miro
 {

@@ -11,7 +11,7 @@
 
 #include "MotionInterface.h"
 
-#include "miro/MotionC.h"
+#include "idl/MotionC.h"
 #include "miro/Client.h"
 #include "miro/Angle.h"
 #include "miro/IO.h"

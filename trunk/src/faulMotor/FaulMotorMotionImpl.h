@@ -11,8 +11,8 @@
 #ifndef faulMotionImpl_hh
 #define faulMotionImpl_hh
 
-#include "miro/SparrowMotionS.h"
-#include "miro/OdometryC.h"
+#include "idl/SparrowMotionS.h"
+#include "idl/OdometryC.h"
 #include "miro/DifferentialMotionImpl.h"
 #include "miro/Exception.h"
 

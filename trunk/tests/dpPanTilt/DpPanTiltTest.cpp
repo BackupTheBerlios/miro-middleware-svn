@@ -17,7 +17,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "miro/DirectedPerceptionPanTiltC.h"
+#include "idl/DirectedPerceptionPanTiltC.h"
 #include "miro/Client.h"
 
 #include <iostream>

@@ -10,11 +10,11 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "miro/Client.h"
-#include "miro/OdometryC.h"
-#include "miro/MotionC.h"
-#include "miro/RangeSensorC.h"
-#include "miro/ButtonsC.h"
-#include "miro/DtlkSpeechC.h"
+#include "idl/OdometryC.h"
+#include "idl/MotionC.h"
+#include "idl/RangeSensorC.h"
+#include "idl/ButtonsC.h"
+#include "idl/DtlkSpeechC.h"
 
 #include <unistd.h>
 #include <cstdio>

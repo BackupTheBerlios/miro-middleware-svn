@@ -11,7 +11,7 @@
 #ifndef MotionInterface_h
 #define MotionInterface_h
 
-#include "miro/MotionC.h"
+#include "idl/MotionC.h"
 
 class MotionInterface
 {

@@ -2,7 +2,7 @@
 #include <miro/Server.h>
 #include <miro/ReactorTask.h>
 #include <miro/StructuredPushSupplier.h>
-#include <miro/MotionC.h>
+#include <idl/MotionC.h>
 #include <ace/Reactor.h>
 #include <tao/ORB_Core.h>
 #include <linux/joystick.h>

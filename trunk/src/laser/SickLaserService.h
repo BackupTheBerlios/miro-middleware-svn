@@ -11,7 +11,7 @@
 #ifndef laserServer_hh
 #define laserServer_hh
 
-#include "miro/OdometryC.h"
+#include "idl/OdometryC.h"
 #include "miro/Server.h"
 #include "miro/ReactorTask.h"
 #include "miro/StructuredPushSupplier.h"

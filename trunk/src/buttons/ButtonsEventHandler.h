@@ -19,7 +19,7 @@
 #ifndef ButtonsEventHandler_h
 #define ButtonsEventHandler_h
 
-#include "miro/B21ButtonsC.h"
+#include "idl/B21ButtonsC.h"
 #include "miro/StructuredPushSupplier.h"
 #include "ButtonsDevice.h"
 

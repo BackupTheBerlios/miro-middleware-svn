@@ -12,7 +12,7 @@
 #define SparrowConnection2003_h
 
 #include "SparrowDevice2003.h"
-#include "Parameters.h"
+#include "sparrow/Parameters.h"
 
 #include "SparrowBaseConnection.h"         // CanConnection, CanMessageClass
 

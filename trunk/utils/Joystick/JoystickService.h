@@ -3,8 +3,8 @@
 
 #include <ace/Event_Handler.h>
 #include <miro/StructuredPushSupplier.h>
-#include <miro/MotionC.h>
-#include <miro/JoystickC.h>
+#include <idl/MotionC.h>
+#include <idl/JoystickC.h>
 
 
 class EventHandler : public ACE_Event_Handler {

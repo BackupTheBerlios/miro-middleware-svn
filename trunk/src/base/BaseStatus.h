@@ -13,7 +13,7 @@
 
 #include "BaseDevice.h"
 
-#include "miro/MotionStatusC.h"
+#include "idl/MotionStatusC.h"
 
 namespace Miro 
 {

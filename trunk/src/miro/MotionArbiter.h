@@ -11,7 +11,7 @@
 #ifndef MotionArbiter_h
 #define MotionArbiter_h
 
-#include "MotionC.h"
+#include "idl/MotionC.h"
 #include "PriorityArbiter.h"
 #include "MotionArbiterMessage.h"
 

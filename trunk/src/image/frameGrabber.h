@@ -2,6 +2,7 @@
 #define C_FRAME_GRABBER
 
 #include "ImageFactoryDefinitions.h"
+#include <string>
 
 namespace MiroImage {
 

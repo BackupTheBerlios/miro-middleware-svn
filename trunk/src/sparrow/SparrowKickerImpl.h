@@ -11,7 +11,7 @@
 #ifndef SparrowKickerImpl_h
 #define SparrowKickerImpl_h
 
-#include "miro/KickerS.h"
+#include "idl/KickerS.h"
 #include "SparrowBaseConnection.h"
 
 

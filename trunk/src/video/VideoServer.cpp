@@ -18,7 +18,7 @@
 #include "Parameters.h"
 
 #include "miro/Server.h"
-#include "miro/ExceptionC.h"
+#include "idl/ExceptionC.h"
 #include "miro/Exception.h"
 #include "miro/Utils.h"
 

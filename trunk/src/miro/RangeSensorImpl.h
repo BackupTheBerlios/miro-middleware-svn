@@ -11,7 +11,7 @@
 #ifndef RangeSensorImpl_h
 #define RangeSensorImpl_h
 
-#include "RangeSensorS.h"
+#include "idl/RangeSensorS.h"
 #include "Thread.h"
 #include "Synch.h"
 

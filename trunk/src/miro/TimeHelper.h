@@ -15,7 +15,7 @@
 #ifndef miroTimeHelper_hh
 #define miroTimeHelper_hh
 
-#include "miro/TimeC.h"
+#include "idl/TimeC.h"
 
 #include <iostream>
 #include <string>

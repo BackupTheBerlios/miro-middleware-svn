@@ -11,8 +11,8 @@
 #ifndef miroMotionImpl_h
 #define miroMotionImpl_h
 
-#include "MotionS.h"
-#include "Parameters.h"
+#include "idl/MotionS.h"
+#include "miro/Parameters.h"
 #include "Synch.h"
 
 namespace Miro

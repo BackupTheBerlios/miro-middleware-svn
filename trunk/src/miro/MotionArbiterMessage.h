@@ -11,7 +11,7 @@
 #ifndef MotionArbiterMessage_h
 #define MotionArbiterMessage_h
 
-#include "VelocityC.h"
+#include "idl/VelocityC.h"
 #include "ArbiterMessage.h"
 
 namespace Miro

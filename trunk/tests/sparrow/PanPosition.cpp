@@ -9,7 +9,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "miro/SparrowPanTiltC.h"
+#include "idl/SparrowPanTiltC.h"
 #include "miro/Client.h"
 #include "miro/Angle.h"
 #include "miro/TimeHelper.h"

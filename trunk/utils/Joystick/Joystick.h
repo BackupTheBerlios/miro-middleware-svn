@@ -1,8 +1,8 @@
 #ifndef Joystick_h
 #define Joystick_h
 
-#include <miro/MotionC.h>
-#include <miro/KickerC.h>
+#include <idl/MotionC.h>
+#include <idl/KickerC.h>
 #include <ace/Event_Handler.h>
 
 

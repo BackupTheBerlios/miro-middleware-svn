@@ -15,7 +15,7 @@
 #include "MainForm.h"
 
 #include "miro/Exception.h"
-#include "miro/ExceptionC.h"
+#include "idl/ExceptionC.h"
 
 #include <ace/Arg_Shifter.h>
 

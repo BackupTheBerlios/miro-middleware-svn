@@ -1,5 +1,5 @@
 #include "miro/Client.h"
-#include "miro/SphinxSpeechC.h"
+#include "idl/SphinxSpeechC.h"
 #include "miro/TimeHelper.h"
 
 #include <string>

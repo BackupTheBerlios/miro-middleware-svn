@@ -1,8 +1,8 @@
 #include "Joystick.h"
 
 #include <miro/Client.h>
-#include <miro/MotionC.h>
-#include <miro/KickerC.h>
+#include <idl/MotionC.h>
+#include <idl/KickerC.h>
 #include <ace/Reactor.h>
 #include <tao/ORB_Core.h>
 

@@ -9,7 +9,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "miro/BehaviourEngineC.h"
+#include "idl/BehaviourEngineC.h"
 #include "miro/Client.h"
 
 #include <qfile.h>

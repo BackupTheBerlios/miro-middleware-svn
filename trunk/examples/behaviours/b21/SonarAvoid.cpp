@@ -10,7 +10,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include "SonarAvoid.h"
 
-#include "miro/RangeEventC.h"
+#include "idl/RangeEventC.h"
 #include "miro/MotionArbiterMessage.h"
 
 const std::string SonarAvoid::name_ = "SonarAvoid";

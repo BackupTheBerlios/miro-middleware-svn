@@ -1,8 +1,8 @@
 <!DOCTYPE xml SYSTEM "PolicyEditor_behaviour.dtd">
 <config> 
   <config_global name="namespace" value="Miro" />
-  <config_global name="include" value="BehaviourParameters.h" />
-  <config_global name="include" value="ArbiterParameters.h" />
+  <config_global name="include" value="miro/BehaviourParameters.h" />
+  <config_global name="include" value="miro/ArbiterParameters.h" />
   <config_global name="Include" value="ace/TTY_IO.h" />
 
   <config_group name="config">

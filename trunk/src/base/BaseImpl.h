@@ -15,7 +15,7 @@
 
 // #include <termios.h>
 
-#include "miro/B21MotionS.h"
+#include "idl/B21MotionS.h"
 #include "miro/MotionImpl.h"
 
 #include "BaseConnection.h"

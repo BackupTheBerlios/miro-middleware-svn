@@ -16,7 +16,7 @@
 
 #include "miro/Synch.h"
 #include "miro/DevConsumer.h"
-#include "miro/MotionStatusC.h"
+#include "idl/MotionStatusC.h"
 
 // forward declarations
 namespace Miro

@@ -16,7 +16,7 @@
 
 #include "ImageImpl.h"
 
-#include "miro/OdometryC.h"
+#include "idl/OdometryC.h"
 
 namespace Miro {
   class ImageServer : public Server

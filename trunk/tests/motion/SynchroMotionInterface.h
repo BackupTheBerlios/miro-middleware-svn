@@ -13,7 +13,7 @@
 
 #include "MotionInterface.h"
 
-#include "miro/SynchroMotionC.h"
+#include "idl/SynchroMotionC.h"
 
 class SynchroMotionInterface : MotionInterface
 {

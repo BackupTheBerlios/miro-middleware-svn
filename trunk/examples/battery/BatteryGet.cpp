@@ -9,7 +9,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 #include "miro/Client.h"
-#include "miro/BatteryC.h"
+#include "idl/BatteryC.h"
 
 #include <iostream>
 

@@ -13,7 +13,7 @@
 #include "SparrowButtonsImpl.h"
 #include "SparrowConsumer.h"
 
-#include "miro/ExceptionC.h"
+#include "idl/ExceptionC.h"
 #include "miro/StructuredPushSupplier.h"
 
 #include <iostream>

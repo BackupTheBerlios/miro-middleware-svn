@@ -13,7 +13,7 @@
 #include <fstream>
 #include <string>
 
-#include "miro/VideoC.h"
+#include "idl/VideoC.h"
 #include "miro/Client.h"
 #include "miro/IO.h"
 

@@ -29,10 +29,7 @@ namespace Video
 
     // inherited interface
     virtual unsigned int protectedAcquireNextWriteBuffer() throw (Miro::Exception);
-    virtual void protectedSwitchWrite2ReadBuffer(unsigned int _index, unsigned int _n) 
-      throw (Miro::EOutOfBounds);
-    virtual void protectedReleaseReadBuffer(unsigned int _index) throw (Miro::EOutOfBounds);
-    
+
     // capture management
     void acquireOutputBuffer(unsigned long _index);
     int getCurrentErrorCount() const;

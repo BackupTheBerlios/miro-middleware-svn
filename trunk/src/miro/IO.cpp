@@ -12,15 +12,14 @@
 #include "IO.h"
 
 // need all types defined in idl, for io operators
-#include "ExceptionC.h"
-#include "TimeC.h"
-#include "WorldPointC.h"
-#include "PositionC.h"
-#include "VelocityC.h"
-#include "MotionStatusC.h"
-#include "RangeEventC.h"
-#include "PanTiltC.h"
-// #include "LaserC.h"
+#include "idl/ExceptionC.h"
+#include "idl/TimeC.h"
+#include "idl/WorldPointC.h"
+#include "idl/PositionC.h"
+#include "idl/VelocityC.h"
+#include "idl/MotionStatusC.h"
+#include "idl/RangeEventC.h"
+#include "idl/PanTiltC.h"
 
 #include "Angle.h"
 
@@ -99,7 +98,7 @@ namespace Miro
   std::ostream &
   operator<<(std::ostream &ostr, const PositionIDL &rhs) {
     ostr << "(" << rhs.point << ",";
-    ostr << rad2Deg(rhs.heading) << "°)";
+    ostr << rad2Deg(rhs.heading) << ",A0(B)";
     return ostr;
   }
   // output operator for WorldPointIDL
@@ -111,7 +110,7 @@ namespace Miro
   // output operator for VelocityIDL
   std::ostream &
   operator<<(std::ostream &ostr, const VelocityIDL &rhs) {
-    ostr << rhs.translation << "mm/s " << rad2Deg(rhs.rotation) << "°/s";
+    ostr << rhs.translation << "mm/s " << rad2Deg(rhs.rotation) << ",A0(B/s";
     return ostr;
   }
   // output operator for MotionStatusIDL
@@ -125,8 +124,8 @@ namespace Miro
   // output operator for PanTiltPositionIDL
   std::ostream &
   operator<<(std::ostream &ostr, const PanTiltPositionIDL &rhs) {
-    ostr << rad2Deg(rhs.panvalue) << "° ";
-    ostr << rad2Deg(rhs.tiltvalue) << "°";
+    ostr << rad2Deg(rhs.panvalue) << ",A0(B ";
+    ostr << rad2Deg(rhs.tiltvalue) << ",A0(B";
     return ostr;
   }
   // output for exceptions which take arguments

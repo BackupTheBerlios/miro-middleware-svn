@@ -17,7 +17,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "miro/PanTiltC.h"
+#include "idl/PanTiltC.h"
 #include "miro/Client.h"
 #include "miro/IO.h"
 

@@ -9,7 +9,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "miro/StallC.h"
+#include "idl/StallC.h"
 #include "miro/Client.h"
 
 #include <iostream>

@@ -11,7 +11,7 @@
 
 #include "SynchroMotionInterface.h"
 
-#include "miro/SynchroMotionC.h"
+#include "idl/SynchroMotionC.h"
 #include "miro/Client.h"
 #include "miro/Angle.h"
 #include "miro/IO.h"

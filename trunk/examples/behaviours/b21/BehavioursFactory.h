@@ -12,7 +12,7 @@
 #define B21_BehavioursFactory_h
 
 #include "miro/Server.h"
-#include "miro/RangeSensorC.h"
+#include "idl/RangeSensorC.h"
 #include "miro/StructuredPushConsumer.h"
 
 #include "OnButton.h"

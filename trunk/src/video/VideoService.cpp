@@ -10,10 +10,14 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "VideoServer.h"
 
 #include "miro/Server.h"
-#include "miro/ExceptionC.h"
+#include "idl/ExceptionC.h"
 #include "miro/Exception.h"
 #include "miro/Utils.h"
 

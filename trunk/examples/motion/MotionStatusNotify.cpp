@@ -14,7 +14,7 @@
 
 #include "miro/Server.h"
 #include "miro/IO.h"
-#include "miro/MotionStatusC.h"
+#include "idl/MotionStatusC.h"
 
 using std::cout;
 using std::cerr;

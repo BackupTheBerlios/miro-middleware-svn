@@ -11,9 +11,9 @@
 #ifndef DifferentialMotionImpl_h
 #define DifferentialMotionImpl_h
 
-#include "DifferentialMotionS.h"
+#include "idl/DifferentialMotionS.h"
 #include "MotionImpl.h"
-#include "Parameters.h"
+#include "miro/Parameters.h"
 
 #include <cmath>
 

@@ -12,7 +12,7 @@
 #define MainForm_h
 
 #include "miro/Client.h"
-#include "miro/VideoC.h"
+#include "idl/VideoC.h"
 
 #include <qwidget.h>
 #include <qdialog.h>

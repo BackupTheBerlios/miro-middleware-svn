@@ -11,7 +11,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 
-#include "miro/ExceptionC.h"
+#include "idl/ExceptionC.h"
 #include "miro/Exception.h"
 #include "miro/Synch.h"
 

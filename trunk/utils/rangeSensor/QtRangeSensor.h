@@ -12,7 +12,7 @@
 #define QtRangeSensor_h
 
 #include "miro/Client.h"
-#include "miro/RangeSensorC.h"
+#include "idl/RangeSensorC.h"
 
 #include <qwidget.h>
 #include <qstring.h>

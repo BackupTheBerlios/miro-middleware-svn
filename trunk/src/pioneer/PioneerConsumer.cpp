@@ -17,7 +17,7 @@
 #include "pioneer/CanonPanTiltImpl.h"
 //#include "pioneer/CanonPanTiltMessage.h"
 
-#include "miro/RangeEventC.h"
+#include "idl/RangeEventC.h"
 #include "miro/RangeSensorImpl.h"
 #include "miro/OdometryImpl.h"
 #include "miro/BatteryImpl.h"

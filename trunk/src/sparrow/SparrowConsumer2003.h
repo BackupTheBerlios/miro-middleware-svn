@@ -14,7 +14,7 @@
 #include "SparrowDevice2003.h"
 #include "AliveCollector.h"
 #include "faulMotor/FaulMotorConsumer.h"
-#include "Parameters.h"
+#include "sparrow/Parameters.h"
 
 #include "miro/Synch.h"
 #include "miro/DevConsumer.h"

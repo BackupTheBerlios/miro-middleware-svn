@@ -12,7 +12,7 @@
 #ifndef CanonPanTiltImpl_hh
 #define CanonPanTiltImpl_hh
 
-#include "miro/CanonPanTiltS.h"
+#include "idl/CanonPanTiltS.h"
 
 #include "miro/Exception.h"
 #include "pioneer/PioneerConnection.h"

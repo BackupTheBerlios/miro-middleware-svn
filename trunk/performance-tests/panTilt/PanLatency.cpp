@@ -12,8 +12,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include "miro/PanC.h"
-#include "miro/VideoC.h"
+#include "idl/PanC.h"
+#include "idl/VideoC.h"
 #include "miro/Client.h"
 #include "miro/TimeHelper.h"
 #include "miro/VideoHelper.h"

@@ -13,7 +13,7 @@
 #include "OdometryStream.h"
 
 #include "miro/Server.h"
-#include "miro/MotionStatusC.h"
+#include "idl/MotionStatusC.h"
 #include "miro/IO.h"
 
 using std::cout;

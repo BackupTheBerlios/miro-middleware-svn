@@ -22,8 +22,8 @@
 #include <ace/Sample_History.h>
 #include <ace/High_Res_Timer.h>
 
-#include "miro/OdometryC.h"
-#include "miro/SparrowMotionC.h"
+#include "idl/OdometryC.h"
+#include "idl/SparrowMotionC.h"
 
 #include "miro/Server.h"
 #include "miro/IO.h"

@@ -12,7 +12,7 @@
 #ifndef GripperImpl_hh
 #define GripperImpl_hh
 
-#include "miro/GripperS.h"
+#include "idl/GripperS.h"
 
 #include "miro/Exception.h"
 

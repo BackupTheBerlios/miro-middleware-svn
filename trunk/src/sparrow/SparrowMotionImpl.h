@@ -11,7 +11,7 @@
 #ifndef SparrowMotionImpl_h
 #define SparrowMotionImpl_h
 
-#include "miro/SparrowMotionS.h"
+#include "idl/SparrowMotionS.h"
 #include "miro/DifferentialMotionImpl.h"
 #include "miro/Exception.h"
 

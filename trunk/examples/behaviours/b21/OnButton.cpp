@@ -10,7 +10,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include "OnButton.h"
 
-#include "miro/B21ButtonsC.h"
+#include "idl/B21ButtonsC.h"
 #include "miro/IO.h"
 
 const std::string OnButton::name_ = "OnButton";

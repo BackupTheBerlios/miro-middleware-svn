@@ -9,7 +9,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "miro/RangeSensorC.h"
+#include "idl/RangeSensorC.h"
 #include "miro/Client.h"
 #include "miro/IO.h"
 

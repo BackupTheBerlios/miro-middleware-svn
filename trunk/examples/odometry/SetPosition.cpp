@@ -17,7 +17,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "miro/OdometryC.h"
+#include "idl/OdometryC.h"
 #include "miro/Client.h"
 #include "miro/IO.h"
 #include "miro/Angle.h"

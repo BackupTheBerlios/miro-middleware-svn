@@ -13,7 +13,7 @@
 #include "SpeechConnection.h"
 #include "SpeechDevice.h"
 
-#include "miro/ExceptionC.h"
+#include "idl/ExceptionC.h"
 #include "miro/Exception.h"
 
 // #undef DEBUG

@@ -17,7 +17,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "miro/GripperC.h"
+#include "idl/GripperC.h"
 #include "miro/Client.h"
 #include "miro/IO.h"
 

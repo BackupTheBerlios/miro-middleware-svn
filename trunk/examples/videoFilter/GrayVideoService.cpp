@@ -17,7 +17,7 @@
 #include "video/VideoFilterRepository.h"     // FilterRepository declaration.
 
 #include "miro/Server.h"                     // Server declaration.
-#include "miro/ExceptionC.h"                 // CORBA exceptions.
+#include "idl/ExceptionC.h"                 // CORBA exceptions.
 #include "miro/Exception.h"                  // Miro exceptionss
 #include "miro/Utils.h"                      // ConfigDocumet declaration.
 

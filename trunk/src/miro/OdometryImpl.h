@@ -11,7 +11,7 @@
 #ifndef OdometryImpl_h
 #define OdometryImpl_h
 
-#include "OdometryS.h"
+#include "idl/OdometryS.h"
 
 #include "Synch.h"
 #include "Thread.h"

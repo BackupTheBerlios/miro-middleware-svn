@@ -15,7 +15,7 @@
 
 #include "../widgets/FileListDialog.h"
 
-#include "miro/BehaviourEngineC.h"
+#include "idl/BehaviourEngineC.h"
 
 #include <qapplication.h>
 #include <qfiledialog.h>

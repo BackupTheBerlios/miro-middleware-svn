@@ -1,3 +1,4 @@
+
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware For Robots)
@@ -18,7 +19,7 @@
 #include <iostream>
 
 #include "Exception.h"
-#include "Parameters.h"
+#include "miro/Parameters.h"
 
 namespace Miro
 {

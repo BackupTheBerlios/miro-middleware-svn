@@ -11,7 +11,7 @@
 #ifndef LaserAvoid_h
 #define LaserAvoid_h
 
-#include "miro/RangeSensorC.h"
+#include "idl/RangeSensorC.h"
 #include "miro/TimedBehaviour.h"
 
 #include "Parameters.h"

@@ -10,9 +10,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #include "NotifyTest.h"
 
-#include "miro/OdometryC.h"
-#include "miro/RangeEventC.h"
-#include "miro/ButtonsC.h"
+#include "idl/OdometryC.h"
+#include "idl/RangeEventC.h"
+#include "idl/ButtonsC.h"
 
 #include "miro/TimeHelper.h"
 #include "miro/Task.h"

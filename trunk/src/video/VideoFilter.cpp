@@ -15,7 +15,7 @@
 #include "BufferManager.h"
 
 #include "miro/VideoHelper.h"
-#include "miro/VideoC.h"
+#include "idl/VideoC.h"
 #include "miro/ConfigDocument.h"
 
 namespace Video

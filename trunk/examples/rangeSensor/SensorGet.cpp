@@ -17,8 +17,8 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "miro/RangeSensorC.h"
-#include "miro/ExceptionC.h"
+#include "idl/RangeSensorC.h"
+#include "idl/ExceptionC.h"
 #include "miro/Client.h"
 
 #include <iostream>

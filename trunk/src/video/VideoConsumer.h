@@ -13,7 +13,7 @@
 
 #include "miro/Synch.h"
 #include "miro/Thread.h"
-#include "miro/TimeC.h"
+#include "idl/TimeC.h"
 
 namespace Video
 {

@@ -1,2 +1,0 @@
-all:
-	-ln -s . miro

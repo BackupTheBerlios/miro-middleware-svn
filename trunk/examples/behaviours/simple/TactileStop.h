@@ -11,7 +11,7 @@
 #ifndef TactileStop_h
 #define TactileStop_h
 
-#include "miro/MotionC.h"
+#include "idl/MotionC.h"
 #include "miro/EventBehaviour.h"
 
 #include "Parameters.h"

@@ -12,8 +12,8 @@
 #define RangeSensorBehavioursFactory_h
 
 #include "miro/BAFactory.h"
-#include "miro/MotionC.h"
-#include "miro/OdometryC.h"
+#include "idl/MotionC.h"
+#include "idl/OdometryC.h"
 #include "miro/MotionArbiter.h"
 #include "miro/StructuredPushSupplier.h"
 

@@ -12,8 +12,8 @@
 #include "ParameterDialog.h"
 #include "PolicyConfig.h"
 
-#include "../params/Class.h"
-#include "../params/Generator.h"
+#include "../../src/params/Class.h"
+#include "../../src/params/Generator.h"
 
 #include <qgroupbox.h>
 #include <qvgroupbox.h>

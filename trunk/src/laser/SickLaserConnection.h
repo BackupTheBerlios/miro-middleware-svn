@@ -13,7 +13,7 @@
 
 // #include "miro/DevConnection.h"
 #include "miro/RangeSensorImpl.h"
-#include "miro/LaserC.h"
+#include "idl/LaserC.h"
 
 #include "SickLaserMessage.h"
 #include "SickLaserTask.h"

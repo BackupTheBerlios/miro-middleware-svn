@@ -12,7 +12,7 @@
 #define SparrowBaseConnection_hh
 
 
-#include "Parameters.h"
+#include "sparrow/Parameters.h"
 
 #include "can/CanConnection.h"         // CanConnection, CanMessageClass
 

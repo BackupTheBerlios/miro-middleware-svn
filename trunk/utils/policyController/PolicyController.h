@@ -13,7 +13,7 @@
 #define PolicyController_hh
 
 #include "miro/Client.h"
-#include "miro/BehaviourEngineC.h"
+#include "idl/BehaviourEngineC.h"
 
 #include <qwidget.h>
 

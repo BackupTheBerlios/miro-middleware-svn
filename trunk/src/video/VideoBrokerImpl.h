@@ -11,7 +11,7 @@
 #ifndef Miro_VideoBrokerImpl_h
 #define Miro_VideoBrokerImpl_h
 
-#include "miro/VideoS.h"
+#include "idl/VideoS.h"
 
 namespace Video
 {

@@ -27,8 +27,8 @@
 #include <exception>
 #include <string>
 
-#include "miro/OdometryC.h"
-#include "miro/ImageS.h"
+#include "idl/OdometryC.h"
+#include "idl/ImageS.h"
 
 #include "ImageFactory.h"
 

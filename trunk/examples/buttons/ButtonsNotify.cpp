@@ -12,7 +12,7 @@
 #include "ButtonsNotify.h"
 
 #include "miro/Server.h"
-#include "miro/ButtonsC.h"
+#include "idl/ButtonsC.h"
 #include "miro/IO.h"
 
 using std::cout;

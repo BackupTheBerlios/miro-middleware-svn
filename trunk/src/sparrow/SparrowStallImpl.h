@@ -11,7 +11,7 @@
 #ifndef SparrowStallImpl_h
 #define SparrowStallImpl_h
 
-#include "miro/StallS.h"
+#include "idl/StallS.h"
 #include "miro/Exception.h"
 #include "SparrowBaseConnection.h"
 

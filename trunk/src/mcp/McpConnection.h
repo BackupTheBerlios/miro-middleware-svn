@@ -22,7 +22,7 @@
 #include "miro/Synch.h"
 #include "miro/TtyConnection.h"
 #include "miro/Exception.h"
-#include "miro/ExceptionC.h"
+#include "idl/ExceptionC.h"
 
 #include "McpDevice.h"
 #include "McpMessage.h"

@@ -12,7 +12,7 @@
 #ifndef WindowArbiter_h
 #define WindowArbiter_h
 
-#include "DifferentialMotionC.h"
+#include "idl/DifferentialMotionC.h"
 #include "Arbiter.h"
 #include "WindowArbiterViewerTask.h"
 #include "DynamicWindow.h"

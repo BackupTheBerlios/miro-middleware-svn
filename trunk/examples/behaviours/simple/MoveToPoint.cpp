@@ -11,7 +11,7 @@
 
 #include "MoveToPoint.h"
 
-#include "miro/MotionStatusC.h"
+#include "idl/MotionStatusC.h"
 #include "miro/MotionArbiterMessage.h"
 #include "miro/Angle.h"
 

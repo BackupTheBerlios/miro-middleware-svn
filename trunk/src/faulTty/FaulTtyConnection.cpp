@@ -14,7 +14,7 @@
 #include "FaulTtyMessage.h"
 
 #include "miro/Exception.h"
-#include "miro/ExceptionC.h"
+#include "idl/ExceptionC.h"
 
 #include <iostream>
 

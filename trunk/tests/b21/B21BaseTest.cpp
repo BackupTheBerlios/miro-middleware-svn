@@ -9,8 +9,8 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "miro/OdometryC.h"
-#include "miro/B21MotionC.h"
+#include "idl/OdometryC.h"
+#include "idl/B21MotionC.h"
 #include "miro/Client.h"
 #include "miro/Task.h"
 #include "miro/IO.h"

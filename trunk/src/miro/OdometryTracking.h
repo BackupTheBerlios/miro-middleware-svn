@@ -11,7 +11,7 @@
 #ifndef OdometryTracking_h
 #define OdometryTracking_h
 
-#include "MotionStatusC.h"
+#include "idl/MotionStatusC.h"
 #include "StructuredPushConsumer.h"
 
 #include <list>

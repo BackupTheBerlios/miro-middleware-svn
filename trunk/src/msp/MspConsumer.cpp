@@ -19,7 +19,7 @@
 
 #include "base/BaseStatus.h"
 
-#include "miro/RangeEventC.h"
+#include "idl/RangeEventC.h"
 #include "miro/RangeSensorImpl.h"
 #include "miro/StructuredPushSupplier.h"
 

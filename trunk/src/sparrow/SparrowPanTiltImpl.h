@@ -11,11 +11,11 @@
 #ifndef SparrowPanTiltImpl_h
 #define SparrowPanTiltImpl_h
 
-#include "miro/SparrowPanTiltS.h"
+#include "idl/SparrowPanTiltS.h"
 #include "miro/Synch.h"
 #include "miro/Angle.h"
 
-#include "Parameters.h"
+#include "sparrow/Parameters.h"
 
 namespace Sparrow
 {

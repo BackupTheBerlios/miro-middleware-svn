@@ -15,7 +15,7 @@
 #include "ArbiterWidget.h"
 
 #include "PolicyConfig.h"
-#include "../params/Generator.h"
+#include "../../src/params/Generator.h"
 
 #include <qpainter.h>
 #include <qpopupmenu.h>

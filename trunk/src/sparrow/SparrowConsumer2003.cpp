@@ -10,7 +10,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 
-#include "miro/ButtonsC.h"
+#include "idl/ButtonsC.h"
 
 #include "SparrowConsumer2003.h"
 #include "SparrowConnection2003.h"

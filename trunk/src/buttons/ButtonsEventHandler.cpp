@@ -14,7 +14,7 @@
 #include "ButtonsDevice.h"
 #include "ButtonsConnection.h"
 
-#include "miro/B21ButtonsC.h"
+#include "idl/B21ButtonsC.h"
 #include "miro/Exception.h"
 #include "miro/TimeHelper.h"
 

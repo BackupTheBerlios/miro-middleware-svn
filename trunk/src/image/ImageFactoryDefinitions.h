@@ -2,8 +2,8 @@
 #define C_IMAGE_FACTORY_DEFINITIONS
 
 #include "MiroImage.h"
-#include "miro/ExceptionC.h"
-#include "miro/ImageDefinitionsC.h"
+#include "idl/ExceptionC.h"
+#include "idl/ImageDefinitionsC.h"
 
 using namespace Miro;
 

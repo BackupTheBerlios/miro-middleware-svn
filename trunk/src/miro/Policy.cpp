@@ -9,7 +9,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "BehaviourEngineC.h"
+#include "idl/BehaviourEngineC.h"
 
 #include "Policy.h"
 #include "ActionPattern.h"

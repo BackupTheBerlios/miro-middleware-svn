@@ -9,7 +9,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "miro/B21ButtonsC.h"
+#include "idl/B21ButtonsC.h"
 #include "miro/Client.h"
 
 #include <iostream>

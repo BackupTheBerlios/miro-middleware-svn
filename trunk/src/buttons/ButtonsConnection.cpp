@@ -14,7 +14,7 @@
 #include "ButtonsEventHandler.h"
 #include "ButtonsDevice.h"
 
-#include "miro/ExceptionC.h"
+#include "idl/ExceptionC.h"
 #include "miro/Exception.h"
 
 #include <ace/Reactor.h>

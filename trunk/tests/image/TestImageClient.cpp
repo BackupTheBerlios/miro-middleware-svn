@@ -21,7 +21,7 @@
 #include <fstream>
 #include <string>
 
-#include "miro/ImageC.h"
+#include "idl/ImageC.h"
 #include "miro/Client.h"
 #include "miro/IO.h"
 

@@ -13,7 +13,7 @@
 #include "ChannelManager.h"
 
 #include "miro/StructuredPushSupplier.h"
-#include "miro/TimeC.h"
+#include "idl/TimeC.h"
 #include "miro/TimeHelper.h"
 
 ACE_Time_Value const LogFile::T_NULL(0, 0);

@@ -13,7 +13,7 @@
 #include "SparrowAlive.h"
 
 #include "miro/Server.h"
-#include "miro/SparrowAliveC.h"
+#include "idl/SparrowAliveC.h"
 
 #include <map>
 

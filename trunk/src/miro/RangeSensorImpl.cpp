@@ -10,7 +10,7 @@
 
 #include "RangeSensorImpl.h"
 #include "Exception.h"
-#include "ExceptionC.h"
+#include "idl/ExceptionC.h"
 #include "StructuredPushSupplier.h"
 
 #ifdef DEBUG

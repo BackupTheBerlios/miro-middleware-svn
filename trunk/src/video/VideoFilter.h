@@ -15,7 +15,7 @@
 #include "VideoFilterLink.h"
 
 #include "miro/TimeSeries.h"
-#include "miro/VideoC.h"
+#include "idl/VideoC.h"
 
 #include <vector>
 #include <string>

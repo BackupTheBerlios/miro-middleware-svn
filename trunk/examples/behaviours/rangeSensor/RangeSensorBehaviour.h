@@ -11,7 +11,7 @@
 #ifndef RangeSensorBehaviour_h
 #define RangeSensorBehaviour_h
 
-#include "miro/RangeSensorC.h"
+#include "idl/RangeSensorC.h"
 #include "miro/EventBehaviour.h"
 
 #include "Parameters.h"

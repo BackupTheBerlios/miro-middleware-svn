@@ -17,7 +17,7 @@
 #include <qpushbutton.h>
 
 #include "miro/Client.h"
-#include "miro/MotionC.h"
+#include "idl/MotionC.h"
 
 class QPad : public QWidget {
 protected:

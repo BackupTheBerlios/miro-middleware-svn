@@ -11,7 +11,7 @@
 #ifndef VideoFilterFactory_h
 #define VideoFilterFactory_h
 
-#include "miro/VideoC.h"
+#include "idl/VideoC.h"
 
 namespace Video
 {

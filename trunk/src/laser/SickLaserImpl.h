@@ -11,7 +11,7 @@
 #ifndef laserImpl_hh
 #define laserImpl_hh
 
-#include "miro/LaserS.h"
+#include "idl/LaserS.h"
 #include "miro/RangeSensorImpl.h"
 
 namespace Miro 

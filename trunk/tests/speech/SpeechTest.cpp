@@ -17,7 +17,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "miro/SpeechC.h"
+#include "idl/SpeechC.h"
 #include "miro/Client.h"
 
 #include <iostream>

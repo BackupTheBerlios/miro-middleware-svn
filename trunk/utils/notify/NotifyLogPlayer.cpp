@@ -10,8 +10,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #include "NotifyLogPlayer.h"
 
-#include "miro/MotionC.h"
-#include "miro/RangeEventC.h"
+#include "idl/MotionC.h"
+#include "idl/RangeEventC.h"
 
 #include "miro/TimeHelper.h"
 #include "miro/Task.h"

@@ -12,7 +12,7 @@
 #ifndef CanonCameraImpl_hh
 #define CanonCameraImpl_hh
 
-#include "miro/CanonCameraS.h"
+#include "idl/CanonCameraS.h"
 
 #include "miro/Exception.h"
 

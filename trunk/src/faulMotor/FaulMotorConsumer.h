@@ -15,7 +15,7 @@
 #include <orbsvcs/CosNotifyCommC.h>
 
 #include "miro/DevConsumer.h"
-#include "miro/MotionStatusC.h"
+#include "idl/MotionStatusC.h"
 #include <ace/OS.h>
 
 // forward declarations

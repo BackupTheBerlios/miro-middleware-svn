@@ -11,7 +11,7 @@
 #ifndef PowerArbiter_h
 #define PowerArbiter_h
 
-#include "SparrowMotionC.h"
+#include "idl/SparrowMotionC.h"
 #include "PriorityArbiter.h"
 #include "PowerArbiterMessage.h"
 

@@ -19,7 +19,7 @@
 #ifndef SpeechImpl_h
 #define SpeechImpl_h
 
-#include "miro/DtlkSpeechS.h"
+#include "idl/DtlkSpeechS.h"
 
 #include "SpeechConnection.h"
 

@@ -11,7 +11,7 @@
 #ifndef ParameterDialog_h
 #define ParameterDialog_h
 
-#include "../params/Class.h"
+#include "../../src/params/Class.h"
 
 #include <qdialog.h>
 #include <qvalidator.h>

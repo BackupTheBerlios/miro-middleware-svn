@@ -12,7 +12,7 @@
 #define ButtonsConnection_h
 
 #include "miro/Exception.h"
-#include "miro/ExceptionC.h"
+#include "idl/ExceptionC.h"
 
 #include <ace/FILE_Connector.h>
 

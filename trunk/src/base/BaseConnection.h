@@ -13,7 +13,7 @@
 
 #include "miro/Synch.h"
 #include "miro/Exception.h"
-#include "miro/ExceptionC.h"
+#include "idl/ExceptionC.h"
 
 #include "mcp/McpDevice.h"
 #include "mcp/McpConnection.h"
