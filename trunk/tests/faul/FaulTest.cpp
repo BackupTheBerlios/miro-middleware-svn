@@ -127,8 +127,8 @@ int main(int argc, char* argv[])
 
   // adding a handler for odometry polling
 
-  ACE_Time_Value tv(0, 50000);
-  // service.reactorTask.reactor()->schedule_timer(service.pTimerEventHandler, NULL, tv ,tv);
+  ACE_Time_Value tv(0, 500000);
+  service.reactorTask.reactor()->schedule_timer(service.pTimerEventHandler, NULL, tv ,tv);
 
 
   // adding a handler for stall detection
