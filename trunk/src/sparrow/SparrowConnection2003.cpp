@@ -37,8 +37,8 @@ namespace Sparrow
     Super(_reactor, _devEventHandler),
     consumer(_consumer),
     eventHandler(new EventHandler2003(*this)),
-    boardReply(-1),
-    panTicksPerDegree_(0)
+    panTicksPerDegree_(0),
+    boardReply(-1)
   {
     MIRO_LOG_CTOR("SparrowConnection2003");
 
@@ -119,14 +119,17 @@ namespace Sparrow
   Connection2003::setPan(double _rad)
   {
     CanMessage message;
-    message.length(5);
-    message.id(CAN_PAN_GO_2005);
-    message.byteData(0, 0); // servo number
 
     if (params_->pan.servo) {
-      message.longData(1, rad2servo0Ticks(_rad));
+      message.length(3);
+      message.id(CAN_PAN_GO_2005);
+      message.byteData(0, 0); // servo number
+      message.shortData(1, rad2servo0Ticks(_rad));
     }
     else {
+      message.length(5);
+      message.id(CAN_PAN_GO_2005);
+      message.byteData(0, 0); // servo number
       message.longData(1, (long)((double)getPanTicksPerDegree()*Miro::rad2Deg(-_rad)) );
     }
     write(message);

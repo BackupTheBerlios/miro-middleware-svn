@@ -140,7 +140,6 @@
           infraredDescription2003.group[1].sensor[i].masked = false;
         }
       </constructor>
-
     </config_item>
   </config_group>
 </config>
