@@ -2,7 +2,8 @@ Test for the generalized motion interfaces.
 
 Handy to verify the motor controler stuff.
 
-Start the robots motion service. Then you can access the motion
+Start the robots motion service. Normally contained within the robots
+set of base services: <RobotType>Base. Then you can access the motion
 interfaces directly via these small test programs. They offer a simple
 text interface for each method available within the interfaces.
 

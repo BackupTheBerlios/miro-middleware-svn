@@ -28,7 +28,7 @@ LDLIBS += -lmiro -lTAO_CosNotification -lTAO_CosNaming -lTAO
 BIN 	= NotifyTest
 
 ## additional files
-FILES	= NotifyTest
+FILES	= NotifyTesty
 
 SRC	= $(addsuffix .cpp,$(FILES))
 OBJ	= $(addsuffix .o,$(FILES))

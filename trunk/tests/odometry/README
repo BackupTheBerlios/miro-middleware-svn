@@ -2,9 +2,10 @@ Test for the general odometry interface.
 
 Handy to verify the odometry interface stuff.
 
-Start the robots odometry service. Then you can access the odometry
-interface directly via the small test program.It offers a simple
-text interface for each method available within the interfaces.
+Start the robots odometry service. Normally contained within the
+robots set of base services: <RobotType>Base. Then you can access the
+Odometry interface directly via the small test program. It offers a
+simple text interface for each method available within the interfaces.
 
 Don't forget to specify the robots name at the command line
 (-MNC <robotname>), if it is set in the configuration file.
