@@ -397,6 +397,7 @@ namespace Sparrow
     case CAN_R_PAN_TICKSPERDEG_2005:
 	{
 		//TODO: store value in PanTilt parameters...
+		connection->setPanTicksPerDegree(message.longData(0));
 		break;
 	}
 

@@ -121,7 +121,7 @@ namespace Sparrow
     message.length(5);
     message.id(CAN_PAN_GO_2005);
     message.byteData(0, servo);                         // servo number
-    message.longData(1, (servo)? rad2servo1Ticks(rad) : rad2servo0Ticks(rad));
+    message.longData(1, (long)((double)getPanTicksPerDegree()*rad) );
     write(message);
   }
 
@@ -168,6 +168,19 @@ namespace Sparrow
     message.byteData(1, waittime);
     write(message);
   }
+
+  void 
+  Connection2003::setPanTicksPerDegree(unsigned int ticks)
+  {
+    panTicksPerDegree = ticks;
+  }
+
+  unsigned int 
+  Connection2003::getPanTicksPerDegree()
+  {
+    return(panTicksPerDegree);
+  }
+
 
   void
   Connection2003::writeFloodPing(unsigned short fnumber)

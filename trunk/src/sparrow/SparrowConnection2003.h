@@ -54,12 +54,17 @@ namespace Sparrow
 
     void setInfrared1WaitTime(unsigned char waittime);
     void setInfrared2WaitTime(unsigned char waittime);
+    
+    void setPanTicksPerDegree(unsigned int ticks);
+    unsigned int getPanTicksPerDegree();
 
     void alivetimeout();
 
   protected:
     Consumer2003 * consumer;
     EventHandler2003 * eventHandler;
+    
+    unsigned int panTicksPerDegree;
 
     short rad2servo0Ticks(double rad) const;
     short rad2servo1Ticks(double rad) const;
