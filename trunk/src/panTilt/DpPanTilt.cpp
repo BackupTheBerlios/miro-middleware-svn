@@ -28,6 +28,10 @@ using DpPanTilt::Parameters;
 using DpPanTilt::PanTiltServer;
 using std::endl;
 
+using std::endl;
+using std::cout;
+
+
 namespace DpPanTilt
 {
   using Miro::ReactorTask;
