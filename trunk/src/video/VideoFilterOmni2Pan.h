@@ -30,6 +30,8 @@ namespace Video
     virtual ~FilterOmni2Pan();
     virtual void process();
 
+    FILTER_PARAMETERS_FACTORY(FilterOmni2Pan);
+
     static unsigned int const IMAGE_WIDTH = 360;
     static unsigned int const IMAGE_HEIGHT = 120;
 

@@ -13,8 +13,9 @@
 
 #include "miro/NotifyMulticastAdapter.h"
 #include "miro/Exception.h"
-#include "miro/Utils.h"
+#include "miro/Configuration.h"
 #include "miro/Synch.h"
+#include "miro/Log.h"
 
 #include "pioneer/Parameters.h"
 
@@ -23,18 +24,6 @@
 #include <orbsvcs/Notify/Notify_Default_POA_Factory.h>
 #include <orbsvcs/Notify/Notify_Default_Collection_Factory.h>
 #include <orbsvcs/Notify/Notify_Default_EMO_Factory.h>
-
-#include <iostream>
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
-
-using std::cout;
-using std::cerr;
-using std::endl;
 
 PioneerBase::PioneerBase(int argc, char *argv[]) :
   Super(argc, argv),
@@ -117,16 +106,16 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   if (mcAdapter_)
     mcAdapter_->init();
 
-  DBG(cout << "PioneerBase initialized.." << endl);
+  MIRO_LOG_CTOR("PioneerBase");
 }
 
 PioneerBase::~PioneerBase()
 {
-  DBG(cout << "Destructing PioneerBase." << endl);
+  MIRO_LOG_DTOR("PioneerBase");
 
   // close channel sharing
   if (mcAdapter_) {
-    DBG(cout << "Closing multicats adapter." << endl);
+    MIRO_LOG(LL_CTOR_DTOR, "PioneerBase: Closing multicats adapter.");
 
     mcAdapter_->fini();
     delete mcAdapter_;
@@ -140,60 +129,66 @@ PioneerBase::~PioneerBase()
   // deactivate from the poa.
 //  poa->deactivate_object (oid.in ());
   reactorTask.cancel();
-  DBG(cout << "reactor Task ended" << endl);
+  MIRO_LOG(LL_CTOR_DTOR, "PioneerBase: Reactor Task ended.");
 }
 
 int
 main(int argc, char *argv[])
 {
-  int rc = 0;
+  int rc = 1;
+
+  // Init TAO Factories
+  TAO_Notify_Default_CO_Factory::init_svc();
+  TAO_Notify_Default_POA_Factory::init_svc();
+  TAO_Notify_Default_Collection_Factory::init_svc();
+  TAO_Notify_Default_EMO_Factory::init_svc();
+    
   try {
     Miro::Log::init(argc, argv);
+    Miro::Configuration::init(argc, argv);
 
-    // Init TAO Factories
-    TAO_Notify_Default_CO_Factory::init_svc();
-    TAO_Notify_Default_POA_Factory::init_svc();
-    TAO_Notify_Default_Collection_Factory::init_svc();
-    TAO_Notify_Default_EMO_Factory::init_svc();
-    
     // Parameters to be passed to the services
     Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
     Pioneer::Parameters * pioneerParameters = Pioneer::Parameters::instance();
     
     // Config file processing
-    Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
+    Miro::ConfigDocument * config = Miro::Configuration::document();
     config->setSection("Robot");
-    config->getParameters("Robot", *robotParameters);
+    config->getParameters("Miro::RobotParameters", *robotParameters);
     config->setSection("ActiveMedia");
-    config->getParameters("PioneerBoard", *pioneerParameters);
-    delete config;
+    config->getParameters("Pioneer::Parameters", *pioneerParameters);
       
-#ifdef DEBUG
-    cout << "  robot parameters:" << endl << *robotParameters << endl;
-    cout << "  pioneer parameters:" << endl << *pioneerParameters << endl;
-#endif
+    MIRO_LOG_OSTR(LL_NOTICE,
+		  "  robot parameters:" << std::endl <<
+		  *robotParameters << std::endl <<
+		  "  pioneer parameters:" << std::endl <<
+		  *pioneerParameters);
       
-    DBG(cout << "Initialize server daemon." << endl);
+    MIRO_LOG(LL_NOTICE, "Initialize server daemon.");
     PioneerBase pioneerBase(argc, argv);
     try {
-      DBG(cout << "Loop forever handling events." << endl);
+      MIRO_LOG(LL_NOTICE, "Loop forever handling events.");
       pioneerBase.run(8);
-      DBG(cout << "pioneerBase ended, exiting." << endl);
+      MIRO_LOG(LL_NOTICE, "pioneerBase ended, exiting.");
+      rc = 0;
     }
     catch (const Miro::EOutOfBounds& e) {
-      cerr << "OutOfBounds exception: Wrong parameter for device initialization." << endl;
+      MIRO_LOG_OSTR(LL_CRITICAL,
+		    "OutOfBounds exception: Wrong parameter for device initialization." << std::endl <<
+		    e.what);
     }
     catch (const Miro::EDevIO& e) {
-      cerr << "DevIO exception: Device access failed." << endl;
+      MIRO_LOG_OSTR(LL_CRITICAL,
+		    "DevIO exception: Device access failed." << std::endl <<
+		    e.what);
     }
     catch (const CORBA::Exception & e) {
-      cerr << "Uncaught CORBA exception: " << e << endl;
-      rc = 1;
+      MIRO_LOG_OSTR(LL_CRITICAL, "Uncaught CORBA exception: " << e);
     }
   }
   catch (const Miro::Exception& e) {
-    cerr << "Miro exception: " << e << endl;
-    rc = 1;
+       MIRO_LOG_OSTR(LL_CRITICAL, "Miro exception: " << e);
+       rc = 1;
   }
 
   return rc;

@@ -16,6 +16,12 @@
 
 namespace Video
 {
+  FILTER_PARAMETERS_FACTORY_IMPL(FilterCopy);
+  FILTER_PARAMETERS_FACTORY_IMPL(FilterSwap3);
+  FILTER_PARAMETERS_FACTORY_IMPL(FilterSwap4);
+  FILTER_PARAMETERS_FACTORY_IMPL(FilterFlip);
+  FILTER_PARAMETERS_FACTORY_IMPL(FilterReverse);
+
   FilterCopy::FilterCopy(const Miro::ImageFormatIDL& _format) :
     Super(_format),
     imageSize_(getImageSize(_format))

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -11,6 +11,7 @@
 
 #include "B21Base.h"
 
+#include "miro/Configuration.h"
 #include "miro/Exception.h"
 #include "miro/Utils.h"
 #include "miro/Log.h"
@@ -104,6 +105,7 @@ main(int argc, char *argv[])
   int rc = 0;
   try {
     Miro::Log::init(argc, argv);
+    Miro::Configuration::init(argc, argv);
 
     // Init TAO Factories
     TAO_Notify_Default_CO_Factory::init_svc();
@@ -117,19 +119,18 @@ main(int argc, char *argv[])
     Msp::Parameters * mspParameters = Msp::Parameters::instance();
     
     // Config file processing
-    Miro::ConfigDocument *config = new Miro::ConfigDocument(argc, argv);
+    Miro::ConfigDocument * config = Miro::Configuration::document();
     config->setSection("Robot");
-    config->getParameters("Robot", *robotParameters);
+    config->getParameters("Miro::RobotParameters", *robotParameters);
     config->setSection("B21");
-    config->getParameters("Base", *baseParameters);
-    config->getParameters("Msp", *mspParameters);
-    delete config;
+    config->getParameters("B21::Parameters", *baseParameters);
+    config->getParameters("Msp::Parameters", *mspParameters);
 
-   MIRO_DBG_OSTR(B21 , LL_PRATTLE , "  robot parameters:\n" << robotParameters);
-   MIRO_DBG_OSTR(B21 , LL_PRATTLE , "  base parameters:\n" << baseParameters);
-   MIRO_DBG_OSTR(B21 , LL_PRATTLE , "  msp parameters:\n" << mspParameters);
-
-   MIRO_LOG(LL_NOTICE,"Initialize server daemon.");
+    MIRO_LOG_OSTR(LL_NOTICE , "  robot parameters:\n" << robotParameters);
+    MIRO_LOG_OSTR(LL_NOTICE , "  base parameters:\n" << baseParameters);
+    MIRO_LOG_OSTR(LL_NOTICE , "  msp parameters:\n" << mspParameters);
+    
+    MIRO_LOG(LL_NOTICE,"Initialize server daemon.");
     B21Base b21Base(argc, argv);
     try {
       MIRO_LOG(LL_NOTICE , "Loop forever handling events." );

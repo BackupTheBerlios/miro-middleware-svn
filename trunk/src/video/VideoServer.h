@@ -41,7 +41,7 @@ namespace Video
     // Constructor
     Service(Miro::Server& _server,
 	    Miro::ConfigDocument * _config,
-	    Video::Parameters * _videoParams = Video::Parameters::instance());
+	    Video::Parameters * _videoParams);
     // Destructor.
     virtual ~Service();
 

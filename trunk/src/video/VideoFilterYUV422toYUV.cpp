@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -17,10 +17,12 @@
 #include "VideoFilterYUV422toYUV.h"
 
 #include "miro/VideoHelper.h"
-#include <miro/Exception.h>
+#include "miro/Exception.h"
 
 namespace Video
 {
+  FILTER_PARAMETERS_FACTORY_IMPL(FilterYUV422toYUV);
+
   //---------------------------------------------------------------
   FilterYUV422toYUV::FilterYUV422toYUV(Miro::ImageFormatIDL const& _inputFormat) :
     Super(_inputFormat)

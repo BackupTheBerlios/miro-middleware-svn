@@ -22,6 +22,7 @@ BehaviourParameters.lo
 BehaviourRepository.lo
 Client.lo
 ConfigDocument.lo
+Configuration.lo
 DynamicWindow.lo
 EventBehaviour.lo
 Exception.lo

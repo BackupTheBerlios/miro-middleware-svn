@@ -27,6 +27,8 @@ namespace Video
   double FilterOmni2Pan::cosLookup_[360];
   double FilterOmni2Pan::sinLookup_[360];
 
+  FILTER_PARAMETERS_FACTORY_IMPL(FilterOmni2Pan);
+
   //---------------------------------------------------------------
   FilterOmni2Pan::FilterOmni2Pan(Miro::ImageFormatIDL const& _inputFormat) :
     Super(_inputFormat)

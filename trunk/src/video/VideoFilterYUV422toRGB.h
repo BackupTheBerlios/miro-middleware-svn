@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -28,8 +28,9 @@ namespace Video
     FilterYUV422toRGB(Miro::ImageFormatIDL const& _inputFormat);
     virtual ~FilterYUV422toRGB();
     virtual void process();
+    FILTER_PARAMETERS_FACTORY(FilterYUV422toRGB);
   };
-};
+}
 
 #endif // VideoFilterYUV422toRGB_h
 

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2000, 2001, 2002, 2003
+// (c) 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // 
@@ -12,8 +12,10 @@
 
 #include "SparrowServer.h"
 
+#include "miro/Configuration.h"
 #include "miro/Exception.h"
 #include "miro/Utils.h"
+#include "miro/Log.h"
 
 #include "sparrow/Parameters.h"
 #include "faulMotor/Parameters.h"
@@ -43,15 +45,16 @@ int
 main(int argc, char *argv[])
 {
   int rc = 0;
+  // Init TAO Factories
+  TAO_Notify_Default_CO_Factory::init_svc();
+  TAO_Notify_Default_POA_Factory::init_svc();
+  TAO_Notify_Default_Collection_Factory::init_svc();
+  TAO_Notify_Default_EMO_Factory::init_svc();
+    
   try {
     Miro::Log::init(argc, argv);
+    Miro::Configuration::init(argc, argv);
 
-    // Init TAO Factories
-    TAO_Notify_Default_CO_Factory::init_svc();
-    TAO_Notify_Default_POA_Factory::init_svc();
-    TAO_Notify_Default_Collection_Factory::init_svc();
-    TAO_Notify_Default_EMO_Factory::init_svc();
-    
     // Parameters to be passed to the services
     Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
     Sparrow::Parameters * pSparrowParameters = Sparrow::Parameters::instance();
@@ -59,21 +62,21 @@ main(int argc, char *argv[])
     Miro::NMC::Parameters * notifyMulticastParameters = Miro::NMC::Parameters::instance();
     
     // Config file processing
-    Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
+    Miro::ConfigDocument * config =  Miro::Configuration::document();
     config->setSection("Robot");
-    config->getParameters("Robot", *robotParameters);
+    config->getParameters("Miro::RobotParameters", *robotParameters);
 
-    config->setSection("Sparrow99");
-    config->getParameters("SparrowBoard", *pSparrowParameters);
+    config->setSection("Sparrow");
+    config->getParameters("Sparrow::Parameters", *pSparrowParameters);
 
     if (pSparrowParameters->faulhaber) {
       pFaulMotorParameters = FaulMotor::Parameters::instance();
       config->setSection("Faulhaber");
-      config->getParameters("FaulMotor", *pFaulMotorParameters);
+      config->getParameters("FaulMotor::Parameters", *pFaulMotorParameters);
     }
     config->setSection("Notification");
-    config->getParameters("NotifyMulticast", *notifyMulticastParameters);
-    delete config;
+    config->getParameters("Miro::NMC::Parameters", *notifyMulticastParameters);
+    config->fini();
 
 #ifdef DEBUG
     cout << "  robot paramters:" << endl << robotParameters << endl;

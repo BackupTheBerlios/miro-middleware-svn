@@ -17,13 +17,12 @@
 #include "PanTiltConnection.h"
 #include "Parameters.h"
 
-#include "miro/Utils.h"
+#include "miro/Configuration.h"
+#include "miro/ConfigDocument.h"
 #include "miro/Log.h"
 
 #include <sstream>
 
-
-using Miro::ConfigDocument;
 using DpPanTilt::Parameters;
 using DpPanTilt::PanTiltServer;
 using std::endl;
@@ -64,28 +63,29 @@ namespace DpPanTilt
 
 int main(int argc, char *argv[])
 {
-  int rc = 0;
+  int rc = 1;
 
   Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
   Parameters * params = Parameters::instance();
 
   try {
+    Miro::Log::init(argc, argv);
+    Miro::Configuration::init(argc, argv);
+
     // Config file processing
-    ConfigDocument * config = new ConfigDocument(argc, argv);
+    Miro::ConfigDocument * config = Miro::Configuration::document();
     config->setSection("Robot");
-    config->getParameters("Robot", *robotParameters);
+    config->getParameters("Miro::RobotParameters", *robotParameters);
     config->setSection("DirectedPerception");
-    config->getParameters("PanTilt", *params);
-    delete config;
+    config->getParameters("DpPanTilt::Parameters", *params);
 
-    if (Miro::Log::level() > 1) {
-      std::stringstream s;
-      s << "  robot parameters:" << endl << *robotParameters << std::endl
-	<< "  pantilt paramters:" << endl << *params << std::endl;
-
-      MIRO_LOG_OSTR(LL_NOTICE, "Configuration:\n" << s);
-    }
-
+    MIRO_LOG_OSTR(LL_NOTICE, 
+		  "Configuration:\n" << 
+		  "  robot parameters:" << std::endl <<
+		  *robotParameters << std::endl <<
+		  "  pantilt paramters:" << endl <<
+		  *params);
+    
     MIRO_LOG(LL_NOTICE, "Initialize server daemon.");
     PanTiltServer panTiltServer(argc, argv);
 
@@ -93,44 +93,28 @@ int main(int argc, char *argv[])
       MIRO_LOG(LL_NOTICE, "Loop forever handling events.\n");
       panTiltServer.run(4);
       MIRO_LOG(LL_NOTICE, "Service loop ended, exiting.");
+      rc = 0;
     }
     catch (const Miro::EOutOfBounds& e) {
-      std::stringstream s;
-      s << "OutOfBounds exception: Wrong parameter for device initialization."
-	<< e << endl;
-      MIRO_LOG_OSTR(LL_CRITICAL, s);
-      rc = 1;
+      MIRO_LOG_OSTR(LL_CRITICAL, 
+		    "OutOfBounds exception: Wrong parameter for device initialization."
+		    << e);
     }
     catch (const Miro::EDevIO& e) {
-      std::stringstream s;
-      s << "DevIO exception: Device access failed." 
-	<< e << endl;
-      MIRO_LOG_OSTR(LL_CRITICAL, s);
-      rc = 1;
+      MIRO_LOG_OSTR(LL_CRITICAL, 
+		    "DevIO exception: Device access failed." 
+		    << e);
     }
     catch (const CORBA::Exception & e) {
-      std::stringstream s;
-      s << "Uncaught CORBA exception: " << e << endl;
-      MIRO_LOG_OSTR(LL_CRITICAL, s);
-      rc = 1;
+      MIRO_LOG_OSTR(LL_CRITICAL, "Uncaught CORBA exception: " << e);
     }
   }
   catch (const Miro::CException& e) {
-    std::stringstream s;
-    s << "Miro C exception: " << e << endl;
-      MIRO_LOG_OSTR(LL_CRITICAL, s);
+    MIRO_LOG_OSTR(LL_CRITICAL, "Miro C exception: " << e);
     rc = 1;
   }
   catch (const Miro::Exception& e) {
-    std::stringstream s;
-    s << "Miro exception: " << e << endl;
-      MIRO_LOG_OSTR(LL_CRITICAL, s);
-    rc = 1;
-  }
-  catch (...) {
-    std::stringstream s;
-    s << "Uncaught exception: " << endl;
-    MIRO_LOG_OSTR(LL_CRITICAL, s);
+    MIRO_LOG_OSTR(LL_CRITICAL, "Miro exception: " << e);
     rc = 1;
   }
   return rc;

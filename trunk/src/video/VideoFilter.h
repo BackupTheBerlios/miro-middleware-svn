@@ -271,6 +271,11 @@ namespace Video
     //! Search the filter subtree for a filter by its name.
     Filter * findByNameDown(std::string const & _name);
 
+    //! Shortcut for inputFormat_.width
+    unsigned int width() const throw();
+    //! Shortcut for inputFormat_.height
+    unsigned int height() const throw();
+
     //--------------------------------------------------------------------------
     // protected types
 
@@ -512,6 +517,19 @@ namespace Video
   Filter::parentNode() throw() {
     return pre_;
   }
+
+  inline
+  unsigned int
+  Filter::width() const throw() {
+    return inputFormat_.width;
+  }
+
+  inline
+  unsigned int
+  Filter::height() const throw() {
+    return inputFormat_.height;
+  }
+
 }
 
 #endif

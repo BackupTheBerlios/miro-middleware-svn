@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -14,8 +14,8 @@
 
 #include "BufferManager.h"
 
-#include "miro/VideoHelper.h"
 #include "idl/VideoC.h"
+#include "miro/VideoHelper.h"
 #include "miro/ConfigDocument.h"
 
 namespace Video
@@ -134,7 +134,7 @@ namespace Video
 
     // initialize the parameter instance from the config file
     // _config.getInstance(this->name(), *params);
-    _config.getParameters(this->name(), *params);
+    _config.getInstance(this->name(), *params);
 
     // debug output
     std::cout << name() << std::endl;

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -16,19 +16,20 @@
 #include "miro/Log.h"
 #include "miro/Server.h"
 #include "idl/DistanceScanC.h"
+
 #include <iostream>
 #include <algorithm>
 #include <cmath>
 
-using CosNotification::EventTypeSeq;
-using CosNotification::StructuredEvent;
-using CosNotifyChannelAdmin::EventChannel;
-using CosNotifyChannelAdmin::EventChannel_ptr;
-using CosNotifyChannelAdmin::EventChannel_var;
-
 namespace Video
 {
+  using CosNotification::EventTypeSeq;
+  using CosNotification::StructuredEvent;
+  using CosNotifyChannelAdmin::EventChannel;
+  using CosNotifyChannelAdmin::EventChannel_ptr;
+  using CosNotifyChannelAdmin::EventChannel_var;
 
+  FILTER_PARAMETERS_FACTORY_IMPL(FilterDistanceScan);
 
   //---------------------------------------------------------------
   FilterDistanceScan::FilterDistanceScan(Miro::ImageFormatIDL const& _inputFormat) :

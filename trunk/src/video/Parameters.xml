@@ -126,7 +126,7 @@
 
     </config_item>
 
-    <config_item parent="Miro::Config" instance="true">
+    <config_item parent="Miro::Config">
       <config_parameter name="width" type="int" default="384" measure="pixel" />
       <config_parameter name="height" type="int" default="288" measure="pixel" />
       <config_parameter name="palette" type="string" default="rgb" />
