@@ -26,7 +26,7 @@ EventHandler::EventHandler(Miro::Motion_var _motion, Miro::Kicker_var _kicker, b
 	oldrot = 0.0;
 	oldtrans = 0;
         kickeron_ = _kickeron;
-	maxRotation = 3.14;
+	maxRotation = 3.14; 
 	maxTranslation = 1000;
 	
 	//Maximal zulässige Translation und Rotation holen
@@ -102,7 +102,7 @@ int EventHandler::handle_input(ACE_HANDLE){
        
        if (e.number == 1){
           
-	  velocity.translation = -(maxTranslation * (long)e.value * 4)/(32767*5);
+	  velocity.translation = -(maxTranslation * (long)e.value)/(32767);
 
 	  oldtrans = velocity.translation;
 	  cout << maxTranslation << " " << maxRotation << endl;

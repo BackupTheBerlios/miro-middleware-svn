@@ -14,7 +14,7 @@
 #include "SparrowDevice.h"
 #include "Parameters.h"
 
-#include "can/CanConnection.h"         // CanConnection, CanMessageClass
+#include "SparrowBaseConnection.h"         // CanConnection, CanMessageClass
 
 //------------------------ SparrowClass ---------------------------//
 
@@ -27,12 +27,12 @@ namespace Sparrow
   /**
    * Class for using the Sparrow robot
    */
-  class Connection : public Can::Connection
+  class Connection : public BaseConnection
   {
-    typedef Can::Connection Super;
+    typedef BaseConnection Super;
 
   public:
-    Connection(ACE_Reactor * _reactor, 
+    Connection(ACE_Reactor * _reactor,
 	       Miro::DevEventHandler * _eventHandler,
 	       Consumer * _consumer);
     virtual ~Connection();
@@ -131,17 +131,15 @@ namespace Sparrow
 
     void testAdd();
     void testResult();
-    
+
 
   protected:
     short rad2servo0Ticks(double rad) const;
     short rad2servo1Ticks(double rad) const;
 
     Consumer * consumer;
-    ACE_Reactor * reactor;
-    EventHandler * eventHandler;
 
-    Parameters const * const params_;
+    EventHandler * eventHandler;
 
     int buttonsPollTimerId;
 
@@ -176,7 +174,7 @@ namespace Sparrow
   short
   Connection::rad2servo1Ticks(double rad) const
   {
-    return params_->servo1MidPulse + 
+    return params_->servo1MidPulse +
       static_cast<short>(rint(rad * params_->deg2ServoTicksL * 180. / M_PI));
   }
 

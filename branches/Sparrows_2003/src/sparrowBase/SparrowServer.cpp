@@ -89,7 +89,7 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 	   &structuredPushSupplier_, true),
 
   // Sparrow board initialization
-  pSparrowConsumer(new Sparrow::Consumer(sparrowConnection,
+  /*pSparrowConsumer(new Sparrow::Consumer(*sparrowConnection,
 					 ( (Sparrow::Parameters::instance()->faulhaber)?
 					   NULL :
 					   &odometry),
@@ -97,9 +97,9 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:&sparrowButtons,
 					 &infrared)),
   pCanEventHandler(new Can::EventHandler(pSparrowConsumer)),
-  sparrowConnection(reactorTask.reactor(),
+  sparrowConnection(new Sparrow::Connection(reactorTask.reactor(),
 		    pCanEventHandler,
-		    pSparrowConsumer),
+		    pSparrowConsumer)),*/
 
   // Pioneer board initialization
   pPioneer((Sparrow::Parameters::instance()->goalie && !Sparrow::Parameters::instance()->sparrow2003)?
@@ -110,22 +110,78 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 	   new FaulhaberHardware(reactorTask.reactor(), &odometry) : NULL),
 
   // Service initialization
-  pSparrowMotion((Sparrow::Parameters::instance()->faulhaber)?
-                 (POA_Miro::Motion *) new FaulMotor::MotionImpl(pFaulhaber->connection,
-								*pFaulhaber->pConsumer) :
-		 (POA_Miro::Motion *) new Sparrow::MotionImpl(sparrowConnection,
-							      *pSparrowConsumer)),
-  sparrowKicker(sparrowConnection),
-  sparrowButtons(*pSparrowConsumer, &structuredPushSupplier_),
-  sparrowStall(sparrowConnection, &structuredPushSupplier_),
-  sparrowPanTilt(sparrowConnection),
+
 
   mcAdapter_((Sparrow::Parameters::instance()->channelSharing)?
              new Miro::NotifyMulticast::Adapter(argc, argv, this, ec_) :
 	     0)
 {
 
-  init(true);
+   if(Sparrow::Parameters::instance()->sparrow2003){
+
+   pSparrowConsumer2003 = new Sparrow::Consumer2003();/**sparrowConnection,
+					 ( (Sparrow::Parameters::instance()->faulhaber)?
+					   NULL :
+					   &odometry),
+					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:sparrowStall,
+					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:sparrowButtons,
+					 &infrared);*/
+   pCanEventHandler = new Can::EventHandler(pSparrowConsumer2003);
+   sparrowConnection2003 = new Sparrow::Connection2003(reactorTask.reactor(),
+		    pCanEventHandler,
+		    pSparrowConsumer2003);
+
+   sparrowKicker = new Sparrow::KickerImpl(sparrowConnection2003);
+   //sparrowButtons = new Sparrow::ButtonsImpl(*pSparrowConsumer2003, &structuredPushSupplier_);
+   //sparrowStall = new Sparrow::StallImpl(*sparrowConnection2003, &structuredPushSupplier_);
+   //sparrowPanTilt = new Sparrow::PanTiltImpl(*sparrowConnection2003);
+
+   pSparrowConsumer2003->registerInterfaces(sparrowConnection2003,
+					( (Sparrow::Parameters::instance()->faulhaber)?
+					   NULL :
+					   &odometry),
+					   &infrared);
+
+   pSparrowMotion = (std::auto_ptr<POA_Miro::Motion>) new FaulMotor::MotionImpl(pFaulhaber->connection);
+
+
+   }
+   else{
+
+   pSparrowConsumer = new Sparrow::Consumer();/**sparrowConnection,
+					 ( (Sparrow::Parameters::instance()->faulhaber)?
+					   NULL :
+					   &odometry),
+					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:sparrowStall,
+					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:sparrowButtons,
+					 &infrared);*/
+   pCanEventHandler = new Can::EventHandler(pSparrowConsumer);
+   sparrowConnection = new Sparrow::Connection(reactorTask.reactor(),
+		    pCanEventHandler,
+		    pSparrowConsumer);
+
+   sparrowKicker = new Sparrow::KickerImpl(sparrowConnection);
+   sparrowButtons = new Sparrow::ButtonsImpl(*pSparrowConsumer, &structuredPushSupplier_);
+   sparrowStall = new Sparrow::StallImpl(*sparrowConnection, &structuredPushSupplier_);
+   sparrowPanTilt = new Sparrow::PanTiltImpl(*sparrowConnection);
+
+   pSparrowConsumer->registerInterfaces(sparrowConnection,
+					( (Sparrow::Parameters::instance()->faulhaber)?
+					   NULL :
+					   &odometry),
+					 sparrowStall,
+					 sparrowButtons,
+					 &infrared);
+
+   pSparrowMotion = (Sparrow::Parameters::instance()->faulhaber)?
+                 (std::auto_ptr<POA_Miro::Motion>) new FaulMotor::MotionImpl(pFaulhaber->connection) :
+		 (std::auto_ptr<POA_Miro::Motion>) new Sparrow::MotionImpl(*sparrowConnection);
+
+   }
+
+   init(true);
+
+
 
   DBG(cout << "SparrowBase initialized.." << endl);
 }
@@ -149,7 +205,7 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 	   &structuredPushSupplier_, true),
 
   // Sparrow board initialization
-  pSparrowConsumer(new Sparrow::Consumer(sparrowConnection,
+  /*pSparrowConsumer(new Sparrow::Consumer(*sparrowConnection,
 					 ( (Sparrow::Parameters::instance()->faulhaber)?
 					   NULL :
 					   &odometry),
@@ -157,11 +213,11 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:&sparrowButtons,
 					 &infrared)),
   pCanEventHandler(new Can::EventHandler(pSparrowConsumer)),
-  sparrowConnection(reactorTask.reactor(),
+  sparrowConnection(new Sparrow::Connection(reactorTask.reactor(),
 		    pCanEventHandler,
-		    pSparrowConsumer),
+		    pSparrowConsumer)),
 
-  // Pioneer board initialization
+  // Pioneer board initialization*/
   pPioneer((Sparrow::Parameters::instance()->goalie && !Sparrow::Parameters::instance()->sparrow2003)?
 	   new PioneerHardware(reactorTask.reactor(), pSonar_.get()) : NULL),
 
@@ -170,20 +226,84 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
 	   new FaulhaberHardware(reactorTask.reactor(), &odometry) : NULL),
 
   // Service initialization
-  pSparrowMotion((Sparrow::Parameters::instance()->faulhaber)?
-                 (POA_Miro::Motion *) new FaulMotor::MotionImpl(pFaulhaber->connection,
-								*pFaulhaber->pConsumer) :
-		 (POA_Miro::Motion *) new Sparrow::MotionImpl(sparrowConnection,
-							      *pSparrowConsumer)),
-  sparrowKicker(sparrowConnection),
-  sparrowButtons(*pSparrowConsumer, &structuredPushSupplier_),
-  sparrowStall(sparrowConnection, &structuredPushSupplier_),
-  sparrowPanTilt(sparrowConnection),
+
 
   mcAdapter_((Sparrow::Parameters::instance()->channelSharing)?
              new Miro::NotifyMulticast::Adapter(0, NULL, this, ec_) :
 	     NULL)
 {
+
+   if(Sparrow::Parameters::instance()->sparrow2003){
+   pSparrowConsumer2003 = new Sparrow::Consumer2003(); /**sparrowConnection,
+					 ( (Sparrow::Parameters::instance()->faulhaber)?
+					   NULL :
+					   &odometry),
+					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:sparrowStall,
+					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:sparrowButtons,
+					 &infrared);*/
+   pCanEventHandler = new Can::EventHandler(pSparrowConsumer2003);
+   sparrowConnection2003 = new Sparrow::Connection2003(reactorTask.reactor(),
+		    pCanEventHandler,
+		    pSparrowConsumer2003);
+
+   sparrowKicker = new Sparrow::KickerImpl(sparrowConnection2003);
+   //sparrowButtons = new Sparrow::ButtonsImpl(*pSparrowConsumer2003, &structuredPushSupplier_);
+   //sparrowStall = new Sparrow::StallImpl(*sparrowConnection2003, &structuredPushSupplier_);
+   //sparrowPanTilt = new Sparrow::PanTiltImpl(*sparrowConnection2003);
+
+
+
+
+
+
+   pSparrowConsumer2003->registerInterfaces(sparrowConnection2003,
+					( (Sparrow::Parameters::instance()->faulhaber)?
+					   NULL :
+					   &odometry),
+					 &infrared);
+
+   pSparrowMotion = (std::auto_ptr<POA_Miro::Motion>) new FaulMotor::MotionImpl(pFaulhaber->connection);
+
+
+
+
+   }
+   else{
+   pSparrowConsumer = new Sparrow::Consumer(); /**sparrowConnection,
+					 ( (Sparrow::Parameters::instance()->faulhaber)?
+					   NULL :
+					   &odometry),
+					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:sparrowStall,
+					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:sparrowButtons,
+					 &infrared);*/
+   pCanEventHandler = new Can::EventHandler(pSparrowConsumer);
+   sparrowConnection = new Sparrow::Connection(reactorTask.reactor(),
+		    pCanEventHandler,
+		    pSparrowConsumer);
+
+   sparrowKicker = new Sparrow::KickerImpl(sparrowConnection);
+   sparrowButtons = new Sparrow::ButtonsImpl(*pSparrowConsumer, &structuredPushSupplier_);
+   sparrowStall = new Sparrow::StallImpl(*sparrowConnection, &structuredPushSupplier_);
+   sparrowPanTilt = new Sparrow::PanTiltImpl(*sparrowConnection);
+
+
+   pSparrowConsumer->registerInterfaces(sparrowConnection,
+					( (Sparrow::Parameters::instance()->faulhaber)?
+					   NULL :
+					   &odometry),
+					 sparrowStall,
+					 sparrowButtons,
+					 &infrared);
+
+   pSparrowMotion = (Sparrow::Parameters::instance()->faulhaber)?
+                 (std::auto_ptr<POA_Miro::Motion> ) new FaulMotor::MotionImpl(pFaulhaber->connection) :
+		 (std::auto_ptr<POA_Miro::Motion> ) new Sparrow::MotionImpl(*sparrowConnection);
+
+
+
+  }
+
+
   init(_startReactorTastk);
 
   DBG(cout << "SparrowBase initialized.." << endl);
@@ -196,10 +316,10 @@ SparrowBase::init(bool _startReactorTastk)
   pMotion = pSparrowMotion->_this();
   pInfrared = infrared._this();
   if(!Sparrow::Parameters::instance()->sparrow2003){
-    pKicker = sparrowKicker._this();
-    pButtons = sparrowButtons._this();
-    pStall = sparrowStall._this();
-    pPanTilt = sparrowPanTilt._this();
+    pKicker = sparrowKicker->_this();
+    pButtons = sparrowButtons->_this();
+    pStall = sparrowStall->_this();
+    pPanTilt = sparrowPanTilt->_this();
   }
 
   addToNameService(ec_, "EventChannel");

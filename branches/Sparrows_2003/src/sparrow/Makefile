@@ -26,9 +26,13 @@ SHLIB    = lib$(NAME).$(SOEXT)
 ## specify your library files here
 FILES = 	\
 		Parameters \
+		SparrowBaseConnection \
 		SparrowConnection \
+		SparrowConnection2003 \
 		SparrowEventHandler \
+		SparrowEventHandler2003 \
 		SparrowConsumer \
+		SparrowConsumer2003 \
 		SparrowMotionImpl \
 		SparrowKickerImpl \
 		SparrowButtonsImpl \

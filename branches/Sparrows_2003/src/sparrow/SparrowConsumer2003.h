@@ -1,0 +1,92 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef SparrowConsumer2003_h
+#define SparrowConsumer2003_h
+
+#include "SparrowDevice2003.h"
+#include "Parameters.h"
+
+#include "miro/Synch.h"
+#include "miro/DevConsumer.h"
+#include "miro/OdometryImpl.h"
+
+// forward decleration
+namespace Miro
+{
+  class StructuredPushSupplier;
+  class RangeSensorImpl;
+};
+
+namespace Sparrow
+{
+  // forward declerations
+  class Connection2003;
+
+  class Consumer2003 : public Miro::DevConsumer
+  {
+    typedef Miro::DevConsumer Super;
+
+  public:
+    Consumer2003(Connection2003 * _connection,
+	     Miro::OdometryImpl * _pOdometry,
+	     Miro::RangeSensorImpl * _pIR);
+    Consumer2003();
+    ~Consumer2003();
+
+    virtual void handleMessage(const Miro::DevMessage * _message);
+    virtual void registerInterfaces(Connection2003 * _connection,
+	     				Miro::OdometryImpl * _pOdometry,
+	     				Miro::RangeSensorImpl * _pIR);
+
+    short * getTable1();
+    short * getTable2();
+
+  protected:
+    Connection2003 * connection;
+    Miro::OdometryImpl * pOdometry_;
+    Miro::RangeSensorImpl * pIR_;
+
+    Parameters const * params_;
+
+    Miro::MotionStatusIDL status_;
+
+  public:
+    unsigned char   digital[8];
+    unsigned short  analog[16];
+
+    Miro::Mutex     irAliveMutex;
+    Miro::Condition irAliveCond;
+
+
+    //Miro::Condition accelCond;
+
+    /*short xPos_;
+    short yPos_;
+    double phi_;
+
+    short xPrev_;
+    short yPrev_;
+    double phiPrev_;
+
+    double x_;
+    double y_;
+
+    short distanceL;
+    short distanceR;*/
+
+  protected:
+    /*int index_;
+    short table1[ACCEL_TABLE_SIZE];
+    short table2[ACCEL_TABLE_SIZE];*/
+  };
+};
+#endif
+

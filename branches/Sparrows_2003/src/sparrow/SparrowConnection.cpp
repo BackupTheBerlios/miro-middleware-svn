@@ -32,7 +32,7 @@
 
 namespace
 {
-  ACE_Time_Value stallReset(2, 0); 
+  ACE_Time_Value stallReset(2, 0);
 };
 
 namespace Sparrow
@@ -45,15 +45,13 @@ namespace Sparrow
   //----- constructors -----//
   //------------------------//
 
-  Connection::Connection(ACE_Reactor* _reactor, 
+  Connection::Connection(ACE_Reactor* _reactor,
 			 Miro::DevEventHandler* _devEventHandler,
 			 //			 EventHandler _eventHandler,
-			 Consumer * _consumer) : 
-    Super(_reactor, _devEventHandler, *Parameters::instance()),
+			 Consumer * _consumer) :
+    Super(_reactor, _devEventHandler),
     consumer(_consumer),
-    reactor(_reactor),
     eventHandler(new EventHandler(*this)),
-    params_(Parameters::instance()),
     buttonsPollTimerId(0),
     motionMutex(),
     motionState(LIMP),
@@ -64,7 +62,7 @@ namespace Sparrow
     leftPower(0),
     rightPower(0),
     boardReply(-1)
-  { 
+  {
     DBG(cout << "Constructing SparrowConnection." << endl);
 
     // init odometry
@@ -72,17 +70,17 @@ namespace Sparrow
 
     // Complete initialization after entering of the reactor processing loop.
     // So we start immediately after the start of the reactor
-    ACE_Time_Value startReports(0, 1); 
-    if (reactor->schedule_timer(eventHandler, 
+    ACE_Time_Value startReports(0, 1);
+    if (reactor->schedule_timer(eventHandler,
 				(void *)INIT_TIMER, // timer id
 				startReports,       // delay
 				ACE_Time_Value(5)) // interval
 	== -1)
       throw Miro::ACE_Exception(errno, "Failed to register timer for status report startup.");
 
-    
+
     DBG(cout << "polling buttons every " << params_->buttonsPollInterval << "sec" << endl);
-    if ( (buttonsPollTimerId = reactor->schedule_timer(eventHandler, 
+    if ( (buttonsPollTimerId = reactor->schedule_timer(eventHandler,
 				(void *)BUTTONS_TIMER, // timer id
 				params_->buttonsPollInterval, // delay
 				params_->buttonsPollInterval) ) // interval
@@ -90,20 +88,20 @@ namespace Sparrow
       throw Miro::ACE_Exception(errno, "Failed to register timer for buttons polling.");
   }
 
-  void 
-  Connection::init() 
+  void
+  Connection::init()
   {
     // init motors
     initDrive(params_->ticksL, params_->ticksR, params_->diameter);
 
-    initMax(params_->maxAccel, 
-	    params_->maxPower, 
+    initMax(params_->maxAccel,
+	    params_->maxPower,
 	    params_->motion.maxTranslation,
 	    params_->motion.maxRotation);
 
     // init stall
-    initStall(params_->stallThreshold, 
-	      params_->stallA2, 
+    initStall(params_->stallThreshold,
+	      params_->stallA2,
 	      params_->stallA1,
 	      params_->stallA0);
 
@@ -117,7 +115,7 @@ namespace Sparrow
   //----------------------//
 
   Connection::~Connection()
-  { 
+  {
     DBG(cout << "Destructing SparrowConnection." << endl);
 
     getPosition(params_->odometryPulse.msec(), 1);
@@ -125,7 +123,7 @@ namespace Sparrow
     if (!params_->goalie) {
       setPower(0, 0);
     }
-    else 
+    else
       setSpeed(0, 0);
     reactor->cancel_timer(buttonsPollTimerId);
     delete eventHandler;
@@ -152,7 +150,7 @@ namespace Sparrow
     }
   }
 
-  void 
+  void
   Connection::readTables()
   {
     if(params_->writeTables) {
@@ -163,7 +161,7 @@ namespace Sparrow
       cout << "wait on condition" << endl;
       consumer->accelCond.wait();
       consumer->accelMutex.release();
-      
+
       cout << "table 1" << endl;
       short * table1 = consumer->getTable1();
       for (int i = 0; i < Sparrow::ACCEL_TABLE_SIZE; ++i) {
@@ -173,9 +171,9 @@ namespace Sparrow
 	if ( ((i+1) % 8) == 0)
 	  cout << endl;
       }
-      
+
       cout << endl << endl << "table 2" << endl;
-      
+
       short * table2 = consumer->getTable2();
       for (int i = 0; i < Sparrow::ACCEL_TABLE_SIZE; ++i) {
 	cout.width(7);
@@ -213,7 +211,7 @@ namespace Sparrow
 
   // set absolute speed in mm/sec for both wheels    //
   // positive values are forward, negatives backward //
-  void 
+  void
   Connection::setSpeed(short left, short right)
   {
     Miro::Guard guard(motionMutex);

@@ -37,12 +37,10 @@ namespace Sparrow
   using Miro::ETimeOut;
   using Miro::EOutOfBounds;
 
-  MotionImpl::MotionImpl(Connection& _connection,
-			 Consumer& _consumer) throw(Exception) :
+  MotionImpl::MotionImpl(Connection& _connection) throw(Exception) :
     Miro::DifferentialMotionImpl(Parameters::instance()->motion),
     params_(Parameters::instance()),
-    connection(_connection),
-    consumer(_consumer)
+    connection(_connection)
   {
     DBG(cout << "Constructing SparrowMotionImpl" << endl);
   }
@@ -52,14 +50,14 @@ namespace Sparrow
     DBG(cout << "Destructing SparrowMotionImpl" << endl);
   }
 
-  // 
+  //
   // IDL interface implementation
 
   //--------------------------------------------------------------------------
   // Motion interface implementation
   //--------------------------------------------------------------------------
 
-  void 
+  void
   MotionImpl::limp() throw(EDevIO)
   {
     Miro::VelocityIDL v;
@@ -74,7 +72,7 @@ namespace Sparrow
       connection.setSpeed(0,0);
   }
 
-  void 
+  void
   MotionImpl::setVelocity(const Miro::VelocityIDL& vel) throw(EOutOfBounds, EDevIO)
   {
     testVelocityBounds(vel);

@@ -36,7 +36,7 @@ struct Service
 
 Service::Service() :
   reactorTask(),
-  pSparrowConsumer(new Sparrow::Consumer(sparrowConnection, NULL, NULL, NULL, NULL)),
+  pSparrowConsumer(new Sparrow::Consumer(&sparrowConnection, NULL, NULL, NULL, NULL)),
   pCanEventHandler(new Can::EventHandler(pSparrowConsumer)),
   sparrowConnection(reactorTask.reactor(), pCanEventHandler, pSparrowConsumer)
 {

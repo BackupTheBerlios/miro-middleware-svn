@@ -12,11 +12,13 @@
 #define SparrowKickerImpl_h
 
 #include "miro/KickerS.h"
+#include "SparrowBaseConnection.h"
+
 
 namespace Sparrow
 {
   // forward declerations
-  class Connection;
+
 
   class KickerImpl :  public virtual POA_Miro::Kicker
   {
@@ -25,7 +27,7 @@ namespace Sparrow
     //-------------------------------------------------------------------------
   public:
     // Constructor/Destructor
-    KickerImpl(Connection& _connection);
+    KickerImpl(BaseConnection * _connection);
     virtual ~KickerImpl();
 
     //-------------------------------------------------------------------------
@@ -34,7 +36,7 @@ namespace Sparrow
     void kick(const Miro::TimeIDL& time) throw();
 
   protected:
-    Connection&         connection; // encapsulating communication to hardware
+    BaseConnection *         connection; // encapsulating communication to hardware
   };
 };
 
