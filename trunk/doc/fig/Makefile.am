@@ -37,6 +37,7 @@ figures = \
 	filtergraph.fig \
         filtergraphlegal.fig \
         filtergraphillegal.fig \
+	federatedchannel.fig \
 	signature.ps \
 	pincolla.ps
 
