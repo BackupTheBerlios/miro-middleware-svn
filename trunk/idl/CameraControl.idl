@@ -17,12 +17,20 @@
 module Miro
 {
   //! Struct representing zoom limits.
+  /**
+   * Represents the minimal (tele) and maximal (wide) horizontal aperture
+   *  angles in rad.
+   */
   struct ZoomRangeIDL
   {
     float min;
     float max;
   };
+
   //! Struct representing focus limits
+  /**
+   * Represents the minimal and maximal focus distance, in mm.
+   */
   struct FocusRangeIDL
   {
     short min;
@@ -30,6 +38,9 @@ module Miro
   };
 
   //! Struct representing the shutter speed limits
+  /**
+   * Represents the minimal and maximal shutter times
+   */
   struct ShutterRangeIDL
   {
     TimeIDL min;
