@@ -55,7 +55,8 @@ globalsources = \
 	BehaviourEngine.idl \
 	Joystick.idl \
 	DistanceScan.idl \
-	ArbiterEvent.idl 
+	ArbiterEvent.idl \
+	ObjectVector.idl
 
 b21sources = \
 	Laser.idl \
@@ -67,9 +68,7 @@ b21sources = \
 pioneersources = \
 	PioneerStall.idl \
 	PioneerMotion.idl \
-	Gripper.idl \
-	ObjectVector.idl \
-	Cortex.idl
+	Gripper.idl 
 
 sparrowsources = \
 	Kicker.idl \
