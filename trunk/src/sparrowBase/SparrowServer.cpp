@@ -168,7 +168,7 @@ SparrowBase::init(bool _startReactorTastk)
   addToNameService(pPanTilt.in(), "PanTilt");
   addToNameService(pInfrared.in(), "Infrared");
 
-  if (pSonar_.get() == NULL) {
+  if (pSonar_.get() != NULL) {
     pSonar = pSonar_->_this();
     addToNameService(pSonar.in(), "Sonar");
   }
