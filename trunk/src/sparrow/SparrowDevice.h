@@ -144,6 +144,8 @@ namespace Sparrow
   static const unsigned long CAN_WRITE_MOTOR_RIGHT_2003 = 0x04010102;
   static const unsigned long CAN_MOTOR_TICKS_LEFT_2003 = 0x85020201;
   static const unsigned long CAN_MOTOR_TICKS_RIGHT_2003 = 0x84020201;
+  static const unsigned long CAN_MOTOR_ACC_VEL2003 = 0x06010102;
+  static const unsigned long CAN_MOTOR_TICKS_2003 = 0x86020201;
   static const unsigned long CAN_R_MOTOR_ALIVE_2003 = 0x8f020201;
   static const unsigned long CAN_HOST_ALIVE_2003 = 0x1E0f0102;
   static const unsigned long CAN_MOTOR_FLOOD_2003 = 0x03010102;

@@ -307,16 +307,14 @@ namespace Sparrow
       FaulController::OdometryMessage 
 	odoMessage(FaulController::OdometryMessage::LEFT);
       if (params_->module == "pcan") {
-	pcanmsg * msgp_;
-	message.canMessage((int **) &msgp_);
-	odoMessage.ticks_ = message.longData(0);
+	odoMessage.setTicks(message.longData(0));
       }
       else {
 	canmsg * msg_;
 	message.canMessage((int **) &msg_);
-	memcpy((void *) &(odoMessage.ticks_),(void *) (msg_->d),  4);
+	odoMessage.setTicks(*(reinterpret_cast<long *>(msg_->d)));
       }
-      odoMessage.time() = ACE_OS::gettimeofday();
+      odoMessage.time() = message.time();
 
       if(faulConsumer)
 	faulConsumer->handleMessage(&odoMessage);
@@ -326,22 +324,64 @@ namespace Sparrow
     case CAN_MOTOR_TICKS_RIGHT_2003: {
 
       FaulController::OdometryMessage 
-	odoMessage2(FaulController::OdometryMessage::RIGHT);
+	odoMessage(FaulController::OdometryMessage::RIGHT);
 
       if(params_->module == "pcan") {
-	pcanmsg * msgp_;
-	message.canMessage((int **) &msgp_);
-	odoMessage2.ticks_ = message.longData(0);
+	odoMessage.setTicks(message.longData(0));
       }
       else{
 	canmsg * msg_;
 	message.canMessage((int **) &msg_);
-	memcpy((void *) &(odoMessage2.ticks_),(void *) (msg_->d),  4);
+	odoMessage.setTicks(*(reinterpret_cast<long *>(msg_->d)));
       }
-      odoMessage2.time() = ACE_OS::gettimeofday();
+      odoMessage.time() = message.time();
 
       if(faulConsumer)
-	faulConsumer->handleMessage(&odoMessage2);
+	faulConsumer->handleMessage(&odoMessage);
+      break;
+    }
+      
+    case CAN_MOTOR_TICKS_2003: {
+
+      if(faulConsumer) {
+      
+	FaulController::OdometryMessage 
+	  odoLeft(FaulController::OdometryMessage::LEFT);
+	FaulController::OdometryMessage 
+	  odoRight(FaulController::OdometryMessage::RIGHT);
+	
+	MIRO_ASSERT(params_->module == "pcan");
+	
+	// get can message buffer
+	//	canmsg * msg_;
+	//	message.canMessage((int **) &msg_);
+	
+	// get left clock and ticks
+	{
+	  
+	  unsigned int clockL = message.longData(0);//*(reinterpret_cast<long *>(msg_->d));
+	  int deltaL = clockL & 0x00ffffff;
+	  clockL >>= 24;
+	  
+	  odoLeft.setTicks(deltaL);
+	  odoLeft.setClock((unsigned char) clockL);
+	  odoLeft.time() = message.time();
+      }
+	
+	// get right clock and ticks
+	{
+	  unsigned int clockR = message.longData(4); //*(reinterpret_cast<long *>(msg_->d + 4));
+	  int deltaR = clockR & 0x00ffffff;
+	  clockR >>= 24;
+	  
+	  odoRight.setTicks(deltaR);
+	  odoRight.setClock((unsigned char) clockR);
+	  odoRight.time() = message.time();
+	}
+      
+	faulConsumer->handleMessage(&odoLeft);
+	faulConsumer->handleMessage(&odoRight);
+      }
       break;
     }
 

@@ -148,6 +148,19 @@ namespace Sparrow
   }
 
   void
+  Connection2003::writeAccVel(short accL, short accR, short velL, short velR)
+  {
+    CanMessage message;
+    message.length(8);
+    message.id(CAN_MOTOR_ACC_VEL2003);
+    message.shortData(0, accL);
+    message.shortData(2, accR);
+    message.shortData(4, velL);
+    message.shortData(6, velR);
+    write(message);
+  }
+
+  void
   Connection2003::setServo(unsigned char servo, double rad)
   {
     CanMessage message;
