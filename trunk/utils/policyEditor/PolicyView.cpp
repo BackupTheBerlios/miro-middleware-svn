@@ -191,13 +191,11 @@ PolicyView::drawArrows(QPainter * p)
   for (first = transitions.begin(); first != last; ++first ) {
     QString message = first->getMessage();
     PatternXML * target  = first->getTarget();
+
     map[target] = map[target] + 1;
     
     int DrawX2 = childX(target->widget()) + target->widget()->width();
     int DrawY2 = childY(target->widget());
-
-    cout << "x1: " << DrawX1 << " y1: " << DrawY1 << endl;
-    cout << "x2: " << DrawX2 << " y2: " << DrawY2 << endl;
 
     PatternWidget::drawArrow(p, DrawX1, DrawY1, DrawX2, DrawY2, 10);
     i = map[target]-1;

@@ -284,10 +284,8 @@ PatternWidget::drawArrows(QPainter * p)
     else { 
       DrawX1 = view_->childX(this);
       DrawY1 = view_->childY(this)+height(); 
-      DrawX2 = x2 + width();    
-      DrawY2 = y2 + PATTERN_NAME_HEIGHT +
-	BEHAVIOUR_NAME_HEIGHT * behaviours +
-	2 * frameWidth(); 
+      DrawX2 = x2 + target->widget()->width();    
+      DrawY2 = y2 + target->widget()->height();
     } 
 
     drawArrow(p, DrawX1, DrawY1, DrawX2, DrawY2, 10);

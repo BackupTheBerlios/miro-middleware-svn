@@ -58,8 +58,8 @@ PolicyDocumentXML::policyRenaming(QString const& _oldName, QString const& _newNa
     Item * i = itemFromListViewItem(item);
     PolicyXML * p = dynamic_cast<PolicyXML *>(i);
 
-    MIRO_ASSERT(p != NULL);
-    p->policyRenaming(_oldName, _newName);
+    if (p != NULL)
+      p->policyRenaming(_oldName, _newName);
 
     item = item->nextSibling();
   }
