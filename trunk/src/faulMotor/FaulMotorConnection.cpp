@@ -120,23 +120,23 @@ namespace FaulMotor
 
     if ((speedL != 0) && (speedR != 0))
     {
-    	accL = speedL
-    	if (prevSpeedL != 0) accL = speedL / prevSpeedL;
+    	accL = -speedL;
+    	if (prevSpeedL != 0) accL = -speedL / prevSpeedL;
 	accR = speedR;
 	if (prevSpeedR != 0) accR = speedR/ prevSpeedR;
 	if ((accL <= accR) && (accR != 0))
 	{
-		accL = (accL / accR * params_-> maxPosAccel) * 90. / 320.;
-		accR = (params_-> maxPosAccel) * 90. / 320.;
+		accL = (accL / accR * params_-> maxPosAccel) * 9. / 320.;
+		accR = (params_-> maxPosAccel) * 9. / 320.;
 	}else
 	{
 		if (accL != 0)
 		{
-		accR = (accR / accL * params_-> maxPosAccel) * 90. / 320.;
-		accL = (params_-> maxPosAccel) * 90. / 320.;
+		accR = (accR / accL * params_-> maxPosAccel) * 9. / 320.;
+		accL = (params_-> maxPosAccel) * 9. / 320.;
 		}
 	}
-	cout << "AccR: " << accR << " AccL: " << accL << endl;
+	cout << "maxPosAcc: " << params_-> maxPosAccel <<" AccR: " << accR << " AccL: " << accL << endl;
      }
 
 
@@ -144,7 +144,7 @@ namespace FaulMotor
     sprintf(speedMessageR, "v%d\r\n", speedR); // build speed message
     leftWheel_.writeMessage(speedMessageL);
     rightWheel_.writeMessage(speedMessageR);             // send it
-    prevSpeedL = speedL;
+    prevSpeedL = -speedL;
     prevSpeedR = speedR;
   }
 
