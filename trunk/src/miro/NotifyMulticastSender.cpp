@@ -507,8 +507,16 @@ namespace Miro
 
       _iov[0].iov_base = cdr.begin()->rd_ptr();
       _iov[0].iov_len  = cdr.begin()->length();
-
+#ifdef ASDF
+      ACE_Time_Value t = ACE_OS::gettimeofday();
+      int l = 0;
+      for (int i = 0; i< _iovcnt; ++i) 
+	      l += _iov[i].iov_len;
+#endif
       size_t len = sendData(_iov, _iovcnt);
+#ifdef ASDF
+      std::cout << "sendData needed (ms): " << ACE_OS::gettimeofday() - t << " for size: " << l << std::endl;
+#endif
       switch (len) {
       case -1: 
 	{
