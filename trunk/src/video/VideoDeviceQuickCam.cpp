@@ -212,7 +212,8 @@ namespace Video
     //setSource();
     setPalette();
 
-    /* set framerate */
+
+    
     getVideoWindow();
 
     setFramerate(params_->framerate);
@@ -230,7 +231,7 @@ namespace Video
     setContrast(params_->contrast);
 
     setVideoPicture();
-
+#ifdef asdfzzzz
     /* set pwc centric parameters */
     MIRO_DBG(VIDEO, LL_DEBUG, "Retrieving PWC information.");
     getPWC();
@@ -249,6 +250,7 @@ namespace Video
     setCompression(params_->compression);
 
     setPWC();
+#endif
     
 
     //	preparing buffers
