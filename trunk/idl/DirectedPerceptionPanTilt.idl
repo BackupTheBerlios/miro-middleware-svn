@@ -1,18 +1,10 @@
-// -*- idl -*- ///////////////////////////////////////////////////////////////
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// for details copyright, usage and credits to other groups see Miro/COPYRIGHT
-// for documentation see Miro/doc
-// 
-// (c) 1999,2000
+// (c) 1999, 2000, 2001, 2002
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//    Stefan Enderle, 
-//    Stefan Sablatnoeg, 
-//    Hans Utz
-// 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
@@ -23,102 +15,117 @@
 
 module Miro
 {
-  /** struct representing a pantilt speed and acceleration configuration */
+  //! Struct representing a pantilt speed and acceleration configuration.
   struct PanTiltSpdAccIDL
   {
-    /** target pan speed value in rad/s */
+    //! Target pan speed value in rad/s.
     double     targetpanspeed;
-    /** target tilt speed value in rad/s */
+    //! Target tilt speed value in rad/s.
     double     targettiltspeed;
-    /** base pan speed value in rad/s */
+    //! Base pan speed value in rad/s.
     double     panbasespeed;
-    /** minimum pan speed value in rad/s */
+    //! Minimum pan speed value in rad/s.
     double     panminspeed;
-    /** maximum pan speed value in rad/s */
+    //! Maximum pan speed value in rad/s.
     double     panmaxspeed;
-    /** base tilt speed value in rad/s */
+    //! Base tilt speed value in rad/s.
     double     tiltbasespeed;
-    /** minimum tilt speed value in rad/s */
+    //! Minimum tilt speed value in rad/s.
     double     tiltminspeed;
-    /** maximum tilt speed value in rad/s */
+    //! Maximum tilt speed value in rad/s.
     double     tiltmaxspeed;
-    /** pan acc value in rad/s^2 */
+    //! Pan acc value in rad/s^2.
     double     panacc;
-    /** tilt acc value in rad/s^2 */
+    //! Tilt acc value in rad/s^2.
     double     tiltacc;
   };
 
-  /** struct representing a pantilt limits  configuration */
+  //! Struct representing a pantilt limits  configuration.
   struct PanTiltLimitsIDL
   {
-    /** minimal pan position */
+    //! Minimal pan position.
     double minpanposition;
-    /** maximal pan position */
+    //! Maximal pan position.
     double maxpanposition;
-    /** minimal tilt position */
+    //! Minimal tilt position.
     double mintiltposition;
-    /** maximal tilt position */
+    //! Maximal tilt position.
     double maxtiltposition;
   };
 
-  /** struct representing a pantilt hold and move power configuration */
+  //! Struct representing a pantilt hold and move power configuration.
   struct PanTiltPowersIDL 
   {
-    /** hold power pan 0,1,2 off, low, regular */
+    //! Hold power pan.
+    /**
+     * Possible values are 0, 1, 2, corresponding to
+     * off, low, regular.
+     */
     long panhold;
 
-    /** hold power tilt 0,1,2 off, low, regular */
+    //! Hold power tilt.
+    /**
+     * Possible values are 0, 1, 2, corresponding to
+     * off, low, regular.
+     */
     long tilthold;
 
-    /** move power pan 0,1,2 low regular high */
+    //! Move power pan.
+    /**
+     * Possible values are 0, 1, 2, corresponding to
+     * off, low, regular.
+     */
     long panmove;
 
-    /** move power tilt 0,1,2, low regular high */
+    //! Move power.
+    /**
+     * Possible values are 0, 1, 2, corresponding to
+     * off, low, regular.
+     */
     long tiltmove;
 
   };
 
+  //! Interface to the panTilt unit manufactured by Directed Perception.
   /**
-   * Interface to the panTilt unit of the B21 robot, manufactured by
-   * Directed Perception. It registers as "PanTilt" at the naming service
-   * in the specified naming context.
+   * This pantilt unit is mounted on the B21 robot.  It registers as
+   * "PanTilt" at the naming service in the specified naming context.
    */
   interface DirectedPerceptionPanTilt : PanTilt
   {
-    /** Move the PanTiltUnit to dest, if awaitCompletion is true, the
-     * call returns after the position is reached, else the call
-     * returns immediatly */
+    //! Move the PTU to the specified destination.
+    /** The call awaits completion of the movement.
+     */
     void setWaitPosition( in Miro::PanTiltPositionIDL dest) 
       raises(Miro::EOutOfBounds, Miro::EDevIO);
 
-    /**
-     * sets the actual speed and acceleration settings
-     */
+    //! Set the actual speed and acceleration settings.
     void setSpdAcc( in PanTiltSpdAccIDL dest )
       raises(Miro::EDevIO, Miro::ETimeOut);
 
+    //! Query the current speed and acceleration setting.
     /**
-     * returns the actual speed and acceleration settings of the pantilt 
+     * @return The actual speed and acceleration settings of the PTU.
      */
     PanTiltSpdAccIDL  getSpdAcc() raises(Miro::EDevIO, Miro::ETimeOut);
 
+    //! Query the limits of the PTU.
     /**
-     * returns the actual limits settings of the pantilt 
+     * @return The actual limits settings of the PTU.
      */
     PanTiltLimitsIDL  getLimits() raises(Miro::EDevIO, Miro::ETimeOut);
 
-    /**
-     * sets the actual powers settings
-     */
+    //! Set the actual powers settings.
     void setPowers( in PanTiltPowersIDL dest ) 
       raises(Miro::EDevIO, Miro::ETimeOut);
 
+    //! Query the current power settings of the PTU.
     /**
-     * returns the actual powers settings of the pantilt 
+     * @return The actual powers settings of the PTU.
      */
     PanTiltPowersIDL  getPowers() 
       raises(Miro::EDevIO, Miro::ETimeOut);
   };
 };
 
-#endif
+#endif // DirectedPerceptionPanTilt_idl
