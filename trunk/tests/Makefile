@@ -37,7 +37,8 @@ DIRS =		odometry \
 		video \
 		notify \
 		behaviours \
-		xml
+		xml \
+		gripper
 ifneq (,$(findstring B21,$(MIRO_COMPONENTS)))
   DIRS +=	b21 \
 		dpPanTilt \
