@@ -105,14 +105,14 @@ namespace FaulMotor
 
     speedR = speedR *4.2; //* 112;
     speedL = speedL *4.2; // * 112;
-    strcpy(buffer,"0v\0");
+    strcpy(buffer,"1v\0");
     sprintf(strbuff, "%d", speedL);
     strcat(buffer, strbuff);
     strcat(buffer, "\r\n");
     Message speedMessageL(buffer);
     writeMessage(speedMessageL);
 
-    strcpy(buffer,"1v\0");
+    strcpy(buffer,"0v\0");
     speedR = -speedR;
     sprintf(strbuff, "%d", speedR);
     strcat(buffer, strbuff);

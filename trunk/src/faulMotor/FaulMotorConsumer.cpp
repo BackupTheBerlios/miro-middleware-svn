@@ -154,8 +154,8 @@ namespace FaulMotor
 	//cout << "r: " << r << "  egoX: " << egoX << " egoY: " << egoY<< " winkel bogen "<< status_.position.heading<<endl;
 
 	*/
-	status_.position.point.x = status_.position.point.x - sin(status_.position.heading) * (dL+dR) / 2;
-	status_.position.point.y = status_.position.point.y + cos(status_.position.heading) * (dL+dR) / 2; 
+	status_.position.point.x = status_.position.point.x + sin(status_.position.heading) * (dL+dR) / 2;
+	status_.position.point.y = status_.position.point.y - cos(status_.position.heading) * (dL+dR) / 2; 
 	//status_.position.point.x = 0.;
         //status_.position.point.y = 0.;
         //status_.velocity.translation = 0;
