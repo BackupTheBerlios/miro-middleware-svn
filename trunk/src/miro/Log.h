@@ -205,38 +205,23 @@ namespace Miro
     static unsigned int const MIRO =    0x00000800;
     //! Log cathegory of the video components.
     static unsigned int const VIDEO =   0x00001000;
-    //! Log cathegory of the psos components.
-    /** The Pioneer low level protocol. */
-    static unsigned int const PSOS =    0x00002000;
     //! Log cathegory of the Sphinx Speech components.
-    static unsigned int const SPHINX =  0x00004000;
+    static unsigned int const SPHINX =  0x00002000;
     //! Log cathegory of the Pioneer components.
-    static unsigned int const PIONEER = 0x00010000;
-    //! Log cathegory of the can components.
-    /** The Sparrow low level communication bus. */
-    static unsigned int const CAN =     0x00020000;
+    static unsigned int const PIONEER = 0x00004000;
     //! Log cathegory of the faulhaber components.
-    static unsigned int const FAUL =    0x00040000;
+    static unsigned int const FAUL =    0x00008000;
     //! Log cathegory of the Sparrow components.
-    static unsigned int const SPARROW = 0x00080000;
-    //! Log cathegory of the mcp components.
-    /** A tty protocol of the B21. */
-    static unsigned int const MCP =     0x00100000;
-    //! Log cathegory of the access bus components.
-    /** A B21 communications bus. */
-    static unsigned int const ABUS =    0x00200000;
-    //! Log cathegory of the msp components.
-    /** The abus communication protocol of the B21. */
-    static unsigned int const MSP =     0x00300000;
+    static unsigned int const SPARROW = 0x00010000;
     //! Log cathegory of the Sick laser range finder components.
-    static unsigned int const SICK =    0x00400000;
+    static unsigned int const SICK =    0x00020000;
     //! Log cathegory of the DoubleTalk components.
-    static unsigned int const DTLK =    0x00800000;
+    static unsigned int const DTLK =    0x00040000;
     //! Log cathegory of the DirectedPerception components.
     /** The pantilt unit of the B21. */
-    static unsigned int const DP =      0x01000000;
-    //! Log cathegory of the miro core components
-    static unsigned int const B21 =     0x02000000;
+    static unsigned int const DP =      0x00080000;
+    //! Log cathegory of the B21 components
+    static unsigned int const B21 =     0x00100000;
 
     //! Log level of messages reporting an emergency.
     /** 

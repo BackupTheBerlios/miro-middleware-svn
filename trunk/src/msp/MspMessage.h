@@ -62,35 +62,20 @@ namespace Msp
 
   struct SonarRplMessage : public Message
   {
-    unsigned short sonars() const { return (msgLen() - 4) / ((echos() +1) * sizeof(short)); }
-    unsigned short echos() const { return shortData(0); }
-    unsigned short sonarId(int index) const { return shortData(1 + index * (1 + echos())); }
-    unsigned short sonarEcho(int index, int echo) const { return shortData((1 + index * (1 + echos())) + echo + 1); }
+    unsigned short sonars() const { 
+      return (msgLen() - 4) / ((echos() +1) * sizeof(short)); 
+    }
+    unsigned short echos() const {
+      return shortData(0); 
+    }
+    unsigned short sonarId(int index) const {
+      return shortData(1 + index * (1 + echos())); 
+    }
+    unsigned short sonarEcho(int index, int echo) const { 
+      return shortData((1 + index * (1 + echos())) + echo + 1); 
+    }
   };
-
-// MSP_SON_RPL
-//   short   data
-//     0      sonar address
-//     1      first return value
-//     2      second return value
-//     N      Nth return value
-//     ...
-//  echoNum-1 return value
-//  echoNum   second sonar address
-//  echoNum+1 first return value of second sonar
-//     ...
-      
-// MSP_SON_TABLE
-//   short   data
-//     0     first sonar address
-//     1     second sonar address
-//     ...
-//     0000  indicating end of first sonar list
-//     ...
-//     0000  end of second list
-//     ...
-
-};
+}
      
 #endif // mspMessage_hh
 

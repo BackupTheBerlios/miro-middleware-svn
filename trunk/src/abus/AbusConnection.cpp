@@ -167,13 +167,13 @@ namespace Abus
       throw Exception(std::string("non-existent devId "));
     }
 
-    MIRO_DBG_OSTR(ABUS,LL_PRATTLE,"abus: write() - dev 0x" << std::hex << (int)msg->devId() << std::dec << endl);
+    MIRO_DBG_OSTR(B21,LL_PRATTLE,"abus: write() - dev 0x" << std::hex << (int)msg->devId() << std::dec << endl);
 
     for (int i = 0; i < 3; ++i) {
       if (ioBuffer_.send_n(msg->buffer(), Message::MSG_LEN) >= 0) {
 	return;
       }
-      MIRO_DBG_OSTR(ABUS,LL_PRATTLE, "abus: write() failed - " << (i+1) << endl);
+      MIRO_DBG_OSTR(B21,LL_PRATTLE, "abus: write() failed - " << (i+1) << endl);
 
       ACE_OS::sleep(ACE_Time_Value(0, (unsigned long)(.01*1000000)));
     }

@@ -76,18 +76,7 @@ namespace Mcp
   {
     DBG(cout << "Constructing McpConnection." << endl);
 
-    // In case base is hosed. SIGALRM will be thrown. If we catch it,
-    // MCP did not respond in time.  If not, cancel alarm 
-    // Since the reactor isn't running yet, we have to do this native
-    ACE_OS::signal(SIGALRM, &deadHandler); 
-    ACE_OS::alarm(INITIAL_WAIT_TIME);
-
-    // will definitely choke if base is off
     setBinaryMode();
-
-    // if we made it back, cancel alarm 
-    ACE_OS::alarm(0);
-    ACE_OS::signal(SIGALRM, SIG_DFL);
 
     // reset communication
     synch();
@@ -96,9 +85,6 @@ namespace Mcp
 
     // register handlers at the reactor
 
-    // we want to reset the watchdog interval with a margin 
-    // of safety.  If we miss, the mcp will go limp. 
-    // So, we reset at some fraction of the timeout time
 //     ACE_Time_Value watchdogTimeout;
 //     watchdogTimeout.msec(_parameters.watchdogTimeout.msec() / 2);
     
