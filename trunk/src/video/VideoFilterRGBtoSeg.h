@@ -40,7 +40,10 @@ namespace Video
 	float g_lookup[256];
 	float b_lookup[256];
 	
+	
 	unsigned int bitImage_[360*4];
+	unsigned int distanceProfile_[360];
+	unsigned int distLookup_[120];
 
     };
 };
