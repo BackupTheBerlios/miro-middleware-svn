@@ -31,7 +31,7 @@ namespace Miro
     pSupplier_(_pSupplier),
     reactor(ar_),
     timerId(0),
-    dynWindow_(std::complex<double>(0., 0.), 20000, 20000),
+    dynWindow_(std::complex<double>(0., 0.), 700, 2000),
     winArbViewTask_(NULL),
     winArbViewTaskCreated(false)
   {
@@ -152,8 +152,8 @@ namespace Miro
     velocity.translation = 10 * ((int)newVelocity.real() + (int)newVelocity.imag()) / 2;
     velocity.rotation = 10 * ((int)newVelocity.imag() - (int)newVelocity.real()) / RADSTAND;
     if (velocity.translation != currentVelocity_.translation || velocity.rotation != currentVelocity_.rotation) {
-      // pMotion_->setVelocity(velocity);
-      // currentVelocity_ = velocity;
+      pMotion_->setVelocity(velocity);
+      currentVelocity_ = velocity;
     }
 
     cout << "\n\nWindowArbiter TimeOutHandler FINISHED.\n\n" << endl;

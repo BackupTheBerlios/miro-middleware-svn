@@ -6,7 +6,7 @@
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
 
 #include "DynamicWindow.h"
@@ -46,10 +46,10 @@ namespace Miro
   DynamicWindow::~DynamicWindow() {
 
   }
-  
+
 
   // set preferred direction
-  //  
+  //
   void DynamicWindow::setPreferredDirection(double _prefDir) {
 
     double value_left, value_right;
@@ -72,102 +72,129 @@ namespace Miro
 
   void DynamicWindow::collisionCheckDeluxe(std::vector<Vector2d> &_robot, std::vector<Vector2d> &_obstacle) {
 
-    const int CURV_COUNT = 17; // = 2n+1
-    const int CURV_SEGS = 17; // = 2n+1
-    const int CURV_SEG_LEN = 50;  // in mm
-    const int CURV_SEG_SMOOTH = 30;
-    const double WHEEL_DISTANCE  = 390.;  // in mm
-    const double BREAK_ACCELERATION = 1500.;  // in mm/sec2
-    const double BREAK_DELAY = 0.5; // in sec
+    const int CURV_CNT = 6; // count
+    const int CURV_RES = 6; // count
+    const int CURV_LEN = 600; // mm
+    const int CURV_SMOOTH_LEN = 300; // mm
+    const double WHEEL_DISTANCE  = 390.; // mm
+    const double BREAK_ACCEL = 2000.; // in mm/sec2
 
-    int CURV[17][17];	// curvature space
-    int count, seg, left, right, curv, target, k, l;
-    bool kObst, lObst;
-    double fLeft, fRight, offset, angle, rel, breaklen, left_break, right_break;
+    int CURV[2*CURV_CNT+1][2*CURV_RES+1]; // curvature space
+    
+    int count, seg, left, right, curv, target, front, back;
+    bool frontObstacle, backObstacle;
+    double fLeft, fRight, offset, angle, rel, break_dist, left_break, right_break;
 
-    std::FILE *logFile1, *logFile2;
-    logFile1 = std::fopen("Curvature.log","a");
-    logFile2 = std::fopen("Window.log","a");
+    std::FILE *logFile1;
+    logFile1 = std::fopen("curvature.log","a");
+    
+    for(count = 0; count < 2*CURV_CNT+1; count++) {
 
-    for(count = 0; count < CURV_COUNT; count++) {
-
-      rel = tan((M_PI * count / (CURV_COUNT - 1)) - (M_PI/2));
-
-      if(fabs(rel)>=1) {
-	fLeft = CURV_SEG_LEN;
-	fRight = fLeft / rel;
+      // CALCULATING CURVATURE SPACE
+      //
+      
+      // relation between left and right wheel (-inf...0...+inf)
+      rel = tan( (M_PI * count / (2*CURV_CNT)) - (M_PI/2) );
+      
+      // calculate speed for left and right wheel using 'rel'
+      if(fabs(rel) >= 1) {
+    	fLeft = (double)CURV_LEN / (double)CURV_RES;
+        fRight = fLeft / rel;
       }
       else {
-	fRight = CURV_SEG_LEN;
+	fRight = (double)CURV_LEN / (double)CURV_RES;
 	fLeft = fRight * rel;
       }
 
-      if(fLeft!=fRight) {
-
+      // check for collisions along the curvature given by left and right speed   
+      if(rel != 1) {  // aka left!=right ==> real curvature
+	
+	// calculate offset and angle for rotation
         offset = (WHEEL_DISTANCE / 2.) * ((fLeft + fRight) / (fLeft - fRight));
         angle = (180. * (fLeft - fRight)) / (WHEEL_DISTANCE * M_PI);
-
-	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -1 * angle * (CURV_SEGS + 1) / 2);
-        for(seg = 0; seg < CURV_SEGS; seg++) {  	
+	
+	// rotate completely backwards
+	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -angle * (CURV_RES + 1));
+	
+	// rotate stepwise forwards and check for collisions
+	for(seg = 0; seg < 2*CURV_RES+1; seg++) {
 	  rotateMountedPolygon(_robot, Vector2d(-offset, 0.), angle);
-          getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) == 0 ? CURV[count][seg] = 0 : CURV[count][seg] = 250;
-	  fprintf(logFile1,"%d\n",CURV[count][seg]);
+          if(getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) == 0) {
+	    CURV[count][seg] = 0;
+	  }
+          else {
+	    CURV[count][seg] = 250;
+	  }
+          fprintf(logFile1,"%d\n",CURV[count][seg]);
 	}
-	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -1 * angle * (CURV_SEGS - 1) / 2);
+	
+	// rotate backwards to middle position
+	rotateMountedPolygon(_robot, Vector2d(-offset, 0.), -angle * CURV_RES);
 	
       }
-      else {
-	for(seg = 1; seg <= CURV_SEGS; seg++) {
-	  fprintf(logFile1,"%d\n",-100);
+      else { // left==right ==> robot moves straight forward/backward
+	for(seg = 0; seg < 2*CURV_RES+1 ; seg++) {
+	  fprintf(logFile1,"%d\n",0);	// INCOMPLETE!!!!!!!!!!!!!!!!!!!!!!!!!!
 	}
       }
-
      
-      k = (CURV_SEGS - 1) / 2;
-      while((k < CURV_SEGS) && (CURV[count][k] != 0)) {
-	k++;
+      // SMOOTHING CURVATURE SPACE
+      //
+    
+      // search curvature space for obstacles (obstacle = 0)
+      front = CURV_RES;
+      while((front < 2*CURV_RES+1) && (CURV[count][front] != 0)) {
+	front++;
       }
-      l = (CURV_SEGS - 1) / 2;
-      while((l > 0) && (CURV[count][l] != 0)) {
-	l--;
+      back = CURV_RES;
+      while((back > 0) && (CURV[count][back] != 0)) {
+        back--;
       }
-      (k == CURV_SEGS) ? kObst = false : kObst = true;
-      (l == 0) ? lObst = false : lObst = true;
-
-      while((kObst && (k > 0)) || (lObst && (l < CURV_SEGS))) {
-	if(kObst && (k > 0)) {
-	  CURV[count][k-1] = std::min(CURV[count][k-1],std::min(250, CURV[count][k] + CURV_SEG_SMOOTH));
-	  k--;
+      (front == 2*CURV_RES+1) ? frontObstacle = false : frontObstacle = true; // true = obstacle found
+      (back == -1) ? backObstacle = false : backObstacle = true; // true = obstacle found
+      backObstacle = false;
+      
+      while((frontObstacle && (front > 0)) || (backObstacle && (back < 2*CURV_RES+1))) {
+	if(frontObstacle && (front > 0)) {
+	  CURV[count][front-1] = std::min(CURV[count][front-1],std::min(250, CURV[count][front] + (int)(250 * CURV_LEN / (CURV_SMOOTH_LEN * CURV_RES))));
+	  front--;
+	} 
+	if(backObstacle && (back < 2*CURV_RES+1)) {
+	  CURV[count][back+1] = std::min(CURV[count][back+1],std::min(250, CURV[count][back] + (int)(250 * CURV_LEN / (CURV_SMOOTH_LEN * CURV_RES))));
+	  back++;
 	}
-	if(lObst && (l < CURV_SEGS)) {
-	  CURV[count][l+1] = std::min(CURV[count][l+1],std::min(250, CURV[count][l] + CURV_SEG_SMOOTH));
-	  l++;
-	}
+	
       }
       
+      
     }
-
-
+    
+    // CALCULATING VELOCITY SPACE (BASED ON CURVATURE SPACE)
+    //
+    
     for(left = minLeft_; left <= maxLeft_; left++) {
       for(right = minRight_ ; right <= maxRight_; right++) {
 	
-	curv = (int)((atan((double)left / (double)right) + (M_PI / 2.)) * (CURV_COUNT - 1) / M_PI);
-
-
-	left_break = 100. * (double)(left * abs(left)) / BREAK_ACCELERATION;
-	right_break = 100. * (double)(right * abs(right)) / BREAK_ACCELERATION;
-	fabs(left_break) > fabs(right_break) ? breaklen = left_break : breaklen = right_break;
-	target = ((CURV_SEGS - 1) / 2)  + (int)(breaklen / CURV_SEG_LEN);
-	fprintf(logFile2,"%d %d\n",curv,target);
-
-	velocitySpace_[left+100][right+100] = ((double)CURV[std::max(0,std::min(CURV_COUNT-1,curv))][std::max(0,std::min(CURV_SEGS-1,target))] / 250.) * velocitySpace_[left+100][right+100];
+	// calculating actual curvature
+	curv = (int)((atan((double)left / (double)right) + (M_PI / 2.)) * 2 * CURV_CNT / M_PI);
+	// calculating breaking distance
+	left_break = ((10. * fabs((double)left)) / BREAK_ACCEL) * 10. * (double)left;	
+	right_break = ((10. * fabs((double)right)) / BREAK_ACCEL) * 10. * (double)right;
+	if(fabs(left_break) >= fabs(right_break))
+	  break_dist = left_break;
+	else
+	  break_dist = right_break;
+	
+	target = CURV_RES  + (int)(break_dist  * (double)CURV_RES / (double)CURV_LEN);
+	
+	velocitySpace_[left+100][right+100] = (double)CURV[std::max(0,std::min(2*CURV_CNT,curv))][std::max(0,std::min(2*CURV_RES,target))] * (double)velocitySpace_[left+100][right+100] / 250.;
+	// velocitySpace_[left+100][right+100] = std::min(CURV[std::max(0,std::min(2*CURV_CNT,curv))][std::max(0,std::min(2*CURV_RES,target))], velocitySpace_[left+100][right+100]);
+	
       }
     }
-
-
+    
     fclose(logFile1);
-    fclose(logFile2);
-
+    
   }
 
 
@@ -254,19 +281,22 @@ namespace Miro
   //
   Vector2d DynamicWindow::calcNewVelocity() {
 
-    int biggestVelocitySpaceValue = 10;
-    Vector2d biggestVelocitySpaceValueVelocity(0, 0);
+    int biggestVelocitySpaceValue = 0;
+    double biggestVelocitySpaceRadius = 0.;
+    Vector2d biggestVelocitySpaceValueVelocity(0,0);
+    
 
     for(int left = minLeft_; left < maxLeft_; left++) {
       for(int right = minRight_; right < maxRight_; right++) {
 
-        if((velocitySpace_[left+100][right+100] >= biggestVelocitySpaceValue) &&
-	   (left + right > (int)(biggestVelocitySpaceValueVelocity.imag() + biggestVelocitySpaceValueVelocity.real())))
+        if((velocitySpace_[left+100][right+100] > biggestVelocitySpaceValue) || 
+	   ((velocitySpace_[left+100][right+100] == biggestVelocitySpaceValue) && ((left * left) + (right * right)) > biggestVelocitySpaceRadius) )
         {
           biggestVelocitySpaceValue = velocitySpace_[left+100][right+100];
-          biggestVelocitySpaceValueVelocity = Vector2d(left, right);
+	  biggestVelocitySpaceRadius = (left * left) + (right * right);
+	  biggestVelocitySpaceValueVelocity = Vector2d(left,right);
+	  
         }
-
       }
     }
 
@@ -274,32 +304,32 @@ namespace Miro
 
     return biggestVelocitySpaceValueVelocity;
   }
-  
+
 
   // private methods
   //
   //
-	
+
 
   // set new DynamicWindow
-  // 
+  //
   void DynamicWindow::setNewDynamicWindow(Vector2d _velocity) {
 
 
     velocity_ = _velocity;
 
     velocity_ = std::complex<double>(std::max(std::min(40., velocity_.real()),-40.), std::max(std::min(40.,velocity_.imag()),-40.));
-        
+
     minRight_ = std::max((int)(std::imag(velocity_)  - (maxNegAccel_ / (10 * PACE))), -100);
     maxRight_ = std::min(100, (int)(std::imag(velocity_) + (maxPosAccel_ / (10 * PACE))));
     minLeft_ = std::max((int)(std::real(velocity_) - (maxNegAccel_ / (10 * PACE))), -100);
     maxLeft_ = std::min(100, (int)(std::real(velocity_) + (maxPosAccel_ / (10 * PACE))));
 
   }
-	
+
 
   // get signed distance between point and line
-  //  
+  //
   double DynamicWindow::getSignedDistanceBetweenPointAndLine(Vector2d _p1, Vector2d _l1, Vector2d _l2) {
 
     Vector2d l1_l2, l1_p1, l2_p1;
@@ -327,14 +357,14 @@ namespace Miro
       / sqrt(l1_l2.real() * l1_l2.real() + l1_l2.imag() * l1_l2.imag());
 
   }
-  
-	
+
+
   // get distance between two lines
   //
   double DynamicWindow::getDistanceBetweenLineAndLine(Vector2d _l1, Vector2d _l2, Vector2d _l3, Vector2d _l4) {
 
     double l1_to_l3_l4, l2_to_l3_l4, l3_to_l1_l2, l4_to_l1_l2;
-    
+
     l1_to_l3_l4 = getSignedDistanceBetweenPointAndLine(_l1, _l3, _l4);
     l2_to_l3_l4 = getSignedDistanceBetweenPointAndLine(_l2, _l3, _l4);
     l3_to_l1_l2 = getSignedDistanceBetweenPointAndLine(_l3, _l1, _l2);
@@ -344,120 +374,120 @@ namespace Miro
       return 0;
 
     return fabs(std::min(std::min(l1_to_l3_l4, l2_to_l3_l4), std::min(l3_to_l1_l2, l4_to_l1_l2)));
-    
+
   }
-  
-  
+
+
   // get distance between two mounted polygons
-  // 
+  //
   double DynamicWindow::getDistanceBetweenPolygonAndPolygon(std::vector<Vector2d> &_polygon1, std::vector<Vector2d> &_polygon2) {
-    
+
     std::vector<Vector2d>::iterator a1, a2, b1, b2;
     double distance, minDistance;
 
     for(a1 = _polygon1.begin(), a2 = _polygon1.begin() + 1; a2 < _polygon1.end(); a1++, a2++) {
       for(b1 = _polygon2.begin(), b2 = _polygon2.begin() + 1; b2 < _polygon2.end(); b1++, b2++) {
-  
+
         distance = getDistanceBetweenLineAndLine(*a1, *a2, *b1, *b2);
-            
+
         if(((a1 == _polygon1.begin()) && (b1 == _polygon2.begin())) || (distance < minDistance)) {
           minDistance = distance;
         }
-        
+
       }
     }
-    
+
     return minDistance;
-    
-  }  
-  
-  
+
+  }
+
+
   // get front distance between robot and obstacle
-  // 
+  //
   double DynamicWindow::getFrontDistanceBetweenPolygonAndPolygon(std::vector<Vector2d> &_polygon1, std::vector<Vector2d> &_polygon2) {
-    
+
     std::vector<Vector2d>::iterator a1, a2, b1, b2;
     double distance, minDistance;
 
     for(a1 = _polygon1.begin() + 2, a2 = _polygon1.begin() + 3; a2 < _polygon1.begin() + 5; a1++, a2++) {
       for(b1 = _polygon2.begin() + 4, b2 = _polygon2.begin() + 5; b2 < _polygon2.begin() + 7; b1++, b2++) {
-  
+
         distance = getDistanceBetweenLineAndLine(*a1, *a2, *b1, *b2);
-            
+
         if(((a1 == _polygon1.begin() + 2) && (b1 == _polygon2.begin() + 4)) || (distance < minDistance)) {
           minDistance = distance;
         }
-        
+
       }
     }
-    
+
     return minDistance;
-    
-  }  
+
+  }
 
 
   // rotate mounted polygon around offset by given angle
-  // 
+  //
   void DynamicWindow::rotateMountedPolygon(std::vector<Vector2d> &_polygon, Vector2d _point, double _angle) {
-    
+
     std::vector<Vector2d>::iterator i;
-    
+
     double cosAngle = cos(M_PI * _angle / 180.);
     double sinAngle = sin(M_PI * _angle / 180.);
-    
+
     for(i = _polygon.begin() + 1; i < _polygon.end(); i++) {
       double temp_x, temp_y;
       temp_x = (i->real() - _point.real()) * cosAngle + (i->imag() - _point.imag()) * -sinAngle;
-      temp_y = (i->real() - _point.real()) * sinAngle + (i->imag() - _point.imag()) * cosAngle;  
+      temp_y = (i->real() - _point.real()) * sinAngle + (i->imag() - _point.imag()) * cosAngle;
       *i = Vector2d(temp_x + _point.real(), temp_y + _point.imag());
     }
-    
+
   }
-  
-  
+
+
   // move the given mounted polygon by given distance
-  // 
+  //
   void DynamicWindow::moveMountedPolygon(std::vector<Vector2d> &_polygon, Vector2d _distance) {
-    
+
     std::vector<Vector2d>::iterator i;
-    
+
     for(i = _polygon.begin() + 1; i < _polygon.end(); i++) {
       *i = Vector2d(i->real() + _distance.real(), i->imag() + _distance.imag());
     }
-    
+
   }
 
 
   // rotate polygon around offset by given angle
-  // 
+  //
   void DynamicWindow::rotatePolygon(std::vector<Vector2d> &_polygon, Vector2d _point, double _angle) {
-    
+
     std::vector<Vector2d>::iterator i;
-    
+
     double cosAngle = cos(M_PI * _angle / 180.);
     double sinAngle = sin(M_PI * _angle / 180.);
-    
+
     for(i = _polygon.begin(); i < _polygon.end(); i++) {
       double temp_x, temp_y;
       temp_x = (i->real() - _point.real()) * cosAngle + (i->imag() - _point.imag()) * -sinAngle;
-      temp_y = (i->real() - _point.real()) * sinAngle + (i->imag() - _point.imag()) * cosAngle;  
+      temp_y = (i->real() - _point.real()) * sinAngle + (i->imag() - _point.imag()) * cosAngle;
       *i = Vector2d(temp_x + _point.real(), temp_y + _point.imag());
     }
-    
+
   }
-  
-  
+
+
   // move the given polygon by given distance
-  // 
+  //
   void DynamicWindow::movePolygon(std::vector<Vector2d> &_polygon, Vector2d _distance) {
-    
+
     std::vector<Vector2d>::iterator i;
-    
+
     for(i = _polygon.begin(); i < _polygon.end(); i++) {
       *i = Vector2d(i->real() + _distance.real(), i->imag() + _distance.imag());
     }
-    
+
   }
 
-    
+
 };
