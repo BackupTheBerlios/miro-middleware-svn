@@ -66,6 +66,8 @@ namespace Sparrow
   {
     cout << "Constructing SparrowConsumer." << endl;
 
+    pAliveCollector = NULL;
+    faulConsumer = NULL;
     status_.position.point.x = 0.;
     status_.position.point.y = 0.;
     status_.position.heading = 0.;
@@ -85,6 +87,7 @@ namespace Sparrow
       pOdometry_->setPosition(origin);
     }
 
+    if(pIR1_){
     description_ = pIR1_->getScanDescription();
     IrValues.resize(3);
 
@@ -101,7 +104,7 @@ namespace Sparrow
        }
    }
    }
-
+   }
 
 
   }
@@ -182,6 +185,7 @@ namespace Sparrow
       pOdometry_->setPosition(origin);
     }
 
+    if(pIR1_){
     description_ = pIR1_->getScanDescription();
 
     IrValues.resize(3);
@@ -196,6 +200,7 @@ namespace Sparrow
 
 	  IrValues[k][i][j] = -1;
        }
+   }
    }
    }
 
@@ -290,7 +295,8 @@ namespace Sparrow
 
     case CAN_R_IR_ALIVE1:{
       DBG(cout << "Consumer::receiveThread:  received message: IR_ALIVE1" << endl);
-      pAliveCollector->setLastInfrared1Alive(ACE_OS::gettimeofday());
+      if(pAliveCollector)
+         pAliveCollector->setLastInfrared1Alive(ACE_OS::gettimeofday());
 
       break;
     }
@@ -298,7 +304,8 @@ namespace Sparrow
 
     case CAN_R_IR_ALIVE2:{
       DBG(cout << "Consumer::receiveThread:  received message: IR_ALIVE2" << endl);
-      pAliveCollector->setLastInfrared2Alive(ACE_OS::gettimeofday());
+      if(pAliveCollector)
+         pAliveCollector->setLastInfrared2Alive(ACE_OS::gettimeofday());
 
       break;
     }
@@ -306,7 +313,8 @@ namespace Sparrow
 
     case CAN_R_MOTOR_ALIVE:{
       DBG(cout << "Consumer::receiveThread:  received message: MOTOR_ALIVE" << endl);
-      pAliveCollector->setLastMotorAlive(ACE_OS::gettimeofday());
+      if(pAliveCollector)
+         pAliveCollector->setLastMotorAlive(ACE_OS::gettimeofday());
 
       break;
     }
@@ -314,7 +322,8 @@ namespace Sparrow
 
     case CAN_R_PAN_ALIVE:{
       DBG(cout << "Consumer::receivedThread:  received message: PAN_ALIVE" << endl);
-      pAliveCollector->setLastPanAlive(ACE_OS::gettimeofday());
+      if(pAliveCollector)
+         pAliveCollector->setLastPanAlive(ACE_OS::gettimeofday());
 
       break;
     }
@@ -322,7 +331,8 @@ namespace Sparrow
 
     case CAN_R_KICK_ALIVE:{
       DBG(cout << "Consumer::receiveThread:  received message: KICK_ALIVE" << endl);
-      pAliveCollector->setLastKickAlive(ACE_OS::gettimeofday());
+      if(pAliveCollector)
+         pAliveCollector->setLastKickAlive(ACE_OS::gettimeofday());
 
       break;
     }
@@ -342,7 +352,8 @@ namespace Sparrow
 	 memcpy((void *) &(odoMessage.ticks_),(void *) (msg_->d),  4);
       }
       odoMessage.setTimestamp(ACE_OS::gettimeofday());
-      faulConsumer->handleMessage(&odoMessage);
+      if(faulConsumer)
+         faulConsumer->handleMessage(&odoMessage);
       //std::cout << "MotorTicksLeft" << message << endl;
 
 
@@ -364,7 +375,8 @@ namespace Sparrow
 	 memcpy((void *) &(odoMessage2.ticks_),(void *) (msg_->d),  4);
       }
        odoMessage2.setTimestamp(ACE_OS::gettimeofday());
-       faulConsumer->handleMessage(&odoMessage2);
+       if(faulConsumer)
+          faulConsumer->handleMessage(&odoMessage2);
        //std::cout << "MotorTicksRight" << message << endl;
        break;
 

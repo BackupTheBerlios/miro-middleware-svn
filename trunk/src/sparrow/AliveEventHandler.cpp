@@ -27,7 +27,7 @@ namespace Sparrow{
 
    int AliveEventHandler::handle_timeout (const ACE_Time_Value &current_time, const void *act){
 
-      std::cout << "Handle Timeout" << std::endl;
+      //std::cout << "Handle Timeout" << std::endl;
 
       Miro::SparrowAliveIDL aliveIDL;
       aliveIDL.MotorAlive = collector->motorAlive();

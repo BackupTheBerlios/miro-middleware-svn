@@ -43,7 +43,7 @@ namespace Miro
 	// Notify Event initialization
 	notifyEvent_[i].header.fixed_header.event_type.domain_name =
 	  CORBA::string_dup(supplier_->domainName().c_str());
-	notifyEvent_[i].header.fixed_header.event_type.type_name = 
+	notifyEvent_[i].header.fixed_header.event_type.type_name =
 	  CORBA::string_dup(_description.eventName);
 	notifyEvent_[i].header.fixed_header.event_name = CORBA::string_dup("");
 	notifyEvent_[i].header.variable_header.length(0);   // put nothing here
@@ -84,10 +84,10 @@ namespace Miro
       Guard guard(mutex_);
       ACE_Time_Value timeout(ACE_OS::gettimeofday());
       timeout += maxWait_;
-      cout << "Asynchronous RangeSensor dispatching **************************" << endl;
+      //cout << "Asynchronous RangeSensor dispatching **************************" << endl;
       if (cond_.wait(&timeout) != -1 &&
 	  !canceled()) {
-        cout << "Asynchronous RangeSensor dispatching ++++++++++++++++++++++" << endl;
+        //cout << "Asynchronous RangeSensor dispatching ++++++++++++++++++++++" << endl;
 	dispatch();
       }
     }
