@@ -145,9 +145,9 @@
    </parameter>
    <parameter value="0.050000" name="ButtonsPollInterval" />
    <parameter value="1.0776" name="TransFactor" />
-   <parameter value="28.2" name="Deg2ServoTicks" />
+   <parameter value="27.0" name="Deg2ServoTicks" />
    <parameter value="1.000000" name="WatchdogTimeout" />
-   <parameter value="3700" name="Servo0MidPulse" />
+   <parameter value="3970" name="Servo0MidPulse" />
    <parameter value="15" name="MaxAccel" /><!-- SollDistanz zum Torrueckwand 10 -->
    <parameter value="1555" name="Diameter" />
    <parameter value="15" name="MaxPower" /><!-- Vorfaktor turnfehler 15 -->
