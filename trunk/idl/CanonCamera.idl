@@ -78,6 +78,11 @@ module Miro
      */
     FocusRangeIDL getFocusRange() raises(EDevIO, ETimeOut);
 
+
+    void setAEoff() raises (EDevIO, EOutOfBounds, ETimeOut);
+    void setAEon() raises (EDevIO, EOutOfBounds, ETimeOut);
+
+
   };
 };
 #endif /* CanonCamera_idl */
