@@ -117,16 +117,18 @@ int main (int argc, char * argv[])
 		<< " q - Quit" << std::endl 
 		<< std::endl;
       
-      std::cin >> in;
-      c = in[0];
       
+      while (std::cin >> c) {
       switch (c) {
       case 'a': {
 	Miro::FilterTreeIDL_var stats = broker->filterTreeStats();
 	Miro::ConnectionSetIDL connections;
 	connectToFilters(stats.in(), connections);
 	Miro::BufferSetIDL_var buffers = new Miro::BufferSetIDL;
-	broker->acquireNextImageSet(connections, buffers);
+	Miro::TimeIDL tC = broker->acquireNextImageSet(connections, buffers);
+	ACE_Time_Value tA;
+	Miro::timeC2A(tC, tA);
+	std::cout << "Image time: " << tA << std::endl;
 	broker->releaseImageSet(connections, buffers.in());
 	disconnectFromFilters(client, connections);
 	break;
@@ -138,6 +140,10 @@ int main (int argc, char * argv[])
 	break;
       }
       default:
+	break;
+      }
+
+      if (c == 'q')
 	break;
       }
     }
