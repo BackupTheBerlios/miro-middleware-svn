@@ -17,7 +17,7 @@ ifndef MIRO_COMPONENTS
 endif
 
 ifndef MIRO_VIDEO_COMPONENTS
-  MIRO_VIDO_COMPONENTS = BTTV Meteor 1394
+  MIRO_VIDEO_COMPONENTS = BTTV Meteor 1394
 endif
 
 # local macros
