@@ -77,19 +77,19 @@ namespace Pioneer
     //
     // Tactile description defaults
     //
-    sonarDescription.scanType = ::Miro::RangeSensor::BUNCHWISE;
-    sonarDescription.eventName = "Tactile";
-    sonarDescription.group.length(1);
-    sonarDescription.group[0].description.minRange = 0;
-    sonarDescription.group[0].description.maxRange = 10;
-    sonarDescription.group[0].description.focus = deg2Rad(30);
-    sonarDescription.group[0].sensor.length(10);
+    tactileDescription.scanType = ::Miro::RangeSensor::BUNCHWISE;
+    tactileDescription.eventName = "Tactile";
+    tactileDescription.group.length(1);
+    tactileDescription.group[0].description.minRange = 0;
+    tactileDescription.group[0].description.maxRange = 10;
+    tactileDescription.group[0].description.focus = deg2Rad(30);
+    tactileDescription.group[0].sensor.length(10);
     for (unsigned int i = 0; i < 10; ++i) {
-      sonarDescription.group[0].sensor[i].height = 350;
-      sonarDescription.group[0].sensor[i].distance = tactileDistance[i];
-      sonarDescription.group[0].sensor[i].alpha = Miro::deg2Rad(tactileAlpha[i]);
-      sonarDescription.group[0].sensor[i].beta = Miro::deg2Rad(tactileBeta[i]);
-      sonarDescription.group[0].sensor[i].gamma = 0;
+      tactileDescription.group[0].sensor[i].height = 350;
+      tactileDescription.group[0].sensor[i].distance = tactileDistance[i];
+      tactileDescription.group[0].sensor[i].alpha = Miro::deg2Rad(tactileAlpha[i]);
+      tactileDescription.group[0].sensor[i].beta = Miro::deg2Rad(tactileBeta[i]);
+      tactileDescription.group[0].sensor[i].gamma = 0;
     }
   }
 
