@@ -49,19 +49,19 @@ For each service the following command line options can be specified:
 
 \section{Individual Interfaces}
 
-In the following, we list the different services and their interface
-names in the naming service, all interfaces are registered within the
-specified naming context in the naming service. For multi robot
-scenarios the canonical naming convention for the individual robots
-naming contexts is the robots name. Don't get confused by the fact
-that many services are collocated within a single binary, while for
-others there exists a dedicated binary. Note that in general the
-specialized interfaces of individual robots register at the Naming
-Service under their ancestors name.  The interface documentation can
-be looked up within the \miro reference and in the \miro online
-documentation as well.  For some services specializations for
-individaul robot types do exist. Those are described in the subsequent
-sections.
+In the following, we list the different services and their
+interface names in the naming service, all interfaces are
+registered within the specified naming context in the naming
+service. For multi robot scenarios the canonical naming convention
+for the individual robots naming contexts is the robots name.
+Don't get confused by the fact that many services are collocated
+within a single binary, while for others there exists a dedicated
+binary. Note that in general the specialized interfaces of
+individual robots register at the Naming Service under their
+ancestors name.  The interface documentation can be looked up
+within the \miro reference and in the \miro online documentation
+as well.  For some services specializations for individual robot
+types do exist. Those are described in the subsequent sections.
 
 \begin{description}
 \item[Odometry:]
@@ -102,14 +102,14 @@ sections.
 \item[Video:] The video service registers the {\tt Miro::Video}
   interface as {\tt Video}. It provides camera images at a rate of up
   to 25 images per second captured by frame grabber cards. Currently
-  supported are {\tt matrox meteor} and cards, that are supported
+  supported are {\tt matrox meteor} and cards that are supported
   by {\em video for linux} (bttv8).  Since the bandwidth needed for
   uncompressed image data transportation exceeds the capabilities of
   most todays network devices and even memory copying can introduce
   excessive overhead, the video service enables access
   to the grabbed images via shared memory keys.
 \item[PanTilt:] Cameras often are mounted on top of a pan-tilt unit,
-  allowing the robot to look sideway while moving on in another
+  allowing the robot to look sideways while moving in another
   direction. Lightweight versions of such a device are panning or
   tilting units.  The associated services register the
   {\tt Miro::Pan}, {\tt Miro::Tilt} and {\tt Miro::PanTilt}
@@ -160,7 +160,7 @@ in the event are listed for the individual services:
     ScanDescriptionIDL} struct. The event data is one of three types,
   as also specified within {\tt Miro::SensorDescriptionIDL}.
   \begin{description}
-  \item[Miro::RangeScanEventIDL] 
+  \item[Miro::RangeScanEventIDL]
     The data of a range sensor that acquires data in a continuous scan
     pushes its data within this struct. (Currently, there does exist
     no actual sensor that behaves in this way, but anyways...)
@@ -180,7 +180,7 @@ in the event are listed for the individual services:
   The event type name is that of the actual sensor: {\tt Sonar}, {\tt
     Laser}, {\tt Tactile}, etc. as also specified within {\tt
     Miro::SensorDescriptionIDL}.
-  
+
 \item[Sonar:] The sonar service generates range sensor events with the
   type name {\tt Sonar}. Note that the sonar sensors are fired
   interleavingly to avoid crosstalk between them. Therefore the
@@ -238,7 +238,7 @@ relevant binaries for its specialized services are:
     button is pressed or released.
   \end{itemize}
 
-\item[DickLaserService:]
+\item[SickLaserService:]
   This is the service to access the SICK laser scanner. It supports
   the {\tt Miro::RangeSensor} interface.
 \item[DtlkSpeech:]
@@ -253,12 +253,12 @@ relevant binaries for its specialized services are:
   itself as {\tt PanTilt}
 \end{description}
 
-Note that the B21 has two internal computers, to which the different
-sensors and actuators are attached. You have to start the relevant
-binaries at the correct computer. The sensory/actuatory distribution
-in our laboratory is as follows: Start B21Base and LaserService
-on the left computer, VideoService and DpPantilt and
-DtlkSpeeck on the right.
+Note that the B21 has two internal computers, to which the
+different sensors and actuators are attached. You have to start
+the relevant binaries at the correct computer. The
+sensory/actuatory distribution in our laboratory is as follows:
+Start B21Base and LaserService on the left computer, VideoService
+and DpPantilt and DtlkSpeech on the right.
 
 
 \section{\sparrow}
@@ -271,7 +271,7 @@ grouped together in less binaries:
 \item[SparrowBase:]
   Within this file the following services are grouped together:
   Motion, Stall, Kicker, Buttons, Sonar, Infrared and Pantilt. The
-  corresponding interfaces are: 
+  corresponding interfaces are:
   \begin{itemize}
   \item {\tt Miro::SparrowMotion} \\
     The {\tt Miro::SparrowMotion} interface is derived from the
@@ -314,7 +314,7 @@ the most fundamental services for this robot.
 \begin{description}
 \item[PioneerBase:]
   The following services are grouped together: Motion, Stall and Sonar.
-  The corresponding interfaces are: 
+  The corresponding interfaces are:
   \begin{itemize}
   \item {\tt Miro::PioneerMotion} \\
     The {\tt Miro::PioneerMotion} interface is derived from the
@@ -366,13 +366,13 @@ As always there is a configuration section in the xml-file called {\tt
   the (american) {\tt ntsc} format or the (asiatic) {\tt secam}
   format. With the {\tt auto} option, the format is choosen
   automatically.
-\item[source:] This parameter define, from which input source the
+\item[source:] This parameter defines, from which input source the
   server should read. Possible choises are: {\tt composite1}, {\tt
     composite2}, {\tt composite3}, {\tt svideo} and {\tt tuner}.
   %%{\tt usb} or {\tt 1394}.
 \item[palette:] Palette can be one of the following: {\tt gray}, {\tt
     rgb}, {\tt rgba}, {\tt bgr} or {\tt bgra}. \\
-  {\tt rgb} or {\tt bgr} indicates the 24-Bit mode, whereas {\tt rgba} and
+  {\tt rgb} or {\tt bgr} indicate the 24-Bit mode, whereas {\tt rgba} and
   {\tt bgra} are 32-Bit modes.
 \item[subfield:] With this parameter you can choose which subfields to
   use: {\tt odd}, {\tt even} or {\tt all}.
@@ -380,12 +380,17 @@ As always there is a configuration section in the xml-file called {\tt
 \item[height:] The {\tt height} that the image should have.
 \item[connections:]
 \item[buffers:]
-\item[byteorder:] {\tt 0} means native mode, {\tt 1} means rgb.
+\item[byteorder:] {\tt 0}
+means native mode, {\tt 1} means rgb.
+\item[pixelsize:] This
+parameter specifies the size in bytes of each pixel (1, 3 or 4).
+\item[upsidedown:] On some systems the camera is mounted upside
+down. Set this parameter to true if this is the case.
 \end{description}
 
-Note, that not each card support each option and that not every
-combination of options can be used for each card. If in doubt, refer
-to the technical manual of your frame grabber card.
+Note, that not each card supports each option and that not every
+combination of options can be used for each card. If in doubt,
+refer to the technical manual of your frame grabber card.
 
 The following example shows the configuration used for our hardware:
 
@@ -402,6 +407,7 @@ The following example shows the configuration used for our hardware:
   <connections>16</connections>
   <buffers>16</buffers>
   <byteorder>1</byteorder>
+  <pixelsize>3</pixelsize>
 </video>
 \end{lstlisting}
 
@@ -443,7 +449,7 @@ section {\tt sick}. The following parameters are understood:
 \item[continousmode:]
   If {\tt true} is provided for this
   parameter the sensor will provide data automatically, about 40 times
-  a second. If {\tt false} is used, the service will poll a 
+  a second. If {\tt false} is used, the service will poll a
   measurement after an interval that can be specified with the
   following parameter.
 \item[pollintervall:]
@@ -466,7 +472,7 @@ The following example shows the configuration used for our hardware:
 
 As the laser provides a specialization of a range sensor, we also
 provide a scandescription for it. See section \ref{scandescrption} for
-details. 
+details.
 
 
 \subsection{Possible Problems}
@@ -491,9 +497,10 @@ depending on your configuration, see man page of {\em hdparm}). Another
 solution could be using {\em irqtune} to give the serial irq a higher
 priority, or using {\em RT-Linux}.
 
-\textbf{Due to the adaptions of the divisor for the serial line, the
-  {\tt SickLaserService} has to be suid root. If you use a standard
-  crystal, and you do not use 500000~baud, this is not necessary.}
+\textbf{Due to the adaptations of the divisor for the serial line,
+the {\tt SickLaserService} has to be suid root. If you use a
+standard crystal, and you do not use 500000~baud, this is not
+necessary.}
 
 
 \section{DoubleTalk Speech Card}
@@ -514,7 +521,7 @@ priority, or using {\em RT-Linux}.
 %\subsection{ClassificationServer}
 
 
-%%% Local Variables: 
+%%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "miro_manual"
-%%% End: 
+%%% End:
