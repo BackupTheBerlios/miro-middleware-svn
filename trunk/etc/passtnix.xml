@@ -6,6 +6,16 @@
    <parameter value="Sparrow99" name="Type" />
   </parameter>
  </section>
+ <section name="ActiveMedia" >
+  <parameter name="FaulMotorBoard" >
+   <parameter value="/dev/ttyS0" name="Device" />
+   <parameter name="TtyParams" >
+    <parameter value="19200" name="Baudrate" />
+   </parameter>
+   </parameter>
+  
+ </section>
+
  <section name="Sparrow99" >
   <parameter name="SparrowBoard" >
    <parameter value="/dev/can/0" name="Device" />
@@ -68,7 +78,7 @@
    <parameter value="1.0776" name="TransFactor" />
    <parameter value="27.5" name="Deg2ServoTicks" />
    <parameter value="1.000000" name="WatchdogTimeout" />
-   <parameter value="3300" name="Servo0MidPulse" />
+   <parameter value="3100" name="Servo0MidPulse" />
    <parameter value="200" name="MaxAccel" />
    <parameter value="2310" name="Diameter" />
    <parameter value="30720" name="MaxPower" />

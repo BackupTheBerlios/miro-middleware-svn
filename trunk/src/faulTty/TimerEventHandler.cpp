@@ -55,11 +55,11 @@ namespace FaulTty
     
     char buffer[10];
 
-    strcpy(buffer,"0gn\r\n\0");
+    strcpy(buffer,"0pos\r\n\0");
     Message speedMessageL(buffer); // build speed packet
     connection.writeMessage(speedMessageL);             // send it
 
-    strcpy(buffer,"1gn\r\n\0");
+    strcpy(buffer,"1pos\r\n\0");
     Message speedMessageR(buffer); // build speed packet
     connection.writeMessage(speedMessageR);
     

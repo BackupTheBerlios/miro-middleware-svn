@@ -1,5 +1,5 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
-//
+// 
 // This file is part of Miro (The Middleware For Robots)
 //
 // (c) 2000, 2001, 2002, 2003
@@ -8,7 +8,7 @@
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-
+  
 #include "FaulMotorConsumer.h"
 //#include "FaulMotorStallImpl.h"
 #include "Parameters.h"
@@ -118,7 +118,19 @@ namespace FaulMotor
 	prevPosR = pFaulMsg->rPos;
 
 	//dieser fall nur x>y x,y>=0  x=dl  y=dR
-	status_.position.heading = (dL-dR)/(2*M_PI*385)*360;     // 385 radabstand
+	//status_.position.heading = 
+//	cout <<prevPosR<< endl;
+	/*if (dL==dL) {
+		status_.position.heading = (dL-dR)/38;} 
+		else
+		{status_.position.heading=1;}	
+*/
+//status_.position.heading = (dL-dR)/(2*M_PI*385)*360; 
+         status_.position.point.x = 0.;
+         status_.position.point.y = 0.;
+         //status_.position.heading = 0.;
+         status_.velocity.translation = 0;
+         status_.velocity.rotation = 0.;
 
 
 	//cout <<"consumer gekommt: " <<pFaulMsg->lPos << endl;
