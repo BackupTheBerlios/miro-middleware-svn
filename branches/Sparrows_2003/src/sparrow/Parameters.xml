@@ -93,6 +93,39 @@
         }
       </constructor>
 
+      <config_parameter name="infraredDescription2003" type="Miro::ScanDescriptionIDL" />
+      <constructor>
+        static const int distance2003[16] = { 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210 };
+        static const int alpha2003[16] = { 124, 101, 79, 56, 34, 11, -11, -34, -56, -79, -101, -124, -146, -169,  169, 146 };
+        static const int beta2003[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+        infraredDescription2003.scanType = ::Miro::RangeSensor::GROUPWISE;
+        infraredDescription2003.eventName = &quot;Infrared&quot;;
+        infraredDescription2003.group.length(2);
+        infraredDescription2003.group[0].description.minRange = 0;
+        infraredDescription2003.group[0].description.maxRange = 800;
+        infraredDescription2003.group[0].description.focus = Miro::deg2Rad(1);
+        infraredDescription2003.group[0].sensor.length(8);
+        for (unsigned int i = 0; i &lt; 8; ++i) {
+          infraredDescription2003.group[0].sensor[i].height = 150;
+          infraredDescription2003.group[0].sensor[i].distance = distance2003[i];
+          infraredDescription2003.group[0].sensor[i].alpha = Miro::deg2Rad(alpha2003[i]);
+          infraredDescription2003.group[0].sensor[i].beta = Miro::deg2Rad(beta2003[i]);
+          infraredDescription2003.group[0].sensor[i].gamma = 0;
+        }
+        infraredDescription2003.group[1].description.minRange = 0;
+        infraredDescription2003.group[1].description.maxRange = 800;
+        infraredDescription2003.group[1].description.focus = Miro::deg2Rad(1);
+        infraredDescription2003.group[1].sensor.length(8);
+        for (unsigned int i = 0; i &lt; 8; ++i) {
+          infraredDescription2003.group[1].sensor[i].height = 150;
+          infraredDescription2003.group[1].sensor[i].distance = distance2003[i+8];
+          infraredDescription2003.group[1].sensor[i].alpha = Miro::deg2Rad(alpha2003[i+8]);
+          infraredDescription2003.group[1].sensor[i].beta = Miro::deg2Rad(beta2003[i+8]);
+          infraredDescription2003.group[1].sensor[i].gamma = 0;
+        }
+      </constructor>
+
     </config_item>
   </config_group>
 </config>

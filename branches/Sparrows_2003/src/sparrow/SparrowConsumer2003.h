@@ -62,8 +62,11 @@ namespace Sparrow
     unsigned char   digital[8];
     unsigned short  analog[16];
 
-    Miro::Mutex     irAliveMutex;
-    Miro::Condition irAliveCond;
+    Miro::Mutex     irAliveMutex1;
+    Miro::Condition irAliveCond1;
+
+    Miro::Mutex     irAliveMutex2;
+    Miro::Condition irAliveCond2;
 
 
     //Miro::Condition accelCond;

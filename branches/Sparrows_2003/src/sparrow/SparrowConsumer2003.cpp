@@ -47,8 +47,10 @@ namespace Sparrow
     pIR_(_pIR),
     params_(Parameters::instance()),
     status_(),
-    irAliveMutex(),
-    irAliveCond(irAliveMutex)
+    irAliveMutex1(),
+    irAliveCond1(irAliveMutex1),
+    irAliveMutex2(),
+    irAliveCond2(irAliveMutex2)
 
     //x_(0.),
     //y_(0.),
@@ -79,8 +81,10 @@ namespace Sparrow
   Consumer2003::Consumer2003():
     params_(Parameters::instance()),
     status_(),
-    irAliveMutex(),
-    irAliveCond(irAliveMutex)
+    irAliveMutex1(),
+    irAliveCond1(irAliveMutex1),
+    irAliveMutex2(),
+    irAliveCond2(irAliveMutex2)
 
     //x_(0.),
     //y_(0.),
@@ -105,9 +109,13 @@ namespace Sparrow
   {
     cout << "Destructing SparrowConsumer." << endl;
 
-    irAliveCond.broadcast();
+    irAliveCond1.broadcast();
 
-    irAliveMutex.release();
+    irAliveMutex1.release();
+
+    irAliveCond2.broadcast();
+
+    irAliveMutex2.release();
 
   }
 
@@ -163,8 +171,8 @@ namespace Sparrow
 
     switch (msgID) {
 
-      case CAN_R_IR_GET_CONT:
-      DBG(cout << "Consumer::receiveThread: receiveThread message: IR_CONT" << endl);
+      case CAN_R_IR_GET_CONT1:
+      DBG(cout << "Consumer::receiveThread: receiveThread message: IR_CONT1" << endl);
 
       if (pIR_) {
 	Sparrow::Parameters * param = Sparrow::Parameters::instance(); //uli
@@ -194,18 +202,63 @@ namespace Sparrow
       }
       break;
 
-    case CAN_R_IR_ALIVE: {
-      DBG(cout << "Consumer::receiveThread:  received message: IR_ALIVE" << endl);
+      case CAN_R_IR_GET_CONT2:
+      DBG(cout << "Consumer::receiveThread: receiveThread message: IR_CONT2" << endl);
+
+      if (pIR_) {
+	Sparrow::Parameters * param = Sparrow::Parameters::instance(); //uli
+	long calRange;
+	Miro::RangeGroupEventIDL * data = new Miro::RangeGroupEventIDL();
+	Miro::timeA2C(message.time(), data->time);
+	data->group = 1;
+	data->range.length(8);
+	for (int i = 7; i >= 0; --i)  {
+	  if (message.charData(i) != -1) {
+
+	    calRange = ((int)message.charData(i) * 10 - param->irScaling[i].offset);
+	    calRange = calRange - param->irScaling[i].minDistance;
+	    calRange = (long) (calRange * param->irScaling[i].scaling);
+	    calRange = calRange + param->irScaling[i].minDistance ;
+	    if ((calRange < param->irScaling[i].minDistance) ||
+		(calRange > param->irScaling[i].maxDistance)) {
+	      calRange = -1;
+	    }
+	  }
+	  else {
+	    calRange = -1;
+	  }
+	  data->range[i] = calRange;
+	}
+	pIR_->integrateData(data);
+      }
+      break;
+
+    case CAN_R_IR_ALIVE1: {
+      DBG(cout << "Consumer::receiveThread:  received message: IR_ALIVE1" << endl);
 
       versSub = message.shortData(0);
       versNr = versSub >> 4;
       versSub = versSub & 0x0F; // versNr loeschen mit AND 00001111
       cout << "IR_ALIVE_VERSION: "<< versNr << "." << versSub << endl;
       cout << "IR_TIME_STAMP (sec):" << message.shortData(2) << endl;
-      Miro::Guard guard(irAliveMutex);
-      irAliveCond.broadcast();
+      Miro::Guard guard(irAliveMutex1);
+      irAliveCond1.broadcast();
       break;
     }
+
+    case CAN_R_IR_ALIVE2: {
+      DBG(cout << "Consumer::receiveThread:  received message: IR_ALIVE2" << endl);
+
+      versSub = message.shortData(0);
+      versNr = versSub >> 4;
+      versSub = versSub & 0x0F; // versNr loeschen mit AND 00001111
+      cout << "IR_ALIVE_VERSION: "<< versNr << "." << versSub << endl;
+      cout << "IR_TIME_STAMP (sec):" << message.shortData(2) << endl;
+      Miro::Guard guard(irAliveMutex2);
+      irAliveCond2.broadcast();
+      break;
+    }
+
       // Debug Messages
 
 
