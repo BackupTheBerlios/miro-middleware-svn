@@ -32,14 +32,14 @@
              <sensor><alpha>-25</alpha><distance>175</distance></sensor>
              <sensor><alpha>-45</alpha><distance>170</distance></sensor>
              <sensor><alpha>-60</alpha><beta>-30</beta><distance>150</distance></sensor>
-             <sensor><alpha>-180</alpha></sensor>
-             <sensor><alpha>-150</alpha></sensor>
-             <sensor><alpha>-120</alpha></sensor>
-             <sensor><alpha>-90</alpha></sensor>
-             <sensor><alpha>-90</alpha></sensor>
-             <sensor><alpha>-60</alpha></sensor>
-             <sensor><alpha>-30</alpha></sensor>
-             <sensor><alpha>-0</alpha></sensor>
+             <sensor><alpha>-120</alpha><beta>30</beta><distance>150</distance></sensor>
+             <sensor><alpha>-135</alpha><distance>170</distance></sensor>
+             <sensor><alpha>-155</alpha><distance>175</distance></sensor>
+             <sensor><alpha>-167.5</alpha><distance>180</distance></sensor>
+             <sensor><alpha>167.5</alpha><distance>180</distance></sensor>
+             <sensor><alpha>155</alpha><distance>175</distance></sensor>
+             <sensor><alpha>135</alpha><distance>170</distance></sensor>
+             <sensor><alpha>120</alpha><beta>-30</beta><distance>150</distance></sensor>
            </sensorgroup>
            <sensorgroup height="1090" distance="200" beta="0" gamma="0">
              <description>
