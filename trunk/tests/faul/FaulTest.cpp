@@ -198,11 +198,14 @@ int main(int argc, char* argv[])
 {
   // Parameters to be passed to the services
   FaulMotor::Parameters * pParams = FaulMotor::Parameters::instance();
+  Sparrow::Parameters * pSparrows = Sparrow::Parameters::instance();
 
   // Config file processing
   Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
   config->setSection("Faulhaber");
   config->getParameters("FaulMotor", *pParams);
+  config->setSection("Sparrow99");
+  config->getParameters("SparrowBoard", *pSparrows);
   delete config;
 
 #ifdef DEBUG
