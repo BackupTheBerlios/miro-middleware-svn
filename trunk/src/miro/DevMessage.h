@@ -33,6 +33,9 @@ namespace Miro
   class DevMessage 
   {
   public:
+    //! We need a virtual detor as childs may define virtual methods.	  
+    virtual ~DevMessage() {}
+    
     //! Time the message was produced by the device.
     ACE_Time_Value  time_;
     //! Get a constant reference to the time value.

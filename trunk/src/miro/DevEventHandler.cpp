@@ -34,6 +34,7 @@ namespace Miro
     MIRO_DBG(MIRO,LL_CTOR_DTOR,"Destructing DevEvent.\n");
 
     delete consumer_;
+    // FIXME: this gives a segmentation fault with can
     delete message_;
   }
 
