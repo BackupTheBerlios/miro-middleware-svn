@@ -125,6 +125,17 @@ namespace Sparrow
   }
 
   void
+  Connection2003::setPanExt(double _rad,double _vel)
+  {
+    CanMessage message;
+    message.length(7);
+    message.id(CAN_PAN_GO_2005);
+    message.byteData(0, 0);// servo number
+    message.longData(1, (long)((double)getPanTicksPerDegree()*Miro::rad2Deg(-_rad)) );
+    message.shortData(5, (short)((double)getPanTicksPerDegree()*Miro::rad2Deg(_vel)) );  
+  }
+
+  void
   Connection2003::queryPanTicksPerDegree()
   {
     CanMessage message;
@@ -154,6 +165,25 @@ namespace Sparrow
     write(message);
   }
 
+  void
+  Connection2003::setPanPosition(float _pos)
+  {
+    currentPanPos = _pos;
+  }
+
+  float
+  Connection2003::getPanPosition()
+  {
+    return(currentPanPos);
+  }
+
+  
+
+
+
+  /********************
+  *  Kicker           *
+  ********************/
   void
   Connection2003::kick(unsigned char ventilatetime, unsigned char kicktime)
   {

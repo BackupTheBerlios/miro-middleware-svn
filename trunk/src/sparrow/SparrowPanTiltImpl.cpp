@@ -132,7 +132,7 @@ namespace Sparrow
   {
     Miro::PanPositionIDL position;
 
-    if (!prvPanning(stamp)) {
+/*    if (!prvPanning(stamp)) {
       // the pan doesn't move
       position.angle = (stamp < timeLastSet + params_.panLatency)? lastPosition : nextPosition;
       position.accuracy = params_.panAccuracy;
@@ -161,7 +161,10 @@ namespace Sparrow
 	  lastPosition + alpha : lastPosition - alpha;
 	position.accuracy = std::max(delta * .25, params_.panSwingAccuracy);
       }
-    }
+    }*/
+
+    position.angle = ((Connection2003 *)connection)->getPanPosition();
+    position.accuracy = params_.panAccuracy;
 
     return position;
   }

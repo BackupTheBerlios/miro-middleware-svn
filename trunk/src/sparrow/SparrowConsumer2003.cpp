@@ -344,7 +344,18 @@ namespace Sparrow
       break;
 
     case CAN_R_PAN_POSITION_2005:
-      // TODO: store current pan position in PanTilt...
+      // store current pan position ...
+      MIRO_LOG_OSTR(LL_NOTICE, "SparrowConsumer2003: Received Pan2005 position");
+      double tpd;
+      tpd = connection_->getPanTicksPerDegree();
+      if (tpd!=0.0f)					// As long as we don't know about ticks/deg we cannot calc current position
+      {
+        connection_->setPanPosition(Miro::deg2Rad(message.longData(0)/tpd));
+      }
+      else
+      {
+        connection_->setPanPosition(0.0f);
+      }
       break;
       
     case CAN_R_PAN_RESET_2005:

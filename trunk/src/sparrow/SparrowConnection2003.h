@@ -44,14 +44,20 @@ namespace Sparrow
     virtual void init();
     virtual void fini();
 
-    //! Move pan to absolut position.
+    //! Move pan to absolute position.
     void setPan(double _rad);
+    //! Move pan to absolute position with defined velocity
+    void setPanExt(double _rad,double _vel);
+        
     //! Query pan calibration parameters.
     void queryPanTicksPerDegree();
     //! Query pan calibration parameters via timer.
     void deferredQueryPanTicksPerDegree(ACE_Time_Value const& _delay);
     //! Trigger pan recalibration.
     void panReset();
+    
+    void setPanPosition(float _pos);
+    float getPanPosition();
 
     //! Kick
     void kick(unsigned char ventilatetime, unsigned char kicktime);
@@ -76,6 +82,7 @@ namespace Sparrow
     EventHandler2003 * eventHandler;
     
     unsigned int panTicksPerDegree;
+    float currentPanPos;			// Pan position as rad
 
     short rad2servo0Ticks(double rad) const;
     short rad2servo1Ticks(double rad) const;
