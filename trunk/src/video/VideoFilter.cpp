@@ -133,7 +133,8 @@ namespace Video
     FilterParameters * params = this->getParametersInstance();
 
     // initialize the parameter instance from the config file
-    _config.getInstance(this->name(), *params);
+    // _config.getInstance(this->name(), *params);
+    _config.getParameters(this->name(), *params);
 
     // debug output
     std::cout << name() << std::endl;
