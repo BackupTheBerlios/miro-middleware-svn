@@ -11,16 +11,11 @@
 #ifndef SimpleBehavioursFactory_h
 #define SimpleBehavioursFactory_h
 
+#include "miro/BAFactory.h"
 #include "miro/MotionC.h"
 #include "miro/OdometryC.h"
 #include "miro/MotionArbiter.h"
 #include "miro/StructuredPushSupplier.h"
-
-#include "TactileStop.h"
-#include "Straight.h"
-#include "Wander.h"
-#include "Timer.h"
-#include "MoveToPoint.h"
 
 #include <orbsvcs/CosNotifyCommC.h>
 
@@ -32,26 +27,19 @@ namespace Miro
 };
 
 
-class SimpleBehavioursFactory
+class SimpleBehavioursFactory : public Miro::BAFactory
 {
+  typedef Miro::BAFactory Super;
+
 public:
   // Initialization and Termination methods.
   SimpleBehavioursFactory(Miro::Server& _server, ACE_Reactor& _reactor);
   // Constructor.
 
-  ~SimpleBehavioursFactory();
-  // Destructor.
+  void connect();
+  void disconnect();
 
-  void open();
-  void close();
-
-private:
-  Miro::Server& server_;
-
-  // since TAO is using the main thread, we need our own reactor
-  // actually its worse: Due to deadlocks otherwise, we need a concurrent reactor!
-  ACE_Reactor& reactor_;
-
+protected:
   // Notification Service
 
   /** The one channel that we create using the factory. */
@@ -61,15 +49,6 @@ private:
   // optain references
   Miro::Motion_var motion_;
   Miro::Odometry_var odometry_;
-
-  // initialize behaviours
-  TactileStop tactileStop;
-  Straight straight;
-  Wander wander;
-  Timer timer;
-  MoveToPoint moveToPoint;
-
-  Miro::MotionArbiter ma;
 };
 #endif
 

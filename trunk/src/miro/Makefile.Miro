@@ -145,6 +145,7 @@ FILES +=	\
 	Behaviour \
 	BehaviourParameters \
 	BehaviourRepository \
+	BAFactory \
 	EventBehaviour \
 	TaskBehaviour \
 	TimedBehaviour \

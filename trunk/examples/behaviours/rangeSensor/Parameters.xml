@@ -26,7 +26,7 @@
       <config_parameter name="SensorName" type="string" default="Sonar" />
     </config_item>
     
-    <config_item name="AvoidOne" parent="Miro::EventBehaviour" dummy="true">
+    <config_item name="RangeSensorAvoidOne" parent="Miro::EventBehaviour" dummy="true">
       <config_parameter name="MinDistance" type="int" measure="mm" default="500" />
       <config_parameter name="HaltDistance" type="int" measure="mm" default="300" />
       <config_parameter name="LateralDistance" type="int" measure="mm" default="500" />
@@ -35,7 +35,7 @@
       <config_parameter name="SensorName" type="string" default="Sonar" />
     </config_item>
     
-    <config_item name="AvoidTwo" parent="Miro::EventBehaviour" dummy="true">
+    <config_item name="RangeSensorAvoidTwo" parent="Miro::EventBehaviour" dummy="true">
       <config_parameter name="MinDistance" type="int" measure="mm" default="500" />
       <config_parameter name="HaltDistance" type="int" measure="mm" default="300" />
       <config_parameter name="LateralDistance" type="int" measure="mm" default="500" />

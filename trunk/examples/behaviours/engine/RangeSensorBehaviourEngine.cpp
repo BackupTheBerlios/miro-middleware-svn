@@ -43,6 +43,8 @@ int main(int argc, char *argv[])
     SimpleBehavioursFactory behaviours1(server, *task->reactor());
     RangeSensorBehavioursFactory behaviours2(server, *task->reactor());
 
+    behaviours1.init();
+
     // Notification Service
     EventChannel_var ec = server.resolveName<EventChannel>("EventChannel");
     
@@ -59,9 +61,9 @@ int main(int argc, char *argv[])
     // start timed behaviour sceduler
     task->open(NULL);
 
-    behaviours1.open();
-    behaviours2.open();
     supplier_.connect();
+    behaviours1.connect();
+    behaviours2.open();
 
     cout << "Loop forever handling events." << endl;
     server.run(5);
@@ -71,7 +73,7 @@ int main(int argc, char *argv[])
     engineImpl.closePolicy();
 
     behaviours2.close();
-    behaviours1.close();
+    behaviours1.disconnect();
     supplier_.disconnect();
 
     task->cancel();
