@@ -5,7 +5,7 @@
   <config_global name="include" value="SvcParameters.h" />
   <config_global name="Include" value="ace/INET_Addr.h" />
 
-  <config_group name="config">
+  <config_group name="Notification">
     <config_item parent="Config" instance="true">
       <config_parameter name="Subscription" type="std::set&lt;std::string&gt;" />
       <config_parameter name="Messagetimeout" type="unsigned int" default="500" measure="msec"/>
