@@ -285,33 +285,53 @@ namespace Miro
   void
   VelocitySpace::addEvalForVelocity(Vector2d const& _velocity)
   {
-#ifdef ASDF
-    for(int l_index = minDynWinLeft_; l_index <= maxDynWinLeft_; l_index++) {
-      for(int r_index = minDynWinRight_; r_index <= maxDynWinRight_; r_index++) {
-
-	double left = getVelocityByIndex(l_index);
-	double right = getVelocityByIndex(r_index);
-	double l_value =
-	  cos(_prefDir - M_PI_4) * left -
-	  sin(_prefDir - M_PI_4) * right;
-	double r_value =
-	  sin(_prefDir - M_PI_4) * left +
-	  cos(_prefDir - M_PI_4) * right;
-
-        double v_dist = sqrt(left*left + right*right);
-	if (v_dist <= _maxSpeed){
-            axis_direction = (fabs(atan2(l_value, r_value)) > M_PI_2)?-1.0:1.0;
-            axis_value = ((axis_direction*v_dist)/abs(maxVelocity_) + 1.0)/2.0;
-            velocitySpace_[l_index][r_index] =
-	    (int)rint(255. * (((1. +
-			      atan(fabs(l_value /r_value)) / M_PI_2) / 2.)*axis_value));
-
-        }
-	else
-	  velocitySpace_[l_index][r_index] = 0.0;
-      }
-    }
-#endif
+  
+     double left = 0.0;
+     double right = 0.0;
+     
+     velocity2lr(_velocity, left, right);
+     
+     double maxSpeed = std::max(fabs(left), fabs(right));
+     
+     double preferredDir = atan2(right, left) - M_PI_4;
+     
+     Miro::Angle::normalize(preferredDir);
+     
+     addEvalForPreferredDirection(preferredDir, maxSpeed);
+  
+  
+  }
+  
+  
+  void 
+  VelocitySpace::addEvalForCircle(double _radius, double _speed, double _direction)
+  {
+  
+        double left;
+	double right;
+	
+	if(_direction > 0.0){
+	
+	   right = (_radius + (double)wheelBase_/2.0)/_radius * _speed;
+	   left = (_radius - (double)wheelBase_/2.0)/_radius * _speed;
+	
+	}
+	else{
+	
+	   right = (_radius - (double)wheelBase_/2.0)/_radius * _speed;
+	   left = (_radius + (double)wheelBase_/2.0)/_radius * _speed;
+	
+	}     
+  
+       double maxSpeed = std::max(fabs(left), fabs(right));
+     
+       double preferredDir = atan2(right, left) - M_PI_4;
+     
+       Miro::Angle::normalize(preferredDir);
+     
+       addEvalForPreferredDirection(preferredDir, maxSpeed);
+  
+  
   }
 
   // clear all evaluations

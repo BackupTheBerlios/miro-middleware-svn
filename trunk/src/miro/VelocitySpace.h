@@ -67,6 +67,8 @@ namespace Miro
     void addEvalForStraightVelocityLP(double, double);
     // add an evaluation for a preferred velocity
     void addEvalForVelocity(Vector2d const& _velocity);
+    // add an evaluation for curvature
+    void addEvalForCircle(double _radius, double _speed, double _direction);
     // clear all evaluations
     void clearAllEvals(void);
     // add evaluations for given obstacle to velocity space
