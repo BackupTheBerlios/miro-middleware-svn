@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 1999, 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -32,7 +32,7 @@ OSTR_OPERATOR_DECL(ACE_INET_Addr);
   template<class T>
   std::ostream &
   operator<<(std::ostream &ostr, const std::vector<T> &rhs) {
-    std::vector<T>::const_iterator first, last = rhs.end();
+    typename std::vector<T>::const_iterator first, last = rhs.end();
     for (first = rhs.begin(); first != last; ++first) {
       ostr << (*first) << endl;
     }
@@ -41,7 +41,7 @@ OSTR_OPERATOR_DECL(ACE_INET_Addr);
   template<class T>
   std::ostream &
   operator<<(std::ostream &ostr, const std::set<T> &rhs) {
-    std::set<T>::const_iterator first, last = rhs.end();
+    typename std::set<T>::const_iterator first, last = rhs.end();
     for (first = rhs.begin(); first != last; ++first) {
       ostr << (*first) << endl;
     }

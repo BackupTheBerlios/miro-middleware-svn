@@ -17,15 +17,15 @@
 #include <qstring.h>
 
 #define XML_PARSE_QSTRING_IMPL(type, qstringmethod) \
-  void operator <<= (type ## & _lhs, const QDomNode& _node) \
+  void operator <<= (type & _lhs, const QDomNode& _node) \
   { \
     bool valid; \
     QString value = getAttribute(_node, QString("value")); \
-    _lhs = value. ## qstringmethod ## (&valid); \
+    _lhs = value.  qstringmethod  (&valid); \
     if (!valid) \
        throw Exception("Parse exception"); \
   } \
-  QDomElement operator >>= (const type ## & _lhs, QDomNode& _node) \
+  QDomElement operator >>= (const type & _lhs, QDomNode& _node) \
   { \
     QString value; \
     QDomDocument document = _node.ownerDocument(); \

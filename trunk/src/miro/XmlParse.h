@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2002
+// (c) 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -107,7 +107,7 @@ namespace Miro
   QDomElement operator >>= (const std::vector<T>& lhs, QDomNode& node) {
     QDomDocument d = node.ownerDocument();
     QDomElement e = d.createElement("parameter");
-    std::vector<T>::const_iterator f, l = lhs.end();
+    typename std::vector<T>::const_iterator f, l = lhs.end();
     for (f = lhs.begin(); f != l; ++f) {
       (*f) >>= e;
     }
@@ -118,7 +118,7 @@ namespace Miro
   QDomElement operator >>= (const std::set<T>& lhs, QDomNode& node) {
     QDomDocument d = node.ownerDocument();
     QDomElement e = d.createElement("parameter");
-    std::set<T>::const_iterator f, l = lhs.end();
+    typename std::set<T>::const_iterator f, l = lhs.end();
     for (f = lhs.begin(); f != l; ++f) {
       (*f) >>= e;
     }
