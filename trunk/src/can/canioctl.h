@@ -26,14 +26,20 @@ typedef struct {
 #define CAN_RESET 		_IO(CAN_ID,0)
 
 /* controller configuration */
-#define CAN_SETCONFIG	_IOW(CAN_ID,1,sizeof(CanConfig))
-#define CAN_GETCONFIG	_IOR(CAN_ID,2,sizeof(CanConfig))
+/* #define CAN_SETCONFIG	_IOW(CAN_ID,1,sizeof(CanConfig)) */
+/* #define CAN_GETCONFIG	_IOR(CAN_ID,2,sizeof(CanConfig)) */
+#define CAN_SETCONFIG	_IOW(CAN_ID,1,CanConfig)
+#define CAN_GETCONFIG	_IOR(CAN_ID,2,CanConfig)
 
 /* controller status */
-#define CAN_GETSTAT		_IOR(CAN_ID,5,sizeof(CanStatus))
+/* #define CAN_GETSTAT		_IOR(CAN_ID,5,sizeof(CanStatus)) */
+#define CAN_GETSTAT		_IOR(CAN_ID,5,CanStatus)
 #define CAN_CLEARSTAT	_IO(CAN_ID,6)
 
-#define CAN_READREG		_IOWR(CAN_ID,8,sizeof(RegStruct))
-#define CAN_WRITEREG	_IOW(CAN_ID,9,sizeof(RegStruct))
+/* #define CAN_READREG		_IOWR(CAN_ID,8,sizeof(RegStruct)) */
+/* #define CAN_WRITEREG	_IOW(CAN_ID,9,sizeof(RegStruct)) */
+/* #define CAN_GETREGISTERS _IOR(CAN_ID,10,256) */
+#define CAN_READREG		_IOWR(CAN_ID,8,RegStruct)
+#define CAN_WRITEREG	_IOW(CAN_ID,9,RegStruct)
 #define CAN_GETREGISTERS _IOR(CAN_ID,10,256)
 #endif
