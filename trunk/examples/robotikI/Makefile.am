@@ -28,7 +28,7 @@ LaserGet_SOURCES = LaserGet.cpp
 LaserStream_SOURCES = LaserStream.cpp
 SonarGet_SOURCES = SonarGet.cpp
 SonarStream_SOURCES = SonarStream.cpp
-SonarStream2_SOURCES = SonarStream2.cpp
+SonarStream2_SOURCES = SonarStream2.cpp SonarStream2.h
 
 linkwithlibraries = \
 	-lTAO \

@@ -21,9 +21,13 @@ lib_LTLIBRARIES = libmiroBehavioursB21.la
 libmiroBehavioursB21_la_SOURCES = \
 	Parameters.xml \
 	LaserAvoid.cpp \
+	LaserAvoid.h \
 	SonarAvoid.cpp \
+	SonarAvoid.h \
 	OnButton.cpp \
-	BehavioursFactory.cpp
+	OnButton.h \
+	BehavioursFactory.cpp \
+	BehavioursFactory.h
 
 BUILT_SOURCES = Parameters.cpp Parameters.h
 CLEANFILES = $(BUILT_SOURCES)

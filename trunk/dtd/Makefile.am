@@ -18,3 +18,5 @@ dtddata = \
 
 dtddir = $(prefix)/dtd
 dtd_DATA = $(dtddata)
+
+EXTRA_DIST = $(dtddata)

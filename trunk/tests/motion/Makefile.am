@@ -20,9 +20,24 @@ bin_PROGRAMS = \
 	SynchroMotionTest
 
 
-MotionTest_SOURCES = MotionTest.cpp MotionInterface.cpp
-DifferentialMotionTest_SOURCES = DifferentialMotionTest.cpp DifferentialMotionInterface.cpp MotionInterface.cpp
-SynchroMotionTest_SOURCES = SynchroMotionTest.cpp SynchroMotionInterface.cpp MotionInterface.cpp
+MotionTest_SOURCES = \
+	MotionTest.cpp \
+	MotionInterface.cpp \
+	MotionInterface.h
+
+DifferentialMotionTest_SOURCES = \
+	DifferentialMotionTest.cpp \
+	DifferentialMotionInterface.cpp \
+	DifferentialMotionInterface.h \
+	MotionInterface.cpp \
+	MotionInterface.h
+
+SynchroMotionTest_SOURCES = \
+	SynchroMotionTest.cpp \
+	SynchroMotionInterface.cpp \
+	SynchroMotionInterface.h \
+	MotionInterface.cpp \
+	MotionInterface.h
 
 linkwithlibraries = \
 	-lmiroSvc \

@@ -27,7 +27,8 @@ bin_PROGRAMS = QtRangeSensor
 sources = 
 
 tomocsources = \
-	QtRangeSensor.cpp
+	QtRangeSensor.cpp \
+	QtRangeSensor.h
 
 QtRangeSensor_SOURCES = $(sources) $(tomocsources) $(sources:.cpp=.h) $(tomocsources:.cpp=.moc.cpp)
 

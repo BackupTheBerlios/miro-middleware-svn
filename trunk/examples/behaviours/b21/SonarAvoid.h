@@ -14,7 +14,7 @@
 #include "idl/RangeSensorC.h"
 #include "miro/EventBehaviour.h"
 
-#include "Parameters.h"
+#include "examples/behaviours/b21/Parameters.h"
 
 #include <vector>
 

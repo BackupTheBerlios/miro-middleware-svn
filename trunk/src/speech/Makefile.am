@@ -21,19 +21,18 @@ bin_PROGRAMS = DtlkSpeech
 
 DtlkSpeech_SOURCES = \
 	DtlkSpeech.cpp \
+	DtlkSpeech.h \
 	SpeechConnection.cpp \
-	SpeechImpl.cpp
+	SpeechConnection.h \
+	SpeechImpl.cpp \
+	SpeechImpl.h \
+	SpeechDevice.h
+
 
 DtlkSpeech_LDADD = \
 	-lmiroSvc \
 	-lmiroIDL \
 	-lmiro
-
-#EXTRA_DIST = \
-#	DtlkSpeech.h \
-#	SpeechConnection.h \
-#	SpeechDevice.h \
-#	SpeechImpl.h
 
 all-local:
 	$(INSTALLPROGRAMS)

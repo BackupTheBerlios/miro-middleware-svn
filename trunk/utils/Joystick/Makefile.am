@@ -21,8 +21,8 @@ bin_PROGRAMS = \
 	JoystickService
 
 
-Joystick_SOURCES = Joystick.cpp
-JoystickService_SOURCES = JoystickService.cpp
+Joystick_SOURCES = Joystick.cpp Joystick.h
+JoystickService_SOURCES = JoystickService.cpp JoystickService.h
 
 linkwithlibraries = \
 	-lTAO \

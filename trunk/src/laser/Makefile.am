@@ -22,11 +22,20 @@ bin_PROGRAMS = SickLaserService
 SickLaserService_SOURCES = \
 	Parameters.xml \
 	SickLaserService.cpp \
+	SickLaserService.h \
 	SickLaserConnection.cpp \
+	SickLaserConnection.h \
 	SickLaserTask.cpp \
+	SickLaserTask.h \
 	SickLaserPollTask.cpp \
+	SickLaserPollTask.h \
 	SickLaserEvent.cpp \
-	SickLaserImpl.cpp
+	SickLaserEvent.h \
+	SickLaserImpl.cpp \
+	SickLaserImpl.h \
+	SickLaserMessage.h \
+	SickLaserStatistic.h \
+	SickLaserOpcodes.h
 
 BUILT_SOURCES = Parameters.cpp Parameters.h
 CLEANFILES = $(BUILT_SOURCES)

@@ -23,13 +23,22 @@ lib_LIBRARIES = libpioneer.a
 sources = \
 	Parameters.xml \
 	PioneerConnection.cpp \
+	PioneerConnection.h \
 	PioneerConsumer.cpp \
+	PioneerConsumer.h \
 	PioneerMotionImpl.cpp  \
-	PioneerStallImpl.cpp  \
+	PioneerMotionImpl.h \
+	PioneerStallImpl.cpp \
+	PioneerStallImpl.h \
 	CanonPanTiltImpl.cpp \
+	CanonPanTiltImpl.h \
 	CanonCameraImpl.cpp \
+	CanonCameraImpl.h \
 	CanonMessage.cpp \
-	GripperImpl.cpp
+	CanonMessage.h \
+	GripperImpl.cpp \
+	GripperImpl.h \
+	CanonDevice.h
 
 libpioneer_a_SOURCES = $(sources)
 

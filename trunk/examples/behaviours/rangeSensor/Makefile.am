@@ -21,9 +21,13 @@ lib_LTLIBRARIES = libmiroBehavioursRangeSensor.la
 libmiroBehavioursRangeSensor_la_SOURCES = \
 	Parameters.xml \
 	RangeSensorBehaviour.cpp \
+	RangeSensorBehaviour.h \
 	RangeSensorAvoid.cpp \
+	RangeSensorAvoid.h \
 	RangeSensorWallFollow.cpp \
-	BehavioursFactory.cpp
+	RangeSensorWallFollow.h \
+	BehavioursFactory.cpp \
+	BehavioursFactory.h
 
 BUILT_SOURCES = Parameters.cpp Parameters.h
 CLEANFILES = $(BUILT_SOURCES)

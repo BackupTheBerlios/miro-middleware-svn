@@ -22,7 +22,8 @@ SUFFIXES = .h .moc.cpp
 bin_PROGRAMS = PolicyController
 
 
-sources = 
+sources = \
+	PolicyController.h
 
 tomocsources = \
 	PolicyController.cpp

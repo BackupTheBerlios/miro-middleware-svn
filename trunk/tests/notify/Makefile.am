@@ -19,7 +19,9 @@ include $(top_srcdir)/config/Make-rules
 bin_PROGRAMS = NotifyTest
 
 
-NotifyTest_SOURCES = NotifyTest.cpp
+NotifyTest_SOURCES = \
+	NotifyTest.cpp \
+	NotifyTest.h
 
 NotifyTest_LDADD = \
 	-lTAO \

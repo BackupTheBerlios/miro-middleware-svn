@@ -35,6 +35,10 @@ includefiles1 = $(sources:.xml=.h)
 includefiles2 = $(includefiles1:.cpp=.h)
 faulTty_include_HEADERS = $(includefiles2)
 
+EXTRA_DIST = \
+	FaulTtyDevice.h \
+	FaulTtyMessage.h
+
 all-local:
 	$(INSTALLLIBRARIES)
 

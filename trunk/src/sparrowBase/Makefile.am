@@ -21,6 +21,7 @@ bin_PROGRAMS = SparrowBase
 
 SparrowBase_SOURCES = \
 	SparrowServer.cpp \
+	SparrowServer.h \
 	SparrowBase.cpp
 
 SparrowBase_LDADD = \

@@ -24,9 +24,21 @@ bin_PROGRAMS = PolicyEditor
 
 sources = \
 	PolicyDocument.cpp \
+	PolicyDocument.h \
 	PolicyPattern.cpp \
+	PolicyPattern.h \
 	PolicyBehaviour.cpp \
-	PolicyConfig.cpp
+	PolicyBehaviour.h \
+	PolicyConfig.cpp \
+	PolicyConfig.h \
+	PatternWidget.h \
+	BehaviourWidget.h \
+	ArbiterWidget.h \
+	ParameterDialog.h \
+	PolicyEditor.h \
+	PolicyView.h \
+	PolicyArbiter.h \
+	Transition.h
 
 tomocsources = \
 	PolicyView.cpp \

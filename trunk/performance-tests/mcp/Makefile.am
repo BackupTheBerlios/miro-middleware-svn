@@ -19,7 +19,7 @@ include $(top_srcdir)/config/Make-rules
 bin_PROGRAMS = McpPerformance
 
 
-McpPerformance_SOURCES = McpPerformance.cpp
+McpPerformance_SOURCES = McpPerformance.cpp McpPerformance.h
 
 McpPerformance_LDADD = \
 	-lTAO \

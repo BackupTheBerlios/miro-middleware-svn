@@ -14,8 +14,13 @@
 include $(top_srcdir)/config/Make-rules
 
 scriptsdir = $(prefix)/scripts
-scripts_SCRIPTS = \
+
+scripts = \
 	doclinks_create.sh \
 	addheader.sh \
 	doclinks_delete.sh \
 	generateChangeLog.sh
+
+scripts_SCRIPTS = $(scripts)
+
+EXTRA_DIST = $(scripts)

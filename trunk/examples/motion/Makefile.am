@@ -22,7 +22,7 @@ bin_PROGRAMS = \
 
 
 MotionStatusPoll_SOURCES = MotionStatusPoll.cpp
-MotionStatusNotify_SOURCES = MotionStatusNotify.cpp
+MotionStatusNotify_SOURCES = MotionStatusNotify.cpp MotionStatusNotify.h
 
 linkwithlibraries = \
 	-lTAO \

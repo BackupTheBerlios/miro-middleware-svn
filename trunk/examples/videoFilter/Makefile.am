@@ -20,7 +20,9 @@ bin_PROGRAMS = GrayVideoService
 GrayVideoService_SOURCES = \
 	GrayVideoService.cpp \
 	FilterGray.cpp \
+	FilterGray.h \
 	FilterDiff.cpp \
+	FilterDiff.h \
 	Parameters.xml
 
 if COND_IEEE1394

@@ -53,29 +53,22 @@ globalsources = \
 	BehaviourEngine.idl \
 	Joystick.idl
 
-if COND_B21
 b21sources = \
 	Laser.idl \
 	DtlkSpeech.idl \
 	DirectedPerceptionPanTilt.idl \
 	B21Buttons.idl \
 	B21Motion.idl
-endif
 
-if COND_PIONEER
 pioneersources = \
 	PioneerStall.idl \
 	PioneerMotion.idl \
 	Gripper.idl
-endif
 
-if COND_SPARROW99
-if !COND_PIONEER
 sparrowsources1 = \
 	PioneerStall.idl \
 	PioneerMotion.idl \
 	Gripper.idl
-endif
 
 sparrowsources2 = \
 	Kicker.idl \
@@ -83,21 +76,40 @@ sparrowsources2 = \
 	SparrowStall.idl \
 	SparrowMotion.idl \
 	SparrowAlive.idl
-endif
 
-if COND_DEPRECATED
 deprecatedsources = \
 	ImageDefinitions.idl \
 	Image.idl
+
+
+
+if COND_B21
+b21sources_used = $(b21sources)
 endif
+
+if COND_PIONEER
+pioneersources_used = $(pioneersources)
+endif
+
+if COND_SPARROW99
+if !COND_PIONEER
+sparrowsources1_used = $(sparrowsources1)
+endif
+sparrowsources2_used = $(sparrowsources2)
+endif
+
+if COND_DEPRECATED
+deprecatedsources_used = $(deprecatedsources)
+endif
+
 
 sources = \
 	$(globalsources) \
-	$(b21sources) \
-	$(pioneersources) \
-	$(sparrowsources1) \
-	$(sparrowsources2) \
-	$(deprecatedsources)
+	$(b21sources_used) \
+	$(pioneersources_used) \
+	$(sparrowsources1_used) \
+	$(sparrowsources2_used) \
+	$(deprecatedsources_used)
 
 builtsources = \
 	$(sources:.idl=C.cpp) \
@@ -108,12 +120,12 @@ builtsources = \
 	$(sources:.idl=S.i.h)
 
 libmiroIDL_la_DEPENDENCIES = $(sources)
-libmiroIDL_la_SOURCES = $(builtsources)
+nodist_libmiroIDL_la_SOURCES = $(builtsources)
 
 BUILT_SOURCES = $(builtsources)
 CLEANFILES = $(builtsources)
 
-idl_include_HEADERS = \
+nodist_idl_include_HEADERS = \
 	$(sources:.idl=C.h) \
 	$(sources:.idl=C.i.h) \
 	$(sources:.idl=S.h) \

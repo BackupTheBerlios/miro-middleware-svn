@@ -28,7 +28,8 @@ sources = \
 	QtJoystick.cpp
 
 tomocsources = \
-	MainForm.cpp
+	MainForm.cpp \
+	MainForm.h
 
 QtJoystick_SOURCES = $(sources) $(tomocsources) $(tomocsources:.cpp=.moc.cpp)
 

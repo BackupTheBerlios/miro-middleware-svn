@@ -22,7 +22,7 @@ bin_PROGRAMS = \
 
 ScanDescription_SOURCES = ScanDescription.cpp
 SensorGet_SOURCES = SensorGet.cpp
-SensorStream_SOURCES = SensorStream.cpp
+SensorStream_SOURCES = SensorStream.cpp SensorStream.h
 
 linkwithlibraries = \
 	-lTAO \

@@ -25,7 +25,7 @@ bin_PROGRAMS = \
 
 
 SparrowTest2003_SOURCES = SparrowTest2003.cpp
-SparrowAlive_SOURCES = SparrowAlive.cpp
+SparrowAlive_SOURCES = SparrowAlive.cpp SparrowAlive.h
 SparrowTest_SOURCES = SparrowTest.cpp
 PanPosition_SOURCES = PanPosition.cpp
 KickerTest_SOURCES = KickerTest.cpp

@@ -47,8 +47,6 @@ sources1 = \
 	PriorityArbiter.cpp \
 	MotionArbiter.cpp \
 	MotionArbiterMessage.cpp \
-	PowerArbiter.cpp \
-	PowerArbiterMessage.cpp \
 	WindowArbiter.cpp \
 	WindowArbiterViewer.cpp \
 	WindowArbiterViewerTask.cpp \
@@ -70,7 +68,15 @@ sources1 = \
         NotifyMulticastConfig.cpp \
 	NotifyMulticastAdapter.cpp
 
-libmiro_la_SOURCES = $(sources1)
+sparrowsources1 = \
+	PowerArbiter.cpp \
+	PowerArbiterMessage.cpp
+
+if COND_SPARROW99
+sparrowsources1_used = $(sparrowsources1)
+endif
+
+libmiro_la_SOURCES = $(sources1) $(sparrowsources1_used)
 
 libmiro_la_LIBADD = \
 	-lTAO_CosNotification \
@@ -113,14 +119,21 @@ extraheader = \
 	DevMessage.h \
 	NotifyMulticastRequestIndex.h \
 	NotifyMulticastDefines.h \
-	Utils.h
+	NotifyMulticast.h \
+	Utils.h \
+	TimeSeries.h
 
 BUILT_SOURCES = \
 	Parameters.cpp Parameters.h \
 	NotifyMulticastParameters.cpp NotifyMulticastParameters.h
 CLEANFILES = $(BUILT_SOURCES)
 
-includefiles1 = $(sources1:.xml=.h) $(sources2:.xml=.h) $(sources3:.xml=.h) $(extraheader)
+includefiles1 = \
+	$(sources1:.xml=.h) \
+	$(sparrowsources1:.xml=.h) \
+	$(sources2:.xml=.h) \
+	$(sources3:.xml=.h) \
+	$(extraheader)
 includefiles2 = $(includefiles1:.cpp=.h)
 miro_include_HEADERS = $(includefiles2)
 

@@ -19,7 +19,7 @@ include $(top_srcdir)/config/Make-rules
 bin_PROGRAMS = GenericNotify
 
 
-GenericNotify_SOURCES = GenericNotify.cpp
+GenericNotify_SOURCES = GenericNotify.cpp GenericNotify.h
 
 GenericNotify_LDADD = \
 	-lTAO \

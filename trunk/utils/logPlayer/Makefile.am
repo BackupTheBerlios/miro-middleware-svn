@@ -24,12 +24,16 @@ bin_PROGRAMS = LogPlayer
 
 sources = \
 	LogPlayer.cpp \
-	ChannelManager.cpp
+	ChannelManager.cpp \
+	ChannelManager.h
 
 tomocsources = \
 	LogFile.cpp \
+	LogFile.h \
 	FileSet.cpp \
-	MainForm.cpp
+	FileSet.h \
+	MainForm.cpp \
+	MainForm.h
 
 LogPlayer_SOURCES = $(sources) $(tomocsources) $(tomocsources:.cpp=.moc.cpp)
 

@@ -22,7 +22,7 @@ bin_PROGRAMS = \
 
 PollPosition_SOURCES = PollPosition.cpp
 SetPosition_SOURCES = SetPosition.cpp
-OdometryStream_SOURCES = OdometryStream.cpp
+OdometryStream_SOURCES = OdometryStream.cpp OdometryStream.h
 
 linkwithlibraries = \
 	-lTAO \

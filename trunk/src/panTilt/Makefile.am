@@ -20,11 +20,19 @@ bin_PROGRAMS = DpPanTilt
 DpPanTilt_SOURCES = \
 	Parameters.xml \
 	DpPanTilt.cpp \
+	DpPanTilt.h \
 	PanTiltConnection.cpp \
+	PanTiltConnection.h \
 	PanTiltConsumer.cpp \
+	PanTiltConsumer.h \
 	PanTiltEventHandler.cpp \
+	PanTiltEventHandler.h \
 	PanTiltData.cpp \
-	PanTiltImpl.cpp 
+	PanTiltData.h \
+	PanTiltImpl.cpp \
+	PanTiltImpl.h \
+	PanTiltMessage.h \
+	PanTiltOpcodes.h
 
 BUILT_SOURCES = Parameters.cpp Parameters.h
 CLEANFILES = $(BUILT_SOURCES)

@@ -22,7 +22,7 @@ bin_PROGRAMS = \
 
 
 ButtonsPoll_SOURCES = ButtonsPoll.cpp
-ButtonsNotify_SOURCES = ButtonsNotify.cpp
+ButtonsNotify_SOURCES = ButtonsNotify.cpp ButtonsNotify.h
 
 linkwithlibraries = \
 	-lTAO \

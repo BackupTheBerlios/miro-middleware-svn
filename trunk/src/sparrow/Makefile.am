@@ -44,6 +44,11 @@ includefiles1 = $(sources:.xml=.h)
 includefiles2 = $(includefiles1:.cpp=.h)
 sparrow_include_HEADERS = $(includefiles2)
 
+EXTRA_DIST = \
+	IRLookupTable.h \
+	SparrowDevice2003.h \
+	SparrowDevice.h
+
 all-local:
 	$(INSTALLLIBRARIES)
 

@@ -21,11 +21,17 @@ lib_LTLIBRARIES = libmiroBehavioursSimple.la
 libmiroBehavioursSimple_la_SOURCES = \
 	Parameters.xml \
 	TactileStop.cpp \
+	TactileStop.h \
 	Straight.cpp \
+	Straight.h \
 	Wander.cpp \
+	Wander.h \
 	Timer.cpp \
+	Timer.h \
 	MoveToPoint.cpp \
-	BehavioursFactory.cpp
+	MoveToPoint.h \
+	BehavioursFactory.cpp \
+	BehavioursFactory.h
 
 BUILT_SOURCES = Parameters.cpp Parameters.h
 CLEANFILES = $(BUILT_SOURCES)

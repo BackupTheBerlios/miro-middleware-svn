@@ -33,19 +33,14 @@ sources = \
 	VideoBrokerImpl.cpp \
 	VideoServer.cpp
 
-if COND_BTTV
 bttvsources = \
 	BufferManagerBTTV.cpp \
 	VideoDeviceBTTV.cpp
-endif
 
-if COND_METEOR
 meteorsources = \
 	BufferManagerMeteor.cpp \
 	VideoDeviceMeteor.cpp
-endif
 
-if COND_IEEE1394
 1394sources = \
 	BufferManager1394.cpp \
 	VideoDevice1394.cpp \
@@ -54,13 +49,28 @@ if COND_IEEE1394
 	VideoFilterYUV411toYUV.cpp \
 	VideoFilterYUV422toRGB.cpp \
 	VideoFilterYUV422toYUV.cpp
+
+
+
+if COND_BTTV
+bttvsources_used = $(bttvsources)
+endif
+
+if COND_METEOR
+meteorsources_used = $(meteorsources)
+endif
+
+if COND_IEEE1394
+1394sources_used = $(1394sources)
 endif 
+
+
 
 libmiroVideo_la_SOURCES = \
 	$(sources) \
-	$(bttvsources) \
-	$(meteorsources) \
-	$(1394sources)
+	$(bttvsources_used) \
+	$(meteorsources_used) \
+	$(1394sources_used)
 
 
 

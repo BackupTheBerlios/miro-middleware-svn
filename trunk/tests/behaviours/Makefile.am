@@ -24,34 +24,51 @@ bin_PROGRAMS = \
 PriorityArbitersTest_SOURCES = \
 	PriorityArbitersTest.cpp \
 	DummyBehaviour.cpp \
+	DummyBehaviour.h \
 	DummyBehaviourB.cpp \
+	DummyBehaviourB.h \
 	DummyArbiter.cpp \
+	DummyArbiter.h \
 	DummyArbiterMessage.cpp \
+	DummyArbiterMessage.h \
 	Parameters.xml
 
 PolicyParsingTest_SOURCES = \
 	PolicyParsingTest.cpp \
 	DummyBehaviour.cpp \
+	DummyBehaviour.h \
 	DummyBehaviourB.cpp \
+	DummyBehaviourB.h \
 	DummyArbiter.cpp \
+	DummyArbiter.h \
 	DummyArbiterMessage.cpp \
+	DummyArbiterMessage.h \
 	Parameters.xml
 
 BehaviourEngineTest_SOURCES = \
 	BehaviourEngineTest.cpp \
 	DummyBehaviour.cpp \
+	DummyBehaviour.h \
 	DummyBehaviourB.cpp \
+	DummyBehaviourB.h \
 	DummyArbiter.cpp \
+	DummyArbiter.h \
 	DummyArbiterMessage.cpp \
+	DummyArbiterMessage.h \
 	Parameters.xml
 
 DynamicPolicyTest_SOURCES = \
 	DynamicPolicyTest.cpp \
 	DummyBehaviour.cpp \
+	DummyBehaviour.h \
 	DummyBehaviourB.cpp \
+	DummyBehaviourB.h \
 	DummyBehaviourD.cpp \
+	DummyBehaviourD.h \
 	DummyArbiter.cpp \
+	DummyArbiter.h \
 	DummyArbiterMessage.cpp \
+	DummyArbiterMessage.h \
 	Parameters.xml
 
 linkwithlibraries = \

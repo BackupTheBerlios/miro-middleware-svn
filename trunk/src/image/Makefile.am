@@ -22,16 +22,29 @@ bin_PROGRAMS = MiroImage
 
 MiroImage_SOURCES = \
 	MiroImage.cpp \
+	MiroImage.h \
 	Pixels.cpp \
+	Pixels.h \
+	pixels.ih \
 	FrameGrabber.cpp \
+	frameGrabber.h \
 	FrameGrabberMeteor.cpp \
+	frameGrabberMeteor.h \
 	ImageSource.cpp \
+	imageSource.h \
 	VideoSource.cpp \
+	videoSource.h \
 	PatternSource.cpp \
+	patternSource.h \
 	ImageFactoryDefinitions.cpp \
+	ImageFactoryDefinitions.h \
 	ImageFactory.cpp \
+	ImageFactory.h \
 	ImageServer.cpp \
+	ImageServer.h \
 	ImageImpl.cpp
+	ImageImpl.h \
+	ioctl_meteor.h 
 
 MiroImage_LDADD = \
 	-lTAO_CosNotification \

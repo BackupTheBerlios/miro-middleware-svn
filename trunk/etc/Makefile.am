@@ -13,7 +13,7 @@
 
 include $(top_srcdir)/config/Make-rules
 
-sysconf_DATA = \
+data = \
 	B21Default.xml \
 	PioneerDefault.xml \
 	PpbDefault.xml \
@@ -30,3 +30,7 @@ sysconf_DATA = \
 	stanleft.xml \
 	stanright.xml \
 	trifftnix.xml
+
+sysconf_DATA = $(data)
+
+EXTRA_DIST = $(data)

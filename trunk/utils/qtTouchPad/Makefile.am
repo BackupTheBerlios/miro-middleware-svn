@@ -28,7 +28,8 @@ sources = \
 	QtTouchPad.cpp
 
 tomocsources = \
-	MainForm.cpp
+	MainForm.cpp \
+	MainForm.h
 
 QtTouchPad_SOURCES = $(sources) $(tomocsources) $(tomocsources:.cpp=.moc.cpp)
 

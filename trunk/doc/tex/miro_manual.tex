@@ -439,6 +439,12 @@ couple of other targets, that may be of interest:
 \item[dist:] Generates a gzipped tar-file containing a snapshot of the
   actual \miro directory, including all the necessary source files to
   configure and build \miro.
+\item[distcheck:] Some as above plus a complete make of the packed
+  tar.gz file and finally make another tarfile to ensure the
+  distribution is self-contained. You can change the configure options
+  that are used for this make run within the toplevel
+  \texttt{Makefile.am} by changing the
+  \texttt{DISTCHECK_CONFIGURE_FLAGS} variable.
 \end{description}
 
 \subsubsection{Developer information}

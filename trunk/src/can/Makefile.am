@@ -37,6 +37,12 @@ includefiles1 = $(sources:.xml=.h)
 includefiles2 = $(includefiles1:.cpp=.h)
 can_include_HEADERS = $(includefiles2)
 
+EXTRA_DIST = \
+	canioctl.h \
+	canmsg.h \
+	pcan.h \
+	can.h
+
 all-local:
 	$(INSTALLLIBRARIES)
 

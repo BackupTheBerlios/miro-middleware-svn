@@ -22,9 +22,18 @@ bin_PROGRAMS = \
 	NotifyLogPlayer
 
 
-LogNotify_SOURCES = LogNotify.cpp LogNotifyConsumer.cpp Parameters.xml
-LogTruncate_SOURCES = LogTruncate.cpp
-NotifyLogPlayer_SOURCES = NotifyLogPlayer.cpp
+LogNotify_SOURCES = \
+	LogNotify.cpp \
+	LogNotifyConsumer.cpp \
+	LogNotifyConsumer.h \
+	Parameters.xml
+
+LogTruncate_SOURCES = \
+	LogTruncate.cpp
+
+NotifyLogPlayer_SOURCES = \
+	NotifyLogPlayer.cpp \
+	NotifyLogPlayer.h
 
 linkwithlibraries = \
 	-lmiroSvc \

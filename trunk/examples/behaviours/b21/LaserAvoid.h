@@ -14,7 +14,7 @@
 #include "idl/RangeSensorC.h"
 #include "miro/TimedBehaviour.h"
 
-#include "Parameters.h"
+#include "examples/behaviours/b21/Parameters.h"
 
 class LaserAvoid : public Miro::TimedBehaviour
 {

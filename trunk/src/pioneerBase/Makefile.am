@@ -20,7 +20,8 @@ bin_PROGRAMS = PioneerBase
 
 
 PioneerBase_SOURCES = \
-	PioneerBase.cpp
+	PioneerBase.cpp \
+	PioneerBase.h
 
 PioneerBase_LDADD = \
 	-lpioneer \

@@ -29,7 +29,8 @@ sources = \
 	QtVideo.cpp
 
 tomocsources = \
-	MainForm.cpp
+	MainForm.cpp \
+	MainForm.h
 
 QtVideo_SOURCES = $(sources) $(tomocsources) $(tomocsources:.cpp=.moc.cpp)
 
