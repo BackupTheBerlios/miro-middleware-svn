@@ -6,9 +6,10 @@ BatteryS.i
 BatteryS.cpp
 CanonPanTiltC.h
 CanonPanTiltC.i
-CanonPanTiltS.cpp
+CanonPanTiltC.cpp
 CanonPanTiltS.h
 CanonPanTiltS.i
+CanonPanTiltS.cpp
 TimeC.h
 TimeC.i
 TimeC.cpp
