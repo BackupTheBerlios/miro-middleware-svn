@@ -53,8 +53,20 @@ namespace Miro
   }
 
   void
+  DevEventHandler::set_handle(ACE_HANDLE _handle)
+  {
+    handle_ = _handle;
+  }
+
+  ACE_HANDLE
+  DevEventHandler::get_handle() const
+  {
+    return handle_;
+  }
+
+  void
   DevEventHandler::dispatchMessage() 
   {
     consumer_->handleMessage(message_);
   }
-};
+}

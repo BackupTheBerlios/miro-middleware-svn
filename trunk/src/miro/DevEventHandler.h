@@ -68,6 +68,8 @@ namespace Miro
      * This implementation commits suicide and calls delete(this);
      */
     virtual int handle_close(ACE_HANDLE handle, ACE_Reactor_Mask close_mask);
+    virtual void set_handle(ACE_HANDLE _handle);
+    virtual ACE_HANDLE get_handle() const;
 
   protected:
     /**
@@ -78,13 +80,15 @@ namespace Miro
      */
     virtual void dispatchMessage();
 
+    ACE_HANDLE handle_;
+
     /**
      * pointer to the consumer instance
      */
     DevConsumer* consumer_; 
     DevMessage* message_;
   };
-};
+}
 #endif
 
 
