@@ -40,6 +40,158 @@
 	<parameter value="true" name="Sparrow2003" />
 	<parameter value="/dev/pcan24" name="Device" />
 	<parameter value="pcan" name="Module" />
+	<parameter name="InfraredDescription2003" >
+	 <parameter value="2" name="ScanType" />
+	 <parameter value="Infrared" name="EventName" />
+	 <parameter name="Group" >
+	  <parameter>
+	   <parameter name="Description" >
+	    <parameter value="1" name="Focus" />
+	    <parameter value="800" name="MaxRange" />
+	    <parameter value="0" name="MinRange" />
+	   </parameter>
+	   <parameter name="Sensor" >
+	    <parameter>
+	     <parameter value="56" name="Alpha" />
+	     <parameter value="0" name="Beta" />
+	     <parameter value="0" name="Gamma" />
+	     <parameter value="false" name="Masked" />
+	     <parameter value="210" name="Distance" />
+	     <parameter value="150" name="Height" />
+	    </parameter>
+	    <parameter>
+	     <parameter value="79" name="Alpha" />
+	     <parameter value="0" name="Beta" />
+	     <parameter value="0" name="Gamma" />
+	     <parameter value="false" name="Masked" />
+	     <parameter value="210" name="Distance" />
+	     <parameter value="150" name="Height" />
+	    </parameter>
+	    <parameter>
+	     <parameter value="101" name="Alpha" />
+	     <parameter value="0" name="Beta" />
+	     <parameter value="0" name="Gamma" />
+	     <parameter value="false" name="Masked" />
+	     <parameter value="210" name="Distance" />
+	     <parameter value="150" name="Height" />
+	    </parameter>
+	    <parameter>
+	     <parameter value="124" name="Alpha" />
+	     <parameter value="0" name="Beta" />
+	     <parameter value="0" name="Gamma" />
+	     <parameter value="false" name="Masked" />
+	     <parameter value="210" name="Distance" />
+	     <parameter value="150" name="Height" />
+	    </parameter>
+	    <parameter>
+	     <parameter value="146" name="Alpha" />
+	     <parameter value="0" name="Beta" />
+	     <parameter value="0" name="Gamma" />
+	     <parameter value="false" name="Masked" />
+	     <parameter value="210" name="Distance" />
+	     <parameter value="150" name="Height" />
+	    </parameter>
+	    <parameter>
+	     <parameter value="169" name="Alpha" />
+	     <parameter value="0" name="Beta" />
+	     <parameter value="0" name="Gamma" />
+	     <parameter value="false" name="Masked" />
+	     <parameter value="210" name="Distance" />
+	     <parameter value="150" name="Height" />
+	    </parameter>
+	    <parameter>
+	     <parameter value="-169" name="Alpha" />
+	     <parameter value="0" name="Beta" />
+	     <parameter value="0" name="Gamma" />
+	     <parameter value="false" name="Masked" />
+	     <parameter value="210" name="Distance" />
+	     <parameter value="150" name="Height" />
+	    </parameter>
+	    <parameter>
+	     <parameter value="-146" name="Alpha" />
+	     <parameter value="0" name="Beta" />
+	     <parameter value="0" name="Gamma" />
+	     <parameter value="false" name="Masked" />
+	     <parameter value="210" name="Distance" />
+	     <parameter value="150" name="Height" />
+	    </parameter>
+	   </parameter>
+	  </parameter>
+	  <parameter>
+	   <parameter name="Description" >
+	    <parameter value="1" name="Focus" />
+	    <parameter value="800" name="MaxRange" />
+	    <parameter value="0" name="MinRange" />
+	   </parameter>
+	   <parameter name="Sensor" >
+	    <parameter>
+	     <parameter value="-124" name="Alpha" />
+	     <parameter value="0" name="Beta" />
+	     <parameter value="0" name="Gamma" />
+	     <parameter value="false" name="Masked" />
+	     <parameter value="210" name="Distance" />
+	     <parameter value="150" name="Height" />
+	    </parameter>
+	    <parameter>
+	     <parameter value="-101" name="Alpha" />
+	     <parameter value="0" name="Beta" />
+	     <parameter value="0" name="Gamma" />
+	     <parameter value="false" name="Masked" />
+	     <parameter value="210" name="Distance" />
+	     <parameter value="150" name="Height" />
+	    </parameter>
+	    <parameter>
+	     <parameter value="-79" name="Alpha" />
+	     <parameter value="0" name="Beta" />
+	     <parameter value="0" name="Gamma" />
+	     <parameter value="false" name="Masked" />
+	     <parameter value="210" name="Distance" />
+	     <parameter value="150" name="Height" />
+	    </parameter>
+	    <parameter>
+	     <parameter value="-56" name="Alpha" />
+	     <parameter value="0" name="Beta" />
+	     <parameter value="0" name="Gamma" />
+	     <parameter value="false" name="Masked" />
+	     <parameter value="210" name="Distance" />
+	     <parameter value="150" name="Height" />
+	    </parameter>
+	    <parameter>
+	     <parameter value="-34" name="Alpha" />
+	     <parameter value="0" name="Beta" />
+	     <parameter value="0" name="Gamma" />
+	     <parameter value="false" name="Masked" />
+	     <parameter value="210" name="Distance" />
+	     <parameter value="150" name="Height" />
+	    </parameter>
+	    <parameter>
+	     <parameter value="-11" name="Alpha" />
+	     <parameter value="0" name="Beta" />
+	     <parameter value="0" name="Gamma" />
+	     <parameter value="false" name="Masked" />
+	     <parameter value="210" name="Distance" />
+	     <parameter value="150" name="Height" />
+	    </parameter>
+	    <parameter>
+	     <parameter value="11" name="Alpha" />
+	     <parameter value="0" name="Beta" />
+	     <parameter value="0" name="Gamma" />
+	     <parameter value="false" name="Masked" />
+	     <parameter value="210" name="Distance" />
+	     <parameter value="150" name="Height" />
+	    </parameter>
+	    <parameter>
+	     <parameter value="34" name="Alpha" />
+	     <parameter value="0" name="Beta" />
+	     <parameter value="0" name="Gamma" />
+	     <parameter value="false" name="Masked" />
+	     <parameter value="210" name="Distance" />
+	     <parameter value="150" name="Height" />
+	    </parameter>
+	   </parameter>
+	  </parameter>
+	 </parameter>
+	</parameter>
 	<parameter value="0.050000" name="PanLatency" />
 	<parameter value="0.300000" name="PanSwing" />
 	<parameter value="245" name="PanRadPerSec" />
@@ -153,6 +305,7 @@
 	<parameter value="30720" name="MaxPower" />
 	<parameter value="29" name="TicksL" />
 	<parameter value="29" name="TicksR" />
+	<parameter value="true" name="Goalie" />
 	<parameter value="21.8" name="Deg2ServoTicksL"/>
 	<parameter value="20.8" name="Deg2ServoTicksR"/>
 	<parameter value="true" name="ChannelSharing" />
