@@ -87,6 +87,7 @@ namespace Miro
   {
     Guard guard(mutex_);
     suspendedPattern_ = policy_.currentActionPattern();
+    policy_.close();
   }
   
   void
