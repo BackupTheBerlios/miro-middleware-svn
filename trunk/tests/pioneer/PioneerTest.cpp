@@ -94,7 +94,9 @@ Service::Service() :
   canonPanTiltImpl(connection, Pioneer::Parameters::instance()->cameraUpsideDown),
   canonCamera(connection, canonPanTiltImpl.getAnswer()),
   gripper(connection),
-  pEventHandler(new Psos::EventHandler(pConsumer, connection)),
+  pEventHandler(new Psos::EventHandler(pConsumer,
+				       connection, 
+				       Pioneer::Parameters::instance())),
   connection(reactorTask.reactor(), pEventHandler, pConsumer)
 {}
 
