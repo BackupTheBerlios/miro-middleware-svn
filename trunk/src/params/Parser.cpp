@@ -266,12 +266,15 @@ namespace Miro
      
 	    // static const parameter parsing
 	    QString staticConst = attributes.value("static_const");
-	    if (staticConst == "true") {
-	      staticConst_ = true;
+	    staticConst_ = (staticConst == "true");
 
+	    if (staticConst_) {
 	      if (def.isEmpty()) {
 		error_ = "Static const declaration without default value for " + type_.name();
 		break;
+	      }
+	      for (unsigned int i = 0; i < name.length(); ++i) {
+		name[i] = name[i].upper();
 	      }
 	    }
 
