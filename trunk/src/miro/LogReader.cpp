@@ -246,7 +246,8 @@ namespace Miro
 	char *begin = istr_->rd_ptr ();
 
 	// Skip over the next aregument.
-#if ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 3))
+#if ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 3)) || \
+  ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 2) && (TAO_BETA_VERSION >= 2))
 	CORBA::TypeCode::traverse_status status =
 	  TAO_Marshal_Object::perform_skip (tc,
 					    istr_

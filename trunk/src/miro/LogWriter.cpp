@@ -186,12 +186,23 @@ namespace Miro
 		full_ = true;
 		return false;
 	      }
+#else
+
+#if ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 2) && (TAO_BETA_VERSION >= 2))
+
+
+	      TAO_Marshal_Object::perform_append (tc.in (),
+						  &input,
+						  &ostr_
+						  ACE_ENV_ARG_PARAMETER);
 #else // TAO_MINOR_VERSION <= 2
 	      
 	      TAO_Marshal_Object::perform_append (tc.in (),
 						  &input,
 						  &ostr_,
 						  ACE_TRY_ENV);
+#endif
+
 	      ACE_TRY_CHECK;
 #endif
 	    }
