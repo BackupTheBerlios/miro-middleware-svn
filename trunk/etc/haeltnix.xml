@@ -105,37 +105,37 @@
     <parameter>
      <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.000" name="Scaling" />
+     <parameter value="1.133" name="Scaling" />
      <parameter value="0" name="Offset" />
     </parameter>
     <parameter>
      <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.047" name="Scaling" />
+     <parameter value="1.148" name="Scaling" />
      <parameter value="0" name="Offset" />
     </parameter>
     <parameter>
      <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.000" name="Scaling" />
+     <parameter value="0.944" name="Scaling" />
      <parameter value="0" name="Offset" />
     </parameter>
     <parameter>
      <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.173" name="Scaling" />
+     <parameter value="1.104" name="Scaling" />
      <parameter value="0" name="Offset" />
     </parameter>
     <parameter>
      <parameter value="800" name="MaxDistance" />
      <parameter value="90" name="MinDistance" />
-     <parameter value="1.281" name="Scaling" />
+     <parameter value="1.243" name="Scaling" />
      <parameter value="0" name="Offset" />
     </parameter>
     <parameter>
      <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.1" name="Scaling" />
+     <parameter value="1.018" name="Scaling" />
      <parameter value="0" name="Offset" />
     </parameter>
     <parameter>
@@ -150,7 +150,7 @@
    <parameter value="26.0" name="Deg2ServoTicks" />
    <parameter value="1.000000" name="WatchdogTimeout" />
    <parameter value="3950" name="Servo0MidPulse" />
-   <parameter value="15" name="MaxAccel" /><!-- SollDistanz zum Torrueckwand 10 -->
+   <parameter value="200" name="MaxAccel" /><!-- SollDistanz zum Torrueckwand 10 -->
    <parameter value="1555" name="Diameter" />
    <parameter value="15" name="MaxPower" /><!-- Vorfaktor turnfehler 15 -->
    <parameter value="22" name="TicksL" />
@@ -160,7 +160,7 @@
    <parameter name="Motion" >
     <parameter value="180" name="MaxRotation" />
     <parameter value="-180" name="MinRotation" /><!-- Unterreichweite fue  Turndoubler 9 (6) -->
-    <parameter value="300" name="MaxTranslation" /><!-- Vorfaktor Distanzefehler 1 -->
+    <parameter value="1000" name="MaxTranslation" /><!-- Vorfaktor Distanzefehler 1 -->
     <parameter value="-1000" name="MinTranslation" />
     <parameter value="450" name="WheelBase" />
     <parameter value="1000" name="MaxLTranslation" />
