@@ -127,8 +127,8 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 
   //infrared2 = new Miro::RangeSensorImpl(Sparrow::Parameters::instance()->infraredDescription2003,
    //                                                                &structuredPushSupplier_, false);
-  pSparrowConsumer2003 = new Sparrow::Consumer2003();/**sparrowConnection,
-					 /*( (Sparrow::Parameters::instance()->faulhaber)?
+  pSparrowConsumer2003 = new Sparrow::Consumer2003();/*sparrowConnection,
+					 ( (Sparrow::Parameters::instance()->faulhaber)?
 					   NULL :
 					   &odometry),
 					 (Sparrow::Parameters::instance()->sparrow2003)?NULL:sparrowStall,
@@ -239,8 +239,8 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
   sparrowConnection(new Sparrow::Connection(reactorTask.reactor(),
 		    pCanEventHandler,
 		    pSparrowConsumer)),
-
-  // Pioneer board initialization*/
+  */
+  // Pioneer board initialization
   pPioneer((Sparrow::Parameters::instance()->goalie && !Sparrow::Parameters::instance()->sparrow2003)?
 	   new PioneerHardware(reactorTask.reactor(), pSonar_) : NULL),
   //pPioneer(NULL),

@@ -89,8 +89,6 @@ realclean: clean
  ../params/Class.h ../params/Parameter.h ../params/Generator.h \
  ../params/TextErrorHandler.h
 
-.obj/ConfigDialog.o .obj/ConfigDialog.so .shobj/ConfigDialog.o .shobj/ConfigDialog.so: ConfigDialog.cpp ConfigDialog.h
-
 .obj/PolicyView.o .obj/PolicyView.so .shobj/PolicyView.o .shobj/PolicyView.so: PolicyView.cpp PolicyView.h PolicyDocument.h \
  Transition.h PolicyConfig.h PatternWidget.h
 
@@ -122,8 +120,6 @@ realclean: clean
  ../widgets/FileListDialog.h \
  $(MIRO_ROOT)/src/miro/BehaviourEngineC.h \
  $(MIRO_ROOT)/src/miro/BehaviourEngineC.i
-
-.obj/ConfigDialog.moc.o .obj/ConfigDialog.moc.so .shobj/ConfigDialog.moc.o .shobj/ConfigDialog.moc.so: ConfigDialog.moc.cpp ConfigDialog.h
 
 .obj/PolicyView.moc.o .obj/PolicyView.moc.so .shobj/PolicyView.moc.o .shobj/PolicyView.moc.so: PolicyView.moc.cpp PolicyView.h PolicyDocument.h \
  Transition.h PolicyConfig.h
