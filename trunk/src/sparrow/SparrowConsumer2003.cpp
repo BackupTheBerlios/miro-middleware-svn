@@ -406,9 +406,37 @@ namespace Sparrow
 		break;
 	}
 
-
-
-      // Debug Messages
+    case CAN_PAN_ERROR_2005:
+  	{
+	 	switch(message.byteData(0))
+		{
+			case 0x01:	//ERR_UNKNOWN_COMMAND = 0x01;
+      				MIRO_DBG(SPARROW, LL_ERROR, "Unknown Command sent to Pan2005 controller");
+				break;
+			case 0x02:	//ERR_REPORT_VERSION = 0x02;
+                                MIRO_DBG(SPARROW, LL_NOTICE, "Pan2005 controller rebooted");
+                                break;
+			case 0x03:	//ERR_SER_RX_OVERFLOW = 0x03;  // serial rx buffer overflow
+                                MIRO_DBG(SPARROW, LL_ERROR, "RX buffer overflow on Pan2005 controller");
+                                break;
+			case 0x04:	//ERR_SER_TX_OVERFLOW = 0x04;  // serial tx buffer overflow
+                                MIRO_DBG(SPARROW, LL_ERROR, "TX buffer overflow on Pan2005 controller");
+                                break;
+			case 0x05:	//ERR_NOT_READY = 0x05;
+                                MIRO_DBG(SPARROW, LL_ERROR, "Pan2005 controller not ready for panning, still calibrating");
+                                break;
+			case 0x06:	//ERR_NODATA = 0x06;
+                                MIRO_DBG(SPARROW, LL_ERROR, "Pan2005 controller missing data for panning");
+                                break;
+			case 0x07:	//ERR_OUT_OF_BOUNDS = 0x07;
+                                MIRO_DBG(SPARROW, LL_ERROR, "Pan2005 reports out of panning range error");
+                                break;
+			case 0x08:	//ERR_NO_RESPONSE = 0x08;      // Debug Messages
+                                MIRO_DBG(SPARROW, LL_ERROR, "Pan2005 reports motorcontroller IO timeout");
+                                break;
+		}
+		break;
+	}
     default:
       MIRO_LOG_OSTR(LL_WARNING, 
 		    "SparrowConsumer2003: Unhandled can bus message: " << message);
