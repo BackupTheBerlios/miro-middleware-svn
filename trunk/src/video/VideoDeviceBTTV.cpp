@@ -252,8 +252,10 @@ namespace Video
     ACE_Time_Value beginTime = ACE_OS::gettimeofday();
 
     int err = ioctl(videoFd, VIDIOCSYNC, &currentBuffer_);
-    if (err == -1)
+    if (err == -1) {
+      cerr << currentBuffer_ << endl;
       throw Miro::CException(errno, "VideoDeviceBTTV::grabImage() - VIDIOCSYNC");
+    }
     err = ioctl(videoFd, VIDIOCMCAPTURE, &(gb[nextBuffer_]));
     if (err == -1)
       throw Miro::CException(errno, "VideoDeviceBTTV::grabImage() - VIDIOCMCAPTURE");
