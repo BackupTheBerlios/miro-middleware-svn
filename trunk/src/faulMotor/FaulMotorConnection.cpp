@@ -176,13 +176,16 @@ namespace FaulMotor
 
     // if we did not write yet and have enough
     // time left: set the speed directly
+    //
+    // this seems to be far too dangerous concerning the timing 
+    // schema of a faul motor controller
 
-    ACE_Time_Value now = ACE_OS::gettimeofday();
-    if (!writeThisRound_ &&
-	now + ACE_Time_Value(0, 20000) < nextSceduledQuery_) {
-      writeThisRound_ = true;
-      protectedDeferredSetSpeed();
-    }
+//     ACE_Time_Value now = ACE_OS::gettimeofday();
+//     if (!writeThisRound_ &&
+// 	now + ACE_Time_Value(0, 20000) < nextSceduledQuery_) {
+//       writeThisRound_ = true;
+//       protectedDeferredSetSpeed();
+//     }
   }
 
   void

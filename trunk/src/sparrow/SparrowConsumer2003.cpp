@@ -316,7 +316,7 @@ namespace Sparrow
 	message.canMessage((int **) &msg_);
 	memcpy((void *) &(odoMessage.ticks_),(void *) (msg_->d),  4);
       }
-      odoMessage.setTimestamp(ACE_OS::gettimeofday());
+      odoMessage.time() = ACE_OS::gettimeofday();
 
       if(faulConsumer)
 	faulConsumer->handleMessage(&odoMessage);
@@ -338,7 +338,7 @@ namespace Sparrow
 	message.canMessage((int **) &msg_);
 	memcpy((void *) &(odoMessage2.ticks_),(void *) (msg_->d),  4);
       }
-      odoMessage2.setTimestamp(ACE_OS::gettimeofday());
+      odoMessage2.time() = ACE_OS::gettimeofday();
 
       if(faulConsumer)
 	faulConsumer->handleMessage(&odoMessage2);

@@ -101,13 +101,11 @@ namespace FaulMotor
 	static_cast<const FaulController::OdometryMessage *>(_message);
 
       if (pFaulMsg->wheel() == FaulController::OdometryMessage::LEFT) {
-//	cout << "L: " << pFaulMsg->ticks();
 	ticksL_ = pFaulMsg->ticks();
 	clockL_ = pFaulMsg->clock();
 	timeStampL_ = pFaulMsg->time();
       }
       else {
-//	cout << "R: " << pFaulMsg->ticks();
 	ticksR_ = pFaulMsg->ticks();
 	clockR_ = pFaulMsg->clock();
 	timeStampR_ = pFaulMsg->time();
@@ -121,15 +119,58 @@ namespace FaulMotor
 	  double deltaTicksL = ticksL_ - prevTicksL_;
 	  double deltaTicksR = ticksR_ - prevTicksR_;
 
-	  ticksFile << timeStampL_ << " " 
-		    << (timeStampL_ - prevTimeStampL_) << " " 
-		    << clockL_ << " " 
-		    << ticksL_ << " " << deltaTicksL << "\t"
-		    << timeStampR_ << " " 
-		    << (timeStampR_ - prevTimeStampR_) << " " 
-		    << clockR_ << " " 
-		    << ticksR_ << " " << deltaTicksR << std::endl;
+	  // sanity checking for clock ticks
+	  // 
+	  // the faulhaber controller can only count to 9, regarding clock ticks
+	  // so we have to make sure, we didn't miss 1/10 of a second...
 
+	  if (FAUL_LOGGING && clockL_ == 0)
+	    ticksFile << "left  ticks == 0=" << std::endl;
+	  if (FAUL_LOGGING && clockR_ == 0)
+	    ticksFile << "right ticks == 0=" << std::endl;
+
+	  bool overflow = false;
+	  ACE_Time_Value jitter(0, 50000); // 1/20 sec
+	  ACE_Time_Value deltaTimeL = timeStampL_ - prevTimeStampL_;
+
+	  ACE_Time_Value t;
+	  t.set((double)clockL_ * CLOCK_2_SEC);
+	  while (deltaTimeL > t + jitter) {
+	    overflow = true;
+	    clockL_ += 9;
+	    t.set((double)clockL_ * CLOCK_2_SEC);
+	  }
+	  ACE_Time_Value deltaTimeR = timeStampR_ - prevTimeStampR_;
+	  t.set((double)clockR_ * CLOCK_2_SEC);
+	  while (deltaTimeR > t + jitter) {
+	    overflow = true;
+	    clockR_ += 9;
+	    t.set((double)clockR_ * CLOCK_2_SEC);
+	  }
+
+
+	  // lowlevel logging hook
+	  if (FAUL_LOGGING) {
+	    ticksFile << timeStampL_ << " " 
+		      << (timeStampL_ - prevTimeStampL_) << " " 
+		      << clockL_ << " " 
+		      << ticksL_ << " " << deltaTicksL << "\t"
+		      << timeStampR_ << " " 
+		      << (timeStampR_ - prevTimeStampR_) << " " 
+		      << clockR_ << " " 
+		      << ticksR_ << " " << deltaTicksR;
+
+	    if (overflow)
+	      ticksFile << "   !!!!!!!!!!!";
+
+	    if (abs(clockL_ - clockR_) > 5)
+	      ticksFile << "   ???????????";
+
+	    ticksFile << std::endl;
+	  }
+
+
+	  // okay, lets do business
 	  double dL = -(ticksL_ - prevTicksL_) / params_->leftTicksPerMM;
 	  double dR = (ticksR_ - prevTicksR_) / params_->rightTicksPerMM;
 
