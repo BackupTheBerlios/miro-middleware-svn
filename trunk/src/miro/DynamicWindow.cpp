@@ -75,7 +75,7 @@ namespace Miro
 	  }
 	}
 
-	velocitySpace_[left+100][right+100] = (int)(512. * (1.0 * rot + 1.5 * trans));
+	velocitySpace_[left+100][right+100] = (int)(64. * (1.0 * rot + 1.5 * trans));
       }
     }
   }	
@@ -96,18 +96,18 @@ namespace Miro
       for(int right = minRight_ ; right <= maxRight_; right += RESOLUTION ) {
   
 	if(left == right) {
-	  fLeft = 100. * (double)(left * left) / BREAK_ACCELERATION;
-	  fRight = 100. * (double)(right * right) / BREAK_ACCELERATION;
+	  fLeft = 100. * (double)(abs(left) * left) / BREAK_ACCELERATION;
+	  fRight = 100. * (double)(abs(right) * right) / BREAK_ACCELERATION;
       	}
-      	else {
-	  if(left > right) {
-	    fLeft = 100. * (double)(left * left) / BREAK_ACCELERATION;
+       	else {
+	  if(abs(left) > abs(right)) {
+	    fLeft = 100. * (double)(abs(left) * left) / BREAK_ACCELERATION;
 	    fRight = ((double)(right) / double(left)) * fLeft;
 	  }
-	  else if(left < right) {
-	    fRight = 100. * (double)(right * right) / BREAK_ACCELERATION;
+	  else if(abs(left) < abs(right)) {
+	    fRight = 100. * (double)(abs(right) * right) / BREAK_ACCELERATION;
 	    fLeft = ((double)(left) / double(right)) * fRight;
-	  }
+	    }
 	}
   
         if(left != right) {
@@ -115,7 +115,7 @@ namespace Miro
           offset = (WHEEL_DISTANCE / 2.) * ((fLeft + fRight) / (fLeft - fRight));
           angle = (180. * (fLeft - fRight)) / (WHEEL_DISTANCE * M_PI);
           rotateMountedPolygon(_robot, Vector2d(-offset, 0.), angle);       
-          pointValue = std::min(1., getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) / MAX_POLYGON_DISTANCE);
+	  pointValue = std::min(1., getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) / MAX_POLYGON_DISTANCE);
           
           for(int x = 0; (x < RESOLUTION) && (x+left <= maxLeft_); x++) {
             for(int y = 0; (y < RESOLUTION) && (y+right <= maxRight_); y++) {
@@ -130,9 +130,6 @@ namespace Miro
           
           moveMountedPolygon(_robot, Vector2d(0., (fLeft + fRight) / 2.));
           pointValue = min(1., getDistanceBetweenPolygonAndPolygon(_robot, _obstacle) / MAX_POLYGON_DISTANCE);
-
-	  if(left == minLeft_ && right == minRight_)
-	    cout << "POINTVALUE: " << pointValue << " - DISTANCE: " << (fLeft + fRight) / 2. << endl;
 
           for(int x = 0; (x < RESOLUTION) && (x+left <= maxLeft_); x++) {
             for(int y = 0; (y < RESOLUTION) && (y+right <= maxRight_); y++) {
@@ -207,13 +204,19 @@ namespace Miro
     l1_p1 = _p1 - _l1;
 
     if(l1_l2.real() * l1_p1.real() + l1_l2.imag() * l1_p1.imag() < 0) {
-      return sqrt(l1_p1.real() * l1_p1.real() + l1_p1.imag() * l1_p1.imag());
+      if(l1_l2.imag() * l1_p1.real() + -l1_l2.real() * l1_p1.imag() < 0)
+	return sqrt(l1_p1.real() * l1_p1.real() + l1_p1.imag() * l1_p1.imag());
+      else
+	return -sqrt(l1_p1.real() * l1_p1.real() + l1_p1.imag() * l1_p1.imag());
     }
 
     l2_p1 = _p1 - _l2;
 
     if(-l1_l2.real() * l2_p1.real() + -l1_l2.imag() * l2_p1.imag() < 0) {
-      return sqrt(l2_p1.real() * l2_p1.real() + l2_p1.imag() * l2_p1.imag());
+      if(l1_l2.imag() * l2_p1.real() + -l1_l2.real() * l2_p1.imag() < 0)
+	return sqrt(l2_p1.real() * l2_p1.real() + l2_p1.imag() * l2_p1.imag());
+      else
+	return -sqrt(l2_p1.real() * l2_p1.real() + l2_p1.imag() * l2_p1.imag());
     }
 
     return (l1_l2.real() * l1_p1.imag() - l1_l2.imag() * l1_p1.real())
@@ -247,12 +250,12 @@ namespace Miro
     
     std::vector<Vector2d>::iterator a1, a2, b1, b2;
     double distance, minDistance;
-    
+
     for(a1 = _polygon1.begin(), a2 = _polygon1.begin() + 1; a2 < _polygon1.end(); a1++, a2++) {
       for(b1 = _polygon2.begin(), b2 = _polygon2.begin() + 1; b2 < _polygon2.end(); b1++, b2++) {
   
         distance = getDistanceBetweenLineAndLine(*a1, *a2, *b1, *b2);
-        
+            
         if(((a1 == _polygon1.begin()) && (b1 == _polygon2.begin())) || (distance < minDistance)) {
           minDistance = distance;
         }
