@@ -24,53 +24,42 @@
 #include "NotifyMulticastReceiver.h"
 #include "NotifyMulticastConfig.h"
 
-#define DBG_CLASSNAME "NotifyMulticast::EventHandler"
+#include "Log.h"
 
-namespace Miro {
+namespace Miro 
+{
+  namespace NMC 
+  {
+    /**
+     *   Parameters:
+     *     _receiver: Pointer to receiver object
+     *     _config:   Pointer to NotifyMulticast configuration
+     */
+    EventHandler::EventHandler(Receiver *_receiver, Config *_config) :
+      receiver_(_receiver),
+      config_(_config)
+    {
+      MIRO_LOG_CTOR("NMC::EventHandler");
+    }
 
-    namespace NotifyMulticast {
-
-        /**
-         * EventHandler::EventHandler()
-         *
-         *   Description:
-         *     Default constructor
-         *
-         *   Parameters:
-         *     _receiver: Pointer to receiver object
-         *     _config:   Pointer to NotifyMulticast configuration
-         */
-        EventHandler::EventHandler(Receiver *_receiver, Config *_config) {
-            PRINT_DBG(DBG_INFO, "Initializing");
-
-            receiver_ = _receiver;
-            config_ = _config;
-
-            PRINT_DBG(DBG_MORE, "Initialized");
-        }
-
-        /**
-         * EventHandler::handle_input()
-         *
-         *   Description:
-         *     Is called when input is available
-         */
-        int EventHandler::handle_input(ACE_HANDLE /*handle*/) {
-            this->receiver_->handle_input();
-            return 0;
-        }
+    /**
+     *     Is called when input is available
+     */
+    int
+    EventHandler::handle_input(ACE_HANDLE /*handle*/) 
+    {
+      this->receiver_->handle_input();
+      return 0;
+    }
 
 
-        /**
-         * EventHandler::get_handle()
-         *
-         *   Description:
-         *     Returns ACE handle
-         */
-        ACE_HANDLE EventHandler::get_handle() const {
-            return config_->getSocket()->get_handle();
-            ;
-        }
-    };
-};
-
+    /**
+     *     Returns ACE handle
+     */
+    ACE_HANDLE
+    EventHandler::get_handle() const 
+    {
+      return config_->getSocket()->get_handle();
+    }
+  }
+}

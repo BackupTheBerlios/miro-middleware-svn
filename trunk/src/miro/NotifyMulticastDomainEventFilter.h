@@ -29,30 +29,28 @@
 //  $Id$
 //
 //////////////////////////////////////////////////////////////////////////////
-
 #ifndef NotifyMulticastDomainEventFilter_h
 #define NotifyMulticastDomainEventFilter_h
 
 /* Miro includes */
 #include "NotifyMulticastEventFilter.h"
 
-namespace Miro {
-
-    namespace NotifyMulticast {
-
-        class DomainEventFilter : public EventFilter {
-
-            public:
-                /* constructor */
-                DomainEventFilter(const std::string & _domain_name);
-
-                virtual bool isAccepted(const CosNotification::StructuredEvent &_event);
-		
-	    private :
-	    	std::string domain_name_;
-        };
+namespace Miro 
+{
+  namespace NMC 
+  {
+    class DomainEventFilter : public EventFilter 
+    {
+    public:
+      /* constructor */
+      DomainEventFilter(const std::string & _domain_name);
+      
+      virtual bool isAccepted(const CosNotification::StructuredEvent &_event);
+      
+    private :
+      std::string domain_name_;
     };
-};
-
-#endif /* NotifyMulticastDomainEventFilter_h */
+  }
+}
+#endif // NotifyMulticastDomainEventFilter_h
 

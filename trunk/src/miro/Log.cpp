@@ -24,7 +24,7 @@ namespace
     char const * name;
   };
 
-  unsigned int const NUM_CATHEGORIES = 10;
+  unsigned int const NUM_CATHEGORIES = 11;
   Pair cathegories[NUM_CATHEGORIES] = {
     {Miro::Log::MIRO, "Miro"},
     {Miro::Log::VIDEO, "Video"},
@@ -35,7 +35,8 @@ namespace
     {Miro::Log::SICK, "Sick"},
     {Miro::Log::DTLK, "Dtlk"},
     {Miro::Log::DP, "DP"},
-    {Miro::Log::B21, "B21"}
+    {Miro::Log::B21, "B21"},
+    {Miro::Log::NMC, "NMC"}
   };
 
   struct Pair2

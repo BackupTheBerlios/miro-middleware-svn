@@ -23,52 +23,69 @@
 //  $Id$
 //
 //////////////////////////////////////////////////////////////////////////////
-
 #ifndef NotifyMulticastRequestIndex_h
 #define NotifyMulticastRequestIndex_h
 
+#include <tao/Basic_Types.h>
 #include <ace/INET_Addr.h>
-#include <orbsvcs/CosNotifyCommC.h>
 
-namespace Miro {
+namespace Miro 
+{
+  namespace NMC 
+  {
+    class RequestIndex 
+    {
+      
+    public:
+      //! Default constructor.
+      RequestIndex();
+      //! Initializing constructor.
+      RequestIndex(const ACE_INET_Addr &_from, CORBA::ULong _requestId);
 
-    namespace NotifyMulticast {
+      //! Return hash value.
+      u_long hash() const;
+      //! Comparison operator.
+      bool operator==(RequestIndex const &rhs) const;
+      //! Comparison operator.
+      bool operator!=(RequestIndex const &rhs) const;
 
-        class RequestIndex {
-
-            public:
-                /* Default constructor */
-                RequestIndex(void) : requestId(0) {}
-
-                ;
-
-                /* Default copy constructor */
-                RequestIndex(const ACE_INET_Addr &_from, CORBA::ULong _requestId) : from(_from), requestId(_requestId) {}
-
-                ;
-
-                /* return hash value */
-                inline u_long hash (void) const {
-                    return ((from.get_ip_address() << 24)
-                            | (from.get_port_number () << 8)
-                            | (requestId & 0x000000ff));
-                }
-
-                /* comparison operators */
-                inline int operator== (const RequestIndex &rhs) const {
-                    return (this->from == rhs.from &&
-                            this->requestId == rhs.requestId);
-                }
-
-                inline int operator!= (const RequestIndex &rhs) const {
-                    return !(*this == rhs);
-                }
-
-            private:
-                ACE_INET_Addr from;
-                CORBA::ULong  requestId;
-        };
+    private:
+      ACE_INET_Addr from_;
+      CORBA::ULong  requestId_;
     };
-};
 
-#endif
+    inline
+    RequestIndex::RequestIndex() : 
+      requestId_(0) 
+    {}
+
+    inline
+    RequestIndex::RequestIndex(const ACE_INET_Addr &_from, CORBA::ULong _requestId) : 
+      from_(_from), 
+      requestId_(_requestId) 
+    {}
+
+    inline 
+    u_long 
+    RequestIndex::hash() const {
+      return ((from_.get_ip_address() << 24)
+	      | (from_.get_port_number () << 8)
+	      | (requestId_ & 0x000000ff));
+    }
+
+    inline 
+    bool 
+    RequestIndex::operator==(RequestIndex const &rhs) const {
+      return (this->from_ == rhs.from_ &&
+	      this->requestId_ == rhs.requestId_);
+    }
+
+    inline
+    bool 
+    RequestIndex::operator!=(RequestIndex const &rhs) const {
+      return !(*this == rhs);
+    }
+  }
+}
+
+#endif // NotifyMulticastRequestIndex_h

@@ -3,7 +3,7 @@
 //  NotifyMulticast
 //
 //
-//  (c) 2001, 2002
+//  (c) 2001, 2002, 2003, 2004
 //  Department of Neural Information Processing, University of Ulm, Germany
 //
 //
@@ -43,7 +43,7 @@
 #ifndef NotifyMulticast_hh
 #define NotifyMulticast_hh
 
-#include <miro/NotifyMulticastAdapter.h>
-#include <miro/NotifyMulticastDefines.h>
+#include "NotifyMulticastAdapter.h"
+#include "NotifyMulticastDefines.h"
 
 #endif /* NotifyMulticast_hh */

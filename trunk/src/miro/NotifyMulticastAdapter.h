@@ -18,25 +18,6 @@
 //
 //  Description:
 //
-//    Sets up a multicast gateway: events sent over the eventchannel
-//    are multicasted to the peers in the multicast group.
-//
-//    Since multicast is a very efficient way for group communication,
-//    this is a very robust and simple way for multi-agent scenarios
-//    like RoboCup robot soccer games.
-//
-//    Network connections via Wireless Lan (e.g. IEEE 802.11) are not
-//    as reliable as wired networks. Thus, a connectionless protocol
-//    like UDP is very useful.
-//
-//    The datagrams are sent once and every peer that subscribed the
-//    multicast group takes a copy of this packet. So the capacity
-//    costs are kept very low.
-//
-//    An ip multicast interface already is defined in TAO for the
-//    Real-Time EventChannel. I've implemented an own version for Miro,
-//    since Miro uses the Notification EventChannel.
-//
 //
 //  Changes:
 //
@@ -81,7 +62,6 @@
 //  $Id$
 //
 //////////////////////////////////////////////////////////////////////////////
-
 #ifndef NotifyMulticastAdapter_h
 #define NotifyMulticastAdapter_h
 
@@ -104,97 +84,120 @@
 #include <map>
 #include <fstream>
 
-namespace Miro {
+namespace Miro 
+{
+  namespace NMC 
+  {
 
-    namespace NotifyMulticast {
+    // forward declarations
 
-        // forward declarations
+    class SH;
+    class TimeoutHandler;
+    class EventHandler;
+    class Sender;
+    class Receiver;
 
-        class SH;
+    /**
+     * class Adapter
+     *
+     * Sets up a multicast gateway: events sent over the eventchannel
+     * are multicasted to the peers in the multicast group.
+     *
+     * Since multicast is a very efficient way for group
+     * communication, this is a very robust and simple way for
+     * multi-agent scenarios  like RoboCup robot soccer games.
+     *
+     * Network connections via Wireless Lan (e.g. IEEE 802.11) are not
+     * as reliable as wired networks. Thus, a connectionless protocol
+     * like UDP is very useful.
+     *
+     * The datagrams are sent once and every peer that subscribed the
+     * multicast group takes a copy of this packet. So the capacity
+     * costs are kept very low.
+     *
+     * An ip multicast interface already is defined in TAO for the
+     * Real-Time EventChannel. I've implemented an own version for
+     * Miro, since Miro uses the Notification EventChannel.
+     *
+     * Subscribes the IP/MC group given in _multicastAddress. If
+     * _multicastAddress is omitted, 225.2.2.1 is used as the default
+     * MC-Group.  A connection to the EventChannel given by
+     * _eventChannel is established, the necessary events are
+     * subscribed and arriving events are pushed into this
+     * EventChannel
+     */
 
-        class TimeoutHandler;
+    class Adapter 
+    {
 
-        class EventHandler;
+    public:
+      //! Initializing constructor.
+      Adapter(int& _argc,
+	      char *_argv[],
+	      Miro::Client *_client,
+	      CosNotifyChannelAdmin::EventChannel_ptr _eventChannel,
+	      unsigned int _eventMaxAge = 500,
+	      std::string _multicastAddress = "225.2.2.1")
+	throw(CORBA::Exception, Miro::Exception);
 
-        class Sender;
+      //! Destructor
+      ~Adapter() throw();
 
-        class Receiver;
+      void init();
+      void fini();
 
-        /**
-         * class Adapter
-         *
-         *   Descritpion:
-         *     Subscribes the IP/MC group given in _multicastAddress. If _multicastAddress
-         *     is omitted, 225.2.2.1 is used as the default MC-Group.
-         *     A connection to the EventChannel given by _eventChannel is established,
-         *     the necessary events are subscribed and arriving events are pushed into
-         *     this EventChannel
-         */
+      //! Returns pointer to sender.
+      Sender *getSender();
 
-        class Adapter {
+      //! Returns pointer to receiver.
+      Receiver *getReceiver();
 
-            public:
-                //! Initializing constructor.
-                Adapter(
-                    int _argc,
-                    char *_argv[],
-                    Miro::Client *_client,
-                    CosNotifyChannelAdmin::EventChannel_ptr _eventChannel,
-                    unsigned int _eventMaxAge = 500,
-                    std::string _multicastAddress = "225.2.2.1")
-                throw(CORBA::Exception, Miro::Exception);
+      // Fried classes
 
-                //! Destructor
-                ~Adapter() throw(CORBA::Exception, Miro::Exception);
+      friend class Receiver;
+      friend class Sender;
 
-                void init();
-                void fini();
+    protected:
+      Miro::Client *client_;
+      ACE_Reactor *reactor_;
+      Config configuration_;
 
-                //! Returns pointer to sender.
-                Sender *getSender();
+      Sender *sender_;
+      Receiver *receiver_;
 
-                //! Returns pointer to receiver.
-                Receiver *getReceiver();
+      /* event handling */
+      int eventHandlerId_;
+      EventHandler *eventHandler_;
 
-                /* Fried classes */
+      /* timeout handling */
+      int timeoutHandlerId_;
+      TimeoutHandler *timeoutHandler_;
+      ACE_Time_Value timeoutHandlerInterval_;
 
-                friend class Receiver;
+      int shId_;
+      SH *sh_;
+      ACE_Time_Value shInterval_;
 
-                friend class Sender;
+      /* logfile */
+      std::ofstream logfile_;
+      bool useLogfile_;
 
-            protected:
-                Miro::Client *client_;
+      ACE_Date_Time dt_;
 
-                ACE_Reactor *reactor_;
-
-                Config configuration_;
-
-                Sender *sender_;
-                Receiver *receiver_;
-
-                /* event handling */
-                int eventHandlerId_;
-                EventHandler *eventHandler_;
-
-                /* timeout handling */
-                int timeoutHandlerId_;
-                TimeoutHandler *timeoutHandler_;
-                ACE_Time_Value timeoutHandlerInterval_;
-
-                int shId_;
-                SH *sh_;
-                ACE_Time_Value shInterval_;
-
-                /* logfile */
-                std::ofstream logfile_;
-                bool useLogfile_;
-
-                ACE_Date_Time dt_;
-
-                static const char months[13][4];
-
-        };
+      static const char months[13][4];
     };
-};
 
-#endif /* NotifyMulticastAdapter_h */
+    inline
+    Sender *
+    Adapter::getSender() {
+      return sender_;
+    }
+
+    inline
+    Receiver *
+    Adapter::getReceiver() {
+      return receiver_;
+    }
+  }
+}
+#endif // NotifyMulticastAdapter_h 

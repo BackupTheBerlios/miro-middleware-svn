@@ -33,17 +33,20 @@
 /* Miro includes */
 #include "NotifyMulticastDomainEventFilter.h"
 
-namespace Miro {
-
-    namespace NotifyMulticast {
-
-        DomainEventFilter::DomainEventFilter(const std::string & _domain_name)
-	 :  domain_name_(_domain_name) {}
-	 
-        bool DomainEventFilter::isAccepted(const CosNotification::StructuredEvent &_event)
-	{
-            return (!ACE_OS::strcmp((const char *)_event.header.fixed_header.event_type.domain_name, domain_name_.c_str()));
-	}
-    };
-};
+namespace Miro 
+{
+  namespace NMC
+  {
+    DomainEventFilter::DomainEventFilter(const std::string & _domain_name) :
+      domain_name_(_domain_name) 
+    {}
+    
+    bool
+    DomainEventFilter::isAccepted(const CosNotification::StructuredEvent &_event)
+    {
+      return (!ACE_OS::strcmp((char const *)_event.header.fixed_header.event_type.domain_name, 
+			      domain_name_.c_str()));
+    }
+  }
+}
 

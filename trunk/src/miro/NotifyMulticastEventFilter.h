@@ -30,30 +30,30 @@
 //  $Id$
 //
 //////////////////////////////////////////////////////////////////////////////
-
 #ifndef NotifyMulticastEventFilter_h
 #define NotifyMulticastEventFilter_h
 
 /* Miro includes */
 #include "StructuredPushConsumer.h"
 
-namespace Miro {
-
-    namespace NotifyMulticast {
-
-        class EventFilter {
-
-            public:
-                /* Default constructor */
-                EventFilter() {};
-		
-                /* Default destructor */
-                virtual ~EventFilter() {};
-
-                virtual bool isAccepted(const CosNotification::StructuredEvent &_event) = 0;
-        };
+namespace Miro 
+{
+  namespace NMC 
+  {
+    class EventFilter 
+    {
+    public:
+      //! Default constructor.
+      EventFilter() 
+      {};
+      
+      //! Default destructor 
+      virtual ~EventFilter() 
+      {};
+      
+      virtual bool isAccepted(const CosNotification::StructuredEvent &_event) = 0;
     };
-};
-
-#endif /* NotifyMulticastEventFilter_h */
+  }
+}
+#endif // NotifyMulticastEventFilter_h
 

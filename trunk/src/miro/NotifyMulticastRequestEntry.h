@@ -22,7 +22,6 @@
 //  $Id$
 //
 //////////////////////////////////////////////////////////////////////////////
-
 #ifndef NotifyMulticastRequestEntry_h
 #define NotifyMulticastRequestEntry_h
 
@@ -37,100 +36,71 @@
 #include <orbsvcs/CosNotifyChannelAdminS.h>
 #include <orbsvcs/CosNotifyCommC.h>
 
-// Hack for TAO <= x.2.1 compability
+namespace Miro 
+{
+  namespace NMC 
+  {
+    class RequestEntry 
+    {
+    public:
+      enum {
+	DEFAULT_FRAGMENT_BUFSIZ = 8
+      };
 
-#ifndef ACE_ENV_ARG_DECL_WITH_DEFAULTS
-#define ACE_ENV_ARG_DECL_WITH_DEFAULTS \
- , CORBA::Environment &ACE_TRY_ENV = TAO_default_environment ()
-#endif
-#ifndef ACE_ENV_SINGLE_ARG_DECL_WITH_DEFAULTS
-#define ACE_ENV_SINGLE_ARG_DECL_WITH_DEFAULTS \
- CORBA::Environment &ACE_TRY_ENV = TAO_default_environment ()
-#endif
-#ifndef ACE_ENV_ARG_DECL
-#define ACE_ENV_ARG_DECL \
- , CORBA::Environment & _ACE_CORBA_Environment_variable
-#endif
-#ifndef ACE_ENV_SINGLE_ARG_DECL
-#define ACE_ENV_SINGLE_ARG_DECL \
- CORBA::Environment & _ACE_CORBA_Environment_variable
-#endif
-#ifndef ACE_ENV_ARG_DECL_NOT_USED
-#define ACE_ENV_ARG_DECL_NOT_USED \
- , CORBA::Environment &
-#endif
-#ifndef ACE_ENV_SINGLE_ARG_DECL_NOT_USED
-#define ACE_ENV_SINGLE_ARG_DECL_NOT_USED \
- CORBA::Environment &
-#endif
+      /** Initialize the fragment, allocating memory, etc. */
+      RequestEntry(CORBA::Boolean byteOrder,
+		   CORBA::ULong   requestId,
+		   CORBA::ULong   requestSize,
+		   CORBA::ULong   fragmentCount);
+      ~RequestEntry (void);
 
-namespace Miro {
+      /** Validate a fragment, it should be rejected if it is invalid.. */
+      int validateFragment(CORBA::Boolean byteOrder,
+			   CORBA::ULong   requestSize,
+			   CORBA::ULong   fragmentSize,
+			   CORBA::ULong   fragmentOffset,
+			   CORBA::ULong   fragmentId,
+			   CORBA::ULong   fragmentCount) const;
 
-    namespace NotifyMulticast {
+      /* Has <fragment_id> been received? */
+      int testReceived(CORBA::ULong fragmentId) const;
 
-        class RequestEntry {
+      /* Mark <fragment_id> as received, reset timeout counter... */
+      void markReceived(CORBA::ULong fragmentId);
 
-            public:
-                enum {
-                    DEFAULT_FRAGMENT_BUFSIZ = 8
-            };
+      /* Is the message complete? */
+      int complete(void) const;
 
-                ~RequestEntry (void);
+      /* Return a buffer for the fragment at offset <fragment_offset> */
+      char* fragmentBuffer(CORBA::ULong fragmentOffset);
 
-                /* Initialize the fragment, allocating memory, etc. */
-                RequestEntry(CORBA::Boolean byteOrder,
-                             CORBA::ULong   requestId,
-                             CORBA::ULong   requestSize,
-                             CORBA::ULong   fragmentCount);
+      /* Decode the events, the message must be complete. */
+      void decode(CosNotification::StructuredEvent &event) throw (CORBA::MARSHAL);
 
-                /* Validate a fragment, it should be rejected if it is invalid.. */
-                int validateFragment(CORBA::Boolean byteOrder,
-                                     CORBA::ULong   requestSize,
-                                     CORBA::ULong   fragmentSize,
-                                     CORBA::ULong   fragmentOffset,
-                                     CORBA::ULong   fragmentId,
-                                     CORBA::ULong   fragmentCount) const;
+      /* Increment the timeout counter... */
+      void incTimeout(void);
 
-                /* Has <fragment_id> been received? */
-                int testReceived(CORBA::ULong fragmentId) const;
+      /* Get the timeout counter.... */
+      int getTimeout(void) const;
 
-                /* Mark <fragment_id> as received, reset timeout counter... */
-                void markReceived(CORBA::ULong fragmentId);
+    private:
+      /* This attributes should remain constant in all the fragments, used *
+       * for validation....                                                */
+      CORBA::Boolean    byteOrder_;
+      CORBA::ULong      requestId_;
+      CORBA::ULong      requestSize_;
+      CORBA::ULong      fragmentCount_;
 
-                /* Is the message complete? */
-                int complete(void) const;
+      CORBA::ULong      timeoutCounter_;
+      ACE_Message_Block payload_;
 
-                /* Return a buffer for the fragment at offset <fragment_offset> */
-                char* fragmentBuffer(CORBA::ULong fragmentOffset);
-
-                /* Decode the events, the message must be complete. */
-                void decode(CosNotification::StructuredEvent &event
-                            ACE_ENV_ARG_DECL_WITH_DEFAULTS);
-
-                /* Increment the timeout counter... */
-                void incTimeout(void);
-
-                /* Get the timeout counter.... */
-                int getTimeout(void) const;
-
-            private:
-                /* This attributes should remain constant in all the fragments, used *
-                 * for validation....                                                */
-                CORBA::Boolean    byteOrder_;
-                CORBA::ULong      requestId_;
-                CORBA::ULong      requestSize_;
-                CORBA::ULong      fragmentCount_;
-
-                CORBA::ULong      timeoutCounter_;
-                ACE_Message_Block payload_;
-
-                /* This is a bit vector, used to keep track of the received buffers. */
-                CORBA::ULong     *receivedFragments_;
-                int               ownReceivedFragments_;
-                CORBA::ULong      receivedFragmentsSize_;
-                CORBA::ULong      defaultReceivedFragments_[DEFAULT_FRAGMENT_BUFSIZ];
-        };
+      /* This is a bit vector, used to keep track of the received buffers. */
+      CORBA::ULong     *receivedFragments_;
+      int               ownReceivedFragments_;
+      CORBA::ULong      receivedFragmentsSize_;
+      CORBA::ULong      defaultReceivedFragments_[DEFAULT_FRAGMENT_BUFSIZ];
     };
-};
+  }
+}
 
-#endif
+#endif // NotifyMulticastRequestEntry_h

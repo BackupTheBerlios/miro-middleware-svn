@@ -1,9 +1,9 @@
-#// -*- c++ -*- ///////////////////////////////////////////////////////////////
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 //  NotifyMulticastTimeoutHandler
 //
 //
-//  (c) 2002
+//  (c) 2002, 2003, 2004
 //  Department of Neural Information Processing, University of Ulm, Germany
 //
 //
@@ -14,14 +14,6 @@
 //  Version:
 //    1.0.3
 //
-//
-//  Description:
-//
-//    This event handler periodically calls (with the help of a reactor) the
-//    handle_timeout routine of the receiver to invalidate events that are
-//    incomplete for longer time.
-//
-//
 //  $Id$
 //
 //////////////////////////////////////////////////////////////////////////////
@@ -30,27 +22,31 @@
 
 #include <ace/Event_Handler.h>
 
+namespace Miro 
+{
+  namespace NMC 
+  {
+    class Receiver;
 
-namespace Miro {
+    /**
+     * This event handler periodically calls (with the help of a
+     * reactor) the handle_timeout routine of the receiver to
+     * invalidate events that are incomplete for longer time.
+     */
+    class TimeoutHandler : public ACE_Event_Handler 
+    {
+      typedef ACE_Event_Handler Super;
+      
+    public:
+      TimeoutHandler(Receiver *_receiver);
 
-    namespace NotifyMulticast {
+      virtual int handle_timeout(const ACE_Time_Value &_tv,
+				 const void           *_act);
 
-        class Receiver;
-
-        class TimeoutHandler : public ACE_Event_Handler {
-                typedef ACE_Event_Handler Super;
-
-            public:
-                TimeoutHandler(Receiver *_receiver);
-
-                virtual int handle_timeout(const ACE_Time_Value &_tv,
-                                           const void           *_act);
-
-            protected:
-                Receiver *receiver_;
-
-        };
+    protected:
+      Receiver *receiver_;
     };
-};
+  }
+}
 
-#endif
+#endif // NotifyMulticastTimeoutHandler_h
