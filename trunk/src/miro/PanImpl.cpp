@@ -16,7 +16,8 @@ namespace Miro
 {
 
   PanImpl::PanImpl(const Miro::PanParameters& _panParameters) :
-    panParameters_(_panParameters)
+    panParameters_(_panParameters),
+    targetPan_(0)
   {}
 
   PanImpl::~PanImpl() {}

@@ -16,7 +16,8 @@ namespace Miro
 {
 
   TiltImpl::TiltImpl(const Miro::TiltParameters& _tiltParameters) :
-    tiltParameters_(_tiltParameters)
+    tiltParameters_(_tiltParameters),
+    targetTilt_(0)
   {}
 
   TiltImpl::~TiltImpl() {}
