@@ -73,9 +73,9 @@
 
       <config_parameter name="infraredDescription" type="Miro::ScanDescriptionIDL" />
       <constructor>
-        static const int distance[8] = { 150, 150, 150, 150, 150, 150, 150, 150 };
-        static const int alpha[8] = { 90, 15, 0, -15, -90, 45, -45, 180 };
-        static const int beta[8] = { 0, -15, 0, 15, 0, 0, 0, 0 };
+        static const int distance[8] = { 226, 159, 75, 159, 226, 183, 183, 250 };
+        static const int alpha[8] = { 95,  62, 0, -62, -96,  79, -79, -154 };
+        static const int beta[8] =  { -5, -62, 0,  62,   6, -34,  34,  154 };
 
         infraredDescription.scanType = ::Miro::RangeSensor::GROUPWISE;
         infraredDescription.eventName = &quot;Infrared&quot;;
