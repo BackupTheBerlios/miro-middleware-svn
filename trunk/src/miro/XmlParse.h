@@ -69,7 +69,7 @@ namespace Miro
     lhs.clear();
     QDomNode n = node.firstChild();
     while (!n.isNull()) {
-      if (!n.isComment()) {
+      if (n.isElement()) {
 	T t;
 	t <<= n;
 	lhs.push_back(t);
@@ -83,7 +83,7 @@ namespace Miro
     lhs.clear();
     QDomNode n = node.firstChild();
     while (!n.isNull()) {
-      if (!n.isComment()) {
+      if (n.isElement()) {
 	T t;
 	t <<= n;
 	lhs.insert(t);
