@@ -33,6 +33,10 @@ namespace Miro
      * maximum speed to velocity space
      */
     void addEvalForPreferredDirection(double, double);
+
+    void addEvalForStraightVelocity(double, double);
+    // clear all evaluations
+    void clearAllEvals(void);
     // add evaluations for given obstacle to velocity space
     void addEvalForObstacle(Polygon&, Polygon&);
     // obtain new velocity, by applying objective function to evaluations in velocity space

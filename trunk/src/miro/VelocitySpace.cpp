@@ -25,9 +25,9 @@ namespace Miro
 
   // constructor
   //
-  VelocitySpace::VelocitySpace(int _maxVelocity, 
+  VelocitySpace::VelocitySpace(int _maxVelocity,
 			       int _spaceResolution,
-			       int _maxAccel, 
+			       int _maxAccel,
 			       int _maxDecel,
 			       int _pace) :
     maxVelocity_(_maxVelocity),		// in mm/sec
@@ -37,7 +37,8 @@ namespace Miro
     pace_(_pace)			// in times/sec
   {
     // init member variables for given parameters
-    
+
+
     // set up velocity space
     int size = 2 * (maxVelocity_/spaceResolution_) + 1;
     space_ = new int[size * size];
@@ -45,19 +46,16 @@ namespace Miro
     for(int i = 0; i < size; i++) {
       velocitySpace_[i] = space_ + i * size;
     }
-    
+
     // set initial dynamic window
     setNewVelocity(Vector2d(0., 0.));
   }
-
   // destructor
   //
-  VelocitySpace::~VelocitySpace() 
+  VelocitySpace::~VelocitySpace()
   {
     delete[] space_;
   }
-  
-  
   // add evaluation for preferred direction
   //
   void
@@ -65,25 +63,74 @@ namespace Miro
   {
     double l_value, r_value, left, right;
     double _maxSpeed2 = _maxSpeed * _maxSpeed;
-    
+
     for(int l_index = minDynWinLeft_; l_index <= maxDynWinLeft_; l_index++) {
       for(int r_index = minDynWinRight_; r_index <= maxDynWinRight_; r_index++) {
-        
+
 	left = getVelocityByIndex(l_index);
 	right = getVelocityByIndex(r_index);
 	l_value =
 	  cos(_prefDir - M_PI_4) * left -
 	  sin(_prefDir - M_PI_4) * right;
-	r_value = 
-	  sin(_prefDir - M_PI_4) * left + 
+	r_value =
+	  sin(_prefDir - M_PI_4) * left +
 	  cos(_prefDir - M_PI_4) * right;
-	
-	if (left*left + right*right <= _maxSpeed2)
-	  velocitySpace_[l_index][r_index] = 
-	    (int)rint(255. * (1. + 
-			      atan(l_value / fabs(r_value)) / M_PI_2) / 2.);
+
+        left*left + right*right;
+	if (left*left + right*right <= _maxSpeed2){
+            velocitySpace_[l_index][r_index] =
+	    (int)rint(255. * ((1. +
+			      atan(fabs(l_value /r_value)) / M_PI_2) / 2.));
+
+        }
 	else
 	  velocitySpace_[l_index][r_index] = 0;
+      }
+    }
+  }
+
+  void VelocitySpace::addEvalForStraightVelocity(double _prefDir, double _maxSpeed)
+  {
+    double l_value, r_value, left, right;
+    double _maxSpeed2 = _maxSpeed * _maxSpeed;
+    double axis_direction;
+    double axis_value;
+    double v_dist;
+
+    for(int l_index = minDynWinLeft_; l_index <= maxDynWinLeft_; l_index++) {
+      for(int r_index = minDynWinRight_; r_index <= maxDynWinRight_; r_index++) {
+
+	left = getVelocityByIndex(l_index);
+	right = getVelocityByIndex(r_index);
+	l_value =
+	  cos(_prefDir - M_PI_4) * left -
+	  sin(_prefDir - M_PI_4) * right;
+	r_value =
+	  sin(_prefDir - M_PI_4) * left +
+	  cos(_prefDir - M_PI_4) * right;
+
+        v_dist = sqrt(left*left + right*right);
+	if (v_dist <= _maxSpeed){
+            axis_direction = (fabs(atan2(l_value, r_value)) > M_PI_2)?-1.0:1.0;
+            axis_value = ((axis_direction*v_dist)/abs(maxVelocity_) + 1.0)/2.0;
+            velocitySpace_[l_index][r_index] =
+	    (int)rint(255. * (((1. +
+			      atan(fabs(l_value /r_value)) / M_PI_2) / 2.)*axis_value));
+
+        }
+	else
+	  velocitySpace_[l_index][r_index] = 0;
+      }
+    }
+  }
+
+
+  // clear all evaluations
+  //
+  void VelocitySpace::clearAllEvals(void) {
+    for(int l_index = 0; l_index < 2*(maxVelocity_/spaceResolution_)+1; l_index++) {
+      for(int r_index = 0; r_index < 2*(maxVelocity_/spaceResolution_)+1; r_index++) {
+        velocitySpace_[l_index][r_index] = 0;
       }
     }
   }
@@ -264,7 +311,7 @@ namespace Miro
   // calc new velocity
   //
   Vector2d
-  VelocitySpace::applyObjectiveFunctionToEval() 
+  VelocitySpace::applyObjectiveFunctionToEval()
   {
     int biggestEval = 10;		// start with a threshold of 10
     double biggestRad = 0.;
@@ -284,7 +331,7 @@ namespace Miro
 	if(    (velocitySpace_[l_index][r_index] > biggestEval)
 	    || (velocitySpace_[l_index][r_index] == biggestEval
 	       && (left*left)+(right*right) > biggestRad )    )
-	{		
+	{
           biggestEval = velocitySpace_[l_index][r_index];
 	  biggestRad = (left * left) + (right * right);
 	  biggestValueVelocity = Vector2d(left,right);
@@ -299,18 +346,18 @@ namespace Miro
 	temp_left = std::min(0., velocity_.real() + maxAccel_ / pace_);
       }
       else {
-        temp_left = std::max(0., velocity_.real() - maxDecel_ / pace_);	
+        temp_left = std::max(0., velocity_.real() - maxDecel_ / pace_);
       }
       if(velocity_.imag() < 0.) {
         temp_right = std::min(0., velocity_.imag() + maxAccel_ / pace_);
       }
       else {
-        temp_right = std::max(0., velocity_.imag() - maxDecel_ / pace_);	
+        temp_right = std::max(0., velocity_.imag() - maxDecel_ / pace_);
       }
       biggestValueVelocity = Vector2d(temp_left, temp_right);
     }
 
-    // set new velocity 
+    // set new velocity
     setNewVelocity(biggestValueVelocity);
 
     return biggestValueVelocity;
@@ -320,11 +367,11 @@ namespace Miro
   // private methods
   //
 
- 
+
   // set new velocity
   //
-  void 
-  VelocitySpace::setNewVelocity(Vector2d const& _velocity) 
+  void
+  VelocitySpace::setNewVelocity(Vector2d const& _velocity)
   {
     velocity_ = _velocity;
     minDynWinLeft_ = getIndexByVelocity((int)velocity_.real() - (maxDecel_ / pace_));
@@ -333,13 +380,13 @@ namespace Miro
     maxDynWinRight_ = getIndexByVelocity((int)velocity_.imag() + (maxAccel_ / pace_));
   }
 
-  
+
   // get signed distance between point and line
   //
-  double 
+  double
   VelocitySpace::getSignedDistanceBetweenPointAndLine(Vector2d const& _p1,
 						      Vector2d const& _l1,
-						      Vector2d const& _l2) 
+						      Vector2d const& _l2)
   {
     Vector2d l1_l2, l1_p1, l2_p1;
 
@@ -370,18 +417,18 @@ namespace Miro
 
   // get distance between two lines
   //
-  double 
+  double
   VelocitySpace::getDistanceBetweenLineAndLine(Vector2d const& _l1,
 					       Vector2d const& _l2,
 					       Vector2d const& _l3,
-					       Vector2d const& _l4) 
+					       Vector2d const& _l4)
   {
     double l1_to_l3_l4 = getSignedDistanceBetweenPointAndLine(_l1, _l3, _l4);
     double l2_to_l3_l4 = getSignedDistanceBetweenPointAndLine(_l2, _l3, _l4);
     double l3_to_l1_l2 = getSignedDistanceBetweenPointAndLine(_l3, _l1, _l2);
     double l4_to_l1_l2 = getSignedDistanceBetweenPointAndLine(_l4, _l1, _l2);
 
-    if( ((l1_to_l3_l4 * l2_to_l3_l4) < 0) && 
+    if( ((l1_to_l3_l4 * l2_to_l3_l4) < 0) &&
 	((l3_to_l1_l2 * l4_to_l1_l2) < 0) )
       return 0;
 

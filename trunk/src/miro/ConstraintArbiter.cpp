@@ -145,18 +145,19 @@ namespace Miro
       bv[j->second] = j->first;
     }
     BehaviourVector::const_iterator k;
+    velocitySpace_.clearAllEvals();
     for(k = bv.begin(); k != bv.end(); k++) {
       (*k)->addEvaluation(&velocitySpace_);
     }
 
     // calculate new velocity using the content of the velocity space
     velocity = velocitySpace_.applyObjectiveFunctionToEval();
-    
-    //    cout << "LEFT: " << velocity.real() << " ::: " << velocity.imag() << endl; 
-    
+
+    //    cout << "LEFT: " << velocity.real() << " ::: " << velocity.imag() << endl;
+
     // set steering commands
     pMotion_->setLRVelocity(velocity.real(), velocity.imag());
-    
+
 //    logFile1 = std::fopen("velocityspace.log","a");
 //    for(int r_index = 0; r_index <= 2*(velocitySpace_.maxVelocity_/velocitySpace_.spaceResolution_)+1; r_index++) {
 //	for(int l_index = 0; l_index <= 2*(velocitySpace_.maxVelocity_/velocitySpace_.spaceResolution_)+1; l_index++) {
@@ -164,7 +165,7 @@ namespace Miro
 //	}
 //    }
 //    fclose(logFile1);
- 
+
     return 0;
   }
 
