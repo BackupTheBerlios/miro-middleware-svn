@@ -69,9 +69,11 @@ namespace Miro
     lhs.clear();
     QDomNode n = node.firstChild();
     while (!n.isNull()) {
-      T t;
-      t <<= n;
-      lhs.push_back(t);
+      if (!n.isComment()) {
+	T t;
+	t <<= n;
+	lhs.push_back(t);
+      }
       n = n.nextSibling();
     }
   }
@@ -81,9 +83,11 @@ namespace Miro
     lhs.clear();
     QDomNode n = node.firstChild();
     while (!n.isNull()) {
-      T t;
-      t <<= n;
-      lhs.insert(t);
+      if (!n.isComment()) {
+	T t;
+	t <<= n;
+	lhs.insert(t);
+      }
       n = n.nextSibling();
     }
   }

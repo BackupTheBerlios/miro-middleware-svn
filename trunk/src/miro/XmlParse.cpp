@@ -42,7 +42,7 @@ namespace
 {
   const QString getAttribute(QDomNode _node, const QString& _attribute)
   {
-    QString value;
+    QString value("");
 
     if( !_node.isNull() ) {
       QDomElement e = _node.toElement(); // try to convert the node to an element.
@@ -127,6 +127,8 @@ namespace Miro
 
   void operator <<= (std::string& lhs, const QDomNode& node)
   {
+    QString attrib = getAttribute(node, QString("value"));
+    cout << attrib << endl;
     lhs = getAttribute(node, QString("value")).latin1();
   }
 
