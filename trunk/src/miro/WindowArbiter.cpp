@@ -114,7 +114,7 @@ namespace Miro
   int
   WindowArbiter::handle_timeout(const ACE_Time_Value &, const void*)
   {
-    const double RADSTAND = 390;
+    const double RADSTAND = 390; // florian: besser aus parameter struct
 
     Miro::VelocityIDL  velocity;
     std::complex<double> newVelocity;
@@ -136,12 +136,15 @@ namespace Miro
     // Calculate new velocity using the content of the dynamicWindow    
     newVelocity = dynWindow_.calcNewVelocity();
     newVelocity = std::complex<double>(std::max(std::min(40., newVelocity.real()),-40.), std::max(std::min(40.,newVelocity.imag()),-40.));
+
+    // florian: gehört eigentlich vor die ->calcDynamicWindow Schleife
     dynWindow_.setNewDynamicWindow(newVelocity);
     
     // print velocity for debugging
     cout << "\nVelocity: left: " << newVelocity.real() << " - right: " << newVelocity.imag() << endl;
 
     // Set motion
+    // florian: probier mal wie's mit setLRVelocity läuft.
     velocity.translation = 10 * ((int)newVelocity.real() + (int)newVelocity.imag()) / 2;
     velocity.rotation = 10 * ((int)newVelocity.imag() - (int)newVelocity.real()) / RADSTAND;
     if (velocity.translation != currentVelocity_.translation || velocity.rotation != currentVelocity_.rotation) {
@@ -152,6 +155,9 @@ namespace Miro
     return 0;
   }
   
+  // florian: bei close sollten wir anhalten. - oder so
+  // florian: eventuell mit priority-Arbiter und arbitrate() verheiraten
+
   const std::string&
   WindowArbiter::getName() const
   {

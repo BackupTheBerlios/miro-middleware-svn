@@ -1,3 +1,4 @@
+// florian: Miro header einfügen
 // dynamicWindow.h
 #ifndef DynamicWindow_h
 #define DynamicWindow_h
@@ -5,14 +6,15 @@
 #include <vector>
 #include <complex>
 
+// florian: const static member variables?
 #define VEL_SPACE_LEFT 201
 #define VEL_SPACE_RIGHT 201
 #define PACE 10
 
-typedef std::complex<double> Vector2d;
-
 namespace Miro
 {
+  typedef std::complex<double> Vector2d;
+
   class DynamicWindow 
   {
   public:
@@ -22,17 +24,25 @@ namespace Miro
     ~DynamicWindow();
     // check for collisions for every reachable velocity
     // and update the content of the actual dynamic window
+
+    // florain: const !
     void collisionCheck(std::vector<Vector2d>&, std::vector<Vector2d>&);
     // calculate the new velocity using the content
     // of the actual dynamic window
+
+    // florian: const ?
     Vector2d calcNewVelocity();
     // set the new velocity and calculate the size
     // of the new dynamicWindow
+
+    // florian: const &
     void setNewDynamicWindow(Vector2d);
     // set a prefferedDirection and prefferedTranslation
     // and calculate the new content of the velocitySpace
     void setPreferredDirection(double);
     // get distance between two given polygons
+
+    // florian: const vector , const ?
     double getPolygonDistance(std::vector<Vector2d>&, std::vector<Vector2d>&);
     // rotate the given polygon around the given point by the given angle
     void rotateMountedPolygon(std::vector<Vector2d>&, Vector2d, double);

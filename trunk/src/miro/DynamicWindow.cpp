@@ -1,3 +1,4 @@
+// florian: Miro header
 // dynamicWindow.cc
 #include "DynamicWindow.h"
 #include <iostream>
@@ -6,8 +7,6 @@
 
 namespace Miro
 {
-  typedef std::complex<double> Vector2d;
-  
   using std::min;
   using std::max;
 
@@ -75,17 +74,25 @@ namespace Miro
 
     bestVelocity  = velocity_;
     biggestLineValueAverage = 0.;
+
+    // florain: warum nicht gleich in rad?
+    // #inlucde <miro/Angle.h>, using Miro::deg2Rad;
+    // for (angle = deg2Rad(0); angle < deg2Rad(360); angle += deg2Rad(ANGE_STEP)
     for(angle = 0.; angle < 360.; angle += ANGLE_STEP) {
       // calculate sinus and cosinus of the angle
+
+      // florian: pi = M_PI
       sinAngle = sin(angle * 3.1415 / 180.);
       cosAngle = cos(angle * 3.1415 / 180.);
       // start in the middle of the velocity space
       fLeft = 0.; fRight = 0.;
 		
+      // florian: bitte nur ein statement pro zeile - danke
       sumOfLineValues = 0; stepCount = 0; biggestLineValue = 0;
       bestLineVelocity = std::complex<double>(std::min(maxLeft_, std::max(0,minLeft_)),
 					      std::min(maxRight_, std::max(0,minRight_)));
-		
+
+      // florian: optimierungspotential?!
       for(lineSize = 0; lineSize < 150; lineSize += STEP_SIZE) {
 	fLeft += cosAngle * STEP_SIZE;
 	fRight += sinAngle * STEP_SIZE;
@@ -115,6 +122,7 @@ namespace Miro
 
   void DynamicWindow::collisionCheck(std::vector<Vector2d> &_robot, std::vector<Vector2d> &_obstacle) {
 		
+    // muss parameterisierbar sein, für andere Roboter...
     const double WHEEL_DISTANCE  = 390.;  // in mm
     // const double BREAK_ACCEL = 2000.;     // in mm/sec²
     const double SCALE_ANGLE = 0.5;
@@ -299,6 +307,7 @@ namespace Miro
   double DynamicWindow::getAngleBetweenVectors(Vector2d _v1, Vector2d _v2) {
 
     double a1 = atan(_v1.imag() / _v1.real());
+    // florian: nach if () bitte newline
     if(_v1.real() < 0) a1 += M_PI;
     if(_v1.real() >= 0 && _v1.imag() < 0) a1 += 2 * M_PI;
     
@@ -346,6 +355,7 @@ namespace Miro
     }
     
     // calculate point of intersection d and...
+    // florian: found bool -> found == true<==> found
     if(found==true) {  // ...check, if intersection is in the line boundaries...
       d = _p1 - (b * beta);
       if((d.real() >= min(_l1.real(), _l2.real())) && (d.real() <= max(_l1.real(), _l2.real())) &&
