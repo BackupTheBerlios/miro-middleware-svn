@@ -100,6 +100,7 @@ AC_DETERMINE_VIDEODEVICES
 AH_TEMPLATE([MIRO_HAS_BTTV], [build with 1394 support.])
 AH_TEMPLATE([MIRO_HAS_METEOR], [build with Meteor support.])
 AH_TEMPLATE([MIRO_HAS_1394], [build with BTTV support.])
+AH_TEMPLATE([MIRO_HAS_QUICKCAM], [build with QuickCam support.])
 
 if test "x$ac_request_bttv" = xyes; then
 	AC_DEFINE(MIRO_HAS_BTTV)
@@ -113,14 +114,20 @@ fi
 
 if test "x$ac_request_ieee1394" = xyes &&
 	test "x$ac_have_libraw1394" = xyes &&
-	test "x$ac_have_libdc1394" = xyes; then 
+	test "x$ac_have_libdc1394" = xyes; then
 	AC_DEFINE(MIRO_HAS_1394)
 	ac_miro_has_1394=yes
+fi
+
+if test "x$ac_request_quickcam" = xyes; then
+	AC_DEFINE(MIRO_HAS_QUICKCAM)
+	ac_miro_has_quickcam=yes
 fi
 
 AM_CONDITIONAL(COND_BTTV, [test "x$ac_miro_has_bttv" = xyes])
 AM_CONDITIONAL(COND_METEOR, [test "x$ac_miro_has_meteor" = xyes])
 AM_CONDITIONAL(COND_IEEE1394, [test "x$ac_miro_has_1394" = xyes])
+AM_CONDITIONAL(COND_QUICKCAM, [test "x$ac_miro_has_quickcam" = xyes])
 
 if test "x$ac_request_docu" = xyes; then
 	if test "x$ac_has_bibtex" = xyes &&
@@ -340,6 +347,7 @@ echo ""
 echo $ECHO_N "BTTV support "; if test "x$ac_miro_has_bttv" = xyes; then echo "enabled."; else echo "disabled."; fi
 echo $ECHO_N "Meteor support "; if test "x$ac_miro_has_meteor" = xyes; then echo "enabled."; else echo "disabled."; fi
 echo $ECHO_N "IEEE1394 support "; if test "x$ac_miro_has_1394" = xyes; then echo "enabled."; else echo "disabled."; fi
+echo $ECHO_N "QuickCam support "; if test "x$ac_miro_has_quickcam" = xyes; then echo "enabled."; else echo "disabled."; fi
 echo ""
 echo $ECHO_N "Speech support "; if test "x$ac_compile_speech" = xyes; then echo "enabled."; else echo "disabled."; fi
 echo ""
