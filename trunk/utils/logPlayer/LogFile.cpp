@@ -82,6 +82,16 @@ LogFile::parse()
     ec_ = channelManager_->getEventChannel(domainName_);
     supplier_ = new Miro::StructuredPushSupplier(ec_.in(), domainName_.latin1());
 
+    CosNotification::EventTypeSeq offers;
+    offers.length(typeNames_.size());
+
+    CStringSet::const_iterator typeName = typeNames_.begin();
+    for (unsigned int i = 0; i < offers.length(); ++i, ++ typeName) {
+      offers[i].domain_name = CORBA::string_dup(domainName_.latin1());
+      offers[i].type_name = CORBA::string_dup(typeName->latin1());
+    }
+    supplier_->setOffers(offers);
+
     delete istr_;
     istr_ = NULL;
     rc = 100;
