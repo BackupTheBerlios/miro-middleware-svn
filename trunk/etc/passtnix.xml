@@ -86,6 +86,7 @@
     <parameter value="-1000" name="MinRTranslation" />
    </parameter>
   </parameter>
+ </section>
  <section name="Video" >
   <parameter name="Video" >
    <parameter value="odd" name="Subfield" />

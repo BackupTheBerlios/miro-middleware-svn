@@ -166,7 +166,9 @@
     <parameter value="-1000" name="MinRTranslation" />
    </parameter>
   </parameter>
-  <parameter name="ActiveMedia" >
+ </section>
+ <section name="ActiveMedia" >
+  <parameter name="PioneerBoard">
    <parameter value="/dev/tts/0" name="Device" />
    <parameter name="TtyParams" >
     <parameter value="9600" name="Baudrate" />
@@ -303,7 +305,7 @@
  </section>
  <section name="Notification" >
   <parameter name="Logging" >
-   <parameter name="TypeName" />
+   <parameter name="TypeName">
     <parameter value="Infrared" />
     <parameter value="Odometry" />
     <parameter value="RawPosition" />
@@ -315,12 +317,12 @@
     <parameter value="ArbitrateChange" />
     <parameter value="PositionHypothesis" />
    </parameter>
-  <parameter value="157286400" name="MaxFileSize" />
+   <parameter value="157286400" name="MaxFileSize" />
   </parameter>
   <parameter name="NotifyMulticast" >
-   <parameter value="225.2.2.1" name="Multicastgroup" />
+   <parameter value="225.2.2.1:41006" name="Multicastgroup" />
    <parameter value="500" name="Messagetimeout" />
-    <parameter value="Subscription">
+   <parameter name="Subscription">
      <parameter value="BallPosition" />
      <parameter value="LocalizedPosition" />
    </parameter>
