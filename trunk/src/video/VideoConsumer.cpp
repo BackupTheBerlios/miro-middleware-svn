@@ -92,8 +92,7 @@ namespace Video
     while (running)
     {
       try {
-	void*	pNextImageData;
-	pNextImageData = connection.videoDevice.grabImage();
+	void*	pNextImageData = connection.videoDevice.grabImage();
 
 	/**************
 	 *
