@@ -214,6 +214,7 @@ AC_CONFIG_FILES([Makefile
                  tests/speech/Makefile
                  tests/sphinx/Makefile
                  tests/video/Makefile
+                 tests/videoBroker/Makefile
                  utils/Joystick/Makefile
                  utils/Makefile
                  utils/logPlayer/Makefile
