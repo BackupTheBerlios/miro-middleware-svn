@@ -85,7 +85,8 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
 //  pSonar_((Sparrow::Parameters::instance()->goalie && !Sparrow::Parameters::instance()->sparrow2003)?
 //	  new Miro::RangeSensorImpl(Pioneer::Parameters::instance()->sonarDescription,
 //				    &structuredPushSupplier_, true) : NULL),
-  infrared(Sparrow::Parameters::instance()->infraredDescription,
+  infrared((Sparrow::Parameters::instance()->sparrow2003)?Sparrow::Parameters::instance()->infraredDescription2003:
+                                                          Sparrow::Parameters::instance()->infraredDescription,
 	   &structuredPushSupplier_, true),
 
   // Sparrow board initialization
@@ -104,7 +105,7 @@ SparrowBase::SparrowBase(int argc, char *argv[]) :
   // Pioneer board initialization
   //pPioneer((Sparrow::Parameters::instance()->goalie && !Sparrow::Parameters::instance()->sparrow2003)?
   //	   new PioneerHardware(reactorTask.reactor(), pSonar_.get()) : NULL),
-  pPioneer(NULL),	   
+  pPioneer(NULL),
 
   // Faulhaber board initialization
   pFaulhaber((Sparrow::Parameters::instance()->faulhaber)?
@@ -202,7 +203,8 @@ SparrowBase::SparrowBase(Server& _server, bool _startReactorTastk) :
   //pSonar_((Sparrow::Parameters::instance()->goalie && !Sparrow::Parameters::instance()->sparrow2003)?
 //	  new Miro::RangeSensorImpl(Pioneer::Parameters::instance()->sonarDescription,
 //				    &structuredPushSupplier_, true) : NULL),
-  infrared(Sparrow::Parameters::instance()->infraredDescription,
+  infrared((Sparrow::Parameters::instance()->sparrow2003)?Sparrow::Parameters::instance()->infraredDescription2003:
+                                                          Sparrow::Parameters::instance()->infraredDescription,
 	   &structuredPushSupplier_, true),
 
   // Sparrow board initialization
