@@ -61,7 +61,7 @@ namespace Sparrow
   void
   PanTiltImpl::setPan(CORBA::Float _value) throw (EDevIO, EOutOfBounds)
   {
-    if (isnan(connection_->getPanPosition()))
+    if (!params_.servo && isnan(connection_->getPanPosition()))
       return;
 
     ACE_Guard<ACE_Recursive_Thread_Mutex> guard(mutex_);
