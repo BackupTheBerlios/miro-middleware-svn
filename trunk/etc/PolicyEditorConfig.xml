@@ -1,0 +1,5 @@
+<xml> 
+  <configItem name="files">
+    <file name="behaviour-description-file" path="/home/hutz/Nix/etc/PolicyEditor_Nix.xml" />        
+  </configItem>
+</xml>
