@@ -12,7 +12,7 @@
 #ifndef motionImpl_hh
 #define motionImpl_hh
 
-#include "idl/MotionS.h"
+#include "idl/PioneerMotionS.h"
 #include "idl/OdometryC.h"
 #include "miro/DifferentialMotionImpl.h"
 #include "miro/Exception.h"
@@ -31,7 +31,7 @@ namespace Pioneer
   class Consumer;
   class Parameters;
 
-  class MotionImpl :  public virtual POA_Miro::Motion,
+  class MotionImpl :  public virtual POA_Miro::PioneerMotion,
 		      public virtual ::Miro::DifferentialMotionImpl
   {
     //-------------------------------------------------------------------------
