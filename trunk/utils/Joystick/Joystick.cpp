@@ -26,8 +26,8 @@ EventHandler::EventHandler(Miro::Motion_var _motion, Miro::Kicker_var _kicker, b
 	oldrot = 0.0;
 	oldtrans = 0;
         kickeron_ = _kickeron;
-	maxRotation = 1.57;
-	maxTranslation = 500;
+	maxRotation = 3.14;
+	maxTranslation = 1000;
 	
 	//Maximal zulässige Translation und Rotation holen
 	
@@ -40,6 +40,8 @@ EventHandler::EventHandler(Miro::Motion_var _motion, Miro::Kicker_var _kicker, b
 	maxTranslation = maxTrans;
 	minRotation = minRot;
 	maxRotation = maxRot;
+        cout << "MaxTranslation: " << maxTranslation << endl;
+        cout << "MaxRotation: " << maxRotation << endl; 
 	
 }
 
@@ -100,10 +102,13 @@ int EventHandler::handle_input(ACE_HANDLE){
        
        if (e.number == 1){
           
-	  velocity.translation = -(maxTranslation * e.value * 4)/(32767*5);
+	  velocity.translation = -(maxTranslation * (long)e.value * 4)/(32767*5);
+
 	  oldtrans = velocity.translation;
-	  motion_->setVelocity(velocity);
-	
+	  cout << maxTranslation << " " << maxRotation << endl;
+          motion_->setVelocity(velocity);
+          cout << "Achse 1 " << e.value << " Geschw: " << velocity.translation
+          << endl;	
        }
        
        //horizontale Richtung
@@ -113,7 +118,8 @@ int EventHandler::handle_input(ACE_HANDLE){
 	  velocity.rotation = -0.8*(double)(e.value)*maxRotation/32767.0;
 	  oldrot = velocity.rotation;
 	  motion_->setVelocity(velocity);
-	
+	  cout << "Achse 0 " << e.value << " Geschw: " <<
+          velocity.rotation << endl;
        }	
 		
     }
@@ -191,7 +197,7 @@ main(int argc, char *argv[])
        cout << "Joystick-Device not found" << endl;
        exit(1);
     }
-    
+    cout << "Joystick Device gefunden" << endl;
     //EventHandler erzeugen, Motion und Kicker übergeben, Joystick-fd übergeben
     
     EventHandler eventHandler(motion, kicker, kickeron, (ACE_HANDLE) fd);

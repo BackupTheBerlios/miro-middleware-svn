@@ -23,7 +23,7 @@
 LDLIBS += -lmiro -lTAO_CosNotification -lTAO_CosNaming -lTAO
 
 ## program to be built
-BIN 	= Joystick
+BIN 	= Joystick JoystickService
 
 ## additional files
 FILES	= 
