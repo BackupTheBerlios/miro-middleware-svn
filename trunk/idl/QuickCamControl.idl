@@ -17,48 +17,54 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.2  2004/10/13 13:48:27  hutz
+ * small cleanup of the QuickCamControl interface:
+ * moving it into namespace Miro
+ * making some of the constants unsigned
+ *
  * Revision 1.1  2004/03/09 16:03:01  roadrunner
  * Added QuickCam interface
  *
  *
  */
- 
 #ifndef QUICKCAMCONTROL_IDL
 #define QUICKCAMCONTROL_IDL
 
-module Video
-{
-    //! Definition of active camera features, negative values meaning "auto".
-    struct QuickCamFeatureSet
-    {
-        long framerate;
-	
-	short brightness;
-	short hue;
-	short contrast;
-	
-	long whitebalance;
-	long whitebalanceReadRed;
-	long whitebalanceManualRed;
-	long whitebalanceReadBlue;
-	long whitebalanceManualBlue;
-	long whitebalanceSpeed;
-	long whitebalanceDelay;
-	long autoGainControl;
-	long shutterSpeed;
-	long sharpness;
-	long backlightCompensation;
-	long flickerlessMode;
-	long dynamicNoiseReduction;
-	long compression;
-    };
+#include "Exception.idl"
 
-    //! The interface to get and set camera settings.
-    interface QuickCamControl
-    {
-        boolean getFeatures(out QuickCamFeatureSet features);
-	boolean setFeatures(in QuickCamFeatureSet features);
-    };
+module Miro
+{
+  //! Definition of active camera features, negative values meaning "auto".
+  struct QuickCamFeatureSet
+  {
+    long framerate;
+	
+    unsigned short brightness;
+    unsigned short hue;
+    unsigned short contrast;
+	
+    long whitebalance;
+    long whitebalanceReadRed;
+    long whitebalanceManualRed;
+    long whitebalanceReadBlue;
+    long whitebalanceManualBlue;
+    long whitebalanceSpeed;
+    long whitebalanceDelay;
+    long autoGainControl;
+    long shutterSpeed;
+    long sharpness;
+    long backlightCompensation;
+    long flickerlessMode;
+    long dynamicNoiseReduction;
+    long compression;
+  };
+
+  //! The interface to get and set camera settings.
+  interface QuickCamControl
+  {
+    void getFeatures(out QuickCamFeatureSet features) raises(EOutOfBounds);
+    void setFeatures(in QuickCamFeatureSet features) raises(EOutOfBounds);
+  };
 };
 
 #endif /* VIDEOCONTROL_IDL */
