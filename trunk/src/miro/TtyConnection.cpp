@@ -48,7 +48,7 @@ namespace Miro
     DBG(cout << "TtyConnection intizialising" << endl);
 
     if (connector.connect(ioBuffer, ttyName, 0, ACE_Addr::sap_any, 0, O_RDWR) == -1) {
-      cerr << "Failed to open device." << endl
+      cerr << "Failed to open device: " << _parameters.device << endl
 	   << "Propably running on the wrong machine?" << endl;
       throw CException(errno, std::strerror(errno));
     }
