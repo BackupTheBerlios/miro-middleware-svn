@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -31,10 +31,10 @@ namespace Miro
   }
 
   void
-  MotionArbiterMessage::printToConsole(std::ostream& ostr) const
+  MotionArbiterMessage::printToConsole(std::ostream& _ostr) const
   {
-    Super::printToConsole(ostr);
-    ostr << "translation: " << velocity.translation << endl
-	 << "rotation: " << velocity.rotation << endl;
+    Super::printToConsole(_ostr);
+    _ostr << "translation: " << velocity.translation << std::endl
+	  << "rotation: " << velocity.rotation << std::endl;
   }
 };

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -32,7 +32,7 @@ namespace Miro
 		 StructuredPushSupplier * _pSupplier = NULL);
 
     // factory method for ArbiterParameters
-    PowerArbiterMessage * getMessageInstance() const;
+    ARBITER_TYPES_FACTORY(PowerArbiter);
 
     virtual const std::string& getName() const;
 
@@ -40,12 +40,19 @@ namespace Miro
     virtual void setActuators(const ArbiterMessage& _message);
     virtual void limpActuators();
 
-    SparrowMotion_ptr pMotion_;
+    //! Pointer to the motion interface.
+    SparrowMotion_var pMotion_;
+    //! Pointer to the supplier.
     StructuredPushSupplier * pSupplier_;
 
+    //! The last issued left power.
     long currentLeft_;
+    //! The last issued left power.
     long currentRight_;
+    //! The last issued motion command.
     VelocityIDL currentVelocity_;
+
+    //! Preconfigured event to send to the supplier.
     CosNotification::StructuredEvent notifyEvent;
 
     //! Arbiter name.

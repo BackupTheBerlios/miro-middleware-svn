@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2000, 2001, 2002
+// (c) 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -16,8 +16,6 @@
 #include "MotionArbiterMessage.h"
 
 #include <orbsvcs/CosNotifyCommC.h>
-
-#include <string>
 
 namespace Miro
 {
@@ -45,11 +43,11 @@ namespace Miro
     virtual void limpActuators();
 
     //! Pointer to the motion interface.
-    Motion_ptr pMotion_;
+    Motion_var pMotion_;
     //! Pointer to the supplier.
     StructuredPushSupplier * pSupplier_;
 
-    //! The last issued motion commant.
+    //! The last issued motion command.
     VelocityIDL currentVelocity_;
     //! Preconfigured event to send to the supplier.
     CosNotification::StructuredEvent notifyEvent;

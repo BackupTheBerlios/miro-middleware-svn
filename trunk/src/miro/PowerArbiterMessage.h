@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -26,11 +26,13 @@ namespace Miro
 
     //! Default constructor. 
     PowerArbiterMessage();
+    //! Virtual assignement operator.
     virtual void assign(const ArbiterMessage& _lhs);
 
   protected:
     //! Dump message to the specified output stream.
-    void printToConsole(std::ostream& ostr) const;
+    void printToConsole(std::ostream& _ostr) const;
+
   private:
     //! Type of this class.
     typedef PowerArbiterMessage Self;

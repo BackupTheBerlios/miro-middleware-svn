@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -10,7 +10,6 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "PowerArbiter.h"
-#include "PowerArbiterMessage.h"
 #include "Behaviour.h"
 #include "StructuredPushSupplier.h"
 
@@ -18,8 +17,11 @@ namespace Miro
 {
   const std::string PowerArbiter::name_ = "PowerArbiter";
 
-  PowerArbiter::PowerArbiter(SparrowMotion_ptr _pMotion, StructuredPushSupplier * _pSupplier) :
-    pMotion_(_pMotion),
+  ARBITER_TYPES_FACTORY_IMPL(PowerArbiter);
+
+  PowerArbiter::PowerArbiter(SparrowMotion_ptr _pMotion, 
+			     StructuredPushSupplier * _pSupplier) :
+    pMotion_(SparrowMotion::_duplicate(_pMotion)),
     pSupplier_(_pSupplier),
     currentLeft_(0),
     currentRight_(0)
@@ -39,12 +41,6 @@ namespace Miro
     }
   }
 
-  PowerArbiterMessage * 
-  PowerArbiter::getMessageInstance() const
-  {
-    return new PowerArbiterMessage();
-  }
-
   void
   PowerArbiter::setActuators(const ArbiterMessage& _message)
   {
@@ -62,9 +58,9 @@ namespace Miro
       
       newPower = true;
       
+      pMotion_->setLRPower(currentLeft_, currentRight_);
       currentLeft_ = message.left;
       currentRight_ = message.right;
-      pMotion_->setLRPower(currentLeft_, currentRight_);
       
       // velocity for debug output
       currentVelocity_.translation = (currentLeft_ + currentRight_) / 2;

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002
+// (c) 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -27,7 +27,7 @@ namespace Miro
    */
   MotionArbiter::MotionArbiter(Motion_ptr _pMotion, 
 			       StructuredPushSupplier * _pSupplier) :
-    pMotion_(_pMotion),
+    pMotion_(Motion::_duplicate(_pMotion)),
     pSupplier_(_pSupplier)
   {
     currentVelocity_.translation = 0;
