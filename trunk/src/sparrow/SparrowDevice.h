@@ -111,7 +111,7 @@ namespace Sparrow
   static const unsigned long CAN_SERVO_GO      = 0x81010104;
   static const unsigned long CAN_SERVO_ALL_OFF = 0x8e010104;
   static const unsigned long CAN_SERVO_ALIVE   = 0x8f010104;
-  static const unsigned long CAN_R_SERVO_ALIVE = 0x8f810401;
+  static const unsigned long CAN_R_SERVO_ALIVE = 0x8f810401; 
 
   // infrared messages
 
@@ -158,10 +158,19 @@ namespace Sparrow
   static const unsigned long CAN_KICK_RESET_2003    = 0x8d010103;   // enforce device reset
   static const unsigned long CAN_KICK_QUERY_2003    = 0x8e010103;   // query device version/status
 
-  // servo messages
-
-  static const unsigned long CAN_SERVO_GO_2003      = 0x81010104;
-  static const unsigned long CAN_R_PAN_ALIVE_2003   = 0x9e0f0401;
+  // pan servo 2005 messages
+    /* messages from pan device */
+  static const unsigned long CAN_R_PAN_ALIVE_2005   = 0x9e0f0401;
+  static const unsigned long CAN_R_PAN_RESET_2005   = 0x9F0F0401;
+  static const unsigned long CAN_PAN_ERROR_2005     = 0x9D0F0401;
+  static const unsigned long CAN_R_PAN_TICKSPERDEG_2005 = 0x82810401;
+  static const unsigned long CAN_PAN_GO_2005        = 0x81010104;  
+    /* messages to pan device */
+  static const unsigned long CAN_PAN_TICKSPERDEG_2005 = 0x82010104;
+  static const unsigned long CAN_PAN_SETLIMITS_2005 = 0x83010104;
+  static const unsigned long CAN_PAN_RESET_2005     = 0x8d010104;
+  static const unsigned long CAN_PAN_QUERY_2005     = 0x8e010104;
+  
 
   // infrared messages
 

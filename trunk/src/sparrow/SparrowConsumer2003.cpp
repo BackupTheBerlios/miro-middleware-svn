@@ -278,9 +278,9 @@ namespace Sparrow
     }
 
 
-    case CAN_R_PAN_ALIVE_2003: {
+    case CAN_R_PAN_ALIVE_2005: {
       MIRO_DBG(SPARROW, LL_PRATTLE, 
-	       "Consumer::receivedThread:  received message: PAN_ALIVE");
+	       "Consumer::receivedThread:  received message: PAN2005_ALIVE");
 
       if(pAliveCollector)
 	pAliveCollector->setLastPanAlive(ACE_OS::gettimeofday());

@@ -119,7 +119,7 @@ namespace Sparrow
   {
     CanMessage message;
     message.length(5);
-    message.id(CAN_SERVO_GO_2003);
+    message.id(CAN_PAN_GO_2005);
     message.byteData(0, servo);                         // servo number
     message.longData(1, (servo)? rad2servo1Ticks(rad) : rad2servo0Ticks(rad));
     write(message);
