@@ -19,7 +19,7 @@
    <parameter value="0.485" name="DistConvFactor" />
    <parameter value="1" name="RangeConvFactor" />
    <parameter value="20" name="Vel2Divisor" />
-   <parameter value="1" name="VelConvFactor" />
+   <parameter value=".5" name="VelConvFactor" />
    <parameter value="true" name="Camera" />
    <parameter value="true" name="CameraUpsideDown" />
    <parameter value="true" name="Infrared" />

@@ -32,7 +32,8 @@ int main(int argc, char *argv[])
 {
   int rc = 0;
   bool quit = false;
-  short pressure,time;
+  short pressure;
+  int time;
   char c, buffer[256];
 
   // Initialize server daemon.

@@ -19,7 +19,7 @@
    <parameter value="0.485" name="DistConvFactor" />
    <parameter value="1" name="RangeConvFactor" />
    <parameter value="20" name="Vel2Divisor" />
-   <parameter value="1" name="VelConvFactor" />
+   <parameter value=".5" name="VelConvFactor" />
    <parameter value="true" name="Camera" />
    <parameter value="true" name="CameraUpsideDown" />
    <parameter value="true" name="Infrared" />
@@ -256,7 +256,7 @@
  </section>
  <section name="Video" >
   <parameter name="Video" >
-   <parameter value="/dev/v4l/video0" name="Device" />
+   <parameter value="/dev/video0" name="Device" />
    <parameter value="3" name="PixelSize" />
    <parameter value="true" name="UpsideDown" />
    <parameter value="1" name="Byteorder" />

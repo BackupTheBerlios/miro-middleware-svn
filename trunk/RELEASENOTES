@@ -43,9 +43,6 @@ together nicely.
 - Odometry
   as can be tested for instance by the OdometryTest
 
-  Known issues:
-  The reported velocity wrong.
-
 - RangeSensor interfaces for Sonar, Tactile and Infrared sensors
   Try RangSensorTest or QtRangeSenor.
 
