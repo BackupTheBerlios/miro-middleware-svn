@@ -23,8 +23,7 @@ INSTALL = $(VBIN:%=$(INSBIN)/%)
 LDLIBS += -lmiro -lTAO_CosNaming -lTAO
 
 ## program to be built
-## there has to exist a source file with the same name (mybinary.cc)
-BIN 	= LiveVideoClient
+BIN 	= QtVideo
 
 ## additional files
 FILES	=

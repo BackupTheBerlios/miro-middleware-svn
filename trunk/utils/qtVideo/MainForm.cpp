@@ -156,6 +156,7 @@ MainForm::MainForm(int argc, char* argv[], QWidget *parent, const char *name) :
 
 MainForm::~MainForm()
 {
+  if (video!=NULL) video->release(imageIDL);
   if (ppm!=NULL) free(ppm);
   if (colorTable!=NULL) free(colorTable);
 }

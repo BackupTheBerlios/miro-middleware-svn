@@ -34,7 +34,7 @@ DIRS =		\
 		notify \
 		logPlayer \
 		rangeSensor \
-		liveVideo \
+		qtVideo \
 		qtTouchPad \
 		qtJoystick \
 		policyEditor \
