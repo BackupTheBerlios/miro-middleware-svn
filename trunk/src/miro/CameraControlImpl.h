@@ -64,6 +64,10 @@ namespace Miro
      */
     virtual float getTargetZoom() throw();
     void setTargetZoom(float value);
+    /**
+     * Test whether the value lies within the allowed range
+     */
+    bool testZoom(float value);
 
     //! CameraControl interface method implementation.
     virtual void setFocus(short value) throw(Miro::EDevIO, Miro::EOutOfBounds,Miro::ETimeOut);
@@ -87,6 +91,10 @@ namespace Miro
      */
     virtual short getTargetFocus() throw();
     void setTargetFocus(short value);
+    /**
+     * Test whether the value lies within the allowed range
+     */
+    bool testFocus(short value);
 
     //! CameraControl interface method implementation.
     virtual void setShutter(TimeIDL & value) throw(Miro::EDevIO, Miro::EOutOfBounds,Miro::ETimeOut);
@@ -103,15 +111,6 @@ namespace Miro
      */
     virtual TimeIDL getTargetShutter() throw();
     void setTargetShutter(const TimeIDL& value);
-
-    /**
-     * Test whether the value lies within the allowed range
-     */
-    bool testZoom(float value);
-    /**
-     * Test whether the value lies within the allowed range
-     */
-    bool testFocus(short value);
     /**
      * Test whether the value lies within the allowed range
      */
