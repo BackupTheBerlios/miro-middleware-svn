@@ -36,6 +36,7 @@ namespace Psos
     void writeMessage(const Message& message);
     bool synched() const;
     bool waitSynch(const ACE_Time_Value& maxWait) const;
+    void close();
 
   protected:
     EventHandler* eventHandler;

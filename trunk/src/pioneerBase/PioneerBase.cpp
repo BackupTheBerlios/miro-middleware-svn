@@ -82,6 +82,8 @@ PioneerBase::~PioneerBase()
 {
   DBG(cout << "Destructing PioneerBase." << endl);
 
+  pioneerConnection.close();
+
   // Deactivate.
   PortableServer::ObjectId_var oid =
     poa->reference_to_id (notifyFactory_.in());

@@ -77,9 +77,6 @@ namespace Psos
   {
     DBG(cout << "Destructing PSOSConnection" << endl);
 
-    // closes the PSOS connection
-    writeMessage(MSG_COMCLOSE);
-
     // deregister timers
     if (synchTimerId != -1)
       reactor->cancel_timer(synchTimerId);
@@ -122,4 +119,15 @@ namespace Psos
     return (eventHandler->synch == 3);
   }
 
+  void
+  Connection::close()
+  {
+    eventHandler->synchMutex.acquire();
+    eventHandler->synch = 4;
+    eventHandler->synchMutex.release();
+      
+    // closes the PSOS connection
+    writeMessage(MSG_COMCLOSE);
+    ACE_OS::sleep(ACE_Time_Value(1));
+  }
 };
