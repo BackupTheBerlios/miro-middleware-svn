@@ -91,11 +91,15 @@ namespace Canon
   CanonPanTiltImpl::setPan(double angle) throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
     Miro::PanTiltPositionIDL dest;
+
+cout << "setPan" << endl;
     //if camera is inverse mounted, change sign for current saved value
     //as it will be changed again on setPosition
-    dest.panvalue=angle;
-    dest.tiltvalue=(upsideDown?-currentTilt:currentTilt);
+    dest.panvalue = angle;
+    dest.tiltvalue = (upsideDown? -currentTilt : currentTilt);
+
     setPosition(dest);
+cout << "position set" << endl;
   }
   
   double
@@ -195,10 +199,12 @@ namespace Canon
 
     waitInitialize();
 
+cout << "initialized" << endl;
+
     //if camera in inverse position, change sign for pan/tilt
     //Miro's pan works opposite to camera's!!!
-    currentPan = dest.panvalue*(!upsideDown?-1:1);
-    currentTilt = dest.tiltvalue*(upsideDown?-1:1);
+    currentPan = dest.panvalue * (!upsideDown? -1 : 1);
+    currentTilt = dest.tiltvalue* (upsideDown? -1 : 1);
     
     char angleASCII[9];
     Canon::Message panTiltValue(PAN_TILT_SET_POSITION,
@@ -211,7 +217,9 @@ namespace Canon
     while (!done) {
       { //scope for mutex
 	Miro::Guard guard(pAnswer->mutex); 
+cout << "init answer" << endl;
 	pAnswer->init();
+cout << "send camera" << endl;
 	connection.sendCamera(panTiltValue);
 	try {
 	  while (!pAnswer->errorCode()) {
@@ -228,21 +236,25 @@ namespace Canon
 	  checkAnswer();
 	}
 	catch (Miro::ETimeOut& e) {
+cout << "timeout" << endl;
 	  currentPan = panTmp; //reset old values in case of error
 	  currentTilt = tiltTmp;
 	  throw (e);
 	}
 	catch (Miro::EOutOfBounds& e) {
+cout << "out of bounds" << endl;
 	  currentPan = panTmp; //reset old values in case of error
 	  currentTilt = tiltTmp;
 	  throw (e);
 	}
 	catch (Miro::EDevIO& e) {
+cout << "dev IO error" << endl;
 	  currentPan = panTmp; //reset old values in case of error
 	  currentTilt = tiltTmp;
 	  throw (e);
 	}
 	catch (Miro::Exception& e) {
+cout << "miro exception" << endl;
 	  currentPan = panTmp; //reset old values in case of error
 	  currentTilt = tiltTmp;
 	  throw (e);
