@@ -58,11 +58,11 @@ MotionInterface::evalCommand(char c)
     break;
   case '2':
     std::cout << "Set velocity: " << endl
-	      << "translation (mm/s) - " << flush;
+	      << "translation (mm/s) : " << flush;
     std::cin >> trans;
-    std::cout << "rotation (°/s) - " << flush;
+    std::cout << "rotation (°/s) : " << flush;
     std::cin >> rot;
-    std::cout << "time befor stop (msec) - " << flush;
+    std::cout << "time befor stop (msec) : " << flush;
     std::cin >> msec;
 
     rot = Miro::deg2Rad(rot);

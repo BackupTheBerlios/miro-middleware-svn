@@ -56,11 +56,11 @@ DifferentialMotionInterface::evalCommand(char c)
     break;
   case '6':
     std::cout << "Set wheel velocity: " << endl
-	      << "left translation (mm/s) - " << flush;
+	      << "left translation (mm/s) : " << flush;
     std::cin >> lTrans;
-    std::cout << "right translation (mm/s) - " << flush;
+    std::cout << "right translation (mm/s) : " << flush;
     std::cin >> rTrans;
-    std::cout << "time befor stop (msec) - " << flush;
+    std::cout << "time befor stop (msec) : " << flush;
     std::cin >> msec;
 
     diffMotion_->setLRVelocity(lTrans, rTrans);

@@ -46,9 +46,9 @@ SynchroMotionInterface::evalCommand(char c)
   switch (c) {
   case '4':
     std::cout << "Set tranlational velocity: " << endl
-	      << "translation (mm/s) - " << flush;
+	      << "translation (mm/s) : " << flush;
     std::cin >> trans;
-    std::cout << "time before stop (msec) - " << flush;
+    std::cout << "time before stop (msec) : " << flush;
     std::cin >> msec;
 
     synchroMotion_->translate(trans);
@@ -60,9 +60,9 @@ SynchroMotionInterface::evalCommand(char c)
     break;
   case '6':
     std::cout << "Set rotational velocity: " << endl
-	      << "rotation (°/s) - " << flush;
+	      << "rotation (°/s) : " << flush;
     std::cin >> rot;
-    std::cout << "time before stop (msec) - " << flush;
+    std::cout << "time before stop (msec) : " << flush;
     std::cin >> msec;
 
     rot = Miro::deg2Rad(rot);
