@@ -43,28 +43,61 @@ namespace Miro
     typeRepository_(NULL),
     next_(NULL),
     version_(1),
+    tcrOffset_(sizeof(LogHeader)),
+    events_(0),
     eof_(false)
   {
     if (memMap_.addr() == MAP_FAILED)
       throw CException(errno, std::strerror(errno));
 
     try {
-      std::cout << "looking for log file type" << std::endl;
+      MIRO_DBG(MIRO, LL_DEBUG, "Looking for log file type.");
       LogHeader::READ r;
       header_ = new (memMap_.addr()) LogHeader(r);
       version_ = header_->version;
-      // version 2 log file
+
       istr_ = new TAO_InputCDR((char*)memMap_.addr() + sizeof(LogHeader),
 			       memMap_.size() - sizeof(LogHeader),
 			       (int)header_->byteOrder);
-      typeRepository_ = new LogTypeRepository(*istr_);
+      // version 2 log file
+      if (version() == 2) {
+	istr_ = new TAO_InputCDR((char*)memMap_.addr() + sizeof(LogHeader),
+				 memMap_.size() - sizeof(LogHeader),
+				 (int)header_->byteOrder);
+	typeRepository_ = new LogTypeRepository(*istr_);
+      }
+      // version 3 log file
+      else if (version() == 3) {
+	istr_ = new TAO_InputCDR((char*)memMap_.addr() + sizeof(LogHeader),
+				 memMap_.size() - sizeof(LogHeader),
+				 (int)header_->byteOrder);
+
+	istr_->read_ulong(tcrOffset_);
+	istr_->read_ulong(events_);
+
+	MIRO_DBG_OSTR(MIRO, LL_DEBUG, 
+		      "offset " << 
+		      std::hex << tcrOffset_ << std::endl <<
+		      "events " << 
+		      events_ << std::dec);
+
+	TAO_InputCDR tcrIStream((char*)memMap_.addr() + tcrOffset_,
+				memMap_.size() - tcrOffset_,
+				(int)header_->byteOrder);
+	typeRepository_ = new LogTypeRepository(tcrIStream);
+
+
+	MIRO_DBG_OSTR(MIRO, LL_DEBUG, "good bit : " << istr_->good_bit());
+      }
+      else 
+	throw Exception("Unknown log format version.");
     }
     catch (Miro::LogHeader::EFileType const&) {
 
       // version 1 log file
       istr_ = new TAO_InputCDR((char*)memMap_.addr(), memMap_.size());
     }
-    std::cout << "version : " << version_ << std::endl;
+    MIRO_DBG_OSTR(MIRO, LL_DEBUG,  "version : " << version_);
   }
 
   bool
@@ -75,26 +108,23 @@ namespace Miro
 	istr_->rd_ptr() == 0)
       return false;
 
-    // version 2 parsing
-    if (version() == 2) {
+    // version >= 2 parsing
+    if (version() >= 2) {
 
       // get the time stamp
       TimeBase::TimeT t;
       if (!(istr_->read_ulonglong(t))) {
-	std::cout << "eof 1" << std::endl;
+	MIRO_DBG(MIRO, LL_DEBUG, "eof 1");
 	eof_ = true;
 	return false;
       }
 
       if (next_ != NULL &&
 	  next_ != istr_->rd_ptr() - sizeof(TimeBase::TimeT)) {
-	std::cout << "mismatch: " << (void*)next_ 
-		  << "\t " << (void *)(istr_->rd_ptr() - sizeof(TimeBase::TimeT))
-		  << std::endl;
+	MIRO_LOG_OSTR(LL_ERROR, 
+		      "mismatch: " << (void*)next_ <<
+		      "\t " << (void *)(istr_->rd_ptr() - sizeof(TimeBase::TimeT)));
       }
-
-      //      std::cout << "prt: 0x" << (void*) istr_->rd_ptr()
-      //		<< "  time: 0x" << std::hex << t << std::dec << std::endl;
 
       ORBSVCS_Time::TimeT_to_Time_Value(_stamp, t);
     }
@@ -102,7 +132,7 @@ namespace Miro
     else {
       TimeIDL timeStamp;
       if (!((*istr_) >> timeStamp)) {
-	std::cout << "eof 2" << std::endl;
+	MIRO_DBG(MIRO, LL_DEBUG, "eof 2");
 	eof_ = true;
 	return false;
       }
@@ -111,7 +141,7 @@ namespace Miro
     }
     
     if (_stamp == ACE_Time_Value::zero) {
-      std::cout << "eof 3" << std::endl;
+      MIRO_DBG(MIRO, LL_DEBUG, "eof 3");
       eof_ = true;
       return false;
     }
@@ -124,14 +154,13 @@ namespace Miro
     if (eof_)
       return false;
 
-    // version 2 parsing
-    if (version() == 2) {
-      //      std::cout << "h" << std::flush;
+    // version >= 2 parsing
+    if (version() >= 2) {
       // get address of next event
       char const * here = istr_->start()->rd_ptr();
       unsigned int len;
       if (!istr_->read_ulong(len)) {
-	std::cout << "eof h1" << std::flush;
+	MIRO_DBG(MIRO, LL_DEBUG, "eof h1");
 	eof_ = true;
 	return false;
       }
@@ -140,24 +169,15 @@ namespace Miro
 
       next_ = here + len;
 
-      /*
-      std::cout << std::endl
-		<< "rd: " << (void *)istr_->start()->rd_ptr() << std::endl
-		<< "wr: " << (void *)istr_->start()->wr_ptr() << std::endl
-		<< "len: " << len << std::endl;
-      */
-
       // get header
       if (!((*istr_) >> _header)) {
 	eof_ = true;
 	return false;
       }
-      //      std::cout << "h" << std::endl;
     }
     // version 1 parsing
     else {
       if (!((*istr_) >> _header)) {
-	std::cout << "-" << std::endl;
 	eof_ = true;
 	return false;
       }
@@ -168,10 +188,8 @@ namespace Miro
   bool
   LogReader::parseEventBody(CosNotification::StructuredEvent& _event) throw ()
   {
-    //    std::cout << "parse event body" << std::endl;
-
     if (eof_) {
-      std::cout << "eof 1" << std::endl;
+      MIRO_DBG(MIRO, LL_DEBUG, "eof e1");
       return false;
     }
 
@@ -179,16 +197,13 @@ namespace Miro
     // get the filterable data
     if (!((*istr_) >> _event.header.variable_header) ||
 	!((*istr_) >> _event.filterable_data)) {
-      std::cout << "eof 2" << std::endl;
+      MIRO_DBG(MIRO, LL_DEBUG, "eof e2");
       eof_ = true;
       return false;
     }
 
-    //    std::cout << "." << std::flush;
-
     // parse the any
-    if (version() == 2) {
-
+    if (version() >= 2) {
 
       // get type code from repository
       int id;
@@ -278,7 +293,6 @@ namespace Miro
     }
     // version 1 parsing
     else {
-      //      std::cout << "parse event body" << std::endl;
       if (!((*istr_) >> _event.remainder_of_body)) {
 	eof_ = true;
 	return false;

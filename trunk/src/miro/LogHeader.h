@@ -33,8 +33,8 @@ namespace Miro
     //--------------------------------------------------------------------------
 
     static unsigned long const PROTOCOL_ID = 0x474f4c4d;      // "MLOG";
-    static unsigned short const PROTOCOL_VERSION = 0x0002;
-    static unsigned short const MAX_VERSION = 0x0002;
+    static unsigned short const PROTOCOL_VERSION = 0x0003;
+    static unsigned short const MAX_VERSION = 0x0003;
 
     //--------------------------------------------------------------------------
     // public methods

@@ -44,6 +44,9 @@ namespace Miro
 
     //! Report the protocol version.
     unsigned short version() const throw ();
+    //! Report the number of events in the log file.
+    unsigned long events() const throw ();
+    //! Flag indicating end of file.
     bool eof() const throw ();
 
     unsigned int progress() const throw ();
@@ -65,6 +68,11 @@ namespace Miro
 
     //! Version number of the log file protocol.
     unsigned short version_;
+    //! Offset of the type code repository in log file (version >= 3).
+    ACE_UINT32 tcrOffset_;
+    //! Number of events in log (version >= 3).
+    ACE_UINT32 events_;
+
     //! Flag inidcating end of file.
     bool eof_;
   };
@@ -85,6 +93,8 @@ namespace Miro
 	eof_ = true;
       }
 	
+
+      // TODO: solve this without operator new
       istr_ = new TAO_InputCDR(_rdPtr,
 			       ((char *)memMap_.addr() + memMap_.size()) - _rdPtr,
 			       (int)header_->byteOrder);
@@ -112,6 +122,11 @@ namespace Miro
   unsigned short
   LogReader::version() const throw () {
     return version_;
+  }
+  inline
+  unsigned long
+  LogReader::events() const throw () {
+    return events_;
   }
   inline
   bool

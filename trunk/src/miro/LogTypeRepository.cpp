@@ -53,8 +53,7 @@ namespace Miro
     _istr.read_ulong(numTypes);
     types_.reserve(numTypes);
 
-    std::cout << "types: " << numTypes << std::endl;
-    std::cout << "types base: " << (void *)_istr.rd_ptr() << std::endl;
+    MIRO_DBG_OSTR(MIRO, LL_DEBUG, "types: " << numTypes);
 
     // read each type from cdr stream
     for (unsigned int i = 0; i < numTypes; ++i) {
@@ -69,7 +68,6 @@ namespace Miro
       // add type to our repository
       types_.push_back(CORBA::TypeCode::_duplicate(type));
     }
-    std::cout << "types end: " << (void *)(_istr.rd_ptr()) << std::endl;
   }
 
   LogTypeRepository::~LogTypeRepository() throw ()

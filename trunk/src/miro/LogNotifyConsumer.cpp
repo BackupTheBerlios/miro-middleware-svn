@@ -33,7 +33,7 @@ namespace Miro
     domainName_(_domainName),
     fileName_((_fileName.size() == 0)? defaultFileName() : _fileName),
     mutex_(),
-    logWriter_(fileName_, false, _parameters),
+    logWriter_(fileName_, _parameters),
     keepAlive_(_keepAlive),
     history_(NULL),
     nTimes_(0)

@@ -26,19 +26,19 @@ namespace
 
   unsigned int const NUM_CATHEGORIES = 15;
   Pair cathegories[NUM_CATHEGORIES] = {
-    {Miro::Log::MIRO, "MIRO"},
-    {Miro::Log::VIDEO, "VIDEO"},
+    {Miro::Log::MIRO, "Miro"},
+    {Miro::Log::VIDEO, "Video"},
     {Miro::Log::PSOS, "PSOS"},
-    {Miro::Log::SPHINX, "SPHINX"},
-    {Miro::Log::PIONEER, "PIONEER"},
+    {Miro::Log::SPHINX, "Sphinx"},
+    {Miro::Log::PIONEER, "Pioneer"},
     {Miro::Log::CAN, "CAN"},
-    {Miro::Log::FAUL, "FAUL"},
-    {Miro::Log::SPARROW, "SPARROW"},
+    {Miro::Log::FAUL, "Faul"},
+    {Miro::Log::SPARROW, "Sparrow"},
     {Miro::Log::MCP, "MCP"},
     {Miro::Log::ABUS, "ABUS"},
     {Miro::Log::MSP, "MSP"},
-    {Miro::Log::SICK, "SICK"},
-    {Miro::Log::DTLK, "DTLK"},
+    {Miro::Log::SICK, "Sick"},
+    {Miro::Log::DTLK, "Dtlk"},
     {Miro::Log::DP, "DP"},
     {Miro::Log::B21, "B21"}
   };

@@ -14,6 +14,7 @@
 #include "TimeHelper.h"
 #include "StructuredPushSupplier.h"
 #include "Angle.h"
+#include "Log.h"
 
 #include <cmath>
 
@@ -72,7 +73,7 @@ namespace Miro
   int
   OdometryDispatcher::svc()
   {
-    std::cout << "Asynchronous Odometry dispatching" << std::endl;
+    MIRO_LOG(LL_NOTICE, "Asynchronous Odometry dispatching");
 
     while(!canceled()) {
       Guard guard(mutex_);

@@ -31,79 +31,57 @@
 namespace Miro
 {
   LogWriter::LogWriter(std::string const& _fileName,
-		   bool _tmpFile,
-		   LogNotifyParameters const& _parameters) :
+		       LogNotifyParameters const& _parameters) :
     parameters_(_parameters),
     fileName_(_fileName),
-    tcrMap_((fileName_ + ".tcr").c_str(), parameters_.tCRFileSize,
+    memMap_((fileName_).c_str(), parameters_.maxFileSize,
 	    O_RDWR | O_CREAT | O_TRUNC, ACE_DEFAULT_FILE_PERMS, PROT_RDWR, 
 	    ACE_MAP_SHARED),
-    tcrOstr_((char*)tcrMap_.addr(), tcrMap_.size()),
+    header_(new(memMap_.addr()) LogHeader(w_)),
+    ostr_((char*)memMap_.addr() + sizeof(LogHeader), 
+	  memMap_.size() - sizeof(LogHeader) - parameters_.tCRFileSize),
+    tcrOstr_((char*)memMap_.addr() + memMap_.size() - parameters_.tCRFileSize,
+	     parameters_.tCRFileSize),
     typeRepository_(&tcrOstr_, parameters_.tCRFileSize),
-    memMap_((fileName_ + ".dta").c_str(), parameters_.maxFileSize,
-	    O_RDWR | O_CREAT | O_TRUNC, ACE_DEFAULT_FILE_PERMS, PROT_RDWR, 
-	    ACE_MAP_SHARED),
-    ostr_((char*)memMap_.addr(), memMap_.size()),
+    tcrOffsetSlot_(NULL),
+    numEventsSlot_(NULL),
+    numEvents_(0UL),
     lengthSlot_(NULL),
-    tmpFile_(_tmpFile),
     totalLength_(0),
     full_(false)
   {
     if (memMap_.addr() == MAP_FAILED)
       throw CException(errno, std::strerror(errno));
 
+    // The alignement is okay as we wrote 8 bytes of LogHeader
+    tcrOffsetSlot_ = ostr_.current()->wr_ptr();
+    ostr_.write_ulong(memMap_.size() - parameters_.tCRFileSize);
+
+    // The allignement is okay as we write now a ulong.
+    numEventsSlot_ = ostr_.current()->wr_ptr();
+    ostr_.write_ulong(0);
   }
 
   LogWriter::~LogWriter()
   {
     //--------------------------------------------------------------------------
-    // write the actual log file
+    // place type codes at the end of the event stream
     //--------------------------------------------------------------------------
 
-    if (!tmpFile_) {
-      try {
-	writeFile();
-      }
-      catch (CException const& e) {
-	MIRO_LOG_OSTR(LL_ERROR, "Error writing log file: " << e);
-      }
-    }
+    packTCR();
 
     //--------------------------------------------------------------------------
-    // type code repository cleanup
-    //--------------------------------------------------------------------------
-
-    // close the memory mapped file
-    tcrMap_.close();
-    if (tmpFile_) {
-      remove((fileName_+".tcr").c_str());
-    }
-    // truncate the file to the actual length
-    else if (ACE_OS::truncate((fileName_ + ".tcr").c_str(), 
-			      typeRepository_.totalLength()) == -1) {
-      // We shouldn't throw in a destructor...
-      MIRO_LOG_OSTR(LL_WARNING, 
-		    "Error " << errno << 
-		    " truncating log file " << fileName_ << ".tcr : " << std::endl
-		    << std::strerror(errno));
-    }
-
-    //--------------------------------------------------------------------------
-    // type code repository cleanup
+    // log file size cleanup
     //--------------------------------------------------------------------------
 
     // close the memory mapped file
     memMap_.close();
 
-    if (tmpFile_) {
-      remove((fileName_ + ".dta").c_str());
-    }
-    // truncate the file to the actual length
-    else if (ACE_OS::truncate((fileName_ + ".dta").c_str(), totalLength_) == -1) {
+    if (ACE_OS::truncate((fileName_).c_str(), totalLength_) == -1) {
       // We shouldn't throw in a destructor...
       MIRO_LOG_OSTR(LL_WARNING, 
 		    "Error " << errno << 
-		    " truncating log file " << fileName_ << ".dta : " << std::endl
+		    " truncating log file " << fileName_  << std::endl
 		    << std::strerror(errno));
     }
   }
@@ -122,30 +100,23 @@ namespace Miro
       // write time stamp
       if (ostr_.write_ulonglong(t)) {
 	
-	//	std::cout << "." << std::flush;
 	// set the length entry of the previous event
 	if (lengthSlot_ != NULL) {
 	  
-	  //	  std::cout << "+" << std::flush;
 	  // calculate length
 	  char * here = ostr_.current()->wr_ptr() - sizeof(TimeBase::TimeT);
 	  CORBA::ULong length = here - lengthSlot_;
 	  
-	  // dirty tricks on cdr stream...
-	  ACE_Message_Block * mblock = 
-	    const_cast<ACE_Message_Block *>(ostr_.current());
-	  // safe the write ptr
-	  char * tmp = mblock->wr_ptr();
-	  // set the length
-	  mblock->wr_ptr(lengthSlot_);
-	  ostr_.write_ulong(length);
-	  // restore write ptr of the cdr stream
-	  mblock->wr_ptr(tmp);
+	  // write the length of the previous event
+	  // direct writing is allowed, 
+	  // as the alignement is correct and we write in host byte order
+	  * reinterpret_cast<ACE_INT32 *>(lengthSlot_) = length;
 	}
 	
 	
 	// The alignement is okay as we wrote an ulonglong before
 	lengthSlot_ = ostr_.current()->wr_ptr();
+
 	// write the length slot
 	if (ostr_.write_ulong(0) &&
 	    // write the header
@@ -155,7 +126,6 @@ namespace Miro
 	  
 	  
 	  // serialize remainder_of_body
-	  //	  std::cout << "." << std::flush;
 
 	  // obtain type code id
 	  CORBA::Long typeId = -1;
@@ -181,7 +151,12 @@ namespace Miro
 		_event.remainder_of_body.impl()->marshal_value(ostr_)) &&
 	      // not max file size reached
 	      (ostr_.total_length() <= parameters_.maxFileSize)) {
-	    //	    std::cout << "." << std::endl;
+
+	    // write number of events
+	    // direct writing is allowed, 
+	    // as the alignement is correct and we write in host byte order
+	    *reinterpret_cast<ACE_INT32 *>(numEventsSlot_) = ++numEvents_;
+
 	    totalLength_ = ostr_.total_length();
 	    return true;
 	  }
@@ -227,6 +202,12 @@ namespace Miro
 	    ACE_ENDTRY;
 
 	    if (ostr_.total_length() <= parameters_.maxFileSize) {
+
+	      // write number of events
+	      // direct writing is allowed, 
+	      // as the alignement is correct and we write in host byte order
+	      *reinterpret_cast<CORBA::ULONG*>(numEventsSlot_) = ++numEvents_;
+
 	      totalLength_ = ostr_.total_length();
 	      return true;
 	    }
@@ -245,46 +226,26 @@ namespace Miro
   }
 
   void
-  LogWriter::writeFile() throw (CException)
+  LogWriter::packTCR() throw (CException)
   {
-    ACE_FILE_Addr fileName(fileName_.c_str());
-    ACE_FILE_IO buffer;
-    ACE_FILE_Connector connector;
+    char * dest = (char *)memMap_.addr();
+    ACE_UINT32 offset = sizeof(LogHeader) + totalLength_;
 
-    if (connector.connect(buffer, 
-			  fileName, 
-			  NULL,
-			  ACE_Addr::sap_any, 
-			  0,
-			  O_WRONLY | O_CREAT | O_TRUNC) == -1) {
-      throw CException(errno, std::strerror(errno));
-    }
+    // 8 byte alignement
+    offset += (0x08 - (totalLength_ & 0x07)) & 0x07;
 
-    LogHeader::WRITE w;
-    LogHeader header(w);
+    dest += offset;
+    memcpy(dest, tcrOstr_.current()->base(), typeRepository_.totalLength());
 
-    char alignementBuffer[0x08];
-    ACE_OS::memset(alignementBuffer, 0, 0x08);
+    // note new location of tcr
+    TAO_OutputCDR o_(tcrOffsetSlot_, 8);
+    o_.write_ulong(offset);
 
-    iovec iov[4];
-    iov[0].iov_base = &header;
-    iov[0].iov_len = sizeof(LogHeader);
+    MIRO_DBG_OSTR(MIRO, LL_DEBUG,
+		  "Offset" << std::hex << offset <<
+		  "Events" << numEvents_ << std::dec);
 
-    iov[1].iov_base = tcrMap_.addr();
-    iov[1].iov_len = typeRepository_.totalLength();
-
-    // cdr stream alignement
-    iov[2].iov_base = alignementBuffer;
-    iov[2].iov_len = (0x08 - (typeRepository_.totalLength() & 0x07)) & 0x07;
-
-    iov[3].iov_base = memMap_.addr();
-    iov[3].iov_len = totalLength_;
-
-    if (buffer.send(iov, 4) == -1)
-      throw CException(errno, std::strerror(errno)); 
-
-    buffer.close();
-
-    setTmp();
+    // get total length of the file
+    totalLength_ = offset + typeRepository_.totalLength();
   }
 }
