@@ -29,6 +29,8 @@ namespace Miro
   public:
     typedef std::vector<std::string> StringVector;
 
+    //! Default constructor.
+    ConfigDocument();
     //! Initializing constructor.
     ConfigDocument(int& argc, 
 		   char * argv[], 
@@ -37,6 +39,12 @@ namespace Miro
 		   StringVector const& userPath = std::vector<std::string>())
       throw (Exception);
     ~ConfigDocument();    
+
+    void init(std::string const& _defaultName = std::string(""), 
+	      StringVector const& _userPath = std::vector<std::string>())
+      throw(Exception);
+
+    void fini();
 
     void setSection(std::string const& _section);
 

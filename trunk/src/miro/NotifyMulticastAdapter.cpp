@@ -204,6 +204,7 @@ namespace Miro
 
     void Adapter::fini() {
       MIRO_DBG(NMC, LL_DEBUG, "Finalizing notify multicast adapter.");
+      sender_->disconnect();
       receiver_->disconnect();
     }
   } // NMC

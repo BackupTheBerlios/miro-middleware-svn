@@ -46,13 +46,17 @@ namespace Miro
     std::vector<std::string>::iterator i;
 
     path.push_back(std::string("."));
-    char* miroRoot = ACE_OS::getenv("MIRO_ROOT");
-    if (miroRoot) {
-      path.push_back(std::string(miroRoot) + std::string("/etc"));
-    }
     // this should be here, because the plain name could also be right
     // and a . before an absolute path is no longer an absolute path
     path.push_back(std::string("")); 
+
+    if (path.size() == 2) {
+      char* miroRoot = ACE_OS::getenv("MIRO_ROOT");
+      if (miroRoot) {
+	path.push_back(std::string(miroRoot) + std::string("/etc"));
+      }
+    }
+
   
     for (i = path.begin(); i != path.end(); ++i) {
       fullName = *i + "/" + name;
@@ -61,6 +65,10 @@ namespace Miro
     }
     return std::string();
   }
+
+  ConfigDocument::ConfigDocument() :
+    document_(NULL)
+  {}
 
   /**
    * The file to use is identified as follows: If a file name
@@ -152,37 +160,84 @@ namespace Miro
     delete document_;
   }
 
+  void ConfigDocument::init(std::string const& _fileName, 
+		       StringVector const& _userPath) 
+    throw (Exception)
+  {
+    delete document_;
+    document_ = NULL;
+
+    std::string fullName = findFile(_fileName, _userPath );
+    if (fullName.length() == 0) {
+      MIRO_LOG_OSTR(LL_ERROR, 
+		    "ConfigDocument: File not found: " << 
+		    _fileName << std::endl <<
+		    "No config file processing.");
+    } 
+    else {
+      QFile f(fullName.c_str());
+
+      if (!f.open(IO_ReadOnly)) {
+	throw CException(errno, "Error opening" + fullName);
+      }
+      QString parsingError;
+      int line = 0;
+      int column = 0;
+      document_ = new QDomDocument("MiroConfigDocument");
+      if (!document_->setContent(&f, &parsingError, &line, &column)) {
+	f.close();
+	std::stringstream ostr;
+	ostr << "error parsing " << fullName << std::endl
+	     << " in line " << line << " "
+	     << ", column " << column << std::endl
+	     << parsingError << std::endl;
+	throw Exception(ostr.str());
+      }
+      f.close();
+    }
+  }
+
+  void
+  ConfigDocument::fini() 
+  {
+    delete document_;
+    document_ = NULL;
+    section_ = "";
+  }
+
   ConfigDocument::StringVector 
   ConfigDocument::getInstances(const std::string& _type)
   {
     StringVector names;    
 
-    QString section = section_.c_str();
-    QString type = _type.c_str();
-
-    // get the root nodes first child
-    QDomNode n1 = document_->documentElement().firstChild();
-    while(!n1.isNull()) {
-      QDomElement e1 = n1.toElement();
-      if (!e1.isNull() &&
-	  ( (n1.nodeName() == "section" &&
-	     e1.attribute("name") == section) ||
-	    (n1.nodeName() == section))) {
-
-	QDomNode n2 = n1.firstChild();
-	while (!n2.isNull()) {
-	  QDomElement e2 = n2.toElement();
-	  if (!e2.isNull() &&
-	      n2.nodeName() == "instance" &&
-	      e2.attribute("type") == type) {
-	    std::string name = e2.attribute("name").latin1();
-	    if (name != "")
-	      names.push_back(name);
+    if (document_ != NULL) {
+      QString section = section_.c_str();
+      QString type = _type.c_str();
+      
+      // get the root nodes first child
+      QDomNode n1 = document_->documentElement().firstChild();
+      while(!n1.isNull()) {
+	QDomElement e1 = n1.toElement();
+	if (!e1.isNull() &&
+	    ( (n1.nodeName() == "section" &&
+	       e1.attribute("name") == section) ||
+	      (n1.nodeName() == section))) {
+	  
+	  QDomNode n2 = n1.firstChild();
+	  while (!n2.isNull()) {
+	    QDomElement e2 = n2.toElement();
+	    if (!e2.isNull() &&
+		n2.nodeName() == "instance" &&
+		e2.attribute("type") == type) {
+	      std::string name = e2.attribute("name").latin1();
+	      if (name != "")
+		names.push_back(name);
+	    }
+	    n2 = n2.nextSibling();
 	  }
-	  n2 = n2.nextSibling();
 	}
+	n1 = n1.nextSibling();
       }
-      n1 = n1.nextSibling();
     }
 
     return names;
@@ -194,34 +249,35 @@ namespace Miro
   {
     unsigned int processed = 0;
 
-    QString section = section_.c_str();
-    QString category = _category.c_str();
-
-    // get the root nodes first child
-    QDomNode n1 = document_->documentElement().firstChild();
-    while(!n1.isNull()) {
-      QDomElement e1 = n1.toElement();
-      if (!e1.isNull() &&
-	  ( (n1.nodeName() == "section" &&
-	     e1.attribute("name") == section) ||
-	    (n1.nodeName() == section))) {
-
-	QDomNode n2 = n1.firstChild();
-	while (!n2.isNull()) {
-	  QDomElement e2 = n2.toElement();
-	  if (!e2.isNull() &&
-	      ( (n2.nodeName() == "parameter" &&
-	         e2.attribute("name") == category) ||
-		(n2.nodeName() == category))) {
-	    _parameters <<= n2;
-	    ++processed;
+    if (document_ != NULL) {
+      QString section = section_.c_str();
+      QString category = _category.c_str();
+      
+      // get the root nodes first child
+      QDomNode n1 = document_->documentElement().firstChild();
+      while(!n1.isNull()) {
+	QDomElement e1 = n1.toElement();
+	if (!e1.isNull() &&
+	    ( (n1.nodeName() == "section" &&
+	       e1.attribute("name") == section) ||
+	      (n1.nodeName() == section))) {
+	  
+	  QDomNode n2 = n1.firstChild();
+	  while (!n2.isNull()) {
+	    QDomElement e2 = n2.toElement();
+	    if (!e2.isNull() &&
+		( (n2.nodeName() == "parameter" &&
+		   e2.attribute("name") == category) ||
+		  (n2.nodeName() == category))) {
+	      _parameters <<= n2;
+	      ++processed;
+	    }
+	    n2 = n2.nextSibling();
 	  }
-	  n2 = n2.nextSibling();
 	}
+	n1 = n1.nextSibling();
       }
-      n1 = n1.nextSibling();
     }
-
     if (processed == 0) {
       MIRO_LOG_OSTR(LL_WARNING, 
 		    "ConfigDocument: No parameters found for " <<
@@ -242,35 +298,36 @@ namespace Miro
   {
     unsigned int processed = 0;
 
-    QString section = section_.c_str();
-    QString type = _type.c_str();
-    QString name = _name.c_str();
+    if (document_ != NULL) {
+      QString section = section_.c_str();
+      QString type = _type.c_str();
+      QString name = _name.c_str();
 
-    // get the root nodes first child
-    QDomNode n1 = document_->documentElement().firstChild();
-    while(!n1.isNull()) {
-      QDomElement e1 = n1.toElement();
-      if (!e1.isNull() &&
-	  ( (n1.nodeName() == "section" &&
-	     e1.attribute("name") == section) ||
-	    (n1.nodeName() == section))) {
+      // get the root nodes first child
+      QDomNode n1 = document_->documentElement().firstChild();
+      while(!n1.isNull()) {
+	QDomElement e1 = n1.toElement();
+	if (!e1.isNull() &&
+	    ( (n1.nodeName() == "section" &&
+	       e1.attribute("name") == section) ||
+	      (n1.nodeName() == section))) {
 
-	QDomNode n2 = n1.firstChild();
-	while (!n2.isNull()) {
-	  QDomElement e2 = n2.toElement();
-	  if (!e2.isNull() &&
-	      n2.nodeName() == "instance" &&
-	      e2.attribute("name") == name &&
-	      e2.attribute("type") == type) {
-	    _parameters <<= n2;
-	    ++processed;
+	  QDomNode n2 = n1.firstChild();
+	  while (!n2.isNull()) {
+	    QDomElement e2 = n2.toElement();
+	    if (!e2.isNull() &&
+		n2.nodeName() == "instance" &&
+		e2.attribute("name") == name &&
+		e2.attribute("type") == type) {
+	      _parameters <<= n2;
+	      ++processed;
+	    }
+	    n2 = n2.nextSibling();
 	  }
-	  n2 = n2.nextSibling();
 	}
+	n1 = n1.nextSibling();
       }
-      n1 = n1.nextSibling();
     }
-
     if (processed == 0) {
       MIRO_LOG_OSTR(LL_WARNING, 
 		    "ConfigDocument: No parameters found for " <<
@@ -290,33 +347,34 @@ namespace Miro
   {
     unsigned int processed = 0;
 
-    QString section = section_.c_str();
-    QString name = _name.c_str();
+    if (document_ != NULL) {
+      QString section = section_.c_str();
+      QString name = _name.c_str();
 
-    // get the root nodes first child
-    QDomNode n1 = document_->documentElement().firstChild();
-    while(!n1.isNull()) {
-      QDomElement e1 = n1.toElement();
-      if (!e1.isNull() &&
-	  ( (n1.nodeName() == "section" &&
-	     e1.attribute("name") == section) ||
-	    (n1.nodeName() == section))) {
+      // get the root nodes first child
+      QDomNode n1 = document_->documentElement().firstChild();
+      while(!n1.isNull()) {
+	QDomElement e1 = n1.toElement();
+	if (!e1.isNull() &&
+	    ( (n1.nodeName() == "section" &&
+	       e1.attribute("name") == section) ||
+	      (n1.nodeName() == section))) {
 
-	QDomNode n2 = n1.firstChild();
-	while (!n2.isNull()) {
-	  QDomElement e2 = n2.toElement();
-	  if (!e2.isNull() &&
-	      n2.nodeName() == "instance" &&
-	      e2.attribute("name") == name) {
-	    _parameters <<= n2;
-	    ++processed;
+	  QDomNode n2 = n1.firstChild();
+	  while (!n2.isNull()) {
+	    QDomElement e2 = n2.toElement();
+	    if (!e2.isNull() &&
+		n2.nodeName() == "instance" &&
+		e2.attribute("name") == name) {
+	      _parameters <<= n2;
+	      ++processed;
+	    }
+	    n2 = n2.nextSibling();
 	  }
-	  n2 = n2.nextSibling();
 	}
+	n1 = n1.nextSibling();
       }
-      n1 = n1.nextSibling();
     }
-
     if (processed == 0) {
       MIRO_LOG_OSTR(LL_WARNING, 
 		    "ConfigDocument: No parameters found for " <<

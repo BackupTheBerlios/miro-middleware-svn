@@ -26,6 +26,7 @@ sources1 = \
 	XmlParse.cpp \
 	Exception.cpp \
 	Angle.cpp \
+	Configuration.cpp \
 	ConfigDocument.cpp \
 	Log.cpp \
 	Thread.cpp \
