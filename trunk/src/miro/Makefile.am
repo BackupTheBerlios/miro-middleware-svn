@@ -127,6 +127,7 @@ extraheader = \
 	NotifyMulticastRequestIndex.h \
 	NotifyMulticastDefines.h \
 	NotifyMulticast.h \
+	NotifyMulticastEventFilter.h \
 	Utils.h \
 	TimeSeries.h
 
