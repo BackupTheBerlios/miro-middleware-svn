@@ -7,15 +7,15 @@ cvs update -r PeopleBotBeta2
 
 Tar archives are also available at our web site.
 
-With this beta, Miro now supports all sensors and actuators of
-the performance people bot of activeMedia. The binary infrared sensors
-are modeled as normal range sensors.
+With this beta, Miro should now support all sensors and actuators of
+the performance people bot of ActiveMedia. The binary infrared sensors
+are modeled as normal range sensors. We hopefully didn't miss any.
 
 This beta introduces the parameter framework of Miro. Miro now supports
 auto code generation for parameter files of its services as well as for
 behaviours. Read the Miro manual for more details.
 
-The PolicyEditor was renovated and should now show better perfomance 
+The PolicyEditor was renovated and should now show better performance 
 as well as less segmentation faults.
 
 The Behaviour/Action Pattern/Policy framework was enhanced. It now 
@@ -23,7 +23,7 @@ supports global transitions and an interface to change parameter sets
 within a running policy. Read the Miro manual for more details.
 The example behaviours moved to examples/behaviours and its 
 subdirectories. Also a bunch of trivial behaviours was added.
-The instanciation of Behaviours/Arbiters etc. was cleaned up 
+The instantiation of Behaviours/Arbiters etc. was cleaned up 
 into factory classes.
 
 The Ppb-Services are all collected within the PioneerBase binary. - We
@@ -54,24 +54,32 @@ together nicely.
 
   Knows issues:
   - After each reboot, please execute the following command on the
-  commandline: "v4lctl setnorm NTSC".
+  command line: "v4lctl setnorm NTSC".
   - If the video radio link is switched on, the internal image may be
-  very dark. This is not a Miro bug, but a technical peoplebot
+  very dark. This is not a Miro bug, but a technical PeopleBot
   limitation.
 
 
 - BehaviourEngine
 
-  The simple avoid behaviour demo is working quite well. It drives the
+  As our PeopleBot had some hardware problems, we actually
+  didn't too much further behaviour testing.
+
+  The RangeSensorAvoid behaviour demo is working quite well. It drives the
   robot straight and turns away from obstacles.
 
   The wallfollow behaviour demo does not really work - do not test it!
+
+  The simple/square.xml policy makes the robot drive a square of
+  3m x 3m. Make sure there is enough space, as it does not do any
+  avoiding... It is a nice policy for testing the accuracy of your
+  robots odometry.
 
   To test the avoid demo:
   * Start the 
     PioneerBase
   * Start the Behaviours, specifying the policy at the command line:
-    Behaviours ../examples/behaviours/PpbStraight.xml
+    SimpleBehaviourEngine ../examples/behaviours/policies/rangeSensor/PpbStraight.xml
   * Start the PolicyController, to start and stop the policy.
   The PioneerBase has to run on the robot. It is also a good idea to
   run the Behaviours on the robot, to avoid that network latencies
@@ -93,7 +101,7 @@ together nicely.
   as can be tested for instance by the PanTiltTest
 
   Known Issues:
-  Afer using, the remote control may be disfunctional. Simple switch
+  After using, the remote control may be dysfunctional. Simple switch
   the camera off and on one time by removing the power cable.
 
 - Gripper
