@@ -27,6 +27,17 @@
 #define DBG(x)
 #endif
 
+static Miro::Server * pServer;
+
+extern "C" void handler (int signum)
+{
+  // check of sigint
+  if (signum == SIGINT) {
+    pServer->shutdown();
+  }
+}
+
+
 namespace Miro
 {
   Server::Event::Event(Server& server_) :
@@ -114,8 +125,10 @@ namespace Miro
     poa_mgr = poa->the_POAManager();
         
     // register Signal handler for Ctr+C
-    signals_.sig_add(SIGINT);
-    signals_.sig_add(SIGTERM);
+    //    signals_.sig_add(SIGINT);
+    //    signals_.sig_add(SIGTERM);
+
+    ACE_Sig_Action sa ((ACE_SignalHandler) handler, SIGINT);
 
     if (reactor()->register_handler(signals_, event_) == -1) {
       throw ACE_Exception(errno, "Failed to register signal handler.");
