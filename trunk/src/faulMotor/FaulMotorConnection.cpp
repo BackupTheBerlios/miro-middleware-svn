@@ -94,65 +94,33 @@ namespace FaulMotor
     dSpeedR = speedR - prevSpeedR;
     accR = ( params_-> maxPosAccel) * 9. / 320.;
     accL = ( params_-> maxPosAccel) * 9. / 320.;
-    if ((dSpeedL != 0) && (dSpeedR != 0))
-    {
-    if (abs(dSpeedL) > abs(dSpeedR))
-    	{
-		accR = (dSpeedR / dSpeedL *params_-> maxPosAccel) * 9. / 320.;
-    	}
-	else
-	{
-		accL = ( dSpeedL / dSpeedR * params_-> maxPosAccel) * 9. / 320.;
-	}
-     }
-
-    /*if ((speedL != 0) && (speedR != 0))
-    {
-    	accL = -speedL;
-    	if (prevSpeedL != 0) accL = -speedL / prevSpeedL;
-	accR = speedR;
-	if (prevSpeedR != 0) accR = speedR/ prevSpeedR;
-
-	if ((accL <= accR) && (accR != 0))
-	{
-		accL = (accL / accR * params_-> maxPosAccel) * 9. / 320.;
-		accR = (params_-> maxPosAccel) * 90. / 320.;
-	}else
-	{
-		if (accL != 0)
-
-		{
-
-		accR = (accR / accL * params_-> maxPosAccel) * 9. / 320.;
-		accL = (params_-> maxPosAccel) * 90. / 320.;
-
-		}
-	}
-	//cout << "maxPosAcc: " << params_-> maxPosAccel <<" AccR: " << accR << " AccL: " << accL << endl;
-     }
-	else   // wenn speed 0 bremsen!!!
-	{
-	  accL = params_-> maxNegAccel * 9. / 320;
-	  accR = params_-> maxNegAccel * 9. / 320;
-	}*/
+    if ((dSpeedL != 0) && (dSpeedR != 0)) {
+      if (abs(dSpeedL) > abs(dSpeedR)) {
+	accR = (dSpeedR / dSpeedL *params_-> maxPosAccel) * 9. / 320.;
+      }
+      else {
+	accL = ( dSpeedL / dSpeedR * params_-> maxPosAccel) * 9. / 320.;
+      }
+    }
 
     acctestL = abs((short)accL);
     acctestR = abs((short)accR);
 //    cout << "maxPosAcc: " << params_-> maxPosAccel <<" AccR: " << acctestR ;
 //    cout << " AccL: " << acctestL << endl;
-    if (true || abs(acctestL-prevAccL)>2){			//zur datenverringerung
+
+    if (false && abs(acctestL-prevAccL)>2){			//zur datenverringerung
     	sprintf(speedMessageL, "ac%d\r\n", acctestL); // build speed message
 	leftWheel_.writeMessage(speedMessageL);
 	prevAccL=acctestL;
     }
-    if (true || abs(acctestR-prevAccR)>2){
+    if (false && abs(acctestR-prevAccR)>2){
     	sprintf(speedMessageR, "ac%d\r\n", acctestR); // build speed message
 	rightWheel_.writeMessage(speedMessageR);
     	prevAccR=acctestR;
     }
 
-    sprintf(speedMessageL, "v%d\r\n", speedL); // build speed message
-    sprintf(speedMessageR, "v%d\r\n", speedR); // build speed message
+    sprintf(speedMessageL, "ac%d\r\nv%d\r\n", acctestL, speedL); // build speed message
+    sprintf(speedMessageR, "ac%d\r\nv%d\r\n", acctestR, speedR); // build speed message
     leftWheel_.writeMessage(speedMessageL);
     rightWheel_.writeMessage(speedMessageR);             // send it
     prevSpeedL = -speedL;
