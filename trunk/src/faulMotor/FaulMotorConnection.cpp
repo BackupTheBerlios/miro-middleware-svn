@@ -146,12 +146,16 @@ namespace FaulMotor
     Miro::Guard guard(mutex_);
 
     gotTicks_ = 0;
+
+#ifdef ASD
     ACE_Time_Value now = ACE_OS::gettimeofday();
     ACE_Time_Value nextWrite = std::min(leftWheel_.lastWrite, rightWheel_.lastWrite)
       + ACE_Time_Value(0, 18000);
 
     if (nextWrite > now)
       ACE_OS::sleep(nextWrite - now);
+#endif
+
     leftWheel_.writeMessage(getTicksMessage);            // send it
     rightWheel_.writeMessage(getTicksMessage);
   }

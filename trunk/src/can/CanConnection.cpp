@@ -108,10 +108,6 @@ namespace Can
 
 
     }
-
-
-
-
   }
 
   void
@@ -137,7 +133,7 @@ namespace Can
     int rc = ioBuffer.send_n(message.canMessage(), sizeof(canmsg));
 
     lastWrite = time;
-    ACE_OS::sleep(canTimeOut);
+    //    ACE_OS::sleep(canTimeOut);
 
     writeMutex.release();
     if (rc == -1)

@@ -12,6 +12,7 @@
 #ifndef FaulTtyConnection_h
 #define FaulTtyConnection_h
 
+#include "miro/Synch.h"
 #include "miro/TtyConnection.h"
 
 namespace FaulMotor
@@ -38,7 +39,9 @@ namespace FaulTty
 
   protected:
     EventHandler* eventHandler;
-    ACE_Time_Value lastWrite;
+
+    Miro::Mutex mutex_;
+    ACE_Time_Value lastWrite_;
 
     friend class FaulMotor::Connection;
   };
