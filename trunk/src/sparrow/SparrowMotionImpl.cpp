@@ -105,7 +105,7 @@ namespace Sparrow
   };
 
   void
-  MotionImpl::initMax(short maxAcc, short maxPower, short maxSpeed, double maxTurn)
+  MotionImpl::initMax(short maxAcc, short maxPower, short maxSpeed, double maxTurn) throw()
   {
     Miro::Guard guard(mutex_);
     connection.initMax(maxAcc, maxPower, maxSpeed, maxTurn);

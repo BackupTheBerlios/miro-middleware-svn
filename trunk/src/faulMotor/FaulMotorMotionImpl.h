@@ -53,8 +53,9 @@ namespace FaulMotor
 
     void setLRPower(CORBA::Long, CORBA::Long)
       throw(Miro::EOutOfBounds, Miro::EDevIO);
-    void initMax(short maxAcc, short maxPower, short maxSpeed, double maxTurn);
-
+    void initMax(short maxAcc, short maxPower, short maxSpeed, double maxTurn)
+     throw();
+     
   protected:
     const Parameters *  params_;
     Connection&         connection; // encapsulating communication to hardware
