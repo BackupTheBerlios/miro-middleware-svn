@@ -342,8 +342,8 @@
 			    </parameter>
 
 			    <parameter name="Filter" >
-			      <parameter value="IndextoCanny" name="Type" />
-			      <parameter value="IndextoCannyWhiteBlue" name="Name" />
+			      <parameter value="IndextoEdge" name="Type" />
+			      <parameter value="IndextoEdgeWhiteBlue" name="Name" />
 			      <parameter name="Successor" >
 				<parameter name="Filter" >
 				  <parameter value="AttentionGoalPosts" name="Type" />
@@ -352,8 +352,8 @@
 			      </parameter>
 			    </parameter>
 			    <parameter name="Filter" >
-			      <parameter value="IndextoCanny" name="Type" />
-			      <parameter value="IndextoCannyBlueWhite" name="Name" />
+			      <parameter value="IndextoEdge" name="Type" />
+			      <parameter value="IndextoEdgeBlueWhite" name="Name" />
 			      <parameter name="Successor" >
 				<parameter name="Filter" >
 				  <parameter value="AttentionGoalPosts" name="Type" />
@@ -362,8 +362,8 @@
 			      </parameter>
 			    </parameter>
 			    <parameter name="Filter" >
-			      <parameter value="IndextoCanny" name="Type" />
-			      <parameter value="IndextoCannyWhiteYellow" name="Name" />
+			      <parameter value="IndextoEdge" name="Type" />
+			      <parameter value="IndextoEdgeWhiteYellow" name="Name" />
 			      <parameter name="Successor" >
 				<parameter name="Filter" >
 				  <parameter value="AttentionGoalPosts" name="Type" />
@@ -372,8 +372,8 @@
 			      </parameter>
 			    </parameter>
 			    <parameter name="Filter" >
-			      <parameter value="IndextoCanny" name="Type" />
-			      <parameter value="IndextoCannyYellowWhite" name="Name" />
+			      <parameter value="IndextoEdge" name="Type" />
+			      <parameter value="IndextoEdgeYellowWhite" name="Name" />
 			      <parameter name="Successor" >
 				<parameter name="Filter" >
 				  <parameter value="AttentionGoalPosts" name="Type" />
@@ -383,8 +383,8 @@
 			    </parameter>
 
 			    <parameter name="Filter" >
-			      <parameter value="IndextoCanny" name="Type" />
-			      <parameter value="IndextoCannyGreenWhite" name="Name" />
+			      <parameter value="IndextoEdge" name="Type" />
+			      <parameter value="IndextoEdgeGreenWhite" name="Name" />
 			      <parameter name="Successor" >
 				<parameter name="Filter" >
 				  <parameter value="Enlarge4" name="Type" />
@@ -420,11 +420,12 @@
 			<parameter value="AttentionBall" />
 			<parameter value="AttentionGoal" />
 			<parameter value="AttentionCornerPoles" />
-			<!--
 			<parameter value="BlueLeftPost" />
 			<parameter value="BlueRightPost" />
 			<parameter value="YellowLeftPost" />
 			<parameter value="YellowRightPost" />
+			<parameter value="AttentionLines" />
+			<!--
 			<parameter value="AttentionRobots" />
 			-->
 		      </parameter>
@@ -495,11 +496,9 @@
 	<parameter value="false" name="Random" />
       </parameter>
 
-      <parameter name="IndextoCannyWhiteBlue">
+      <parameter name="IndextoEdgeWhiteBlue">
         <parameter value="WHITE" name="ColorOne" />
         <parameter value="BLUE" name="ColorTwo" />
-        <parameter value="50" name="LowThresh" />
-        <parameter value="180" name="HighThresh" />
         <parameter value="true" name="SelectOrient" />
         <parameter value="-30" name="LowAngle" />
         <parameter value="30" name="HighAngle" />
@@ -511,11 +510,9 @@
         <parameter value="BLUELEFTGOALPOST" name="Type" />
       </parameter>
 
-      <parameter name="IndextoCannyBlueWhite">
+      <parameter name="IndextoEdgeBlueWhite">
         <parameter value="BLUE" name="ColorOne" />
         <parameter value="WHITE" name="ColorTwo" />
-        <parameter value="50" name="LowThresh" />
-        <parameter value="180" name="HighThresh" />
         <parameter value="true" name="SelectOrient" />
         <parameter value="-30" name="LowAngle" />
         <parameter value="30" name="HighAngle" />
@@ -527,11 +524,9 @@
         <parameter value="BLUERIGHTGOALPOST" name="Type" />
       </parameter>
 
-      <parameter name="IndextoCannyWhiteYellow">
+      <parameter name="IndextoEdgeWhiteYellow">
         <parameter value="WHITE" name="ColorOne" />
         <parameter value="YELLOW" name="ColorTwo" />
-        <parameter value="50" name="LowThresh" />
-        <parameter value="180" name="HighThresh" />
         <parameter value="true" name="SelectOrient" />
         <parameter value="-30" name="LowAngle" />
         <parameter value="30" name="HighAngle" />
@@ -543,15 +538,17 @@
         <parameter value="YELLOWLEFTGOALPOST" name="Type" />
       </parameter>
 
-      <parameter name="IndextoCannyYellowWhite">
+      <parameter name="IndextoEdgeYellowWhite">
         <parameter value="YELLOW" name="ColorOne" />
         <parameter value="WHITE" name="ColorTwo" />
-        <parameter value="50" name="LowThresh" />
-        <parameter value="180" name="HighThresh" />
         <parameter value="true" name="SelectOrient" />
         <parameter value="-30" name="LowAngle" />
         <parameter value="30" name="HighAngle" />
         <parameter value="false" name="OppositeDirection" />
+        <parameter value="true" name="InterfaceInstance" />
+        <parameter name="Interface" >
+          <parameter value="YRG" name="Name" />
+        </parameter>
       </parameter>
       <parameter name="YellowRightPost">
         <parameter value="false" name="Rotate" />
@@ -559,15 +556,13 @@
         <parameter value="YELLOWRIGHTGOALPOST" name="Type" />
       </parameter>
 
-      <parameter name="IndextoCannyGreenWhite">
+      <parameter name="IndextoEdgeGreenWhite">
         <parameter value="GREEN" name="ColorOne" />
         <parameter value="WHITE" name="ColorTwo" />
-        <parameter value="50" name="LowThresh" />
-        <parameter value="180" name="HighThresh" />
       </parameter>
 
       <parameter name="CollectAllFeatures" >
-	<parameter value="3" name="NumberBackLinks" />
+	<parameter value="8" name="NumberBackLinks" />
 	<parameter value="true" name="DynamicConnection" />
       </parameter>
 
