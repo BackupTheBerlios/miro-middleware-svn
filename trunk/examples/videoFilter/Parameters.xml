@@ -1,0 +1,12 @@
+<!DOCTYPE xml SYSTEM "MiroParameterDescription.dtd">
+<config> 
+  <config_global name="include" value="video/Parameters.h" />
+
+  <config_group name="video">
+    <config_item name="FilterGray" parent="Video::Filter" final="true">
+      <config_parameter name="WeightRed" type="double" default="1." />
+      <config_parameter name="WeightGreen" type="double" default="1." />
+      <config_parameter name="WeightBlue" type="double" default="1." />
+    </config_item>
+  </config_group>
+</config>
