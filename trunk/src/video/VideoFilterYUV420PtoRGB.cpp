@@ -9,10 +9,6 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-/*! \file FilterYUV420PtoRGB.cpp
- *  \brief Image conversion routines YUV->RGB
- *  \author Arnd Muehlenfeld
- */
 
 #include "VideoFilterYUV420PtoRGB.h"
 

@@ -33,6 +33,12 @@ namespace Video
 	virtual ~FilterRGBtoSeg();
 	virtual void process();
     protected:
+        
+        void buildLookupTables();
+    
+        float r_lookup[256];
+	float g_lookup[256];
+	float b_lookup[256];
 
     };
 };

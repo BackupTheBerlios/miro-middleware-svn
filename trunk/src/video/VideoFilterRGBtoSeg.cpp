@@ -9,10 +9,6 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-/*! \file FilterRGBtoSeg.cpp
- *  \brief Image conversion routines YUV->RGB
- *  \author Roland Reichle 
- */
 
 #include "VideoFilterRGBtoSeg.h"
 
@@ -35,7 +31,8 @@ namespace Video
     if (_inputFormat.palette != Miro::RGB_24)
       throw Miro::Exception("Incompatible input format for FilterRGBtoSeg.");
     outputFormat_.palette = Miro::GREY_8;
-
+    
+    buildLookupTables();
   }
 
   //---------------------------------------------------------------
@@ -50,22 +47,31 @@ namespace Video
     unsigned char const * src_img = inputBuffer();
     unsigned char * tgt_img = outputBuffer();
 
+    unsigned int length = inputFormat_.width * inputFormat_.height;
 
+    for(unsigned int x = 0; x < length; ++x){
+       
 
-    for(unsigned int x = 0; x < inputFormat_.width; x++){
-       for(unsigned int y = 0; y < inputFormat_.height; y++){
+          *(tgt_img++) =  (r_lookup[*(src_img++)] +  g_lookup[*(src_img++)] + b_lookup[*(src_img++)] < 80.0)?0:255;
 
-          *(tgt_img++) =  ((unsigned char) (*(src_img++)*0.299 +  *(src_img++)*0.587 + *(src_img++)*0.114) < 80)?0:255;
-
-       }
+      
 
     }
 
 
 
   }
-
-
-
+  
+  void FilterRGBtoSeg::buildLookupTables()
+  {
+  
+     for(int i = 0; i < 256; i++){
+        r_lookup[i] = (float)i * 0.299;
+	g_lookup[i] = (float)i * 0.587;
+	b_lookup[i] = (float)i * 0.114;
+     }  
+  
+  
+  }
 
 };
