@@ -165,9 +165,10 @@ namespace Miro
 	  first->generateHeader(ostr, indent);
       }
    
+      // close namespace scope
       while (indent) {
 	indent -= STEP;
-	ostr << spaces.left(indent) << "};" << std::endl;
+	ostr << spaces.left(indent) << "}" << std::endl;
       }
 
       ostr << std::endl
@@ -223,7 +224,7 @@ namespace Miro
 
       while (indent) {
 	indent -= STEP;
-	ostr << spaces.left(indent) << "};" << std::endl;
+	ostr << spaces.left(indent) << "}" << std::endl;
       }
 
     }
