@@ -30,7 +30,6 @@ SHLIB    = lib$(NAME).$(SOEXT)
 FILES = mylibraryfiles
 DEFS  = $(addsuffix .h,$(FILES))
 LSRC  = $(addsuffix .cpp,$(FILES))
-DEPS  = $(addsuffix .d,$(FILES))
 
 #----------------------------------------------------------------------------
 #	Include macros and targets
