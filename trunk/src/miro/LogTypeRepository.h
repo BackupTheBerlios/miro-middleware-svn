@@ -20,6 +20,7 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include <algorithm>
 
 // forward declaration
 class TAO_OutputCDR;
