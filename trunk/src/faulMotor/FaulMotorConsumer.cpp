@@ -43,6 +43,8 @@ namespace FaulMotor
     ticksR_(0.),
     prevTicksL_(0.),
     prevTicksR_(0.),
+    counterL(49),
+    counterR(49),
     wheelBase_(params_->motion.wheelBase)
   {
     DBG(cout << "Constructing FaulMotorConsumer." << endl);
@@ -51,6 +53,7 @@ namespace FaulMotor
     status_.position.heading = 0.;
     status_.velocity.translation = 0;
     status_.velocity.rotation = 0.;
+    
   }
 
 
@@ -83,7 +86,7 @@ namespace FaulMotor
 	timeStampR_ = pFaulMsg->time();
       }
 
-      if (prevTimeStampL_ < timeStampR_ && prevTimeStampR_ < timeStampL_) {
+      if (prevTimeStampL_+ACE_Time_Value(0.10000) < timeStampR_ && prevTimeStampR_+ACE_Time_Value(0.10000) < timeStampL_) {
 	if (init_ == 0) {
 	  double dL = -(ticksL_ - prevTicksL_) / params_->leftTicksPerMM;
 	  double dR = (ticksR_ - prevTicksR_) / params_->rightTicksPerMM;
@@ -91,7 +94,7 @@ namespace FaulMotor
 //	  cout << "dL: " << dL << " dR: " << dR << endl;
 
 	  // reset tick counters to minimize overhead
-	  //if ((pFaulMsg->lPos < 3000) or (pFaulMsg->lPos > 10000) pConnection->setPos1(0); zur zeit ohne zurücksetzung der pos
+	  //if ((pFaulMsg->lPos < 3000) or (pFaulMsg->lPos > 10000) pConnection->setPos1(0); 
 	  //if ((pFaulMsg->RPos < 3000) or (pFaulMsg->RPos > 10000) pConnection->setPos0(0);
 
 	  // calculate new orientation
@@ -119,6 +122,101 @@ namespace FaulMotor
 
 	  //cout << status_.time.sec<< "  " << status_.time.usec <<endl; //(dL+dR) / 2*dtime<<  endl;
 	  
+// berechnung 
+	   double deltaTR[50];
+	   double deltaTL[50];
+           double deltaTLR[50];
+
+	   //int counter = 49;
+	   if ( timeStampR_ != prevTimeStampR_ )
+	   {
+	     ACE_Time_Value dTR = timeStampR_ - prevTimeStampR_;
+	      --counterR;
+	     deltaTR[counterR] = (double)dTR.sec() + (double)dTR.usec() /1000000.;
+	     cout << "dTR: "<<dTR<< endl;
+	   }
+
+	   if ( timeStampL_ != prevTimeStampL_ )
+           {
+             ACE_Time_Value dTL = timeStampL_ - prevTimeStampL_;
+              --counterL;
+             deltaTL[counterL] = (double)dTL.sec() + (double)dTL.usec()/1000000.;
+             cout << "dTL: "<<dTL<< endl;
+           }
+
+
+	   
+           ACE_Time_Value dTLR = timeStampL_ - timeStampR_;
+
+            //deltaTLR[counterL] = (double)dTL.sec() + (double)dTL.usec() / 1000000.;
+
+      //prevTimeStamp = timeStamp;
+      //--counter;
+      int i;
+      if (counterL < 0) {
+        double meanL = deltaTL[0];
+	//double meanR = deltaTR[0];
+        //double meanLR = deltaTLR[0];
+        for ( i = 49; i > 0; --i)
+         { meanL += deltaTL[i];
+	   //meanR += deltaTR[i];
+	   //meanLR += deltaTR[i];	
+         }
+
+        meanL /= 50.;
+	//meanR /= 50.;
+	//meanR /= 50.;
+
+
+        double varL = 0.;
+	//double varR = 0.;
+
+        for ( i = 49; i >= 0; --i)
+          varL += (deltaTL[i] - meanL) * (deltaTL[i] - meanL);
+	  //varR += (deltaTR[i] - meanR) * (deltaTR[i] - meanR);
+
+        varL /= 49.;
+	//varR /= 49.;
+        cout << "TimerOdoL: mean=" << meanL << "sec \t var=" <<sqrt(varL)<< endl;
+	//cout << "TimerOdoR: mean=" << meanR << "sec \t var=" <<sqrt(varR)<< endl;
+	//cout << "TimerOdoL-R: mean=" << meanLR << endl;
+        counterL = 49;
+      }
+
+	if (counterR < 0) {
+        //double meanL = deltaTL[0];
+        double meanR = deltaTR[0];
+        //double meanLR = deltaTLR[0];
+        for ( i = 49; i > 0; --i)
+         { //meanL += deltaTL[i];
+           meanR += deltaTR[i];
+           //meanLR += deltaTR[i];
+         }
+
+        //meanL /= 50.;
+        meanR /= 50.;
+        //meanR /= 50.;
+
+
+        //double varL = 0.;
+        double varR = 0.;
+
+        for ( i = 49; i >= 0; --i)
+          //varL += (deltaTL[i] - meanL) * (deltaTL[i] - meanL);
+          varR += (deltaTR[i] - meanR) * (deltaTR[i] - meanR);
+
+        //varL /= 49.;
+        varR /= 49.;
+        //cout << "TimerOdoL: mean=" << meanL << "sec \t var=" <<sqrt(varL)<<endl;
+        cout << "TimerOdoR: mean=" << meanR << "sec \t var="<<sqrt(varR)<< endl;
+        //cout << "TimerOdoL-R: mean=" << meanLR << endl;
+        counterR = 49;
+      }
+
+
+
+
+
 	  // save current values for next iteration
 	  prevTimeStampL_ = timeStampL_;
 	  prevTimeStampR_ = timeStampR_;

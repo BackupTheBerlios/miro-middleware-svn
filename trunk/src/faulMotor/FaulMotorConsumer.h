@@ -56,7 +56,9 @@ namespace FaulMotor
     double ticksR_;
     double prevTicksL_;
     double prevTicksR_;
-
+    int counterL;
+    int counterR;
+    
     ACE_Time_Value timeStampL_;
     ACE_Time_Value timeStampR_;
     ACE_Time_Value prevTimeStampL_;
