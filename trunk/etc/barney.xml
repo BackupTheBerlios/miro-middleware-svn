@@ -110,7 +110,6 @@
  </section>
  <section name="Video" >
   <parameter name="Video" >
-   <parameter name="Device" value="/dev/video1394/0" />
    <parameter value="yuv411" name="Palette" />
    <parameter value="640" name="Width" />
    <parameter value="480" name="Height" />
