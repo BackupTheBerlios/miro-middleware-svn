@@ -42,7 +42,7 @@ examplelinks = \
 	$(top_srcdir)/examples/sonar/SonarPoll2.cpp \
 	$(top_srcdir)/examples/sonar/SonarPoll3.cpp \
 	$(top_srcdir)/examples/sonar/SonarNotify.cpp \
-	$(top_srcdir)/examples/behaviours/b21/LaserAvoid.cpp \
+	$(top_srcdir)/botsvcs/examples/BAP/b21/LaserAvoid.cpp \
 	$(top_srcdir)/examples/video/VideoExample.cpp
 
 if COND_PDF

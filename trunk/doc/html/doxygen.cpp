@@ -64,7 +64,7 @@ EXCLUDE_PATTERNS       = *C.h \
 			 Laser.idl \
                          Image.idl \
                          ImageDefinitions.idl
-INPUT                  = ../../src/miro ../../src/video
+INPUT                  = ../../src/miro ../../src/video ../../utils/widgets/ ../../utils/configEditor  ../../utils/policyEditor
 EXAMPLE_PATH           = 
 EXAMPLE_PATTERNS       = 
 IMAGE_PATH             = 
