@@ -15,6 +15,7 @@
 #include "PriorityArbiter.h"
 #include "ConstraintArbiterViewerTask.h"
 #include "VelocitySpace.h"
+#include "MotionArbiterMessage.h"
 #include "ConstraintArbiterParameters.h"
 #include "Synch.h"
 
@@ -27,7 +28,6 @@
 namespace Miro
 {
   class StructuredPushSupplier;
-  class MotionArbiterMessage;
 
   typedef MotionArbiterMessage ConstraintArbiterMessage;
 
@@ -47,6 +47,7 @@ namespace Miro
 
     virtual ConstraintArbiterParameters * 
     ConstraintArbiter::getParametersInstance() const;
+    virtual ConstraintArbiterMessage * getMessageInstance() const;
     virtual void init(ArbiterParameters const * _params);
     virtual void open();
     virtual void close();

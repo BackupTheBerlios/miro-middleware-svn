@@ -11,7 +11,6 @@
 
 //#include "ActionPattern.h"
 #include "ArbiterParameters.h"
-#include "MotionArbiterMessage.h"
 #include "ConstraintArbiter.h"
 #include "ConstraintArbiterViewer.h"
 #include "Behaviour.h"
@@ -79,6 +78,12 @@ namespace Miro
     p->velocitySpace.setWheelBase(pMotion_->getWheelBase());
 
     return p;
+  }
+
+  ConstraintArbiterMessage * 
+  ConstraintArbiter::getMessageInstance() const
+  {
+    return new ConstraintArbiterMessage();
   }
 
   void
