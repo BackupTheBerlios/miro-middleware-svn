@@ -67,6 +67,7 @@ libmiroVideo_la-VideoDevice1394.lo
 libmiroVideo_la-VideoDeviceBTTV.lo
 libmiroVideo_la-VideoDeviceDummy.lo
 libmiroVideo_la-VideoDeviceMeteor.lo
+libmiroVideo_la-VideoDevicePlayer.lo
 libmiroVideo_la-VideoDeviceQuickCam.lo
 libmiroVideo_la-VideoFilter.lo
 libmiroVideo_la-VideoFilterBasic.lo
