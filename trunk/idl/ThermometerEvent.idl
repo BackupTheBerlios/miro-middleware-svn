@@ -1,0 +1,33 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2005
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+
+#ifndef ThermometerEvent_idl
+#define ThermometerEvent_idl
+
+#include "Time.idl"
+
+module Miro
+{
+  //! Thermometer reading notification
+  /**
+   * Used by the thermometer implementation to send out an update
+   * whenever new data is available.
+   */
+  struct ThermometerEventIDL
+  {
+    //! Timestamp of thermometer reading
+    TimeIDL time;
+    //! New temperature in degrees C
+    float temperature;
+  };
+};
+
+#endif // ThermometerEvent_idl

@@ -1,0 +1,42 @@
+// -*- c++ -*- //////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2005
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+
+#ifndef TCM2_idl
+#define TCM2_idl
+
+#include "Compass.idl"
+#include "Inclinometer.idl"
+#include "Magnetometer.idl"
+#include "Thermometer.idl"
+#include "TCM2Event.idl"
+#include "Exception.idl"
+
+module Miro
+{
+  //! Interface for the Pioneer TCM 2 module.
+  /**
+   * This module contains compass, inclinometer, magnetometer and
+   * thermometer. Those sensors' values can be accessed either by the
+   * respective base class's methods or in a single call to one of the
+   * methods defined in this super-class.
+   *
+   * @author Ingo van Lil
+   */
+  interface TCM2 : Compass, Inclinometer, Magnetometer, Thermometer
+  {
+    //! Read all sensors at once
+    TCM2EventIDL getData();
+    //! Wait up to one second for a sensor update and read all values.
+    TCM2EventIDL getWaitData() raises(ETimeOut);
+  };
+};
+
+#endif

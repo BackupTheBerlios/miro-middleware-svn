@@ -67,7 +67,18 @@ globalsources = \
 	Joystick.idl \
 	DistanceScan.idl \
 	ArbiterEvent.idl \
-	ObjectVector.idl
+	ObjectVector.idl \
+	Compass.idl \
+	CompassEvent.idl \
+	Inclination.idl \
+	Inclinometer.idl \
+	InclinometerEvent.idl \
+	FieldStrength.idl \
+	Magnetometer.idl \
+	MagnetometerEvent.idl \
+	Thermometer.idl \
+	ThermometerEvent.idl
+
 
 b21sources = \
 	DtlkSpeech.idl \
@@ -78,7 +89,9 @@ b21sources = \
 pioneersources = \
 	PioneerStall.idl \
 	PioneerMotion.idl \
-	Gripper.idl 
+	Gripper.idl \
+	TCM2.idl \
+	TCM2Event.idl
 
 sparrowsources = \
 	Kicker.idl \

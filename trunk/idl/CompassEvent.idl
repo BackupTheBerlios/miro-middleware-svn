@@ -1,0 +1,33 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2005
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+
+#ifndef CompassEvent_idl
+#define CompassEvent_idl
+
+#include "Time.idl"
+
+module Miro
+{
+  //! Compass reading notification
+  /**
+   * Used by the compass implementation to send out an update
+   * whenever new data is available.
+   */
+  struct CompassEventIDL
+  {
+    //! Timestamp of compass reading
+    TimeIDL time;
+    //! New compass heading in radiants relative to magnetic north
+    float heading;
+  };
+};
+
+#endif // CompassEvent_idl

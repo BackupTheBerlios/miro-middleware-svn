@@ -1,0 +1,38 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2005
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+
+#ifndef MagnetometerEvent_idl
+#define MagnetometerEvent_idl
+
+#include "Time.idl"
+#include "FieldStrength.idl"
+
+module Miro
+{
+  //! Magnetometer reading notification
+  /**
+   * Used by the magnetometer implementation to send out an update
+   * whenever new data is available.
+   */
+  struct MagnetometerEventIDL
+  {
+    //! Timestamp of magnetometer reading
+    TimeIDL time;
+    //! New magnetic field strength values
+    /**
+     * The field strength reading includes x-, y- and z-components,
+     * each being specified in uT.
+     */
+    FieldStrengthIDL fieldstrength;
+  };
+};
+
+#endif // MagnetometerEvent_idl

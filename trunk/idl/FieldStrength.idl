@@ -1,0 +1,32 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2005
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+
+#ifndef FieldStrength_idl
+#define FieldStrength_idl
+
+module Miro
+{
+  //! Structure for storing a generic three-dimensional field strength value
+  /**
+   * The components' unit depends on the particular use of the structure.
+   */
+  struct FieldStrengthIDL
+  {
+    //! Field x-component
+    float x;
+    //! Field y-component
+    float y;
+    //! Field z-component
+    float z;
+  };
+};
+
+#endif // FieldStrength_idl

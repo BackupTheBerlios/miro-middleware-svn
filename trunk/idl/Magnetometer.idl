@@ -1,0 +1,37 @@
+// -*- c++ -*- //////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2005
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+
+#ifndef Magnetometer_idl
+#define Magnetometer_idl
+
+#include "MagnetometerEvent.idl"
+#include "Exception.idl"
+
+module Miro
+{
+  //! Interface for querying a magnetometer
+  /**
+   * @author Ingo van Lil
+   */
+  interface Magnetometer
+  {
+    //! Read the current magnetic field strength
+    MagnetometerEventIDL getFieldStrength();
+    //! Wait up to one second for a field strength update and get it
+    MagnetometerEventIDL getWaitFieldStrength() raises(ETimeOut);
+    //! Get the valid field strength range
+    void getMinMaxFieldStrength(out float minFieldStrength,
+				out float maxFieldStrength);
+  };
+};
+
+#endif // Magnetometer_idl
+

@@ -1,0 +1,38 @@
+// -*- c++ -*- //////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2005
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+
+#ifndef Inclinometer_idl
+#define Inclinometer_idl
+
+#include "InclinometerEvent.idl"
+#include "Exception.idl"
+
+module Miro
+{
+  //! Interface for querying an inclinometer
+  /**
+   * @author Ingo van Lil
+   */
+  interface Inclinometer
+  {
+    //! Read the current inclination (pitch and roll) angles
+    InclinometerEventIDL getInclination();
+    //! Wait up to one second for an inclination update and read it
+    InclinometerEventIDL getWaitInclination() raises(ETimeOut);
+    //! Get the valid pitch angle range
+    void getMinMaxPitch(out float minPitch, out float maxPitch);
+    //! Get the valid roll angle range
+    void getMinMaxRoll(out float minRoll, out float maxRoll);
+  };
+};
+
+#endif // Inclinometer_idl
+
