@@ -21,7 +21,7 @@ typedef unsigned long CanId;
 typedef struct
 {
   CanId id;
-  //int type;
+//  int type;
   int rtr;					/* remote transmission	*/
   int len;					/* data length 0..8 	*/
   unsigned char d[8];
