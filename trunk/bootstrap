@@ -1,6 +1,12 @@
 #! /bin/sh
 
-libtoolize --copy --force
+rm -f ./ltmain.sh && \
+rm -f ./config.guess && \
+rm -f ./config.sub && \
+libtoolize --copy --force && \
+if test -e ltmain.sh; then mv -f ltmain.sh config/; fi && \
+if test -e config.guess; then mv -f config.guess config/; fi && \
+if test -e config.sub; then mv -f config.sub config/; fi && \
 aclocal -I config  && \
 autoheader && \
 automake  --add-missing && \
