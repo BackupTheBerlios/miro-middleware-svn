@@ -258,5 +258,7 @@ namespace Miro
 
     // get total length of the file
     totalLength_ = offset + typeRepository_.totalLength();
+    MIRO_DBG_OSTR(MIRO, LL_DEBUG,
+		  "TCR length: " <<  typeRepository_.totalLength());
   }
 }
