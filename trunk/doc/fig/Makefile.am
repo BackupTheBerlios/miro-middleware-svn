@@ -16,10 +16,10 @@ include $(top_srcdir)/config/Make-rules
 SUFFIXES = .fig .ps .eps .png
 
 .fig.eps:
-	convert $< $@
+	fig2dev -L eps $< $@
 
 .fig.png:
-	convert $< $@
+	fig2dev -L png $< $@
 
 .ps.png:
 	convert $< $@
@@ -35,6 +35,8 @@ figures = \
 	filterchain.fig \
 	filtertree.fig \
 	filtergraph.fig \
+        filtergraphlegal.fig \
+        filtergraphillegal.fig \
 	signature.ps \
 	pincolla.ps
 

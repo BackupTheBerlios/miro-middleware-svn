@@ -66,15 +66,18 @@ perform a function $M_{n+1} = f_i(M_{n})$. Where $M_n$ denotes the input
 image (matrix), $M_{n+1}$ the output image and $f_i$ is the actual
 filtering function. 
 
-Often filter chains are used. I.e. first undistorting
-the image $f_0$ and then performing some color indexing $f_2$. So the
-filtering function producing the output image $M_o$ from the input
-image $M_i$ could be expressed as:  $$M_o = f_2(f_1(M_i))$$
+Often filter chains are used (see figure \ref{fig:filterChain}). I.e.
+first undistorting the image $f_0$ and then performing some color
+indexing $f_2$. So the filtering function producing the output image
+$M_o$ from the input image $M_i$ could be expressed as: $$M_o =
+f_2(f_1(M_i))$$
 
 \begin{figure}[!ht]
   \begin{center}
-    \includegraphics[width=8cm, angle=-90]{filterchain}
+    \includegraphics[width=5cm]{filterchain}
   \end{center}
+\caption{A simple filter chain.}
+\label{fig:filterChain}
 \end{figure}
 
 More complex vision processing could also include the computation of
@@ -84,24 +87,29 @@ filter $f_4$, leading to the second filter chain:
 $$M_e = f_4(f_3(f_1(M_i)))$$
 
 To avoid computing the undistorted image twice, a filter tree should
-be used instead of two separate filter chains.
+be used instead of two separate filter chains, as illustrated in
+fiugre \ref{fig:filterTree}.
 
 \begin{figure}[!ht]
   \begin{center}
-    \includegraphics[width=8cm, angle=-90]{filtertree}
+    \includegraphics[width=6cm]{filtertree}
   \end{center}
+\caption{A still quite simple filter tree.}
+\label{fig:filterTree}
 \end{figure}
 
 As an additional complication, many sophisticated filters use more
 then one input filter. For instance the Canny filter computes first
 two images of the Zobel operator (one for the x axis $z_x$ and one for the y
 axis $z_y$). So the above described filter tree is actually an acyclic
-directed graph of filters.
+directed graph of filters, as illustrated in figure \ref{fig:filterGraph}.
 
 \begin{figure}[!ht]
   \begin{center}
-    \includegraphics[width=8cm, angle=-90]{filtergraph}
+    \includegraphics[width=7cm]{filtergraph}
   \end{center}
+\caption{A not that simple filter graph.}
+\label{fig:filterGraph}
 \end{figure}
 
 \section{VideoService}
@@ -134,8 +142,17 @@ depth first order. This scheme is extended by so called filter
 links: A filter can specify additional input filters. To guaranty the
 correct order processing the filters, those additional filters have to
 reside before the specifying filter, in terms of the depth first
-evaluation scheme of the filter tree. Figure \ref{fig:legalilligal}
+evaluation scheme of the filter tree. Figure \ref{fig:legalIlligal}
 tries to visualize this constrain.
+
+\begin{figure}[!ht]
+  \begin{center}
+    \includegraphics[width=5cm]{filtergraphlegal}
+    \includegraphics[width=5cm]{filtergraphillegal}
+  \end{center}
+\caption{A legal vs an illigal filter graph.}
+\label{fig:legalIlligal}
+\end{figure}
 
 \subsection{VideoService Parameters}
 
@@ -185,8 +202,6 @@ filter tree. Those are also located within the section Video.
 The base parameter set of each filter is as follows:
 
 \begin{description}
-\item[Name] The name of the filter (string).
-  Somehow redundant. --- Will have to check.
 \item[InterfaceInstance] Whether the filter has an instance of the
   video interface associated with it (bool).
   Each filter can have an instance of the video interface. That way
@@ -222,6 +237,18 @@ want to go into that, yet. The common DeviceFilter parameters are:
   a common default (like /dev/video/0 for bttv and /dev/video1394/0 for
   firewire).
 \end{description}
+
+Common parameters for frame grabber based video devices are:
+
+\begin{description}
+\item[Format] The analog format of the video signal. This is either
+  \texttt{pal, ntsc, secam} or \texttt{auto}.
+\item[Source] The source of the video signal. Available sources are
+  \texttt{composite1, composite2, composite3, svideo} and
+  \texttt{tuner}.
+\end{description}
+
+
 
 The available video device filters are (listed by type name):
 
@@ -263,8 +290,15 @@ The available video device filters are (listed by type name):
   \end{description}
 \item[VideDeviceMeteor] The matrox meteor device filter does not
   define any additional parameters.
-\item[VideoDeviceDummy] A dummy device which reads an image specified
-  by the {\em Device} parameter. Useful for offline testing.
+\item[VideoDeviceDummy] A dummy device which can be used for offline
+  testing.  It reads an image specified by the {\em Device} parameter.
+  If the {\em Device} specifies a directory instead of a file, all
+  {\em *.ppm} files of the directory are used by the device.
+  \begin{description}
+  \item[Timeout] The image refreshing time (sec).
+  \item[Cyclic] (bool) The default is {\em true}. If true the device
+    will restart with the first image after all images were loaded.
+  \end{description}
 \end{description}
 
 \subsection{Basic Video Filters and Their Parameters}
@@ -507,9 +541,9 @@ with a {\tt Video} interface instance.
 
 The most important protected methods and data members for child classes are.
 \begin{description}
-\item[inputBuffer] Returns a pointer to the input buffer.
+\item[inputBuffer()] Returns a pointer to the input buffer.
 \item[inputFormat\_] Specifies the data format of the input buffer.
-\item[outputBuffer] Returns a pointer to the output buffer.
+\item[outputBuffer()] Returns a pointer to the output buffer.
 \item[outputFormat\_] Specifies the data format of the output buffer.
 \end{description}
 
@@ -614,7 +648,7 @@ as the average of the weighted sum of the three color values. The
 weighting can be specified by the filters parameters.
 
 Start the example service in the directory videoFilter with \\
-{\tt GrayVideoService -MiroConfigFile GrayVideoService.xml}
+{\tt GrayVideoService -MiroConfigFile GrayVideoConfig.xml}
 
 It registers two interfaces at the naming service: {\tt Video} and
 {\tt Gray}. To examine the original and the filtered image, use {\tt
@@ -630,7 +664,7 @@ parameters. Note however, that it has to be less then the number of
 output buffers provided by the input buffer.
 
 Start the example service in the directory videoFilter with \\
-{\tt GrayVideoService -MiroConfigFile DiffVideoService.xml} \\
+{\tt GrayVideoService -MiroConfigFile DiffVideoConfig.xml} \\
 Note that the usage of an input filter link is a bit artificial in
 this configuration, as both input filters are the same.
 
