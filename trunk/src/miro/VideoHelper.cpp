@@ -39,6 +39,7 @@ namespace Miro
     case YUV_24:  //      yuv24:
     case RGB_24:	//	rgb24:
     case BGR_24:	//	bgr24:
+    case HSV_24:		//	hsv24
       pixelSize = 3;
       break;
     case BGR_32:	//	rgb32:
