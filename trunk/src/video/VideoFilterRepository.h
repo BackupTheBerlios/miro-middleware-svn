@@ -68,12 +68,17 @@ namespace Video
 
     friend std::ostream& operator << (std::ostream&, FilterRepository const&);
 
+#if GCC_MAJOR_VERSION >= 3
+    friend class Miro::Singleton<FilterRepository>::ACE_Singleton_Type;
+
   private:
+#else
+  public:
+#endif
     //! There is only one BehaviourRepository instance.
     FilterRepository();
     //! Copy construction is prohibited
     FilterRepository(FilterRepository const&) {}
-    friend class Miro::Singleton<FilterRepository>::ACE_Singleton_Type;
   };
 
   template<class T>

@@ -57,12 +57,17 @@ namespace Miro
 
     friend std::ostream& operator << (std::ostream&, const BehaviourRepository&);
 
+#if GCC_MAJOR_VERSION >= 3
+    friend class Singleton<BehaviourRepository>::ACE_Singleton_Type;
+
   private:
+#else
+  public:
+#endif
     //! There is only one BehaviourRepository instance.
     BehaviourRepository();
     //! Copy construction is prohibited
     BehaviourRepository(const BehaviourRepository&) {}
-    friend class Singleton<BehaviourRepository>::ACE_Singleton_Type;
   };
 }
 #endif

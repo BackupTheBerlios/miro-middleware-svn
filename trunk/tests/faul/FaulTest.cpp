@@ -170,8 +170,7 @@ void floodingTest(int _iter, int _timeout)
     // set random velocity
 
     double dl = (double)rand() / ((RAND_MAX + 1.0) * .5) - 1.;
-    double dr = (double)rand() / ((RAND_MAX + 1.0) * .5) - 1.;
-
+    //    double dr = (double)rand() / ((RAND_MAX + 1.0) * .5) - 1.;
 
     short l = (short) (dl * 900.);
     short r = (short) (dl * 900.);

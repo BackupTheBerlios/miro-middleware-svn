@@ -46,7 +46,7 @@ namespace
   bool streaming = false;
   bool verbose = false;
   int interval = 0;
-  int stop = 5000;
+  unsigned int stop = 5000;
   std::string interfaceName;
 
   string path()
