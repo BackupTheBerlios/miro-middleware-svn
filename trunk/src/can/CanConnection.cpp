@@ -4,34 +4,35 @@
 //
 // for details copyright, usage and credits to other groups see Miro/COPYRIGHT
 // for documentation see Miro/doc
-// 
+//
 // (c) 1999,2000
 // Department of Neural Information Processing, University of Ulm, Germany
 //
-// Authors: 
-//   Stefan Enderle, 
-//   Stefan Sablatnoeg, 
+// Authors:
+//   Stefan Enderle,
+//   Stefan Sablatnoeg,
 //   Hans Utz
-// 
+//
 // $Id$
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
 
 
 #include "CanConnection.h"
 #include "Parameters.h"
 
-// extern "C" 
+// extern "C"
 // {
 // #include "canlib.h"
 #include "canmsg.h"
 #include "canioctl.h"
+#include "can.h"
 // }
 
 namespace
 {
-  // parameters for 
-  // 250kbit 
+  // parameters for
+  // 250kbit
   const unsigned char CAN_BRP   = 3;
   const unsigned char CAN_TSEG1 = 1;
   const unsigned char CAN_TSEG2 = 4;
@@ -48,10 +49,11 @@ namespace Can
 {
   ACE_Time_Value Connection::canTimeOut(0, 1000);
 
-  Connection::Connection(ACE_Reactor * _reactor, 
+  Connection::Connection(ACE_Reactor * _reactor,
 			 Miro::DevEventHandler * _eventHandler,
 			 const Parameters& _parameters) :
-    Super(_reactor, _eventHandler, _parameters)
+    Super(_reactor, _eventHandler, _parameters),
+    parameters_(_parameters)
   {
     init();
   }
@@ -59,32 +61,60 @@ namespace Can
   void
   Connection::init() const
   {
-    CanConfig cfg;
+
+    if(parameters_.module == "Can"){
+       CanConfig cfg;
 
     // can_ClearStatus(fd);
-    if(ioctl(ioBuffer.get_handle(), CAN_CLEARSTAT, 0L))
-      throw Miro::Exception("can_ClearStatus() ioctl error");
-    
-    // configure controller
+       if(ioctl(ioBuffer.get_handle(), CAN_CLEARSTAT, 0L))
+         throw Miro::Exception("can_ClearStatus() ioctl error");
 
-    // can_GetConfig(fd,&cfg);
-    if(ioctl(ioBuffer.get_handle(), CAN_GETCONFIG, (void*)&cfg))
-      throw Miro::Exception("can_GetConfig() ioctl error\n");
+       // configure controller
 
-    cfg.gmask = XTID_MASK;
-    cfg.mask15 = 0L;		/* accept all */
-    cfg.id15 = XTID;
-    cfg.BRP = CAN_BRP;
-    cfg.TSEG1 = CAN_TSEG1;
-    cfg.TSEG2 = CAN_TSEG2;
-    cfg.SJW = CAN_SJW;
+       // can_GetConfig(fd,&cfg);
+       if(ioctl(ioBuffer.get_handle(), CAN_GETCONFIG, (void*)&cfg))
+         throw Miro::Exception("can_GetConfig() ioctl error\n");
 
-    // can_SetConfig(fd,&cfg);
-    if(ioctl(ioBuffer.get_handle(), CAN_SETCONFIG, (void*)&cfg))
-      throw Miro::Exception("can_SetConfig() ioctl error\n");
+       cfg.gmask = XTID_MASK;
+       cfg.mask15 = 0L;		/* accept all */
+       cfg.id15 = XTID;
+       cfg.BRP = CAN_BRP;
+       cfg.TSEG1 = CAN_TSEG1;
+       cfg.TSEG2 = CAN_TSEG2;
+       cfg.SJW = CAN_SJW;
+
+       // can_SetConfig(fd,&cfg);
+       if(ioctl(ioBuffer.get_handle(), CAN_SETCONFIG, (void*)&cfg))
+         throw Miro::Exception("can_SetConfig() ioctl error\n");
+    }
+    if(parameters_.module == "sja1000"){
+
+       unsigned long baud_rate = B250;
+       long long acode = -1, amask = -1;
+
+       if(ioctl(ioBuffer.get_handle(), CAN_IOCSBAUD, &baud_rate))
+         throw Miro::Exception("can_IOCSBAUD() ioctl error");
+
+       if(acode != -1){
+          if(ioctl(ioBuffer.get_handle(), CAN_IOCSACODE, &baud_rate))
+            throw Miro::Exception("can_IOCSACODE() ioctl error");
+       }
+
+       if(amask != -1){
+          if(ioctl(ioBuffer.get_handle(), CAN_IOCSAMASK, &baud_rate))
+            throw Miro::Exception("can_IOCSAMASK() ioctl error");
+       }
+
+
+
+    }
+
+
+
+
   }
 
-  void 
+  void
   Connection::write(const Message& message)
   {
     ACE_Time_Value av(ACE_OS::gettimeofday() + ACE_Time_Value(1));
@@ -114,7 +144,7 @@ namespace Can
       throw Miro::CException(errno, "Error writing can device.");
   }
 
-  void 
+  void
   Connection::deadHandler(int)
   {
     static std::string errorMessage = "SparrowBoard write failed." \

@@ -52,6 +52,7 @@ namespace Can
     static ACE_Time_Value canTimeOut;
 
   protected:
+    const Parameters& parameters_;
     Miro::Mutex writeMutex;
 
     static void deadHandler(int);
