@@ -14,6 +14,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.4  2003/05/16 13:14:57  hutz
+ * removing unused parameters and methods from VideoDevice
+ *
  * Revision 1.3  2003/05/13 21:58:49  hutz
  * removing the bridge pattern between VideoDevice and VideoDeviceBase
  * making VideoDevice* a direct descendant of VideoDevice
@@ -75,8 +78,6 @@ namespace Video
   void
   VideoDeviceDummy::connect()
   {
-    formatID = ::Video::getFormat(params_->format);
-    sourceID = ::Video::getSource(params_->source);
     requestedPaletteID = ::Video::getPalette(params_->palette);
     devicePaletteID = ::Video::getPalette(params_->palette);
     requestedSubfieldID = ::Video::getSubfield(params_->subfield);
@@ -85,7 +86,6 @@ namespace Video
     imgHeight = params_->height;
     iNBuffers = params_->buffers;
     iCurrentBuffer = 0;
-    iNFramesCaptured = 1;
     is_connected_ = true;
 	
     delete buffer_;

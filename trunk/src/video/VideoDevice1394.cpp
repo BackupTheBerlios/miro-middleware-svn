@@ -15,6 +15,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.6  2003/05/16 13:14:57  hutz
+ * removing unused parameters and methods from VideoDevice
+ *
  * Revision 1.5  2003/05/13 21:58:49  hutz
  * removing the bridge pattern between VideoDevice and VideoDeviceBase
  * making VideoDevice* a direct descendant of VideoDevice
@@ -229,7 +232,7 @@ namespace Video
   void
   VideoDevice1394::disconnect()
   {
-    DBG(std::cout << "VideoDevice1394:handleDisconnect: frames captured " << iNFramesCaptured << std::endl);
+    DBG(std::cout << "VideoDevice1394:handleDisconnect." << std::endl);
 	
     if (is_open_)
     {
@@ -297,7 +300,6 @@ namespace Video
   VideoDevice1394::setFormat(VideoFormat fmt)
   {
     DBG(std::cout << "VideoDevice1394::setFormat" << std::endl);
-    formatID = fmt;
   }
 
   //---------------------------------------------------------------
@@ -307,7 +309,6 @@ namespace Video
     DBG(std::cout << "VideoDevice1394::setSource" << std::endl);
     if (src != source1394)
       throw Miro::Exception("VideoDevice1394::setSource: unsupported source requested");
-    sourceID = src;
   }
 
   //---------------------------------------------------------------
@@ -381,7 +382,6 @@ namespace Video
 
     iNBuffers = buf_cnt;
     iCurrentBuffer = iNBuffers-1;
-    iNFramesCaptured = 0;
     frame_buffers_ = new char [getImageSize()*iNBuffers];
   }
 

@@ -22,8 +22,6 @@ namespace Video
   //--------------------------------------------------------------------
   VideoDevice::VideoDevice(Parameters const * _params) :
     params_(_params),
-    formatID(0),
-    sourceID(0),
     requestedPaletteID(0),
     devicePaletteID(0),
     requestedSubfieldID(0),
@@ -36,34 +34,6 @@ namespace Video
   //--------------------------------------------------------------------
   VideoDevice::~VideoDevice()
   {
-  }
-
-  //--------------------------------------------------------------------
-  int
-  VideoDevice::countBuffers() const
-  {
-    return iNBuffers;
-  }
-
-  //--------------------------------------------------------------------
-  int
-  VideoDevice::countFramesCaptured() const
-  {
-    return iNFramesCaptured;
-  }
-
-  //--------------------------------------------------------------------
-  int
-  VideoDevice::getFormat() const
-  {
-    return formatID;
-  }
-
-  //--------------------------------------------------------------------
-  int
-  VideoDevice::getSource()  const
-  {
-    return sourceID;
   }
 
   //--------------------------------------------------------------------

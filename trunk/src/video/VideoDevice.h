@@ -32,11 +32,6 @@ namespace Video
     virtual void disconnect() = 0;
     virtual void * grabImage(ACE_Time_Value& _timeStamp) const = 0;
 
-    virtual int	countBuffers() const;
-    virtual int	countFramesCaptured() const;
-
-    virtual int	getFormat() const;
-    virtual int	getSource() const;
     virtual int getDevicePalette() const;
     virtual int getRequestedPalette() const;
     virtual int getDeviceSubfield() const;
@@ -50,11 +45,8 @@ namespace Video
   protected:
     int getPixelSize(const int) const;
 
-
     Parameters const * params_;
 
-    int		formatID;
-    int		sourceID;
     int		requestedPaletteID;
     int		devicePaletteID;
     int		requestedSubfieldID;
@@ -65,7 +57,6 @@ namespace Video
 	
     int		iNBuffers;
     mutable int	iCurrentBuffer;
-    mutable int	iNFramesCaptured;
 
     int		formatLookup[numFormatEntries];
     int		paletteLookup[numPaletteEntries];

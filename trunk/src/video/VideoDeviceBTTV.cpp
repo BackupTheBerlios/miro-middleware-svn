@@ -124,8 +124,6 @@ namespace Video
     setPalette(Video::getPalette(params_->palette));
     setSize(params_->width, params_->height);
 
-    iNFramesCaptured = 0;
-
     //	preparing buffers
 
     delete gb;
@@ -180,7 +178,7 @@ namespace Video
 
   void VideoDeviceBTTV::disconnect()
   {
-    DBG(std::cout << "VideoDeviceBTTV: frames captured " << iNFramesCaptured << std::endl);
+    DBG(std::cout << "VideoDeviceBTTV." << std::endl);
 
     delete[] channels;
     channels = NULL;
@@ -198,9 +196,7 @@ namespace Video
   {
     DBG(std::cout << "VideoDeviceBTTV: setFormat" << std::endl);
 
-    if (formatLookup[id] != -1)
-      formatID = id;
-    else
+    if (formatLookup[id] == -1)
       throw Miro::Exception("VideoDeviceBTTV::setFormat");
   }
 
@@ -209,8 +205,7 @@ namespace Video
     DBG(std::cout << "VideoDeviceBTTV: setSource" << std::endl);
 
     if ((sourceLookup[id] != -1) && (sourceLookup[id] < capability.channels)) {
-      sourceID = id;
-      int err = ioctl(videoFd, VIDIOCSCHAN, &channels[sourceLookup[sourceID]]);
+      int err = ioctl(videoFd, VIDIOCSCHAN, &channels[sourceLookup[id]]);
       if (err == -1)
 	throw Miro::CException(errno, "VideoDeviceBTTV::setSource() - VIDIOCSCHAN");
     }
@@ -280,9 +275,6 @@ namespace Video
     if (nextBuffer_ == iNBuffers)
       nextBuffer_ = 0;
     
-    // runtime statistics
-    ++iNFramesCaptured;
-
     return buffer;
   }
 

@@ -95,13 +95,11 @@ namespace Video
     map = (char*)mmap(0,getDeviceImageSize(),PROT_READ,MAP_SHARED,videoFd,0);
     if (map == (char*)-1)
       throw Miro::Exception("mmap()");
-
-    iNFramesCaptured = 0;
   }
 
   void VideoDeviceMeteor::disconnect()
   {
-    DBG(cout << "VideoDeviceBTTV: frames captured " << iNFramesCaptured << endl);
+    DBG(cout << "VideoDeviceBTTV." << endl);
 
     if (map != (char*)-1)
     {
@@ -117,7 +115,6 @@ namespace Video
   {
     if (formatLookup[id] != -1)
     {
-      formatID = id;
       if (::ioctl(videoFd, METEORSFMT, &formatLookup[id]) < 0)
 	throw Miro::Exception("METEORSFMT");
     }
@@ -129,8 +126,7 @@ namespace Video
   {
     DBG(cout << "VideoDeviceMeteor: setSource" << endl);
 
-    sourceID = id;
-    int	err = ioctl(videoFd, METEORSINPUT, &sourceLookup[sourceID]);
+    int	err = ioctl(videoFd, METEORSINPUT, &sourceLookup[id]);
     if (err == -1)
       throw Miro::Exception("METEORSINPUT");
   }
@@ -187,7 +183,6 @@ namespace Video
 
     if (!done)
       throw Miro::Exception("VideoDeviceMeteor::grabImage");
-    iNFramesCaptured++;
     return map;
   }
 
