@@ -18,7 +18,10 @@
 #include "miro/TimeHelper.h"
 
 #include "miro/StructuredPushSupplier.h"
+
+#ifdef NIX_DEBUG
 #include "nix/LineSamplesC.h"
+#endif
 
 #include <algorithm>
 
@@ -163,8 +166,7 @@ RangeSensorBehaviour::action()
     evalScan();
   }
 
-#define SADF
-#ifdef SADF
+#ifdef NIX_DEBUG
   if (pSupplier_ && !(++counter % 10)) {
     Nix::VisionFeaturesIDL * features = new Nix::VisionFeaturesIDL();
 

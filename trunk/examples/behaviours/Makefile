@@ -17,10 +17,10 @@
 
 INSTALL = $(VBIN:%=$(INSBIN)/%)
 
-## hack for debug visualization
-INCLDIRS += -I$(NIX_ROOT)/src
-LDFLAGS +=  -L$(NIX_ROOT)/lib
-LDFLAGS +=  -L$(IPP_ROOT)/lib
+
+ifeq (,$(nix_debug))
+  nix_debug = 0
+endif
 
 ## static libraries
 
@@ -32,10 +32,28 @@ STATIC_DEPS = $(addprefix $(MIRO_ROOT)/lib/lib, $(addsuffix .a,$(STATIC_LIBS)))
 LDLIBS += $(addprefix -l, $(STATIC_LIBS))
 
 ## dynamic libraries if needed
-LDLIBS += -lmiro -lTAO -lACE \
+LDLIBS += -lmiro -lTAO -lACE
+
+## hack for debug visualization
+ifneq (,$(NIX_ROOT))
+  ifeq (,$(nix_debug))
+    nix_debug = 1
+  endif
+endif
+ifeq (1, $(nix_debug))
+
+  INCLDIRS += -I$(NIX_ROOT)/src
+  LDFLAGS +=  -L$(NIX_ROOT)/lib
+  LDFLAGS +=  -L$(IPP_ROOT)/lib
+
+  LDLIBS += \
 	$(NIX_ROOT)/src/nix/.shobj/LineSamplesC.o \
 	$(NIX_ROOT)/src/nix/.shobj/GoalFeatureC.o \
 	$(NIX_ROOT)/src/nix/.shobj/CornerFeatureC.o
+
+
+  CPPFLAGS += -DNIX_DEBUG
+endif
 
 ## program to be built
 BIN 	= Behaviours BehaviourControler
