@@ -3,10 +3,7 @@
 
 #include "BaseDummy.h"
 #include "MiroPosition.h"
-
-#include <iostream>
-
-// #undef DEBUG
+#include "miro/Log.h"
 
 namespace Base
 {
@@ -19,9 +16,7 @@ namespace Base
     translateAcceleration(), // 0x4000),
     stateMutex()
   {
-#ifdef DEBUG
-    cout << "Constructing BaseDummy" << endl;
-#endif
+    MIRO_DBG( B21 , LL_CTOR_DTOR , "Constructing BaseDummy" );
 
     status.time.sec = 0;
     status.time.usec = 0;
@@ -37,9 +32,8 @@ namespace Base
 
   Dummy::~Dummy()
   {
-#ifdef DEBUG
-    cout << "Destructing BaseDummy" << endl;
-#endif
+    MIRO_DBG( B21 , LL_CTOR_DTOR , "Destructing BaseDummy" );
+
   }
 
   // 
@@ -47,25 +41,19 @@ namespace Base
   void 
   Dummy::limp() throw(Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "limp all motors" << endl;
-#endif
+    MIRO_DBG( B21 , LL_PRATTLE , "limp all motors" );
   }
 
   void
   Dummy::halt() throw(Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "halt all motors" << endl;
-#endif
+    MIRO_DBG( B21 , LL_PRATTLE , "halt all motors" );
   }
 
   Miro::MotionStatusDataIDL
   Dummy::getStatus()
   {
-#ifdef DEBUG
-    cout << "get base status data" << endl;
-#endif
+    MIRO_DBG( B21 , LL_PRATTLE , "get base status data" );
  
     return status;
   }
@@ -73,9 +61,7 @@ namespace Base
   Miro::MotionStatusDataIDL
   Dummy::getWaitStatus() throw(Miro::ETimeOut)
   {
-#ifdef DEBUG
-    cout << "get base status data" << endl;
-#endif
+    MIRO_DBG( B21 , LL_PRATTLE , "get base status data" );
  
     return status;
   }
@@ -87,9 +73,7 @@ namespace Base
 
   Dummy::rotateLimp() throw(Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "limp rotational motor" << endl;
-#endif
+    MIRO_DBG( B21 , LL_PRATTLE , "limp rotational motor" );
 
     Miro::Guard guard(stateMutex);
 
@@ -99,9 +83,7 @@ namespace Base
   void
   Dummy::rotateHalt() throw(Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "halt rotational motor" << endl;
-#endif
+    MIRO_DBG( B21 , LL_PRATTLE , "halt rotational motor" );
 
     Miro::Guard guard(stateMutex);
 
@@ -111,34 +93,27 @@ namespace Base
   void
   Dummy::waitRotateHalt()
   {
-#ifdef DEBUG
-    cout << "wait for halt of rotational motor" << endl;
-#endif
+    MIRO_DBG( B21 , LL_PRATTLE , "wait for halt of rotational motor" );
   }
 
   void
   Dummy::rotateLeft() throw(Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "start rotating left" << endl;
-#endif
+    MIRO_DBG( B21 , LL_PRATTLE , "start rotating left" );
   }
 
   void
   Dummy::rotateRight() throw(Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "start rotating right" << endl;
-#endif
+    MIRO_DBG( B21 , LL_PRATTLE , "start rotating right" );
   }
 
   void
   Dummy::rotateToPosition(CORBA::Double position) 
     throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "rotate to angle (rad): " << position << endl;
-#endif
+    MIRO_DBG_OSTR( B21 , LL_PRATTLE ,  "rotate to angle (rad): " << position );
+
     Miro::Guard guard(stateMutex);
 
     rotateState = TO_POSITION;
@@ -147,9 +122,7 @@ namespace Base
   void
   Dummy::rotateRelative(CORBA::Double relative) throw(Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "rotate by angle (rad): " << relative << endl;
-#endif
+    MIRO_DBG_OSTR( B21 , LL_PRATTLE ,  "rotate by angle (rad): " << relative );
 
     Miro::Guard guard(stateMutex);
 
@@ -160,9 +133,7 @@ namespace Base
   Dummy::rotateTorque(CORBA::Long relative)
     throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "rotate with torque: " << relative << endl;
-#endif
+    MIRO_DBG_OSTR( B21 , LL_PRATTLE ,  "rotate with torque: " << relative );
 
     Miro::Guard guard(stateMutex);
 
@@ -173,9 +144,7 @@ namespace Base
   Dummy::rotatePower(CORBA::Long relative)
     throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "rotate with power: " << relative << endl;
-#endif
+    MIRO_DBG_OSTR( B21 , LL_PRATTLE ,  "rotate with power: " << relative );
 
     Miro::Guard guard(stateMutex);
 
@@ -186,9 +155,7 @@ namespace Base
   Dummy::setRotateVelocity(CORBA::Double velocity)
     throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "set rotate velocity (rad/s): " << velocity << endl;
-#endif
+    MIRO_DBG_OSTR( B21 , LL_PRATTLE ,  "set rotate velocity (rad/s): " << velocity );
 
     Miro::Guard guard(stateMutex);
 
@@ -199,9 +166,7 @@ namespace Base
   Dummy::setRotateAcceleration(CORBA::Double accel)
     throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "set rotate acceleration (rad/s*s): " << accel << endl;
-#endif
+    MIRO_DBG_OSTR( B21 , LL_PRATTLE ,  "set rotate acceleration (rad/s*s): " << accel );
 
     Miro::Guard guard(stateMutex);
 
@@ -212,9 +177,7 @@ namespace Base
   Dummy::setRotateTorque(CORBA::ULong torque)
     throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "set rotate torque: " << torque << endl;
-#endif
+    MIRO_DBG_OSTR( B21 , LL_PRATTLE ,  "set rotate torque: " << torque );
   }
 
   //
@@ -224,9 +187,7 @@ namespace Base
   void
   Dummy::translateLimp() throw(Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "limp translational motor" << endl;
-#endif
+    MIRO_DBG( B21 , LL_PRATTLE , "limp translational motor" );
 
     Miro::Guard guard(stateMutex);
 
@@ -236,9 +197,7 @@ namespace Base
   void
   Dummy::translateHalt() throw(Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "halt translational motor" << endl;
-#endif
+    MIRO_DBG( B21 , LL_PRATTLE , "halt translational motor" );
 
     Miro::Guard guard(stateMutex);
 
@@ -248,33 +207,25 @@ namespace Base
   void
   Dummy::waitTranslateHalt()
   {
-#ifdef DEBUG
-    cout << "wait for halt of translational motor" << endl;
-#endif
+    MIRO_DBG( B21 , LL_PRATTLE , "wait for halt of translational motor" );
   }
 
   void
   Dummy::translateForward() throw(Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "start translating forward" << endl;
-#endif
+    MIRO_DBG( B21 , LL_PRATTLE , "start translating forward" );
   }
 
   void
   Dummy::translateBackward() throw(Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "start translating backward" << endl;
-#endif
+    MIRO_DBG( B21 , LL_PRATTLE , "start translating backward" );
   }
 
   void
   Dummy::translateToPosition(CORBA::ULong position) throw(Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "translate to position (mm): " << position << endl;
-#endif
+    MIRO_DBG_OSTR( B21 , LL_PRATTLE , "translate to position (mm): " << position );
 
     Miro::Guard guard(stateMutex);
 
@@ -284,9 +235,7 @@ namespace Base
   void
   Dummy::translateRelative(CORBA::Long relative) throw(Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "translate by distance (mm): " << relative << endl;
-#endif
+    MIRO_DBG_OSTR( B21 , LL_PRATTLE , "translate by distance (mm): " << relative );
 
     Miro::Guard guard(stateMutex);
 
@@ -297,9 +246,7 @@ namespace Base
   Dummy::translateTorque(CORBA::Long relative)
     throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "translate with torque: " << relative << endl;
-#endif
+    MIRO_DBG_OSTR( B21 , LL_PRATTLE , "translate with torque: " << relative );
 
     Miro::Guard guard(stateMutex);
 
@@ -310,9 +257,7 @@ namespace Base
   Dummy::translatePower(CORBA::Long relative) 
     throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "translate with power: " << relative << endl;
-#endif
+    MIRO_DBG_OSTR( B21 , LL_PRATTLE , "translate with power: " << relative );
 
     Miro::Guard guard(stateMutex);
 
@@ -323,9 +268,7 @@ namespace Base
   Dummy::setTranslateVelocity(CORBA::ULong velocity)
     throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "set translate velocity (mm/s): " << velocity << endl;
-#endif
+    MIRO_DBG_OSTR( B21 , LL_PRATTLE , "set translate velocity (mm/s): " << velocity );
 
     Miro::Guard guard(stateMutex);
 
@@ -336,9 +279,7 @@ namespace Base
   Dummy::setTranslateAcceleration(CORBA::ULong accel)
     throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "set translate acceleration (mm/s*s): " << accel << endl;
-#endif
+    MIRO_DBG_OSTR( B21 , LL_PRATTLE , "set translate acceleration (mm/s*s): " << accel );
 
     Miro::Guard guard(stateMutex);
 
@@ -349,9 +290,7 @@ namespace Base
   Dummy::setTranslateTorque(CORBA::ULong torque)
     throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "set translate torque: " << torque << endl;
-#endif
+    MIRO_DBG_OSTR( B21 , LL_PRATTLE , "set translate torque: " << torque );
 
     Miro::Guard guard(stateMutex);
 
@@ -365,18 +304,15 @@ namespace Base
   double
   Dummy::getWaitRotateCurrent() throw(Miro::ETimeOut, Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "get the roatitional current" << endl;
-#endif
+    MIRO_DBG( B21 , LL_PRATTLE , "get the roatitional current" );
+
     return 1.0;
   }
 
   double
   Dummy::getWaitTranslateCurrent() throw(Miro::ETimeOut, Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "get the translational current" << endl;
-#endif
+    MIRO_DBG( B21 , LL_PRATTLE , "get the translational current" );
 
     return 1.0;
   }
@@ -384,9 +320,7 @@ namespace Base
   double
   Dummy::getWaitBatteryVoltage() throw(Miro::ETimeOut, Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "get the battery voltage" << endl;
-#endif
+    MIRO_DBG( B21 , LL_PRATTLE , "get the battery voltage" );
 
     return 48.0;
   }
@@ -394,9 +328,7 @@ namespace Base
   void
   Dummy::setPosition(const Miro::PositionIDL& pos )
   {
-#ifdef DEBUG
-    cout << "set the position to: " << Miro::Position(pos) << endl;
-#endif
+    MIRO_DBG_OSTR( B21 , LL_PRATTLE , "set the position to: " << Miro::Position(pos) );
 
     status.position = pos;
   }
@@ -404,9 +336,7 @@ namespace Base
   void
   Dummy::updatePosition(const Miro::PositionIDL& pos)
   {
-#ifdef DEBUG
-    cout << "move the position by: " << Miro::Position(pos) << endl;
-#endif
+    MIRO_DBG_OSTR( B21 , LL_PRATTLE , "move the position by: " << Miro::Position(pos) );
 
     status.position.point.x += pos.point.x;
     status.position.point.y += pos.point.y;
@@ -416,9 +346,7 @@ namespace Base
   Miro::PositionDataIDL
   Dummy::getPosition()
   {
-#ifdef DEBUG
-    cout << "get the position" << endl;
-#endif
+    MIRO_DBG( B21 , LL_PRATTLE , "get the position" );
 
     Miro::PositionDataIDL data;
 
@@ -431,9 +359,7 @@ namespace Base
   Miro::PositionDataIDL
   Dummy::getWaitPosition() throw(Miro::ETimeOut)
   {
-#ifdef DEBUG
-    cout << "get the position" << endl;
-#endif
+    MIRO_DBG( B21 , LL_PRATTLE , "get the position" );
 
     Miro::PositionDataIDL data;
 
@@ -447,10 +373,8 @@ namespace Base
   Dummy::setVelocity(const Miro::VelocityIDL& vel) 
     throw(Miro::EOutOfBounds, Miro::EDevIO)
   {
-#ifdef DEBUG
-    cout << "set rotational (" << vel. translation 
-	 << ") and translational (" << vel.rotation << ") velocity" << endl;
-#endif
+    MIRO_DBG_OSTR( B21 , LL_PRATTLE , "set rotational (" << vel. translation 
+                                   << ") and translational (" << vel.rotation << ") velocity" );
 
     status.velocity = vel;
   }
@@ -458,9 +382,7 @@ namespace Base
   Miro::VelocityDataIDL
   Dummy::getVelocity() 
   {
-#ifdef DEBUG
-    cout << "get the velocity" << endl;
-#endif
+    MIRO_DBG( B21 , LL_PRATTLE , "get the velocity" );
 
     Miro::VelocityDataIDL data;
 
@@ -473,9 +395,7 @@ namespace Base
   Miro::VelocityDataIDL
   Dummy::getWaitVelocity() throw(Miro::ETimeOut)
   {
-#ifdef DEBUG
-    cout << "get the velocity" << endl;
-#endif
+    MIRO_DBG( B21 , LL_PRATTLE , "get the velocity" );
 
     Miro::VelocityDataIDL data;
 

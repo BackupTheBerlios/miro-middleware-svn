@@ -13,6 +13,7 @@
 
 #include "miro/Exception.h"
 #include "miro/Utils.h"
+#include "miro/Log.h"
 
 #include "base/BaseImpl.h"
 #include "base/BaseConsumer.h"
@@ -27,18 +28,6 @@
 #include <orbsvcs/Notify/Notify_Default_POA_Factory.h>
 #include <orbsvcs/Notify/Notify_Default_Collection_Factory.h>
 #include <orbsvcs/Notify/Notify_Default_EMO_Factory.h>
-
-#include <iostream>
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
-
-using std::cout;
-using std::cerr;
-using std::endl;
 
 using CosNotifyChannelAdmin::EventChannelFactory;
 
@@ -97,12 +86,12 @@ B21Base::B21Base(int& argc, char *argv[]) :
   b21Motion.setStatusReportPeriod(26); // 1/10 sec
   mspConnection.sonarStart();
 
-  DBG(cout << "B21Base initialized.." << endl);
+  MIRO_LOG(LL_NOTICE,"B21Base initialized..");
 }
 
 B21Base::~B21Base()
 {
-  DBG(cout << "Destructing B21Base." << endl);
+  MIRO_DBG(B21,LL_CTOR_DTOR,"Destructing B21Base.");
 
   mspConnection.sonarStop();
 
@@ -136,34 +125,32 @@ main(int argc, char *argv[])
     config->getParameters("Msp", *mspParameters);
     delete config;
 
-#ifdef DEBUG
-    cout << "  robot parameters:" << endl << robotParameters << endl;
-    cout << "  base parameters:" << endl << baseParameters << endl;
-    cout << "  msp parameters:" << endl << mspParameters << endl;
-#endif
+   MIRO_DBG_OSTR(B21 , LL_PRATTLE , "  robot parameters:\n" << robotParameters);
+   MIRO_DBG_OSTR(B21 , LL_PRATTLE , "  base parameters:\n" << baseParameters);
+   MIRO_DBG_OSTR(B21 , LL_PRATTLE , "  msp parameters:\n" << mspParameters);
 
-    DBG(cout << "Initialize server daemon." << endl);
+   MIRO_LOG(LL_NOTICE,"Initialize server daemon.");
     B21Base b21Base(argc, argv);
     try {
-      DBG(cout << "Loop forever handling events." << endl);
+      MIRO_LOG(LL_NOTICE , "Loop forever handling events." );
       b21Base.run(8);
-      DBG(cout << "b21Base ended, exiting." << endl);
+      MIRO_LOG(LL_NOTICE , "b21Base ended, exiting." );
     }
     catch (const Miro::EOutOfBounds& e) {
-      cerr << "OutOfBounds exception: Wrong parameter for device initialization." << endl;
+      MIRO_LOG(LL_ERROR , "OutOfBounds exception: Wrong parameter for device initialization." );
       rc = 1;
     }
     catch (const Miro::EDevIO& e) {
-      cerr << "DevIO exception: Device access failed." << endl;
+      MIRO_LOG(LL_ERROR , "DevIO exception: Device access failed." );
       rc = 1;
     }
     catch (const CORBA::Exception & e) {
-      cerr << "Uncaught CORBA exception: " << e << endl;
+      MIRO_LOG_OSTR(LL_ERROR , "Uncaught CORBA exception: " << e );
       rc = 1;
     }
   }
   catch (const Miro::Exception& e) {
-    cerr << "Miro exception: " << e << endl;
+    MIRO_LOG_OSTR(LL_ERROR , "Miro exception: " << e );
     rc = 1;
   }
   return rc;

@@ -15,12 +15,7 @@
 
 #include "miro/Exception.h"
 #include "miro/Utils.h"
-
-#include <iostream>
-
-using std::cout;
-using std::cerr;
-using std::endl;
+#include "miro/Log.h"
 
 B21BaseDummy::B21BaseDummy(int argc, char *argv[]) :
   super(argc, argv),
@@ -39,16 +34,12 @@ B21BaseDummy::B21BaseDummy(int argc, char *argv[]) :
   n[0].id = CORBA::string_dup("Motion");
   namingContext->bind(n, pBase.in());
 
-#ifdef DEBUG
-  cout << "DummyServer initialized.." << endl;
-#endif
+  MIRO_LOG(LL_NOTICE , "DummyServer initialized.." );
 }
 
 B21BaseDummy::~B21BaseDummy()
 {
-#ifdef DEBUG
-  cout << "Destructing DummyServer." << endl;
-#endif
+  MIRO_DBG(B21 , LL_CTOR_DTOR , "Destructing DummyServer." );
   try {
     CosNaming::Name n;
      
@@ -57,7 +48,7 @@ B21BaseDummy::~B21BaseDummy()
     namingContext->unbind(n);
   }
   catch (const CORBA::Exception& e) {
-    cerr << "Caught CORBA exception on unbind: " << e << endl;
+    MIRO_LOG_OSTR( LL_ERROR , "Caught CORBA exception on unbind: " << e );
   }
 }
 
@@ -65,24 +56,18 @@ int
 main(int argc, char *argv[])
 {
   try {
-#ifdef DEBUG
-    cout << "Initialize server daemon." << endl;
-#endif
+    MIRO_LOG(LL_NOTICE , "Initialize server daemon." );
     B21BaseDummy b21BaseDummy(argc, argv);
-#ifdef DEBUG
-    cout << "Loop forever handling events." << endl;
-#endif
+    MIRO_LOG( LL_NOTICE , "Loop forever handling events." );
     b21BaseDummy.run();
-#ifdef DEBUG
-    cout << "baseServer ended, exiting." << endl;
-#endif
+    MIRO_LOG( LL_NOTICE , "baseServer ended, exiting." );
   }
   catch (const CORBA::Exception & e) {
-    cerr << "Uncaught CORBA exception: " << e << endl;
+    MIRO_LOG_OSTR( LL_ERROR , "Uncaught CORBA exception: " << e );
     return 1;
   }
   catch (...) {
-    cerr << "Uncaught exception: " << endl;
+    MIRO_LOG( LL_ERROR , "Uncaught exception: " );
     return 1;
   }
   return 0;
