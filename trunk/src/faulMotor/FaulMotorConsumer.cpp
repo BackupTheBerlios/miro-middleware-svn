@@ -20,6 +20,7 @@
 #include "miro/TimeHelper.h"
 
 #include <cmath>
+#include <fstream>
 
 #undef DEBUG
 
@@ -34,6 +35,10 @@ namespace FaulMotor
   using std::cout;
   using std::cerr;
   using std::endl;
+
+  std::ofstream ticksFile;
+
+  bool const FAUL_LOGGING = true;
 
   double const Consumer::CLOCK_2_SEC = 0.00933;
 
@@ -62,6 +67,8 @@ namespace FaulMotor
     status_.velocity.translation = 0;
     status_.velocity.rotation = 0.;
 
+    if (FAUL_LOGGING)
+      ticksFile.open("ticks.log");
   }
 
 
@@ -71,6 +78,8 @@ namespace FaulMotor
   Consumer::~Consumer()
   {
     DBG(cout << "Destructing FaulMotorConsumer." << endl);
+    if (FAUL_LOGGING)
+      ticksFile.close();
   }
 
   // reads incoming packets from the faulhaber connection and stores the values
@@ -91,16 +100,16 @@ namespace FaulMotor
       const FaulController::OdometryMessage * pFaulMsg =
 	static_cast<const FaulController::OdometryMessage *>(_message);
 
-      if (pFaulMsg->wheel_ == FaulController::OdometryMessage::LEFT) {
-//	cout << "L: " << pFaulMsg->ticks_;
-	ticksL_ = pFaulMsg->ticks_;
-	clockL_ = pFaulMsg->clock_;
+      if (pFaulMsg->wheel() == FaulController::OdometryMessage::LEFT) {
+//	cout << "L: " << pFaulMsg->ticks();
+	ticksL_ = pFaulMsg->ticks();
+	clockL_ = pFaulMsg->clock();
 	timeStampL_ = pFaulMsg->time();
       }
       else {
-//	cout << "R: " << pFaulMsg->ticks_;
-	ticksR_ = pFaulMsg->ticks_;
-	clockR_ = pFaulMsg->clock_;
+//	cout << "R: " << pFaulMsg->ticks();
+	ticksR_ = pFaulMsg->ticks();
+	clockR_ = pFaulMsg->clock();
 	timeStampR_ = pFaulMsg->time();
       }
 
@@ -109,6 +118,18 @@ namespace FaulMotor
 
       if (!oddWheel_) {
 	if (init_ == 0) {
+	  double deltaTicksL = ticksL_ - prevTicksL_;
+	  double deltaTicksR = ticksR_ - prevTicksR_;
+
+	  ticksFile << timeStampL_ << " " 
+		    << (timeStampL_ - prevTimeStampL_) << " " 
+		    << clockL_ << " " 
+		    << ticksL_ << " " << deltaTicksL << "\t"
+		    << timeStampR_ << " " 
+		    << (timeStampR_ - prevTimeStampR_) << " " 
+		    << clockR_ << " " 
+		    << ticksR_ << " " << deltaTicksR << std::endl;
+
 	  double dL = -(ticksL_ - prevTicksL_) / params_->leftTicksPerMM;
 	  double dR = (ticksR_ - prevTicksR_) / params_->rightTicksPerMM;
 
