@@ -164,8 +164,12 @@ namespace Sparrow
   short
   Connection::rad2servo0Ticks(double rad) const
   {
-    return params_->servo0MidPulse + 
-      static_cast<short>(rint(rad * params_->deg2ServoTicks * 180. / M_PI));
+    short pulse = params_->servo0MidPulse;
+    if (rad > 0.)
+      pulse += static_cast<short>(rint(rad * params_->deg2ServoTicksL * 180. / M_PI));
+    else
+      pulse += static_cast<short>(rint(rad * params_->deg2ServoTicksR * 180. / M_PI));
+    return pulse;
   }
 
   inline
@@ -173,7 +177,7 @@ namespace Sparrow
   Connection::rad2servo1Ticks(double rad) const
   {
     return params_->servo1MidPulse + 
-      static_cast<short>(rint(rad * params_->deg2ServoTicks * 180. / M_PI));
+      static_cast<short>(rint(rad * params_->deg2ServoTicksL * 180. / M_PI));
   }
 
 };

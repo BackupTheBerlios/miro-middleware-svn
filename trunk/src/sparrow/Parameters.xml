@@ -50,7 +50,8 @@
 
       <config_parameter name="servo0MidPulse" type="unsigned long" default="3600"/>
       <config_parameter name="servo1MidPulse" type="unsigned long" default="3600"/>
-      <config_parameter name="deg2ServoTicks" type="double" default="28.2"/>
+      <config_parameter name="deg2ServoTicksL" type="double" default="28.2"/>
+      <config_parameter name="deg2ServoTicksR" type="double" default="28.2"/>
 
       <config_parameter name="panLatency" type="ACE_Time_Value" default="0, 50000" measure="sec" />
       <config_parameter name="panSwing" type="ACE_Time_Value" default="0, 500000" measure="sec" />
