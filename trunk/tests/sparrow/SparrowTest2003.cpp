@@ -65,7 +65,7 @@ struct Service
 Service::Service() :
   reactorTask(),
   //odometryImpl(new Miro::OdometryImpl(NULL)),
-  pSparrowConsumer(new Sparrow::Consumer2003(&connection, NULL, NULL,NULL)),
+  pSparrowConsumer(new Sparrow::Consumer2003(&connection, NULL, NULL)),
   pCanEventHandler(new Can::EventHandler(pSparrowConsumer, Sparrow::Parameters::instance())),
   connection(reactorTask.reactor(), pCanEventHandler, pSparrowConsumer)
 {
