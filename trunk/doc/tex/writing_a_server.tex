@@ -9,7 +9,11 @@ incorporate multiple sensor modalities.
 \section{High-Level Server Programming}
 
 \begin{figure}[!ht]
+  \ifpdf
+  \includegraphics[width=\textwidth]{../fig/client_server.png}
+  \else
   \includegraphics[width=\textwidth]{../fig/client_server.eps}
+  \fi
   \caption{Client-Server Architecture Overview}
   \label{FIG_CLIENT_SERVER_ARCHITECTURE}
 \end{figure}
@@ -115,7 +119,11 @@ an easy scaling for multiple working threads that concurrently work on
 the different requests.
 
 \begin{figure}[!ht]
+  \ifpdf
+  \includegraphics[width=\textwidth]{../fig/client_server_low_level.png}
+  \else
   \includegraphics[width=\textwidth]{../fig/client_server_low_level.eps}
+  \fi
   \caption{Client-Server Architecture}
   \label{FIG_CLIENT_SERVER_ARCHITECTURE_LOW_LEVEL}
 \end{figure}

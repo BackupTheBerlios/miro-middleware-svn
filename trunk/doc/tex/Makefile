@@ -26,13 +26,17 @@
 #       Local macros
 #----------------------------------------------------------------------------
 
+# Variables for the miro manual
 
+# directory where the figures reside
 FIGDIR = ../fig
+# list of figures (without extension)
 FIGS = \
-	$(FIGDIR)/client_server.eps \
-	$(FIGDIR)/client_server_low_level.eps \
-	$(FIGDIR)/grid_coords.eps
+	$(FIGDIR)/client_server \
+	$(FIGDIR)/client_server_low_level \
+	$(FIGDIR)/grid_coords
 
+# tex-files the manual is build from
 MANUAL_FILES = \
 	miro_manual.tex \
 	definitions.tex \
@@ -42,10 +46,7 @@ MANUAL_FILES = \
 	writing_a_client.tex \
 	writing_a_server.tex
 
-REFERENCE_FILES = \
-	miro_reference.tex \
-	styleguide.tex
-
+# examples used in the manual
 EXAMPLE_LINKS = \
 	$(MIRO_ROOT)/examples/sonar/SonarPoll1.cpp \
 	$(MIRO_ROOT)/examples/sonar/SonarPoll2.cpp \
@@ -53,14 +54,26 @@ EXAMPLE_LINKS = \
 	$(MIRO_ROOT)/examples/sonar/SonarNotify.cpp \
 	$(MIRO_ROOT)/examples/b21Behaviours/LaserAvoid.cpp
 
-DOXYCONFTMPL = doxygen.conf.tmpl
-DOXYCONF = doxygen.conf
+# generate the list of figures for the different output-formats
+EPSFIGS = $(addsuffix .eps,$(FIGS))
+PNGFIGS = $(addsuffix .png,$(FIGS) $(FIGDIR)/pincolla $(FIGDIR)/signature)
+
+# Variables for the miro reference
+
+# tex-files the manual is build from
+#REFERENCE_FILES = \
+#	miro_reference.tex \
+#	styleguide.tex
+
+# stuff for the automatically build tex-reference 
+#DOXYCONFTMPL = doxygen.conf.tmpl
+#DOXYCONF = doxygen.conf
 
 # insert here the subdirs to process with doxygen
-IDL_DIRS = \
-	../../idl
-HEADER_DIRS = \
-	../../src/miro
+#IDL_DIRS = \
+#	../../idl
+#HEADER_DIRS = \
+#	../../src/miro
 #	../../src/abus \
 #	../../src/laser \
 #	../../src/mcp \
@@ -90,7 +103,6 @@ include $(TAO_ROOT)/rules.tao.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.nonested.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.bin.GNU
-DEPS := $(addprefix $(VDIR),$(DEPS))
 include $(ACE_ROOT)/include/makeinclude/rules.local.GNU
 include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 
@@ -98,41 +110,48 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 #       Local targets
 #----------------------------------------------------------------------------
 
-all:  links manual reference
+all:  links manual #reference
 
 links:
 	-ln -s $(EXAMPLE_LINKS) .
 
-manual: miro_manual.ps
+manual: miro_manual.ps miro_manual.pdf
 
-reference: miro_reference.ps
+#reference: miro_reference.ps
 
 clean:
 	$(MIRO_ROOT)/scripts/doclinks_delete.sh
 	-rm -f *.aux *.log *.ind *.idx *.ilg *.toc *.dvi *.bbl *.blg
 	-rm -f latex_ref/*.tex latex_ref/*.eps latex_ref/*.log latex_ref/doxygen.sty latex_ref/Makefile
-	-rmdir latex_ref
-	-rm -f $(DOXYCONF)
-	-rm -f $(FIGS)
+#	-rmdir latex_ref
+#	-rm -f $(DOXYCONF)
+	-rm -f $(EPSFIGS) $(PNGFIGS)
 
-miro_manual.dvi: $(MANUAL_FILES) $(FIGS)
+miro_manual.dvi: $(MANUAL_FILES) $(EPSFIGS)
 	latex miro_manual.tex
 	bibtex miro_manual
 	latex miro_manual.tex
 	makeindex miro_manual
 	latex miro_manual.tex
 
-miro_reference.dvi: latex_reference $(REFERENCE_FILES)
-	$(MIRO_ROOT)/scripts/doclinks_create.sh
-	latex miro_reference.tex
-	latex miro_reference.tex
-	makeindex miro_reference
-	latex miro_reference.tex
+miro_manual.pdf: $(MANUAL_FILES) $(PNGFIGS)
+	pdflatex miro_manual.tex
+	bibtex miro_manual
+	pdflatex miro_manual.tex
+	makeindex miro_manual
+	pdflatex miro_manual.tex
 
-latex_reference: $(addsuffix /*.idl,$(basename $(IDL_DIRS))) $(addsuffix /*.h,$(basename $(HEADER_DIRS)))
-	cp $(DOXYCONFTMPL) $(DOXYCONF)
-	@echo "# ------------------------------------" >> $(DOXYCONF)
-	@echo "# automatically added input directorys" >> $(DOXYCONF)
-	@echo "#-------------------------------------" >> $(DOXYCONF)
-	@echo "INPUT = $(IDL_DIRS) $(HEADER_DIRS)" >> $(DOXYCONF)
-	doxygen doxygen.conf
+#miro_reference.dvi: latex_reference $(REFERENCE_FILES)
+#	$(MIRO_ROOT)/scripts/doclinks_create.sh
+#	latex miro_reference.tex
+#	latex miro_reference.tex
+#	makeindex miro_reference
+#	latex miro_reference.tex
+
+#latex_reference: $(addsuffix /*.idl,$(basename $(IDL_DIRS))) $(addsuffix /*.h,$(basename $(HEADER_DIRS)))
+#	cp $(DOXYCONFTMPL) $(DOXYCONF)
+#	@echo "# ------------------------------------" >> $(DOXYCONF)
+#	@echo "# automatically added input directorys" >> $(DOXYCONF)
+#	@echo "#-------------------------------------" >> $(DOXYCONF)
+#	@echo "INPUT = $(IDL_DIRS) $(HEADER_DIRS)" >> $(DOXYCONF)
+#	doxygen doxygen.conf

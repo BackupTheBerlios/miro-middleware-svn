@@ -1,6 +1,19 @@
+% detect interpreter: pdflatex or latex
+\newif\ifpdf
+\ifx\pdfoutput\undefined
+\pdffalse
+\else
+\pdftrue
+\fi
+
 \documentclass[10pt]{book}
 
 %% insert the common definitions
+\ifpdf
+\usepackage{graphicx} % enhanced graphics usage
+\else
+\usepackage[dvips]{graphicx} % enhanced graphics usage
+\fi
 \input{tex_definitions}
 
 %% special definitions
@@ -15,7 +28,11 @@
 \thispagestyle{empty}   
 \begin{center}
   \vfill
+  \ifpdf
+  \includegraphics[width=5in]{../fig/signature.png}\\
+  \else
   \includegraphics[width=5in]{../fig/signature.ps}\\
+  \fi
   \vspace{30 mm}
   {\Xbombastic \miro}\\
   \vspace{10 mm}
@@ -30,7 +47,11 @@
 \newpage
 
 \begin{center}
+  \ifpdf
+  \includegraphics[width=5in]{../fig/pincolla.png}
+  \else
   \includegraphics[width=5in]{../fig/pincolla.ps}
+  \fi
   \bigskip 
   For more paintings, see {\tt http://www.bcn.fjmiro.es/}
 \end{center}
