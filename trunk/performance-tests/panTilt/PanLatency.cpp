@@ -16,7 +16,7 @@
 #include "miro/VideoC.h"
 #include "miro/Client.h"
 #include "miro/TimeHelper.h"
-
+#include "miro/VideoHelper.h"
 #include <ace/Date_Time.h>
 #include <ace/Get_Opt.h>
 
@@ -175,19 +175,13 @@ int main(int argc, char *argv[])
     // get reference to video service
     Pan_var pan = client.resolveName<Pan>(panName.c_str());
     Video_var video = client.resolveName<Video>("Video");
-    CORBA::ULong id;
-    ImageHandleIDL_var imageIDL;
     char * imageData;
     char buffer[256];
     char c;
     double alpha;
     string angle;
-	
-    imageIDL = video->connect(id);
-    imageData = (char*)::shmat(imageIDL->key, NULL, 0);
+    Miro::VideoConnection connection(video.in());
 
-    if ((int)imageData == -1)
-      throw Miro::EDevIO();
 
     // set pan to initial position
     pan->setPan(0);
@@ -244,14 +238,12 @@ int main(int argc, char *argv[])
 	    first = false;
     
 	    // get image
-	    CORBA::ULong imgOffset;
-	    video->acquireNextImage(id, imgOffset);
-	    
+	    Miro::VideoAcquireImage frame(connection, Miro::VideoAcquireImage::Next); 
 	    // fill image structure
 	    Image image;
 	    image.fileName = path() + client.namingContextName + "_" + createFileName() + ".ppm";
-	    image.width = imageIDL->format.width;
-	    image.height = imageIDL->format.height;
+	    image.width = connection.handle->format.width;
+	    image.height = connection.handle->format.height;
 	    
 	    // fill image buffer
 	    image.buffer = new char[3 * image.width * image.height];
@@ -261,14 +253,14 @@ int main(int argc, char *argv[])
 	      int offset = 0;
 	      for (int i = 0; i < image.width; ++i) {
 		for (int j = 0; j < image.height; ++j, offset += 3) {
-		  image.buffer[offset + 0] = (imageData + imgOffset)[offset + 2]; // r
-		  image.buffer[offset + 1] = (imageData + imgOffset)[offset + 1]; // g
-		  image.buffer[offset + 2] = (imageData + imgOffset)[offset + 0]; // b
+		  image.buffer[offset + 0] = frame.buffer[offset + 3]; // r
+		  image.buffer[offset + 1] = frame.buffer[offset + 2]; // g
+		  image.buffer[offset + 2] = frame.buffer[offset + 1]; // b
 		}
 	      }
 	    }
 	    else {
-	      std::memcpy(image.buffer, imageData + imgOffset, 3 * image.width * image.height);
+	      std::memcpy(image.buffer, frame.buffer, 3 * image.width * image.height);
 	    }
 	    
 	    // save image to buffer
@@ -276,7 +268,6 @@ int main(int argc, char *argv[])
 	      cout << "Save image to buffer." << endl;
 	    v.push_back(image);
 
-	    video->releaseImage(id, imgOffset);
 	  }
 	  // write images to disc
 	  if (verbose)
@@ -294,8 +285,6 @@ int main(int argc, char *argv[])
       }
     }      
 
-    ::shmdt((void*)imageData);
-    video->disconnect(id);
     cout << endl;
 
   }
