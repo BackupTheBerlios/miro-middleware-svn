@@ -278,7 +278,7 @@
         <parameter name="WhitebalanceDelay" value="0" />
         <!-- END -->
         <!-- autoGainControl < 0 ? auto : fixed (0..65535) -->
-        <parameter name="AutoGainControl" value="31744" />
+        <parameter name="AutoGainControl" value="-31744" />
         <!-- shutterSpeed < 0 ? auto : fixed (0..65535) -->
         <parameter name="ShutterSpeed" value="0" />
         <!-- sharpness < 0 ? auto : fixed (0..65535) -->
