@@ -378,13 +378,14 @@ DistanceScanS.cpp
 DistanceScanS.h
 DistanceScanS.i.h
 DistanceScanS.lo
-ObstC.cpp
-ObstC.h
-ObstC.i.h
-ObstC.lo
-ObstS.cpp
-ObstS.h
-ObstS.i.h
-ObstS.lo
+ObjectVectorC.cpp
+ObjectVectorC.h
+ObjectVectorC.i.h
+ObjectVectorC.lo
+ObjectVectorS.cpp
+ObjectVectorS.h
+ObjectVectorS.i.h
+ObjectVectorS.lo
+
 
 libmiroIDL.la
