@@ -143,7 +143,7 @@ namespace Miro
   void
   Repository<T>::clear() throw ()
   {
-    InstanceMap::iterator first, last = instances_.end();
+    typename InstanceMap::iterator first, last = instances_.end();
     for (first = instances_.begin(); first != last; ++first)
       delete first->second;
     instances_.clear();
@@ -171,7 +171,7 @@ namespace Miro
   T * 
   Repository<T>::get(const std::string& _name) throw (ENotRegistered)
   {
-    InstanceMap::const_iterator i = instances_.find(_name);
+    typename InstanceMap::const_iterator i = instances_.find(_name);
     if (i != instances_.end())
       return i->second;
     throw ENotRegistered(_name);
@@ -185,7 +185,7 @@ namespace Miro
   void
   Repository<T>::remove(const std::string& _name) throw (ENotRegistered)
   {
-    InstanceMap::iterator i = instances_.find(_name);
+    typename InstanceMap::iterator i = instances_.find(_name);
     if (i != instances_.end()) {
       delete i->second;
       instances_.erase(i);
@@ -201,7 +201,7 @@ namespace Miro
   void
   Repository<T>::printToStream(std::ostream& _ostr) const
   {
-    InstanceMap::const_iterator first, last = instances_.end();	
+    typename InstanceMap::const_iterator first, last = instances_.end();	
     for(first = instances_.begin(); first != last; ++first) {		
       _ostr << first->first << endl;
     }
