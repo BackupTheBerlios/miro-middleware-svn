@@ -9,9 +9,9 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "miro/ConfigDocument.h"
-#include "miro/Exception.h"
-#include "miro/Parameters.h"
+#include "ConfigDocument.h"
+#include "Exception.h"
+#include "Parameters.h"
 
 #include <ace/Arg_Shifter.h>
 
