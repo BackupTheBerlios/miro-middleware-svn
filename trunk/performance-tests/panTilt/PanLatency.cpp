@@ -163,7 +163,6 @@ namespace
 int main(int argc, char *argv[])
 {
   int rc = 0;
-  bool first = true;
 
   ImageVector v;
 
@@ -218,7 +217,7 @@ int main(int argc, char *argv[])
 	  alpha = Miro::deg2Rad(alpha);
 	  
 	  // set time stamp
-	  string stamp = path() + client.namingContextName + "_" + createFileName() + "." + angle;
+	  string stamp = path() + client.namingContextName + "_" + createFileName() + ".deg" + angle;
 	  
 	  if (verbose)
 	    cout << stamp << endl;
@@ -231,6 +230,7 @@ int main(int argc, char *argv[])
 	  pan->setPan(alpha);
 	  
 	  // save image burst
+          bool first = true;
 	  ACE_Time_Value start = ACE_OS::gettimeofday();
 	  while(true) {
 	    // init streaming timer
@@ -240,7 +240,8 @@ int main(int argc, char *argv[])
 	      if (elapsed.msec() > stop)
 		break;
 	  }
-	    
+	    first = false;
+    
 	    // get image
 	    video->getWaitImage(imageIDL);
 	    
