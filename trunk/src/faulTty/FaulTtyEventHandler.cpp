@@ -84,7 +84,7 @@ namespace FaulTty
 	}
       }
       else if (*first == '\13') {
-	cout << "dispatch: " <<  << endl;
+	cout << "dispatch: " << msg->ticks_ << endl;
 	dispatchMessage();
       }
       else if (*first == '\10') {
