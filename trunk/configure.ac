@@ -286,7 +286,7 @@ echo ""
 echo $ECHO_N "Latex documentation "; if test "x$ac_compile_docu" = xyes; then
 	if test "x$ac_compile_pdf" = xyes; then echo "enabled using pdflatex."; else echo "enabled using latex and dvips."; fi
 	else echo "disabled."; fi
-echo $ECHO_N "HTML documentation "; if test "x$ac_compile_html" = xyes; then echo "enable."; else echo "disabled."; fi
+echo $ECHO_N "HTML documentation "; if test "x$ac_compile_html" = xyes; then echo "enabled."; else echo "disabled."; fi
 echo ""
 
 
