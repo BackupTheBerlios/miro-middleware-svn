@@ -72,7 +72,7 @@ namespace Miro
 
     Guard guard(connectedMutex_);
     if(!connected_) {
-      StructuredPushSupplier_var objref = this->_this();
+      objref_ = this->_this();
 
       supplierAdmin_ = ec_->new_for_suppliers(ifgop_, supplierAdminId_);
 
@@ -86,7 +86,7 @@ namespace Miro
 	StructuredProxyPushConsumer::_narrow(proxyConsumer.in());
       ACE_ASSERT(!CORBA::is_nil(proxyConsumer.in()));
 
-      proxyConsumer_->connect_structured_push_supplier(objref.in());
+      proxyConsumer_->connect_structured_push_supplier(objref_);
       connected_ = true;
 
 #ifdef DEBUG
@@ -109,6 +109,19 @@ namespace Miro
     if (connected_) {
       proxyConsumer_->disconnect_structured_push_consumer();
       supplierAdmin_->destroy();
+
+      // Get reference to Root POA.
+      PortableServer::POA_var poa = _default_POA();
+
+      // Deactivate.
+      PortableServer::ObjectId_var oid =
+	poa->reference_to_id (objref_);
+
+      CORBA::release(objref_);
+    
+      // deactivate from the poa.
+      poa->deactivate_object (oid.in ());
+
       connected_ = false;
     }
   }

@@ -59,6 +59,8 @@ namespace Miro
     CosNotifyChannelAdmin::StructuredProxyPushConsumer_var proxyConsumer_;
     //! This supplier's id. 
     CosNotifyChannelAdmin::ProxyID proxyConsumerId_;
+    //! Our own object id.
+    CosNotifyComm::StructuredPushSupplier_ptr objref_;
 
     //! Event domain name.
     std::string domainName_;
