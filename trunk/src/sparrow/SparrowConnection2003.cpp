@@ -153,10 +153,10 @@ namespace Sparrow
     CanMessage message;
     message.length(8);
     message.id(CAN_MOTOR_ACC_VEL2003);
-    message.shortData(0, accL);
-    message.shortData(2, accR);
-    message.shortData(4, velL);
-    message.shortData(6, velR);
+    message.shortData(0, ACE_NTOHS(accL));
+    message.shortData(2, ACE_NTOHS(accR));
+    message.shortData(4, ACE_NTOHS(velL));
+    message.shortData(6, ACE_NTOHS(velR));
     write(message);
   }
 
