@@ -125,7 +125,7 @@
   <parameter name="NotifyMulticast" >
    <parameter value="225.2.2.1:41006" name="Multicastgroup" />
    <parameter value="500" name="Messagetimeout" />
-   <parameter name="Subscription" />
+   <parameter name="Subscription" >
      <parameter value="BallPosition" />
      <parameter value="LocalizedPosition" />
    </parameter>
