@@ -62,6 +62,8 @@ namespace Miro
     else if (_format.palette == YUV_411)
       imageSize = (unsigned int)
 	ceil((double)(_format.width * _format.height * 3) / 2.);
+//    else if (_format.palette == YUV_420P)
+//      imageSize = _format.width * 3 * (_format.height / 2);
     else
       imageSize = _format.width * _format.height * getPixelSize(_format.palette);
     return imageSize;
@@ -76,6 +78,8 @@ namespace Miro
     else if (_format.palette == YUV_411)
       rowSize = (unsigned int)
 	ceil((double)(_format.width * 3) / 2.);
+//    else if (_format.palette == YUV_420P)
+//      rowSize = _format.width * 2;
     else
       rowSize = _format.width * getPixelSize(_format.palette);
     return rowSize;

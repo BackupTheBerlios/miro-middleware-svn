@@ -30,7 +30,7 @@ namespace Miro
     reactor_(),
     schedp_(ACE_SCHED_OTHER, 0)
   {
-    MIRO_DBG(MIRO,LL_CTOR_DTOR,"Constructing [Miro::ReactorTask].\n");
+    MIRO_LOG_CTOR("Miro::ReactorTask");
     reactor(&reactor_);
     reactor_.open(size);
     if (pschedp) 
@@ -39,8 +39,9 @@ namespace Miro
 
   ReactorTask::~ReactorTask()
   {
-    MIRO_DBG(MIRO,LL_CTOR_DTOR,"Destructing [Miro::ReactorTask].\n");
+    MIRO_LOG_DTOR("Miro::ReactorTask");
     reactor_.close();
+    MIRO_LOG(LL_NOTICE, "Reactor closed.");
     reactor(NULL);
     MIRO_LOG(LL_NOTICE,"Reactor canceled.\n");
   }
