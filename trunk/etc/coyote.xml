@@ -314,6 +314,8 @@
      <parameter value="BallPosition" />
      <parameter value="PatternChange" />
      <parameter value="ArbitrateChange" />
+     <parameter value="LocalizedPosition" />
+     <parameter value="LocalizeStatistics" />
      <parameter value="PositionHypothesis" />
    </parameter>
    <parameter value="157286400" name="MaxFileSize" />
@@ -323,8 +325,8 @@
    <parameter value="500" name="Messagetimeout" />
    <parameter name="Subscription">
      <parameter value="BallPosition" />
+     <parameter value="GoalPosition" />
      <parameter value="LocalizedPosition" />
-     <parameter value="SharedWorld" />
    </parameter>
   </parameter>
  </section>
