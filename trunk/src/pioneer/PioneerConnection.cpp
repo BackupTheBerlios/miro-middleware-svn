@@ -89,8 +89,8 @@ namespace Pioneer
   Connection::setSpeed2(short left, short right)
   {
     Message speed2Message(SF_COMVEL2,  // build speed packet
-			  (short)((double)right / params_->vel2Divisor), 
-			  (short)((double)left / params_->vel2Divisor));
+			  (char)((double)right / params_->vel2Divisor), 
+			  (char)((double)left / params_->vel2Divisor));
     writeMessage(speed2Message);                        // send it
     //cout << "setSpeed2 right_ left_:_ " << right << "--"<< left << endl
     //        << speed2Message << endl;

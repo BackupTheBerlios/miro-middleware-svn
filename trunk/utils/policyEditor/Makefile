@@ -103,8 +103,7 @@ realclean: clean
 .obj/PolicyEditor.o .obj/PolicyEditor.so .shobj/PolicyEditor.o .shobj/PolicyEditor.so: PolicyEditor.cpp \
  $(MIRO_ROOT)/src/miro/BehaviourEngineC.h \
  $(MIRO_ROOT)/src/miro/BehaviourEngineC.i PolicyEditor.h \
- $(MIRO_ROOT)/src/miro/Client.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/Client.h $(MIRO_ROOT)/src/miro/Exception.h \
  $(MIRO_ROOT)/src/miro/RobotParameters.h \
  $(MIRO_ROOT)/src/miro/Parameters.h PolicyDocument.h \
  BehaviourDescription.h Transition.h PolicyConfig.h BehaviourParam.h \
@@ -133,8 +132,7 @@ realclean: clean
  BehaviourDescription.h Transition.h PolicyConfig.h BehaviourParam.h
 
 .obj/PolicyEditor.moc.o .obj/PolicyEditor.moc.so .shobj/PolicyEditor.moc.o .shobj/PolicyEditor.moc.so: PolicyEditor.moc.cpp PolicyEditor.h \
- $(MIRO_ROOT)/src/miro/Client.h \
- $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/Client.h $(MIRO_ROOT)/src/miro/Exception.h \
  $(MIRO_ROOT)/src/miro/RobotParameters.h \
  $(MIRO_ROOT)/src/miro/Parameters.h PolicyDocument.h \
  BehaviourDescription.h Transition.h PolicyConfig.h BehaviourParam.h \

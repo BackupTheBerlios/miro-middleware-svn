@@ -61,5 +61,21 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
 
 
+.obj/NotifyTest.o .obj/NotifyTest.so .shobj/NotifyTest.o .shobj/NotifyTest.so: NotifyTest.cpp NotifyTest.h $(MIRO_ROOT)/src/miro/Server.h \
+ $(MIRO_ROOT)/src/miro/Client.h $(MIRO_ROOT)/src/miro/Exception.h \
+ $(MIRO_ROOT)/src/miro/RobotParameters.h \
+ $(MIRO_ROOT)/src/miro/Parameters.h $(MIRO_ROOT)/src/miro/Singleton.h \
+ $(MIRO_ROOT)/src/miro/Synch.h \
+ $(MIRO_ROOT)/src/miro/StructuredPushSupplier.h \
+ $(MIRO_ROOT)/src/miro/OdometryC.h $(MIRO_ROOT)/src/miro/ExceptionC.h \
+ $(MIRO_ROOT)/src/miro/ExceptionC.i $(MIRO_ROOT)/src/miro/PositionC.h \
+ $(MIRO_ROOT)/src/miro/WorldPointC.h $(MIRO_ROOT)/src/miro/WorldPointC.i \
+ $(MIRO_ROOT)/src/miro/PositionC.i $(MIRO_ROOT)/src/miro/MotionStatusC.h \
+ $(MIRO_ROOT)/src/miro/TimeC.h $(MIRO_ROOT)/src/miro/TimeC.i \
+ $(MIRO_ROOT)/src/miro/VelocityC.h $(MIRO_ROOT)/src/miro/VelocityC.i \
+ $(MIRO_ROOT)/src/miro/MotionStatusC.i $(MIRO_ROOT)/src/miro/OdometryC.i \
+ $(MIRO_ROOT)/src/miro/RangeEventC.h $(MIRO_ROOT)/src/miro/RangeEventC.i \
+ $(MIRO_ROOT)/src/miro/ButtonsC.h $(MIRO_ROOT)/src/miro/ButtonsC.i \
+ $(MIRO_ROOT)/src/miro/TimeHelper.h $(MIRO_ROOT)/src/miro/Task.h
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

@@ -210,6 +210,9 @@ realclean: clean
 
 .obj/StallS.o .obj/StallS.o .obj/StallS.o .obj/StallS.o: StallS.cpp StallS.h StallC.h StallC.i StallS.i
 
+.obj/BatteryS.o .obj/BatteryS.o .obj/BatteryS.o .obj/BatteryS.o: BatteryS.cpp BatteryS.h ExceptionS.h ExceptionC.h \
+ ExceptionC.i ExceptionS.i BatteryC.h BatteryC.i BatteryS.i
+
 .obj/ScanDescriptionS.o .obj/ScanDescriptionS.o .obj/ScanDescriptionS.o .obj/ScanDescriptionS.o: ScanDescriptionS.cpp ScanDescriptionS.h \
  ScanDescriptionC.h ScanDescriptionC.i ScanDescriptionS.i
 
@@ -232,6 +235,11 @@ realclean: clean
 .obj/PanTiltS.o .obj/PanTiltS.o .obj/PanTiltS.o .obj/PanTiltS.o: PanTiltS.cpp PanTiltS.h TiltS.h ExceptionS.h ExceptionC.h \
  ExceptionC.i ExceptionS.i TiltC.h TiltC.i TiltS.i PanS.h PanC.h \
  PanC.i PanS.i PanTiltC.h PanTiltC.i PanTiltS.i
+
+.obj/CanonPanTiltS.o .obj/CanonPanTiltS.o .obj/CanonPanTiltS.o .obj/CanonPanTiltS.o: CanonPanTiltS.cpp CanonPanTiltS.h PanTiltS.h TiltS.h \
+ ExceptionS.h ExceptionC.h ExceptionC.i ExceptionS.i TiltC.h TiltC.i \
+ TiltS.i PanS.h PanC.h PanC.i PanS.i PanTiltC.h PanTiltC.i PanTiltS.i \
+ CanonPanTiltC.h CanonPanTiltC.i CanonPanTiltS.i
 
 .obj/ButtonsS.o .obj/ButtonsS.o .obj/ButtonsS.o .obj/ButtonsS.o: ButtonsS.cpp ButtonsS.h ExceptionS.h ExceptionC.h \
  ExceptionC.i ExceptionS.i TimeS.h TimeC.h TimeC.i TimeS.i ButtonsC.h \
@@ -324,38 +332,31 @@ realclean: clean
  OdometryC.h OdometryC.i OdometryS.i B21MotionC.h B21MotionC.i \
  B21MotionS.i
 
-.obj/XmlParse.o .obj/XmlParse.o .obj/XmlParse.o .obj/XmlParse.o: XmlParse.cpp XmlParse.h Exception.h
+.obj/XmlParse.o .obj/XmlParse.o .obj/XmlParse.o .obj/XmlParse.o: XmlParse.cpp XmlParse.h Angle.h Exception.h
 
 .obj/DevParameters.o .obj/DevParameters.o .obj/DevParameters.o .obj/DevParameters.o: DevParameters.cpp DevParameters.h Parameters.h
 
 .obj/TtyParameters.o .obj/TtyParameters.o .obj/TtyParameters.o .obj/TtyParameters.o: TtyParameters.cpp TtyParameters.h DevParameters.h \
  Parameters.h
 
-.obj/DevConnection.o .obj/DevConnection.o .obj/DevConnection.o .obj/DevConnection.o: DevConnection.cpp \
- $(MIRO_ROOT)/src/miro/DevConnection.h \
- $(MIRO_ROOT)/src/miro/DevEventHandler.h \
- $(MIRO_ROOT)/src/miro/DevParameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/Exception.h
+.obj/DevConnection.o .obj/DevConnection.o .obj/DevConnection.o .obj/DevConnection.o: DevConnection.cpp DevConnection.h \
+ DevEventHandler.h \
+ DevParameters.h Parameters.h \
+ Exception.h
 
 .obj/DevEventHandler.o .obj/DevEventHandler.o .obj/DevEventHandler.o .obj/DevEventHandler.o: DevEventHandler.cpp \
- $(MIRO_ROOT)/src/miro/DevEventHandler.h \
- $(MIRO_ROOT)/src/miro/DevConsumer.h \
- $(MIRO_ROOT)/src/miro/DevMessage.h \
- $(MIRO_ROOT)/src/miro/Exception.h
+ DevEventHandler.h \
+ DevConsumer.h DevMessage.h \
+ Exception.h
 
-.obj/DevConsumer.o .obj/DevConsumer.o .obj/DevConsumer.o .obj/DevConsumer.o: DevConsumer.cpp \
- $(MIRO_ROOT)/src/miro/Exception.h \
- $(MIRO_ROOT)/src/miro/DevConsumer.h \
- $(MIRO_ROOT)/src/miro/DevMessage.h
+.obj/DevConsumer.o .obj/DevConsumer.o .obj/DevConsumer.o .obj/DevConsumer.o: DevConsumer.cpp Exception.h \
+ DevConsumer.h DevMessage.h
 
-.obj/TtyConnection.o .obj/TtyConnection.o .obj/TtyConnection.o .obj/TtyConnection.o: TtyConnection.cpp \
- $(MIRO_ROOT)/src/miro/TtyConnection.h \
- $(MIRO_ROOT)/src/miro/DevEventHandler.h \
- $(MIRO_ROOT)/src/miro/TtyParameters.h \
- $(MIRO_ROOT)/src/miro/DevParameters.h \
- $(MIRO_ROOT)/src/miro/Parameters.h \
- $(MIRO_ROOT)/src/miro/Exception.h
+.obj/TtyConnection.o .obj/TtyConnection.o .obj/TtyConnection.o .obj/TtyConnection.o: TtyConnection.cpp TtyConnection.h \
+ DevEventHandler.h \
+ TtyParameters.h \
+ DevParameters.h Parameters.h \
+ Exception.h
 
 .obj/RangeSensorImpl.o .obj/RangeSensorImpl.o .obj/RangeSensorImpl.o .obj/RangeSensorImpl.o: RangeSensorImpl.cpp RangeSensorImpl.h \
  RangeSensorS.h ExceptionS.h ExceptionC.h ExceptionC.i ExceptionS.i \
@@ -372,7 +373,7 @@ realclean: clean
  TimeS.i VelocityS.h VelocityC.h VelocityC.i VelocityS.i \
  MotionStatusC.h MotionStatusC.i MotionStatusS.i OdometryC.h \
  OdometryC.i OdometryS.i Synch.h TimeHelper.h \
- $(MIRO_ROOT)/src/miro/TimeC.h StructuredPushSupplier.h
+ TimeC.h StructuredPushSupplier.h
 
 .obj/MotionImpl.o .obj/MotionImpl.o .obj/MotionImpl.o .obj/MotionImpl.o: MotionImpl.cpp MotionImpl.h MotionS.h ExceptionS.h \
  ExceptionC.h ExceptionC.i ExceptionS.i VelocityS.h VelocityC.h \
@@ -385,6 +386,10 @@ realclean: clean
  VelocityC.i VelocityS.i MotionC.h MotionC.i MotionS.i \
  DifferentialMotionC.h DifferentialMotionC.i DifferentialMotionS.i \
  MotionImpl.h MotionParameters.h Parameters.h Synch.h
+
+.obj/BatteryImpl.o .obj/BatteryImpl.o .obj/BatteryImpl.o .obj/BatteryImpl.o: BatteryImpl.cpp BatteryImpl.h BatteryS.h ExceptionS.h \
+ ExceptionC.h ExceptionC.i ExceptionS.i BatteryC.h BatteryC.i \
+ BatteryS.i
 
 .obj/BehaviourEngineImpl.o .obj/BehaviourEngineImpl.o .obj/BehaviourEngineImpl.o .obj/BehaviourEngineImpl.o: BehaviourEngineImpl.cpp BehaviourEngineImpl.h \
  BehaviourEngineS.h BehaviourEngineC.h BehaviourEngineC.i \

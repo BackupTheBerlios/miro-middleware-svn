@@ -79,7 +79,7 @@ namespace Psos
   Message::Message(char cmd, char byte1, char byte2)
   {
     header(START_12);
-    length(1 + 2 + 2);
+    length(2 + 2 + 2); // cmd/arg + 2 byte integer + 2 byte checksum
     id(cmd);
     userData()[0] = byte1;
     userData()[1] = byte2;

@@ -100,8 +100,7 @@ namespace Pioneer
 
     Miro::Guard guard(mutex_);
     setTargetVelocity(left, right);
-    connection.setSpeed2((short)(left / params_->vel2Divisor), 
-			 (short)(right / params_->vel2Divisor));
+    connection.setSpeed2((short)left, (short)right);
   }
   
   //--------------------------------------------------------------------------

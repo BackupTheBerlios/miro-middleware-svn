@@ -29,7 +29,7 @@ LDLIBS += $(addprefix -l, $(STATIC_LIBS))
 
 
 ## dynamic libraries if needed
-LDLIBS += -lmiro -lTAO_CosNaming -lTAO
+LDLIBS += -lmiro
 
 ## program to be built
 BIN 	= \
@@ -62,6 +62,8 @@ include $(MIRO_ROOT)/include/makeinclude/rules.miro.GNU
 #----------------------------------------------------------------------------
 #	Local targets
 #----------------------------------------------------------------------------
+
+$(BIN): $(STATIC_DEPS)
 
 # DO NOT DELETE THIS LINE -- g++dep uses it.
 # DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.

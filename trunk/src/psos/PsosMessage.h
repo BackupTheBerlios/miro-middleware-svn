@@ -33,7 +33,7 @@ namespace Psos
     Message(char cmd, const char * msg, int msgLength=0);
     explicit Message(char cmd, short val);
     explicit Message(char cmd, unsigned short val);
-    Message(char cmd, char byte1, char byte2);
+    explicit Message(char cmd, char byte1, char byte2);
 
     unsigned short header() const;
     void header(unsigned short _header);
