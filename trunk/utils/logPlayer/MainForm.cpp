@@ -337,8 +337,6 @@ MainForm::step()
     destTime = std::min(destTime, fileSet_.coursorTime() + ACE_Time_Value(0, 200000));
     destTime = std::min(destTime, fileSet_.cutEndTime());
 
-    std::cout << "play till: " << destTime - fileSet_.cutStartTime() << std::endl;
-
     fileSet_.playEvents(destTime);
 
     if (fileSet_.coursorTime() < fileSet_.cutEndTime()) {
