@@ -34,6 +34,7 @@
 #include "miro/OdometryImpl.h"
 #include "miro/BatteryImpl.h"
 #include "miro/Exception.h"
+#include "miro/Log.h"
 
 #include <ace/Signal.h>
 
@@ -205,6 +206,8 @@ void floodingTest(int _iter, int _timeout)
 
 int main(int argc, char* argv[])
 {
+  Miro::Log::init(argc, argv);
+
   // Parameters to be passed to the services
   FaulMotor::Parameters * pParams = FaulMotor::Parameters::instance();
   Sparrow::Parameters * pSparrows = Sparrow::Parameters::instance();
