@@ -2,14 +2,12 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002, 2003
+// (c) 2003
 // Department of Neural Information Processing, University of Ulm, Germany
-//
 // 
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-
 
 #include "miro/ExceptionC.h"
 #include "miro/Exception.h"
@@ -104,27 +102,6 @@ namespace FaulTty
     if (rc == -1)
       throw Miro::EDevIO("Error writing FaulTty device.");
   }
-
-//******************************nur zum test****************************************
-
-//******************************nur zum test****************************************
-
-
- /* bool
-  Connection::synched() const {
-    return eventHandler->synch == 3;
-  }
-
-  bool
-  Connection::waitSynch(const ACE_Time_Value& maxWait) const {
-    Miro::Guard guard(eventHandler->synchMutex);
-    ACE_Time_Value timeout = ACE_OS::gettimeofday();
-    timeout += maxWait;
-    if (eventHandler->synch != 3)
-      eventHandler->synchCondition.wait(&timeout);
-    return (eventHandler->synch == 3);
-
-  }*/
 
   void
   Connection::close()

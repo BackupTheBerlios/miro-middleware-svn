@@ -2,15 +2,12 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2003
 // Department of Neural Information Processing, University of Ulm, Germany
-//
 //
 // $Id$
 //
 //////////////////////////////////////////////////////////////////////////////
-
-
 
 #include "FaulTtyEventHandler.h"
 #include "FaulTtyConnection.h"
@@ -49,7 +46,7 @@ namespace FaulTty
 
   {
     DBG(cout << "Constructing FaulTtyEventHandler." << endl);
-    lrbytes=0; //init für die zwei daten wegen multiplexer
+    lrbytes = 0; //init für die zwei daten wegen multiplexer
   }
 
   EventHandler::~EventHandler()
@@ -82,28 +79,28 @@ namespace FaulTty
     //msg->time() = ACE_OS::gettimeofday();
 
     if (lrbytes==0) {
-        posL=(long)atoi(buff);
-	lrbytes=1;
-	}
-       else {
-	posR=(long)atoi(buff);
-	lrbytes=0;
-	msg->setPos(posL,posR);
-	msg->time() = ACE_OS::gettimeofday();
-	//cout <<ACE_OS::gettimeofday()<< endl;
-       dispatchMessage();
-       }
+      posL=(long)atoi(buff);
+      lrbytes=1;
+    }
+    else {
+      posR=(long)atoi(buff);
+      lrbytes=0;
+      msg->setPos(posL,posR);
+      msg->time() = ACE_OS::gettimeofday();
+      //cout <<ACE_OS::gettimeofday()<< endl;
+      dispatchMessage();
+    }
 
    
 
-//cout << "hab daten gelesen!!!!!!!" << bytes << "   " <<buff<< endl;
+    //cout << "hab daten gelesen!!!!!!!" << bytes << "   " <<buff<< endl;
 
     DBG(cerr << "Read " << bytes << " bytes from FaulTty" << endl);
 
 
 	  
 
-	  dispatchMessage();
+    dispatchMessage();
 	
     DBG(cout << "FaulTtyEventHandler: Done with select" << endl);
 
@@ -116,7 +113,7 @@ namespace FaulTty
     Message* msg = (Message*) message_;
 
  
-	Super::dispatchMessage();
+    Super::dispatchMessage();
     
   }
 

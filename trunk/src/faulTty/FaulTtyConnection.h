@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // 
@@ -35,8 +35,6 @@ namespace FaulTty
 
     void writeMessage(const Message& message);
     
-    /*bool synched() const;
-    bool waitSynch(const ACE_Time_Value& maxWait) const;*/
     void close();
 
   protected:

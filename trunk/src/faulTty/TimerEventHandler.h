@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 //
@@ -20,7 +20,7 @@ namespace FaulTty
 
   class Connection;
 
-class TimerEventHandler : public ACE_Event_Handler
+  class TimerEventHandler : public ACE_Event_Handler
   {
     typedef ACE_Event_Handler Super;
 
@@ -46,9 +46,9 @@ class TimerEventHandler : public ACE_Event_Handler
 
 
     virtual int handle_timeout (const ACE_Time_Value &current_time,
-                              const void *act = 0);
+				const void *act = 0);
 
-	Connection& connection;
-   };
+    Connection& connection;
+  };
 };
 

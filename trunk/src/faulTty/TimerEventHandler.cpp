@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 //
@@ -10,12 +10,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "TimerEventHandler.h"
 #include "FaulTtyConnection.h"
 #include "FaulTtyMessage.h"
-
-#include <algorithm>
 
 #undef DEBUG
 
