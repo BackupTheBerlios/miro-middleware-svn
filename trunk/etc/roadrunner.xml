@@ -48,99 +48,99 @@
    <parameter value="0.040000" name="OdometryPulse" />
    <parameter name="IrScaling" >
     <parameter>
-     <parameter value="350" name="MaxDistance" />
+     <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.0" name="Scaling" />
+     <parameter value="1.134" name="Scaling" />
      <parameter value="20" name="Offset" />
     </parameter>
     <parameter>
-     <parameter value="350" name="MaxDistance" />
+     <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.037" name="Scaling" />
-     <parameter value="22" name="Offset" />
-    </parameter>
-    <parameter>
-     <parameter value="350" name="MaxDistance" />
-     <parameter value="30" name="MinDistance" />
-     <parameter value="1.024" name="Scaling" />
+     <parameter value="0.850" name="Scaling" />
      <parameter value="20" name="Offset" />
     </parameter>
     <parameter>
-     <parameter value="350" name="MaxDistance" />
+     <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="0.900" name="Scaling" />
-     <parameter value="21" name="Offset" />
-    </parameter>
-    <parameter>
-     <parameter value="350" name="MaxDistance" />
-     <parameter value="30" name="MinDistance" />
-     <parameter value="0.859" name="Scaling" />
+     <parameter value="0.850" name="Scaling" />
      <parameter value="20" name="Offset" />
     </parameter>
     <parameter>
-     <parameter value="350" name="MaxDistance" />
+     <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1.049" name="Scaling" />
+     <parameter value="0.971" name="Scaling" />
      <parameter value="20" name="Offset" />
     </parameter>
     <parameter>
-     <parameter value="350" name="MaxDistance" />
+     <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="0.972" name="Scaling" />
+     <parameter value="1.000" name="Scaling" />
      <parameter value="20" name="Offset" />
     </parameter>
     <parameter>
-     <parameter value="350" name="MaxDistance" />
-     <parameter value="30" name="MinDistance" />
-     <parameter value="1.006" name="Scaling" />
-     <parameter value="20" name="Offset" />
-    </parameter>
-    <parameter>
-     <parameter value="350" name="MaxDistance" />
-     <parameter value="30" name="MinDistance" />
-     <parameter value="1.111" name="Scaling" />
-     <parameter value="20" name="Offset" />
-    </parameter>
-    <parameter>
-     <parameter value="350" name="MaxDistance" />
+     <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
      <parameter value="0.944" name="Scaling" />
      <parameter value="20" name="Offset" />
     </parameter>
     <parameter>
-     <parameter value="350" name="MaxDistance" />
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="1.134" name="Scaling" />
+     <parameter value="20" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="1.000" name="Scaling" />
+     <parameter value="20" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="1.000" name="Scaling" />
+     <parameter value="20" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="1.134" name="Scaling" />
+     <parameter value="20" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="1.134" name="Scaling" />
+     <parameter value="20" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="1.000" name="Scaling" />
+     <parameter value="20" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="0.872" name="Scaling" />
+     <parameter value="20" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
+     <parameter value="30" name="MinDistance" />
+     <parameter value="1.134" name="Scaling" />
+     <parameter value="20" name="Offset" />
+    </parameter>
+    <parameter>
+     <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
      <parameter value="0.971" name="Scaling" />
      <parameter value="20" name="Offset" />
     </parameter>
     <parameter>
-     <parameter value="350" name="MaxDistance" />
+     <parameter value="400" name="MaxDistance" />
      <parameter value="30" name="MinDistance" />
-     <parameter value="1" name="Scaling" />
-     <parameter value="20" name="Offset" />
-    </parameter>
-    <parameter>
-     <parameter value="350" name="MaxDistance" />
-     <parameter value="30" name="MinDistance" />
-     <parameter value="0.971" name="Scaling" />
-     <parameter value="20" name="Offset" />
-    </parameter>
-    <parameter>
-     <parameter value="350" name="MaxDistance" />
-     <parameter value="30" name="MinDistance" />
-     <parameter value="1.063" name="Scaling" />
-     <parameter value="20" name="Offset" />
-    </parameter>
-    <parameter>
-     <parameter value="350" name="MaxDistance" />
-     <parameter value="30" name="MinDistance" />
-     <parameter value="1.063" name="Scaling" />
-     <parameter value="20" name="Offset" />
-    </parameter>
-    <parameter>
-     <parameter value="350" name="MaxDistance" />
-     <parameter value="30" name="MinDistance" />
-     <parameter value="1" name="Scaling" />
+     <parameter value="1.000" name="Scaling" />
      <parameter value="20" name="Offset" />
     </parameter>
    </parameter>
@@ -155,7 +155,7 @@
    <parameter value="29" name="TicksR" />
    <parameter value="21.7" name="Deg2ServoTicksL"/>
    <parameter value="22.0" name="Deg2ServoTicksR"/>
-   <parameter value="false" name="ChannelSharing" />
+   <parameter value="true" name="ChannelSharing" />
    <parameter name="Motion" >
     <parameter value="180" name="MaxRotation" />
     <parameter value="-180" name="MinRotation" />
