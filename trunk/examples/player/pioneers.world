@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<gz:world xmlns:gz="http://playerstage.sourceforge.net/gazebo/xmlschema/#gz" xmlns:model="http://playerstage.sourceforge.net/gazebo/xmlschema/#model" xmlns:window="http://playerstage.sourceforge.net/gazebo/xmlschema/#window" xmlns:params="http://playerstage.sourceforge.net/gazebo/xmlschema/#params">
+
+  <model:ObserverCam>
+    <id>userCam0</id>
+    <xyz>0.080 -1.355 0.814</xyz>
+    <rpy>-0 0.15 90</rpy>
+    <imageSize>640 480</imageSize>
+    <updateRate>10</updateRate>
+    <displayRays>true</displayRays>
+  </model:ObserverCam>
+
+  <model:GroundPlane>
+    <id>ground1</id>
+    <color>0.8 0.8 0</color>
+  </model:GroundPlane>
+
+  <model:LightSource>
+    <id>0</id>
+    <xyz>-10.000 -10.000 100.000</xyz>
+  </model:LightSource>
+
+  <model:Pioneer2DX>
+    <id>robot2</id> 
+    <xyz>0 -1 0.2</xyz>
+    <model:SonyVID30>
+      <id>camera2</id>
+      <xyz>0 0 0.0</xyz>
+    </model:SonyVID30>
+  </model:Pioneer2DX>
+
+  <model:Pioneer2DX>
+    <id>robot1</id>
+    <xyz>-0.007 -0.007 0.2</xyz>
+    <model:SickLMS200>
+      <id>laser1</id>
+      <xyz>0.0 0 0.0</xyz> 
+      <rayCount>91</rayCount>
+      <rangeCount>361</rangeCount>
+    </model:SickLMS200>
+    <model:SonyVID30>
+      <id>camera1</id>
+      <xyz>0 0 0.2</xyz>
+    </model:SonyVID30>
+  </model:Pioneer2DX>
+
+  <model:SimpleSolid>
+    <xyz>1 1 0</xyz>
+    <shape>cylinder</shape>
+    <color>0 1 0</color>
+    <size>1 1 4</size>
+  </model:SimpleSolid>
+
+  <model:SimpleSolid>
+    <xyz>1 -1 0</xyz>
+    <shape>box</shape>
+    <color>0 0 1</color>
+    <size>1 1 0.5</size>
+  </model:SimpleSolid>
+
+</gz:world>
