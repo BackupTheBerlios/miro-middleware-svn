@@ -45,10 +45,8 @@ namespace FaulTty
   void
   Connection::writeMessage(char const * const _message)
   {
-    //    ACE_Time_Value time = ACE_OS::gettimeofday();
-
     int rc = ioBuffer.send_n(_message, strlen(_message));
-    //    lastWrite = time;
+    lastWrite = ACE_OS::gettimeofday();;
 
     if (rc == -1)
       throw Miro::EDevIO("Error writing FaulTty device.");

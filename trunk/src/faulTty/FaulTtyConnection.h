@@ -14,6 +14,11 @@
 
 #include "miro/TtyConnection.h"
 
+namespace FaulMotor
+{
+  class Connection;
+};
+
 namespace FaulTty
 {
   // forward declarations
@@ -34,6 +39,8 @@ namespace FaulTty
   protected:
     EventHandler* eventHandler;
     ACE_Time_Value lastWrite;
+
+    friend class FaulMotor::Connection;
   };
 };
 #endif
