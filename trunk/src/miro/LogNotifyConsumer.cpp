@@ -16,6 +16,9 @@
 #include "TimeHelper.h"
 #include "Log.h"
 
+#include <ace/Stats.h>
+#include <ace/Sample_History.h>
+
 namespace Miro
 {
   LogNotifyConsumer::LogNotifyConsumer(Server& _server,
@@ -35,7 +38,9 @@ namespace Miro
 	    ACE_MAP_SHARED),
     ostr_((char*)memMap_.addr(), memMap_.size()),
     totalLength_(0),
-    keepAlive_(_keepAlive)
+    keepAlive_(_keepAlive),
+    history_(NULL),
+    nTimes_(0)
   {
     if (memMap_.addr() == MAP_FAILED)
       throw CException(errno, std::strerror(errno));
@@ -61,6 +66,8 @@ namespace Miro
 
   LogNotifyConsumer::~LogNotifyConsumer()
   {
+    delete history_;
+
     // close the memory mapped file
     memMap_.close();
 
@@ -74,6 +81,8 @@ namespace Miro
 					   ACE_ENV_ARG_DECL_NOT_USED)
     throw(CORBA::SystemException, CosEventComm::Disconnected)
   {
+    ACE_hrtime_t start = ACE_OS::gethrtime ();
+
     TimeIDL time;
     timeA2C(ACE_OS::gettimeofday(), time);
 
@@ -95,6 +104,47 @@ namespace Miro
 	  server_.shutdown();
       }
     }
+
+    // performance measurement
+    if (nTimes_ > 0) {
+      ACE_hrtime_t now = ACE_OS::gethrtime ();
+      history_->sample (now - start);
+
+      --nTimes_;
+    }
+  }
+
+  void 
+  LogNotifyConsumer::measureTiming(unsigned int _nTimes)
+  {
+    nTimes_ = _nTimes;
+    delete history_;
+    history_ = new ACE_Sample_History(nTimes_);
+    testStart_ = ACE_OS::gethrtime ();
+  }
+
+
+  void
+  LogNotifyConsumer::evaluateTiming()
+  {
+    ACE_hrtime_t testEnd = ACE_OS::gethrtime ();
+    ACE_DEBUG ((LM_DEBUG, "Logging client test finished\n"));
+    
+    ACE_DEBUG ((LM_DEBUG, "High resolution timer calibration...."));
+    ACE_UINT32 gsf = ACE_High_Res_Timer::global_scale_factor ();
+    ACE_DEBUG ((LM_DEBUG, "done\n"));
+    
+    //history_->dump_samples ("HISTORY", gsf);
+    
+    ACE_Basic_Stats stats;
+    history_->collect_basic_stats (stats);
+    stats.dump_results ("Total", gsf);
+    
+    ACE_Throughput_Stats::dump_throughput ("Logging client total", gsf,
+					   testEnd - testStart_,
+					   stats.samples_count ());
+    delete history_;
+    history_ = NULL;
   }
 
   std::string

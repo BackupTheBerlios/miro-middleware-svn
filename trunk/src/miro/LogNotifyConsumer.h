@@ -15,13 +15,17 @@
 #include "SvcParameters.h"
 
 #include <ace/Mem_Map.h>
+#include <ace/High_Res_Timer.h>
 #include <tao/CDR.h>
 
 #include <string>
 
 // forward declarations
+class ACE_Sample_History;
+
 namespace Miro
 {
+  // forward declarations
   class Server;
 
   class LogNotifyConsumer : public Miro::StructuredPushConsumer
@@ -63,6 +67,9 @@ namespace Miro
      */
     std::string defaultFileName() const;
 
+    void measureTiming(unsigned int _nTimes);
+    void evaluateTiming();
+
   protected:
     //! The default location for log files.
     /** 
@@ -92,6 +99,10 @@ namespace Miro
     //! End the server if logfile is full.
     /** Default is false. */
     bool keepAlive_;
+
+    ACE_Sample_History * history_;
+    int nTimes_;
+    ACE_hrtime_t testStart_;
   };
 }
 #endif
