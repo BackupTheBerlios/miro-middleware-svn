@@ -23,24 +23,24 @@ namespace Base
   std::ostream& 
   operator << (std::ostream& out, const ReportData& report) 
   {
-    out << hex
-	<< "request = 0x" << report.Request << endl
-	<< "Clock = 0x" << report.Clock << endl
-	<< "status = 0x" << report.GeneralStatus << endl
-	<< "X = 0x" << report.Xpos << endl
-	<< "Y = 0x" << report.Ypos << endl
-	<< dec
-	<< "heading = " << report.Heading << endl
-	<< "relative heading = " << report.BaseRelativeHeading << endl
-	<< "tranlate error = " << report.TranslateError << endl
-	<< "translate velocity = " << report.TranslateVelocity << endl
-	<< hex
-	<< "translate status = 0x" << report.TranslateStatus << endl
-	<< dec
-	<< "tranlate error = " << report.RotateError << endl
-	<< "translate velocity = " << report.RotateVelocity << endl
-	<< hex
-	<< "translate status = 0x" << report.RotateStatus << dec << endl;
+    out << std::hex
+	<< "request = 0x" << report.Request << std::endl
+	<< "Clock = 0x" << report.Clock << std::endl
+	<< "status = 0x" << report.GeneralStatus << std::endl
+	<< "X = 0x" << report.Xpos << std::endl
+	<< "Y = 0x" << report.Ypos << std::endl
+	<< std::dec
+	<< "heading = " << report.Heading << std::endl
+	<< "relative heading = " << report.BaseRelativeHeading << std::endl
+	<< "tranlate error = " << report.TranslateError << std::endl
+	<< "translate velocity = " << report.TranslateVelocity << std::endl
+	<< std::hex
+	<< "translate status = 0x" << report.TranslateStatus << std::endl
+	<< std::dec
+	<< "tranlate error = " << report.RotateError << std::endl
+	<< "translate velocity = " << report.RotateVelocity << std::endl
+	<< std::hex
+	<< "translate status = 0x" << report.RotateStatus << std::dec << std::endl;
 
     return out;
   }
