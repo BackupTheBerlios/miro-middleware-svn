@@ -116,7 +116,7 @@ LogFile::playEvent()
     }
   }
 
-#define DEBUG_LOCALIZATION
+// #define DEBUG_LOCALIZATION
 #ifdef DEBUG_LOCALIZATION  
   if (eventName == "LineSamples")
     event.header.fixed_header.event_type.type_name = CORBA::string_dup( "RawLineSamples" );
