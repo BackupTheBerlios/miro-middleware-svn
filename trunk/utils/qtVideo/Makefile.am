@@ -27,8 +27,11 @@ SUFFIXES = .h .moc.cpp
 %.cpp: %.ui
 	$(QT_UIC) -o $@ -impl $*.h $<
 
+if COND_IEEE1394
+1394programs = QtVideoControl VideoControlTest
+endif
 
-bin_PROGRAMS = QtVideo QtVideoControl VideoControlTest
+bin_PROGRAMS = QtVideo $(1394programs)
 
 video_sources = \
 	QtVideo.cpp \
