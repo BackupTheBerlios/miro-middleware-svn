@@ -40,26 +40,6 @@ namespace Miro
     // MiroEvent shouldn´t be subclassed any further,
     // so we make it private to MiroServer
 
-    /**
-     * @todo Rewrite as ACE_Signal_Handler
-     */
-    class Event : public ACE_Event_Handler
-    {
-    public:
-      Event(Server& server_);
-      //  private:
-      virtual ~Event();
-    public:
-      
-      //! Handle asynchronous signal
-      virtual int handle_signal (int signum, siginfo_t *, ucontext_t *);
-      //! Called when object is removed from the <ACE_Reactor>.
-      virtual int handle_close (ACE_HANDLE, ACE_Reactor_Mask);
-
-    private:
-      Server& server;
-    };
-
     //! Detached server thread pool.
     /**
      *   Uses the ACE_Task_Base class to run server threads
@@ -130,13 +110,6 @@ namespace Miro
 
   private:
     bool shutdown_;
-
-    //! Event handler for SIGINT.
-    /** Triggers clean shutdown of the server. */
-    Event *event_;
-
-    //! Signal set to be handled by the event handler.
-    ACE_Sig_Set signals_;
 
     ACE_Thread_Manager threadManager_;
 

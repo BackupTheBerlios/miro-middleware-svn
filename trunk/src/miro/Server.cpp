@@ -41,36 +41,6 @@ extern "C" void handler (int signum)
 
 namespace Miro
 {
-  Server::Event::Event(Server& server_) :
-    server(server_)
-  {
-    DBG(cout << "Constructing Miro::Server::Event." << endl);
-  }
-
-  Server::Event::~Event()
-  {
-    DBG(cout << "Destructing Miro::Server::Event." << endl);
-  }
-
-  int
-  Server::Event::handle_signal(int signum, siginfo_t *, ucontext_t *)
-  {
-    DBG(cerr << "Signal received: " << signum << endl);
-
-    server.shutdown();
-
-    return 0;
-  }
-  
-  int
-  Server::Event::handle_close (ACE_HANDLE, ACE_Reactor_Mask) 
-  {
-    cout << "Miro server handle_close called." << endl;
-    return 0;
-  }
-
-  //  Singleton<Server::Worker> Server::Worker::instance;
-
   /**
    * @param orb      The Object request broker.
    * @param shutdown Cooperative shutdown indicator.
@@ -99,8 +69,6 @@ namespace Miro
     rebind_(true),
     own_(true),
     shutdown_(false),
-    event_(new Event(*this)),
-    signals_(),
     worker_(&threadManager_, orb_.in(), shutdown_)
   {
     DBG(cerr << "Constructing Miro::Server." << endl);
@@ -126,15 +94,9 @@ namespace Miro
     poa_mgr = poa->the_POAManager();
         
     // register Signal handler for Ctr+C
-    //    signals_.sig_add(SIGINT);
-    //    signals_.sig_add(SIGTERM);
-
     pServer = this;
-    ACE_Sig_Action sa ((ACE_SignalHandler) handler, SIGINT);
-
-    if (reactor()->register_handler(signals_, event_) == -1) {
-      throw ACE_Exception(errno, "Failed to register signal handler.");
-    }
+    ACE_Sig_Action sa1 ((ACE_SignalHandler) handler, SIGINT);
+    ACE_Sig_Action sa2 ((ACE_SignalHandler) handler, SIGTERM);
 
     // Activate the POA manager.
     poa_mgr->activate();
@@ -149,8 +111,6 @@ namespace Miro
     rebind_(_server.rebind_),
     own_(false),
     shutdown_(true),
-    event_(NULL),
-    signals_(),
     worker_(&threadManager_, orb_.in(), shutdown_)
   {
     DBG(cerr << "Copy constructing Miro::Server." << endl);
@@ -194,13 +154,7 @@ namespace Miro
       orb_->perform_work(timeSlice);
       cout << "Destroying the ORB." << endl;
       orb_->shutdown(1);
-      
-      // remove signal handler from reactor
-      reactor()->remove_handler(signals_);
-      // since it is only registered for signals, 
-      // handel_close isn't called
-      delete event_;
-    }
+          }
   }
 
   // Return the root POA reference
