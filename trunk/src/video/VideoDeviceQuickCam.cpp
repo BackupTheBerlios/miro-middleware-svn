@@ -54,7 +54,7 @@ namespace Video
 
 
   bool
-  DeviceQuickCam::setFeatures(const QuickCamFeatureSet &features) 
+  DeviceQuickCam::setFeatures(const Miro::QuickCamFeatureSet &features) 
   {
     setFramerate(features.framerate);
     setVideoWindow();
@@ -82,7 +82,7 @@ namespace Video
   }
   
   bool
-  DeviceQuickCam::getFeatures(QuickCamFeatureSet &features) 
+  DeviceQuickCam::getFeatures(Miro::QuickCamFeatureSet &features) 
   {
     getVideoWindow();
     features.framerate = getFramerate();
@@ -205,7 +205,7 @@ namespace Video
 
     probeAllFormats();
 
-    QuickCamFeatureSet s;
+    Miro::QuickCamFeatureSet s;
     getFeatures(s);
 
     //setFormat();

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2000, 2001, 2002, 2003
+// (c) 2000, 2001, 2002, 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -18,8 +18,9 @@ extern "C" {
 
 
 #include "VideoDevice.h"
-#include <ace/DEV_Connector.h>
 #include "idl/QuickCamControlC.h"
+
+#include <ace/DEV_Connector.h>
 
 namespace Video
 {
@@ -36,10 +37,8 @@ namespace Video
 
     FILTER_PARAMETERS_FACTORY(DeviceQuickCam);
 
-    bool setFeatures(const QuickCamFeatureSet &features);
-    bool getFeatures(QuickCamFeatureSet &features);
-//    virtual void acquireOutputBuffer();
-//    virtual void releaseOutputBuffer();
+    bool setFeatures(const Miro::QuickCamFeatureSet &features);
+    bool getFeatures(Miro::QuickCamFeatureSet &features);
 
   protected:
 
@@ -48,8 +47,6 @@ namespace Video
     virtual void fini();
 
     // methods
-    //void setFormat();
-    //void setSource();
     void setPalette();
     void setSize();
 
@@ -121,7 +118,6 @@ namespace Video
 
     // static methods
 
-
     // data
     DeviceQuickCamParameters const * params_;
 
@@ -159,5 +155,5 @@ namespace Video
     //! screen grab
     static int gb_pal[64];
   };
-};
+}
 #endif
