@@ -10,7 +10,6 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "SparrowPanTiltImpl.h"
-#include "SparrowConnection.h"
 #include "SparrowConnection2003.h"
 
 #include "miro/TimeHelper.h"
@@ -24,25 +23,18 @@ namespace Sparrow
   using Miro::EOutOfBounds;
 
   // Implementation skeleton constructor
-  PanTiltImpl::PanTiltImpl(BaseConnection* _connection,
+  PanTiltImpl::PanTiltImpl(Connection2003 * _connection,
 			   Miro::StructuredPushSupplier * _pSupplier) :
     Miro::PanImpl(Parameters::instance()->pan),
-    connection(_connection),
+    connection_(dynamic_cast<Connection2003 *>(_connection)),
     params_(Parameters::instance()->pan),
     pSupplier_(_pSupplier),
     lastPosition(Miro::deg2Rad(90.)),
     nextPosition(0.),
     timeLastSet(ACE_OS::gettimeofday()),
-    totalLatency(params_.panLatency + params_.panSwing),
-    sparrow2003_(Parameters::instance()->sparrow2003)
+    totalLatency(params_.panLatency + params_.panSwing)
   {
-    if (sparrow2003_) {
-      ((Connection2003 *)connection)->setPan(Miro::deg2Rad(0.));
-    }
-    else {
-      ((Connection *)connection)->setServo(0, Miro::deg2Rad(0.));
-    }
-    //    connection.setServo(1, params_.farAngle);
+    connection_->setPan(Miro::deg2Rad(0.));
 
     // Stall Notify Event initialization
     if (pSupplier_) {
@@ -67,9 +59,9 @@ namespace Sparrow
   }
 
   void
-  PanTiltImpl::setPan(CORBA::Double _value) throw (EDevIO, EOutOfBounds)
+  PanTiltImpl::setPan(CORBA::Float _value) throw (EDevIO, EOutOfBounds)
   {
-    Miro::Guard guard(mutex);
+    ACE_Guard<ACE_Recursive_Thread_Mutex> guard(mutex_);
 
     if (_value != nextPosition) {
 
@@ -77,13 +69,8 @@ namespace Sparrow
       ACE_Time_Value t = ACE_OS::gettimeofday();
 
       // set servo
+      connection_->setPan(_value);
 
-      if(sparrow2003_){
-         ((Connection2003 *)connection)->setPan(_value);
-      }
-      else{
-         ((Connection *)connection)->setServo(0, _value);
-      }
       // set positioning parameters
       lastPosition = currentPosition(t).angle;
       nextPosition = _value;
@@ -101,10 +88,10 @@ namespace Sparrow
     }
   }
 
-  CORBA::Double
+  CORBA::Float
   PanTiltImpl::getPan() throw (EDevIO)
   {
-    Miro::Guard guard(mutex);
+    ACE_Guard<ACE_Recursive_Thread_Mutex> guard(mutex_);
     ACE_Time_Value t = ACE_OS::gettimeofday();
     return currentPosition(t).angle;
   }
@@ -112,7 +99,7 @@ namespace Sparrow
   CORBA::Boolean
   PanTiltImpl::panning(const Miro::TimeIDL& stamp) throw()
   {
-    Miro::Guard guard(mutex);
+    ACE_Guard<ACE_Recursive_Thread_Mutex> guard(mutex_);
     ACE_Time_Value t;
     Miro::timeC2A(stamp, t);
     return prvPanning(t);
@@ -121,7 +108,7 @@ namespace Sparrow
   Miro::PanPositionIDL
   PanTiltImpl::currentPan(const Miro::TimeIDL& stamp) throw()
   {
-    Miro::Guard guard(mutex);
+    ACE_Guard<ACE_Recursive_Thread_Mutex> guard(mutex_);
     ACE_Time_Value t;
     Miro::timeC2A(stamp, t);
     return currentPosition(t);
@@ -165,7 +152,7 @@ namespace Sparrow
       }
     }
     else {
-      position.angle = ((Connection2003 *)connection)->getPanPosition();
+      position.angle = connection_->getPanPosition();
       position.accuracy = params_.panAccuracy;
     }
 

@@ -28,23 +28,23 @@ namespace Miro
 namespace Sparrow
 {
   // forward declaration
-  class BaseConnection;
+  class Connection2003;
   class Parameters;
 
   class  PanTiltImpl : public virtual POA_Miro::SparrowPanTilt,
-		       public Miro::PanImpl
+		       public virtual Miro::PanImpl
   {
   public:
-    //Constructor
-    PanTiltImpl(BaseConnection * _connection,
+    //! Constructor
+    PanTiltImpl(Connection2003 * _connection,
 		Miro::StructuredPushSupplier * _pSupplier = NULL);
 
-    //Destructor
+    //! Destructor
     virtual ~PanTiltImpl();
 
-    virtual void setPan(CORBA::Double value)
+    virtual void setPan(CORBA::Float value)
       throw (Miro::EDevIO, Miro::EOutOfBounds);
-    virtual CORBA::Double getPan() throw (Miro::EDevIO);
+    virtual CORBA::Float getPan() throw (Miro::EDevIO);
 
     virtual CORBA::Boolean panning(const Miro::TimeIDL& stamp) throw();
     virtual Miro::PanPositionIDL currentPan(const Miro::TimeIDL& stamp) throw();
@@ -53,9 +53,8 @@ namespace Sparrow
     bool prvPanning(const ACE_Time_Value& _t);
     Miro::PanPositionIDL currentPosition(const ACE_Time_Value& _t);
 
-    BaseConnection *         connection;
-    PanParameters const&     params_;
-    Miro::Mutex              mutex;
+    Connection2003 * connection_;
+    PanParameters const&  params_;
 
     Miro::StructuredPushSupplier * pSupplier_;
     CosNotification::StructuredEvent notifyEvent;
@@ -65,7 +64,6 @@ namespace Sparrow
     ACE_Time_Value timeLastSet;
 
     ACE_Time_Value totalLatency;
-    bool sparrow2003_;
   };
 
   inline
