@@ -19,6 +19,7 @@
 #include "miro/OdometryImpl.h"
 #include "miro/TimeHelper.h"
 #include "miro/Log.h"
+#include "miro/IO.h"
 
 #include <cmath>
 #include <fstream>

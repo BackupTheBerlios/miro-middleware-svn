@@ -346,7 +346,7 @@ namespace Sparrow
       MIRO_DBG(SPARROW, LL_PRATTLE, "MotorController received MotorTicks2003!");
 
       if(faulConsumer) {
-      
+	      
 	FaulController::OdometryMessage 
 	  odoLeft(FaulController::OdometryMessage::DELTA_LEFT);
 	FaulController::OdometryMessage 
