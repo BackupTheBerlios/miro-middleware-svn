@@ -43,6 +43,10 @@ int main(int argc, char *argv[])
   char c, buffer[256];
   PanTiltPositionIDL position;
 
+  Miro::PanLimitsIDL panLimits;
+  Miro::TiltLimitsIDL tiltLimits;
+  Miro::PanTiltLimitsIDL panTiltLimits;
+
   // Initialize server daemon.
   Client client(argc, argv);
 
@@ -57,8 +61,11 @@ int main(int argc, char *argv[])
 	   << "  1 - set pan position" << endl
 	   << "  2 - get tilt position" << endl
 	   << "  3 - set tilt position" << endl
-	   << "  4 - get panilt position" << endl
+	   << "  4 - get pantilt position" << endl
 	   << "  5 - set pantilt position" << endl
+	   << "  6 - get pan limits" << endl
+	   << "  7 - get tilt limits" << endl
+	   << "  8 - get pantilt limits" << endl
 	   << " q to quit" << endl;
       cin.getline(buffer,256);
       c = buffer[0];
@@ -98,6 +105,23 @@ int main(int argc, char *argv[])
 	cin >> tilt;
 	position.tiltvalue = tilt * M_PI/180.;
 	panTilt->setPosition(position);
+	break;
+      case '6':
+	panLimits=panTilt->getPanLimits();
+	cout << "pan limits: " << flush
+	     << panLimits.minpanposition*180/M_PI << " <-> " << panLimits.maxpanposition*180/M_PI <<endl;
+	break;
+      case '7':
+	tiltLimits=panTilt->getTiltLimits();
+	cout << "tilt limits: " << flush
+	     << tiltLimits.mintiltposition*180/M_PI<< " <-> " << tiltLimits.maxtiltposition*180/M_PI <<endl;
+	break;
+      case '8':
+	panTiltLimits=panTilt->getPanTiltLimits();
+	cout << "pan limits: " << flush
+	     << panTiltLimits.minpanposition*180/M_PI << " <-> " << panTiltLimits.maxpanposition*180/M_PI << endl;
+	cout << "tilt limits: " << flush
+	     << panTiltLimits.mintiltposition*180/M_PI << " <-> " << panTiltLimits.maxtiltposition*180/M_PI <<endl;
 	break;
       case 'q':
 	quit = true;
