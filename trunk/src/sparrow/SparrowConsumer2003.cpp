@@ -248,10 +248,10 @@ namespace Sparrow
 	calRange = (long) (calRange * param->irScaling[7].scaling);
 	calRange = calRange + param->irScaling[7].minDistance ;
 	if (calRange < param->irScaling[7].minDistance)
-	     calRange = -2;
+	     calRange = param->irScaling[7].minDistance;
 	if(calRange > param->irScaling[7].maxDistance)
 	     calRange = -1;
-	postRange = calRange;
+        postRange = calRange;
 
 	//zweite in der gruppe lesen
 	calRange = IR_LOOKUP_TABLE[message.byteData(6)];
@@ -260,7 +260,7 @@ namespace Sparrow
 	calRange = (long) (calRange * param->irScaling[6].scaling);
 	calRange = calRange + param->irScaling[6].minDistance ;
 	if (calRange < param->irScaling[6].minDistance)
-	   calRange = -2;
+	   calRange = param->irScaling[6].minDistance;
 	if (calRange > param->irScaling[6].maxDistance)
 	   calRange = -1;
 	aktRange = calRange;
@@ -274,6 +274,8 @@ namespace Sparrow
 		}
 
 
+
+
 	for (int i = 6; i >= 1; --i)  {
 	  calRange = IR_LOOKUP_TABLE[message.byteData(i-1)];
 
@@ -282,7 +284,7 @@ namespace Sparrow
 	    calRange = (long) (calRange * param->irScaling[i-1].scaling);
 	    calRange = calRange + param->irScaling[i-1].minDistance ;
 	    if (calRange < param->irScaling[i-1].minDistance)
-	       calRange = -2;
+	       calRange = param->irScaling[i-1].minDistance;
 
 	    if(calRange > param->irScaling[i-1].maxDistance)
 	      calRange = -1;
@@ -299,12 +301,14 @@ namespace Sparrow
 
 	}
 
-	if ((postRange > -1) && (aktRange > -1)){
+	/*if ((postRange > -1) && (aktRange > -1)){
 	   data->range[0] = integrateIrValues(0, 0, aktRange);
 		}
 		else{
                    data->range[0] = integrateIrValues(0, 0, -1);
-		}
+		}*/
+
+        data->range[0] = integrateIrValues(0, 0, aktRange);
 	pIR1_->integrateData(data);
       }
 
@@ -345,10 +349,12 @@ namespace Sparrow
 	calRange = (long) (calRange * param->irScaling[7].scaling);
 	calRange = calRange + param->irScaling[7].minDistance ;
 	if (calRange < param->irScaling[7].minDistance)
-	     calRange = -2;
+	     calRange = param->irScaling[7].minDistance;
 	if(calRange > param->irScaling[7].maxDistance)
 	     calRange = -1;
 	postRange = calRange;
+        data->range[7] = integrateIrValues(1, 7,postRange);
+
 
 	//zweite in der gruppe lesen
 	calRange = IR_LOOKUP_TABLE[message.byteData(6)];
@@ -357,18 +363,18 @@ namespace Sparrow
 	calRange = (long) (calRange * param->irScaling[6].scaling);
 	calRange = calRange + param->irScaling[6].minDistance ;
 	if (calRange < param->irScaling[6].minDistance)
-	   calRange = -2;
+	   calRange = param->irScaling[6].minDistance;
 	if (calRange > param->irScaling[6].maxDistance)
 	   calRange = -1;
 	aktRange = calRange;
 
 	//den ersten berechnen
-	if ((postRange > -1) && (aktRange > -1)){
+	/*if ((postRange > -1) && (aktRange > -1)){
 		   data->range[7] = integrateIrValues(1, 7, postRange);
 		}
 		else{
                    data->range[7] = integrateIrValues(1, 7, -1);
-		}
+		}*/
 
 
 	for (int i = 6; i >= 1; --i)  {
@@ -379,7 +385,7 @@ namespace Sparrow
 	    calRange = (long) (calRange * param->irScaling[i-1].scaling);
 	    calRange = calRange + param->irScaling[i-1].minDistance ;
 	    if (calRange < param->irScaling[i-1].minDistance)
-	       calRange = -2;
+	       calRange = param->irScaling[i-1].minDistance;
 
 	    if(calRange > param->irScaling[i-1].maxDistance)
 	      calRange = -1;
@@ -395,13 +401,16 @@ namespace Sparrow
 	aktRange = preRange;
 
 	}
-
+/*
 	if ((postRange > -1) && (aktRange > -1)){
 	   data->range[0] = integrateIrValues(1, 0, aktRange);
+
 		}
 		else{
                    data->range[0] = integrateIrValues(1, 0, -1);
-		}
+		}*/
+
+	data->range[0] = integrateIrValues(1, 0, aktRange);
 
 	pIR1_->integrateData(data);
       }
