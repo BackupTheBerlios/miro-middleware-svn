@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2000, 2001, 2002
+// (c) 2000, 2001, 2002, 2003
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -17,23 +17,42 @@
 
 module Miro
 {
+  //! The available video formats
+  enum VideoPaletteIDL {
+    GREY_8,
+    GREY_16,
+    RGB_24,
+    BGR_24,
+    RGB_32,
+    BGR_32,
+    YUV_24,
+    YUV_411,
+    YUV_422
+  };
+
+  //! Struct describing the format of an image.
+  struct ImageFormatIDL
+  {
+    //! Image width (columns).
+    unsigned long width;
+    //! Image height (rows).
+    unsigned long height;
+    //! Image palette (gray,rgb).
+    VideoPaletteIDL palette;
+  };    
+
+  //! The image handle, containing all relevant image meta data.
+  typedef sequence<unsigned long> OffsetSequenceIDL;
+
   //! The image handle, containing all relevant image meta data.
   struct ImageHandleIDL
   {
-    //! Time stamp associated to the image.
-    TimeIDL   time;
-    //! Image width (columns).
-    long		width;
-    //! Image height (rows).
-    long		height;
-    //! Image palette (gray,rgb).
-    long		palette;
-    //! Image source (composite/svideo).
-    long		source;
-    // Shared memory key to image data.
-    long		key;
-    //! Shared memory key to image data
-    long		handle;
+    //! Shared memory key to image data.
+    long key;
+    //! Image format 
+    ImageFormatIDL format;
+    //! Sequence of buffer offsets.
+    OffsetSequenceIDL offset;
   };
 
   typedef sequence<octet> SubImageDataIDL;
@@ -41,6 +60,8 @@ module Miro
   //! Interface to the frame grabber devices.
   /** 
    * @author Steffen Simon
+   * @author Hans Utz
+   * @author Arnd Muehlenfeld
    */
   interface Video
   {
@@ -48,30 +69,36 @@ module Miro
     /**
      * @throw EDevIO is thrown to indicate low level device problems.
      */
-    ImageHandleIDL	connect() raises(EDevIO);
+    ImageHandleIDL connect(out unsigned long id) raises(EDevIO);
     //! Disconnect from the service. 
     /**
      * @throw EDevIO is thrown to indicate low level device problems.
      */
-    void release(in ImageHandleIDL img) raises(EOutOfBounds, EDevIO);
+    void disconnect(in unsigned long id) raises(EOutOfBounds, EDevIO);
+    //! Get the current image. 
     /**
-     * Get the current image. This call immediately
-     * returns the last grabbed image.
+     * This call immediately returns the last grabbed image.
      *
      * @throw EDevIO is thrown to indicate low level device problems.
      */
-    //! Get the current image. 
-    TimeIDL getImage(inout ImageHandleIDL img) raises(EOutOfBounds, EDevIO);
+    TimeIDL acquireCurrentImage(in unsigned long id, out unsigned long buffer) 
+      raises(EOutOfBounds, EDevIO);
     //! Get the next image. 
     /**
      * This call waits and returns the next grabbed image.
      *
      * @throw EDevIO is thrown to indicate low level device problems.
      */
-    TimeIDL getWaitImage(inout ImageHandleIDL img) raises(EOutOfBounds, EDevIO, ETimeOut);
+    TimeIDL acquireNextImage(in unsigned long id, out unsigned long buffer)
+      raises(EOutOfBounds, EDevIO, ETimeOut);
+    
+    //! Release a previously acquired image.
+    void releaseImage(in unsigned long id, in unsigned long buffer) 
+      raises(EOutOfBounds);
 
     //! Get all the pixels of the current image, downsized to width=x height=y
-    SubImageDataIDL exportWaitSubImage(in long x, in long y) raises(EOutOfBounds, EDevIO, ETimeOut);
+    SubImageDataIDL exportWaitSubImage(inout unsigned long x, inout unsigned long y) 
+      raises(EOutOfBounds, EDevIO, ETimeOut);
   };
 };
 
