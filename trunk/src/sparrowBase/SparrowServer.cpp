@@ -50,18 +50,15 @@ FaulhaberHardware::FaulhaberHardware(ACE_Reactor * _reactor,
 {
   FaulMotor::Parameters * params = 
     FaulMotor::Parameters::instance();
-  if (params->odometryPolling) {
-    timerId = reactor->schedule_timer(pTimerEventHandler, NULL, 
-		                      ACE_Time_Value(2),
-				      params->odometryPace);
-  }
+  timerId = reactor->schedule_timer(pTimerEventHandler, NULL, 
+				    ACE_Time_Value(2),
+				    params->odometryPace);
 }
 
 FaulhaberHardware::~FaulhaberHardware()
 {
   if (timerId != -1)
     reactor->cancel_timer(timerId);
-
 }
 
 

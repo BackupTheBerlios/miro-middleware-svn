@@ -2,44 +2,26 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 //
 //////////////////////////////////////////////////////////////////////////////
 
-// This implements an object-oriented user interface to the FaulMotor
-// robot.
-
 #include "FaulMotorConnection.h"
 #include "FaulMotorConsumer.h"
 #include "Parameters.h"
+
 #include "sparrow/Parameters.h"
 
 #include "faulTty/FaulTtyEventHandler.h"
 #include "faulTty/FaulCanConnection.h"
 #include "faulTty/FaulTtyConnection.h"
 
+#include "miro/Log.h"
+
 #include <cmath>
-
-#ifdef DEBUG
-#define DBG(x) x
-#define CSDBG(x) x
-#else
-#define DBG(x)
-#define CSDBG(x)
-#endif
-
-// Roland: Mittelfristig waere mir folgende Loesung lieber
-// anstatt bei jedem write zu unterscheiden, ob wir einen neuen oder alten
-// roboter haben:
-// FaulTty::write -> FaulController::virtual write
-// class FaulTty : public FaulController
-// class FaulTtyCanProxy : public FaulController
-// write jeweils implementieren.
-
-// if (sparrow2003) nur im constructor
 
 namespace 
 {
@@ -48,19 +30,12 @@ namespace
   char const GET_TICKS_MSG[1] = { (char const)201 };
   char const * const MOTOR_ENABLE_MSG[2] = { "en", NULL };
   char const * const MOTOR_DISABLE_MSG[2] = { "di", NULL };
-  char const * const DISABLE_ODO_MSG[2] = { "jmp1", NULL };
-  char const * const ENABLE_ODO_MSG[2] = { "jmp2", NULL };
   char const * const STOP_MSG[2] = { "jmp3", NULL };
 }
 
 namespace FaulMotor
 {
   using namespace FaulController;
-  using Miro::Guard;
-
-  using std::cout;
-  using std::cerr;
-  using std::endl;
 
   unsigned int Connection::gotTicks_ = 2;
 
@@ -72,55 +47,50 @@ namespace FaulMotor
 			 Consumer * _consumer,
 			 Sparrow::Connection2003 * _connection2003) :
     params_(Parameters::instance()),
-
-
     consumer(_consumer),
     connection2003(_connection2003),
-    nextSceduledQuery_(ACE_OS::gettimeofday()),
-    writeThisRound_(false),
     prevSpeedL(0),
     prevSpeedR(0),
     prevAccL(0),
     prevAccR(0)
   {
-    DBG(cout << "Constructing FaulMotorConnection." << endl);
-    if(Sparrow::Parameters::instance()->sparrow2003){
+    MIRO_LOG_CTOR("FaulMotor::Connection");
+    if(Sparrow::Parameters::instance()->sparrow2003) {
 
-       leftWheel_ = new FaulController::FaulCanConnection(connection2003, Sparrow::Connection2003::LEFT_MOTOR);
-       rightWheel_ = new FaulController::FaulCanConnection(connection2003, Sparrow::Connection2003::RIGHT_MOTOR);
-
-       /*char const * const accMessage = "ac50\0"; // build acceleration packet
-       connection2003->writeLeftWheel(accMessage, strlen(accMessage));
-       connection2003->writeRightWheel(accMessage, strlen(accMessage));*/
-
+       leftWheel_ = 
+	 new FaulController::FaulCanConnection(connection2003,
+					       Sparrow::Connection2003::LEFT_MOTOR);
+       rightWheel_ = 
+	 new FaulController::FaulCanConnection(connection2003,
+					       Sparrow::Connection2003::RIGHT_MOTOR);
     }
     else {
-       leftWheel_= new FaulController::FaulTtyConnection(_reactor,
-	       new FaulController::EventHandler(_consumer, OdometryMessage::LEFT),
-	       params_->leftWheel);
-       rightWheel_ = new FaulController::FaulTtyConnection(_reactor,
-		new FaulController::EventHandler(_consumer, OdometryMessage::RIGHT),
-	       params_->rightWheel);
-
+      FaulController::EventHandler * leftHandler =
+	new FaulController::EventHandler(_consumer, OdometryMessage::LEFT);
+      leftWheel_ =
+	new FaulController::FaulTtyConnection(_reactor,
+					      leftHandler,
+					      params_->leftWheel);
+      FaulController::EventHandler * rightHandler =
+	new FaulController::EventHandler(_consumer, OdometryMessage::RIGHT);
+      rightWheel_ = 
+	new FaulController::FaulTtyConnection(_reactor,
+					      rightHandler,
+					      params_->rightWheel);
     }
 
     leftWheel_->writeMessage(DEF_ACC_MSG);
     rightWheel_->writeMessage(DEF_ACC_MSG);
 
-
+    // limp motors
     disable();
     enableBinary();
-    if (!params_->odometryPolling) {
-      jmp2();
-    }
   }
 
   Connection::~Connection()
   {
-    DBG(cout << "Destructing FaulMotorConnection." << endl);
-    if (!params_->odometryPolling) {
-      jmp1();
-    }
+    MIRO_LOG_DTOR("FaulMotor::Connection");
+    // limp motors
     disable();
   }
 
@@ -174,31 +144,6 @@ namespace FaulMotor
 
     newAccL = abs((int)rint(accL));
     newAccR = abs((int)rint(accR));
-
-    // if we did not write yet and have enough
-    // time left: set the speed directly
-    //
-    // this seems to be far too dangerous concerning the timing 
-    // schema of a faul motor controller
-
-//     ACE_Time_Value now = ACE_OS::gettimeofday();
-//     if (!writeThisRound_ &&
-// 	now + ACE_Time_Value(0, 20000) < nextSceduledQuery_) {
-//       writeThisRound_ = true;
-//       protectedDeferredSetSpeed();
-//     }
-
-    // if we don't poll the odometry, we have to write sometimes...
-    if (!params_->odometryPolling)
-	protectedDeferredSetSpeed();
-  }
-
-  void
-  Connection::getSpeed()
-  {
-    Miro::Guard guard(mutex_);
-    leftWheel_->writeMessage(GET_SPPED_MSG);             // send it
-    rightWheel_->writeMessage(GET_SPPED_MSG);
   }
 
   void
@@ -210,21 +155,6 @@ namespace FaulMotor
     
     leftWheel_->writeBinary(GET_TICKS_MSG, 1); // send it
     rightWheel_->writeBinary(GET_TICKS_MSG, 1);
-  }
-
-  void
-  Connection::setBefehl(char const * const befehl)
-  {
-    char buffer[256];
-
-    Miro::Guard guard(mutex_);
-    strncpy(buffer, befehl, 253);
-
-    strcat(buffer,"\0");
-    //    leftWheel_->writeMessage(buffer);
-
-
-    // FIXME: we need to specify the wheel to send the command to
   }
 
   void
@@ -271,20 +201,6 @@ namespace FaulMotor
   }
 
   void
-  Connection::jmp1()					// keine Ododaten
-  {
-    leftWheel_->writeMessage(DISABLE_ODO_MSG);             // send it
-    rightWheel_->writeMessage(DISABLE_ODO_MSG);
-  }
-
-  void
-  Connection::jmp2()					// ododaten so schnell wie m,Av(Bglich
-  {
-    leftWheel_->writeMessage(ENABLE_ODO_MSG);             // send it
-    rightWheel_->writeMessage(ENABLE_ODO_MSG);
-  }
-
-  void
   Connection::jmp3()					// notaus keine Ododaten und v0
   {
     leftWheel_->writeMessage(STOP_MSG);             // send it
@@ -300,10 +216,6 @@ namespace FaulMotor
   Connection::deferredSetSpeed()
   {
     Miro::Guard guard(mutex_);
-
-    //    nextSceduledQuery_ = _now + Parameters::instance()->odometryPace;
-
-    writeThisRound_ = false;
 
     if (Sparrow::Parameters::instance()->sparrow2003){
       gotTicks_ = 0;

@@ -37,20 +37,19 @@ namespace FaulMotor
   {
     if (Connection::gotTicks_ == 0) {
       ++stallCounter_;
-      MIRO_LOG_OSTR(LL_WARNING, " odometry stall " << stallCounter_);
+      MIRO_LOG_OSTR(LL_WARNING, "FaulMotor::TimerEventHandler odometry stall " << stallCounter_);
       if (stallCounter_ >= 5) {
-	if (!Sparrow::Parameters::instance()->sparrow2003)
-	  connection_.getTicks();
+	MIRO_LOG_OSTR(LL_WARNING, "FaulMotor::TimerEventHandler resending an odometry request. " << stallCounter_);
+	connection_.getTicks();
 	connection_.deferredSetSpeed();
 	// reset stall counter
 	stallCounter_ = 0;
       }
     }
     else {
-	// reset stall counter
+      // reset stall counter
       stallCounter_ = 0;
-      if (!Sparrow::Parameters::instance()->sparrow2003)
-	connection_.getTicks();
+      connection_.getTicks();
       connection_.deferredSetSpeed();
     }
 

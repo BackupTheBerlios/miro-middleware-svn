@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // 
@@ -18,10 +18,9 @@
 #include <ace/Time_Value.h>
 
 // forward declarations
-namespace Miro
-{
+namespace Miro {
   class OdometryImpl;
-};
+}
 
 namespace FaulMotor
 {

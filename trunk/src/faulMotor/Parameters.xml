@@ -13,7 +13,6 @@
       <config_parameter name="maxNegAccel" type="double" default="3000" measure="mm/s*s" />
       <config_parameter name="speedConvFactor" type="double" default="4.2" />
       <config_parameter name="motion" type="Miro::DifferentialMotionParameters" />
-      <config_parameter name="odometryPolling" type="bool" default="true" />
       <!-- the pace has to stay actually fixed !! -->
       <config_parameter name="odometryPace" type="ACE_Time_Value" default="0,33000" measure="ms" />
      <constructor>

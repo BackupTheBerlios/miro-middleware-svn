@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2003, 2004
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -18,27 +18,25 @@
 
 #include "miro/OdometryImpl.h"
 #include "miro/TimeHelper.h"
+#include "miro/Log.h"
 
 #include <cmath>
 #include <fstream>
 
-#undef DEBUG
+namespace {
+  // debug statistics
 
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
+  double deltaTR[50];
+  double deltaTL[50];
+  double deltaTLR[50];
+  int counter = 49;
+}
 
 namespace FaulMotor
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-
   std::ofstream ticksFile;
 
-  bool const FAUL_LOGGING = true;
+  bool const FAUL_LOGGING = false;
 
   double const Consumer::CLOCK_2_SEC = 0.00933;
 
@@ -58,7 +56,8 @@ namespace FaulMotor
     wheelBase_(params_->motion.wheelBase),
     oddWheel_(0)
   {
-    DBG(cout << "Constructing FaulMotorConsumer." << endl);
+    MIRO_LOG_CTOR("FaulMotor::Consumer");
+
     status_.position.point.x = 0.;
     status_.position.point.y = 0.;
     status_.position.heading = 0.;
@@ -75,18 +74,14 @@ namespace FaulMotor
   //----------------------//
   Consumer::~Consumer()
   {
-    DBG(cout << "Destructing FaulMotorConsumer." << endl);
+    MIRO_LOG_DTOR("FaulMotor::Consumer");
+
     if (FAUL_LOGGING)
       ticksFile.close();
   }
 
   // reads incoming packets from the faulhaber connection and stores the values
   // in the local (class internal) variables.
-
-  double deltaTR[50];
-  double deltaTL[50];
-  double deltaTLR[50];
-  int counter = 49;
 
   void
   Consumer::handleMessage(const Miro::DevMessage * _message)
@@ -134,17 +129,9 @@ namespace FaulMotor
 
       ++oddWheel_; 
       oddWheel_ &= 1;
-      if ((params_->odometryPolling && !oddWheel_) || // new odometry mode
-          (!params_->odometryPolling &&
-	  (prevTimeStampL_+ ACE_Time_Value(0, 10000) < timeStampR_ && // old odo
-	   prevTimeStampR_+ ACE_Time_Value(0, 10000) < timeStampL_ &&
-	   prevTimeStampL_ != timeStampL_ &&
-	   prevTimeStampR_ != timeStampR_))) {
+      if (!oddWheel_) { // new odometry mode
 	if (init_ == 0) {
-	  if (params_->odometryPolling)
 	    integrateBinary();
-	  else
-	    integrateAscii();
 
 	  // statistical evaluation of odometry timing
 	  if (false) {
@@ -159,7 +146,8 @@ namespace FaulMotor
 	      timeStampR_ - timeStampL_;
 	    deltaTLR[counter] = (double)dTLR.sec() + (double)dTLR.usec()/ 1000000.;
 	    
-	    cout << "TimerOdo dTR: " << dTR << " \tdTL: " << dTL << " \tdTLR: " << dTLR << endl;
+	    MIRO_DBG_OSTR(FAUL, LL_PRATTLE,
+			  "TimerOdo dTR: " << dTR << " \tdTL: " << dTL << " \tdTLR: " << dTLR);
 	    
 	    int i;
 	    if (counter ==  0) {
@@ -191,9 +179,12 @@ namespace FaulMotor
 	      varR /= 49.;
 	      varLR /= 49.;
 	      
-	      cout << "TimerOdo L:  mean=" << meanL << "sec \t var=" <<sqrt(varL)<< endl;
-	      cout << "TimerOdo R:  mean=" << meanR << "sec \t var=" <<sqrt(varR)<< endl;
-	      cout << "TimerOdo LR: mean=" << meanLR << "sec \t var=" <<sqrt(varLR)<< endl;
+	      MIRO_DBG_OSTR(FAUL, LL_PRATTLE,
+			    "TimerOdo L:  mean=" << meanL << "sec \t var=" << sqrt(varL));
+	      MIRO_DBG_OSTR(FAUL, LL_PRATTLE,
+			    "TimerOdo R:  mean=" << meanR << "sec \t var=" << sqrt(varR));
+	      MIRO_DBG_OSTR(FAUL, LL_PRATTLE,
+			    "TimerOdo LR: mean=" << meanLR << "sec \t var=" << sqrt(varLR));
 	      
 	      counter = 50;
 	    }
@@ -350,6 +341,7 @@ namespace FaulMotor
     status_.velocity.translation = (long)(dist / _deltaT);
     status_.velocity.rotation = turn / _deltaT;
     
-    //cout << status_.time.sec<< "  " << status_.time.usec <<endl; //(dL+dR) / 2*dtime<<  endl;
+    MIRO_DBG_OSTR(FAUL, LL_PRATTLE, //(dL+dR) / 2*dtime<<  endl;
+		  status_.time.sec<< "  " << status_.time.usec); 
   }
 }
