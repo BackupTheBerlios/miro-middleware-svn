@@ -146,16 +146,13 @@ namespace Canon
 
     Canon::Message getPanTilt(PAN_TILT_GET_POSITION);
 
-    Miro::Guard guard(pAnswer->mutex); //to release in case of exception
-    pAnswer->mutex.release();
-
     while(!done) {
+      Miro::Guard guard(pAnswer->mutex);       
       pAnswer->init();
       connection.sendCamera(getPanTilt);
       while (!pAnswer->errorCode()) usleep(1000); //wait until the error code is finished
       //if camera is initializing, wait and try again
       if (pAnswer->errorCode()==ERROR_BUSY) {
-	pAnswer->done(); //release mutex
 	continue;
       }
 
@@ -165,11 +162,9 @@ namespace Canon
       
       checkAnswer(); //wait for completion and check
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
-      if (!done) pAnswer->done(); //release mutex in case of error
     }
     result.panvalue=deg2Rad(double(str2int(pAnswer->parameter(),4)-0x8000)*panPulseRatio);
     result.tiltvalue=deg2Rad(double(str2int(pAnswer->parameter()+4,4)-0x8000)*tiltPulseRatio);
-    pAnswer->done();
 
     if (upsideDown) {
       //if inverse mounting, switch directions
@@ -203,50 +198,49 @@ namespace Canon
 					int(rad2Deg(currentTilt)/tiltPulseRatio+0x8000),
 					4));
 
-    Miro::Guard guard(pAnswer->mutex); //to release in case of exception
-    pAnswer->mutex.release();
-
     while (!done) {
-      pAnswer->init();
-      connection.sendCamera(panTiltValue);
-      while (!pAnswer->errorCode()) usleep(1000); //wait until the error code is finished
-    
-      //check if the format is OK and no errors are returned
-      //if there is an error, an exception will be thrown
-      try {
-	checkAnswer();
-      }
-      catch (Miro::EOutOfBounds& e) {
-	currentPan=panTmp; //reset old values in case of error
-	currentTilt=tiltTmp;
-	throw (e);
-      }
-      catch (Miro::EDevIO& e) {
-	currentPan=panTmp; //reset old values in case of error
-	currentTilt=tiltTmp;
-	throw (e);
-      }
-      catch (Miro::Exception& e) {
-	currentPan=panTmp; //reset old values in case of error
-	currentTilt=tiltTmp;
-	throw (e);
-      }
-      catch (CORBA::Exception& e) {
-	currentPan=panTmp; //reset old values in case of error
-	currentTilt=tiltTmp;
-	throw (e);
-      }
+      { //scope for mutex
+	Miro::Guard guard(pAnswer->mutex); 
+	pAnswer->init();
+	connection.sendCamera(panTiltValue);
+	while (!pAnswer->errorCode()) usleep(1000); //wait until the error code is finished
+	
+	//check if the format is OK and no errors are returned
+	//if there is an error, an exception will be thrown
+	try {
+	  checkAnswer();
+	}
+	catch (Miro::EOutOfBounds& e) {
+	  currentPan=panTmp; //reset old values in case of error
+	  currentTilt=tiltTmp;
+	  throw (e);
+	}
+	catch (Miro::EDevIO& e) {
+	  currentPan=panTmp; //reset old values in case of error
+	  currentTilt=tiltTmp;
+	  throw (e);
+	}
+	catch (Miro::Exception& e) {
+	  currentPan=panTmp; //reset old values in case of error
+	  currentTilt=tiltTmp;
+	  throw (e);
+	}
+	catch (CORBA::Exception& e) {
+	  currentPan=panTmp; //reset old values in case of error
+	  currentTilt=tiltTmp;
+	  throw (e);
+	}
+      }//scope for mutex end
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
       if (pAnswer->errorCode()==ERROR_BUSY) {
-	pAnswer->done();
+	Miro::Guard guard(pAnswer->mutex); 
 	pAnswer->init();
 	Message stop(PAN_TILT_STOP,0x30);
 	connection.sendCamera(stop);
 	checkAnswer();
       }
-      pAnswer->done();
     }
-
+    
   }
   
   //-------------------------------------------------------------------------
@@ -296,21 +290,23 @@ namespace Canon
     Message setPanSpeed(SET_PAN_SPEED,int2str(tmp,panspeed,3));
     Message setTiltSpeed(SET_TILT_SPEED,int2str(tmp,tiltspeed,3));
 
-    Miro::Guard guard(pAnswer->mutex); //to release in case of exception
-    pAnswer->mutex.release();
+    {//scope for mutex
+      Miro::Guard guard(pAnswer->mutex); 
+      
+      pAnswer->init();
+      connection.sendCamera(setPanSpeed);
+      //wait for completion
+      checkAnswer();
+    }//scope for mutex end
 
-    pAnswer->init();
-    connection.sendCamera(setPanSpeed);
-    //wait for completion
-    checkAnswer();
-    pAnswer->done();
+    {//scope for mutex
+      Miro::Guard guard(pAnswer->mutex); 
 
-    pAnswer->init();
-    connection.sendCamera(setTiltSpeed);
-    //wait for completion
-    checkAnswer();
-    pAnswer->done();
-
+      pAnswer->init();
+      connection.sendCamera(setTiltSpeed);
+      //wait for completion
+      checkAnswer();
+    }//scope for mutex end
   }
   
   CanonPanTiltSpdAccIDL 
@@ -327,36 +323,41 @@ namespace Canon
     Message maxTiltSpeed(GET_TILT_MAX_SPEED,0x33);
 
 
-    Miro::Guard guard(pAnswer->mutex); //to release in case of exception
-    pAnswer->mutex.release();
-
     Timer timer(500000); //.5 sec timeout
-    pAnswer->init();
-    connection.sendCamera(getPanSpeed);
-    //wait for error code completion
-    while (!pAnswer->errorCode()) 
-      if (timer.usleep(1000))
-	throw Miro::ETimeOut();
-    //get the rest
-    if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
-    checkAnswer(); //wait for completion
-    result.targetpanspeed=deg2Rad(double(str2int(pAnswer->parameter(),3))*panPulseRatio);
-    pAnswer->done();
+    {//scope for mutex
+      Miro::Guard guard(pAnswer->mutex); 
 
-    timer.reset(500000);
-    pAnswer->init();
-    connection.sendCamera(getTiltSpeed);
-    //wait for error code completion
-    while (!pAnswer->errorCode()) 
-      if (timer.usleep(1000))
-	throw Miro::ETimeOut();
-    //get the rest
-    if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
-    checkAnswer(); //wait for completion
-    result.targettiltspeed=deg2Rad(double(str2int(pAnswer->parameter(),3))*tiltPulseRatio);
-    pAnswer->done();
+      pAnswer->init();
+      connection.sendCamera(getPanSpeed);
+      //wait for error code completion
+      while (!pAnswer->errorCode()) 
+	if (timer.usleep(1000))
+	  throw Miro::ETimeOut();
+      //get the rest
+      if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
+      checkAnswer(); //wait for completion
+      result.targetpanspeed=deg2Rad(double(str2int(pAnswer->parameter(),3))*panPulseRatio);
+    }//scope for mutex
+
+    {//Scope for mutex
+      Miro::Guard guard(pAnswer->mutex); 
+
+      timer.reset(500000);
+      pAnswer->init();
+      connection.sendCamera(getTiltSpeed);
+      //wait for error code completion
+      while (!pAnswer->errorCode()) 
+	if (timer.usleep(1000))
+	  throw Miro::ETimeOut();
+      //get the rest
+      if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
+      checkAnswer(); //wait for completion
+      result.targettiltspeed=deg2Rad(double(str2int(pAnswer->parameter(),3))*tiltPulseRatio);
+    }//scope for mutex
 
     if (panMinSpeed<0) {
+      Miro::Guard guard(pAnswer->mutex); 
+
       //if not initialized, get it from the camera;
       pAnswer->init();
       timer.reset(500000);
@@ -369,11 +370,11 @@ namespace Canon
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
       checkAnswer(); //wait for completion
       panMinSpeed=deg2Rad(double(str2int(pAnswer->parameter(),3))*panPulseRatio);
-      pAnswer->done();
     }
     result.panminspeed=panMinSpeed;
  
     if (tiltMinSpeed<0) {
+      Miro::Guard guard(pAnswer->mutex); 
       //if not initialized, get it from the camera
       pAnswer->init();
       timer.reset(500000);
@@ -386,12 +387,12 @@ namespace Canon
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
       checkAnswer(); //wait for completion
       tiltMinSpeed=deg2Rad(double(str2int(pAnswer->parameter(),3))*tiltPulseRatio);
-      pAnswer->done();
     }
     result.tiltminspeed=tiltMinSpeed;
 
 
     if (panMaxSpeed<0) {
+      Miro::Guard guard(pAnswer->mutex); 
       //if not initialized, get it from the camera
       pAnswer->init();
       timer.reset(500000);
@@ -404,11 +405,11 @@ namespace Canon
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
       checkAnswer(); //wait for completion
       panMaxSpeed=deg2Rad(double(str2int(pAnswer->parameter(),3))*panPulseRatio);
-      pAnswer->done();
     }
     result.panmaxspeed=panMaxSpeed;
 
     if (tiltMaxSpeed<0) {
+      Miro::Guard guard(pAnswer->mutex); 
       //if not initialized, get it from the camera
       pAnswer->init();
       timer.reset(500000);
@@ -421,7 +422,6 @@ namespace Canon
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(3);
       checkAnswer(); //wait for completion
       tiltMaxSpeed=deg2Rad(double(str2int(pAnswer->parameter(),3))*tiltPulseRatio);
-      pAnswer->done();
     }
     result.tiltmaxspeed=tiltMaxSpeed;
 
@@ -441,11 +441,9 @@ namespace Canon
     Message getMinTilt(GET_ANGLE_LIMITS,0x32);
     Message getMaxTilt(GET_ANGLE_LIMITS,0x33);
 
-    Miro::Guard guard(pAnswer->mutex); //to release in case of exception
-    pAnswer->mutex.release();
-
     Timer timer(500000);
     if (minPan<=-1e10) {
+      Miro::Guard guard(pAnswer->mutex); 
       //if not initialized, get it from the camera;
       pAnswer->init();
       connection.sendCamera(getMinPan);
@@ -457,10 +455,10 @@ namespace Canon
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
       checkAnswer(); //wait for completion
       minPan=deg2Rad(double(str2int(pAnswer->parameter(),4)-0x8000)*panPulseRatio);
-      pAnswer->done();
     }
  
     if (minTilt<=-1e10) {
+      Miro::Guard guard(pAnswer->mutex); 
       //if not initialized, get it from the camera
       pAnswer->init();
       timer.reset(500000);
@@ -473,10 +471,10 @@ namespace Canon
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
       checkAnswer(); //wait for completion
       minTilt=deg2Rad(double(str2int(pAnswer->parameter(),4)-0x8000)*tiltPulseRatio);
-      pAnswer->done();
     }
 
     if (maxPan<=-1e10) {
+      Miro::Guard guard(pAnswer->mutex); 
       //if not initialized, get it from the camera
       pAnswer->init();
       timer.reset(500000);
@@ -489,10 +487,10 @@ namespace Canon
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
       checkAnswer(); //wait for completion
       maxPan=deg2Rad(double(str2int(pAnswer->parameter(),4)-0x8000)*panPulseRatio);
-      pAnswer->done();
     }
 
     if (maxTilt<=-1e10) {
+      Miro::Guard guard(pAnswer->mutex); 
       //if not initialized, get it from the camera
       pAnswer->init();
       timer.reset(500000);
@@ -505,7 +503,6 @@ namespace Canon
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
       checkAnswer(); //wait for completion
       maxTilt=deg2Rad(double(str2int(pAnswer->parameter(),4)-0x8000)*tiltPulseRatio);
-      pAnswer->done();
     }
 
     //if in inverse mounting, the max and min values must be switched
@@ -529,8 +526,7 @@ namespace Canon
 
     Canon::Message getRatio(GET_PAN_ANGLE_RATIO,0x30);
 
-    Miro::Guard guard(pAnswer->mutex); //to release in case of exception
-    pAnswer->mutex.release();
+    Miro::Guard guard(pAnswer->mutex); 
    
     pAnswer->init();
     connection.sendCamera(getRatio);
@@ -544,7 +540,6 @@ namespace Canon
     checkAnswer();
 
     panPulseRatio=double(str2int(pAnswer->parameter(),4))/100000.0;
-    pAnswer->done();
     
     return panPulseRatio;
   }
@@ -556,8 +551,7 @@ namespace Canon
 
     Canon::Message getRatio(GET_TILT_ANGLE_RATIO,0x31);
 
-    Miro::Guard guard(pAnswer->mutex); //to release in case of exception
-    pAnswer->mutex.release();
+    Miro::Guard guard(pAnswer->mutex); 
 
     pAnswer->init();
     connection.sendCamera(getRatio);
@@ -571,7 +565,6 @@ namespace Canon
     checkAnswer();
 
     tiltPulseRatio=double(str2int(pAnswer->parameter(),4))/100000.0;
-    pAnswer->done();
     
     return tiltPulseRatio;
   }
@@ -579,22 +572,21 @@ namespace Canon
   void
   CanonPanTiltImpl::initialize()
   {
-    Miro::Guard guard(pAnswer->mutex); //to release in case of exception
-    pAnswer->mutex.release();
-
     if (!initialized) {
-      
+      Miro::Guard guard(pAnswer->mutex);
+
       Canon::Message msg(HOST_CONTROL_MODE,0x30);
       pAnswer->init();
       connection.sendCamera(msg);
       checkAnswer();
-      pAnswer->done();
     }
-    Canon::Message initMsg(INITIALIZE1,0x030);
-    pAnswer->init();
-    connection.sendCamera(initMsg);
-    checkAnswer();
-    pAnswer->done();
+    {//scope for mutex
+      Canon::Message initMsg(INITIALIZE1,0x030);
+      pAnswer->init();
+      connection.sendCamera(initMsg);
+      checkAnswer();
+    }//scope for mutex
+
     if (!initialized) {
       getPanPulseRatio();
       getTiltPulseRatio();

@@ -105,14 +105,8 @@ namespace Canon
     
     bool isValid() const;
 
-    //initializes and sets the mutex
     void init();
 
-    //used to release the mutex
-    void done();
-
-    //    Answer& operator+=(unsigned char val);
-    //    friend Answer* operator +=(Answer* out, unsigned char val);
     void add(unsigned char val);
 
     Miro::Mutex mutex;

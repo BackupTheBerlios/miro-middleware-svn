@@ -41,18 +41,12 @@ namespace Canon
   }
   std::ostream& operator<< (std::ostream& ostr, const Answer& rhs)
   {
-    //    ostr.setf(ios::hex, ios::basefield);
     ostr << "answer= 0x ";
-    //    ostr.width(2);
-    //    ostr.fill('0');
     for (int i = 0; i < rhs.length(); ++i) {
-      //      ostr.width(2);
-      //      ostr.fill('0');
-      //      ostr << (int)(rhs.buffer()[i]) << " ";
+
       char tmp[3];
       ostr << int2str(tmp,rhs.buffer()[i],2) << " ";
     }
-    //    ostr.setf(ios::dec, ios::basefield);
 
     return ostr;
   }
@@ -193,15 +187,9 @@ namespace Canon
 
   void
   Answer::init() {
-    mutex.acquire();
     index_=0;
     header(0x3132);
     valid=false;
-  }
-
-  void 
-  Answer::done() {
-    mutex.release();
   }
 
   void

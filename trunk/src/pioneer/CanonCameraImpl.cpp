@@ -80,16 +80,14 @@ namespace Canon
     if (!initialized) initialize();
 
     Message zoom(SET_ZOOM_POSITION1,int2str(tmp,value,2));
-    Miro::Guard guard(pAnswer->mutex); //to force release at the end
-    pAnswer->mutex.release();
 
     while (!done) {
+      Miro::Guard guard(pAnswer->mutex); 
       pAnswer->init();
       connection.sendCamera(zoom);
       checkAnswer();
       //keep trying...
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
-      pAnswer->done();
     }
   }
   
@@ -102,10 +100,9 @@ namespace Canon
     if (!initialized) initialize();
 
     Message zoom=Message(GET_ZOOM_POSITION1);
-    Miro::Guard guard(pAnswer->mutex); //to force release at the end
-    pAnswer->mutex.release();
 
     while (!done) {
+      Miro::Guard guard(pAnswer->mutex);
       Timer timer(500000); //wait 0.5 sec max for an answer
       pAnswer->init();
       connection.sendCamera(zoom);
@@ -116,7 +113,6 @@ namespace Canon
       
       //if busy, keep trying...
       if (pAnswer->errorCode()==ERROR_BUSY) {
-	pAnswer->done();
 	continue;
       }
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(2);
@@ -125,7 +121,6 @@ namespace Canon
 	result=str2int(pAnswer->parameter(),2);
 	done=true;
       }
-      pAnswer->done();
     }
 
     return 100*result/128;
@@ -143,17 +138,14 @@ namespace Canon
     range=getFocusRange();
     factor=factor*(range.max-range.min)/100+range.min;
 
-    Miro::Guard guard(pAnswer->mutex); //to force release at the end
-    pAnswer->mutex.release();
-    
     Message focus(SET_FOCUS_POSITION,int2str(tmp,factor,4));
     while (!done) {
+      Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
       connection.sendCamera(focus);
       checkAnswer();
       //keep trying...
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
-      pAnswer->done();
     }
   }
 
@@ -169,10 +161,8 @@ namespace Canon
 
     Message focus=Message(GET_FOCUS_POSITION,0x30);
 
-    Miro::Guard guard(pAnswer->mutex); //to force release at the end
-    pAnswer->mutex.release();
-
     while (!done) {
+      Miro::Guard guard(pAnswer->mutex); 
       Timer timer(500000);
       pAnswer->init();
       connection.sendCamera(focus);
@@ -183,7 +173,6 @@ namespace Canon
       
       //if busy, keep trying...
       if (pAnswer->errorCode()==ERROR_BUSY) {
-	pAnswer->done();
 	continue;
       }
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(4);
@@ -192,7 +181,6 @@ namespace Canon
 	done=true;
 	result=str2int(pAnswer->parameter(),4);
       }
-      pAnswer->done();
     }
 
     return 100*(result-range.min)/(range.max-range.min);
@@ -206,16 +194,13 @@ namespace Canon
 
     Message focus(FOCUS_AUTO,0x30);
 
-    Miro::Guard guard(pAnswer->mutex); //to force release at the end
-    pAnswer->mutex.release();
-
     while (!done) {
+      Miro::Guard guard(pAnswer->mutex); 
       pAnswer->init();
       connection.sendCamera(focus);
       checkAnswer();
       //keep trying...
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
-      pAnswer->done();
     }
   }
 
@@ -229,10 +214,8 @@ namespace Canon
 
     Message focus(GET_FOCUS_RANGE,0x32);
 
-    Miro::Guard guard(pAnswer->mutex); //to force release at the end
-    pAnswer->mutex.release();
-
     while (!done) {
+      Miro::Guard guard(pAnswer->mutex); 
       Timer timer(500000);
       pAnswer->init();
       connection.sendCamera(focus);
@@ -243,7 +226,6 @@ namespace Canon
       
       //if busy, keep trying...
       if (pAnswer->errorCode()==ERROR_BUSY) {
-	pAnswer->done();
 	continue;
       }
       if (pAnswer->errorCode()==ERROR_NO_ERROR) connection.getCamera(8);
@@ -253,7 +235,6 @@ namespace Canon
 	result.max=str2int(pAnswer->parameter()+4,4);
 	done=true;
       }
-      pAnswer->done();
     }
     
     return result;
@@ -267,15 +248,12 @@ namespace Canon
   void
   CanonCameraImpl::initialize()
   {
-    Miro::Guard guard(pAnswer->mutex); //to force release at the end
-    pAnswer->mutex.release();
-
     if (!initialized) {
+      Miro::Guard guard(pAnswer->mutex); 
       Canon::Message msg(HOST_CONTROL_MODE,0x30);
       pAnswer->init();
       connection.sendCamera(msg);
       checkAnswer();
-      pAnswer->done();
     }
     initialized=true;
   }
