@@ -11,19 +11,16 @@ namespace Miro {
             sender_ = _sender;
             receiver_ = _receiver;
             config_ = _config;
-            std::cout << "NotifyMulticast: DEBUG SH::SH" << std::endl;
         }
 
 
         SH::~SH() {
-            std::cout << "NotifyMulticast: DEBUG SH::~SH" << std::endl;
         }
 
 
         int SH::handle_timeout(
             const ACE_Time_Value & /*_tv*/,
             const void * /*_act*/) {
-            std::cout << "NotifyMulticast: DEBUG SH::handle_timeout" << std::endl;
             std::cout << "NotifyMulticast: sending offered/subscribed events" << std::endl;
             CosNotification::StructuredEvent oe;
             CosNotification::StructuredEvent se;
@@ -31,20 +28,19 @@ namespace Miro {
             ::CosNotification::EventTypeSeq_var sets = receiver_->proxyConsumer_->obtain_subscription_types(CosNotifyChannelAdmin::ALL_NOW_UPDATES_OFF);
 
             /* only take non-local types for subscription list */
-            std::vector<std::string> sublist;
+            std::string domain;
+            std::vector<CosNotification::EventType *> sublist;
             std::cout << "NotifyMulticast: Subscription list:" << std::endl;
             for (unsigned int i = 0; i < sets->length(); i++) {
-                if (strcmp((*sets)[i].domain_name, config_->getDomain().c_str())) {
+                if (strcmp((*sets)[i].domain_name, receiver_->domainName().c_str())) {
                     std::cout << "NotifyMulticast: + " << (*sets)[i].domain_name << "/" << (*sets)[i].type_name << std::endl;
-                    sublist.push_back((const char *)(*sets)[i].type_name);
+                    sublist.push_back(&(*sets)[i]);
                 }
             }
 
-            /* set alien types */
             sets->length(sublist.size());
             for (unsigned int i = 0; i < sublist.size(); i++) {
-                (*sets)[i].domain_name = CORBA::string_dup(config_->getDomain().c_str());
-                (*sets)[i].type_name = CORBA::string_dup(sublist[i].c_str());
+                (*sets)[i] = *sublist[i];
             }
 
             /* print offerd list */
@@ -53,17 +49,18 @@ namespace Miro {
                 std::cout << "NotifyMulticast: + " << (*oets)[i].domain_name << "/" << (*oets)[i].type_name << std::endl;
             }
             
-            oe.header.fixed_header.event_type.domain_name = CORBA::string_dup(config_->getDomain().c_str());
+            oe.header.fixed_header.event_type.domain_name = CORBA::string_dup(receiver_->domainName().c_str());
             oe.header.fixed_header.event_type.type_name = CORBA::string_dup("NotifyMulticast::offered");
             oe.remainder_of_body <<= oets._retn();
             
-            se.header.fixed_header.event_type.domain_name = CORBA::string_dup(config_->getDomain().c_str());
+            se.header.fixed_header.event_type.domain_name = CORBA::string_dup(receiver_->domainName().c_str());
             se.header.fixed_header.event_type.type_name = CORBA::string_dup("NotifyMulticast::subscribed");
             se.remainder_of_body <<= sets._retn();
 
             sender_->push_structured_event(oe);
             sender_->push_structured_event(se);
 
+            /* subscription management */
             for (SubscribedMap::iterator itr = subscribedMap.begin();
                  itr != subscribedMap.end();
                  itr++) {
@@ -74,7 +71,7 @@ namespace Miro {
                     std::cout << "NotifyMulticast: Outdated subscription found for " << itr->first << std::endl;
 
                     try {
-                        sender_->unsubscribe(config_->getDomain().c_str(), itr->first);
+                        sender_->unsubscribe(receiver_->domainName().c_str(), itr->first);
                     } catch (...) {
                         std::cerr << "NotifyMulticast: Uncaught exception unsubscribing " << itr->first << std::endl;
                     }
@@ -82,19 +79,59 @@ namespace Miro {
                 }
             }
 
+            /* offer management */
+            int invalidated = 0;
+            for (OfferMap::iterator itr = offerMap.begin();
+                 itr != offerMap.end();
+                 itr++) {
+                itr->second--;
+
+                /* check for outdated entry */
+                if (itr->second == 0) {
+                    std::cout << "NotifyMulticast: Outdated offer found for " << itr->first.first << "/" << itr->first.second << std::endl;
+
+                    offerMap.erase(itr);
+                    invalidated++;
+                }
+            }
+
+            if (invalidated > 0) {
+                int pos = 0;
+                CosNotification::EventTypeSeq ets(offerMap.size());
+
+                for (OfferMap::iterator itr = offerMap.begin(); itr != offerMap.end(); itr++) {
+                    ets[pos++].domain_name = CORBA::string_dup(itr->first.first.c_str());
+                    ets[pos++].type_name = CORBA::string_dup(itr->first.second.c_str());
+                }
+                
+                receiver_->setOffers(ets);
+            }
+
             return 0;
         }
         
-        void SH::handleOffers(CosNotification::EventTypeSeq &/*ets*/) {
+        void SH::handleOffers(CosNotification::EventTypeSeq &ets) {
             std::cout << "NotifyMulticast: DEBUG SH::handleOffers" << std::endl;
-            /* nothing done yet; TO BE IMPLEMENTED */
+
+            for (unsigned int i = 0; i < ets.length(); i++) {
+                std::pair<std::string, std::string> val;
+                
+                val.first = ets[i].domain_name;
+                val.second = ets[i].type_name;
+
+                offerMap[val] = DEFAULT_LIVETIME;
+            }
+            
+            receiver_->addOffers(ets);
         }
 
         void SH::handleSubscriptions(CosNotification::EventTypeSeq &ets) {
             std::cout << "NotifyMulticast: DEBUG SH::handleSubscriptions" << std::endl;
 
+	    std::cout << ets.length() << std::endl;
             for (unsigned int i = 0; i < ets.length(); i++) {
-                if (!strcmp(ets[i].domain_name, config_->getDomain().c_str())) {
+		    std::cout << ets[i].domain_name << "/" << ets[i].type_name << " " << receiver_->domainName() << std::endl;
+                if (!strcmp(ets[i].domain_name, receiver_->domainName().c_str())) {
                     SubscribedMap::iterator itr = subscribedMap.find((const char *)ets[i].type_name);
 
                     /* not yet subscribed */
@@ -102,7 +139,7 @@ namespace Miro {
                         std::cout << "NotifyMulticast: subscription for " << ets[i].type_name << " requested" << std::endl;
                     
                         try {
-                            sender_->subscribe(config_->getDomain().c_str(), (const char *)ets[i].type_name);
+                            sender_->subscribe(receiver_->domainName().c_str(), (const char *)ets[i].type_name);
                             subscribedMap[(const char *)ets[i].type_name] = DEFAULT_LIVETIME;
                         
                         } catch (...) {

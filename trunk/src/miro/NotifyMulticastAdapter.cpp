@@ -66,13 +66,13 @@ namespace Miro {
          *     Miro::Exception
          */
         Adapter::Adapter(
-            int _argc,
-            char *_argv[],
-            Miro::Client *_client,
-            CosNotifyChannelAdmin::EventChannel_ptr _eventChannel,
-            unsigned int _eventMaxAge,
-            std::string _multicastAddress)
-        throw(CORBA::Exception, Miro::Exception) :
+                int _argc,
+                char *_argv[],
+                Miro::Client *_client,
+                CosNotifyChannelAdmin::EventChannel_ptr _eventChannel,
+                unsigned int _eventMaxAge,
+                std::string _multicastAddress)
+            throw(CORBA::Exception, Miro::Exception) :
                 client_(_client),
                 reactor_(_client->orb()->orb_core()->reactor()),
                 configuration_(),
@@ -81,8 +81,9 @@ namespace Miro {
                 timeoutHandlerId_(-1),
                 timeoutHandler_(NULL),
                 timeoutHandlerInterval_(ACE_Time_Value(0, 50000)),
-                shInterval_(ACE_Time_Value(5, 0)),
-        useLogfile_(false) {
+                shInterval_(ACE_Time_Value(1, 0)),
+                useLogfile_(false)
+        {
             PRINT_DBG(DBG_INFO, "Initializing");
 
             Parameters *parameters = Parameters::instance();

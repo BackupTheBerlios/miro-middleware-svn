@@ -15,7 +15,7 @@
 #include "idl/ButtonsC.h"
 
 #include "miro/TimeHelper.h"
-#include "miro/Task.h"
+#include "miro/StructuredPushConsumer.h"
 
 #include <ace/Arg_Shifter.h>
 #include <ace/OS.h>
@@ -47,6 +47,34 @@ using CosNotifyChannelAdmin::EventChannel;
 
 CosNaming::Name channelFactoryName;
 
+class Consumer : public Miro::StructuredPushConsumer {
+    public:
+        Consumer(CosNotifyChannelAdmin::EventChannel_ptr ec,
+                 CosNotification::EventTypeSeq ets) :
+            Miro::StructuredPushConsumer(ec)
+        {
+            CosNotification::EventTypeSeq none(0);
+            std::cout << "subscription change (" << ets.length() << ")" << std::endl;
+            try {
+                consumerAdmin_->subscription_change(ets, none);
+            } catch (...) {
+                std::cout << "Uncaught exception while subscribing events" << std::endl;
+            }
+        }
+
+        ~Consumer() {
+        }
+
+        void push_structured_event(
+                const CosNotification::StructuredEvent &e
+                ACE_ENV_ARG_DECL_WITH_DEFAULTS)
+            throw(CORBA::SystemException, CosEventComm::Disconnected)
+        {
+            std::cout << "Got event from " << e.header.fixed_header.event_type.domain_name << "/" << e.header.fixed_header.event_type.type_name << std::endl;
+        }
+};
+     
+        
 NotifyMulticastTest::NotifyMulticastTest(int argc, char *argv[], bool _colocated) :
   Super(argc, argv),
   colocated_(_colocated),
@@ -80,11 +108,27 @@ NotifyMulticastTest::NotifyMulticastTest(int argc, char *argv[], bool _colocated
 
     DBG(cout << "Bound channel in naming service." << endl);
   } catch (...) {
+      std::cout << "Error binding naming service" << std::endl;
   }
 
-  consumer = new Consumer(ec_.in(), namingContextName);
+  /* only even number of args allowed */
+  if ((((argc - 1) & 0x01) == 0) && (argc > 1)) {
+      ets.length(argc / 2);
 
-  nmcAdapter = new NotifyMulticast::Adapter(argc, argv, this, ec_);
+      for (int i = 0; i < (argc / 2); i++) {
+          ets[i].domain_name = CORBA::string_dup(argv[2 * i + 1]);
+          ets[i].type_name = CORBA::string_dup(argv[2 * i + 2]);
+          std::cout << "Subscribing " << ets[i].domain_name << "/" << ets[i].type_name << std::endl;
+      }
+      
+  } else {
+      std::cerr << "Wrong arg count" << std::endl;
+      exit(1);
+  }
+
+  consumer = new Consumer(ec_.in(), ets);
+
+  nmcAdapter = new Miro::NotifyMulticast::Adapter(argc, argv, this, ec_);
 
   DBG(cout << "NotifyMulticastTest initialized.." << endl);
 }
@@ -114,27 +158,6 @@ NotifyMulticastTest::~NotifyMulticastTest()
     ec_->destroy();
 }
 
-class Consumer : public Miro::StructuredPushConsumer {
-    public:
-        Consumer(CosNotifyChannelAdmin_ptr *ec
-                 const std::string &ncName) :
-            Miro::StructuredPushConsumer(ec, ncName)
-        {
-        }
-
-        ~Consumer() {
-        }
-
-        void push_structured_event(
-                const CosNotification::StructuredEvent &e
-                ACE_ENV_ARG_DECL_WITH_DEFAULTS)
-            throw(CORBA::SystemException, CosEventComm::Disconnected)
-        {
-            std::cout << "Got event from " << e.header.fixed_header.event_type.domain_name << "/" << e.headers.fixed_header.event_type.type_name << std::endl;
-        }
-};
-     
-        
 int
 main(int argc, char *argv[])
 {
@@ -154,21 +177,6 @@ main(int argc, char *argv[])
     arg_shifter.ignore_arg ();
   }
 
-  CosNotification::EventTypeSeq ets;
-  /* only even number of args allowed */
-  if (((argc - 1) & 1 == 0) && (argc > 1)) {
-      ets.length(argc - 1);
-
-      for (int i = 0; i < argc / 2, i++) {
-          ets[i].domain_name = CORBA::string_dup(argv[2 * i]);
-          ets[i].type_name = CORBA::string_dup(argv[2 * i + 1]);
-      }
-      
-  } else {
-      std::cerr << "Wrong arg count" << std::endl;
-      exit(1);
-  }
-
   // Init TAO Factories
   if (colocated) {
     TAO_Notify_Default_CO_Factory::init_svc();
@@ -180,9 +188,10 @@ main(int argc, char *argv[])
   channelFactoryName.length(1);
   channelFactoryName[0].id = CORBA::string_dup(NOTIFY_FACTORY_NAME);
 
+  std::cout << "nmctest" << std::endl;
+  try {
   NotifyMulticastTest NotifyMulticastTest(argc, argv, colocated);
-  Task task(NotifyMulticastTest.pPushSupplier);
-
+  
   try {
     DBG(cout << "Initialize server daemon." << endl);
 
@@ -198,5 +207,11 @@ main(int argc, char *argv[])
     cerr << "Uncaught exception: " << endl;
     return 1;
   }
+  } catch (const CORBA::Exception &e) {
+      std::cout << e << std::endl;
+  } catch (...) {
+      std::cout << "uncaught exception" << std::endl;
+  }
+
   return 0;
 }

@@ -18,6 +18,8 @@
 #include <orbsvcs/CosNotifyChannelAdminS.h>
 #include <orbsvcs/CosNotifyCommC.h>
 
+class Consumer;
+
 class NotifyMulticastTest : public Miro::Server
 {
   typedef Miro::Server Super;
@@ -52,7 +54,9 @@ public:
 
   Consumer * consumer;
 
-  NotifyMulticast::Adapter *nmcAdapter;
+  Miro::NotifyMulticast::Adapter *nmcAdapter;
+  
+  CosNotification::EventTypeSeq ets;
 };
 #endif
 

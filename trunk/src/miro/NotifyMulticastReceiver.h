@@ -95,7 +95,7 @@ namespace Miro {
         class SH;
 
         class Receiver : public Miro::StructuredPushSupplier {
-                typedef Miro::StructuredPushSupplier Super;
+            typedef Miro::StructuredPushSupplier Super;
 
             public:
 

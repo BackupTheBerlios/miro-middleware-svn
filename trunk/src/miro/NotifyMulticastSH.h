@@ -33,8 +33,11 @@ namespace Miro {
                 Sender *sender_;
                 Receiver *receiver_;
                 Config *config_;
+                
                 typedef std::map<std::string, int> SubscribedMap;
+                typedef std::map<std::pair<std::string, std::string> , int> OfferMap;
                 SubscribedMap subscribedMap;
+                OfferMap offerMap;
         };
 
     };
