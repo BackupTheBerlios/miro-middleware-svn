@@ -191,6 +191,8 @@
 	  </parameter>
 	</parameter>
         <parameter name="Pan">
+	  <parameter value="-80" name="RangeMin" />
+	  <parameter value="80" name="RangeMax" />
           <parameter value="0.050000" name="PanLatency" />
 	  <parameter value="0.300000" name="PanSwing" />
 	  <parameter value="245" name="PanRadPerSec" />
@@ -364,13 +366,14 @@
 				  <parameter value="IndextoDistHighRes" name="Name" />
 				  <parameter value="IndextoDist" name="Type" />
 				  <!-- ENABLED FOR GOALIE -->
+				  <!--
 				  <parameter name="Successor" >
 				    <parameter name="Filter" >
 				      <parameter value="ConnectionFake_HighRes" name="Name" />
 				      <parameter value="ConnectionFake" name="Type" />
 				    </parameter>
 				  </parameter>
-				  <!-- -->
+				  -->
 				</parameter>				  
 				<parameter name="Filter" >
 				  <parameter value="IndextoDistLowRes" name="Name" />
