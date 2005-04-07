@@ -427,8 +427,8 @@ PolicyXML::deletable()
   
   while (i != NULL) {
     PolicyXML * p = dynamic_cast<PolicyXML *>(itemFromListViewItem(i));
-    MIRO_ASSERT(p != NULL);
-    if (p->hasSubpolicy(name())) {
+    if (p != NULL &&
+	p->hasSubpolicy(name())) {
       QMessageBox::warning(NULL, 
 			   "Delete Policy", 
 			   QString("Policy ") + name() + 
