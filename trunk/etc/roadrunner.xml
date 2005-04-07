@@ -39,7 +39,7 @@
 	<parameter value="/dev/pcan24" name="Device" />
 	<parameter value="pcan" name="Module" />
         <parameter name="Pan">
-	  <parameter value="5" name="Offset" />
+	  <parameter value="-5" name="Offset" />
 	  <parameter value="784" name="TicksPerDegree" />
 	  <parameter value="0.050000" name="PanLatency" />
 	  <parameter value="0.300000" name="PanSwing" />
@@ -226,6 +226,7 @@
 				  <parameter value="IndextoDistLowRes" name="Name" />
 				  <parameter value="IndextoDist" name="Type" />
 				  <parameter name="Successor" >
+
 				    <parameter name="Filter" >
 				      <parameter value="ConnectionFake_LowRes" name="Name" />
 				      <parameter value="ConnectionFake" name="Type" />
@@ -320,8 +321,8 @@
 
       <instance type="LVF::AttentionBallOmni" name="AttentionBallOmni">
 	<parameter value="10" name="MinBlobWidth" />
-	<parameter value="10" name="MinBlobHeight" />
-	<parameter value="40" name="MinBlobPixels" />
+	<parameter value="20" name="MinBlobHeight" />
+	<parameter value="80" name="MinBlobPixels" />
 	<parameter value="0.4" name="MinBlobFill" />
 	<parameter value="true" name="LimitToOneBall" />
       </instance>
@@ -1004,7 +1005,7 @@
       </parameter>
       <parameter name="Miro::NMC::Parameters" >
 	<parameter value="225.2.2.1:41006" name="MulticastGroup" />
-	<parameter value="0.50000" name="MessageTimeout" />
+	<parameter value="0.500000" name="MessageTimeout" />
 	<parameter name="Subscription" >
 	  <parameter value="SharedBelief" />
 	</parameter>

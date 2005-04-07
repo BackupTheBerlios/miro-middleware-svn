@@ -316,8 +316,8 @@
 
       <instance type="LVF::AttentionBallOmni" name="AttentionBallOmni">
 	<parameter value="10" name="MinBlobWidth" />
-	<parameter value="10" name="MinBlobHeight" />
-	<parameter value="40" name="MinBlobPixels" />
+	<parameter value="20" name="MinBlobHeight" />
+	<parameter value="80" name="MinBlobPixels" />
 	<parameter value="0.4" name="MinBlobFill" />
 	<parameter value="true" name="LimitToOneBall" />
       </instance>
