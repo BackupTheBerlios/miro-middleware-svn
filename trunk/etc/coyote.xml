@@ -202,32 +202,32 @@
 	  <parameter>
 	    <parameter value="400" name="MaxDistance" />
 	    <parameter value="30" name="MinDistance" />
-	    <parameter value="1.134" name="Scaling" />
-	    <parameter value="20" name="Offset" />
+	    <parameter value="0.92" name="Scaling" />
+	    <parameter value="5" name="Offset" />
+	  </parameter>
+	  <parameter>
+	    <parameter value="370" name="MaxDistance" />
+	    <parameter value="30" name="MinDistance" />
+	    <parameter value="0.87" name="Scaling" />
+	    <parameter value="15" name="Offset" />
 	  </parameter>
 	  <parameter>
 	    <parameter value="400" name="MaxDistance" />
 	    <parameter value="30" name="MinDistance" />
-	    <parameter value="0.850" name="Scaling" />
-	    <parameter value="20" name="Offset" />
+	    <parameter value="1.0" name="Scaling" />
+	    <parameter value="10" name="Offset" />
 	  </parameter>
 	  <parameter>
 	    <parameter value="400" name="MaxDistance" />
 	    <parameter value="30" name="MinDistance" />
-	    <parameter value="0.850" name="Scaling" />
-	    <parameter value="20" name="Offset" />
+	    <parameter value="0.94" name="Scaling" />
+	    <parameter value="15" name="Offset" />
 	  </parameter>
 	  <parameter>
-	    <parameter value="400" name="MaxDistance" />
-	    <parameter value="30" name="MinDistance" />
-	    <parameter value="0.971" name="Scaling" />
-	    <parameter value="20" name="Offset" />
-	  </parameter>
-	  <parameter>
-	    <parameter value="400" name="MaxDistance" />
+	    <parameter value="350" name="MaxDistance" />
 	    <parameter value="30" name="MinDistance" />
 	    <parameter value="1.000" name="Scaling" />
-	    <parameter value="20" name="Offset" />
+	    <parameter value="00" name="Offset" />
 	  </parameter>
 	  <parameter>
 	    <parameter value="400" name="MaxDistance" />
@@ -266,9 +266,9 @@
 	    <parameter value="20" name="Offset" />
 	  </parameter>
 	  <parameter>
-	    <parameter value="400" name="MaxDistance" />
+	    <parameter value="350" name="MaxDistance" />
 	    <parameter value="30" name="MinDistance" />
-	    <parameter value="1.000" name="Scaling" />
+	    <parameter value="1.10" name="Scaling" />
 	    <parameter value="20" name="Offset" />
 	  </parameter>
 	  <parameter>
@@ -308,7 +308,7 @@
 	<parameter value="true" name="Goalie" />
 	<parameter value="20.5" name="Deg2ServoTicksL" />
 	<parameter value="21.8" name="Deg2ServoTicksR" />
-	<parameter value="true" name="ChannelSharing" />
+	<parameter value="false" name="ChannelSharing" />
 	<parameter name="Motion" >
 	  <parameter value="180" name="MaxRotation" />
 	  <parameter value="-180" name="MinRotation" />
@@ -505,9 +505,9 @@
       </instance>
 
       <instance type="Video::FilterOmni2Pan" name="FilterOmni2Pan_Debug">
-	<parameter value="166" name="CenterX" />
-	<parameter value="120" name="CenterY" />
-	<parameter value="120" name="Radius" />
+        <parameter value="74" name="CenterX" />
+        <parameter value="61" name="CenterY" />
+        <parameter value="62" name="Radius" />
       </instance>
 
       <instance type="LVF::ROIVisual" name="ROIVisual_CollectOmni" >
@@ -871,7 +871,7 @@
 	<parameter name="Camera" >
 	  <parameter value="0.060000" name="Latency" />
 	  <parameter value="34.0" name="Alpha" />
-	  <parameter value="595" name="Height" />
+	  <parameter value="675" name="Height" />
 	  <parameter value=" 6.4000000000e+02" name="Ncx" />
 	  <parameter value=" 6.4000000000e+02" name="Nfx" />
 	  <parameter value=" 7.4000000000e-03" name="Dx" />
