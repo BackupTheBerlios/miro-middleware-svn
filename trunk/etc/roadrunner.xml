@@ -355,9 +355,14 @@
       </instance>
 
       <instance type="Video::FilterOmni2Pan" name="FilterOmni2Pan_Debug">
+	<parameter value="80" name="CenterX" />
+	<parameter value="61" name="CenterY" />
+	<parameter value="62" name="Radius" />
+<!--
 	<parameter value="166" name="CenterX" />
 	<parameter value="120" name="CenterY" />
 	<parameter value="120" name="Radius" />
+-->
       </instance>
 
       <instance type="LVF::ROIVisual" name="ROIVisual_CollectOmni" >
@@ -778,9 +783,9 @@
 	<parameter value="false" name="Random" />
 	<parameter value="false" name="Rotate" />
 	<parameter value="false" name="LimitToOneBall" />
-	<parameter value="2" name="MinBlobWidth" />
-	<parameter value="2" name="MinBlobHeight" />
-	<parameter value="4" name="MinBlobPixels" />
+	<parameter value="3" name="MinBlobWidth" />
+	<parameter value="3" name="MinBlobHeight" />
+	<parameter value="5" name="MinBlobPixels" />
 	<parameter value="0.3" name="MinBlobFill" />
       </instance>
       <instance type="LVF::AttentionGoalCornerPoles" name="AttentionGoalCornerPoles" >
