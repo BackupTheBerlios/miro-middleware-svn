@@ -41,10 +41,13 @@
 	<parameter value="/dev/pcan24" name="Device" />
 	<parameter value="pcan" name="Module" />
         <parameter name="Pan">
+	  <parameter value="true" name="Servo" />
+	  <parameter value="-80" name="RangeMin" />
+	  <parameter value="80" name="RangeMax" />
 	  <parameter value="0.050000" name="PanLatency" />
 	  <parameter value="0.300000" name="PanSwing" />
 	  <parameter value="245" name="PanRadPerSec" />
-	  <parameter value="3." name="PanAccuracy" />
+	  <parameter value="4." name="PanAccuracy" />
         </parameter>
 	<parameter value="0.040000" name="InfraredPulse" />
 	<parameter value="0.040000" name="OdometryPulse" />
@@ -149,14 +152,14 @@
 	<parameter value="0.050000" name="ButtonsPollInterval" />
 	<parameter value="1.0776" name="TransFactor" />
 	<parameter value="1.000000" name="WatchdogTimeout" />
-	<parameter value="2820" name="Servo0MidPulse" />
+	<parameter value="2950" name="Servo0MidPulse" />
 	<parameter value="200" name="MaxAccel" />
 	<parameter value="2350" name="Diameter" />
 	<parameter value="30720" name="MaxPower" />
 	<parameter value="29" name="TicksL" />
 	<parameter value="29" name="TicksR" />
 	<parameter value="21.0" name="Deg2ServoTicksL"/>
-	<parameter value="19.5" name="Deg2ServoTicksR"/>
+	<parameter value="21.0" name="Deg2ServoTicksR"/>
 	<parameter value="true" name="ChannelSharing" />
 	<parameter name="Motion" >
 	  <parameter value="180" name="MaxRotation" />
@@ -724,8 +727,8 @@
 	<parameter value="184" name="WhiteBalance1" />
 	<parameter name="Camera" >
 	  <parameter value="0.060000" name="Latency" />
-	  <parameter value="34.0" name="Alpha" />
-	  <parameter value="595" name="Height" />
+	  <parameter value="33.0" name="Alpha" />
+	  <parameter value="694" name="Height" />
 	  <parameter value=" 6.4000000000e+02" name="Ncx" />
 	  <parameter value=" 6.4000000000e+02" name="Nfx" />
 	  <parameter value=" 7.4000000000e-03" name="Dx" />
@@ -1003,9 +1006,11 @@
       </parameter>
       <parameter name="Miro::NMC::Parameters" >
 	<parameter value="225.2.2.1:41006" name="MulticastGroup" />
-	<parameter value="0.500000" name="MessageTimeout" />
+	<parameter value="0.000000" name="MessageTimeout" />
 	<parameter name="Subscription">
 	  <parameter value="SharedBelief" />
+	  <parameter value="PatternChange" />
+	  <parameter value="ArbitrateChange" />
 	</parameter>
       </parameter>
     </section>
