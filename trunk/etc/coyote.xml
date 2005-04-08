@@ -310,7 +310,7 @@
 	<parameter value="true" name="Goalie" />
 	<parameter value="20.5" name="Deg2ServoTicksL" />
 	<parameter value="21.8" name="Deg2ServoTicksR" />
-	<parameter value="false" name="ChannelSharing" />
+	<parameter value="true" name="ChannelSharing" />
 	<parameter name="Motion" >
 	  <parameter value="180" name="MaxRotation" />
 	  <parameter value="-180" name="MinRotation" />
