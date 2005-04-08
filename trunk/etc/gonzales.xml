@@ -1006,7 +1006,7 @@
       </parameter>
       <parameter name="Miro::NMC::Parameters" >
 	<parameter value="225.2.2.1:41006" name="MulticastGroup" />
-	<parameter value="0.000000" name="MessageTimeout" />
+	<parameter value="0.500000" name="MessageTimeout" />
 	<parameter name="Subscription">
 	  <parameter value="SharedBelief" />
 	  <parameter value="PatternChange" />
