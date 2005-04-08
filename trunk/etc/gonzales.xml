@@ -353,7 +353,7 @@
 	<parameter value="VisionCollectorOmni" name="InterfaceName" />
 	<parameter value="1" name="ScaleFactorRunLength" />
 	<parameter value="2" name="UseIndexFrom" />
-	<parameter value="false" name="Save" />
+	<parameter value="true" name="Save" />
       </instance>
 
      <instance type="Video::FilterOmni2Pan" name="FilterOmni2Pan_Debug">
