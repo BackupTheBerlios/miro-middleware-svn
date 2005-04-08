@@ -982,7 +982,7 @@
       <parameter name="Miro::LogNotifyParameters" >
 	<parameter name="TypeName" >
 	  <parameter value="Pan" />
-	  <parameter value="Infrared" />
+	  <parameter value="MergedDist" />
 	  <parameter value="Odometry" />
 	  <parameter value="RawPosition" />
 	  <parameter value="VisionData" />
