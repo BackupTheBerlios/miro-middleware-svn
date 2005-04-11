@@ -65,9 +65,13 @@ int main(int argc, char *argv[])
       if (c == 'q')
 	break;
 
+      Miro::ZoomRangeIDL zoomRange;
+      Miro::FocusRangeIDL focusRange;
+      Miro::ShutterRangeIDL shutterRange;
+
       switch (c) {
       case '0':
-	Miro::ZoomRangeIDL zoomRange=cameraControl->getZoomRange();
+	zoomRange=cameraControl->getZoomRange();
 	cout << "Zoom limits: " 
 	     << rad2Deg(zoomRange.min) << " <-> " 
 	     << rad2Deg(zoomRange.max) << endl;
@@ -82,7 +86,7 @@ int main(int argc, char *argv[])
 	cameraControl->setZoom(deg2Rad(zoom));
 	break;
       case '3':
-	Miro::FocusRangeIDL focusRange=cameraControl->getFocusRange();
+	focusRange=cameraControl->getFocusRange();
 	cout << "Focus limits: " 
 	     << focusRange.min << " <-> " 
 	     << focusRange.max << endl;
@@ -104,11 +108,9 @@ int main(int argc, char *argv[])
 	}
 	break;
       case '7':
-	break;
-      case '8':
-	cout << "time (ms): " << flush;
-	cin >> time;
-	//	cameraControl->moveGrip(time);
+	cout << "set (1) or unset (0) autofocus?" << endl;
+	cin >> focus;
+	cameraControl->setAutoFocus(focus);
 	break;
       case 'q':
 	quit = true;
