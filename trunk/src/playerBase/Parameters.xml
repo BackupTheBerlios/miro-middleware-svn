@@ -44,9 +44,9 @@
       <config_parameter name="sonar" type="bool" default="true" />
       <config_parameter name="sonarDescription" type="Miro::ScanDescriptionIDL" />
       <constructor>
-        static const int sonarDistance[8] = { 150, 150, 150, 150, 150, 150, 150, 150 };
-        static const int sonarAlpha[8] = { 90, 60, 15, 0, -15, -60, -90, 180 };
-        static const int sonarBeta[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+        static const int sonarDistance[16] = { 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150 };
+        static const int sonarAlpha[16] = { 90, 50, 30, 10, -10, -30, -50, -90,-90, -130, -150, -170, 170, 150, 130, 90 };
+        static const int sonarBeta[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
         sonarDescription.scanType = Miro::RangeSensor::BUNCHWISE;
         sonarDescription.eventName = &quot;Sonar&quot;;
@@ -54,8 +54,8 @@
         sonarDescription.group[0].description.minRange = 200;
         sonarDescription.group[0].description.maxRange = 5000;
         sonarDescription.group[0].description.focus = Miro::deg2Rad(30);
-        sonarDescription.group[0].sensor.length(8);
-        for (unsigned int i = 0; i &lt; 8; ++i) {
+        sonarDescription.group[0].sensor.length(16);
+        for (unsigned int i = 0; i &lt; 16; ++i) {
           sonarDescription.group[0].sensor[i].height = 350;
           sonarDescription.group[0].sensor[i].distance = sonarDistance[i];
           sonarDescription.group[0].sensor[i].alpha = Miro::deg2Rad(sonarAlpha[i]);

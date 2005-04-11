@@ -120,8 +120,6 @@ namespace Miro {
   }
 
   int PlayerReactorTask::svc() throw (CORBA::Exception) {
-    int sonarReadings=16;
-    string robotName="Robot";
 
     assert(pMotion_!=NULL);
 
@@ -196,6 +194,7 @@ namespace Miro {
 	if ((pSonar_!=NULL) && (playerSonar!=NULL)) {
 	  RangeBunchEventIDL * pSonarEvent = new RangeBunchEventIDL();
 
+	  int sonarReadings=playerSonar->range_count;
 	  pSonarEvent->sensor.length(sonarReadings);
 
 	  // iterate through new data
