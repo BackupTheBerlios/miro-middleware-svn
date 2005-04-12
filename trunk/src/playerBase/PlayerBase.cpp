@@ -113,12 +113,12 @@ PlayerBase::PlayerBase(int argc, char *argv[],
   // start the asychronous consumer listening for the hardware
   reactorTask.open(0);
 
-  DBG(cout << "PlayerBase initialized.." << endl);
+  MIRO_LOG(LL_NOTICE, "PlayerBase initialized..");
 }
 
 PlayerBase::~PlayerBase()
 {
-  DBG(cout << "Destructing PlayerBase." << endl);
+  MIRO_LOG(LL_NOTICE,"Destructing PlayerBase.");
 
   try {
     // Deactivate.
@@ -129,22 +129,22 @@ PlayerBase::~PlayerBase()
     poa->deactivate_object (oid.in ());
   }
   catch (const CORBA::Exception & e) {
-    cout << "CORBA::Exception: " << e << endl;
+    MIRO_LOG_OSTR(LL_ERROR, "CORBA::Exception: " << e);
   }
   catch (const Miro::Exception & e) {
-    cout << "Miro::Exception: " << e << endl;
+    MIRO_LOG_OSTR(LL_ERROR, "Miro::Exception: " << e);
   }
   catch (const std::string & e) {
-    cout << "string exception: " << e << endl;
+    MIRO_LOG_OSTR(LL_ERROR, "string exception: " << e);
   }
   catch (...) {
-    cout << "Unknown Exception... " << endl;
+    MIRO_LOG(LL_ERROR, "Unknown Exception... ");
   }
-
+  
   reactorTask.done = true;
   reactorTask.wait();
 
-  DBG(cout << "reactor Task ended" << endl);
+  MIRO_LOG(LL_NOTICE, "reactor Task ended");
 }
 
 int parseArgs(int& argc, char* argv[], 
@@ -160,12 +160,12 @@ int parseArgs(int& argc, char* argv[],
 
   while (get_opts.is_anything_left()) 
   {
-    if ((get_opts.cur_arg_strncasecmp("help")>=0)  ||
-	(get_opts.cur_arg_strncasecmp("?")>=0) ){
-      cout << "usage: " << "argv[0]" << " [-h=hostname] [-p=port] [-i=id] [-?]" << endl
- 	   << "  -h=hostname: host running Player (default localhost)" << endl
- 	   << "  -p=port:     Player port to connect to (default 6665)" << endl
- 	   << "  -i=id:       instance id of Player devices (default 0)" << endl
+    if ((get_opts.cur_arg_strncasecmp("--help")>=0)  ||
+	(get_opts.cur_arg_strncasecmp("-?")>=0) ){
+      cout << "usage: " << argv[0] << " [-h=hostname] [-p=port] [-i=id] [-?]" << endl
+ 	   << "  -h=hostname: host running Player (default "<< playerHost <<")" << endl
+ 	   << "  -p=port:     Player port to connect to (default " << playerPort << ")" << endl
+ 	   << "  -i=id:       instance id of Player devices (default " << playerId << ")" << endl
  	   << "  -?:          emit this text and stop" << endl;
       rc = 1;
       get_opts.consume_arg();
@@ -207,8 +207,7 @@ main(int argc, char *argv[])
     Miro::Configuration::init(argc, argv);
   }
   catch (Miro::Exception const & e) {
-    std::cerr << "Initialization of logging failed: " << std::endl
-	      << e << std::endl;
+    MIRO_LOG_OSTR(LL_ERROR, "Initialization of logging failed: " << std::endl << e);
     return 1;
   }
 
@@ -235,34 +234,34 @@ main(int argc, char *argv[])
     config->getParameters("Laser::Parameters", *laserParameters);
     delete config;
 
-    DBG(cout << "Initialize server daemon." << endl);
+    MIRO_LOG(LL_NOTICE, "Initialize server daemon.");
 
     playerClient=new PlayerClient(playerHost.c_str(),playerPort);
 
     PlayerBase playerBase(argc, argv, playerClient,playerId);
  
     try {
-      DBG(cout << "Loop forever handling events." << endl);
+      MIRO_LOG(LL_NOTICE, "Loop forever handling events.");
       playerBase.run(5);
-      DBG(cout << "PlayerBase ended, exiting." << endl);
+      MIRO_LOG(LL_NOTICE, "PlayerBase ended, exiting.");
     }
     catch (const Miro::EOutOfBounds& e) {
-      cerr << "OutOfBounds exception: Wrong parameter for device initialization." << endl;
+      MIRO_LOG(LL_ERROR, "OutOfBounds exception: Wrong parameter for device initialization.");
     }
     catch (const Miro::EDevIO& e) {
-      cerr << "DevIO exception: Device access failed." << endl;
+      MIRO_LOG(LL_ERROR, "DevIO exception: Device access failed.");
     }
     catch (const CORBA::Exception & e) {
-      cerr << "Uncaught CORBA exception: " << e << endl;
+      MIRO_LOG_OSTR(LL_ERROR, "Uncaught CORBA exception: " << e);
       rc = 1;
     }
   }
   catch (const Miro::Exception& e) {
-    cerr << "Miro exception: " << e << endl;
+    MIRO_LOG_OSTR(LL_ERROR, "Miro exception: " << e);
     rc = 1;
   }
   catch (...) {
-    cerr << "Uncaught exception: " << endl;
+    MIRO_LOG(LL_ERROR, "Uncaught exception: ");
     rc = 1;
   }
 

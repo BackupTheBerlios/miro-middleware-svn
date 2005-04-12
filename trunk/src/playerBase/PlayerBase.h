@@ -13,6 +13,7 @@
 #define PlayerBase_h
 
 #include "miro/Server.h"
+#include "miro/Log.h"
 #include "miro/StructuredPushSupplier.h"
 #include "miro/OdometryImpl.h"
 #include "miro/BatteryImpl.h"
@@ -30,7 +31,7 @@
 
 class PlayerClient;
 
-class PlayerBase : public Miro::Server
+class PlayerBase : public Miro::Server, public Miro::Log
 {
   typedef Miro::Server Super;
 
