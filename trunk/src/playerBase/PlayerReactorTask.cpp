@@ -230,6 +230,12 @@ namespace Miro {
 	  status.position.point.y=long(playerPosition->Ypos()*1000); //m to mm
 	  status.position.heading=playerPosition->Theta();
 
+	  //assure that Theta is between -PI and PI
+	  while (status.position.heading>M_PI)
+	    status.position.heading -= 2*M_PI;
+	  while (status.position.heading<-M_PI)
+	    status.position.heading += 2*M_PI;
+
 	  status.velocity.translation=long(playerPosition->Speed()*1000); 
 	                                  // m/s to mm/s
 	  status.velocity.rotation=playerPosition->TurnRate();
