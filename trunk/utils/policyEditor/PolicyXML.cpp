@@ -15,6 +15,7 @@
 #include "ActionPatternXML.h"
 #include "PolicyDocumentXML.h"
 #include "PolicyView.h"
+#include "TransitionDialog.h"
 
 #include "miro/Log.h"
 
@@ -209,17 +210,6 @@ PolicyXML::contextMenu(QPopupMenu& _menu)
       menuAddSubpolicy_->insertItem(*first);
   }
 
-  // build add downtransition submenu
-  menuAddDownTransition_ = new QPopupMenu(&_menu);
-
-  QStringList targets = patternList();
-  QStringList::const_iterator first, last = targets.end();
-  for (first = targets.begin(); first != last; ++first)
-    menuAddDownTransition_->insertItem(*first);
-
-  connect(menuAddDownTransition_, SIGNAL(activated(int)),
-	  this, SLOT(addDownTransition(int)));
-
   //  Super::contextMenu(_menu);
   _menu.insertItem("Add Action Pattern", this, SLOT(addActionPattern()));
   if (structuredPolicy) {
@@ -227,8 +217,9 @@ PolicyXML::contextMenu(QPopupMenu& _menu)
     if (menuAddSubpolicy_->count() == 0)
       _menu.setItemEnabled(i, false);
   }
-  int i = _menu.insertItem("Add downward Transition", menuAddDownTransition_);
-  if (menuAddDownTransition_->count() == 0)
+
+  int i = _menu.insertItem("Add Transition Pattern", this, SLOT(addDownTransition()));
+  if (unboundTransitionMessages().size() == 0)
     _menu.setItemEnabled(i, false);
 
   if (structuredPolicy) {
@@ -393,23 +384,31 @@ PolicyXML::addSubpolicy(int _id)
 }
 
 void
-PolicyXML::addDownTransition(int _id)
+PolicyXML::addDownTransition()
 {
-  QStringVector v = unboundDownTransitionMessages();
-  QStringList l;
+  bool ok = false;
+
+  // messages
+  QStringVector v = unboundTransitionMessages();
+  QStringList msg;
   QStringVector::const_iterator first, last = v.end();
   for (first = v.begin(); first != last; ++first) {
-    l.push_back(*first);
+    msg.push_back(*first);
   }
 
-  bool ok = false;
-  QString msg = QInputDialog::getItem(
-                    tr( "Add downward Transition" ),
-                    tr( "Transition message:" ),
-                    l, 0, false, &ok);
-  if ( ok && !msg.isEmpty() ) {
+  // targets
+  TransitionDialog dialog(msg, patternList(), 
+			  NULL, "Transition Pattern Dialog");
+
+
+  ok = (dialog.exec() == QDialog::Accepted );
+
+  if (ok) {
+    QString msg = dialog.getMessage();
+    QString trgt = dialog.getTarget();
+
     if (!hasTransition(msg)) {
-      addDownTransition(msg, menuAddDownTransition_->text(_id));
+      addDownTransition(msg, trgt);
     }
     else
       QMessageBox::warning(NULL, 

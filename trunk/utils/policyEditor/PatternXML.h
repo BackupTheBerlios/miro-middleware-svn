@@ -72,7 +72,7 @@ public:
 
 protected slots:
   void setStartPattern();
-  void addTransition(int _id);
+  void addTransition();
 
 protected:
   //----------------------------------------------------------------------------  

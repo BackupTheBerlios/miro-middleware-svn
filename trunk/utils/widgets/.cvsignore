@@ -1,3 +1,6 @@
+OkCancelDialog.lo
+OkCancelDialog.moc.cpp
+OkCancelDialog.moc.lo
 Item.moc.cpp
 FileListDialog.moc.cpp
 Makefile.in

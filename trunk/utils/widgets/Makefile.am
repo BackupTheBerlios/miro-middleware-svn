@@ -42,6 +42,7 @@ normalsources = \
 	ParameterEdit.h \
 	SimpleParameterEdit.h \
 	DeferredParameterEdit.h \
+	OkCancelDialog.h \
 	DialogXML.h \
 	ParameterDialog.h \
 	ParameterListDialog.h \
@@ -61,6 +62,7 @@ tomocsources = \
 	ParameterEdit.cpp \
 	SimpleParameterEdit.cpp \
 	DeferredParameterEdit.cpp \
+	OkCancelDialog.cpp \
 	DialogXML.cpp \
 	ParameterDialog.cpp \
 	ParameterListDialog.cpp \

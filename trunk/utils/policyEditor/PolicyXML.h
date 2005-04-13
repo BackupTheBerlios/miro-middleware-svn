@@ -75,7 +75,7 @@ protected slots:
   //----------------------------------------------------------------------------
   void addActionPattern();
   void addSubpolicy(int _id);
-  void addDownTransition(int _id);
+  void addDownTransition();
 
 protected:
   //----------------------------------------------------------------------------  

@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1998, 1999, 2000, 2001, 2002, 2003
+// (c) 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -10,7 +10,6 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "MainWindow.h"
-
 #include "utils/widgets/ConfigFile.h"
 #include "utils/widgets/DocumentView.h"
 

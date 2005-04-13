@@ -17,6 +17,8 @@
 #include "PolicyXML.h"
 #include "PolicyView.h"
 #include "PatternWidget.h"
+#include "TransitionDialog.h"
+
 
 #include "miro/Log.h"
 
@@ -152,7 +154,7 @@ PatternXML::removeTransitionTo(QString const& _target)
     TransitionXML * t = dynamic_cast<TransitionXML *>(item);
     if (t != NULL &&
 	t->target() == _target) {
-      t->deleteLater();
+      t->deleteItem();
       setModified();
       if (widget_) {
 	MIRO_ASSERT(widget_->parent() != NULL);
@@ -239,18 +241,10 @@ PatternXML::setY(int _y)
 void
 PatternXML::contextMenu(QPopupMenu& _menu)
 {
-  // build add transition submenu
-  menuAddTransition_ = new QPopupMenu(&_menu);
+  int i = _menu.insertItem("Add Transition", this, SLOT(addTransition()));
+  if (unboundTransitionMessages().size() == 0)
+    _menu.setItemEnabled(i, false);
 
-  QStringList targets = policy()->patternList();
-  
-  QStringList::const_iterator first, last = targets.end();
-  for (first = targets.begin(); first != last; ++first)
-    menuAddTransition_->insertItem(*first);
-
-  connect(menuAddTransition_, SIGNAL(activated(int)), this, SLOT(addTransition(int)));
-
-  _menu.insertItem("Add Transition", menuAddTransition_);
   _menu.insertSeparator();
   _menu.insertItem("Set Name", this, SLOT(slotRename()));
   _menu.insertItem("Set start Pattern", this, SLOT(setStartPattern()));
@@ -333,24 +327,31 @@ PatternXML::addTransition(QString const& _msg, QString const& _target)
 }
 
 void
-PatternXML::addTransition(int _id)
+PatternXML::addTransition()
 {
   bool ok = false;
 
+  // messages
   QStringVector v = unboundTransitionMessages();
-  QStringList l;
+  QStringList msg;
   QStringVector::const_iterator first, last = v.end();
   for (first = v.begin(); first != last; ++first) {
-    l.push_back(*first);
+    msg.push_back(*first);
   }
 
-  QString msg = QInputDialog::getItem(
-                    tr( "Add Transition" ),
-                    tr( "Transition message:" ),
-                    l, 0, false, &ok);
-  if ( ok && !msg.isEmpty() ) {
+  // targets
+  TransitionDialog dialog(msg, policy()->patternList(), 
+			  NULL, "Transition Dialog");
+
+
+  ok = (dialog.exec() == QDialog::Accepted );
+
+  if (ok) {
+    QString msg = dialog.getMessage();
+    QString trgt = dialog.getTarget();
+
     if (!hasTransition(msg)) {
-      addTransition(msg, menuAddTransition_->text(_id));
+      addTransition(msg, trgt);
     }
     else
       QMessageBox::warning(NULL, 

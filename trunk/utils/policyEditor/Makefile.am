@@ -46,7 +46,8 @@ sources = \
 	PolicyView.h \
 	TransitionContainer.h \
 	TransitionWidget.h \
-	Transition.h
+	Transition.h \
+	TransitionDialog.h
 
 tomocsources = \
 	PolicyDocumentXML.cpp \
@@ -66,7 +67,8 @@ tomocsources = \
 	PatternWidget.cpp \
 	PolicyView.cpp \
 	TransitionContainer.cpp \
-	TransitionWidget.cpp
+	TransitionWidget.cpp  \
+	TransitionDialog.cpp
 
 
 PolicyEditor_SOURCES = $(sources) $(tomocsources) $(tomocsources:.cpp=.moc.cpp)
