@@ -1,3 +1,4 @@
+TransitionDialog.moc.cpp
 ExternalTransitionXML.moc.cpp
 TransitionWidget.moc.cpp
 TransitionContainer.moc.cpp
