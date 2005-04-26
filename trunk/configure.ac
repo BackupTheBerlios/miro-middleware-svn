@@ -238,10 +238,12 @@ AC_CONFIG_FILES([Makefile
                  src/sphinx/Makefile
                  src/video/Makefile
                  src/playerBase/Makefile
+                 src/gps/Makefile
                  examples/Makefile
                  examples/b21Motion/Makefile
                  examples/battery/Makefile
                  examples/buttons/Makefile
+                 examples/gps/Makefile
                  examples/infrared/Makefile
                  examples/motion/Makefile
                  examples/notify/Makefile

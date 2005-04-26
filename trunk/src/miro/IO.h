@@ -67,6 +67,7 @@ namespace Miro
   OSTR_OPERATOR_DECL(TimeIDL);
   OSTR_OPERATOR_DECL(PositionIDL);
   OSTR_OPERATOR_DECL(WorldPointIDL);
+  OSTR_OPERATOR_DECL(WorldPoint3DIDL);
   OSTR_OPERATOR_DECL(VelocityIDL);
 
   // interface specific types
@@ -78,6 +79,14 @@ namespace Miro
   OSTR_OPERATOR_DECL(RangeBunchEventIDL);
   OSTR_OPERATOR_DECL(RangeGroupEventIDL);
   OSTR_OPERATOR_DECL(RangeScanEventIDL);
+
+  OSTR_OPERATOR_DECL(GpsPositionIDL);
+  OSTR_OPERATOR_DECL(GpsDilutionIDL);
+  OSTR_OPERATOR_DECL(GpsGlobalPositionEventIDL);
+  OSTR_OPERATOR_DECL(GpsRelativePositionEventIDL);
+  OSTR_OPERATOR_DECL(GpsPositionEventIDL);
+  OSTR_OPERATOR_DECL(GpsDilutionEventIDL);
+  OSTR_OPERATOR_DECL(GpsSentenceEventIDL);
 
   OSTR_OPERATOR_DECL(FieldStrengthIDL);
   OSTR_OPERATOR_DECL(InclinationIDL);

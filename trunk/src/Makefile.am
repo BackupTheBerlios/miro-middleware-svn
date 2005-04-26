@@ -16,7 +16,8 @@ globaldirs = \
 	makeParams \
 	miro \
 	video \
-	laser
+	laser \
+	gps
 
 if COND_B21
 b21dirs = \

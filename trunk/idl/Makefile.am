@@ -81,8 +81,10 @@ globalsources = \
 	Magnetometer.idl \
 	MagnetometerEvent.idl \
 	Thermometer.idl \
-	ThermometerEvent.idl
-
+	ThermometerEvent.idl \
+	Gps.idl \
+	GpsData.idl \
+	CtGps.idl
 
 b21sources = \
 	DtlkSpeech.idl \

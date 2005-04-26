@@ -142,7 +142,7 @@
     if (::Miro::Log::level() >= ::Miro::Log::LL_CTOR_DTOR) { \
       ACE_Log_Msg *ace___ = ACE_Log_Msg::instance (); \
       ace___->conditional_set (__FILE__, __LINE__, 0, 0); \
-      ace___->log(LM_DEBUG, "Construction of " X " fininshed.\n"); \
+      ace___->log(LM_DEBUG, "Construction of " X " finished.\n"); \
     } \
   } while (0)
 // Destructor log message (Miro::Log::level() >= 1)

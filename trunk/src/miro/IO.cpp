@@ -19,11 +19,13 @@
 #include "idl/ExceptionC.h"
 #include "idl/TimeC.h"
 #include "idl/WorldPointC.h"
+#include "idl/WorldPoint3DC.h"
 #include "idl/PositionC.h"
 #include "idl/VelocityC.h"
 #include "idl/MotionStatusC.h"
 #include "idl/RangeEventC.h"
 #include "idl/PanTiltC.h"
+#include "idl/GpsDataC.h"
 #include "idl/FieldStrengthC.h"
 #include "idl/InclinationC.h"
 #include "idl/CompassEventC.h"
@@ -140,6 +142,12 @@ namespace Miro
     ostr << rhs.x << " " << rhs.y;
     return ostr;
   }
+  // output operator for WorldPoint3DIDL
+  std::ostream &
+  operator<<(std::ostream &ostr, const WorldPoint3DIDL &rhs) {
+    ostr << rhs.x << " " << rhs.y << " " << rhs.z;
+    return ostr;
+  }
   // output operator for VelocityIDL
   std::ostream &
   operator<<(std::ostream &ostr, const VelocityIDL &rhs) {
@@ -252,6 +260,59 @@ namespace Miro
   {
     ostr << rhs.time << std::endl 
 	 << rhs. range;
+    return ostr;
+  }
+
+  std::ostream &
+  operator<<(std::ostream &ostr, const GpsPositionIDL &rhs)
+  {
+    ostr << "lat = " << rad2Deg(rhs.latitude) << "°, ";
+    ostr << "lon = " << rad2Deg(rhs.longitude) << "°, ";
+    ostr << "alt = " << rhs.altitude << "m";
+    return ostr;
+  }
+
+  std::ostream &
+  operator<<(std::ostream &ostr, const GpsDilutionIDL &rhs)
+  {
+    ostr << "hdop = " << rhs.hdop << ", ";
+    ostr << "vdop = " << rhs.vdop << ", ";
+    ostr << "pdop = " << rhs.pdop;
+    return ostr;
+  }
+
+  std::ostream &
+  operator<<(std::ostream &ostr, const GpsGlobalPositionEventIDL &rhs)
+  {
+    ostr << rhs.time << ": " << rhs.global;
+    return ostr;
+  }
+
+  std::ostream &
+  operator<<(std::ostream &ostr, const GpsRelativePositionEventIDL &rhs)
+  {
+    ostr << rhs.time << ": " << rhs.relative;
+    return ostr;
+  }
+
+  std::ostream &
+  operator<<(std::ostream &ostr, const GpsPositionEventIDL &rhs)
+  {
+    ostr << rhs.time << ": " << rhs.global << " / " << rhs.relative;
+    return ostr;
+  }
+
+  std::ostream &
+  operator<<(std::ostream &ostr, const GpsDilutionEventIDL &rhs)
+  {
+    ostr << rhs.time << ": " << rhs.dilution;
+    return ostr;
+  }
+
+  std::ostream &
+  operator<<(std::ostream &ostr, const GpsSentenceEventIDL &rhs)
+  {
+    ostr << rhs.time << ": " << rhs.sentence;
     return ostr;
   }
 

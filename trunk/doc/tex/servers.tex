@@ -123,6 +123,12 @@ types do exist. Those are described in the subsequent sections.
   To provide a more natural way of communication, some robots are
   equipped with speech synthesizer cards. The speech service registers
   the {\tt Miro::Speech} interface as {\tt Speech}.
+\item[Gps:]
+  Some robots may be equipped with a GPS receiver to allow easy and
+  Odometry-independent positioning. The GPS service registers the
+  {\tt Miro::Gps} interface as {\tt GPS}. Specialized services for
+  particular GPS devices may also register an extended interface derived
+  from {\tt Miro::Gps}, e.g. {\tt Miro::CtGps}.
 \end{description}
 
 
@@ -202,6 +208,18 @@ in the event are listed for the individual services:
 \item[Buttons:] They also provide the event triggered communications
   model that uses the event type {\tt Button}. The events payload is
   of type {\tt ButtonStatusIDL}.
+\item[Gps:] The GPS service sends out events for every position or
+  dilution update received from the device. Position updates are denoted
+  by the type name {\tt GpsPosition} and carry a {\tt
+  GpsPositionEventIDL} payload containing updated information for the
+  global position as well as a local position relative to a freely
+  placeable reference point. Dilution events contain the type name {\tt
+  GpsDilution} and carry a {\tt GpsDilutionEventIDL} type payload.\\
+  Besides that the GPS service is also able to forward selected GPS
+  sentences received from the device for evaluation by the client. If
+  this feature is enabled the generated events will contain the {\tt
+  GpsSentence} type name and carry a {\tt GpsSentenceEventIDL} type
+  payload.
 \end{description}
 
 
@@ -440,6 +458,89 @@ necessary.}
 
 
 \section{Directed Perception Pantilt}
+
+\section{Global Positioning System}
+
+The {\tt GpsService} provides an interface for any NMEA-0183 compatible
+GPS receiver connected via a serial interface. The service implements
+the idl interface {\tt Miro::Gps} or, depending on its configuration, a
+specialized interface derived from it.
+
+The service reads the {\tt GPS::Parameters} from the {\tt Gps} section
+of the XML configuration file. The parameter format is derived from {\tt
+Miro::TtyParameters} and includes the following fields:
+
+\begin{description}
+\item[Device:]
+  The filename of the device which should be used. If no device is
+  specified {\tt /dev/gps} is used.
+\item[Baudrate:]
+  The baudrate for communication with the GPS device. Most receivers
+  communicate at 4800 baud.
+\item[ReceiverType:]
+  The type of the GPS receiver. If this parameter is not specified the
+  {\tt generic} type is used.
+\item[NmeaNotify:]
+  This parameter is a string vector and can hold an arbitrary number of
+  NMEA sentences that should be forwarded to the client. By default this
+  feature is disabled.
+\end{description}
+
+A typical GPS configuration section might look like this:
+
+\begin{lstlisting}[frame=tb]{}
+  <section name="Gps" >
+    <parameter name="GPS::Parameters" >
+      <parameter value="/dev/ttyS1" name="Device" />
+      <parameter value="4800" name="Baudrate" />
+      <parameter value="generic" name="ReceiverType" />
+      <parameter name="NmeaNotify" >
+        <parameter value="GPRRE" />
+        <parameter value="GPVTG" />
+      </parameter>
+    </parameter>
+  </section>
+\end{lstlisting}
+
+In this example any NMEA sentences containing the type name {\tt GPRRE}
+or {\tt GPVTG} are wrapped inside a {\tt GpsSentenceEventIDL} event and
+forwarded to the client.
+
+\subsection{Generic GPS receivers}
+
+The generic GPS implementation is used if the {\tt ReceiverType}
+configuration parameter is either omitted or set to {\tt generic}. In
+this mode the service remains completely passive, i.e. it will read
+sentences sent out by the GPS unit and evaluate any known and verified
+message, but it will not send any commands to the device. If your device
+requires any configuration (i.e. to enable Altitude Aiding or
+Differential GPS) you have to use a separate tool to prepare it and, if
+possible, make the configuration permanent before starting the GPS
+service.
+
+The generic implementation registers the {\tt Miro::Gps} interface as
+{\tt GPS} in the CORBA Naming Service. It provides methods to poll for
+the current position (both global and relative to a relocatable position
+reference), to poll for the dilution of precision values and to place
+the reference point for relative positioning.
+
+\subsection{Star Track GPS receivers}
+
+This implementation is specialized for use with GPS receivers
+manufactured by CT Communication Technology GmbH Friedberg. It was
+developed and tested using a Star Track GSX-1 GPS receiver, but it
+should be compatible compatible with other models by the same vendor (or
+maybe even by other vendors) as well. Set the {\tt ReceiverType} config
+parameter in GPS::Parameters to {\tt ct} in order to use this interface
+instead of the generic one.
+
+In this mode the service implements the {\tt Miro::CtGps} IDL interface
+which is derived from {\tt Miro::Gps} and registers it as {\tt GPS} in
+the Naming Service. The specialized interface provides all methods of
+the generic interface as well as additional methods to configure
+Differential GPS, enable and disable Altitude Aiding, select the rate at
+which each particular NMEA sentence is sent and store the current
+configuration.
 
 %\section{Higher-level Servers}
 
