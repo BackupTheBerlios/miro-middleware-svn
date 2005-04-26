@@ -87,7 +87,7 @@ namespace GPS
 	    sentence[pos] = '\0';
 	    MIRO_LOG(LL_PRATTLE, sentence);
 	    // pass correctly received sentence to consumer
-	    GPS::Message * pmsg = static_cast<const GPS::Message *>(message_);
+	    GPS::Message * pmsg = dynamic_cast<GPS::Message *>(message_);
 	    pmsg->time() = ACE_OS::gettimeofday();
 	    pmsg->set(sentence);
 	    if (pmsg->valid())
