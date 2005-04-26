@@ -426,7 +426,8 @@
 		</parameter>
 	      </parameter>
 	    </parameter>
-	    <!-- Attention Control  -->          <parameter name="Filter" >
+	    <!-- Attention Control  -->
+            <parameter name="Filter" >
 	      <parameter value="YUV422toIndexShrink2" name="Name" />
 	      <parameter value="YUV422toIndexShrink2" name="Type" />
 	      <parameter name="Successor" >
