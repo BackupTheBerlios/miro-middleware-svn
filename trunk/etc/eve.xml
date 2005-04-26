@@ -1,5 +1,5 @@
 <!DOCTYPE MiroConfigDocument>
-  <config>
+ <config>
  <section name="Robot" >
   <parameter name="Miro::RobotParameters" >
    <parameter value="eve" name="Name" />
@@ -251,7 +251,6 @@
    <parameter value="true" name="Tactile" />
    <parameter value="true" name="Sonar" />
    <parameter value="true" name="Camera" />
-   <parameter value="true" name="Camera" />
    <parameter name="CameraParams" >
     <parameter value="canon" name="Vendor" />
     <parameter value="vc-c4" name="Model" />
@@ -270,8 +269,8 @@
     </parameter>
     <parameter name="Shutter">
      <parameter name="Present" value="true"/>
-     <parameter name="RangeMin" value="0, 100"/>
-     <parameter name="RangeMax" value="0, 20000"/>
+     <parameter name="RangeMin" value="0.000100"/>
+     <parameter name="RangeMax" value="0.020000"/>
     </parameter>
    </parameter>
    <parameter name="PanTiltParams">
