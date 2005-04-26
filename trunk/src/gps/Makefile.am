@@ -40,9 +40,7 @@ GpsService_LDADD = \
 	-lmiro
 
 all-local: GpsService
-	$(INSTALLLIBRARIES)
 	$(INSTALLPROGRAMS)
 
 clean-local:
-	$(CLEANLIBRARIES)
 	$(CLEANPROGRAMS)
