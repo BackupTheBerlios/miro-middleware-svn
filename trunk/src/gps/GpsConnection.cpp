@@ -19,6 +19,7 @@
  * $Id$
  */
 
+#include <cmath>
 #include <ace/Reactor.h>
 #include <ace/OS.h>
 
