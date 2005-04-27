@@ -16,6 +16,12 @@
 
 #include <cmath>
 
+#if GCC_MAJOR_VERSION == 2
+#if GCC_MINOR_VERSION == 95
+#include <bits/nan.h>
+#endif
+#endif
+
 namespace Miro
 {
 
