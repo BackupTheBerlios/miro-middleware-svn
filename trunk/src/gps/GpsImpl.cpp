@@ -29,6 +29,9 @@
 #include <string>
 #include <cmath>
 
+const double GPS::GpsImpl::REF_MAX_LAT = 1.5;
+const double GPS::GpsImpl::METERS_PER_RAD = 40070000 / (2 * M_PI);
+
 namespace GPS
 {
   /** Maximum wait time for cond_.wait calls. */

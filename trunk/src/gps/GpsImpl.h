@@ -173,9 +173,9 @@ namespace GPS
     //! Position reference coordinates
     Miro::GpsPositionIDL reference_;
     //! Valid reference latitude range (about -85 .. 85 deg)
-    static const double REF_MAX_LAT = 1.5;
+    static const double REF_MAX_LAT;
     //! Meters per longitude (Equator) or latitude radian
-    static const double METERS_PER_RAD = 40070000 / (2 * M_PI);
+    static const double METERS_PER_RAD;
 
     //-------------------------------------------------------------------------
     // helper functions
