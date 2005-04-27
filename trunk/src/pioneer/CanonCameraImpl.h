@@ -33,6 +33,8 @@ namespace Pioneer
 namespace Canon
 {
   class Answer;
+  class Message;
+
   class CanonCameraImpl :  public virtual POA_Miro::CanonCamera
   {
     //-------------------------------------------------------------------------
@@ -89,6 +91,7 @@ namespace Canon
     bool initialized;
 
     void initialize();
+    void send(const Canon::Message &msg);
   };
 
   inline Answer* CanonCameraImpl::getAnswer() {return pAnswer;}

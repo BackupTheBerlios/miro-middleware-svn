@@ -74,7 +74,7 @@ namespace Pioneer
     //    void setPosition(short x, short y, short theta_rad);
     //    void setOdometryRate(unsigned short ms);
 
-    void sendCamera(Canon::Message cameraMessage);
+    void sendCamera(const Pioneer::CameraMessage& cameraMessage);
     void getCamera(unsigned short length); //get length bytes from AUX1
 
     void gripperCommand(unsigned short command); //send a command to the gripper

@@ -12,9 +12,9 @@
 #ifndef CanonPanTiltMessage_h
 #define CanonPanTiltMessage_h
 
-#include "miro/DevMessage.h"
 #include "miro/Synch.h"
 
+#include "CameraMessage.h"
 #include "CanonDevice.h"
 
 #include <cmath>
@@ -47,7 +47,7 @@ namespace Canon
   
 
 
-  class Message : public Miro::DevMessage
+  class Message : public Pioneer::CameraMessage
   {
   public:
     Message() {} // default get message
@@ -78,43 +78,21 @@ namespace Canon
     int length_;
   }; 
 
-  class Answer
+  class Answer : public Pioneer::CameraAnswer
   {
   public:
-
-    Answer();
-    ~Answer();
-
     unsigned char header() const;
     void header(unsigned char _header);
 
     const unsigned short deviceNum() const;
     void deviceNum(unsigned short num);
 
-    const int length() const;
-
     const unsigned short errorCode() const;
     void errorCode(unsigned short errorCode);
 
     const unsigned char * parameter() const;
 
-    const unsigned char * buffer() const;
-    
     bool isValid() const;
-
-    void init();
-
-    void add(unsigned char val);
-
-    Miro::Mutex mutex;
-    Miro::Condition cond;
-    ACE_Time_Value maxWait;
-
-  protected:
-    static const int MAX_ANSWER_SIZE=128;
-    unsigned char buffer_[MAX_ANSWER_SIZE];
-    int index_;
-    bool valid;
   };
 
   /*  class Timer
@@ -217,11 +195,6 @@ namespace Canon
     buffer_[2]=(unsigned char) num & 0x0ff; 
   }
   inline
-  const int
-  Answer::length() const {
-    return index_;
-  }
-  inline
   const unsigned short
   Answer::errorCode() const {
     if (length()<5) return 0;
@@ -238,15 +211,12 @@ namespace Canon
   Answer::parameter() const { 
     return &buffer_[5]; 
   }
-  inline
-  const unsigned char *
-  Answer::buffer() const { 
-    return buffer_; 
-  }
   inline 
   bool 
   Answer::isValid() const {
-    return valid;
+    if (length() == 0)
+      return false;
+    return (buffer_[length()-1] == END_MARK);
   }
 
 };

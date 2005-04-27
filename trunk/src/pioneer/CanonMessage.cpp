@@ -174,32 +174,4 @@ namespace Canon
     parameter()[length_+1]='\0';
   }
 
-
-  Answer::Answer() :
-    mutex(),
-    cond(mutex),
-    maxWait(0,500000),
-    index_(0),
-    valid(false)
-  {
-  }
-
-  Answer::~Answer()
-  {
-  }
-
-  void
-  Answer::init() {
-    index_=0;
-    header(0x3132);
-    valid=false;
-  }
-
-  void
-  Answer::add(unsigned char val) {
-    buffer_[index_]=val;
-    index_++;
-    valid|=(val==END_MARK); //if the ending mark came, the message is complete
-  }
-
 };

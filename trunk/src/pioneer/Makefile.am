@@ -33,6 +33,8 @@ sources = \
 	PioneerMotionImpl.h \
 	PioneerStallImpl.cpp \
 	PioneerStallImpl.h \
+	CameraMessage.cpp \
+	CameraMessage.h \
 	CanonPanTiltImpl.cpp \
 	CanonPanTiltImpl.h \
 	CanonCameraControlImpl.cpp \

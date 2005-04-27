@@ -17,6 +17,7 @@
 #include "miro/Exception.h"
 #include "miro/SvcParameters.h"
 
+#include "pioneer/CanonMessage.h"
 #include "pioneer/Parameters.h"
 
 //forward declarations
@@ -108,6 +109,7 @@ namespace Canon
     Miro::TimeIDL shutterCanon2Time(short value, std::string format);
 
     void initialize();
+    void send(const Canon::Message &msg);
   };
 
   inline Canon::Answer* CanonCameraControlImpl::getAnswer() {return pAnswer;}

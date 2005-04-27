@@ -16,8 +16,7 @@
 #include "PioneerMotionImpl.h"
 #include "idl/CompassEventC.h"
 #include "TCM2Impl.h"
-#include "pioneer/CanonPanTiltImpl.h"
-//#include "pioneer/CanonPanTiltMessage.h"
+#include "CameraMessage.h"
 
 #include "idl/RangeEventC.h"
 #include "miro/RangeSensorImpl.h"
@@ -25,6 +24,7 @@
 #include "miro/BatteryImpl.h"
 #include "miro/TimeHelper.h"
 #include "miro/Angle.h"
+#include "miro/Log.h"
 
 #include "psos/PsosMessage.h"
 #include <cmath>
@@ -39,9 +39,9 @@
 
 namespace Pioneer
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
+//  using std::cout;
+//  using std::cerr;
+//  using std::endl;
   using std::hex;
   using std::dec;
 
@@ -59,7 +59,7 @@ namespace Pioneer
 		     Miro::BatteryImpl * _pBattery,
 		     Pioneer::StallImpl * _pStall,
 		     Pioneer::TCM2Impl * _pTCM2,
-		     Canon::CanonPanTiltImpl * _pCanonPanTilt) :
+		     Pioneer::CameraAnswer * _pCameraAnswer) :
     pSonar(_pSonar),
     pTactile(_pTactile),
     pInfrared(_pInfrared),
@@ -68,20 +68,19 @@ namespace Pioneer
     pBattery(_pBattery),
     pStall(_pStall),
     pTCM2(_pTCM2),
-    pCanonPanTilt(_pCanonPanTilt),
+    pCameraAnswer(_pCameraAnswer),
     prevX(0),
     prevY(0),
     bumpers_(0x3e3e),
     params_(Parameters::instance())
   { 
-    DBG(cout << "Constructing PioneerConsumer." << endl);
+    MIRO_LOG(LL_CTOR_DTOR, "Constructing PioneerConsumer.");
 
     status_.position.point.x = 0.;
     status_.position.point.y = 0.;
     status_.position.heading = 0.;
     status_.velocity.translation = 0;
     status_.velocity.rotation = 0.;
-    pAnswer=(pCanonPanTilt!=NULL)?pCanonPanTilt->getAnswer():NULL;
   }
 
 
@@ -90,7 +89,7 @@ namespace Pioneer
   //----------------------//
   Consumer::~Consumer()
   { 
-    DBG(cout << "Destructing PioneerConsumer." << endl);
+    MIRO_LOG(LL_CTOR_DTOR, "Destructing PioneerConsumer.");
   }
 
   // reads incoming packets from the psos connection and stores the values
@@ -99,7 +98,7 @@ namespace Pioneer
   void 
   Consumer::handleMessage(const Miro::DevMessage * _message)
   {
-    // DBG(cerr << "PioneerConsumer: handle message" << endl);
+    MIRO_LOG(LL_PRATTLE, "PioneerConsumer: handle message");
 
     const Psos::Message * pPsosMsg = static_cast<const Psos::Message *>(_message);
 
@@ -167,7 +166,7 @@ namespace Pioneer
 	//------------------------------
 	  
 	if (pSonar && message->sonarReadings() > 0) {
-	  //  DBG(cout << "Sonar readings: " << message->sonarReadings() << endl);
+	  MIRO_LOG_OSTR(LL_DEBUG, "Sonar readings: " << message->sonarReadings());
 	    
 	  RangeBunchEventIDL * pSonarEvent = new RangeBunchEventIDL();
 	  pSonarEvent->time.sec  = message->time().sec();
@@ -205,7 +204,7 @@ namespace Pioneer
 	  unsigned short rBump = message->rBumper();
 	  unsigned short lBump = message->lBumper();
 	  pStall->integrateData(rBump,lBump);
-	  //cout << "Stall: " << lBump << "--" << rBump << endl;
+	  MIRO_LOG_OSTR(LL_DEBUG, "Stall: " << lBump << "--" << rBump);
 	}
 	  
 	if (pTactile) {
@@ -253,7 +252,7 @@ namespace Pioneer
 	//-------------------------------------------------------------------
 	if (pBattery) {
 	  pBattery->integrateData(message->battery());
-	  //cout << "Battery: " << bat << endl;
+	  MIRO_LOG_OSTR(LL_DEBUG, "Battery: " << message->battery());
 	}
 
 	//-------------------------------------------------------------------
@@ -274,12 +273,10 @@ namespace Pioneer
       // SERAUXpac SIP
       //-------------------------------------------------------------------
       else if (pPsosMsg->id() == 0xb0) { //SERAUXpac SIP
-	cout << "serial answer" << endl;
-	if (pAnswer) {
-	  Miro::Guard guard(pAnswer->mutex);
-	  for (int i = 4; i < 4 + pPsosMsg->buffer()[2] - 3; ++i) 
-	    pAnswer->add(pPsosMsg->buffer()[i]);
-	  pAnswer->cond.broadcast();
+	MIRO_LOG(LL_DEBUG,"serial answer");
+	if (pCameraAnswer) {
+	  int length = pPsosMsg->buffer()[2] - 3;
+	  pCameraAnswer->add(pPsosMsg->buffer() + 4, length);
 	}
       }
 
@@ -347,13 +344,13 @@ namespace Pioneer
       }
 
       else {
-       std::cerr << "Unkown message header: "
-		 << hex << pPsosMsg->header() << dec << endl;
+       MIRO_LOG_OSTR(LL_ERROR, "Unkown message header: "
+		 << hex << pPsosMsg->header() << dec);
       }
     }
     else {
-      std::cerr << "Unkown message header: "
-		<< hex << pPsosMsg->header() << dec << endl;
+      MIRO_LOG_OSTR(LL_ERROR, "Unkown message header: "
+		<< hex << pPsosMsg->header() << dec);
     }
   }
 };

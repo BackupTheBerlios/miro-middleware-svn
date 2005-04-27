@@ -63,7 +63,7 @@ namespace Canon
   CanonCameraImpl::done() 
   {
     Canon::Message msg(LOCAL_CONTROL_MODE,0x31);
-    connection.sendCamera(msg);
+    send(msg);
   }
 
   // 
@@ -87,7 +87,7 @@ namespace Canon
     while (!done) {
       Miro::Guard guard(pAnswer->mutex); 
       pAnswer->init();
-      connection.sendCamera(zoom);
+      send(zoom);
       checkAnswer();
       //keep trying...
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
@@ -107,7 +107,7 @@ namespace Canon
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
-      connection.sendCamera(zoom);
+      send(zoom);
       while (!pAnswer->errorCode()) {
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
 	timeout+=maxWait;
@@ -148,7 +148,7 @@ namespace Canon
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
-      connection.sendCamera(focus);
+      send(focus);
       checkAnswer();
       //keep trying...
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
@@ -170,7 +170,7 @@ namespace Canon
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
-      connection.sendCamera(focus);
+      send(focus);
       while (!pAnswer->errorCode()) {
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
 	timeout+=maxWait;
@@ -206,7 +206,7 @@ namespace Canon
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
-      connection.sendCamera(focus);
+      send(focus);
       checkAnswer();
       //keep trying...
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
@@ -226,7 +226,7 @@ namespace Canon
     while (!done) {
       Miro::Guard guard(pAnswer->mutex); 
       pAnswer->init();
-      connection.sendCamera(focus);
+      send(focus);
       while (!pAnswer->errorCode()) {
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
 	timeout+=maxWait;
@@ -266,7 +266,7 @@ namespace Canon
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
-      connection.sendCamera(aeLock);
+      send(aeLock);
       checkAnswer();
       //keep trying...
       cout <<"antwort" <<pAnswer->errorCode()<< endl;
@@ -286,7 +286,7 @@ namespace Canon
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
-      connection.sendCamera(aeLock);
+      send(aeLock);
       checkAnswer();
       //keep trying...
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
@@ -305,7 +305,7 @@ namespace Canon
     if (value > 255) value = 255;
     Message aeValue(LIGHT_AE,strcat(fixChar, int2str(tmp,value,2)));
 cout << aeValue<< endl;
-connection.sendCamera(aeValue);
+send(aeValue);
 checkAnswer();
 cout << " error" << pAnswer->errorCode() << endl;
 /*
@@ -313,7 +313,7 @@ cout << " error" << pAnswer->errorCode() << endl;
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
-      connection.sendCamera(aeValue);
+      send(aeValue);
       checkAnswer();
       //keep trying...
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
@@ -332,14 +332,14 @@ cout << " error" << pAnswer->errorCode() << endl;
     if (value > 16) value = 16;
     Message aeIris(LIGHT_AE,strcat(fixChar, int2str(tmp,value,2)));
 cout << aeIris << endl;
-connection.sendCamera(aeIris);
+send(aeIris);
 checkAnswer();
 cout << "Error:" <<pAnswer->errorCode() << endl;
 
 /*    while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
-      connection.sendCamera(aeIris);
+      send(aeIris);
       checkAnswer();
       //keep trying...
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
@@ -357,14 +357,14 @@ cout << "Error:" <<pAnswer->errorCode() << endl;
     if (value < 0) value = 0;
     if (value > 255) value = 255;
     Message gainValue(LIGHT_AE,strcat(fixChar, int2str(tmp,value,3)));
-connection.sendCamera(gainValue);
+send(gainValue);
 checkAnswer();
 cout << "error" << pAnswer->errorCode()<< endl;
 
 /*    while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
-      connection.sendCamera(gainValue);
+      send(gainValue);
       checkAnswer();
       //keep trying...
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
@@ -383,13 +383,13 @@ cout << "error" << pAnswer->errorCode()<< endl;
     if (value > 25) value = 25;
     Message shutterSpeedValue(LIGHT_AE,strcat(fixChar, int2str(tmp,value,3)));
 
-connection.sendCamera(shutterSpeedValue);
+send(shutterSpeedValue);
 checkAnswer();
 cout << "error" <<pAnswer->errorCode()<< endl;
 /*    while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
-      connection.sendCamera(shutterSpeedValue);
+      send(shutterSpeedValue);
       checkAnswer();
       //keep trying...
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
@@ -406,7 +406,7 @@ cout << "error" <<pAnswer->errorCode()<< endl;
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
-      connection.sendCamera(aeLock);
+      send(aeLock);
       checkAnswer();
       //keep trying...
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
@@ -423,7 +423,7 @@ cout << "error" <<pAnswer->errorCode()<< endl;
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
-      connection.sendCamera(aeLock);
+      send(aeLock);
       checkAnswer();
       //keep trying...
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
@@ -439,7 +439,7 @@ cout << "error" <<pAnswer->errorCode()<< endl;
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
-      connection.sendCamera(wbLock);
+      send(wbLock);
       checkAnswer();
       //keep trying...
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
@@ -457,7 +457,7 @@ cout << "error" <<pAnswer->errorCode()<< endl;
     if (value > 255) value = 255;
     Message wbValue(WHITE_BALANCE,strcat(fixChar, int2str(tmp,value,2)));
 cout << wbValue<< endl;
-connection.sendCamera(wbValue);
+send(wbValue);
 checkAnswer();
 cout << " error" << pAnswer->errorCode() << endl;
   }
@@ -475,10 +475,18 @@ cout << " error" << pAnswer->errorCode() << endl;
       Miro::Guard guard(pAnswer->mutex);
       Canon::Message msg(HOST_CONTROL_MODE,0x30);
       pAnswer->init();
-      connection.sendCamera(msg);
+      send(msg);
       checkAnswer();
     }
     initialized=true;
+  }
+
+  void
+  CanonCameraImpl::send(const Canon::Message &msg)
+  {
+    connection.getCamera(0); //flush buffer
+    connection.sendCamera(msg);
+    connection.getCamera(6); //get minimum answer
   }
 
   void CanonCameraImpl::checkAnswer() throw (Miro::EDevIO,Miro::EOutOfBounds, Miro::ETimeOut)

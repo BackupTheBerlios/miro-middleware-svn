@@ -16,6 +16,7 @@
 #include "pioneer/Parameters.h"
 #include "pioneer/PioneerConsumer.h"
 #include "pioneer/PioneerStallImpl.h"
+#include "pioneer/CameraMessage.h"
 #include "pioneer/CanonPanTiltImpl.h"
 
 #include "pioneer/CanonCameraControlImpl.h"
@@ -27,6 +28,7 @@
 #include "miro/ReactorTask.h"
 #include "miro/IO.h"
 #include "miro/Utils.h"
+#include "miro/Configuration.h"
 #include "miro/TimeHelper.h"
 #include "miro/RangeSensorImpl.h"
 #include "miro/OdometryImpl.h"
@@ -78,6 +80,7 @@ struct Service
   Miro::RangeSensorImpl * pRangeSensorImpl;
   Miro::OdometryImpl * pOdometryImpl;
   Miro::BatteryImpl * pBatteryImpl;
+  Pioneer::CameraAnswer * pCameraAnswer;
   Pioneer::Consumer * pConsumer;
   Pioneer::StallImpl * pStallImpl;
   Pioneer::TCM2Impl * pTCM2Impl;
@@ -91,6 +94,7 @@ struct Service
   Pioneer::Connection connection;
   
   Service();
+  ~Service();
 };
 
 
@@ -99,19 +103,31 @@ Service::Service() :
   pRangeSensorImpl(new Miro::RangeSensorImpl(Pioneer::Parameters::instance()->sonarDescription)),
   pOdometryImpl(new Miro::OdometryImpl(NULL)),
   pBatteryImpl(new Miro::BatteryImpl()),
-  pConsumer(new Pioneer::Consumer(pRangeSensorImpl, NULL, NULL, NULL, pOdometryImpl, NULL, NULL, NULL, pPanTiltImpl)),
+  pCameraAnswer(new Pioneer::CameraAnswer()),
+  pConsumer(new Pioneer::Consumer(pRangeSensorImpl, NULL, NULL, NULL, pOdometryImpl, NULL, NULL, NULL, pCameraAnswer)),
   pStallImpl(new Pioneer::StallImpl()),
   pTCM2Impl(new Pioneer::TCM2Impl(Pioneer::Parameters::instance()->tcm2Params, NULL)),
-  pPanTiltImpl(new Canon::CanonPanTiltImpl(connection, Pioneer::Parameters::instance()->panTiltParams, Pioneer::Parameters::instance()->cameraParams.upsideDown)),
 #ifdef MIRO_HAS_DEPRECATED
-  canonCamera(connection, pPanTiltImpl->getAnswer()),
+  canonCamera(connection, static_cast<Canon::Answer *>(pCameraAnswer)),
 #endif
   gripper(connection),
   pEventHandler(new Psos::EventHandler(pConsumer,
 				       connection, 
 				       Pioneer::Parameters::instance())),
   connection(reactorTask.reactor(), pEventHandler, pConsumer)
-{}
+{
+  Canon::Answer * pAnswer = static_cast<Canon::Answer *>(pCameraAnswer);
+  pPanTiltImpl=new
+    Canon::CanonPanTiltImpl(connection, pAnswer,
+			    Pioneer::Parameters::instance()->panTiltParams,
+			    Pioneer::Parameters::instance()->cameraParams.upsideDown);
+}
+
+Service::~Service()
+{
+  if (pPanTiltImpl)
+    delete(pPanTiltImpl);
+}
 
 void gripperMenu(Service& service)
 {
@@ -472,11 +488,16 @@ void cameraMenu(Service& service)
 
 int main(int argc, char* argv[])
 {
+  Miro::Configuration::init(argc,argv);
+
   // Parameters to be passed to the services
+  Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
   Pioneer::Parameters * pParams = Pioneer::Parameters::instance();
 
   // Config file processing
   Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
+  config->setSection("Robot");
+  config->getParameters("Miro::RobotParameters", *robotParameters);
   config->setSection("ActiveMedia");
   config->getParameters("PioneerBoard", *pParams);
 

@@ -13,6 +13,7 @@
 #include "pioneer/CanonPanTiltImpl.h"
 #include "pioneer/PioneerConnection.h"
 #include "pioneer/PioneerConsumer.h"
+#include "pioneer/CameraMessage.h"
 #include "pioneer/CanonMessage.h"
 #include "pioneer/Parameters.h"
 
@@ -54,11 +55,11 @@ namespace Canon
   ACE_Time_Value CanonPanTiltImpl::maxWait = ACE_Time_Value(0, 500000);
 
   CanonPanTiltImpl::CanonPanTiltImpl(Pioneer::Connection& _connection,
+				     Answer * _pAnswer,
 				     Miro::PanTiltParameters _panTiltParameters,
 				     bool _upsideDown) throw(Exception) :
     PanTiltImpl(_panTiltParameters),
-    answer(),
-    pAnswer(&answer),
+    pAnswer(_pAnswer),
     connection(_connection),
     initialized(false),
     panPulseRatio(0.1125),
@@ -81,13 +82,8 @@ namespace Canon
   CanonPanTiltImpl::~CanonPanTiltImpl()
   {
     DBG(cout << "Destructing CanonPanTiltImpl" << endl);
-  }
-  
-  void
-  CanonPanTiltImpl::done() 
-  {
     Canon::Message msg(LOCAL_CONTROL_MODE,0x31);
-    connection.sendCamera(msg);
+    send(msg);
   }
   
   // 
@@ -158,7 +154,7 @@ namespace Canon
     while(!done) {
       Miro::Guard guard(pAnswer->mutex);       
       pAnswer->init();
-      connection.sendCamera(getPanTilt);
+      send(getPanTilt);
 
       while (!pAnswer->errorCode()) {
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
@@ -224,7 +220,7 @@ namespace Canon
       { //scope for mutex
 	Miro::Guard guard(pAnswer->mutex); 
 	pAnswer->init();
-	connection.sendCamera(panTiltValue);
+	send(panTiltValue);
 	try {
 	  while (!pAnswer->errorCode()) {
 	    ACE_Time_Value timeout(ACE_OS::gettimeofday());
@@ -266,7 +262,7 @@ namespace Canon
 	Miro::Guard guard(pAnswer->mutex); 
 	pAnswer->init();
 	Message stop(PAN_TILT_STOP,0x30);
-	connection.sendCamera(stop);
+	send(stop);
 	checkAnswer();
       }
     }
@@ -329,7 +325,7 @@ namespace Canon
       Miro::Guard guard(pAnswer->mutex); 
       
       pAnswer->init();
-      connection.sendCamera(setPanSpeed);
+      send(setPanSpeed);
       //wait for completion
       checkAnswer();
     }//scope for mutex end
@@ -338,7 +334,7 @@ namespace Canon
       Miro::Guard guard(pAnswer->mutex); 
 
       pAnswer->init();
-      connection.sendCamera(setTiltSpeed);
+      send(setTiltSpeed);
       //wait for completion
       checkAnswer();
     }//scope for mutex end
@@ -362,7 +358,7 @@ namespace Canon
       Miro::Guard guard(pAnswer->mutex); 
 
       pAnswer->init();
-      connection.sendCamera(getPanSpeed);
+      send(getPanSpeed);
       //wait for error code completion
       while (!pAnswer->errorCode()) {
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
@@ -383,7 +379,7 @@ namespace Canon
       Miro::Guard guard(pAnswer->mutex); 
 
       pAnswer->init();
-      connection.sendCamera(getTiltSpeed);
+      send(getTiltSpeed);
       //wait for error code completion
       while (!pAnswer->errorCode()) {
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
@@ -406,7 +402,7 @@ namespace Canon
 
       //if not initialized, get it from the camera;
       pAnswer->init();
-      connection.sendCamera(minPanSpeed);
+      send(minPanSpeed);
       //wait for error code completion
       while (!pAnswer->errorCode()) {
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
@@ -428,7 +424,7 @@ namespace Canon
       Miro::Guard guard(pAnswer->mutex); 
       //if not initialized, get it from the camera
       pAnswer->init();
-      connection.sendCamera(minTiltSpeed);
+      send(minTiltSpeed);
       //wait for error code completion
       while (!pAnswer->errorCode()) {
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
@@ -453,7 +449,7 @@ namespace Canon
       Miro::Guard guard(pAnswer->mutex); 
       //if not initialized, get it from the camera
       pAnswer->init();
-      connection.sendCamera(maxPanSpeed);
+      send(maxPanSpeed);
       //wait for error code completion
       while (!pAnswer->errorCode()) {
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
@@ -476,7 +472,7 @@ namespace Canon
       Miro::Guard guard(pAnswer->mutex); 
       //if not initialized, get it from the camera
       pAnswer->init();
-      connection.sendCamera(maxTiltSpeed);
+      send(maxTiltSpeed);
       //wait for error code completion
       while (!pAnswer->errorCode()) {
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
@@ -516,7 +512,7 @@ namespace Canon
       Miro::Guard guard(pAnswer->mutex); 
       //if not initialized, get it from the camera;
       pAnswer->init();
-      connection.sendCamera(getMinPan);
+      send(getMinPan);
       //wait for error code completion
       while (!pAnswer->errorCode()) {
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
@@ -537,7 +533,7 @@ namespace Canon
       Miro::Guard guard(pAnswer->mutex); 
       //if not initialized, get it from the camera
       pAnswer->init();
-      connection.sendCamera(getMinTilt);
+      send(getMinTilt);
       //wait for error code completion
       while (!pAnswer->errorCode()) {
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
@@ -558,7 +554,7 @@ namespace Canon
       Miro::Guard guard(pAnswer->mutex); 
       //if not initialized, get it from the camera
       pAnswer->init();
-      connection.sendCamera(getMaxPan);
+      send(getMaxPan);
       //wait for error code completion
       while (!pAnswer->errorCode()) {
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
@@ -579,7 +575,7 @@ namespace Canon
       Miro::Guard guard(pAnswer->mutex); 
       //if not initialized, get it from the camera
       pAnswer->init();
-      connection.sendCamera(getMaxTilt);
+      send(getMaxTilt);
       //wait for error code completion
       while (!pAnswer->errorCode()) {
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
@@ -640,7 +636,7 @@ namespace Canon
     Miro::Guard guard(pAnswer->mutex); 
    
     pAnswer->init();
-    connection.sendCamera(getRatio);
+    send(getRatio);
     while (!pAnswer->errorCode()) {
       ACE_Time_Value timeout(ACE_OS::gettimeofday());
       timeout += maxWait;
@@ -672,7 +668,7 @@ namespace Canon
     Miro::Guard guard(pAnswer->mutex); 
 
     pAnswer->init();
-    connection.sendCamera(getRatio);
+    send(getRatio);
     while (!pAnswer->errorCode()) {
       ACE_Time_Value timeout(ACE_OS::gettimeofday());
       timeout += maxWait;
@@ -701,12 +697,12 @@ namespace Canon
 
       Canon::Message msg(HOST_CONTROL_MODE,0x30);
       pAnswer->init();
-      connection.sendCamera(msg);
+      send(msg);
       checkAnswer();
 
       Canon::Message initMsg(INITIALIZE1,0x030);
       pAnswer->init();
-      connection.sendCamera(initMsg);
+      send(initMsg);
       checkAnswer();
     }//scope for mutex
 
@@ -745,6 +741,14 @@ namespace Canon
 	done = false;
       }
     } while(!done);
+  }
+
+  void
+  CanonPanTiltImpl::send(const Canon::Message &msg)
+  {
+    connection.getCamera(0); //flush buffer
+    connection.sendCamera(msg);
+    connection.getCamera(6); //get minimum answer
   }
 
   void 

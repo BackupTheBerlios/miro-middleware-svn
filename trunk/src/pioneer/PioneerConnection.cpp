@@ -61,9 +61,6 @@ namespace Pioneer
   Connection::~Connection()
   { 
     DBG(cout << "Destructing PioneerConnection." << endl);
-
-    //if there is a camera, close the connection
-    if (consumer->pCanonPanTilt!=NULL) consumer->pCanonPanTilt->done();
   }
 
   //-------------------//
@@ -187,12 +184,10 @@ namespace Pioneer
     writeMessage(kickMessage);               // send it
   }
 
-  void Connection::sendCamera(Canon::Message cameraMessage)
+  void Connection::sendCamera(const Pioneer::CameraMessage& cameraMessage)
   {
-    getCamera(0); //flush buffer
     Message camMsg(SF_COMTTY2,(char*)cameraMessage.buffer(),cameraMessage.length());
     writeMessage(camMsg);
-    getCamera(6); //get minimum answer 
   }
 
   void Connection::getCamera(unsigned short length)

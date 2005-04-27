@@ -23,6 +23,7 @@
 #include "pioneer/PioneerConsumer.h"
 #include "pioneer/PioneerMotionImpl.h"
 #include "pioneer/PioneerStallImpl.h"
+#include "pioneer/CameraMessage.h"
 #include "pioneer/CanonPanTiltImpl.h"
 #include "pioneer/CanonCameraControlImpl.h"
 
@@ -97,15 +98,16 @@ private:
   Pioneer::MotionImpl motion;
   Pioneer::StallImpl  stall;
   Pioneer::TCM2Impl tcm2;
+  Pioneer::CameraAnswer cameraAnswer;
   Miro::RangeSensorImpl sonar;
   Miro::RangeSensorImpl tactile;
   Miro::RangeSensorImpl infrared;
-  Canon::CanonPanTiltImpl * pPanTiltImpl;
+  // The implementation of these two depends on the particular camera type:
+  Miro::PanTiltImpl * pPanTiltImpl;
+  Miro::CameraControlImpl * pCameraControlImpl;
 #ifdef MIRO_HAS_DEPRECATED
   Canon::CanonCameraImpl canonCamera;
 #endif
-  //  Miro::PanTiltImpl * panTilt;
-  Canon::CanonCameraControlImpl * pCameraControlImpl;
   Miro::GripperImpl gripper;
   Miro::ObjectVectorImpl objectVector;
   //Miro::CortexImpl cortex;
@@ -121,9 +123,8 @@ private:
 #ifdef MIRO_HAS_DEPRECATED
   Miro::CanonCamera_var pCanonCamera;
 #endif
-  //  Miro::CanonPanTilt_var pCanonPanTilt;
-  Miro::CanonPanTilt_var pPanTilt;
-  Miro::CanonCameraControl_var pCameraControl;
+  Miro::PanTilt_var pPanTilt;
+  Miro::CameraControl_var pCameraControl;
   Miro::Gripper_var pGripper;
   Miro::ObjectVector_var pObjectVector;
   //Miro::Cortex_var pCortex;

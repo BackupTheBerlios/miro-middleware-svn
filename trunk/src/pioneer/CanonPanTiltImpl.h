@@ -43,6 +43,7 @@ namespace Canon
   public:
     // Constructor/Destructor
     CanonPanTiltImpl(Pioneer::Connection& _connection,
+		     Answer * _pAnswer,
 		     Miro::PanTiltParameters _panTiltParameters,
 		     bool _upsideDown = false) throw(Miro::Exception);
     virtual ~CanonPanTiltImpl();
@@ -98,15 +99,9 @@ namespace Canon
     virtual Miro::PanTiltLimitsIDL getLimits()
       throw(Miro::EDevIO, Miro::ETimeOut);
    
-    Answer * getAnswer();
     void checkAnswer() throw(Miro::EDevIO,Miro::EOutOfBounds, Miro::ETimeOut);
 
-    //closes the connection and returns control to Remote Controller
-    void done();
-
-
   protected:
-    Answer answer;
     Answer * pAnswer;
 
     Pioneer::Connection&         connection; // encapsulating communication to hardware
@@ -131,12 +126,10 @@ namespace Canon
     double getTiltPulseRatio();
     void initialize();
     void waitInitialize(bool force=false,bool forceWait=false);
+    void send(const Canon::Message &msg);
 
   };
-
-  inline Answer* CanonPanTiltImpl::getAnswer() {
-    return &answer;
-  }
+  
 }
 
 #endif

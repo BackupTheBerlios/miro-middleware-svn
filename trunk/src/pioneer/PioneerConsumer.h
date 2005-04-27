@@ -24,7 +24,7 @@ namespace Miro
   class OdometryImpl;
   class RangeSensorImpl;
   class BatteryImpl;
-};
+}
 
 namespace Canon
 {
@@ -46,6 +46,7 @@ namespace Pioneer
                                                           // nur zum test
   class StallImpl;
   class TCM2Impl;
+  class CameraAnswer;
 
   class Consumer : public Miro::DevConsumer
   {
@@ -59,7 +60,7 @@ namespace Pioneer
 	     Miro::BatteryImpl * _pBattery = NULL,
 	     Pioneer::StallImpl * _pStall = NULL,
 	     Pioneer::TCM2Impl * _pTCM2 = NULL,
-	     Canon::CanonPanTiltImpl * _pCanonPanTilt=NULL);
+	     Pioneer::CameraAnswer * _pCameraAnswer = NULL);
     ~Consumer();
 
     virtual void handleMessage(const Miro::DevMessage * _message);
@@ -73,12 +74,7 @@ namespace Pioneer
     Miro::BatteryImpl * pBattery;
     Pioneer::StallImpl * pStall;
     Pioneer::TCM2Impl * pTCM2;
-    //public:
-    //must be public in order for the connection to close the camera
-    Canon::CanonPanTiltImpl * pCanonPanTilt;
-    //will be used for CanonCamera too
-    Canon::Answer *pAnswer;
-    // protected:    
+    Pioneer::CameraAnswer * pCameraAnswer;
 
     Miro::MotionStatusIDL status_;
     short prevX, prevY;

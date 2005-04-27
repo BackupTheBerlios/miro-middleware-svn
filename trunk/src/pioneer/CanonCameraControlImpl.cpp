@@ -79,7 +79,7 @@ namespace Canon
     while (!done) {
       Miro::Guard guard(pAnswer->mutex); 
       pAnswer->init();
-      connection.sendCamera(zoom);
+      send(zoom);
       checkAnswer();
       //keep trying...
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
@@ -99,7 +99,7 @@ namespace Canon
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
-      connection.sendCamera(zoom);
+      send(zoom);
       while (!pAnswer->errorCode()) {
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
 	timeout+=maxWait;
@@ -150,7 +150,7 @@ namespace Canon
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
-      connection.sendCamera(focusMsg);
+      send(focusMsg);
       checkAnswer();
       //keep trying...
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
@@ -172,7 +172,7 @@ namespace Canon
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
-      connection.sendCamera(focus);
+      send(focus);
       while (!pAnswer->errorCode()) {
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
 	timeout+=maxWait;
@@ -211,7 +211,7 @@ namespace Canon
     while (!done) {
       Miro::Guard guard(pAnswer->mutex); 
       pAnswer->init();
-      connection.sendCamera(focus);
+      send(focus);
       while (!pAnswer->errorCode()) {
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
 	timeout+=maxWait;
@@ -252,7 +252,7 @@ namespace Canon
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
-      connection.sendCamera(focus);
+      send(focus);
       checkAnswer();
       //keep trying...
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
@@ -345,7 +345,7 @@ namespace Canon
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
-      connection.sendCamera(shutter);
+      send(shutter);
       checkAnswer();
       //keep trying...
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
@@ -459,7 +459,7 @@ namespace Canon
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
-      connection.sendCamera(shutter);
+      send(shutter);
       while (!pAnswer->errorCode()) {
 	ACE_Time_Value timeout(ACE_OS::gettimeofday());
 	timeout+=maxWait;
@@ -497,7 +497,7 @@ namespace Canon
     while (!done) {
       Miro::Guard guard(pAnswer->mutex);
       pAnswer->init();
-      connection.sendCamera(aeLock);
+      send(aeLock);
       checkAnswer();
       //keep trying...
       if (pAnswer->errorCode()==ERROR_NO_ERROR) done=true;
@@ -516,10 +516,18 @@ namespace Canon
       Miro::Guard guard(pAnswer->mutex);
       Canon::Message msg(HOST_CONTROL_MODE,0x30);
       pAnswer->init();
-      connection.sendCamera(msg);
+      send(msg);
       checkAnswer();
     }
     initialized=true;
+  }
+
+  void
+  CanonCameraControlImpl::send(const Canon::Message &msg)
+  {
+    connection.getCamera(0); //flush buffer
+    connection.sendCamera(msg);
+    connection.getCamera(6); //get minimum answer
   }
 
   void CanonCameraControlImpl::checkAnswer() throw (Miro::EDevIO,Miro::EOutOfBounds, Miro::ETimeOut)
