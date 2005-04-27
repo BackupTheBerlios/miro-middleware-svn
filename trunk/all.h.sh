@@ -51,3 +51,6 @@ for j in `cat pch/all.h.tmp2`; do
 	fi
     done
 done
+
+rm -f pch/all.h.tmp1
+rm -f pch/all.h.tmp2
