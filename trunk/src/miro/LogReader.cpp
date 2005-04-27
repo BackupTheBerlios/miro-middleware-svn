@@ -223,8 +223,22 @@ namespace Miro
       // direct copies from TAO sources
       // read the any payload
 
-#if (TAO_MAJOR_VERSION > 1) || \
-  ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION >= 4)) || \
+#if ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 4 && TAO_BETA_VERSION >= 4)) || \
+  ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION >= 5))
+
+      try {
+
+	TAO::Unknown_IDL_Type *impl = new TAO::Unknown_IDL_Type (tc, *istr_);
+	_event.remainder_of_body.replace (impl);
+	impl->_tao_decode (*istr_);
+      }
+      catch (CORBA::Exception const&) {
+	eof_ = true;
+	return false;
+      }
+
+#elif (TAO_MAJOR_VERSION > 1) || \
+  ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 4) && (TAO_BETA_VERSION <= 3)) ||	\
   ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 3 && TAO_BETA_VERSION >= 5)) 
 
       try {
