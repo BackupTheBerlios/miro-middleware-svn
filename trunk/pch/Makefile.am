@@ -28,5 +28,5 @@ lib_LTLIBRARIES = libfoo.la
 libfoo_la_SOURCES = foo.cc 
 
 # BUILT_SOURCES = all.h.gch
-CLEANFILES = all_static.h all_static.h.gch all_shared.h all_shared.h.gch all.h.tmp1 all.h.tmp2 all.h
+CLEANFILES = all_static.h all_static.h.gch all_shared.h all_shared.h.gch all.h.tmp1 all.h.tmp2
 
