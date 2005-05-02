@@ -20,6 +20,7 @@ DpPanTilt
 DpPanTiltTest
 DtlkSpeech
 DtlkSpeechTest
+DummyBehaviourEngine
 DynamicPolicyTest
 EventChannel
 FaulTest
@@ -44,7 +45,6 @@ MakeParams
 Makefile
 Makefile.in
 McpPerformance
-MiroImage
 MotionStatusNotify
 MotionStatusPoll
 MotionTest
@@ -65,7 +65,6 @@ PlayerBase
 PolicyController
 PolicyEditor
 PolicyParsingTest
-PollImages
 PollInfrared
 PollPosition
 PollResponse
@@ -102,7 +101,6 @@ SynchroMotionTest
 TCM2Get
 TCM2Poll
 TCM2Stream
-TestImageClient
 TestRemoteVideoClient
 TestVideoClient
 VideoBrokerTest
