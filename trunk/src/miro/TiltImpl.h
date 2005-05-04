@@ -57,8 +57,8 @@ namespace Miro
   inline 
   bool
   TiltImpl::testTilt(CORBA::Float _angle) const throw() {
-    return ((_angle >= params_.rangeMin) &&
-	    (_angle <= params_.rangeMax));
+    return ((_angle >= float(params_.rangeMin)) &&
+	    (_angle <= float(params_.rangeMax)));
   }
   
   inline
