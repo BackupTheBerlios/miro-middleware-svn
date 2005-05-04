@@ -19,15 +19,18 @@ CPPFLAGS+=-include $(top_builddir)/pch/all_static.h
 endif
 
 
-bin_PROGRAMS = VideoBrokerTest
+bin_PROGRAMS = VideoBrokerTest VideoBrokerTestBrief
 
 
 VideoBrokerTest_SOURCES = VideoBrokerTest.cpp
-
 VideoBrokerTest_LDADD = \
 	-lmiro
 
-all-local: VideoBrokerTest
+VideoBrokerTestBrief_SOURCES = VideoBrokerTestBrief.cpp
+VideoBrokerTestBrief_LDADD = \
+	-lmiro
+
+all-local: VideoBrokerTest VideoBrokerTestBrief
 	$(INSTALLPROGRAMS)
 
 clean-local:
