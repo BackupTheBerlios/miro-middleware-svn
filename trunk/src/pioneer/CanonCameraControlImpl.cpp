@@ -123,7 +123,7 @@ namespace Canon
     return (zoomParameters_.rangeMin+((zoomParameters_.rangeMax-zoomParameters_.rangeMin)/128)*(128-result));
   }
 
-  void CanonCameraControlImpl::setFocus(short value) throw(Miro::EDevIO, Miro::EOutOfBounds,Miro::ETimeOut)
+  void CanonCameraControlImpl::setFocus(float value) throw(Miro::EDevIO, Miro::EOutOfBounds,Miro::ETimeOut)
   {
     if (!focusParameters_.present) {
       throw Miro::EDevIO("Focus not supported");
@@ -158,10 +158,10 @@ namespace Canon
 
   }
   
-  short CanonCameraControlImpl::getFocus() throw(Miro::EDevIO, Miro::ETimeOut) 
+  float CanonCameraControlImpl::getFocus() throw(Miro::EDevIO, Miro::ETimeOut) 
   {
     bool done=false;
-    short result=0;
+    float result=0;
 
     if (!initialized) initialize();
 

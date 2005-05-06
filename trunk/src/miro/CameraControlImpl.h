@@ -70,9 +70,9 @@ namespace Miro
     bool testZoom(float value);
 
     //! CameraControl interface method implementation.
-    virtual void setFocus(short value) throw(Miro::EDevIO, Miro::EOutOfBounds,Miro::ETimeOut);
+    virtual void setFocus(float value) throw(Miro::EDevIO, Miro::EOutOfBounds,Miro::ETimeOut);
     //! CameraControl interface method implementation.
-    virtual short getFocus() throw(Miro::EDevIO, Miro::ETimeOut);
+    virtual float getFocus() throw(Miro::EDevIO, Miro::ETimeOut);
     //! CameraControl interface method implementation.
     /**
      * @return The range specified on the XML configuration file
@@ -89,12 +89,12 @@ namespace Miro
     /**
      * @return The target focus as set by setTargetFocus
      */
-    virtual short getTargetFocus() throw();
-    void setTargetFocus(short value);
+    virtual float getTargetFocus() throw();
+    void setTargetFocus(float value);
     /**
      * Test whether the value lies within the allowed range
      */
-    bool testFocus(short value);
+    bool testFocus(float value);
 
     //! CameraControl interface method implementation.
     virtual void setShutter(TimeIDL & value) throw(Miro::EDevIO, Miro::EOutOfBounds,Miro::ETimeOut);
@@ -125,7 +125,7 @@ namespace Miro
     Miro::ShutterParameters shutterParameters_;
 
     float currentZoom_;
-    short currentFocus_;
+    float currentFocus_;
     bool autoFocusSet_;
     TimeIDL currentShutter_;
 
@@ -134,7 +134,7 @@ namespace Miro
   inline
   bool CameraControlImpl::testZoom(float value) 
   {
-    if ((value>zoomParameters_.rangeMax) || (value<zoomParameters_.rangeMin)) {
+    if ((value>float(zoomParameters_.rangeMax)) || (value<float(zoomParameters_.rangeMin))) {
       return false;
     } else {
       return true;
@@ -142,9 +142,9 @@ namespace Miro
   }
   
   inline
-  bool CameraControlImpl::testFocus(short value) 
+  bool CameraControlImpl::testFocus(float value) 
   {
-    if ((value>focusParameters_.rangeMax) || (value<focusParameters_.rangeMin)) {
+    if ((value>float(focusParameters_.rangeMax)) || (value<float(focusParameters_.rangeMin))) {
       return false;
     } else {
       return true;
@@ -166,7 +166,7 @@ namespace Miro
   inline void CameraControlImpl::setTargetZoom(float value) {
     currentZoom_=value;
   }
-  inline void CameraControlImpl::setTargetFocus(short value) {
+  inline void CameraControlImpl::setTargetFocus(float value) {
     currentFocus_=value;
   }
   inline void CameraControlImpl::setTargetShutter(const TimeIDL& value) {

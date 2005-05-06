@@ -54,9 +54,9 @@ namespace Canon
     virtual float getZoom() throw(Miro::EDevIO, Miro::ETimeOut);
 
     //! CameraControl interface method implementation.
-    virtual void setFocus(short value) throw(Miro::EDevIO, Miro::EOutOfBounds,Miro::ETimeOut);
+    virtual void setFocus(float value) throw(Miro::EDevIO, Miro::EOutOfBounds,Miro::ETimeOut);
     //! CameraControl interface method implementation.
-    virtual short getFocus() throw(Miro::EDevIO, Miro::ETimeOut);
+    virtual float getFocus() throw(Miro::EDevIO, Miro::ETimeOut);
     //! CameraControl interface method implementation.
     virtual Miro::FocusRangeIDL getFocusRange() throw(Miro::EDevIO, Miro::ETimeOut);
     //! CameraControl interface method implementation.

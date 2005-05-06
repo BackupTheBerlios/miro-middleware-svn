@@ -60,7 +60,7 @@ namespace Miro
     return currentZoom_;
   }
 
-  void CameraControlImpl::setFocus(short value) throw(Miro::EDevIO, Miro::EOutOfBounds,Miro::ETimeOut)
+  void CameraControlImpl::setFocus(float value) throw(Miro::EDevIO, Miro::EOutOfBounds,Miro::ETimeOut)
   {
     if (!focusParameters_.present) {
       throw Miro::EDevIO("Focus not supported");
@@ -71,7 +71,7 @@ namespace Miro
     setTargetFocus(value);
   }
   
-  short CameraControlImpl::getFocus() throw(Miro::EDevIO, Miro::ETimeOut) 
+  float CameraControlImpl::getFocus() throw(Miro::EDevIO, Miro::ETimeOut) 
   {
     return currentFocus_;
   }
@@ -97,7 +97,7 @@ namespace Miro
     autoFocusSet_=value;
   }
 
-  short CameraControlImpl::getTargetFocus() throw()
+  float CameraControlImpl::getTargetFocus() throw()
   {
     return currentFocus_;
   }
