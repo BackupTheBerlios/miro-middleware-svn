@@ -1,0 +1,247 @@
+<!DOCTYPE MiroConfigDocument>
+  <config>
+    <section name="Robot" >
+      <parameter name="Miro::RobotParameters" >
+	<parameter name="Type" value="Sparrow99" />
+      </parameter>
+    </section>
+
+    <section name="Sparrow" >
+      <parameter name="Sparrow::Parameters" >
+	<parameter value="/dev/can/0" name="Device" />
+	<parameter name="InfraredDescription" >
+	  <parameter value="2" name="ScanType" />
+	  <parameter value="Infrared" name="EventName" />
+	  <parameter name="Group" >
+	    <parameter>
+	      <parameter name="Description" >
+		<parameter value="1" name="Focus" />
+		<parameter value="800" name="MaxRange" />
+		<parameter value="40" name="MinRange" />
+	      </parameter>
+	      <parameter name="Sensor" >
+		<parameter>
+		  <parameter value="180" name="Alpha" />
+		  <parameter value="0" name="Beta" />
+		  <parameter value="0" name="Gamma" />
+		  <parameter value="false" name="Masked" />
+		  <parameter value="248" name="Distance" />
+		  <parameter value="150" name="Height" />
+		</parameter>
+		<parameter>
+		  <parameter value="150" name="Alpha" />
+		  <parameter value="-15" name="Beta" />
+		  <parameter value="0" name="Gamma" />
+		  <parameter value="false" name="Masked" />
+		  <parameter value="248" name="Distance" />
+		  <parameter value="150" name="Height" />
+		</parameter>
+		<parameter>
+		  <parameter value="120" name="Alpha" />
+		  <parameter value="0" name="Beta" />
+		  <parameter value="0" name="Gamma" />
+		  <parameter value="false" name="Masked" />
+		  <parameter value="248" name="Distance" />
+		  <parameter value="150" name="Height" />
+		</parameter>
+		<parameter>
+		  <parameter value="90" name="Alpha" />
+		  <parameter value="15" name="Beta" />
+		  <parameter value="0" name="Gamma" />
+		  <parameter value="false" name="Masked" />
+		  <parameter value="248" name="Distance" />
+		  <parameter value="150" name="Height" />
+		</parameter>
+		<parameter>
+		  <parameter value="60" name="Alpha" />
+		  <parameter value="0" name="Beta" />
+		  <parameter value="0" name="Gamma" />
+		  <parameter value="false" name="Masked" />
+		  <parameter value="248" name="Distance" />
+		  <parameter value="150" name="Height" />
+		</parameter>
+		<parameter>
+		  <parameter value="30" name="Alpha" />
+		  <parameter value="0" name="Beta" />
+		  <parameter value="0" name="Gamma" />
+		  <parameter value="false" name="Masked" />
+		  <parameter value="248" name="Distance" />
+		  <parameter value="150" name="Height" />
+		</parameter>
+		<parameter>
+		  <parameter value="0" name="Alpha" />
+		  <parameter value="0" name="Beta" />
+		  <parameter value="0" name="Gamma" />
+		  <parameter value="false" name="Masked" />
+		  <parameter value="248" name="Distance" />
+		  <parameter value="150" name="Height" />
+		</parameter>
+		<parameter>
+		  <parameter value="-90" name="Alpha" />
+		  <parameter value="0" name="Beta" />
+		  <parameter value="0" name="Gamma" />
+		  <parameter value="false" name="Masked" />
+		  <parameter value="248" name="Distance" />
+		  <parameter value="150" name="Height" />
+		</parameter>
+	      </parameter>
+	    </parameter>
+	  </parameter>
+	</parameter>
+	<parameter value="0.040000" name="InfraredPulse" />
+	<parameter value="0.040000" name="OdometryPulse" />
+	<parameter name="IrScaling" >
+	  <parameter>
+	    <parameter value="400" name="MaxDistance" />
+	    <parameter value="30" name="MinDistance" />
+	    <parameter value="1.227" name="Scaling" />
+	    <parameter value="0" name="Offset" />
+	  </parameter>
+	  <parameter>
+	    <parameter value="400" name="MaxDistance" />
+	    <parameter value="30" name="MinDistance" />
+	    <parameter value="1.000" name="Scaling" />
+	    <parameter value="0" name="Offset" />
+	  </parameter>
+	  <parameter>
+	    <parameter value="400" name="MaxDistance" />
+	    <parameter value="30" name="MinDistance" />
+	    <parameter value="1.047" name="Scaling" />
+	    <parameter value="0" name="Offset" />
+	  </parameter>
+	  <parameter>
+	    <parameter value="400" name="MaxDistance" />
+	    <parameter value="30" name="MinDistance" />
+	    <parameter value="1.000" name="Scaling" />
+	    <parameter value="0" name="Offset" />
+	  </parameter>
+	  <parameter>
+	    <parameter value="400" name="MaxDistance" />
+	    <parameter value="30" name="MinDistance" />
+	    <parameter value="1.173" name="Scaling" />
+	    <parameter value="0" name="Offset" />
+	  </parameter>
+	  <parameter>
+	    <parameter value="800" name="MaxDistance" />
+	    <parameter value="90" name="MinDistance" />
+	    <parameter value="1.281" name="Scaling" />
+	    <parameter value="0" name="Offset" />
+	  </parameter>
+	  <parameter>
+	    <parameter value="400" name="MaxDistance" />
+	    <parameter value="30" name="MinDistance" />
+	    <parameter value="1.9" name="Scaling" />
+	    <parameter value="0" name="Offset" />
+	  </parameter>
+	  <parameter>
+	    <parameter value="800" name="MaxDistance" />
+	    <parameter value="90" name="MinDistance" />
+	    <parameter value="1.281" name="Scaling" />
+	    <parameter value="0" name="Offset" />
+	  </parameter>
+	</parameter>
+        <parameter name="Pan">
+	  <parameter value="0.000000" name="PanLatency" />
+	  <parameter value="200" name="PanSwing" />
+        </parameter>
+	<parameter value="0.050000" name="ButtonsPollInterval" />
+	<parameter value="1.0776" name="TransFactor" />
+	<parameter value="1.000000" name="WatchdogTimeout" />
+	<parameter value="3700" name="Servo0MidPulse" />
+	<parameter value="15" name="MaxAccel" /><!-- SollDistanz zum Torrueckwand 10 -->
+	<parameter value="1555" name="Diameter" />
+	<parameter value="15" name="MaxPower" /><!-- Vorfaktor turnfehler 15 -->
+	<parameter value="22" name="TicksL" />
+	<parameter value="22" name="TicksR" />
+	<parameter value="true" name="Goalie" />
+	<parameter value="true" name="ChannelSharing" />
+	<parameter name="Motion" >
+	  <parameter value="180" name="MaxRotation" />
+	  <parameter value="-180" name="MinRotation" /><!-- Unterreichweite fue  Turndoubler 9 (6) -->
+	  <parameter value="1000" name="MaxTranslation" /><!-- Vorfaktor Distanzefehler 1 -->
+	  <parameter value="-1000" name="MinTranslation" />
+	  <parameter value="450" name="WheelBase" />
+	  <parameter value="1000" name="MaxLTranslation" />
+	  <parameter value="1000" name="MaxRTranslation" />
+	  <parameter value="-1000" name="MinLTranslation" />
+	  <parameter value="-1000" name="MinRTranslation" />
+	</parameter>
+      </parameter>
+    </section>
+
+    <section name="Video" >
+      <instance type="Video::Parameters"  name="AnalogCam" >
+	<parameter value="bgr" name="Palette" />
+	<parameter value="384" name="Width" />
+	<parameter value="288" name="Height" />
+	<parameter name="Filter">
+	  <parameter value="DeviceBTTV" name="Name" />
+	  <parameter value="DeviceBTTV" name="Type" />
+	  <parameter name="Successor" >
+	    <parameter name="Filter" >
+	      <parameter value="FilterSwap3" name="Name" />
+	      <parameter value="FilterSwap3" name="Type" />
+	      <parameter name="Successor" >
+		<parameter name="Filter" >
+		  <parameter value="FilterRGBtoGray" name="Name" />
+		  <parameter value="FilterRGBtoGray" name="Type" />
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="FilterGraytoCanny" name="Name" />
+		      <parameter value="FilterGraytoCanny" name="Type" />
+		    </parameter>
+		  </parameter>
+		</parameter>
+		<parameter name="Filter" >
+		  <parameter value="FilterRGBtoIndex" name="Name" />
+		  <parameter value="FilterRGBtoIndex" name="Type" />
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="FilterIndextoIndex" name="Name" />
+		      <parameter value="FilterIndextoIndex" name="Type" />
+		    </parameter>
+		  </parameter>
+		</parameter>
+	      </parameter>
+	    </parameter>
+	  </parameter>
+	</parameter>
+      </instance>
+
+      <instance type="DeviceBTTV" name="DeviceBTTV">
+	<parameter name="Miro::CameraParameters" >
+	  <parameter value="0.120000" name="Latency" />
+	  <parameter value="31.0" name="Alpha" />
+	  <parameter value="600" name="Height" />
+	  <parameter value="197.159465" name="Cx" />
+	  <parameter value="139.645856" name="Cy" />
+	  <parameter value="4.043536" name="F" />
+	  <parameter value="2.980936e-02" name="Kappa" />
+	  <parameter value="1" name="Sx" />
+	  <parameter value="0.00625" name="Dx" />
+	  <parameter value="0.0125" name="Dy" />
+	  <parameter value="384" name="Nfx" />
+	  <parameter value="768" name="Ncx" />
+	</parameter>
+      </instance>
+
+    </section>
+
+    <section name="Notification" >
+      <parameter name="Miro::LogNotifyParameters" >
+	<parameter name="TypeName" >
+	  <parameter value="Infrared" />
+	  <parameter value="Odometry" />
+	  <parameter value="RawPosition" />
+	  <parameter value="VisionData" />
+	  <parameter value="LineSamples" />
+	  <parameter value="GoalPosition" />
+	  <parameter value="BallPosition" />
+	  <parameter value="PatternChange" />
+	  <parameter value="ArbitrateChange" />
+	  <parameter value="PositionHypothesis" />
+	</parameter>
+	<parameter value="157286400" name="MaxFileSize" />
+      </parameter>
+    </section>
+  </config>

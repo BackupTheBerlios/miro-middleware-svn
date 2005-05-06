@@ -1,0 +1,9 @@
+Small tests for the video interface.
+
+TestVideoClient stores a burst of images from the video service to disk,
+measuring timings. Uses shared memory, so you must have the frame grabber on
+the local machine.
+
+TestRemoteVideoClient does similar, but retrieves the whole images' content.
+Runs also on a distant machine but uses the network heavily. Images should be
+downscaled.

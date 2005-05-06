@@ -1,0 +1,66 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2000, 2001, 2002, 2003, 2004
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef Tilt_idl
+#define Tilt_idl
+
+#include "Exception.idl"
+
+module Miro
+{
+  //! Struct representing a tilting limits  configuration.
+  struct TiltLimitsIDL
+  {
+    //! Minimal tilt angle (in rad).
+    double minAngle;
+    //! Maximal tilt angle (in rad).
+    double maxAngle;
+  };
+
+
+  //! Basic interface for a tilting unit.
+  /** 
+   * @author Hans Utz
+   */
+  interface Tilt 
+  {
+    //! Set the tilting angle.
+    /**
+     * @param angle is specified in radiant.
+     * @throw EOutOfBounds is thrown
+     * if the specified tilitng angle is beyond the range of the tilting unit.
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    void setTilt(in float value) raises(EDevIO, EOutOfBounds);
+
+    //! Get the current tilting angle.
+    /**
+     * @return The tilting angle, specified in radiant.
+     * @throw EDevIO
+     * is thrown to indicate low level device problems.
+     */
+    float getTilt() raises(EDevIO);
+
+    //! Get the target tilting angle.
+    /**
+     * @return The target tilting angle, specified in radiant.
+     */
+    float getTargetTilt();
+
+    //! Get the tilting angle limits.
+    /**
+     * @return The angles within the tilt unit works, specified in radiant.
+     */
+    TiltLimitsIDL getTiltLimits();
+  };
+};
+
+#endif // Tilt_idl

@@ -1,0 +1,51 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef SparrowMotion_idl
+#define SparrowMotion_idl
+
+#include "DifferentialMotion.idl"
+
+module Miro
+{
+  //! The specialized motion interface of the Sparrow 99 robot. 
+  /** 
+   * @author Hans Utz
+   */
+  interface SparrowMotion : DifferentialMotion
+  {
+    //-----------------------------------------------------------------------
+    // generalized movement methods
+    //-----------------------------------------------------------------------
+
+    //! Set the motor power per wheel.
+    /**
+     * Sets the motor power for each of the two wheels and starts moving. 
+     * Backward translation is specified by negative values.
+     *
+     * @param left The velocity of the left wheel: -30000 <= left <= 30000.
+     * @param right The velocity of the right wheel: -30000 <= right <= 30000.
+     *
+     * @throw EOutOfBounds is thrown if the requested motor power
+     * exceeds the maximum motor power of the robot.
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void setLRPower(in long left, in long right) raises(EOutOfBounds, EDevIO);
+
+    //! Goalie hack
+    void initMax(in short maxAcc, in short maxPower, in short maxSpeed, in double maxTurn);
+  };
+};
+
+#endif // SparrowMotion_idl
+
+
+
+

@@ -1,0 +1,39 @@
+<!DOCTYPE MiroConfigDocument>
+  <config>
+ <section name="Video" >
+  <instance type="Video::Parameters" name="GrayVideoService" >
+   <parameter value="rgb" name="Palette" />
+   <parameter value="634" name="Width" />
+   <parameter value="480" name="Height" />
+    <parameter name="Filter">
+     <parameter value="DeviceDummy" name="Name" />
+     <parameter value="DeviceDummy" name="Type" />
+     <parameter name="Successor" >
+      <parameter name="Filter" >
+       <parameter value="FilterCopy" name="Name" />
+       <parameter value="FilterCopy" name="Type" />
+       <parameter name="Successor" >
+        <parameter name="Filter" >
+         <parameter value="FilterGray" name="Name" />
+         <parameter value="FilterGray" name="Type" />
+        </parameter>
+       </parameter>
+      </parameter>
+     </parameter>
+    </parameter>
+  </instance>
+  <instance type="Video::DeviceDummy" name="DeviceDummy" >
+   <parameter name="Device" value="./goal.ppm" />
+  </instance>
+  <instance type="Video::FilterCopy" name="FilterCopy">
+   <parameter value="true" name="InterfaceInstance" />
+  </instance>
+  <instance type="FilterGray" name="FilterGray">
+   <parameter value=".8" name="WeightBlue" />
+   <parameter value="true" name="InterfaceInstance" />
+   <parameter name="Interface" >
+    <parameter value="Gray" name="Name" />
+   </parameter>
+  </instance>
+ </section>
+</config>

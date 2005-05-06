@@ -1,0 +1,9 @@
+.deps
+.libs
+
+Makefile
+Makefile.in
+KickerTest
+KickerTest.o
+.deps
+.libs

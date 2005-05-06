@@ -1,0 +1,68 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef DifferentialMotion_idl
+#define DifferentialMotion_idl
+
+#include "Motion.idl"
+
+module Miro
+{
+  //! The specialized motion interface of differential drive robots.
+  /**
+   * The Pioneer1 as well as the Sparrow99 robot have a differential drive
+   * mobile base.
+   * 
+   * @author Hans Utz
+   */
+  interface DifferentialMotion : Motion
+  {
+    //! Set the velocity per wheel.
+    /**
+     * Sets the velocity of the two wheels and starts moving. 
+     * Backward translation is specified by negative velocity.
+     *
+     * @param left The velocity of the left wheel in mm/s.
+     * @param right The velocity of the right wheel in mm/s.
+     *
+     * @throw EOutOfBounds is thrown if the requested velocitiy
+     * exceeds the maximum velocity of the robot.
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void setLRVelocity(in long left, in long right) raises(EDevIO, EOutOfBounds);
+
+
+    //! Get the applicable per wheel velocities of a differential drive robot.
+    /**
+     * @return The range of the accepted per wheel velocities. That is, velocities requested by
+     * @ref setLRVelocity that lie outside these limits should result in an
+     * @ref EOutOfBounds exception.  
+     */
+    void getMinMaxLRVelocity(out long minLTranslation,
+			     out long maxLTranslation,
+			     out long minRTranslation,
+			     out long maxRTranslation);
+
+    //! Get the current target per wheel velocity of a differential drive robot.
+    /**
+     * @return The target velocity set by the last call to @ref
+     * setLRVelocity (or corresponding methods).
+     */
+    void getTargetLRVelocity(out long left, out long right);
+
+    //! Get the wheelbase of the robot.
+    double getWheelBase();
+  };
+};
+#endif // differentialMotion_idl
+
+
+
+

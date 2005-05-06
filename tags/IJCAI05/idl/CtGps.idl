@@ -1,0 +1,145 @@
+/*
+ * This file is part of Miro (The Middleware for Robots)
+ * Copyright (C) 2005 Ingo van Lil <ingo@vanlil.de>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * $Id$
+ */
+
+#ifndef CtGps_idl
+#define CtGps_idl
+
+#include "Exception.idl"
+#include "Gps.idl"
+
+module Miro
+{
+  //! Interface for GPS modules by CT Communication Technology GmbH Friedberg
+  /**
+   * This is a specialized GPS interface for modules manufactured by
+   * CT Communication Technology GmbH Friedberg. It has been developed
+   * and tested using a Star Track GSX-1 GPS receiver, but it should be
+   * compatible with other models by the same vendor (or maybe even by
+   * other vendors) as well.
+   * Set the \a ReceiverType config parameter in GPS::Parameters to
+   * \c "ct" in order to use this interface instead of the generic one.
+   *
+   * @author Ingo van Lil
+   */
+  interface CtGps : Miro::Gps
+  {
+    //! Enumeration for setDifferentialSource() argument
+    enum DifferentialSource {
+      THIS,	//!< Get diff from this port (not supported by this service).
+      OTHER,	//!< Get diff from other port.
+      BEACON,	//!< Get diff from beacon port (RTCM).
+      LBAND,	//!< Get diff from L-Band.
+      WAAS,	//!< Get diff from WAAS/EGNOS/MSAS. L-Band can be used instead.
+      NONE	//!< Turn off use of differential.
+    };
+
+    //! Select source of differential
+    /**
+     * @param source New source of differential.
+     *
+     * @throw EOutOfBounds is thrown on invalid argument.
+     * @throw ETimeOut is thrown on timeout waiting for ACK message.
+     */
+    void setDifferentialSource(in DifferentialSource source)
+		raises(EOutOfBounds, ETimeOut);
+
+    //! Disable altitude aiding
+    /**
+     * @throw ETimeOut is thrown on timeout waiting for ACK message.
+     */
+    void setAltitudeAidingNever() raises(ETimeOut);
+
+    //! Enable altitude aiding in case of high dilution of precision
+    /**
+     * @param threshold specifies the PDOP threshold. Altitude aiding
+     *        is enabled in case the PDOP exceeds this value.
+     *
+     * @throw ETimeOut is thrown on timeout waiting for ACK message.
+     */
+    void setAltitudeAidingSometimes(in float threshold) raises(ETimeOut);
+
+    //! Enable altitude aiding, i.e. set a fixed altitude
+    /**
+     * @param altitude specifies the fixed altitude value.
+     *
+     * @throw ETimeOut is thrown on timeout waiting for ACK message.
+     */
+    void setAltitudeAidingAlways(in float altitude) raises(ETimeOut);
+
+    //! Enable default set of NMEA messages
+    /**
+     * This function configures the GPS device to output a default set
+     * of NMEA strings that provide all information handled by the GPS
+     * service implementation (currently \a GPGGA and \a GPGSA), each
+     * at a rate of 1 Hz. All other GPS messages are disabled.
+     *
+     * @throw ETimeOut is thrown on timeout waiting for ACK message.
+     */
+    void setSentencesDefault() raises(ETimeOut);
+
+    //! Disable all NMEA messages
+    /**
+     * @throw ETimeOut is thrown on timeout waiting for ACK message.
+     */
+    void setSentencesOff() raises(ETimeOut);
+
+    //! Known NMEA message types for setSentenceRate()
+    enum NmeaSentence {
+      GPGGA, //!< Global Positioning System Fix Data
+      GPGLL, //!< Geographic position, Latitude and Longitude
+      GPGSA, //!< GPS DOP and active satellites
+      GPGST, //!< GPS Pseudorange Noise Statistics
+      GPGSV, //!< Satellites in view
+      GPRMC, //!< Recommended minimum specific GPS/Transit data
+      GPRRE, //!< Range Residual Error
+      GPVTG, //!< Track made good and ground speed
+      GPZDA  //!< Time and date
+    };
+
+    //! Enable a particular NMEA message at a given rate
+    /**
+     * @param msg NMEA message type.
+     * @param rate Rate (in Hz) to send the given message type at. Allowed
+     *        values are \b 0 (disables that message), <b>0.2</b>, \b 1
+     *        and \b 5. \a GPGSA, \a GPGST, \a GPGSV and \a GPRRE are only
+     *        available at 1 Hz.
+     *
+     * @throw EOutOfBounds is thrown if the specified message type is
+     *        unknown or not available at the desired rate.
+     * @throw ETimeOut is thrown on timeout waiting for ACK message.
+     *
+     * \note Currently only \a GPGGA, \a GPGLL, \a GPGSA and \a GPRMC are
+     *       handled by the GPS service implementation. You can use the
+     *       \a NmeaNotify config parameter to enable notifications for
+     *       other sentences.
+     */
+    void setSentenceRate(in NmeaSentence msg, in float rate)
+		raises(EOutOfBounds,ETimeOut);
+
+    //! Make the current configuration permanent. Use with caution!
+    /**
+     * @throw ETimeOut is thrown on timeout waiting for ACK message.
+     */
+    void saveConfig() raises(ETimeOut);
+  };
+};
+
+#endif // CtGps_idl

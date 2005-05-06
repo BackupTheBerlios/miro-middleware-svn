@@ -1,0 +1,102 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef Motion_idl
+#define Motion_idl
+
+#include "Exception.idl"
+#include "Velocity.idl"
+
+module Miro
+{
+  //! The general motion interface.
+  /**
+   * Each robot registers its motion interface as "Motion"
+   * at the naming service within its own naming context.
+   *
+   * Note that most robots provide their own specialization of this
+   * interface.
+   *
+   * @author Hans Utz
+   */
+  interface Motion
+  {
+    //-------------------------------------------------------------------------
+    // generalized movement methods
+    //-------------------------------------------------------------------------
+
+    //! Limp all motors.
+    /**
+     * Passive halt.
+     * The robot doesn't move afterwards, but can be pushed and turned around.
+     *
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void limp() raises(EDevIO);
+
+    //! Set the translational and rotational velocity of the mobile base.
+    /**
+     * Sets the translational and rotational velocity of the mobile
+     * base and starts moving. Backward translation and counter clock
+     * wise rotation are specified by negative velocities.
+     *
+     * @param velocity The velocities.
+     *
+     * @throw EOutOfBounds is thrown if the requested velocity exceeds
+     * the maximum velocity of the robot as reported by @getMinMaxVelocity.  
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void setVelocity(in VelocityIDL velocity) raises(EOutOfBounds, EDevIO);
+
+    //-------------------------------------------------------------------------
+    // interface query methods
+    //-------------------------------------------------------------------------
+
+    //! Get the applicable velocities of the mobile base.
+    /**
+     * @return The range of the accepted translational and rotational
+     * velocities of the mobile base. That is, velocities requested by
+     * @ref setVelocity that lie outside these limits should result in an
+     * @ref EOutOfBounds exception.  
+     *
+     * Note however, that differential drive robots translational and
+     * rotational velocity is not independent from each other. That is
+     * you can not turn with maximum translational velocity and the
+     * maximum rotational velocity is reached when turning in place.
+     *
+     * A differential drive platform is supposed to accept velocity
+     * commands, that violate these constraints but lie within the
+     * reported limits of getMinMaxVelocity. Instead, the
+     * translational velocity is adjusted if necessary, to reach the
+     * requeseted rotational velocity.
+     *
+     */
+    void getMinMaxVelocity(out long minTranslation,
+			   out long maxTranslation,
+			   out double minRotation,
+			   out double maxRotation);
+
+    //! Get the current target velocity of the mobile base.
+    /**
+     * @return The target velocity set by the last call to @ref
+     * setVelocity (or corresponding methods in derived
+     * interfaces). If adjustments to the commanded velocities had to
+     * be made (as described in @ref getMinMaxVelocity), they will be 
+     * reflected in the return value.
+     */
+    VelocityIDL getTargetVelocity();
+
+  };
+};
+#endif // Motion_idl
+
+
+
+

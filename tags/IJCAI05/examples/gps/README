@@ -1,0 +1,10 @@
+A small set of example programs demonstrating the use of the GPS interface:
+
+GpsPoll: Polls for GPS global position updates and displays them as soon
+         as they come in.
+
+GpsStream: Subscribes for any GPS notifications (including NMEA sentences
+           that are listed in the nmeaDispatch configuration parameter) and
+           displays their contents as soon as they are received.
+
+CtGpsTest: Demonstrates the use of the specialized CtGps interface.

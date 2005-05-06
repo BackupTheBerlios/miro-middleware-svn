@@ -1,0 +1,23 @@
+## -*- Makefile -*- ##########################################################
+##
+## This file is part of Miro (The Middleware For Robots)
+##
+## (c) 2004
+## Department of Neural Information Processing, University of Ulm, Germany
+##
+## Miro/templates/Makefile.am.dir
+##
+##############################################################################
+
+## insert unconditional directories here
+generaldirs = firstDir secondDir
+
+## example for conditional compilation
+if COND_PIONEER
+pioneerdirs = conditionalDir
+endif
+
+
+SUBDIRS = $(generaldirs) $(pioneerdirs)
+
+

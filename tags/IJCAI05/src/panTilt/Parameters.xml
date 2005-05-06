@@ -1,0 +1,14 @@
+<!DOCTYPE xml SYSTEM "PolicyEditor_behaviour.dtd">
+<config> 
+  <config_global name="namespace" value="DpPanTilt" />
+  <config_global name="include" value="miro/SvcParameters.h" />
+
+  <config_group name="DirectedPerception">
+    <config_item parent="Miro::Tty" instance="true">
+      <config_parameter name="device" type="string" inherited="true" default="/dev/panTilt" />
+      <constructor>
+        ttyParams.baudrate = 9600;
+      </constructor>
+    </config_item>
+  </config_group>
+</config>

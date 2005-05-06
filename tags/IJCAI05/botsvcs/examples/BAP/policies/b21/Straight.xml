@@ -1,0 +1,33 @@
+<!DOCTYPE MiroPolicyConfig >
+<policy>
+ <actionpattern x="305" y="125" name="Straight" >
+  <behaviour name="TactileStop" />
+  <behaviour name="LaserAvoid" >
+   <parameter value="600" name="HaltDistance" />
+   <parameter value="800" name="MinDistance" />
+   <parameter value="270" name="LeftLaser" />
+   <parameter value="90" name="RightLaser" />
+   <parameter value="100" name="Translation" />
+  </behaviour>
+  <behaviour name="SonarAvoid" >
+   <parameter value="400" name="HaltDistance" />
+   <parameter value="500" name="MinDistance" />
+   <parameter value="8" name="LeftSonar" />
+   <parameter value="16" name="RightSonar" />
+   <parameter value="100" name="Translation" />
+  </behaviour>
+  <behaviour name="Straight" >
+   <parameter value="200" name="Translation" />
+   <parameter value="1000" name="Pace" />
+  </behaviour>
+  <arbiter name="MotionArbiter" />
+  <transition target="WaitButton" message="Button" />
+  <behaviour name="OnButton" />
+ </actionpattern>
+ <actionpattern x="56" y="103" name="WaitButton" start="true">
+  <arbiter name="MotionArbiter" />
+  <behaviour name="OnButton" />
+  <transition target="Straight" message="Button" />
+ </actionpattern>
+</policy>
+

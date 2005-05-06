@@ -1,0 +1,41 @@
+<!DOCTYPE MiroPolicyConfig>
+<structuredpolicy>
+ <policy start="false" name="Policy0" >
+  <actionpattern x="28" y="24" start="true" name="Pattern1" >
+   <behaviour name="Behaviour0" >
+    <parameter value="4" name="SendTransition" />
+   </behaviour>
+   <behaviour name="Behaviour1" />
+   <arbiter name="Arbiter0" />
+   <transition target="Pattern0" message="TransitionBehaviour0" />
+  </actionpattern>
+  <actionpattern x="167" y="116" start="false" name="Pattern0" >
+   <behaviour name="Behaviour1" />
+   <behaviour name="Behaviour0" >
+    <parameter value="2" name="SendTransition" />
+   </behaviour>
+   <arbiter name="Arbiter1" />
+  </actionpattern>
+ </policy>
+ <policy start="true" >
+  <transitionpattern target="Pattern3" message="TransitionBehaviour1" />
+  <actionpattern x="29" y="57" name="Pattern3" >
+   <transition target="Subpolicy0" message="TransitionBehaviour2" />
+   <behaviour name="Behaviour2" >
+    <parameter value="4" name="SendTransition" />
+   </behaviour>
+   <behaviour name="Behaviour0" />
+   <arbiter name="Arbiter1" />
+  </actionpattern>
+  <actionpattern x="375" y="195" name="Pattern2" >
+   <behaviour name="Behaviour0" />
+   <behaviour name="Behaviour1" >
+    <parameter value="3" name="SendTransition" />
+   </behaviour>
+   <arbiter name="Arbiter0" />
+  </actionpattern>
+  <subpolicy x="202" y="125" type="Policy0" start="true" name="Subpolicy0" >
+   <transition target="Pattern2" message="TransitionBehaviour0" />
+  </subpolicy>
+ </policy>
+</structuredpolicy>

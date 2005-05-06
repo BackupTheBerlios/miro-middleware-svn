@@ -1,0 +1,30 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2004
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef Miro_ArbiterEvent_idl
+#define Miro_ArbiterEvent_idl
+
+module Miro
+{
+  //! Type specifying a velocity space evaluation
+  /**
+   * For performance, this is a hardcoded octed stream in intel byte orde.
+   *
+   * - 1 Short Version (0000)
+   * - 1 Short Size 
+   * - 1 Short rOffset
+   * - 1 Short lOffset
+   * - 1 Short rSize
+   * - 1 Short lSize
+   * - 1 rSize * lSize Bytes Weights
+   */
+  typedef sequence<octet> VelocitySpaceIDL;
+};
+#endif // Miro_ArbiterEvent_idl

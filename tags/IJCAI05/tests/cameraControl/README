@@ -1,0 +1,10 @@
+Test for the general CameraControl interface.
+
+Handy to verify the CameraControl interface stuff.
+
+Start the camera control service. Then you can access the camera control
+interface directly via this small test program. It offers a simple text
+interface for each method available within the interfaces.
+
+Don't forget to specify the robots name at the command line
+(-MNC <robotname>), if it is set in the configuration file.

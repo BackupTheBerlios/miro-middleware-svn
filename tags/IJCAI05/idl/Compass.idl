@@ -1,0 +1,38 @@
+// -*- c++ -*- //////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2005
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+
+#ifndef Compass_idl
+#define Compass_idl
+
+#include "CompassEvent.idl"
+#include "Exception.idl"
+
+module Miro
+{
+  //! Interface for querying a compass module
+  /**
+   * @author Ingo van Lil
+   */
+  interface Compass
+  {
+    //! Get the current compass heading relative to magnetic north
+    /**
+     * The heading is specified in radiants (-Pi < h <= Pi) relative
+     * to magnetic north. Angles are defined counter-clockwise, i.e.
+     * positive values indicate a westward orientation of the robot.
+     */
+    CompassEventIDL getHeading();
+    //! Wait up to one second for a compass update and get it
+    CompassEventIDL getWaitHeading() raises(ETimeOut);
+  };
+};
+
+#endif // Compass_idl

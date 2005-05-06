@@ -1,0 +1,44 @@
+//#ifndef ObjectVector_idl
+//#define ObjectVector_idl
+
+#include "Exception.idl"
+#include "Time.idl"
+
+module Miro
+{
+  //! Interface for Object komunikation.
+
+  enum ObjectType {
+    FIRST,
+    SECOND
+  };
+
+   //! A vector Objects
+  typedef sequence<short> ObjectIDL;
+  typedef sequence<short> MovesIDL;
+
+
+  struct mirrorObject
+  {
+    //! The time the scan was accquired.
+    TimeIDL time;
+    ObjectIDL data;
+  };
+
+  struct mirrorMoves
+  {
+    //! The time the scan was accquired.
+    TimeIDL time;
+    MovesIDL data;
+  };
+
+
+
+  interface ObjectVector
+  {
+    mirrorObject getObjectVector(in ObjectType _objectType);
+    //mirrorMoves getAktion();
+    void setObjectVector(in mirrorObject ObstArt, in ObjectType _objectType);
+  };
+};
+//#endif // Obst_idl

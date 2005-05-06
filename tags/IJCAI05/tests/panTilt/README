@@ -1,0 +1,10 @@
+Test for the general pantilt interface.
+
+Handy to verify the pantilt interface stuff.
+
+Start the robots pantilt service. Then you can access the PamTilt
+interface directly via the small test program. It offers a simple text
+interface for each method available within the interfaces.
+
+Don't forget to specify the robots name at the command line
+(-MNC <robotname>), if it is set in the configuration file.

@@ -1,0 +1,43 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef CanonCameraControl_idl
+#define CanonCameraControl_idl
+
+#include "Exception.idl"
+#include "CameraControl.idl"
+
+module Miro
+{
+  
+  //! Interface for a Canon zoom camera.
+  /** 
+   * @author Guillem Pages Gassull
+   */
+  interface CanonCameraControl: CameraControl
+    {
+      //!Lock/unlock the exposure of AE mode.
+      /**
+       * @param value true to lock, false to unlock.
+       * @throw EDevIO
+       * is thrown to indicate low level device problems.
+       */
+      void setAELock(in boolean value) raises (EDevIO, ETimeOut);
+      //    void setAEoff() raises (EDevIO, ETimeOut);
+      //    void setAEon() raises (EDevIO,  ETimeOut);
+      //    void setAE(in short value) raises (EDevIO, ETimeOut);
+      //    void setIrisAssignment(in short value) raises (EDevIO, ETimeOut);
+//    void setAGCGain(in short value) raises (EDevIO, ETimeOut);
+
+
+
+  };
+};
+#endif /* CanonCamera_idl */

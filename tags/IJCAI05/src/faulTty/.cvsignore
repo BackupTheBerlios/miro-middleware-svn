@@ -1,0 +1,5 @@
+libfaulTty.a
+Makefile.in
+Makefile
+.deps
+.libs

@@ -1,0 +1,103 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef B21Buttons_idl
+#define B21Buttons_idl
+
+#include "Buttons.idl"
+#include "Time.idl"
+
+module Miro
+{
+  //! Namespace holding type definitions  and constants for the B21Buttons interface.
+  module B21Button
+  {
+    //! The identifer of the red button.
+    const unsigned long RED = 0;
+    //! The identifer of the yellow button.
+    const unsigned long YELLOW = 1;
+    //! The identifer of the green button.
+    const unsigned long GREEN = 2;
+    //! The identifer of the blue button.
+    const unsigned long BLUE = 3;
+    //! The identifer of the right kill button. 
+    /**
+     * Note that only its light can be set, its button status
+     * can not be queried.
+     */
+    const unsigned long RIGHT_KILL = 4;
+    //! The identifer of the left kill button 
+    /**
+     * Note that only its light can be set, its button status
+     * can not be queried.
+     */
+    const unsigned long LEFT_KILL = 5;
+    
+    //! Data type specifying the button mode.
+    /**
+     * Note the following mode transformations on pressing of a button:
+     * - OFF -> OFF (default)
+     * - ON -> ON
+     * - FLASHING -> FLASHING
+     * - FLASHING_TILL_PRESSED -> OFF
+     * - ON_TILL_PRESSED -> OFF
+     * - OFF_TILL_PRESSED -> ON
+     * - TOGGLE_ON -> TOGGLE_OFF
+     * - TOGGLE_OFF -> TOGGLE_ON
+     * - ON_WHILE_PRESSED -> ON_WHILE_PRESSED
+     * - OFF_WHILE_PRESSED -> OFF_WHILE_PRESSED
+     */
+    enum Mode {
+      OFF, ON, 
+      FLASHING, FLASHING_TILL_PRESSED,
+      ON_TILL_PRESSED,
+      OFF_TILL_PRESSED,
+      TOGGLE_ON, TOGGLE_OFF,
+      ON_WHILE_PRESSED, 
+      OFF_WHILE_PRESSED
+    };
+  };
+  
+  //! Interface to the B21 button service.
+  /**
+   * The B21 has 4 general purpos buttons and 2 emergency stop buttons (kill buttons).
+   * Each button also contains a light, that can operate in various modes.
+   *
+   * The state of the buttons is also broadcasted via the notification
+   * service as described in the @ref Button interface.
+   *
+   * @author Hans Utz
+   */
+  interface B21Buttons : Buttons
+  {
+    //! Get the current mode of a single button.
+    /**
+     * @param number The id of the button.
+     *
+     * @throw ETOutOfBounds is thrown, when number excedes the
+     * the number of buttons returned by @ref numberOfButtons.
+     *
+     * @return The mode the button currently operating in.
+     */
+    B21Button::Mode getButtonMode(in unsigned long number) raises(EOutOfBounds);
+    
+    //! Set the current mode of a single button.
+    /**
+     * @param number The id of the button.
+     * @param mode The mode the button shall operate in from now on.
+     *
+     * @throw ETOutOfBounds is thrown, when number excedes the
+     * the number of buttons returned by @ref numberOfButtons.
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void setButtonMode(in unsigned long number, in B21Button::Mode mode) raises(EDevIO, EOutOfBounds);
+  };
+};
+#endif

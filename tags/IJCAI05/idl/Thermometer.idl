@@ -1,0 +1,37 @@
+// -*- c++ -*- //////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2005
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+
+#ifndef Thermometer_idl
+#define Thermometer_idl
+
+#include "ThermometerEvent.idl"
+#include "Exception.idl"
+
+module Miro
+{
+  //! Interface for querying a thermometer
+  /**
+   * @author Ingo van Lil
+   */
+  interface Thermometer
+  {
+    //! Get the current temperature in degrees C
+    ThermometerEventIDL getTemperature();
+    //! Wait up to one second for a temperature update and read it
+    ThermometerEventIDL getWaitTemperature() raises(ETimeOut);
+    //! Get the module's operating temperature range
+    void getMinMaxTemperature(out float minTemperature,
+			      out float maxTemperature);
+  };
+};
+
+#endif // Thermometer_idl
+

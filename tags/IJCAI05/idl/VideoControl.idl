@@ -1,0 +1,69 @@
+// -*- c++ -*- 
+/*! \file VideoControl.idl
+ *  \brief IDL Interface to set camera parameters "on the fly".
+ *
+ *  IDL Interface Video::Control.
+ *
+ * -----------------------------------------------------
+ *
+ * RoboCup Middle Size Team, Technische Universitaet Graz
+ * "Mostly Harmless" 
+ * http://www.robocup.tugraz.at
+ *
+ * Project: Miro / Video
+ *
+ * $Author$
+ * $Date$
+ * $Revision$
+ *
+ * $Log$
+ * Revision 1.1  2004/02/09 17:28:56  graz
+ * Added control-interface to VideoDevice1394 & Dialog.
+ *
+ * Revision 1.1  2003/06/11 09:23:13  muehlenf
+ * Added camera control interface.
+ *
+ *
+ *
+ */
+ 
+#ifndef VIDEOCONTROL_IDL
+#define VIDEOCONTROL_IDL
+
+module Video
+{
+    //! A value pair (white_balance needs one)
+    struct ValuePair
+    {
+        short first;
+	short second;
+    };
+
+    //! Definition of active camera features, negative values meaning "auto".
+    struct FeatureSet
+    {
+        short brightness;
+        short exposure;
+        short focus;
+        short gain;
+        short gamma;
+        short hue;
+        short iris;
+        short saturation;
+        short sharpness;
+        short shutter;
+        short temperature;
+        short trigger;
+	ValuePair white_balance;
+    };
+
+    //! The interface to get and set camera settings.
+    interface Control
+    {
+        boolean getFeatures(out FeatureSet features);
+	boolean setFeatures(in FeatureSet features);
+    };
+};
+
+#endif /* VIDEOCONTROL_IDL */
+

@@ -1,0 +1,8 @@
+Tool for basic notify multicast adapter testing.
+
+Not of general interest, but maybe usefull to get familiar with this
+service.
+
+Starts up a notification service, creates a consumer and a NotifyMulticast
+adapter and tries to subscribe for different domain-types-pairs passed
+by parameters
