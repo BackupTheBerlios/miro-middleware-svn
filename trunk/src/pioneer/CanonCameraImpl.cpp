@@ -141,7 +141,7 @@ namespace Canon
 
     Miro::FocusRangeIDL range;    
     range=getFocusRange();
-    factor=factor*(range.max-range.min)/100+range.min;
+    factor=factor*int(range.max-range.min)/100+int(range.min);
 
     Message focus(SET_FOCUS_POSITION,int2str(tmp,factor,4));
     cout << focus << endl;  				// only test
@@ -191,7 +191,7 @@ namespace Canon
       }
     }
 
-    return 100*(result-range.min)/(range.max-range.min);
+    return int(100*(result-range.min)/(range.max-range.min));
   }
   
   void
