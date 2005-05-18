@@ -76,7 +76,7 @@ namespace Mcp
     int  buffLen;
     int  buffPos;
 
-    char * writePtr;
+    unsigned char * writePtr;
   };
 };
 #endif

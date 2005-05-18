@@ -44,7 +44,7 @@ namespace Mcp
     state(NO_STARTS),
     buffLen(0),
     buffPos(0),
-    writePtr((char*)message_)
+    writePtr(dynamic_cast<Message*>(message_)->buffer())
   {
   }
 
@@ -79,7 +79,7 @@ namespace Mcp
     while ((buffPos < buffLen)) {
       thisChar = buffer[buffPos++];
       DBG(cerr << "Working char " << buffPos 
-	  << " (0x" <<  hex << (unsigned int)thisChar << dec << ")" 
+	  << " (0x" <<  hex << ((unsigned int)thisChar && 0xff) << dec << ")" 
 	  << endl);
     
       // translate the mcp message read from fd
@@ -107,8 +107,7 @@ namespace Mcp
 	if (thisChar == START) {
 	  state = IN_PROGRESS;
 
-	  *((ACE_Time_Value*)(writePtr)) = ACE_OS::gettimeofday();
-	  writePtr += sizeof(ACE_Time_Value); // Move beyond timestamp
+	  message_->time() = ACE_OS::gettimeofday();
 	}
 	else {
 	  state = NO_STARTS; /* starts only count if in a pair */
@@ -138,7 +137,7 @@ namespace Mcp
 	  cerr << "Unexpected start in base packet" << endl;
 	  // reset base output parsing
 	  state = NO_STARTS;
-	  writePtr = (char*)message_;
+	  writePtr = dynamic_cast<Message*>(message_)->buffer();
 	  break;
 	case END:
 	default:
@@ -152,7 +151,7 @@ namespace Mcp
 	case END:
 	  // get the message on its way
 	  dispatchMessage();
-	  writePtr = (char*)message_;
+	  writePtr = dynamic_cast<Message*>(message_)->buffer();
 	  // reset base output parsing
 	  state = NO_STARTS;
 	  break;
@@ -222,5 +221,6 @@ namespace Mcp
     // this will cancel the impending timeout and set a new one
     // unless the user is insisting on doing it him/herself
     connection.watchdogTimer(watchdogTimeout);
+
   }
 };
