@@ -43,7 +43,7 @@ namespace Miro
   {
     MIRO_DBG(MIRO,LL_NOTICE,"Device handle_close called.\n");
 
-    // commit suizide
+    // commit suicide
     delete this;
     return 0;
   }
