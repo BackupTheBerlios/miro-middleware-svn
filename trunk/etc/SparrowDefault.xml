@@ -209,7 +209,7 @@
       </instance>
 
       <instance type="DeviceBTTV" name="DeviceBTTV">
-	<parameter name="Miro::CameraParameters" >
+	<parameter name="Camera" >
 	  <parameter value="0.120000" name="Latency" />
 	  <parameter value="31.0" name="Alpha" />
 	  <parameter value="600" name="Height" />

@@ -287,7 +287,7 @@
  </section>
 
  <section name="Video" >
-  <parameter name="Video" >
+  <instance type="Video::Parameters"  name="Video" >
    <parameter value="bgr" name="Palette" />
    <parameter value="384" name="Width" />
    <parameter value="288" name="Height" />
@@ -305,22 +305,22 @@
        </parameter>
      </parameter>
     </parameter>
-  </parameter>
+  </instance>
 
-  <parameter name="DeviceBTTV">
+  <instance type="DeviceBTTV" name="DeviceBTTV">
    <parameter value="/dev/video0" name="Device" />
-  </parameter>
+  </instance>
 
-  <parameter name="FilterFlip">
+  <instance type="FilterFlip" name="FilterFlip">
    <parameter value="true" name="InterfaceInstance" />
    <parameter name="Interface">
     <parameter value="BGR" name="Name" />
    </parameter>
-  </parameter> 
+  </instance> 
 
-  <parameter name="FilterSwap3">
+  <instance type="FilterSwap3" name="FilterSwap3">
    <parameter value="true" name="InterfaceInstance" />
-  </parameter>
+  </instance>
  </section>
 
  <section name="Notification" >
