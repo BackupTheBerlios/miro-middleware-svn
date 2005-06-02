@@ -4,11 +4,12 @@
 # required versions
 REQUIRED_AUTOMAKE=1.7
 REQUIRED_AUTOCONF=2.57
+REQUIRED_LIBTOOL=1.5
 
 # search for the version strings
 AUTOMAKE=`automake --version | head -n 1 | sed 's/[^0-9.]*//' | sed 's/\([0-9.]*\).*/\1/'`
 AUTOCONF=`autoconf --version | head -n 1 | sed 's/[^0-9.]*//' | sed 's/\([0-9.]*\).*/\1/'`
-
+LIBTOOL=`libtool --version | head -n 1 | sed 's/[^0-9]*//' | sed 's/\([0-9][0-9]*\.[0-9.]*\).*/\1/'`
 
 
 
@@ -51,6 +52,7 @@ if [ $? == 0 ]; then
 
   if [ x$USED_AUTOMAKE == "x" ]; then
     echo "no suitable automake versions found, giving up"
+    echo "need: "$REQUIRED_AUTOMAKE", found: "$AUTOMAKE
     exit -1
   fi
 else
@@ -83,8 +85,19 @@ fi
 equal_greater_then $AUTOCONF $REQUIRED_AUTOCONF
 if [ $? == 0 ]; then
   echo "no suitable automake versions found, giving up"
+  echo "need: "$REQUIRED_AUTOCONF", found: "$AUTOCONF
   exit -1
 fi
+
+# check libtool version
+
+equal_greater_then $LIBTOOL $REQUIRED_LIBTOOL
+if [ $? == 0 ]; then
+  echo "no suitable libtool versions found, giving up"
+  echo "need: "$REQUIRED_LIBTOOL", found: "$LIBTOOL
+  exit -1
+fi
+
 
 # remove config files in ./
 
