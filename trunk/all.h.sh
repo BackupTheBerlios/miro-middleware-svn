@@ -48,6 +48,7 @@ for j in `cat pch/all.h.tmp2`; do
     for i in $used_options; do
 	if echo $j | grep -q $i; then
 	    echo "#include <"$j">" >> pch/all.h
+            break
 	fi
     done
 done
