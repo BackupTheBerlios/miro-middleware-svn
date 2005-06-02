@@ -320,42 +320,90 @@
           <parameter value="0.020000" name="RangeMax" />
         </parameter>
       </parameter>
-   <parameter name="PanTiltParams">
-    <parameter name="Pan">
-     <parameter name="RangeMin" value="-100"/>
-     <parameter name="RangeMax" value="100"/>
-    </parameter>
-    <parameter name="Tilt">
-     <parameter name="RangeMin" value="-90"/>
-     <parameter name="RangeMax" value="30"/>
-    </parameter>
-   </parameter>
-  </parameter>
- </section>
- <section name="Video" >
-  <instance type="Video::Parameters" name="CannonCam">
-   <parameter value="bgr" name="Palette" />
-   <parameter value="384" name="Width" />
-   <parameter value="288" name="Height" />
-    <parameter name="Filter">
-     <parameter value="DeviceBTTV" name="Name" />
-     <parameter value="DeviceBTTV" name="Type" />
-     <parameter name="Successor" >
-      <parameter name="Filter" >
-       <parameter value="FlipIpp" name="Name" />
-       <parameter value="FlipIpp" name="Type" />
-       <parameter name="Successor">
-        <parameter name="Filter" >
-         <parameter value="FilterSwap3" name="Name" />
-         <parameter value="FilterSwap3" name="Type" />
+      <parameter name="PanTiltParams" >
+        <parameter name="Pan" >
+          <parameter value="-100" name="RangeMin" />
+          <parameter value="100" name="RangeMax" />
         </parameter>
-       </parameter> 
+        <parameter name="Tilt" >
+          <parameter value="-90" name="RangeMin" />
+          <parameter value="30" name="RangeMax" />
+        </parameter>
       </parameter>
-     </parameter>
     </parameter>
-   </instance>
-
-
+  </section>
+  <section name="Video" >
+    <instance type="Video::Parameters" name="CannonCam" >
+      <parameter value="bgr" name="Palette" />
+      <parameter value="384" name="Width" />
+      <parameter value="288" name="Height" />
+      <parameter name="Filter" >
+        <parameter value="DeviceBTTV" name="Name" />
+        <parameter value="DeviceBTTV" name="Type" />
+        <parameter name="Successor" >
+          <parameter name="Filter" >
+            <parameter value="FlipIpp" name="Name" />
+            <parameter value="FlipIpp" name="Type" />
+            <parameter name="Successor" >
+              <parameter name="Filter" >
+                <parameter value="FilterSwap3" name="Name" />
+                <parameter value="FilterSwap3" name="Type" />
+              </parameter>
+            </parameter>
+          </parameter>
+        </parameter>
+      </parameter>
+    </instance>
+    <instance type="Video::DeviceBTTVParameters" name="DeviceBTTV" >
+      <parameter value="-1" name="Focus" />
+      <parameter value="128" name="Hue" />
+      <parameter value="-1" name="Iris" />
+      <parameter value="-1" name="Trigger" />
+      <parameter value="2048" name="Shutter" />
+      <parameter value="128" name="Gamma" />
+      <parameter value="128" name="Sharpness" />
+      <parameter value="-1" name="Temperature" />
+      <parameter value="0" name="Gain" />
+      <parameter value="30" name="Framerate" />
+      <parameter value="128" name="Brightness" />
+      <parameter value="128" name="Exposure" />
+      <parameter value="128" name="Saturation" />
+      <parameter value="162" name="WhiteBalance0" />
+      <parameter value="184" name="WhiteBalance1" />
+      <parameter name="Camera" >
+        <parameter value="0.060000" name="Latency" />
+        <parameter value="34.0" name="Alpha" />
+        <parameter value="675" name="Height" />
+        <parameter value=" 3.8400000000e+02" name="Ncx" />
+        <parameter value=" 3.8400000000e+02" name="Nfx" />
+        <parameter value=" 1.2500000000e-02" name="Dx" />
+        <parameter value=" 6.2500000000e-03" name="Dy" />
+        <parameter value=" 1.2500000000e-02" name="Dpx" />
+        <parameter value=" 6.2500000000e-03" name="Dpy" />
+        <parameter value=" 3.0007661987e+02" name="Cx" />
+        <parameter value=" 2.0132624324e+02" name="Cy" />
+        <parameter value=" 1.0000000000e+00" name="Sx" />
+        <parameter value=" 1.5923252708e+01" name="F" />
+        <parameter value=" 1.1259377983e-04" name="Kappa" />
+        <parameter value="-2.3844295568e+02" name="Tx" />
+        <parameter value="-4.2492150950e+01" name="Ty" />
+        <parameter value=" 1.2630303397e+03" name="Tz" />
+        <parameter value="-1.0426447603e+00" name="Rx" />
+        <parameter value="-8.8179550250e-02" name="Ry" />
+        <parameter value=" 6.6942776641e-03" name="Rz" />
+        <parameter value=" 0.0000000000e+00" name="P1" />
+        <parameter value=" 0.0000000000e+00" name="P2" />
+        <parameter value=" 9.9609238246e-01" name="R1" />
+        <parameter value=" 7.2690364897e-02" name="R2" />
+        <parameter value="-5.0160507028e-02" name="R3" />
+        <parameter value=" 6.6682185959e-03" name="R4" />
+        <parameter value=" 5.0443554554e-01" name="R5" />
+        <parameter value=" 8.6342360128e-01" name="R6" />
+        <parameter value=" 8.8065319366e-02" name="R7" />
+        <parameter value="-8.6038415330e-01" name="R8" />
+        <parameter value=" 5.0197968911e-01" name="R9" />
+      </parameter>
+    </instance>
     <instance type="Video::DeviceBTTV" name="DeviceBTTV" >
       <parameter value="/dev/video0" name="Device" />
       <parameter value="2" name="Buffers" />
