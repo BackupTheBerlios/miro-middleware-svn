@@ -36,6 +36,8 @@ libmiroBehavioursSimple_la_SOURCES = \
 	BehavioursFactory.cpp \
 	BehavioursFactory.h
 
+Parameters.h: Parameters.cpp
+
 BUILT_SOURCES = Parameters.cpp Parameters.h
 CLEANFILES = $(BUILT_SOURCES)
 

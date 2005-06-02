@@ -27,6 +27,8 @@ sources = \
 	DummyBehaviourD.cpp \
 	DummyFactory.cpp
 
+Parameters.h: Parameters.cpp
+
 ## the prefix of the following macro must have the same name as the respective library
 ## (replace dots with underscores)
 libmiroBAPtests_la_SOURCES = $(sources)

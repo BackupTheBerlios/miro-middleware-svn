@@ -31,6 +31,8 @@ sources = \
         PCanMessage.cpp \
 	CanEventHandler.cpp
 
+Parameters.h: Parameters.cpp
+
 libcan_a_SOURCES = $(sources)
 
 BUILT_SOURCES = Parameters.cpp Parameters.h

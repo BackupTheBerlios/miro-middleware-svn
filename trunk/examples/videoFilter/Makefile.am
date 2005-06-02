@@ -30,6 +30,8 @@ GrayVideoService_SOURCES = \
 	FilterBusy.h \
 	Parameters.xml
 
+Parameters.h: Parameters.cpp
+
 if COND_IEEE1394
 1394libraries = \
         -lraw1394 \

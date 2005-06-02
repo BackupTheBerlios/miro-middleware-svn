@@ -28,6 +28,7 @@ libmiroLaser_a_SOURCES = \
 	SickLaserEvent.cpp \
 	SickLaserImpl.cpp
 
+Parameters.h: Parameters.cpp
 Parameters.cpp: Parameters.xml
 
 if COND_PCH

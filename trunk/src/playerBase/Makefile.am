@@ -32,6 +32,8 @@ PlayerBase_SOURCES = \
 	PlayerPanTiltImpl.cpp \
 	PlayerCameraControlImpl.cpp \
 	PlayerStallImpl.cpp
+	
+Parameters.h: Parameters.cpp
 
 PlayerBase_LDADD = \
 	-lmiroIDL \

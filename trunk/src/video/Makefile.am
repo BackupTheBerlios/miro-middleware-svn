@@ -90,6 +90,7 @@ if COND_QUICKCAM
 quickcamsources_used = $(quickcamsources)
 endif
 
+Parameters.h: Parameters.cpp
 Parameters.cpp: Parameters.xml
 
 

@@ -33,6 +33,8 @@ sources = \
 	BaseStatus.cpp \
 	BaseDummyImpl.cpp
 
+Parameters.h: Parameters.cpp
+
 libbase_a_SOURCES = $(sources)
 
 BUILT_SOURCES = Parameters.cpp Parameters.h

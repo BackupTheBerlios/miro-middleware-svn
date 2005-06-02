@@ -37,6 +37,8 @@ DpPanTilt_SOURCES = \
 	PanTiltMessage.h \
 	PanTiltOpcodes.h
 
+Parameters.h: Parameters.cpp
+
 BUILT_SOURCES = Parameters.cpp Parameters.h
 CLEANFILES = $(BUILT_SOURCES)
 

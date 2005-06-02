@@ -30,6 +30,8 @@ sources = \
 	PsosConnection.cpp \
 	PsosEventHandler.cpp
 
+Parameters.h: Parameters.cpp
+
 libpsos_a_SOURCES = $(sources)
 
 BUILT_SOURCES = Parameters.cpp Parameters.h

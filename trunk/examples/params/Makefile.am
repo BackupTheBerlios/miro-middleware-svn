@@ -24,6 +24,8 @@ ParameterExample_SOURCES = \
 	ParameterExample.cpp \
 	Parameters.xml
 
+Parameters.h: Parameters.cpp
+
 ParameterExample_LDADD = \
 	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiro

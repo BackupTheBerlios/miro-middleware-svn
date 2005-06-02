@@ -30,6 +30,8 @@ sources = \
 	MspEventHandler.cpp \
 	MspConsumer.cpp
 
+Parameters.h: Parameters.cpp
+
 libmsp_a_SOURCES = $(sources)
 
 

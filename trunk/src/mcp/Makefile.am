@@ -30,6 +30,8 @@ sources = \
 	McpConsumer.cpp \
 	McpEventHandler.cpp
 
+Parameters.h: Parameters.cpp
+
 libmcp_a_SOURCES = $(sources)
 
 BUILT_SOURCES = Parameters.cpp Parameters.h

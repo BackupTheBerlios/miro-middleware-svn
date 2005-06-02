@@ -48,6 +48,8 @@ sparrowsources = \
 	PowerArbiter.cpp \
 	PowerArbiterMessage.cpp
 
+Parameters.h: Parameters.cpp
+
 if COND_SPARROW99
 sparrowsources_used = $(sparrowsources)
 endif

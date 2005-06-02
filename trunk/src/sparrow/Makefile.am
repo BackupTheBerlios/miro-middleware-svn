@@ -38,6 +38,8 @@ sources = \
 	SparrowStallImpl.cpp \
 	SparrowPanTiltImpl.cpp
 
+Parameters.h: Parameters.cpp
+
 libsparrow_a_SOURCES = $(sources)
 
 BUILT_SOURCES = Parameters.cpp Parameters.h

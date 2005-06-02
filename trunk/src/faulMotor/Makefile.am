@@ -28,6 +28,8 @@ sources = \
 	FaulMotorMotionImpl.cpp \
 	TimerEventHandler.cpp
 
+Parameters.h: Parameters.cpp
+
 libfaulMotor_a_SOURCES = $(sources)
 
 BUILT_SOURCES = Parameters.cpp Parameters.h

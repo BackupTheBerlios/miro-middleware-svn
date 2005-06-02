@@ -51,6 +51,8 @@ deprecatedsources = \
 	CanonCameraImpl.cpp \
 	CanonCameraImpl.h
 
+Parameters.h: Parameters.cpp
+
 if COND_DEPRECATED
 deprecatedsources_used = $(deprecatedsources)
 endif

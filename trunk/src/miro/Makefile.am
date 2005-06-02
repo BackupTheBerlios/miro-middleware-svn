@@ -41,10 +41,10 @@ sources1 = \
 	StructuredPushConsumer.cpp \
 	OdometryTracking.cpp 
 
+Parameters.h: Parameters.cpp
 Parameters.cpp: Parameters.xml
-NotifyMulticastParameters.cpp: NotifyMulticastParameters.xml
 
-libmiro_la_SOURCES = $(sources1) $(sparrowsources1_used) $(pioneersources1_used)
+libmiro_la_SOURCES = $(sources1)
 if COND_PCH
 libmiro_la_CPPFLAGS = -include $(top_builddir)/pch/all_shared.h $(CPPFLAGS) $(AM_CPPFLAGS)
 endif
@@ -92,7 +92,10 @@ sources2 = \
         NotifyMulticastSH.cpp \
         NotifyMulticastDomainEventFilter.cpp
 
+SvcParameters.h: SvcParameters.cpp
 SvcParameters.cpp: SvcParameters.xml
+NotifyMulticastParameters.h: NotifyMulticastParameters.cpp
+NotifyMulticastParameters.cpp: NotifyMulticastParameters.xml
 
 libmiroSvc_a_SOURCES = $(sources2)
 if COND_PCH
