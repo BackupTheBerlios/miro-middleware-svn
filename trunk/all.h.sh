@@ -24,11 +24,12 @@ echo -n "" > pch/all.h.tmp1
 # test if it includes one of the search paths
 # first sed expression kills first part
 # second one the crap at the end
-# grep out the absolute pathnames and be sure that they are header files
+# grep out the absolute pathnames and be sure that they are header files (and not .i.h files)
+# grep out the config.h file from other projects
 
 # no need to add -I`dirname $i` -I./src -I./ to the search path, as this would only
 # include files which are in the list anyway
-gcc -E -x c++ $options `find . -name \*.cpp -o -name \*.h` 2>/dev/null | grep "^# [0-9]* " | sed 's/^#\ [0-9]*\ \"//' | sed 's/\"[\ 0-9]*$//' | grep ^/.*\.h[h]*$ >> pch/all.h.tmp1
+gcc -E -x c++ $options `find . -name \*.cpp -o -name \*.h` 2>/dev/null | grep "^# [0-9]* " | sed 's/^#\ [0-9]*\ \"//' | sed 's/\"[\ 0-9]*$//' | grep "^/.*[^\.][^i]\.h[h]*$" | grep -v "/config.h$" >> pch/all.h.tmp1
 
 # sort and delete duplicates
 sort -u < pch/all.h.tmp1 > pch/all.h.tmp2
