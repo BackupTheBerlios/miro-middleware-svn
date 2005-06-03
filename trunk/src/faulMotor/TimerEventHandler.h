@@ -9,6 +9,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+#ifndef TimerEventHandler_hh
+#define TimerEventHandler_hh
+
 #include <ace/Event_Handler.h>
 
 namespace FaulMotor
@@ -54,3 +57,4 @@ namespace FaulMotor
   };
 }
 
+#endif
