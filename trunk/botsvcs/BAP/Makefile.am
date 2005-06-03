@@ -15,7 +15,7 @@
 
 include $(top_srcdir)/config/Make-rules
 if COND_PCH
-CPPFLAGS+=-include $(top_builddir)/pch/all_shared.h
+AM_CPPFLAGS+=-include $(top_builddir)/pch/all_shared.h
 endif
 
 lib_LTLIBRARIES = libmiroBAP.la

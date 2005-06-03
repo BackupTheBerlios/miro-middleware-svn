@@ -12,9 +12,8 @@
 ##############################################################################
 
 include $(top_srcdir)/config/Make-rules
-# AM_LDFLAGS += -version-info `echo $(VERSION) | sed 's/\./:/g'`
 if COND_PCH
-CPPFLAGS+=-include $(top_builddir)/pch/all_shared.h
+AM_CPPFLAGS+=-include $(top_builddir)/pch/all_shared.h
 endif
 
 
@@ -34,10 +33,6 @@ libmiroParams_la_LIBADD = \
 	$(TAO_LIBS) \
         $(INHERITED_LIBS) \
 	$(QT_LIBS)
-
-
-#BUILT_SOURCES = Parameters.cpp Parameters.h
-#CLEANFILES = $(BUILT_SOURCES)
 
 includefiles1 = $(sources:.xml=.h)
 includefiles2 = $(includefiles1:.cpp=.h)

@@ -112,3 +112,4 @@ MakeConfig
 NotifyObserver
 SerialPolling
 NotifyMulticastTest
+VideoBrokerTestBrief

@@ -19,15 +19,17 @@ AM_CXXFLAGS += $(INHERITED_CPPFLAGS) $(INHERITED_SYMBOLS)
 # $(INHERITED_WARNINGS)
 AM_CXXFLAGS += -W -Wall -Woverloaded-virtual -DDEBUG -DQT_GENUINE_STR
 
+AM_CPPFLAGS =
+
 # lib search path
 
-# AM_LDFLAGS = -L$(top_builddir)/lib
-# AM_LDFLAGS += $(ACE_LDFLAGS) $(TAO_LDFLAGS) $(QT_LDFLAGS)
-# AM_LDFLAGS += $(INHERITED_LDFLAGS)
+AM_LDFLAGS = -L$(top_builddir)/lib
+AM_LDFLAGS += $(ACE_LDFLAGS) $(TAO_LDFLAGS) $(QT_LDFLAGS)
+AM_LDFLAGS += $(INHERITED_LDFLAGS) -version-info `echo $(VERSION) | sed 's/\./:/g'`
 
 # I know, I know. But older versions didn't recognize AM_LDFLAGS
 # overriding this variable by a user should work nevertheless.
-LDFLAGS = -L$(top_builddir)/lib $(ACE_LDFLAGS) $(TAO_LDFLAGS) $(QT_LDFLAGS) $(INHERITED_LDFLAGS) -version-info `echo $(VERSION) | sed 's/\./:/g'`
+# LDFLAGS = -L$(top_builddir)/lib $(ACE_LDFLAGS) $(TAO_LDFLAGS) $(QT_LDFLAGS) $(INHERITED_LDFLAGS) -version-info `echo $(VERSION) | sed 's/\./:/g'`
 
 
 # header include dirs

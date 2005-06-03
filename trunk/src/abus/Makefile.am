@@ -14,9 +14,8 @@
 ##############################################################################
 
 include $(top_srcdir)/config/Make-rules
-# AM_LDFLAGS += -version-info `echo $(VERSION) | sed 's/\./:/g'`
 if COND_PCH
-CPPFLAGS+=-include $(top_builddir)/pch/all_static.h
+AM_CPPFLAGS+=-include $(top_builddir)/pch/all_static.h
 endif
 
 
@@ -33,9 +32,6 @@ libabus_a_SOURCES = $(sources)
 
 extraheader = \
 	AbusMessage.h
-
-#BUILT_SOURCES = Parameters.cpp Parameters.h
-#CLEANFILES = $(BUILT_SOURCES)
 
 includefiles1 = $(sources:.xml=.h) $(extraheader)
 includefiles2 = $(includefiles1:.cpp=.h)
