@@ -78,19 +78,13 @@ namespace Psos
   {
     Miro::Guard guard(writeMutex);
     ACE_Time_Value time = ACE_OS::gettimeofday();
-    
 
-    /*
-     * This is some kind of flooding protection for the psos devie
-     * it seems not to be necessary, but maybe someone should
-     * write an explicit testcase and report his findings 
-     
-     * ACE_Time_Value delta = time - lastWrite;
-     * if (delta < writeTimeOut) {
-     *   ACE_OS::sleep(writeTimeOut - delta);
-     *   time = ACE_OS::gettimeofday();
-     * }
-     */
+    ACE_Time_Value delta = time - lastWrite;
+    if (delta < writeTimeOut) {
+      ACE_OS::sleep(writeTimeOut - delta);
+      time = ACE_OS::gettimeofday();
+    }
+
     int rc = ioBuffer.send_n(message.buffer(), message.length() + 3);
     lastWrite = time;
 

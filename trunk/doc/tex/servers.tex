@@ -115,6 +115,12 @@ types do exist. Those are described in the subsequent sections.
   {\tt Miro::Pan}, {\tt Miro::Tilt} and {\tt Miro::PanTilt}
   interfaces as {\tt Pan, Tilt} and {\tt PanTilt} at the naming
   service.
+\item[CameraControl:]
+  This interface allows to control the optical properties of certain
+  camera models, i.e. {\em zoom}, {\em focus} and {\em shutter speed}.
+  In addition to the generic {\tt CameraControl} interface there are
+  some specialized interfaces for particular camera models, e.g.
+  {\tt CanonCameraControl} or {\tt SonyCameraControl}.
 \item[Buttons:]
   For simple user interaction, some robot types provide push
   buttons. The buttons service registers the {\tt Miro::Buttons}

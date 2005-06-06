@@ -22,8 +22,6 @@
 #include "CameraMessage.h"
 #include <cstring>
 
-#include <iostream>
-
 namespace Pioneer
 {
   CameraAnswer::CameraAnswer() :

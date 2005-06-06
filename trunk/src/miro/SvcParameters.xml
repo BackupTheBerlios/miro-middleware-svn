@@ -124,8 +124,8 @@
     <config_item name="Focus" final="false" parent="Config">
       <config_parameter name="present" type="bool" default="false" />
       <config_parameter name="autoFocus" type="bool" default="false" />
-      <config_parameter name="rangeMin" type="long" measure="mm" default="0" />
-      <config_parameter name="rangeMax" type="long" measure="mm" default="0" />
+      <config_parameter name="rangeMin" type="double" measure="mm" default="0" />
+      <config_parameter name="rangeMax" type="double" measure="mm" default="INFINITY" />
     </config_item>
     <config_item name="Shutter" final="false" parent="Config">
       <config_parameter name="present" type="bool" default="false" />

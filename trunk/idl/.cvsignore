@@ -322,6 +322,14 @@ ScanDescriptionS.cpp
 ScanDescriptionS.h
 ScanDescriptionS.i.h
 ScanDescriptionS.lo
+SonyCameraControlC.cpp
+SonyCameraControlC.h
+SonyCameraControlC.i.h
+SonyCameraControlC.lo
+SonyCameraControlS.cpp
+SonyCameraControlS.h
+SonyCameraControlS.i.h
+SonyCameraControlS.lo
 SparrowAliveC.cpp
 SparrowAliveC.h
 SparrowAliveC.i.h

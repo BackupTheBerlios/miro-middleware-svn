@@ -99,6 +99,18 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
       pCanonCamera = canonCamera._this();
 #endif
     } // camera is canon
+    else if (Pioneer::Parameters::instance()->cameraParams.vendor=="sony") {
+      // Sony EVI-D30/D31 series
+      pCameraControlImpl=new 
+	Sony::SonyCameraControlImpl(pioneerConnection,
+			*Pioneer::Parameters::instance());
+      pCameraControl = pCameraControlImpl->_this();
+      pPanTiltImpl=new
+	Sony::SonyPanTiltImpl(pioneerConnection,
+			Pioneer::Parameters::instance()->panTiltParams,
+			Pioneer::Parameters::instance()->cameraParams.upsideDown);
+      pPanTilt = pPanTiltImpl->_this();
+    } // camera is sony
   } else {
     pCameraControlImpl=NULL;
     pPanTiltImpl=NULL;

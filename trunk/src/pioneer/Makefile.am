@@ -40,6 +40,12 @@ sources = \
 	CanonCameraControlImpl.h \
 	CanonMessage.cpp \
 	CanonMessage.h \
+	SonyPanTiltImpl.cpp \
+	SonyPanTiltImpl.h \
+	SonyCameraControlImpl.cpp \
+	SonyCameraControlImpl.h \
+	SonyMessage.cpp \
+	SonyMessage.h \
 	GripperImpl.cpp \
 	GripperImpl.h \
 	CanonDevice.h \

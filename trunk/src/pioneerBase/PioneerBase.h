@@ -26,6 +26,8 @@
 #include "pioneer/CameraMessage.h"
 #include "pioneer/CanonPanTiltImpl.h"
 #include "pioneer/CanonCameraControlImpl.h"
+#include "pioneer/SonyPanTiltImpl.h"
+#include "pioneer/SonyCameraControlImpl.h"
 
 #ifdef MIRO_HAS_DEPRECATED
 #include "pioneer/CanonCameraImpl.h"

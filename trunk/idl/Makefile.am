@@ -95,6 +95,7 @@ pioneersources = \
 	PioneerStall.idl \
 	PioneerMotion.idl \
 	CanonCameraControl.idl \
+	SonyCameraControl.idl \
 	Gripper.idl \
 	TCM2.idl \
 	TCM2Event.idl
