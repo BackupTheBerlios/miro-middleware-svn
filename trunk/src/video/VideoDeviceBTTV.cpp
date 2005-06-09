@@ -133,7 +133,7 @@ namespace Video
       err = ioctl(ioBuffer_.get_handle(), VIDIOCGMBUF, &gb_buffers);
       if (err == -1)
 	throw Miro::CException(errno, "DeviceBTTV::handleConnect() - VIDIOCGMBUF");
-      map_ = (unsigned char*)mmap(0, gb_buffers.size, PROT_READ, MAP_SHARED, ioBuffer_.get_handle(), 0);
+      map_ = (unsigned char*)mmap(0, gb_buffers.size, PROT_READ|PROT_WRITE, MAP_SHARED, ioBuffer_.get_handle(), 0);
       if ((int)map_ == -1)
 	throw Miro::CException(errno, "DeviceBTTV::handleConnect() - mmap()");
     }
