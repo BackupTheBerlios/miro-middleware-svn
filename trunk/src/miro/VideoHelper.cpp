@@ -28,6 +28,7 @@ namespace Miro
     switch (_pal)
     {
     case GREY_8:	//	gray
+    case INVALID:	//	dummy color model for filters not producing a meaningful output image
       pixelSize = 1;
       break;
     case GREY_16:	//	gray

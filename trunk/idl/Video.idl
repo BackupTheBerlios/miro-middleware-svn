@@ -20,6 +20,7 @@ module Miro
   //! The available video formats
   enum VideoPaletteIDL {
     GREY_8,
+    INVALID,
     GREY_16,
     GREY_32,
     RGB_24,
