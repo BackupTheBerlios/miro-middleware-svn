@@ -1,4 +1,5 @@
-/*
+/* -*- C++ -*-
+ *
  * This file is part of Miro (The Middleware for Robots)
  * Copyright (C) 2005 Ingo van Lil <ingo@vanlil.de>
  *
@@ -41,12 +42,11 @@ namespace GPS
     virtual int handle_input(ACE_HANDLE fd);
 
   private:
-    enum {WAIT_SOS, COPY_MSG, WAIT_LF} state;
+    enum {WAIT_SOS, COPY_MSG, WAIT_LF} state_;
     static const int BUFSIZE = 128;
-    char buffer[BUFSIZE];
-    char sentence[BUFSIZE];
-    bool in_sentence;
-    int pos;
+    char buffer_[BUFSIZE];
+    char sentence_[BUFSIZE];
+    int pos_;
   };
 }
 

@@ -1,4 +1,5 @@
-/*
+/* -*- C++ -*-
+ *
  * This file is part of Miro (The Middleware for Robots)
  * Copyright (C) 2005 Ingo van Lil <ingo@vanlil.de>
  *
@@ -31,10 +32,11 @@
 namespace GPS
 {
   EventHandler::EventHandler(Miro::DevConsumer * _consumer) :
-    Super(_consumer, new Message())
+    Super(_consumer, new Message()),
+    state_(WAIT_SOS),
+    pos_(0)
   {
     MIRO_LOG_CTOR("GPS::EventHandler");
-    state = WAIT_SOS;
     MIRO_LOG_CTOR_END("GPS::EventHandler");
   }
 
@@ -47,7 +49,7 @@ namespace GPS
   int EventHandler::handle_input(ACE_HANDLE fd)
   {
     int bpos = 0;
-    int n = ACE_OS::read(fd, buffer, BUFSIZE);
+    int n = ACE_OS::read(fd, buffer_, BUFSIZE);
 
     if (n < 0)
       throw Miro::Exception("GPS::EventHandler: Error reading from GPS device");
@@ -55,48 +57,52 @@ namespace GPS
       throw Miro::Exception("GPS::EventHandler: No data available");
 
     while (bpos < n) {
-      switch (state) {
+      switch (state_) {
 	case WAIT_SOS: // Wait for start of sentence character ('$')
-	  if (buffer[bpos] == '$') {
-	    sentence[pos++] = buffer[bpos];
-	    state = COPY_MSG;
+	  if (buffer_[bpos] == '$') {
+	    sentence_[pos_++] = buffer_[bpos];
+	    state_ = COPY_MSG;
 	  }
 	  break;
 
 	case COPY_MSG: // Copy message into sentence buffer
-	  if (buffer[bpos] == '\r')
-	    state = WAIT_LF;
-	  else if (buffer[bpos] == '\0') {
+	  if (buffer_[bpos] == '\r') {
+	    state_ = WAIT_LF;
+	  }
+	  else if (buffer_[bpos] == '\0') {
 	    MIRO_LOG(LL_WARNING, "GPS::EventHandler: NUL character whithin NMEA sentence");
-	    pos = 0;
-	    state = WAIT_SOS;
-	  } else if (buffer[bpos] == '$') {
+	    pos_ = 0;
+	    state_ = WAIT_SOS;
+	  }
+	  else if (buffer_[bpos] == '$') {
 	    MIRO_LOG(LL_WARNING, "GPS::EventHandler: SOS character whithin NMEA sentence");
-	    sentence[0] = '$';
-	    pos = 1;
-	  } else if (pos >= BUFSIZE-1) {
+	    sentence_[0] = '$';
+	    pos_ = 1;
+	  } 
+	  else if (pos_ >= BUFSIZE-1) {
 	    MIRO_LOG(LL_WARNING, "GPS::EventHandler: NMEA sentence too long");
-	    pos = 0;
-	    state = WAIT_SOS;
-	  } else
-	    sentence[pos++] = buffer[bpos];
+	    pos_ = 0;
+	    state_ = WAIT_SOS;
+	  } 
+	  else
+	    sentence_[pos_++] = buffer_[bpos];
 	  break;
 
 	case WAIT_LF: // Wait for final terminator, handle message if OK
-	  if (buffer[bpos] == '\n') {
-	    sentence[pos] = '\0';
-	    MIRO_LOG(LL_PRATTLE, sentence);
+	  if (buffer_[bpos] == '\n') {
+	    sentence_[pos_] = '\0';
+	    MIRO_LOG(LL_PRATTLE, sentence_);
 	    // pass correctly received sentence to consumer
 	    GPS::Message * pmsg = dynamic_cast<GPS::Message *>(message_);
 	    pmsg->time() = ACE_OS::gettimeofday();
-	    pmsg->set(sentence);
+	    pmsg->set(sentence_);
 	    if (pmsg->valid())
 	      Super::dispatchMessage();
 	    else
 	      MIRO_LOG(LL_WARNING, "GPS::EventHandler: Invalid NMEA sentence");
 	  }
-	  pos = 0;
-	  state = WAIT_SOS;
+	  pos_ = 0;
+	  state_ = WAIT_SOS;
 	  break;
 
 	default:
