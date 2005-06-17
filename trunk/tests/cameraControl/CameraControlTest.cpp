@@ -12,9 +12,13 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
+#include <config.h>
+
 #include "idl/CameraControlC.h"
+#ifdef MIRO_HAS_PIONEER
 #include "idl/CanonCameraControlC.h"
 #include "idl/SonyCameraControlC.h"
+#endif
 #include "miro/Client.h"
 #include "miro/IO.h"
 #include "miro/Angle.h"
@@ -25,10 +29,12 @@
 using Miro::Client;
 using Miro::CameraControl;
 using Miro::CameraControl_var;
+#ifdef MIRO_HAS_PIONEER
 using Miro::CanonCameraControl;
 using Miro::CanonCameraControl_var;
 using Miro::SonyCameraControl;
 using Miro::SonyCameraControl_var;
+#endif
 using Miro::deg2Rad;
 using Miro::rad2Deg;
 
@@ -46,7 +52,6 @@ int main(int argc, char *argv[])
   float focus;
   int time;
   char c, buffer[256];
-  bool canon = false, sony = false;
 
   // Initialize server daemon.
   Client client(argc, argv);
@@ -55,6 +60,8 @@ int main(int argc, char *argv[])
      // Reference to the server object
     CameraControl_var cameraControl = client.resolveName<CameraControl>("CameraControl");
 
+#ifdef MIRO_HAS_PIONEER
+    bool canon = false, sony = false;
     CanonCameraControl_var canonCameraControl = CanonCameraControl::_narrow(cameraControl);
     if (! CORBA::is_nil(canonCameraControl)) {
       cout << "CanonCameraControl interface detected." << endl;
@@ -66,6 +73,7 @@ int main(int argc, char *argv[])
       cout << "SonyCameraControl interface detected." << endl;
       sony = true;
     }
+#endif
 
     while(!quit) {
       cout << "CameraControl test!" << endl
@@ -81,6 +89,7 @@ int main(int argc, char *argv[])
 	   << "  8 - get shutter limits" << endl
 	   << "  9 - get shutter" << endl
 	   << "  a - set shutter" << endl;
+#ifdef MIRO_HAS_PIONEER
       if (canon) {
 	cout << "  A - set AE lock" << endl;
       } else if (sony) {
@@ -92,6 +101,7 @@ int main(int argc, char *argv[])
 	     << "  F - get gain" << endl
 	     << "  G - set gain" << endl;
       }
+#endif
       cout << " q to quit" << endl;
       cin.getline(buffer,256);
       c = buffer[0];
@@ -166,6 +176,7 @@ int main(int argc, char *argv[])
 	quit = true;
 	break;
       default:
+#ifdef MIRO_HAS_PIONEER
 	if (canon) {
 	  int ae;
 	  switch (c) {
@@ -374,6 +385,7 @@ int main(int argc, char *argv[])
 	      cout << "unknown option" << endl;
 	  }
 	} else
+#endif
 	  cout << "unknown option" << endl;
       }
     }
