@@ -43,16 +43,16 @@
   }
 
 #define IMAGE_PARAMETERS_FACTORY(X) \
-    virtual X ## ImageParameters * getImageParametersInstance() const; \
-    virtual X ## ImageParameters * getImageParametersInstance(const ::Video::FilterImageParameters& _p) const
+    virtual Video::FilterImageParameters * getImageParametersInstance() const; \
+    virtual Video::FilterImageParameters * getImageParametersInstance(const ::Video::FilterImageParameters& _p) const
 
 #define IMAGE_PARAMETERS_FACTORY_IMPL(X) \
-  X ## ImageParameters * \
+  Video::FilterImageParameters * \
   X::getImageParametersInstance() const \
   { \
     return new X ## ImageParameters(); \
   } \
-  X ## ImageParameters * \
+  Video::FilterImageParameters * \
   X::getImageParametersInstance(const ::Video::FilterImageParameters& _p) const \
   { \
     X ## ImageParameters const& p= dynamic_cast<X ## ImageParameters const&>(_p); \
@@ -62,12 +62,12 @@
 /* In contrast to the IMAGE_PARAMETERS_FACTORY_IMPL version above, this one uses the
    name Y to assign the method to the right class. */
 #define IMAGE_PARAMETERS_FACTORY_IMPL_2(X, Y) \
-  X ## ImageParameters * \
+  Video::FilterImageParameters * \
   Y::getImageParametersInstance() const \
   { \
     return new X ## ImageParameters(); \
   } \
-  X ## ImageParameters * \
+  Video::FilterImageParameters * \
   Y::getImageParametersInstance(const ::Video::FilterImageParameters& _p) const \
   { \
     X ## ImageParameters const& p= dynamic_cast<X ## ImageParameters const&>(_p); \
