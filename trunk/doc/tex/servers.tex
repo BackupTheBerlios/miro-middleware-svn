@@ -390,12 +390,12 @@ The configuration of this service is provided in xml, within the
 section {\tt sick}. The following parameters are understood:
 
 \begin{description}
-\item[device:]
+\item[Device:]
   The filename of the device which should be used.
-\item[baudrate:]
+\item[Baudrate:]
   The baudrate for communication with the sensor,
   possible values are: 9600, 19200, 38400 and 500000.
-\item[stdcrystal:]
+\item[StdCrystal:]
   For achieving the unusual baud rate of 500000
   baud, we use a serial adapter, that is equipped with a 16MHz
   crystal, instead of the standard 14.??MHz. Due to this reason, the
@@ -403,33 +403,62 @@ section {\tt sick}. The following parameters are understood:
   the UART. If you have an off-the-shelf serial adapter, use
   {\tt true} here, you will probably not be able to use 500000 baud
   then.
-\item[continousmode:]
+\item[ContinousMode:]
   If {\tt true} is provided for this
   parameter the sensor will provide data automatically, about 40 times
   a second. If {\tt false} is used, the service will poll a
   measurement after an interval that can be specified with the
   following parameter.
-\item[pollintervall:]
+\item[PollIntervall:]
   The interval between two consecutive
-  measurements, measured in microseconds. This parameter has no effect
-  if continousmode is set to {\tt true}.
+  measurements, measured in seconds. This parameter has no effect
+  if ContinousMode is set to {\tt true}.
+\item[Notify:]
+  Specifies whether incoming scan results should be sent out through the
+  CORBA notification service.
+\item[PositionStamps:]
+  Specifies whether laser scan events should be marked with an odometry
+  position reading.
+\item[Statistics:]
+  If this parameter is {\tt true} the laser service will dump some
+  statistical data about the device communication at regular intervals
+  (once for each 1000 received packets).
+\item[Fov:]
+  The field of vision, i.e. angular scan range of the laser scanner in
+  degrees. Current SICK laser scanners support a scan range of either
+  180° (default) or 100°.
+\item[ScanResolution:]
+  The scan resolution, i.e. the angular distance between two single shots
+  in degrees. Supported values are 0.5° (default) or 1° for a scan range
+  of 180° or 0.25°, 0.5° or 1° for a scan range of 100°.
 \end{description}
 
 The following example shows the configuration used for our hardware:
 
 \begin{lstlisting}[frame=tb]{}
-<sick>
-  <device>/dev/laser</device>
-  <baudrate>500000</baudrate>
-  <continousmode>true</continousmode>
-  <stdcrystal>false</stdcrystal>
-  <pollintervall>100000</pollintervall><!-- pollinterval in usec -->
-</sick>
+    <section name="Sick" >
+      <parameter name="Laser::Parameters" >
+	<parameter value="/dev/laser" name="Device" />
+        <parameter name="TtyParams" >
+          <parameter value="500000" name="Baudrate" />
+        </parameter>
+        <parameter value="false" name="StdCrystal" />
+        <parameter value="true" name="ContinousMode" />
+        <parameter value="0.100000" name="PollInterval" />
+        <parameter value="false" name="Notify" />
+        <parameter value="false" name="PositionStamps" />
+        <parameter value="true" name="Statistics" />
+        <parameter value="180" name="Fov" />
+	<parameter value="0.5" name="ScanResolution" />
+      </parameter>
+    </section>
 \end{lstlisting}
 
-As the laser provides a specialization of a range sensor, we also
-provide a scandescription for it. See section \ref{scandescrption} for
-details.
+As the laser provides a specialization of a range sensor, we also provide
+a scandescription for it. See section \ref{scandescrption} for details.
+However, since it isn't feasible to manually specify up to 401 separate
+range sensors large parts of the scandescription are calculated from the
+Fov and ScanResolution parameters at service startup.
 
 
 \subsection{Possible Problems}

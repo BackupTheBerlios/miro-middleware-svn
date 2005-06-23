@@ -14,11 +14,13 @@
 #include "SickLaserConnection.h"
 #include "SickLaserMessage.h"
 #include "SickLaserStatistic.h"
+#include "Parameters.h"
 
 #include "miro/TimeHelper.h"
 #include "miro/Log.h"
 
 #include <iostream>
+#include <sstream>
 
 #include <netinet/in.h>
 
@@ -37,9 +39,11 @@ namespace Miro
     Super(),
     laser_(_laser),
     laserI_(_laserI),
+    parameters_(*::Laser::Parameters::instance()),
     laserStatistic_(_laserStatistic)
   {
     MIRO_LOG_CTOR("Miro::LaserTask");
+    rangeFactor = 1;
   }
 
   //////////////////////////////////////////////////////////////////////
@@ -184,12 +188,17 @@ namespace Miro
       break;
 
     case LR_REQ_DATA: 
-      {
+      if (laser_.hardwareInitialized) {
 	int vals = (message.getUnsignedShort(0) & 0x3fff);
+	int expected = (int)(parameters_.fov / parameters_.scanResolution + 1);
       
 	// throw exception if not the expected number of data arrived
-	if (vals != 361)
-	  throw Miro::Exception("LaserTask::handleMessage: was expecting 361 values");
+	if (vals != expected) {
+	  std::ostringstream outs;
+	  outs << "LaserTask::handleMessage: expected " << expected
+	       << " values, got " << vals;
+	  throw Miro::Exception(outs.str());
+	}
 
 	Guard guard(laser_.syncLaserScan);
 	RangeGroupEventIDL * data = new RangeGroupEventIDL();
@@ -200,17 +209,34 @@ namespace Miro
 	data->range.length(vals);
 
 	for (long i = vals - 1; i >= 0; --i) {
-	  data->range[i] = message.getUnsignedShort((i+1)*2) & 0x1fff;
+	  data->range[i] = (int)(rangeFactor *
+			   (message.getUnsignedShort((i+1)*2) & 0x1fff));
 	}
 
 	laserI_.integrateData(data);
 
 	laser_.syncLaserScanCond.broadcast();
-	break;
       }
-      case LR_LMS_STATUS: 
+      break;
+
+      case LR_LMS_STATUS:
 	MIRO_LOG(LL_NOTICE, "received sensor/LMI status");
 	laser_.syncStatusCond.broadcast();
+
+	if (message.datalength() >= 122) {
+	  switch (message.getUnsignedByte(121)) {
+	    case 0: // Range factor 1cm, maximum scan range 80m
+	      rangeFactor = 10;
+	      parameters_.laserDescription.group[0].description.maxRange
+			  = 81910;
+	      break;
+	    case 1: // Range factor 1mm, maximum scan range 8m
+	      rangeFactor = 1;
+	      parameters_.laserDescription.group[0].description.maxRange
+			  = 8191;
+	      break;
+	  }
+	}
 	// TODO further decode
 	break;
 
@@ -262,20 +288,27 @@ namespace Miro
 	// TODO further decode
 	break;
 
-      case LR_LMS_VARIANT_CHANGE: 
+      case LR_LMS_VARIANT_CHANGE:
 	MIRO_LOG(LL_NOTICE, "received variant change");
+	laser_.syncVariantChange.acquire();
 	switch (message.getUnsignedByte(0)) {
-	case 0: 
+	case 0:
 	  MIRO_LOG(LL_NOTICE, "variant change aborted");
+	  laser_.variantChanged = false;
 	  break;
 	case 1:
 	  MIRO_LOG(LL_NOTICE, "variant change done");
+	  laser_.variantChanged = true;
 	  break;
+	default:
+	  MIRO_LOG(LL_WARNING, "variant change: unknown status");
+	  laser_.variantChanged = false;
 	}
+	laser_.syncVariantChange.release();
+	laser_.syncVariantChangeCond.broadcast();
 
 	MIRO_LOG_OSTR(LL_NOTICE, "angular scan range    :"<< message.getUnsignedShort(1) << endl);
 	MIRO_LOG_OSTR(LL_NOTICE, "single shot resolution:"<< message.getUnsignedShort(3) << endl);
-      
 	break;
 
       case LR_FIELD_CONF: 

@@ -82,8 +82,33 @@ namespace Miro
     reactorTask_.cancel();
 
     //  delete laser;
+    PortableServer::ObjectId_var oid = poa->reference_to_id(pLaser);
+    poa->deactivate_object(oid.in());
 
     MIRO_LOG_DTOR_END("Miro::LaserServer");
+  }
+}
+
+void
+calculateLaserDescription(Laser::Parameters * parameters)
+{
+  parameters->laserDescription.scanType = Miro::RangeSensor::GROUPWISE;
+  parameters->laserDescription.eventName = "Laser";
+  parameters->laserDescription.group.length(1);
+  parameters->laserDescription.group[0].description.minRange = 50;
+  parameters->laserDescription.group[0].description.maxRange = 81910;
+  parameters->laserDescription.group[0].description.focus =
+		Miro::deg2Rad(parameters->scanResolution);
+
+  int values = (int)(parameters->fov / parameters->scanResolution + 1);
+  parameters->laserDescription.group[0].sensor.length(values);
+  for (int i = 0; i < values; ++i) {
+    parameters->laserDescription.group[0].sensor[i].height = 300;
+    parameters->laserDescription.group[0].sensor[i].distance = 0;
+    parameters->laserDescription.group[0].sensor[i].alpha =
+	Miro::deg2Rad(-(parameters->fov/2) + i * parameters->scanResolution);
+    parameters->laserDescription.group[0].sensor[i].beta = 0;
+    parameters->laserDescription.group[0].sensor[i].gamma = 0;
   }
 }
 
@@ -96,6 +121,7 @@ main(int argc, char *argv[])
   Laser::Parameters * parameters = Laser::Parameters::instance();
 
   try {
+    Miro::Log::init(argc, argv);
     // Config file processing
     Miro::ConfigDocument * config = new Miro::ConfigDocument(argc, argv);
     config->setSection("Robot");
@@ -103,13 +129,14 @@ main(int argc, char *argv[])
     config->setSection("Sick");
     config->getParameters("Laser::Parameters", *parameters);
     delete config;
+    calculateLaserDescription(parameters);
 
     MIRO_LOG_OSTR(LL_NOTICE, 
 		  "Configuration:\n" << 
 		  "  robot parameters:" << std::endl <<
-		  robotParameters << std::endl <<
+		  *robotParameters << std::endl <<
 		  "  parameters:" << std::endl <<
-		  parameters);
+		  *parameters);
 
     MIRO_LOG(LL_NOTICE, "Initialize server daemon.\n");
     Miro::LaserServer laserServer(argc, argv);

@@ -143,22 +143,30 @@ namespace Miro
     unsigned short getUnsignedShort(unsigned long offset) const { 
       if ( offset > (bufferSize()-sizeof(unsigned short)) )
 	throw Miro::Exception("LaserMessage::getUnsignedShort: range check violation");
-      return *((unsigned short *)(data() + offset));
+      return (unsigned short) *(data() + offset) |
+	     ((unsigned short) *(data() + offset + 1)) << 8;
     }
     signed short getSignedShort(unsigned long offset) const { 
       if ( offset > (bufferSize()-sizeof(signed short)) )
 	throw Miro::Exception("LaserMessage::getSignedShort: range check violation");
-      return *((signed short *)(data() + offset));
+      return (signed short) *(data() + offset) |
+	     ((signed short) *(data() + offset + 1)) << 8;
     }
     unsigned long getUnsignedLong(unsigned long offset) const { 
       if ( offset > (bufferSize()-sizeof(unsigned long)) )
 	throw Miro::Exception("LaserMessage::getUnsignedLong: range check violation");
-      return *((unsigned long *)(data() + offset));
+      return (unsigned long) *(data() + offset) |
+	     ((unsigned long) *(data() + offset + 1)) << 8 |
+	     ((unsigned long) *(data() + offset + 2)) << 16 |
+	     ((unsigned long) *(data() + offset + 3)) << 24;
     }
     signed long getSignedLong(unsigned long offset) const { 
       if ( offset > (bufferSize()-sizeof(signed long)) )
 	throw Miro::Exception("LaserMessage::getSignedLong: range check violation");
-      return *((signed long *)(data() + offset));
+      return (signed long) *(data() + offset) |
+	     ((signed long) *(data() + offset + 1)) << 8 |
+	     ((signed long) *(data() + offset + 2)) << 16 |
+	     ((signed long) *(data() + offset + 3)) << 24;
     }
     unsigned int getUnsignedByte(unsigned long offset) const { 
       if ( offset > (bufferSize()-sizeof(unsigned char)) )

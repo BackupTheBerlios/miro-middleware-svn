@@ -85,6 +85,9 @@ namespace Miro
     //! Make laser send every scan, blocks until mode is changed.
     void setContinousMode();
 
+    //! Set the scan variant (field of vision and scan resolution).
+    void changeVariant(unsigned short fov, double res);
+
     //! Make laser send scans only on request, blocks until mode is changed.
     void setPollingMode();
 
@@ -181,9 +184,30 @@ namespace Miro
 
 
     /**
+     * mutex for synchronization on access to variant with LaserTask
+     */
+    Mutex syncVariantChange;
+
+    /**
+     * condition variable for synchronization on update of variant by LaserTask
+     */
+    Condition syncVariantChangeCond;
+
+
+    /**
      * set if the laser acknowledged the mode change
      */
     bool modeChanged;
+
+    /**
+     * set if the laser acknowledged the variant change
+     */
+    bool variantChanged;
+
+    /**
+     * set as soon as the hardware initialization has been completed
+     */
+    bool hardwareInitialized;
 
     /**
      * mutex for synchronization on status requests

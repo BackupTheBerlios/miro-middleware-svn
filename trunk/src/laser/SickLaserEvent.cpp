@@ -157,11 +157,13 @@ namespace Miro
 	packData = ((unsigned short)(lengthlow) | ((unsigned short)(thisChar) << 8)) + 2; // () important
 
 	// here we set the blockking of the fd to the exact number of bytes, we are expecting
+#if 0
 	newtio.c_cc[VMIN]     = packData-(buffLen0-buffPos0);   // blocking read until whole packet is arrived
 	
 	if (tcsetattr(fd,TCSANOW,&newtio) < 0)
 	  throw Miro::CException(errno, "LaserImpl::setBaudrate:tcsetattr " + string(strerror(errno)) );
-	
+#endif
+
 	// rough sensibility check, to avoid long lossed with non synched data
 	if (packData > 1000) {
 	  MIRO_LOG_OSTR(LL_WARNING, "      ignored large package :"<<packData);
@@ -216,19 +218,20 @@ namespace Miro
 	    // reset assembled packet
 	    message->wr_ptr(message->base());
 	    message->rd_ptr(message->base()); // only place where we need it
-
+#if 0
 	// here we set the blockking of the fd to a typical header size, but not too small
 	newtio.c_cc[VMIN]     = 1;   // blocking read until whole packet is arrived
 	
 	if (tcsetattr(fd,TCSANOW,&newtio) < 0)
 	  throw Miro::CException(errno, "LaserImpl::setBaudrate:tcsetattr " + string(strerror(errno)) );
-	
+#endif
 #endif
 
 	  } 
 	  else {
 	    MIRO_LOG(LL_ERROR,"        CRC ERRROR.");
 	    laserStatistic->packetsCRCError++;
+#define RESYNCONPARTS
 #ifdef RESYNCONPARTS
 	    // try to chop a reasonable part of the packet for resynch
 	    // copy actual input to a safe place

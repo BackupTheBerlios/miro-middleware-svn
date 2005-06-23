@@ -35,10 +35,12 @@
     <parameter value="500000" name="Baudrate" />
    </parameter>
    <parameter value="false" name="ContinousMode" />
-   <parameter value="false" name="Notify" />
+   <parameter value="true" name="Notify" />
    <parameter value="0.100000" name="PollInterval" />
-   <parameter value="false" name="PositionStamps" />
+   <parameter value="true" name="PositionStamps" />
    <parameter value="true" name="Statistics" />
+   <parameter value="180" name="Fov" />
+   <parameter value="0.5" name="ScanResolution"/>
    <parameter value="false" name="StdCrystal" />
   </parameter>
  </section>

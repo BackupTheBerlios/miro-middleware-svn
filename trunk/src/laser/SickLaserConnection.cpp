@@ -51,6 +51,8 @@ namespace Miro
     syncLaserScanCond(syncLaserScan),
     syncModeChange(),
     syncModeChangeCond(syncModeChange),
+    syncVariantChange(),
+    syncVariantChangeCond(syncVariantChange),
     syncStatus(),
     syncStatusCond(syncStatus)
   {
@@ -80,6 +82,9 @@ namespace Miro
 laserEvent_, ACE_Event_Handler::READ_MASK);
     if (rc == -1)
       throw Miro::Exception("LaserConnection::LaserConnection: Failed to register handler for laser file descriptor.");
+
+    // set true after initHardware()
+    hardwareInitialized = false;
   }
 
   LaserConnection::~LaserConnection()
@@ -155,6 +160,7 @@ laserEvent_, ACE_Event_Handler::READ_MASK);
 
     // signal everything we have, to make hanging threads run free
     syncModeChange.release();
+    syncVariantChange.release();
     syncStatus.release();
     laserEvent_->syncMutex.release(); 
     laserEvent_->stateMutex.release();
@@ -262,7 +268,7 @@ laserEvent_, ACE_Event_Handler::READ_MASK);
       if ((!ok) && (retries != 0)) {
 	// we have to wait at least 30msecs before we are allowed to retry
 	ACE_OS::sleep( RETRYDELAY );
-	MIRO_LOG(LL_WARNING, "LaserConnection::send: retring...\n");
+	MIRO_LOG(LL_WARNING, "LaserConnection::send: retrying...\n");
       }
     } while ((!ok) && (retries != 0));
   
@@ -457,7 +463,7 @@ laserEvent_, ACE_Event_Handler::READ_MASK);
   LaserConnection::initHardware() 
   {
     // actual baudrate set/detected
-    int actual, destinationRate;
+    int actual = 0, destinationRate;
     int allowedRates[]={500000,9600,19200,38400};
     //
     // have called after all reactor stuff is set up
@@ -466,9 +472,18 @@ laserEvent_, ACE_Event_Handler::READ_MASK);
 
     destinationRate = parameters_.ttyParams.baudrate;
 
-    int i=0;
-    while (i<4) {
-      actual = allowedRates[i];
+    int i = -1;
+    while (i < 4) {
+      // try the user-configured baudrate first
+      if (i == -1)
+	actual = destinationRate;
+      else if (allowedRates[i] != destinationRate)
+	actual = allowedRates[i];
+      else {
+	++i;
+	continue;
+      }
+
       try {
 	setBaudrate(actual);
       } catch (Miro::Exception& m) {
@@ -511,12 +526,44 @@ laserEvent_, ACE_Event_Handler::READ_MASK);
       throw Miro::Exception("LaserConnection::initHardware could not connect to laser.");
     }
 
+    changeVariant(parameters_.fov, parameters_.scanResolution);
+
     if (parameters_.continousMode) {
       setContinousMode();
     } else {
       setPollingMode();
       laserPollTask_->open(0);
     }
+
+    // everything finished, accept incoming scan results now
+    hardwareInitialized = true;
+  }
+
+  void
+  LaserConnection::changeVariant(unsigned short fov, double res)
+  {
+    unsigned char c[3];
+    c[0] = fov & 0xff;
+    c[1] = (fov >> 8) & 0xff;
+    c[2] = ((unsigned short)(res * 100)) & 0xff;
+    c[3] = (((unsigned short)(res * 100)) >> 8) & 0xff;
+    Miro::LaserMessage lm(0, LO_LMS_CHANGE_VARIANT, 4, (char *)c);
+    ACE_Time_Value abstimeout;
+    ACE_Time_Value timeout(5,0); // 5 seconds for variant change acknowledge
+    Guard guard(syncModeChange);
+
+    if (!send(lm,5))
+      throw Miro::Exception("LaserConnection::changeVariant: could not set variant in laser");
+
+    MIRO_LOG(LL_NOTICE, "changeVariant: mode change sent, waiting for answer.");
+
+    variantChanged = false;
+
+    abstimeout = ACE_OS::gettimeofday();
+    abstimeout += timeout;
+
+    if (syncVariantChangeCond.wait(&abstimeout) < 0 )
+      throw Miro::Exception("LaserConnection::setContinousMode: laser failed to acknowledge variant change");
   }
 
   //

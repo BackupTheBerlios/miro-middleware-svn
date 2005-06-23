@@ -12,6 +12,10 @@
 #define laserTask_hh
 
 #include "miro/Task.h"
+namespace Laser
+{
+  class Parameters;
+}
 
 namespace Miro 
 {
@@ -81,9 +85,21 @@ namespace Miro
     RangeSensorImpl& laserI_;
 
     /**
+     * Reference to the parameter set. Must not be constant because
+     * the SickLaserTask might need to update some fields in the
+     * LaserDescription
+     */
+    ::Laser::Parameters& parameters_;
+
+    /**
      * ptr to the central device error statistic
      */
     LaserStatistic * laserStatistic_;
+
+    /**
+     * Conversion factor for raw laser scan values (in mm)
+     */
+    double rangeFactor;
   };
 };
 #endif

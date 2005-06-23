@@ -33,6 +33,8 @@
       <config_parameter name="notify" type="bool" default="false" />
       <config_parameter name="positionStamps" type="bool" default="false" />
       <config_parameter name="statistics" type="bool" default="true" />
+      <config_parameter name="fov" type="int" default="180" measure="&deg;" />
+      <config_parameter name="scanResolution" type="double" default="0.5" measure="&deg;" />
     <!--
        this contains the physical description of the laser sensor,
        i.e. installtion and other characteristics needed for a
