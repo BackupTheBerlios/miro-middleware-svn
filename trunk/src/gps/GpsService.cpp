@@ -80,7 +80,7 @@ namespace Miro
     reactorTask_.cancel();
 
     PortableServer::ObjectId_var oid;
-    oid = poa->reference_to_id(GpsObject_);
+    oid = poa->reference_to_id(GpsObject_.in());
     poa->deactivate_object(oid.in());
 
     MIRO_LOG_DTOR_END("Miro::GpsServer");
