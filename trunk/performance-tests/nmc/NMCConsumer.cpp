@@ -34,11 +34,12 @@
 bool verbose = false;
 int clients = 1;
 bool multicast = false;
+std::string domainName = "Miro";
 
 int 
 parseArgs(int& argc, char* argv[])
 {
-  ACE_Get_Opt get_opts (argc, argv, "c:mv?");
+  ACE_Get_Opt get_opts (argc, argv, "d:c:mv?");
   
   int rc = 0;
   int c;
@@ -54,11 +55,14 @@ parseArgs(int& argc, char* argv[])
     case 'v':
       verbose = true;
       break;
+    case 'd':
+      domainName = get_opts.optarg;
     case '?':
     default:
       std::cerr << "usage: " << argv[0] << "[-fpv?]" << std::endl
 		<< "  -m enamble multicast" << std::endl
 		<< "  -c <number> client consumers (default 1)" << std::endl
+		<< "  -d <name> domain name for the subscribed events (default Miro)" << std::endl
 		<< "  -v verbose mode" << std::endl
 		<< "  -? help: emit this text and stop" << std::endl;
       rc = -1;
@@ -67,7 +71,8 @@ parseArgs(int& argc, char* argv[])
 
   if (verbose) {
     std::cout << "multicast: " << multicast << std::endl
-	      << "cients: " << clients << std::endl;
+	      << "cients: " << clients << std::endl
+	      << "domain name: " << domainName << std::endl;
   }
   return rc;
 }
@@ -136,7 +141,6 @@ main (int argc, char * argv[])
 	ec =
 	  notifyFactory->create_channel(initialQos, initialAdmin, id);
 
-	nmcParams->subscription.insert("Payload");
 	mcAdapter =
 	  new Miro::NMC::Adapter(argc, argv, 
 				 &server, ec.in(),
@@ -150,7 +154,7 @@ main (int argc, char * argv[])
       // create local consumers.
       std::vector<PayloadConsumer *> consumer;
       for (int i = 0; i < clients; ++i)
-	consumer.push_back(new PayloadConsumer(ec.in(), i));
+	consumer.push_back(new PayloadConsumer(ec.in(), domainName, i));
 
       std::cerr << "up and running" << std::endl;
       server.wait();

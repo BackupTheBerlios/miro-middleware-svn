@@ -25,6 +25,7 @@ using CosNotifyChannelAdmin::EventChannel_ptr;
 using CosNotifyChannelAdmin::EventChannel_var;
 
 PayloadConsumer::PayloadConsumer(EventChannel_ptr _consumerAdmin,
+				 std::string const& _nc,
 				 unsigned int _id) :
   Super(_consumerAdmin),
   id_(_id),
@@ -33,7 +34,7 @@ PayloadConsumer::PayloadConsumer(EventChannel_ptr _consumerAdmin,
   EventTypeSeq added;
   added.length(1);
 
-  added[0].domain_name =  CORBA::string_dup("Miro");
+  added[0].domain_name =  CORBA::string_dup(_nc.c_str());
   added[0].type_name = CORBA::string_dup("Payload");
 
   setSubscriptions(added);

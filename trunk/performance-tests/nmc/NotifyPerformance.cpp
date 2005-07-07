@@ -72,11 +72,11 @@ ACE_Time_Value timeout = 0;
 
 
 void 
-producePayload(CosNotifyChannelAdmin::EventChannel_ptr _ec, std::string _nc)
+producePayload(CosNotifyChannelAdmin::EventChannel_ptr _ec, std::string const& _nc)
 {
   CosNotification::EventTypeSeq offers;
   offers.length(1);
-  offers[0].domain_name = CORBA::string_dup("Miro");
+  offers[0].domain_name = CORBA::string_dup(_nc.c_str());
   offers[0].type_name = CORBA::string_dup("Payload");
   Miro::StructuredPushSupplier supplier(_ec,
 					_nc,
@@ -339,7 +339,7 @@ main (int argc, char * argv[])
       // create local consumers.
       std::vector<PayloadConsumer *> consumer;
       for (int i = 0; i < colocated; ++i)
-	consumer.push_back(new PayloadConsumer(ec.in(), i));
+	consumer.push_back(new PayloadConsumer(ec.in(), server.namingContextName, i));
 
       std::cout << "press return to start..." << std::flush;
       getchar();

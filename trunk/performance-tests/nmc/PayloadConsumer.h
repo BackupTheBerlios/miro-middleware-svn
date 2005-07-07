@@ -27,6 +27,7 @@ public:
    * Registers for the events, that it wants to get pushed.
    */
   PayloadConsumer(CosNotifyChannelAdmin::EventChannel_ptr _ec,
+		  std::string const& _nc,
 		  unsigned int _id);
   /** Disconnect from the supplier. */
   virtual ~PayloadConsumer();
