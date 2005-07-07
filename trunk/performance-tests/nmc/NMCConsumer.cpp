@@ -57,6 +57,7 @@ parseArgs(int& argc, char* argv[])
       break;
     case 'd':
       domainName = get_opts.optarg;
+      break;
     case '?':
     default:
       std::cerr << "usage: " << argv[0] << "[-fpv?]" << std::endl
