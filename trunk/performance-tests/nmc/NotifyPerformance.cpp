@@ -21,6 +21,7 @@
 #include "miro/Log.h"
 #include "miro/TimeHelper.h"
 #include "miro/NotifyMulticast.h"
+#include "miro/Configuration.h"
 
 #include <orbsvcs/Notify/Notify_EventChannelFactory_i.h>
 #include <orbsvcs/Notify/Notify_Default_CO_Factory.h>
@@ -63,7 +64,6 @@ char const * const payloadName[NUM_PAYLOADS] = {
 
 bool verbose = false;
 PayloadID payload = OCTED_STREAM_1K;
-std::string fileName;
 int iterations = 10000;
 int colocated = 0;
 bool multicast = false;
@@ -210,7 +210,7 @@ producePayload(CosNotifyChannelAdmin::EventChannel_ptr _ec, std::string _nc)
 int 
 parseArgs(int& argc, char* argv[])
 {
-  ACE_Get_Opt get_opts (argc, argv, "t:c:mn:f:p:v?");
+  ACE_Get_Opt get_opts (argc, argv, "t:c:mn:p:v?");
   
   int rc = 0;
   int c;
@@ -224,9 +224,6 @@ parseArgs(int& argc, char* argv[])
       break;
     case 'c':
       colocated = atoi(get_opts.optarg);
-      break;
-    case 'f':
-      fileName = get_opts.optarg;
       break;
     case 'n':
       iterations = atoi(get_opts.optarg);
@@ -248,7 +245,6 @@ parseArgs(int& argc, char* argv[])
 		<< "  -m enamble multicast" << std::endl
 		<< "  -c <number> colocated consumers (default 0)" << std::endl
 		<< "  -n <iterations> number of iterations" << std::endl
-		<< "  -f <file name> log file name" << std::endl
 		<< "  -t <msec> timeout ( < 1000, default 0)" << std::endl
 		<< "  -p <payload> the type of payload for the test:" << std::endl;
       for (unsigned int i = 0; i < NUM_PAYLOADS; ++i) {
@@ -264,7 +260,6 @@ parseArgs(int& argc, char* argv[])
     std::cout << "multicast: " << multicast << std::endl
 	      << "colocated clients: " << colocated << std::endl
 	      << "iterations: " << iterations << std::endl
-	      << "log file name: " << fileName << std::endl
 	      << "payload: " << payloadName[payload] << std::endl;
   }
   return rc;
@@ -277,8 +272,23 @@ main (int argc, char * argv[])
 {
   int rc = 1;
 
+  Miro::Log::init(argc, argv);
+  Miro::Configuration::init(argc, argv);
+
+  // Parameters to be passed to the services
+  Miro::RobotParameters * robotParams = Miro::RobotParameters::instance();
+  Miro::NMC::Parameters * nmcParams = Miro::NMC::Parameters::instance();
+    
+  // Config file processing
+  Miro::ConfigDocument * config =  Miro::Configuration::document();
+  config->setSection("Robot");
+  config->getParameters("Miro::RobotParameters", *robotParams);
+
+  config->setSection("Notification");
+  config->getParameters("Miro::NMC::Parameters", *nmcParams);
+  config->fini();
+
   try {
-    Miro::Log::init(argc, argv);
     Miro::Server server(argc, argv);
 
     if (parseArgs(argc, argv) != 0)
@@ -318,8 +328,6 @@ main (int argc, char * argv[])
       // initialize notify multicast
       Miro::NMC::Adapter *mcAdapter = NULL;
       if (multicast) {
-	Miro::NMC::Parameters * nmcParams =
-	  Miro::NMC::Parameters::instance();
 	nmcParams->subscription.insert("Payload");
 	mcAdapter =
 	  new Miro::NMC::Adapter(argc, argv, 

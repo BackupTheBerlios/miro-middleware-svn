@@ -15,6 +15,7 @@
 #include "miro/Log.h"
 #include "miro/TimeHelper.h"
 #include "miro/NotifyMulticast.h"
+#include "miro/Configuration.h"
 
 #include <orbsvcs/Notify/Notify_EventChannelFactory_i.h>
 #include <orbsvcs/Notify/Notify_Default_CO_Factory.h>
@@ -30,11 +31,9 @@
 #include <iostream>
 #include <vector>
 
-
 bool verbose = false;
 int clients = 1;
 bool multicast = false;
-
 
 int 
 parseArgs(int& argc, char* argv[])
@@ -80,8 +79,23 @@ main (int argc, char * argv[])
 {
   int rc = 1;
 
+  Miro::Log::init(argc, argv);
+  Miro::Configuration::init(argc, argv);
+
+  // Parameters to be passed to the services
+  Miro::RobotParameters * robotParams = Miro::RobotParameters::instance();
+  Miro::NMC::Parameters * nmcParams = Miro::NMC::Parameters::instance();
+    
+  // Config file processing
+  Miro::ConfigDocument * config =  Miro::Configuration::document();
+  config->setSection("Robot");
+  config->getParameters("Miro::RobotParameters", *robotParams);
+
+  config->setSection("Notification");
+  config->getParameters("Miro::NMC::Parameters", *nmcParams);
+  config->fini();
+
   try {
-    Miro::Log::init(argc, argv);
     Miro::Server server(argc, argv);
 
     if (parseArgs(argc, argv) != 0)
@@ -122,8 +136,6 @@ main (int argc, char * argv[])
 	ec =
 	  notifyFactory->create_channel(initialQos, initialAdmin, id);
 
-	Miro::NMC::Parameters * nmcParams =
-	  Miro::NMC::Parameters::instance();
 	nmcParams->subscription.insert("Payload");
 	mcAdapter =
 	  new Miro::NMC::Adapter(argc, argv, 
