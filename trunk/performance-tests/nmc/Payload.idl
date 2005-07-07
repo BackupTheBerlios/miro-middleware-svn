@@ -1,0 +1,25 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2003, 2004
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef Payload_idl
+#define Payload_idl
+
+typedef sequence<octet> OctStr;
+struct I1K 
+{
+  long array[256]; 
+};
+
+struct I10K
+{
+  long array[2560];
+};
+
+#endif // Payload_idl

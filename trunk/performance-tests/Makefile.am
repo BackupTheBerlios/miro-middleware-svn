@@ -2,7 +2,7 @@
 ##
 ## This file is part of Miro (The Middleware For Robots)
 ##
-## (c) 1999, 2000, 2001, 2002, 2003
+## (c) 1999, 2000, 2001, 2002, 2003, 2004, 2005
 ## Department of Neural Information Processing, University of Ulm, Germany
 ##
 ## $Id$
@@ -15,7 +15,9 @@
 
 globaldirs = \
 	video \
-	panTilt
+	panTilt \
+	logging \
+	nmc
 
 if COND_B21
 b21dirs = \
@@ -26,8 +28,7 @@ if COND_SPARROW99
 sparrowdirs = \
 	can \
 	response \
-	faul \
-	logging
+	faul
 endif
 
 if COND_DEPRECATED
