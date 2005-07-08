@@ -142,6 +142,7 @@ main (int argc, char * argv[])
 	ec =
 	  notifyFactory->create_channel(initialQos, initialAdmin, id);
 
+	nmcParams->messageTimeout = 0;
 	mcAdapter =
 	  new Miro::NMC::Adapter(argc, argv, 
 				 &server, ec.in(),
