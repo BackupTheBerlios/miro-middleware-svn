@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 2005
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -10,8 +10,13 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "PayloadConsumer.h"
+#include "SharedBeliefStateC.h"
 
+#include "idl/MotionStatusC.h"
 #include "miro/Server.h"
+#include "miro/TimeHelper.h"
+
+#include <orbsvcs/Time_Utilities.h>
 
 using std::cout;
 using std::cerr;
@@ -45,10 +50,25 @@ PayloadConsumer::~PayloadConsumer()
 }
 
 void
-PayloadConsumer::push_structured_event(const StructuredEvent & /*notification*/)
+PayloadConsumer::push_structured_event(const StructuredEvent & notification)
   throw(CORBA::SystemException, CosEventComm::Disconnected)
 {
   ++received_;
+  MSL::SharedBeliefState01 * belief = new MSL::SharedBeliefState01();
+  Miro::MotionStatusIDL * motion = new Miro::MotionStatusIDL();;
+
+  if (notification.remainder_of_body >>= belief) {
+    ACE_Time_Value now = ACE_OS::gettimeofday();
+    ACE_Time_Value then;
+    ORBSVCS_Time::TimeT_to_Time_Value(now, belief->time);
+    std::cout << now - then << std::endl;
+  }
+  else if (notification.remainder_of_body >>= motion) {
+    ACE_Time_Value now = ACE_OS::gettimeofday();
+    ACE_Time_Value then;
+    Miro::timeC2A(motion->time, then);
+    std::cout << now - then << std::endl;
+  }
 }
 
 void

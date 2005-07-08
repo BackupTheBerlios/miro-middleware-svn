@@ -101,6 +101,9 @@ main (int argc, char * argv[])
   config->getParameters("Miro::NMC::Parameters", *nmcParams);
   config->fini();
 
+  if (!multicast)
+    robotParams->name = domainName;
+
   try {
     Miro::Server server(argc, argv);
 
