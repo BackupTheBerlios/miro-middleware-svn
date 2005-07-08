@@ -343,7 +343,9 @@ main (int argc, char * argv[])
 
       std::cout << "press return to start..." << std::flush;
       getchar();
-
+      std::cout << std::endl;
+      ACE_OS::sleep(1);
+      
       producePayload(ec, server.namingContextName);
 
       for (int i = 0; i < colocated; ++i) {
