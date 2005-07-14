@@ -1,5 +1,13 @@
 .deps
 .libs
+ConfigC.cpp
+ConfigC.h
+ConfigC.i.h
+ConfigC.lo
+ConfigS.cpp
+ConfigS.h
+ConfigS.i.h
+ConfigS.lo
 B21ButtonsC.cpp
 B21ButtonsC.h
 B21ButtonsC.i.h

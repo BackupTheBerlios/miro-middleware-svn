@@ -1,0 +1,35 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2005
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef Config_idl
+#define Config_idl
+
+#include "Exception.idl"
+
+module Miro
+{
+  //! The basic configuration interface.
+  /** 
+   * @author Hans Utz
+   */
+  interface Config
+  {
+    void getParameters(out string name,
+		       out string type,
+		       out string document);
+    void setParameters(in string document );
+
+  };
+};
+#endif // Odometry_idl
+
+
+
+

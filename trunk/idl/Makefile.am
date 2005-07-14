@@ -38,6 +38,7 @@ lib_LTLIBRARIES = libmiroIDL.la
 globalsources = \
 	Time.idl \
 	Exception.idl \
+	Config.idl \
 	WorldPoint.idl \
 	WorldPoint3D.idl \
 	WorldVector.idl \
