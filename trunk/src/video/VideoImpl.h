@@ -47,6 +47,11 @@ namespace Miro
     const std::string&  name() const;
     ::Video::BufferManager * bufferManager();
 
+    virtual void getParameters(CORBA::String_out _name,
+			       CORBA::String_out _type,
+			       CORBA::String_out _document) throw();
+    virtual void setParameters(char const * _document) throw();
+
     virtual ImageHandleIDL * connect(CORBA::ULong& id) ACE_THROW_SPEC (());
     virtual void disconnect(CORBA::ULong id) 
       ACE_THROW_SPEC ((EOutOfBounds));

@@ -20,6 +20,8 @@
 #include "BufferManager.h"
 #include "Parameters.h"
 
+#include <qdom.h>
+
 #include <sys/ipc.h>
 #include <sys/shm.h>
 
@@ -82,6 +84,36 @@ namespace Miro
     delete pBufferManager_;
     shmdt(pBufferArray_);
     shmctl(imageHandle_.key, IPC_RMID, NULL);
+  }
+
+  void 
+  VideoImpl::getParameters(CORBA::String_out _name,
+			   CORBA::String_out _type,
+			   CORBA::String_out _document) throw()
+  {
+    _name = CORBA::string_dup(filter_->name().c_str());
+    _type = CORBA::string_dup("dunno");
+    QDomDocument document("MiroConfigDocument");
+    QDomElement root = document.createElement("config");
+    QDomNode config = document.appendChild( root );
+    QDomElement e = document.createElement("section");
+    e.setAttribute("name", "Video");
+    QDomNode section = config.appendChild(e);
+
+    QDomElement i = document.createElement("instance");
+    i.setAttribute("type", "dunno");
+    i.setAttribute("name", filter_->name());
+
+    QDomNode instance = section.appendChild(i);
+    *(filter_->parameters()) >>= instance;
+
+    _document = CORBA::string_dup(document.toCString());
+  }
+
+  void 
+  VideoImpl::setParameters(char const * _document) throw()
+  {
+
   }
 
   unsigned int
