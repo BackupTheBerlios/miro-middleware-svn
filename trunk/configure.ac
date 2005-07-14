@@ -267,6 +267,7 @@ AC_CONFIG_FILES([Makefile
 		 performance-tests/logging/Makefile
 		 performance-tests/nmc/Makefile
                  tests/Makefile
+		 tests/config/Makefile
                  tests/b21/Makefile
                  tests/dpPanTilt/Makefile
                  tests/dtlk/Makefile
