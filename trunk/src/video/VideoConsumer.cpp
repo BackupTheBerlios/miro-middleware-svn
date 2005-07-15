@@ -59,7 +59,11 @@ namespace Video
       try {
 	// clock_t start = clock();
 	if (videoDevice.calcConnectivity()) {
-	  if (videoDevice.deviceAsynchLinkManager()->tryAcquireBufferSets()) {
+	  ACE_Time_Value maxJitter = 
+	    (maxSynchJitter_ == ACE_Time_Value::zero)?
+	    ACE_Time_Value::zero :
+	    ACE_OS::gettimeofday() - maxSynchJitter_;
+	  if (videoDevice.deviceAsynchLinkManager()->tryAcquireBufferSets(maxJitter)) {
 	    videoDevice.setBrokerRequestQueue();
 	    videoDevice.processFilterTree();
 	    videoDevice.deviceAsynchLinkManager()->releaseBufferSets();

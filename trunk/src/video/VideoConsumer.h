@@ -34,10 +34,19 @@ namespace Video
 
     virtual int svc();
 
+    void setMaxSynchJitter(ACE_Time_Value const& _maxJitter) throw();
+    
   protected:
     Device& videoDevice;
     ACE_Sched_Params schedp_;
+    ACE_Time_Value maxSynchJitter_;
   };
-};
+
+  inline
+  void
+  Consumer::setMaxSynchJitter(ACE_Time_Value const& _maxJitter) throw() {
+    maxSynchJitter_ = _maxJitter;
+  }
+}
 #endif
 

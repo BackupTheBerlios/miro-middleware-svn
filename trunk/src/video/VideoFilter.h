@@ -441,6 +441,7 @@ namespace Video
 
     friend class Consumer;
     friend class AsynchBufferSet;
+    friend class Miro::VideoImpl;
   };
 }
 

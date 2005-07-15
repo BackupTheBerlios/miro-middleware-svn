@@ -57,7 +57,7 @@ namespace Video
     bool asynchBuffersConnected(ACE_Time_Value const& _stamp) throw();
 
     //! Returns true if all buffer sets are available under the current synch mode.
-    bool tryAcquireBufferSets() throw();
+    bool tryAcquireBufferSets(ACE_Time_Value const& _maxJitter) throw();
     void releaseBufferSets() throw();
 
     //! Build up the buffer links.
@@ -123,7 +123,7 @@ namespace Video
 
   inline
   bool
-  DeviceAsynchLinkManager::tryAcquireBufferSets() throw() {
+  DeviceAsynchLinkManager::tryAcquireBufferSets(ACE_Time_Value const& _maxJitter) throw() {
     if (bufferSets_.size() == 0)
       return true;
 
@@ -133,7 +133,7 @@ namespace Video
 
       //TODO: is it valid to use connected here?
       if (first->connected() &&
-	  !first->tryAcquireBufferSet()) {
+	  !first->tryAcquireBufferSet(_maxJitter)) {
 
 	// release already acquired buffers
 	while (first != bufferSets_.begin()) {

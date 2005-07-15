@@ -114,7 +114,7 @@ namespace Video
    
     numInts += ptroff;
     unsigned int first, pre, actual;
-    for(unsigned int i = 0; i < numInts; i++){
+    for(int i = 0; i < numInts; i++){
        int_p = bitImage_ + i*inputFormat_.width;
        pre = *int_p;
        first = *int_p;
@@ -153,7 +153,7 @@ namespace Video
        else {
 	  dbg_counter++;
 
-          for(unsigned int j = z; j < numInts; j++) {
+          for(int j = z; j < numInts; j++) {
 	     if(*int_p != 0) {
 	        actual = *int_p;
 		int range = (j == numInts - 1)?rest-2:30;

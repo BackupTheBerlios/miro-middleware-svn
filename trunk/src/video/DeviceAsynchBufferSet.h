@@ -62,7 +62,7 @@ namespace Video
     unsigned int setCompleted(unsigned int _id) throw();
     ACE_Time_Value currentSet() throw();
     //! Try to acquire the buffer set.
-    bool tryAcquireBufferSet() throw();
+    bool tryAcquireBufferSet(ACE_Time_Value const& _maxJitter) throw();
     void releaseBufferSet(bool _keepAllways = false) throw();
 
     //! Index of the locked set.
@@ -214,17 +214,21 @@ namespace Video
   /** This is called by DeviceAsynchLinkManager which already holds the lock. */
   inline
   bool
-  DeviceAsynchBufferSet::tryAcquireBufferSet() throw() {
+  DeviceAsynchBufferSet::tryAcquireBufferSet(ACE_Time_Value const& _maxJitter) throw() {
     if (synchWithCurrent_) {
       if (currentSet_ == 4 ||
-	  stamp_[currentSet_] == ACE_Time_Value::zero) {
+	  stamp_[currentSet_] == ACE_Time_Value::zero ||
+	  ( _maxJitter != ACE_Time_Value::zero && 
+	    stamp_[currentSet_] < _maxJitter)) {
 	return false;
       }
       lockedSet_ = currentSet_;
     }
     else {
       if (upcomingSet_ == 4 ||
-	  stamp_[upcomingSet_] == ACE_Time_Value::zero) {
+	  stamp_[upcomingSet_] == ACE_Time_Value::zero ||
+	  ( _maxJitter != ACE_Time_Value::zero && 
+	    stamp_[upcomingSet_] < _maxJitter)) {
 	return false;
       }
       lockedSet_ = upcomingSet_;

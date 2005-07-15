@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001, 2002, 2003, 2004
+// (c) 1999, 2000, 2001, 2002, 2003, 2004, 2005
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -13,6 +13,7 @@
 #include "miro/VideoHelper.h"
 #include "miro/Exception.h"
 #include "miro/Log.h"
+#include "miro/ConfigDocument.h"
 
 #include "VideoImpl.h"
 #include "VideoFilter.h"
@@ -100,20 +101,39 @@ namespace Miro
     e.setAttribute("name", "Video");
     QDomNode section = config.appendChild(e);
 
-    QDomElement i = document.createElement("instance");
-    i.setAttribute("type", "dunno");
-    i.setAttribute("name", filter_->name());
-
-    QDomNode instance = section.appendChild(i);
-    *(filter_->parameters()) >>= instance;
+    QDomElement instance = *(filter_->parameters()) >>= section;
+    instance.setTagName("instance");
+    instance.setAttribute("type", filter_->parameters()->fullTypeName());
+    instance.setAttribute("name", filter_->name());
 
     _document = CORBA::string_dup(document.toCString());
   }
 
   void 
-  VideoImpl::setParameters(char const * _document) throw()
+  VideoImpl::setParameters(char const * _document) throw(EOutOfBounds)
   {
+    QDomDocument * doc = new QDomDocument("MiroConfigDocument");
 
+    QCString p(_document);
+    if (!doc->setContent(p)) {
+	throw EOutOfBounds();
+    }
+
+    Miro::ConfigDocument document(doc);
+    document.setSection("Video");
+
+    // create an instance of the the filters parameters
+    FilterParameters * params = filter_->getParametersInstance();
+
+    // initialize the parameter instance from the config file
+    // _config.getInstance(this->name(), *params);
+    document.getInstance(filter_->name(), *params);
+
+    // debug output
+    MIRO_LOG_OSTR(LL_NOTICE, name() << std::endl << *params);
+
+    // initialize the filter instance with its parameters
+    filter_->init(server_, params); 
   }
 
   unsigned int

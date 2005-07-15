@@ -149,6 +149,8 @@
       <config_parameter name="scheduling" type="ACE_Sched_Params" default="ACE_SCHED_OTHER, 0" />
       <config_parameter name="synchWithCurrent" type="bool" default="false" />
       <config_parameter name="synchAllNew" type="bool" default="false" />
+      <config_parameter name="maxSynchJitter" type="ACE_Time_Value" default="0" />
+
       <config_parameter name="videoBroker" type="std::string" default="VideoBroker" measure="Name"/>
     </config_item>
   </config_group>

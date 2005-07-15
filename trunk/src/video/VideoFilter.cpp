@@ -102,28 +102,42 @@ namespace Video
   {
     MIRO_DBG(VIDEO, LL_DEBUG, "Video::Filter::init()");
 
+    // figure out if we are actually reinitializing, or not
+    bool reinit = (params_ != NULL);
+
+    // clean up before reinitializing
+    if (reinit) {
+      if ( (params_->interfaceInstance != _params->interfaceInstance) ||
+	   (params_->interface.name != _params->interface.name) ||
+	   (params_->buffers != _params->buffers) ) {
+	throw Miro::EOutOfBounds("Trying to reinitialize parameters that can't be.");
+      }
+      delete params_;
+    }
+
     // safe instance, as we have to clean it up.
     params_ = _params;
 
-    // Test for inplace:
-    // FIXME: We can't do inplace up till now.
-    if (inplace_) {
+    if (!reinit) {
+      // Test for inplace:
+      // FIXME: We can't do inplace up till now.
+      if (inplace_) {
 	inplace_ = false;
-    }
-
-    // create the interface.
-    if (_params->interfaceInstance) {
-      if (interfaceAllowed()) {
-	interface_ = new Miro::VideoImpl(_server, _params->interface, this);
-	bufferManager_ = interface_->bufferManager();
       }
-      else
-	throw Miro::Exception("Device::setInterface not supported.");    
+      
+      // create the interface.
+      if (params_->interfaceInstance) {
+	if (interfaceAllowed()) {
+	  interface_ = new Miro::VideoImpl(_server, _params->interface, this);
+	  bufferManager_ = interface_->bufferManager();
+	}
+	else
+	  throw Miro::Exception("Device::setInterface not supported.");    
+      }
+      else {
+	bufferManager_ = bufferManagerInstance();
+      }
     }
-    else {
-      bufferManager_ = bufferManagerInstance();
-    }
-
     MIRO_DBG(VIDEO, LL_DEBUG, "Video::Filter::init() end");
   }
 

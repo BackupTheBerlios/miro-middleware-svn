@@ -64,6 +64,7 @@ namespace Video
 		 videoParameters_->synchAllNew);
     
     pConsumer_ = new Video::Consumer(*pVideoDevice_, &videoParameters_->scheduling);
+    pConsumer_->setMaxSynchJitter(videoParameters_->maxSynchJitter);
     pConsumer_->open(NULL);
 
     pBroker_ = new Miro::VideoBrokerImpl(pVideoDevice_);
