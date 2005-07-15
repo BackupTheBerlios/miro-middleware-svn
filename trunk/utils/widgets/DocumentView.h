@@ -49,6 +49,8 @@ public:
   void newDocument();
   //! Open an XML document into the view.
   void openDocument(QString const& _name);
+  //! Open an XML document from a string into the view.
+  void openDocumentXML(QString const& _title, QString const& _xml);
   //! Save the XML document form the view.
   bool saveDocument();
   //! Save the XML document via QFileDialog selection.

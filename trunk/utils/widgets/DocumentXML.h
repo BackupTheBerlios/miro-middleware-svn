@@ -47,6 +47,8 @@ public:
 
   //! Reset policy document.
   virtual void init(QString const& _rootTag);
+  //! Set policy document.
+  virtual void initXML(QString const& _xml);
   //! Parse document and build list view tree
   virtual void parse() = 0;
   //! Clean up document.

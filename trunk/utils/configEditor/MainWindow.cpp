@@ -16,13 +16,17 @@
 #include "utils/widgets/ConfigFile.h"
 #include "utils/widgets/FileListDialog.h"
 
+#include "idl/ConfigC.h"
+
 #include "miro/Log.h"
+#include "miro/Client.h"
 
 #include <qfiledialog.h>
 #include <qpopupmenu.h>
 #include <qmenubar.h>
 #include <qmessagebox.h>
 #include <qpushbutton.h>
+#include <qinputdialog.h>
 
 namespace 
 {
@@ -33,12 +37,14 @@ namespace
   };
 }
 
-MainWindow::MainWindow() :
+MainWindow::MainWindow(Miro::Client& _client) :
   Super(NULL, "MainWindow"),
   config_(ConfigFile::instance()),
   view_(new DocumentView(this, "config_list")),
   document_(QDomDocument(ConfigDocumentXML::XML_DOCTYPE), view_),
-  configDialog_(new FileListDialog(this, "Config dialog", "Parameter description files", filters))
+  configDialog_(new FileListDialog(this, "Config dialog", "Parameter description files", filters)),
+  client_(_client),
+  interfaceName_("Video")
 {
   resize(400, 300);
   //-----------//
@@ -53,6 +59,9 @@ MainWindow::MainWindow() :
   menuFile->insertItem("Open ...", view_, SLOT(slotLoad()));
   menuFile->insertItem("Save", view_, SLOT(slotSave())); 
   menuFile->insertItem("Save As ...", view_, SLOT(slotSaveAs()));
+  menuFile->insertSeparator();
+  menuFile->insertItem("Get from ...", this, SLOT(slotGetFrom()));
+  menuFile->insertItem("Send to ...", this, SLOT(slotSendTo()));
   menuFile->insertSeparator();
   menuFile->insertItem("Quit", this, SLOT(close()));
 
@@ -84,6 +93,78 @@ MainWindow::MainWindow() :
 
 MainWindow::~MainWindow()
 {
+}
+
+void 
+MainWindow::slotGetFrom()
+{
+  bool ok = false;
+  QString tmp = QInputDialog::getText(tr( "Get configuration" ),
+				      tr( "Interface name" ),
+				      QLineEdit::Normal, interfaceName_, &ok, this );
+
+  if ( ok && !tmp.isEmpty() ) {
+    QString error;
+
+    interfaceName_ = tmp;
+    try {
+      Miro::Config_var config = client_.resolveName<Miro::Config>(interfaceName_.latin1());
+
+      char * param;
+      char * type;
+      char * document;
+      config->getParameters(param, type, document);
+      view_->openDocumentXML(param, document);
+    }
+    catch(const CORBA::Exception& e) {
+      std::ostringstream sstr;
+      sstr << "Communication Failed. CORBA exception: " << e << std::flush;
+
+      error = sstr.str().c_str();
+      ok = false;
+    }
+
+    if (!ok) {
+      QMessageBox::warning(this, "Couln't get configuration:", error);
+    }
+
+  }
+}
+
+void 
+MainWindow::slotSendTo()
+{
+  bool ok = false;
+  QString tmp = QInputDialog::getText(tr( "Send configuration" ),
+				      tr( "Interface name" ),
+				      QLineEdit::Normal, interfaceName_, &ok, this );
+
+  if ( ok && !tmp.isEmpty() ) {
+    QString error;
+
+    interfaceName_ = tmp;
+    try {
+      Miro::Config_var config = client_.resolveName<Miro::Config>(interfaceName_.latin1());
+
+      config->setParameters(document_.domDocument().toCString());
+    }
+    catch(const Miro::EOutOfBounds& e) {
+      error = QString("Error parsing policy: ") + e.what;
+      ok = false;
+    }
+    catch(const CORBA::Exception& e) {
+      std::ostringstream sstr;
+      sstr << "Communication Failed. CORBA exception: " << e << std::flush;
+
+      error = sstr.str().c_str();
+      ok = false;
+    }
+
+    if (!ok) {
+      QMessageBox::warning(this, "Couln't send configuration:", error);
+    }
+
+  }
 }
 
 void

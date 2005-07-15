@@ -132,7 +132,33 @@ DocumentView::openDocument(const QString& _name)
   }
   catch (QString const& e) {
     QMessageBox::warning(this, 
-			 "Error loading Config file", e,
+			 "Error loading file", e,
+			     QMessageBox::Ok, QMessageBox::NoButton);
+  }
+}
+
+void 
+DocumentView::openDocumentXML(QString const& _title, QString const& _xml)
+{
+  MIRO_ASSERT(document_ != NULL);
+
+  if (_xml.isEmpty())
+    return;
+
+  try {
+    // load selected XML file
+    document_->initXML(_xml);
+    document_->parse();
+    
+    // set new caption and status bar
+    setTitle(_title);
+    QString message(_title + " opened.");
+    setMessage(message, 3000);
+    update();
+  }
+  catch (QString const& e) {
+    QMessageBox::warning(this, 
+			 "Error opening file", e,
 			     QMessageBox::Ok, QMessageBox::NoButton);
   }
 }

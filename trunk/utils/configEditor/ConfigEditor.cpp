@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2004
+// (c) 2004, 2005
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -15,6 +15,7 @@
 #include "utils/widgets/DocumentView.h"
 
 #include "miro/Exception.h"
+#include "miro/Client.h"
 
 #include <qapplication.h>
 
@@ -27,9 +28,11 @@ main(int argc, char * argv[])
 
   ConfigFileName::instance()->setFileName(".ConfigEditor.xml");
 
+  Miro::Client client(argc, argv);
   QApplication app(argc, argv);
+
   try {
-    MainWindow mainWindow;
+    MainWindow mainWindow(client);
     
     if (argc > 2)
       throw Miro::Exception(std::string("Usage: ") + argv[0] + " [config file]");

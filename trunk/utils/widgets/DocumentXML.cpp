@@ -38,6 +38,7 @@ void
 DocumentXML::init(QString const& _rootTag)
 {
   clear();
+  setName("");
 
   // init default document
   QDomElement root = document_.createElement(_rootTag);
@@ -47,6 +48,25 @@ DocumentXML::init(QString const& _rootTag)
   listViewItem()->setText(0, _rootTag);
   listViewItem()->setText(2, document_.doctype().name());
   listViewItem()->setOpen(true);
+
+  setModified(false, true);
+}
+
+void
+DocumentXML::initXML(QString const& _xml)
+{
+  clear();
+  setName("");
+
+  QString error;
+  int line;
+  int column;
+  if (!document_.setContent(_xml, &error, &line, &column)) {
+    QString l, c;
+    l.setNum(line);
+    c.setNum(column);
+    throw QString("XML parsing error!\n" + error + "in line " + l + ", column " + c);
+  }
 
   setModified(false, true);
 }

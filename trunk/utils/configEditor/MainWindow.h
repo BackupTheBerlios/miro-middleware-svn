@@ -19,6 +19,9 @@
 class DocumentView;
 class FileListDialog;
 class ConfigFile;
+namespace Miro {
+  class Client;
+}
 
 //! Main class of the MainWindow application 
 class MainWindow : public QMainWindow
@@ -38,7 +41,7 @@ public:
   //----------------------------------------------------------------------------
 
   //! Initializing constructor.
-  MainWindow();
+  MainWindow(Miro::Client& _client);
   virtual ~MainWindow();
 
   //! Accessor method for the document view.
@@ -48,6 +51,10 @@ protected slots:
   //----------------------------------------------------------------------------
   // protected slots
   //----------------------------------------------------------------------------
+
+  // file menu
+  void slotGetFrom();
+  void slotSendTo();
 
   // options menu
   void paramsDescriptions();
@@ -74,6 +81,11 @@ protected:
   ConfigDocumentXML document_;
   //! Parameter file dialog.
   FileListDialog * configDialog_;
+
+  //! CORBA client reference.
+  Miro::Client& client_;
+  //! CORBA interface name.
+  QString interfaceName_;
 
 private:
   //----------------------------------------------------------------------------
