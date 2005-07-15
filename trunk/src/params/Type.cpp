@@ -141,6 +141,8 @@ namespace Miro
 	// destructor
 	if (parent_.isEmpty())
 	  ostr << spaces.left(indent) << "virtual ~"<< name_ << "Parameters();" << std::endl;
+	// type information
+	ostr << spaces.left(indent) << "virtual char const * fullTypeName() const throw();" << std::endl;
 	// parsing operator
 	ostr << std::endl;
 	if (parameter_.size() > 0 || parent_.isEmpty()) {
@@ -250,6 +252,14 @@ namespace Miro
 	       << spaces.left(indent) << "{}" << std::endl
 	       << std::endl;
   
+	// type information
+	ostr << spaces.left(indent) << "char const *" << std::endl
+	     << spaces.left(indent) << name_ << "Parameters::fullTypeName() const throw()" << std::endl
+	     << spaces.left(indent) << "{" << std::endl
+	     << spaces.left(indent +2) << "return \"" << fullName() << "\";" << std::endl
+	     << spaces.left(indent) << "}" << std::endl
+	     << std::endl;
+
 	if (parameter_.size() > 0 || parent_.isEmpty()) {
 
 	  // operator <<=
