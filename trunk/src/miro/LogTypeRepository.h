@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2001, 2002, 2003, 2004
+// (c) 2001, 2002, 2003, 2004, 2005
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -14,7 +14,15 @@
 #include "Exception.h"
 
 #include <ace/Mem_Map.h>
-#include <tao/Typecode.h>
+#include <tao/Version.h>
+#if (TAO_MAJOR_VERION > 1) || \
+  ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION > 4) ) || \
+  ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 4) && (TAO_BETA_VERSION > 4) )
+#  include <tao/TypeCode.h>
+#else
+#  include <tao/Typecode.h>
+#endif
+
 #include <tao/CDR.h>
 
 #include <string>
