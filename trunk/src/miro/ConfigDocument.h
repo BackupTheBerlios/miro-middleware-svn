@@ -32,6 +32,8 @@ namespace Miro
     //! Default constructor.
     ConfigDocument();
     //! Initializing constructor.
+    ConfigDocument(QDomDocument * _document);
+    //! Initializing constructor.
     ConfigDocument(int& argc, 
 		   char * argv[], 
 		   std::string const& defaultname = std::string(""), 
@@ -43,6 +45,7 @@ namespace Miro
     void init(std::string const& _defaultName = std::string(""), 
 	      StringVector const& _userPath = std::vector<std::string>())
       throw(Exception);
+    void init(QDomDocument * _document) throw(Exception);
 
     void fini();
 

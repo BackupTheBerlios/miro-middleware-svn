@@ -70,6 +70,10 @@ namespace Miro
     document_(NULL)
   {}
 
+  ConfigDocument::ConfigDocument(QDomDocument * _document) :
+    document_(_document)
+  {}
+
   /**
    * The file to use is identified as follows: If a file name
    * argument -MiroConfigFile (or -MCF for short) is given in argc
@@ -158,6 +162,12 @@ namespace Miro
   ConfigDocument::~ConfigDocument()
   {
     delete document_;
+  }
+
+  void ConfigDocument::init(QDomDocument * _document) throw (Exception)
+  {
+    delete document_;
+    document_ = _document;
   }
 
   void ConfigDocument::init(std::string const& _fileName, 
