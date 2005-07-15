@@ -24,7 +24,7 @@ module Miro
     void getParameters(out string name,
 		       out string type,
 		       out string document);
-    void setParameters(in string document );
+    void setParameters(in string document ) raises (EOutOfBounds);
 
   };
 };
