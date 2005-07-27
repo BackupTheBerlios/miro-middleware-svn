@@ -56,6 +56,7 @@
           laserDescription.group[0].sensor[i].alpha = Miro::deg2Rad(-90. + (double)i * 0.5);
           laserDescription.group[0].sensor[i].beta = 0;
           laserDescription.group[0].sensor[i].gamma = 0;
+          laserDescription.group[0].sensor[i].masked = false;
         }
       </constructor>
     </config_item>
