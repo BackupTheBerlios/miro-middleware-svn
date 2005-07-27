@@ -12,6 +12,7 @@
 #include "GenericNotify.h"
 
 #include "miro/Server.h"
+#include "miro/Log.h"
 
 using std::cout;
 using std::cerr;
@@ -66,6 +67,7 @@ GenericNotify::push_structured_event(const StructuredEvent & notification
 int
 main(int argc, char *argv[])
 {
+  Miro::Log::init(argc, argv);
   cout << "Initialize server daemon." << flush;
   Miro::Server server(argc, argv);
 
