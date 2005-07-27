@@ -86,8 +86,8 @@ producePayload(CosNotifyChannelAdmin::EventChannel_ptr _ec, std::string const& _
   Miro::StructuredPushSupplier::initStructuredEvent(event, _nc, "Payload");
 
   ACE_Sample_History history (iterations);
-  ACE_hrtime_t test_start = ACE_OS::gethrtime ();
-  for (int i = 0; i < iterations; ++i) {
+  // ACE_hrtime_t test_start = ACE_OS::gethrtime ();
+  // for (int i = 0; i < iterations; ++i) {
 
   switch(payload) {
   case NONE: 
@@ -178,8 +178,8 @@ producePayload(CosNotifyChannelAdmin::EventChannel_ptr _ec, std::string const& _
 
   // send two dummies, to get the initializing done...
  
-  //  ACE_hrtime_t test_start = ACE_OS::gethrtime ();
-  //  for (int i = 0; i < iterations; ++i) {
+  ACE_hrtime_t test_start = ACE_OS::gethrtime ();
+  for (int i = 0; i < iterations; ++i) {
     ACE_Time_Value then = ACE_OS::gettimeofday() + timeout;
     ACE_hrtime_t start = ACE_OS::gethrtime ();
     supplier.sendEvent(event);
