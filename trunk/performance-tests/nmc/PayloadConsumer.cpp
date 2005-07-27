@@ -61,13 +61,13 @@ PayloadConsumer::push_structured_event(const StructuredEvent & notification)
     ACE_Time_Value now = ACE_OS::gettimeofday();
     ACE_Time_Value then;
     ORBSVCS_Time::TimeT_to_Time_Value(now, belief->time);
-    std::cout << now - then << std::endl;
+    std::cout << then << " " << now << " " << (now - then) << std::endl;
   }
   else if (notification.remainder_of_body >>= motion) {
     ACE_Time_Value now = ACE_OS::gettimeofday();
     ACE_Time_Value then;
     Miro::timeC2A(motion->time, then);
-    std::cout << now - then << std::endl;
+    std::cout << then << " " << now << " " << (now - then) << std::endl;
   }
 }
 
