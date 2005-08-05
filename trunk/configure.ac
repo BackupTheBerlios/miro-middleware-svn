@@ -225,6 +225,7 @@ AC_CONFIG_FILES([Makefile
                  src/faulMotor/Makefile
                  src/faulTty/Makefile
                  src/laser/Makefile
+		 src/fusedRangeSensor/Makefile
                  src/mcp/Makefile
                  src/miro/Makefile
                  src/msp/Makefile
@@ -282,6 +283,7 @@ AC_CONFIG_FILES([Makefile
                  tests/kicker/Makefile
                  tests/pioneer/Makefile
                  tests/rangeSensor/Makefile
+		 tests/fusedRangeSensor/Makefile
                  tests/sparrow/Makefile
                  tests/speech/Makefile
                  tests/sphinx/Makefile

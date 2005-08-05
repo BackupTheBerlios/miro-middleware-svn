@@ -17,7 +17,8 @@ globaldirs = \
 	miro \
 	video \
 	laser \
-	gps
+	gps \
+	fusedRangeSensor
 
 if COND_B21
 b21dirs = \

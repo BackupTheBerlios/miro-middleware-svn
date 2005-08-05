@@ -1,0 +1,71 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 1999, 2000, 2001, 2002
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+#ifndef FusedRangeSensor_idl
+#define FusedRangeSensor_idl
+
+#include "Exception.idl"
+#include "RangeSensor.idl"
+
+module Miro
+{
+  //! Fused range sensor interface.
+  /**
+   * It provides a Range Sensor compatible interface to a fused sensor.
+   * Provides a 360º scan with the fused values of the selected range sensors.
+   * The resolution is the greatest of all fused sensors.
+   * Angles with no values might be either masked or interpolated (user's choice)
+   */
+  interface FusedRangeSensor : RangeSensor
+  {
+    //! Data type specifying the interpolation mode
+    enum InterpolationType { MASKED, LINEAR };
+
+    //! Data type specifying the fusion mode
+    enum FusionType { MINIMUM };
+
+    //! Add a sensor type to the fusion
+    /**
+     * Add a new sensor to the fusion; identified by name.
+     * 
+     * @param name Name of the sensor to be fused.
+     * @throw EDevIO Thrown if the selected sensor cannot be subscribed.
+     */
+    void addSensor(in string name) raises (EDevIO);
+
+    //! Remove a sensor type from the fusion
+    /**
+     * Remove a sensor from the fusion; identified by name.
+     * 
+     * @param name Name of the sensor to be removed.
+     * @throw EDevIO Thrown if the selected sensor was not being fused.
+     */
+    void removeSensor(in string name) raises (EDevIO);
+
+     //! Set the interpolation type
+    /**
+     * Specify how the different sensors should be interpolated
+     *
+     * @param interpolationMode The method to be used to fill intermediate values
+     */
+    void setInterpolationMode(in InterpolationType interpolationMode);
+
+   //! Set the fusion type
+    /**
+     * Specify how the different sensors should be fused
+     *
+     * @param fusionMode The method to be used to fuse the values
+     */
+    void setFusionMode(in FusionType fusionMode);
+
+  };
+};
+
+#endif

@@ -152,6 +152,14 @@ FieldStrengthS.cpp
 FieldStrengthS.h
 FieldStrengthS.i.h
 FieldStrengthS.lo
+FusedRangeSensorC.cpp
+FusedRangeSensorC.h
+FusedRangeSensorC.i.h
+FusedRangeSensorC.lo
+FusedRangeSensorS.cpp
+FusedRangeSensorS.h
+FusedRangeSensorS.i.h
+FusedRangeSensorS.lo
 GpsC.cpp
 GpsC.h
 GpsC.i.h

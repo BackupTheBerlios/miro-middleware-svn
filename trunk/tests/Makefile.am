@@ -16,6 +16,7 @@ globaldirs = \
 	odometry \
 	motion \
 	rangeSensor \
+	fusedRangeSensor \
 	panTilt \
 	cameraControl \
 	video \

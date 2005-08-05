@@ -24,6 +24,8 @@ DummyBehaviourEngine
 DynamicPolicyTest
 EventChannel
 FaulTest
+FusedRangeSensor
+FusedRangeSensorTest
 GenericNotify
 GpsPoll
 GpsService

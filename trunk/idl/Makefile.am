@@ -55,6 +55,7 @@ globalsources = \
 	ScanDescription.idl \
 	RangeEvent.idl \
 	RangeSensor.idl \
+	FusedRangeSensor.idl \
 	Laser.idl \
 	Pan.idl \
 	Tilt.idl \
