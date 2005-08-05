@@ -22,16 +22,6 @@
   </model:LightSource>
 
   <model:Pioneer2DX>
-    <id>robot2</id> 
-    <xyz>0 -1 0.2</xyz>
-    <model:SonyVID30>
-      <id>camera2</id>
-      <xyz>0 0 0.0</xyz>
-      <renderMethod>glx</renderMethod>
-    </model:SonyVID30>
-  </model:Pioneer2DX>
-
-  <model:Pioneer2DX>
     <id>robot1</id>
     <xyz>-0.007 -0.007 0.2</xyz>
     <model:SickLMS200>
@@ -43,6 +33,16 @@
     <model:SonyVID30>
       <id>camera1</id>
       <xyz>0 0 0.2</xyz>
+      <renderMethod>glx</renderMethod>
+    </model:SonyVID30>
+  </model:Pioneer2DX>
+
+  <model:Pioneer2DX>
+    <id>robot2</id> 
+    <xyz>0 -1 0.2</xyz>
+    <model:SonyVID30>
+      <id>camera2</id>
+      <xyz>0 0 0.0</xyz>
       <renderMethod>glx</renderMethod>
     </model:SonyVID30>
   </model:Pioneer2DX>
