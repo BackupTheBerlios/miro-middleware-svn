@@ -38,6 +38,10 @@ include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.nonested.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.lib.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.local.GNU
+
+all:
+	@echo $(LINK.cc)
+	@echo $(VLDLIBS)
 EOF
 # empty program (nothing needed)
 cat << \EOF > conftest.bin.cpp
@@ -58,6 +62,10 @@ include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.nonested.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.bin.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.local.GNU
+
+all:
+	@echo $(LINK.cc)
+	@echo $(VLDLIBS)
 EOF
 # run the compilation
 make -f conftest.Makefile.lib > conftest.run
