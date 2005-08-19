@@ -98,7 +98,7 @@ namespace Base
 
   // Synchro motion interface.
   void 
-  Dummy::rotate(double velocity) throw(Miro::EDevIO, Miro::EOutOfBounds)
+  Dummy::setRotation(double velocity) throw(Miro::EDevIO, Miro::EOutOfBounds)
   {
 #ifdef DEBUG
     cout << "set rotational (" << velocity << ") velocity" << endl;
@@ -108,7 +108,7 @@ namespace Base
   }
    
   void 
-  Dummy::translate(CORBA::Long velocity) throw(Miro::EDevIO, Miro::EOutOfBounds)
+  Dummy::setTranslation(CORBA::Long velocity) throw(Miro::EDevIO, Miro::EOutOfBounds)
   {
 #ifdef DEBUG
     cout << "set translational (" << velocity << ") velocity" << endl;

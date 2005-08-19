@@ -111,7 +111,7 @@ namespace Base
 
   // Synchro Motion Interface
   void 
-  Impl::rotate(double velocity) throw(Miro::EDevIO, Miro::EOutOfBounds)
+  Impl::setRotation(double velocity) throw(Miro::EDevIO, Miro::EOutOfBounds)
   {
     if (fabs(velocity) > parameters.motion.maxRotation)
       throw EOutOfBounds();
@@ -130,7 +130,7 @@ namespace Base
   }
 
   void
-  Impl::translate(CORBA::Long velocity) throw(Miro::EDevIO, Miro::EOutOfBounds)
+  Impl::setTranslation(CORBA::Long velocity) throw(Miro::EDevIO, Miro::EOutOfBounds)
   {
     if (abs(velocity) > parameters.motion.maxTranslation)
       throw EOutOfBounds();

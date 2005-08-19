@@ -60,8 +60,8 @@ namespace Base
     Miro::PositionIDL getWaitRawPosition() throw(Miro::ETimeOut);
 
     // Synchro Motion Interface
-    void rotate(double velocity) throw(Miro::EDevIO, Miro::EOutOfBounds);
-    void translate(CORBA::Long velocity) throw(Miro::EDevIO, Miro::EOutOfBounds);
+    void setRotation(double velocity) throw(Miro::EDevIO, Miro::EOutOfBounds);
+    void setTranslation(CORBA::Long velocity) throw(Miro::EDevIO, Miro::EOutOfBounds);
 
     // Rotation Commands
 
