@@ -43,13 +43,13 @@ namespace Miro
 				     CORBA::Long& maxRTranslation) throw();
     //! DifferentialMotion interface method implementation.
     virtual void getTargetLRVelocity(CORBA::Long& left, CORBA::Long& right) throw();
+    //! Report the wheelbase.
+    virtual double getWheelBase() throw();
 
     //! Convert per wheel velocities in translation/rotation.
-    void lr2velocity(CORBA::Long left, CORBA::Long right, VelocityIDL& velocity);
+    void lr2velocity(CORBA::Long left, CORBA::Long right, VelocityIDL& velocity) throw();
     //! Convert translation/rotation into per wheel velocities.
-    void velocity2lr(const VelocityIDL& _velocity, CORBA::Long& _left, CORBA::Long& _right);
-    //! Report the wheelbase.
-    double getWheelBase() throw();
+    void velocity2lr(const VelocityIDL& _velocity, CORBA::Long& _left, CORBA::Long& _right) throw();
 
   protected:
     //! Memorize target velocity.
@@ -96,7 +96,9 @@ namespace Miro
 
   inline
   void
-  DifferentialMotionImpl::lr2velocity(CORBA::Long left, CORBA::Long right, VelocityIDL& velocity)
+  DifferentialMotionImpl::lr2velocity(CORBA::Long left, CORBA::Long right,
+				      VelocityIDL& velocity)
+    throw()
   {
     velocity.translation = (left + right) / 2;
     velocity.rotation = (double)(right - left) / (params_.wheelBase);
@@ -104,7 +106,9 @@ namespace Miro
 
   inline
   void
-  DifferentialMotionImpl::velocity2lr(const VelocityIDL& velocity, CORBA::Long& left, CORBA::Long& right)
+  DifferentialMotionImpl::velocity2lr(const VelocityIDL& velocity, 
+				      CORBA::Long& left, CORBA::Long& right)
+    throw()
   {
     left = velocity.translation;
     right = velocity.translation;

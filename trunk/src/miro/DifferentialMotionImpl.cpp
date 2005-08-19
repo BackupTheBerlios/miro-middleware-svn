@@ -15,10 +15,10 @@ namespace Miro
 {
   DifferentialMotionImpl::DifferentialMotionImpl(const DifferentialMotionParameters& _params) :
     MotionImpl(_params),
-    params_(_params)
+    params_(_params),
+    left_(0),
+    right_(0)
   {
-    left_ = 0;
-    right_ = 0;
   }
 
   void
