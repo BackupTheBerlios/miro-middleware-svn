@@ -57,7 +57,7 @@ SynchroMotionInterface::evalCommand(char c)
     std::cout << "time before stop (msec) : " << flush;
     std::cin >> msec;
 
-    synchroMotion_->translate(trans);
+    synchroMotion_->setTranslation(trans);
 
     t.msec(msec);
     ACE_OS::sleep(t);
@@ -72,7 +72,7 @@ SynchroMotionInterface::evalCommand(char c)
     std::cin >> msec;
 
     rot = Miro::deg2Rad(rot);
-    synchroMotion_->rotate(rot);
+    synchroMotion_->setRotation(rot);
 
     t.msec(msec);
     ACE_OS::sleep(t);
