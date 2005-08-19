@@ -48,7 +48,7 @@ module Miro
      * exceeds the maximum rotational velocity of the robot.
      * @throw EDevIO is thrown to indicate low level device problems.
      */
-    void rotate(in double velocity) raises(EOutOfBounds, EDevIO);
+    void setRotation(in double velocity) raises(EOutOfBounds, EDevIO);
 
     //-------------------------------------------------------------------------
     // translational movement methods
@@ -74,7 +74,7 @@ module Miro
      * exceeds the maximum translational velocity of the robot.
      * @throw EDevIO is thrown to indicate low level device problems.
      */
-    void translate(in long velocity) raises(EOutOfBounds, EDevIO);
+    void setTranslation(in long velocity) raises(EOutOfBounds, EDevIO);
   };
 };
 
