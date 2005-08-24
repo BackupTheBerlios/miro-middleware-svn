@@ -6,3 +6,48 @@ service.
 Starts up a notification service, creates a consumer and a NotifyMulticast
 adapter and tries to subscribe for different domain-types-pairs passed
 by parameters
+
+
+The scenario is the following: Two computers run their own local event channel 
+and use a different naming context. Start a NmcAdapter on each computer with 
+the local naming context. If you now start a consumer such as NotifyTest with 
+the local naming context and an event name/type name pair this event should 
+be forwarded through the multicast group from the remote server to the local 
+event channel.
+
+
+
+
+> I guess I have some specific questions
+> 1) What is the required naming service environment for NMC? Don't afraid
+> to be simplistic, I'm a dangerous idiot in this regard...
+
+Each robot just has to resolve its own event channel. So they do not need to 
+know anything about the others interfaces. It is however necessary, that they 
+use different naming contexts (robot names) in the configuration file. 
+Otherwise it will not be possible to distinguish between local and remote 
+events of the same type.
+
+> 2)Are there any specific requirements for event publishers. It seems
+> mandatory that each service publishing events must use the
+> Robot::Parameters domain name and type name for its events to go out
+> over the NMC...is there anything else?
+
+The domain name, not the type name. - Oh, there is also a message timeout. 
+That is, you either synchronize the time between the robots (which is a nice 
+idea, if you want to do sensor fusion in a dynamic environment), or you set 
+it to zero in the configuration file, so it will be ignored.
+
+> 3) What command line requirements are needed for execution of these
+> apps. An example, maybe?
+>
+> 4) In general, how are these systems launched? I assume a naming service
+> and NotifyMulticast service is started on each machine.
+
+Naming service has nothing to do with that. NMC needs to run on each machine.
+
+> 5) How does a service subscribe to NMC originating events?
+> NotifyMulticastTest provides some insight...but I'm not sure I follow
+> whats going on.
+>
+> Anyway, thanks in advance for your responses.

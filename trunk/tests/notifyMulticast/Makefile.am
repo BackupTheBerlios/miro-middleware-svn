@@ -19,7 +19,7 @@ AM_CPPFLAGS+=-include $(top_builddir)/pch/all_static.h
 endif
 
 
-bin_PROGRAMS = NotifyMulticastTest
+bin_PROGRAMS = NotifyMulticastTest MulticastAdapter
 
 
 NotifyMulticastTest_SOURCES = \
@@ -30,7 +30,14 @@ NotifyMulticastTest_LDADD = \
 	$(top_builddir)/lib/libmiroSvc.a \
 	-lmiro
 
-all-local: NotifyMulticastTest
+MulticastAdapter_SOURCES = \
+	MulticastAdapter.cpp
+
+MulticastAdapter_LDADD = \
+	$(top_builddir)/lib/libmiroSvc.a \
+	-lmiro
+
+all-local: NotifyMulticastTest MulticastAdapter
 	$(INSTALLPROGRAMS)
 
 clean-local:
