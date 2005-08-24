@@ -15,6 +15,7 @@
 #include "miro/TimeHelper.h"
 #include "miro/Log.h"
 #include "miro/NotifyMulticastParameters.h"
+#include "miro/IO.h"
 
 int main(int argc, char *argv[])
 {
@@ -34,8 +35,8 @@ int main(int argc, char *argv[])
   config->setSection("Notification");
   config->getParameters("Miro::NMC::Parameters", *nmcParameters);
   
-  MIRO_DBG_OSTR(MIRO , LL_PRATTLE , "  robot parameters:\n" << robotParameters);
-  MIRO_DBG_OSTR(MIRO , LL_PRATTLE , "  multicast parameters:\n" << nmcParameters);
+  MIRO_LOG_OSTR(LL_NOTICE, "  robot parameters:\n" << robotParameters);
+  MIRO_LOG_OSTR(LL_NOTICE, "  multicast parameters:\n" << nmcParameters);
 
   MIRO_LOG(LL_NOTICE,"Initialize server daemon.");
   Miro::Server server(argc, argv);
