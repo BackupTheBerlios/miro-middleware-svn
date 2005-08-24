@@ -1,6 +1,9 @@
+NotifyMulticastTest
+===================
+
 Tool for basic notify multicast adapter testing.
 
-Not of general interest, but maybe usefull to get familiar with this
+Not of general interest, but maybe useful to get familiar with this
 service.
 
 Starts up a notification service, creates a consumer and a NotifyMulticast
@@ -8,46 +11,85 @@ adapter and tries to subscribe for different domain-types-pairs passed
 by parameters
 
 
+MulticastAdapter
+================
+
+Stand alone version of the multicast module.
+
 The scenario is the following: Two computers run their own local event channel 
-and use a different naming context. Start a NmcAdapter on each computer with 
-the local naming context. If you now start a consumer such as NotifyTest with 
+and use a different naming context. Start a MulticastAdapter on each computer with 
+the local naming context. If you now start a consumer such as GenericNotify with 
 the local naming context and an event name/type name pair this event should 
 be forwarded through the multicast group from the remote server to the local 
 event channel.
 
+A hand crafted setup for testing:
 
+I assume we have two computers A & B running in the same subnet
+(multicast routing is something your local network guru should
+configure for you, if it is really required). These computers have
+access to some naming service (might be one shared or two local ones,
+we don't care).
 
+Start a notification service, a event publisher and a multicast
+adapter on computer A. The first two are contained by the NotifyTest:
 
-> I guess I have some specific questions
-> 1) What is the required naming service environment for NMC? Don't afraid
-> to be simplistic, I'm a dangerous idiot in this regard...
+cd $MIRO_BIN
+./NotifyTest -MNC A -colocated
 
-Each robot just has to resolve its own event channel. So they do not need to 
-know anything about the others interfaces. It is however necessary, that they 
-use different naming contexts (robot names) in the configuration file. 
-Otherwise it will not be possible to distinguish between local and remote 
-events of the same type.
+-MNC (MiroNamingContext) selects the naming context. -colocated tells
+the test to create its own notification service and event channel. The
+test allows to send three different types of events through the
+channel. You can subscribe to these events directly at the local event
+channel. You can test it with GenericNotify:
 
-> 2)Are there any specific requirements for event publishers. It seems
-> mandatory that each service publishing events must use the
-> Robot::Parameters domain name and type name for its events to go out
-> over the NMC...is there anything else?
+./GenericNotify Sonar A -MNC A
 
-The domain name, not the type name. - Oh, there is also a message timeout. 
-That is, you either synchronize the time between the robots (which is a nice 
-idea, if you want to do sensor fusion in a dynamic environment), or you set 
-it to zero in the configuration file, so it will be ignored.
+The command line parameters tell GenericNotify to subscribe for events
+with the type_name "Sonar" and domain_name "A" at the event channel
+that is registered at the naming service in the naming context (MNC)
+"A".
 
-> 3) What command line requirements are needed for execution of these
-> apps. An example, maybe?
->
-> 4) In general, how are these systems launched? I assume a naming service
-> and NotifyMulticast service is started on each machine.
+If the local setup works, we can test the actual event channel
+federations.  Start a notification service on computer B as follows:
 
-Naming service has nothing to do with that. NMC needs to run on each machine.
+$TAO_ROOT/orbsvcs/Notify_Service//Notify_Service -NameSvc -Channel -ChannelName EventChannel
 
-> 5) How does a service subscribe to NMC originating events?
-> NotifyMulticastTest provides some insight...but I'm not sure I follow
-> whats going on.
->
-> Anyway, thanks in advance for your responses.
+This tells the notification service to register the event channel
+factory at the naming service, to create an event channel and to name
+that event channel "EventChannel" (in the naming
+service). Unfortunately it registers the channel in the root naming
+context. So we add a link to the root naming context to the naming
+service root naming context, using the naming convention of Miro:
+
+cd
+$TAO_ROOT/utils/nsadd --name A --ior `cat $NameSeviceIOR`
+
+Okay, this is a bit none intuitive. Anyhow, we just create a test
+setup using the available tools. All Miro service would register the
+event channel in the correct naming context in the first place, so you
+can just forget about this step, as soon as you copy pasted it into
+the command line...)
+
+Now we start a MulticastAdapter on computer B:
+
+cd $MIRO_ROOT/bin
+./MulticastAdapter -MNC B
+
+(You can enhance the verbosity of the adapter by specifying the log level and the log filter
+at the command line: -MiroLogLevel 9 -MiroLogFilter NMC)
+
+Now we can start a event consumer B that subscribes for events of the
+channel on computer A at the channel located at computer B. All events
+published locally at the channel of computer A should have the
+domain_name set to A:
+
+cd $MIRO_BIN
+./GenericNotify Sonar A -MNC B
+
+You can verify that the events are exchanged through the multicast
+group, by simple stopping one of the multicast adapters. Restarting
+them should reestablish the connection. Note that the multicast
+adapter considers timeouts for events. So either synchronize the
+clocks of the two computers (NTP), or set the timeout parameter to
+zero in the configuration file.
