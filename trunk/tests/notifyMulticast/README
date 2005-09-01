@@ -51,45 +51,27 @@ that is registered at the naming service in the naming context (MNC)
 "A".
 
 If the local setup works, we can test the actual event channel
-federations.  Start a notification service on computer B as follows:
-
-$TAO_ROOT/orbsvcs/Notify_Service//Notify_Service -NameSvc -Channel -ChannelName EventChannel
-
-This tells the notification service to register the event channel
-factory at the naming service, to create an event channel and to name
-that event channel "EventChannel" (in the naming
-service). Unfortunately it registers the channel in the root naming
-context. So we add a link to the root naming context to the naming
-service root naming context, using the naming convention of Miro:
-
-cd
-$TAO_ROOT/utils/nsadd --name A --ior `cat $NameSeviceIOR`
-
-Okay, this is a bit none intuitive. Anyhow, we just create a test
-setup using the available tools. All Miro service would register the
-event channel in the correct naming context in the first place, so you
-can just forget about this step, as soon as you copy pasted it into
-the command line...)
-
-Now we start a MulticastAdapter on computer B:
+federations. First we start a MulticastAdapter on computer A:
 
 cd $MIRO_ROOT/bin
-./MulticastAdapter -MNC B
+./MulticastAdapter -MNC A
 
 (You can enhance the verbosity of the adapter by specifying the log level and the log filter
 at the command line: -MiroLogLevel 9 -MiroLogFilter NMC)
 
-Now we can start a event consumer B that subscribes for events of the
-channel on computer A at the channel located at computer B. All events
-published locally at the channel of computer A should have the
-domain_name set to A:
 
-cd $MIRO_BIN
+Now we start up the same programs on computer B, using the apropriate
+naming context etc. Note that we still want to subscribe for the sonar events of computer A:
+
+cd $MIRO_ROOT/bin
+./NotifyTest -MNC B -colocated
+./MulticastAdapter -MNC B
 ./GenericNotify Sonar A -MNC B
 
-You can verify that the events are exchanged through the multicast
-group, by simple stopping one of the multicast adapters. Restarting
-them should reestablish the connection. Note that the multicast
-adapter considers timeouts for events. So either synchronize the
-clocks of the two computers (NTP), or set the timeout parameter to
-zero in the configuration file.
+Additional GenericNotify instances can be started on both computers to
+report on other events. Also, you can verify that the events are
+exchanged through the multicast group, by simple stopping one of the
+multicast adapters. Restarting them should reestablish the
+connection. Note that the multicast adapter considers timeouts for
+events. So either synchronize the clocks of the two computers (NTP),
+or set the timeout parameter to zero in the configuration file.
