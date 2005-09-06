@@ -111,7 +111,7 @@ main(int argc, char * argv[])
 	  cin >> input;
 	  rangeSensor->setFusionMode(input[0]=='0'?
 				     Miro::FusedRangeSensor::MINIMUM:
-				     Miro::FusedRangeSensor::MINIMUM );
+				     Miro::FusedRangeSensor::AVERAGE );
 	  break;
 	default:
 	  std::cerr << "Unknown command: " << input << endl;

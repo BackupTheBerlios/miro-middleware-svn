@@ -17,6 +17,7 @@
 #include "miro/StructuredPushConsumer.h"
 
 #include <string>
+#include <map>
 
 namespace Miro 
 {
@@ -26,6 +27,10 @@ namespace Miro
 			       public virtual Miro::RangeSensorImpl
   {
   public:
+
+    typedef std::map<std::string, Miro::RangeBunchEventIDL *> RangeBunchList;
+    typedef std::map<std::string, Miro::ScanDescriptionIDL *> ScanDescriptionList;
+
     //! Constructor
     FusedRangeSensorImpl(Miro::Client* _client,
 			 CosNotifyChannelAdmin::EventChannel_ptr _ec,
@@ -47,6 +52,9 @@ namespace Miro
 
     FusedPushConsumer * pConsumer_;
     CosNotification::EventTypeSeq subscriptions_;
+
+    RangeBunchList scanList_;
+    ScanDescriptionList descriptionList_;
 
     Miro::FusedRangeSensor::InterpolationType interpolationMode_;
     Miro::FusedRangeSensor::FusionType fusionMode_;
@@ -105,6 +113,11 @@ namespace Miro
     friend class FusedRangeSensorImpl;
   };
 
+  void fuseAverage(Miro::RangeScanEventIDL  * scan, 
+		   Miro::ScanDescriptionIDL & scanDescription, 
+		   int alreadyFused,
+		   const Miro::RangeBunchEventIDL * newScan,
+		   const Miro::ScanDescriptionIDL & newScanDescription);
   void fuseMinimum(Miro::RangeScanEventIDL  * scan, 
 		   Miro::ScanDescriptionIDL & scanDescription, 
 		   const Miro::RangeBunchEventIDL * newScan,

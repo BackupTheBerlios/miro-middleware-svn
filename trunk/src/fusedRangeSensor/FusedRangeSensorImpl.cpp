@@ -41,6 +41,7 @@ namespace Miro {
     interpolationMode_(Miro::FusedRangeSensor::MASKED),
     fusionMode_(Miro::FusedRangeSensor::MINIMUM)
   {
+    MIRO_LOG_CTOR("FusedRangeSensorImpl");
     maxWait_=ACE_Time_Value(5); // five seconds
     subscriptions_.length(0);
   }
@@ -53,12 +54,13 @@ namespace Miro {
   void FusedRangeSensorImpl::addSensor(const char* name) 
     throw (Miro::EDevIO)
   {
-    MIRO_LOG_OSTR(LL_NOTICE,"Would add sensor " << name << " to fuse if implemented");
     try {
       RangeSensor_var rangeSensor=client_->resolveName<Miro::RangeSensor>(name);
       Miro::Guard guard(mutex_);
       
       addSubscription(name);
+      delete descriptionList_[name];
+      descriptionList_[name]=rangeSensor->getScanDescription();
       calculateDescription();
       pConsumer_->setSubscriptions(subscriptions_);
     }
@@ -70,12 +72,13 @@ namespace Miro {
   void FusedRangeSensorImpl::removeSensor(const char* name) 
     throw (Miro::EDevIO)
   {
-    MIRO_LOG_OSTR(LL_NOTICE,"Would remove sensor " << name << " from fusion if implemented" << std::endl);
     {
       Miro::Guard guard(mutex_);
       removeSubscription(name);
-      calculateDescription();
       pConsumer_->setSubscriptions(subscriptions_);
+      descriptionList_.erase(name);
+      scanList_.erase(name);
+      calculateDescription();
     }
   }
 
@@ -126,6 +129,10 @@ namespace Miro {
   }
 
   void FusedRangeSensorImpl::calculateDescription() {
+    //TODO: Instead of getting all the new descriptions each time,
+    // use the descriptionList_.
+    // It might be useful to update it...
+
     RangeSensor_var rangeSensor;
 
     int fusedSensors=0;
@@ -204,45 +211,53 @@ namespace Miro {
   }
 
   void FusedRangeSensorImpl::processStructuredEvent(const CosNotification::StructuredEvent & notification) {
-    Miro::RangeBunchEventIDL * pSensorBunch;
+    Miro::RangeBunchEventIDL * pSensorBunch=NULL;
     Miro::RangeScanEventIDL * fusion=NULL;
-    ACE_Time_Value currentTime;
+    //    ACE_Time_Value currentTime;
     ACE_Time_Value scanTime;
-    ACE_Time_Value timeTmp;
+    //    ACE_Time_Value timeTmp;
     
+
+    MIRO_LOG(LL_PRATTLE,"Process Structured Event");
     timeTmp.usec(1000);
     
-    timeC2A(scan_.time,currentTime);
+    //  timeC2A(scan_.time,currentTime);
 
     string eventName=CORBA::string_dup(notification.header.fixed_header.event_type.type_name);
-    ScanDescriptionIDL_var scanDescription;
     
-    try {
-      RangeSensor_var rangeSensor=client_->resolveName<Miro::RangeSensor>(eventName.c_str());
-      scanDescription=rangeSensor->getScanDescription();
-    } catch (CORBA::Exception & e) {
-      MIRO_LOG(LL_ERROR, "FusedRangeSensorImpl: Got an event without description");
-    }
-
     if (notification.remainder_of_body >>= pSensorBunch) {
       MIRO_LOG_OSTR(LL_PRATTLE, "Event Received (" 
 		    << eventName
 		    << "); length: " 
 		    << pSensorBunch->sensor.length()); 
-      timeC2A(pSensorBunch->time,scanTime);
-      if ( (scanTime-currentTime) < timeTmp)
-      {
-	fusion=new RangeScanEventIDL(scan_);
-      } else {
-	fusion=new RangeScanEventIDL();
-	initializeScan(fusion);
-	timeA2C(scanTime, fusion->time);
-      }
+       timeC2A(pSensorBunch->time,scanTime);
+       
+       //do not delete; integrateData takes ownership
+       fusion=new RangeScanEventIDL();
+       
+
+       initializeScan(fusion);
+       timeA2C(scanTime, fusion->time);
+
+      delete scanList_[eventName];
+      scanList_[eventName]=new RangeBunchEventIDL(*pSensorBunch);
 
       switch (fusionMode_) {
-      case Miro::FusedRangeSensor::MINIMUM: 
-	fuseMinimum(fusion, description_, pSensorBunch, scanDescription);
+      case Miro::FusedRangeSensor::MINIMUM:
+	for (RangeBunchList::iterator it=scanList_.begin(); it!=scanList_.end(); it++) {
+	  MIRO_LOG_OSTR(LL_PRATTLE,"Min-Fusing " << it->first);
+	  fuseMinimum(fusion, description_, it->second, *descriptionList_[it->first]);
+	}
 	break;
+      case Miro::FusedRangeSensor::AVERAGE: {
+	int i=0;
+	for (RangeBunchList::iterator it=scanList_.begin(); it!=scanList_.end(); it++) {
+	  i++;
+ 	  MIRO_LOG_OSTR(LL_PRATTLE,"Avg-Fusing " << it->first);
+ 	  fuseAverage(fusion, description_, i, it->second, *descriptionList_[it->first]);
+ 	}
+ 	break;
+      }
       default:
 	MIRO_LOG_OSTR(LL_ERROR, "FusedRangeSensorImpl: Unknown fusion mode (" << fusionMode_ << ")");
 	break;
@@ -259,7 +274,7 @@ namespace Miro {
 	MIRO_LOG_OSTR(LL_ERROR, "FusedRangeSensorImpl: Unknown interpolation mode (" << interpolationMode_ << ")");
 	break;
       }
-
+      
       integrateData(fusion);
     } else {
       MIRO_LOG_OSTR(LL_NOTICE, "Event received: " << eventName);
@@ -315,6 +330,60 @@ namespace Miro {
     
   }
 
+  void fuseAverage(RangeScanEventIDL * scan,
+		   ScanDescriptionIDL & scanDescription,
+		   int alreadyFused,
+		   const RangeBunchEventIDL * newScan,
+		   const ScanDescriptionIDL & newScanDescription) {
+  
+    double angle;
+    double distance;
+    int distanceFromCenter;
+    int index;
+    double alpha;
+    double beta;
+
+    //By definition, newScan should contain same or fewer readings than scan
+    //otherwise, there is an error while adding/removing subscriptions
+    for (unsigned int i=0; i<newScan->sensor.length(); i++) {
+      //TODO: It could be more than one group present.
+      if (newScan->sensor[i].group >0)
+	continue;
+      //Ignore masked/invalid readings
+      if (newScan->sensor[i].range<0)
+	continue;
+      alpha=newScanDescription.group[newScan->sensor[i].group].sensor[newScan->sensor[i].index].alpha;
+      beta=newScanDescription.group[newScan->sensor[i].group].sensor[newScan->sensor[i].index].beta;
+      distanceFromCenter=newScanDescription.group[newScan->sensor[i].group].sensor[newScan->sensor[i].index].distance;
+
+      if (beta != 0) {
+	int a=newScan->sensor[i].range;
+	int b=distanceFromCenter;
+	double C=M_PI+beta; 
+	//calculate distance using the cosinus rule
+	// c² = a²+b²-2 a b cos(C)
+	distance=sqrt(a*a+b*b-2*a*b*cos(C));
+	//Calculate angle using the sinus rule
+	//sin(A)/a = sin(B)/b = sin(C)/c
+	angle=alpha - asin(a*sin(C)/distance);
+      } else {
+	angle = alpha;
+	distance=newScan->sensor[i].range+distanceFromCenter;
+      }
+
+      index=getIndex(scanDescription, angle);
+
+      if (index==-1) {
+	MIRO_LOG_OSTR(LL_WARNING, "No sensor found for angle " << angle);
+      } else if (scan->range[0][index]>=0) {
+	scan->range[0][index]=(scan->range[0][index]*alreadyFused + int(distance))/(alreadyFused+1);
+      } else { //not yet initialized.
+	scan->range[0][index]=int(distance);
+	scanDescription.group[0].sensor[index].masked=false;
+      }
+    }
+  }		   
+
   void fuseMinimum(RangeScanEventIDL  * scan, 
 		   ScanDescriptionIDL & scanDescription, 
 		   const RangeBunchEventIDL * newScan,
@@ -331,6 +400,9 @@ namespace Miro {
     for (unsigned int i=0; i<newScan->sensor.length(); i++) {
       //TODO: It could be more than one group present.
       if (newScan->sensor[i].group >0)
+	continue;
+      //Ignore masked/invalid readings
+      if (newScan->sensor[i].range<0)
 	continue;
       alpha=newScanDescription.group[newScan->sensor[i].group].sensor[newScan->sensor[i].index].alpha;
       beta=newScanDescription.group[newScan->sensor[i].group].sensor[newScan->sensor[i].index].beta;
@@ -368,14 +440,11 @@ namespace Miro {
 			 const ScanDescriptionIDL & /*scanDescription*/) {
     /* The default initialization puts a "MASKED" value on every sensor. */
     /* Thus this function does nothing */
+    /* Provided only for consistence */
   }
 
   void interpolateLinear(RangeScanEventIDL * scan,
 			 const ScanDescriptionIDL & /*scanDescription*/) {
-
-    //!TODO: Interpolate Laser and sonar does not work when there are no laser 
-    //  readings (back side).
-    //  Check why.
 
     int lastKnown=0;
     int nextKnown=0;
@@ -444,5 +513,4 @@ namespace Miro {
     }
     
   }
-
 }

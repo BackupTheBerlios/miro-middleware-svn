@@ -29,7 +29,7 @@ module Miro
     enum InterpolationType { MASKED, LINEAR };
 
     //! Data type specifying the fusion mode
-    enum FusionType { MINIMUM };
+    enum FusionType { MINIMUM, AVERAGE };
 
     //! Add a sensor type to the fusion
     /**
