@@ -219,7 +219,7 @@ namespace Miro {
     
 
     MIRO_LOG(LL_PRATTLE,"Process Structured Event");
-    timeTmp.usec(1000);
+   // timeTmp.usec(1000);
     
     //  timeC2A(scan_.time,currentTime);
 
