@@ -202,7 +202,7 @@ namespace Miro
       
       //    cout << "LEFT: " << velocity.real() << " ::: " << velocity.imag() << endl;
       
-      timing_.stop();
+      timing_.done();
       
       // set steering commands
       pMotion_->setLRVelocity(velocity.real(), velocity.imag());

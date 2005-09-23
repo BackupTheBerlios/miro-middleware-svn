@@ -229,7 +229,7 @@ namespace Miro
 	  //          velocitySpace_[l_index][r_index] = 0.0;
 	}
       }
-      timingEval_.stop();
+      timingEval_.done();
 
       if (Miro::Log::level() >= Miro::Log::LL_PRATTLE) {
         TimeStats stats;
@@ -551,7 +551,7 @@ namespace Miro
 	}
 	fclose(logFile1);*/
 
-      timingObst_.stop();
+      timingObst_.done();
       if (Miro::Log::level() >= Miro::Log::LL_PRATTLE) {
 	TimeStats stats;
 	timingObst_.eval(stats);
@@ -733,7 +733,7 @@ namespace Miro
 	}
 	fclose(logFile1);*/
 
-      timingObst_.stop();
+      timingObst_.done();
       if (Miro::Log::level() >= Miro::Log::LL_PRATTLE) {
 	TimeStats stats;
 	timingObst_.eval(stats);
@@ -811,7 +811,7 @@ namespace Miro
       // set new velocity
       setNewVelocity(biggestValueVelocity);
 
-      timingApply_.stop();
+      timingApply_.done();
 
       if (Miro::Log::level() >= Miro::Log::LL_PRATTLE) {
 	TimeStats stats;
