@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003, 2004, 2005
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -20,6 +20,7 @@
 
 #include "BaseConsumer.h"
 #include "BaseDevice.h"
+
 
 // forward decleration
 class ACE_Reactor;
@@ -528,27 +529,6 @@ namespace Base
     sendCommands(vec, 2);	
   }
   inline
-  void
-  Connection::setTranslateVelocity(unsigned long arg) throw(Miro::EDevIO)
-  {
-    Miro::Guard guard(stateMutex);
-
-    if (translateVelocity != arg) {
-      translateVelocity = arg;
-#ifdef DEBUG
-      std::cerr << __FILE__ << ":"
-	   << __LINE__ << ":"
-	   << __FUNCTION__ << "() - " 
-	   << arg << ": 0x"
-	   << std::hex << convertMMToEncoders(arg) << std::dec << std::endl;
-#endif
-      OutMessage message(OP_TRANS_VEL, convertMMToEncoders(arg));
-      const iovec vec[2] = { {&message, sizeof(OutMessage)}, 
-                             {&MSG_USER_MESSAGE, sizeof(OutMessage)} };
-      sendCommands(vec, 2);	
-    }
-  }
-  inline
   void 
   Connection::setTranslateAcceleration(unsigned long arg) 
     throw(Miro::EDevIO)
@@ -563,5 +543,5 @@ namespace Base
       sendCommands(vec, 2);	
     }
   }
-};
+}
 #endif

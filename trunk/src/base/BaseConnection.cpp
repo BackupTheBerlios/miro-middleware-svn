@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003, 2004, 2005
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -18,6 +18,8 @@
 #include "Parameters.h"
 
 #include "miro/Exception.h"
+
+#include <iostream>
 
 
 namespace Base
@@ -71,8 +73,26 @@ namespace Base
     // deleting eventHandler handler
     delete eventHandler;
   }
-};
 
+  void
+  Connection::setTranslateVelocity(unsigned long arg) throw(Miro::EDevIO)
+  {
+    Miro::Guard guard(stateMutex);
 
+    if (translateVelocity != arg) {
+      translateVelocity = arg;
+#ifdef DEBUG
+      std::cerr << __FILE__ << ":"
+	   << __LINE__ << ":"
+	   << __FUNCTION__ << "() - " 
+	   << arg << ": 0x"
+	   << std::hex << convertMMToEncoders(arg) << std::dec << std::endl;
+#endif
+      OutMessage message(OP_TRANS_VEL, convertMMToEncoders(arg));
+      const iovec vec[2] = { {&message, sizeof(OutMessage)}, 
+                             {&MSG_USER_MESSAGE, sizeof(OutMessage)} };
+      sendCommands(vec, 2);	
+    }
+  }
 
-
+}
