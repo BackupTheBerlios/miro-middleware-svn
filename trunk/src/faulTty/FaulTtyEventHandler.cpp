@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2003
+// (c) 2003, 2004, 2005
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -16,38 +16,20 @@
 #include "miro/Exception.h"
 #include "miro/Log.h"
 
-#undef DEBUG
-
-#ifdef DEBUG
 #include <iostream>
-#include <stdlib.h>
-
-using std::cout;
-using std::cerr;
-#endif
-
-#ifdef DEBUG
-#define DBG(x) x
-#else
-#define DBG(x)
-#endif
 
 namespace FaulController
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-
   EventHandler::EventHandler(Miro::DevConsumer * _consumer, OdometryMessage::Wheel _wheel) :
     Super(_consumer, new OdometryMessage(_wheel)),
     index_(0)
   {
-    DBG(cout << "Constructing FaulTtyEventHandler." << endl);
+    MIRO_LOG_CTOR("FaulController::EventHandler");
   }
 
   EventHandler::~EventHandler()
   {
-    DBG(cout << "Destructing FaulTtyEventHandler." << endl);
+    MIRO_LOG_DTOR("FaulController::EventHandler");
     if (static_cast<OdometryMessage *>(message_)->wheel() == 
         OdometryMessage::LEFT)
 	          consumer_ = NULL;
@@ -57,7 +39,7 @@ namespace FaulController
   int
   EventHandler::handle_input (ACE_HANDLE fd)
   {
-    DBG(cout << "FaulEventHandler: handle_input" << endl);
+    MIRO_DBG(FAUL, LL_PRATTLE, "FaulEventHandler: handle_input");
 
     OdometryMessage * msg = static_cast<OdometryMessage *>(message_);
 
@@ -126,8 +108,9 @@ namespace FaulController
       }
     }
 #endif
-    DBG(cerr << "Read " << bytes << " bytes from FaulTty" << endl);
-    DBG(cout << "FaulTtyEventHandler: Done with select" << endl);
+
+    MIRO_DBG_OSTR(FAUL, LL_PRATTLE, "Read " << bytes << " bytes from FaulTty");
+    MIRO_DBG(FAUL, LL_PRATTLE, "FaulController::EventHandler: Done with select");
 
     return 0;
   }
