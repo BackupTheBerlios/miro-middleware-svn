@@ -10,7 +10,9 @@
 ##############################################################################
 
 include $(top_srcdir)/config/Make-rules
-CPPFLAGS+=-include $(top_builddir)/pch/all_shared.h
+if COND_PCH
+AM_CPPFLAGS+=-include $(top_builddir)/pch/all_shared.h
+endif
 
 
 ## shared library to be built
