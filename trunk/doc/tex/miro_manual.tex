@@ -151,6 +151,10 @@ the directories present in the \miro root directory:
   This directory contains links to the binaries of \miro.
   For an explanation of the individual binaries, see Chapter
   \ref{sec:services} about the robot services.
+\item[botsvcs:] Higher level robot services. This is were platform
+  independent stuff for autonomous mobile robot programming should go.
+  Currently it hosts a framework for hierarchical behavior programming
+  and one for particle filter based Monte Carlo self localization.
 \item[doc:]
   Here, the available documentation is gathered. In the
   subdirectory {\tt tex} you find the postscript version of this
@@ -159,8 +163,9 @@ the directories present in the \miro root directory:
   (the starting page of this documentation resides at: \\
   {\tt \$MIRO\_ROOT/doc/html/idl/index.html} respectively \\
   {\tt \$MIRO\_ROOT/doc/html/cpp/index.html}).
-\item[etc:]
-  Config files for the individual robots.
+\item[etc:] Config files for the individual robots. While these are
+  xml-based configuration files, using the {\tt ConfigEditor} will
+  surely facilitate their editing.
 \item[examples:]
   Examples on how to use individual interfaces of \miro. If you want
   to write your own programs utilizing the \miro framework, this is a
@@ -187,7 +192,8 @@ the directories present in the \miro root directory:
   Small test programs to monitor or test isolated interfaces of the
   \miro robot control architecture.
 \item[utils:]
-  Utilities made for convenience. No magic to be expected here.
+  Utilities made for convenience. No magic to be expected here, but some
+  really cool graphical editing facilities.
 \end{description}
 
 %=============================== Tutorial ====================================

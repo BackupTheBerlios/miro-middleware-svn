@@ -9,62 +9,64 @@ whether it would be more convenient to prepare a central installation.
 \subsection{Requirements}
 
 You need the following packages in order to compile \miro:
-\begin{itemize}
-\item ACE ($>$= 5.2.2): Please refer to the installation instruction
-  in \ref{sec::aceInstall} for building and installing ACE. The source
+\begin{description}
+\item[ACE ($>$= 5.4.1):] We recomment using the latest bug-fix only
+  releases for ACE and TAO. Please refer to the installation
+  instruction in \ref{sec::aceInstall} for building and installing
+  ACE. The source
   tarball and CVS access is available at:\\
   \texttt{http://www.cs.wustl.edu/$\sim$schmidt/ACE.html}.
-\item TAO ($>$= 1.2.2): Building and installation is also described in
+\item[TAO ($>$= 1.4.1):] Building and installation is also described in
   section \ref{sec::aceInstall}. TAO downloads are available on:\\
   \texttt{http://www.theaceorb.com/}.
-\item Qt ($>$= 2.2.4): Installation should be quite easy, as Qt uses a
+\item[Qt ($>$= 3.1):] Installation should be quite easy, as Qt uses a
   configure script for automatic system checks. Qt is installed on
   most modern Unix/Linux systems anyway, since KDE relies on
   it. Recent versions of Qt can be found at:\\
   \texttt{http://www.trolltech.com/}.
-\end{itemize}
+\end{description}
 
 If you want to compile the wrapper classes for the speech detection
 system, you also need:
-\begin{itemize}
-\item Speech tools: The Edinburgh Speech Tools Library is a collection
+\begin{description}
+\item[Speech tools:] The Edinburgh Speech Tools Library is a collection
   of C++ class, functions and related programs for manipulating the
   sorts of objects used in speech processing. It is to provide the
   underlying classes in the Festival Speech System. We use version
   1.2.3 that can be retrieved from:\\
   \texttt{http://www.cstr.ed.ac.uk/projects/speech\_tools}
-\item Festival: The Festival Speech Synthesis System is a general
+\item[Festival:] The Festival Speech Synthesis System is a general
   multi-lingual speech synthesis system developed at CSTR. We
   successfully used version 1.4.2. See:\\
   \texttt{http://www.cstr.ed.ac.uk/projects/festival/}
-\item Sphinx: The CMU Sphinx Group Open Source Speech Recognition, a
+\item[Sphinx:] The CMU Sphinx Group Open Source Speech Recognition, a
   real-time, large vocabulary, speaker independent speech recognition
   system. We use version Sphinx2-0.4, downloaded from:\\
  \texttt{http://www.speech.cs.cmu.edu/sphinx}
-\end{itemize}
+\end{description}
 
 Depending on your camera system, you may need libraries for the
 IEEE 1394 (aka Firewire) support:
-\begin{itemize} 
-\item libraw1394: This library provides direct access to the IEEE 1394
+\begin{description} 
+\item[libraw1394:] This library provides direct access to the IEEE 1394
   bus through the Linux 1394 subsystem's raw1394 user space
   interface. It can be found one it's homepage:\\
   \texttt{http://www.linux1394.org/}\\
   or on SourceForge:\\
   \texttt{http://sourceforge.net/projects/libraw1394/}
-\item libdc1394: It is a library that is intended to provide a high
+\item[libdc1394:] It is a library that is intended to provide a high
   level programming interface for application developers who wish to
   control IEEE 1394 based cameras that conform to the 1394-based
   Digital Camera Specification. Available via:\\
   \texttt{http://sourceforge.net/projects/libdc1394/}
-\end{itemize}
+\end{description}
 Both libraries are available as compiled packages for the most modern
 Linux systems too.
 
 To build the documentation, your system should provide the following
 tools:
-\begin{itemize}
-\item Doxygen: It is a JavaDoc like documentation system for C++, C,
+\begin{description}
+\item[Doxygen:] It is a JavaDoc like documentation system for C++, C,
   Java and IDL. It can generate an on-line HTML documentation
   extracted directly from the sources, which makes it much easier to
   keep the documentation consistent with the source code. You can
@@ -72,12 +74,12 @@ tools:
   \texttt{http://www.stack.nl/\~dimitri/doxygen/}\\
   or again from SourceForge:\\
   \texttt{http://sourceforge.net/projects/doxygen/}
-\item The LaTeX package (either pdflatex or latex and dvips, bibtex
+\item[\LaTeX:] The LaTeX package (either pdflatex or latex and dvips, bibtex
   and makeindex -- available via one of the CTAN server, e.g.\ 
   \texttt{http://dante.ctan.org}) and the convert image convertsion
   utility from the ImageMagick package \\
   (\texttt{http://imagemagick.sourceforge.net/}).
-\end{itemize}
+\end{description}
 
 \subsection{Download}
 
@@ -92,6 +94,7 @@ please have a look at
 installed with the usual steps:
 
 \begin{lstlisting}[frame=tb]{}
+./bootstrap (for cvs checkouts)
 ./configure
 make 
 (make install)
@@ -155,7 +158,7 @@ Supported robot platforms:
   have a Sparrow99 robot (we built them ourselfs), it might be
   interesting to look at the sources for this robot if you are looking
   for group communication technology etc.
-\item The Pioneer1 platform is a complete port for the ActiveMedia
+\item The Pioneer platform is a complete port for the ActiveMedia
   robot series, based on the PSOS, P2OS and AROS protocols. But we
   could only test and extend it to the platforms available to us.
   \begin{itemize}
@@ -331,8 +334,7 @@ features. Therefore we summarize here our experience with the
 ACE/TAO installation.
 
 At the time of this writing we suggest to use the latest BFO (bug fix
-only) version ACE/TAO --- currently this is 5.3.2/1.3.2. There are
-knon problems with the notification service in TAO.
+only) version ACE/TAO --- currently this is 5.4.1/1.4.1.
 
 The options that should be set additionally in the {\tt
   platform\_macros.GNU} file (to be found under
