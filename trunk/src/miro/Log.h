@@ -224,6 +224,10 @@ namespace Miro
     static unsigned int const B21 =     0x00100000;
     //! Log cathegory of the NMC components
     static unsigned int const NMC =     0x00200000;
+    //! Log cathegory of the NMC components
+    static unsigned int const MCL =     0x00400000;
+    //! Log cathegory of the NMC components
+    static unsigned int const BAP =     0x00800000;
 
     //! Log level of messages reporting an emergency.
     /** 

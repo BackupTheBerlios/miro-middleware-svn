@@ -13,7 +13,7 @@
 
 #include <qdom.h>
 
-#include <iostream>
+#include <iosfwd>
 
 namespace Miro
 {

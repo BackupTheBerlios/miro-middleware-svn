@@ -24,6 +24,7 @@ sources1 = \
 	XmlParse.cpp \
 	Exception.cpp \
 	Angle.cpp \
+	Random.cpp \
 	Configuration.cpp \
 	ConfigDocument.cpp \
 	Log.cpp \
@@ -125,6 +126,7 @@ extraheader = \
 	Utils.h 
 
 BUILT_SOURCES = \
+	BuiltIn.h \
 	Parameters.cpp Parameters.h \
 	NotifyMulticastParameters.cpp NotifyMulticastParameters.h \
 	SvcParameters.cpp SvcParameters.h

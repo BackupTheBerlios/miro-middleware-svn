@@ -12,11 +12,34 @@
 #define Miro_TimeSeries_h
 
 #include "Log.h"
+
 #include <ace/Time_Value.h>
-#include "idl/TimeC.h"
+
+#include <iosfwd>
+
+#ifdef MIRO_PERFORMANCE_LOGGING
+
+#define MIRO_TIME_SERIES(x, y) \
+  Miro::TimeSeries<> x(y)
+#define MIRO_TIME_SERIES_N(x, y, n) \
+  Miro::TimeSeries<n> x(y)
+#define  MIRO_TIME_PROBE_START(x) \
+  do {x.start()} while(false)
+#define MIRO_TIME_PROBE_DONE(x) \
+  do {x.done()} while(false)
+
+#else //!MIRO_PERFORMANCE_LOGGING
+
+#define MIRO_TIME_SERIES(x, y)
+#define MIRO_TIME_SERIES_N(x, y, n) 
+#define  MIRO_TIME_PROBE_START(x)
+#define MIRO_TIME_PROBE_DONE(x)
+
+#endif // !MIRO_PERFORMANCE_LOGGING
 
 namespace Miro
 {
+  //! Struct holding timing statistics.
   struct TimeStats
   {
     ACE_Time_Value min;
@@ -25,38 +48,67 @@ namespace Miro
     ACE_Time_Value var;
   };
 
+  //! Output operator for TimeStats.
   std::ostream& operator<<(std::ostream& _ostr, TimeStats const& _rhs);
 
+  //! Class for simple time series evaluation.
+  /** It calculates a floating mean of the last N time probes.  The
+   * time probes are based upon the gettimeofday() system call and
+   * lack the precise accuracy one might prefer when doing a
+   * statistical evaluation for a scientific paper. But they provide
+   * enough precision for generic timing evaluation.
+   */
   template<unsigned int N = 100UL>
   class TimeSeries
   {
   public:
     static const unsigned int SIZE = N;
 
-    TimeSeries();
+    //! The constructor takes a name argument.
+    TimeSeries(std::string const& _name = "Miro") throw();
 
-    void start(const ACE_Time_Value& _stamp = ACE_OS::gettimeofday());
-    void stop(const ACE_Time_Value& _stamp = ACE_OS::gettimeofday());
+    //! Start the time probe.
+    void start(ACE_Time_Value const& _stamp = ACE_OS::gettimeofday()) throw();
+    //! Stop the time proble.
+    void done(ACE_Time_Value const& _stamp = ACE_OS::gettimeofday()) throw();
 
-    void eval(TimeStats& _stats) const;
-    unsigned int size() const;
-    bool full() const;
+    //! Evaluate the time series
+    void eval(TimeStats& _stats) const throw();
+    //! Return the size of the histogram
+    unsigned int size() const throw();
+    //! True if the histogram holds the maximum number of entries.
+    bool full() const throw();
+    //! Returns a reference to the name of the time series.
+    std::string const& name() const throw();
 
-  protected:
+  private:
+    //! The name of the series.
+    std::string const name_;
+
+    //! The timing histogram.
     ACE_Time_Value stamp_[SIZE];
-    ACE_Time_Value * begin_;
-    ACE_Time_Value * end_;
+    //! Pointer to the beginning of the histogram.
+    ACE_Time_Value * const begin_;
+    //! Pointer to the end of the histogram.
+    ACE_Time_Value * const end_;
+    //! Pointer to the next entry.
     ACE_Time_Value * next_;
+    //! Start time of the current time probe.
     ACE_Time_Value start_;
 
+    //! Flag indicating the ring buffer is full.
     bool full_;
+    //! Flag indicating a time probe was started.
     bool started_;
 
-    static ACE_Time_Value tSquare(const ACE_Time_Value& _t);
+    //! Internal helper method for squaring a time value.
+    static ACE_Time_Value tSquare(ACE_Time_Value const& _t) throw();
   };
 
   template<unsigned int N>
-  TimeSeries<N>::TimeSeries() :
+  inline
+  TimeSeries<N>::TimeSeries(std::string const& _name) throw() :
+    name_(_name),
     begin_(stamp_),
     end_(stamp_ + SIZE),
     next_(stamp_),
@@ -66,30 +118,34 @@ namespace Miro
   }
 
   template<unsigned int N>
+  inline
   bool
-  TimeSeries<N>::full() const
+  TimeSeries<N>::full() const throw()
   {
     return full_;
   }
 
   template<unsigned int N>
+  inline
   unsigned int
-  TimeSeries<N>::size() const 
+  TimeSeries<N>::size() const  throw()
   {
     return (full_)? SIZE : next_ - begin_;
   }
 
   template<unsigned int N>
+  inline
   void
-  TimeSeries<N>::start(const ACE_Time_Value& _stamp)
+  TimeSeries<N>::start(ACE_Time_Value const& _stamp) throw()
   {
     start_ = _stamp;
     started_ = true;
   }
 
   template<unsigned int N>
+  inline
   void
-  TimeSeries<N>::stop(const ACE_Time_Value& _stamp)
+  TimeSeries<N>::done(ACE_Time_Value const& _stamp) throw()
   {
     // prevent nonsense
     MIRO_ASSERT(started_);
@@ -105,7 +161,7 @@ namespace Miro
 
   template<unsigned int N>
   void
-  TimeSeries<N>::eval(TimeStats& _stats) const
+  TimeSeries<N>::eval(TimeStats& _stats) const throw()
   {
     ACE_Time_Value * first = begin_;
     ACE_Time_Value * last = (full_)? end_ : next_;
@@ -141,8 +197,9 @@ namespace Miro
   }
 
   template<unsigned int N>
+  inline
   ACE_Time_Value
-  TimeSeries<N>::tSquare(const ACE_Time_Value& _t) {
+  TimeSeries<N>::tSquare(ACE_Time_Value const& _t)  throw() {
     ACE_Time_Value v;
     double t = (double)_t.sec() + (double)_t.usec() / 1000000.;
     t *= t;

@@ -13,8 +13,9 @@
 #include "idl/ScanDescriptionC.h"
 
 #include "XmlParse.h"
-
 #include "Angle.h"
+
+#include <iostream>
 
 namespace Miro
 {

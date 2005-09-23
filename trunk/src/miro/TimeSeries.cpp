@@ -12,6 +12,8 @@
 #include "TimeSeries.h"
 #include "TimeHelper.h"
 
+#include <iostream>
+
 namespace Miro
 {
   std::ostream& operator<<(std::ostream& _ostr, TimeStats const& _rhs)

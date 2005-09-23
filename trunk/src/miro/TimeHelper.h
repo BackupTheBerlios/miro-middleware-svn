@@ -20,7 +20,7 @@
 #include <ace/Time_Value.h>
 #include <ace/Version.h>
 
-#include <iostream>
+#include <iosfwd>
 #include <string>
 
 

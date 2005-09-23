@@ -27,7 +27,7 @@ namespace Miro
   std::ostream& 
   operator<<(std::ostream& ostr, Angle alpha)
   {
-    return ostr << alpha.angle;
+    return ostr << alpha.angle_;
   }
 
   std::istream& 
@@ -35,9 +35,9 @@ namespace Miro
   {
     double a;
     
-    istr >> a;
-    alpha = Angle(a);
+    if (istr >> a) 
+      alpha.setRad(a);
     return istr;
   }
-};
+}
 

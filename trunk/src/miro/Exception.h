@@ -13,7 +13,7 @@
 
 #include <exception>
 #include <string>
-#include <iostream>
+#include <iosfwd>
 
 #define MIRO_EXCEPTION_TYPE(N) \
   class N : public ::Miro::Exception \

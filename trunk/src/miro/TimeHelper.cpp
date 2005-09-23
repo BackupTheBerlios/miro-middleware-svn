@@ -12,6 +12,8 @@
 #include "TimeHelper.h"
 
 #include <ace/Date_Time.h>
+
+#include <iostream>
 #include <sstream>
 
 std::ostream& 
