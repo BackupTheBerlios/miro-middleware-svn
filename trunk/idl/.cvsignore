@@ -1,5 +1,13 @@
 .deps
 .libs
+LocalizationC.cpp
+LocalizationC.h
+LocalizationC.i.h
+LocalizationC.lo
+LocalizationS.cpp
+LocalizationS.h
+LocalizationS.i.h
+LocalizationS.lo
 ConfigC.cpp
 ConfigC.h
 ConfigC.i.h

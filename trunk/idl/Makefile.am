@@ -69,6 +69,7 @@ globalsources = \
 	Speech.idl \
 	SphinxSpeech.idl \
 	BehaviourEngine.idl \
+	Localization.idl \
 	Joystick.idl \
 	DistanceScan.idl \
 	ArbiterEvent.idl \
