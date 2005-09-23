@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2004
+// (c) 2005
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$

@@ -34,18 +34,22 @@
 bool verbose = false;
 int clients = 1;
 bool multicast = false;
+bool latency = false;
 std::string domainName = "Miro";
 
 int 
 parseArgs(int& argc, char* argv[])
 {
-  ACE_Get_Opt get_opts (argc, argv, "d:c:mv?");
+  ACE_Get_Opt get_opts (argc, argv, "ld:c:mv?");
   
   int rc = 0;
   int c;
   
   while ((c = get_opts()) != -1) {
     switch (c) {
+    case 'l':
+      latency = true;
+      break;
     case 'm':
       multicast = true;
       break;
@@ -64,6 +68,7 @@ parseArgs(int& argc, char* argv[])
 		<< "  -m enamble multicast" << std::endl
 		<< "  -c <number> client consumers (default 1)" << std::endl
 		<< "  -d <name> domain name for the subscribed events (default Miro)" << std::endl
+		<< "  -l measure latency" << std::endl
 		<< "  -v verbose mode" << std::endl
 		<< "  -? help: emit this text and stop" << std::endl;
       rc = -1;
