@@ -2,25 +2,24 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003, 2004, 2005
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include "PanTiltEventHandler.h"
 #include "PanTiltConnection.h"
 #include "PanTiltConsumer.h"
 #include "PanTiltMessage.h"
 
+#include "miro/Log.h"
+
+#include <iostream>
+
 namespace DpPanTilt
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-
   //
   // EventHandler is an object wrapper for the event handler 
   // registered with the reactor
@@ -79,7 +78,7 @@ namespace DpPanTilt
 	  msg_->setErrorState();
 	}
 	else {
-	  cerr << "ignoring :|" << thisChar << "|" << endl;
+	  MIRO_LOG_OSTR(LL_ERROR, "ignoring :|" << thisChar << "|");
 	}
 	break;
 
