@@ -306,6 +306,7 @@ AC_CONFIG_FILES([Makefile
 		 utils/notifyObserver/Makefile
 		 botsvcs/Makefile
 		 botsvcs/BAP/Makefile
+		 botsvcs/MCL/Makefile
 		 botsvcs/tests/Makefile
                  botsvcs/tests/BAP/Makefile
                  botsvcs/tests/BAP/lib/Makefile
