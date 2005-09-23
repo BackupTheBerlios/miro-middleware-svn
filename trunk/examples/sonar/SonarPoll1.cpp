@@ -1,8 +1,6 @@
 #include <miro/Client.h>
 #include <idl/RangeSensorC.h>
 
-#include <ace/Log_Msg.h>
-
 #include <iostream>
 
 int main(int argc, char *argv[])
