@@ -291,7 +291,7 @@ namespace Video
     // std::cout << "process buffer" << std::endl;
     timeFilter_.start();
     process();
-    timeFilter_.stop();
+    timeFilter_.done();
     
     
     // std::cout << "relable write buffer as readbuffer for all successors" << std::endl;
@@ -362,7 +362,7 @@ namespace Video
 	(*first)->processFilterTree();
       }
     }
-    timeFilterTree_.stop();
+    timeFilterTree_.done();
   }
 
   /**

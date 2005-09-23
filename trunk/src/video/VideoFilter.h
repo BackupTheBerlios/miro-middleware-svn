@@ -200,7 +200,7 @@ namespace Video
      */
     unsigned int outputBuffers() const throw();
 
-    //! Accessor method for the filters paramters.
+    //! Accessor methodfor the filters paramters.
     FilterParameters const * parameters() const throw();
 
     //! Deferred initialization: set synch mode.

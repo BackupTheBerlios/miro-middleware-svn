@@ -80,7 +80,7 @@ namespace Video
     
     timeFilter_.start();
     process();
-    timeFilter_.stop();
+    timeFilter_.done();
 
     bufferManager_->switchWrite2ReadBuffer(outputBufferIndex_, 0);
   }
