@@ -15,32 +15,24 @@
 #include "MspMessage.h"
 
 #include "miro/Exception.h"
+#include "miro/Log.h"
 
 #include "abus/AbusDevice.h"
 
-#undef DEBUG
 
 namespace Msp
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-
   EventHandler::EventHandler(Connection& _msp, 
 			     Miro::DevConsumer * _consumer) :
     Super(_msp, _consumer, new Message()),
     msp(_msp)
   {
-#ifdef DEBUG
-    cout << "Constructing MspEventHandler." << endl;
-#endif
+    MIRO_LOG_CTOR("Msp::EventHandler");
   }
 
   EventHandler::~EventHandler() 
   {
-#ifdef DEBUG
-    cout << "Destructing MspEventHandler." << endl;
-#endif
+    MIRO_LOG_DTOR("Msp::EventHandler");
   }
 
   //-----------------------------------------------------------------------------
@@ -53,9 +45,8 @@ namespace Msp
 
     int mspAddr = Abus::devId2devNum(message.devId());
 
-#ifdef DEBUG
-    cout << "msp.disconnect() Addr: 0x" << hex << mspAddr << endl;
-#endif
+    MIRO_LOG_OSTR(LL_NOTICE, 
+		  "msp.disconnect() Addr: 0x" << std::hex << mspAddr << std::dec);
 
     if (mspAddr == masterMspAddr) { // master MSP down. 
       msp.masterMspBusId = 0;
@@ -73,9 +64,8 @@ namespace Msp
     if (mspAddr == masterMspAddr)       // master msp up 
       msp.masterMspBusId = message.devId();
 
-#ifdef DEBUG
-    cout << "msp.linkApproveAck() Addr: 0x" << hex << mspAddr << endl;
-#endif
+    MIRO_LOG_OSTR(LL_NOTICE,
+		  "msp.linkApproveAck() Addr: 0x" << std::hex << mspAddr << std::dec);
 
     try {
       msp.setIrParms(message.devId(), 75); // set ir interval
@@ -88,9 +78,9 @@ namespace Msp
 	msp.sonarStart();           // start pinging
       }
     } catch (const Miro::CException& e) {
-      cerr << "msp.lingApproveAck() exception: " << e << endl;
+      MIRO_LOG_OSTR(LL_ERROR, "msp.lingApproveAck() exception: " << e);
     } catch (const Miro::Exception& e) {
-      cerr << "msp.lingApproveAck() exception: " << e << endl;
+      MIRO_LOG_OSTR(LL_ERROR, "msp.lingApproveAck() exception: " << e);
     }
   }
 }
