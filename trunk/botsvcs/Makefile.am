@@ -12,6 +12,7 @@
 ## insert unconditional directories here
 generaldirs = \
 	BAP \
+	MCL \
 	tests \
 	examples
 
