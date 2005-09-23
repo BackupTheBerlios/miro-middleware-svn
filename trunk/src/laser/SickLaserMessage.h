@@ -2,24 +2,22 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 1999, 2000, 2001
+// (c) 1999, 2000, 2001, 2002, 2003, 2004, 2005
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-#ifndef laserMessage_hh
-#define laserMessage_hh
+#ifndef LaserMessage_h
+#define LaserMessage_h
 
 #include "SickLaserOpcodes.h"
 #include "miro/Exception.h"
 
+#include <iosfwd>
+
 namespace Miro 
 {
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-
   /**
    * represents a message block sent to and received from the SICK 
    * laserscanner. 
@@ -202,25 +200,10 @@ namespace Miro
     /**
      * prints a LaserMessage object on the given stream.
      */
-    friend ostream &operator<<(ostream &ostr, const LaserMessage &lm);
-    void PrintDataOn(ostream &ostr) const;
-    void PrintDumpOn(ostream &ostr) const;
+    friend std::ostream &operator<<(std::ostream &ostr, const LaserMessage &lm);
+    void PrintDataOn(std::ostream &ostr) const;
+    void PrintDumpOn(std::ostream &ostr) const;
   };
-
-  inline 
-  void LaserMessage::PrintDataOn(ostream &ostr) const {
-    for (long i=0; i<(datalength()); ++i) 
-      ostr << data()[i];
-    ostr << endl;
-    ostr << "Status : " << int(status()) << endl;
-  }
-
-  inline 
-  void LaserMessage::PrintDumpOn(ostream &ostr) const {
-    for (long i=0; i<length()+6; ++i)
-      ostr << short(bufferAddress()[i]) << " ";
-    ostr << "}" << endl;
-  }
 
   inline
   unsigned short LaserMessage::createcrc() const
@@ -247,25 +230,10 @@ namespace Miro
     }
 
     return crcsum;
+  }
 }
 
-
-  inline 
-  ostream &operator<<(ostream &ostr, const LaserMessage &lm) {
-    ostr << "[address:" << int(lm.address()) << 
-      " length:" << lm.length() << 
-      " cmd:" << int(lm.cmd()) << 
-      " status:" << int(lm.status()) <<
-      " crc:" << lm.crc() << "]{";
-
-    for (long i=0; i<lm.length(); ++i)
-      ostr << short(lm.data()[i]) << " ";
-    ostr << "}" << endl;
-
-    return ostr;
-  }
-};
-#endif
+#endif // LaserMessage_h
 
 
 

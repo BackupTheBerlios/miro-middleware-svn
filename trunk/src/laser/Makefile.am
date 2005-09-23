@@ -26,7 +26,8 @@ libmiroLaser_a_SOURCES = \
 	SickLaserTask.cpp \
 	SickLaserPollTask.cpp \
 	SickLaserEvent.cpp \
-	SickLaserImpl.cpp
+	SickLaserImpl.cpp \
+	SickLaserMessage.cpp
 
 Parameters.h: Parameters.cpp
 Parameters.cpp: Parameters.xml
@@ -42,7 +43,6 @@ laser_include_HEADERS = \
 	SickLaserPollTask.h \
 	SickLaserEvent.h \
 	SickLaserImpl.h \
-	SickLaserMessage.h \
 	SickLaserStatistic.h \
 	SickLaserOpcodes.h \
 	Parameters.h
