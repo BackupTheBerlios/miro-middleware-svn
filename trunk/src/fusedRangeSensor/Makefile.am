@@ -23,6 +23,8 @@ Parameters.cpp: Parameters.xml
 
 laser_include_HEADERS = \
 	FusedRangeSensorImpl.h \
+	Parameters.h
+
 #	SickLaserConnection.h \
 #	SickLaserTask.h \
 #	SickLaserPollTask.h \
@@ -30,8 +32,7 @@ laser_include_HEADERS = \
 #	SickLaserImpl.h \
 #	SickLaserMessage.h \
 #	SickLaserStatistic.h \
-#	SickLaserOpcodes.h \
-	Parameters.h
+#	SickLaserOpcodes.h
 
 FusedRangeSensor_SOURCES = \
 	Parameters.cpp \
