@@ -14,6 +14,7 @@
 #include "Log.h"
 
 #include <ace/Time_Value.h>
+#include <ace/OS.h>
 
 #include <iosfwd>
 
