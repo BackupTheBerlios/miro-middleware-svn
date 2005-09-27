@@ -10,7 +10,6 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "idl/LocalizeC.h"
-#include "nix/PerformanceLog.hh"
 
 #include "miro/Log.h"
 #include "miro/TimeHelper.h"
