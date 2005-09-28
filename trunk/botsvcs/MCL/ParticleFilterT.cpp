@@ -9,7 +9,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////
 
-#include "idl/LocalizeC.h"
+#include "idl/LocalizationC.h"
 
 #include "miro/Log.h"
 #include "miro/TimeHelper.h"
