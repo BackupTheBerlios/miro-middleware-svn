@@ -13,9 +13,8 @@
 
 AC_INIT(Miro, 2.1.0)
 AC_CONFIG_AUX_DIR(config)
-# AM_INIT_AUTOMAKE() # for never automake versions
-AM_INIT_AUTOMAKE(Miro, 2.1.0) 
-
+# AM_INIT_AUTOMAKE() # for newer automake versions
+AM_INIT_AUTOMAKE(Miro, 2.1.0) # for older automake version
 AM_CONFIG_HEADER(config.h)
 
 AC_PREFIX_DEFAULT($PWD)
@@ -68,148 +67,65 @@ AC_CHECK_PROG(ac_has_makeindex, makeindex, yes, no)
 AC_CHECK_PROG(ac_has_doxygen, doxygen, yes, no)
 AC_CHECK_PROG(ac_has_fig2dev, fig2dev, yes, no)
 
-AC_DETERMINE_ADDITIONAL
+AC_CHECK_LIB(termcap, free)
 
 # our own specific paket tests
-AC_CHECK_LIB(termcap, free)
-if test "x$ac_request_speech" = xyes; then
-	AC_SEARCH_SPEECHTOOLS
-	AC_SEARCH_SPHINX
-	AC_SEARCH_FESTIVAL
-fi
+
 AC_SEARCH_QT
 AC_SEARCH_ACE
 AC_SEARCH_TAO
 AC_FEATURES_COMPILE_ACE
 
-# conditional compilation
+AC_DETERMINE_DOCUMENTATION
+AC_DETERMINE_SPEECH
 
 AC_DETERMINE_PLATFORMS
-
-AM_CONDITIONAL(COND_SPARROW99, [test "x$ac_request_sparrow99" = xyes])
-AM_CONDITIONAL(COND_PIONEER,   [test "x$ac_request_pioneer" = xyes])
-AM_CONDITIONAL(COND_B21,       [test "x$ac_request_b21" = xyes])
-AM_CONDITIONAL(COND_DEPRECATED,[test "x$ac_request_deprecated" = xyes])
-
-AH_TEMPLATE([MIRO_HAS_SPARROW99], [build with support for Sparrow99 robots.])
-AH_TEMPLATE([MIRO_HAS_PIONEER], [build with support for pioneer robots.])
-AH_TEMPLATE([MIRO_HAS_B21], [build with support for B21 robots.])
-AH_TEMPLATE([MIRO_HAS_PLAYER], [build with Player support.])
-
-AH_TEMPLATE([MIRO_HAS_DEPRECATED], [build with support for deprecated interfaces. ])
-
-if test "x$ac_request_sparrow99" = xyes; then
-	AC_DEFINE(MIRO_HAS_SPARROW99)
-fi
-if test "x$ac_request_pioneer" = xyes; then
-	AC_DEFINE(MIRO_HAS_PIONEER)
-fi
-if test "x$ac_request_b21" = xyes; then
-	AC_DEFINE(MIRO_HAS_B21)
-fi
-if test "x$ac_request_deprecated" = xyes; then
-	AC_DEFINE(MIRO_HAS_DEPRECATED)
-fi
-
-if test "x$ac_request_player" = xyes; then
-	AC_SEARCH_PLAYER
-fi
-
 AC_DETERMINE_VIDEODEVICES
 
-AH_TEMPLATE([MIRO_HAS_BTTV], [build with BTTV support.])
-AH_TEMPLATE([MIRO_HAS_METEOR], [build with Meteor support.])
-AH_TEMPLATE([MIRO_HAS_1394], [build with 1394 support.])
-AH_TEMPLATE([MIRO_HAS_QUICKCAM], [build with QuickCam support.])
-
-if test "x$ac_request_bttv" = xyes; then
-	AC_DEFINE(MIRO_HAS_BTTV)
-	ac_miro_has_bttv=yes
-fi
-
-if test "x$ac_request_meteor" = xyes; then
-	AC_DEFINE(MIRO_HAS_METEOR)
-	ac_miro_has_meteor=yes
-fi
-
-if test "x$ac_request_ieee1394" = xyes; then
-	AC_CHECK_LIB(raw1394, raw1394_get_libversion, [ac_have_libraw1394=yes], [ac_have_libraw1394=no])
-	AC_CHECK_LIB(dc1394_control, dc1394_print_feature_set, [ac_have_libdc1394=yes], [ac_have_libdc1394=no], [-lraw1394])
-	AC_DETERMINE_LIBDC_VERSION
-	if test "x$ac_have_libraw1394" = xyes && test "x$ac_have_libdc1394" = xyes; then
-		AC_DEFINE(MIRO_HAS_1394)
-		ac_miro_has_1394=yes
-	fi
-fi
-
-if test "x$ac_request_quickcam" = xyes; then
-	AC_DEFINE(MIRO_HAS_QUICKCAM)
-	ac_miro_has_quickcam=yes
-fi
-
-AM_CONDITIONAL(COND_BTTV, [test "x$ac_miro_has_bttv" = xyes])
-AM_CONDITIONAL(COND_METEOR, [test "x$ac_miro_has_meteor" = xyes])
-AM_CONDITIONAL(COND_IEEE1394, [test "x$ac_miro_has_1394" = xyes])
-AM_CONDITIONAL(COND_QUICKCAM, [test "x$ac_miro_has_quickcam" = xyes])
-
-if test "x$ac_request_docu" = xyes; then
-	if test "x$ac_has_bibtex" = xyes &&
-	test "x$ac_has_makeindex" = xyes &&
-	test "x$ac_has_convert" = xyes &&
-	test "x$ac_has_fig2dev" = xyes &&
-	 ((test "x$ac_has_latex" = xyes &&
-	   test "x$ac_has_dvips" = xyes) ||
-	  (test "x$ac_has_pdflatex" = xyes)); then
-		ac_compile_docu=yes
-	fi
-
-	if test "x$ac_has_pdflatex" = xyes &&
-	test "x$ac_has_fig2dev" = xyes &&
-	test "x$ac_has_convert" = xyes; then
-		ac_compile_pdf=yes
-	fi
-
-	if test "x$ac_has_doxygen" = xyes; then
-		ac_compile_html=yes
-	fi
-fi
-
-AM_CONDITIONAL(COND_TEXDOC, [test "x$ac_compile_docu" = xyes])
-AM_CONDITIONAL(COND_PDF, [test "x$ac_compile_pdf" = xyes])
-AM_CONDITIONAL(COND_HTMLDOC, [test "x$ac_compile_html" = xyes])
-
-if test "x$ac_request_speech" = xyes &&
-	test "x$ac_has_sphinx" = xyes &&
-	test "x$ac_has_festival" = xyes &&
-	test "x$ac_has_speechtools" = xyes; then
-	ac_compile_speech=yes
-fi
-
-AM_CONDITIONAL(COND_SPEECH, [test "x$ac_compile_speech" = xyes])
-
-if test "x$ac_request_player" = xyes &&
-	test "x$ac_has_player" = xyes; then
-	AC_DEFINE(MIRO_HAS_PLAYER)
-	ac_compile_player=yes
-fi
-
-AM_CONDITIONAL(COND_PLAYER, [test "x$ac_compile_player" = xyes])
-
-AH_TEMPLATE([MIRO_NO_DEBUG], [build without debug info support.])
-AH_TEMPLATE([MIRO_NO_LOGGING], [build without log info support.])
-
-AC_DETERMINE_LOGGING
-if test "x$ac_request_debuginfo" = xno; then
-	AC_DEFINE(MIRO_NO_DEBUG)
-fi
-if test "x$ac_request_loginfo" = xno; then
-	AC_DEFINE(MIRO_NO_LOGGING)
-fi
-
-
 AC_DETERMINE_GCC_VERSION
-AC_DETERMINE_PCH # be sure, that this is called last (at least after AC_DETERMINE_GCC_VERSION)
+AC_DETERMINE_PCH
 
+# now build the compiler flag lines used for derivative projects
+
+miro_export_acetao_cflags="${ACE_CFLAGS} ${TAO_CFLAGS} ${INHERITED_CPPFLAGS} ${INHERITED_SYMBOLS} -W -Wall -Woverloaded-virtual -DDEBUG -DQT_GENUINE_STR"
+miro_export_acetao_ldflags="${ACE_LDFLAGS} ${TAO_LDFLAGS}"
+miro_export_acetao_libs="${ACE_LIBS} ${TAO_LIBS}"
+miro_export_qt_cflags="${QT_CFLAGS}"
+miro_export_qt_ldflags="${QT_LDFLAGS}"
+miro_export_qt_libs="${QT_LIBS}"
+
+miro_export_cflags="-I${PWD}/src -I${PWD}/"
+miro_export_ldflags="-L${libdir}"
+miro_export_libs="-lmiroVideo -lmiroIDL -lmiro ${PWD}/lib/libmiroSvc.a"
+if test "x$ac_miro_has_1394" == xyes; then miro_export_libs="$miro_export_libs -lraw1394 -ldc1394_control"; fi
+if test "x$ac_compile_player" == xyes; then miro_export_libs="$miro_export_libs ${PLAYER_LDFLAGS} ${PLAYER_LIBS}"; fi
+
+AC_SUBST(miro_export_acetao_cflags)
+AC_SUBST(miro_export_acetao_ldflags)
+AC_SUBST(miro_export_acetao_libs)
+AC_SUBST(miro_export_qt_cflags)
+AC_SUBST(miro_export_qt_ldflags)
+AC_SUBST(miro_export_qt_libs)
+AC_SUBST(miro_export_cflags)
+AC_SUBST(miro_export_ldflags)
+AC_SUBST(miro_export_libs)
+
+AC_SUBST(miro_export_makeparams, "${PWD}/bin/MakeParams")
+AC_SUBST(miro_export_acetao_idlcomp, "${TAO_IDL}")
+AC_SUBST(miro_export_qt_moc, "${QT_MOC}")
+AC_SUBST(miro_export_qt_uic, "${QT_UIC}")
+
+AC_SUBST(miro_export_bttv, "$ac_miro_has_bttv")
+AC_SUBST(miro_export_ieee1394, "$ac_miro_has_1394")
+AC_SUBST(miro_export_meteor, "$ac_miro_has_meteor")
+AC_SUBST(miro_export_quickcam, "$ac_miro_has_quickcam")
+AC_SUBST(miro_export_sparrow99,"$ac_request_sparrow99")
+AC_SUBST(miro_export_pioneer, "$ac_request_pioneer")
+AC_SUBST(miro_export_b21, "$ac_request_b21")
+AC_SUBST(miro_export_player, "$ac_compile_player")
+AC_SUBST(miro_export_speech, "$ac_compile_speech")
+
+# create makefiles
 
 AC_CONFIG_FILES([Makefile
                  idl/Makefile
@@ -330,14 +246,13 @@ AC_CONFIG_FILES([Makefile
                  scripts/Makefile
                  bin/Makefile
                  lib/Makefile
+                 miro-config
 ])
 
-#                 tests/xml/Makefile
-#                 utils/makeConfig/Makefile
-#                 utils/sparrowBoard/Makefile
-#                 miro-2.0.0.pc
-
 AC_OUTPUT
+
+# make miro-config executable so it is useable without installation
+chmod a+x miro-config
 
 
 
@@ -413,7 +328,3 @@ echo $ECHO_N "Latex documentation "; if test "x$ac_compile_docu" = xyes; then
 	else echo "disabled."; fi
 echo $ECHO_N "HTML documentation "; if test "x$ac_compile_html" = xyes; then echo "enabled."; else echo "disabled."; fi
 echo ""
-
-
-
-# AC_SUBST(MIRO_ROOT, "$PWD")

@@ -45,6 +45,43 @@ AC_DEFUN([AC_DETERMINE_PLATFORMS],
 		AC_HELP_STRING([--enable-Deprecated], [Turn on support for deprecated interfaces]),
 		ac_request_deprecated=$enableval,
 		ac_request_deprecated=no)
+
+	AM_CONDITIONAL(COND_SPARROW99, [test "x$ac_request_sparrow99" = xyes])
+	AM_CONDITIONAL(COND_PIONEER,   [test "x$ac_request_pioneer" = xyes])
+	AM_CONDITIONAL(COND_B21,       [test "x$ac_request_b21" = xyes])
+	AM_CONDITIONAL(COND_DEPRECATED,[test "x$ac_request_deprecated" = xyes])
+
+	AH_TEMPLATE([MIRO_HAS_SPARROW99], [build with support for Sparrow99 robots.])
+	AH_TEMPLATE([MIRO_HAS_PIONEER], [build with support for pioneer robots.])
+	AH_TEMPLATE([MIRO_HAS_B21], [build with support for B21 robots.])
+	AH_TEMPLATE([MIRO_HAS_PLAYER], [build with Player support.])
+
+	AH_TEMPLATE([MIRO_HAS_DEPRECATED], [build with support for deprecated interfaces. ])
+
+	if test "x$ac_request_sparrow99" = xyes; then
+		AC_DEFINE(MIRO_HAS_SPARROW99)
+	fi
+	if test "x$ac_request_pioneer" = xyes; then
+		AC_DEFINE(MIRO_HAS_PIONEER)
+	fi
+	if test "x$ac_request_b21" = xyes; then
+		AC_DEFINE(MIRO_HAS_B21)
+	fi
+	if test "x$ac_request_deprecated" = xyes; then
+		AC_DEFINE(MIRO_HAS_DEPRECATED)
+	fi
+
+	if test "x$ac_request_player" = xyes; then
+		AC_SEARCH_PLAYER
+	fi
+
+	if test "x$ac_request_player" = xyes &&
+		test "x$ac_has_player" = xyes; then
+		AC_DEFINE(MIRO_HAS_PLAYER)
+		ac_compile_player=yes
+	fi
+
+	AM_CONDITIONAL(COND_PLAYER, [test "x$ac_compile_player" = xyes])
 ])
 
 
@@ -53,36 +90,71 @@ AC_DEFUN([AC_DETERMINE_PLATFORMS],
 
 AC_DEFUN([AC_DETERMINE_VIDEODEVICES],
 [
-AC_ARG_ENABLE(
-	BTTV,
-	AC_HELP_STRING([--enable-BTTV], [Turn on BTTV support (default on)]),
-	ac_request_bttv=$enableval,
-	ac_request_bttv=yes)
+	AC_ARG_ENABLE(
+		BTTV,
+		AC_HELP_STRING([--enable-BTTV], [Turn on BTTV support (default on)]),
+		ac_request_bttv=$enableval,
+		ac_request_bttv=yes)
 
-AC_ARG_ENABLE(
-	Meteor,
-	AC_HELP_STRING([--enable-Meteor], [Turn on Meteor support (default off)]),
-	ac_request_meteor=$enableval,
-	ac_request_meteor=no)
+	AC_ARG_ENABLE(
+		Meteor,
+		AC_HELP_STRING([--enable-Meteor], [Turn on Meteor support (default off)]),
+		ac_request_meteor=$enableval,
+		ac_request_meteor=no)
 
-AC_ARG_ENABLE(
-	IEEE1394,
-	AC_HELP_STRING([--enable-IEEE1394], [Turn on IEEE1394 support (default on)]),
-	ac_request_ieee1394=$enableval,
-	ac_request_ieee1394=yes)
+	AC_ARG_ENABLE(
+		IEEE1394,
+		AC_HELP_STRING([--enable-IEEE1394], [Turn on IEEE1394 support (default on)]),
+		ac_request_ieee1394=$enableval,
+		ac_request_ieee1394=yes)
 
-AC_ARG_ENABLE(
-	QuickCam,
-	AC_HELP_STRING([--enable-QuickCam], [Turn on QuickCam support (default on)]),
-	ac_request_quickcam=$enableval,
-	ac_request_quickcam=yes)
+	AC_ARG_ENABLE(
+		QuickCam,
+		AC_HELP_STRING([--enable-QuickCam], [Turn on QuickCam support (default on)]),
+		ac_request_quickcam=$enableval,
+		ac_request_quickcam=yes)
+
+	AH_TEMPLATE([MIRO_HAS_BTTV], [build with BTTV support.])
+	AH_TEMPLATE([MIRO_HAS_METEOR], [build with Meteor support.])
+	AH_TEMPLATE([MIRO_HAS_1394], [build with 1394 support.])
+	AH_TEMPLATE([MIRO_HAS_QUICKCAM], [build with QuickCam support.])
+
+	if test "x$ac_request_bttv" = xyes; then
+		AC_DEFINE(MIRO_HAS_BTTV)
+		ac_miro_has_bttv=yes
+	fi
+
+	if test "x$ac_request_meteor" = xyes; then
+		AC_DEFINE(MIRO_HAS_METEOR)
+		ac_miro_has_meteor=yes
+	fi
+
+	if test "x$ac_request_ieee1394" = xyes; then
+		AC_CHECK_LIB(raw1394, raw1394_get_libversion, [ac_have_libraw1394=yes], [ac_have_libraw1394=no])
+		AC_CHECK_LIB(dc1394_control, dc1394_print_feature_set, [ac_have_libdc1394=yes], [ac_have_libdc1394=no], [-lraw1394])
+		AC_DETERMINE_LIBDC_VERSION
+		if test "x$ac_have_libraw1394" = xyes && test "x$ac_have_libdc1394" = xyes; then
+			AC_DEFINE(MIRO_HAS_1394)
+			ac_miro_has_1394=yes
+		fi
+	fi
+
+	if test "x$ac_request_quickcam" = xyes; then
+		AC_DEFINE(MIRO_HAS_QUICKCAM)
+		ac_miro_has_quickcam=yes
+	fi
+
+	AM_CONDITIONAL(COND_BTTV, [test "x$ac_miro_has_bttv" = xyes])
+	AM_CONDITIONAL(COND_METEOR, [test "x$ac_miro_has_meteor" = xyes])
+	AM_CONDITIONAL(COND_IEEE1394, [test "x$ac_miro_has_1394" = xyes])
+	AM_CONDITIONAL(COND_QUICKCAM, [test "x$ac_miro_has_quickcam" = xyes])
 ])
 
 
 
-## misc additional stuff
+## documentation
 
-AC_DEFUN([AC_DETERMINE_ADDITIONAL],
+AC_DEFUN([AC_DETERMINE_DOCUMENTATION],
 [
 	AC_ARG_ENABLE(
 		Documentation,
@@ -90,11 +162,58 @@ AC_DEFUN([AC_DETERMINE_ADDITIONAL],
 		ac_request_docu=$enableval,
 		ac_request_docu=no)
 
+	if test "x$ac_request_docu" = xyes; then
+		if test "x$ac_has_bibtex" = xyes &&
+		test "x$ac_has_makeindex" = xyes &&
+		test "x$ac_has_convert" = xyes &&
+		test "x$ac_has_fig2dev" = xyes &&
+		 ((test "x$ac_has_latex" = xyes &&
+		   test "x$ac_has_dvips" = xyes) ||
+		  (test "x$ac_has_pdflatex" = xyes)); then
+			ac_compile_docu=yes
+		fi
+
+		if test "x$ac_has_pdflatex" = xyes &&
+		test "x$ac_has_fig2dev" = xyes &&
+		test "x$ac_has_convert" = xyes; then
+			ac_compile_pdf=yes
+		fi
+
+		if test "x$ac_has_doxygen" = xyes; then
+			ac_compile_html=yes
+		fi
+	fi
+
+	AM_CONDITIONAL(COND_TEXDOC, [test "x$ac_compile_docu" = xyes])
+	AM_CONDITIONAL(COND_PDF, [test "x$ac_compile_pdf" = xyes])
+	AM_CONDITIONAL(COND_HTMLDOC, [test "x$ac_compile_html" = xyes])
+])
+
+
+## speech support
+
+AC_DEFUN([AC_DETERMINE_SPEECH],
+[
 	AC_ARG_ENABLE(
 		Speech,
 		AC_HELP_STRING([--enable-Speech], [Turn on Speech support (default off)]),
 		ac_request_speech=$enableval,
 		ac_request_speech=no)
+
+	if test "x$ac_request_speech" = xyes; then
+		AC_SEARCH_SPEECHTOOLS
+		AC_SEARCH_SPHINX
+		AC_SEARCH_FESTIVAL
+	fi
+
+	if test "x$ac_request_speech" = xyes &&
+		test "x$ac_has_sphinx" = xyes &&
+		test "x$ac_has_festival" = xyes &&
+		test "x$ac_has_speechtools" = xyes; then
+		ac_compile_speech=yes
+	fi
+
+	AM_CONDITIONAL(COND_SPEECH, [test "x$ac_compile_speech" = xyes])
 ])
 
 
@@ -181,6 +300,19 @@ AC_DEFUN([AC_DETERMINE_LOGGING],
 		AC_HELP_STRING([--enable-LogInfo], [Enable Miro logging information (default on)]),
 		ac_request_loginfo=$enableval,
 		ac_request_loginfo=yes)
+
+
+	AH_TEMPLATE([MIRO_NO_DEBUG], [build without debug info support.])
+	AH_TEMPLATE([MIRO_NO_LOGGING], [build without log info support.])
+
+
+	AC_DETERMINE_LOGGING
+	if test "x$ac_request_debuginfo" = xno; then
+		AC_DEFINE(MIRO_NO_DEBUG)
+	fi
+	if test "x$ac_request_loginfo" = xno; then
+		AC_DEFINE(MIRO_NO_LOGGING)
+	fi
 ])
 
 
