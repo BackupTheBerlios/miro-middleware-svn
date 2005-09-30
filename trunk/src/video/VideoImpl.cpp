@@ -104,7 +104,7 @@ namespace Miro
     QDomElement instance = *(filter_->parameters()) >>= section;
     instance.setTagName("instance");
     instance.setAttribute("type", filter_->parameters()->fullTypeName());
-    instance.setAttribute("name", filter_->name());
+    instance.setAttribute("name", filter_->name().c_str());
 
     _document = CORBA::string_dup(document.toCString());
   }
