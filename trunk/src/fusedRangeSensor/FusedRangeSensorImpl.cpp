@@ -103,7 +103,7 @@ namespace Miro {
     unsigned int i=0;    
 
     for (i=0; i<length; i++) {
-      if (string("") == subscriptions_[i].type_name) {
+      if (string("") == string(subscriptions_[i].type_name)) {
 	break;
       }
     }
@@ -118,11 +118,11 @@ namespace Miro {
   void FusedRangeSensorImpl::removeSubscription(std::string name) {
     unsigned int length=subscriptions_.length();
     for (unsigned int i=0; i<length; i++) {
-      if (name == subscriptions_[i].type_name) {
+      if (name == string(subscriptions_[i].type_name)) {
 	subscriptions_[i].type_name = CORBA::string_dup("");
       }
     }
-    while ((length>0) && (string("") == subscriptions_[length-1].type_name)) {
+    while ((length>0) && (string("") == string(subscriptions_[length-1].type_name))) {
       length--;
     }
     subscriptions_.length(length);
