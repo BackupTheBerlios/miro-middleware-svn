@@ -1,3 +1,434 @@
+2005-09-30  Rebecca Fay  <rfay@owl>
+
+	* src/fusedRangeSensor/FusedRangeSensorImpl.cpp:
+	some more string changes
+
+	* src/video/VideoImpl.cpp:
+	converted some what ever string to c_str, so that it compiles on my computer. i hope it will still compile on other computers...
+
+2005-09-29  Gerd Mayer  <gmayer@owl>
+
+	* config/Make-rules, config/conditionals.m4, configure.ac, miro-config.in:
+	now a script is made during bootstrap/configure which can be used by derived projects to determine how miro is built (try for example $MIRO_ROOT/miro-config --version).
+
+	for convenience, the script can also be used to check for ace/tao and qt stuff. there is no need to search them again and again (not very standard-like, but useful as long as all these projects use there own, weird build system).
+
+	additional clean up in some files
+
+	* bin/.cvsignore, .cvsignore: add a couple of ignore files
+	 CVS: ----------------------------------------------------------------------
+
+	* src/miro/Makefile.am:
+	remove BuiltIn.h entry. Otherwise it will be removed after a make clean
+
+2005-09-28  Gerd Mayer  <gmayer@owl>
+
+	* botsvcs/MCL/ParticleFilterT.cpp:
+	change include to local localization idl file
+
+2005-09-27  Hans Utz  <hutz@owl>
+
+	* botsvcs/MCL/ParticleFilterT.cpp:
+	removing stale include to removed nix file
+
+2005-09-26  Gerd Mayer  <gmayer@owl>
+
+	* src/fusedRangeSensor/Makefile.am:
+	reorder comments so we do not longer get a warning. this fools the bootstrap script otherwise
+
+	* src/miro/TimeSeries.h: add missing include for older ace-versions
+
+2005-09-23  Hans Utz  <hutz@owl>
+
+	* doc/tex/definitions.tex, doc/tex/install.tex, doc/tex/miro_manual.tex, doc/tex/new_project.tex, doc/tex/tex_definitions.tex:
+	some minor updates on the documentation
+
+	* botsvcs/Makefile.am: adding MCL directory to compile process
+	TODO: provide test and example code
+
+	* idl/.cvsignore, idl/Localization.idl, idl/Makefile.am:
+	adding a basic localization interface
+
+	* configure.ac: adding MCL directory to bootstrap process
+
+	* botsvcs/MCL/.cvsignore, botsvcs/MCL/Feature.cpp, botsvcs/MCL/Feature.h, botsvcs/MCL/FeatureManagementI.cpp, botsvcs/MCL/FeatureManagementI.h, botsvcs/MCL/FeatureManager.cpp, botsvcs/MCL/FeatureManager.h, botsvcs/MCL/FeatureRepository.cpp, botsvcs/MCL/FeatureRepository.h, botsvcs/MCL/Makefile.am, botsvcs/MCL/MotionModelT.h, botsvcs/MCL/ObservationModelT.h, botsvcs/MCL/ParticleFilter.h, botsvcs/MCL/ParticleFilterT.cpp, botsvcs/MCL/Sample.h, botsvcs/MCL/SampleFactoryT.h, botsvcs/MCL/WorldModel.cpp, botsvcs/MCL/WorldModel.h:
+	addin generic particle filter for localization
+
+	* templates/Makefile.am.lib.so: fixing makefile template
+
+	* performance-tests/nmc/NMCConsumer.cpp, performance-tests/nmc/NotifyPerformance.cpp:
+	adding option for latency testing (TODO)
+
+	* examples/sonar/SonarPoll1.cpp:
+	removing unnecessary header that broke documentation line references
+
+	* botsvcs/BAP/ConstraintArbiter.cpp, botsvcs/BAP/VelocitySpace.cpp:
+	propagating TimeSeries cleanup
+
+	* src/video/VideoDevice.cpp, src/video/VideoFilter.cpp, src/video/VideoFilter.h:
+	propagating time series cleanup
+
+	* src/panTilt/PanTiltConsumer.cpp, src/panTilt/PanTiltEventHandler.cpp:
+	converting to new log machinery
+
+	* src/msp/MspEventHandler.cpp: converting debug output to LOG machinery
+
+	* src/laser/Makefile.am, src/laser/SickLaserMessage.cpp, src/laser/SickLaserMessage.h:
+	splitting laser message header into header and implementation
+	cleaning up debug macro usage
+
+	* src/faulTty/FaulTtyEventHandler.cpp:
+	converting debug output to LOG macros
+
+	* src/base/BaseConnection.cpp, src/base/BaseConnection.h:
+	cleaning up base connection
+	adding iostream header as needed
+	moving inline method into cpp file
+
+	* src/miro/.cvsignore, src/miro/Angle.cpp, src/miro/Angle.h, src/miro/Angle.i, src/miro/BuiltIn.h, src/miro/Exception.cpp, src/miro/Exception.h, src/miro/Log.cpp, src/miro/Log.h, src/miro/Makefile.am, src/miro/Random.cpp, src/miro/Random.h, src/miro/ScanDescriptionHelper.cpp, src/miro/ScanDescriptionHelper.h, src/miro/TimeHelper.cpp, src/miro/TimeHelper.h, src/miro/TimeSeries.cpp, src/miro/TimeSeries.h:
+	cleanup in the directory
+	adding base functionality for inclusion of MCL to Miro/botsvcs
+	- using <iosfwd> instead of <iostream> to cut down header inclusion
+	  (need to test with old compiler versions...)
+	- cleaning up and documenting TimeSeries class
+	- adding now log filters: MCL and BAP
+	  (need to thing about a design that omits the need for changing log.h
+	  on such occasions...)
+	- splitting Angle.h into header and inline file
+	- adding a random number lookup table class
+	- adding a header file of wrapper macros for builtin functions of gcc
+	  which tend to change with different compiler versions
+
+2005-09-08  Guillem Pages  <guillem@owl>
+
+	* src/fusedRangeSensor/FusedRangeSensorImpl.cpp:
+	Oops, forgot that one cannot initialize deleted variables :-p
+	There is no point anyway if they are unused.
+
+2005-09-06  Guillem Pages  <guillem@owl>
+
+	* tests/fusedRangeSensor/FusedRangeSensorTest.cpp, src/fusedRangeSensor/FusedRangeSensorImpl.cpp, src/fusedRangeSensor/FusedRangeSensorImpl.h, idl/FusedRangeSensor.idl:
+	Added AVERAGE fusion method.
+	  It doesn't make much sense to fuse sensors that way, but you never know...
+	Reimplemented the fusion itself, to solve a bug in the linear interpolation.
+	  Once a sensor bunch came, it was interpolated, and the next one had to
+	   compete with the interpolated values. In case of the back 180º of the laser,
+	   it prevented the sonar to get meaningful values.
+
+2005-09-01  Hans Utz  <hutz@owl>
+
+	* tests/notifyMulticast/README:
+	changing to a slightly simpler version of multicast testing
+
+2005-08-27  Hans Utz  <hutz@owl>
+
+	* doc/tex/video.tex, doc/tex/writing_a_client.tex:
+	fixes for new latex package
+
+2005-08-24  Hans Utz  <hutz@owl>
+
+	* tests/notifyMulticast/README:
+	added a walk through for the multicast adapter
+
+	* tests/notifyMulticast/MulticastAdapter.cpp:
+	printing parameters instead of their pointer values...
+
+	* tests/notifyMulticast/MulticastAdapter.cpp:
+	adding parameter output stuff
+
+	* tests/notifyMulticast/.cvsignore, tests/notifyMulticast/Makefile.am, tests/notifyMulticast/MulticastAdapter.cpp, tests/notifyMulticast/README:
+	added a stand alone multicast module
+
+2005-08-24  Guillem Pages  <guillem@owl>
+
+	* tests/fusedRangeSensor/FusedRangeSensorTest.cpp:
+	Made "Fused" default sensor (it does not work with other sensors anyway).
+	Kept the parameter optional for consistence with RangeSensorTest
+
+2005-08-19  Hans Utz  <hutz@owl>
+
+	* tests/motion/SynchroMotionInterface.cpp:
+	propagating interface method name changes
+
+	* src/pioneer/Parameters.xml:
+	fully qualifying parameter type name for disambiguation in config editor
+
+	* src/b21Base/BaseDummy.cpp, src/b21Base/BaseDummy.h:
+	removing ancient unused files
+
+	* src/base/BaseDummyImpl.cpp, src/base/BaseDummyImpl.h, src/base/BaseImpl.cpp, src/base/BaseImpl.h:
+	propagating name changes for synchro motion interface methods
+
+	* src/miro/DifferentialMotionImpl.cpp, src/miro/DifferentialMotionImpl.h, src/miro/Makefile.am:
+	cleaning up differential motion partial default implementation
+
+	* idl/SynchroMotion.idl:
+	cleaning up naming of synchro motion interface methods
+
+2005-08-15  Gerd Mayer  <gmayer@owl>
+
+	* config/features_ace.m4:
+	changes necessary for newer ACE+TAO versions. Should be no problem with other/older versions
+
+2005-08-05  Guillem Pages  <guillem@owl>
+
+	* tests/fusedRangeSensor/.cvsignore: Oops, forgot something ;-)
+
+	* bin/.cvsignore, configure.ac, idl/.cvsignore, idl/FusedRangeSensor.idl, idl/Makefile.am, src/Makefile.am, src/fusedRangeSensor/.cvsignore, src/fusedRangeSensor/FusedRangeSensor.cpp, src/fusedRangeSensor/FusedRangeSensor.h, src/fusedRangeSensor/FusedRangeSensorImpl.cpp, src/fusedRangeSensor/FusedRangeSensorImpl.h, src/fusedRangeSensor/Makefile.am, src/fusedRangeSensor/Parameters.xml, tests/Makefile.am, tests/fusedRangeSensor/FusedRangeSensorTest.cpp, tests/fusedRangeSensor/Makefile.am, tests/fusedRangeSensor/README:
+	Added a derived range sensor, which fuses other range sensors into a
+	 single sensor (Fused).
+	Currently it chooses the minimum of the n values for a given angle.
+	Values not provided by any sensor can be either masked or interpolated.
+
+	* examples/player/pioneers.world: Ordered robots by id
+
+2005-07-27  Guillem Pages  <guillem@owl>
+
+	* src/laser/Parameters.xml:
+	Set the default "unmasked" in the constructor
+
+2005-07-27  Coyote  <coyote@owl>
+
+	* performance-tests/nmc/NotifyPerformance.cpp:
+	restoring none-latency measurment configuration
+
+2005-07-27  Verteidiger  <roadrunner@owl>
+
+	* examples/notify/GenericNotify.cpp: adding logging initialization
+
+2005-07-27  speedy  <speedy@owl>
+
+	* performance-tests/nmc/PayloadConsumer.cpp:
+	more verbosity in latency output
+
+2005-07-15  Hans Utz  <hutz@owl>
+
+	* src/miro/LogTypeRepository.h:
+	ensuring compability with newer TAO version
+
+	* utils/configEditor/ConfigEditor.cpp, utils/configEditor/MainWindow.cpp, utils/configEditor/MainWindow.h, utils/widgets/DocumentView.cpp, utils/widgets/DocumentView.h, utils/widgets/DocumentXML.cpp, utils/widgets/DocumentXML.h:
+	adding set parameters functionality to config editor
+	you need to start ConfigEditor with -MiroNoNaming if you are in
+	an environment with no running naming service
+
+	* src/video/DeviceAsynchBufferSet.h, src/video/DeviceAsynchLinkManager.h, src/video/Parameters.xml, src/video/VideoConsumer.cpp, src/video/VideoConsumer.h, src/video/VideoDeviceQuickCam.cpp, src/video/VideoFilter.cpp, src/video/VideoFilter.h, src/video/VideoFilterRGBtoSeg.cpp, src/video/VideoImpl.cpp, src/video/VideoImpl.h, src/video/VideoServer.cpp:
+	committing synch jitter patches - need to redo tests
+	adding reinitialization capabilities for filter parameters
+
+	* src/miro/ConfigDocument.cpp, src/miro/ConfigDocument.h:
+	allowing to instanciate a config document with a QDomDocument
+
+	* src/params/Type.cpp:
+	extending parameter type functionality by typeName query method
+
+	* idl/Config.idl: adding exceptions for setParameters
+
+2005-07-14  Hans Utz  <hutz@owl>
+
+	* templates/Makefile.am.bin: fixing makefile template
+
+	* configure.ac: added the test directory
+
+	* tests/Makefile.am, tests/config/.cvsignore, tests/config/ConfigTest.cpp, tests/config/Makefile.am:
+	added a test for configuration parameter interfacing
+
+	* src/video/VideoImpl.cpp, src/video/VideoImpl.h:
+	implemented the query for the video interface
+	(not yet complete)
+
+	* idl/.cvsignore, idl/Config.idl, idl/Makefile.am, idl/Video.idl:
+	added an interface for generic parameter queries
+
+2005-07-08  Hans Utz  <hutz@owl>
+
+	* performance-tests/nmc/NMCConsumer.cpp, performance-tests/nmc/NotifyPerformance.cpp, performance-tests/nmc/PayloadConsumer.cpp:
+	adding latency testing
+
+2005-07-08  Gonzales  <gonzales@owl>
+
+	* performance-tests/nmc/NotifyPerformance.cpp:
+	delaying the work by one second to allow to start other
+	things before flooding the network
+
+2005-07-08  speedy  <speedy@owl>
+
+	* performance-tests/nmc/NMCConsumer.cpp:
+	clearing message timout, as we want to receive everything
+
+2005-07-07  Hans Utz  <hutz@owl>
+
+	* performance-tests/nmc/NMCConsumer.cpp:
+	forgot break in case statement for the second time today :-(
+
+	* performance-tests/nmc/NMCConsumer.cpp, performance-tests/nmc/NotifyPerformance.cpp, performance-tests/nmc/PayloadConsumer.cpp, performance-tests/nmc/PayloadConsumer.h:
+	allowing to subscribe for events from other robots
+
+	* performance-tests/nmc/NMCConsumer.cpp, performance-tests/nmc/NotifyPerformance.cpp:
+	adding config file support to ease distributed testing
+
+	* performance-tests/nmc/PayloadConsumer.cpp, performance-tests/nmc/PayloadConsumer.h:
+	forgot the consumer files :-(
+
+	* configure.ac: adding a new test
+
+	* performance-tests/Makefile.am, performance-tests/nmc/.cvsignore, performance-tests/nmc/Makefile.am, performance-tests/nmc/NMCConsumer.cpp, performance-tests/nmc/NotifyPerformance.cpp, performance-tests/nmc/Payload.idl, performance-tests/nmc/SharedBeliefState.idl:
+	added a new test for nmc/notification service evaluation
+
+2005-06-27  Guillem Pages  <guillem@owl>
+
+	* src/miro/Infinity.h, src/miro/SvcParameters.xml:
+	Ugly dirty patch to keep it compiling on stan / gcc 2.95
+
+2005-06-23  Rebecca Fay  <rfay@owl>
+
+	* src/video/VideoFilter.h:
+	some changes that Gerd made for me to the macro stuff ;-)
+
+2005-06-23  Guillem Pages  <guillem@owl>
+
+	* src/gps/GpsService.cpp:
+	Removed a TAO "chosing xxx over yyy " warning (xxx_var.in())
+
+	* doc/tex/servers.tex, etc/stanleft.xml, src/laser/Parameters.xml, src/laser/SickLaserConnection.cpp, src/laser/SickLaserConnection.h, src/laser/SickLaserEvent.cpp, src/laser/SickLaserMessage.h, src/laser/SickLaserService.cpp, src/laser/SickLaserTask.cpp, src/laser/SickLaserTask.h:
+	Applied Ingo's Laser patch.
+	Now the laser can be used in both 100 and 180 deg. fov mode.
+	Should also be byte order independant.
+	And some other improvements...
+
+2005-06-17  Guillem Pages  <guillem@owl>
+
+	* tests/cameraControl/CameraControlTest.cpp:
+	Added some #ifdef's to the specific canon/sony parts (Pioneer related stuff)
+
+2005-06-16  Hans Utz  <hutz@owl>
+
+	* src/gps/GpsEventHandler.cpp, src/gps/GpsEventHandler.h:
+	applied ingos patch, some cleanup on names and on member variables
+
+2005-06-10  Gerd Mayer  <gmayer@owl>
+
+	* src/miro/VideoHelper.cpp, idl/Video.idl:
+	add another "color space" named INVALID (internally handled as gray value)
+
+2005-06-09  Gerd Mayer  <gmayer@owl>
+
+	* src/video/VideoDeviceBTTV.cpp:
+	change bttv driver to work with 2.4 _and_ 2.6 kernel
+
+2005-06-07  Guillem Pages  <guillem@owl>
+
+	* idl/SonyCameraControl.idl, src/pioneer/SonyCameraControlImpl.cpp, src/pioneer/SonyCameraControlImpl.h, src/pioneer/SonyMessage.cpp, src/pioneer/SonyMessage.h, src/pioneer/SonyPanTiltImpl.cpp, src/pioneer/SonyPanTiltImpl.h:
+	Oops. As I commited Ingo's patch I forgot to add the new files. Sorry about that.
+	It did compile on my computer ;-)
+
+2005-06-06  Guillem Pages  <guillem@owl>
+
+	* doc/tex/servers.tex, idl/.cvsignore, idl/Makefile.am, src/miro/SvcParameters.xml, src/pioneer/CameraMessage.cpp, src/pioneer/Makefile.am, src/pioneerBase/PioneerBase.cpp, src/pioneerBase/PioneerBase.h, src/psos/PsosConnection.cpp, tests/cameraControl/CameraControlTest.cpp:
+	Applied Ingo's Sony Camera Patch. Should not break compatibility...
+
+	* src/playerBase/Parameters.xml:
+	Trying to unmask laser values by default
+
+2005-06-03  Gerd Mayer  <gmayer@owl>
+
+	* bin/.cvsignore, botsvcs/BAP/Makefile.am, botsvcs/examples/BAP/b21/Makefile.am, botsvcs/examples/BAP/engine/Makefile.am, botsvcs/examples/BAP/rangeSensor/Makefile.am, botsvcs/examples/BAP/simple/Makefile.am, botsvcs/tests/BAP/dynamicPolicy/Makefile.am, botsvcs/tests/BAP/engine/Makefile.am, botsvcs/tests/BAP/lib/Makefile.am, botsvcs/tests/BAP/monitor/Makefile.am, botsvcs/tests/BAP/parsing/Makefile.am, botsvcs/tests/BAP/priorityArbiter/Makefile.am, config/Make-rules, examples/b21Motion/Makefile.am, examples/battery/Makefile.am, examples/buttons/Makefile.am, examples/gps/Makefile.am, examples/infrared/Makefile.am, examples/motion/Makefile.am, examples/notify/Makefile.am, examples/odometry/Makefile.am, examples/params/Makefile.am, examples/rangeSensor/Makefile.am, examples/robotikI/Makefile.am, examples/sonar/Makefile.am, examples/speechSimple/Makefile.am, examples/stall/Makefile.am, examples/video/Makefile.am, examples/videoFilter/Makefile.am, idl/Makefile.am, performance-tests/can/Makefile.am, performance-tests/faul/Makefile.am, performance-tests/logging/Makefile.am, performance-tests/mcp/Makefile.am, performance-tests/panTilt/Makefile.am, performance-tests/response/Makefile.am, performance-tests/video/Makefile.am, src/abus/Makefile.am, src/b21Base/Makefile.am, src/base/Makefile.am, src/buttons/Makefile.am, src/can/Makefile.am, src/faulMotor/Makefile.am, src/faulTty/Makefile.am, src/gps/Makefile.am, src/makeParams/Makefile.am, src/mcp/Makefile.am, src/msp/Makefile.am, src/panTilt/Makefile.am, src/params/Makefile.am, src/pioneer/Makefile.am, src/pioneerBase/Makefile.am, src/playerBase/Makefile.am, src/psos/Makefile.am, src/sparrow/Makefile.am, src/sparrowBase/Makefile.am, src/speech/Makefile.am, src/sphinx/Makefile.am, src/video/Makefile.am, tests/b21/Makefile.am, tests/cameraControl/Makefile.am, tests/dpPanTilt/Makefile.am, tests/dtlk/Makefile.am, tests/faul/Makefile.am, tests/gripper/Makefile.am, tests/kicker/Makefile.am, tests/log/Makefile.am, tests/motion/Makefile.am, tests/notify/Makefile.am, tests/notifyMulticast/Makefile.am, tests/odometry/Makefile.am, tests/panTilt/Makefile.am, tests/pioneer/Makefile.am, tests/rangeSensor/Makefile.am, tests/sparrow/Makefile.am, tests/speech/Makefile.am, tests/sphinx/Makefile.am, tests/video/Makefile.am, tests/videoBroker/.cvsignore, tests/videoBroker/Makefile.am, tests/xml/Makefile.am, utils/Joystick/Makefile.am, utils/configEditor/Makefile.am, utils/logPlayer/Makefile.am, utils/makeConfig/Makefile.am, utils/notify/Makefile.am, utils/notifyObserver/Makefile.am, utils/nsIOR/Makefile.am, utils/policyController/Makefile.am, utils/policyEditor/Makefile.am, utils/qtJoystick/Makefile.am, utils/qtTouchPad/Makefile.am, utils/qtVideo/Makefile.am, utils/rangeSensor/Makefile.am, utils/sparrowBoard/Makefile.am, utils/widgets/Makefile.am:
+	replace CPPFLAGS with AM_CPPFLAGS to get rid of annoying warnings on bootstrap
+
+	* all.h.sh:
+	do not include the i.h files into the global include file, as this can cause problems with mulitple definitions
+	do not include config.h files from other projects to reduce warnings.
+
+	* src/faulMotor/TimerEventHandler.h: add missing include guard
+
+2005-06-02  Gerd Mayer  <gmayer@owl>
+
+	* all.h.sh: prevent unnecessary entries in the global pch-include file
+
+2005-06-02  Uli Kaufmann  <uli@owl>
+
+	* etc/eve.xml: add camera parameters not very good :-)
+
+2005-06-02  Gerd Mayer  <gmayer@owl>
+
+	* botsvcs/examples/BAP/simple/Makefile.am, botsvcs/tests/BAP/lib/Makefile.am, examples/params/Makefile.am, examples/videoFilter/Makefile.am, src/base/Makefile.am, src/can/Makefile.am, src/faulMotor/Makefile.am, src/gps/Makefile.am, src/laser/Makefile.am, src/mcp/Makefile.am, src/miro/Makefile.am, src/msp/Makefile.am, src/panTilt/Makefile.am, src/pioneer/Makefile.am, src/playerBase/Makefile.am, src/psos/Makefile.am, src/sparrow/Makefile.am, src/video/Makefile.am, botsvcs/BAP/Makefile.am, botsvcs/examples/BAP/b21/Makefile.am, botsvcs/examples/BAP/rangeSensor/Makefile.am:
+	add a couple of dependencies for the xml files, so parallel builds should work again
+
+	* bootstrap: add minimal required version for libtool too
+
+2005-05-31  Uli Kaufmann  <uli@owl>
+
+	* etc/eve.xml: video:
+	remove FilterFlip
+	add FlippIpp
+
+	add infrared section
+
+2005-05-25  Hans Utz  <hutz@owl>
+
+	* etc/PioneerDefault.xml, etc/PpbDefault.xml:
+	more debugging on parameter files using the config editor
+
+	* etc/PpbDefault.xml, etc/SparrowDefault.xml, etc/eve.xml:
+	fixing parameter settings for video devices
+
+2005-05-19  Guillem Pages  <guillem@owl>
+
+	* CONFIG, CONFIGURATION:
+	Rename CONFIG to CONFIGURATION to avoid name conflict with directory config
+	 on M$ Windows. I know it is utterly senseless, but at least a simple cvs co
+	 will be possible now ;-)
+
+2005-05-18  Guillem Pages  <guillem@owl>
+
+	* src/mcp/McpEventHandler.cpp, src/mcp/McpEventHandler.h:
+	Solved the millenium bug.
+	Message was changed sometime in the past and changes were never ported.
+	Should work now.
+
+	* src/miro/DevEventHandler.cpp: Typo in comment
+
+2005-05-09  Guillem Pages  <guillem@owl>
+
+	* src/pioneer/CanonCameraImpl.cpp:
+	Also changed the deprecated interface from short to float.
+	Should not break the (probably not existing anymore) compatibility; only raise warnings
+
+2005-05-06  Guillem Pages  <guillem@owl>
+
+	* idl/CameraControl.idl, src/miro/CameraControlImpl.cpp, src/miro/CameraControlImpl.h, src/pioneer/CanonCameraControlImpl.cpp, src/pioneer/CanonCameraControlImpl.h:
+	Changed the focus interface from short to float, to allow for infinity values
+
+2005-05-04  speedy  <speedy@owl>
+
+	* tests/videoBroker/Makefile.am, tests/videoBroker/VideoBrokerTestBrief.cpp:
+	add another (not so verbose) version of videobrokertest
+
+2005-05-04  Guillem Pages  <guillem@owl>
+
+	* src/miro/PanImpl.h, src/miro/TiltImpl.h:
+	Comparing floats with floats; not with doubles
+
+2005-05-02  Guillem Pages  <guillem@owl>
+
+	* idl/.cvsignore:
+	Removed the Image and ImageDefinition stubs/skeletons from cvsignore.
+	Thei should not be ignored; they should be removed.
+
+	* bin/.cvsignore:
+	Removed some deprecated, discontinued and removed programs from .cvsignore (image).
+	If their sources are not any longer in the source tree, a user should remove
+	 them and not ignore the cvs warnings.
+	Also included the DummyBehaviourEngine
+
+2005-04-29  Guillem Pages  <guillem@owl>
+
+	* src/gps/GpsImpl.cpp: Stan doesn't know about NAN.
+	done a conditional include for gcc 2.95.x
+
+2005-04-29  Gerd Mayer  <gmayer@owl>
+
+	* ChangeLog: correct ChangeLog
+
 2005-04-28  Gerd Mayer  <gmayer@owl>
 
 	* pch/Makefile.am: all.h should not be deleted by a make clean
