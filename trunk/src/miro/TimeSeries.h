@@ -18,18 +18,18 @@
 
 #include <iosfwd>
 
-#ifdef MIRO_PERFORMANCE_LOGGING
+#ifndef MIRO_NO_PERFORMANCE_LOGGING
 
 #define MIRO_TIME_SERIES(x, y) \
   Miro::TimeSeries<> x(y)
 #define MIRO_TIME_SERIES_N(x, y, n) \
   Miro::TimeSeries<n> x(y)
 #define  MIRO_TIME_PROBE_START(x) \
-  do {x.start()} while(false)
+  do {x.start();} while(false)
 #define MIRO_TIME_PROBE_DONE(x) \
-  do {x.done()} while(false)
+  do {x.done();} while(false)
 
-#else //!MIRO_PERFORMANCE_LOGGING
+#else //!MIRO_NO_PERFORMANCE_LOGGING
 
 #define MIRO_TIME_SERIES(x, y)
 #define MIRO_TIME_SERIES_N(x, y, n) 
