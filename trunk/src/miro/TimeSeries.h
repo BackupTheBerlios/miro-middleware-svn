@@ -72,8 +72,10 @@ namespace Miro
     void start(ACE_Time_Value const& _stamp = ACE_OS::gettimeofday()) throw();
     //! Stop the time proble.
     void done(ACE_Time_Value const& _stamp = ACE_OS::gettimeofday()) throw();
-
-    //! Evaluate the time series
+    
+    //! Query last value.
+    ACE_Time_Value const& last() const throw();
+    //! Evaluate statistics.
     void eval(TimeStats& _stats) const throw();
     //! Return the size of the histogram
     unsigned int size() const throw();
@@ -158,6 +160,16 @@ namespace Miro
       next_ = begin_;
       full_ = true;
     }
+  }
+
+  template<unsigned int N>
+  ACE_Time_Value const&
+  TimeSeries<N>::last() const throw() {
+    ACE_Time_Value * l = next_;
+    if (l == begin_)
+      l = end_;
+    --l;
+    return *l;
   }
 
   template<unsigned int N>
