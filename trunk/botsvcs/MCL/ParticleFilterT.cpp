@@ -181,7 +181,7 @@ namespace Miro
       update();
       if (evalStatistics()) {
 	updating_.done();
-	//	Miro::timeA2C(updating.mean(), statistics_.updateTime);
+	Miro::timeA2C(updating_.last(), statistics_.updateTime);
       }
 
       // selecting samples
@@ -190,7 +190,7 @@ namespace Miro
       select();
       if (evalStatistics()) {
 	selecting_.done();
-	//	Miro::timeA2C(selecting.mean(), statistics_.selectTime);
+	Miro::timeA2C(selecting_.last(), statistics_.selectTime);
       }
 
       // choosing new position hypthesis
@@ -203,7 +203,7 @@ namespace Miro
       }    
       if (evalStatistics()) {
 	choosing_.done();
-	//	Miro::timeA2C(choosing.mean(), statistics_.hypothesisTime);
+	Miro::timeA2C(choosing_.last(), statistics_.hypothesisTime);
       }
       return num;
     }
