@@ -25,15 +25,6 @@ laser_include_HEADERS = \
 	FusedRangeSensorImpl.h \
 	Parameters.h
 
-#	SickLaserConnection.h \
-#	SickLaserTask.h \
-#	SickLaserPollTask.h \
-#	SickLaserEvent.h \
-#	SickLaserImpl.h \
-#	SickLaserMessage.h \
-#	SickLaserStatistic.h \
-#	SickLaserOpcodes.h
-
 FusedRangeSensor_SOURCES = \
 	Parameters.cpp \
 	FusedRangeSensorImpl.cpp \
