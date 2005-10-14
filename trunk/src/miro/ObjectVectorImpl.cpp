@@ -42,13 +42,17 @@ namespace Miro
   ObjectVectorImpl::getObjectVector(ObjectType _objectType) throw()
   {
     int num; 
+
     if (_objectType == FIRST) 
       num = 0;
     else
       num = 1;
-    mirrorObject_var tmp = new mirrorObject();
-    mObj_[num]->data[0]= mObj_[num]->data[0];
-    tmp = mObj_[num];
+    mirrorObject_var tmp = new mirrorObject(mObj_[num]);
+
+//   What did this code do anyway?
+//    mObj_[num]->data[0]= mObj_[num]->data[0];
+//    tmp = mObj_[num];
+
     return tmp._retn();
   }
 
@@ -73,6 +77,7 @@ namespace Miro
      ACE_Time_Value objTime(ACE_OS::gettimeofday());
      timeA2C(objTime,mObj_[num]->time);
      mObj_[num]->data = _art.data;
+
   }
   //ObstImpl::setObst(mirrorObject const& _art) ACE_THROW_SPEC(())
 };
