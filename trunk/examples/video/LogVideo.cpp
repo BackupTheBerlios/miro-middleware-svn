@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
     }
     
     // get reference to video service
-    Video_var video = client.resolveName<Video>("Video");
+    Video_var video = client.resolveName<Video>(interfaceName.c_str());
     Miro::VideoConnection connection(video.in());
 
     ACE_Time_Value start;
