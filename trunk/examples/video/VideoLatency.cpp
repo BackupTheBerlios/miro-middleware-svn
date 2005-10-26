@@ -58,8 +58,7 @@ int main (int, char**)
   
     std::cout << ostr.str() << std::endl;
 
-    //ACE_OS::sleep(ACE_Time_Value(0, 1));
-    usleep(100);
+    ACE_OS::sleep(ACE_Time_Value(0, 1));
   }
   return 0;
 }
