@@ -14,6 +14,7 @@
 #include "SparrowConnection2003.h"
 
 #include "miro/StructuredPushSupplier.h"
+#include "miro/Log.h"
 
 namespace Sparrow
 {
@@ -102,11 +103,16 @@ namespace Sparrow
   {
     Miro::SparrowAliveIDL aliveIDL;
 
-    aliveIDL.MotorAlive = collector_->motorAlive();
-    aliveIDL.KickerAlive = collector_->kickAlive();
-    aliveIDL.Infrared1Alive = collector_->infrared1Alive();
-    aliveIDL.Infrared2Alive = collector_->infrared2Alive();
-    aliveIDL.PanAlive = collector_->panAlive();
+    if (!(aliveIDL.MotorAlive = collector_->motorAlive()))
+      MIRO_LOG(LL_ERROR, "Sparrow2003: motor board not alive!");
+    if (!(aliveIDL.KickerAlive = collector_->kickAlive()))
+      MIRO_LOG(LL_ERROR, "Sparrow2003: kicker board not alive!");
+    if (!(aliveIDL.Infrared1Alive = collector_->infrared1Alive()))
+      MIRO_LOG(LL_ERROR, "Sparrow2003: infrared board not alive!");
+    if (!(aliveIDL.Infrared2Alive = collector_->infrared2Alive()))
+      MIRO_LOG(LL_ERROR, "Sparrow2003: infrared board 2 not alive!");
+    if (!(aliveIDL.PanAlive = collector_->panAlive()))
+      MIRO_LOG(LL_ERROR, "Sparrow2003: pan board not alive!");
 
     connection_->writeHostAlive();
     
