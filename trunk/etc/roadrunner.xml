@@ -178,8 +178,8 @@
       <!-- OmniCam -->
 
       <instance type="Video::Parameters" name="OmniCam" >
-	<parameter value="160" name="Width" />
-	<parameter value="120" name="Height" />
+	<parameter value="320" name="Width" />
+	<parameter value="240" name="Height" />
 	<parameter value="yuv420p" name="Palette" />
 	<parameter name="Filter">
 	  <parameter value="DeviceQuickCam" name="Name" />
@@ -303,9 +303,9 @@
       </instance>
 
       <instance type="Video::FilterOmni2Pan" name="FilterOmni2Pan">
-	<parameter value="80" name="CenterX" />
-	<parameter value="61" name="CenterY" />
-	<parameter value="62" name="Radius" />
+	<parameter value="164" name="CenterX" />
+	<parameter value="122" name="CenterY" />
+	<parameter value="125" name="Radius" />
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
 	  <parameter value="Pan" name="Name" />
@@ -377,7 +377,7 @@
         <parameter value="32767" name="Contrast" />
         <parameter value="32767" name="Brightness" />
         <parameter value="32767" name="Hue" />
-        <parameter value="20" name="Framerate" />
+        <parameter value="30" name="Framerate" />
         <parameter value="0" name="DynamicNoiseReduction" />
 	<parameter value="0" name="FlickerlessMode" />
         <parameter value="0" name="BacklightCompensation" />
