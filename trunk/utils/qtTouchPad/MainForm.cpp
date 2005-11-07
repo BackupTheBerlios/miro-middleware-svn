@@ -20,6 +20,8 @@ MainForm::MainForm(int argc, char* argv[], QWidget *parent, const char *name) :
   client(argc,argv),
   mouseMoving(false)
 {
+  speed.translation = 0;
+  speed.rotation = 0;
 
   initDialog();
 
@@ -108,6 +110,90 @@ void MainForm::mouseMoveEvent(QMouseEvent * mouse)
   } catch (const Miro::EOutOfBounds& e) {
     std::cout << e << e.what << std::endl;
   }
+}
+
+void MainForm::keyPressEvent(QKeyEvent * ke)
+{
+  Miro::VelocityIDL newSpeed;
+  newSpeed.rotation = this->speed.rotation;
+  newSpeed.translation = this->speed.translation;
+  int mint,maxt;
+  double minr,maxr;
+
+  const double keySpeed = 0.8;
+
+  motion->getMinMaxVelocity(mint,maxt,minr,maxr);
+
+  int k = ke->key();
+  if (k == Key_Up) {
+    //newSpeed.translation = maxt*keySpeed;
+    newSpeed.translation = 1500;
+  } else if (k == Key_Down) {
+    //newSpeed.translation = mint*keySpeed;
+    newSpeed.translation = -1500;
+  } else if (k == Key_Left) {
+    //newSpeed.rotation = maxr*keySpeed;
+    newSpeed.rotation = 3;
+  } else if (k == Key_Right) {
+    //newSpeed.rotation = minr*keySpeed;
+    newSpeed.rotation = -3;
+  } else if (k == Key_Space) {
+    kick();
+  } else {
+    ke->ignore();
+  }
+  
+  if (newSpeed.rotation != this->speed.rotation ||
+      newSpeed.translation != this->speed.translation) {
+    this->speed.rotation = newSpeed.rotation;
+    this->speed.translation = newSpeed.translation;
+    motion->setVelocity(this->speed);
+  }
+	  
+}
+
+void MainForm::kick()
+{
+  try {
+
+    Miro::Kicker_var kicker = client.resolveName<Miro::Kicker>("Kicker");
+    ACE_Time_Value aT;
+    aT.msec(200);
+    Miro::TimeIDL cT;
+    Miro::timeA2C(aT, cT);
+    kicker->kick(cT);
+    
+  } catch (const CORBA::Exception & e) {
+    MIRO_LOG_OSTR(LL_CRITICAL, "Uncaught CORBA exception:" << std::endl << e);
+  }
+}
+
+
+void MainForm::keyReleaseEvent(QKeyEvent * ke)
+{
+  Miro::VelocityIDL newSpeed;
+  newSpeed.rotation = this->speed.rotation;
+  newSpeed.translation = this->speed.translation;
+  int k = ke->key();
+  if (k == Key_Up) {
+    newSpeed.translation = 0;
+  } else if (k == Key_Down) {
+    newSpeed.translation = 0;
+  } else if (k == Key_Left) {
+    newSpeed.rotation = 0;
+  } else if (k == Key_Right) {
+    newSpeed.rotation = 0;
+  } else {
+    ke->ignore();
+  }
+  
+  if (newSpeed.rotation != this->speed.rotation ||
+      newSpeed.translation != this->speed.translation) {
+    this->speed.rotation = newSpeed.rotation;
+    this->speed.translation = newSpeed.translation;
+    motion->setVelocity(this->speed);
+  }
+
 }
 
 void MainForm::paintEvent(QPaintEvent * /*pe*/)

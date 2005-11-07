@@ -17,7 +17,10 @@
 #include <qpushbutton.h>
 
 #include "miro/Client.h"
+#include "miro/TimeHelper.h"
+#include "miro/Log.h"
 #include "idl/MotionC.h"
+#include "idl/KickerC.h"
 
 class QPad : public QWidget {
 protected:
@@ -48,6 +51,11 @@ protected:
   virtual void mousePressEvent(QMouseEvent * mouse);
   virtual void mouseReleaseEvent(QMouseEvent * mouse);
   virtual void mouseMoveEvent(QMouseEvent * mouse); 
+  virtual void keyPressEvent(QKeyEvent * ke); 
+  virtual void keyReleaseEvent(QKeyEvent * ke); 
+  Miro::VelocityIDL speed;
+
+  void kick();
   
   Miro::Client client;
   Miro::Motion_var motion;
