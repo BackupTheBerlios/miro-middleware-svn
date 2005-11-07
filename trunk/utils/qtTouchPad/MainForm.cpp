@@ -120,7 +120,7 @@ void MainForm::keyPressEvent(QKeyEvent * ke)
   int mint,maxt;
   double minr,maxr;
 
-  const double keySpeed = 0.8;
+  const double keySpeed = 0.5;
 
   motion->getMinMaxVelocity(mint,maxt,minr,maxr);
 
