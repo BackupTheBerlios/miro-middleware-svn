@@ -188,9 +188,9 @@ namespace GPS
     dilution_.dilution.vdop = NAN;
     dilution_.dilution.pdop = NAN;
 
-    reference_.latitude = NAN;
-    reference_.longitude = NAN;
-    reference_.altitude = NAN;
+    reference_.latitude = parameters_.reference_latitude;
+    reference_.longitude = parameters_.reference_longitude;
+    reference_.altitude = parameters_.reference_altitude;
     MIRO_LOG_CTOR_END("GPS::GpsImpl");
   }
 

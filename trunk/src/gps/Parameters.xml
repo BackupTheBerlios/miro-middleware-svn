@@ -11,6 +11,9 @@
       <config_parameter name="device" type="string" inherited="true" default="/dev/ttyS1" />
       <config_parameter name="receiverType" type="string" default="generic" />
       <config_parameter name="nmeaNotify" type="vector&lt;std::string&gt;" />
+      <config_parameter name="reference_latitude" type="double" default="NAN" />      
+      <config_parameter name="reference_longitude" type="double" default="NAN" />      
+      <config_parameter name="reference_altitude" type="double" default="NAN" />      
     </config_item>
   </config_group>
 </config>
