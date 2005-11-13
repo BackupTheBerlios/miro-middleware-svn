@@ -55,7 +55,9 @@ protected:
   virtual void keyReleaseEvent(QKeyEvent * ke); 
   Miro::VelocityIDL speed;
 
-  void kick();
+#ifdef MIRO_HAS_SPARROW99
+  inline void kick();
+#endif
   
   Miro::Client client;
   Miro::Motion_var motion;

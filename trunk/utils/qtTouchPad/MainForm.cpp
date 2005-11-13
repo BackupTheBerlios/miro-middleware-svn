@@ -121,24 +121,23 @@ void MainForm::keyPressEvent(QKeyEvent * ke)
   double minr,maxr;
 
   const double keySpeed = 0.5;
+  const double keyRotation = 0.3;
 
   motion->getMinMaxVelocity(mint,maxt,minr,maxr);
 
   int k = ke->key();
   if (k == Key_Up) {
-    //newSpeed.translation = maxt*keySpeed;
-    newSpeed.translation = 1500;
+    newSpeed.translation = maxt*keySpeed;
   } else if (k == Key_Down) {
-    //newSpeed.translation = mint*keySpeed;
-    newSpeed.translation = -1500;
+    newSpeed.translation = mint*keySpeed;
   } else if (k == Key_Left) {
-    //newSpeed.rotation = maxr*keySpeed;
-    newSpeed.rotation = 3;
+    newSpeed.rotation = maxr*keyRotation;
   } else if (k == Key_Right) {
-    //newSpeed.rotation = minr*keySpeed;
-    newSpeed.rotation = -3;
+    newSpeed.rotation = minr*keyRotation;
+#ifdef MIRO_HAS_SPARROW99
   } else if (k == Key_Space) {
     kick();
+#endif
   } else {
     ke->ignore();
   }
@@ -152,7 +151,8 @@ void MainForm::keyPressEvent(QKeyEvent * ke)
 	  
 }
 
-void MainForm::kick()
+#ifdef MIRO_HAS_SPARROW99
+inline void MainForm::kick()
 {
   try {
 
@@ -167,7 +167,7 @@ void MainForm::kick()
     MIRO_LOG_OSTR(LL_CRITICAL, "Uncaught CORBA exception:" << std::endl << e);
   }
 }
-
+#endif
 
 void MainForm::keyReleaseEvent(QKeyEvent * ke)
 {
