@@ -94,9 +94,13 @@ miro_export_qt_cflags="${QT_CFLAGS}"
 miro_export_qt_ldflags="${QT_LDFLAGS}"
 miro_export_qt_libs="${QT_LIBS}"
 
-miro_export_cflags="-I${prefix}/src -I${prefix} -I${includedir}"
-miro_export_ldflags="-L${libdir}"
-miro_export_libs="-lmiroVideo -lmiroIDL -lmiro ${prefix}/lib/libmiroSvc.a"
+if test "x$prefix" == xNONE; then
+	miro_export_cflags="-I${PWD}/src -I${PWD} -I${PWD}/include"; 
+	miro_export_ldflags="-L${PWD}/lib";
+	miro_export_libs="-lmiroVideo -lmiroIDL -lmiro ${PWD}/lib/libmiroSvc.a"; else
+	miro_export_cflags="-I${prefix}/src -I${prefix} -I${includedir}"; 
+	miro_export_ldflags="-L${libdir}";
+	miro_export_libs="-lmiroVideo -lmiroIDL -lmiro ${libdir}/libmiroSvc.a"; fi
 if test "x$ac_miro_has_1394" == xyes; then miro_export_libs="$miro_export_libs -lraw1394 -ldc1394_control"; fi
 if test "x$ac_compile_player" == xyes; then miro_export_libs="$miro_export_libs ${PLAYER_LDFLAGS} ${PLAYER_LIBS}"; fi
 
@@ -217,6 +221,7 @@ AC_CONFIG_FILES([Makefile
                  utils/qtJoystick/Makefile
                  utils/qtTouchPad/Makefile
                  utils/qtVideo/Makefile
+                 utils/qtBroker/Makefile
                  utils/rangeSensor/Makefile
                  utils/widgets/Makefile
 		 utils/notifyObserver/Makefile
