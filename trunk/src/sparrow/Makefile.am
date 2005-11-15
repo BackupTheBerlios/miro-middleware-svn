@@ -44,9 +44,12 @@ libsparrow_a_SOURCES = $(sources)
 BUILT_SOURCES = Parameters.cpp Parameters.h
 CLEANFILES = $(BUILT_SOURCES)
 
+extraheader = \
+	SparrowDevice.h
+
 includefiles1 = $(sources:.xml=.h)
 includefiles2 = $(includefiles1:.cpp=.h)
-sparrow_include_HEADERS = $(includefiles2)
+sparrow_include_HEADERS = $(includefiles2) $(extraheader)
 
 EXTRA_DIST = \
 	IRLookupTable.h \

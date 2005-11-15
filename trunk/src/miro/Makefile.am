@@ -113,6 +113,7 @@ libmiroSsh_a_CPPFLAGS = -include $(top_builddir)/pch/all_static.h $(CPPFLAGS) $(
 endif
 
 extraheader = \
+	Angle.i \
 	Repository.h \
 	Factory.h \
 	Singleton.h \
@@ -123,7 +124,10 @@ extraheader = \
 	NotifyMulticastRequestIndex.h \
 	NotifyMulticastDefines.h \
 	NotifyMulticast.h \
-	Utils.h 
+	Utils.h \
+	Infinity.h \
+	BuiltIn.h \
+	PanTiltBase.h
 
 BUILT_SOURCES = \
 	Parameters.cpp Parameters.h \

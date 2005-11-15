@@ -34,7 +34,11 @@ libmiroMCL_la_SOURCES = $(sources)
 extraheader = 	\
 		ParticleFilter.h \
 		Sample.h \
-		ObservationModelT.h
+		ObservationModelT.h \
+		MotionModelT.h
+
+extratemplates = \
+		ParticleFilterT.cpp
 
 ## automatically builded files (depends on your source files)
 BUILT_SOURCES = 
@@ -43,7 +47,7 @@ CLEANFILES = $(BUILT_SOURCES)
 includefiles1 = $(sources:.xml=.h) $(extraheader)
 includefiles2 = $(includefiles1:.cpp=.h)
 ## the prefix of the following macro indicates the installation directory
-miro_include_HEADERS = $(includefiles2)
+botsvcsMCL_include_HEADERS = $(includefiles2) $(extratemplates)
 
 all-local: libmiroMCL.la
 	$(INSTALLLTLIBRARIES)

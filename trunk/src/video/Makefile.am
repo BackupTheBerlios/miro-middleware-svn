@@ -136,7 +136,9 @@ extraheader = \
 	VideoFilterFactory.h \
 	VideoFilterLink.h \
 	VideoBrokerLink.h \
-	ioctl_meteor.h
+	ioctl_meteor.h \
+	pwc-ioctl.h \
+	VideoFilter.i
 
 BUILT_SOURCES = Parameters.cpp Parameters.h
 CLEANFILES = $(BUILT_SOURCES)

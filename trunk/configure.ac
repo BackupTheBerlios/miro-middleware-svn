@@ -94,9 +94,9 @@ miro_export_qt_cflags="${QT_CFLAGS}"
 miro_export_qt_ldflags="${QT_LDFLAGS}"
 miro_export_qt_libs="${QT_LIBS}"
 
-miro_export_cflags="-I${PWD}/src -I${PWD}/"
+miro_export_cflags="-I${prefix}/src -I${prefix} -I${includedir}"
 miro_export_ldflags="-L${libdir}"
-miro_export_libs="-lmiroVideo -lmiroIDL -lmiro ${PWD}/lib/libmiroSvc.a"
+miro_export_libs="-lmiroVideo -lmiroIDL -lmiro ${prefix}/lib/libmiroSvc.a"
 if test "x$ac_miro_has_1394" == xyes; then miro_export_libs="$miro_export_libs -lraw1394 -ldc1394_control"; fi
 if test "x$ac_compile_player" == xyes; then miro_export_libs="$miro_export_libs ${PLAYER_LDFLAGS} ${PLAYER_LIBS}"; fi
 
@@ -110,7 +110,7 @@ AC_SUBST(miro_export_cflags)
 AC_SUBST(miro_export_ldflags)
 AC_SUBST(miro_export_libs)
 
-AC_SUBST(miro_export_makeparams, "${PWD}/bin/MakeParams")
+AC_SUBST(miro_export_makeparams, "${bindir}/MakeParams")
 AC_SUBST(miro_export_acetao_idlcomp, "${TAO_IDL}")
 AC_SUBST(miro_export_qt_moc, "${QT_MOC}")
 AC_SUBST(miro_export_qt_uic, "${QT_UIC}")
@@ -246,13 +246,13 @@ AC_CONFIG_FILES([Makefile
                  scripts/Makefile
                  bin/Makefile
                  lib/Makefile
-                 miro-config
+                 bin/miro-config
 ])
 
 AC_OUTPUT
 
 # make miro-config executable so it is useable without installation
-chmod a+x miro-config
+chmod a+x bin/miro-config
 
 
 

@@ -261,7 +261,7 @@ AC_DEFUN([AC_DETERMINE_PCH],
 			AC_DEFINE(MIRO_HAS_PCH)
 			ac_use_pch=yes
 			AC_MSG_RESULT(yes)
-			AC_MSG_CHECKING(create single PCH header (may take some time))
+			AC_MSG_CHECKING(create single PCH (may take some time))
 
 			if test -f pch/all.h; then
 				AC_MSG_NOTICE([Header file allready exists - skipping this. If you want to rebuild the header file, simply remove the file $MIRO_ROOT/pch/all.h and rerun the configure script or call the script $MIRO_ROOT/all.h.sh manually.])

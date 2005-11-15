@@ -61,6 +61,11 @@ libmiroBAP_la_LIBADD = \
 	$(INHERITED_LIBS) \
 	$(QT_LIBS)
 
+extraheader = \
+	Transition.h \
+	BehaviourRepository.h \
+	ArbiterRepository.h
+
 BUILT_SOURCES = \
 	Parameters.cpp Parameters.h
 
@@ -68,9 +73,10 @@ CLEANFILES = $(BUILT_SOURCES)
 
 includefiles1 = \
 	$(sources:.xml=.h) \
-	$(sparrowsources:.xml=.h) 
+	$(sparrowsources:.xml=.h) \
+	$(extraheader)
 includefiles2 = $(includefiles1:.cpp=.h)
-miro_include_HEADERS = $(includefiles2)
+botsvcsBAP_include_HEADERS = $(includefiles2)
 
 all-local: libmiroBAP.la
 	$(INSTALLLTLIBRARIES)

@@ -156,6 +156,8 @@ libmiroIDL_la_SOURCES = $(builtsources)
 BUILT_SOURCES = $(builtsources)
 CLEANFILES = $(builtsources)
 
+idl_include_HEADERS = $(builtsources) $(sources)
+
 all-local: libmiroIDL.la
 	$(INSTALLLTLIBRARIES)
 

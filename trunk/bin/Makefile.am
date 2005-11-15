@@ -13,6 +13,8 @@
 
 include $(top_srcdir)/config/Make-rules
 
+bin_SCRIPTS = miro-config
+
 EXTRA_DIST = \
         mt_svc.conf \
         speech.conf \

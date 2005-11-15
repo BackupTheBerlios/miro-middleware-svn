@@ -43,7 +43,7 @@ CLEANFILES = $(BUILT_SOURCES)
 includefiles1 = $(sources:.xml=.h) $(extraheader)
 includefiles2 = $(includefiles1:.cpp=.h)
 ## the prefix of the following macro indicates the installation directory
-miro_include_HEADERS = $(includefiles2)
+# miro_include_HEADERS = $(includefiles2)
 
 all-local: libmiroBAPtests.la
 	$(INSTALLLTLIBRARIES)

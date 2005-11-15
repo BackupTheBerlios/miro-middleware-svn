@@ -11,7 +11,7 @@
 #ifndef Position_idl
 #define Position_idl
 
-#include "WorldPoint.idl"
+#include "idl/WorldPoint.idl"
 
 module Miro 
 {
