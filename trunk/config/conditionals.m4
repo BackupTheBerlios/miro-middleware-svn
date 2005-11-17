@@ -327,46 +327,65 @@ AC_DEFUN([AC_DETERMINE_LIBDC_VERSION],
 	AC_TRY_COMPILE([
 		#include <libdc1394/dc1394_control.h>
 	],[
-		raw1394handle_t handle;
-		nodeid_t node;
+		dc1394camera_t *camera;
 		dc1394_dma_setup_capture(
-			handle,
-			node,
+			camera,
 			1,
-			FORMAT_VGA_NONCOMPRESSED,
-			MODE_640x480_YUV422,
-			SPEED_400,
-			FRAMERATE_30, 
+			DC1394_MODE_640x480_YUV422,
+			DC1394_SPEED_400,
+			DC1394_FRAMERATE_30,
 			4,
 			1,
-			1,
-			"/dev/blabla",
-			(dc1394_cameracapture *)NULL);
+			"/dev/blabla");
 	],[
-	success=2
+	success=3
 	],[
 	])
-	AC_TRY_COMPILE([
-		#include <libdc1394/dc1394_control.h>
-	],[
-		raw1394handle_t handle;
-		nodeid_t node;
-		dc1394_dma_setup_capture(
-			handle,
-			node,
-			1,
-			FORMAT_VGA_NONCOMPRESSED,
-			MODE_640x480_YUV422,
-			SPEED_400,
-			FRAMERATE_30, 
-			4,
-			1,
-			"/dev/blabla",
-			(dc1394_cameracapture *)NULL);
-	],[
-	success=1
-	],[
-	])
+	if test $success = "failed"; then
+		AC_TRY_COMPILE([
+			#include <libdc1394/dc1394_control.h>
+		],[
+			raw1394handle_t handle;
+			nodeid_t node;
+			dc1394_dma_setup_capture(
+				handle,
+				node,
+				1,
+				FORMAT_VGA_NONCOMPRESSED,
+				MODE_640x480_YUV422,
+				SPEED_400,
+				FRAMERATE_30, 
+				4,
+				1,
+				1,
+				"/dev/blabla",
+				(dc1394_cameracapture *)NULL);
+		],[
+		success=2
+		],[
+		]); fi
+	if test $success = "failed"; then
+		AC_TRY_COMPILE([
+			#include <libdc1394/dc1394_control.h>
+		],[
+			raw1394handle_t handle;
+			nodeid_t node;
+			dc1394_dma_setup_capture(
+				handle,
+				node,
+				1,
+				FORMAT_VGA_NONCOMPRESSED,
+				MODE_640x480_YUV422,
+				SPEED_400,
+				FRAMERATE_30, 
+				4,
+				1,
+				"/dev/blabla",
+				(dc1394_cameracapture *)NULL);
+		],[
+		success=1
+		],[
+		]); fi
 	AC_MSG_RESULT($success)
 	AC_LANG_POP()
 
