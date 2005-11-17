@@ -22,8 +22,13 @@ namespace
 
 namespace Video
 {
+#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
   BufferManager1394::BufferManager1394(Filter const * const _filter,
 				       dc1394_cameracapture *  _pCamera) 
+#else
+  BufferManager1394::BufferManager1394(Filter const * const _filter,
+				       dc1394camera_t * _pCamera) 
+#endif
     throw (std::bad_alloc) :
     Super(_filter, 1, b),
     pCamera_(_pCamera)
@@ -65,11 +70,16 @@ namespace Video
   void
   BufferManager1394::acquireOutputBuffer(unsigned long _index)
   {
+#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
     dc1394_dma_single_capture(pCamera_);
-
     bufferStatus_[_index].time = ACE_OS::gettimeofday() - camParams_->latency;
-    bufferStatus_[_index].buffer = 
-      reinterpret_cast<unsigned char *>(pCamera_->capture_buffer);
+    bufferStatus_[_index].buffer = reinterpret_cast<unsigned char *>(pCamera_->capture_buffer);
+#else
+
+    dc1394_dma_capture(&pCamera_, 1, DC1394_VIDEO1394_WAIT);
+    bufferStatus_[_index].time = ACE_OS::gettimeofday() - camParams_->latency;
+    bufferStatus_[_index].buffer = reinterpret_cast<unsigned char *>(pCamera_->capture.capture_buffer);
+#endif
   }
 
   //---------------------------------------------------------------

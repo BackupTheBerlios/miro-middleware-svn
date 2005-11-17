@@ -15,6 +15,10 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.17  2005/11/17 15:58:31  gmayer
+ * now works with libdc1394 version 2 (tested with 2.0.0-pre5)
+ * it's better to have this in place before it's the default verison in debian :-)
+ *
  * Revision 1.16  2004/09/29 16:23:23  hutz
  * minor include cleanup
  *
@@ -118,10 +122,6 @@
  *
  *
  */
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
  
 #include "VideoDevice1394.h"
 #include "BufferManager1394.h"
@@ -145,6 +145,8 @@ namespace
     int mode;
   };
 
+  // mapping of miro formats to libdc1394 formats
+#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
   static Mode1394 mode1394[NUM_FORMAT0_MODES] = {
     { {160, 120, Miro::YUV_24 }, MODE_160x120_YUV444},
     { {320, 240, Miro::YUV_422}, MODE_320x240_YUV422},
@@ -154,6 +156,17 @@ namespace
     { {640, 480, Miro::GREY_8 }, MODE_640x480_MONO},
     { {640, 480, Miro::GREY_16}, MODE_640x480_MONO16}
   };
+#else
+  static Mode1394 mode1394[DC1394_MODE_FORMAT0_NUM] = {
+    { {160, 120, Miro::YUV_24 }, DC1394_MODE_160x120_YUV444},
+    { {320, 240, Miro::YUV_422}, DC1394_MODE_320x240_YUV422},
+    { {640, 480, Miro::YUV_411}, DC1394_MODE_640x480_YUV411},
+    { {640, 480, Miro::YUV_422}, DC1394_MODE_640x480_YUV422},
+    { {640, 480, Miro::RGB_24 }, DC1394_MODE_640x480_RGB8},
+    { {640, 480, Miro::GREY_8 }, DC1394_MODE_640x480_MONO8},
+    { {640, 480, Miro::GREY_16}, DC1394_MODE_640x480_MONO16}
+  };
+#endif
 
   //---------------------------------------------------------------
   struct Feature1394
@@ -167,6 +180,7 @@ namespace
   };
 
   //---------------------------------------------------------------
+#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
   static Feature1394 feature1394[12] = {
     { "brightness",  NULL, FEATURE_BRIGHTNESS,  dc1394_set_brightness },
     { "exposure",    NULL, FEATURE_EXPOSURE,    dc1394_set_exposure },
@@ -181,6 +195,22 @@ namespace
     { "temperature", NULL, FEATURE_TEMPERATURE, dc1394_set_temperature },
     { "trigger",     NULL, FEATURE_TRIGGER,     dc1394_set_trigger_mode }
   };
+#else
+  static Feature1394 feature1394[12] = {
+    { "brightness",  NULL, DC1394_FEATURE_BRIGHTNESS,  NULL },
+    { "exposure",    NULL, DC1394_FEATURE_EXPOSURE,    NULL },
+    { "focus",       NULL, DC1394_FEATURE_FOCUS,	NULL },
+    { "gain",        NULL, DC1394_FEATURE_GAIN,	NULL },
+    { "gamma",       NULL, DC1394_FEATURE_GAMMA,	NULL },
+    { "hue",         NULL, DC1394_FEATURE_HUE,         NULL },
+    { "iris",        NULL, DC1394_FEATURE_IRIS,	NULL },
+    { "saturation",  NULL, DC1394_FEATURE_SATURATION,  NULL },
+    { "sharpness",   NULL, DC1394_FEATURE_SHARPNESS,   NULL },
+    { "shutter",     NULL, DC1394_FEATURE_SHUTTER,     NULL },
+    { "temperature", NULL, DC1394_FEATURE_TEMPERATURE, NULL },
+    { "trigger",     NULL, DC1394_FEATURE_TRIGGER,     NULL }
+  };
+#endif
 
   //---------------------------------------------------------------
   struct FeatureTable
@@ -227,8 +257,16 @@ namespace Video
     Super(_inputFormat),
     is_open_(false),
     handle_(0),
+#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
     p_camera_(new dc1394_cameracapture()),
     frameRate_(FRAMERATE_30)
+#else
+    // p_camera_(new dc1394camera_t()),
+      p_camera_(NULL),
+    frameRate_(DC1394_FRAMERATE_30)
+#endif
+
+
   {
     MIRO_LOG_CTOR("Video::Device1394.");
 
@@ -243,7 +281,7 @@ namespace Video
   Device1394::~Device1394()
   {
     MIRO_LOG_DTOR("Video::Device1394.");
-    delete p_camera_;
+    // delete p_camera_;
   } 
 
   BufferManager * 
@@ -283,9 +321,15 @@ namespace Video
     if (is_open_)
     {
       MIRO_DBG(VIDEO, LL_DEBUG, "Device1394::fini() close");
+#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
       dc1394_stop_iso_transmission(handle_, p_camera_->node);
       dc1394_dma_unlisten(handle_, p_camera_);
       dc1394_dma_release_camera(handle_, p_camera_);
+#else
+      dc1394_video_set_transmission(p_camera_, DC1394_OFF);
+      dc1394_dma_unlisten(p_camera_);
+      dc1394_dma_release_camera(p_camera_);
+#endif
       is_open_ = false;
     }
 
@@ -298,6 +342,8 @@ namespace Video
   {
     MIRO_DBG(VIDEO, LL_DEBUG, "Device1394::initDevice()");
 
+#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
+
     handle_ = dc1394_create_handle(port);
     if (!handle_) {
       throw Miro::Exception("Device1394::initDevice: unable to create handle");
@@ -306,9 +352,7 @@ namespace Video
     int num_nodes = raw1394_get_nodecount(handle_);
     int camera_count = 0;
     nodeid_t * camera_nodes = dc1394_get_camera_nodes(handle_, &camera_count, 1);
-
-    MIRO_DBG_OSTR(VIDEO, LL_DEBUG,
-		  "Device1394::initDevice: cameracount = " << camera_count);
+    MIRO_DBG_OSTR(VIDEO, LL_DEBUG, "Device1394::initDevice: cameracount = " << camera_count);
     if (camera_count < 1)
       throw Miro::Exception("Device1394::initDevice: no camera found");
 
@@ -326,6 +370,24 @@ namespace Video
 	
     if (Miro::Log::level() >= Miro::Log::LL_NOTICE)
       dc1394_print_feature_set(&features_);
+
+#else
+
+    dc1394camera_t ** cameras;
+    unsigned int camera_count;
+    dc1394_find_cameras(&cameras, &camera_count);
+    MIRO_DBG_OSTR(VIDEO, LL_DEBUG, "Device1394::initDevice: cameracount = " << camera_count);
+    if (camera_count < 1)
+      throw Miro::Exception("Device1394::initDevice: no camera found");
+
+    // for now, simply use the camera with the lowest number
+    p_camera_=cameras[0];
+    for (unsigned int i=1; i<camera_count; ++i) {
+      dc1394_free_camera(cameras[i]);
+    }
+    free(cameras);
+
+#endif
   }
 
   //---------------------------------------------------------------
@@ -334,10 +396,15 @@ namespace Video
   {
     MIRO_DBG(VIDEO, LL_DEBUG, "Device1394::cleanupDevice()");
 
+#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
     if (handle_) {
       dc1394_destroy_handle(handle_);
       handle_ = 0;
     }
+#else
+    if (p_camera_)
+      dc1394_free_camera(p_camera_);
+#endif
   }
 
   //---------------------------------------------------------------
@@ -347,7 +414,11 @@ namespace Video
     MIRO_DBG(VIDEO, LL_DEBUG, "Device1394::setImageFormat()");
 
     unsigned int i;
+#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
     for (i = 0; i < NUM_FORMAT0_MODES; ++i) {
+#else
+    for (i = 0; i < DC1394_MODE_FORMAT0_NUM; ++i) {
+#endif
       if (inputFormat_.width  == mode1394[i].format.width &&
 	  inputFormat_.height == mode1394[i].format.height &&
 	  inputFormat_.palette == mode1394[i].format.palette ) {
@@ -355,21 +426,33 @@ namespace Video
 	break;
       }
     }
+#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
     if (i == NUM_FORMAT0_MODES)
+#else
+    if (i == DC1394_MODE_FORMAT0_NUM)
+#endif
       throw Miro::Exception("Device1394::setImageFormat - Unsupported image format requested.");
+
+    MIRO_DBG(VIDEO, LL_DEBUG, "Device1394::setImageFormat() finished");
   }
 
   //---------------------------------------------------------------
   void
   Device1394::initCapture()
   {
+    MIRO_DBG(VIDEO, LL_DEBUG, "Device1394::initCapture()");
+
     unsigned int channel;
     unsigned int speed;
 
+#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
     if (dc1394_get_iso_channel_and_speed(handle_, p_camera_->node, &channel, &speed) != DC1394_SUCCESS)
       throw Miro::Exception("Device1394:initDevice: unable to get iso channel number");
-    MIRO_DBG_OSTR(VIDEO, LL_DEBUG,
-		  "ISO channel: " << channel << "    speed: " << speed);
+#else
+    if (dc1394_video_get_iso_channel_and_speed(p_camera_, &channel, &speed) != DC1394_SUCCESS)
+      throw Miro::Exception("Device1394:initDevice: unable to get iso channel number");
+#endif
+    MIRO_DBG_OSTR(VIDEO, LL_DEBUG, "ISO channel: " << channel << "    speed: " << speed);
     channel = 1;
 
 #if ( LIBDC1394_VERSION == 1 )
@@ -385,7 +468,7 @@ namespace Video
 				 DROP_FRAMES,
 				 params_.device.c_str(),
 				 p_camera_) != DC1394_SUCCESS)
-
+      throw Miro::Exception("Device1394::handleConnect: unable to setup camera");
 #elif ( LIBDC1394_VERSION == 2 )
     // new version
     if (dc1394_dma_setup_capture(handle_,
@@ -400,46 +483,84 @@ namespace Video
 				 DROP_FRAMES,
 				 params_.device.c_str(),
 				 p_camera_) != DC1394_SUCCESS)
-#endif
       throw Miro::Exception("Device1394::handleConnect: unable to setup camera");
-	
+#else
+    // for version 2.x
+    if (dc1394_dma_setup_capture(p_camera_,
+				 channel,
+				 imageFormat_,
+				 DC1394_SPEED_400,
+				 frameRate_, 
+				 1,
+				 DROP_FRAMES,
+				 params_.device.c_str()) != DC1394_SUCCESS)
+      throw Miro::Exception("Device1394::handleConnect: unable to setup camera");
+#endif
+
+#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
     if (dc1394_start_iso_transmission(handle_, p_camera_->node) != DC1394_SUCCESS)
       throw Miro::Exception("Device1394::handleConnect: unable to start camera iso transmission");
+#else
+    if (dc1394_video_set_transmission(p_camera_,  DC1394_ON) != DC1394_SUCCESS)
+      throw Miro::Exception("Device1394::handleConnect: unable to start camera iso transmission");
+#endif
+
     is_open_ = true;
+    MIRO_DBG(VIDEO, LL_DEBUG, "Device1394::initCapture() finished");
   }
 
   //---------------------------------------------------------------
   void
   Device1394::initSettings()
   {
+    MIRO_DBG(VIDEO, LL_DEBUG, "Device1394::initSettings()");
+
     // set standardized features
     FeatureTable featureTable(params_);
     Feature1394 const * first;
     Feature1394 const * last = featureTable.end();
     for (first = featureTable.begin(); first != last; ++first) {
       if (*(first->pValue) == -1) {
+#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
 	dc1394_auto_on_off(handle_, p_camera_->node, first->code, 1);
+#else
+	dc1394_feature_set_mode(p_camera_, first->code, DC1394_FEATURE_MODE_AUTO);
+#endif
       }
       else if (*(first->pValue) >= 0) {
+#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
 	if (first->set_function(handle_,
 				p_camera_->node,
-				(*first->pValue)) != DC1394_SUCCESS) {
+				(*first->pValue)) != DC1394_SUCCESS)
 	  MIRO_LOG_OSTR(LL_WARNING,
 			"Feature " << 
 			first->name << " = " << (*first->pValue) <<
 			" not set.");
-	}
 	dc1394_auto_on_off(handle_, p_camera_->node, first->code, 0);
+#else
+	if (dc1394_feature_set_value(p_camera_, first->code, (*first->pValue)) != DC1394_SUCCESS)
+	  MIRO_LOG_OSTR(LL_WARNING,
+			"Feature " << 
+			first->name << " = " << (*first->pValue) <<
+			" not set.");
+
+	dc1394_feature_set_mode(p_camera_, first->code, DC1394_FEATURE_MODE_MANUAL);
+#endif
       }
     }
 
     // white balance
     if (params_.whiteBalance0 == -1 ||
 	params_.whiteBalance1 == -1) {
+#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
       dc1394_auto_on_off(handle_, p_camera_->node, FEATURE_WHITE_BALANCE, 1);
+#else
+      dc1394_feature_set_mode(p_camera_, DC1394_FEATURE_WHITE_BALANCE, DC1394_FEATURE_MODE_AUTO);
+#endif
     }
     else if (params_.whiteBalance0 >= 0 &&
 	     params_.whiteBalance1 >= 0) {
+#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
       if (dc1394_set_white_balance(handle_,
 				   p_camera_->node,
 				   params_.whiteBalance0,
@@ -450,10 +571,22 @@ namespace Video
 			" not set.");
       }
       dc1394_auto_on_off(handle_, p_camera_->node, FEATURE_WHITE_BALANCE, 0);
+#else
+      if (dc1394_feature_whitebalance_set_value(p_camera_,
+						params_.whiteBalance0,
+						params_.whiteBalance1) != DC1394_SUCCESS) {
+	MIRO_LOG_OSTR(LL_WARNING,
+		      "Feature WhiteBalance = " <<
+		      params_.whiteBalance0 << ":" << params_.whiteBalance1 <<
+		      " not set.");
+      }
+      dc1394_feature_set_mode(p_camera_, DC1394_FEATURE_WHITE_BALANCE, DC1394_FEATURE_MODE_MANUAL);
+#endif
     }
 
     // set framerate
     int value = params_.framerate;
+#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
     if (value <= 1)	   
       frameRate_ = FRAMERATE_1_875;
     else if (value <= 3)
@@ -464,6 +597,20 @@ namespace Video
       frameRate_ = FRAMERATE_15;
     else
       frameRate_ = FRAMERATE_30;
+#else
+    if (value <= 1)	   
+      frameRate_ = DC1394_FRAMERATE_1_875;
+    else if (value <= 3)
+      frameRate_ = DC1394_FRAMERATE_3_75;
+    else if (value <= 7)
+      frameRate_ = DC1394_FRAMERATE_7_5;
+    else if (value <= 15)
+      frameRate_ = DC1394_FRAMERATE_15;
+    else
+      frameRate_ = DC1394_FRAMERATE_30;
+#endif
+
+    MIRO_DBG(VIDEO, LL_DEBUG, "Device1394::initSettings() finished");
   }
 //---------------------------------------------------------------
     bool Device1394::setFeatures(const FeatureSet & features)

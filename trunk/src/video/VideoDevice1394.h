@@ -15,6 +15,10 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.9  2005/11/17 15:58:31  gmayer
+ * now works with libdc1394 version 2 (tested with 2.0.0-pre5)
+ * it's better to have this in place before it's the default verison in debian :-)
+ *
  * Revision 1.8  2004/02/09 17:28:56  graz
  * Added control-interface to VideoDevice1394 & Dialog.
  *
@@ -78,6 +82,10 @@
 #ifndef VIDEODEVICE1394_H
 #define VIDEODEVICE1394_H
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "VideoDevice.h"
 #include "idl/VideoControlC.h"
 
@@ -127,10 +135,17 @@ namespace Video
     bool                    is_open_;
     //! Real device handle.
     raw1394handle_t         handle_;
+#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
     //! Actual camera features.
     dc1394_feature_set      features_;
     //! Camera capture data structure.
     dc1394_cameracapture *  p_camera_;
+#else
+    //! Actual camera features.
+    dc1394featureset_t features_;
+    //! Camera capture data structure.
+    dc1394camera_t * p_camera_;
+#endif
     //! Selected image format.
     long                    imageFormat_;
     //! Framerate
