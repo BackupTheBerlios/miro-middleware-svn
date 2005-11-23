@@ -41,7 +41,6 @@
 	<parameter value="/dev/pcan24" name="Device" />
 	<parameter value="pcan" name="Module" />
         <parameter name="Pan">
-	  <parameter value="true" name="Servo" />
 	  <parameter value="-80" name="RangeMin" />
 	  <parameter value="80" name="RangeMax" />
 	  <parameter value="0.050000" name="PanLatency" />
