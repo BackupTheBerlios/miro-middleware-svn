@@ -30,7 +30,7 @@ namespace Miro
 
     //! Virtual destructor.
     /** Noop implementation. */
-    virtual ~FactoryBase() throw () {};
+    virtual ~FactoryBase() {};
     //! The actual factory method.
     /** @return An instance of a descendand of BaseType. */
     virtual BaseType * instance() const = 0;
@@ -41,7 +41,7 @@ namespace Miro
    * @param T The concrete derived type of the factory.
    * @param B The common base type of the factory.
    */
-  template<class T, class B>
+  template<class T, class B = typename T::Base>
   class Factory : public FactoryBase<B>
   {
   public:
@@ -50,7 +50,7 @@ namespace Miro
 
     //! Virtual destructor.
     /** Noop implementation. */
-    virtual ~Factory() throw () {};
+    virtual ~Factory() {};
     //! The actual factory method.
     virtual Type * instance() const;
   };
@@ -71,7 +71,7 @@ namespace Miro
    * @param B The name of the base type of the factory.
    * @param P The name of the parameter type for the ctor of B.
    */
-  template<class B, class P>
+  template<class P, class B>
   class OneParamFactoryBase
   {
   public:
@@ -82,22 +82,24 @@ namespace Miro
 
     //! Virtual destructor.
     /** Noop implementation. */
-    virtual ~OneParamFactoryBase() throw () {};
+    virtual ~OneParamFactoryBase() {};
     //! The actual factory method.
     /** @return An instance of a descendand of BaseType. */
     virtual BaseType * instance(ParamType const&) const = 0;
   };
 
-  template<class T, class B, class P>
-  class OneParamFactory : public OneParamFactoryBase<B, P>
+  template<class T, class P, class B = typename T::Base>
+  class OneParamFactory : public OneParamFactoryBase<P, B>
   {
   public:
     //! The typedef for the concrete type.
     typedef T Type;
+    //! The typedef for the parameter type.
+    typedef P ParamType;
 
     //! Virtual destructor.
     /** Noop implementation. */
-    virtual ~OneParamFactory() throw () {};
+    virtual ~OneParamFactory() {};
     //! The actual factory method.
     virtual Type * instance(ParamType const&) const;
   };
@@ -106,9 +108,9 @@ namespace Miro
    * @param param To be passed to the constructor of Type.
    * @return An instance of a type Type. 
    */
-  template<class T, class B, class P>
+  template<class T, class P, class B>
   T *
-  OneParamFactory<T>::instance(ParamType const& _param) const {
+  OneParamFactory<T, P, B>::instance(ParamType const& _param) const {
     return new Type(_param);
   }
 }

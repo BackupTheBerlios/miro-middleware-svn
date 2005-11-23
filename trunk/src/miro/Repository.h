@@ -64,7 +64,7 @@ namespace Miro
     //--------------------------------------------------------------------------
 
     //! Clean up the repository.
-    ~Repository() throw ();
+    ~Repository();
     //! Empty the repository.
     void clear() throw ();
     //! Register an instance at the repository.
@@ -112,6 +112,7 @@ namespace Miro
     Repository() throw ();
     //! Copy construction is prohibited
     Repository(const Repository<T>&) throw () {}
+    Repository& operator=(Repository const&) {}
 
     //--------------------------------------------------------------------------
     // friend declarations
@@ -134,7 +135,7 @@ namespace Miro
   {}
 
   template<class T>
-  Repository<T>::~Repository() throw ()
+  Repository<T>::~Repository()
   {
     clear();
   }
