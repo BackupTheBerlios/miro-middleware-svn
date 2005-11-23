@@ -36,6 +36,6 @@ namespace Video
   FilterFactory<T>::instance(Miro::ImageFormatIDL const & _inputFormat) const {
     return new T(_inputFormat);
   }
-};
+}
 
 #endif

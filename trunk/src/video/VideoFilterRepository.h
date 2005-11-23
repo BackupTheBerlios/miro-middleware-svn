@@ -86,6 +86,6 @@ namespace Video
       throw Miro::Exception("FilterFactory " + _name + " already registered at the Repository.");
     factory_[_name] =  new FilterFactory<T>;	
   }
-};
+}
 #endif
 
