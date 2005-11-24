@@ -86,7 +86,10 @@ globalsources = \
 	ThermometerEvent.idl \
 	Gps.idl \
 	GpsData.idl \
-	CtGps.idl
+	CtGps.idl\
+	InertialData.idl\
+	InertialSensorEvent.idl\
+	InertialSensor.idl
 
 b21sources = \
 	DtlkSpeech.idl \

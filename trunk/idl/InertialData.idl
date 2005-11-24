@@ -1,0 +1,41 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2005
+// Department of Software Technology, University of Technology, Graz, Austria
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+
+#ifndef InertialData_idl
+#define InertialData_idl
+
+module Miro
+{
+	//! structure for holding Inertial Sensor Data
+	struct InertialDataIDL
+	{
+	//! Pitch angle in radiants
+    /**
+     * Positive values indicate the robot facing an upward slope.
+     */
+    float pitch;
+    //! Roll angle in radiants
+    /**
+     * Positive values indicate the robot being rolled to the left
+     * from its own perspective.
+     */
+    float roll;
+    //! Yaw angle in radiants
+    /**
+     * Positive values indicate the robot being rolled to the left
+     * from its own perspective.
+     */
+    float yaw;
+	
+	};
+};
+
+#endif

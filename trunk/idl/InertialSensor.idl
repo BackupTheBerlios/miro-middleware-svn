@@ -1,0 +1,42 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2005
+// Institute for Software Technology, Graz, University of Technology, Austria
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+
+#ifndef InertialSensor_idl
+#define InertialSensor_idl
+
+#include "Exception.idl"
+#include "Compass.idl"
+#include "Inclinometer.idl"
+#include "InertialSensorEvent.idl"
+#include "CompassEvent.idl"
+#include "InclinometerEvent.idl"
+
+module Miro
+{
+  /// InertialSensor Interface
+  /**
+   * It provides a uniform way to query the layout of intertial
+   * sensors and query their data. This is especially usefull in
+   * conjunction with the notification service. All inertial sensors
+   * broadcast their data periodically via the event channel (named
+   * "EventChannel" at the naming service) in a unified data format
+   */
+  interface InertialSensor : Compass, Inclinometer
+  {
+  
+    //! Read the current inertial data (pitch, roll and yaw) angles
+    InertialSensorEventIDL getInertialData();
+    //! Wait up to one second for an inertial update and read it
+    InertialSensorEventIDL getWaitInertialData() raises(ETimeOut);
+  };
+};
+
+#endif // InertialSensor_idl

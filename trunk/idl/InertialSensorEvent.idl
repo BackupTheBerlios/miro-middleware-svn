@@ -1,0 +1,35 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2005
+// Department of Software Technology, University of Technology, Graz, Austria
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+
+#ifndef InertialSensorEvent_idl
+#define InertialSensorEvent_idl
+
+#include "Time.idl"
+#include "InertialData.idl"
+
+module Miro
+{
+  //! Inertial reading notification
+  /**
+   * Used by the inertial implementation to send out an update
+   * whenever new data is available.
+   */
+  struct InertialSensorEventIDL
+  {
+    //! Timestamp of inertial reading
+    TimeIDL time;
+    //! New inertial (pitch, roll and yaw) angles, specified in radiants
+    InertialDataIDL inertial_data;
+  };
+};
+
+
+#endif
