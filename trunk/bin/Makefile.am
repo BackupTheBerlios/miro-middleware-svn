@@ -21,3 +21,7 @@ EXTRA_DIST = \
         st_svc.conf \
         svc.conf \
         tp_svc.conf
+
+all-local:
+	chmod a+x ./miro-config
+
