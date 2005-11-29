@@ -20,7 +20,9 @@
 #include "miro/TimeHelper.h"
 #include "miro/Log.h"
 #include "idl/MotionC.h"
+#ifdef MIRO_HAS_SPARROW99
 #include "idl/KickerC.h"
+#endif
 
 class QPad : public QWidget {
 protected:
