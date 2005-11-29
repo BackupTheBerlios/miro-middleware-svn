@@ -785,6 +785,8 @@
 	<parameter value="3" name="NumberBackLinks" />
 	<parameter value="false" name="DynamicConnection" />
 	<parameter value="VisionCollectorBasic" name="InterfaceName" />
+	<parameter value="true" name="SendVisionResults" />
+	<parameter value="false" name="SendVisionImage" />
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
 	  <parameter value="CollectBasic" name="Name" />
@@ -797,6 +799,8 @@
 	<parameter value="2" name="ScaleFactorRunLength" />
 	<parameter value="9" name="UseIndexFrom" />
 	<parameter value="false" name="Save" />
+	<parameter value="true" name="SendVisionResults" />
+	<parameter value="true" name="SendVisionImage" />
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
 	  <parameter value="CollectFull" name="Name" />
