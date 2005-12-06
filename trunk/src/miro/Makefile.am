@@ -124,7 +124,7 @@ extraheader = \
 	NotifyMulticastRequestIndex.h \
 	NotifyMulticastDefines.h \
 	NotifyMulticast.h \
-	NotifyMulticastEventFilter.h
+	NotifyMulticastEventFilter.h \
 	Utils.h \
 	Infinity.h \
 	BuiltIn.h \
