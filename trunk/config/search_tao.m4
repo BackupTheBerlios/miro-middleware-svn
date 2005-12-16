@@ -153,7 +153,7 @@ AC_DEFUN([AC_SEARCH_TAO_IDL],
 	if test "${TAO_ROOT}" == "" ; then
 		AC_PATH_PROG(ac_taobindir, tao_idl, no)
 	else
-		AC_PATH_PROG(ac_taobindir, tao_idl, no, [$TAO_ROOT/TAO_IDL])
+		AC_PATH_PROG(ac_taobindir, tao_idl, no, [$TAO_ROOT/TAO_IDL:$PATH])
 	fi
 
 # still not found? try the path of an installed tao version
