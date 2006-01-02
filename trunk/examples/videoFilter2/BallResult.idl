@@ -1,0 +1,27 @@
+//////////////////////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware For Robots)
+//
+// (c) 2005
+// Department of Neural Information Processing, University of Ulm, Germany
+//
+// $Id$
+// 
+//////////////////////////////////////////////////////////////////////////////
+
+#ifndef Video_BallResult_idl
+#define Video_BallResult_idl
+
+module Video
+{
+  //! Struct holding a found ball object.
+  struct BallResultIDL
+  {
+    //! The x-pos of the object within the image.
+    long x;
+    //! The y-pos of the object within the image.
+    long y;
+  };
+};
+
+#endif

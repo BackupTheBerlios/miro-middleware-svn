@@ -1,0 +1,14 @@
+<!DOCTYPE xml SYSTEM "MiroParameterDescription.dtd">
+  <config> 
+    <config_global name="namespace" value="Video" />
+    <config_global name="include" value="video/Parameters.h" />
+
+    <config_group name="Video">
+
+      <config_item name="BallFeatureImage" parent="Video::FilterImage">
+	<config_parameter name="x" type="int" default="-1" />
+	<config_parameter name="y" type="int" default="-1" />
+      </config_item>
+
+    </config_group>
+  </config>
