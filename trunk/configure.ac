@@ -178,6 +178,7 @@ AC_CONFIG_FILES([Makefile
                  examples/tcm2/Makefile
                  examples/video/Makefile
                  examples/videoFilter/Makefile
+                 examples/videoFilter2/Makefile
                  performance-tests/Makefile
                  performance-tests/can/Makefile
                  performance-tests/mcp/Makefile

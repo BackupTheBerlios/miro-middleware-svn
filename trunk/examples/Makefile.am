@@ -22,6 +22,7 @@ globaldirs = \
 	stall \
 	video \
 	videoFilter \
+	videoFilter2 \
 	battery \
 	notify \
 	infrared \
