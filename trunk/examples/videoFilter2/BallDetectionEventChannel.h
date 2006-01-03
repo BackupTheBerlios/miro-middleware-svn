@@ -23,7 +23,7 @@ namespace Video
    */
   class BallDetectionEventChannel : public BallDetection
   {
-    typedef BallDetection Super
+    typedef BallDetection Super;
 
   public:
     //! Initializing constructor.

@@ -52,7 +52,7 @@ namespace Video
 	initStructuredEvent(event_, supplier_->domainName(), "BallResult");
 
       // Register the event at the event channel
-      supplier_->addOffers(event_);
+      supplier_->addOffer(event_);
     }
     catch (const CORBA::Exception& e) {
       std::cerr << "Set up event publication failed: " << e << std::endl;
