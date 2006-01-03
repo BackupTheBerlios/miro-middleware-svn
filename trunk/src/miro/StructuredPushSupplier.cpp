@@ -210,7 +210,7 @@ namespace Miro
   {
     CosNotification::EventTypeSeq added;
     added.length(1);
-    added[0] = added..header.fixed_header.event_type;
+    added[0] = _added.header.fixed_header.event_type;
     IndexVector rc = addOffers(added);
     return rc[0];
   }
