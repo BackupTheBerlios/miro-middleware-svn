@@ -26,7 +26,7 @@
 #include <string>
 
 #define FILTER_PARAMETERS_FACTORY(X) \
-  private: \
+  protected: \
     typedef X ## Parameters Parameters; \
   public: \
     virtual X ## Parameters * getParametersInstance() const; \
@@ -46,7 +46,7 @@
   }
 
 #define IMAGE_PARAMETERS_FACTORY(X) \
-  private: \
+  protected: \
     typedef X ## ImageParameters ImageParameters; \
   public: \
     virtual Video::FilterImageParameters * getImageParametersInstance() const; \
