@@ -16,6 +16,11 @@
 #include "miro/Exception.h"   // Exception declarations.
 #include "miro/Server.h"
 
+namespace {
+  using CosNotifyChannelAdmin::EventChannel;
+  using CosNotifyChannelAdmin::EventChannel_var;
+}
+
 namespace Video 
 {
   /**
