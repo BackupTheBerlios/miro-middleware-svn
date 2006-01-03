@@ -205,6 +205,16 @@ namespace Miro
     return indexes;
   }
 
+  unsigned long
+  StructuredPushSupplier::addOffer(CosNotification::StructuredEvent const& _added)
+  {
+    CosNotification::EventTypeSeq added;
+    added.length(1);
+    added[0] = added..header.fixed_header.event_type;
+    IndexVector rc = addOffers(added);
+    return rc[0];
+  }
+
   /**
    *
    * This will overwrite all previously set or added offers.

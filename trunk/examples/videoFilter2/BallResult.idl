@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware For Robots)
 //
@@ -8,14 +8,13 @@
 // $Id$
 // 
 //////////////////////////////////////////////////////////////////////////////
-
 #ifndef Video_BallResult_idl
 #define Video_BallResult_idl
 
 module Video
 {
   //! Struct holding a found ball object.
-  struct BallResultIDL
+  struct BallResult
   {
     //! The x-pos of the object within the image.
     long x;

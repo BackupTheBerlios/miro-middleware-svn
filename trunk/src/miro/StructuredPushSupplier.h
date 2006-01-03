@@ -66,6 +66,8 @@ namespace Miro
     //! Test whether an offered event is subscribed.
     bool subscribed(std::string const& _domain, std::string const& _type) const;
 
+    //! Add an offers to the notification channel.
+    unsigned long addOffer(CosNotification::StructuredEvent const& _added);
     //! Add a set of offers to the notification channel.
     IndexVector addOffers(CosNotification::EventTypeSeq const& _added);
     //! Set the set of offers to the notification channel.

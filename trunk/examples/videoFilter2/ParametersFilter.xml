@@ -12,8 +12,5 @@
 	<config_parameter name="blueHigh" type="int" default="50" />
 	<config_parameter name="redRatio" type="double" default="0.05" />
       </config_item>
-
-      <config_item name="BallDetectionEventChannel" parent="BallDetection" final="true" />
-
     </config_group>
   </config>
