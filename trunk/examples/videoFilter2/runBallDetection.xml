@@ -11,13 +11,17 @@
     <section name="Video" >
       <instance type="Video::Parameters" name="VideoFilterExample" >
 	<parameter value="VideoFilterExampleBroker" name="VideoBroker" />
-	<parameter value="640" name="Width" />
-	<parameter value="480" name="Height" />
+	<parameter value="288" name="Width" />
+	<parameter value="384" name="Height" />
 	<parameter value="rgb" name="Palette" />
 	<parameter name="Filter" >
 	  <parameter value="DeviceDummy" name="Name" />
 	  <parameter value="DeviceDummy" name="Type" />
 	  <parameter name="Successor" >
+	    <parameter name="Filter" >
+	      <parameter value="FilterCopy" name="Name" />
+	      <parameter value="FilterCopy" name="Type" />
+	    </parameter>
 	    <parameter name="Filter" >
 	      <parameter value="BallDetection" name="Name" />
 	      <parameter value="BallDetection" name="Type" />
@@ -43,6 +47,13 @@
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
 	  <parameter value="Ball" name="Name" />
+	</parameter>
+      </instance>
+
+      <instance type="Video::FilterCopy" name="FilterCopy" >
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="Org" name="Name" />
 	</parameter>
       </instance>
 

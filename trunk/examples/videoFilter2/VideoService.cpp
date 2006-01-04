@@ -14,10 +14,11 @@
 
 #include "video/VideoServer.h"               // VideoServer declaration.
 #include "video/VideoDeviceDummy.h"          // Dummy device declaration.
+#include "video/VideoFilterBasic.h"          // Declaration of some basic filters.
 #include "video/VideoFilterRepository.h"     // FilterRepository declaration.
 
 #include "miro/Server.h"                     // Server declaration.
-#include "idl/ExceptionC.h"                 // CORBA exceptions.
+#include "idl/ExceptionC.h"                  // CORBA exceptions.
 #include "miro/Exception.h"                  // Miro exceptionss
 #include "miro/Configuration.h"              // ConfigDocument declaration.
 
@@ -48,6 +49,7 @@ main(int argc, char *argv[])
     repo->registerFilter<Video::DeviceDummy>("DeviceDummy");
     repo->registerFilter<Video::BallDetection>("BallDetection");
     repo->registerFilter<Video::BallDetectionEventChannel>("BallDetectionEventChannel");
+    repo->registerFilter<Video::FilterCopy>("FilterCopy");
 
     MIRO_LOG(LL_NOTICE, "Config file processing.");
     

@@ -11,8 +11,8 @@
     <section name="Video" >
       <instance type="Video::Parameters" name="VideoFilterExample" >
 	<parameter value="VideoFilterExampleBroker" name="VideoBroker" />
-	<parameter value="640" name="Width" />
-	<parameter value="480" name="Height" />
+	<parameter value="288" name="Width" />
+	<parameter value="384" name="Height" />
 	<parameter value="rgb" name="Palette" />
 	<parameter name="Filter" >
 	  <parameter value="DeviceDummy" name="Name" />
