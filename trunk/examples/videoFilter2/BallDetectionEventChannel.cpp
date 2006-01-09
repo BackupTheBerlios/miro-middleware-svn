@@ -55,7 +55,7 @@ namespace Video
       supplier_->addOffer(event_);
     }
     catch (const CORBA::Exception& e) {
-      std::cerr << "Set up event publication failed: " << e << std::endl;
+      std::cerr << "Set up event publication failed: " << std::endl;
     }
   }
 
