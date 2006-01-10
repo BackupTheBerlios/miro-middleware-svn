@@ -38,10 +38,10 @@ into which directory, if the user applies a {\em "`make install"'\/}
 files are generated automatically during the build-process and can
 therefor removed if a {\em "`make clean"'\/} is desired ({\tt
 BUILT\_SOURCES} and {\tt CLEANFILES}). These Makefile.am are converted
-into {\tt Makefile.ac} using the {\em automake\/} program.
+into {\tt Makefile.in} using the {\em automake\/} program.
 
 \item {\em autoconf\/} generates the real {\tt Makefile} for the {\tt
-Makefile.ac} files. Therefor it has to know the paths and options
+Makefile.in} files. Therefor it has to know the paths and options
 necessary for the build process and which files, libraries and
 programs it has to compile at all. Exactly that is, what the
 configure-script tries to detect and guess automatically. Of course no
@@ -54,7 +54,8 @@ stuff is based on so called macros, from which are a lot of them
 allready included:
 
 \begin{verbatim}
-  AC_CHECK_LIB(raw1394, raw1394_get_libversion, ac_have_libraw1394=yes, [ac_have_libraw1394=no])
+  AC_CHECK_LIB(raw1394, raw1394_get_libversion,
+               ac_have_libraw1394=yes, [ac_have_libraw1394=no])
   AC_CHECK_HEADERS(errno.h fcntl.h stdlib.h)
   AC_CHECK_PROG(ac_has_dvips, dvips, yes, no)
 \end{verbatim}
@@ -62,7 +63,7 @@ allready included:
 There are e.g.\ macros to test the existence of libraries, header files
 or executable programs. If you need a more complicated test, you can
 write them with a language called M4 (M4's syntax is quite close to a
-normal shell syntax). The results of all tests are write in a file
+normal shell syntax). The results of all tests are written in a file
 called config.h additionally. This file can be included into the
 C-files and are treated as normal c-defines (e.g. {\tt \#define
 MIRO\_HAS\_METEOR 1}).
@@ -128,23 +129,23 @@ Additionally checks are written in a language called M4. It is up to
 you, where to save these files, but I prefer to add an extra directory
 named config, so the following explanation will assume this.
 
-First you have to check for the existence of e.g. ACE, TAO and
-Qt. Simply copy the necessary files {\tt search\_ace.m4},{\tt
-search\_tao.m4} and so on from {\tt \$MIRO\_ROOT/\-config/} to your local
-config directory and add {\tt AC\_SEARCH\_ACE}, {\tt AC\_SEARCH\_TAO} and
-so on (the name of the function macros) to the {\tt configure.ac}
-script (for example directly above the {\tt AC\_CONFIG\_FILES} macro.
+Miro has to check e.g.\ for the existence of ACE, TAO and Qt. But if you build your own
+project, these packages are found allready. So during the configure run of Miro, a small
+script called miro-config is generated. This script can be used not only to test Miro's
+properties (e.g.\ check the installation prefix using \texttt{miro-config --prefix}), but
+also the properties of these other packages (ACE, TAO and Qt). So for example you can
+easily check which C-flags are necessary to include ACE stuff (\texttt{miro-config
+  --acetao-clags}). Additionally, the script can be used to check if Miro contains all
+necessary modules you may need for your own project. For example \texttt{miro-config
+  --bttv} returns yes or no, depending on the configure parameters miro is built with.
 
-To be sure to add all the necessary libraries and options that are
-used to compile ACE/\-TAO, additional test are prepared within the file
-{\tt feature\_ace.m4} (again copy this file into your local folder and
-add the macro name into {\tt configure.ac}).
+If you need a starting point on how to use this sript, have a look at
+\texttt{\$MIRO\_ROOT/\-templates/\-search\_miro.m4}. Copy this file into your own local
+config directory and add \texttt{AC\_SEARCH\_MIRO} (the name of the function macro) to the
+\texttt{configure.ac} script (for example directly above the {\tt AC\_CONFIG\_FILES} macro. 
 
-To check for Miro and parts of the functionality, we prepared two
-files {\tt \$MIRO\_ROOT/\-templates/\-search\_miro.m4} and {\tt
-\$MIRO\_ROOT/\-templates/\-features\_miro.m4}. Again use them the usual way,
-e.g. insert {\tt AC\_FEATURES\_BTTV\_MIRO} to be sure that Miro is
-compiled with support for {\em BTTV\/} frame grabber cards.
+In the lowermost part of \texttt{search\_miro.m4} you can see, how Miro is checked for its
+conditional features. If you need more of these checks, simply add them there the same way
 
 If you need to write your own tests and checks, please feel free to
 use and modify these files. Additional macros that can be used out of
@@ -272,7 +273,7 @@ entering the following commands:
   tests from the config-directory.
 
 \item[autoconf] Creates \texttt{configure} from \texttt{configure.ac}
-\item[automake] Creates \texttt{Makefile.ac} from \texttt{Makefile.am} 
+\item[automake] Creates \texttt{Makefile.in} from \texttt{Makefile.am} 
 \item[./\-configure] Creates \texttt{Makefile} from \texttt{Makefile.in}
 \item[make]
 \end{description}
