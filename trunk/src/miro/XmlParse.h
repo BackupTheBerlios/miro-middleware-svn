@@ -51,6 +51,7 @@ namespace Miro
 
   void operator <<= (bool& lhs, const QDomNode& node);
   void operator <<= (char& lhs, const QDomNode& node);
+  void operator <<= (unsigned char& lhs, const QDomNode& node);
   void operator <<= (short& lhs, const QDomNode& node);
   void operator <<= (unsigned short& lhs, const QDomNode& node);
   void operator <<= (int& lhs, const QDomNode& node);
@@ -95,6 +96,7 @@ namespace Miro
 
   QDomElement operator >>= (const bool& lhs, QDomNode& node);
   QDomElement operator >>= (const char& lhs, QDomNode& node);
+  QDomElement operator >>= (const unsigned char& lhs, QDomNode& node);
   QDomElement operator >>= (const short& lhs, QDomNode& node);
   QDomElement operator >>= (const unsigned short& lhs, QDomNode& node);
   QDomElement operator >>= (const int& lhs, QDomNode& node);

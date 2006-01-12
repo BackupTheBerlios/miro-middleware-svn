@@ -18,8 +18,11 @@
 
 #include <tao/Version.h>
 #if (TAO_MAJOR_VERSION > 1) || \
-  ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION >= 4))
-#include <tao/Any_Impl.h>
+  ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION > 4) ) || \
+  ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 4) && (TAO_BETA_VERSION > 7) )
+#  include <tao/AnyTypeCode/Any_Impl.h>
+#elif ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 4) )
+#  include <tao/Any_Impl.h>
 #else
 #include <tao/Marshal.h>
 #endif

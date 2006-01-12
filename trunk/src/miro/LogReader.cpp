@@ -23,13 +23,17 @@
 
 #include <tao/Version.h>
 #if (TAO_MAJOR_VERSION > 1) || \
-  ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION >= 4))
-#include <tao/Any_Impl.h>
-#include <tao/Any_Unknown_IDL_Type.h>
+  ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION > 4) ) || \
+  ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 4) && (TAO_BETA_VERSION > 7) )
+#  include <tao/AnyTypeCode/Any_Impl.h>
+#  include <tao/AnyTypeCode/Any_Unknown_IDL_Type.h>
+#elif ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 4) )
+#  include <tao/Any_Impl.h>
+#  include <tao/Any_Unknown_IDL_Type.h>
 #else
-#include <tao/Marshal.h>
-#include <tao/Typecode.h>
-#include <tao/Environment.h>
+#  include <tao/Marshal.h>
+#  include <tao/Typecode.h>
+#  include <tao/Environment.h>
 #endif
 
 #include <cstdio>

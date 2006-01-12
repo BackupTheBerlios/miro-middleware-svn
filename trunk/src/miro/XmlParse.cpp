@@ -97,6 +97,25 @@ namespace Miro
     return e;
   }
 
+  void operator <<= (unsigned char& lhs, const QDomNode& node)
+  {
+    QString value = getAttribute(node, QString("value"));
+    if (value.length() != 1)
+      throw Exception("Parse exception");
+
+    lhs = value[0].latin1();
+  }
+
+  QDomElement operator >>= (const unsigned char& lhs, QDomNode& _node)
+  {
+    QChar c(lhs);
+    QDomDocument document = _node.ownerDocument();
+    QDomElement e = document. createElement("parameter");
+    e.setAttribute("value", QString(c));
+    _node.appendChild(e);
+    return e;
+  }
+
   XML_PARSE_QSTRING_IMPL(short, toShort);
   XML_PARSE_QSTRING_IMPL(unsigned short, toUShort);
   XML_PARSE_QSTRING_IMPL(int, toInt);

@@ -16,8 +16,11 @@
 #include <ace/Mem_Map.h>
 #include <tao/Version.h>
 #if (TAO_MAJOR_VERION > 1) || \
-  ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION > 4) ) || \
-  ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 4) && (TAO_BETA_VERSION > 4) )
+  ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION > 4) ) ||		\
+  ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 4) && (TAO_BETA_VERSION > 7) )
+#  include <tao/AnyTypeCode/TypeCode.h>
+#  include <tao/AnyTypeCode/TypeCode_Constants.h>
+#elif ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 4) && (TAO_BETA_VERSION > 4) )
 #  include <tao/TypeCode.h>
 #else
 #  include <tao/Typecode.h>
