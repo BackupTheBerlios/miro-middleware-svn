@@ -57,7 +57,6 @@ namespace Video
     while (!canceled())
     {
       try {
-	// clock_t start = clock();
 	if (videoDevice.calcConnectivity()) {
 	  ACE_Time_Value maxJitter = 
 	    (maxSynchJitter_ == ACE_Time_Value::zero)?
@@ -81,8 +80,6 @@ namespace Video
 			"VideoConsumer::svc() skipping image due to synch latencies");
 	  videoDevice.skipImage();
 	}
-	// std::cout << "TIME " << (double)(clock() - start)/CLOCKS_PER_SEC  << std::endl;
-
       }
       catch(Miro::CException& e) {
 	MIRO_LOG_OSTR(LL_ERROR,
@@ -97,7 +94,7 @@ namespace Video
 		      videoDevice.name() <<
 		      " VideoConsumer::svc() caught Miro::Exception: " << 
 		      e << std::endl);
-	ACE_OS::sleep(ACE_Time_Value(0, 500000));
+	exit(-1);
       }
     }
 
