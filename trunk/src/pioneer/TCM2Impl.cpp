@@ -143,12 +143,12 @@ namespace Pioneer
   void
   TCM2Impl::integrateData(const Miro::TCM2EventIDL& _data)
   {
-    assert(_data.heading > -M_PI &&
-	   _data.heading <= M_PI);
-    assert(_data.inclination.pitch > -M_PI &&
-	   _data.inclination.pitch <= M_PI);
-    assert(_data.inclination.roll > -M_PI &&
-	   _data.inclination.roll <= M_PI);
+    assert(_data.heading > (float)-M_PI &&
+	   _data.heading <= (float)M_PI);
+    assert(_data.inclination.pitch > (float)-M_PI &&
+	   _data.inclination.pitch <= (float)M_PI);
+    assert(_data.inclination.roll > (float)-M_PI &&
+	   _data.inclination.roll <= (float)M_PI);
 
     { // scope for guard
       Miro::Guard guard(mutex_);

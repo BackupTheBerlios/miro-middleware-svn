@@ -137,8 +137,8 @@ namespace Miro
   void 
   CompassImpl::integrateData(const CompassEventIDL& _data)
   {
-    assert(_data.heading > -M_PI &&
-	   _data.heading <= M_PI);
+    assert(_data.heading > (float)-M_PI &&
+	   _data.heading <= (float)M_PI);
 
     { // scope for guard
       Guard guard(mutex_);

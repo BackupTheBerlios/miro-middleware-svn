@@ -142,10 +142,10 @@ namespace Miro
   void 
   InclinometerImpl::integrateData(const InclinometerEventIDL& _data)
   {
-    assert(_data.inclination.pitch > -M_PI &&
-	   _data.inclination.pitch <= M_PI);
-    assert(_data.inclination.roll > -M_PI &&
-	   _data.inclination.roll <= M_PI);
+    assert(_data.inclination.pitch > (float)-M_PI &&
+	   _data.inclination.pitch <= (float)M_PI);
+    assert(_data.inclination.roll > (float)-M_PI &&
+	   _data.inclination.roll <= (float)M_PI);
 
     { // scope for guard
       Guard guard(mutex_);
