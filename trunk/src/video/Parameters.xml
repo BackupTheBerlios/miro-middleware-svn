@@ -118,9 +118,7 @@
 
     <config_item name="Device1394" parent="Device" final="true">
       <config_parameter name="device" type="string" inherited="true" default="/dev/video1394/0" />
-
       <config_parameter name="buffers" type="unsigned int" default="4" />
-
       <config_parameter name="brightness" type="int" default="128" />
       <config_parameter name="exposure" type="int" default="128" />
       <config_parameter name="focus" type="int" default="-1" />
@@ -136,9 +134,8 @@
       <config_parameter name="trigger" type="int" default="-1" />
       <config_parameter name="whiteBalance0" type="int" default="162" />
       <config_parameter name="whiteBalance1" type="int" default="184" />
-      <config_parameter name="videoFormat" type="string" default="SVGA1" />
-      <config_parameter name="videoMode" type="int" default="1" />
-
+      <config_parameter name="videoFormat" type="string" default="VGA" />
+      <config_parameter name="videoMode" type="int" default="0" />
     </config_item>
 
     <config_item parent="Miro::Config">
