@@ -81,10 +81,10 @@ MainForm::MainForm(Miro::Client& _client,
     }
 
     char ppmHeader[32]; // should be 15+1, but just in case...
-    sprintf(ppmHeader,"P%i\n%3i %3i %3i\n",
+    sprintf(ppmHeader,"P%i\n%i %i 255\n",
 	    ((bpp_ == 8)? 5 : 6),
 	    imageIDL_->format.width,
-	    imageIDL_->format.height, 255);
+	    imageIDL_->format.height);
     ppmOffset_ = strlen(ppmHeader);
     ppmBuffer_ = new unsigned char[imageSize_ + ppmOffset_];
 
