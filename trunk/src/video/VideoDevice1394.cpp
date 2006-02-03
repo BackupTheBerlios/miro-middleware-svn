@@ -15,6 +15,32 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.18  2006/02/03 08:40:05  gmayer
+ * apply patch from Sean Verret
+ * description taken from his email see below
+ *
+ *
+ * I made the changes to The ULM code to make the flea camera work.  Here
+ * is a summary of the changes you can pass on to Ulm:
+ *
+ * 1. I added support for FORMAT1 type cameras.  This includes the
+ * MODE_1024x768_MONO format that we are interested in.
+ *
+ * 2. I added support for SVGA_NONCOMPRESSED_1 video Format
+ *
+ * In order to accomplish the above tasks I defined two new variables
+ * videoFormat and videoMode in the Device1394 section of the parameters
+ * file.  These variables are used in VideoDevice1394 to pass the correct
+ * parameters to libdc.
+ *
+ * videoFormat is a string.  Valid entries are:
+ * VGA (This equates to the previous Ulm code)
+ * SVGA1 This adds support for the flea camera
+ *
+ * videoMode is an integre.  Valid entries are:
+ * 0 - (Format0 cameras handle the previous Ulm code)
+ * 1 - (Format1 handles 800x600 and 1024x768 cameras)
+ *
  * Revision 1.17  2005/11/17 15:58:31  gmayer
  * now works with libdc1394 version 2 (tested with 2.0.0-pre5)
  * it's better to have this in place before it's the default verison in debian :-)
@@ -136,8 +162,11 @@
 #define NUM_BUFFERS 4
 #define DROP_FRAMES 1
 
+#include <iostream>
+
 namespace
 {
+
   //---------------------------------------------------------------
   struct Mode1394
   {
@@ -147,15 +176,25 @@ namespace
 
   // mapping of miro formats to libdc1394 formats
 #if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
+
   static Mode1394 mode1394[NUM_FORMAT0_MODES] = {
     { {160, 120, Miro::YUV_24 }, MODE_160x120_YUV444},
     { {320, 240, Miro::YUV_422}, MODE_320x240_YUV422},
     { {640, 480, Miro::YUV_411}, MODE_640x480_YUV411},
     { {640, 480, Miro::YUV_422}, MODE_640x480_YUV422},
     { {640, 480, Miro::RGB_24 }, MODE_640x480_RGB},
-    { {640, 480, Miro::GREY_8 }, MODE_640x480_MONO},
     { {640, 480, Miro::GREY_16}, MODE_640x480_MONO16}
-  };
+	};
+    	
+	static Mode1394 mode11394[NUM_FORMAT1_MODES] = {
+    { {800, 600, Miro::YUV_422}, MODE_800x600_YUV422},
+    { {1024, 768, Miro::YUV_422}, MODE_1024x768_YUV422},
+    { {800, 600, Miro::RGB_24 }, MODE_800x600_RGB},
+    { {1024, 768, Miro::RGB_24 }, MODE_1024x768_RGB},
+    { {800, 600, Miro::GREY_8}, MODE_800x600_MONO},
+    { {1024, 768, Miro::GREY_8}, MODE_1024x768_MONO},
+    { {800, 600, Miro::GREY_16}, MODE_800x600_MONO16}
+    };
 #else
   static Mode1394 mode1394[DC1394_MODE_FORMAT0_NUM] = {
     { {160, 120, Miro::YUV_24 }, DC1394_MODE_160x120_YUV444},
@@ -165,7 +204,18 @@ namespace
     { {640, 480, Miro::RGB_24 }, DC1394_MODE_640x480_RGB8},
     { {640, 480, Miro::GREY_8 }, DC1394_MODE_640x480_MONO8},
     { {640, 480, Miro::GREY_16}, DC1394_MODE_640x480_MONO16}
-  };
+	};
+	
+	static Mode1394 mode11394[DC1394_MODE_FORMAT1_NUM] = {
+    { {800, 600, Miro::YUV_422}, DC1394_MODE_800x600_YUV422},
+    { {1024, 768, Miro::YUV_422}, DC1394_MODE_1024x768_YUV422},
+    { {800, 600, Miro::RGB_24 }, DC1394_MODE_800x600_RGB8},
+    { {1024, 768, Miro::RGB_24 }, DC1394_MODE_1024x768_RGB8},
+    { {800, 600, Miro::GREY_8}, DC1394_MODE_800x600_MONO8},
+    { {1024, 768, Miro::GREY_8}, DC1394_MODE_1024x768_MONO8},
+    { {800, 600, Miro::GREY_16}, DC1394_MODE_800x600_MONO16},
+    { {1024, 768, Miro::GREY_16}, DC1394_MODE_1024x768_MONO16}
+    };
 #endif
 
   //---------------------------------------------------------------
@@ -250,6 +300,9 @@ namespace
 
 namespace Video
 {
+
+using std::cout;
+  using std::endl;
   FILTER_PARAMETERS_FACTORY_IMPL(Device1394);
 
   //---------------------------------------------------------------
@@ -414,24 +467,60 @@ namespace Video
     MIRO_DBG(VIDEO, LL_DEBUG, "Device1394::setImageFormat()");
 
     unsigned int i;
+	if( params_.videoMode == 0 )
+	{
 #if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
-    for (i = 0; i < NUM_FORMAT0_MODES; ++i) {
+    	for (i = 0; i < NUM_FORMAT0_MODES; ++i) 
+		{
 #else
-    for (i = 0; i < DC1394_MODE_FORMAT0_NUM; ++i) {
+    	for (i = 0; i < DC1394_MODE_FORMAT0_NUM; ++i) 
+		{
 #endif
-      if (inputFormat_.width  == mode1394[i].format.width &&
-	  inputFormat_.height == mode1394[i].format.height &&
-	  inputFormat_.palette == mode1394[i].format.palette ) {
-	imageFormat_ = mode1394[i].mode;
-	break;
-      }
+      	if (inputFormat_.width  == mode1394[i].format.width &&
+	  	inputFormat_.height == mode1394[i].format.height &&
+	  	inputFormat_.palette == mode1394[i].format.palette ) {
+		imageFormat_ = mode1394[i].mode;
+		break;
+      	}
     }
-#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
+	
+	#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
     if (i == NUM_FORMAT0_MODES)
 #else
     if (i == DC1394_MODE_FORMAT0_NUM)
 #endif
       throw Miro::Exception("Device1394::setImageFormat - Unsupported image format requested.");
+	
+	}
+	else if ( params_.videoMode == 1 )
+	{
+	#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
+    	for (i = 0; i < NUM_FORMAT1_MODES; ++i) 
+		{
+#else
+    	for (i = 0; i < DC1394_MODE_FORMAT1_NUM; ++i) 
+		{
+#endif
+      	if (inputFormat_.width  == mode11394[i].format.width &&
+	  	inputFormat_.height == mode11394[i].format.height &&
+	  	inputFormat_.palette == mode11394[i].format.palette ) {
+		imageFormat_ = mode11394[i].mode;
+		break;
+      	}
+    }
+	
+	#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
+    if (i == NUM_FORMAT1_MODES)
+#else
+    if (i == DC1394_MODE_FORMAT1_NUM)
+#endif
+      throw Miro::Exception("Device1394::setImageFormat - Unsupported image format requested.");
+	} 
+	else
+	{
+	   throw Miro::Exception("Device1394::setImageFormat - Unsupported params_.videoMode requested.");
+	}
+
 
     MIRO_DBG(VIDEO, LL_DEBUG, "Device1394::setImageFormat() finished");
   }
@@ -444,6 +533,7 @@ namespace Video
 
     unsigned int channel;
     unsigned int speed;
+	unsigned int format;
 
 #if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
     if (dc1394_get_iso_channel_and_speed(handle_, p_camera_->node, &channel, &speed) != DC1394_SUCCESS)
@@ -456,11 +546,27 @@ namespace Video
     channel = 1;
 
 #if ( LIBDC1394_VERSION == 1 )
+	if ( params_.videoFormat == "SVGA1" )
+	{
+		format = FORMAT_SVGA_NONCOMPRESSED_1;
+	}
+	else if ( params_.videoFormat == "VGA" )
+	{
+			format = FORMAT_VGA_NONCOMPRESSED;
+	}
+	else
+	{
+		throw Miro::Exception("Device1394:initDevice: Invalid params_.videoFormat");
+	}
+	
+#endif
+
+#if ( LIBDC1394_VERSION == 1 )
     // old version
     if (dc1394_dma_setup_capture(handle_,
 				 p_camera_->node,
 				 channel,
-				 FORMAT_VGA_NONCOMPRESSED,
+				 format,
 				 imageFormat_,
 				 SPEED_400,
 				 frameRate_,
@@ -474,7 +580,7 @@ namespace Video
     if (dc1394_dma_setup_capture(handle_,
 				 p_camera_->node,
 				 channel,
-				 FORMAT_VGA_NONCOMPRESSED,
+				 format,
 				 imageFormat_,
 				 SPEED_400,
 				 frameRate_,

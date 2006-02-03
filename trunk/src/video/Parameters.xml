@@ -136,6 +136,8 @@
       <config_parameter name="trigger" type="int" default="-1" />
       <config_parameter name="whiteBalance0" type="int" default="162" />
       <config_parameter name="whiteBalance1" type="int" default="184" />
+      <config_parameter name="videoFormat" type="string" default="SVGA1" />
+      <config_parameter name="videoMode" type="int" default="1" />
 
     </config_item>
 
