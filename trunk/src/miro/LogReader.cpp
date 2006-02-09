@@ -227,12 +227,13 @@ namespace Miro
       // direct copies from TAO sources
       // read the any payload
 
-#if ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 4 && TAO_BETA_VERSION >= 4)) || \
-  ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION >= 5))
+#if (TAO_MAJOR_VERSION > 1) || \
+  ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION > 4) ) || \
+  ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 4) && (TAO_BETA_VERSION > 3) )
 
       try {
 
-	TAO::Unknown_IDL_Type *impl = new TAO::Unknown_IDL_Type (tc, *istr_);
+	TAO::Unknown_IDL_Type *impl = new TAO::Unknown_IDL_Type (tc);
 	_event.remainder_of_body.replace (impl);
 	impl->_tao_decode (*istr_);
       }
@@ -241,9 +242,9 @@ namespace Miro
 	return false;
       }
 
-#elif (TAO_MAJOR_VERSION > 1) || \
-  ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 4) && (TAO_BETA_VERSION <= 3)) ||	\
-  ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 3 && TAO_BETA_VERSION >= 5)) 
+#elif \
+  ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 4) ) || \
+  ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 3) && (TAO_BETA_VERSION > 4) ) 
 
       try {
 
@@ -264,13 +265,14 @@ namespace Miro
 	char *begin = istr_->rd_ptr ();
 
 	// Skip over the next aregument.
-#if ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 3)) || \
-  ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 2) && (TAO_BETA_VERSION >= 2))
+#if \
+  ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 3) ) || \
+  ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 2) && (TAO_BETA_VERSION > 1) )
 	CORBA::TypeCode::traverse_status status =
 	  TAO_Marshal_Object::perform_skip (tc,
 					    istr_
 					    ACE_ENV_ARG_PARAMETER);
-#else // TAO_MINOR_VERSION <= 2
+#else // TAO_MINOR_VERSION <= 1
 	CORBA::TypeCode::traverse_status status =
 	  TAO_Marshal_Object::perform_skip (tc, istr_, ACE_TRY_ENV);
 #endif
