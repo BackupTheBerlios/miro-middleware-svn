@@ -61,7 +61,7 @@ namespace Video
 	int y1,y2,u,v;
 	unsigned char const *py1,*py2;
 	int i,j, c1, c2, c3, c4;
-	unsigned char *d1, *d2, *d3;
+	unsigned char *d1, *d2;
 
 	//Initialization
 	src0=src_img;

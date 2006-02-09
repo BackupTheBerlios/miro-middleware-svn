@@ -59,8 +59,11 @@ namespace Video
 
     
     for (unsigned int x = 0; x < length; ++x) {
-      *(tgt_img++) =  (unsigned int)
-	    rint(r_lookup[*(src_img++)] + g_lookup[*(src_img++)] + b_lookup[*(src_img++)]);
+      float sum = r_lookup[*(src_img++)];
+      sum += g_lookup[*(src_img++)];
+      sum += b_lookup[*(src_img++)];
+
+      *(tgt_img++) =  (unsigned int) rintf(sum);
     }
     
     bzero(bitImage_, 360 * 4 * 4);

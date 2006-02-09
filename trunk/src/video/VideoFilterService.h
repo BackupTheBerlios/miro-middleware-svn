@@ -22,6 +22,7 @@ namespace Miro
     class FilterService
     {
     public:
+      virtual ~FilterService();
       virtual int init();
       virtual int fini();
       

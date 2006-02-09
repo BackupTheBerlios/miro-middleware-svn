@@ -49,13 +49,16 @@ namespace Miro
 { 
   namespace VIP
   {
+    FilterService::~FilterService()
+    {}
+
     int
     FilterService::init()
     {
       int rc = -1;
 
       try {
-	MIRO_LOG(LL_NOTICE, "Registered filters.");
+	MIRO_LOG(LL_NOTICE, "Registering filters.");
 	
 	::Video::FilterRepository * repo = ::Video::FilterRepository::instance();
 	repo->registerFilter< ::Video::DeviceDummy>("DeviceDummy");
@@ -95,6 +98,7 @@ namespace Miro
 	repo->registerFilter< ::Video::FilterReverse>("FilterReverse");
 	repo->registerFilter< ::Video::FilterHalfImage>("FilterHalfImage");
    
+	MIRO_LOG(LL_NOTICE, "Registered filters.");
 	rc = 0;
       }
       catch (const Miro::CException& e) {
