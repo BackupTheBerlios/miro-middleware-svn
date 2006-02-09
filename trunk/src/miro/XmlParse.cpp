@@ -2,7 +2,7 @@
 //
 // This file is part of Miro (The Middleware For Robots)
 //
-// (c) 2002, 2003
+// (c) 2002, 2003, 2004, 2005, 2006
 // Department of Neural Information Processing, University of Ulm, Germany
 //
 // $Id$
@@ -18,6 +18,7 @@
 #include <qstring.h>
 
 #include <algorithm>
+#include <limits>
 
 #define XML_PARSE_QSTRING_IMPL(type, qstringmethod) \
   void operator <<= (type & _lhs, const QDomNode& _node) \
@@ -97,21 +98,44 @@ namespace Miro
     return e;
   }
 
+  void operator <<= (signed char& lhs, const QDomNode& node)
+  {
+    bool valid = false; 
+    QString value = getAttribute(node, QString("value"));
+    signed short v = value.toUShort(&valid);
+    if (!valid || v < SCHAR_MIN || v > SCHAR_MAX ) 
+       throw Exception("Parse exception"); 
+    lhs = v;
+  }
+
+  QDomElement operator >>= (const signed char& lhs, QDomNode& _node)
+  {
+    QString value;
+    QDomDocument document = _node.ownerDocument();
+    QDomElement e = document. createElement("parameter");
+    value.setNum(lhs); \
+    e.setAttribute("value", value);
+    _node.appendChild(e);
+    return e;
+  }
+
   void operator <<= (unsigned char& lhs, const QDomNode& node)
   {
+    bool valid = false;
     QString value = getAttribute(node, QString("value"));
-    if (value.length() != 1)
-      throw Exception("Parse exception");
-
-    lhs = value[0].latin1();
+    unsigned short v = value.toUShort(&valid);
+    if (!valid || v > UCHAR_MAX ) 
+       throw Exception("Parse exception"); 
+    lhs = v;
   }
 
   QDomElement operator >>= (const unsigned char& lhs, QDomNode& _node)
   {
-    QChar c(lhs);
+    QString value;
     QDomDocument document = _node.ownerDocument();
     QDomElement e = document. createElement("parameter");
-    e.setAttribute("value", QString(c));
+    value.setNum(lhs); \
+    e.setAttribute("value", value);
     _node.appendChild(e);
     return e;
   }
