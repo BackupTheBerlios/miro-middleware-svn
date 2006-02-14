@@ -298,9 +298,9 @@
       </instance>
 
       <instance type="Video::FilterOmni2Pan" name="FilterOmni2Pan">
-	<parameter value="83" name="CenterX" />
-	<parameter value="60" name="CenterY" />
-	<parameter value="60" name="Radius" />
+	<parameter value="158" name="CenterX" />
+	<parameter value="122" name="CenterY" />
+	<parameter value="120" name="Radius" />
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
 	  <parameter value="Pan" name="Name" />
