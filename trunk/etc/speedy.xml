@@ -174,8 +174,8 @@
       <!-- OmniCam -->
 
       <instance type="Video::Parameters" name="OmniCam" >
-	<parameter value="160" name="Width" />
-	<parameter value="120" name="Height" />
+	<parameter value="320" name="Width" />
+	<parameter value="240" name="Height" />
 	<parameter value="yuv420p" name="Palette" />
 	<parameter name="Filter">
 	  <parameter value="DeviceQuickCam" name="Name" />
