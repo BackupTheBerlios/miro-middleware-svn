@@ -140,7 +140,7 @@ namespace Miro
     asynchDispatching_(_asynchDispatching),
     dispatcherThread_(_description, _supplier)
   {
-    MIRO_DBG_OSTR(MIRO,LL_CTOR_DTOR,"Constructing Miro::RangeSensorImpl." << std::endl);
+    MIRO_DBG_OSTR(MIRO,LL_CTOR_DTOR,"Constructing Miro::RangeSensorImpl. " << description_.eventName << std::endl);
 
     if (_description.group.length() == 0)
       throw Exception("RangeSensorImpl: Empty Scan Description");
