@@ -29,18 +29,12 @@ struct SonarNotify : public StructuredPushConsumer
   SonarNotify(EventChannel_ptr _ec, const string& domainName) :
     StructuredPushConsumer(_ec)
   {
-    EventTypeSeq added, removed;
-    added.length(1);
-    added[0].domain_name =  CORBA::string_dup(domainName.c_str());
-    added[0].type_name = CORBA::string_dup("Sonar");
-
-    setSubscriptions(added);
+    setSingleSubscription(domainName, "Sonar");
   }
 
   // Inherited IDL interface.
   // Called for every event by the event channel. 
-  void push_structured_event(const StructuredEvent& notification
-			     ACE_ENV_ARG_DECL_WITH_DEFAULTS)
+  void push_structured_event(const StructuredEvent& notification)
     throw(SystemException, Disconnected) 
   {
     // Get a pointer to the sensor data of the structured event.
