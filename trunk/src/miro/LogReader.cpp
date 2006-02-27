@@ -80,9 +80,9 @@ namespace Miro
 	istr_->read_ulong(events_);
 
 	MIRO_DBG_OSTR(MIRO, LL_DEBUG, 
-		      "offset " << 
-		      std::hex << tcrOffset_ << std::endl <<
-		      "events " << 
+		      "LogReader - TCR Offset: 0x" << 
+		      std::hex << tcrOffset_ << std::dec << std::endl <<
+		      "LogReader - Number of events: " << 
 		      events_ << std::dec);
 
 	TAO_InputCDR tcrIStream((char*)memMap_.addr() + tcrOffset_,
@@ -91,7 +91,7 @@ namespace Miro
 	typeRepository_ = new LogTypeRepository(tcrIStream);
 
 
-	MIRO_DBG_OSTR(MIRO, LL_DEBUG, "good bit : " << istr_->good_bit());
+	MIRO_DBG_OSTR(MIRO, LL_PRATTLE, "LogReader - Good bit : " << istr_->good_bit());
       }
       else 
 	throw Exception("Unknown log format version.");

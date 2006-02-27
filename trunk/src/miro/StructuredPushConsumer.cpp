@@ -308,6 +308,20 @@ namespace Miro
   }
 
   void
+  StructuredPushConsumer::setSingleSubscription(std::string const& _domain,
+						std::string const& _type)
+  {
+    CosNotification::EventTypeSeq subscriptions;
+    subscriptions.length(1);
+    subscriptions[0].domain_name = CORBA::string_dup(_domain.c_str());
+    subscriptions[0].type_name = CORBA::string_dup(_type.c_str());
+
+    setSubscriptions(subscriptions);
+  }
+
+
+
+  void
   StructuredPushConsumer::offer_change(const CosNotification::EventTypeSeq& added, 
                                        const CosNotification::EventTypeSeq& removed
                                        ACE_ENV_ARG_DECL_NOT_USED)

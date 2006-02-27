@@ -86,8 +86,12 @@ namespace Miro
     //! Set the set of subscriptions from the notification channel.
     void setSubscriptions(CosNotification::EventTypeSeq const& _newSubscriptions,
 			  bool subscribe = true);
+    //! Set a single subscription from the notification channel.
+    /** This is a convenience method, that just calls setSubscriptions. 
+     * The subscription will have the index 0, for further reference. */
+    void setSingleSubscription(std::string const& _domain, std::string const& _type);
 
-    /** Accessor for the Proxy that we're connected to. */
+    //! Accessor for the Proxy that we're connected to.
     CosNotifyChannelAdmin::StructuredProxyPushSupplier_ptr getProxySupplier();
 
   protected:

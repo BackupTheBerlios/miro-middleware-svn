@@ -53,7 +53,7 @@ namespace Miro
     _istr.read_ulong(numTypes);
     types_.reserve(numTypes);
 
-    MIRO_DBG_OSTR(MIRO, LL_DEBUG, "types: " << numTypes);
+    MIRO_DBG_OSTR(MIRO, LL_DEBUG, "LogTypeRepository - number of types: " << numTypes);
 
     // read each type from cdr stream
     for (unsigned int i = 0; i < numTypes; ++i) {

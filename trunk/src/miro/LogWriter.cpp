@@ -83,7 +83,7 @@ namespace Miro
     if (ACE_OS::truncate((fileName_).c_str(), totalLength_) == -1) {
       // We shouldn't throw in a destructor...
       MIRO_LOG_OSTR(LL_WARNING, 
-		    "Error " << errno << 
+		    "LogWriter - Error " << errno << 
 		    " truncating log file " << fileName_  << std::endl
 		    << std::strerror(errno));
     }
@@ -256,12 +256,12 @@ namespace Miro
     o_.write_ulong(offset);
 
     MIRO_DBG_OSTR(MIRO, LL_DEBUG,
-		  "Offset" << std::hex << offset <<
-		  "Events" << numEvents_ << std::dec);
+		  "LogWriter - TCR Offset: 0x" << std::hex << offset << std::dec <<std::endl <<
+		  "LogWriter - Number of events: " << numEvents_);
 
     // get total length of the file
     totalLength_ = offset + typeRepository_.totalLength();
     MIRO_DBG_OSTR(MIRO, LL_DEBUG,
-		  "TCR length: " <<  typeRepository_.totalLength());
+		  "LogWriter - TCR length: " <<  typeRepository_.totalLength());
   }
 }
