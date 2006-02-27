@@ -654,7 +654,7 @@
 	<parameter value="0" name="WhitebalanceDelay" />
 	<parameter value="2" name="Whitebalance" />
 	<parameter value="-1" name="ShutterSpeed" />
-        <parameter value="32767" name="AutoGainControl" />
+        <parameter value="25000" name="AutoGainControl" />
         <parameter value="0" name="Compression" />
       </instance>
 
