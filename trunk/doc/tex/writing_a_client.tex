@@ -228,12 +228,12 @@ To show how asynchronous event processing works within \miro, lets
 look at a small example. First we look at the code to handle the
 events.
 
-\lstinputlisting[frame=tb, firstline=24, lastline=53, caption={examples/sonar/SonarNotify.cpp}]{SonarNotify.cpp}
+\lstinputlisting[frame=tb, firstline=25, lastline=47, caption={examples/sonar/SonarNotify.cpp}]{SonarNotify.cpp}
 \label{lst:SonarNotify}
 
 A step by step walk trough the code:
 
-\lstinputlisting[frame=tb, firstline=24, lastline=24]{SonarNotify.cpp}
+\lstinputlisting[frame=tb, firstline=25, lastline=25]{SonarNotify.cpp}
 
 The class \lstinline!SonarNotify! provides a callback for the event
 channel. It is derived from \lstinline!Miro::StructuredPushConsumer!,
@@ -242,27 +242,19 @@ the initialization and registering is done within the constructor of
 this super class. The method \lstinline!push_structured_event! is the
 callback that is called from the notification service.
 
-\lstinputlisting[frame=tb, firstline=31, lastline=31]{SonarNotify.cpp}
+\lstinputlisting[frame=tb, firstline=32, lastline=32]{SonarNotify.cpp}
 
-The \lstinline!EventTypeSeq! class is for specifying the events that you
-want to be subscribed for. It is an incremental protocol. So you make
-a list of events you want to receive from now on and another with the
-events you wish to no longer become informed about. Since we are just
-subscribing, the second list is empty.
+In the constructor, we subscribe for the events we want to receive. As
+we are only interested in one single event, we can use the helper
+method \lstinline!setSingleSubscription!, which uses constant
+std::string references as parameter types instead of a CORBA sequence
+of CORBA string pairs. Events are subscribed by
+\lstinline!domain_name! and \lstinline!type_name!.  The domain name
+corresponds with the name of the robot and the type name usually
+corresponds with the name, the service interface is registered at the
+naming service with.
 
-\lstinputlisting[frame=tb, firstline=33, lastline=35]{SonarNotify.cpp}
-
-Events are subscribed by \lstinline!domain_name! and
-\lstinline!type_name!. Never forget to set the length of a
-sequence explicitly. Specifying the length as a constructor
-parameter just reserves the number of elements, the length of the
-sequence is still zero.
-
-\lstinputlisting[frame=tb, firstline=37, lastline=37]{SonarNotify.cpp}
-
-Tell the consumer admin what we want to subscribe for.
-
-\lstinputlisting[frame=tb, firstline=48, lastline=49]{SonarNotify.cpp}
+\lstinputlisting[frame=tb, firstline=42, lastline=43]{SonarNotify.cpp}
 
 The payload of a structured event is contained within the
 \lstinline!remainder_of_body! field with is of type
@@ -273,12 +265,12 @@ Even though a \lstinline!CORBA::Any! can hold any IDL defined struct,
 you can only extract type \lstinline!T! from a \lstinline!CORBA::Any!
 if it actually contains an object of type \lstinline!T!.
 
-\lstinputlisting[frame=tb, firstline=54, caption={examples/sonar/SonarNotify.cpp}]{SonarNotify.cpp}
+\lstinputlisting[frame=tb, firstline=49, caption={examples/sonar/SonarNotify.cpp}]{SonarNotify.cpp}
 \label{lst:SonarNotify2}
 
 Lets now have a look at the \lstinline!main! function:
 
-\lstinputlisting[frame=tb, firstline=57, lastline=57]{SonarNotify.cpp}
+\lstinputlisting[frame=tb, firstline=51, lastline=51]{SonarNotify.cpp}
 
 Since a push consumer is called (pushed) by the event producer, it
 is actually a server instead of a client. Therefor the
@@ -287,17 +279,17 @@ necessary calls to init the CORBA environment. It is basically the
 same as the \lstinline!Miro::Client!  but we also need a POA to
 register the consumer object.
 
-\lstinputlisting[frame=tb, firstline=59, lastline=59]{SonarNotify.cpp}
+\lstinputlisting[frame=tb, firstline=53, lastline=53]{SonarNotify.cpp}
 
 Just like the former \lstinline!Miro::RangeSensor! interface, we
 resolve the \lstinline!EventChannel! by name at the naming service.
 
-\lstinputlisting[frame=tb, firstline=61, lastline=61]{SonarNotify.cpp}
+\lstinputlisting[frame=tb, firstline=55, lastline=55]{SonarNotify.cpp}
 
 Instanciate the push consumer. It does all the necessary
 initialization within its constructor.
 
-\lstinputlisting[frame=tb, firstline=63, lastline=63]{SonarNotify.cpp}
+\lstinputlisting[frame=tb, firstline=57, lastline=57]{SonarNotify.cpp}
 
 Now we enter the CORBA event loop. This will not return, until the
 process is signaled by SIGINT or SIGTERM.
