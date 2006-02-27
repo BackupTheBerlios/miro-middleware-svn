@@ -1,11 +1,13 @@
 <!DOCTYPE MiroConfigDocument>
   <config>
+
     <section name="Robot" >
       <parameter name="Miro::RobotParameters" >
 	<parameter value="roadrunner" name="Name" />
 	<parameter value="Sparrow2003" name="Type" />
       </parameter>
     </section>
+
     <section name="Faulhaber" >
       <parameter name="FaulMotor::Parameters" >
 	<parameter name="LeftWheel" >
@@ -32,6 +34,7 @@
 	<parameter value="1700" name="MaxNegAccel" />
       </parameter>
     </section>
+
     <section name="Sparrow" >
       <parameter name="Sparrow::Parameters" >
 	<parameter value="true" name="Faulhaber" />
@@ -45,7 +48,6 @@
 	  <parameter value="0.300000" name="PanSwing" />
 	  <parameter value="245" name="PanRadPerSec" />
 	  <parameter value="3." name="PanAccuracy" />
-	  <!--parameter value="true" name="Servo" /-->
         </parameter>
 	<parameter value="0.040000" name="InfraredPulse" />
 	<parameter value="0.040000" name="OdometryPulse" />
@@ -175,6 +177,84 @@
 
     <section name="Video" >
 
+      <parameter name="LVF::FuseEvidenceParameters">
+        <parameter name="APrioriAttentionControl">
+          <parameter value="0.55" name="Bybcornerpost" />
+          <parameter value="0.55" name="Ybycornerpost" />
+          <parameter value="0.5" name="Bluegoal" />
+          <parameter value="0.5" name="Yellowgoal" />
+          <parameter value="0.5" name="Blueleftgoalpost" />
+          <parameter value="0.5" name="Bluerightgoalpost" />
+          <parameter value="0.5" name="Yellowleftgoalpost" />
+          <parameter value="0.5" name="Yellowrightgoalpost" />
+          <parameter value="0.55" name="Ball" />
+          <parameter value="0.55" name="Robot" />
+        </parameter>
+        <parameter name="APrioriBeingThere">
+          <parameter value="0.4" name="Bybcornerpost" />
+          <parameter value="0.4" name="Ybycornerpost" />
+          <parameter value="0.0" name="Bluegoal" />
+          <parameter value="0.0" name="Yellowgoal" />
+          <parameter value="0.0" name="Blueleftgoalpost" />
+          <parameter value="0.0" name="Bluerightgoalpost" />
+          <parameter value="0.0" name="Yellowleftgoalpost" />
+          <parameter value="0.0" name="Yellowrightgoalpost" />
+          <parameter value="0.4" name="Ball" />
+          <parameter value="0.4" name="Robot" />
+        </parameter>
+        <parameter name="APrioriSeenFloor">
+          <parameter value="0.2" name="Bybcornerpost" />
+          <parameter value="0.2" name="Ybycornerpost" />
+          <parameter value="0.0" name="Bluegoal" />
+          <parameter value="0.0" name="Yellowgoal" />
+          <parameter value="0.0" name="Blueleftgoalpost" />
+          <parameter value="0.0" name="Bluerightgoalpost" />
+          <parameter value="0.0" name="Yellowleftgoalpost" />
+          <parameter value="0.0" name="Yellowrightgoalpost" />
+          <parameter value="0.2" name="Ball" />
+          <parameter value="0.2" name="Robot" />
+        </parameter>
+        <parameter name="MinThreshold">
+          <parameter value="0.3" name="Bybcornerpost" />
+          <parameter value="0.3" name="Ybycornerpost" />
+          <parameter value="0.2" name="Bluegoal" />
+          <parameter value="0.2" name="Yellowgoal" />
+          <parameter value="0.2" name="Blueleftgoalpost" />
+          <parameter value="0.2" name="Bluerightgoalpost" />
+          <parameter value="0.2" name="Yellowleftgoalpost" />
+          <parameter value="0.2" name="Yellowrightgoalpost" />
+          <parameter value="0.3" name="Ball" />
+          <parameter value="0.3" name="Robot" />
+        </parameter>
+        <parameter name="MaxThreshold">
+          <parameter value="0.75" name="Bybcornerpost" />
+          <parameter value="0.75" name="Ybycornerpost" />
+          <parameter value="0.4" name="Bluegoal" />
+          <parameter value="0.4" name="Yellowgoal" />
+          <parameter value="0.4" name="Blueleftgoalpost" />
+          <parameter value="0.4" name="Bluerightgoalpost" />
+          <parameter value="0.4" name="Yellowleftgoalpost" />
+          <parameter value="0.4" name="Yellowrightgoalpost" />
+          <parameter value="0.75" name="Ball" />
+          <parameter value="0.75" name="Robot" />
+        </parameter>
+        <parameter name="UseThreshold">
+          <parameter value="0.65" name="Bybcornerpost" />
+          <parameter value="0.65" name="Ybycornerpost" />
+          <parameter value="0.35" name="Bluegoal" />
+          <parameter value="0.35" name="Yellowgoal" />
+          <parameter value="0.35" name="Blueleftgoalpost" />
+          <parameter value="0.35" name="Bluerightgoalpost" />
+          <parameter value="0.35" name="Yellowleftgoalpost" />
+          <parameter value="0.35" name="Yellowrightgoalpost" />
+          <parameter value="0.65" name="Ball" />
+          <parameter value="0.65" name="Robot" />
+        </parameter>
+        <parameter value="0.25" name="DiminishRate" />
+        <parameter value="1.0" name="MaxEstimateErrorNCVM" />
+        <parameter value="3.0" name="MaxEstimateErrorFPM" />
+      </parameter>
+
       <!-- OmniCam -->
 
       <instance type="Video::Parameters" name="OmniCam" >
@@ -186,90 +266,94 @@
 	  <parameter value="DeviceQuickCam" name="Type" />
 	  <parameter name="Successor" >
 	    <parameter name="Filter" >
-	      <parameter value="FilterYUV420PtoRGB" name="Name" />
-	      <parameter value="FilterYUV420PtoRGB" name="Type" />
+	      <parameter value="Save" name="Name" />
+	      <parameter value="Save" name="Type" />
+	    </parameter>
+	    <parameter name="Filter" >
+	      <parameter value="YUV420PtoIndexList" name="Name" />
+	      <parameter value="YUV420PtoIndexList" name="Type" />
 	      <parameter name="Successor" >
+		<parameter name="Filter" >
+		  <parameter value="IndextoIndex_Omni1" name="Name" />
+		  <parameter value="IndextoIndex" name="Type" />
+		</parameter>
 		<parameter name="Filter" >
 		  <parameter value="FilterOmni2Pan" name="Name" />
 		  <parameter value="FilterOmni2Pan" name="Type" />
 		  <parameter name="Successor" >
 		    <parameter name="Filter" >
-		      <parameter value="RGBtoIndexVer2" name="Name" />
-		      <parameter value="RGBtoIndexVer2" name="Type" />
+		      <parameter value="IndextoIndex_Omni2" name="Name" />
+		      <parameter value="IndextoIndex" name="Type" />
+		    </parameter>
+		    <parameter name="Filter" >
+		      <parameter value="AttentionBallOmni" name="Name" />
+		      <parameter value="AttentionBallOmni" name="Type" />
+		    </parameter>
+		    <parameter name="Filter" >
+		      <parameter value="DilateOmni" name="Name" />
+		      <parameter value="Dilate" name="Type" />
 		      <parameter name="Successor" >
 			<parameter name="Filter" >
-			  <parameter value="AttentionBallOmni" name="Name" />
-			  <parameter value="AttentionBallOmni" name="Type" />
-			</parameter>
-			<parameter name="Filter" >
-			  <parameter value="DilateOmni" name="Name" />
-			  <parameter value="Dilate" name="Type" />
+			  <parameter value="ErodeOmni" name="Name" />
+			  <parameter value="Erode" name="Type" />
+			  <!-- MACHT DAS DIE SEITEN GRAU ????? -->
 			  <parameter name="Successor" >
 			    <parameter name="Filter" >
-			      <parameter value="ErodeOmni" name="Name" />
-			      <parameter value="Erode" name="Type" />
-			      <!-- MACHT DAS DIE SEITEN GRAU ????? -->
+			      <parameter value="IndextoDistHighRes" name="Name" />
+			      <parameter value="IndextoDist" name="Type" />
+			      <!-- enable this for the goalie -->
+			      <!--
 			      <parameter name="Successor" >
+			      <parameter name="Filter" >
+			      <parameter value="ConnectionFake_HighRes" name="Name" />
+			      <parameter value="ConnectionFake" name="Type" />
+			      </parameter>
+			      </parameter>
+			      -->
+			    </parameter>
+			    <parameter name="Filter" >
+			      <parameter value="IndextoDistLowRes" name="Name" />
+			      <parameter value="IndextoDist" name="Type" />
+			      <parameter name="Successor" >
+				<!-- disable while debug flag in IndexToDist filter is disabled -->
+				<!-- 
 				<parameter name="Filter" >
-				  <parameter value="IndextoDistHighRes" name="Name" />
-				  <parameter value="IndextoDist" name="Type" />
-				  <!--
-				  <parameter name="Successor" >
-				  <parameter name="Filter" >
-				  <parameter value="ConnectionFake_HighRes" name="Name" />
+				<parameter value="IndextoIndex_Omni3" name="Name" />
+				<parameter value="IndextoIndex" name="Type" />
+			        </parameter>
+				-->
+				<!-- disable this for the goalie -->
+				<parameter name="Filter" >
+				  <parameter value="ConnectionFake_LowRes" name="Name" />
 				  <parameter value="ConnectionFake" name="Type" />
-				</parameter>
-				</parameter>
-				  -->
-				</parameter>				  
-				<parameter name="Filter" >
-				  <parameter value="IndextoDistLowRes" name="Name" />
-				  <parameter value="IndextoDist" name="Type" />
-				  <parameter name="Successor" >
-
-				    <parameter name="Filter" >
-				      <parameter value="ConnectionFake_LowRes" name="Name" />
-				      <parameter value="ConnectionFake" name="Type" />
-				    </parameter>
-				  </parameter>
 				</parameter>
 			      </parameter>
 			    </parameter>
 			  </parameter>
 			</parameter>
-			<parameter name="Filter" >
-			  <parameter value="IndextoIndexOmni" name="Name" />
-			  <parameter value="IndextoIndex" name="Type" />
-			</parameter>
 		      </parameter>
 		    </parameter>
+		  </parameter>
+		</parameter>
+		<parameter name="Filter" >
+		  <parameter value="CollectRoboCupFeaturesOmni" name="Name" />
+		  <parameter value="CollectRoboCupFeaturesOmni" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="AttentionBallOmni" />
+		    <parameter value="YUV420PtoIndexList" />
+		  </parameter>
+		  <parameter name="Successor" >
 		    <parameter name="Filter" >
-		      <parameter value="ROIVisual_BallOmni" name="Name" />
-		      <parameter value="ROIVisual" name="Type" />
-		      <parameter name="BackLink" >
-			<parameter value="AttentionBallOmni" />
-		      </parameter>
+		      <parameter value="ConnectionFake_FeaturesOmni" name="Name" />
+		      <parameter value="ConnectionFake" name="Type" />
 		    </parameter>
 		  </parameter>
 		</parameter>
 	      </parameter>
 	    </parameter>
 
-	    <parameter name="Filter" >
-	      <parameter value="CollectRoboCupFeaturesOmni" name="Name" />
-	      <parameter value="CollectRoboCupFeaturesOmni" name="Type" />
-	      <parameter name="BackLink" >
-		<parameter value="AttentionBallOmni" />
-		<parameter value="RGBtoIndexVer2" />
-	      </parameter>
-	      <parameter name="Successor" >
-		<parameter name="Filter" >
-		  <parameter value="ConnectionFake_FeaturesOmni" name="Name" />
-		  <parameter value="ConnectionFake" name="Type" />
-		</parameter>
-	      </parameter>
-	    </parameter>
 	    <!-- DEBUG -->
+
 	    <parameter name="Filter" >
 	      <parameter value="FilterYUV420PtoRGB_Debug" name="Name" />
 	      <parameter value="FilterYUV420PtoRGB" name="Type" />
@@ -278,6 +362,13 @@
 		  <parameter value="FilterOmni2Pan_Debug" name="Name" />
 		  <parameter value="FilterOmni2Pan" name="Type" />
 		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="ROIVisual_BallOmni" name="Name" />
+		      <parameter value="ROIVisual" name="Type" />
+		      <parameter name="BackLink" >
+			<parameter value="AttentionBallOmni" />
+		      </parameter>
+		    </parameter>
 		    <parameter name="Filter" >
 		      <parameter value="ROIVisual_CollectOmni" name="Name" />
 		      <parameter value="ROIVisual" name="Type" />
@@ -295,27 +386,51 @@
 
       <!-- OmniCam Parameters -->
 
-      <instance type="Video::FilterYUV420PtoRGB" name="FilterYUV420PtoRGB">
+      <!-- a couple of filters using no extra paramter set (to silence output on startup) -->
+      <instance type="LVF::Dilate" name="DilateOmni" />
+      <instance type="LVF::Erode" name="ErodeOmni" />
+      <instance type="LVF::ConnectionFake" name="ConnectionFake_LowRes" />
+      <instance type="LVF::ConnectionFake" name="ConnectionFake_FeaturesOmni" />
+
+
+
+      <instance type="Video::FilterYUV420PtoRGB" name="FilterYUV420PtoRGB_Debug">
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
 	  <parameter value="Omni" name="Name" />
 	</parameter>
       </instance>
 
-      <instance type="Video::FilterOmni2Pan" name="FilterOmni2Pan">
-	<parameter value="164" name="CenterX" />
-	<parameter value="122" name="CenterY" />
-	<parameter value="125" name="Radius" />
-	<parameter value="true" name="InterfaceInstance" />
-	<parameter name="Interface" >
-	  <parameter value="Pan" name="Name" />
-	</parameter>
+      <instance type="LVF::Save" name="Save">
+	<parameter value="1" name="Interval" />
+	<parameter value="false" name="Activate" />
       </instance>
 
-      <instance type="LVF::IndextoIndex" name="IndextoIndexOmni">
+
+      <instance type="Video::FilterOmni2Pan" name="FilterOmni2Pan">
+	<parameter value="159" name="CenterX" />
+	<parameter value="123" name="CenterY" />
+	<parameter value="120" name="Radius" />
+      </instance>
+
+      <instance type="LVF::IndextoIndex" name="IndextoIndex_Omni1">
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
 	  <parameter value="IndexOmni" name="Name" />
+	</parameter>
+      </instance>
+
+      <instance type="LVF::IndextoIndex" name="IndextoIndex_Omni2">
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="IndexPano" name="Name" />
+	</parameter>
+      </instance>
+
+      <instance type="LVF::IndextoIndex" name="IndextoIndex_Omni3">
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="DistPano" name="Name" />
 	</parameter>
       </instance>
 
@@ -351,19 +466,15 @@
 	<parameter value="false" name="DynamicConnection" />
 	<parameter value="VisionCollectorOmni" name="InterfaceName" />
 	<parameter value="1" name="ScaleFactorRunLength" />
-	<parameter value="2" name="UseIndexFrom" />
+	<!-- disable for now to save network bandwidth -->
+	<!-- <parameter value="2" name="UseIndexFrom" /> -->
 	<parameter value="false" name="Save" />
       </instance>
 
       <instance type="Video::FilterOmni2Pan" name="FilterOmni2Pan_Debug">
-	<parameter value="80" name="CenterX" />
-	<parameter value="61" name="CenterY" />
-	<parameter value="62" name="Radius" />
-<!--
-	<parameter value="166" name="CenterX" />
-	<parameter value="120" name="CenterY" />
+	<parameter value="159" name="CenterX" />
+	<parameter value="123" name="CenterY" />
 	<parameter value="120" name="Radius" />
--->
       </instance>
 
       <instance type="LVF::ROIVisual" name="ROIVisual_CollectOmni" >
@@ -401,11 +512,15 @@
 	  <parameter value="Device1394" name="Name" />
 	  <parameter value="Device1394" name="Type" />
 	  <parameter name="Successor" >
-	    <!-- limit to lower part of the image -->          <parameter name="Filter" >
+
+	    <!-- limit to lower part of the image (used for lines on the floor) -->
+	    <parameter name="Filter" >
 	      <parameter value="ROIListDummy" name="Name" />
 	      <parameter value="ROIListDummy" name="Type" />
 	    </parameter>
-	    <!-- edges of original image -->          <parameter name="Filter" >
+
+	    <!-- edges of original image (used for lines on the floor) -->
+	    <parameter name="Filter" >
 	      <parameter value="YUV422toGray" name="Name" />
 	      <parameter value="YUV422toGray" name="Type" />
 	      <parameter name="BackLink" >
@@ -431,11 +546,15 @@
 		</parameter>
 	      </parameter>
 	    </parameter>
-	    <!-- Attention Control  -->          <parameter name="Filter" >
-	      <parameter value="YUV422toIndexShrink2" name="Name" />
-	      <parameter value="YUV422toIndexShrink2" name="Type" />
+
+	    <!-- Attention Control  -->
+
+	    <parameter name="Filter" >
+	      <parameter value="YUV422toIndexListShrink2" name="Name" />
+	      <parameter value="YUV422toIndexListShrink2" name="Type" />
 	      <parameter name="Successor" >
-		<!-- DEBUG -->              <parameter name="Filter" >
+
+		<parameter name="Filter" >
 		  <parameter value="IndextoIndex" name="Name" />
 		  <parameter value="IndextoIndex" name="Type" />
 		</parameter>
@@ -443,23 +562,156 @@
 		  <parameter value="ColorCount" name="Name" />
 		  <parameter value="ColorCount" name="Type" />
 		</parameter>
+
+		<!-- Attention Control (Ball) -->
 		<parameter name="Filter" >
 		  <parameter value="AttentionBall" name="Name" />
 		  <parameter value="AttentionBall" name="Type" />
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="ObjectTracking_Ball" name="Name" />
+		      <parameter value="ObjectTracking" name="Type" />
+		      <parameter name="Successor" >
+			<parameter name="Filter" >
+			  <parameter value="FilterPredictedROIs_Ball" name="Name" />
+			  <parameter value="FilterPredictedROIs" name="Type" />
+			</parameter>
+			<parameter name="Filter" >
+			  <parameter value="FilterUnpredictedROIs_Ball" name="Name" />
+			  <parameter value="FilterUnpredictedROIs" name="Type" />
+			  <parameter name="Successor" >
+			    <parameter name="Filter" >
+			      <parameter value="FilterUncertainROIs_Ball" name="Name" />
+			      <parameter value="FilterUncertainROIs" name="Type" />
+			    </parameter>
+			    <parameter name="Filter" >
+			      <parameter value="FilterNewTracks_Ball" name="Name" />
+			      <parameter value="FilterNewTracks" name="Type" />
+			      <parameter name="Successor" >
+				<parameter name="Filter" >
+				  <parameter value="ConcatROIs_Ball" name="Name" />
+				  <parameter value="ConcatROIs" name="Type" />
+				  <parameter name="BackLink" >
+				    <parameter value="FilterUncertainROIs_Ball" />
+				  </parameter>
+				</parameter>
+			      </parameter>
+			    </parameter>
+			  </parameter>
+			</parameter>
+		      </parameter>
+		    </parameter>
+		  </parameter>
 		</parameter>
+		<!-- Attention Control (Goal and Corner Poles) -->
 		<parameter name="Filter" >
 		  <parameter value="AttentionGoalCornerPoles" name="Name" />
 		  <parameter value="AttentionGoalCornerPoles" name="Type" />
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="FilterROIsByType_Goal" name="Name" />
+		      <parameter value="FilterROIsByType" name="Type" />
+		      <parameter name="Successor" >
+			<parameter name="Filter" >
+			  <parameter value="ObjectTracking_Goal" name="Name" />
+			  <parameter value="ObjectTracking" name="Type" />
+			  <parameter name="Successor" >
+			    <parameter name="Filter" >
+			      <parameter value="IntegrateObservations_Goal" name="Name" />
+			      <parameter value="IntegrateObservations" name="Type" />
+			    </parameter>
+			  </parameter>
+			</parameter>
+		      </parameter>
+		    </parameter>
+		    <parameter name="Filter" >
+		      <parameter value="FilterROIsByType_CornerPoles" name="Name" />
+		      <parameter value="FilterROIsByType" name="Type" />
+		      <parameter name="Successor" >
+			<parameter name="Filter" >
+			  <parameter value="ObjectTracking_CornerPoles" name="Name" />
+			  <parameter value="ObjectTracking" name="Type" />
+			  <parameter name="Successor" >
+			    <parameter name="Filter" >
+			      <parameter value="FilterPredictedROIs_CornerPoles" name="Name" />
+			      <parameter value="FilterPredictedROIs" name="Type" />
+			    </parameter>
+			    <parameter name="Filter" >
+			      <parameter value="FilterUnpredictedROIs_CornerPoles" name="Name" />
+			      <parameter value="FilterUnpredictedROIs" name="Type" />
+			      <parameter name="Successor" >
+				<parameter name="Filter" >
+				  <parameter value="FilterUncertainROIs_CornerPoles" name="Name" />
+				  <parameter value="FilterUncertainROIs" name="Type" />
+				</parameter>
+				<parameter name="Filter" >
+				  <parameter value="FilterNewTracks_CornerPoles" name="Name" />
+				  <parameter value="FilterNewTracks" name="Type" />
+				  <parameter name="Successor" >
+				    <parameter name="Filter" >
+				      <parameter value="ConcatROIs_CornerPoles" name="Name" />
+				      <parameter value="ConcatROIs" name="Type" />
+				      <parameter name="BackLink" >
+					<parameter value="FilterUncertainROIs_CornerPoles" />
+				      </parameter>
+				    </parameter>
+				  </parameter>
+				</parameter>
+			      </parameter>
+			    </parameter>
+			  </parameter>
+			</parameter>
+		      </parameter>
+		    </parameter>
+		  </parameter>
 		</parameter>
+		<!-- Attention Control (Robots) -->
 		<parameter name="Filter" >
 		  <parameter value="AttentionRobots" name="Name" />
 		  <parameter value="AttentionRobots" name="Type" />
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="ObjectTracking_Robots" name="Name" />
+		      <parameter value="ObjectTracking" name="Type" />
+		      <parameter name="Successor" >
+			<parameter name="Filter" >
+			  <parameter value="FilterPredictedROIs_Robots" name="Name" />
+			  <parameter value="FilterPredictedROIs" name="Type" />
+			</parameter>
+			<parameter name="Filter" >
+			  <parameter value="FilterUnpredictedROIs_Robots" name="Name" />
+			  <parameter value="FilterUnpredictedROIs" name="Type" />
+			  <parameter name="Successor" >
+			    <parameter name="Filter" >
+			      <parameter value="FilterUncertainROIs_Robots" name="Name" />
+			      <parameter value="FilterUncertainROIs" name="Type" />
+			    </parameter>
+			    <parameter name="Filter" >
+			      <parameter value="FilterNewTracks_Robots" name="Name" />
+			      <parameter value="FilterNewTracks" name="Type" />
+			      <parameter name="Successor" >
+				<parameter name="Filter" >
+				  <parameter value="ConcatROIs_Robots" name="Name" />
+				  <parameter value="ConcatROIs" name="Type" />
+				  <parameter name="BackLink" >
+				    <parameter value="FilterUncertainROIs_Robots" />
+				  </parameter>
+				</parameter>
+			      </parameter>
+			    </parameter>
+			  </parameter>
+			</parameter>
+		      </parameter>
+		    </parameter>
+		  </parameter>
 		</parameter>
+		<!-- Attention Control (Goal Posts and Lines) -->
 		<parameter name="Filter" >
 		  <parameter value="Shrink2" name="Type" />
 		  <parameter value="Shrink2" name="Name" />
 		  <parameter name="Successor" >
-		    <!-- Blue Goal Post -->                  <parameter name="Filter" >
+		    <!-- Blue Goal Post -->
+		    <parameter name="Filter" >
 		      <parameter value="IndextoEdge" name="Type" />
 		      <parameter value="IndextoEdgeWhiteBlue" name="Name" />
 		      <parameter name="Successor" >
@@ -470,10 +722,20 @@
 			<parameter name="Filter" >
 			  <parameter value="AttentionGoalPosts" name="Type" />
 			  <parameter value="BlueRightPost" name="Name" />
+			  <parameter name="Successor" >
+			    <parameter name="Filter" >
+			      <parameter value="ConcatROIs_BluePost" name="Name" />
+			      <parameter value="ConcatROIs" name="Type" />
+			      <parameter name="BackLink" >
+				<parameter value="BlueLeftPost" />
+			      </parameter>
+			    </parameter>
+			  </parameter>
 			</parameter>
 		      </parameter>
 		    </parameter>
-		    <!-- Yellow Goal Post -->                  <parameter name="Filter" >
+		    <!-- Yellow Goal Post -->
+		    <parameter name="Filter" >
 		      <parameter value="IndextoEdge" name="Type" />
 		      <parameter value="IndextoEdgeWhiteYellow" name="Name" />
 		      <parameter name="Successor" >
@@ -484,10 +746,42 @@
 			<parameter name="Filter" >
 			  <parameter value="AttentionGoalPosts" name="Type" />
 			  <parameter value="YellowRightPost" name="Name" />
+			  <parameter name="Successor" >
+			    <parameter name="Filter" >
+			      <parameter value="ConcatROIs_YellowPost" name="Name" />
+			      <parameter value="ConcatROIs" name="Type" />
+			      <parameter name="BackLink" >
+				<parameter value="YellowLeftPost" />
+			      </parameter>
+			      <!-- Goal post tracking (common for all) -->
+			      <parameter name="Successor" >
+				<parameter name="Filter" >
+				  <parameter value="ConcatROIs_GoalPost" name="Name" />
+				  <parameter value="ConcatROIs" name="Type" />
+				  <parameter name="BackLink" >
+				    <parameter value="ConcatROIs_BluePost" />
+				  </parameter>
+				  <parameter name="Successor" >
+				    <parameter name="Filter" >
+				      <parameter value="ObjectTracking_GoalPost" name="Name" />
+				      <parameter value="ObjectTracking" name="Type" />
+				      <parameter name="Successor" >
+					<parameter name="Filter" >
+					  <parameter value="IntegrateObservations_GoalPost" name="Name" />
+					  <parameter value="IntegrateObservations" name="Type" />
+					</parameter>
+				      </parameter>
+				    </parameter>
+				  </parameter>
+				</parameter>
+			      </parameter>
+			    </parameter>
+			  </parameter>
 			</parameter>
 		      </parameter>
 		    </parameter>
-		    <!-- Lines on the floor -->                  <parameter name="Filter" >
+		    <!-- Lines on the floor -->
+		    <parameter name="Filter" >
 		      <parameter value="IndextoCanny" name="Type" />
 		      <parameter value="IndextoCannyGreenWhite" name="Name" />
 		      <parameter name="Successor" >
@@ -515,33 +809,125 @@
 		    </parameter>
 		  </parameter>
 		</parameter>
-		<!-- (scaled) binary mask for robot detection -->              <parameter name="Filter" >
-		  <parameter value="ScaleROIForRobots" name="Name" />
-		  <!-- scale the rois back down to this image format -->                <parameter value="ScaleROI" name="Type" />
+
+		<!-- Floor Check -->
+
+		<!-- Ball -->
+		<parameter name="Filter" >
+		  <parameter value="ScaleROI_Ball" name="Name" />
+		  <parameter value="ScaleROI" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="FilterPredictedROIs_Ball" />
+		  </parameter>
+		</parameter>
+		<parameter name="Filter" >
+		  <parameter value="CheckForFloor_Ball" name="Name" />
+		  <parameter value="CheckForFloor" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="ScaleROI_Ball" />
+		  </parameter>
+		</parameter>
+		<!-- Corner Poles -->
+		<parameter name="Filter" >
+		  <parameter value="ScaleROI_2_CornerPoles" name="Name" />
+		  <parameter value="ScaleROI" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="FilterPredictedROIs_CornerPoles" />
+		  </parameter>
+		</parameter>
+		<parameter name="Filter" >
+		  <parameter value="CheckForFloor_CornerPoles" name="Name" />
+		  <parameter value="CheckForFloor" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="ScaleROI_2_CornerPoles" />
+		  </parameter>
+		</parameter>
+		<!-- Robots -->
+		<parameter name="Filter" >
+		  <parameter value="ScaleROI_2_Robots" name="Name" />
+		  <parameter value="ScaleROI" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="FilterPredictedROIs_Robots" />
+		  </parameter>
+		</parameter>
+		<parameter name="Filter" >
+		  <parameter value="CheckForFloor_Robots" name="Name" />
+		  <parameter value="CheckForFloor" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="ScaleROI_2_Robots" />
+		  </parameter>
+		</parameter>
+
+		<!-- Create binary masks -->
+
+		<!-- Corner Poles -->
+		<parameter name="Filter" >
+		  <!-- scale the found rois back down to this image format -->
+		  <!-- if AttentionGoalCornerPoles would provide it in an adequate size -->
+		  <!-- allready, we would have to scale it below -->
+		  <parameter value="ScaleROI_CornerPoles" name="Name" />
+		  <parameter value="ScaleROI" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="ConcatROIs_CornerPoles" />
+		  </parameter>
+		</parameter>
+		<!-- wide the roi a specific amount not to miss lines -->
+		<parameter name="Filter" >
+		  <parameter value="ResizeROI_CornerPoles" name="Name" />
+		  <parameter value="ResizeROI" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="ScaleROI_CornerPoles" />
+		  </parameter>
+		</parameter>
+		<!-- create binary mask from blue and yellow -->
+		<parameter name="Filter" >
+		  <parameter value="MaskByColor_CornerPoles" name="Name" />
+		  <parameter value="MaskByColor" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="ResizeROI_CornerPoles" />
+		  </parameter>
+		  <parameter name="Successor" >
+		    <!-- scale down to the upper size limit -->
+		    <parameter name="Filter" >
+		      <parameter value="ShrinkImageParts_Mask_CornerPoles" name="Name" />
+		      <parameter value="ShrinkImageParts" name="Type" />
+		      <parameter name="Successor" >
+			<parameter name="Filter" >
+			  <parameter value="Enlarge2_CornerPoles" name="Name" />
+			  <parameter value="Enlarge2" name="Type" />
+			</parameter>
+		      </parameter>
+		    </parameter>
+		  </parameter>
+		</parameter>
+		<!-- Robots -->
+		<parameter name="Filter" >
+		  <parameter value="ScaleROI_Robots" name="Name" />
+		  <parameter value="ScaleROI" name="Type" />
 		  <parameter name="BackLink" >
 		    <parameter value="AttentionRobots" />
 		  </parameter>
 		</parameter>
 		<parameter name="Filter" >
-		  <parameter value="ResizeROIForRobots" name="Name" />
-		  <!-- wide the roi a specific amount not to miss lines -->                <parameter value="ResizeROI" name="Type" />
+		  <parameter value="ResizeROI_Robots" name="Name" />
+		  <parameter value="ResizeROI" name="Type" />
 		  <parameter name="BackLink" >
-		    <parameter value="ScaleROIForRobots" />
+		    <parameter value="ScaleROI_Robots" />
 		  </parameter>
 		</parameter>
 		<parameter name="Filter" >
-		  <parameter value="MaskByColorForRobots" name="Name" />
+		  <parameter value="MaskByColor_Robots" name="Name" />
 		  <parameter value="MaskByColor" name="Type" />
 		  <parameter name="BackLink" >
-		    <parameter value="ResizeROIForRobots" />
+		    <parameter value="ResizeROI_Robots" />
 		  </parameter>
 		  <parameter name="Successor" >
 		    <parameter name="Filter" >
-		      <parameter value="ShrinkImagePartsMaskForRobots" name="Name" />
+		      <parameter value="ShrinkImagePartsMask_Robots" name="Name" />
 		      <parameter value="ShrinkImageParts" name="Type" />
 		      <parameter name="Successor" >
 			<parameter name="Filter" >
-			  <parameter value="Enlarge2ForRobots" name="Name" />
+			  <parameter value="Enlarge2_Robots" name="Name" />
 			  <parameter value="Enlarge2" name="Type" />
 			</parameter>
 		      </parameter>
@@ -550,42 +936,58 @@
 		</parameter>
 	      </parameter>
 	    </parameter>
-	    <!-- Neural Network and Feature Extraction for Ball -->          <parameter name="Filter" >
-	      <parameter value="YUV422toGrayForBall" name="Name" />
+
+	    <!-- Neural Network and Feature Extraction -->
+
+	    <!-- Ball -->
+	    <!-- actually, at the moment we do not use a real mask for the ball, just -->
+	    <!-- resize the roi a small portion -->
+	    <parameter name="Filter" >
+	      <parameter value="ResizeROI_Ball" name="Name" />
+	      <parameter value="ResizeROI" name="Type" />
+	      <parameter name="BackLink" >
+		<parameter value="ConcatROIs_Ball" />
+	      </parameter>
+	    </parameter>
+	    <parameter name="Filter" >
+	      <parameter value="YUV422toGray_Ball" name="Name" />
 	      <parameter value="YUV422toGray" name="Type" />
 	      <parameter name="BackLink" >
-		<parameter value="AttentionBall" />
+		<parameter value="ResizeROI_Ball" />
 	      </parameter>
 	      <parameter name="Successor" >
 		<parameter name="Filter" >
-		  <parameter value="SobelVerticalForBall" name="Name" />
+		  <parameter value="SobelVertical_Ball" name="Name" />
 		  <parameter value="Sobel" name="Type" />
 		</parameter>
 		<parameter name="Filter" >
-		  <parameter value="SobelHorizontalForBall" name="Name" />
+		  <parameter value="SobelHorizontal_Ball" name="Name" />
 		  <parameter value="Sobel" name="Type" />
 		</parameter>
 	      </parameter>
 	    </parameter>
 	    <parameter name="Filter" >
-	      <parameter value="OrientHistForBall" name="Name" />
-	      <parameter value="OrientHist" name="Type" />
+	      <parameter value="OrientCurvatureHist_Ball" name="Name" />
+	      <parameter value="OrientCurvatureHist" name="Type" />
 	      <parameter name="BackLink" >
-		<parameter value="SobelVerticalForBall" />
-		<parameter value="SobelHorizontalForBall" />
-		<parameter value="AttentionBall" />
+		<parameter value="SobelVertical_Ball" />
+		<parameter value="SobelHorizontal_Ball" />
+		<parameter value="ResizeROI_Ball" />
 	      </parameter>
 	    </parameter>
 	    <parameter name="Filter" >
-	      <parameter value="YUV422toRGBIppForBall" name="Name" />
+	      <parameter value="YUV422toRGBIpp_Ball" name="Name" />
 	      <parameter value="YUV422toRGBIpp" name="Type" />
 	      <parameter name="BackLink" >
-		<parameter value="AttentionBall" />
+		<parameter value="ConcatROIs_Ball" />
 	      </parameter>
 	      <parameter name="Successor" >
 		<parameter name="Filter" >
-		  <parameter value="ColorHistForBall" name="Name" />
+		  <parameter value="ColorHist_Ball" name="Name" />
 		  <parameter value="ColorHist" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="ConcatROIs_Ball" />
+		  </parameter>
 		</parameter>
 	      </parameter>
 	    </parameter>
@@ -593,47 +995,164 @@
 	      <parameter value="NeuralNetBall" name="Name" />
 	      <parameter value="NeuralNetBall" name="Type" />
 	      <parameter name="BackLink" >
-		<parameter value="ColorHistForBall" />
-		<parameter value="OrientHistForBall" />
-		<parameter value="AttentionBall" />
-	      </parameter>
-	    </parameter>
-	    <!-- Neural Network and Feature Extraction for Robots -->          <parameter name="Filter" >
-	      <parameter value="ResizeROI2ForRobots" name="Name" />
-	      <!-- wide the roi a specific amount not to miss lines -->            <parameter value="ResizeROI" name="Type" />
-	      <parameter name="BackLink" >
-		<parameter value="AttentionRobots" />
-	      </parameter>
-	    </parameter>
-	    <parameter name="Filter" >
-	      <parameter value="YUV422toGrayForRobots" name="Name" />
-	      <parameter value="YUV422toGray" name="Type" />
-	      <parameter name="BackLink" >
-		<parameter value="ResizeROI2ForRobots" />
+		<parameter value="ColorHist_Ball" />
+		<parameter value="OrientCurvatureHist_Ball" />
+		<parameter value="ConcatROIs_Ball" />
 	      </parameter>
 	      <parameter name="Successor" >
 		<parameter name="Filter" >
-		  <parameter value="ShrinkImagePartsGrayForRobots" name="Name" />
+		  <parameter value="IntegrateObservations_Ball" name="Name" />
+		  <parameter value="IntegrateObservations" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="FilterUnpredictedROIs_Ball" />
+		    <parameter value="FilterPredictedROIs_Ball" />
+		    <parameter value="CheckForFloor_Ball" />
+		  </parameter>
+		</parameter>
+	      </parameter>
+	    </parameter>
+	    <!-- Corner Poles -->
+	    <!-- wide the roi a specific amount not to miss lines -->
+	    <!-- this time the original sized rois (we could resize the widen small rois as well) -->
+	    <parameter name="Filter" >
+	      <parameter value="ResizeROI_2_CornerPoles" name="Name" />
+	      <parameter value="ResizeROI" name="Type" />
+	      <parameter name="BackLink" >
+		<parameter value="ConcatROIs_CornerPoles" />
+	      </parameter>
+	    </parameter>
+	    <parameter name="Filter" >
+	      <parameter value="YUV422toRGBIpp_CornerPoles" name="Name" />
+	      <parameter value="YUV422toRGBIpp" name="Type" />
+	      <parameter name="BackLink" >
+		<parameter value="ResizeROI_2_CornerPoles" />
+	      </parameter>
+	      <parameter name="Successor" >
+		<!-- scale down to the upper size limit (this time the RGB regions) -->
+		<parameter name="Filter" >
+		  <parameter value="ShrinkImageParts_RGB_CornerPoles" name="Name" />
+		  <parameter value="ShrinkImageParts" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="ResizeROI_2_CornerPoles" />
+		  </parameter>
+		  <parameter name="Successor" >
+		    <!-- combine with the binary mask to get only relevant parts of the color image -->
+		    <parameter name="Filter" >
+		      <parameter value="And_CornerPoles" name="Name" />
+		      <parameter value="And" name="Type" />
+		      <parameter name="BackLink" >
+			<parameter value="Enlarge2_CornerPoles" />
+			<parameter value="ShrinkImageParts_RGB_CornerPoles" />
+		      </parameter>
+		      <parameter name="Successor" >
+			<!-- calculate color histogram on the separated corner poles -->
+			<parameter name="Filter" >
+			  <parameter value="ColorHist_CornerPoles" name="Name" />
+			  <parameter value="ColorHist" name="Type" />
+			  <parameter name="BackLink" >
+			    <parameter value="YUV422toRGBIpp_CornerPoles" />
+			  </parameter>
+		        </parameter>
+		      </parameter>
+		    </parameter>
+		  </parameter>
+		</parameter>
+	      </parameter>
+	    </parameter>
+	    <!-- orient/curvature histograms -->
+	    <parameter name="Filter" >
+	      <parameter value="YUV422toGray_CornerPoles" name="Name" />
+	      <parameter value="YUV422toGray" name="Type" />
+	      <parameter name="BackLink" >
+		<parameter value="ResizeROI_2_CornerPoles" />
+	      </parameter>
+	      <parameter name="Successor" >
+		<!-- scale down to the upper size limit (this time the gray regions) -->
+		<parameter name="Filter" >
+		  <parameter value="ShrinkImageParts_Gray_CornerPoles" name="Name" />
 		  <parameter value="ShrinkImageParts" name="Type" />
 		  <parameter name="Successor" >
 		    <parameter name="Filter" >
-		      <parameter value="SobelVerticalForRobots" name="Name" />
+		      <parameter value="Sobel_Vertical_CornerPoles" name="Name" />
 		      <parameter value="Sobel" name="Type" />
 		    </parameter>
 		    <parameter name="Filter" >
-		      <parameter value="SobelHorizontalForRobots" name="Name" />
+		      <parameter value="Sobel_Horizontal_CornerPoles" name="Name" />
 		      <parameter value="Sobel" name="Type" />
 		    </parameter>
 		  </parameter>
 		</parameter>
 		<parameter name="Filter" >
-		  <parameter value="OrientHistMaskForRobots" name="Name" />
+		  <parameter value="OrientCurvatureHistMask_CornerPoles" name="Name" />
+		  <parameter value="OrientCurvatureHistMask" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="Sobel_Vertical_CornerPoles" />
+		    <parameter value="Sobel_Horizontal_CornerPoles" />
+		    <parameter value="ShrinkImageParts_Gray_CornerPoles" />
+		    <parameter value="Enlarge2_CornerPoles" />
+		  </parameter>
+		</parameter>
+	      </parameter>
+	    </parameter>
+	    <parameter name="Filter" >
+	      <parameter value="NeuralNetCornerPoles" name="Name" />
+	      <parameter value="NeuralNetCornerPoles" name="Type" />
+	      <parameter name="BackLink" >
+		<parameter value="OrientCurvatureHistMask_CornerPoles" />
+		<parameter value="ColorHist_CornerPoles" />
+		<parameter value="ConcatROIs_CornerPoles" />
+	      </parameter>
+	      <parameter name="Successor" >
+		<parameter name="Filter" >
+		  <parameter value="IntegrateObservations_CornerPoles" name="Name" />
+		  <parameter value="IntegrateObservations" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="FilterUnpredictedROIs_CornerPoles" />
+		    <parameter value="FilterPredictedROIs_CornerPoles" />
+		    <parameter value="CheckForFloor_CornerPoles" />
+		  </parameter>
+		</parameter>
+	      </parameter>
+	    </parameter>
+
+	    <!-- Robots -->
+	    <parameter name="Filter" >
+	      <parameter value="ResizeROI_2_Robots" name="Name" />
+	      <!-- wide the roi a specific amount not to miss lines -->
+	      <parameter value="ResizeROI" name="Type" />
+	      <parameter name="BackLink" >
+		<parameter value="ConcatROIs_Robots" />
+	      </parameter>
+	    </parameter>
+	    <parameter name="Filter" >
+	      <parameter value="YUV422toGray_Robots" name="Name" />
+	      <parameter value="YUV422toGray" name="Type" />
+	      <parameter name="BackLink" >
+		<parameter value="ResizeROI_2_Robots" />
+	      </parameter>
+	      <parameter name="Successor" >
+		<parameter name="Filter" >
+		  <parameter value="ShrinkImagePartsGray_Robots" name="Name" />
+		  <parameter value="ShrinkImageParts" name="Type" />
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="SobelVertical_Robots" name="Name" />
+		      <parameter value="Sobel" name="Type" />
+		    </parameter>
+		    <parameter name="Filter" >
+		      <parameter value="SobelHorizontal_Robots" name="Name" />
+		      <parameter value="Sobel" name="Type" />
+		    </parameter>
+		  </parameter>
+		</parameter>
+		<parameter name="Filter" >
+		  <parameter value="OrientHistMask_Robots" name="Name" />
 		  <parameter value="OrientHistMask" name="Type" />
 		  <parameter name="BackLink" >
-		    <parameter value="SobelVerticalForRobots" />
-		    <parameter value="SobelHorizontalForRobots" />
-		    <parameter value="ShrinkImagePartsGrayForRobots" />
-		    <parameter value="Enlarge2ForRobots" />
+		    <parameter value="SobelVertical_Robots" />
+		    <parameter value="SobelHorizontal_Robots" />
+		    <parameter value="ShrinkImagePartsGray_Robots" />
+		    <parameter value="Enlarge2_Robots" />
 		  </parameter>
 		</parameter>
 	      </parameter>
@@ -642,65 +1161,126 @@
 	      <parameter value="NeuralNetRobots" name="Name" />
 	      <parameter value="NeuralNetRobots" name="Type" />
 	      <parameter name="BackLink" >
-		<parameter value="OrientHistMaskForRobots" />
-		<parameter value="AttentionRobots" />
+		<parameter value="OrientHistMask_Robots" />
+		<parameter value="ConcatROIs_Robots" />
+	      </parameter>
+	      <parameter name="Successor" >
+		<parameter name="Filter" >
+		  <parameter value="IntegrateObservations_Robots" name="Name" />
+		  <parameter value="IntegrateObservations" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="FilterUnpredictedROIs_Robots" />
+		    <parameter value="FilterPredictedROIs_Robots" />
+		    <parameter value="CheckForFloor_Robots" />
+		  </parameter>
+		</parameter>
 	      </parameter>
 	    </parameter>
-	    <!-- Collect Basic Features -->          <parameter name="Filter" >
-	      <parameter value="CollectAllFeatures2Basic" name="Name" />
-	      <parameter value="CollectAllFeatures2" name="Type" />
+
+	    <!-- Collect Basic Features -->
+	    <parameter name="Filter" >
+	      <parameter value="CollectRoboCupFeatures_Basic" name="Name" />
+	      <parameter value="CollectRoboCupFeatures" name="Type" />
 	      <parameter name="BackLink" >
-		<parameter value="NeuralNetBall" />
-		<parameter value="AttentionGoalCornerPoles" />
+		<parameter value="IntegrateObservations_Ball" />
+		<parameter value="IntegrateObservations_Goal" />
 		<parameter value="ColorCount" />
 	      </parameter>
 	    </parameter>
-	    <!-- Collect Full Features -->          <parameter name="Filter" >
-	      <parameter value="CollectAllFeatures2" name="Type" />
-	      <parameter value="CollectAllFeatures2Full" name="Name" />
+	    <!-- Collect Full Features -->
+	    <parameter name="Filter" >
+	      <parameter value="CollectRoboCupFeatures_Full" name="Name" />
+	      <parameter value="CollectRoboCupFeatures" name="Type" />
 	      <parameter name="BackLink" >
-		<parameter value="NeuralNetBall" />
-		<parameter value="NeuralNetRobots" /> 
-		<parameter value="AttentionGoalCornerPoles" />
-		<parameter value="BlueLeftPost" />
-		<parameter value="BlueRightPost" />
-		<parameter value="YellowLeftPost" />
-		<parameter value="YellowRightPost" />
+		<parameter value="IntegrateObservations_Ball" />
+		<parameter value="IntegrateObservations_Robots" /> 
+		<parameter value="IntegrateObservations_Goal" />
+		<parameter value="IntegrateObservations_CornerPoles" />
+		<parameter value="IntegrateObservations_GoalPost" />
 		<parameter value="AttentionLines" />
 		<parameter value="ColorCount" />
-		<parameter value="YUV422toIndexShrink2" />
+		<parameter value="YUV422toIndexListShrink2" />
 	      </parameter>
 	    </parameter>
-	    <!-- DEBUG -->          <parameter name="Filter" >
+
+	    <!-- DEBUG -->
+	    <parameter name="Filter" >
 	      <parameter value="YUV422toRGBIppDebug" name="Name" />
 	      <parameter value="YUV422toRGBIpp" name="Type" />
 	      <parameter name="Successor" >
+		<!-- Found stuff -->
 		<parameter name="Filter" >
 		  <parameter value="ROIVisualBasic" name="Name" />
 		  <parameter value="ROIVisual" name="Type" />
 		  <parameter name="BackLink" >
-		    <parameter value="CollectAllFeatures2Basic" />
+		    <parameter value="CollectRoboCupFeatures_Basic" />
 		  </parameter>
 		</parameter>
 		<parameter name="Filter" >
 		  <parameter value="ROIVisualFull" name="Name" />
 		  <parameter value="ROIVisual" name="Type" />
 		  <parameter name="BackLink" >
-		    <parameter value="CollectAllFeatures2Full" />
+		    <parameter value="CollectRoboCupFeatures_Full" />
 		  </parameter>
 		</parameter>
+		<!-- Ball -->
 		<parameter name="Filter" >
-		  <parameter value="ROIVisualBall" name="Name" />
+		  <parameter value="ROIVisual_AttentionBall" name="Name" />
 		  <parameter value="ROIVisual" name="Type" />
 		  <parameter name="BackLink" >
 		    <parameter value="AttentionBall" />
 		  </parameter>
 		</parameter>
 		<parameter name="Filter" >
-		  <parameter value="ROIVisualRobot" name="Name" />
+		  <parameter value="ROIVisual_Ball" name="Name" />
 		  <parameter value="ROIVisual" name="Type" />
 		  <parameter name="BackLink" >
-		    <parameter value="ScaleROIForRobots" />
+		    <parameter value="IntegrateObservations_Ball" />
+		  </parameter>
+		</parameter>
+		<!-- Goal and Corner Poles -->
+		<parameter name="Filter" >
+		  <parameter value="ROIVisual_AttentionCornerPoles" name="Name" />
+		  <parameter value="ROIVisual" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="AttentionGoalCornerPoles" />
+		  </parameter>
+		</parameter>
+		<parameter name="Filter" >
+		  <parameter value="ROIVisual_CornerPoles" name="Name" />
+		  <parameter value="ROIVisual" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="IntegrateObservations_CornerPoles" />
+		  </parameter>
+		</parameter>
+		<parameter name="Filter" >
+		  <parameter value="ROIVisual_Goal" name="Name" />
+		  <parameter value="ROIVisual" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="IntegrateObservations_Goal" />
+		  </parameter>
+		</parameter>
+		<!-- Goal Posts -->
+		<parameter name="Filter" >
+		  <parameter value="ROIVisual_GoalPost" name="Name" />
+		  <parameter value="ROIVisual" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="IntegrateObservations_GoalPost" />
+		  </parameter>
+		</parameter>
+		<!-- Robot -->
+		<parameter name="Filter" >
+		  <parameter value="ROIVisual_AttentionRobots" name="Name" />
+		  <parameter value="ROIVisual" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="AttentionRobots" />
+		  </parameter>
+		</parameter>
+		<parameter name="Filter" >
+		  <parameter value="ROIVisual_Robots" name="Name" />
+		  <parameter value="ROIVisual" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="IntegrateObservations_Robots" />
 		  </parameter>
 		</parameter>
 	      </parameter>
@@ -708,6 +1288,27 @@
 	  </parameter>
 	</parameter>
       </instance>
+
+      <!-- Sony Camera Parameter -->
+
+      <!-- a couple of filters using no extra paramter set (to silence output on startup) -->
+      <instance type="LVF::YUV422toIndexShrink2" name="YUV422toIndexShrink2" />
+      <instance type="LVF::ColorCount" name="ColorCount" />
+      <instance type="LVF::FilterPredictedROIs" name="FilterPredictedROIs_Ball" />
+      <instance type="LVF::FilterUnpredictedROIs" name="FilterUnpredictedROIs_Ball" />
+      <instance type="LVF::FilterUncertainROIs" name="FilterUncertainROIs_Ball" />
+      <instance type="LVF::FilterPredictedROIs" name="FilterPredictedROIs_CornerPoles" />
+      <instance type="LVF::FilterUnpredictedROIs" name="FilterUnpredictedROIs_CornerPoles" />
+      <instance type="LVF::FilterUncertainROIs" name="FilterUncertainROIs_CornerPoles" />
+      <instance type="LVF::AttentionRobots" name="AttentionRobots" />
+      <instance type="LVF::FilterPredictedROIs" name="FilterPredictedROIs_Robots" />
+      <instance type="LVF::FilterUnpredictedROIs" name="FilterUnpredictedROIs_Robots" />
+      <instance type="LVF::FilterUncertainROIs" name="FilterUncertainROIs_Robots" />
+      <instance type="LVF::Shrink2" name="Shrink2" />
+      <instance type="LVF::Enlarge4" name="Enlarge4" />
+      <instance type="LVF::AttentionLines" name="AttentionLines" />
+      <instance type="LVF::YUV422toRGBIpp" name="YUV422toRGBIppDebug" />
+
       <!-- Directed Camera -->
       <instance type="Video::Device1394Parameters" name="Device1394" >
 	<parameter value="-1" name="Focus" />
@@ -759,7 +1360,9 @@
 	  <parameter value=" 8.6309418060e-01" name="R9" />
 	</parameter>
       </instance>
-      <!-- edges of original image -->    <instance type="LVF::ROIListDummyParameters" name="ROIListDummy" >
+
+      <!-- edges of original image -->
+      <instance type="LVF::ROIListDummyParameters" name="ROIListDummy" >
 	<parameter value="0" name="X" />
 	<parameter value="80" name="Y" />
 	<parameter value="640" name="Width" />
@@ -780,15 +1383,37 @@
 	  <parameter value="Canny" name="Name" />
 	</parameter>
       </instance>
-      <!-- Attention Control  -->    <instance type="LVF::AttentionBall" name="AttentionBall" >
+
+      <!-- Attention Control  -->
+
+      <!-- Ball -->
+      <instance type="LVF::AttentionBall" name="AttentionBall" >
 	<parameter value="false" name="Random" />
 	<parameter value="false" name="Rotate" />
 	<parameter value="false" name="LimitToOneBall" />
+	<parameter value="true" name="AssumeQuadROI" />
 	<parameter value="3" name="MinBlobWidth" />
 	<parameter value="3" name="MinBlobHeight" />
 	<parameter value="5" name="MinBlobPixels" />
 	<parameter value="0.3" name="MinBlobFill" />
       </instance>
+      <instance type="LVF::ObjectTracking" name="ObjectTracking_Ball" >
+	<parameter value="1.0" name="InitialErrorVarFPM" />
+	<parameter value="0.01" name="SystemNoiseVarFPM" />
+	<parameter value="0.1" name="MeasurementNoiseVarX" />
+	<parameter value="0.1" name="MeasurementNoiseVarY" />
+	<parameter value="0.03333" name="RevisitInterval" />
+	<parameter value="20" name="DeletionThreshold" />
+	<parameter value="true" name="EmitMeasurementROI" />
+      </instance>
+      <instance type="LVF::FilterNewTracks" name="FilterNewTracks_Ball" >
+	<parameter value="ObjectTracking_Ball" name="ObjectTrackingInstance" />
+	<parameter value="5" name="MaxTrackLength" />
+      </instance>
+      <instance type="LVF::ConcatROIs" name="ConcatROIs_Ball" >
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <!-- Corner Poles -->
       <instance type="LVF::AttentionGoalCornerPoles" name="AttentionGoalCornerPoles" >
 	<parameter value="2" name="PoleMinBlobWidth" />
 	<parameter value="3" name="PoleMinBlobHeight" />
@@ -799,7 +1424,63 @@
 	<parameter value="25" name="GoalMinBlobPixels" />
 	<parameter value="0.3" name="GoalMinBlobFill" />
       </instance>
-      <!-- Blue Goal Post -->    <instance type="LVF::IndextoEdge" name="IndextoEdgeWhiteBlue" >
+      <instance type="LVF::FilterROIsByType" name="FilterROIsByType_Goal" >
+	<parameter value="BLUEGOAL YELLOWGOAL" name="Type" />
+      </instance>
+      <instance type="LVF::ObjectTracking" name="ObjectTracking_Goal" >
+	<parameter value="1.0" name="InitialErrorVarFPM" />
+	<parameter value="0.01" name="SystemNoiseVarFPM" />
+	<parameter value="0.1" name="MeasurementNoiseVarX" />
+	<parameter value="0.1" name="MeasurementNoiseVarY" />
+	<parameter value="0.03333" name="RevisitInterval" />
+	<parameter value="20" name="DeletionThreshold" />
+	<parameter value="true" name="EmitMeasurementROI" />
+      </instance>
+      <instance type="LVF::IntegrateObservations" name="IntegrateObservations_Goal" >
+	<parameter value="ObjectTracking_Goal" name="ObjectTrackingInstance" />
+	<parameter value="false" name="UsePredicted" />
+	<parameter value="-1" name="UseDetectedClassifiedFrom" />
+	<parameter value="-1" name="UseDetectedAttentionFrom" /> <!--  check if this makes sense -->
+	<parameter value="false" name="AddPredictedToOutput" />
+      </instance>
+      <instance type="LVF::FilterROIsByType" name="FilterROIsByType_CornerPoles" >
+	<parameter value="BYBCORNERPOST YBYCORNERPOST" name="Type" />
+      </instance>
+      <instance type="LVF::ObjectTracking" name="ObjectTracking_CornerPoles" >
+	<parameter value="1.0" name="InitialErrorVarFPM" />
+	<parameter value="0.01" name="SystemNoiseVarFPM" />
+	<parameter value="0.1" name="MeasurementNoiseVarX" />
+	<parameter value="0.1" name="MeasurementNoiseVarY" />
+	<parameter value="0.4" name="RevisitInterval" /> <!-- CHECK THIS -->
+	<parameter value="20" name="DeletionThreshold" />
+	<parameter value="true" name="EmitMeasurementROI" />
+      </instance>
+      <instance type="LVF::FilterNewTracks" name="FilterNewTracks_CornerPoles" >
+	<parameter value="ObjectTracking_CornerPoles" name="ObjectTrackingInstance" />
+	<parameter value="5" name="MaxTrackLength" />
+      </instance>
+      <instance type="LVF::ConcatROIs" name="ConcatROIs_CornerPoles" >
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <!-- Robots -->
+      <instance type="LVF::ObjectTracking" name="ObjectTracking_Robots" >
+	<parameter value="1.0" name="InitialErrorVarFPM" />
+	<parameter value="0.01" name="SystemNoiseVarFPM" />
+	<parameter value="0.1" name="MeasurementNoiseVarX" />
+	<parameter value="0.1" name="MeasurementNoiseVarY" />
+	<parameter value="0.4" name="RevisitInterval" /> <!-- CHECK THIS -->
+	<parameter value="20" name="DeletionThreshold" />
+	<parameter value="true" name="EmitMeasurementROI" />
+      </instance>
+      <instance type="LVF::FilterNewTracks" name="FilterNewTracks_Robots" >
+	<parameter value="ObjectTracking_Robots" name="ObjectTrackingInstance" />
+	<parameter value="5" name="MaxTrackLength" />
+      </instance>
+      <instance type="LVF::ConcatROIs" name="ConcatROIs_Robots" >
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <!-- Blue Goal Post -->
+      <instance type="LVF::IndextoEdge" name="IndextoEdgeWhiteBlue" >
 	<parameter value="WHITE" name="ColorOne" />
 	<parameter value="BLUE" name="ColorTwo" />
 	<parameter value="true" name="SelectOrient" />
@@ -817,7 +1498,8 @@
 	<parameter value="BLUERIGHTGOALPOST" name="Type" />
 	<parameter value="11" name="MinBlobHeight" />
       </instance>
-      <!-- Yellow Goal Post -->    <instance type="LVF::IndextoEdge" name="IndextoEdgeWhiteYellow" >
+      <!-- Yellow Goal Post -->
+      <instance type="LVF::IndextoEdge" name="IndextoEdgeWhiteYellow" >
 	<parameter value="WHITE" name="ColorOne" />
 	<parameter value="YELLOW" name="ColorTwo" />
 	<parameter value="true" name="SelectOrient" />
@@ -835,7 +1517,34 @@
 	<parameter value="YELLOWRIGHTGOALPOST" name="Type" />
 	<parameter value="11" name="MinBlobHeight" />
       </instance>
-      <!-- Lines on the floor -->    <instance type="LVF::IndextoCanny" name="IndextoCannyGreenWhite" >
+      <!-- Goal Post concatenation, tracking and integration -->
+      <instance type="LVF::ConcatROIs" name="ConcatROIs_BluePost" >
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::ConcatROIs" name="ConcatROIs_YellowPost" >
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::ConcatROIs" name="ConcatROIs_GoalPost" >
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::ObjectTracking" name="ObjectTracking_GoalPost" >
+	<parameter value="1.0" name="InitialErrorVarFPM" />
+	<parameter value="0.01" name="SystemNoiseVarFPM" />
+	<parameter value="0.1" name="MeasurementNoiseVarX" />
+	<parameter value="0.1" name="MeasurementNoiseVarY" />
+	<parameter value="0.4" name="RevisitInterval" /> <!-- CHECK THIS -->
+	<parameter value="20" name="DeletionThreshold" />
+	<parameter value="true" name="EmitMeasurementROI" />
+      </instance>
+      <instance type="LVF::IntegrateObservations" name="IntegrateObservations_GoalPost" >
+	<parameter value="ObjectTracking_GoalPost" name="ObjectTrackingInstance" />
+	<parameter value="false" name="UsePredicted" />
+	<parameter value="-1" name="UseDetectedClassifiedFrom" />
+	<parameter value="-1" name="UseDetectedAttentionFrom" /> <!--  check if this makes sense -->
+	<parameter value="false" name="AddPredictedToOutput" />
+      </instance>
+      <!-- Lines on the floor -->
+      <instance type="LVF::IndextoCanny" name="IndextoCannyGreenWhite" >
 	<parameter value="GREEN" name="ColorOne" />
 	<parameter value="WHITE" name="ColorTwo" />
 	<parameter value="120" name="LowThresh" />
@@ -844,79 +1553,218 @@
       <instance type="LVF::Multiply" name="Multiply" >
 	<parameter value="2" name="UseROIFrom" />
       </instance>
-      <!-- Color mask for robot detection -->    <instance type="LVF::ResizeROI" name="ResizeROIForRobots" >
-	<parameter value="0.05" name="Percentage" />
-	<parameter value="1" name="UseROIFrom" />
-      </instance>
-      <instance type="LVF::ScaleROI" name="ScaleROIForRobots" >
+      <!-- Floor Check (Ball) -->
+      <instance type="LVF::ScaleROI" name="ScaleROI_Ball" >
 	<parameter value="0.5" name="Factor" />
 	<parameter value="1" name="UseROIFrom" />
       </instance>
-      <instance type="LVF::MaskByColor" name="MaskByColorForRobots" >
-	<parameter value="BLACK CYAN MAGENTA" name="Colors" />
+      <instance type="LVF::CheckForFloor" name="CheckForFloor_Ball" >
+	<parameter value="0.75" name="MinGreenRatio" />
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <!-- Floor Check (Corner Poles) -->
+      <instance type="LVF::ScaleROI" name="ScaleROI_2_CornerPoles" >
+	<parameter value="0.5" name="Factor" />
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::CheckForFloor" name="CheckForFloor_CornerPoles" >
+	<parameter value="0.75" name="MinGreenRatio" />
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <!-- Floor Check (Robots) -->
+      <instance type="LVF::ScaleROI" name="ScaleROI_2_Robots" >
+	<parameter value="0.5" name="Factor" />
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::CheckForFloor" name="CheckForFloor_Robots" >
+	<parameter value="0.75" name="MinGreenRatio" />
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+
+      <!-- Color mask -->
+
+      <!-- Corner poles -->
+      <instance type="LVF::ScaleROI" name="ScaleROI_CornerPoles" >
+	<parameter value="0.5" name="Factor" />
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::ResizeROI" name="ResizeROI_CornerPoles" >
+	<parameter value="0.05" name="Percentage" />
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::MaskByColor" name="MaskByColor_CornerPoles" >
+	<parameter value="BLUE YELLOW" name="Colors" />
 	<parameter value="5" name="DilateRectSize" />
 	<parameter value="1" name="UseROIFrom" />
       </instance>
-      <instance type="LVF::ShrinkImageParts" name="ShrinkImagePartsMaskForRobots" >
+      <instance type="LVF::ShrinkImageParts" name="ShrinkImageParts_Mask_CornerPoles" >
 	<parameter value="50" name="MaxX" />
 	<parameter value="50" name="MaxY" />
 	<parameter value="NN" name="Interpolation" />
       </instance>
-      <instance type="LVF::Enlarge2" name="Enlarge2ForRobots" >
+      <instance type="LVF::Enlarge2" name="Enlarge2_CornerPoles" >
 	<parameter value="NN" name="Interpolation" />
       </instance>
-      <!-- Neural Network and Feature Extraction for Ball -->    <instance type="LVF::YUV422toGray" name="YUV422toGrayForBall" >
-	<parameter value="1" name="UseROIFrom" />
-      </instance>
-      <instance type="LVF::Sobel" name="SobelVerticalForBall" >
-	<parameter value="VERTICAL" name="Orientation" />
-      </instance>
-      <instance type="LVF::Sobel" name="SobelHorizontalForBall" >
-	<parameter value="HORIZONTAL" name="Orientation" />
-      </instance>
-      <instance type="LVF::OrientHist" name="OrientHistForBall" >
-	<parameter value="3" name="UseROIFrom" />
-	<!--        <parameter value="0.2" name="WideROI" /> -->      <parameter value="0.0" name="XOverlap" />
-	<parameter value="0.0" name="YOverlap" />
-	<parameter value="2" name="XSubwin" />
-	<parameter value="2" name="YSubwin" />
-	<parameter value="8" name="Discrete" /> -->
-      </instance>
-      <instance type="LVF::YUV422toRGBIpp" name="YUV422toRGBIppForBall" >
-	<parameter value="1" name="UseROIFrom" />
-      </instance>
-      <instance type="LVF::ColorHist" name="ColorHistForBall" >
-	<!--        <parameter value="0.0" name="WideROI" /> -->      <parameter value="0.0" name="XOverlap" />
-	<parameter value="0.0" name="YOverlap" />
-	<parameter value="1" name="XSubwin" />
-	<parameter value="2" name="YSubwin" />
-	<parameter value="8" name="Discrete" />
-      </instance>
-      <instance type="LVF::NeuralNetBall" name="NeuralNetBall" >
-	<parameter value="Ball.net" name="File" />
-	<parameter value="1" name="UseColorHistFrom" />
-	<parameter value="2" name="UseOrientHistFrom" />
-	<parameter value="3" name="UseROIFrom" />
-      </instance>
-      <!-- Neural Network and Feature Extraction for Robots -->    <instance type="LVF::ResizeROI" name="ResizeROI2ForRobots" >
+      <!-- Robot -->
+      <instance type="LVF::ResizeROI" name="ResizeROI_Robots" >
 	<parameter value="0.05" name="Percentage" />
 	<parameter value="1" name="UseROIFrom" />
       </instance>
-      <instance type="LVF::YUV422toGray" name="YUV422toGrayForRobots" >
+      <instance type="LVF::ScaleROI" name="ScaleROI_Robots" >
+	<parameter value="0.5" name="Factor" />
 	<parameter value="1" name="UseROIFrom" />
       </instance>
-      <instance type="LVF::ShrinkImageParts" name="ShrinkImagePartsGrayForRobots" >
+      <instance type="LVF::MaskByColor" name="MaskByColor_Robots" >
+	<parameter value="BLACK CYAN MAGENTA" name="Colors" />
+	<parameter value="5" name="DilateRectSize" />
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::ShrinkImageParts" name="ShrinkImagePartsMask_Robots" >
+	<parameter value="50" name="MaxX" />
+	<parameter value="50" name="MaxY" />
+	<parameter value="NN" name="Interpolation" />
+      </instance>
+      <instance type="LVF::Enlarge2" name="Enlarge2_Robots" >
+	<parameter value="NN" name="Interpolation" />
+      </instance>
+
+      <!-- Neural Network and Feature Extraction -->
+
+      <!-- Ball -->
+      <instance type="LVF::ResizeROI" name="ResizeROI_Ball" >
+	<parameter value="0.05" name="Percentage" />
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::YUV422toGray" name="YUV422toGray_Ball" >
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::Sobel" name="SobelVertical_Ball" >
+	<parameter value="VERTICAL" name="Orientation" />
+      </instance>
+      <instance type="LVF::Sobel" name="SobelHorizontal_Ball" >
+	<parameter value="HORIZONTAL" name="Orientation" />
+      </instance>
+      <instance type="LVF::OrientCurvatureHist" name="OrientCurvatureHist_Ball" >
+        <parameter value="3" name="UseROIFrom" />
+        <parameter value="0.0" name="XOverlap" />
+        <parameter value="0.0" name="YOverlap" />
+        <parameter value="2" name="XSubwin" />
+        <parameter value="2" name="YSubwin" />
+        <parameter value="8" name="Discrete" />
+	<parameter value="13" name="KernelSize"/>
+      </instance>
+      <instance type="LVF::YUV422toRGBIpp" name="YUV422toRGBIpp_Ball" >
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::ColorHist" name="ColorHist_Ball" >
+	<parameter value="0.0" name="XOverlap" />
+	<parameter value="0.0" name="YOverlap" />
+	<parameter value="2" name="XSubwin" />
+	<parameter value="2" name="YSubwin" />
+	<parameter value="8" name="Discrete" />
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::NeuralNetBall" name="NeuralNetBall" >
+	<parameter value="Ball_ColorHist.net" name="FileColorHist" />
+	<parameter value="Ball_OrientCurvatureHist.net" name="FileOrientCurvatureHist" />
+	<parameter value="1" name="UseColorHistFrom" />
+	<parameter value="2" name="UseOrientCurvatureHistFrom" />
+	<parameter value="3" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::IntegrateObservations" name="IntegrateObservations_Ball" >
+	<parameter value="ObjectTracking_Ball" name="ObjectTrackingInstance" />
+	<parameter value="true" name="UsePredicted" />
+	<parameter value="-1" name="UseDetectedClassifiedFrom" />
+	<parameter value="1" name="UseDetectedAttentionFrom" />
+	<parameter value="2" name="UsePredictedAllFrom" />
+	<parameter value="3" name="UsePredictedFloorFrom" />
+	<parameter value="false" name="AddPredictedToOutput" />
+      </instance>
+      <!-- Corner Poles -->
+      <instance type="LVF::ResizeROI" name="ResizeROI_2_CornerPoles" >
+ 	<parameter value="0.05" name="Percentage" />
+ 	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::YUV422toRGBIpp" name="YUV422toRGBIpp_CornerPoles" >
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::ShrinkImageParts" name="ShrinkImageParts_RGB_CornerPoles" >
+	<parameter value="100" name="MaxX" />
+	<parameter value="100" name="MaxY" />
+	<parameter value="SUPER" name="Interpolation" />
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::And" name="And_CornerPoles" >
+	<parameter value="2" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::ColorHist" name="ColorHist_CornerPoles" >
+ 	<parameter value="10" name="Discrete" />
+	<parameter value="3" name="XSubwin" />
+	<parameter value="3" name="YSubwin" />
+	<parameter value="0.2" name="XOverlap" />
+	<parameter value="0.2" name="YOverlap" />
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::YUV422toGray" name="YUV422toGray_CornerPoles" >
+ 	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::ShrinkImageParts" name="ShrinkImageParts_Gray_CornerPoles" >
+ 	<parameter value="100" name="MaxX" />  <!-- twice the value of the other shrink-filter -->
+ 	<parameter value="100" name="MaxY" />
+ 	<parameter value="SUPER" name="Interpolation" />
+      </instance>
+      <instance type="LVF::Sobel" name="Sobel_Vertical_CornerPoles" >
+ 	<parameter value="VERTICAL" name="Orientation" />
+      </instance>
+      <instance type="LVF::Sobel" name="Sobel_Horizontal_CornerPoles" >
+ 	<parameter value="HORIZONTAL" name="Orientation" />
+      </instance>
+      <instance type="LVF::OrientCurvatureHistMask" name="OrientCurvatureHistMask_CornerPoles" >
+ 	<parameter value="3" name="UseROIFrom" />
+ 	<parameter value="4" name="UseMaskFrom" />
+ 	<parameter value="0.2" name="XOverlap" />
+ 	<parameter value="0.2" name="YOverlap" />
+	<parameter value="3" name="XSubwin" />
+	<parameter value="3" name="YSubwin" />
+	<parameter value="6" name="Discrete" />
+      </instance>
+      <instance type="LVF::NeuralNetCornerPoles" name="NeuralNetCornerPoles" >
+	<parameter value="CornerPoles_OrientCurvatureHist.net" name="FileOrientCurvatureHist" />
+	<parameter value="CornerPoles_ColorHist.net" name="FileColorHist" />
+	<parameter value="1" name="UseOrientCurvatureHistFrom" />
+	<parameter value="2" name="UseColorHistFrom" />
+	<parameter value="3" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::IntegrateObservations" name="IntegrateObservations_CornerPoles" >
+	<parameter value="ObjectTracking_CornerPoles" name="ObjectTrackingInstance" />
+	<parameter value="true" name="UsePredicted" />
+	<parameter value="-1" name="UseDetectedClassifiedFrom" />
+	<parameter value="1" name="UseDetectedAttentionFrom" />
+	<parameter value="2" name="UsePredictedAllFrom" />
+	<parameter value="3" name="UsePredictedFloorFrom" />
+	<parameter value="false" name="AddPredictedToOutput" />
+      </instance>
+
+      <!-- Robots -->
+      <instance type="LVF::ResizeROI" name="ResizeROI_2_Robots" >
+	<parameter value="0.05" name="Percentage" />
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::YUV422toGray" name="YUV422toGray_Robots" >
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::ShrinkImageParts" name="ShrinkImagePartsGray_Robots" >
 	<parameter value="100" name="MaxX" />
 	<parameter value="100" name="MaxY" />
 	<parameter value="SUPER" name="Interpolation" />
       </instance>
-      <instance type="LVF::Sobel" name="SobelVerticalForRobots" >
+      <instance type="LVF::Sobel" name="SobelVertical_Robots" >
 	<parameter value="VERTICAL" name="Orientation" />
       </instance>
-      <instance type="LVF::Sobel" name="SobelHorizontalForRobots" >
+      <instance type="LVF::Sobel" name="SobelHorizontal_Robots" >
 	<parameter value="HORIZONTAL" name="Orientation" />
       </instance>
-      <instance type="LVF::OrientHistMask" name="OrientHistMaskForRobots" >
+      <instance type="LVF::OrientHistMask" name="OrientHistMask_Robots" >
 	<parameter value="3" name="UseROIFrom" />
 	<parameter value="4" name="UseMaskFrom" />
 	<parameter value="false" name="AbsGradient" />
@@ -933,7 +1781,17 @@
 	<parameter value="1" name="UseOrientHistFrom" />
 	<parameter value="2" name="UseROIFrom" />
       </instance>
-      <!-- Collect Basic Features -->    <instance type="LVF::CollectAllFeatures2" name="CollectAllFeatures2Basic" >
+      <instance type="LVF::IntegrateObservations" name="IntegrateObservations_Robots" >
+	<parameter value="ObjectTracking_Robots" name="ObjectTrackingInstance" />
+	<parameter value="true" name="UsePredicted" />
+	<parameter value="-1" name="UseDetectedClassifiedFrom" />
+	<parameter value="1" name="UseDetectedAttentionFrom" />
+	<parameter value="2" name="UsePredictedAllFrom" />
+	<parameter value="3" name="UsePredictedFloorFrom" />
+	<parameter value="false" name="AddPredictedToOutput" />
+      </instance>
+      <!-- Collect Basic Features -->
+      <instance type="LVF::CollectRoboCupFeatures" name="CollectRoboCupFeatures_Basic" >
 	<parameter value="3" name="NumberBackLinks" />
 	<parameter value="false" name="DynamicConnection" />
 	<parameter value="VisionCollectorBasic" name="InterfaceName" />
@@ -944,12 +1802,13 @@
 	  <parameter value="CollectBasic" name="Name" />
 	</parameter>
       </instance>
-      <!-- Collect All Features -->    <instance type="LVF::CollectAllFeatures2" name="CollectAllFeatures2Full" >
-	<parameter value="9" name="NumberBackLinks" />
+      <!-- Collect All Features -->
+      <instance type="LVF::CollectRoboCupFeatures" name="CollectRoboCupFeatures_Full" >
+	<parameter value="7" name="NumberBackLinks" />
 	<parameter value="true" name="DynamicConnection" />
 	<parameter value="VisionCollectorFull" name="InterfaceName" />
 	<parameter value="2" name="ScaleFactorRunLength" />
-	<parameter value="10" name="UseIndexFrom" />
+	<parameter value="8" name="UseIndexFrom" />
 	<parameter value="false" name="Save" />
 	<parameter value="true" name="SendVisionResults" />
 	<parameter value="true" name="SendVisionImage" />
@@ -958,7 +1817,10 @@
 	  <parameter value="CollectFull" name="Name" />
 	</parameter>
       </instance>
-      <!-- DEBUG -->    <instance type="LVF::ROIVisual" name="ROIVisualBasic" >
+
+      <!-- DEBUG -->
+      <!-- Found stuff -->
+      <instance type="LVF::ROIVisual" name="ROIVisualBasic" >
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
 	  <parameter value="Basic" name="Name" />
@@ -970,18 +1832,69 @@
 	  <parameter value="Full" name="Name" />
 	</parameter>
       </instance>
-      <instance type="LVF::ROIVisual" name="ROIVisualBall" >
+      <!-- Ball -->
+      <instance type="LVF::ROIVisual" name="ROIVisual_AttentionBall" >
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="AttentionBall" name="Name" />
+	</parameter>
+      </instance>
+      <instance type="LVF::ROIVisual" name="ROIVisual_Ball" >
+	<parameter value="true" name="VisText" />
+	<parameter value="true" name="ConsiderCertainty" />
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
 	  <parameter value="Ball" name="Name" />
 	</parameter>
       </instance>
-      <instance type="LVF::ROIVisual" name="ROIVisualRobot" >
+      <!-- Goal and Corner Poles -->
+      <instance type="LVF::ROIVisual" name="ROIVisual_AttentionCornerPoles" >
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
-	  <parameter value="Robot" name="Name" />
+	  <parameter value="AttentionCornerPoles" name="Name" />
 	</parameter>
       </instance>
+      <instance type="LVF::ROIVisual" name="ROIVisual_CornerPoles" >
+	<parameter value="true" name="VisText" />
+	<parameter value="true" name="ConsiderCertainty" />
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="CornerPoles" name="Name" />
+	</parameter>
+      </instance>
+      <instance type="LVF::ROIVisual" name="ROIVisual_Goal" >
+	<parameter value="true" name="VisText" />
+	<parameter value="true" name="ConsiderCertainty" />
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="Goal" name="Name" />
+	</parameter>
+      </instance>
+      <!-- Goal Posts -->
+      <instance type="LVF::ROIVisual" name="ROIVisual_GoalPost" >
+	<parameter value="true" name="VisText" />
+	<parameter value="true" name="ConsiderCertainty" />
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="GoalPost" name="Name" />
+	</parameter>
+      </instance>
+      <!-- Robots -->
+      <instance type="LVF::ROIVisual" name="ROIVisual_AttentionRobots" >
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="AttentionRobots" name="Name" />
+	</parameter>
+      </instance>
+      <instance type="LVF::ROIVisual" name="ROIVisual_Robots" >
+	<parameter value="true" name="VisText" />
+	<parameter value="true" name="ConsiderCertainty" />
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="Robots" name="Name" />
+	</parameter>
+      </instance>
+      <!-- Index -->
       <instance type="LVF::IndextoIndex" name="IndextoIndex" >
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
@@ -989,6 +1902,7 @@
 	</parameter>
       </instance>
     </section>
+
     <section name="Notification" >
       <parameter name="Miro::LogNotifyParameters" >
 	<parameter name="TypeName" >
@@ -1015,4 +1929,5 @@
 	</parameter>
       </parameter>
     </section>
+
   </config>
