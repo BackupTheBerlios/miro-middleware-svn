@@ -13,7 +13,6 @@
     <config_item name="Robot" parent="Config" instance="true">
       <config_parameter name="name" type="std::string" default="Miro" />
       <config_parameter name="type" type="std::string" default="Robot" />
-      <config_parameter name="nameServiceIOR" type="std::string" />
     </config_item>
   </config_group>
 

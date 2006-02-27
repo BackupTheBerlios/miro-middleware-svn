@@ -39,6 +39,7 @@ namespace
   const char * const namingKey = "-MiroNamingContext";
   const char * const shortNamingKey = "-MNC";
   const char * const noNamingKey = "-MiroNoNaming";
+  const char * const shortNoNamingKey = "-MNN";
 }
 
 namespace Miro
@@ -65,7 +66,8 @@ namespace Miro
 	  arg_shifter.consume_arg();
 	}
       }
-      else if (ACE_OS::strcasecmp(current_arg, noNamingKey) == 0) {
+      else if (ACE_OS::strcasecmp(current_arg, noNamingKey) == 0 ||
+	  ACE_OS::strcasecmp(current_arg, shortNoNamingKey) == 0) {
 	arg_shifter.consume_arg();
 	noNaming_ = true;
       }
@@ -74,14 +76,8 @@ namespace Miro
     }
 
     if (!noNaming_) {
-      if (params_.nameServiceIOR.length() == 0) {
-	// Get reference to NameService
-	initialNamingContext = resolveInit<NamingContext>("NameService");
-      }
-      else {
-	Object_var tmp = orb_->string_to_object(params_.nameServiceIOR.c_str());
-	initialNamingContext = NamingContext::_narrow(tmp.in());
-      }
+      // Get reference to NameService
+      initialNamingContext = resolveInit<NamingContext>("NameService");
 
       // Attempt to create naming context.
       Name n;
