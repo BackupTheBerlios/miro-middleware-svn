@@ -18,18 +18,15 @@ data = \
 	PioneerDefault.xml \
 	PpbDefault.xml \
 	SparrowDefault.xml \
-	barney.xml \
 	coyote.xml \
+	gonzales.xml \
 	eve.xml \
-	passtnix.xml \
 	roadrunner.xml \
-	rosita.xml \
 	speedy.xml \
 	sphinx.dic \
 	sphinx.lm \
 	stanleft.xml \
-	stanright.xml \
-	trifftnix.xml
+	stanright.xml
 
 sysconf_DATA = $(data)
 
