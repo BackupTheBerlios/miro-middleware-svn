@@ -184,7 +184,7 @@
           <parameter value="0.5" name="Bluerightgoalpost" />
           <parameter value="0.5" name="Yellowleftgoalpost" />
           <parameter value="0.5" name="Yellowrightgoalpost" />
-          <parameter value="0.55" name="Ball" />
+          <parameter value="0.6" name="Ball" />
           <parameter value="0.55" name="Robot" />
         </parameter>
         <parameter name="APrioriBeingThere">
@@ -232,7 +232,7 @@
           <parameter value="0.4" name="Bluerightgoalpost" />
           <parameter value="0.4" name="Yellowleftgoalpost" />
           <parameter value="0.4" name="Yellowrightgoalpost" />
-          <parameter value="0.75" name="Ball" />
+          <parameter value="0.7" name="Ball" />
           <parameter value="0.75" name="Robot" />
         </parameter>
         <parameter name="UseThreshold">
@@ -1488,12 +1488,12 @@
       <instance type="LVF::AttentionGoalPosts" name="BlueLeftPost" >
 	<parameter value="255" name="Color" />
 	<parameter value="BLUELEFTGOALPOST" name="Type" />
-	<parameter value="11" name="MinBlobHeight" />
+	<parameter value="8" name="MinBlobHeight" />
       </instance>
       <instance type="LVF::AttentionGoalPosts" name="BlueRightPost" >
 	<parameter value="128" name="Color" />
 	<parameter value="BLUERIGHTGOALPOST" name="Type" />
-	<parameter value="11" name="MinBlobHeight" />
+	<parameter value="8" name="MinBlobHeight" />
       </instance>
       <!-- Yellow Goal Post -->
       <instance type="LVF::IndextoEdge" name="IndextoEdgeWhiteYellow" >
@@ -1507,12 +1507,12 @@
       <instance type="LVF::AttentionGoalPosts" name="YellowLeftPost" >
 	<parameter value="255" name="Color" />
 	<parameter value="YELLOWLEFTGOALPOST" name="Type" />
-	<parameter value="11" name="MinBlobHeight" />
+	<parameter value="8" name="MinBlobHeight" />
       </instance>
       <instance type="LVF::AttentionGoalPosts" name="YellowRightPost" >
 	<parameter value="128" name="Color" />
 	<parameter value="YELLOWRIGHTGOALPOST" name="Type" />
-	<parameter value="11" name="MinBlobHeight" />
+	<parameter value="8" name="MinBlobHeight" />
       </instance>
       <!-- Goal Post concatenation, tracking and integration -->
       <instance type="LVF::ConcatROIs" name="ConcatROIs_BluePost" >

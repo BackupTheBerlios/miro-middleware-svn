@@ -1648,12 +1648,12 @@
       <instance type="LVF::AttentionGoalPosts" name="BlueLeftPost" >
 	<parameter value="255" name="Color" />
 	<parameter value="BLUELEFTGOALPOST" name="Type" />
-	<parameter value="11" name="MinBlobHeight" />
+	<parameter value="8" name="MinBlobHeight" />
       </instance>
       <instance type="LVF::AttentionGoalPosts" name="BlueRightPost" >
 	<parameter value="128" name="Color" />
 	<parameter value="BLUERIGHTGOALPOST" name="Type" />
-	<parameter value="11" name="MinBlobHeight" />
+	<parameter value="8" name="MinBlobHeight" />
       </instance>
       <!-- Yellow Goal Post -->
       <instance type="LVF::IndextoEdge" name="IndextoEdgeWhiteYellow" >
@@ -1667,12 +1667,12 @@
       <instance type="LVF::AttentionGoalPosts" name="YellowLeftPost" >
 	<parameter value="255" name="Color" />
 	<parameter value="YELLOWLEFTGOALPOST" name="Type" />
-	<parameter value="11" name="MinBlobHeight" />
+	<parameter value="8" name="MinBlobHeight" />
       </instance>
       <instance type="LVF::AttentionGoalPosts" name="YellowRightPost" >
 	<parameter value="128" name="Color" />
 	<parameter value="YELLOWRIGHTGOALPOST" name="Type" />
-	<parameter value="11" name="MinBlobHeight" />
+	<parameter value="8" name="MinBlobHeight" />
       </instance>
       <!-- Goal Post concatenation, tracking and integration -->
       <instance type="LVF::ConcatROIs" name="ConcatROIs_BluePost" >
