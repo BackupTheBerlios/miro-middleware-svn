@@ -232,7 +232,7 @@
           <parameter value="0.4" name="Bluerightgoalpost" />
           <parameter value="0.4" name="Yellowleftgoalpost" />
           <parameter value="0.4" name="Yellowrightgoalpost" />
-          <parameter value="0.7" name="Ball" />
+          <parameter value="0.8" name="Ball" />
           <parameter value="0.75" name="Robot" />
         </parameter>
         <parameter name="UseThreshold">
@@ -405,9 +405,9 @@
 
 
       <instance type="Video::FilterOmni2Pan" name="FilterOmni2Pan">
-	<parameter value="158" name="CenterX" />
+	<parameter value="170" name="CenterX" />
 	<parameter value="122" name="CenterY" />
-	<parameter value="120" name="Radius" />
+	<parameter value="112" name="Radius" />
       </instance>
 
       <instance type="LVF::IndextoIndex" name="IndextoIndex_Omni1">
@@ -469,9 +469,9 @@
       </instance>
 
       <instance type="Video::FilterOmni2Pan" name="FilterOmni2Pan_Debug">
-	<parameter value="158" name="CenterX" />
+	<parameter value="170" name="CenterX" />
 	<parameter value="122" name="CenterY" />
-	<parameter value="120" name="Radius" />
+	<parameter value="112" name="Radius" />
       </instance>
 
       <instance type="LVF::ROIVisual" name="ROIVisual_CollectOmni" >
