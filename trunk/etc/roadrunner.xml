@@ -235,7 +235,7 @@
           <parameter value="0.4" name="Bluerightgoalpost" />
           <parameter value="0.4" name="Yellowleftgoalpost" />
           <parameter value="0.4" name="Yellowrightgoalpost" />
-          <parameter value="0.75" name="Ball" />
+          <parameter value="0.85" name="Ball" />
           <parameter value="0.75" name="Robot" />
         </parameter>
         <parameter name="UseThreshold">
