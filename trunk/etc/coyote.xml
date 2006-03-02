@@ -193,8 +193,8 @@
 	  </parameter>
 	</parameter>
         <parameter name="Pan">
-	  <parameter value="-80" name="RangeMin" />
-	  <parameter value="80" name="RangeMax" />
+	  <parameter value="-160" name="RangeMin" />
+	  <parameter value="160" name="RangeMax" />
           <parameter value="0.050000" name="PanLatency" />
 	  <parameter value="0.300000" name="PanSwing" />
 	  <parameter value="245" name="PanRadPerSec" />

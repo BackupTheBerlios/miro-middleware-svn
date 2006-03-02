@@ -41,12 +41,12 @@
 	<parameter value="/dev/pcan24" name="Device" />
 	<parameter value="pcan" name="Module" />
         <parameter name="Pan">
-	  <parameter value="-80" name="RangeMin" />
-	  <parameter value="80" name="RangeMax" />
+	  <parameter value="-160" name="RangeMin" />
+	  <parameter value="160" name="RangeMax" />
 	  <parameter value="0.050000" name="PanLatency" />
 	  <parameter value="0.300000" name="PanSwing" />
 	  <parameter value="245" name="PanRadPerSec" />
-	  <parameter value="4." name="PanAccuracy" />
+	  <parameter value="3." name="PanAccuracy" />
         </parameter>
 	<parameter value="0.040000" name="InfraredPulse" />
 	<parameter value="0.040000" name="OdometryPulse" />

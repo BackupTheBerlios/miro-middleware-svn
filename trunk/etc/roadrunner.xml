@@ -42,6 +42,8 @@
 	<parameter value="/dev/pcan24" name="Device" />
 	<parameter value="pcan" name="Module" />
         <parameter name="Pan">
+          <parameter value="-160" name="RangeMin" />
+	  <parameter value="160" name="RangeMax" />
 	  <parameter value="-5" name="Offset" />
 	  <parameter value="784" name="TicksPerDegree" />
 	  <parameter value="0.050000" name="PanLatency" />
