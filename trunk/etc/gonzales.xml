@@ -315,7 +315,7 @@
 			      <parameter value="IndextoDist" name="Type" />
 			      <parameter name="Successor" >
 				<!-- disable while debug flag in IndexToDist filter is disabled -->
-				<!-- 
+				<!--
 				<parameter name="Filter" >
 				<parameter value="IndextoIndex_Omni3" name="Name" />
 				<parameter value="IndextoIndex" name="Type" />
@@ -407,9 +407,9 @@
 
 
       <instance type="Video::FilterOmni2Pan" name="FilterOmni2Pan">
-	<parameter value="166" name="CenterX" />
-	<parameter value="120" name="CenterY" />
-	<parameter value="120" name="Radius" />
+	<parameter value="156" name="CenterX" />
+	<parameter value="121" name="CenterY" />
+	<parameter value="116" name="Radius" />
       </instance>
 
       <instance type="LVF::IndextoIndex" name="IndextoIndex_Omni1">
@@ -471,9 +471,9 @@
       </instance>
 
       <instance type="Video::FilterOmni2Pan" name="FilterOmni2Pan_Debug">
-	<parameter value="166" name="CenterX" />
-	<parameter value="120" name="CenterY" />
-	<parameter value="120" name="Radius" />
+	<parameter value="156" name="CenterX" />
+	<parameter value="121" name="CenterY" />
+	<parameter value="116" name="Radius" />
       </instance>
 
       <instance type="LVF::ROIVisual" name="ROIVisual_CollectOmni" >
