@@ -29,8 +29,8 @@
 	  <parameter value="-2500" name="MinRTranslation"/>
 	</parameter>
 	<parameter name="SpeedConvFactor" value="2.0" />
-	<parameter name="MaxPosAccel" value="2500" />
-	<parameter name="MaxNegAccel" value="2500" />
+	<parameter name="MaxPosAccel" value="1700" />
+	<parameter name="MaxNegAccel" value="1700" />
       </parameter>
     </section>
     
