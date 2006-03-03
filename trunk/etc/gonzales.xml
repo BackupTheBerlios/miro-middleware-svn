@@ -1309,8 +1309,8 @@
       <instance type="LVF::YUV422toRGBIpp" name="YUV422toRGBIppDebug" />
 
       <!-- Directed Camera -->
-      <instance type="Video::Device1394Parameters" name="Device1394" >
-<!--	<parameter value="-1" name="Focus" />
+<!--      <instance type="Video::Device1394Parameters" name="Device1394" >
+	<parameter value="-1" name="Focus" />
 	<parameter value="128" name="Hue" />
 	<parameter value="-1" name="Iris" />
 	<parameter value="-1" name="Trigger" />
