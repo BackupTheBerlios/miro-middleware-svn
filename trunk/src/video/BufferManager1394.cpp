@@ -10,7 +10,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "BufferManager1394.h"
-#include "Parameters.h"
+#include "video/Parameters.h"
 #include "VideoFilter.h"
 
 #include <ace/OS.h>

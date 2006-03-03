@@ -11,7 +11,7 @@
 #ifndef DummyBehaviour_h
 #define DummyBehaviour_h
 
-#include "Parameters.h"
+#include "botsvcs/tests/BAP/lib/Parameters.h"
 #include "botsvcs/BAP/TimedBehaviour.h"
 
 class DummyBehaviour : public Miro::BAP::TimedBehaviour

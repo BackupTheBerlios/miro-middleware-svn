@@ -128,7 +128,8 @@ extraheader = \
 	Utils.h \
 	Infinity.h \
 	BuiltIn.h \
-	PanTiltBase.h
+	PanTiltBase.h \
+	Infinity.h
 
 BUILT_SOURCES = \
 	Parameters.cpp Parameters.h \

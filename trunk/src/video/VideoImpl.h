@@ -11,7 +11,7 @@
 #ifndef VideoImpl_h
 #define VideoImpl_h
 
-#include "Parameters.h"
+#include "video/Parameters.h"
 
 #include "idl/VideoS.h"
 #include "miro/Synch.h"

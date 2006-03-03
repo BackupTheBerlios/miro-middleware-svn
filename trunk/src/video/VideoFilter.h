@@ -11,7 +11,7 @@
 #ifndef Video_Filter_h
 #define Video_Filter_h
 
-#include "Parameters.h"
+#include "video/Parameters.h"
 #include "AsynchSuccLink.h"
 #include "AsynchLinkManager.h"
 #include "VideoFilterLink.h"

@@ -31,8 +31,7 @@ namespace Miro
    * consumers.
    */
   class StructuredPushConsumer :
-    public POA_CosNotifyComm::StructuredPushConsumer //,
-//    public PortableServer::RefCountServantBase        
+    public POA_CosNotifyComm::StructuredPushConsumer   
   {
   public:
     //--------------------------------------------------------------------------

@@ -10,7 +10,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "BufferManagerQuickCam.h"
-#include "Parameters.h"
+#include "video/Parameters.h"
 #include "VideoFilter.h"
 
 #include <ace/OS.h>

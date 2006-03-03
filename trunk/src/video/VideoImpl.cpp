@@ -19,7 +19,7 @@
 #include "VideoFilter.h"
 #include "VideoConsumer.h"
 #include "BufferManager.h"
-#include "Parameters.h"
+#include "video/Parameters.h"
 
 #include <qdom.h>
 

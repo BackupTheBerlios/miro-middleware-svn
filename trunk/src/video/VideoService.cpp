@@ -16,7 +16,7 @@
 
 #include "VideoServer.h"
 #include "VideoFilterService.h"
-#include "Parameters.h"
+#include "video/Parameters.h"
 
 #include "VideoFilterRepository.h"
 

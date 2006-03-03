@@ -28,6 +28,7 @@ sources = \
 	DummyFactory.cpp
 
 Parameters.h: Parameters.cpp
+Parameters.cpp: Parameters.xml
 
 ## the prefix of the following macro must have the same name as the respective library
 ## (replace dots with underscores)

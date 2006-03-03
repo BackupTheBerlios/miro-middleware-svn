@@ -14,7 +14,7 @@
 #include "VideoConsumer.h"
 #include "VideoBrokerImpl.h"
 #include "VideoFilterRepository.h"
-#include "Parameters.h"
+#include "video/Parameters.h"
 
 #include "miro/Server.h"
 #include "idl/ExceptionC.h"

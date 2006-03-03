@@ -1,8 +1,8 @@
 <!DOCTYPE xml SYSTEM "PolicyEditor_behaviour.dtd">
 <config> 
-  <config_global name="include" value="Parameters.h" />
+  <config_global name="include" value="miro/Parameters.h" />
   <config_global name="Include" value="ace/TTY_IO.h" />
-  <config_global name="include" value="Infinity.h" />
+  <config_global name="include" value="miro/Infinity.h" />
  
   <config_group name="ACE">
     <config_item name="ACE_TTY_IO::Serial_Params" final="false" dummy="true">
