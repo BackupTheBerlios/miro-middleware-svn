@@ -22,7 +22,8 @@
 #ifndef GpsImpl_h
 #define GpsImpl_h
 
-#include "Parameters.h"
+#include "gps/Parameters.h"
+
 #include "idl/GpsS.h"
 #include "idl/GpsDataC.h"
 #include "idl/WorldPoint3DC.h"

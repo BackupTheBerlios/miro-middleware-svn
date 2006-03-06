@@ -22,7 +22,8 @@
 #ifndef GpsConnection_h
 #define GpsConnection_h
 
-#include "Parameters.h"
+#include "gps/Parameters.h"
+
 #include "miro/TtyConnection.h"
 
 #include <string>

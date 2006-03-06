@@ -22,7 +22,7 @@
 #ifndef CtGpsImpl_h
 #define CtGpsImpl_h
 
-#include "Parameters.h"
+#include "gps/Parameters.h"
 #include "GpsImpl.h"
 #include "GpsConnection.h"
 #include "idl/CtGpsS.h"
