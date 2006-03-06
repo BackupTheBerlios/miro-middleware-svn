@@ -13,24 +13,35 @@
 
 include $(top_srcdir)/config/Make-rules
 
+.tag.tmp:
+	test -e `echo $< | sed 's/\.*\\/.*\\///g'` || $(LN_S) $<
+
 CLEANFILES = \
 	idl/*.html idl/*.png idl/*.gif idl/*.css idl/installdox idl/MiroIDL.tag \
-	cpp/*.html cpp/*.png cpp/*.gif cpp/*.css cpp/installdox cpp/MiroCpp.tag 
+	cpp/*.html cpp/*.png cpp/*.gif cpp/*.css cpp/installdox cpp/MiroCpp.tag
 
 #clean-local: 
 #	test -d idl && rmdir idl
 #	test -d cpp && rmdir cpp
 
-all-local:
-	doxygen doxygen.idl
+tagfiles= \
+	ACE.tag \
+	TAO.tag
+
+all-local: $(tagfiles:.tag=.tmp)
+	doxygen $(srcdir)/doxygen.idl
 	(cd idl && ./installdox -lACE.tag@http://www.dre.vanderbilt.edu/Doxygen/Current/html/ace/ -lTAO.tag@http://www.dre.vanderbilt.edu/Doxygen/Current/html/tao/)
-	doxygen doxygen.cpp
+	doxygen $(srcdir)/doxygen.cpp
 	(cd cpp && ./installdox -lMiroIDL.tag@../idl/ -lACE.tag@http://www.dre.vanderbilt.edu/Doxygen/Current/html/ace/ -lTAO.tag@http://www.dre.vanderbilt.edu/Doxygen/Current/html/tao/)
 
 install-data-local:
 	mkdir -p $(datadir)/html/idl $(datadir)/html/cpp
 	cp idl/* $(datadir)/html/idl
 	cp cpp/* $(datadir)/html/cpp
+
+clean-local:
+	if test x$(abs_builddir) != x$(abs_srcdir); then rm $(tagfiles); fi
+		
 
 EXTRA_DIST = \
 	ACE.tag \

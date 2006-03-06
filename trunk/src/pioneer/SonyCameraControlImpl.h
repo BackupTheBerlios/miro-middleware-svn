@@ -27,7 +27,7 @@
 #include "miro/Exception.h"
 #include "miro/CameraControlImpl.h"
 
-#include "Parameters.h"
+#include "pioneer/Parameters.h"
 
 // forward declarations
 namespace Psos

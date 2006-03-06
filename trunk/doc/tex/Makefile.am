@@ -27,14 +27,28 @@ SUFFIXES = .tmp
 .cpp.tmp:
 	test -e `echo $< | sed 's/\.*\\/.*\\///g'` || $(LN_S) $<
 
+.tex.tmp:
+	test -e `echo $< | sed 's/\.*\\/.*\\///g'` || $(LN_S) $<
+
 texsources = \
-	miro_manual.tex \
-	definitions.tex \
-	using.tex \
-	servers.tex \
-	clients.tex \
-	writing_a_client.tex \
 	behaviourEngine.tex \
+	blank.tex \
+	clients.tex \
+	definitions.tex \
+	event_channel_logging.tex \
+	group_communication.tex \
+	install.tex \
+	logging.tex \
+	miro_manual.tex \
+	miro_reference.tex \
+	new_project.tex \
+	parameters.tex \
+	servers.tex \
+	styleguide.tex \
+	tex_definitions.tex \
+	using.tex \
+	video.tex \
+	writing_a_client.tex \
 	writing_a_server.tex
 
 examplelinks = \
@@ -47,31 +61,32 @@ examplelinks = \
 
 if COND_PDF
 todo = \
-	pdflatex miro_manual.tex; \
-	bibtex miro_manual; \
-	pdflatex miro_manual.tex; \
-	makeindex miro_manual; \
-	pdflatex miro_manual.tex
+	pdflatex $(srcdir)/miro_manual.tex; \
+	bibtex $(srcdir)/miro_manual; \
+	pdflatex $(srcdir)/miro_manual.tex; \
+	makeindex $(srcdir)/miro_manual; \
+	pdflatex $(srcdir)/miro_manual.tex
 install = \
 	miro_manual.pdf
 else
 todo = \
-	latex miro_manual.tex; \
-	bibtex miro_manual; \
-	latex miro_manual.tex; \
-	makeindex miro_manual; \
-	latex miro_manual.tex; \
+	latex $(srcdir)/miro_manual.tex; \
+	bibtex $(srcdir)/miro_manual; \
+	latex $(srcdir)/miro_manual.tex; \
+	makeindex $(srcdir)/miro_manual; \
+	latex $(srcdir)/miro_manual.tex; \
 	dvips miro_manual.dvi -o miro_manual.ps
 install = \
 	miro_manual.ps
 endif
 
-all-local: $(examplelinks:.cpp=.tmp) $(texsources)
+all-local: $(examplelinks:.cpp=.tmp) $(texsources:.tex=.tmp)
 	$(todo)
 
 clean-local:
 	-rm -f *.aux *.log *.ind *.idx *.ilg *.toc *.dvi *.bbl *.blg *.out 
 	-rm -f miro_manual.pdf miro_manual.ps
+	if test x$(abs_builddir) != x$(abs_srcdir); then rm -f $(texsources); fi
 
 install-data-local:
 	mkdir -p $(datadir)/doc
