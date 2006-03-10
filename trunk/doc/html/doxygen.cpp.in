@@ -64,7 +64,16 @@ EXCLUDE_PATTERNS       = *C.h \
 			 Laser.idl \
                          Image.idl \
                          ImageDefinitions.idl
-INPUT                  = ../../idl
+INPUT                  = @abs_top_builddir@/src/miro \
+                         @abs_top_srcdir@/src/miro \
+                         @abs_top_builddir@/src/video \
+                         @abs_top_srcdir@/src/video \
+                         @abs_top_builddir@/utils/widgets \
+                         @abs_top_srcdir@/utils/widgets \
+                         @abs_top_builddir@/utils/configEditor \
+                         @abs_top_srcdir@/utils/configEditor \
+                         @abs_top_builddir@/utils/policyEditor \
+                         @abs_top_srcdir@/utils/policyEditor
 EXAMPLE_PATH           = 
 EXAMPLE_PATTERNS       = 
 IMAGE_PATH             = 
@@ -92,9 +101,9 @@ DISABLE_INDEX          = NO
 ENUM_VALUES_PER_LINE   = 4
 GENERATE_TREEVIEW      = NO
 TREEVIEW_WIDTH         = 250
-HTML_OUTPUT            = idl
-GENERATE_TAGFILE       = idl/MiroIDL.tag
-TAGFILES               = ACE.tag TAO.tag
+HTML_OUTPUT            = cpp
+GENERATE_TAGFILE       = cpp/MiroCpp.tag
+TAGFILES               = idl/MiroIDL.tag ACE.tag TAO.tag
 
 #---------------------------------------------------------------------------
 # configuration options related to the LaTeX output

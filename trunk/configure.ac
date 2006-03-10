@@ -246,6 +246,8 @@ AC_CONFIG_FILES([Makefile
                  doc/fig/Makefile
                  doc/tex/Makefile
                  doc/html/Makefile
+                 doc/html/doxygen.idl
+                 doc/html/doxygen.cpp
                  dtd/Makefile
                  etc/Makefile
                  scripts/Makefile
