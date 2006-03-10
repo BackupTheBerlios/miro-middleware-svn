@@ -26,8 +26,6 @@ globaldirs = \
 	speech \
         log
 
-#	xml
-
 if COND_B21
 b21dirs = \
 	b21 \
@@ -53,10 +51,4 @@ sparrowdirs = \
 	faul
 endif
 
-if COND_DEPRECATED
-deprecateddirs = 
-endif
-
-
-
-SUBDIRS = $(globaldirs) $(b21dirs) $(speechdirs) $(pioneerdirs) $(sparrowdirs) $(deprecateddirs)
+SUBDIRS = $(globaldirs) $(b21dirs) $(speechdirs) $(pioneerdirs) $(sparrowdirs)

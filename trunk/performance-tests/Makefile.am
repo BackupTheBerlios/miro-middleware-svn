@@ -30,10 +30,4 @@ sparrowdirs = \
 	response 
 endif
 
-if COND_DEPRECATED
-deprecateddirs = 
-endif
-
-
-
-SUBDIRS = $(globaldirs) $(b21dirs) $(sparrowdirs) $(deprecateddirs)
+SUBDIRS = $(globaldirs) $(b21dirs) $(sparrowdirs)

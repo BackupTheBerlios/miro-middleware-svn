@@ -54,7 +54,7 @@ time2date_LDADD = -lmiro
 BUILT_SOURCES = $(tomocsources:.cpp=.moc.cpp)
 CLEANFILES = $(BUILT_SOURCES)
 
-all-local: LogPlayer
+all-local: $(bin_PROGRAMS)
 	$(INSTALLPROGRAMS)
 
 clean-local:

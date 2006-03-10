@@ -25,7 +25,7 @@ sources = myParameterFile.xml mySourceFile.cpp
 ## (replace dots with underscores)
 libmyLibrary_la_SOURCES = $(sources)
 
-## if there are headers without a associated cpp-file
+## if there are headers without an associated cpp-file
 extraheader = myExtraHeader.h
 
 ## automatically builded files (depends on your source files)
@@ -34,10 +34,10 @@ CLEANFILES = $(BUILT_SOURCES)
 
 includefiles1 = $(sources:.xml=.h) $(extraheader)
 includefiles2 = $(includefiles1:.cpp=.h)
-## the prefix of the following macro indicates the installation directory
+## the prefix of the following macro indicates the installation directory (see config/Make-rules for their definition)
 myInstallDir_include_HEADERS = $(includefiles2)
 
-all-local: libmyLibrary.la
+all-local: $(lib_LTLIBRARIES)
 	$(INSTALLLTLIBRARIES)
 
 clean-local:

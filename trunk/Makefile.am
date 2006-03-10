@@ -53,8 +53,6 @@ distclean-local:
 configh_configdir = $(libdir)/Miro/include
 configh_config_DATA = config.h
 
-# bin_SCRIPTS = miro-config
-
 EXTRA_DIST = config/Make-rules
 
-DISTCHECK_CONFIGURE_FLAGS = --enable-B21 --enable-Pioneer --enable-Sparrow99 --enable-BTTV --enable-IEEE1394 --enable-Meteor
+DISTCHECK_CONFIGURE_FLAGS = --enable-B21 --enable-Pioneer --enable-Sparrow99 --enable-BTTV --enable-IEEE1394 --enable-Meteor --enable-QuickCam

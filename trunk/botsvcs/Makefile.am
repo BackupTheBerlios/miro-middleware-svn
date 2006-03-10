@@ -16,12 +16,6 @@ generaldirs = \
 	tests \
 	examples
 
-## example for conditional compilation
-if COND_PIONEER
-conditionaldirs = 
-endif
-
-
-SUBDIRS = $(generaldirs) $(conditionaldirs)
+SUBDIRS = $(generaldirs)
 
 

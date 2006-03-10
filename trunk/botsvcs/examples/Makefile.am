@@ -12,12 +12,6 @@
 ## insert unconditional directories here
 generaldirs = BAP
 
-## example for conditional compilation
-if COND_PIONEER
-pioneerdirs = conditionalDir
-endif
-
-
 SUBDIRS = $(generaldirs)
 
 

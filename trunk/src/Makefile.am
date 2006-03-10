@@ -53,15 +53,11 @@ sparrowdirs = \
 	sparrowBase
 endif
 
-if COND_DEPRECATED
-deprecateddirs = 
-endif
-
 if COND_PLAYER
 playerdirs = \
 	playerBase
 endif
 
-SUBDIRS = $(globaldirs) $(b21dirs) $(speechdirs) $(pioneerdirs) $(sparrowdirs) $(playerdirs) $(deprecateddirs)
+SUBDIRS = $(globaldirs) $(b21dirs) $(speechdirs) $(pioneerdirs) $(sparrowdirs) $(playerdirs)
 
 

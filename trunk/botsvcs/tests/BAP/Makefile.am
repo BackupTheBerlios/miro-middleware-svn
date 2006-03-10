@@ -12,12 +12,6 @@
 ## insert unconditional directories here
 generaldirs = lib parsing engine priorityArbiter dynamicPolicy
 
-## example for conditional compilation
-if COND_PIONEER
-pioneerdirs = conditionalDir
-endif
-
-
 SUBDIRS = $(generaldirs)
 
 

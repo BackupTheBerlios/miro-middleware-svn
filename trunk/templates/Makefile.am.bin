@@ -28,7 +28,7 @@ SecondBinary_SOURCES = secondBinary.cpp secondBinary.h additionalFile.cpp additi
 FirstBinary_LDADD  = -lmiro
 SecondBinary_LDADD = -lmiro
 
-all-local: FirstBinary SecondBinary
+all-local: $(bin_PROGRAMS)
 	$(INSTALLPROGRAMS)
 
 clean-local:

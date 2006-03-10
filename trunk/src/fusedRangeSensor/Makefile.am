@@ -43,10 +43,8 @@ FusedRangeSensor_LDADD = \
 BUILT_SOURCES = Parameters.cpp Parameters.h
 CLEANFILES = $(BUILT_SOURCES)
 
-all-local: FusedRangeSensor #libmiroLaser.a
-#	$(INSTALLLIBRARIES)
+all-local: FusedRangeSensor
 	$(INSTALLPROGRAMS)
 
 clean-local:
-#	$(CLEANLIBRARIES)
 	$(CLEANPROGRAMS)
