@@ -51,8 +51,7 @@ WARN_LOGFILE           =
 # configuration options related to the input files
 #---------------------------------------------------------------------------
 FILE_PATTERNS          = *.h \
-                         *.cpp \
-                         *.idl
+                         *.cpp
 RECURSIVE              = NO
 EXCLUDE                = 
 EXCLUDE_PATTERNS       = *C.h \
@@ -60,10 +59,7 @@ EXCLUDE_PATTERNS       = *C.h \
                          *S.h \
                          *S.i.h \
                          *S.cpp \
-                         *C.cpp \
-			 Laser.idl \
-                         Image.idl \
-                         ImageDefinitions.idl
+                         *C.cpp
 INPUT                  = @abs_top_builddir@/src/miro \
                          @abs_top_srcdir@/src/miro \
                          @abs_top_builddir@/src/video \

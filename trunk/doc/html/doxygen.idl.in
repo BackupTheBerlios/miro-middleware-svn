@@ -50,18 +50,10 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-FILE_PATTERNS          = *.h \
-                         *.cpp \
-                         *.idl
+FILE_PATTERNS          = *.idl
 RECURSIVE              = NO
 EXCLUDE                = 
-EXCLUDE_PATTERNS       = *C.h \
-                         *C.i.h \
-                         *S.h \
-                         *S.i.h \
-                         *S.cpp \
-                         *C.cpp \
-			 Laser.idl \
+EXCLUDE_PATTERNS       = Laser.idl \
                          Image.idl \
                          ImageDefinitions.idl
 INPUT                  = @abs_top_srcdir@/idl
