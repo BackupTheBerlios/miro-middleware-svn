@@ -91,6 +91,12 @@ namespace Sparrow
     }
   }
 
+  void
+  PanTiltImpl::setPanSpeed(CORBA::Float _speed) throw (EDevIO, EOutOfBounds)
+  {
+     connection_->setPanExt(nextPosition, _speed);
+  }
+  
   CORBA::Float
   PanTiltImpl::getPan() throw (EDevIO)
   {

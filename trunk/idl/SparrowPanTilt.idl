@@ -53,6 +53,8 @@ module Miro
 
     //! Get pan position and accuracy.
     PanPositionIDL currentPan(in Miro::TimeIDL stamp);
+    
+    void setPanSpeed(in float value) raises(EDevIO, EOutOfBounds);
   };
 };
 
