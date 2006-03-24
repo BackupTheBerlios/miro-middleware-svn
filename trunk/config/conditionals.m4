@@ -391,6 +391,7 @@ AC_DEFUN([AC_DETERMINE_LIBDC_VERSION],
 	if test "x$success" != "xfailed"; then
 		AC_DEFINE_UNQUOTED(MIRO_HAS_LIBDC1394_VERSION, $success)
 		AM_CONDITIONAL(COND_IEEE1394_NEWLIB, [test $success -ge 3])
+		if test $success -ge 3; then ac_miro_has_1394_newlib=yes; else ac_miro_has_1394_newlib=no; fi
 		ac_have_libdc1394=yes
 	else
 		AC_MSG_ERROR([Cannot determine libdc1394 version. Giving up. For more details about this problem, look at the end of config.log.])
