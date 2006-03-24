@@ -17,7 +17,7 @@ AM_CPPFLAGS+=-include $(top_builddir)/pch/all_shared.h
 endif
 
 
-lib_LTLIBRARIES = libmiroBehavioursRangeSensor.la
+noinst_LTLIBRARIES = libmiroBehavioursRangeSensor.la
 
 
 libmiroBehavioursRangeSensor_la_SOURCES = \

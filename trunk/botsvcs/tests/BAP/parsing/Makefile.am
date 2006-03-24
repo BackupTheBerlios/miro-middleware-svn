@@ -17,7 +17,7 @@ AM_CPPFLAGS+=-include $(top_builddir)/pch/all_static.h
 endif
 
 
-bin_PROGRAMS = \
+noinst_PROGRAMS = \
 	PolicyParsingTest
 
 
@@ -25,6 +25,7 @@ PolicyParsingTest_SOURCES = \
 	PolicyParsingTest.cpp
 
 PolicyParsingTest_LDADD = \
+	-L../lib \
 	-lmiroBAPtests \
 	-lmiroBAP \
 	-lmiroIDL \

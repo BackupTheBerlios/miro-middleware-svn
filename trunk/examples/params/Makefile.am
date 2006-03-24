@@ -17,7 +17,7 @@ AM_CPPFLAGS+=-include $(top_builddir)/pch/all_static.h
 endif
 
 
-bin_PROGRAMS = ParameterExample
+noinst_PROGRAMS = ParameterExample
 
 
 ParameterExample_SOURCES = \

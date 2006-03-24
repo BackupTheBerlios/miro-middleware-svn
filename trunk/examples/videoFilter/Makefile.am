@@ -17,7 +17,7 @@ AM_CPPFLAGS+=-include $(top_builddir)/pch/all_static.h
 endif
 
 
-bin_PROGRAMS = GrayVideoService
+noinst_PROGRAMS = GrayVideoService
 
 
 GrayVideoService_SOURCES = \

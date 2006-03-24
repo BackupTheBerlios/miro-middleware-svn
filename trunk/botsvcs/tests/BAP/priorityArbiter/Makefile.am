@@ -17,7 +17,7 @@ AM_CPPFLAGS+=-include $(top_builddir)/pch/all_static.h
 endif
 
 
-bin_PROGRAMS = \
+noinst_PROGRAMS = \
 	PriorityArbitersTest
 
 PriorityArbitersTest_SOURCES = \
@@ -25,6 +25,7 @@ PriorityArbitersTest_SOURCES = \
 
 
 PriorityArbitersTest_LDADD = \
+	-L../lib \
 	-lmiroBAPtests \
 	-lmiroBAP \
 	-lmiroIDL \

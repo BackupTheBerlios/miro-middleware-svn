@@ -16,13 +16,14 @@ if COND_PCH
 AM_CPPFLAGS+=-include $(top_builddir)/pch/all_static.h
 endif
 
-bin_PROGRAMS = \
+noinst_PROGRAMS = \
 	DynamicPolicyTest
 
 DynamicPolicyTest_SOURCES = \
 	DynamicPolicyTest.cpp
 
 DynamicPolicyTest_LDADD = \
+	-L../lib \
 	-lmiroBAPtests \
 	-lmiroBAP \
 	-lmiroIDL \

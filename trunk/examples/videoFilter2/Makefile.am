@@ -23,7 +23,7 @@ SUFFIXES = .idl C.cpp C.h C.i.h S.cpp S.h S.i.h
 
 
 
-bin_PROGRAMS = VideoService
+noinst_PROGRAMS = VideoService
 
 
 ParametersFilter.h: ParametersFilter.cpp

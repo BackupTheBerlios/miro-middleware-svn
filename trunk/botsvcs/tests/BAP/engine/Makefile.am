@@ -16,7 +16,7 @@ if COND_PCH
 AM_CPPFLAGS+=-include $(top_builddir)/pch/all_static.h
 endif
 
-bin_PROGRAMS = \
+noinst_PROGRAMS = \
 	BehaviourEngineTest DummyBehaviourEngine
 
 BehaviourEngineTest_SOURCES = \
@@ -26,11 +26,13 @@ DummyBehaviourEngine_SOURCES = \
 	DummyBehaviourEngine.cpp
 
 BehaviourEngineTest_LDADD = \
+	-L../lib \
 	-lmiroBAPtests \
 	-lmiroBAP \
 	-lmiro
 
 DummyBehaviourEngine_LDADD = \
+	-L../lib \
 	-lmiroBAPtests \
 	-lmiroBAP \
 	-lmiro

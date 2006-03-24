@@ -19,7 +19,7 @@ AM_CPPFLAGS+=-include $(top_builddir)/pch/all_static.h
 endif
 
 
-bin_PROGRAMS = SimpleBaseClient
+noinst_PROGRAMS = SimpleBaseClient
 
 
 SimpleBaseClient_SOURCES = SimpleBaseClient.cpp

@@ -22,7 +22,7 @@ b21exec = \
 	B21BehaviourEngine
 endif
 
-bin_PROGRAMS = \
+noinst_PROGRAMS = \
 	SimpleBehaviourEngine \
 	RangeSensorBehaviourEngine \
 	$(b21exec)
@@ -33,12 +33,15 @@ RangeSensorBehaviourEngine_SOURCES = RangeSensorBehaviourEngine.cpp
 B21BehaviourEngine_SOURCES = B21BehaviourEngine.cpp
 
 globallibs = \
+	-L../simple \
 	-lmiroBehavioursSimple \
+	-L../rangeSensor \
 	-lmiroBehavioursRangeSensor \
 	-lmiroBAP
 
 if COND_B21
 b21libs = \
+	-L../b21 \
 	-lmiroBehavioursB21
 endif
 

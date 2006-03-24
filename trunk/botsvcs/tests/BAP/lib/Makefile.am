@@ -15,7 +15,7 @@ AM_CPPFLAGS+=-include $(top_builddir)/pch/all_shared.h
 endif
 
 ## shared library to be built
-lib_LTLIBRARIES = libmiroBAPtests.la
+noinst_LTLIBRARIES = libmiroBAPtests.la
 
 ## sourcefiles needed for the library to be built
 sources = \
