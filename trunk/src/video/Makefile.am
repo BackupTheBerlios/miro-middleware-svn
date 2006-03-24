@@ -111,10 +111,6 @@ if COND_PCH
 VideoService_CPPFLAGS = -include $(top_builddir)/pch/all_static.h $(CPPFLAGS) $(AM_CPPFLAGS)
 endif
 
-if COND_PLAYER
-playerlibraries = $(PLAYER_LDFLAGS) $(PLAYER_LIBS)
-endif
-
 ## local version of libmiroVideo, because it is not installed at this point.
 VideoService_LDADD = \
 	$(top_builddir)/lib/libmiroSvc.a \
