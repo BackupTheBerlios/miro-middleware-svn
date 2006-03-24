@@ -17,9 +17,7 @@ if COND_PCH
 pchdir = pch
 endif
 
-
 SUBDIRS = \
-	. \
 	$(pchdir) \
 	idl \
 	src \
@@ -35,21 +33,16 @@ SUBDIRS = \
 	lib \
 	doc
 
-all-local:
-	if test -L idl/idl; then rm idl/idl; fi
-	$(LN_S) ./ idl/idl
+DISTCLEANFILES = \
+	all.h.in \
+	config/config.guess \
+	config/config.sub \
+	config/depcomp \
+	config/install-sh \
+	config/ltmain.sh \
+	config/missing \
+	config/mkinstalldirs
 
-distclean-local:
-	rm -f idl/idl
-	rm -f config/config.guess
-	rm -f config/config.sub
-	rm -f config/depcomp
-	rm -f config/install-sh
-	rm -f config/ltmain.sh
-	rm -f config/missing
-	rm -f config/mkinstalldirs
-
-# configh_configdir = $(libdir)/Miro-`echo $(VERSION) | sed 's/\./:/g'`/include
 configh_configdir = $(libdir)/Miro/include
 configh_config_DATA = config.h
 
