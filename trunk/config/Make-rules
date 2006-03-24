@@ -23,8 +23,12 @@ AM_CPPFLAGS =
 # lib search path
 
 AM_LDFLAGS = -L$(top_builddir)/lib
+
+# AM_LDFLAGS = -L@abs_top_builddir@/botsvcs/BAP -L@abs_top_builddir@/botsvcs/MCL -L@abs_top_builddir@/idl -L@abs_top_builddir@/src/abus -L@abs_top_builddir@/src/base -L@abs_top_builddir@/src/buttons -L@abs_top_builddir@/src/can -L@abs_top_builddir@/src/faulMotor -L@abs_top_builddir@/src/faulTty -L@abs_top_builddir@/src/laser -L@abs_top_builddir@/src/mcp -L@abs_top_builddir@/src/miro -L@abs_top_builddir@/src/msp -L@abs_top_builddir@/src/params -L@abs_top_builddir@/src/pioneer -L@abs_top_builddir@/src/psos -L@abs_top_builddir@/src/sparrow -L@abs_top_builddir@/src/sparrowBase -L@abs_top_builddir@/src/video -L@abs_top_builddir@/utils/widgets
+
 AM_LDFLAGS += $(ACE_LDFLAGS) $(TAO_LDFLAGS) $(QT_LDFLAGS)
 AM_LDFLAGS += $(INHERITED_LDFLAGS) -version-info `echo $(VERSION) | sed 's/\./:/g'`
+
 
 # header include dirs
 
@@ -78,15 +82,14 @@ endif
 
 # these rules do the trick of local install/cleaning the libraries and programs
 
-INSTALLLTLIBRARIES=installpath=`(cd $(PWD)/$(top_builddir)/lib/ ; pwd)`;hit=0; for i in $(lib_LTLIBRARIES); do if test $$i -nt $$installpath/$$i; then /bin/sh $(top_builddir)/libtool --mode=install /usr/bin/install $$i $$installpath/$$i; hit=1; fi; done; if test $$hit -gt 0; then libtool --finish $$installpath; fi
+INSTALLLTLIBRARIES=@(installpath=@abs_top_builddir@/lib;hit=0; for i in $(lib_LTLIBRARIES); do if test $$i -nt $$installpath/$$i; then /bin/sh $(top_builddir)/libtool --mode=install /usr/bin/install $$i $$installpath/$$i; hit=1; fi; done; if test $$hit -gt 0; then libtool --finish $$installpath; fi)
 
-INSTALLLIBRARIES=installpath=`(cd $(PWD)/$(top_builddir)/lib/ ; pwd)`;hit=0; for i in $(lib_LIBRARIES); do if test $$i -nt $$installpath/$$i; then /bin/sh $(top_builddir)/libtool --mode=install /usr/bin/install $$i $$installpath/$$i; hit=1; fi; done; if test $$hit -gt 0; then libtool --finish $$installpath; fi
+INSTALLLIBRARIES=@(installpath=@abs_top_builddir@/lib;hit=0; for i in $(lib_LIBRARIES); do if test $$i -nt $$installpath/$$i; then /bin/sh $(top_builddir)/libtool --mode=install /usr/bin/install $$i $$installpath/$$i; hit=1; fi; done; if test $$hit -gt 0; then libtool --finish $$installpath; fi)
 
-INSTALLPROGRAMS=installpath=`(cd $(PWD)/$(top_builddir)/bin/ ; pwd)`; for i in $(bin_PROGRAMS); do if test $$i -nt $$installpath/$$i; then /bin/sh $(top_builddir)/libtool --mode=install /usr/bin/install $$i $$installpath/$$i; fi; done
+INSTALLPROGRAMS=@(installpath=@abs_top_builddir@/bin; for i in $(bin_PROGRAMS); do if test $$i -nt $$installpath/$$i; then /bin/sh $(top_builddir)/libtool --mode=install /usr/bin/install $$i $$installpath/$$i; fi; done)
 
-CLEANLTLIBRARIES=for i in $(lib_LTLIBRARIES); do if test -f $(top_builddir)/lib/$$i; then rm -f $(top_builddir)/lib/`basename $$i .la`.*; fi; done
+CLEANLTLIBRARIES=@(for i in $(lib_LTLIBRARIES); do if test -f $(top_builddir)/lib/$$i; then rm -f $(top_builddir)/lib/`basename $$i .la`.*; fi; done)
 
-CLEANLIBRARIES=for i in $(lib_LIBRARIES); do if test -f $(top_builddir)/lib/$$i; then rm -f $(top_builddir)/lib/$$i; fi; done
+CLEANLIBRARIES=@(for i in $(lib_LIBRARIES); do if test -f $(top_builddir)/lib/$$i; then rm -f $(top_builddir)/lib/$$i; fi; done)
 
-CLEANPROGRAMS=for i in $(bin_PROGRAMS); do if test -f $(top_builddir)/bin/$$i; then rm -f $(top_builddir)/bin/$$i; fi; done
-
+CLEANPROGRAMS=@(for i in $(bin_PROGRAMS); do if test -f $(top_builddir)/bin/$$i; then rm -f $(top_builddir)/bin/$$i; fi; done)
