@@ -22,74 +22,55 @@
 
 include $(top_srcdir)/config/Make-rules
 
-SUFFIXES = .tmp
-
-.cpp.tmp:
-	test -e `echo $< | sed 's/\.*\\/.*\\///g'` || $(LN_S) $<
-
-.tex.tmp:
-	test -e `echo $< | sed 's/\.*\\/.*\\///g'` || $(LN_S) $<
-
 texsources = \
-	behaviourEngine.tex \
-	blank.tex \
-	clients.tex \
-	definitions.tex \
-	event_channel_logging.tex \
-	group_communication.tex \
-	install.tex \
-	logging.tex \
-	miro_manual.tex \
-	miro_reference.tex \
-	new_project.tex \
-	parameters.tex \
-	servers.tex \
-	styleguide.tex \
-	tex_definitions.tex \
-	using.tex \
-	video.tex \
-	writing_a_client.tex \
-	writing_a_server.tex
+	$(srcdir)/behaviourEngine.tex \
+	$(srcdir)/blank.tex \
+	$(srcdir)/clients.tex \
+	$(srcdir)/definitions.tex \
+	$(srcdir)/event_channel_logging.tex \
+	$(srcdir)/group_communication.tex \
+	$(srcdir)/install.tex \
+	$(srcdir)/logging.tex \
+	$(srcdir)/miro_manual.tex \
+	$(srcdir)/miro_reference.tex \
+	$(srcdir)/new_project.tex \
+	$(srcdir)/parameters.tex \
+	$(srcdir)/servers.tex \
+	$(srcdir)/styleguide.tex \
+	$(srcdir)/tex_definitions.tex \
+	$(srcdir)/using.tex \
+	$(srcdir)/video.tex \
+	$(srcdir)/writing_a_client.tex \
+	$(srcdir)/writing_a_server.tex
 
-examplelinks = \
-	$(top_srcdir)/examples/sonar/SonarPoll1.cpp \
-	$(top_srcdir)/examples/sonar/SonarPoll2.cpp \
-	$(top_srcdir)/examples/sonar/SonarPoll3.cpp \
-	$(top_srcdir)/examples/sonar/SonarNotify.cpp \
-	$(top_srcdir)/botsvcs/examples/BAP/b21/LaserAvoid.cpp \
-	$(top_srcdir)/examples/video/VideoExample.cpp
+miro_manual.pdf: $(examplelinks) $(texsources)
+	(TEXINPUTS=$(srcdir):$(srcdir)/../../examples/sonar:$(srcdir)/../../examples/video:$(srcdir)/../../botsvcs/examples/BAP/b21:@builddir@:${TEXINPUTS:-:}; export TEXINPUTS; \
+	pdflatex -interaction=nonstopmode $(srcdir)/miro_manual.tex; \
+	bibtex $(srcdir)/miro_manual; \
+	pdflatex -interaction=nonstopmode $(srcdir)/miro_manual.tex; \
+	makeindex $(srcdir)/miro_manual; \
+	pdflatex -interaction=nonstopmode $(srcdir)/miro_manual.tex)
 
+miro_manual.ps: $(examplelinks) $(texsources)
+	(TEXINPUTS=$(srcdir):$(srcdir)/../../examples/sonar:$(srcdir)/../../examples/video:$(srcdir)/../../botsvcs/examples/BAP/b21:@builddir@:${TEXINPUTS:-:}; export TEXINPUTS; \
+	latex -interaction=nonstopmode $(srcdir)/miro_manual.tex; \
+	bibtex $(srcdir)/miro_manual; \
+	latex -interaction=nonstopmode $(srcdir)/miro_manual.tex; \
+	makeindex $(srcdir)/miro_manual; \
+	latex -interaction=nonstopmode $(srcdir)/miro_manual.tex)
+
+docdir = $(prefix)/share/doc/$(PACKAGE)-$(VERSION)
 if COND_PDF
-todo = \
-	pdflatex $(srcdir)/miro_manual.tex; \
-	bibtex $(srcdir)/miro_manual; \
-	pdflatex $(srcdir)/miro_manual.tex; \
-	makeindex $(srcdir)/miro_manual; \
-	pdflatex $(srcdir)/miro_manual.tex
-install = \
-	miro_manual.pdf
+doc_DATA = miro_manual.pdf
 else
-todo = \
-	latex $(srcdir)/miro_manual.tex; \
-	bibtex $(srcdir)/miro_manual; \
-	latex $(srcdir)/miro_manual.tex; \
-	makeindex $(srcdir)/miro_manual; \
-	latex $(srcdir)/miro_manual.tex; \
-	dvips miro_manual.dvi -o miro_manual.ps
-install = \
-	miro_manual.ps
+doc_DATA = miro_manual.ps
 endif
 
-all-local: $(examplelinks:.cpp=.tmp) $(texsources:.tex=.tmp)
-	$(todo)
-
-clean-local:
-	-rm -f *.aux *.log *.ind *.idx *.ilg *.toc *.dvi *.bbl *.blg *.out 
-	-rm -f miro_manual.pdf miro_manual.ps
-	if test x$(abs_builddir) != x$(abs_srcdir); then rm -f $(texsources); fi
-
-install-data-local:
-	mkdir -p $(datadir)/doc
-	cp $(install) $(datadir)/doc
-
-EXTRA_DIST = $(texsources)
+CLEANFILES = \
+	miro_manual.pdf \
+	miro_manual.ps \
+	miro_manual.aux \
+	miro_manual.idx \
+	miro_manual.log \
+	miro_manual.out \
+	miro_manual.toc

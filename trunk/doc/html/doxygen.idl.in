@@ -86,7 +86,7 @@ GENERATE_TREEVIEW      = NO
 TREEVIEW_WIDTH         = 250
 HTML_OUTPUT            = idl
 GENERATE_TAGFILE       = idl/MiroIDL.tag
-TAGFILES               = ACE.tag TAO.tag
+TAGFILES               = @srcdir@/ACE.tag @srcdir@/TAO.tag
 
 #---------------------------------------------------------------------------
 # configuration options related to the LaTeX output

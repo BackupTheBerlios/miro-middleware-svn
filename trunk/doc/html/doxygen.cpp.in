@@ -99,7 +99,7 @@ GENERATE_TREEVIEW      = NO
 TREEVIEW_WIDTH         = 250
 HTML_OUTPUT            = cpp
 GENERATE_TAGFILE       = cpp/MiroCpp.tag
-TAGFILES               = idl/MiroIDL.tag ACE.tag TAO.tag
+TAGFILES               = idl/MiroIDL.tag @srcdir@/ACE.tag @srcdir@/TAO.tag
 
 #---------------------------------------------------------------------------
 # configuration options related to the LaTeX output

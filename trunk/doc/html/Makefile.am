@@ -13,38 +13,44 @@
 
 include $(top_srcdir)/config/Make-rules
 
-.tag.tmp:
-	test -e `echo $< | sed 's/\.*\\/.*\\///g'` || $(LN_S) $<
+
+cpp/*.html:
+cpp/*.png:
+cpp/MiroCpp.tag:
+cpp/doxygen.css:
+
+idl/*.html:
+idl/*.png:
+idl/MiroIDL.tag:
+idl/doxygen.css:
+idl/formula.repository:
+
+all-local:
+	@(ls @abs_top_srcdir@/idl/*.idl > dependencies.idl)
+	@(for i in `cat dependencies.idl`; do hit=0; if test $$i -nt idl/index.html; then hit=1; break; fi; done; if test $$hit -gt 0; then doxygen doxygen.idl; idl/installdox -l ACE.tag@http://www.dre.vanderbilt.edu/Doxygen/Current/html/ace/ -l TAO.tag@http://www.dre.vanderbilt.edu/Doxygen/Current/html/tao/ idl/*html; fi)
+	@(for i in @abs_top_srcdir@ @abs_top_builddir@; do for j in src/miro src/video utils/widgets utils/policyEditor utils/configEditor; do ls $$i/$$j/*.h $$i/$$j/*.cpp; done; done 2>&1 | grep -v "No such file or directory" > dependencies.cpp)
+	@(for i in `cat dependencies.cpp`; do hit=0; if test $$i -nt cpp/index.html; then hit=1; break; fi; done; if test $$hit -gt 0; then doxygen doxygen.cpp; cpp/installdox -l ACE.tag@http://www.dre.vanderbilt.edu/Doxygen/Current/html/ace/ -l TAO.tag@http://www.dre.vanderbilt.edu/Doxygen/Current/html/tao/ -l MiroIDL.tag@../idl/ cpp/*html; fi)
+
+docidldir = $(prefix)/share/doc/$(PACKAGE)-$(VERSION)/html/idl
+docidl_DATA = idl/*.html idl/*.png idl/MiroIDL.tag idl/doxygen.css idl/formula.repository
+doccppdir = $(prefix)/share/doc/$(PACKAGE)-$(VERSION)/html/cpp
+doccpp_DATA = cpp/*.html cpp/*.png cpp/MiroCpp.tag cpp/doxygen.css
 
 CLEANFILES = \
-	idl/*.html idl/*.png idl/*.gif idl/*.css idl/formula.repository idl/installdox idl/MiroIDL.tag \
-	cpp/*.html cpp/*.png cpp/*.gif cpp/*.css cpp/formula.repository cpp/installdox cpp/MiroCpp.tag \
-	doxygen.idl doxygen.cpp
+	dependencies.cpp \
+	dependencies.idl \
+	cpp/*.html \
+	cpp/*.png \
+	cpp/MiroCpp.tag \
+	cpp/doxygen.css \
+	cpp/installdox \
+	idl/*.html \
+	idl/*.png \
+	idl/MiroIDL.tag \
+	idl/doxygen.css \
+	idl/formula.repository \
+	idl/installdox
 
-#clean-local: 
-#	test -d idl && rmdir idl
-#	test -d cpp && rmdir cpp
-
-tagfiles= \
-	ACE.tag \
-	TAO.tag
-
-all-local: $(tagfiles:.tag=.tmp)
-	doxygen doxygen.idl
-	(cd idl && ./installdox -lACE.tag@http://www.dre.vanderbilt.edu/Doxygen/Current/html/ace/ -lTAO.tag@http://www.dre.vanderbilt.edu/Doxygen/Current/html/tao/)
-	doxygen doxygen.cpp
-	(cd cpp && ./installdox -lMiroIDL.tag@../idl/ -lACE.tag@http://www.dre.vanderbilt.edu/Doxygen/Current/html/ace/ -lTAO.tag@http://www.dre.vanderbilt.edu/Doxygen/Current/html/tao/)
-
-install-data-local:
-	mkdir -p $(datadir)/html/idl $(datadir)/html/cpp
-	cp idl/* $(datadir)/html/idl
-	cp cpp/* $(datadir)/html/cpp
-
-clean-local:
-	if test x$(abs_builddir) != x$(abs_srcdir); then rm $(tagfiles); fi
-
-EXTRA_DIST = \
-	ACE.tag \
-	TAO.tag \
-	doxygen.cpp \
-	doxygen.idl
+DISTCLEANFILES = \
+	doxygen.idl \
+	doxygen.cpp
