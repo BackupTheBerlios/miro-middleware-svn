@@ -15,6 +15,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.10  2006/03/24 16:10:32  gmayer
+ * update to follow cleanup in new libdc1394 version (2.0.0-pre6)
+ *
  * Revision 1.9  2005/11/17 15:58:31  gmayer
  * now works with libdc1394 version 2 (tested with 2.0.0-pre5)
  * it's better to have this in place before it's the default verison in debian :-)
@@ -90,7 +93,12 @@
 #include "idl/VideoControlC.h"
 
 #include <libraw1394/raw1394.h>
+#if MIRO_HAS_LIBDC1394_VERSION == 1 || MIRO_HAS_LIBDC1394_VERSION == 2
 #include <libdc1394/dc1394_control.h>
+#else
+#include <dc1394/dc1394_control.h>
+#endif
+
 
 namespace Video
 {
@@ -135,21 +143,26 @@ namespace Video
     bool                    is_open_;
     //! Real device handle.
     raw1394handle_t         handle_;
-#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
+#if MIRO_HAS_LIBDC1394_VERSION == 1 || MIRO_HAS_LIBDC1394_VERSION == 2
     //! Actual camera features.
     dc1394_feature_set      features_;
     //! Camera capture data structure.
     dc1394_cameracapture *  p_camera_;
+    //! Selected image format.
+    long                    imageFormat_;
+    //! Framerate
+    int                     frameRate_;
 #else
     //! Actual camera features.
     dc1394featureset_t features_;
     //! Camera capture data structure.
     dc1394camera_t * p_camera_;
-#endif
     //! Selected image format.
-    long                    imageFormat_;
+    dc1394video_mode_t      imageFormat_;
     //! Framerate
-    int                     frameRate_;
+    dc1394framerate_t       frameRate_;
+#endif
+
     //! Pointer to Control-Interface.
     ControlImpl *           control_;
   };

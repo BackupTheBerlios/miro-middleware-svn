@@ -22,7 +22,7 @@ namespace
 
 namespace Video
 {
-#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
+#if MIRO_HAS_LIBDC1394_VERSION == 1 || MIRO_HAS_LIBDC1394_VERSION == 2
   BufferManager1394::BufferManager1394(Filter const * const _filter,
 				       dc1394_cameracapture *  _pCamera) 
 #else
@@ -70,7 +70,7 @@ namespace Video
   void
   BufferManager1394::acquireOutputBuffer(unsigned long _index)
   {
-#if LIBDC1394_VERSION == 1 || LIBDC1394_VERSION == 2
+#if MIRO_HAS_LIBDC1394_VERSION == 1 || MIRO_HAS_LIBDC1394_VERSION == 2
     dc1394_dma_single_capture(pCamera_);
     bufferStatus_[_index].time = ACE_OS::gettimeofday() - camParams_->latency;
     bufferStatus_[_index].buffer = reinterpret_cast<unsigned char *>(pCamera_->capture_buffer);

@@ -131,7 +131,7 @@ AC_DEFUN([AC_DETERMINE_VIDEODEVICES],
 
 	if test "x$ac_request_ieee1394" = xyes; then
 		AC_CHECK_LIB(raw1394, raw1394_get_libversion, [ac_have_libraw1394=yes], [ac_have_libraw1394=no])
-		AC_CHECK_LIB(dc1394_control, dc1394_print_feature_set, [ac_have_libdc1394=yes], [ac_have_libdc1394=no], [-lraw1394])
+#		AC_CHECK_LIB(dc1394_control, dc1394_dma_setup_capture, [ac_have_libdc1394=yes], [ac_have_libdc1394=no], [-lraw1394])
 		AC_DETERMINE_LIBDC_VERSION
 		if test "x$ac_have_libraw1394" = xyes && test "x$ac_have_libdc1394" = xyes; then
 			AC_DEFINE(MIRO_HAS_1394)
@@ -325,18 +325,16 @@ AC_DEFUN([AC_DETERMINE_LIBDC_VERSION],
 	AC_MSG_CHECKING(how to setup dma capture)
 	success=failed
 	AC_TRY_COMPILE([
-		#include <libdc1394/dc1394_control.h>
+		#include <dc1394/dc1394_control.h>
 	],[
 		dc1394camera_t *camera;
 		dc1394_dma_setup_capture(
 			camera,
-			1,
-			DC1394_MODE_640x480_YUV422,
-			DC1394_SPEED_400,
+			DC1394_VIDEO_MODE_640x480_YUV422,
+			DC1394_ISO_SPEED_400,
 			DC1394_FRAMERATE_30,
 			4,
-			1,
-			"/dev/blabla");
+			1);
 	],[
 	success=3
 	],[
@@ -389,9 +387,11 @@ AC_DEFUN([AC_DETERMINE_LIBDC_VERSION],
 	AC_MSG_RESULT($success)
 	AC_LANG_POP()
 
-	AH_TEMPLATE([LIBDC1394_VERSION], [the used libdc1394 version.])
+	AH_TEMPLATE([MIRO_HAS_LIBDC1394_VERSION], [the used libdc1394 version.])
 	if test "x$success" != "xfailed"; then
-		AC_DEFINE_UNQUOTED(LIBDC1394_VERSION, $success)
+		AC_DEFINE_UNQUOTED(MIRO_HAS_LIBDC1394_VERSION, $success)
+		AM_CONDITIONAL(COND_IEEE1394_NEWLIB, [test $success -ge 3])
+		ac_have_libdc1394=yes
 	else
 		AC_MSG_ERROR([Cannot determine libdc1394 version. Giving up. For more details about this problem, look at the end of config.log.])
 	fi

@@ -29,18 +29,7 @@ VideoLatency_SOURCES = VideoLatency.cpp
 
 VideoExample_SOURCES = VideoExample.cpp
 
-linkwithlibraries = \
-	-lmiro
-
-if COND_IEEE1394
-1394libraries = \
-	-lraw1394 \
-	-ldc1394_control
-endif 
-
-libraries = \
-	$(linkwithlibraries) \
-	$(1394libraries)
+libraries = -lmiro
 
 LogVideo_LDADD = $(libraries)
 VideoLatency_LDADD = $(libraries)

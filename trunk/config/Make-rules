@@ -53,6 +53,24 @@ video_includedir       = $(includedir)/video
 botsvcsBAP_includedir  = $(includedir)/botsvcs/BAP
 botsvcsMCL_includedir  = $(includedir)/botsvcs/MCL
 
+if COND_IEEE1394
+if COND_IEEE1394_NEWLIB
+1394libraries = \
+	-lraw1394 \
+	-ldc1394
+else
+1394libraries = \
+	-lraw1394 \
+	-ldc1394_control
+endif
+endif
+
+if COND_PLAYER
+playerlibraries = \
+	$(PLAYER_LDFLAGS) $(PLAYER_LIBS)
+endif
+
+
 # common build rules
 
 .xml.cpp:
