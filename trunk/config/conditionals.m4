@@ -264,11 +264,11 @@ AC_DEFUN([AC_DETERMINE_PCH],
 			AC_MSG_CHECKING(create single PCH (may take some time))
 
 			if test -f pch/all.h; then
-				AC_MSG_NOTICE([Header file allready exists - skipping this. If you want to rebuild the header file, simply remove the file $MIRO_ROOT/pch/all.h and rerun the configure script or call the script $MIRO_ROOT/all.h.sh manually.])
+				AC_MSG_NOTICE([Header file allready exists - skipping this. If you want to rebuild the header file, simply remove the file pch/all.h and rerun the configure script or call the script "$MIRO_ROOT/all.h.sh ./all.h.in" manually.])
 			else
 # write config option to file, so they can be used later on
 				echo $ACE_CFLAGS $TAO_CFLAGS $QT_CFLAGS $INHERITED_CPPFLAGS $INHERITED_SYMBOLS -W -Wall -Woverloaded-virtual -DDEBUG -DQT_GENUINE_STR $CXXFLAGS $AM_CXXFLAGS -DHAVE_CONFIG_H > ./all.h.in
-				./all.h.sh
+				$srcdir/all.h.sh ./all.h.in
 				if test $? == 0; then
 					AC_MSG_RESULT(yes)
 				else

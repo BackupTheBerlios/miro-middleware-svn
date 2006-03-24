@@ -14,8 +14,11 @@
 # helper script for PCH support.
 
 # restore config options
-path=`dirname $0`
-options=`cat $path/all.h.in`
+searchpath=`dirname $0`
+options=`cat $1`
+
+# create pch directory, if it is not yet there (may occur, if srcdir != builddir)
+mkdir -p pch
 
 # process all precompiled files
 echo -n "" > pch/all.h.tmp1
@@ -29,7 +32,7 @@ echo -n "" > pch/all.h.tmp1
 
 # no need to add -I`dirname $i` -I./src -I./ to the search path, as this would only
 # include files which are in the list anyway
-gcc -E -x c++ $options `find . -name \*.cpp -o -name \*.h` 2>/dev/null | grep "^# [0-9]* " | sed 's/^#\ [0-9]*\ \"//' | sed 's/\"[\ 0-9]*$//' | grep "^/.*[^\.][^i]\.h[h]*$" | grep -v "/config.h$" >> pch/all.h.tmp1
+gcc -E -x c++ $options `find $searchpath -name \*.cpp -o -name \*.h` 2>/dev/null | grep "^# [0-9]* " | sed 's/^#\ [0-9]*\ \"//' | sed 's/\"[\ 0-9]*$//' | grep "^/.*[^\.][^i]\.h[h]*$" | grep -v "/config.h$" >> pch/all.h.tmp1
 
 # sort and delete duplicates
 sort -u < pch/all.h.tmp1 > pch/all.h.tmp2
