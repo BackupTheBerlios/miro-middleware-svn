@@ -13,12 +13,13 @@
 
 include $(top_srcdir)/config/Make-rules
 
-scriptsdir = $(prefix)/scripts
-
 scripts = \
 	addheader.sh \
 	generateChangeLog.sh
 
-scripts_SCRIPTS = $(scripts)
+noinst_SCRIPTS = $(scripts)
+
+# scriptsdir = $(prefix)/scripts
+# scripts_SCRIPTS = $(scripts)
 
 EXTRA_DIST = $(scripts)
