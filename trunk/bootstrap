@@ -114,7 +114,7 @@ if test -e config.sub; then mv -f config.sub config/; fi && \
 
 echo "aclocal..." && $USED_ACLOCAL -I config  && \
 echo "autoheader..." && autoheader && \
-echo "automake..." && $USED_AUTOMAKE --add-missing && \
+echo "automake..." && $USED_AUTOMAKE --add-missing --copy && \
 echo "autoconf..." && autoconf && \
 echo "finished successfully. type ./configure now" && echo
 exit 0
