@@ -43,7 +43,7 @@ texsources = \
 	$(srcdir)/writing_a_client.tex \
 	$(srcdir)/writing_a_server.tex
 
-miro_manual.pdf: $(examplelinks) $(texsources)
+miro_manual.pdf: $(texsources)
 	(TEXINPUTS=$(srcdir):$(srcdir)/../../examples/sonar:$(srcdir)/../../examples/video:$(srcdir)/../../botsvcs/examples/BAP/b21:@builddir@:${TEXINPUTS:-:}; export TEXINPUTS; \
 	pdflatex -interaction=nonstopmode $(srcdir)/miro_manual.tex; \
 	bibtex $(srcdir)/miro_manual; \
@@ -51,13 +51,14 @@ miro_manual.pdf: $(examplelinks) $(texsources)
 	makeindex $(srcdir)/miro_manual; \
 	pdflatex -interaction=nonstopmode $(srcdir)/miro_manual.tex)
 
-miro_manual.ps: $(examplelinks) $(texsources)
+miro_manual.ps: $(texsources)
 	(TEXINPUTS=$(srcdir):$(srcdir)/../../examples/sonar:$(srcdir)/../../examples/video:$(srcdir)/../../botsvcs/examples/BAP/b21:@builddir@:${TEXINPUTS:-:}; export TEXINPUTS; \
 	latex -interaction=nonstopmode $(srcdir)/miro_manual.tex; \
 	bibtex $(srcdir)/miro_manual; \
 	latex -interaction=nonstopmode $(srcdir)/miro_manual.tex; \
 	makeindex $(srcdir)/miro_manual; \
-	latex -interaction=nonstopmode $(srcdir)/miro_manual.tex)
+	latex -interaction=nonstopmode $(srcdir)/miro_manual.tex; \
+	dvips $(<:.tex=))
 
 docdir = $(prefix)/share/doc/$(PACKAGE)-$(VERSION)
 if COND_PDF
