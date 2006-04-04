@@ -67,7 +67,7 @@ PayloadID payload = OCTED_STREAM_1K;
 int iterations = 10000;
 int colocated = 0;
 bool multicast = false;
-ACE_Time_Value timeout = 0;
+ACE_Time_Value timeout = ACE_Time_Value(0);
 
 
 
