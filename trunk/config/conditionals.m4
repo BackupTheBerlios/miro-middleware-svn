@@ -308,7 +308,6 @@ AC_DEFUN([AC_DETERMINE_LOGGING],
 	AH_TEMPLATE([MIRO_NO_LOGGING], [build without log info support.])
 
 
-	AC_DETERMINE_LOGGING
 	if test "x$ac_request_debuginfo" = xno; then
 		AC_DEFINE(MIRO_NO_DEBUG)
 	fi
