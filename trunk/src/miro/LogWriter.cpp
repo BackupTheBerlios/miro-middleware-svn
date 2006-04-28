@@ -136,7 +136,7 @@ namespace Miro
 	  if (tc.in() != CORBA::_tc_null) {
 	    typeId = typeRepository_.typeID(tc.in());
 	  }
-	  
+
 #if (TAO_MAJOR_VERSION > 1) || \
   ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION >= 4)) || \
   ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 3 && TAO_BETA_VERSION >= 5)) 

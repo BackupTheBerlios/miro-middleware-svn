@@ -18,11 +18,6 @@
 #include <algorithm>
 #include <sstream>
 
-namespace 
-{
-
-}
-
 namespace Miro
 {
   LogTypeRepository::LogTypeRepository(TAO_OutputCDR * _ostr,
@@ -83,14 +78,21 @@ namespace Miro
   LogTypeRepository::addType(CORBA::TypeCode_ptr _type)
   {
     // add type code to the mmapped file
-    // FIXME: test for overrun
-    (*ostr_) << _type;
+
+    TAO_OutputCDR ostr;
+    ostr << _type;
 
     // if memory is used up, fail.
-    if (ostr_->total_length() > maxLength_) {
+    if (ostr_->total_length() + ostr->total_length() > maxLength_) {
       MIRO_LOG(Log::LL_ERROR, "Event log type code repository full.");
       full_ = true;
       return -2;
+    }
+
+    // flatten message block queue
+    ACE_Message_Block * buffer = const_cast<ACE_Message_Block *>(ostr_->current());
+    for (ACE_Message_Block const * block = ostr.begin(); block != NULL; block = block->cont()) {
+      buffer->copy(block->rd_ptr(), block->length());
     }
 
     // add type to our repository
@@ -105,5 +107,4 @@ namespace Miro
 
     return types_.size() - 1;
   }
-
 }
