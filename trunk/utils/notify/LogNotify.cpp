@@ -11,9 +11,9 @@
 
 #include "miro/LogNotifyConsumer.h"
 #include "miro/Server.h"
-#include "miro/ConfigDocument.h"
+#include "miro/Configuration.h"
 #include "miro/TimeHelper.h"
-#include "miro/Log.h"
+#include "miro/Log.h" 
 
 int
 main(int argc, char *argv[])
@@ -23,22 +23,22 @@ main(int argc, char *argv[])
 
   // read syslog options
   Miro::Log::init(argc, argv);
+  Miro::Configuration::init(argc, argv);
 
   // Parameters to be passed to the services
   Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
   Miro::LogNotifyParameters * parameters = Miro::LogNotifyParameters::instance();
 
   // Config file processing
-  Miro::ConfigDocument * config = 
-    new Miro::ConfigDocument(argc, argv);
+  Miro::ConfigDocument * config =  Miro::Configuration::document();
   config->setSection("Robot");
-  config->getParameters("Robot", *robotParameters);
+  config->getParameters("Miro::RobotParameters", *robotParameters);
   config->setSection("Notification");
-  config->getParameters("Logging", *parameters);
-  delete config;
+  config->getParameters("Miro::LogNotifyParameters", *parameters);
+
   
-  MIRO_DBG_OSTR(MIRO , LL_PRATTLE , "  robot parameters:\n" << robotParameters);
-  MIRO_DBG_OSTR(MIRO , LL_PRATTLE , "  logging parameters:\n" << parameters);
+  MIRO_DBG_OSTR(MIRO , LL_PRATTLE , "  robot parameters:\n" << *robotParameters);
+  MIRO_DBG_OSTR(MIRO , LL_PRATTLE , "  logging parameters:\n" << *parameters);
 
   MIRO_LOG(LL_NOTICE,"Initialize server daemon.");
   Miro::Server server(argc, argv);
