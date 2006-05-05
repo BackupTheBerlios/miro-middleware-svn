@@ -82,7 +82,12 @@ namespace Video
           int_p = tmp_p;
           for(unsigned int z = 0; z < inputFormat_.width; z++){
             *int_p = (*int_p << 1);
-	    mask =  (r_lookup[*(src_img++)] +  g_lookup[*(src_img++)] + b_lookup[*(src_img++)] < threshold)?1:0;
+
+	    float sum = r_lookup[*(src_img++)];
+	    sum += g_lookup[*(src_img++)];
+	    sum += b_lookup[*(src_img++)];
+
+	    mask =  (sum < threshold)? 1 : 0;
 	    
 	    if(mask)
 		*(tgt_img) = 127;
@@ -103,10 +108,15 @@ namespace Video
           int_p = tmp_p;
           for(unsigned int z = 0; z < inputFormat_.width; z++){
              *int_p = (*int_p << 1);
-             mask =  (r_lookup[*(src_img++)] +  g_lookup[*(src_img++)] + b_lookup[*(src_img++)] < threshold)?1:0;
+
+	     float sum = r_lookup[*(src_img++)];
+	     sum += g_lookup[*(src_img++)];
+	     sum += b_lookup[*(src_img++)];
 	     
-             if(mask)
-		*(tgt_img) = 127;
+	     mask =  (sum < threshold)? 1 : 0;
+	     
+	     if(mask)
+	       *(tgt_img) = 127;
 	     tgt_img++;
             *int_p |= mask;
             int_p++;
