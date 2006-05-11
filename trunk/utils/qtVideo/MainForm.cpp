@@ -26,6 +26,8 @@ using std::endl;
 using std::flush;
 using std::cin;
 
+
+
 std::string path()
 {
   char * miro_log = ACE_OS::getenv("MIRO_LOG");
@@ -39,9 +41,13 @@ std::string path()
   return p;
 }
 
+
+
 bool MainForm::remote = false;
 bool MainForm::verbose = false;
 std::string MainForm::interfaceName = "Video";
+
+
 
 
 MainForm::MainForm(Miro::Client& _client, 
@@ -57,6 +63,8 @@ MainForm::MainForm(Miro::Client& _client,
   fps(0),
   fpsTmp(0),
   bgr_(false),
+  checkJpeg_(false),
+  isJpeg_(false),
   colorTable_(NULL)
 {
 
@@ -80,16 +88,13 @@ MainForm::MainForm(Miro::Client& _client,
 	throw Miro::EDevIO();
     }
 
-    char ppmHeader[32]; // should be 15+1, but just in case...
-    sprintf(ppmHeader,"P%i\n%i %i 255\n",
-	    ((bpp_ == 8)? 5 : 6),
-	    imageIDL_->format.width,
-	    imageIDL_->format.height);
-    ppmOffset_ = strlen(ppmHeader);
+    std::ostringstream ostr;
+    ostr << "P" << ((bpp_ == 8)? 5 : 6) << "\n" << imageIDL_->format.width << " " << imageIDL_->format.height << " 255\n";
+    ppmOffset_ = strlen(ostr.str().c_str());
     ppmBuffer_ = new unsigned char[imageSize_ + ppmOffset_];
 
     memset(ppmBuffer_, 0, imageSize_ + ppmOffset_);
-    memcpy(ppmBuffer_, ppmHeader, strlen(ppmHeader));
+    memcpy(ppmBuffer_, ostr.str().c_str(), strlen(ostr.str().c_str()));
 
     if (bpp_ == 8) {
       colorTable_ = new QRgb[256];
@@ -104,6 +109,8 @@ MainForm::MainForm(Miro::Client& _client,
   }
 }
 
+
+
 MainForm::~MainForm()
 {
   if (imageBuffer_ != NULL && (int)imageBuffer_ != -1)
@@ -116,6 +123,8 @@ MainForm::~MainForm()
   delete colorTable_;
   delete qImage_;
 }
+
+
 
 void MainForm::initDialog()
 {
@@ -131,29 +140,30 @@ void MainForm::initDialog()
   timer->start(0);
 }
 
+
+
 void MainForm::paintEvent(QPaintEvent * )
 {
-  //  cout << __PRETTY_FUNCTION__ << endl;
-
   QPainter p(this);
 
   if (!qImage_->isNull()) {
     p.drawImage(QPoint(0,0), *qImage_); 
+
+    // draw frames per second status information
+    char strFps[10];
+    sprintf(strFps,"fps: %2i",fps);
+    p.setBrush(p.backgroundColor());
+    p.setPen(p.backgroundColor());
+    p.drawRect(0, qImage_->height(), 100, qImage_->height() + 20);
+    p.setPen(black);
+    p.drawText(5,qImage_->height() + 15, QString(strFps));
   }
   else {
     cout << "no image to paint" << endl;
   }
-
-  // draw frames per second status information
-
-  char strFps[10];
-  sprintf(strFps,"fps: %2i",fps);
-  p.setBrush(p.backgroundColor());
-  p.setPen(p.backgroundColor());
-  p.drawRect(0, imageIDL_->format.height, 100, imageIDL_->format.height + 20);
-  p.setPen(black);
-  p.drawText(5,imageIDL_->format.height + 15, QString(strFps));
 }
+
+
 
 void MainForm::actualizeImage()
 {
@@ -180,7 +190,6 @@ void MainForm::actualizeImage()
   }
 
   // calculate statistics
-  // TODO: should be improved
   ++fpsTmp;
   if (lastTime_ + ACE_Time_Value(1) < ACE_OS::gettimeofday()) { //1 second passed
     fps = fpsTmp;
@@ -200,7 +209,26 @@ void MainForm::actualizeImage()
 			 colorTable_, 256, QImage::IgnoreEndian);
   }
   else {
-    qImage_->loadFromData(ppmBuffer_, imageSize_ + ppmOffset_, "PPM");
+    // okay, here's a hack to recognize jpeg images. if we found one, we just ignore the
+    // ppm header and use only the image data itself (which contains the jpeg header
+    // already)
+    if (!checkJpeg_) {
+      checkJpeg_ = true;
+      if ((ppmBuffer_[ppmOffset_] == 0xff) && (ppmBuffer_[ppmOffset_+1] == 0xd8) &&
+	  qImage_->loadFromData(ppmBuffer_ + ppmOffset_, imageSize_, "JPEG")) {
+	// if mime-magic applies and image loading works, we also have to set the window size and button pos
+	this->setGeometry(0, 0, qImage_->width(), qImage_->height() + 50);
+	buttonGrab->move((qImage_->width() - buttonGrab->width()) / 2,
+			 qImage_->height() + 25 - buttonGrab->height() / 2);
+	cout << "jpeg-format detected" << endl;
+	isJpeg_ = true;
+      }
+    }
+
+    if  (isJpeg_)
+      qImage_->loadFromData(ppmBuffer_ + ppmOffset_, imageSize_, "JPEG");
+    else
+      qImage_->loadFromData(ppmBuffer_, imageSize_ + ppmOffset_, "PPM");
   }
 
   if (!remote)
@@ -209,12 +237,14 @@ void MainForm::actualizeImage()
   repaint(FALSE);
 }
 
+
+
 void MainForm::slotGrabClicked()
 {
   if (qImage_) {
-  std::string fileName = path() + "video_" + Miro::timeString() + ".ppm";
-  if (qImage_->save(fileName.c_str(), "PPM") == false)
-    std::cout << "image save failed." << endl;
+    std::string fileName = path() + "video_" + Miro::timeString() + ".ppm";
+    if (qImage_->save(fileName.c_str(), "PPM") == false)
+      std::cout << "image save failed." << endl;
   }
   else {
     std::cout << "no image to save." << endl;

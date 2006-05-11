@@ -26,7 +26,7 @@
 class MainForm : public QDialog  
 {
   Q_OBJECT
-public: 
+ public: 
   MainForm(Miro::Client& _client,
 	   QWidget *parent=0, const char *name = 0);
   ~MainForm();
@@ -36,11 +36,11 @@ public:
   static bool verbose;
   static std::string interfaceName;
 
-public slots:
-  void actualizeImage();
+	    public slots:
+	    void actualizeImage();
   void slotGrabClicked();
 
-protected:
+ protected:
   void initDialog();
   void paintEvent(QPaintEvent * p);
   
@@ -65,6 +65,8 @@ protected:
   int fps;
   int fpsTmp;
   bool bgr_;
+  bool checkJpeg_;
+  bool isJpeg_;
 
   ACE_Time_Value lastTime_;
 
