@@ -540,12 +540,6 @@
 		      <parameter name="BackLink" >
 			<parameter value="SobelVertical" />
 		      </parameter>
-		      <parameter name="Successor" >
-			<parameter name="Filter" >
-			  <parameter value="Jpeg_Canny" name="Name" />
-			  <parameter value="Jpeg" name="Type" />
-			</parameter>
-		      </parameter>
 		    </parameter>
 		  </parameter>
 		</parameter>
@@ -1220,10 +1214,12 @@
 		  <parameter name="BackLink" >
 		    <parameter value="CollectRoboCupFeatures_Basic" />
 		  </parameter>
-		</parameter>
-		<parameter name="Filter" >
-		  <parameter value="Jpeg_ROIVisualBasic" name="Name" />
-		  <parameter value="Jpeg" name="Type" />
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="Jpeg_ROIVisualBasic" name="Name" />
+		      <parameter value="Jpeg" name="Type" />
+		    </parameter>
+		  </parameter>
 		</parameter>
 
 		<parameter name="Filter" >
@@ -1232,11 +1228,14 @@
 		  <parameter name="BackLink" >
 		    <parameter value="CollectRoboCupFeatures_Full" />
 		  </parameter>
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="Jpeg_ROIVisualFull" name="Name" />
+		      <parameter value="Jpeg" name="Type" />
+		    </parameter>
+		  </parameter>
 		</parameter>
-		<parameter name="Filter" >
-		  <parameter value="Jpeg_ROIVisualFull" name="Name" />
-		  <parameter value="Jpeg" name="Type" />
-		</parameter>
+
 		<!-- Ball -->
 		<parameter name="Filter" >
 		  <parameter value="ROIVisual_AttentionBall" name="Name" />
@@ -1244,10 +1243,12 @@
 		  <parameter name="BackLink" >
 		    <parameter value="AttentionBall" />
 		  </parameter>
-		</parameter>
-		<parameter name="Filter" >
-		  <parameter value="Jpeg_ROIVisual_AttentionBall" name="Name" />
-		  <parameter value="Jpeg" name="Type" />
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="Jpeg_ROIVisual_AttentionBall" name="Name" />
+		      <parameter value="Jpeg" name="Type" />
+		    </parameter>
+		  </parameter>
 		</parameter>
 
 		<parameter name="Filter" >
@@ -1256,11 +1257,14 @@
 		  <parameter name="BackLink" >
 		    <parameter value="IntegrateObservations_Ball" />
 		  </parameter>
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="Jpeg_ROIVisual_Ball" name="Name" />
+		      <parameter value="Jpeg" name="Type" />
+		    </parameter>
+		  </parameter>
 		</parameter>
-		<parameter name="Filter" >
-		  <parameter value="Jpeg_ROIVisual_Ball" name="Name" />
-		  <parameter value="Jpeg" name="Type" />
-		</parameter>
+
 		<!-- Goal and Corner Poles -->
 		<parameter name="Filter" >
 		  <parameter value="ROIVisual_AttentionCornerPoles" name="Name" />
@@ -1268,11 +1272,14 @@
 		  <parameter name="BackLink" >
 		    <parameter value="AttentionGoalCornerPoles" />
 		  </parameter>
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="Jpeg_ROIVisual_AttentionCornerPoles" name="Name" />
+		      <parameter value="Jpeg" name="Type" />
+		    </parameter>
+		  </parameter>
 		</parameter>
-		<parameter name="Filter" >
-		  <parameter value="Jpeg_ROIVisual_AttentionCornerPoles" name="Name" />
-		  <parameter value="Jpeg" name="Type" />
-		</parameter>
+
 
 		<parameter name="Filter" >
 		  <parameter value="ROIVisual_CornerPoles" name="Name" />
@@ -1280,10 +1287,12 @@
 		  <parameter name="BackLink" >
 		    <parameter value="IntegrateObservations_CornerPoles" />
 		  </parameter>
-		</parameter>
-		<parameter name="Filter" >
-		  <parameter value="Jpeg_ROIVisual_CornerPoles" name="Name" />
-		  <parameter value="Jpeg" name="Type" />
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="Jpeg_ROIVisual_CornerPoles" name="Name" />
+		      <parameter value="Jpeg" name="Type" />
+		    </parameter>
+		  </parameter>
 		</parameter>
 
 		<parameter name="Filter" >
@@ -1292,11 +1301,14 @@
 		  <parameter name="BackLink" >
 		    <parameter value="IntegrateObservations_Goal" />
 		  </parameter>
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="Jpeg_ROIVisual_Goal" name="Name" />
+		      <parameter value="Jpeg" name="Type" />
+		    </parameter>
+		  </parameter>
 		</parameter>
-		<parameter name="Filter" >
-		  <parameter value="Jpeg_ROIVisual_Goal" name="Name" />
-		  <parameter value="Jpeg" name="Type" />
-		</parameter>
+
 		<!-- Goal Posts -->
 		<parameter name="Filter" >
 		  <parameter value="ROIVisual_GoalPost" name="Name" />
@@ -1304,26 +1316,41 @@
 		  <parameter name="BackLink" >
 		    <parameter value="IntegrateObservations_GoalPost" />
 		  </parameter>
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="Jpeg_ROIVisual_GoalPost" name="Name" />
+		      <parameter value="Jpeg" name="Type" />
+		    </parameter>
+		  </parameter>
 		</parameter>
-		<parameter name="Filter" >
-		  <parameter value="Jpeg_ROIVisual_GoalPost" name="Name" />
-		  <parameter value="Jpeg" name="Type" />
-		</parameter>
+
 		<!-- Robot -->
 		<parameter name="Filter" >
-		  <parameter value="Jpeg_ROIVisual_AttentionRobots" name="Name" />
-		  <parameter value="Jpeg" name="Type" />
+		  <parameter value="ROIVisual_AttentionRobots" name="Name" />
+		  <parameter value="ROIVisual" name="Type" />
+		  <parameter name="BackLink" >
+		    <parameter value="AttentionRobots" />
+		  </parameter>
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="Jpeg_ROIVisual_AttentionRobots" name="Name" />
+		      <parameter value="Jpeg" name="Type" />
+		    </parameter>
+		  </parameter>
 		</parameter>
+
 		<parameter name="Filter" >
 		  <parameter value="ROIVisual_Robots" name="Name" />
 		  <parameter value="ROIVisual" name="Type" />
 		  <parameter name="BackLink" >
 		    <parameter value="IntegrateObservations_Robots" />
 		  </parameter>
-		</parameter>
-		<parameter name="Filter" >
-		  <parameter value="Jpeg_ROIVisual_Robots" name="Name" />
-		  <parameter value="Jpeg" name="Type" />
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="Jpeg_ROIVisual_Robots" name="Name" />
+		      <parameter value="Jpeg" name="Type" />
+		    </parameter>
+		  </parameter>
 		</parameter>
 	      </parameter>
 	    </parameter>
@@ -1443,12 +1470,6 @@
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
 	  <parameter value="Canny" name="Name" />
-	</parameter>
-      </instance>
-      <instance type="LVF::Jpeg" name="Jpeg_Canny" >
-	<parameter value="true" name="InterfaceInstance" />
-	<parameter name="Interface" >
-	  <parameter value="CannyJ" name="Name" />
 	</parameter>
       </instance>
 
