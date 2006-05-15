@@ -410,9 +410,9 @@
 
 
       <instance type="Video::FilterOmni2Pan" name="FilterOmni2Pan">
-	<parameter value="159" name="CenterX" />
+	<parameter value="167" name="CenterX" />
 	<parameter value="123" name="CenterY" />
-	<parameter value="120" name="Radius" />
+	<parameter value="114" name="Radius" />
       </instance>
 
       <instance type="LVF::IndextoIndex" name="IndextoIndex_Omni1">
