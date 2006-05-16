@@ -1192,7 +1192,7 @@
 	      <parameter value="CollectRoboCupFeatures" name="Type" />
 	      <parameter name="BackLink" >
 		<parameter value="IntegrateObservations_Ball" />
-		<parameter value="IntegrateObservations_Robots" /> 
+		<!-- <parameter value="IntegrateObservations_Robots" />  -->
 		<parameter value="IntegrateObservations_Goal" />
 		<parameter value="IntegrateObservations_CornerPoles" />
 		<parameter value="IntegrateObservations_GoalPost" />
@@ -1214,12 +1214,24 @@
 		  <parameter name="BackLink" >
 		    <parameter value="CollectRoboCupFeatures_Basic" />
 		  </parameter>
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="Jpeg_ROIVisualBasic" name="Name" />
+		      <parameter value="Jpeg" name="Type" />
+		    </parameter>
+		  </parameter>
 		</parameter>
 		<parameter name="Filter" >
 		  <parameter value="ROIVisualFull" name="Name" />
 		  <parameter value="ROIVisual" name="Type" />
 		  <parameter name="BackLink" >
 		    <parameter value="CollectRoboCupFeatures_Full" />
+		  </parameter>
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="Jpeg_ROIVisualFull" name="Name" />
+		      <parameter value="Jpeg" name="Type" />
+		    </parameter>
 		  </parameter>
 		</parameter>
 		<!-- Ball -->
@@ -1229,12 +1241,24 @@
 		  <parameter name="BackLink" >
 		    <parameter value="AttentionBall" />
 		  </parameter>
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="Jpeg_ROIVisual_AttentionBall" name="Name" />
+		      <parameter value="Jpeg" name="Type" />
+		    </parameter>
+		  </parameter>
 		</parameter>
 		<parameter name="Filter" >
 		  <parameter value="ROIVisual_Ball" name="Name" />
 		  <parameter value="ROIVisual" name="Type" />
 		  <parameter name="BackLink" >
 		    <parameter value="IntegrateObservations_Ball" />
+		  </parameter>
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="Jpeg_ROIVisual_Ball" name="Name" />
+		      <parameter value="Jpeg" name="Type" />
+		    </parameter>
 		  </parameter>
 		</parameter>
 		<!-- Goal and Corner Poles -->
@@ -1244,6 +1268,12 @@
 		  <parameter name="BackLink" >
 		    <parameter value="AttentionGoalCornerPoles" />
 		  </parameter>
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="Jpeg_ROIVisual_AttentionCornerPoles" name="Name" />
+		      <parameter value="Jpeg" name="Type" />
+		    </parameter>
+		  </parameter>
 		</parameter>
 		<parameter name="Filter" >
 		  <parameter value="ROIVisual_CornerPoles" name="Name" />
@@ -1251,12 +1281,24 @@
 		  <parameter name="BackLink" >
 		    <parameter value="IntegrateObservations_CornerPoles" />
 		  </parameter>
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="Jpeg_ROIVisual_CornerPoles" name="Name" />
+		      <parameter value="Jpeg" name="Type" />
+		    </parameter>
+		  </parameter>
 		</parameter>
 		<parameter name="Filter" >
 		  <parameter value="ROIVisual_Goal" name="Name" />
 		  <parameter value="ROIVisual" name="Type" />
 		  <parameter name="BackLink" >
 		    <parameter value="IntegrateObservations_Goal" />
+		  </parameter>
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="Jpeg_ROIVisual_Goal" name="Name" />
+		      <parameter value="Jpeg" name="Type" />
+		    </parameter>
 		  </parameter>
 		</parameter>
 		<!-- Goal Posts -->
@@ -1266,6 +1308,12 @@
 		  <parameter name="BackLink" >
 		    <parameter value="IntegrateObservations_GoalPost" />
 		  </parameter>
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="Jpeg_ROIVisual_GoalPost" name="Name" />
+		      <parameter value="Jpeg" name="Type" />
+		    </parameter>
+		  </parameter>
 		</parameter>
 		<!-- Robot -->
 		<parameter name="Filter" >
@@ -1274,12 +1322,24 @@
 		  <parameter name="BackLink" >
 		    <parameter value="AttentionRobots" />
 		  </parameter>
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="Jpeg_ROIVisual_AttentionRobots" name="Name" />
+		      <parameter value="Jpeg" name="Type" />
+		    </parameter>
+		  </parameter>
 		</parameter>
 		<parameter name="Filter" >
 		  <parameter value="ROIVisual_Robots" name="Name" />
 		  <parameter value="ROIVisual" name="Type" />
 		  <parameter name="BackLink" >
 		    <parameter value="IntegrateObservations_Robots" />
+		  </parameter>
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="Jpeg_ROIVisual_Robots" name="Name" />
+		      <parameter value="Jpeg" name="Type" />
+		    </parameter>
 		  </parameter>
 		</parameter>
 	      </parameter>
@@ -1310,22 +1370,6 @@
 
       <!-- Directed Camera -->
       <instance type="Video::Device1394Parameters" name="Device1394" >
-<!--	<parameter value="-1" name="Focus" />
-	<parameter value="128" name="Hue" />
-	<parameter value="-1" name="Iris" />
-	<parameter value="-1" name="Trigger" />
-	<parameter value="2048" name="Shutter" />
-	<parameter value="128" name="Gamma" />
-	<parameter value="128" name="Sharpness" />
-	<parameter value="-1" name="Temperature" />
-	<parameter value="0" name="Gain" />
-	<parameter value="30" name="Framerate" />
-	<parameter value="128" name="Brightness" />
-	<parameter value="128" name="Exposure" />
-	<parameter value="128" name="Saturation" />
-	<parameter value="162" name="WhiteBalance0" />
-	<parameter value="184" name="WhiteBalance1" /> -->
-	
 	<parameter value="-1" name="Focus" />
 	<parameter value="128" name="Hue" />
 	<parameter value="-1" name="Iris" />
@@ -1820,11 +1864,11 @@
       </instance>
       <!-- Collect All Features -->
       <instance type="LVF::CollectRoboCupFeatures" name="CollectRoboCupFeatures_Full" >
-	<parameter value="7" name="NumberBackLinks" />
+	<parameter value="6" name="NumberBackLinks" />
 	<parameter value="true" name="DynamicConnection" />
 	<parameter value="VisionCollectorFull" name="InterfaceName" />
 	<parameter value="2" name="ScaleFactorRunLength" />
-	<parameter value="8" name="UseIndexFrom" />
+	<parameter value="7" name="UseIndexFrom" />
 	<parameter value="false" name="Save" />
 	<parameter value="true" name="SendVisionResults" />
 	<parameter value="true" name="SendVisionImage" />
@@ -1842,10 +1886,22 @@
 	  <parameter value="Basic" name="Name" />
 	</parameter>
       </instance>
+      <instance type="LVF::Jpeg" name="Jpeg_ROIVisualBasic" >
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="BasicJ" name="Name" />
+	</parameter>
+      </instance>
       <instance type="LVF::ROIVisual" name="ROIVisualFull" >
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
 	  <parameter value="Full" name="Name" />
+	</parameter>
+      </instance>
+      <instance type="LVF::Jpeg" name="Jpeg_ROIVisualFull" >
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="FullJ" name="Name" />
 	</parameter>
       </instance>
       <!-- Ball -->
@@ -1853,6 +1909,12 @@
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
 	  <parameter value="AttentionBall" name="Name" />
+	</parameter>
+      </instance>
+      <instance type="LVF::Jpeg" name="Jpeg_ROIVisual_AttentionBall" >
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="AttentionBallJ" name="Name" />
 	</parameter>
       </instance>
       <instance type="LVF::ROIVisual" name="ROIVisual_Ball" >
@@ -1863,11 +1925,23 @@
 	  <parameter value="Ball" name="Name" />
 	</parameter>
       </instance>
+      <instance type="LVF::Jpeg" name="Jpeg_ROIVisual_Ball" >
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="BallJ" name="Name" />
+	</parameter>
+      </instance>
       <!-- Goal and Corner Poles -->
       <instance type="LVF::ROIVisual" name="ROIVisual_AttentionCornerPoles" >
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
 	  <parameter value="AttentionCornerPoles" name="Name" />
+	</parameter>
+      </instance>
+      <instance type="LVF::Jpeg" name="Jpeg_ROIVisual_AttentionCornerPoles" >
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="AttentionCornerPolesJ" name="Name" />
 	</parameter>
       </instance>
       <instance type="LVF::ROIVisual" name="ROIVisual_CornerPoles" >
@@ -1878,12 +1952,24 @@
 	  <parameter value="CornerPoles" name="Name" />
 	</parameter>
       </instance>
+      <instance type="LVF::Jpeg" name="Jpeg_ROIVisual_CornerPoles" >
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="CornerPolesJ" name="Name" />
+	</parameter>
+      </instance>
       <instance type="LVF::ROIVisual" name="ROIVisual_Goal" >
 	<parameter value="true" name="VisText" />
 	<parameter value="true" name="ConsiderCertainty" />
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
 	  <parameter value="Goal" name="Name" />
+	</parameter>
+      </instance>
+      <instance type="LVF::Jpeg" name="Jpeg_ROIVisual_Goal" >
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="GoalJ" name="Name" />
 	</parameter>
       </instance>
       <!-- Goal Posts -->
@@ -1895,11 +1981,23 @@
 	  <parameter value="GoalPost" name="Name" />
 	</parameter>
       </instance>
+      <instance type="LVF::Jpeg" name="Jpeg_ROIVisual_GoalPost" >
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="GoalPostJ" name="Name" />
+	</parameter>
+      </instance>
       <!-- Robots -->
       <instance type="LVF::ROIVisual" name="ROIVisual_AttentionRobots" >
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
 	  <parameter value="AttentionRobots" name="Name" />
+	</parameter>
+      </instance>
+      <instance type="LVF::Jpeg" name="Jpeg_ROIVisual_AttentionRobots" >
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="AttentionRobotsJ" name="Name" />
 	</parameter>
       </instance>
       <instance type="LVF::ROIVisual" name="ROIVisual_Robots" >
@@ -1908,6 +2006,12 @@
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
 	  <parameter value="Robots" name="Name" />
+	</parameter>
+      </instance>
+      <instance type="LVF::Jpeg" name="Jpeg_ROIVisual_Robots" >
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="RobotsJ" name="Name" />
 	</parameter>
       </instance>
       <!-- Index -->
