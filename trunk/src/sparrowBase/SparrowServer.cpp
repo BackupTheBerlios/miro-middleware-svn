@@ -76,12 +76,12 @@ SparrowBase::SparrowBase(Miro::Server& _server, bool _startReactorTask) :
   pFaulhaber(NULL),
 
   // notify multicast iniitialization
-  argc_(0),
-  argv_(NULL),
-  mcAdapter_(( (Sparrow::Parameters::instance()->channelSharing)?
-	       new Miro::NMC::Adapter(argc_, argv_, 
-				      &server_, ec_, server_.namingContextName) :
-	       NULL) ),
+//   argc_(0),
+//   argv_(NULL),
+//   mcAdapter_(( (Sparrow::Parameters::instance()->channelSharing)?
+// 	       new Miro::NMC::Adapter(argc_, argv_, 
+// 				      &server_, ec_, server_.namingContextName) :
+// 	       NULL) ),
   aEventHandler_(NULL),
   delay(0,0),
   interval(0, 500000),
@@ -191,8 +191,8 @@ SparrowBase::init(bool _startReactorTask)
   if (_startReactorTask)
     reactorTask.open(0);
 
-  if (mcAdapter_)
-    mcAdapter_->init();
+//   if (mcAdapter_)
+//     mcAdapter_->init();
 
   MIRO_LOG(LL_CTOR_DTOR, "SparrowBase initialized.");
 }
@@ -207,12 +207,12 @@ SparrowBase::~SparrowBase()
   delete aEventHandler_;
   
   // close channel sharing
-  if (mcAdapter_) {
-    MIRO_LOG(LL_CTOR_DTOR, "SparrowBase: Closing multicats adapter.");
+//   if (mcAdapter_) {
+//     MIRO_LOG(LL_CTOR_DTOR, "SparrowBase: Closing multicats adapter.");
 
-    mcAdapter_->fini();
-    delete mcAdapter_;
-  }
+//     mcAdapter_->fini();
+//     delete mcAdapter_;
+//   }
 
   odometry.cancel();
     MIRO_LOG(LL_CTOR_DTOR, "SparrowBase: Odometry dispatching canceled.");

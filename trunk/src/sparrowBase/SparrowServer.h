@@ -76,7 +76,7 @@ public:
 
   void init(bool startReactorTask);
 
-  Miro::NMC::Adapter * notifyMulticast();
+//   Miro::NMC::Adapter * notifyMulticast();
 
   // protected:
   Miro::Server& server_;
@@ -131,9 +131,9 @@ public:
   Miro::RangeSensor_ptr pInfrared;
 
   /* NotifyMulticast */
-  int argc_;
-  char ** argv_;
-  Miro::NMC::Adapter *mcAdapter_;
+//   int argc_;
+//   char ** argv_;
+//   Miro::NMC::Adapter *mcAdapter_;
 
   Sparrow::AliveCollector * aCollector;
   Sparrow::AliveEventHandler * aEventHandler_;
@@ -142,11 +142,11 @@ public:
   int aEventHandlerId_;
 };
 
-inline
-Miro::NMC::Adapter *
-SparrowBase::notifyMulticast() {
-  return mcAdapter_;
-}
+// inline
+// Miro::NMC::Adapter *
+// SparrowBase::notifyMulticast() {
+//   return mcAdapter_;
+// }
 
 #endif
 
