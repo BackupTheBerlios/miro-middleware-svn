@@ -23,6 +23,7 @@ using std::cin;
 
 unsigned int indent = 0;
 
+
 std::ostream& operator << (std::ostream& _ostr, const Miro::TimeStatsIDL& _rhs)
 {
    std::string in;
@@ -40,6 +41,7 @@ std::ostream& operator << (std::ostream& _ostr, const Miro::TimeStatsIDL& _rhs)
   return _ostr;
 }
 
+
 std::ostream& operator << (std::ostream& _ostr, const Miro::FilterTreeIDL& _rhs)
 {
   std::string in;
@@ -56,20 +58,6 @@ std::ostream& operator << (std::ostream& _ostr, const Miro::FilterTreeIDL& _rhs)
   return _ostr;
 }
 
-void connectToFilters(Miro::FilterTreeIDL const& _tree, 
-		      Miro::ConnectionSetIDL& _connections)
-{
-  if (!CORBA::is_nil(_tree.videoInterface.ior )) {
-    CORBA::ULong index = _connections.length();
-    _connections.length(index + 1);
-    _tree.videoInterface.ior->connect(_connections[index].id);
-    _connections[index].filter = CORBA::string_dup(_tree.videoInterface.name);
-  }
-
-  for (CORBA::ULong i = 0; i < _tree.successors.length(); ++i) {
-    connectToFilters(_tree.successors[i], _connections);
-  }
-}
 
 void disconnectFromFilters(Miro::Client& _client, 
 			   Miro::ConnectionSetIDL& _connections)
@@ -79,6 +67,7 @@ void disconnectFromFilters(Miro::Client& _client,
     video->disconnect(_connections[i].id);
   }
 }
+
 
 int main (int argc, char * argv[])
 {
