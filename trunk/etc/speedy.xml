@@ -1199,6 +1199,7 @@
 		<!-- <parameter value="AttentionLines" /> -->
 		<parameter value="ColorCount" />
 		<parameter value="YUV422toIndexListShrink2" />
+		<parameter value="AttentionGoalCornerPoles" />
 	      </parameter>
 	    </parameter>
 
@@ -1869,6 +1870,7 @@
 	<parameter value="VisionCollectorFull" name="InterfaceName" />
 	<parameter value="2" name="ScaleFactorRunLength" />
 	<parameter value="6" name="UseIndexFrom" />
+	<parameter value="7" name="AttentionCornerPoles" />
 	<parameter value="false" name="Save" />
 	<parameter value="true" name="SendVisionResults" />
 	<parameter value="true" name="SendVisionImage" />
