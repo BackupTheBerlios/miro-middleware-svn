@@ -339,7 +339,7 @@
           <parameter value="0.5" name="Bluerightgoalpost" />
           <parameter value="0.5" name="Yellowleftgoalpost" />
           <parameter value="0.5" name="Yellowrightgoalpost" />
-          <parameter value="0.55" name="Ball" />
+          <parameter value="0.6" name="Ball" />
           <parameter value="0.55" name="Robot" />
         </parameter>
         <parameter name="APrioriBeingThere">
@@ -460,8 +460,8 @@
 			      <parameter name="Filter" >
 			      <parameter value="ConnectionFake_HighRes" name="Name" />
 			      <parameter value="ConnectionFake" name="Type" />
-			      </parameter>
-			      </parameter>
+			    </parameter>
+			    </parameter>
 			      -->
 			    </parameter>
 			    <parameter name="Filter" >
@@ -470,20 +470,20 @@
 			      <!--
 			      <parameter name="Successor" >
 			      -->
-				<!-- disable while debug flag in IndexToDist filter is disabled -->
-				<!-- 
-				<parameter name="Filter" >
-				<parameter value="IndextoIndex_Omni3" name="Name" />
-				<parameter value="IndextoIndex" name="Type" />
-			        </parameter>
-				-->
-				<!-- disable this for the goalie -->
+			      <!-- disable while debug flag in IndexToDist filter is disabled -->
+			      <!-- 
+			      <parameter name="Filter" >
+			      <parameter value="IndextoIndex_Omni3" name="Name" />
+			      <parameter value="IndextoIndex" name="Type" />
+			    </parameter>
+			      -->
+			      <!-- disable this for the goalie -->
 			      <!--
-				<parameter name="Filter" >
-				  <parameter value="ConnectionFake_LowRes" name="Name" />
-				  <parameter value="ConnectionFake" name="Type" />
-				</parameter>
-			      </parameter>
+			      <parameter name="Filter" >
+			      <parameter value="ConnectionFake_LowRes" name="Name" />
+			      <parameter value="ConnectionFake" name="Type" />
+			    </parameter>
+			    </parameter>
 			      -->
 			    </parameter>
 			  </parameter>
@@ -1354,7 +1354,7 @@
 		<parameter value="IntegrateObservations_Goal" />
 		<parameter value="IntegrateObservations_CornerPoles" />
 		<parameter value="IntegrateObservations_GoalPost" />
-		<parameter value="AttentionLines" />
+		<!-- <parameter value="AttentionLines" /> -->
 		<parameter value="ColorCount" />
 		<parameter value="YUV422toIndexListShrink2" />
 	      </parameter>
@@ -1543,7 +1543,7 @@
         <parameter value="128" name="Saturation" />
         <parameter value="180" name="WhiteBalance0" />
         <parameter value="172" name="WhiteBalance1" />
-															
+	
         <parameter name="Camera" >
 	  <parameter value="0.060000" name="Latency" />
 	  <parameter value="34.0" name="Alpha" />
@@ -2022,11 +2022,11 @@
       </instance>
       <!-- Collect All Features -->
       <instance type="LVF::CollectRoboCupFeatures" name="CollectRoboCupFeatures_Full" >
-	<parameter value="6" name="NumberBackLinks" />
+	<parameter value="5" name="NumberBackLinks" />
 	<parameter value="true" name="DynamicConnection" />
 	<parameter value="VisionCollectorFull" name="InterfaceName" />
 	<parameter value="2" name="ScaleFactorRunLength" />
-	<parameter value="7" name="UseIndexFrom" />
+	<parameter value="6" name="UseIndexFrom" />
 	<parameter value="false" name="Save" />
 	<parameter value="true" name="SendVisionResults" />
 	<parameter value="true" name="SendVisionImage" />
