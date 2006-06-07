@@ -516,7 +516,7 @@ namespace Miro
 	    parent_->sendTransitionMessage(_message);
 	  }
 	  else {                    // or ignored if no parent is available
-		  std::cerr << "Pattern: no transition registered for message! \a" 
+		  std::cerr << "Pattern: no transition registered for message '" << _message << "' !\a" 
 		 << std::endl;
 	  }
 	}
