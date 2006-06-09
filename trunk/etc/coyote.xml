@@ -1099,11 +1099,20 @@
 	    <!-- Ball -->
 	    <!-- actually, at the moment we do not use a real mask for the ball, just -->
 	    <!-- resize the roi a small portion -->
+
+	    <!-- small balls :-) -->
+	    <parameter name="Filter" >
+	      <parameter value="FilterSmallROIs_Ball" name="Name" />
+	      <parameter value="FilterSmallROIs" name="Type" />
+	      <parameter name="BackLink" >
+		<parameter value="ConcatROIs_Ball" />
+	      </parameter>
+	    </parameter>
 	    <parameter name="Filter" >
 	      <parameter value="ResizeROI_Ball" name="Name" />
 	      <parameter value="ResizeROI" name="Type" />
 	      <parameter name="BackLink" >
-		<parameter value="ConcatROIs_Ball" />
+		<parameter value="FilterSmallROIs_Ball" />
 	      </parameter>
 	    </parameter>
 	    <parameter name="Filter" >
@@ -1133,37 +1142,78 @@
 	      </parameter>
 	    </parameter>
 	    <parameter name="Filter" >
-	      <parameter value="YUV422toRGBIpp_Ball" name="Name" />
-	      <parameter value="YUV422toRGBIpp" name="Type" />
+	      <parameter value="NeuralNetBallOrientOnly" name="Name" />
+	      <parameter value="NeuralNetBallOrientOnly" name="Type" />
+	      <parameter name="BackLink" >
+		<parameter value="OrientCurvatureHist_Ball" />
+		<parameter value="FilterSmallROIs_Ball" />
+	      </parameter>
+	    </parameter>
+	    <!-- bigger balls :-) -->
+	    <parameter name="Filter" >
+	      <parameter value="FilterLargeROIs_Ball" name="Name" />
+	      <parameter value="FilterLargeROIs" name="Type" />
 	      <parameter name="BackLink" >
 		<parameter value="ConcatROIs_Ball" />
 	      </parameter>
+	    </parameter>
+	    <parameter name="Filter" >
+	      <parameter value="ResizeROI_Ball2" name="Name" />
+	      <parameter value="ResizeROI" name="Type" />
+	      <parameter name="BackLink" >
+		<parameter value="FilterLargeROIs_Ball" />
+	      </parameter>
+	    </parameter>
+	    <parameter name="Filter" >
+	      <parameter value="YUV422toGray_Ball2" name="Name" />
+	      <parameter value="YUV422toGray" name="Type" />
+	      <parameter name="BackLink" >
+		<parameter value="ResizeROI_Ball2" />
+	      </parameter>
 	      <parameter name="Successor" >
 		<parameter name="Filter" >
-		  <parameter value="ColorHist_Ball" name="Name" />
-		  <parameter value="ColorHist" name="Type" />
-		  <parameter name="BackLink" >
-		    <parameter value="ConcatROIs_Ball" />
-		  </parameter>
+		  <parameter value="SobelVertical_Ball2" name="Name" />
+		  <parameter value="Sobel" name="Type" />
+		</parameter>
+		<parameter name="Filter" >
+		  <parameter value="SobelHorizontal_Ball2" name="Name" />
+		  <parameter value="Sobel" name="Type" />
 		</parameter>
 	      </parameter>
 	    </parameter>
 	    <parameter name="Filter" >
-	      <parameter value="NeuralNetBall" name="Name" />
-	      <parameter value="NeuralNetBall" name="Type" />
+	      <parameter value="OrientCurvatureHist_Ball2" name="Name" />
+	      <parameter value="OrientCurvatureHist" name="Type" />
 	      <parameter name="BackLink" >
-		<parameter value="ColorHist_Ball" />
-		<parameter value="OrientCurvatureHist_Ball" />
-		<parameter value="ConcatROIs_Ball" />
+		<parameter value="SobelVertical_Ball2" />
+		<parameter value="SobelHorizontal_Ball2" />
+		<parameter value="ResizeROI_Ball2" />
+	      </parameter>
+	    </parameter>
+	    <parameter name="Filter" >
+	      <parameter value="NeuralNetBallOrientOnly2" name="Name" />
+	      <parameter value="NeuralNetBallOrientOnly" name="Type" />
+	      <parameter name="BackLink" >
+		<parameter value="OrientCurvatureHist_Ball2" />
+		<parameter value="FilterLargeROIs_Ball" />
 	      </parameter>
 	      <parameter name="Successor" >
 		<parameter name="Filter" >
-		  <parameter value="IntegrateObservations_Ball" name="Name" />
-		  <parameter value="IntegrateObservations" name="Type" />
+		  <parameter value="ConcatROIs_Ball2" name="Name" />
+		  <parameter value="ConcatROIs" name="Type" />
 		  <parameter name="BackLink" >
-		    <parameter value="FilterUnpredictedROIs_Ball" />
-		    <parameter value="FilterPredictedROIs_Ball" />
-		    <parameter value="CheckForFloor_Ball" />
+		    <parameter value="NeuralNetBallOrientOnly" />
+		  </parameter>
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+		      <parameter value="IntegrateObservations_Ball" name="Name" />
+		      <parameter value="IntegrateObservations" name="Type" />
+		      <parameter name="BackLink" >
+			<parameter value="FilterUnpredictedROIs_Ball" />
+			<parameter value="FilterPredictedROIs_Ball" />
+			<parameter value="CheckForFloor_Ball" />
+		      </parameter>
+		    </parameter>
 		  </parameter>
 		</parameter>
 	      </parameter>
@@ -1850,8 +1900,14 @@
       <!-- Neural Network and Feature Extraction -->
 
       <!-- Ball -->
+      <!-- small -->
+      <instance type="LVF::FilterSmallROIs" name="FilterSmallROIs_Ball" >
+	<parameter value="25" name="MaxWidth" />
+	<parameter value="25" name="MaxHeight" />
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
       <instance type="LVF::ResizeROI" name="ResizeROI_Ball" >
-	<parameter value="0.05" name="Percentage" />
+	<parameter value="0.2" name="Percentage" />
 	<parameter value="1" name="UseROIFrom" />
       </instance>
       <instance type="LVF::YUV422toGray" name="YUV422toGray_Ball" >
@@ -1869,26 +1925,49 @@
         <parameter value="0.0" name="YOverlap" />
         <parameter value="2" name="XSubwin" />
         <parameter value="2" name="YSubwin" />
+        <parameter value="10" name="Discrete" />
+	<parameter value="11" name="KernelSize"/>
+      </instance>
+      <instance type="LVF::NeuralNetBallOrientOnly" name="NeuralNetBallOrientOnly" >
+	<parameter value="Ball_OrientCurvatureHistSmall.net" name="FileOrientCurvatureHist" />
+	<parameter value="1" name="UseOrientCurvatureHistFrom" />
+	<parameter value="2" name="UseROIFrom" />
+      </instance>
+      <!-- large -->
+      <instance type="LVF::FilterLargeROIs" name="FilterLargeROIs_Ball" >
+	<parameter value="26" name="MinWidth" />
+	<parameter value="26" name="MinHeight" />
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::ResizeROI" name="ResizeROI_Ball2" >
+	<parameter value="0.05" name="Percentage" />
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::YUV422toGray" name="YUV422toGray_Ball2" >
+	<parameter value="1" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::Sobel" name="SobelVertical_Ball2" >
+	<parameter value="VERTICAL" name="Orientation" />
+      </instance>
+      <instance type="LVF::Sobel" name="SobelHorizontal_Ball2" >
+	<parameter value="HORIZONTAL" name="Orientation" />
+      </instance>
+      <instance type="LVF::OrientCurvatureHist" name="OrientCurvatureHist_Ball2" >
+        <parameter value="3" name="UseROIFrom" />
+        <parameter value="0.0" name="XOverlap" />
+        <parameter value="0.0" name="YOverlap" />
+        <parameter value="2" name="XSubwin" />
+        <parameter value="2" name="YSubwin" />
         <parameter value="8" name="Discrete" />
 	<parameter value="13" name="KernelSize"/>
       </instance>
-      <instance type="LVF::YUV422toRGBIpp" name="YUV422toRGBIpp_Ball" >
-	<parameter value="1" name="UseROIFrom" />
-      </instance>
-      <instance type="LVF::ColorHist" name="ColorHist_Ball" >
-	<parameter value="0.0" name="XOverlap" />
-	<parameter value="0.0" name="YOverlap" />
-	<parameter value="2" name="XSubwin" />
-	<parameter value="2" name="YSubwin" />
-	<parameter value="8" name="Discrete" />
-	<parameter value="1" name="UseROIFrom" />
-      </instance>
-      <instance type="LVF::NeuralNetBall" name="NeuralNetBall" >
-	<parameter value="Ball_ColorHist.net" name="FileColorHist" />
+      <instance type="LVF::NeuralNetBallOrientOnly" name="NeuralNetBallOrientOnly2" >
 	<parameter value="Ball_OrientCurvatureHist.net" name="FileOrientCurvatureHist" />
-	<parameter value="1" name="UseColorHistFrom" />
-	<parameter value="2" name="UseOrientCurvatureHistFrom" />
-	<parameter value="3" name="UseROIFrom" />
+	<parameter value="1" name="UseOrientCurvatureHistFrom" />
+	<parameter value="2" name="UseROIFrom" />
+      </instance>
+      <instance type="LVF::ConcatROIs" name="ConcatROIs_Ball2" >
+	<parameter value="1" name="UseROIFrom" />
       </instance>
       <instance type="LVF::IntegrateObservations" name="IntegrateObservations_Ball" >
 	<parameter value="ObjectTracking_Ball" name="ObjectTrackingInstance" />
