@@ -220,7 +220,6 @@ SparrowBase::~SparrowBase()
   infrared.cancel();
   MIRO_LOG(LL_CTOR_DTOR, "SparrowBase: Infrared dispatching canceled.");
 
-  MIRO_LOG(LL_CTOR_DTOR, "SparrowBase: Shutting down sparrow board.");
   if (sparrowConnection)
     sparrowConnection->fini();
 
