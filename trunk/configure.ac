@@ -96,9 +96,16 @@ miro_export_qt_ldflags="${QT_LDFLAGS}"
 miro_export_qt_libs="${QT_LIBS}"
 
 if test "x$prefix" == xNONE; then
-	miro_export_cflags="-I${PWD}/src -I${PWD} -I${PWD}/include"; 
-	miro_export_ldflags="-L${PWD}/lib";
-	miro_export_libs="-lmiroVideo -lmiroIDL -lmiro ${PWD}/lib/libmiroSvc.a"; else
+	if test "x$srcdir" != "x."; then
+		miro_export_cflags="-I${PWD}/src -I${PWD} -I${PWD}/include -I${PWD}/${srcdir}/src -I${PWD}/${srcdir}";
+		miro_export_ldflags="-L${PWD}/lib";
+		miro_export_libs="-lmiroVideo -lmiroIDL -lmiro ${PWD}/lib/libmiroSvc.a";
+	else
+		miro_export_cflags="-I${PWD}/src -I${PWD} -I${PWD}/include"; 
+		miro_export_ldflags="-L${PWD}/lib";
+		miro_export_libs="-lmiroVideo -lmiroIDL -lmiro ${PWD}/lib/libmiroSvc.a";
+	fi
+else
 	miro_export_cflags="-I${prefix}/src -I${prefix} -I${includedir}"; 
 	miro_export_ldflags="-L${libdir}";
 	miro_export_libs="-lmiroVideo -lmiroIDL -lmiro ${libdir}/libmiroSvc.a"; fi
