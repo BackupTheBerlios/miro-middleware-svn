@@ -424,7 +424,7 @@ namespace Miro
 	  // Drop packet if it's too old
 	  ACE_Time_Value now = ACE_OS::gettimeofday();
 	  unsigned long nowmsec = now.msec();
-	  unsigned long deltamsec = 
+	  long deltamsec = 
 	    (nowmsec > _eventData.timestamp)? 
             nowmsec - _eventData.timestamp : 
             _eventData.timestamp - nowmsec;
