@@ -109,7 +109,7 @@ else
 	miro_export_cflags="-I${prefix}/src -I${prefix} -I${includedir}"; 
 	miro_export_ldflags="-L${libdir}";
 	miro_export_libs="-lmiroVideo -lmiroIDL -lmiro ${libdir}/libmiroSvc.a"; fi
-if test "x$ac_miro_has_1394" == xyes; then if test "x$ac_miro_has_1394_newlib" == xyes; then miro_export_libs="$miro_export_libs -lraw1394 -ldc1394"; else miro_export_libs="$miro_export_libs -lraw1394 -ldc1394_control"; fi; fi
+if test "x$ac_miro_has_1394" == xyes; then if test $ac_miro_has_1394_libversion -ge 3; then miro_export_libs="$miro_export_libs -lraw1394 -ldc1394"; else miro_export_libs="$miro_export_libs -lraw1394 -ldc1394_control"; fi; fi
 if test "x$ac_compile_player" == xyes; then miro_export_libs="$miro_export_libs ${PLAYER_LDFLAGS} ${PLAYER_LIBS}"; fi
 
 AC_SUBST(miro_export_acetao_cflags)
