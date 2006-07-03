@@ -18,8 +18,11 @@ if COND_PCH
 AM_CPPFLAGS+=-include $(top_builddir)/pch/all_static.h
 endif
 
+if COND_SPARROW99
+sparrowprograms =  PanTest2003 PanStream2003
+endif
 
-bin_PROGRAMS = PanTiltTest PanTest PanTest2003 PanStream2003
+bin_PROGRAMS = PanTiltTest PanTest $(sparrowprograms)
 
 
 PanTiltTest_SOURCES = PanTiltTest.cpp
@@ -43,7 +46,7 @@ PanStream2003_LDADD = \
 	-lmiro
 
 
-all-local: PanTiltTest PanTest
+all-local: PanTiltTest PanTest $(sparrowprograms)
 	$(INSTALLPROGRAMS)
 
 clean-local:
