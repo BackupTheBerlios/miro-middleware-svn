@@ -15,6 +15,9 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.21  2006/07/03 16:08:11  gmayer
+ * follow changes in newer libdc1394 version
+ *
  * Revision 1.20  2006/03/24 16:10:32  gmayer
  * update to follow cleanup in new libdc1394 version (2.0.0-pre6)
  *
@@ -401,8 +404,8 @@ using std::cout;
       dc1394_dma_release_camera(handle_, p_camera_);
 #else
       dc1394_video_set_transmission(p_camera_, DC1394_OFF);
-      dc1394_dma_unlisten(p_camera_);
-      dc1394_dma_release_camera(p_camera_);
+//       dc1394_dma_unlisten(p_camera_);
+//       dc1394_dma_release_camera(p_camera_);
 #endif
       is_open_ = false;
     }
@@ -610,15 +613,18 @@ using std::cout;
       throw Miro::Exception("Device1394::handleConnect: unable to setup camera");
 #else
     // for version 2.x
-    if (dc1394_dma_setup_capture(p_camera_,
-				 imageFormat_,
-				 DC1394_ISO_SPEED_400,
-				 frameRate_, 
-				 1,
-				 DROP_FRAMES) != DC1394_SUCCESS)
+    char * devicename = new char[params_.device.length()];
+    memcpy(devicename, params_.device.c_str(), params_.device.length()*sizeof(char));
+    if (dc1394_capture_set_dma_device_filename(p_camera_, devicename) != DC1394_SUCCESS)
+      throw Miro::Exception("Device1394::initCapture(): unable to set dma device filename");
+    if (dc1394_video_set_iso_speed(p_camera_, DC1394_ISO_SPEED_400) != DC1394_SUCCESS)
+      throw Miro::Exception("Device1394::initCapture(): unable to set iso speed");
+    if (dc1394_video_set_mode(p_camera_, imageFormat_) != DC1394_SUCCESS)
+      throw Miro::Exception("Device1394::initCapture(): unable to set video mode");
+    if (dc1394_video_set_framerate(p_camera_, frameRate_) != DC1394_SUCCESS)
+      throw Miro::Exception("Device1394::initCapture(): unable to set framerate");
+    if (dc1394_capture_setup_dma(p_camera_, NUM_BUFFERS, DROP_FRAMES) != DC1394_SUCCESS)
       throw Miro::Exception("Device1394::handleConnect: unable to setup camera");
-//     if (dc1394_set_dma_device_filename(p_camera_, params_.device.c_str()) != DC1394_SUCCESS)
-//       throw Miro::Exception("Device1394::handleConnect: unable to set device name camera");
 #endif
 
 #if MIRO_HAS_LIBDC1394_VERSION == 1 || MIRO_HAS_LIBDC1394_VERSION == 2

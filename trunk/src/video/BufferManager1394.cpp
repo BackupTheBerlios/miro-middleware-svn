@@ -75,8 +75,7 @@ namespace Video
     bufferStatus_[_index].time = ACE_OS::gettimeofday() - camParams_->latency;
     bufferStatus_[_index].buffer = reinterpret_cast<unsigned char *>(pCamera_->capture_buffer);
 #else
-
-    dc1394_dma_capture(&pCamera_, 1, DC1394_VIDEO1394_WAIT);
+    dc1394_capture_dma(&pCamera_, 1, DC1394_VIDEO1394_WAIT);
     bufferStatus_[_index].time = ACE_OS::gettimeofday() - camParams_->latency;
     bufferStatus_[_index].buffer = reinterpret_cast<unsigned char *>(pCamera_->capture.capture_buffer);
 #endif
@@ -86,6 +85,10 @@ namespace Video
   void
   BufferManager1394::releaseOutputBuffer()
   {	
+#if MIRO_HAS_LIBDC1394_VERSION == 1 || MIRO_HAS_LIBDC1394_VERSION == 2
     dc1394_dma_done_with_buffer(pCamera_);
+#else
+    dc1394_capture_dma_done_with_buffer(pCamera_);
+#endif
   }
 }
