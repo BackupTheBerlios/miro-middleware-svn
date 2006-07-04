@@ -93,7 +93,7 @@ namespace Miro
   {
     handle = video->connect(id);
     memory = (unsigned char*)::shmat(handle->key, NULL, 0);
-    if ((int)memory == -1)
+    if ((long)memory == -1)
       throw CException(errno, "Unable to map shared memory.");
   }
 

@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 
     imageIDL = video->connect(id);
     imageData = (char*)::shmat(imageIDL->key, NULL, 0);
-    if ((int)imageData == -1)
+    if ((long)imageData == -1)
       throw Miro::EDevIO();
     now = ACE_OS::gettimeofday();
     cout << "connecting: " << " [" << (now - last).msec()  << "ms] " << endl ;

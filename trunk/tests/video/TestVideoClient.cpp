@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     CORBA::ULong offset;
     imageIDL = video->connect(id);
     imageData = (unsigned char*)::shmat(imageIDL->key, NULL, 0);
-    if ((int)imageData == -1)
+    if ((long)imageData == -1)
       throw Miro::EDevIO();
 
     for (int j = 0; j < count; ++j) {

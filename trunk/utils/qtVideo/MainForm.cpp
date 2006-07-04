@@ -84,7 +84,7 @@ MainForm::MainForm(Miro::Client& _client,
 
     if (!remote) {
       imageBuffer_ = (unsigned char*)::shmat(imageIDL_->key, NULL, 0);
-      if ((int)imageBuffer_ == -1)
+      if ((long)imageBuffer_ == -1)
 	throw Miro::EDevIO();
     }
 
@@ -113,7 +113,7 @@ MainForm::MainForm(Miro::Client& _client,
 
 MainForm::~MainForm()
 {
-  if (imageBuffer_ != NULL && (int)imageBuffer_ != -1)
+  if (imageBuffer_ != NULL && (long)imageBuffer_ != -1)
     shmdt((void*)imageBuffer_);
 
   if (video_.in() != NULL)
