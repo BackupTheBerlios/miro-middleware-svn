@@ -18,7 +18,7 @@ endif
 SUFFIXES = .cpp .idl C.cpp C.h C.i.h S.cpp S.h S.i.h
 
 .idlC.cpp:
-	$(TAO_IDL) -in -Gt -Ge 0 -hc C.h -cs C.cpp -ci C.i.h -hs S.h -hT S_T.h -ss S.cpp -sT S_T.cpp -si S.i.h -st S_T.i.h -Sc -Wp,-I$(TAO_ROOT) -I$(TAO_ROOT) -Wp,-I$(TAO_ROOT)/orbsvcs -I$(TAO_ROOT)/orbsvcs $<
+	$(TAO_IDL) -in -Gt -Ge 0 -hc C.h -cs C.cpp -ci C.i.h -hs S.h -hT S_T.h -ss S.cpp -sT S_T.cpp -si S.i.h -st S_T.i.h -Sc $(ACE_CPPFLAGS) $(TAO_CPPFLAGS) $<
 
 C.cppC.h: ;
 
