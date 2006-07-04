@@ -187,6 +187,7 @@ AC_DEFUN([AC_SEARCH_TAO_LOCAL],
 	AC_LANG_PUSH(C++)
 	AC_TRY_LINK([
 		#include <tao/ORB.h>
+		#include <orbsvcs/CosNotifyCommC.h>
 	],[
 		;
 	],[
