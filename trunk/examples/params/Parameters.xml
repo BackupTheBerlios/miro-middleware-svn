@@ -10,15 +10,11 @@
 
   <!-- group names can be freely choosen -->
   <!-- except for behaviours and arbiters -->
-  <config_group name="test">
+  <config_group name="my_test_section">
     
     <!-- MyParameters are derived from Miro::ConfigParameters -->
     <config_item name="My" parent="Miro::Config" instance="true" >
-      Some test data.
-      Some more test data
       <config_parameter name="test1" type="bool" default="true" />
-
-      And even more text!
       <config_parameter name="test2" type="char" default="a" />
       <config_parameter name="test3" type="int" default="3" measure="mm" />
       <config_parameter name="Test4" type="std::string" default="test" />
@@ -26,6 +22,14 @@
       <config_parameter name="Motion" type="Miro::MotionParameters" />
       <config_parameter name="TestVector" type="std::vector&lt;int&gt;" />
       <config_parameter name="TestSet" type="std::set&lt;int&gt;" />
+    </config_item>
+
+    <config_item name="Friends" parent="Miro::Config" instance="false" >
+      <config_parameter name="foo" type="std::string" default="bar" />
+    </config_item>
+
+    <config_item name="More" parent="Test::Friends" instance="true" >
+      <config_parameter name="bar" type="std::string" default="foo" />
     </config_item>
 
   </config_group>

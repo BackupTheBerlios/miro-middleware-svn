@@ -1,19 +1,19 @@
 <config>
-  <section name="test">
-    <parameter name="Test">
-      <parameter name="Test1" value="false" />
-      <parameter name="Test4" value="my test" />
-      <parameter name="TestVector">
+  <section name="My_test_section" >
+    <instance type="Test::FriendsParameters" name="Cherry" >
+      <parameter value="thank's for the flowers" name="Foo" />
+    </instance>
+    <instance type="Test::FriendsParameters" name="Tom" />
+    <parameter name="Test::MyParameters" >
+      <parameter value="false" name="Test1" />
+      <parameter value="a" name="Test2" />
+      <parameter value="4" name="Test3" />
+      <parameter value="hello world" name="Test4" />
+      <parameter name="TestVector" >
+        <parameter value="1" />
         <parameter value="2" />
-        <parameter value="4" />
-        <parameter value="2" />
-        <parameter value="5" />
-      </parameter>
-      <parameter name="TestSet">
-        <parameter value="2" />
-        <parameter value="4" />
-        <parameter value="2" />
-        <parameter value="5" />
+        <parameter value="3" />
+        <parameter value="3" />
       </parameter>
     </parameter>
   </section>
