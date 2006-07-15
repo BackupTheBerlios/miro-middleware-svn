@@ -11,6 +11,10 @@
 ##
 ##############################################################################
 
+# enabling reconfigure
+
+ACLOCAL_AMFLAGS = -I config
+
 # includes 
 
 AM_CXXFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/ -I$(top_builddir)/src -I$(top_builddir)/
