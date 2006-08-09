@@ -58,7 +58,7 @@ protected:
   bool internalSetSelection_;
 
 private:
-  EventView::EventView(EventView const&);
+  EventView(EventView const&);
 
   unsigned int history_;
 };
