@@ -153,6 +153,7 @@ AC_CONFIG_FILES([Makefile
                  src/faulMotor/Makefile
                  src/faulTty/Makefile
                  src/laser/Makefile
+                 src/laser360/Makefile
 		 src/fusedRangeSensor/Makefile
                  src/mcp/Makefile
                  src/miro/Makefile

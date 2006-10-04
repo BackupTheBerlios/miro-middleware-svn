@@ -17,6 +17,7 @@ globaldirs = \
 	miro \
 	video \
 	laser \
+	laser360 \
 	gps \
 	fusedRangeSensor
 
