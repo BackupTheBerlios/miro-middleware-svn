@@ -53,6 +53,8 @@ namespace Miro
   {
 
     control_->controlLoop();
+
+    return 0;
   }
 
 };

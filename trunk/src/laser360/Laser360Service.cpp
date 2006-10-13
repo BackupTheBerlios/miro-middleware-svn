@@ -95,7 +95,9 @@ int main( int argc, char * argv[] )
 
     // Config file processing
     Miro::ConfigDocument * config = new Miro::ConfigDocument( argc, argv );
-    // config->setSection( "Robot" );
+    config->setSection( "Laser360" );
+    delete config;
+
     calculateLaserDescription( parameters );
 
     MIRO_LOG( LL_NOTICE, "Initialize server daemon.\n" );

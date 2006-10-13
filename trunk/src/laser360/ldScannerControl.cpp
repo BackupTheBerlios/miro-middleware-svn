@@ -414,6 +414,8 @@ namespace ldoem_
   //---------------------------------------------------------------------------
   void ScannerControl::getContinuouslyProfile( std::string state )
   {
+    displayCurrentState( state );
+
     RangeGroupEventIDL * data = new RangeGroupEventIDL();
 
     std::istringstream issequence;
@@ -469,7 +471,7 @@ namespace ldoem_
       isvalue >> std::hex >> value;
       if ( ! first_profile_ || ! toggle_ )
       {
-        vdistance.push_back( ( value / 256.0 ) * 10 );
+        vdistance.push_back( value / 256.0 );
         toggle_ = true;
         // set first scan
         first_profile_ = true;
@@ -502,7 +504,7 @@ namespace ldoem_
       {
         if ( distance_[i] < 250 )
         {
-          data->range[i] = ( float ) distance_[i] * 100;
+          data->range[i] = static_cast<int>( distance_[i] * 1000);
         }
         else
           data->range[i] = 0;
@@ -690,7 +692,7 @@ namespace ldoem_
     {
       if ( distance_[i] < 250 )
       {
-        data->range[i] = ( float ) distance_[i] * 1000;
+        data->range[i] = static_cast<int>(distance_[i] * 1000);
       }
       else
         data->range[i] = 0;
@@ -855,15 +857,15 @@ namespace ldoem_
           break;
 
           case CONTINUOUSLY:
-            if ( serial_com_->newMessageRcv() /* && ( actual_profile_count_ <= profile_count_ ) */  )
+            if ( serial_com_->newMessageRcv()  /*&& ( actual_profile_count_ <= profile_count_ )*/  )
             {
               timeout.start( 5000 );
               getContinuouslyProfile( "Continuously" );
             }
-    //        else if ( actual_profile_count_ > profile_count_ )
-    //        {
-    //          exitState( "Reset" );
-    //        }
+  //          else if ( actual_profile_count_ > profile_count_ )
+  //          {
+  //            exitState( "Reset" );
+  //          }
             else if ( timeout.isFinished() )
             {
               std::cout << "Timeout" << std::endl;

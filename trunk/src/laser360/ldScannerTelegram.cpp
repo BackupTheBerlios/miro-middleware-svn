@@ -28,7 +28,7 @@ namespace ldoem_
 
     string command = "";
     stringstream stream;
-    uint16 crc = 0;
+    uint16 crc = item;
 
     // parse command
     stream << header();
@@ -39,6 +39,7 @@ namespace ldoem_
 
     message = stream.str();
     // calculate crc
+    crc = 0;
     crc = createCrc( message );
     stream << hexToString( crc, 4 );
 
@@ -57,7 +58,7 @@ namespace ldoem_
 
     string command = "";
     stringstream stream;
-    uint16 crc = 0;
+    uint16 crc = item;
 
     // parse command
     stream << header();
@@ -67,6 +68,7 @@ namespace ldoem_
 
     message = stream.str();
     // calculate crc
+    crc = 0;
     crc = createCrc( message );
     stream << hexToString( crc, 4 );
 
@@ -86,7 +88,7 @@ namespace ldoem_
 
     string command = "";
     stringstream stream;
-    uint16 crc = 0;
+    uint16 crc = item;
 
     // parse command
     stream << header();
@@ -96,6 +98,7 @@ namespace ldoem_
 
     message = stream.str();
     // calculate crc
+    crc = 0;
     crc = createCrc( message );
     stream << hexToString( crc, 4 );
 
@@ -115,7 +118,7 @@ namespace ldoem_
 
     string command = "";
     stringstream stream;
-    uint16 crc = 0;
+    uint16 crc = item;
 
     // parse command
     stream << header();
@@ -125,6 +128,7 @@ namespace ldoem_
     stream << hexToString( port_value_, 4 );
     message = stream.str();
     // calculate crc
+    crc = 0;
     crc = createCrc( message );
     stream << hexToString( crc, 4 );
 
@@ -144,7 +148,7 @@ namespace ldoem_
 
     string command = "";
     stringstream stream;
-    uint16 crc = 0;
+    uint16 crc = item;
 
     // parse command
     stream << header();
@@ -155,6 +159,7 @@ namespace ldoem_
 
     message = stream.str();
     // calculate crc
+    crc = 0;
     crc = createCrc( message );
     stream << hexToString( crc, 4 );
 
@@ -174,7 +179,7 @@ namespace ldoem_
 
     string command = "";
     stringstream stream;
-    uint16 crc = 0;
+    uint16 crc = item;
 
     // parse command
     stream << header();
@@ -185,6 +190,7 @@ namespace ldoem_
 
     message = stream.str();
     // calculate crc
+    crc = 0;
     crc = createCrc( message );
     stream << hexToString( crc, 4 );
 
@@ -204,7 +210,7 @@ namespace ldoem_
 
     string command = "";
     stringstream stream;
-    uint16 crc = 0;
+    uint16 crc = item;
 
     // parse command
     stream << header();
@@ -215,6 +221,7 @@ namespace ldoem_
 
     message = stream.str();
     // calculate crc
+    crc = 0;
     crc = createCrc( message );
     stream << hexToString( crc, 4 );
 
@@ -234,7 +241,7 @@ namespace ldoem_
 
     string command = "";
     stringstream stream;
-    uint16 crc = 0;
+    uint16 crc = item;
 
     // parse command
     stream << header();
@@ -244,6 +251,7 @@ namespace ldoem_
 
     message = stream.str();
     // calculate crc
+    crc = 0;
     crc = createCrc( message );
     stream << hexToString( crc, 4 );
 
@@ -263,7 +271,7 @@ namespace ldoem_
 
     string command = "";
     stringstream stream;
-    uint16 crc = 0;
+    uint16 crc = item;
 
     // parse command
     stream << header();
@@ -278,6 +286,7 @@ namespace ldoem_
 
     message = stream.str();
     // calculate crc
+    crc = 0;
     crc = createCrc( message );
     stream << hexToString( crc, 4 );
 
@@ -297,7 +306,7 @@ namespace ldoem_
 
     string command = "";
     stringstream stream;
-    uint16 crc = 0;
+    uint16 crc = item;
 
     // parse command
     stream << header();
@@ -311,6 +320,7 @@ namespace ldoem_
 
     message = stream.str();
     // calculate crc
+    crc = 0;
     crc = createCrc( message );
     stream << hexToString( crc, 4 );
 
@@ -330,7 +340,7 @@ namespace ldoem_
 
     string command = "";
     stringstream stream;
-    uint16 crc = 0;
+    uint16 crc = item;
 
     // parse command
     stream << header();
@@ -341,6 +351,7 @@ namespace ldoem_
 
     message = stream.str();
     // calculate crc
+    crc = 0;
     crc = createCrc( message );
     stream << hexToString( crc, 4 );
 
@@ -359,7 +370,7 @@ namespace ldoem_
 
     string command = "";
     stringstream stream;
-    uint16 crc = 0;
+    uint16 crc = item;
 
     // parse command
     stream << header();
@@ -371,6 +382,7 @@ namespace ldoem_
 
     message = stream.str();
     // calculate crc
+    crc = 0;
     crc = createCrc( message );
     stream << hexToString( crc, 4 );
 
@@ -389,7 +401,7 @@ namespace ldoem_
 
     string command = "";
     stringstream stream;
-    uint16 crc = 0;
+    uint16 crc = item;
 
     // parse command
     stream << header();
@@ -400,6 +412,7 @@ namespace ldoem_
 
     message = stream.str();
     // calculate crc
+    crc = 0;
     crc = createCrc( message );
     stream << hexToString( crc, 4 );
 
@@ -419,7 +432,7 @@ namespace ldoem_
 
     string command = "";
     stringstream stream;
-    uint16 crc = 0;
+    uint16 crc = item;
 
     // parse command
     stream << header();
@@ -430,6 +443,7 @@ namespace ldoem_
 
     message = stream.str();
     // calculate crc
+    crc = 0;
     crc = createCrc( message );
     stream << hexToString( crc, 4 );
 
@@ -449,7 +463,7 @@ namespace ldoem_
 
     string command = "";
     stringstream stream;
-    uint16 crc = 0;
+    uint16 crc = item;
 
     // parse command
     stream << header();
@@ -460,6 +474,7 @@ namespace ldoem_
 
     message = stream.str();
     // calculate crc
+    crc = 0;
     crc = createCrc( message );
     stream << hexToString( crc, 4 );
 
@@ -478,7 +493,7 @@ namespace ldoem_
 
     string command = "";
     stringstream stream;
-    uint16 crc = 0;
+    uint16 crc = item;
 
     // parse command
     stream << header();
@@ -489,6 +504,7 @@ namespace ldoem_
 
     message = stream.str();
     // calculate crc
+    crc = 0;
     crc = createCrc( message );
     stream << hexToString( crc, 4 );
 
@@ -508,7 +524,7 @@ namespace ldoem_
 
     string command = "";
     stringstream stream;
-    uint16 crc = 0;
+    uint16 crc = item;
 
     // parse command
     stream << header();
@@ -519,6 +535,7 @@ namespace ldoem_
 
     message = stream.str();
     // calculate crc
+    crc = 0;
     crc = createCrc( message );
     stream << hexToString( crc, 4 );
 

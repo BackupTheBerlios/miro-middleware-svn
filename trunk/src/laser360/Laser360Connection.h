@@ -63,6 +63,12 @@ namespace Miro
 
   protected:
 
+
+    //---------------------------------------------------------------------------
+    /// Reference to the parameter set. Must not be constant because
+    /// the SickLaserTask might need to update some fields in the LaserDescription
+    ::Laser360::Parameters & parameters_;
+
     //---------------------------------------------------------------------------
     /// The laserTask is a group of threads (or only one) that handles
     /// complete pakets received by the laser. It does not have to bother
@@ -70,10 +76,6 @@ namespace Miro
     /// hardware and protocol handling from the actual work to do.
     Laser360Task * laser360Task_;
 
-    //---------------------------------------------------------------------------
-    /// Reference to the parameter set. Must not be constant because
-    /// the SickLaserTask might need to update some fields in the LaserDescription
-    ::Laser360::Parameters & parameters_;
 
   };
 

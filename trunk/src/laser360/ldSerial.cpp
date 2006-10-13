@@ -30,7 +30,7 @@ namespace ldoem_
 
   //---------------------------------------------------------------------------
   // default empty string for the Serial class
-  const char * const Serial::emptyString_ = "";
+  const char   * const Serial::emptyString_ = "";
 
   // --------------------------------------------------
   // Serial::Parameters

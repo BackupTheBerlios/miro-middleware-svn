@@ -65,10 +65,10 @@ namespace ldoem_
     /// @param complete if true (the default) the enclosing begin/end will
     /// be also written, otherwise only the data block will be written.
     /// @return true if write was successful
-    virtual bool write( InOutHandler & handler, const bool complete = true ) const
-    {
-      return true;
-    };
+    virtual bool write( InOutHandler & handler, const bool complete = true ) const = 0;
+   // {
+     //  return true;
+    //};
 
     //---------------------------------------------------------------------------
     /// read the parameters from the given ioHandler
@@ -76,10 +76,11 @@ namespace ldoem_
     /// @param complete if true (the default) the enclosing begin/end will
     ///  be also written, otherwise only the data block will be written.
     /// @return true if write was successful
-    virtual bool read( InOutHandler & handler, const bool complete = true )
-    {
-      return true;
-    };
+    virtual bool read( InOutHandler & handler, const bool complete = true ) = 0;
+  //  {
+    //   return true;
+    //};
+
   };
 
   //---------------------------------------------------------------------------

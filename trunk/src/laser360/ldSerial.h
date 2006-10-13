@@ -337,16 +337,6 @@ namespace ldoem_
     }
 
 
-  protected:
-
-    //---------------------------------------------------------------------------
-    /// the parameters in use
-    Parameters param_;
-
-    //---------------------------------------------------------------------------
-    /// xml parameter handle
-    const ::Laser360::Parameters & parameters_;
-
   private:
 
     //---------------------------------------------------------------------------
@@ -364,11 +354,22 @@ namespace ldoem_
 
     //---------------------------------------------------------------------------
     /// the empty string returned if the statusString is empty
-    static const char * const emptyString_;
+    static const char * const emptyString_ ;
 
     //---------------------------------------------------------------------------
     /// the status string written with setStatusString
     mutable char * statusString_;
+
+  protected:
+
+    //---------------------------------------------------------------------------
+    /// the parameters in use
+    Parameters param_;
+
+    //---------------------------------------------------------------------------
+    /// xml parameter handle
+    const ::Laser360::Parameters & parameters_;
+
   };
 }
 #endif //_LD_SERIAL_H_

@@ -70,11 +70,11 @@ namespace Miro
 
     StructuredPushSupplier * structuredPushSupplier_;
 
-    Laser360Connection connection_;
-
     Laser360Impl pLaser_;
 
     Miro::Laser_var LaserObject_;
+
+    Laser360Connection connection_;
 
   };
 };

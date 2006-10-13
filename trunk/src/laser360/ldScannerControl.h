@@ -85,13 +85,14 @@ namespace ldoem_
     //---------------------------------------------------------------------------
 
     //---------------------------------------------------------------------------
-    /// xml parameter handle
-    const ::Laser360::Parameters & parameters_;
-
-    //---------------------------------------------------------------------------
     /// reference to the LaserImpl class, for signaling data via condition variables
     /// LaserConnection & laser_;
     Miro::RangeSensorImpl & laserI_;
+
+    //---------------------------------------------------------------------------
+    /// xml parameter handle
+    const ::Laser360::Parameters & parameters_;
+
 
   private:
 

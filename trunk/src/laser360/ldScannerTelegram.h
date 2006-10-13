@@ -141,6 +141,7 @@ namespace ldoem_
     /// set telegramm message items for scanner commands
     void setTgmItem( vectorItem & ident_item )
     {
+      vectorItem initial = ident_item;
     }
 
     //---------------------------------------------------------------------------
@@ -193,6 +194,7 @@ namespace ldoem_
     /// set telegramm message items for scanner commands
     void setTgmItem( vectorItem & ident_item )
     {
+      vectorItem initial = ident_item;
     }
 
     //---------------------------------------------------------------------------
@@ -431,6 +433,7 @@ namespace ldoem_
     /// set telegramm message items for scanner commands
     void setTgmItem( vectorItem & ident_item )
     {
+      vectorItem initial = ident_item;
     }
 
     //---------------------------------------------------------------------------
@@ -627,6 +630,7 @@ namespace ldoem_
     /// set telegramm message items for scanner commands
     void setTgmItem( vectorItem & ident_item )
     {
+      vectorItem initial = ident_item;
     }
 
     //---------------------------------------------------------------------------
@@ -780,6 +784,7 @@ namespace ldoem_
     /// set telegramm message items for scanner commands
     void setTgmItem( vectorItem & ident_item )
     {
+      vectorItem initial = ident_item;
     }
 
     //---------------------------------------------------------------------------
@@ -918,6 +923,7 @@ namespace ldoem_
     /// set telegramm message items for scanner commands
     void setTgmItem( vectorItem & ident_item )
     {
+      vectorItem initial = ident_item;
     }
 
     //---------------------------------------------------------------------------
@@ -1040,6 +1046,7 @@ namespace ldoem_
     /// set telegramm message items for scanner commands
     void setTgmItem( vectorItem & ident_item )
     {
+      vectorItem initial = ident_item;
     }
 
     //---------------------------------------------------------------------------
@@ -1165,6 +1172,7 @@ namespace ldoem_
     /// set telegramm message items for scanner commands
     void setTgmItem( vectorItem & ident_item )
     {
+      vectorItem initial = ident_item;
     }
 
     //---------------------------------------------------------------------------

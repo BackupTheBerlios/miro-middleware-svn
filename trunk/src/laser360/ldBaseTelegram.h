@@ -139,6 +139,7 @@ namespace ldoem_
         ( * count ) = static_cast < uint8 > ( value );
         value >>= 8;
       }
+      return value;
     }
 
     //---------------------------------------------------------------------------
