@@ -14,9 +14,9 @@
 #include "miro/TimeHelper.h"
 #include "miro/Server.h"
 
-#include <playerclient.h>
-
 namespace Miro {
+
+  using namespace PlayerCc;
 
   using std::string;
   using std::cout;
@@ -70,17 +70,34 @@ namespace Miro {
     //  does not run in such a case; further corrupt data would be
     //  unimportant (in fact, it would not be even read)
 
-    playerPosition=new PositionProxy(playerClient,playerId,'a');
 
-    if (!playerPosition || playerPosition->GetAccess() != 'a') {
+    playerPosition=new Position2dProxy(playerClient,playerId);
+
+    //MAY NOT BE NECESSARY HAVE TO TEST
+#if 1 == 2
+    if (!playerPosition) {
       throw (Miro::Exception("Could not get reference to Player Position"));
     }
 
-    playerSonar=new SonarProxy(playerClient,playerId,'r');
-    playerLaser=new LaserProxy(playerClient,playerId,'r');
-    playerPower=new PowerProxy(playerClient,playerId,'r');
-    playerPTZ=new PtzProxy(playerClient,playerId,'a');
+    try
+      {
+	playerPosition->Subscribe(playerId);
+      } catch(PlayerCc::PlayerError & e) {
+      throw (Miro::Exception("Could not get reference to Player Position"));
+    }
+#endif 
 
+    playerSonar=new SonarProxy(playerClient,playerId);
+    playerLaser=new LaserProxy(playerClient,playerId);
+    playerPower=new PowerProxy(playerClient,playerId);
+
+    MIRO_DBG_OSTR(MIRO, LL_DEBUG, "Sean Got here\n");
+
+    //playerPTZ=new PtzProxy(playerClient,playerId);
+
+    MIRO_DBG_OSTR(MIRO, LL_DEBUG, "Sean Got here 2\n");
+
+#if 1 == 2
     if (!playerLaser || playerLaser->GetAccess() != 'r') {
       cerr << "WARNING: Could not get reference to Player Laser. No Laser available" << endl;
       delete playerLaser;
@@ -101,6 +118,7 @@ namespace Miro {
       delete playerPTZ;
       playerPTZ=NULL;
     }
+#endif 
 
     status.position.point.x=0;
     status.position.point.y=0;
@@ -120,11 +138,14 @@ namespace Miro {
   }
 
   int PlayerReactorTask::svc() throw (CORBA::Exception) {
-
+    
+    double tmpTime;
     assert(pMotion_!=NULL);
 
     //Do an initial read, to allow initialization with real values
-    if (playerClient->Read()) {
+    try {
+      playerClient->Read();
+    } catch (PlayerCc::PlayerError & e) {
       throw Miro::EDevIO("Error in connection to Player Simulator");
     }
 
@@ -143,116 +164,159 @@ namespace Miro {
       pCameraControl_->setPlayerConnection(playerConnection);
 
     while (!done) {
-    
-      if (playerClient->Read()) {
+   
+
+      try {
+        playerClient->Read();
+      } catch (PlayerCc::PlayerError & e) {
 	throw Miro::EDevIO("Error in connection to Player Simulator");
       }
-      
-      if (playerClient->fresh) {
-	playerClient->fresh=false;
 
-	TimeIDL timestamp;
-	timestamp.sec=playerClient->timestamp.tv_sec;
-	timestamp.usec=playerClient->timestamp.tv_usec;
+      //DON"T THINK WE NEED THE FRESH IT WILL ONLY RETURN FROM READ WHEN NEW DATA IS AVAILIABLE SEAN
+      //if (clientProxy->IsFresh()) {
+      //	clientProxy->NotFresh();
 
-	if ((pLaser_!=NULL) && (playerLaser!=NULL)) {
-	  int laserReadings=playerLaser->RangeCount();
 
-	  RangeBunchEventIDL * pLaserEvent = new RangeBunchEventIDL();
-	  pLaserEvent->sensor.length(laserReadings);
-	
-	  // iterate through new data
+      //*******HOW DO WE DEAL WITH TIME SEAN
+      TimeIDL timestamp;
+      ///timestamp.sec=playerClient->timestamp.tv_sec;
+      //timestamp.usec=playerClient->timestamp.tv_usec;
+      //
 
-	  for (int i = laserReadings - 1; i >= 0; --i) {
-	    int group = 0;
-	    unsigned int index = i;
+      if ((pLaser_!=NULL) && (playerLaser!=NULL) && (playerLaser->IsFresh())) {
+	playerLaser->NotFresh();
+
+	pLaser_->setScanDescription(params_->laserDescription);
+
+	int laserReadings=playerLaser->GetCount();
+
+	RangeGroupEventIDL * pLaserEvent = new RangeGroupEventIDL();
+	pLaserEvent->group = 0;
+	pLaserEvent->range.length(laserReadings);
+
+	// iterate through new data
+
+// 	cout << "Laser Readings = " << laserReadings << endl;
+
+	for (int i = laserReadings - 1; i >= 0; --i) {
+
+	  int group = 0;
+	  unsigned int index = i;
 	    
-	    if (index >= params_->laserDescription.group[group].sensor.length()) {
-	      ++group;
-	      index -= params_->laserDescription.group[group-1].sensor.length();
-	    }
-	    
-	    pLaserEvent->sensor[i].group = group;
-	    pLaserEvent->sensor[i].index = index;
-	    pLaserEvent->sensor[i].range = 
-	      long(playerLaser->scan[i][0]*1000); //Player uses m not mm
-
-	    //check the range
-	    if (pLaserEvent->sensor[i].range>params_->laserDescription.group[group].description.maxRange)
-	      // should return HORIZON_RANGE, but it is ugly ;-)
-	      //	      pLaserEvent->sensor[i].range=Miro::RangeSensor::HORIZON_RANGE;
-	    pLaserEvent->sensor[i].range=params_->laserDescription.group[group].description.maxRange;
-	    else if ((pLaserEvent->sensor[i].range < params_->laserDescription.group[group].description.minRange) &&
-		     (pLaserEvent->sensor[i].range>=0))
-	    pLaserEvent->sensor[i].range=params_->laserDescription.group[group].description.minRange;
+	  if (index >= params_->laserDescription.group[group].sensor.length()) {
+	    ++group;
+	    index -= params_->laserDescription.group[group-1].sensor.length();
 	  }
 
-	  pLaserEvent->time=timestamp;
-	  pLaser_->integrateData(pLaserEvent);
+	  pLaserEvent->range[i] = 
+	    long(playerLaser->GetRange(i)*1000); //Player uses m not mm
+
+	  if (pLaserEvent->range[i] > params_->laserDescription.group[group].description.maxRange)
+	    // should return HORIZON_RANGE, but it is ugly ;-)
+	    //	      pLaserEvent->sensor[i].range=Miro::RangeSensor::HORIZON_RANGE;
+	    pLaserEvent->range[i] =params_->laserDescription.group[group].description.maxRange;
+	  else if ((pLaserEvent->range[i] < params_->laserDescription.group[group].description.minRange) &&
+		   (pLaserEvent->range[i] >=0))
+	    pLaserEvent->range[i] =params_->laserDescription.group[group].description.minRange;
+	}
+
+	tmpTime = playerLaser->GetDataTime();
+	
+	timestamp.sec = floor(tmpTime);
+	timestamp.usec =  floor((tmpTime - timestamp.sec) * 1000000);
+	pLaserEvent->time=timestamp;
+
+	pLaser_->integrateData(pLaserEvent);
 	  
-	} // Laser end
-	if ((pSonar_!=NULL) && (playerSonar!=NULL)) {
-	  RangeBunchEventIDL * pSonarEvent = new RangeBunchEventIDL();
+      } // Laser end
 
-	  int sonarReadings=playerSonar->range_count;
-	  pSonarEvent->sensor.length(sonarReadings);
+      if ((pSonar_!=NULL) && (playerSonar!=NULL) && (playerSonar->IsFresh())) {
+	playerSonar->NotFresh();
 
-	  // iterate through new data
+	RangeBunchEventIDL * pSonarEvent = new RangeBunchEventIDL();
+
+	int sonarReadings=playerSonar->GetCount();
+	pSonarEvent->sensor.length(sonarReadings);
+
+	// iterate through new data
 	  
-	  for (int i = sonarReadings - 1; i >= 0; --i) {
-	    int group = 0;
-	    int index = i;
+	for (int i = sonarReadings - 1; i >= 0; --i) {
+	  int group = 0;
+	  int index = i;
 	    
-	    SensorPositionIDL scanDescription=params_->sonarDescription.group[group].sensor[index];
+	  SensorPositionIDL scanDescription=params_->sonarDescription.group[group].sensor[index];
 	    
-	    pSonarEvent->sensor[i].group = group;
-	    pSonarEvent->sensor[i].index = index;
-	    pSonarEvent->sensor[i].range = long(playerSonar->ranges[i]*1000);
+	  pSonarEvent->sensor[i].group = group;
+	  pSonarEvent->sensor[i].index = index;
+	  pSonarEvent->sensor[i].range = long(playerSonar->GetScan(i)*1000);
 
-	    //check the range
-	    if (pSonarEvent->sensor[i].range>params_->sonarDescription.group[group].description.maxRange)
-	      //Should return HORIZON_RANGE, but it is ugly ;-)
-	      //	      pSonarEvent->sensor[i].range=Miro::RangeSensor::HORIZON_RANGE;
+	  //check the range
+	  if (pSonarEvent->sensor[i].range>params_->sonarDescription.group[group].description.maxRange)
+	    //Should return HORIZON_RANGE, but it is ugly ;-)
+	    //	      pSonarEvent->sensor[i].range=Miro::RangeSensor::HORIZON_RANGE;
 	    pSonarEvent->sensor[i].range=params_->sonarDescription.group[group].description.maxRange;
 
-	    else if ((pSonarEvent->sensor[i].range < params_->sonarDescription.group[group].description.minRange) &&
-		     (pSonarEvent->sensor[i].range>=0))
-	      pSonarEvent->sensor[i].range=params_->sonarDescription.group[group].description.minRange;
-	  }
-	  pSonarEvent->time=timestamp;
-	  pSonar_->integrateData(pSonarEvent);
-	  
+	  else if ((pSonarEvent->sensor[i].range < params_->sonarDescription.group[group].description.minRange) &&
+		   (pSonarEvent->sensor[i].range>=0))
+	    pSonarEvent->sensor[i].range=params_->sonarDescription.group[group].description.minRange;
 	}
+
+	tmpTime = playerSonar->GetDataTime();
 	
-	if ((pOdometry_!=NULL) && (playerPosition!=NULL)) {
+	timestamp.sec = floor(tmpTime);
+	timestamp.usec =  floor((tmpTime - timestamp.sec) * 1000000);
+	pSonarEvent->time=timestamp;
 
-	  status.position.point.x=long(playerPosition->Xpos()*1000); //m to mm
-	  status.position.point.y=long(playerPosition->Ypos()*1000); //m to mm
-	  status.position.heading=playerPosition->Theta();
+	pSonar_->integrateData(pSonarEvent);
+	  
+      } // sonar end
+	
+      if ((pOdometry_!=NULL) && (playerPosition!=NULL) && (playerPosition->IsFresh())) {
+	
+	playerPosition->NotFresh();
 
-	  //assure that Theta is between -PI and PI
-	  while (status.position.heading>M_PI)
-	    status.position.heading -= 2*M_PI;
-	  while (status.position.heading<-M_PI)
-	    status.position.heading += 2*M_PI;
+/*	cout << 
+	  "player x " << playerPosition->GetXPos() << 
+	  "player y " << playerPosition->GetYPos() <<
+	  "player heading " << playerPosition->GetYaw() << endl;
+*/
+	status.position.point.x=long(playerPosition->GetXPos()*1000); //m to mm
+	status.position.point.y=long(playerPosition->GetYPos()*1000); //m to mm
+	status.position.heading=playerPosition->GetYaw();
 
-	  status.velocity.translation=long(playerPosition->Speed()*1000); 
-	                                  // m/s to mm/s
-	  status.velocity.rotation=playerPosition->TurnRate();
+	//assure that Theta is between -PI and PI
+	while (status.position.heading>M_PI)
+	  status.position.heading -= 2*M_PI;
+	while (status.position.heading<-M_PI)
+	  status.position.heading += 2*M_PI;
 
-	  status.time=timestamp;
+	
+	// this needs to be tested SEAN
+	status.velocity.translation=long(1000*sqrt(playerPosition->GetXSpeed()*playerPosition->GetXSpeed()+playerPosition->GetYSpeed()*playerPosition->GetYSpeed())); 
+	// m/s to mm/s
 
-	  pOdometry_->integrateData(status);
+	// is this right???? SEAN
+	status.velocity.rotation=playerPosition->GetYawSpeed();
 
-	  if (pStall_!=NULL) {
-	    pStall_->integrateData(playerPosition->Stall());
-	  }
+	tmpTime = playerLaser->GetDataTime();
+	
+	timestamp.sec = floor(tmpTime);
+	timestamp.usec =  floor((tmpTime - timestamp.sec) * 1000000);
+	status.time=timestamp;
 
-	} // odometry end
-	if ((pBattery_!=NULL) && (playerPower != NULL)) {
-	  pBattery_->integrateData(playerPower->Charge());
-	} // battery end
-      }
+	pOdometry_->integrateData(status);
+
+	if (pStall_!=NULL) {
+	  pStall_->integrateData(playerPosition->GetStall());
+	}
+
+      } // odometry end
+
+      if ((pBattery_!=NULL) && (playerPower != NULL) && (playerPower->IsFresh())) {
+	playerPower->NotFresh();
+	pBattery_->integrateData(playerPower->GetCharge());
+      } // battery end
+	//} // if fresh end SEAN
     }
 
     return 1;

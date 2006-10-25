@@ -14,12 +14,14 @@
 
 #include "miro/OdometryTracking.h"
 #include "miro/TimeHelper.h"
-
+#include <iostream>
 #undef DEBUG
 
 namespace Miro
 {
   using std::string;
+  using std::cout;
+  using std::endl;
 
   /***************************************************************************
    *
@@ -64,6 +66,8 @@ namespace Miro
     //    if (condition_.wait(&timeout) < 0) 
     //      throw Miro::ETimeOut("LaserImpl::getWaitScan");
 
+//     cout << "I'm Here" << endl;
+
     protectedGetScan(scan);
     return scan;
   }
@@ -82,9 +86,21 @@ namespace Miro
       scan.position = odoTracking_->getPosition(timeStamp).position;
     }
 
+//     cout << "scan_.range[0].length() = " << scan_.range[0].length() << endl;
+
     // copy the scan data
     for (long i = std::max(360, (int)scan_.range[0].length() - 1); i >= 0; --i){
       scan.value[i] = scan_.range[0][i];
     }
   }
+
+  void 
+  LaserImpl::setScanDescription(ScanDescriptionIDL _description)
+  {
+    cout << "FIXME set Scan Description" << endl;
+
+
+  }
+
+
 };

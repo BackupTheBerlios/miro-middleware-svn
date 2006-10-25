@@ -1,6 +1,7 @@
 #ifndef PlayerReactorTask_h
 #define PlayerReactorTask_h
 
+#include "miro/Log.h"
 #include "miro/Task.h"
 #include "idl/PositionC.h"
 #include "idl/VelocityC.h"
@@ -8,15 +9,20 @@
 
 #include <string>
 
+#include <playerc++.h>
+#include <playerclient.h>
+
+using namespace PlayerCc;
+
 //Player forward declarations
-class PlayerClient;
-class SonarProxy;
-class PositionProxy;
-class LaserProxy;
-class PowerProxy;
-class BumperProxy;
-class IRProxy;
-class PtzProxy;
+//class PlayerClient;
+//class SonarProxy;
+//class PositionProxy;
+//class LaserProxy;
+//class PowerProxy;
+//class BumperProxy;
+//class IRProxy;
+//class PtzProxy;
 
 namespace Player {
   class Parameters;
@@ -90,9 +96,9 @@ namespace Miro {
 
     PlayerClient* playerClient;
     SonarProxy* playerSonar;
-    PositionProxy* playerPosition;
+    Position2dProxy* playerPosition;
     LaserProxy* playerLaser;
-    IRProxy* playerInfrared;
+    IrProxy* playerInfrared;
     PowerProxy* playerPower;
     BumperProxy* playerBumper;
     PtzProxy* playerPTZ;

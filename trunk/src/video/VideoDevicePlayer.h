@@ -15,6 +15,13 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.2  2006/10/25 13:07:27  uli
+ * changes from Sean Verret
+ * update the Player interface for player-2.0.2
+ *
+ * Revision 1.1.1.3  2006/08/01 22:08:10  sverret
+ * Latest Code from ULM - August 01 2006
+ *
  * Revision 1.1  2005/02/09 16:29:50  guillem
  * Added support for Player simulated camera. Seems to work...
  *
@@ -73,12 +80,17 @@
 #include <vector>
 #include <string>
 
+#include <playerc++.h>
+#include <playerclient.h>
+
 //Player forward declarations
-class PlayerClient;
-class CameraProxy;
+//class PlayerClient;
+//class CameraProxy;
 
 namespace Video
 {
+  using namespace PlayerCc;
+
   /// Player video device that reads images from disk.
   /**
    * Image or a directory to look for images can be specifed.

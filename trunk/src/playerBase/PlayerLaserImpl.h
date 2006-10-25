@@ -14,6 +14,9 @@
 #include "idl/LaserS.h"
 #include "miro/RangeSensorImpl.h"
 
+#include <playerc++.h>
+#include <playerclient.h>
+
 namespace Miro 
 {
   class OdometryTracking;
@@ -31,6 +34,8 @@ namespace Miro
     LaserImpl(OdometryTracking * _odoTracking,
 		       const Miro::ScanDescriptionIDL& _description,
 		       Miro::StructuredPushSupplier * _supplier = NULL);
+
+    void setScanDescription(ScanDescriptionIDL);
 
     /**
      * Destructor

@@ -18,8 +18,6 @@
 #include "PlayerConnection.h"
 #include "PlayerPanTiltImpl.h"
 
-#include <playerclient.h>
-
 namespace Player
 {
   using Miro::EDevIO;

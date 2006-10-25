@@ -27,8 +27,6 @@
 #include <orbsvcs/Notify/Notify_Default_Collection_Factory.h>
 #include <orbsvcs/Notify/Notify_Default_EMO_Factory.h>
 
-#include <playerclient.h>
-
 #include <ace/Arg_Shifter.h>
 
 #include <iostream>
@@ -43,6 +41,7 @@ using std::cout;
 using std::cerr;
 using std::endl;
 using std::string;
+
 
 PlayerBase::PlayerBase(int argc, char *argv[],
 		       PlayerClient* client, 
@@ -67,7 +66,7 @@ PlayerBase::PlayerBase(int argc, char *argv[],
   //TODO: infrared, not sonar description!
   infrared(Player::Parameters::instance()->sonarDescription, &structuredPushSupplier_),
   laser(new Miro::OdometryTracking(ec_.in(), namingContextName),
-	Laser::Parameters::instance()->laserDescription, 
+	Player::Parameters::instance()->playerLaserDescription, 
     	&structuredPushSupplier_),
   panTilt(Player::Parameters::instance()->panTiltParams,Player::Parameters::instance()->cameraParams.upsideDown),
   cameraControl(Player::Parameters::instance()->cameraParams),
@@ -230,9 +229,13 @@ main(int argc, char *argv[])
     config->getParameters("Miro::RobotParameters", *robotParameters);
     config->setSection("Player");
     config->getParameters("Player::Parameters", *playerParameters);
-    config->setSection("Sick");
-    config->getParameters("Laser::Parameters", *laserParameters);
+    //    config->setSection("Sick");
+    //    config->getParameters("Laser::Parameters", *laserParameters);
     delete config;
+
+    MIRO_DBG_OSTR(MIRO, LL_DEBUG, "Robot parameters:\n" << *robotParameters);
+    MIRO_DBG_OSTR(MIRO, LL_DEBUG, "Player parameters:\n" << *playerParameters);
+    MIRO_DBG_OSTR(MIRO, LL_DEBUG, "SickLaser parameters:\n" << *laserParameters);
 
     MIRO_LOG(LL_NOTICE, "Initialize server daemon.");
 

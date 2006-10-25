@@ -13,8 +13,12 @@
 
 #include "miro/MotionImpl.h"
 #include "idl/MotionS.h"
+#include <playerc++.h>
+#include <playerclient.h>
 
 class PositionProxy;
+
+using namespace PlayerCc;
 
 namespace Miro
 {
@@ -31,14 +35,14 @@ namespace Miro
     //! Initializing constructor.
     PlayerMotionImpl(const MotionParameters& _params);
 
-    void setPlayerPositionProxy(PositionProxy* _playerPosition);
+    void setPlayerPositionProxy(Position2dProxy* _playerPosition);
 
     virtual void limp() throw(EDevIO);
 
     virtual void setVelocity(const VelocityIDL& velocity) throw(EOutOfBounds, EDevIO);
 
   protected:
-    PositionProxy* playerPositionProxy;
+    Position2dProxy* playerPositionProxy;
 
   };
 

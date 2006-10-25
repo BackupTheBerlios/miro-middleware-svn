@@ -11,8 +11,6 @@
 
 #include "PlayerMotionImpl.h"
 
-#include <playerclient.h>
-
 namespace Miro
 {
   /**
@@ -25,13 +23,13 @@ namespace Miro
   {
   }
 
-  void PlayerMotionImpl::setPlayerPositionProxy(PositionProxy* _playerPosition) 
+  void PlayerMotionImpl::setPlayerPositionProxy(Position2dProxy* _playerPosition) 
   {
 
     playerPositionProxy=_playerPosition;
 
     if (playerPositionProxy) {
-      playerPositionProxy->SetMotorState(1);
+      playerPositionProxy->SetMotorEnable(1);
     }
   }
   

@@ -13,7 +13,10 @@
 #ifndef PlayerConnection_h
 #define PlayerConnection_h
 
+#include <playerc++.h>
 #include <playerclient.h>
+
+using namespace PlayerCc;
 
 namespace Player {
 
@@ -32,7 +35,6 @@ namespace Player {
     double getTilt() const;
     double getZoom() const;
 
-
   protected:
     PtzProxy * playerPTZ_;
 
@@ -45,60 +47,67 @@ namespace Player {
   inline PlayerConnection::PlayerConnection(PtzProxy * _playerPTZ) {
     playerPTZ_=_playerPTZ;
     //set default values
-    panTarget_=playerPTZ_->pan;
-    tiltTarget_=playerPTZ_->tilt;
-    zoomTarget_=playerPTZ_->zoom;
+    panTarget_=playerPTZ_->GetPan();
+    tiltTarget_=playerPTZ_->GetTilt();
+    zoomTarget_=playerPTZ_->GetZoom();
   }
-  
+ 
   inline bool PlayerConnection::setPan(double pan) {
-    if (playerPTZ_->SetCam(pan,tiltTarget_,zoomTarget_)==0) {
+    try
+    {
+      playerPTZ_->SetCam(pan,tiltTarget_,zoomTarget_);
       panTarget_=pan;
       return true;
-    } else {
+    } catch(PlayerCc::PlayerError & e) {
       return false;
     }
   }
 
   inline bool PlayerConnection::setTilt(double tilt) {
-    if (playerPTZ_->SetCam(panTarget_,tilt,zoomTarget_)==0) {
+    try
+    {
+      playerPTZ_->SetCam(panTarget_,tilt,zoomTarget_);
       tiltTarget_=tilt;
       return true;
-    } else {
+    } catch(PlayerCc::PlayerError & e) {
       return false;
     }
   }
 
   inline bool PlayerConnection::setPanTilt(double pan, double tilt) {
-    if (playerPTZ_->SetCam(pan,tilt,zoomTarget_)==0) {
+    try
+    {
+      playerPTZ_->SetCam(pan,tilt,zoomTarget_);
       panTarget_=pan;
       tiltTarget_=tilt;
       return true;
-    } else {
+    } catch(PlayerCc::PlayerError & e) {
       return false;
     }
   }
 
   inline bool PlayerConnection::setZoom(double zoom) {
-    if (playerPTZ_->SetCam(panTarget_,tiltTarget_,zoom)==0) {
+    try
+    {
+      playerPTZ_->SetCam(panTarget_,tiltTarget_,zoom);
       zoomTarget_=zoom;
       return true;
-    } else {
+    } catch(PlayerCc::PlayerError & e) {
       return false;
     }
   }
 
   inline double PlayerConnection::getPan() const {
-    return playerPTZ_->pan;
+    return playerPTZ_->GetPan();
   }
 
   inline double PlayerConnection::getTilt() const {
-    return playerPTZ_->tilt;
+    return playerPTZ_->GetTilt();
   }
 
   inline double PlayerConnection::getZoom() const {
-    return playerPTZ_->zoom;
+    return playerPTZ_->GetZoom();
   }
-
 }// namespace Player
 
 #endif //PlayerConnection_h

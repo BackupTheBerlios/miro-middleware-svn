@@ -29,7 +29,10 @@
 #include <orbsvcs/CosNotifyChannelAdminS.h>
 #include <orbsvcs/CosNotifyCommC.h>
 
-class PlayerClient;
+#include <playerc++.h>
+#include <playerclient.h>
+
+using namespace PlayerCc;
 
 class PlayerBase : public Miro::Server, public Miro::Log
 {

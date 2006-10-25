@@ -14,6 +14,13 @@
  * $Revision$
  *
  * $Log$
+ * Revision 1.3  2006/10/25 13:07:27  uli
+ * changes from Sean Verret
+ * update the Player interface for player-2.0.2
+ *
+ * Revision 1.1.1.3  2006/08/01 22:08:10  sverret
+ * Latest Code from ULM - August 01 2006
+ *
  * Revision 1.2  2005/02/11 16:48:04  guillem
  * Allow for an interface
  * Unused code cleanup
@@ -109,8 +116,6 @@
 #include "miro/VideoHelper.h"
 #include "miro/Exception.h"
 
-#include <playerclient.h>
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -118,6 +123,8 @@
 
 namespace Video
 {
+  using namespace PlayerCc;
+
   FILTER_PARAMETERS_FACTORY_IMPL(DevicePlayer);
 
 
@@ -127,7 +134,7 @@ namespace Video
     counter_(0),
     playerClient(NULL),
     playerCamera(NULL)
-  {
+  {std::cout <<"init DevicePlayer"<<std::endl;
     interfaceAllowed_=true;
   }
     
@@ -142,20 +149,22 @@ namespace Video
   {
     ACE_Time_Value now = ACE_OS::gettimeofday();
 
-
-    if (playerClient->Read()) {
+    try {
+      playerClient->Read();
+    } catch (PlayerCc::PlayerError & e) {
       throw Miro::EDevIO("Could not read from Player camera");
     }
-
-    assert(inputFormat_.width==playerCamera->width);
-    assert(inputFormat_.height==playerCamera->height);
-
-    unsigned char * outBuffer = outputBuffer();
-    unsigned char * inBuffer = playerCamera->image;
+    assert(inputFormat_.width==playerCamera->GetWidth());
+    assert(inputFormat_.height==playerCamera->GetHeight());
     
+    unsigned char * outBuffer = outputBuffer();
+    unsigned char tempBuffer[playerCamera->GetImageSize()];
+    unsigned char * inBuffer;
+    inBuffer = tempBuffer;
+    playerCamera->GetImage(inBuffer);
     //do work
     unsigned long int i;
-    for (i=0; i<playerCamera->imageSize; i++) {
+    for (i=0; i<playerCamera->GetImageSize(); i++) {
       *outBuffer=*inBuffer++;
       
       outBuffer++;
@@ -163,7 +172,6 @@ namespace Video
 
     bufferManager_->bufferTimeStamp(outputBufferIndex_, 
 				      ACE_OS::gettimeofday());
-
      }
 
   //--------------------------------------------------------------------
@@ -188,11 +196,12 @@ namespace Video
       playerPort = PLAYER_PORTNUM;
 
     playerClient=new PlayerClient(params_->playerHost.c_str(), playerPort);
-    playerCamera = new CameraProxy(playerClient,params_->playerDevice,'r');
+    playerCamera = new CameraProxy(playerClient,params_->playerDevice);
 
+#if 1==2
     if (playerCamera->GetAccess() != 'r') {
       throw Miro::Exception("Could not connect to Player");
     }
-
+#endif
   }
 }
