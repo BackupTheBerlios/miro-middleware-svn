@@ -41,7 +41,7 @@ namespace Miro
     bool logEvent(ACE_Time_Value const& _stamp,
 		  CosNotification::StructuredEvent const& _event);
     //! Report the protocol version.
-    unsigned short version() const;
+    ACE_UINT16 version() const;
 
   protected:
     //--------------------------------------------------------------------------
@@ -87,7 +87,7 @@ namespace Miro
   };
 
   inline
-  unsigned short
+  ACE_UINT16
   LogWriter::version() const {
     return LogHeader::PROTOCOL_VERSION;
   }

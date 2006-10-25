@@ -13,7 +13,7 @@
 
 #include "Exception.h"
 
-#include <ace/CDR_Stream.h>
+#include <ace/Basic_Types.h>
 
 namespace Miro
 {
@@ -32,9 +32,9 @@ namespace Miro
     // public constants
     //--------------------------------------------------------------------------
 
-    static unsigned long const PROTOCOL_ID = 0x474f4c4d;      // "MLOG";
-    static unsigned short const PROTOCOL_VERSION = 0x0003;
-    static unsigned short const MAX_VERSION = 0x0003;
+    static ACE_UINT32 const PROTOCOL_ID = 0x474f4c4d;      // "MLOG";
+    static ACE_UINT16 const PROTOCOL_VERSION = 0x0003;
+    static ACE_UINT16 const MAX_VERSION = 0x0003;
 
     //--------------------------------------------------------------------------
     // public methods
@@ -47,16 +47,9 @@ namespace Miro
     // public data
     //--------------------------------------------------------------------------
 
-    unsigned long id;
-    unsigned short version;
-    unsigned short byteOrder;
+    ACE_UINT32 id;
+    ACE_UINT16 version;
+    ACE_UINT16 byteOrder;
   };
-
-  inline
-  LogHeader::LogHeader(WRITE) :
-    id(PROTOCOL_ID),
-    version(PROTOCOL_VERSION),
-    byteOrder(ACE_CDR_BYTE_ORDER)
-  {}
 }
 #endif // miro_LogHeader_h

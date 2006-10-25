@@ -44,14 +44,14 @@ namespace Miro
     //--------------------------------------------------------------------------
 
     // get number of types in cdr stream
-    unsigned int numTypes;
+    ACE_UINT32 numTypes;
     _istr.read_ulong(numTypes);
     types_.reserve(numTypes);
 
     MIRO_DBG_OSTR(MIRO, LL_DEBUG, "LogTypeRepository - number of types: " << numTypes);
 
     // read each type from cdr stream
-    for (unsigned int i = 0; i < numTypes; ++i) {
+    for (ACE_UINT32 i = 0; i < numTypes; ++i) {
       
       // read type code from the mmapped file
       CORBA::TypeCode_ptr type;

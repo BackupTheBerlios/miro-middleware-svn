@@ -67,7 +67,7 @@ namespace Miro
     char const * next_;
 
     //! Version number of the log file protocol.
-    unsigned short version_;
+    ACE_UINT16 version_;
     //! Offset of the type code repository in log file (version >= 3).
     ACE_UINT32 tcrOffset_;
     //! Number of events in log (version >= 3).

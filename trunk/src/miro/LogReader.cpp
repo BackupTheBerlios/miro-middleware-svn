@@ -162,7 +162,7 @@ namespace Miro
     if (version() >= 2) {
       // get address of next event
       char const * here = istr_->start()->rd_ptr();
-      unsigned int len;
+      ACE_UINT32 len;
       if (!istr_->read_ulong(len)) {
 	MIRO_DBG(MIRO, LL_DEBUG, "eof h1");
 	eof_ = true;
@@ -210,7 +210,7 @@ namespace Miro
     if (version() >= 2) {
 
       // get type code from repository
-      int id;
+      ACE_INT32 id;
       if (!istr_->read_long(id)) {
 	eof_ = true;
 	return false;

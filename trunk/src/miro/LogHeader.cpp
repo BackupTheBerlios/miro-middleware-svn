@@ -12,11 +12,19 @@
 #include "LogHeader.h"
 #include "Exception.h"
 
+#include <ace/CDR_Stream.h>
+
 #include <string>
 #include <sstream>
 
 namespace Miro
 {
+  LogHeader::LogHeader(WRITE) :
+    id(PROTOCOL_ID),
+    version(PROTOCOL_VERSION),
+    byteOrder(ACE_CDR_BYTE_ORDER)
+  {}
+
   LogHeader::LogHeader(READ) throw (EFileType, EVersion)
   {
     if (id != PROTOCOL_ID) {

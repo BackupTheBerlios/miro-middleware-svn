@@ -64,7 +64,7 @@ namespace Miro
 
     //! Return the type code corresponding to the type id.
     /** NULL if the type id is unknown. */
-    CORBA::TypeCode_ptr typeCode(long _typeID);
+    CORBA::TypeCode_ptr typeCode(ACE_INT32 _typeID);
 
     //! Maximum size of the repository backing storage.
     size_t totalLength() const;
@@ -130,9 +130,9 @@ namespace Miro
 
   inline
   CORBA::TypeCode_ptr
-  LogTypeRepository::typeCode(long _id) {
+  LogTypeRepository::typeCode(ACE_INT32 _id) {
     CORBA::TypeCode_ptr tc =  CORBA::_tc_null;
-    if (0 <= _id && _id < (int)types_.size()) {
+    if (0 <= _id && _id < (ACE_INT32)types_.size()) {
       tc = types_[_id];
     }
     return tc;
