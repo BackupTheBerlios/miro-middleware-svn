@@ -11,3 +11,15 @@ pioneers.cfg is the player configuration file to use with the previous world.
 gazebo.cfg is a player configuration file for a single robot. It provides
  more drivers than the standard player gazebo.cfg file (it adds sonar, power, 
  camera and ptz) 
+
+ For testing run this:
+ 
+ > gazebo $MIRO/examples/pioneers.world
+ 
+ > player $MIRO/examples/gazebo.cfg
+ 
+ > cd $MIRO/bin/
+ > ./PlayerBase -MCF $MIRO/examples/miroPlayer.xml
+ 
+ > ./VideoService -MCF $MIRO/examples/miroPlayer.xml
+ 

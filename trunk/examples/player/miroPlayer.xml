@@ -293,14 +293,14 @@
          <parameter value="DevicePlayer" name="Type" />
 	 <parameter name="Successor" >
 	    <parameter name="Filter" >
-	      <parameter value="Gauss" name="Type" />
-	      <parameter value="Gauss" name="Name" />
+	      <parameter value="FilterCopy" name="Type" />
+	      <parameter value="FilterCopy" name="Name" />
 	    </parameter>
       	  </parameter>
        </parameter>
      </instance>
  
-     <instance type="LVF::Gauss" name="Gauss">
+     <instance type="Filter" name="FilterCopy">
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
 	  <parameter value="video" name="Name" />
