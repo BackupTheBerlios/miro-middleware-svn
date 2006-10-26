@@ -197,7 +197,7 @@ namespace Video
       if (err == -1)
 	throw Miro::CException(errno, "DeviceQuickCam::handleConnect() - VIDIOCGMBUF");
       map_ = (unsigned char*)mmap(0, gb_buffers.size, PROT_READ, MAP_SHARED, ioBuffer_.get_handle(), 0);
-      if ((int)map_ == -1)
+      if ((long)map_ == -1)
 	throw Miro::CException(errno, "DeviceQuickCam::handleConnect() - mmap()");
     }
 
@@ -278,7 +278,7 @@ namespace Video
     delete[] channels;
     channels = NULL;
 
-    if ((int)map_ != -1 && map_ != NULL) {
+    if ((long)map_ != -1 && map_ != NULL) {
       munmap(map_, gb_buffers.size);
       map_ = NULL;
     }

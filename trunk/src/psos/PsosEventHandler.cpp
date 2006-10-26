@@ -223,7 +223,7 @@ namespace Psos
     MIRO_DBG(PIONEER, LL_PRATTLE,"Psos::EventHandler: handle timer event.");
 
     Miro::Guard guard(synchMutex);
-    switch ((const int)arg) {
+    switch ((const long)arg) {
     case SYNCH_TIMER:
       MIRO_DBG_OSTR(PIONEER, LL_DEBUG, "Synch status: " << synch);
       if (synch < 3) {

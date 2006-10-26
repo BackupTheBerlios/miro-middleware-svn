@@ -33,7 +33,7 @@ namespace Sparrow
   int 
   EventHandler::handle_timeout(const ACE_Time_Value &, const void *arg)
   {
-    switch ((const int)arg) {
+    switch ((const long)arg) {
     case BUTTONS_TIMER:
       connection.readDigital();
       break;
