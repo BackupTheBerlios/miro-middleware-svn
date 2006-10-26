@@ -44,21 +44,24 @@ AC_DEFUN([AC_SEARCH_PLAYER_LOCAL],
 	OLD_CFLAGS=$CFLAGS
 	OLD_CPPFLAGS=$CPPFLAGS
 
-	if test "$1" ; then
-		LDFLAGS="$LDFLAGS -L$1/lib -lplayerclient"
-		CPPFLAGS="$CPPFLAGS -I$1/include"
-		CFLAGS="$CFLAGS -I$1/include"
-	else
-		LDFLAGS="$LDFLAGS -lplayerclient"
-	fi
 
-	AC_LANG_PUSH(C++)
-	AC_MSG_CHECKING(for Player)
-	AC_TRY_LINK([
-		#include <player.h>
-	],[
-		;
-	],[
+	OLD_CPPFLAGS=$CPPFLAGS
+  
+  	if test "$1" ; then
+ 		LDFLAGS="$LDFLAGS -L$1/lib -lplayerc++ -L$1/lib -lplayerc"
+ 		CPPFLAGS="$CPPFLAGS -I$1/libplayerc -I$1/libplayerc++ -I$1/"
+ 		CFLAGS="$CFLAGS -I$1/libplayerc -I$1/libplayerc++ -I$1/"
+  	else
+ 		LDFLAGS="$LDFLAGS -lplayerc++ -lplayerc"
+  	fi
+  
+  	AC_LANG_PUSH(C++)
+  	AC_MSG_CHECKING(for Player)
+  	AC_TRY_LINK([
+ 		#include <playerc++.h>
+  	],[
+  		;
+  	],[
 	success=yes
 	],[
 	success=no
@@ -72,15 +75,15 @@ AC_DEFUN([AC_SEARCH_PLAYER_LOCAL],
 
 	if test "x$success" != xyes; then
 		AC_MSG_WARN([Player not (properly) installed. See http://playerstage.sourceforge.net])
-		ac_has_player=no
-	else
-		AC_SUBST(PLAYER_LIBS, "-lplayerclient")
-		if test "$1" ; then
-			AC_SUBST(PLAYER_ROOT, "$1")
-			AC_SUBST(PLAYER_LDFLAGS, "-L$1/lib")
-			AC_SUBST(PLAYER_CPPFLAGS, "-I$1/include")
-			AC_SUBST(PLAYER_CFLAGS, "-I$1/include")
-		fi
-		ac_has_player=yes
-	fi
+  		ac_has_player=no
+  	else
+ 		AC_SUBST(PLAYER_LIBS, "-lplayerc -lplayerc++")
+  		if test "$1" ; then
+  			AC_SUBST(PLAYER_ROOT, "$1")
+  			AC_SUBST(PLAYER_LDFLAGS, "-L$1/lib")
+ 			AC_SUBST(PLAYER_CPPFLAGS, "-I$1/libplayerc -I$1/libplayerc++ -I$1")
+ 			AC_SUBST(PLAYER_CFLAGS, "-I$1/libplayerc -I$1/libplayerc++ -I$1")
+  		fi
+  		ac_has_player=yes
+  	fi
 ])
