@@ -64,6 +64,7 @@ sources2 = \
 	DevEventHandler.cpp \
 	DevConsumer.cpp \
 	TtyConnection.cpp \
+	SockConnection.cpp \
 	LogNotifyConsumer.cpp \
 	LogHeader.cpp \
 	LogTypeRepository.cpp \
