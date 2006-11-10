@@ -39,7 +39,7 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   structuredPushSupplier_(ec_.in(), namingContextName),
 
   odometry(&structuredPushSupplier_),
-  battery(),
+  battery(&structuredPushSupplier_),
 
   // Pioneer board initialization
   pPioneerConsumer(new Pioneer::Consumer(&sonar,

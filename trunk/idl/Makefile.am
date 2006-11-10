@@ -52,6 +52,7 @@ globalsources = \
 	DifferentialMotion.idl \
 	Stall.idl \
 	Battery.idl \
+	BatteryEvent.idl\
 	ScanDescription.idl \
 	RangeEvent.idl \
 	RangeSensor.idl \
