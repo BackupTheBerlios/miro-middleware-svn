@@ -25,17 +25,20 @@
 #include <orbsvcs/Notify/Notify_Default_Collection_Factory.h>
 #include <orbsvcs/Notify/Notify_Default_EMO_Factory.h>
 
+#include <qstring.h>
 #include <qapplication.h>
 
 #include <iostream>
 
 namespace 
 {
+  QString channelName = "EventChannel";
   bool verbose = false;
   bool shared = false;
   bool unified = false;
   bool localizeDebug = false;
 
+  const char eventChannelOpt[] = "-event_channel";
   const char colocatedOpt[] = "-shared_ec";
   const char unifiedOpt[] = "-unified_ec";
   const char verboseOpt[] = "-v";
@@ -58,6 +61,10 @@ main(int argc, char *argv[])
       if (ACE_OS::strcasecmp(current_arg, colocatedOpt) == 0) {
 	arg_shifter.consume_arg();
 	shared = true;
+      } 
+      else if (ACE_OS::strcasecmp(current_arg, eventChannelOpt) == 0) {
+	arg_shifter.consume_arg();
+	channelName = arg_shifter.get_current();
       } 
       else if (ACE_OS::strcasecmp(current_arg, unifiedOpt) == 0) {
 	arg_shifter.consume_arg();
@@ -109,7 +116,7 @@ main(int argc, char *argv[])
     if (verbose)
       std::cout << "Initialize server daemon." << std::endl;
     
-    ChannelManager channelManager(argc, argv, shared, unified);
+    ChannelManager channelManager(argc, argv, shared, unified, channelName);
     //    channelManager.setDebugLoclaize(localizeDebug);
     try {
       QApplication app(argc, argv);     // Create Qt application  

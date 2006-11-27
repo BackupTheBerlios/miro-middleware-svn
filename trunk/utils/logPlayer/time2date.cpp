@@ -17,19 +17,32 @@
 
 #include <string>
 #include <iostream>
+#include <sstream>
 
 int main (int argc, char * argv[]) 
 {
 #if ACE_MAJOR_VERSION > 5 || (ACE_MAJOR_VERSION == 5  && ACE_MINOR_VERSION >= 4)
-  if (argc < 3) {
-    std::cout << "usage: " << argv[0] << " <sec> <usec>\n"; 
+  unsigned int sec = 0;
+  unsigned int usec = 0;
+  ACE_Time_Value t;
+
+  if (argc < 2 || argc >3) {
+    std::cout << "usage: " << argv[0] << " <sec> .|' ' [<usec>]\n"; 
     return 1;
   }
-
-  unsigned int sec = atoi(argv[1]);
-  unsigned int usec = atoi(argv[2]);
-
-  ACE_Time_Value t(sec, usec);
+  
+  if (argc == 2) {
+    std::stringstream s(argv[1]);
+    s >> t;
+  }
+  else if (argc == 3) {
+    
+    sec = atoi(argv[1]);
+    usec = atoi(argv[2]);
+    
+    ACE_Time_Value stamp(sec, usec);
+    t = stamp;
+  } 
 
   std::cout << Miro::timeString(t) << std::endl;
 

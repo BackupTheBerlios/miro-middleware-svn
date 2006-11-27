@@ -17,10 +17,12 @@ using std::cerr;
 using std::endl;
 
 ChannelManager::ChannelManager(int& argc, char * argv[], 
-			       bool _shared, bool _unified) :
+			       bool _shared, bool _unified,
+			       QString const& _channelName) :
   Super(argc, argv),
   shared_(_shared),
-  unified_(_unified)
+  unified_(_unified),
+  channelName_(_channelName)
 {
   if (!shared_) {
     // Channel factory
@@ -47,7 +49,7 @@ ChannelManager::~ChannelManager()
   if (!shared_) {
     CosNaming::Name n;
     n.length(2);
-    n[1].id = CORBA::string_dup("EventChannel");
+    n[1].id = CORBA::string_dup(channelName_.latin1());
 
     ChannelMap::iterator first, last = channel_.end();
     for (first = channel_.begin(); first != last; ++first) {
@@ -69,7 +71,7 @@ ChannelManager::getEventChannel(QString const& _domainName)
     CosNaming::Name n;
     n.length(2);
     n[0].id = CORBA::string_dup(_domainName.latin1());
-    n[1].id = CORBA::string_dup("EventChannel");
+    n[1].id = CORBA::string_dup(channelName_.latin1());
 
     if (shared_) {
       ec = resolveName<CosNotifyChannelAdmin::EventChannel>(n);
@@ -116,7 +118,7 @@ ChannelManager::getEventChannel(QString const& _domainName)
       }
 
       n.length(1);
-      n[0].id = CORBA::string_dup("EventChannel");
+      n[0].id = CORBA::string_dup(channelName_.latin1());
       namingContext->bind(n, ec);
     }
     channel = channel_.insert(std::make_pair(_domainName,
