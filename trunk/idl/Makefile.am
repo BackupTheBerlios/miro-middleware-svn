@@ -101,6 +101,7 @@ b21sources = \
 pioneersources = \
 	PioneerStall.idl \
 	PioneerMotion.idl \
+	Charger.idl\
 	CanonCameraControl.idl \
 	SonyCameraControl.idl \
 	Gripper.idl \
