@@ -64,7 +64,7 @@ namespace Miro
       //! Virtual destructor.
       virtual ~Pattern();
       //! Virtual copy constructor.
-      virtual Pattern * clone() const = NULL;
+      virtual Pattern * clone() const = 0;
       //! Clear the policy.
       virtual void clear();
 
