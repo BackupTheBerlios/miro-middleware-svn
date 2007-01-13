@@ -32,6 +32,7 @@ AM_LDFLAGS = -L$(top_builddir)/lib
 
 AM_LDFLAGS += $(ACE_LDFLAGS) $(TAO_LDFLAGS) $(QT_LDFLAGS)
 AM_LDFLAGS += $(INHERITED_LDFLAGS) -version-info `echo $(VERSION) | sed 's/\./:/g'`
+AM_LDFLAGS += -R$(ACE_ROOT)/lib
 
 
 # header include dirs
