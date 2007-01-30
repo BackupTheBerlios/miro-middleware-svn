@@ -229,7 +229,8 @@ namespace Miro
 
 #if (TAO_MAJOR_VERSION > 1) || \
   ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION > 4) ) || \
-  ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 4) && (TAO_BETA_VERSION > 3) )
+  ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 4) && (TAO_BETA_VERSION > 3) ) || \
+  ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 4) && (TAO_OCI_REV == a) && (TAO_OCI_PATCHLEVEL >= 11) )
 
       try {
 
