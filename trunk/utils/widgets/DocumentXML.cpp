@@ -14,6 +14,7 @@
 #include "DocumentXML.h"
 
 #include "miro/Log.h"
+#include "miro/Exception.h"
 
 #include <qfile.h>
 #include <qtextstream.h>
@@ -65,7 +66,7 @@ DocumentXML::initXML(QString const& _xml)
     QString l, c;
     l.setNum(line);
     c.setNum(column);
-    throw QString("XML parsing error!\n" + error + "in line " + l + ", column " + c);
+    throw Miro::Exception(QString("XML parsing error!\n" + error + "in line " + l + ", column " + c));
   }
 
   setModified(false, true);
@@ -107,10 +108,10 @@ DocumentXML::loadXML(const QString& _name)
 
   QFile f(_name);
   if (!f.open(IO_ReadOnly)) {
-    throw QString("DocumentXML::loadXML: Error: file not found!");
+    throw Miro::Exception(QString("DocumentXML::loadXML: Error: file not found!"));
   }
   if (!document_.setContent(&f)) {
-    throw QString("DocumentXML::loadXML: Error: XML parsing error!");
+    throw Miro::Exception(QString("DocumentXML::loadXML: Error: XML parsing error!"));
   }
   Super::setName(_name);
 }
@@ -121,7 +122,7 @@ DocumentXML::saveXML()
 {
   QFile f(name() );
   if (!f.open(IO_WriteOnly)) {
-    throw QString("DocumentXML::loadXML: Error: file error!");
+    throw Miro::Exception(QString("DocumentXML::loadXML: Error: file error!"));
   }
   QTextStream ts(&f);
   document_.save(ts, 2);

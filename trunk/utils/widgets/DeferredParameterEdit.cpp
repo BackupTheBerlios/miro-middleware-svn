@@ -20,6 +20,7 @@
 #include "utils/widgets/ConfigFile.h"
 
 #include "miro/Log.h"
+#include "miro/Exception.h"
 
 #include <qpushbutton.h>
 #include <qstring.h>
@@ -116,15 +117,14 @@ DeferredParameterEdit::deferredEdit()
       ConfigFile::instance()->description().getType(typeName);
     
     if (parameterType == NULL) {
-      throw QString("Parameter description for " + typeName +
-		    " not found.\nCheck whether the relevant description file is loaded.");
+      throw Miro::Exception(QString("Parameter description for " + typeName +
+				    " not found.\nCheck whether the relevant description file is loaded (3)."));
     }
     
     dialog = new ParameterDialog(*parameterType,
 				 tmpParentNode_, tmpNode, 
 				 NULL, NULL,
 				 NULL, name());
-    
   }
   else if (type_ == VECTOR) {
 
@@ -183,8 +183,6 @@ DeferredParameterEdit::deferredEdit()
     int rc = dialog->exec();
     
     if (rc == QDialog::Accepted) {
-
-      std::cout << "get parameters" << std::endl;
       dialog->setXML();
       if (dialog->modified())
 	modified_ = true;
@@ -263,8 +261,8 @@ DeferredParameterEdit::setXML()
 	ConfigFile::instance()->description().getType(typeName);
       
       if (parameterType == NULL) {
-	throw QString("Parameter description for " + typeName +
-		      " not found.\nCheck whether the relevant description file is loaded.");
+	throw Miro::Exception(QString("Parameter description for " + typeName +
+				      " not found.\nCheck whether the relevant description file is loaded (4)."));
       }
     
       item_ = new CompoundParameter(*parameterType,
