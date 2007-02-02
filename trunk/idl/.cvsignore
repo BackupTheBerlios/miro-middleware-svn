@@ -570,5 +570,21 @@ InertialSensorS.cpp
 InertialSensorS.h
 InertialSensorS.i.h
 InertialSensorS.lo
+BatteryEventC.cpp
+BatteryEventC.h
+BatteryEventC.i.h
+BatteryEventC.lo
+BatteryEventS.cpp
+BatteryEventS.h
+BatteryEventS.i.h
+BatteryEventS.lo
+ChargerC.cpp
+ChargerC.h
+ChargerC.i.h
+ChargerC.lo
+ChargerS.cpp
+ChargerS.h
+ChargerS.i.h
+ChargerS.lo
 
 libmiroIDL.la
