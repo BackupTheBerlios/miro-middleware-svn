@@ -17,6 +17,7 @@
 #include "ConfigFile.h"
 
 #include "miro/Log.h"
+#include "miro/Exception.h"
 #include "params/Generator.h"
 
 #include <qgroupbox.h>
@@ -94,9 +95,9 @@ ParameterListDialog::ParameterListDialog(ParameterList::Type _type,
     nestedType_ = 
       ConfigFile::instance()->description().getType(parameter_.type_);
     if (nestedType_ == NULL) {
-      throw QString("Parameter description for " + 
-		    parameter_.type_ +
-		    " not found.\nCheck whether the relevant description file is loaded.");
+      throw Miro::Exception(QString("Parameter description for " + 
+				    parameter_.type_ +
+				    " not found.\nCheck whether the relevant description file is loaded (1)."));
     }
   }
   
@@ -116,8 +117,8 @@ ParameterListDialog::ParameterListDialog(ParameterList::Type _type,
       if (nestedCompound_ == false) {
 
 	if (!e.hasAttribute(SimpleParameter::XML_ATTRIBUTE_VALUE))
-	  throw QString("Parameter tag without value in (" + 
-			parameter_.type_ + ") " + name());
+	  throw Miro::Exception(QString("Parameter tag without value in (" + 
+					parameter_.type_ + ") " + name()));
 
 	
 	QString value = e.attribute(SimpleParameter::XML_ATTRIBUTE_VALUE);
@@ -298,6 +299,7 @@ ParameterListDialog::add()
   // set parameter value
 
   DialogXML * dialog = NULL;
+
   if (!nestedCompound_) {
     dialog = new SingleParameterDialog(parameter_,
 				       newChild,

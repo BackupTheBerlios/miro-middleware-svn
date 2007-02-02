@@ -19,6 +19,7 @@
 #include "params/Generator.h"
 
 #include "miro/Log.h"
+#include "miro/Exception.h"
 
 #include <qpopupmenu.h>
 #include <qlistview.h>
@@ -111,9 +112,9 @@ ParameterList::init()
   else {
     nestedType = config_->description().getType(nestedTypeName_);
     if (nestedType == NULL) {
-      throw QString("Parameter description for " + 
-		    nestedTypeName_ +
-		    " not found.\nCheck whether the relevant description file is loaded.");
+      throw Miro::Exception(QString("Parameter description for " + 
+				    nestedTypeName_ +
+				    " not found.\nCheck whether the relevant description file is loaded (2)."));
     }
   }
   
@@ -142,8 +143,8 @@ ParameterList::init()
 	nestedParameter.description_ = param_.description_;
 
 	if (!e.hasAttribute(SimpleParameter::XML_ATTRIBUTE_VALUE))
-	  throw QString("Parameter tag without value in (" + 
-			param_.type_ + ") " + name());
+	  throw Miro::Exception(QString("Parameter tag without value in (" + 
+					param_.type_ + ") " + name()));
 
 	
 	QString value = e.attribute(SimpleParameter::XML_ATTRIBUTE_VALUE);
