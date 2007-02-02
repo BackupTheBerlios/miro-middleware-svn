@@ -1,0 +1,7 @@
+.deps
+.libs
+Laser360Service
+Makefile
+Makefile.in
+Parameters.cpp
+Parameters.h
