@@ -20,6 +20,7 @@
 #include "params/Generator.h"
 
 #include "miro/Log.h"
+#include "miro/Exception.h"
 
 #include <qpopupmenu.h>
 #include <qlistview.h>
@@ -62,8 +63,8 @@ CompoundParameter::init()
 	e.tagName() == ParameterXML::XML_TAG) {
       ParameterXML * newParam = NULL;
       if (!e.hasAttribute(ParameterXML::XML_ATTRIBUTE_KEY))
-	throw QString("Parameter tag without name in compund (" + 
-		      type_.fullName() + ") " + name());
+	throw Miro::Exception(QString("Parameter tag without name in compund (" +
+				      type_.fullName() + ") " + name()));
 
       QString p = e.attribute(ParameterXML::XML_ATTRIBUTE_KEY);
       QString pLower = p;
@@ -77,8 +78,8 @@ CompoundParameter::init()
 	}
       }
       if (i == last)
-	throw QString("Parameter " + p + " unknown in compund (" + 
-		      type_.fullName() + ") " + name());
+	throw Miro::Exception(QString("Parameter " + p + " unknown in compund (" + 
+				      type_.fullName() + ") " + name()));
 
       if (SimpleParameter::typeFromName(i->type_) != 
 	  SimpleParameter::NONE) {
@@ -98,9 +99,9 @@ CompoundParameter::init()
 				       
 	}
 	else
-	  throw QString("Type " + i->type_ + " of parameter " + p +
-			" unknown in compund (" + 
-			type_.fullName() + ") " + name());
+	  throw Miro::Exception(QString("Type " + i->type_ + " of parameter " + p +
+					" unknown in compund (" + 
+					type_.fullName() + ") " + name()));
       }
       if (newParam != NULL)
 	newParam->init();
@@ -136,8 +137,8 @@ CompoundParameter::type(QDomNode const& _node, QString const& _attribute)
     ConfigFile::instance()->description().getType(typeName);
   
   if (parameterType == NULL) {
-    throw QString("Parameter description for " + typeName +
-		  " not found.\nCheck whether the relevant description file is loaded.");
+    throw Miro::Exception(QString("Parameter description for " + typeName +
+				  " not found.\nCheck whether the relevant description file is loaded (5)."));
   }
   return *parameterType;
 }
