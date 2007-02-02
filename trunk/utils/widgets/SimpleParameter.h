@@ -41,7 +41,8 @@ public:
     NONE,
     BOOL, CHAR, SHORT, USHORT, INT, UINT, LONG, ULONG, 
     DOUBLE,
-    ANGLE, MIRO_ANGLE, STRING, ACE_TIME_VALUE, ACE_INET_ADDR
+    ANGLE, MIRO_ANGLE, STRING, ACE_TIME_VALUE, ACE_INET_ADDR,
+    ENUMERATION, ENUMERATIONMULTIPLE
   };
 
   //----------------------------------------------------------------------------

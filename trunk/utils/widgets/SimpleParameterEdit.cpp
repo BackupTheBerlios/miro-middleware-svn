@@ -24,8 +24,12 @@
 #include <qtooltip.h>
 #include <qlistview.h>
 #include <qcombobox.h>
+#include <qlistbox.h>
 
 #include <climits>
+
+using std::vector;
+using std::string;
 
 SimpleParameterEdit::SimpleParameterEdit(SimpleParameter::Type _type,
 					 Miro::CFG::Parameter const& _parameter,
@@ -40,12 +44,24 @@ SimpleParameterEdit::SimpleParameterEdit(SimpleParameter::Type _type,
 	_parent, _name),
   config_(ConfigFile::instance()),
   type_(_type),
-  lineEdit_( ( parameter_.type_[parameter_.type_.length() - 1] != '&')? 
-	     new QLineEdit(_parent, "line_edit") : NULL),
-  typeBox_( (parameter_.type_[parameter_.type_.length() - 1] == '&')? 
-	    new QComboBox(_parent, "type_box") : NULL)
+  lineEdit_(NULL),
+  typeBox_(NULL),
+  listBox_(NULL),
+  typeBoxModified_(false),
+  listBoxModified_(false)
 {
-  editWidget_ = lineEdit_;
+  if (parameter_.type_ == "Miro::Enumeration" || 
+      parameter_.type_ == "Enumeration") {
+    typeBox_ = new QComboBox(_parent, "type_box");
+    editWidget_ = typeBox_;
+  } else if (parameter_.type_ == "Miro::EnumerationMultiple" || 
+	     parameter_.type_ == "EnumerationMultiple") {
+    listBox_ = new QListBox(_parent, "list_box");
+    editWidget_ = listBox_;
+  } else {
+    lineEdit_ = new QLineEdit(_parent, "line_edit");
+    editWidget_ = lineEdit_;
+  }
 
   MIRO_ASSERT(!parentNode_.isNull());
 
@@ -135,10 +151,69 @@ SimpleParameterEdit::SimpleParameterEdit(SimpleParameter::Type _type,
     // set lineEdit to unedited
     lineEdit_->setEdited(false);
   }
-  // init combo box
   else {
-    //    Miro::CFG::Generator::QStringVector descendands =
-    // config_->description().getDescendants(type_);
+    vector<string> stringvec;
+    switch (_type) {
+
+    case SimpleParameter::ENUMERATION:
+      // init combo box
+      typeBox_->setEditable(FALSE);
+      stringvec = fullDef2StringVector(parameter_.fullDefault_);
+      for (vector<string>::const_iterator i= stringvec.begin(); i!=stringvec.end(); ++i)
+	typeBox_->insertItem(*i);
+
+      // set current value
+      if (!node_.isNull()) {
+	QDomElement e = node_.toElement();
+	if (!e.isNull() && e.hasAttribute("value")) {
+	  typeBox_->setCurrentText(e.attribute("value"));
+	}
+      } else {
+	typeBox_->setCurrentText(parameter_.default_);
+      }
+
+      // connect to function, so we recognize, if value is changed
+      connect(typeBox_, SIGNAL(activated(const QString&)), this, SLOT(typeBoxModified()));
+      break;
+
+    case SimpleParameter::ENUMERATIONMULTIPLE:
+      // init list box
+      listBox_->setSelectionMode(QListBox::Multi);
+      stringvec = fullDef2StringVector(parameter_.fullDefault_);
+      for (vector<string>::const_iterator i= stringvec.begin(); i!=stringvec.end(); ++i)
+	listBox_->insertItem(*i);
+
+      // set current value
+      listBox_->clearSelection();
+      if (!node_.isNull()) {
+	QDomElement e = node_.toElement();
+	if (!e.isNull() && e.hasAttribute("value")) {
+	  QString tmp1 = e.attribute("value");
+	  std::vector<std::string> tmp2 = tokenizer(std::string(tmp1.latin1()));
+	  for (std::vector<std::string>::const_iterator i=tmp2.begin(); i!=tmp2.end(); ++i) {
+	    for (unsigned int j=0; j!=listBox_->count(); ++j) {
+	      if (listBox_->text(j) == QString(i->c_str()))
+		listBox_->setSelected(j, TRUE);
+	    }
+	  }
+	}
+      } else {
+	std::vector<std::string> tmp2 = tokenizer(std::string(parameter_.default_.latin1()));
+	for (std::vector<std::string>::const_iterator i=tmp2.begin(); i!=tmp2.end(); ++i) {
+	  for (unsigned int j=0; j!=listBox_->count(); ++j) {
+	    if (listBox_->text(j) == QString(i->c_str()))
+	      listBox_->setSelected(j, TRUE);
+	  }
+	}
+      }
+
+      // connect to function, so we recognize, if value is changed
+      connect(listBox_, SIGNAL(selectionChanged()), this, SLOT(listBoxModified()));
+      break;
+
+    default:
+      break;
+    }
   }
 }
 
@@ -146,12 +221,14 @@ void
 SimpleParameterEdit::setXML()
 {
   // no edit -> nothing to be done
-  if (!lineEdit_->edited())
+  if (lineEdit_ && !lineEdit_->edited())
     return;
 
   // delete entry if edit field is empty
-  if (!parentNode_.isNull() &&
-      ( lineEdit_->text().isEmpty())) {
+  if (!parentNode_.isNull() && 
+      (( lineEdit_ && lineEdit_->text().isEmpty()) || 
+       (typeBox_ && !typeBoxModified_) || 
+       (listBox_ && !listBoxModified_))) {
     if (!node_.isNull()) {
       // if we know about the associated list view,
       // we delete this one too
@@ -160,10 +237,16 @@ SimpleParameterEdit::setXML()
       }
       parentNode_.removeChild(node_);
     }
-    else
-      lineEdit_->setEdited(false);
+    else {
+      if (lineEdit_)
+	lineEdit_->setEdited(false);
+      else if (typeBox_)
+	typeBoxModified_ = false;
+      else if (listBox_)
+	listBoxModified_ = false;
+    }
     return;
-  }  
+  }
 
   // crete a node if necessary
   if (!parentNode_.isNull() &&
@@ -193,21 +276,111 @@ SimpleParameterEdit::setXML()
   QDomElement e = node_.toElement();
   MIRO_ASSERT(!e.isNull());
 
-  if (e.attribute(XML_ATTRIBUTE_VALUE) != lineEdit_->text()) {
-    e.setAttribute(XML_ATTRIBUTE_VALUE, lineEdit_->text());
-    // if we know about the associated list view,
-    // we set the new value there, too
-    if (item_ != NULL) {
-      item_->listViewItem()->setText(1, e.attribute(XML_ATTRIBUTE_VALUE));
+  if (lineEdit_) {
+    if (e.attribute(XML_ATTRIBUTE_VALUE) != lineEdit_->text()) {
+      e.setAttribute(XML_ATTRIBUTE_VALUE, lineEdit_->text());
+      // if we know about the associated list view,
+      // we set the new value there, too
+      if (item_ != NULL)
+	item_->listViewItem()->setText(1, e.attribute(XML_ATTRIBUTE_VALUE));
+    }
+    else {
+      lineEdit_->setEdited(false);
     }
   }
-  else {
-    lineEdit_->setEdited(false);
+  else if (typeBox_) {
+    if (e.attribute(XML_ATTRIBUTE_VALUE) != typeBox_->currentText()) {
+      e.setAttribute(XML_ATTRIBUTE_VALUE, typeBox_->currentText());
+      // if we know about the associated list view,
+      // we set the new value there, too
+      if (item_ != NULL)
+	item_->listViewItem()->setText(1, e.attribute(XML_ATTRIBUTE_VALUE));
+    }
+    else {
+      typeBoxModified_ = false;
+    }
+  }
+  else if (listBox_) {
+    // create again a space separated string for all the selections
+    QString selectString;
+    int j=0; 
+    for (unsigned int i=0; i<listBox_->count(); ++i)
+      if (listBox_->isSelected(i)) {
+	selectString = listBox_->text(i);
+	j = i;
+	break;
+      }
+    for (unsigned int i=j+1; i<listBox_->count(); ++i)
+      if (listBox_->isSelected(i))
+	selectString += " " + listBox_->text(i);
+    //
+    if (e.attribute(XML_ATTRIBUTE_VALUE) != selectString) {
+      e.setAttribute(XML_ATTRIBUTE_VALUE, selectString);
+      // if we know about the associated list view,
+      // we set the new value there, too
+      if (item_ != NULL)
+	item_->listViewItem()->setText(1, e.attribute(XML_ATTRIBUTE_VALUE));
+    }
+    else {
+      listBoxModified_ = false;
+    }
   }
 }
 
 bool
 SimpleParameterEdit::modified() const 
 {
-  return lineEdit_->edited();
+  if (lineEdit_) 
+    return lineEdit_->edited();
+  else if (typeBox_)
+    return typeBoxModified_;
+  else if (listBox_)
+    return listBoxModified_;
+  return false;
 }
+
+
+vector<string>
+SimpleParameterEdit::fullDef2StringVector(string const& _string)
+{
+  // it's the full default value, so we first have to look for the second part
+  string tmp = _string.substr(_string.find(",")+1);
+  tmp = tmp.substr(tmp.find("\"")+1);
+  tmp = tmp.substr(0, tmp.rfind("\""));
+
+  return tokenizer(tmp);
+}
+
+
+std::vector<std::string>
+SimpleParameterEdit::tokenizer(std::string _values)
+{
+  int pos = 0;
+  std::vector<std::string> values;
+  while (_values.find(" ", pos) < _values.size()) {
+    string tmp = _values.substr(pos, _values.find(" ", pos)-pos);
+    if ((tmp != " ") && (tmp != ""))
+      values.push_back(tmp);
+    pos = _values.find(" ", pos)+1;
+  }
+  string tmp = _values.substr(pos, _values.size());
+  if ((tmp != " ") && (tmp != ""))
+    values.push_back(tmp);
+
+  return values;
+}
+
+
+void
+SimpleParameterEdit::typeBoxModified()
+{
+  typeBoxModified_ = true;
+}
+
+
+void
+SimpleParameterEdit::listBoxModified()
+{
+  listBoxModified_ = true;
+}
+

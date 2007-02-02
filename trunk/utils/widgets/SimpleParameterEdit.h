@@ -14,10 +14,14 @@
 #include "ParameterEdit.h"
 #include "SimpleParameter.h"
 
+#include <string>
+#include <vector>
+
 // forward declarations
 class QString;
 class QLineEdit;
 class QComboBox;
+class QListBox;
 class ConfigFile;
 
 
@@ -48,7 +52,14 @@ public:
   //! Inherited interface.
   virtual bool modified() const;
 
+protected slots:
+  void typeBoxModified();
+  void listBoxModified();
+
 protected:
+
+  std::vector<std::string> fullDef2StringVector(std::string const& _string);
+  std::vector<std::string> tokenizer(std::string _values);
 
   //----------------------------------------------------------------------------
   // puprotected members
@@ -60,6 +71,9 @@ protected:
 
   QLineEdit * lineEdit_;
   QComboBox * typeBox_;
+  QListBox * listBox_;
+  bool typeBoxModified_;
+  bool listBoxModified_;
 };
 
 #endif // SimpleParameterEdit_h

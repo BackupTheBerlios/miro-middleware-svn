@@ -31,23 +31,27 @@ namespace
     SimpleParameter::Type type;
   };
 
-  Pair typeMap [16] = {
-    { "char",           SimpleParameter::CHAR },
-    { "bool",           SimpleParameter::BOOL },
-    { "short",          SimpleParameter::SHORT },
-    { "unsigned short", SimpleParameter::USHORT },
-    { "int",            SimpleParameter::INT },
-    { "unsigned int",   SimpleParameter::UINT },
-    { "long",           SimpleParameter::LONG },
-    { "unsigned long",  SimpleParameter::ULONG },
-    { "double",         SimpleParameter::DOUBLE },
-    { "angle",          SimpleParameter::ANGLE },
-    { "Miro::Angle",    SimpleParameter::MIRO_ANGLE },
-    { "Angle",          SimpleParameter::MIRO_ANGLE },
-    { "std::string",    SimpleParameter::STRING },
-    { "string",         SimpleParameter::STRING },
-    { "ACE_Time_Value", SimpleParameter::ACE_TIME_VALUE },
-    { "ACE_INET_Addr",  SimpleParameter::ACE_INET_ADDR }
+  Pair typeMap [20] = {
+    { "char",              SimpleParameter::CHAR },
+    { "bool",              SimpleParameter::BOOL },
+    { "short",             SimpleParameter::SHORT },
+    { "unsigned short",    SimpleParameter::USHORT },
+    { "int",               SimpleParameter::INT },
+    { "unsigned int",      SimpleParameter::UINT },
+    { "long",              SimpleParameter::LONG },
+    { "unsigned long",     SimpleParameter::ULONG },
+    { "double",            SimpleParameter::DOUBLE },
+    { "angle",             SimpleParameter::ANGLE },
+    { "Miro::Angle",       SimpleParameter::MIRO_ANGLE },
+    { "Angle",             SimpleParameter::MIRO_ANGLE },
+    { "std::string",       SimpleParameter::STRING },
+    { "string",            SimpleParameter::STRING },
+    { "ACE_Time_Value",    SimpleParameter::ACE_TIME_VALUE },
+    { "ACE_INET_Addr",     SimpleParameter::ACE_INET_ADDR },
+    { "Enumeration",       SimpleParameter::ENUMERATION },
+    { "Miro::Enumeration", SimpleParameter::ENUMERATION },
+    { "EnumerationMultiple",       SimpleParameter::ENUMERATIONMULTIPLE },
+    { "Miro::EnumerationMultiple", SimpleParameter::ENUMERATIONMULTIPLE }
   };
 }
 
@@ -56,7 +60,7 @@ QString const SimpleParameter::XML_ATTRIBUTE_VALUE ="value";
 SimpleParameter::Type 
 SimpleParameter::typeFromName(QString const& _type)
 {
-  for (unsigned int i = 0; i < 16; ++i) {
+  for (unsigned int i = 0; i < 20; ++i) {
     if (_type == typeMap[i].name)
       return typeMap[i].type;
   }
