@@ -26,6 +26,8 @@ namespace Miro
       staticConst_(false),
       instance_(false),
       string_(false),
+      enumeration_(false),
+      enumerationMultiple_(false),
       vector_(false),
       set_(false),
       angle_(false),
@@ -44,6 +46,8 @@ namespace Miro
       staticConst_ = false;
       instance_ = false;
       string_ = false;
+      enumeration_ = false;
+      enumerationMultiple_ = false;
       vector_ = false;
       set_ = false;
       angle_ = false;
@@ -192,6 +196,7 @@ namespace Miro
 	      error_ = "No parameter type specified.";
 	      break;
 	    }
+	    QString values;
       
 	    if (type == "string") {
 	      type = "std::" + type;
@@ -200,6 +205,28 @@ namespace Miro
 	    else if (type == "std::string") {
 	      string_ = true;
 	    }
+	    else if (type == "Enumeration" || type == "Miro::Enumeration") {
+	      if (type == "Enumeration")
+		type = "Miro::" + type;
+	      enumeration_ = true;
+
+	      values = attributes.value("values");
+	      if (values.isEmpty()) {
+		error_ = "No enumeration values specified.";
+		break;
+	      }
+      	    }
+	    else if (type == "EnumerationMultiple" || type == "Miro::EnumerationMultiple") {
+	      if (type == "EnumerationMultiple")
+		type = "Miro::" + type;
+	      enumerationMultiple_ = true;
+
+	      values = attributes.value("values");
+	      if (values.isEmpty()) {
+		error_ = "No enumeration values specified.";
+		break;
+	      }
+      	    }
 	    else if (type.startsWith("vector<")) {
 	      type = "std::" + type;
 	      vector_ = true;
@@ -251,8 +278,23 @@ namespace Miro
 	      error_ = "ACE_Time_Value format is (x, y), no dot.";
 	      break;
 	    }
-	    else if (type == "std::string" || type == "Miro::BAP::TransitionMessage")
+	    else if (type == "std::string" || 
+		     type == "Miro::BAP::TransitionMessage")
 	      fullDef = "\"" + def + "\"";
+	    else if (type == "Miro::Enumeration") {
+	      if (def == "") {
+		error_ = "Enumeration definition needs default value.";
+		break;
+	      }
+	      fullDef = "\"" + def + "\", \"" + values + "\"";
+	    }
+	    else if (type == "Miro::EnumerationMultiple") {
+	      if (def == "") {
+		error_ = "EnumerationMultiple definition needs default value.";
+		break;
+	      }
+	      fullDef = "\"" + def + "\", \"" + values + "\"";
+	    }
 	    else if (type == "Miro::Angle")
 	      fullDef = "Miro::deg2Rad(" + def + ")";
 	    else if (type == "angle")
@@ -343,6 +385,10 @@ namespace Miro
 	  }
 	  if (string_)
 	    generator_.addInclude("string");
+	  if (enumeration_)
+	    generator_.addInclude("miro/Enumeration.h");
+	  if (enumerationMultiple_)
+	    generator_.addInclude("miro/EnumerationMultiple.h");
 	  if (vector_) {
 	    generator_.addInclude("vector");
 	    generator_.addSrcInclude("miro/IO.h");

@@ -12,6 +12,8 @@
 #define XmlParse_h
 
 #include "Exception.h"
+#include "Enumeration.h"
+#include "EnumerationMultiple.h"
 
 #include <ace/TTY_IO.h>
 
@@ -61,6 +63,8 @@ namespace Miro
   void operator <<= (double& lhs, const QDomNode& node);
   void operator <<= (Angle& lhs, const QDomNode& node);
   void operator <<= (std::string& lhs, const QDomNode& node);
+  void operator <<= (Miro::Enumeration& lhs, const QDomNode& node);
+  void operator <<= (Miro::EnumerationMultiple& lhs, const QDomNode& node);
   void operator <<= (ACE_Time_Value& lhs, const QDomNode& node);
   void operator <<= (ACE_TTY_IO::Serial_Params& lhs, const QDomNode& node);
   void operator <<= (ACE_INET_Addr& lhs, const QDomNode& node);
@@ -106,6 +110,8 @@ namespace Miro
   QDomElement operator >>= (const double& lhs, QDomNode& node);
   QDomElement operator >>= (const Angle& lhs, QDomNode& node);
   QDomElement operator >>= (const std::string& lhs, QDomNode& node);
+  QDomElement operator >>= (const Miro::Enumeration& lhs, QDomNode& node);
+  QDomElement operator >>= (const Miro::EnumerationMultiple& lhs, QDomNode& node);
   QDomElement operator >>= (const ACE_Time_Value& lhs, QDomNode& node);
   QDomElement operator >>= (const ACE_TTY_IO::Serial_Params& lhs, QDomNode& node);
   QDomElement operator >>= (const ACE_INET_Addr& lhs, QDomNode& node);

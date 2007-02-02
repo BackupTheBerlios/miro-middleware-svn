@@ -24,6 +24,8 @@ sources1 = \
 	XmlParse.cpp \
 	Exception.cpp \
 	Angle.cpp \
+	Enumeration.cpp \
+	EnumerationMultiple.cpp \
 	Random.cpp \
 	Configuration.cpp \
 	ConfigDocument.cpp \

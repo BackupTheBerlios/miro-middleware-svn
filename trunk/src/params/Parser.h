@@ -57,6 +57,8 @@ namespace Miro
       bool staticConst_;
       bool instance_;
       bool string_;
+      bool enumeration_;
+      bool enumerationMultiple_;
       bool vector_;
       bool set_;
       bool angle_;

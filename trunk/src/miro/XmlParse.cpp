@@ -19,6 +19,7 @@
 
 #include <algorithm>
 #include <limits>
+#include <iostream>
 
 #define XML_PARSE_QSTRING_IMPL(type, qstringmethod) \
   void operator <<= (type & _lhs, const QDomNode& _node) \
@@ -27,7 +28,7 @@
     QString value = getAttribute(_node, QString("value")); \
     _lhs = value.  qstringmethod  (&valid); \
     if (!valid) \
-       throw Exception("Parse exception"); \
+      throw Exception("Parse exception ("+ QString(" type ") +")");	\
   } \
   QDomElement operator >>= (const type & _lhs, QDomNode& _node) \
   { \
@@ -65,7 +66,7 @@ namespace Miro
   {
     QString value = getAttribute(node, QString("value"));
     if (value != "true" && value != "false")
-      throw Exception("Parse exception");
+      throw Exception("Parse exception (bool)");
 
     lhs = (value == "true");
   }
@@ -83,7 +84,7 @@ namespace Miro
   {
     QString value = getAttribute(node, QString("value"));
     if (value.length() != 1)
-      throw Exception("Parse exception");
+      throw Exception("Parse exception (char)");
 
     lhs = value[0].latin1();
   }
@@ -104,7 +105,7 @@ namespace Miro
     QString value = getAttribute(node, QString("value"));
     signed short v = value.toUShort(&valid);
     if (!valid || v < SCHAR_MIN || v > SCHAR_MAX ) 
-       throw Exception("Parse exception"); 
+       throw Exception("Parse exception (signed char)"); 
     lhs = v;
   }
 
@@ -125,7 +126,7 @@ namespace Miro
     QString value = getAttribute(node, QString("value"));
     unsigned short v = value.toUShort(&valid);
     if (!valid || v > UCHAR_MAX ) 
-       throw Exception("Parse exception"); 
+       throw Exception("Parse exception (unsigned char)"); 
     lhs = v;
   }
 
@@ -155,7 +156,7 @@ namespace Miro
     QString value = getAttribute(node, QString("value"));
     lhs = deg2Rad(value.toDouble(&valid));
     if (!valid)
-      throw Exception("Parse exception");
+      throw Exception("Parse exception (Angle)");
   }
 
   QDomElement operator >>= (const Angle& lhs, QDomNode& _node)
@@ -183,6 +184,39 @@ namespace Miro
     return e;
   }
 
+  void operator <<= (Miro::Enumeration& lhs, const QDomNode& node)
+  {
+    lhs.value(getAttribute(node, QString("value")).latin1());
+  }
+
+  QDomElement operator >>= (const Miro::Enumeration& lhs, QDomNode& _node)
+  {
+    QDomDocument document = _node.ownerDocument();
+    QDomElement e = document. createElement("parameter");
+    e.setAttribute("value", QString(lhs.value().c_str()));
+    _node.appendChild(e);
+    return e;
+  }
+
+  void operator <<= (Miro::EnumerationMultiple& lhs, const QDomNode& node)
+  {
+    lhs.value(getAttribute(node, QString("value")).latin1());
+  }
+
+  QDomElement operator >>= (const Miro::EnumerationMultiple& lhs, QDomNode& _node)
+  {
+    QDomDocument document = _node.ownerDocument();
+    QDomElement e = document. createElement("parameter");
+    // reverse tokenizer -- build a space separated string 
+    std::vector<std::string> tmp1 = lhs.value();
+    QString tmp2(tmp1[0].c_str());
+    for (std::vector<std::string>::const_iterator i=tmp1.begin()+1; i!=tmp1.end(); ++i)
+      tmp2 += " " + QString(i->c_str());
+    e.setAttribute("value", QString(tmp2));
+    _node.appendChild(e);
+    return e;
+  }
+
   void operator <<= (ACE_Time_Value& lhs, const QDomNode& node)
   {
     bool valid;
@@ -203,10 +237,10 @@ namespace Miro
 
     lhs.sec(sec.toULong(&valid));
     if (!valid)
-      throw Exception("Parse exception");
+      throw Exception("Parse exception (ACE_Time_Value)");
     lhs.usec(usec.toULong(&valid));
     if (!valid)
-      throw Exception("Parse exception");
+      throw Exception("Parse exception (ACE_Time_Value)");
   }
 
   QDomElement operator >>= (const ACE_Time_Value& lhs, QDomNode& _node)
