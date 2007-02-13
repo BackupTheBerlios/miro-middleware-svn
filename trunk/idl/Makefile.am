@@ -20,7 +20,7 @@ endif
 SUFFIXES = .idl C.cpp C.h C.i.h S.cpp S.h S.i.h
 
 .idlC.cpp:
-	LD_LIBRARY_PATH=$(ACE_ROOT)/lib:$(ACE_ROOT)/ace $(TAO_IDL) -in -Ge 0 -hc C.h -cs C.cpp -ci C.i.h -hs S.h -hT S_T.h -ss S.cpp -sT S_T.cpp -si S.i.h -st S_T.i.h -Sc -Wp,-I$(top_srcdir)/idl -I$(top_srcdir)/idl $<
+	LD_LIBRARY_PATH=$(ACE_ROOT)/lib:$(ACE_ROOT)/ace:$(LD_LIBRARY_PATH) $(TAO_IDL) -in -Ge 0 -hc C.h -cs C.cpp -ci C.i.h -hs S.h -hT S_T.h -ss S.cpp -sT S_T.cpp -si S.i.h -st S_T.i.h -Sc -Wp,-I$(top_srcdir)/idl -I$(top_srcdir)/idl $<
 
 C.cppC.h: ;
 
