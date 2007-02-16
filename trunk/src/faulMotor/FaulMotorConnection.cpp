@@ -114,8 +114,11 @@ namespace FaulMotor
   Connection::setSpeed(short _speedL, short _speedR)
   {
     Miro::Guard guard(mutex_);
-    if (disabled_)
+    if (disabled_){
       enable();
+      prevSpeedL = 0;
+      prevSpeedR = 0;
+    }
 
     // calculate the new velocities
     newSpeedL = (int)rint(-_speedL * params_->speedConvFactor);//* 112;
