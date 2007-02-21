@@ -401,7 +401,7 @@
       </instance>
 
       <instance type="LVF::Save" name="Save">
-	<parameter value="1" name="Interval" />
+	<parameter value="2" name="Interval" />
 	<parameter value="false" name="Activate" />
       </instance>
 
@@ -1269,6 +1269,11 @@
 		      <parameter value="Jpeg_ROIVisualBasic" name="Name" />
 		      <parameter value="Jpeg" name="Type" />
 		    </parameter>
+                  <parameter name="Filter" >
+                      <parameter value="Save1394" name="Name" />
+                      <parameter value="Save" name="Type" />
+                    </parameter>
+
 		  </parameter>
 		</parameter>
 		<parameter name="Filter" >
@@ -2101,8 +2106,11 @@
 	  <parameter value="Index" name="Name" />
 	</parameter>
       </instance>
-    </section>
-
+      <instance type="LVF::Save" name="Save1394">
+        <parameter value="2" name="Interval" />
+        <parameter value="false" name="Activate" />
+      </instance>
+</section>
     <section name="Notification" >
       <parameter name="Miro::LogNotifyParameters" >
 	<parameter name="TypeName">
