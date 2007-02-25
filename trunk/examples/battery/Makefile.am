@@ -2,14 +2,12 @@
 ##
 ## This file is part of Miro (The Middleware For Robots)
 ##
-## (c) 2002
-## Department of Neural Information Processing, University of Ulm, Germany
-##
 ## $Id$
 ##
-## Miro/examples/battery/Makefile
+## Miro/examples/battery/Makefile.am
 ##
 ##############################################################################
+
 
 include $(top_srcdir)/config/Make-rules
 if COND_PCH

@@ -2,16 +2,12 @@
 ##
 ## This file is part of Miro (The Middleware For Robots)
 ##
-## (c) 2000, 2001, 2002, 2003
-## Department of Neural Information Processing, University of Ulm, Germany
-##
 ## $Id$
-## $Date$
-## 
 ##
-## Miro/src/sparrowBase/Makefile
+## Miro/src/sparrowBase/Makefile.am
 ##
 ##############################################################################
+
 
 include $(top_srcdir)/config/Make-rules
 if COND_PCH

@@ -2,14 +2,12 @@
 ##
 ## This file is part of Miro (The Middleware For Robots)
 ##
-## (c) 2002, 2003, 2004
-## Department of Neural Information Processing, University of Ulm, Germany
-##
 ## $Id$
 ##
-## Miro/botsvcs/examples/behaviours/b21/Makefile.am
+## Miro/botsvcs/examples/BAP/b21/Makefile.am
 ##
 ##############################################################################
+
 
 include $(top_srcdir)/config/Make-rules
 if COND_PCH

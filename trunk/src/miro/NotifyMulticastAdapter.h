@@ -1,67 +1,30 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
-//  NotifyMulticast Adapter
+// This file is part of Miro (The Middleware for Robots)
+// Copyright (C) 1999-2005
+// Department of Neuroinformatics, University of Ulm, Germany
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published
+// by the Free Software Foundation; either version 2, or (at your option)
+// any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, write to the Free Software Foundation,
+// Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+//
+// $Id$
 //
 //
-//  (c) 2001, 2002, 2003, 2004
-//  Department of Neural Information Processing, University of Ulm, Germany
+// Authors: 
+//   Hans Utz
+//   Philipp Baer
 //
-//
-//  Authors:
-//    Philipp Baer <phbaer@npw.net>
-//    Hans Utz <hans.utz@informatik.uni-ulm.de>
-//
-//
-//  Version:
-//    1.1.0
-//
-//
-//  Description:
-//
-//
-//  Changes:
-//
-//    1.1.0
-//    - added subscription protocol
-//
-//    1.0.4
-//    - removed code that was commented out
-//    - added support for logging debug output to a file
-//
-//    1.0.3
-//    - many clean ups
-//    - removed RtEC dependency
-//    - changed to own namespace
-//    - renamed class NotifyForward to Adapter
-//    - removed some deprecated methods
-//
-//    1.0.2.pre
-//    - Fixes for disabled ping
-//    - Class added for configuration variables
-//
-//    1.0.1.experimental
-//    - Different send/recv addresses possible
-//    - Endpoint removed
-//    - Multicast socket initialized in NotifyMulticast
-//
-//    1.0.0.experimental
-//    - Initial release
-//
-//
-//  Requires:
-//    notifyMulticastSender.hh
-//    notifyMulticastReceiver.hh
-//    notifyMulticastEventHandler.hh
-//    notifyMulticastTimeoutHandler.hh
-//
-//
-//  Command Line Arguments: (case insensitive)
-//    -MCastGroup <ip>:  Change default IP/MC Group
-//
-//
-//  $Id$
-//
-//////////////////////////////////////////////////////////////////////////////
 #ifndef NotifyMulticastAdapter_h
 #define NotifyMulticastAdapter_h
 

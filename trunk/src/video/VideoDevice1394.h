@@ -1,87 +1,25 @@
-/* -*- c++ -*- */
-/*! \file VideoDevice1394.h
- *  \brief Implementation for a firewire video device (interface)
- *
- * -----------------------------------------------------
- *
- * RoboCup Middle Size Team, Technische Universitaet Graz
- * "Mostly Harmless" 
- * http://www.robocup.tugraz.at
- *
- * Project: Miro::Video
- *
- * $Author$
- * $Date$
- * $Revision$
- *
- * $Log$
- * Revision 1.10  2006/03/24 16:10:32  gmayer
- * update to follow cleanup in new libdc1394 version (2.0.0-pre6)
- *
- * Revision 1.9  2005/11/17 15:58:31  gmayer
- * now works with libdc1394 version 2 (tested with 2.0.0-pre5)
- * it's better to have this in place before it's the default verison in debian :-)
- *
- * Revision 1.8  2004/02/09 17:28:56  graz
- * Added control-interface to VideoDevice1394 & Dialog.
- *
- * Revision 1.7  2003/10/17 13:31:42  hutz
- * big video service update
- * we now support filters with multiple input buffers
- * we also support the first version of a video broker interface for
- * synchronised image access and filter tree monitoring
- * - it is not yet implementation complete...
- * we now release buffers for reading as soon as all processing is done
- * we now free buffers as soon as all successors are done
- * added buffer manager for the individual devices
- * connection management is now thread safe (at least has one severe bug less)
- * TODO: documentation update
- * TODO: video broker impl
- * TODO: multiple devices
- *
- * Revision 1.6  2003/06/03 11:03:36  hutz
- * fixed copy paste error in macros.miro.GNU
- * removed the HAVE_* macros in VideoDevice1394.*
- *
- * Revision 1.5  2003/06/03 10:25:32  hutz
- * complete revamp of the video service
- * the interface changes slightly to allow for better access
- * removed unnecessary copies
- * added a complete filter framework for server side image processing
- * added a library miroVideo.a for easy customization to own video service
- * derivates
- * the dummy video device now displays an image
- *
- * Revision 1.4  2003/05/13 21:58:49  hutz
- * removing the bridge pattern between VideoDevice and VideoDeviceBase
- * making VideoDevice* a direct descendant of VideoDevice
- *
- * Revision 1.3  2003/05/13 20:50:20  hutz
- * cleaning up the video service, getting rid of VideoConnection
- *
- * Revision 1.2  2003/05/12 16:34:35  hutz
- * bug hunt on fire wire
- *
- * Revision 1.1  2003/05/12 11:48:05  hutz
- * added the fire wire dc support from graz
- * propagated changes and cleanups introduced by fire wire dc
- * cleaned up the parameter handling of fire wire dc
- *
- * Revision 1.4  2003/03/11 18:19:16  muehlenf
- * Added device-parameter.
- *
- * Revision 1.3  2003/03/10 07:40:34  muehlenf
- * Additional parameters for firewire cameras.
- *
- * Revision 1.2  2003/01/14 10:19:53  muehlenf
- * Started using configure & automake.
- *
- * Revision 1.1  2003/01/09 11:46:20  muehlenf
- * Added firewire support to Miro VideoService
- *
- *
- */
-
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware for Robots)
+// Copyright (C) 2005
+// Department of Software Technology, Technical University of Graz, Austria
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published
+// by the Free Software Foundation; either version 2, or (at your option)
+// any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, write to the Free Software Foundation,
+// Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+//
+// $Id$
+//
 #ifndef VIDEODEVICE1394_H
 #define VIDEODEVICE1394_H
 

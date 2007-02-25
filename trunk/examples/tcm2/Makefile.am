@@ -2,14 +2,12 @@
 ##
 ## This file is part of Miro (The Middleware For Robots)
 ##
-## (c) 2002
-## Department of Neural Information Processing, University of Ulm, Germany
-##
 ## $Id$
 ##
-## Miro/examples/tcm2/Makefile
+## Miro/examples/tcm2/Makefile.am
 ##
 ##############################################################################
+
 
 include $(top_srcdir)/config/Make-rules
 

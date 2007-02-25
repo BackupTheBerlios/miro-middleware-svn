@@ -1,101 +1,25 @@
-/*! \file VideoDeviceDummy.cpp
- *  \brief Dummy implementation for a video device
- *
- * -----------------------------------------------------
- *
- * RoboCup Middle Size Team, Technische Universitaet Graz
- * "Mostly Harmless" 
- * http://www.robocup.tugraz.at
- *
- * Project: Miro::Video
- *
- * $Author$
- * $Date$
- * $Revision$
- *
- * $Log$
- * Revision 1.14  2005/01/10 15:41:09  hutz
- * extending the VIP framework to asynchronous video processing
- * now multiple filter trees can be interlinked and are synchronized as needed
- * at least in theroy :-)
- * in theory it should also be completely unintrusive for synchronous trees
- * any deviations from theory can be proven wrong and therefore do not exist
- * - or get fixed ASAP
- *
- * Revision 1.13  2005/01/09 21:40:34  hutz
- * switching debug output to use the Log.h macros.
- *
- * Revision 1.12  2004/11/02 18:04:09  gmayer
- * should handle images with blank lines (as comments) now correct
- *
- * Revision 1.11  2004/05/11 16:37:50  gmayer
- * add another helper macro (used by libVideoFilters)
- *
- * Revision 1.10  2004/03/09 16:28:58  roadrunner
- * Ouch! entrys->entries
- *
- * Revision 1.9  2003/10/27 13:19:21  hutz
- * making DummyDevice capable of playing image series
- *
- * Revision 1.8  2003/10/22 16:35:04  hutz
- * tons of fixes for namespace std conformance
- *
- * Revision 1.7  2003/10/17 13:31:42  hutz
- * big video service update
- * we now support filters with multiple input buffers
- * we also support the first version of a video broker interface for
- * synchronised image access and filter tree monitoring
- * - it is not yet implementation complete...
- * we now release buffers for reading as soon as all processing is done
- * we now free buffers as soon as all successors are done
- * added buffer manager for the individual devices
- * connection management is now thread safe (at least has one severe bug less)
- * TODO: documentation update
- * TODO: video broker impl
- * TODO: multiple devices
- *
- * Revision 1.6  2003/06/03 13:36:27  hutz
- * trying to remove segfaults on shutdown
- *
- * Revision 1.5  2003/06/03 10:25:32  hutz
- * complete revamp of the video service
- * the interface changes slightly to allow for better access
- * removed unnecessary copies
- * added a complete filter framework for server side image processing
- * added a library miroVideo.a for easy customization to own video service
- * derivates
- * the dummy video device now displays an image
- *
- * Revision 1.4  2003/05/16 13:14:57  hutz
- * removing unused parameters and methods from VideoDevice
- *
- * Revision 1.3  2003/05/13 21:58:49  hutz
- * removing the bridge pattern between VideoDevice and VideoDeviceBase
- * making VideoDevice* a direct descendant of VideoDevice
- *
- * Revision 1.2  2003/05/13 20:50:21  hutz
- * cleaning up the video service, getting rid of VideoConnection
- *
- * Revision 1.1  2003/05/12 11:48:05  hutz
- * added the fire wire dc support from graz
- * propagated changes and cleanups introduced by fire wire dc
- * cleaned up the parameter handling of fire wire dc
- *
- * Revision 1.4  2003/03/10 09:11:22  muehlenf
- * bugfix.
- *
- * Revision 1.3  2003/03/10 07:40:34  muehlenf
- * Additional parameters for firewire cameras.
- *
- * Revision 1.2  2003/01/10 13:46:46  muehlenf
- * Some corrections and tests, first working version.
- *
- * Revision 1.1  2003/01/09 11:46:20  muehlenf
- * Added firewire support to Miro VideoService
- *
- *
- */
-
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware for Robots)
+// Copyright (C) 2005
+// Department of Software Technology, Technical University of Graz, Austria
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published
+// by the Free Software Foundation; either version 2, or (at your option)
+// any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, write to the Free Software Foundation,
+// Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+//
+// $Id$
+//
 #include "VideoDeviceDummy.h"
 #include "BufferManager.h"
 

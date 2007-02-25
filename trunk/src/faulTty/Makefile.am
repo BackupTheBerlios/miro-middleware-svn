@@ -2,16 +2,12 @@
 ##
 ## This file is part of Miro (The Middleware For Robots)
 ##
-## (c) 2003
-## Department of Neural Information Processing, University of Ulm, Germany
-##
 ## $Id$
-## $Date$
-## 
 ##
-## Miro/src/faulTty/Makefile
+## Miro/src/faulTty/Makefile.am
 ##
 ##############################################################################
+
 
 include $(top_srcdir)/config/Make-rules
 if COND_PCH

@@ -1,32 +1,25 @@
-// -*- c++ -*- 
-/*! \file VideoControl.idl
- *  \brief IDL Interface to set QuickCam camera parameters "on the fly".
- *
- *  IDL Interface Video::Control.
- *
- * -----------------------------------------------------
- *
- * RoboCup Middle Size Team, "The Ulm Sparrows",
- * University of Ulm, Germany
- * http://www.sparrows.uni-ulm.de/
- *
- * Project: Miro / Video
- *
- * $Author$
- * $Date$
- * $Revision$
- *
- * $Log$
- * Revision 1.2  2004/10/13 13:48:27  hutz
- * small cleanup of the QuickCamControl interface:
- * moving it into namespace Miro
- * making some of the constants unsigned
- *
- * Revision 1.1  2004/03/09 16:03:01  roadrunner
- * Added QuickCam interface
- *
- *
- */
+// -*- idl -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware for Robots)
+// Copyright (C) 1999-2005
+// Department of Neuroinformatics, University of Ulm, Germany
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published
+// by the Free Software Foundation; either version 2, or (at your option)
+// any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, write to the Free Software Foundation,
+// Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+//
+// $Id$
+//
 #ifndef QUICKCAMCONTROL_IDL
 #define QUICKCAMCONTROL_IDL
 

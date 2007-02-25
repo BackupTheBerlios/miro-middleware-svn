@@ -1,37 +1,29 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
-//  NotifyMulticast EventHandler
+// This file is part of Miro (The Middleware for Robots)
+// Copyright (C) 1999-2005
+// Department of Neuroinformatics, University of Ulm, Germany
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published
+// by the Free Software Foundation; either version 2, or (at your option)
+// any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, write to the Free Software Foundation,
+// Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+//
+// $Id$
 //
 //
-//  (c) 2002
-//  Department of Neural Information Processing, University of Ulm, Germany
+// Authors: 
+//   Philipp Baer
 //
-//
-//  Authors:
-//    Philipp Baer <phbaer@openums.org>
-//
-//
-//  Version:
-//    1.0.3
-//
-//
-//  Description:
-//
-//    This event handler periodically calls (with the help of a reactor) the
-//    handle_timeout routine of the receiver to invalidate events that are
-//    incomplete for longer time.
-//
-//
-//  Changes:
-//
-//    1.0.3:
-//    - Some clean ups
-//    - Uses Config object instead of ACE_HANDLE
-//
-//
-//  $Id$
-//
-//////////////////////////////////////////////////////////////////////////////
 #ifndef NotifyMulticastEventHandler_h
 #define NotifyMulticastEventHandler_h
 

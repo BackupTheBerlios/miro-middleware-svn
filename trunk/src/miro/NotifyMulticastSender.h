@@ -1,51 +1,30 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
-//  NotifyMulticastSender
+// This file is part of Miro (The Middleware for Robots)
+// Copyright (C) 1999-2005
+// Department of Neuroinformatics, University of Ulm, Germany
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published
+// by the Free Software Foundation; either version 2, or (at your option)
+// any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, write to the Free Software Foundation,
+// Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+//
+// $Id$
 //
 //
-//  (c) 2002, 2003, 2004
-//  Department of Neural Information Processing, University of Ulm, Germany
+// Authors: 
+//   Hans Utz
+//   Philipp Baer
 //
-//
-//  Authors:
-//    Hans Utz <hans.utz@neuro.informatik.uni-ulm.de>
-//    Philipp Baer <phbaer@npw.net>
-//
-//
-//  Version:
-//    1.1.0
-//
-//
-//  Description:
-//
-//   push_structured_event is called when new event is received from the
-//   EventChannel. Each event is serialized and sent to the peers using
-//   ip multicast.
-//
-//
-//  Changes:
-//
-//    1.1.0
-//     - added subscription framework
-//
-//    1.0.4
-//     - added some logging output
-//
-//    1.0.3
-//      - many clean ups
-//      - changed namespace, renamed class
-//      - removed RtEC dependencies
-//
-//    1.0.1.experimental
-//      - Changed interface
-//
-//    1.0.0.experimental
-//      - Initial release, not tested!
-//
-//
-//  $Id$
-//
-//////////////////////////////////////////////////////////////////////////////
 #ifndef NotifyMulticastSender_h
 #define NotifyMulticastSender_h
 
