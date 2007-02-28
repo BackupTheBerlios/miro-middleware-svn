@@ -92,6 +92,7 @@ main(int argc, char *argv[])
 	arg_shifter.consume_arg();
 	std::cerr << "usage: " << argv[0] << "[-shared_ec] [-unified_ec] [-v?]" << std::endl
 		  << "  -shared_ec use existing event channels" << std::endl
+                  << "  -event_channel the name of the event channels (default: EventChannel)" << std::endl
 		  << "  -unified_ec use one event channel for all robots" << std::endl
 		  << "  -v verbose mode" << std::endl
 		  << "  -? help: emit this text and stop" << std::endl;
