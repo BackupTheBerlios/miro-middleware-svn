@@ -1,4 +1,311 @@
+2007-02-28  Hans Utz  <hutz@owl>
+
+	* utils/logPlayer/LogPlayer.cpp:
+	adding -? output for command line option -event_channel
+
+	* examples/videoFilter2/Makefile.am, idl/Makefile.am, performance-tests/logging/Makefile.am, performance-tests/nmc/Makefile.am:
+	removing deprecated and redundant options from the tao_idl command line.
+	changing the LD_LIBRARY_PATH setting for tao_idl, hoping it works better.
+	this make Miro compile with TAO 1.5.6, apart from a configure-problem
+	when trying to look up the ACE/TAO build options
+
+	TODO: unite the tao_idl rule in Make-rules (?) add a IDLFLAGS for allowing
+	to inject additional flags to the tao_idl command line
+
+2007-02-25  Hans Utz  <hutz@owl>
+
+	* src/miro/SockConnection.cpp, templates/Makefile.am.bin, templates/Makefile.am.dir, templates/Makefile.am.lib.a, templates/Makefile.am.lib.so, templates/Makefile.am.qt:
+	remaining changes, from the big file header update:
+	- adjusted the Makefile templates accordingly
+	- fixed the SockConnection header
+
+	* src/sparrow/AliveEventHandler.h, src/sparrow/IRLookupTable.h, src/sparrow/Makefile.am, src/sparrow/SparrowBaseConnection.cpp, src/sparrow/SparrowBaseConnection.h, src/sparrow/SparrowButtonsImpl.cpp, src/sparrow/SparrowButtonsImpl.h, src/sparrow/SparrowConnection.cpp, src/sparrow/SparrowConnection.h, src/sparrow/SparrowConnection2003.cpp, src/sparrow/SparrowConnection2003.h, src/sparrow/SparrowConsumer.cpp, src/sparrow/SparrowConsumer.h, src/sparrow/SparrowConsumer2003.cpp, src/sparrow/SparrowConsumer2003.h, src/sparrow/SparrowDevice.h, src/sparrow/SparrowEventHandler.cpp, src/sparrow/SparrowEventHandler.h, src/sparrow/SparrowEventHandler2003.cpp, src/sparrow/SparrowEventHandler2003.h, src/sparrow/SparrowKickerImpl.cpp, src/sparrow/SparrowKickerImpl.h, src/sparrow/SparrowMotionImpl.cpp, src/sparrow/SparrowMotionImpl.h, src/sparrow/SparrowPanTiltImpl.cpp, src/sparrow/SparrowPanTiltImpl.h, src/sparrow/SparrowStallImpl.cpp, src/sparrow/SparrowStallImpl.h, src/sparrowBase/Makefile.am, src/sparrowBase/SparrowBase.cpp, src/sparrowBase/SparrowServer.cpp, src/sparrowBase/SparrowServer.h, src/speech/DtlkSpeech.cpp, src/speech/DtlkSpeech.h, src/speech/Makefile.am, src/speech/SpeechConnection.cpp, src/speech/SpeechConnection.h, src/speech/SpeechDevice.h, src/speech/SpeechImpl.cpp, src/speech/SpeechImpl.h, src/sphinx/FestivalSpeech.cpp, src/sphinx/FestivalSpeech.h, src/sphinx/Makefile.am, src/sphinx/SphinxSpeech.cpp, src/sphinx/SphinxSpeech.h, src/sphinx/SphinxSpeechImpl.cpp, src/sphinx/SphinxSpeechImpl.h, src/sphinx/SphinxSpeechTask.cpp, src/sphinx/SphinxSpeechTask.h, src/video/AsynchBufferSet.cpp, src/video/AsynchBufferSet.h, src/video/AsynchLinkManager.cpp, src/video/AsynchLinkManager.h, src/video/AsynchPreLink.cpp, src/video/AsynchPreLink.h, src/video/AsynchSuccLink.cpp, src/video/AsynchSuccLink.h, src/video/BufferManager.cpp, src/video/BufferManager.h, src/video/BufferManager1394.cpp, src/video/BufferManager1394.h, src/video/BufferManagerBTTV.cpp, src/video/BufferManagerBTTV.h, src/video/BufferManagerMeteor.cpp, src/video/BufferManagerMeteor.h, src/video/BufferManagerQuickCam.cpp, src/video/BufferManagerQuickCam.h, src/video/DeviceAsynchBufferSet.cpp, src/video/DeviceAsynchBufferSet.h, src/video/DeviceAsynchLinkManager.cpp, src/video/DeviceAsynchLinkManager.h, src/video/Makefile.am, src/video/VideoAVDevice.cpp, src/video/VideoAVDevice.h, src/video/VideoBrokerImpl.cpp, src/video/VideoBrokerImpl.h, src/video/VideoBrokerLink.h, src/video/VideoConsumer.cpp, src/video/VideoConsumer.h, src/video/VideoControlImpl.cpp, src/video/VideoControlImpl.h, src/video/VideoDevice.cpp, src/video/VideoDevice.h, src/video/VideoDevice1394.cpp, src/video/VideoDevice1394.h, src/video/VideoDeviceBTTV.cpp, src/video/VideoDeviceBTTV.h, src/video/VideoDeviceDummy.cpp, src/video/VideoDeviceDummy.h, src/video/VideoDeviceMeteor.cpp, src/video/VideoDeviceMeteor.h, src/video/VideoDevicePlayer.cpp, src/video/VideoDevicePlayer.h, src/video/VideoDeviceQuickCam.cpp, src/video/VideoDeviceQuickCam.h, src/video/VideoFilter.cpp, src/video/VideoFilter.h, src/video/VideoFilterBasic.cpp, src/video/VideoFilterBasic.h, src/video/VideoFilterDistanceScan.cpp, src/video/VideoFilterDistanceScan.h, src/video/VideoFilterFactory.h, src/video/VideoFilterLink.h, src/video/VideoFilterOmni2Pan.cpp, src/video/VideoFilterOmni2Pan.h, src/video/VideoFilterRGBtoSeg.cpp, src/video/VideoFilterRGBtoSeg.h, src/video/VideoFilterRepository.cpp, src/video/VideoFilterRepository.h, src/video/VideoFilterService.cpp, src/video/VideoFilterService.h, src/video/VideoFilterYUV411toRGB.cpp, src/video/VideoFilterYUV411toRGB.h, src/video/VideoFilterYUV411toYUV.cpp, src/video/VideoFilterYUV411toYUV.h, src/video/VideoFilterYUV420PtoRGB.cpp, src/video/VideoFilterYUV420PtoRGB.h, src/video/VideoFilterYUV422toRGB.cpp, src/video/VideoFilterYUV422toRGB.h, src/video/VideoFilterYUV422toYUV.cpp, src/video/VideoFilterYUV422toYUV.h, src/video/VideoFilterYUVbase.cpp, src/video/VideoFilterYUVbase.h, src/video/VideoImpl.cpp, src/video/VideoImpl.h, src/video/VideoServer.cpp, src/video/VideoServer.h, src/video/VideoService.cpp, templates/Makefile.am.bin, templates/Makefile.am.dir, templates/Makefile.am.lib.a, templates/Makefile.am.lib.so, templates/Makefile.am.qt, templates/header-template-cpp, templates/header-template-h, templates/header-template-idl, templates/search_miro.m4, tests/Makefile.am, tests/b21/B21BaseTest.cpp, tests/b21/B21ButtonsTest.cpp, tests/b21/B21SelfTest.cpp, tests/b21/B21StressBase.cpp, tests/b21/Makefile.am, tests/cameraControl/CameraControlTest.cpp, tests/cameraControl/Makefile.am, tests/config/ConfigTest.cpp, tests/config/Makefile.am, tests/dpPanTilt/DpPanTiltTest.cpp, tests/dpPanTilt/Makefile.am, tests/dtlk/DtlkSpeechTest.cpp, tests/dtlk/Makefile.am, tests/faul/FaulTest.cpp, tests/faul/Makefile.am, tests/fusedRangeSensor/FusedRangeSensorTest.cpp, tests/fusedRangeSensor/Makefile.am, tests/gripper/GripperTest.cpp, tests/gripper/Makefile.am, tests/kicker/KickerTest.cpp, tests/kicker/Makefile.am, tests/log/LogTest.cpp, tests/log/Makefile.am, tests/motion/DifferentialMotionInterface.cpp, tests/motion/DifferentialMotionInterface.h, tests/motion/DifferentialMotionTest.cpp, tests/motion/Makefile.am, tests/motion/MotionInterface.cpp, tests/motion/MotionInterface.h, tests/motion/MotionTest.cpp, tests/motion/SynchroMotionInterface.cpp, tests/motion/SynchroMotionInterface.h, tests/motion/SynchroMotionTest.cpp, tests/notify/Makefile.am, tests/notify/NotifyTest.cpp, tests/notify/NotifyTest.h, tests/notifyMulticast/Makefile.am, tests/notifyMulticast/MulticastAdapter.cpp, tests/notifyMulticast/NotifyMulticastTest.cpp, tests/notifyMulticast/NotifyMulticastTest.h, tests/odometry/Makefile.am, tests/odometry/OdometryTest.cpp, tests/panTilt/Makefile.am, tests/panTilt/PanStream2003.cpp, tests/panTilt/PanTest.cpp, tests/panTilt/PanTest2003.cpp, tests/panTilt/PanTiltTest.cpp, tests/pioneer/Makefile.am, tests/pioneer/PioneerTest.cpp, tests/rangeSensor/Makefile.am, tests/rangeSensor/RangeSensorTest.cpp, tests/sparrow/KickerTest.cpp, tests/sparrow/Makefile.am, tests/sparrow/PanPosition.cpp, tests/sparrow/SparrowAlive.cpp, tests/sparrow/SparrowAlive.h, tests/sparrow/SparrowTest.cpp, tests/sparrow/SparrowTest2003.cpp, tests/speech/Makefile.am, tests/speech/SpeechTest.cpp, tests/sphinx/Makefile.am, tests/sphinx/SphinxTest.cpp, tests/video/Makefile.am, tests/video/TestRemoteVideoClient.cpp, tests/video/TestVideoClient.cpp, tests/videoBroker/Makefile.am, tests/videoBroker/VideoBrokerTest.cpp, tests/videoBroker/VideoBrokerTestBrief.cpp, tests/xml/Makefile.am, tests/xml/Xml-parse.cpp, utils/Joystick/Joystick.cpp, utils/Joystick/Joystick.h, utils/Joystick/JoystickService.cpp, utils/Joystick/JoystickService.h, utils/Joystick/Makefile.am, utils/Makefile.am, utils/configEditor/ConfigDocumentXML.cpp, utils/configEditor/ConfigDocumentXML.h, utils/configEditor/ConfigEditor.cpp, utils/configEditor/MainWindow.cpp, utils/configEditor/MainWindow.h, utils/configEditor/Makefile.am, utils/configEditor/ParameterInstance.cpp, utils/configEditor/ParameterInstance.h, utils/configEditor/ParameterSingleton.cpp, utils/configEditor/ParameterSingleton.h, utils/configEditor/Section.cpp, utils/configEditor/Section.h, utils/logPlayer/ChannelManager.cpp, utils/logPlayer/ChannelManager.h, utils/logPlayer/EventView.cpp, utils/logPlayer/EventView.h, utils/logPlayer/FileSet.cpp, utils/logPlayer/FileSet.h, utils/logPlayer/LogFile.cpp, utils/logPlayer/LogFile.h, utils/logPlayer/LogPlayer.cpp, utils/logPlayer/MainForm.cpp, utils/logPlayer/MainForm.h, utils/logPlayer/Makefile.am, utils/logPlayer/time2date.cpp, utils/makeConfig/MakeConfig.cpp, utils/makeConfig/Makefile.am, utils/notify/LogNotify.cpp, utils/notify/LogNotifyParameters.cpp, utils/notify/LogNotifyParameters.h, utils/notify/LogTruncate.cpp, utils/notify/Makefile.am, utils/notify/NotifyLogPlayer.cpp, utils/notify/NotifyLogPlayer.h, utils/notifyObserver/ApplicationWindow.cpp, utils/notifyObserver/ApplicationWindow.h, utils/notifyObserver/ConsumerAdmin.cpp, utils/notifyObserver/ConsumerAdmin.h, utils/notifyObserver/EventChannel.cpp, utils/notifyObserver/EventChannel.h, utils/notifyObserver/EventChannelFactory.cpp, utils/notifyObserver/EventChannelFactory.h, utils/notifyObserver/EventTypeDialog.cpp, utils/notifyObserver/EventTypeDialog.h, utils/notifyObserver/FilterAdmin.cpp, utils/notifyObserver/FilterAdmin.h, utils/notifyObserver/Makefile.am, utils/notifyObserver/NotifyObserver.cpp, utils/notifyObserver/NotifyPublish.cpp, utils/notifyObserver/NotifyPublish.h, utils/notifyObserver/NotifySubscribe.cpp, utils/notifyObserver/NotifySubscribe.h, utils/notifyObserver/ProxyConsumer.cpp, utils/notifyObserver/ProxyConsumer.h, utils/notifyObserver/ProxySupplier.cpp, utils/notifyObserver/ProxySupplier.h, utils/notifyObserver/QoSAdmin.cpp, utils/notifyObserver/QoSAdmin.h, utils/notifyObserver/SupplierAdmin.cpp, utils/notifyObserver/SupplierAdmin.h, utils/nsIOR/Makefile.am, utils/nsIOR/NsIOR.cpp, utils/policyController/Makefile.am, utils/policyController/PolicyController.cpp, utils/policyController/PolicyController.h, utils/policyEditor/ActionPatternXML.cpp, utils/policyEditor/ActionPatternXML.h, utils/policyEditor/ArbiterWidget.cpp, utils/policyEditor/ArbiterWidget.h, utils/policyEditor/ArbiterXML.cpp, utils/policyEditor/ArbiterXML.h, utils/policyEditor/BehaviourWidget.cpp, utils/policyEditor/BehaviourWidget.h, utils/policyEditor/BehaviourXML.cpp, utils/policyEditor/BehaviourXML.h, utils/policyEditor/DownTransitionXML.cpp, utils/policyEditor/DownTransitionXML.h, utils/policyEditor/ExternalTransitionXML.cpp, utils/policyEditor/ExternalTransitionXML.h, utils/policyEditor/MainWindow.cpp, utils/policyEditor/MainWindow.h, utils/policyEditor/Makefile.am, utils/policyEditor/ParameterWidget.cpp, utils/policyEditor/ParameterWidget.h, utils/policyEditor/PatternWidget.cpp, utils/policyEditor/PatternWidget.h, utils/policyEditor/PatternXML.cpp, utils/policyEditor/PatternXML.h, utils/policyEditor/PolicyDocumentXML.cpp, utils/policyEditor/PolicyDocumentXML.h, utils/policyEditor/PolicyEditor.cpp, utils/policyEditor/PolicyEditor.h, utils/policyEditor/PolicyView.cpp, utils/policyEditor/PolicyView.h, utils/policyEditor/PolicyXML.cpp, utils/policyEditor/PolicyXML.h, utils/policyEditor/SubpolicyXML.cpp, utils/policyEditor/SubpolicyXML.h, utils/policyEditor/Transition.h, utils/policyEditor/TransitionContainer.cpp, utils/policyEditor/TransitionContainer.h, utils/policyEditor/TransitionDialog.cpp, utils/policyEditor/TransitionDialog.h, utils/policyEditor/TransitionWidget.cpp, utils/policyEditor/TransitionWidget.h, utils/policyEditor/TransitionXML.cpp, utils/policyEditor/TransitionXML.h, utils/qtJoystick/MainForm.cpp, utils/qtJoystick/MainForm.h, utils/qtJoystick/Makefile.am, utils/qtJoystick/QtJoystick.cpp, utils/qtTouchPad/MainForm.cpp, utils/qtTouchPad/MainForm.h, utils/qtTouchPad/Makefile.am, utils/qtTouchPad/QtTouchPad.cpp, utils/qtVideo/MainForm.cpp, utils/qtVideo/MainForm.h, utils/qtVideo/Makefile.am, utils/qtVideo/QtVideo.cpp, utils/qtVideo/QtVideoControl.cpp, utils/qtVideo/VideoControlDialogImp.cpp, utils/qtVideo/VideoControlDialogImp.h, utils/qtVideo/VideoControlTest.cpp, utils/qtVideo/VideoControlTestImpl.cpp, utils/qtVideo/VideoControlTestImpl.h, utils/rangeSensor/Makefile.am, utils/rangeSensor/QtRangeSensor.cpp, utils/rangeSensor/QtRangeSensor.h, utils/sparrowBoard/Makefile.am, utils/sparrowBoard/SparrowAccel.cpp, utils/widgets/CompoundParameter.cpp, utils/widgets/CompoundParameter.h, utils/widgets/ConfigFile.cpp, utils/widgets/ConfigFile.h, utils/widgets/DeferredParameterEdit.cpp, utils/widgets/DeferredParameterEdit.h, utils/widgets/DialogXML.cpp, utils/widgets/DialogXML.h, utils/widgets/DocumentView.cpp, utils/widgets/DocumentView.h, utils/widgets/DocumentXML.cpp, utils/widgets/DocumentXML.h, utils/widgets/FileListDialog.cpp, utils/widgets/FileListDialog.h, utils/widgets/Item.cpp, utils/widgets/Item.h, utils/widgets/ItemXML.cpp, utils/widgets/ItemXML.h, utils/widgets/Makefile.am, utils/widgets/OkCancelDialog.cpp, utils/widgets/OkCancelDialog.h, utils/widgets/ParameterDialog.cpp, utils/widgets/ParameterDialog.h, utils/widgets/ParameterEdit.cpp, utils/widgets/ParameterEdit.h, utils/widgets/ParameterList.cpp, utils/widgets/ParameterList.h, utils/widgets/ParameterListDialog.cpp, utils/widgets/ParameterListDialog.h, utils/widgets/ParameterXML.cpp, utils/widgets/ParameterXML.h, utils/widgets/SimpleParameter.cpp, utils/widgets/SimpleParameter.h, utils/widgets/SimpleParameterEdit.cpp, utils/widgets/SimpleParameterEdit.h, utils/widgets/SingleParameterDialog.cpp, utils/widgets/SingleParameterDialog.h, utils/widgets/Validators.cpp, utils/widgets/Validators.h, examples/rangeSensor/ScanDescription.cpp, examples/rangeSensor/SensorGet.cpp, examples/rangeSensor/SensorStream.cpp, examples/rangeSensor/SensorStream.h, examples/robotikI/LaserGet.cpp, examples/robotikI/LaserStream.cpp, examples/robotikI/Makefile.am, examples/robotikI/SonarGet.cpp, examples/robotikI/SonarStream.cpp, examples/robotikI/SonarStream2.cpp, examples/robotikI/SonarStream2.h, examples/sonar/Makefile.am, examples/speechSimple/Makefile.am, examples/speechSimple/SpeechSimple.cpp, examples/stall/Makefile.am, examples/stall/StallPoll.cpp, examples/tcm2/Makefile.am, examples/tcm2/TCM2Get.cpp, examples/tcm2/TCM2Poll.cpp, examples/tcm2/TCM2Stream.cpp, examples/tcm2/TCM2Stream.h, examples/video/LogVideo.cpp, examples/video/Makefile.am, examples/video/VideoExample.cpp, examples/video/VideoLatency.cpp, examples/videoFilter/FilterBusy.cpp, examples/videoFilter/FilterBusy.h, examples/videoFilter/FilterDiff.cpp, examples/videoFilter/FilterDiff.h, examples/videoFilter/FilterGray.cpp, examples/videoFilter/FilterGray.h, examples/videoFilter/GrayVideoService.cpp, examples/videoFilter/Makefile.am, examples/videoFilter2/BallDetection.cpp, examples/videoFilter2/BallDetection.h, examples/videoFilter2/BallDetectionEventChannel.cpp, examples/videoFilter2/BallDetectionEventChannel.h, examples/videoFilter2/BallResult.idl, examples/videoFilter2/Makefile.am, examples/videoFilter2/VideoService.cpp, idl/ArbiterEvent.idl, idl/B21Buttons.idl, idl/B21Motion.idl, idl/Battery.idl, idl/BatteryEvent.idl, idl/BehaviourEngine.idl, idl/Buttons.idl, idl/CameraControl.idl, idl/CanonCamera.idl, idl/CanonCameraControl.idl, idl/CanonPanTilt.idl, idl/Charger.idl, idl/ClosedMotion.idl, idl/Compass.idl, idl/CompassEvent.idl, idl/Config.idl, idl/CtGps.idl, idl/DifferentialMotion.idl, idl/DirectedPerceptionPanTilt.idl, idl/DistanceScan.idl, idl/DtlkSpeech.idl, idl/Exception.idl, idl/FieldStrength.idl, idl/FusedRangeSensor.idl, idl/Gps.idl, idl/GpsData.idl, idl/Gripper.idl, idl/Inclination.idl, idl/Inclinometer.idl, idl/InclinometerEvent.idl, idl/InertialData.idl, idl/InertialSensor.idl, idl/InertialSensorEvent.idl, idl/Joystick.idl, idl/Kicker.idl, idl/Laser.idl, idl/Localization.idl, idl/Magnetometer.idl, idl/MagnetometerEvent.idl, idl/Makefile.am, idl/Motion.idl, idl/MotionStatus.idl, idl/ObjectVector.idl, idl/Odometry.idl, idl/Pan.idl, idl/PanTilt.idl, idl/PioneerMotion.idl, idl/PioneerStall.idl, idl/Position.idl, idl/QuickCamControl.idl, idl/RangeEvent.idl, idl/RangeSensor.idl, idl/ScanDescription.idl, idl/SonyCameraControl.idl, idl/SparrowAlive.idl, idl/SparrowMotion.idl, idl/SparrowPanTilt.idl, idl/SparrowStall.idl, idl/Speech.idl, idl/SphinxSpeech.idl, idl/Stall.idl, idl/SynchroMotion.idl, idl/TCM2.idl, idl/TCM2Event.idl, idl/Thermometer.idl, idl/ThermometerEvent.idl, idl/Tilt.idl, idl/Time.idl, idl/Velocity.idl, idl/Video.idl, idl/VideoControl.idl, idl/WorldPoint.idl, idl/WorldPoint3D.idl, idl/WorldVector.idl, lib/Makefile.am, pch/Makefile.am, performance-tests/Makefile.am, performance-tests/can/CanPerformance.cpp, performance-tests/can/Makefile.am, performance-tests/faul/Makefile.am, performance-tests/faul/SerialPolling.cpp, performance-tests/logging/LogPerformance.cpp, performance-tests/logging/Makefile.am, performance-tests/logging/Payload.idl, performance-tests/logging/SharedBeliefState.idl, performance-tests/mcp/Makefile.am, performance-tests/mcp/McpPerformance.cpp, performance-tests/mcp/McpPerformance.h, performance-tests/nmc/Makefile.am, performance-tests/nmc/NMCConsumer.cpp, performance-tests/nmc/NotifyPerformance.cpp, performance-tests/nmc/Payload.idl, performance-tests/nmc/PayloadConsumer.cpp, performance-tests/nmc/PayloadConsumer.h, performance-tests/nmc/SharedBeliefState.idl, performance-tests/panTilt/Makefile.am, performance-tests/panTilt/PanLatency.cpp, performance-tests/response/Makefile.am, performance-tests/response/NotifyResponse.cpp, performance-tests/response/PollResponse.cpp, performance-tests/response/SparrowResponse.cpp, performance-tests/video/GrabImages.cpp, performance-tests/video/Makefile.am, scripts/Makefile.am, src/Makefile.am, src/abus/AbusConnection.cpp, src/abus/AbusConnection.h, src/abus/AbusDevice.cpp, src/abus/AbusDevice.h, src/abus/AbusEventHandler.cpp, src/abus/AbusEventHandler.h, src/abus/AbusMessage.h, src/abus/Makefile.am, src/b21Base/B21Base.cpp, src/b21Base/B21Base.h, src/b21Base/B21BaseDummy.cpp, src/b21Base/B21BaseDummy.h, src/b21Base/Makefile.am, src/base/BaseConnection.cpp, src/base/BaseConnection.h, src/base/BaseConsumer.cpp, src/base/BaseConsumer.h, src/base/BaseDevice.cpp, src/base/BaseDevice.h, src/base/BaseDummyImpl.cpp, src/base/BaseDummyImpl.h, src/base/BaseEventHandler.cpp, src/base/BaseEventHandler.h, src/base/BaseImpl.cpp, src/base/BaseImpl.h, src/base/BaseStatus.cpp, src/base/BaseStatus.h, src/base/Makefile.am, src/buttons/ButtonsConnection.cpp, src/buttons/ButtonsConnection.h, src/buttons/ButtonsDevice.h, src/buttons/ButtonsEventHandler.cpp, src/buttons/ButtonsEventHandler.h, src/buttons/ButtonsImpl.cpp, src/buttons/ButtonsImpl.h, src/buttons/Makefile.am, src/can/Can0Message.cpp, src/can/Can0Message.h, src/can/CanConnection.cpp, src/can/CanConnection.h, src/can/CanEventHandler.cpp, src/can/CanEventHandler.h, src/can/CanMessage.cpp, src/can/CanMessage.h, src/can/Makefile.am, src/can/PCanMessage.cpp, src/can/PCanMessage.h, src/faulMotor/FaulMotorConnection.cpp, src/faulMotor/FaulMotorConnection.h, src/faulMotor/FaulMotorConsumer.cpp, src/faulMotor/FaulMotorConsumer.h, src/faulMotor/FaulMotorMotionImpl.cpp, src/faulMotor/FaulMotorMotionImpl.h, src/faulMotor/Makefile.am, src/faulMotor/TimerEventHandler.cpp, src/faulMotor/TimerEventHandler.h, src/faulTty/FaulCanConnection.cpp, src/faulTty/FaulCanConnection.h, src/faulTty/FaulControllerConnection.cpp, src/faulTty/FaulControllerConnection.h, src/faulTty/FaulTtyConnection.cpp, src/faulTty/FaulTtyConnection.h, src/faulTty/FaulTtyDevice.h, src/faulTty/FaulTtyEventHandler.cpp, src/faulTty/FaulTtyEventHandler.h, src/faulTty/FaulTtyMessage.h, src/faulTty/Makefile.am, src/fusedRangeSensor/FusedRangeSensor.cpp, src/fusedRangeSensor/FusedRangeSensor.h, src/fusedRangeSensor/FusedRangeSensorImpl.cpp, src/fusedRangeSensor/FusedRangeSensorImpl.h, src/fusedRangeSensor/Makefile.am, src/gps/CtGpsImpl.cpp, src/gps/CtGpsImpl.h, src/gps/GpsConnection.cpp, src/gps/GpsConnection.h, src/gps/GpsEventHandler.cpp, src/gps/GpsEventHandler.h, src/gps/GpsImpl.cpp, src/gps/GpsImpl.h, src/gps/GpsMessage.cpp, src/gps/GpsMessage.h, src/gps/GpsService.cpp, src/gps/GpsService.h, src/gps/Makefile.am, src/inertial/Makefile.am, src/laser/Makefile.am, src/laser/SickLaserConnection.cpp, src/laser/SickLaserConnection.h, src/laser/SickLaserEvent.cpp, src/laser/SickLaserEvent.h, src/laser/SickLaserImpl.cpp, src/laser/SickLaserImpl.h, src/laser/SickLaserMessage.cpp, src/laser/SickLaserMessage.h, src/laser/SickLaserOpcodes.h, src/laser/SickLaserPollTask.cpp, src/laser/SickLaserPollTask.h, src/laser/SickLaserService.cpp, src/laser/SickLaserService.h, src/laser/SickLaserStatistic.h, src/laser/SickLaserTask.cpp, src/laser/SickLaserTask.h, src/makeParams/MakeParams.cpp, src/makeParams/Makefile.am, src/mcp/Makefile.am, src/mcp/McpConnection.cpp, src/mcp/McpConnection.h, src/mcp/McpConsumer.cpp, src/mcp/McpConsumer.h, src/mcp/McpDevice.cpp, src/mcp/McpDevice.h, src/mcp/McpEventHandler.cpp, src/mcp/McpEventHandler.h, src/mcp/McpMessage.cpp, src/mcp/McpMessage.h, src/miro/Angle.cpp, src/miro/Angle.h, src/miro/BatteryImpl.cpp, src/miro/BatteryImpl.h, src/miro/BuiltIn.h, src/miro/CameraControlImpl.cpp, src/miro/CameraControlImpl.h, src/miro/Client.cpp, src/miro/Client.h, src/miro/CompassImpl.cpp, src/miro/CompassImpl.h, src/miro/ConfigDocument.cpp, src/miro/ConfigDocument.h, src/miro/Configuration.cpp, src/miro/Configuration.h, src/miro/DevConnection.cpp, src/miro/DevConnection.h, src/miro/DevConsumer.cpp, src/miro/DevConsumer.h, src/miro/DevEventHandler.cpp, src/miro/DevEventHandler.h, src/miro/DevMessage.h, src/miro/DifferentialMotionImpl.cpp, src/miro/DifferentialMotionImpl.h, src/miro/Enumeration.cpp, src/miro/Enumeration.h, src/miro/EnumerationMultiple.cpp, src/miro/EnumerationMultiple.h, src/miro/Exception.cpp, src/miro/Exception.h, src/miro/Factory.h, src/miro/IO.cpp, src/miro/IO.h, src/miro/InclinometerImpl.cpp, src/miro/InclinometerImpl.h, src/miro/Infinity.h, src/miro/Log.cpp, src/miro/Log.h, src/miro/LogHeader.cpp, src/miro/LogHeader.h, src/miro/LogNotifyConsumer.cpp, src/miro/LogNotifyConsumer.h, src/miro/LogReader.cpp, src/miro/LogReader.h, src/miro/LogTypeRepository.cpp, src/miro/LogTypeRepository.h, src/miro/LogWriter.cpp, src/miro/LogWriter.h, src/miro/MagnetometerImpl.cpp, src/miro/MagnetometerImpl.h, src/miro/Makefile.am, src/miro/MotionImpl.cpp, src/miro/MotionImpl.h, src/miro/NotifyMulticast.h, src/miro/NotifyMulticastAdapter.cpp, src/miro/NotifyMulticastAdapter.h, src/miro/NotifyMulticastDefines.h, src/miro/NotifyMulticastDomainEventFilter.cpp, src/miro/NotifyMulticastDomainEventFilter.h, src/miro/NotifyMulticastEventFilter.h, src/miro/NotifyMulticastEventHandler.cpp, src/miro/NotifyMulticastEventHandler.h, src/miro/NotifyMulticastReceiver.cpp, src/miro/NotifyMulticastReceiver.h, src/miro/NotifyMulticastRequestEntry.cpp, src/miro/NotifyMulticastRequestEntry.h, src/miro/NotifyMulticastRequestIndex.h, src/miro/NotifyMulticastSH.cpp, src/miro/NotifyMulticastSH.h, src/miro/NotifyMulticastSender.cpp, src/miro/NotifyMulticastSender.h, src/miro/NotifyMulticastTimeoutHandler.cpp, src/miro/NotifyMulticastTimeoutHandler.h, src/miro/ObjectVectorImpl.cpp, src/miro/ObjectVectorImpl.h, src/miro/OdometryImpl.cpp, src/miro/OdometryImpl.h, src/miro/OdometryTracking.cpp, src/miro/OdometryTracking.h, src/miro/PanImpl.cpp, src/miro/PanImpl.h, src/miro/PanTiltBase.h, src/miro/PanTiltImpl.cpp, src/miro/PanTiltImpl.h, src/miro/Random.cpp, src/miro/Random.h, src/miro/RangeSensorImpl.cpp, src/miro/RangeSensorImpl.h, src/miro/ReactorTask.cpp, src/miro/ReactorTask.h, src/miro/Repository.h, src/miro/ScanDescriptionHelper.cpp, src/miro/ScanDescriptionHelper.h, src/miro/Server.cpp, src/miro/Server.h, src/miro/Singleton.h, src/miro/SockConnection.cpp, src/miro/SockConnection.h, src/miro/Ssh.cpp, src/miro/Ssh.h, src/miro/StructuredPushConsumer.cpp, src/miro/StructuredPushConsumer.h, src/miro/StructuredPushSupplier.cpp, src/miro/StructuredPushSupplier.h, src/miro/Synch.h, src/miro/Task.cpp, src/miro/Task.h, src/miro/ThermometerImpl.cpp, src/miro/ThermometerImpl.h, src/miro/Thread.cpp, src/miro/Thread.h, src/miro/TiltImpl.cpp, src/miro/TiltImpl.h, src/miro/TimeHelper.cpp, src/miro/TimeHelper.h, src/miro/TimeSeries.cpp, src/miro/TimeSeries.h, src/miro/TtyConnection.cpp, src/miro/TtyConnection.h, src/miro/Utils.h, src/miro/VideoHelper.cpp, src/miro/VideoHelper.h, src/miro/XmlParse.cpp, src/miro/XmlParse.h, src/msp/Makefile.am, src/msp/MspConnection.cpp, src/msp/MspConnection.h, src/msp/MspConsumer.cpp, src/msp/MspConsumer.h, src/msp/MspDevice.cpp, src/msp/MspDevice.h, src/msp/MspEventHandler.cpp, src/msp/MspEventHandler.h, src/msp/MspMessage.h, src/panTilt/DpPanTilt.cpp, src/panTilt/DpPanTilt.h, src/panTilt/Makefile.am, src/panTilt/PanTiltConnection.cpp, src/panTilt/PanTiltConnection.h, src/panTilt/PanTiltConsumer.cpp, src/panTilt/PanTiltConsumer.h, src/panTilt/PanTiltData.cpp, src/panTilt/PanTiltData.h, src/panTilt/PanTiltEventHandler.cpp, src/panTilt/PanTiltEventHandler.h, src/panTilt/PanTiltImpl.cpp, src/panTilt/PanTiltImpl.h, src/panTilt/PanTiltMessage.h, src/panTilt/PanTiltOpcodes.h, src/params/Generator.cpp, src/params/Generator.h, src/params/Makefile.am, src/params/Parameter.cpp, src/params/Parameter.h, src/params/Parser.cpp, src/params/Parser.h, src/params/TextErrorHandler.cpp, src/params/TextErrorHandler.h, src/params/Type.cpp, src/params/Type.h, src/pioneer/CameraMessage.cpp, src/pioneer/CameraMessage.h, src/pioneer/CanonCameraControlImpl.cpp, src/pioneer/CanonCameraControlImpl.h, src/pioneer/CanonCameraImpl.cpp, src/pioneer/CanonCameraImpl.h, src/pioneer/CanonDevice.h, src/pioneer/CanonMessage.cpp, src/pioneer/CanonMessage.h, src/pioneer/CanonPanTiltImpl.cpp, src/pioneer/CanonPanTiltImpl.h, src/pioneer/GripperImpl.cpp, src/pioneer/GripperImpl.h, src/pioneer/Makefile.am, src/pioneer/PioneerConnection.cpp, src/pioneer/PioneerConnection.h, src/pioneer/PioneerConsumer.cpp, src/pioneer/PioneerConsumer.h, src/pioneer/PioneerMotionImpl.cpp, src/pioneer/PioneerMotionImpl.h, src/pioneer/PioneerStallImpl.cpp, src/pioneer/PioneerStallImpl.h, src/pioneer/SonyCameraControlImpl.cpp, src/pioneer/SonyCameraControlImpl.h, src/pioneer/SonyMessage.cpp, src/pioneer/SonyMessage.h, src/pioneer/SonyPanTiltImpl.cpp, src/pioneer/SonyPanTiltImpl.h, src/pioneer/TCM2Impl.cpp, src/pioneer/TCM2Impl.h, src/pioneerBase/Makefile.am, src/pioneerBase/PioneerBase.cpp, src/pioneerBase/PioneerBase.h, src/playerBase/Makefile.am, src/playerBase/PlayerBase.cpp, src/playerBase/PlayerBase.h, src/playerBase/PlayerCameraControlImpl.cpp, src/playerBase/PlayerCameraControlImpl.h, src/playerBase/PlayerConnection.h, src/playerBase/PlayerLaserImpl.cpp, src/playerBase/PlayerLaserImpl.h, src/playerBase/PlayerMotionImpl.cpp, src/playerBase/PlayerMotionImpl.h, src/playerBase/PlayerPanTiltImpl.cpp, src/playerBase/PlayerPanTiltImpl.h, src/playerBase/PlayerReactorTask.cpp, src/playerBase/PlayerReactorTask.h, src/playerBase/PlayerStallImpl.cpp, src/playerBase/PlayerStallImpl.h, src/psos/Makefile.am, src/psos/PsosConnection.cpp, src/psos/PsosConnection.h, src/psos/PsosDevice.cpp, src/psos/PsosDevice.h, src/psos/PsosEventHandler.cpp, src/psos/PsosEventHandler.h, src/psos/PsosMessage.cpp, src/psos/PsosMessage.h, src/sparrow/AliveCollector.cpp, src/sparrow/AliveCollector.h, src/sparrow/AliveEventHandler.cpp, AUTHORS, Makefile.am, bin/Makefile.am, botsvcs/BAP/ActionPattern.cpp, botsvcs/BAP/ActionPattern.h, botsvcs/BAP/Arbiter.cpp, botsvcs/BAP/Arbiter.h, botsvcs/BAP/ArbiterMessage.cpp, botsvcs/BAP/ArbiterMessage.h, botsvcs/BAP/ArbiterParameters.cpp, botsvcs/BAP/ArbiterParameters.h, botsvcs/BAP/ArbiterRepository.cpp, botsvcs/BAP/ArbiterRepository.h, botsvcs/BAP/BAFactory.cpp, botsvcs/BAP/BAFactory.h, botsvcs/BAP/Behaviour.cpp, botsvcs/BAP/Behaviour.h, botsvcs/BAP/BehaviourEngineImpl.cpp, botsvcs/BAP/BehaviourEngineImpl.h, botsvcs/BAP/BehaviourParameters.cpp, botsvcs/BAP/BehaviourParameters.h, botsvcs/BAP/BehaviourRepository.cpp, botsvcs/BAP/BehaviourRepository.h, botsvcs/BAP/ConstraintArbiter.cpp, botsvcs/BAP/ConstraintArbiter.h, botsvcs/BAP/ConstraintArbiterParameters.cpp, botsvcs/BAP/ConstraintArbiterParameters.h, botsvcs/BAP/ConstraintArbiterViewer.cpp, botsvcs/BAP/ConstraintArbiterViewer.h, botsvcs/BAP/ConstraintArbiterViewerTask.cpp, botsvcs/BAP/ConstraintArbiterViewerTask.h, botsvcs/BAP/EventBehaviour.cpp, botsvcs/BAP/EventBehaviour.h, botsvcs/BAP/Makefile.am, botsvcs/BAP/MotionArbiter.cpp, botsvcs/BAP/MotionArbiter.h, botsvcs/BAP/MotionArbiterMessage.cpp, botsvcs/BAP/MotionArbiterMessage.h, botsvcs/BAP/Pattern.cpp, botsvcs/BAP/Pattern.h, botsvcs/BAP/Policy.cpp, botsvcs/BAP/Policy.h, botsvcs/BAP/PowerArbiter.cpp, botsvcs/BAP/PowerArbiter.h, botsvcs/BAP/PowerArbiterMessage.cpp, botsvcs/BAP/PowerArbiterMessage.h, botsvcs/BAP/PriorityArbiter.cpp, botsvcs/BAP/PriorityArbiter.h, botsvcs/BAP/TaskBehaviour.cpp, botsvcs/BAP/TaskBehaviour.h, botsvcs/BAP/TimedBehaviour.cpp, botsvcs/BAP/TimedBehaviour.h, botsvcs/BAP/Transition.h, botsvcs/BAP/VelocitySpace.cpp, botsvcs/BAP/VelocitySpace.h, botsvcs/MCL/Feature.cpp, botsvcs/MCL/Feature.h, botsvcs/MCL/FeatureManagementI.cpp, botsvcs/MCL/FeatureManagementI.h, botsvcs/MCL/FeatureManager.cpp, botsvcs/MCL/FeatureManager.h, botsvcs/MCL/FeatureRepository.cpp, botsvcs/MCL/FeatureRepository.h, botsvcs/MCL/Makefile.am, botsvcs/MCL/MotionModelT.h, botsvcs/MCL/ObservationModelT.h, botsvcs/MCL/ParticleFilter.h, botsvcs/MCL/ParticleFilterT.cpp, botsvcs/MCL/Sample.h, botsvcs/MCL/SampleFactoryT.h, botsvcs/MCL/WorldModel.cpp, botsvcs/MCL/WorldModel.h, botsvcs/Makefile.am, botsvcs/examples/BAP/Makefile.am, botsvcs/examples/BAP/b21/BehavioursFactory.cpp, botsvcs/examples/BAP/b21/BehavioursFactory.h, botsvcs/examples/BAP/b21/LaserAvoid.cpp, botsvcs/examples/BAP/b21/LaserAvoid.h, botsvcs/examples/BAP/b21/Makefile.am, botsvcs/examples/BAP/b21/OnButton.cpp, botsvcs/examples/BAP/b21/OnButton.h, botsvcs/examples/BAP/b21/SonarAvoid.cpp, botsvcs/examples/BAP/b21/SonarAvoid.h, botsvcs/examples/BAP/engine/B21BehaviourEngine.cpp, botsvcs/examples/BAP/engine/Makefile.am, botsvcs/examples/BAP/engine/RangeSensorBehaviourEngine.cpp, botsvcs/examples/BAP/engine/SimpleBehaviourEngine.cpp, botsvcs/examples/BAP/rangeSensor/BehavioursFactory.cpp, botsvcs/examples/BAP/rangeSensor/BehavioursFactory.h, botsvcs/examples/BAP/rangeSensor/Makefile.am, botsvcs/examples/BAP/rangeSensor/RangeSensorAvoid.cpp, botsvcs/examples/BAP/rangeSensor/RangeSensorAvoid.h, botsvcs/examples/BAP/rangeSensor/RangeSensorBehaviour.cpp, botsvcs/examples/BAP/rangeSensor/RangeSensorBehaviour.h, botsvcs/examples/BAP/rangeSensor/RangeSensorWallFollow.cpp, botsvcs/examples/BAP/rangeSensor/RangeSensorWallFollow.h, botsvcs/examples/BAP/simple/BehavioursFactory.cpp, botsvcs/examples/BAP/simple/BehavioursFactory.h, botsvcs/examples/BAP/simple/Makefile.am, botsvcs/examples/BAP/simple/MoveToPoint.cpp, botsvcs/examples/BAP/simple/MoveToPoint.h, botsvcs/examples/BAP/simple/Straight.cpp, botsvcs/examples/BAP/simple/Straight.h, botsvcs/examples/BAP/simple/TactileStop.cpp, botsvcs/examples/BAP/simple/TactileStop.h, botsvcs/examples/BAP/simple/Timer.cpp, botsvcs/examples/BAP/simple/Timer.h, botsvcs/examples/BAP/simple/Wander.cpp, botsvcs/examples/BAP/simple/Wander.h, botsvcs/examples/Makefile.am, botsvcs/tests/BAP/Makefile.am, botsvcs/tests/BAP/dynamicPolicy/DynamicPolicyTest.cpp, botsvcs/tests/BAP/dynamicPolicy/Makefile.am, botsvcs/tests/BAP/engine/BehaviourEngineTest.cpp, botsvcs/tests/BAP/engine/DummyBehaviourEngine.cpp, botsvcs/tests/BAP/engine/Makefile.am, botsvcs/tests/BAP/lib/DummyArbiter.cpp, botsvcs/tests/BAP/lib/DummyArbiter.h, botsvcs/tests/BAP/lib/DummyArbiterMessage.cpp, botsvcs/tests/BAP/lib/DummyArbiterMessage.h, botsvcs/tests/BAP/lib/DummyBehaviour.cpp, botsvcs/tests/BAP/lib/DummyBehaviour.h, botsvcs/tests/BAP/lib/DummyBehaviourB.cpp, botsvcs/tests/BAP/lib/DummyBehaviourB.h, botsvcs/tests/BAP/lib/DummyBehaviourD.cpp, botsvcs/tests/BAP/lib/DummyBehaviourD.h, botsvcs/tests/BAP/lib/DummyFactory.cpp, botsvcs/tests/BAP/lib/DummyFactory.h, botsvcs/tests/BAP/lib/Makefile.am, botsvcs/tests/BAP/monitor/Makefile.am, botsvcs/tests/BAP/monitor/TransitionMonitor.cpp, botsvcs/tests/BAP/monitor/TransitionMonitor.h, botsvcs/tests/BAP/parsing/Makefile.am, botsvcs/tests/BAP/parsing/PolicyParsingTest.cpp, botsvcs/tests/BAP/priorityArbiter/Makefile.am, botsvcs/tests/BAP/priorityArbiter/PriorityArbitersTest.cpp, botsvcs/tests/Makefile.am, doc/Makefile.am, doc/fig/Makefile.am, doc/html/Makefile.am, doc/tex/Makefile.am, dtd/Makefile.am, etc/Makefile.am, examples/Makefile.am, examples/b21Motion/Makefile.am, examples/b21Motion/SimpleBaseClient.cpp, examples/battery/BatteryGet.cpp, examples/battery/Makefile.am, examples/buttons/ButtonsNotify.cpp, examples/buttons/ButtonsNotify.h, examples/buttons/ButtonsPoll.cpp, examples/buttons/Makefile.am, examples/gps/CtGpsDemo.cpp, examples/gps/GpsPoll.cpp, examples/gps/GpsStream.cpp, examples/gps/GpsStream.h, examples/gps/Makefile.am, examples/infrared/Makefile.am, examples/infrared/PollInfrared.cpp, examples/motion/Makefile.am, examples/motion/MotionStatusNotify.cpp, examples/motion/MotionStatusNotify.h, examples/motion/MotionStatusPoll.cpp, examples/notify/GenericNotify.cpp, examples/notify/GenericNotify.h, examples/notify/Makefile.am, examples/odometry/Makefile.am, examples/odometry/OdometryStream.cpp, examples/odometry/OdometryStream.h, examples/odometry/PollPosition.cpp, examples/odometry/SetPosition.cpp, examples/params/Makefile.am, examples/params/ParameterExample.cpp, examples/rangeSensor/Makefile.am:
+	monster commit touching almost every file of the repository:
+	installing new file headers, that better reflect the licensing, to avoid
+	confusion.
+
+2007-02-21  Coyote  <coyote@owl>
+
+	* etc/gonzales.xml, etc/roadrunner.xml:  :-) akt cam parameters
+
+2007-02-16  Coyote  <coyote@owl>
+
+	* src/faulMotor/FaulMotorConnection.cpp:
+	debug:  the frist motorsetting after motordisabling had wrong prevSpeed
+
+2007-02-13  Gerd Mayer  <gmayer@owl>
+
+	* idl/Makefile.am:
+	do not override the set LD_LIBRARY_PATH, instead append the necessary entries
+
+2007-02-02  Gerd Mayer  <gmayer@owl>
+
+	* idl/.cvsignore: beautify cvs
+
+	* utils/widgets/SimpleParameter.cpp, utils/widgets/SimpleParameter.h, utils/widgets/SimpleParameterEdit.cpp, utils/widgets/SimpleParameterEdit.h:
+	add support for new enum-style data types
+
+	- comboboxes for "1 from n"
+	- listboxes for "m from n"
+
+	* src/miro/.cvsignore: beautify cvs
+
+	* src/miro/Enumeration.cpp, src/miro/Enumeration.h, src/miro/EnumerationMultiple.cpp, src/miro/EnumerationMultiple.h, src/miro/Makefile.am, src/miro/XmlParse.cpp, src/miro/XmlParse.h, src/params/Parser.cpp, src/params/Parser.h:
+	- add support for two new data types supported in the miro configuration framework:
+	-- an enumeration style "1 from n" helper class: Enumeration
+	-- and an extended "m from n" class: EnumerationMultiple (okay, okay, it's a dumb name)
+
+	use it like this:
+
+	<config_item name="TESTIT" parent="Miro::Config" final="false">
+	  <config_parameter name="type1" type="Miro::Enumeration" values="VAL1 VAL2 VAL4 VAL5" default="VAL3" />
+	  <config_parameter name="type2" type="Miro::EnumerationMultiple" values="VAL1 VAL2 VAL3 VAL4 VAL5" default="VAL3 VAL4" />
+	  <config_parameter name="type3" type="string" default="Value" />
+	</config_item>
+
+	mainly preparation for the umcoming changes in the VIP config stuff, but might be useful also, when only a given set of values can be used (e.g. the interpolation method in image scaling...)
+
+	* utils/widgets/ParameterList.cpp, utils/widgets/ParameterListDialog.cpp:
+	and again... makes debugging considerably easier
+
+	* utils/widgets/DeferredParameterEdit.cpp, utils/widgets/DocumentXML.cpp:
+	again, throw exception instead of qstring
+
+	* utils/widgets/CompoundParameter.cpp:
+	throw miro exception instead of qstring
+
+2007-01-30  Hans Utz  <hutz@owl>
+
+	* src/miro/LogReader.cpp:
+	Fixing log-reader TAO-version cascade for the OCI 1.4a release of TAO.
+	Thanks to Greg for coding it.
+
+2007-01-25  Coyote  <coyote@owl>
+
+	* idl/Makefile.am: *** empty log message ***
+
+2007-01-13  Hans Utz  <hutz@owl>
+
+	* config/Make-rules, idl/Makefile.am:
+	- adding rpath for ACE/TAO libraries
+	- explicitly stating the LD_LIBRARY_PATH for tao_idl.
+	  tao_idl does not use rpath. this way we should find the libraries
+	  independently of this environment variable.
+
+	* COPYING:
+	switching the license to LGPL as announced/discussed on the mailing list
+
+2007-01-08  Gerd Mayer  <gmayer@owl>
+
+	* bin/.cvsignore: beautify cvs
+
+2007-01-07  Mosttly  <mostlyharmless@owl>
+
+	* botsvcs/BAP/Pattern.h:
+	NULL not valid for pure virtual function, replaced by 0
+
+2006-12-06  Mosttly  <mostlyharmless@owl>
+
+	* idl/Charger.idl, idl/Makefile.am:
+	Charger Interface for Pioneer 3DX added
+
+2006-11-27  Hans Utz  <hutz@owl>
+
+	* utils/logPlayer/ChannelManager.cpp, utils/logPlayer/ChannelManager.h, utils/logPlayer/LogPlayer.cpp, utils/logPlayer/time2date.cpp:
+	making channel name a command line option (EventChannel by default)
+
+2006-11-10  Mosttly  <mostlyharmless@owl>
+
+	* idl/BatteryEvent.idl, idl/Makefile.am, src/miro/BatteryImpl.cpp, src/miro/BatteryImpl.h, src/pioneerBase/PioneerBase.cpp:
+	Event for Battery Status added
+
+2006-11-06  Gerd Mayer  <gmayer@owl>
+
+	* src/video/VideoDevicePlayer.cpp, src/video/VideoDevicePlayer.h:
+	clean up
+
+2006-10-26  Greg Broten  <gbroten@owl>
+
+	* src/psos/PsosEventHandler.cpp, src/sparrow/SparrowEventHandler.cpp, src/video/VideoDeviceBTTV.cpp, src/video/VideoDeviceQuickCam.cpp:
+	Updated to support the x86_64 bit architecture. In each of these files the compiler complained about a loss of precision when ask to cast a void * to an integer. Under the i386 a void * pointer and an integer are both represented by 32 bits, but under the x86_64 architecture, a void * pointer is 64 bits. The solution was to use a cast to long, which works for both architectures.
+
+	* src/miro/Makefile.am, src/miro/SockConnection.cpp, src/miro/SockConnection.h, src/miro/SvcParameters.xml:
+	Added the SockConnection class, analogous to the TtyConnection class, which simplifies interfacing with socket based devices.
+
+2006-10-26  speedy  <speedy@owl>
+
+	* config/search_player.m4: search for player 2.0
+
+2006-10-25  Hans Utz  <hutz@owl>
+
+	* src/miro/LogHeader.cpp, src/miro/LogHeader.h, src/miro/LogReader.cpp, src/miro/LogReader.h, src/miro/LogTypeRepository.cpp, src/miro/LogTypeRepository.h, src/miro/LogWriter.h:
+	making log stream 64 bit arch save
+
+2006-10-25  Uli Kaufmann  <uli@owl>
+
+	* examples/player/README, examples/player/miroPlayer.xml:
+	add more informations
+
+	* examples/player/gazebo.cfg, examples/player/miroPlayer.xml, examples/player/pioneers.world:
+	here some example config files for player/gazebo 2.0.2
+	and a example file for PlayerBase
+
+	* src/video/VideoDevicePlayer.cpp, src/video/VideoDevicePlayer.h, src/playerBase/Parameters.xml, src/playerBase/PlayerBase.cpp, src/playerBase/PlayerBase.h, src/playerBase/PlayerCameraControlImpl.h, src/playerBase/PlayerConnection.h, src/playerBase/PlayerLaserImpl.cpp, src/playerBase/PlayerLaserImpl.h, src/playerBase/PlayerMotionImpl.cpp, src/playerBase/PlayerMotionImpl.h, src/playerBase/PlayerPanTiltImpl.cpp, src/playerBase/PlayerPanTiltImpl.h, src/playerBase/PlayerReactorTask.cpp, src/playerBase/PlayerReactorTask.h:
+	changes from Sean Verret
+	update the Player interface for player-2.0.2
+
+2006-10-04  Mosttly  <mostlyharmless@owl>
+
+	* configure.ac, src/Makefile.am: added sick laser ranger 360
+
+2006-08-09  Gerd Mayer  <gmayer@owl>
+
+	* utils/logPlayer/EventView.h: compile fix (from sean verret)
+
+2006-07-15  Hans Utz  <hutz@owl>
+
+	* config/Make-rules: fixed a long standing make bug:
+	when changing configure.ac, make will fail until the tree is newly bootstrapped
+	this is, because aclocal was missing its command line parameters when called from the makefile. added those. works like a charm :-)
+
+2006-07-10  Hans Utz  <hutz@owl>
+
+	* examples/params/Config.xml, examples/params/ParameterExample.cpp, examples/params/Parameters.xml:
+	beautifying configuration parameters example
+
+2006-07-04  Gerd Mayer  <gmayer@owl>
+
+	* performance-tests/video/GrabImages.cpp, src/miro/VideoHelper.cpp, tests/video/TestVideoClient.cpp, utils/qtVideo/MainForm.cpp:
+	cast return value to long instead of int, so we do not run into trouble in case we compile on x86_64 machines
+
+	* config/search_tao.m4: add new include file to check for
+
+	* performance-tests/logging/Makefile.am, performance-tests/nmc/Makefile.am:
+	slightly change include dirs for idl->cpp in case ace/tao is installed using new configure stuff
+
+2006-07-03  Gerd Mayer  <gmayer@owl>
+
+	* src/video/BufferManager1394.cpp, src/video/VideoDevice1394.cpp:
+	follow changes in newer libdc1394 version
+
+	* configure.ac: correct check for newer libdc version
+
+	* tests/panTilt/Makefile.am:
+	do not compile pantest2003 in case sparrow support is disabled (idl files are not being built then)
+
+	* src/miro/NotifyMulticastReceiver.cpp:
+	compile fix for x86_64 (avoid ambiguous cast)
+
+2006-06-29  Gerd Mayer  <gmayer@owl>
+
+	* configure.ac:
+	surprising, how many installation/build/prefix combinations exits
+
+2006-06-14  Coyote  <coyote@owl>
+
+	* src/sparrowBase/SparrowServer.cpp: There is no sparrow board any more
+
+2006-06-13  Gonzales  <gonzales@owl>
+
+	* etc/roadrunner.xml: cam1394setup bremen
+
+2006-06-09  Coyote  <coyote@owl>
+
+	* etc/coyote.xml, etc/gonzales.xml, etc/roadrunner.xml, etc/speedy.xml:
+	yeah, we can now distinguish between big and small balls :-)
+
+2006-06-07  Coyote  <coyote@owl>
+
+	* botsvcs/BAP/Policy.cpp:
+	 - added output of _message string to error msg "no transition registered for message"
+
+	 /tomsen
+
+2006-06-06  Gerd Mayer  <gmayer@owl>
+
+	* etc/coyote.xml, etc/gonzales.xml, etc/roadrunner.xml, etc/speedy.xml:
+	add necessary parameters for new corner pole verification
+
+	* etc/coyote.xml, etc/gonzales.xml, etc/roadrunner.xml, etc/speedy.xml:
+	remove floor line calculation for now (localization does not use it currently, and it saves us a lot of resources)  -- hey, this was easy, just one line to change and a whole couple of filters are no longer processed :-)
+
+2006-05-30  Gerd Mayer  <gmayer@owl>
+
+	* tests/videoBroker/VideoBrokerTestBrief.cpp: remove unused func
+
+2006-05-19  Coyote  <coyote@owl>
+
+	* src/sparrowBase/SparrowServer.cpp, src/sparrowBase/SparrowServer.h:
+	remove notify multicast instantiation from the sparrow base (it is now done in the nixplayer)
+
+2006-05-17  Coyote  <coyote@owl>
+
+	* etc/coyote.xml, etc/gonzales.xml, etc/roadrunner.xml, etc/speedy.xml:
+	set pan swing latency to zero
+
+2006-05-16  Gerd Mayer  <gmayer@owl>
+
+	* etc/coyote.xml, etc/gonzales.xml, etc/roadrunner.xml, etc/speedy.xml:
+	propagate jpeg-filter changes and removale of robot detection to other robots too
+
+2006-05-15  Coyote  <coyote@owl>
+
+	* etc/gonzales.xml: remove robot detection for now (no one uses it)
+
+	* etc/gonzales.xml: jpeg should work now
+
+2006-05-15  Gerd Mayer  <gmayer@owl>
+
+	* etc/gonzales.xml: add jpeg filter
+
+2006-05-15  Verteidiger  <roadrunner@owl>
+
+	* etc/roadrunner.xml:
+	 - calibrated omnicam position
+
+	 (tomsen)
+
+2006-05-11  Gerd Mayer  <gmayer@owl>
+
+	* utils/qtVideo/MainForm.cpp, utils/qtVideo/MainForm.h:
+	prepare to handle jpeg-images.
+
+2006-05-05  Hans Utz  <hutz@owl>
+
+	* src/video/VideoFilterRGBtoSeg.cpp:
+	multiple increments in one complex expression are a bit undefined, thinks gcc 4.0
+
+2006-04-28  Hans Utz  <hutz@owl>
+
+	* config/conditionals.m4, configure.ac:
+	checking for log/dbg-macro generation
+
+	* src/miro/LogTypeRepository.cpp:
+	oooops. the last one did not compile, yet
+
+	* utils/notify/LogNotify.cpp:
+	propagate one year old changes to the config document stuff
+
+	* src/miro/LogTypeRepository.cpp, src/miro/LogWriter.cpp:
+	extra copy of message block to prevent chaining
+
+2006-04-20  Coyote  <coyote@owl>
+
+	* etc/gonzales.xml: do no longer save images
+
+2006-04-05  Gerd Mayer  <gmayer@owl>
+
+	* config/conditionals.m4:
+	it's not allowed to define AM_CONDITIONALS in conditional statements... so if one would disable firewire stuff, it chrashes
+
+2006-04-04  Gerd Mayer  <gmayer@owl>
+
+	* performance-tests/nmc/NotifyPerformance.cpp:
+	small fix for ACE+TAO 5.5
+
 2006-03-28  Gerd Mayer  <gmayer@owl>
+
+	* ChangeLog: update
 
 	* config/.cvsignore, doc/html/.cvsignore: beautify
 
@@ -4892,7 +5199,7 @@
 	* etc/coyote.xml, etc/passtnix.xml, etc/roadrunner.xml, etc/trifftnix.xml:
 	readding broadcast of SharedWorld for RoboCTL
 
-2003-07-05  Markus Lauer  <mlauer@owl>
+2003-07-05  mlauer  <mlauer@owl>
 
 	* src/video/VideoFilter.cpp:
 	second try on race condition on filter processing
@@ -4939,7 +5246,7 @@
 	* src/sparrow/SparrowConnection.cpp, src/sparrow/SparrowConnection.h:
 	fixing sparrow board cleanup
 
-2003-07-03  Markus Lauer  <mlauer@owl>
+2003-07-03  mlauer  <mlauer@owl>
 
 	* etc/trifftnix.xml: enabling channel sharing
 	prolonging swing time
@@ -4948,13 +5255,13 @@
 
 	* etc/roadrunner.xml: i hope, this is the right verison ......
 
-2003-07-03  Markus Lauer  <mlauer@owl>
+2003-07-03  mlauer  <mlauer@owl>
 
 	* etc/roadrunner.xml: Changed value of Alpha
 
 	* etc/trifftnix.xml: changed angle of camera
 
-2003-07-02  Markus Lauer  <mlauer@owl>
+2003-07-02  mlauer  <mlauer@owl>
 
 	* etc/trifftnix.xml: changed angle of valchanged angle of valuee
 
