@@ -43,6 +43,8 @@ VideoFilterOmni2Pan.lo
 VideoFilterRGBtoSeg.lo
 VideoFilterService.lo
 VideoFilterYUV420PtoRGB.lo
+libmiroVideo_la-BufferManagerUnicap.lo
+libmiroVideo_la-VideoDeviceUnicap.lo
 
 libmiroVideo.la
 
