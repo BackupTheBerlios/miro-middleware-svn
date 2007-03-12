@@ -138,6 +138,30 @@
       <config_parameter name="videoMode" type="int" default="0" />
     </config_item>
 
+    <config_item name="DeviceUnicap" parent="Device" final="true">
+      <config_parameter name="device" type="string" inherited="true" default="/dev/raw1394" />
+      <config_parameter name="buffers" type="unsigned int" default="6" />
+      <config_parameter name="brightness" type="double" default="128" /> <!-- 0-255 -->
+      <config_parameter name="exposure" type="double" default="800" />  <!-- 0-2000 -->
+      <config_parameter name="whiteBalanceMode" type="Miro::Enumeration" default="ON_OFF"
+	  values="ON_OFF AUTO" />
+      <config_parameter name="whiteBalanceU" type="double" default="45" />  <!-- 0-95 -->
+      <config_parameter name="whiteBalanceV" type="double" default="45" />  <!-- 0-95 -->
+      <config_parameter name="hue" type="double" default="180" /> <!-- 0-359 -->
+      <config_parameter name="saturation" type="double" default="128" /> <!-- 0-255 -->
+      <config_parameter name="gamma" type="double" default="10" /> <!-- 10-22 -->
+      <config_parameter name="shutter" type="double" default="0.033333" /> <!-- 0.0001-30.0 -->
+      <config_parameter name="gain" type="double" default="300" /> <!-- 180-1023 -->
+      <config_parameter name="framerate" type="double" default="30" />  <!-- 1.875/3.75/7.5/15/30 -->
+      <config_parameter name="timeout" type="double" default="1" /> <!-- 0-600 -->
+      <config_parameter name="strobeMode" type="Miro::Enumeration" default="ConstantLow"
+	  values="ConstantLow ConstantHigh FixedDuration Exposure" />
+      <config_parameter name="strobeDuration" type="double" default="10" /> <!-- 10-40000 -->
+      <config_parameter name="strobeDelay" type="double" default="0" /> <!-- -20000 - 20000 -->
+      <config_parameter name="strobePolarity" type="Miro::Enumeration" default="ActiveLow"
+	  values="ActiveLow ActiveHigh" />
+    </config_item>
+
     <config_item parent="Miro::Config">
       <config_parameter name="width" type="int" default="384" measure="pixel" />
       <config_parameter name="height" type="int" default="288" measure="pixel" />

@@ -74,6 +74,12 @@ else
 endif
 endif
 
+if COND_UNICAP
+unicaplibraries = \
+	-lraw1394 \
+	-lunicap
+endif
+
 if COND_PLAYER
 playerlibraries = \
 	$(PLAYER_LDFLAGS) $(PLAYER_LIBS)

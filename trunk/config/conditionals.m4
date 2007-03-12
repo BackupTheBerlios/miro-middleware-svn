@@ -109,6 +109,12 @@ AC_DEFUN([AC_DETERMINE_VIDEODEVICES],
 		ac_request_ieee1394=yes)
 
 	AC_ARG_ENABLE(
+		Unicap,
+		AC_HELP_STRING([--enable-Unicap], [Turn on Unicap support (default off)]),
+		ac_request_unicap=$enableval,
+		ac_request_unicap=no)
+
+	AC_ARG_ENABLE(
 		QuickCam,
 		AC_HELP_STRING([--enable-QuickCam], [Turn on QuickCam support (default on)]),
 		ac_request_quickcam=$enableval,
@@ -117,6 +123,7 @@ AC_DEFUN([AC_DETERMINE_VIDEODEVICES],
 	AH_TEMPLATE([MIRO_HAS_BTTV], [build with BTTV support.])
 	AH_TEMPLATE([MIRO_HAS_METEOR], [build with Meteor support.])
 	AH_TEMPLATE([MIRO_HAS_1394], [build with 1394 support.])
+	AH_TEMPLATE([MIRO_HAS_UNICAP], [build with Unicap support.])
 	AH_TEMPLATE([MIRO_HAS_QUICKCAM], [build with QuickCam support.])
 
 	if test "x$ac_request_bttv" = xyes; then
@@ -132,11 +139,21 @@ AC_DEFUN([AC_DETERMINE_VIDEODEVICES],
 	ac_miro_has_1394_libversion=0
 	if test "x$ac_request_ieee1394" = xyes; then
 		AC_CHECK_LIB(raw1394, raw1394_get_libversion, [ac_have_libraw1394=yes], [ac_have_libraw1394=no])
-#		AC_CHECK_LIB(dc1394_control, dc1394_dma_setup_capture, [ac_have_libdc1394=yes], [ac_have_libdc1394=no], [-lraw1394])
 		AC_DETERMINE_LIBDC_VERSION # overwrites $ac_miro_has_1394_libversion
 		if test "x$ac_have_libraw1394" = xyes && test "x$ac_have_libdc1394" = xyes; then
 			AC_DEFINE(MIRO_HAS_1394)
 			ac_miro_has_1394=yes
+		fi
+	fi
+
+	ac_miro_has_unicap_libversion=0
+	if test "x$ac_request_unicap" = xyes; then
+		AC_CHECK_LIB(raw1394, raw1394_get_libversion, [ac_have_libraw1394=yes], [ac_have_libraw1394=no])
+		AC_CHECK_LIB(unicap, unicap_open, [ac_have_unicap=yes], [ac_have_unicap=no])
+
+		if test "x$ac_have_libraw1394" = xyes && test "x$ac_have_unicap" = xyes; then
+			AC_DEFINE(MIRO_HAS_UNICAP)
+			ac_miro_has_unicap=yes
 		fi
 	fi
 
@@ -149,6 +166,7 @@ AC_DEFUN([AC_DETERMINE_VIDEODEVICES],
 	AM_CONDITIONAL(COND_METEOR, [test "x$ac_miro_has_meteor" = xyes])
 	AM_CONDITIONAL(COND_IEEE1394, [test "x$ac_miro_has_1394" = xyes])
 	AM_CONDITIONAL(COND_IEEE1394_NEWLIB, [test $ac_miro_has_1394_libversion -ge 3])
+	AM_CONDITIONAL(COND_UNICAP, [test "x$ac_miro_has_unicap" = xyes])
 	AM_CONDITIONAL(COND_QUICKCAM, [test "x$ac_miro_has_quickcam" = xyes])
 ])
 

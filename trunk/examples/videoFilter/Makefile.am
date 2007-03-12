@@ -34,6 +34,7 @@ GrayVideoService_LDADD = \
 	-lmiroVideo \
 	-lmiro \
 	$(1394libraries) \
+	$(unicaplibraries) \ 
 	$(playerlibraries)
 
 BUILT_SOURCES = Parameters.cpp Parameters.h

@@ -110,6 +110,7 @@ else
 	miro_export_ldflags="-L${libdir}";
 	miro_export_libs="-lmiroVideo -lmiroIDL -lmiro ${libdir}/libmiroSvc.a"; fi
 if test "x$ac_miro_has_1394" == xyes; then if test $ac_miro_has_1394_libversion -ge 3; then miro_export_libs="$miro_export_libs -lraw1394 -ldc1394"; else miro_export_libs="$miro_export_libs -lraw1394 -ldc1394_control"; fi; fi
+if test "x$ac_miro_has_unicap" == xyes; then miro_export_libs="$miro_export_libs -lunicap"; fi
 if test "x$ac_compile_player" == xyes; then miro_export_libs="$miro_export_libs ${PLAYER_LDFLAGS} ${PLAYER_LIBS}"; fi
 
 AC_SUBST(miro_export_acetao_cflags)
@@ -129,6 +130,7 @@ AC_SUBST(miro_export_qt_uic, "${QT_UIC}")
 
 AC_SUBST(miro_export_bttv, "$ac_miro_has_bttv")
 AC_SUBST(miro_export_ieee1394, "$ac_miro_has_1394")
+AC_SUBST(miro_export_unicap, "$ac_miro_has_unicap")
 AC_SUBST(miro_export_meteor, "$ac_miro_has_meteor")
 AC_SUBST(miro_export_quickcam, "$ac_miro_has_quickcam")
 AC_SUBST(miro_export_sparrow99,"$ac_request_sparrow99")
@@ -327,20 +329,36 @@ if test x$ac_compile_player = xyes; then
 	echo "libraries used:" $PLAYER_LIBS
 fi
 echo ""
-echo $ECHO_N "Sparrow99 support "; if test "x$ac_request_sparrow99" = xyes; then echo "enabled."; else echo "disabled."; fi
-echo $ECHO_N "Pioneer support "; if test "x$ac_request_pioneer" = xyes; then echo "enabled."; else echo "disabled."; fi
-echo $ECHO_N "B21 support "; if test "x$ac_request_b21" = xyes; then echo "enabled."; else echo "disabled."; fi
-echo $ECHO_N "Player simulator support "; if test "x$ac_compile_player" = xyes; then echo "enabled."; else echo "disabled."; fi
-echo ""
-echo $ECHO_N "BTTV support "; if test "x$ac_miro_has_bttv" = xyes; then echo "enabled."; else echo "disabled."; fi
-echo $ECHO_N "Meteor support "; if test "x$ac_miro_has_meteor" = xyes; then echo "enabled."; else echo "disabled."; fi
-echo $ECHO_N "IEEE1394 support "; if test "x$ac_miro_has_1394" = xyes; then echo "enabled."; else echo "disabled."; fi
-echo $ECHO_N "QuickCam support "; if test "x$ac_miro_has_quickcam" = xyes; then echo "enabled."; else echo "disabled."; fi
-echo ""
-echo $ECHO_N "Speech support "; if test "x$ac_compile_speech" = xyes; then echo "enabled."; else echo "disabled."; fi
-echo ""
-echo $ECHO_N "Latex documentation "; if test "x$ac_compile_docu" = xyes; then
-	if test "x$ac_compile_pdf" = xyes; then echo "enabled using pdflatex."; else echo "enabled using latex and dvips."; fi
-	else echo "disabled."; fi
-echo $ECHO_N "HTML documentation "; if test "x$ac_compile_html" = xyes; then echo "enabled."; else echo "disabled."; fi
+echo "Feature:            |   Enabled   |   Disabled   "
+echo "-------------------------------------------------"
+echo $ECHO_N "Sparrow99"
+if test "x$ac_request_sparrow99" = xyes; then echo "                  X"; else echo "                                 X"; fi
+echo $ECHO_N "Pioneer"
+if test "x$ac_request_pioneer" = xyes; then echo "                    X"; else echo "                                   X"; fi
+echo $ECHO_N "B21"
+if test "x$ac_request_b21" = xyes; then echo "                        X"; else echo "                                       X"; fi
+echo $ECHO_N "Player simulator"
+if test "x$ac_compile_player" = xyes; then echo "           X"; else echo "                          X"; fi
+echo "-------------------------------------------------"
+echo $ECHO_N "BTTV"
+if test "x$ac_miro_has_bttv" = xyes; then echo "                       X"; else echo "                                      X"; fi
+echo $ECHO_N "Meteor"
+if test "x$ac_miro_has_meteor" = xyes; then echo "                     X"; else echo "                                    X"; fi
+echo $ECHO_N "IEEE1394"
+if test "x$ac_miro_has_1394" = xyes; then echo "                   X"; else echo "                                  X"; fi
+echo $ECHO_N "Unicap"
+if test "x$ac_miro_has_unicap" = xyes; then echo "                     X"; else echo "                                    X"; fi
+echo $ECHO_N "QuickCam"
+if test "x$ac_miro_has_quickcam" = xyes; then echo "                   X"; else echo "                                  X"; fi
+echo "-------------------------------------------------"
+echo $ECHO_N "Speech"
+if test "x$ac_compile_speech" = xyes; then echo "                     X"; else echo "                                    X"; fi
+echo "-------------------------------------------------"
+echo $ECHO_N "HTML documentation"
+if test "x$ac_compile_html" = xyes; then echo "         X"; else echo "                        X"; fi
+echo $ECHO_N "Latex documentation"
+if test "x$ac_compile_docu" = xyes; then
+if test "x$ac_compile_pdf" = xyes; then echo "     pdflatex"; else echo "   latex/dvips"; fi
+else echo "                       X"; fi
+
 echo ""

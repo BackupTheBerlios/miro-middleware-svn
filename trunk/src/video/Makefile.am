@@ -36,7 +36,16 @@ sources = \
 	VideoImpl.cpp \
 	VideoBrokerImpl.cpp \
 	VideoServer.cpp \
-	VideoFilterService.cpp
+	VideoFilterService.cpp \
+	VideoFilterYUVbase.cpp \
+	VideoFilterYUV411toRGB.cpp \
+	VideoFilterYUV411toYUV.cpp \
+	VideoFilterYUV422toRGB.cpp \
+	VideoFilterYUV422toYUV.cpp \
+	VideoFilterYUV420PtoRGB.cpp \
+	VideoFilterOmni2Pan.cpp \
+	VideoFilterRGBtoSeg.cpp \
+	VideoFilterDistanceScan.cpp
 
 playersources = \
 	VideoDevicePlayer.cpp
@@ -52,20 +61,15 @@ meteorsources = \
 1394sources = \
 	BufferManager1394.cpp \
 	VideoDevice1394.cpp \
-	VideoFilterYUVbase.cpp \
-	VideoFilterYUV411toRGB.cpp \
-	VideoFilterYUV411toYUV.cpp \
-	VideoFilterYUV422toRGB.cpp \
-	VideoFilterYUV422toYUV.cpp \
 	VideoControlImpl.cpp
+
+unicapsources = \
+	BufferManagerUnicap.cpp \
+	VideoDeviceUnicap.cpp
 
 quickcamsources = \
 	BufferManagerQuickCam.cpp \
-	VideoDeviceQuickCam.cpp \
-	VideoFilterYUV420PtoRGB.cpp \
-	VideoFilterOmni2Pan.cpp \
-	VideoFilterRGBtoSeg.cpp \
-	VideoFilterDistanceScan.cpp
+	VideoDeviceQuickCam.cpp
 
 if COND_PLAYER
 playersources_used = $(playersources)
@@ -83,6 +87,10 @@ if COND_IEEE1394
 1394sources_used = $(1394sources)
 endif
 
+if COND_UNICAP
+unicapsources_used = $(unicapsources)
+endif
+
 if COND_QUICKCAM
 quickcamsources_used = $(quickcamsources)
 endif
@@ -97,6 +105,7 @@ libmiroVideo_la_SOURCES = \
 	$(bttvsources_used) \
 	$(meteorsources_used) \
 	$(1394sources_used) \
+	$(unicapsources_used) \
 	$(quickcamsources_used) \
 	$(playersources_used)
 if COND_PCH
@@ -117,6 +126,7 @@ VideoService_LDADD = \
 	-lmiro \
 	$(QT_LIBS) \
 	$(1394libraries) \
+	$(unicaplibraries) \
 	$(playerlibraries)
 
 
@@ -131,7 +141,14 @@ extraheader = \
 BUILT_SOURCES = Parameters.cpp Parameters.h
 CLEANFILES = $(BUILT_SOURCES)
 
-includefiles1 = $(sources:.xml=.h) $(bttvsources:.xml=.h) $(meteorsources:.xml=.h) $(1394sources:.xml=.h) $(quickcamsources:.xml=.h) $(extraheader)
+includefiles1 = \
+	$(sources:.xml=.h) \
+	$(bttvsources:.xml=.h) \
+	$(meteorsources:.xml=.h) \
+	$(1394sources:.xml=.h) \
+	$(unicapsources:.xml=.h) \
+	$(quickcamsources:.xml=.h) \
+	$(extraheader)
 includefiles2 = $(includefiles1:.cpp=.h)
 video_include_HEADERS = $(includefiles2)
 
