@@ -20,14 +20,12 @@ SUFFIXES = .cpp .idl C.cpp C.h C.i.h S.cpp S.h S.i.h
 .idlC.cpp:
 	LD_LIBRARY_PATH=$(ACE_ROOT)/lib:$(ACE_ROOT)/ace $(TAO_IDL) -in -ci C.i.h -si S.i.h -Wp,-I$(top_srcdir)/idl -I$(top_srcdir)/idl $<
 
+#	LD_LIBRARY_PATH=$(ACE_ROOT)/lib:$(ACE_ROOT)/ace $(TAO_IDL) -in -ci C.i.h -si S.i.h -Wp,-I$(top_srcdir)/idl -I$(top_srcdir)/idl -I$(TAO_ROOT) -I$(TAO_ROOT)/orbsvcs $<
+
 C.cppC.h: ;
-
 C.hC.i.h: ;
-
 C.i.hS.cpp: ;
-
 S.cppS.h: ;
-
 S.hS.i.h: ;
 
 sources = \
@@ -42,19 +40,17 @@ builtsources = \
 	$(sources:.idl=S.cpp) \
 	$(sources:.idl=S.i.h)
 
-## binaries to be built
 bin_PROGRAMS = LogPerformance
 
 LogPerformance_DEPENDENCIES = $(sources) $(builtsources)
 
 BUILT_SOURCES = $(builtsources)
-CLEANFILES = $(builtsources)
+CLEANFILES = $(builtsources) \
+	$(sources:.idl=S_T.cpp) \
+	$(sources:.idl=S_T.h) \
+	$(sources:.idl=S_T.inl)
 
-## sourcefiles needed for the different binaries to be built
-## the prefix of the following macros must have the same name as the respective binary
 LogPerformance_SOURCES  = $(builtsources) LogPerformance.cpp
-
-## you may add libraries to be linked here
 LogPerformance_LDADD  = -lmiroSvc -lmiro 
 
 all-local: LogPerformance

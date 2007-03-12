@@ -16,23 +16,22 @@ endif
 
 SUFFIXES = .idl C.cpp C.h C.i.h S.cpp S.h S.i.h
 
-.idlS.cpp:
+.idlC.cpp:
 	LD_LIBRARY_PATH=$(ACE_ROOT)/lib:$(ACE_ROOT)/ace $(TAO_IDL) -in -ci C.i.h -si S.i.h -Wp,-I$(top_srcdir)/idl -I$(top_srcdir)/idl $<
 
-noinst_PROGRAMS = VideoService
+C.cppC.h: ;
+C.hC.i.h: ;
+C.i.hS.cpp: ;
+S.cppS.h: ;
+S.hS.i.h: ;
 
+noinst_PROGRAMS = VideoService
 
 ParametersFilter.h: ParametersFilter.cpp
 ParametersFilter.cpp: ParametersFilter.xml
 
 ParametersImage.h: ParametersImage.cpp
 ParametersImage.cpp: ParametersImage.xml
-
-BallResultC.cpp: BallResultC.i.h
-BallResultC.i.h: BallResultC.h
-BallResultC.h: BallResultS.cpp
-BallResultS.i.h: BallResultS.h
-BallResultS.h: BallResult.idl
 
 VideoService_SOURCES = \
 	VideoService.cpp \
@@ -46,6 +45,7 @@ VideoService_LDADD = \
 	-lmiroVideo \
 	-lmiro \
 	$(1394libraries) \
+	$(unicaplibraries) \
 	$(playerlibraries)
 
 BUILT_SOURCES = \
@@ -53,7 +53,9 @@ BUILT_SOURCES = \
 	ParametersImage.cpp ParametersImage.h \
 	BallResultC.cpp BallResultC.i.h BallResultC.h \
 	BallResultS.cpp BallResultS.i.h BallResultS.h
-CLEANFILES = $(BUILT_SOURCES)
+
+CLEANFILES = $(BUILT_SOURCES) \
+	BallResultS_T.cpp BallResultS_T.h BallResultS_T.inl
 
 all-local: VideoService
 	$(INSTALLPROGRAMS)

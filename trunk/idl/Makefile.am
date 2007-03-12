@@ -14,24 +14,18 @@ if COND_PCH
 AM_CPPFLAGS+=-include $(top_builddir)/pch/all_shared.h
 endif
 
-
 SUFFIXES = .idl C.cpp C.h C.i.h S.cpp S.h S.i.h
 
 .idlC.cpp:
 	LD_LIBRARY_PATH=$(ACE_ROOT)/lib:$(ACE_ROOT)/ace $(TAO_IDL) -in -ci C.i.h -si S.i.h -Wp,-I$(top_srcdir)/idl -I$(top_srcdir)/idl $<
 
 C.cppC.h: ;
-
 C.hC.i.h: ;
-
 C.i.hS.cpp: ;
-
 S.cppS.h: ;
-
 S.hS.i.h: ;
 
 lib_LTLIBRARIES = libmiroIDL.la
-
 
 globalsources = \
 	Time.idl \
@@ -116,8 +110,6 @@ sparrowsources = \
 deprecatedsources = \
 	CanonCamera.idl
 
-
-
 if COND_B21
 b21sources_used = $(b21sources)
 endif
@@ -133,7 +125,6 @@ endif
 if COND_DEPRECATED
 deprecatedsources_used = $(deprecatedsources)
 endif
-
 
 sources = \
 	$(globalsources) \
@@ -152,12 +143,11 @@ builtsources = \
 
 libmiroIDL_la_SOURCES = $(builtsources)
 
-#libmiroIDL_la_LIBADD = \
-#	-lTAO \
-#	-lACE
-
 BUILT_SOURCES = $(builtsources)
-CLEANFILES = $(builtsources)
+CLEANFILES = $(builtsources) \
+	$(sources:.idl=S_T.cpp) \
+	$(sources:.idl=S_T.h) \
+	$(sources:.idl=S_T.inl)
 
 idl_include_HEADERS = $(builtsources) $(sources)
 
