@@ -11,3 +11,6 @@ Makefile.in
 *S.h
 *S.i.h
 *S.cpp
+*S_T.cpp
+*S_T.h
+*S_T.inl

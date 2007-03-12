@@ -12,6 +12,9 @@ BallResultC.i.h
 BallResultS.cpp
 BallResultS.h
 BallResultS.i.h
+BallResultS_T.cpp
+BallResultS_T.h
+BallResultS_T.inl
 ParametersFilter.cpp
 ParametersFilter.h
 ParametersImage.cpp
