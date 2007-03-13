@@ -31,8 +31,8 @@
 #include "VideoDevice.h"
 #include "miro/Enumeration.h"
 
-#include <unicap.h>
-#include <unicap_status.h>
+#include <unicap/unicap.h>
+#include <unicap/unicap_status.h>
 
 
 namespace Video
