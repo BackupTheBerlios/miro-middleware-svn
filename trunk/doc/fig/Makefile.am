@@ -11,7 +11,7 @@
 
 include $(top_srcdir)/config/Make-rules
 
-SUFFIXES = .fig .ps .eps .png
+SUFFIXES += .fig .ps .eps .png
 
 .fig.eps:
 	fig2dev -L eps $< $@

@@ -88,8 +88,28 @@ endif
 
 # common build rules
 
+SUFFIXES = .ui .xml .idl .h .moc.cpp C.cpp C.h C.i.h S.cpp S.h S.i.h
+
 .xml.cpp:
 	$(top_builddir)/src/makeParams/MakeParams -f $< -n $(@:.cpp=) -s cpp -h h
+
+.h.moc.cpp:
+	$(QT_MOC) $< -o $@
+
+.ui.h:
+	$(QT_UIC) -o $@ $<
+
+.ui.cpp:
+	$(QT_UIC) -o $@ -impl $*.h $<
+
+.idlC.cpp:
+	LD_LIBRARY_PATH=$(ACE_ROOT)/lib:$(ACE_ROOT)/ace $(TAO_IDL) -in -ci C.i.h -si S.i.h -Wp,-I$(top_srcdir)/idl -I$(top_srcdir)/idl $(TAO_CFLAGS) $<
+
+C.cppC.h: ;
+C.hC.i.h: ;
+C.i.hS.cpp: ;
+S.cppS.h: ;
+S.hS.i.h: ;
 
 # these rules do the trick of local install/cleaning the libraries and programs
 

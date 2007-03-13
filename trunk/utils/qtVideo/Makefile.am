@@ -16,17 +16,6 @@ AM_CPPFLAGS+=-include $(top_builddir)/pch/all_static.h
 endif
 
 
-SUFFIXES = .h .moc.cpp
-
-.h.moc.cpp:
-	$(QT_MOC) $< -o $@
-
-%.h: %.ui
-	$(QT_UIC) -o $@ $<
-
-%.cpp: %.ui
-	$(QT_UIC) -o $@ -impl $*.h $<
-
 if COND_IEEE1394
 1394programs = QtVideoControl VideoControlTest
 endif

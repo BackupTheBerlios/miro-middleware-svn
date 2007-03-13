@@ -15,12 +15,6 @@ AM_CPPFLAGS+=-include $(top_builddir)/pch/all_static.h
 endif
 
 
-SUFFIXES = .h .moc.cpp
-
-.h.moc.cpp:
-	$(QT_MOC) $< -o $@
-
-
 bin_PROGRAMS = PolicyEditor
 
 
