@@ -126,9 +126,24 @@ namespace Miro
     right = velocity.translation;
 
     int delta = (int) rint(velocity.rotation * params_.wheelBase * .5);
+    
+    //if  left speed > params_.maxLTranslation because of rotation we need to speed down
+    if (left-delta > params_.maxLTranslation) {
+	    left = params_.maxLTranslation;
+	    right = right + 2*delta;
+    }else{
+	    left -= delta;
+	    right += delta;
+    }
+    // here the same for right
+    if (right+delta > params_.maxRTranslation) {
+	    right = params_.maxRTranslation;
+	    left  = left - 2*delta;
+    }else{
+	    left -= delta;
+	    right += delta;
+    }
 
-    left -= delta;
-    right += delta;
   }
 }
 
