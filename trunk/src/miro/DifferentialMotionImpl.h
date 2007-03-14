@@ -132,18 +132,15 @@ namespace Miro
 	    left = params_.maxLTranslation;
 	    right = right + 2*delta;
     }else{
-	    left -= delta;
-	    right += delta;
+	     // here the same for right
+	    if (right+delta > params_.maxRTranslation) {
+		    right = params_.maxRTranslation;
+		    left  = left - 2*delta;
+	    }else{
+		    left -= delta;
+		    right += delta;
+           }
     }
-    // here the same for right
-    if (right+delta > params_.maxRTranslation) {
-	    right = params_.maxRTranslation;
-	    left  = left - 2*delta;
-    }else{
-	    left -= delta;
-	    right += delta;
-    }
-
   }
 }
 
