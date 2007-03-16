@@ -419,7 +419,8 @@ namespace Sparrow
           err = "Pan2005 serial data error";
   	  break;
 	case 0x0A:
-	  err = "Pan2005 severe fault";
+	  err = "Fatal error: Pan2005 severe fault (think about changing batteries)";
+	  MIRO_LOG(LL_ERROR, err);
 	  abort();
 	  break;
 	default:
