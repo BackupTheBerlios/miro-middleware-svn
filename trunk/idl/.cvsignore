@@ -14,4 +14,5 @@ libmiroIDL.la
 *S_T.cpp
 *S_T.h
 *S_T.inl
+*S_T.i
 *S.lo
