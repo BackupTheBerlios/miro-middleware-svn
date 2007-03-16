@@ -4,8 +4,7 @@ QtVideoControl
 VideoControlDialog.cpp
 VideoControlDialog.h
 VideoControlDialog.moc.cpp
-VideoControlDialogImp.moc.cpp
-VideoControlTest
+VideoControl.moc.cpp
 Makefile.in
 Makefile
 .deps

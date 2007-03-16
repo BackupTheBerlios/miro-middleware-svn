@@ -60,8 +60,7 @@ meteorsources = \
 
 1394sources = \
 	BufferManager1394.cpp \
-	VideoDevice1394.cpp \
-	VideoControlImpl.cpp
+	VideoDevice1394.cpp
 
 unicapsources = \
 	BufferManagerUnicap.cpp \
@@ -108,6 +107,7 @@ libmiroVideo_la_SOURCES = \
 	$(unicapsources_used) \
 	$(quickcamsources_used) \
 	$(playersources_used)
+
 if COND_PCH
 libmiroVideo_la_CPPFLAGS = -include $(top_builddir)/pch/all_shared.h $(CPPFLAGS) $(AM_CPPFLAGS)
 endif

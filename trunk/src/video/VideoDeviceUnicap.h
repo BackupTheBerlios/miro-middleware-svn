@@ -29,6 +29,7 @@
 #endif
 
 #include "VideoDevice.h"
+#include "idl/VideoControlS.h"
 #include "miro/Enumeration.h"
 
 #include <unicap.h>
@@ -38,7 +39,7 @@
 namespace Video
 {
   //! Firewire camera support based on the unicap package.
-  class DeviceUnicap : public Device
+  class DeviceUnicap : public Device, public virtual POA_Video::CameraControl
   {
     typedef Device Super;
     
@@ -47,6 +48,13 @@ namespace Video
     virtual ~DeviceUnicap();
 	
     FILTER_PARAMETERS_FACTORY(DeviceUnicap);
+
+    virtual void getFeature(CameraFeature feature, FeatureSet_out set)
+      ACE_THROW_SPEC (( CORBA::SystemException, ::Miro::EOutOfBounds ));
+    virtual void setFeature(CameraFeature feature, const FeatureSet & set)
+      ACE_THROW_SPEC (( CORBA::SystemException, ::Miro::EOutOfBounds ));
+    virtual void getFeatureDescription (FeatureSetVector_out features)
+      ACE_THROW_SPEC (( CORBA::SystemException, ::Miro::EOutOfBounds ));
 
   protected:
     virtual BufferManager * bufferManagerInstance() const;

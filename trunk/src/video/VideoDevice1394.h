@@ -28,7 +28,7 @@
 #endif
 
 #include "VideoDevice.h"
-#include "idl/VideoControlC.h"
+#include "idl/VideoControlS.h"
 
 #include <libraw1394/raw1394.h>
 #if MIRO_HAS_LIBDC1394_VERSION == 1 || MIRO_HAS_LIBDC1394_VERSION == 2
@@ -40,10 +40,8 @@
 
 namespace Video
 {
-  class ControlImpl;
-
   //! Firewire camera support.
-  class Device1394 : public Device
+  class Device1394 : public Device, public virtual POA_Video::CameraControl
   {
     typedef Device Super;
     
@@ -53,8 +51,15 @@ namespace Video
 	
     FILTER_PARAMETERS_FACTORY(Device1394);
 
-    bool setFeatures(const FeatureSet & features);
-    bool getFeatures(FeatureSet & features) const;
+//     bool setFeatures(const FeatureSet & features);
+//     bool getFeatures(FeatureSet & features) const;
+
+    virtual void getFeature(CameraFeature feature, FeatureSet_out set)
+      ACE_THROW_SPEC (( CORBA::SystemException, ::Miro::EOutOfBounds ));
+    virtual void setFeature(CameraFeature feature, const FeatureSet & set)
+      ACE_THROW_SPEC (( CORBA::SystemException, ::Miro::EOutOfBounds ));
+    virtual void getFeatureDescription (FeatureSetVector_out features)
+      ACE_THROW_SPEC (( CORBA::SystemException, ::Miro::EOutOfBounds ));
 
   protected:
     virtual BufferManager * bufferManagerInstance() const;
@@ -73,6 +78,9 @@ namespace Video
 	
     //! Initialize dma transmission
     void initCapture();
+
+    //! local helper class
+    int valueOrNeg(FeatureSet _set);
 
     Device1394Parameters    params_;
 
@@ -100,9 +108,6 @@ namespace Video
     //! Framerate
     dc1394framerate_t       frameRate_;
 #endif
-
-    //! Pointer to Control-Interface.
-    ControlImpl *           control_;
   };
 };
 #endif // VIDEODEVICE1394_H

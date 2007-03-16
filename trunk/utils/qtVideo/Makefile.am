@@ -15,12 +15,7 @@ if COND_PCH
 AM_CPPFLAGS+=-include $(top_builddir)/pch/all_static.h
 endif
 
-
-if COND_IEEE1394
-1394programs = QtVideoControl VideoControlTest
-endif
-
-bin_PROGRAMS = QtVideo $(1394programs)
+bin_PROGRAMS = QtVideo QtVideoControl
 
 video_sources = \
 	QtVideo.cpp \
@@ -29,13 +24,16 @@ video_sources = \
 video_tomocsources = \
 	MainForm.cpp
 
+control_ui = \
+	VideoControlDialog.ui
+
 control_sources = \
-	VideoControlDialogImp.h \
+	VideoControl.h \
 	QtVideoControl.cpp
 
 control_tomocsources = \
-	VideoControlDialog.cpp \
-	VideoControlDialogImp.cpp
+        $(control_ui:.ui=.cpp) \
+	VideoControl.cpp
 
 QtVideo_SOURCES = $(video_sources) $(video_tomocsources) $(video_tomocsources:.cpp=.moc.cpp)
 QtVideo_LDADD = \
@@ -47,20 +45,13 @@ QtVideoControl_LDADD = \
 	-lmiro \
 	$(QT_LIBS)
 
-VideoControlTest_SOURCES = VideoControlTest.cpp VideoControlTestImpl.cpp VideoControlTestImpl.h
-VideoControlTest_LDADD = -lmiro
-
-BUILT_SOURCES = $(video_tomocsources:.cpp=.moc.cpp) $(control_tomocsources:.cpp=.moc.cpp)
+BUILT_SOURCES = $(video_tomocsources:.cpp=.moc.cpp) $(control_tomocsources:.cpp=.moc.cpp) $(control_ui:.ui=.h)  $(control_ui:.ui=.cpp) 
 CLEANFILES = $(BUILT_SOURCES)
-EXTRA_DIST = VideoControlDialog.ui
+EXTRA_DIST = $(control_ui)
 
-all-local: QtVideo $(1394programs)
+all-local: $(bin_PROGRAMS)
 	$(INSTALLPROGRAMS)
 
 clean-local:
 	$(CLEANPROGRAMS)
-
-VideoControlDialog.h: VideoControlDialog.ui
-
-VideoControlDialog.cpp: VideoControlDialog.ui VideoControlDialog.h
 

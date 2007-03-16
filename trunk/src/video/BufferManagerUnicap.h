@@ -25,6 +25,9 @@
 #define BUFFERMANAGERUNICAP_H
 
 #include "BufferManager.h"
+
+#include "miro/Synch.h"
+
 #include <unicap.h>
 #include <unicap_status.h>
 
@@ -43,7 +46,7 @@ namespace Video
       throw (std::bad_alloc);
 
   protected:
-    void acquireOutputBuffer(unsigned long _index);
+    static void newFrameCallback(unicap_event_t event, unicap_handle_t handle, unicap_data_buffer_t * buffer, void *usr_data);
     virtual unsigned int protectedAcquireNextWriteBuffer() throw (Miro::Exception);
 
     unicap_handle_t handle_;
@@ -51,6 +54,18 @@ namespace Video
 
     //! Pointer to the camera parameters of this device
     const Miro::CameraParameters * camParams_;
+
+    typedef struct CallbackData {
+      // buffer index
+      long index;
+      // pointer to bufferStatus.buffer
+      unsigned char ** buffer;
+      // sync callback and write buffer acquisition
+      Miro::Mutex * mutex;
+      Miro::Condition * condition;
+    };
+
+    CallbackData callback_;
   };
 }
 

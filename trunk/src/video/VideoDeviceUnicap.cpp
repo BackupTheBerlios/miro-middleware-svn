@@ -25,9 +25,19 @@
 
 #include <miro/Exception.h>
 #include <miro/Log.h>
+#include <miro/Server.h>
 
 #include <ace/OS.h>
 #include <iostream>
+
+using std::cout;
+using std::endl;
+
+
+
+char * data = new char[640 * 480 * 2];
+
+
 
 namespace
 {
@@ -61,6 +71,27 @@ namespace
   static MenuItemsUnicap modeItemsStrobePolarityUnicap[] = {
     {"ActiveLow",   "active low"},
     {"ActiveHigh",  "active high"}
+  };
+
+  struct UnicapValueControlValue
+  {
+    char * const unicapName;
+    Video::CameraFeature feature;
+    bool autoMode;
+  };
+  static UnicapValueControlValue unicapValueControlValue[] = {
+    {"brightness",      Video::BRIGHTNESS, false},
+    {"strobe_duration", Video::STROBE_DURATION, false},
+    {"strobe_delay",    Video::STROBE_DELAY, false},
+    {"auto_exposure",   Video::EXPOSURE, false},
+    {"white_balance_u", Video::WHITE_BALANCE_BLUE, true},
+    {"white_balance_v", Video::WHITE_BALANCE_RED, false},
+    {"hue",             Video::HUE, false},
+    {"saturation",      Video::SATURATION, false},
+    {"gamma",           Video::GAMMA, false},
+    {"timeout",         Video::TIMEOUT, false},
+    {"shutter",         Video::SHUTTER, true},
+    {"gain",            Video::GAIN, true}
   };
 };
 
@@ -143,6 +174,7 @@ namespace Video
       throw Miro::Exception("DeviceUnicap: Failed to find requested format in camera offers: "+ std::string(device_.identifier));
 
     // Set this video format
+    format_.buffer_type = UNICAP_BUFFER_TYPE_SYSTEM; // need when using system buffer
     if( !SUCCESS( unicap_set_format( handle_, &format_ ) ) )
       throw Miro::Exception("DeviceUnicap: Failed to set video format");
 
@@ -160,11 +192,8 @@ namespace Video
     // set them to new values
     setupParameters();
 
-    // START
-
-    // Start the capture process on the device
-    if( !SUCCESS( unicap_start_capture( handle_ ) ) )
-      throw Miro::Exception("DeviceUnicap: Failed to start capture on device: " + std::string(device_.identifier));
+    CameraControl_ptr controller = this->_this();
+    _server.addToNameService(controller, "CameraControlUnicap");
 
     Super::init(_server, _params);
   }
@@ -236,11 +265,13 @@ namespace Video
 
     i = getProperty("frame rate");
     int j;
-    for (j=0; j<properties_[i].value_list.value_count; ++j)
+    for (j=0; j<properties_[i].value_list.value_count; ++j) {
       if (params_.framerate == properties_[i].value_list.values[j]) {
 	properties_[i].value = properties_[i].value_list.values[j];
 	break;
       }
+    }
+
     if (j >= properties_[i].value_list.value_count)
       throw Miro::Exception("DeviceUnicap:setParam -"
 			    "Failed to find the given value in the list of possible values for \"frame rate\"");
@@ -327,6 +358,68 @@ namespace Video
 
     if ( !SUCCESS( unicap_set_property( handle_, &properties_[i] ) ) )
       throw Miro::Exception("DeviceUnicap:setParam - Failed to set property: " + _property);
+  }
+
+
+  void
+  DeviceUnicap::getFeature(CameraFeature feature, FeatureSet_out set)
+    ACE_THROW_SPEC (( CORBA::SystemException, ::Miro::EOutOfBounds ))
+  {
+    for (unsigned int i=0; i<sizeof(unicapValueControlValue)/sizeof(unicapValueControlValue[0]); ++i) {
+      if (unicapValueControlValue[i].feature == feature) {
+	int prop = getProperty(unicapValueControlValue[i].unicapName);	
+	set.value = properties_[prop].value;
+	if (properties_[prop].flags & UNICAP_FLAGS_MANUAL)
+	  set.autoMode = false;
+	else
+	  set.autoMode = true;
+
+	break;
+      }
+    }
+  }
+
+
+  void
+  DeviceUnicap::setFeature(CameraFeature feature, const FeatureSet & set)
+    ACE_THROW_SPEC (( CORBA::SystemException, ::Miro::EOutOfBounds ))
+  {
+    for (unsigned int i=0; i<sizeof(unicapValueControlValue)/sizeof(unicapValueControlValue[0]); ++i) {
+      if (unicapValueControlValue[i].feature == feature) {
+	int prop = getProperty(unicapValueControlValue[i].unicapName);
+	if (set.autoMode) {
+	  properties_[prop].flags = UNICAP_FLAGS_AUTO;
+	} else {
+	  properties_[prop].value = set.value;
+	  properties_[prop].flags = UNICAP_FLAGS_MANUAL;
+	}
+
+	if( !SUCCESS( unicap_set_property( handle_, &properties_[prop] ) ) )
+	  throw Miro::Exception("DeviceUnicap:setParam - Failed to set property");
+	break;
+      }
+    }
+  }
+
+
+  void
+  DeviceUnicap::getFeatureDescription (FeatureSetVector_out features)
+    ACE_THROW_SPEC (( CORBA::SystemException, ::Miro::EOutOfBounds ))
+  {
+    FeatureSetVector f;
+    f.length(sizeof(unicapValueControlValue)/sizeof(unicapValueControlValue[0]));
+
+    for (unsigned int i=0; i<sizeof(unicapValueControlValue)/sizeof(unicapValueControlValue[0]); ++i) {
+      int prop = getProperty(unicapValueControlValue[i].unicapName);
+      FeatureDescription desc = {unicapValueControlValue[i].feature,
+				 unicapValueControlValue[i].autoMode,
+				 properties_[prop].value,
+				 properties_[prop].range.min,
+				 properties_[prop].range.max};
+      f[i] = desc;
+    }
+
+    features = new FeatureSetVector(f);
   }
 };
 

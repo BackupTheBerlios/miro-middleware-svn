@@ -25,7 +25,6 @@
 #include "video/Parameters.h"
 #include "VideoFilter.h"
 
-
 namespace Video
 {
   BufferManagerUnicap::BufferManagerUnicap(Filter const * const _filter,
@@ -38,39 +37,47 @@ namespace Video
     handle_(_handle),
     format_(_format)
   {
+    // get device parameters
     const Video::DeviceParameters * devParams =
       dynamic_cast<DeviceParameters const *>(_filter->parameters());
     camParams_ = &devParams->camera;
     MIRO_LOG_OSTR(LL_NOTICE, "\n  camera parameters:\n" << *camParams_);
+
+    // init callback structure
+    callback_.index = 0;
+    callback_.mutex = new Miro::Mutex();
+    callback_.condition = new Miro::Condition(*callback_.mutex);
+    callback_.buffer = new unsigned char * [buffers()];
+    for (unsigned int i=0; i<buffers(); ++i)
+      callback_.buffer[i] = bufferAddr(i);
+
+    // register callback
+    unicap_register_callback(handle_, UNICAP_EVENT_NEW_FRAME, (unicap_callback_t) newFrameCallback, (void*)&callback_);
+
+    // Start the capture process on the device
+    if( !SUCCESS( unicap_start_capture( handle_ ) ) )
+      throw Miro::Exception("DeviceUnicap: Failed to start capture on unicap device");
   }
 
 
   unsigned int 
   BufferManagerUnicap::protectedAcquireNextWriteBuffer() throw (Miro::Exception)
   {
-    unsigned int index = Super::protectedAcquireNextWriteBuffer();
-    acquireOutputBuffer(index);
-    return index;
+    callback_.index = Super::protectedAcquireNextWriteBuffer();
+    Miro::Guard guard(*callback_.mutex);
+    callback_.condition->wait();
+    return callback_.index;
   }
 
 
   void
-  BufferManagerUnicap::acquireOutputBuffer(unsigned long _index)
+  BufferManagerUnicap::newFrameCallback(unicap_event_t, unicap_handle_t,
+					unicap_data_buffer_t * buffer, void *usr_data)
   {
-    unicap_data_buffer_t buffer;
-    buffer.data = bufferStatus_[_index].buffer;
-    buffer.buffer_size = format_.buffer_size;
+    CallbackData *callback = (CallbackData*)usr_data;
 
-    // Queue the buffer. The buffer now gets filled with image data by the capture device
-    if( !SUCCESS( unicap_queue_buffer( handle_, &buffer ) ) )
-      throw Miro::Exception("BufferManagerUnicap: Failed to queue a buffer on device");
-
-    unicap_data_buffer_t *returned_buffer;
-	
-    // Wait until the image buffer is ready
-    if( !SUCCESS( unicap_wait_buffer( handle_, &returned_buffer ) ) )
-      throw Miro::Exception("BufferManagerUnicap: Failed to wait for buffer on device");
-
-    bufferStatus_[_index].time = ACE_OS::gettimeofday() - camParams_->latency;
+    Miro::Guard guard(*callback->mutex);
+    memcpy(callback->buffer[callback->index], buffer->data, buffer->buffer_size);
+    callback->condition->broadcast();
   }
 }

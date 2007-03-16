@@ -21,16 +21,19 @@
 // $Id$
 //
 //
-// Authors: 
-//   Hans Utz
-//   Stefan Enderle
-//   Stefan Sablatnoeg
-//
-#include "VideoControlDialogImp.h"
+
+#include "VideoControl.h"
+#include "VideoControlDialog.h"
 
 #include "miro/Client.h"
+#include "idl/VideoControlC.h"
 
 #include <qapplication.h>
+#include <qcombobox.h>
+
+#include <string>
+#include <vector>
+
 
 using namespace Miro;
 
@@ -39,10 +42,44 @@ int main(int argc, char *argv[])
   QApplication a(argc, argv);
   Miro::Client client(argc, argv);
 
-  VideoControlDialogImp * dialog = new VideoControlDialogImp(client);
+  // possible camera control interface names
+  std::vector<std::string> cameraControlChoice;
+  cameraControlChoice.push_back("CameraControlUnicap");
+  cameraControlChoice.push_back("CameraControl1394");
+  cameraControlChoice.push_back("CameraControlQuickCam");
+
+  // look for available ones
+  std::vector<std::string> cameraControlName;
+  for (std::vector<std::string>::const_iterator i=cameraControlChoice.begin(); i!=cameraControlChoice.end(); ++i) {
+    try {
+      Video::CameraControl_var video_control_ = client.resolveName<Video::CameraControl>(i->c_str());
+      cameraControlName.push_back(*i);
+    } catch (...) {
+    }
+  }
+
+  if (cameraControlName.size() == 0) {
+    std::cout << std::endl;
+    std::cout << "No valid camera control interface found." << std::endl;
+    std::cout << "You've probably forgot to choose the correct corba namespace" << std::endl;
+    std::cout << std::endl;
+    return 0;
+  }
+
+  // create dialog to let the user choose
+  QString name;
+  VideoControlDialog *dlg = new VideoControlDialog(0, QString::null, 0, TRUE);
+  for (std::vector<std::string>::const_iterator i=cameraControlName.begin(); i!=cameraControlName.end(); ++i)
+    dlg->comboBox->insertItem(*i);
+  if (dlg->exec() == QDialog::Accepted) {
+    name = dlg->comboBox->currentText();
+  }
+   
+  // start control window
+  VideoControl * dialog = new VideoControl(client, NULL, name);
 
   a.setMainWidget(dialog);
-  dialog->setCaption("QtVideoControl");
+  dialog->setCaption("QtVideoControl - " + name);
   dialog->show();
 
   return a.exec();

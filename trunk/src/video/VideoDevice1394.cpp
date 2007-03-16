@@ -22,7 +22,6 @@
 //
 #include "VideoDevice1394.h"
 #include "BufferManager1394.h"
-#include "VideoControlImpl.h"
 
 #include <miro/Exception.h>
 #include <miro/Server.h>
@@ -244,9 +243,8 @@ using std::cout;
     setImageFormat();
     initCapture();
 
-    control_ = new ControlImpl(this);
-    Video::Control_var control = control_->_this();
-    _server.addToNameService(control.in(), "VideoControl");
+    CameraControl_ptr controller = this->_this();
+    _server.addToNameService(controller, "CameraControl1394");
 
     Super::init(_server, _params);
   }
@@ -604,46 +602,124 @@ using std::cout;
 
     MIRO_DBG(VIDEO, LL_DEBUG, "Device1394::initSettings() finished");
   }
-//---------------------------------------------------------------
-    bool Device1394::setFeatures(const FeatureSet & features)
-    {
-        params_.brightness = features.brightness;
-        params_.exposure = features.exposure;
-        params_.focus = features.focus;
-        params_.gain = features.gain;
-        params_.gamma = features.gamma;
-        params_.hue = features.hue;
-        params_.iris = features.iris;
-        params_.saturation = features.saturation;
-        params_.sharpness = features.sharpness;
-        params_.shutter = features.shutter;
-        params_.temperature = features.temperature;
-        params_.trigger = features.trigger;
-	params_.whiteBalance0 = features.white_balance.first;
-	params_.whiteBalance1 = features.white_balance.second;
-	initSettings();
-        return true;
+
+
+  void
+  Device1394::getFeature(CameraFeature feature, FeatureSet_out set)
+    ACE_THROW_SPEC (( CORBA::SystemException, ::Miro::EOutOfBounds ))
+  {
+    switch (feature) {
+    case BRIGHTNESS:         params_.brightness < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.brightness; break;
+    case EXPOSURE:           params_.exposure < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.exposure; break;
+    case FOCUS:              params_.focus < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.focus; break;
+    case GAIN:               params_.gain < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.gain; break;
+    case GAMMA:              params_.gamma < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.gamma; break;
+    case HUE:                params_.hue < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.hue; break;
+    case IRIS:               params_.iris < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.iris; break;
+    case SATURATION:         params_.saturation < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.saturation; break;
+    case SHARPNESS:          params_.sharpness < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.sharpness; break;
+    case SHUTTER:            params_.shutter < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.shutter; break;
+    case TEMPERATURE:        params_.temperature < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.temperature; break;
+    case TRIGGER:            params_.trigger < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.trigger; break;
+    case WHITE_BALANCE_BLUE: params_.whiteBalance0 < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.whiteBalance0; break;
+    case WHITE_BALANCE_RED:  params_.whiteBalance1 < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.whiteBalance1; break;
+    case WHITE_BALANCE_SPEED:
+    case WHITE_BALANCE_DELAY:
+    case CONTRAST:
+    case TIMEOUT:
+    case STROBE_DURATION:
+    case STROBE_DELAY:
+    case BACKLIGHT_COMPENSATION:
+    case FLICKERLESS_MODE:
+    case DYNAMIC_NOISE_REDUCTION:
+    case COMPRESSION:
+      std::cout << "camera doesn't support this parameter" << std::endl;
     }
-    
-//---------------------------------------------------------------
-    bool Device1394::getFeatures(FeatureSet & features) const
-    {
-        features.brightness = params_.brightness;
-        features.exposure = params_.exposure;
-        features.focus = params_.focus;
-        features.gain = params_.gain;
-        features.gamma = params_.gamma;
-        features.hue = params_.hue;
-        features.iris = params_.iris;
-        features.saturation = params_.saturation;
-        features.sharpness = params_.sharpness;
-        features.shutter = params_.shutter;
-        features.temperature = params_.temperature;
-        features.trigger = params_.trigger;
-	features.white_balance.first = params_.whiteBalance0;
-	features.white_balance.second = params_.whiteBalance1;
-        return true;
+  }
+
+
+  int
+  Device1394::valueOrNeg(FeatureSet _set)
+  {
+    if (_set.autoMode)
+      return -1;
+    return (int)_set.value;
+  }
+   
+
+  void
+  Device1394::setFeature(CameraFeature feature, const FeatureSet & set)
+      ACE_THROW_SPEC (( CORBA::SystemException, ::Miro::EOutOfBounds ))
+  {
+    switch (feature) {
+    case BRIGHTNESS:         params_.brightness = valueOrNeg(set); break;
+    case EXPOSURE:           params_.exposure = valueOrNeg(set); break;
+    case FOCUS:              params_.focus = valueOrNeg(set); break;
+    case GAIN:               params_.gain = valueOrNeg(set); break;
+    case GAMMA:              params_.gamma = valueOrNeg(set); break;
+    case HUE:                params_.hue = valueOrNeg(set); break;
+    case IRIS:               params_.iris = valueOrNeg(set); break;
+    case SATURATION:         params_.saturation = valueOrNeg(set); break;
+    case SHARPNESS:          params_.sharpness = valueOrNeg(set); break;
+    case SHUTTER:            params_.shutter = valueOrNeg(set); break;
+    case TEMPERATURE:        params_.temperature = valueOrNeg(set); break;
+    case TRIGGER:            params_.trigger = valueOrNeg(set); break;
+    case WHITE_BALANCE_BLUE: params_.whiteBalance0 = valueOrNeg(set); break;
+    case WHITE_BALANCE_RED:  params_.whiteBalance1 = valueOrNeg(set); break;
+    case WHITE_BALANCE_SPEED:
+    case WHITE_BALANCE_DELAY:
+    case CONTRAST:
+    case TIMEOUT:
+    case STROBE_DURATION:
+    case STROBE_DELAY:
+    case BACKLIGHT_COMPENSATION:
+    case FLICKERLESS_MODE:
+    case DYNAMIC_NOISE_REDUCTION:
+    case COMPRESSION:
+      std::cout << "camera doesn't support this parameter" << std::endl;
     }
 
+    initSettings();
+  }
+
+
+  void
+  Device1394::getFeatureDescription (FeatureSetVector_out features)
+      ACE_THROW_SPEC (( CORBA::SystemException, ::Miro::EOutOfBounds ))
+  {
+    FeatureSetVector f;
+    f.length(14);
+
+    FeatureDescription desc0 = {BRIGHTNESS, true, params_.brightness, 128, 383};
+    f[0] = desc0;
+    FeatureDescription desc1 = {EXPOSURE, true, params_.exposure, 0, 511};
+    f[1] = desc1;
+    FeatureDescription desc2 = {FOCUS, true, params_.focus, 0, 100};
+    f[2] = desc2;
+    FeatureDescription desc3 = {GAIN, true, params_.gain, 0, 255};
+    f[3] = desc3;
+    FeatureDescription desc4 = {GAMMA, true, params_.gamma, 0, 1};
+    f[4] = desc4;
+    FeatureDescription desc5 = {HUE, true, params_.hue, 0, 100};
+    f[5] = desc5;
+    FeatureDescription desc6 = {IRIS, true, params_.iris, 0, 100};
+    f[6] = desc6;
+    FeatureDescription desc7 = {SATURATION, true, params_.saturation, 0, 255};
+    f[7] = desc7;
+    FeatureDescription desc8 = {SHARPNESS, true, params_.sharpness, 0, 255};
+    f[8] = desc8;
+    FeatureDescription desc9 = {SHUTTER, true, params_.shutter, 0, 7};
+    f[9] = desc9;
+    FeatureDescription desc10 = {TEMPERATURE, true, params_.temperature, 0, 100};
+    f[10] = desc10;
+    FeatureDescription desc11 = {TRIGGER, true, params_.trigger, 0, 100};
+    f[11] = desc11;
+    FeatureDescription desc12 = {WHITE_BALANCE_BLUE, true, params_.whiteBalance0, 0, 255};
+    f[12] = desc12;
+    FeatureDescription desc13 = {WHITE_BALANCE_RED, true, params_.whiteBalance1, 0, 255};
+    f[13] = desc13;
+
+    features = new FeatureSetVector(f);
+  }
 };
 
