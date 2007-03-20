@@ -20,6 +20,12 @@
 	    <parameter name="Filter" >
 	      <parameter value="YUV422toRGBIpp" name="Name" />
 	      <parameter value="YUV422toRGBIpp" name="Type" />
+	      <parameter name="Successor" >
+		<parameter name="Filter" >
+		  <parameter value="RGBtoUndist" name="Name" />
+		  <parameter value="RGBtoUndist" name="Type" />
+		</parameter>
+	      </parameter>
 	    </parameter>
 	  </parameter>
 	</parameter>
@@ -42,12 +48,54 @@
 	<parameter value="10" name="StrobeDuration" />
 	<parameter value="0" name="StrobeDelay" />
 	<parameter value="ActiveLow" name="StrobePolarity" />
+
+        <parameter name="Camera" >
+	  <parameter value="0.060000" name="Latency" />
+	  <parameter value="33.0" name="Alpha" />
+	  <parameter value="694" name="Height" />
+
+	  <parameter value=" 6.4000000000e+02" name="Ncx" />
+	  <parameter value=" 6.4000000000e+02" name="Nfx" />
+	  <parameter value=" 5.6000000000e-03" name="Dx" />
+	  <parameter value=" 5.6000000000e-03" name="Dy" />
+	  <parameter value=" 5.6000000000e-03" name="Dpx" />
+	  <parameter value=" 5.6000000000e-03" name="Dpy" />
+	  <parameter value=" 3.3754472315e+02" name="Cx" />
+	  <parameter value=" 2.3100578168e+02" name="Cy" />
+	  <parameter value=" 1.0000000000e+00" name="Sx" />
+	  <parameter value=" 2.4723133754e+00" name="F" />
+	  <parameter value=" 5.4626336876e-02" name="Kappa" />
+	  <parameter value="-5.0227261209e+01" name="Tx" />
+	  <parameter value="-1.3739870555e+01" name="Ty" />
+	  <parameter value=" 1.2189088890e+02" name="Tz" />
+	  <parameter value="-5.1663179617e-01" name="Rx" />
+	  <parameter value="-1.6507720229e-01" name="Ry" />
+	  <parameter value="-5.0720640893e-02" name="Rz" />
+	  <parameter value=" 0.0000000000e+00" name="P1" />
+	  <parameter value=" 0.0000000000e+00" name="P2" />
+	  <parameter value=" 9.8513713830e-01" name="R1" />
+	  <parameter value=" 1.2514845433e-01" name="R2" />
+	  <parameter value="-1.1765493240e-01" name="R3" />
+	  <parameter value="-5.0009679069e-02" name="R4" />
+	  <parameter value=" 8.6425440392e-01" name="R5" />
+	  <parameter value=" 5.0056304030e-01" name="R6" />
+	  <parameter value=" 1.6432848426e-01" name="R7" />
+	  <parameter value="-4.8723935565e-01" name="R8" />
+	  <parameter value=" 8.5766774428e-01" name="R9" />
+	</parameter>
       </instance>
 
       <instance type="Video::YUV422toRGBIpp" name="YUV422toRGBIpp" >
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
 	  <parameter value="Video" name="Name" />
+	</parameter>
+      </instance>
+
+      <instance type="Video::RGBtoUndist" name="RGBtoUndist" >
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="Undist" name="Name" />
 	</parameter>
       </instance>
 
