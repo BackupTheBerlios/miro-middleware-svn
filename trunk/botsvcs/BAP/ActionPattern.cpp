@@ -254,7 +254,7 @@ namespace Miro
       
       // send pattern change debug output
       if (pSupplier_) {
-	std::cout << "send pattern change" << std::endl;
+	MIRO_LOG_OSTR(LL_WARNING, "sent pattern change on transition named '" << _transition.c_str() << "'");
 	notifyEvent.header.fixed_header.event_name = 
 	  CORBA::string_dup(getFullName().c_str());
 	notifyEvent.remainder_of_body <<= CORBA::string_dup(_transition.c_str());
