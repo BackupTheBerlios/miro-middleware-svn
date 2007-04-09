@@ -67,6 +67,8 @@ module Miro
     PanPositionIDL currentPan(in Miro::TimeIDL stamp);
     
     void setPanSpeed(in float value) raises(EDevIO, EOutOfBounds);
+    void setPanExt(in float value, in float speed) raises(EDevIO, EOutOfBounds);
+
   };
 };
 
