@@ -63,6 +63,7 @@ int main(int argc, char *argv[])
 	   << "  1 - set pan position" << endl
 	   << "  2 - get pan limits" << endl
 	   << "  3 - set pan speed" << endl
+	   << "  4 - set pan pos + speed" << endl
 	   << " q to quit" << endl;
       cin.getline(buffer,256);
       c = buffer[0];
@@ -90,6 +91,13 @@ int main(int argc, char *argv[])
         cout << "new panning speed (deg/sec): " << flush;
 	cin >> speed;
 	pan->setPanSpeed(Miro::deg2Rad(speed));
+	break;		
+	     case '4':
+        cout << "new panning pos (deg): " << flush;
+	cin >> poisition;
+	cout << "new panning speed (deg/sec): " << flush;
+  cin >> speed;
+	pan->setPanExt(Miro::deg2Rad(poisition),Miro::deg2Rad(speed));
 	break;		
       case 'q':
 	quit = true;
