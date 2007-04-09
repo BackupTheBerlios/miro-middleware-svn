@@ -101,6 +101,40 @@ namespace Sparrow
       }
     }
   }
+  
+  void
+  PanTiltImpl::setPanExt(CORBA::Float _value, CORBA::Float _speed ) throw (EDevIO, EOutOfBounds)
+  {
+    if (!params_.servo && isnan(connection_->getPanPosition()))
+      return;
+
+    ACE_Guard<ACE_Recursive_Thread_Mutex> guard(mutex_);
+
+    if (_value != nextPosition) {
+
+      // get current time
+      ACE_Time_Value t = ACE_OS::gettimeofday();
+
+      // set servo
+      connection_->setPanExt(_value, _speed);
+
+      // set positioning parameters
+      lastPosition = currentPosition(t).angle;
+      nextPosition = _value;
+      setTargetPan(_value);
+      timeLastSet = t;
+
+      if (pSupplier_) {
+	Miro::PanEventIDL panEvent;
+	Miro::timeA2C(t, panEvent.time);
+	panEvent.newAngle = _value;
+	
+	notifyEvent.remainder_of_body <<= panEvent;
+	pSupplier_->sendEvent(notifyEvent);
+      }
+    }
+  }
+
 
   void
   PanTiltImpl::setPanSpeed(CORBA::Float _speed) throw (EDevIO, EOutOfBounds)

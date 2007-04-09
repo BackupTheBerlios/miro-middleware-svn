@@ -65,7 +65,10 @@ namespace Sparrow
 				"Failed to register timer for status report startup.");
 
     if (!params_->pan.servo)
-      deferredQueryPanTicksPerDegree(ACE_Time_Value(5));
+      {
+    //     panReset();
+         deferredQueryPanTicksPerDegree(ACE_Time_Value(5));
+      }
   }
 
   //----------------------//
@@ -130,6 +133,7 @@ namespace Sparrow
   void
   Connection2003::setPan(double _rad)
   {
+  std::cout << "################ setPan SparrowConnection<<" << Miro::rad2Deg(-_rad)<< std::endl;
     CanMessage message;
 
     if (params_->pan.servo) {
@@ -145,18 +149,22 @@ namespace Sparrow
       message.longData(1, (long)((double)params_->pan.ticksPerDegree * 
 				 Miro::rad2Deg(-(_rad + params_->pan.offset))) );
     }
+    std::cout << "message:  " << message << std::endl;
     write(message);
   }
 
   void
   Connection2003::setPanExt(double _rad,double _vel)
   {
+  std::cout << "################ setPanExt SparrowConnection<<" << Miro::rad2Deg(-_rad)<< " "<< Miro::rad2Deg(_vel) << std::endl;
     CanMessage message;
     message.length(7);
     message.id(CAN_PAN_GO_2005);
     message.byteData(0, 0);// servo number
     message.longData(1, (long)((double)params_->pan.ticksPerDegree * Miro::rad2Deg(-_rad)) );
     message.shortData(5, (short)((double)params_->pan.ticksPerDegree * Miro::rad2Deg(_vel)) );  
+    std::cout << "message:  " << message << std::endl;
+    write(message);
   }
 
   void

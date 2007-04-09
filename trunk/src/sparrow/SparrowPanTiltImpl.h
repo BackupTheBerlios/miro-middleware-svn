@@ -57,6 +57,8 @@ namespace Sparrow
 
     virtual void setPan(CORBA::Float value)
       throw (Miro::EDevIO, Miro::EOutOfBounds);
+    virtual void setPanExt(CORBA::Float value, CORBA::Float _speed)
+      throw (Miro::EDevIO, Miro::EOutOfBounds);  
     virtual void setPanSpeed(CORBA::Float speed)
       throw (Miro::EDevIO, Miro::EOutOfBounds);
     virtual CORBA::Float getPan() throw (Miro::EDevIO);
