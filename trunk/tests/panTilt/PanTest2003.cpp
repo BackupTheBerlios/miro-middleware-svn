@@ -29,9 +29,11 @@
 #include <idl/SparrowPanTiltC.h>
 #include "miro/Client.h"
 #include "miro/IO.h"
+#include <miro/TimeHelper.h>
 
 #include <iostream>
 #include <cmath>
+
 
 using Miro::Client;
 using Miro::SparrowPanTilt;
@@ -64,11 +66,17 @@ int main(int argc, char *argv[])
 	   << "  2 - get pan limits" << endl
 	   << "  3 - set pan speed" << endl
 	   << "  4 - set pan pos + speed" << endl
+	   << "  5 - check if still panning" << endl
 	   << " q to quit" << endl;
       cin.getline(buffer,256);
       c = buffer[0];
       if (c == 'q')
 	break;
+
+  	ACE_Time_Value now = ACE_OS::gettimeofday();
+    	Miro::TimeIDL cTimeStamp;
+      	Miro::timeA2C(now, cTimeStamp);
+
 
       switch (c) {
       case '0':
@@ -98,6 +106,18 @@ int main(int argc, char *argv[])
 	cout << "new panning speed (deg/sec): " << flush;
   cin >> speed;
 	pan->setPanExt(Miro::deg2Rad(poisition),Miro::deg2Rad(speed));
+	break;		
+	     case '5':
+	cout << "isPanning: ";
+       	if(pan->panning(cTimeStamp))
+	{
+		cout << "yes";
+	}
+	else
+	{
+		cout << "no";
+	}
+	cout << endl;
 	break;		
       case 'q':
 	quit = true;
