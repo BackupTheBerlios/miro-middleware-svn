@@ -64,6 +64,9 @@ namespace Video
   BufferManagerUnicap::protectedAcquireNextWriteBuffer() throw (Miro::Exception)
   {
     callback_.index = Super::protectedAcquireNextWriteBuffer();
+
+    bufferStatus_[callback_.index].time = ACE_OS::gettimeofday() - camParams_->latency;
+
     Miro::Guard guard(*callback_.mutex);
     callback_.condition->wait();
     return callback_.index;
