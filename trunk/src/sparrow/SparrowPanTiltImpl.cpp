@@ -154,13 +154,10 @@ namespace Sparrow
   PanTiltImpl::panning(const Miro::TimeIDL& stamp) throw()
   {
     ACE_Guard<ACE_Recursive_Thread_Mutex> guard(mutex_);
-    if (!params_.servo) {
-      float pan = connection_->getPanPosition();
-      return fabs(targetPan_ - pan) > Miro::deg2Rad(2);
-    }
-    ACE_Time_Value t;
-    Miro::timeC2A(stamp, t);
-    return prvPanning(t);
+      
+    float pan = connection_->getPanPosition();
+
+    return fabs(targetPan_ - pan) > Miro::deg2Rad(2);
   }
 
   Miro::PanPositionIDL
@@ -177,42 +174,8 @@ namespace Sparrow
   {
     Miro::PanPositionIDL position;
 
-    if (params_.servo) {
-      if (!prvPanning(stamp)) {
-	// the pan doesn't move
-	position.angle = (stamp < timeLastSet + params_.panLatency)? lastPosition : nextPosition;
-	position.accuracy = params_.panAccuracy;
-      }
-      else {
-	ACE_Time_Value t = stamp;
-	t -= timeLastSet;
-	t -= params_.panLatency;
-
-	// estimated pan angle
-	double alpha = t.usec();
-	alpha /= 1000000.;
-	alpha += t.sec();
-	alpha *= params_.panRadPerSec;
-
-	double delta = fabs(nextPosition - lastPosition);
-
-	if (alpha > delta) {
-	  // it is swing time
-	  position.angle = nextPosition;
-	  position.accuracy = params_.panSwingAccuracy;
-	}
-	else {
-	  // we are panning
-	  position.angle = (nextPosition > lastPosition)?
-	    lastPosition + alpha : lastPosition - alpha;
-	  position.accuracy = std::max(delta * .25, params_.panSwingAccuracy);
-	}
-      }
-    }
-    else {
-      position.angle = connection_->getPanPosition();
-      position.accuracy = params_.panAccuracy;
-    }
+    position.angle = connection_->getPanPosition();
+    position.accuracy = params_.panAccuracy;
 
     return position;
   }
