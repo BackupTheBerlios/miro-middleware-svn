@@ -1449,7 +1449,7 @@
 	      <parameter value="76" name="WhiteBalanceU" />
 	      <parameter value="21" name="WhiteBalanceV" />
 	      <parameter value="180" name="Hue" />
-	      <parameter value="163" name="Saturation" />
+	      <parameter value="150" name="Saturation" />
 	      <parameter value="10" name="Gamma" />
 	      <parameter value="0.004" name="Shutter" /> 
 	      <parameter value="1023" name="Gain" /> 
