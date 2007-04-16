@@ -35,13 +35,13 @@
 	<parameter value="/dev/raw1394" name="Device" />
 	<parameter value="128" name="Brightness" />
 	<parameter value="800" name="Exposure" />
-	<parameter value="45" name="WhiteBalanceU" />
-	<parameter value="45" name="WhiteBalanceV" />
+	<parameter value="62" name="WhiteBalanceU" />
+	<parameter value="40" name="WhiteBalanceV" />
 	<parameter value="180" name="Hue" />
-	<parameter value="128" name="Saturation" />
+	<parameter value="170" name="Saturation" />
 	<parameter value="10" name="Gamma" />
-	<parameter value="0.002" name="Shutter" /> <!-- 1/500 -->
-	<parameter value="850" name="Gain" /> <!-- best candidate to change, according to lighting -->
+	<parameter value="0.004" name="Shutter" /> <!-- 1/500 -->
+	<parameter value="1000" name="Gain" /> <!-- best candidate to change, according to lighting -->
 	<parameter value="30" name="Framerate" />
 	<parameter value="1" name="Timeout" />
 	<parameter value="ConstantLow" name="StrobeMode" />

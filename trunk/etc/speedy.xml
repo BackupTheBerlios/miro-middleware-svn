@@ -38,7 +38,7 @@
       <parameter name="Sparrow::Parameters" >
 	<parameter value="true" name="Faulhaber" />
 	<parameter value="true" name="Sparrow2003" />
-	<parameter value="/dev/pcan24" name="Device" />
+	<parameter value="/dev/pcan32" name="Device" />
 	<parameter value="pcan" name="Module" />
 	<parameter name="Pan" >
 	  <parameter value="-160" name="RangeMin" />
@@ -494,7 +494,7 @@
 	<parameter value="-1" name="Sharpness" />
 	<parameter value="0" name="WhitebalanceSpeed" />
 	<parameter value="0" name="WhitebalanceDelay" />
-	<parameter value="2" name="Whitebalance" />
+	<parameter value="4" name="Whitebalance" />
 	<parameter value="-1" name="ShutterSpeed" />
         <parameter value="25000" name="AutoGainControl" />
         <parameter value="0" name="Compression" />
