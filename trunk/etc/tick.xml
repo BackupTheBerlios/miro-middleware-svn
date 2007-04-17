@@ -315,12 +315,10 @@
 			      <parameter value="IndextoDist" name="Type" />
 			      <parameter name="Successor" >
 				<!-- disable while debug flag in IndexToDist filter is disabled -->
-				<!--
 				<parameter name="Filter" >
 				<parameter value="IndextoIndex_Omni3" name="Name" />
 				<parameter value="IndextoIndex" name="Type" />
 			      </parameter>
-				-->
 				<!-- disable this for the goalie -->
 				<parameter name="Filter" >
 				  <parameter value="ConnectionFake_LowRes" name="Name" />
