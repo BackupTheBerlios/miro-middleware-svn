@@ -1426,7 +1426,7 @@
       <!-- Directed Camera -->
       <instance type="Video::DeviceUnicapParameters" name="DeviceUnicap" >
 	      <parameter value="/dev/raw1394" name="Device" />
-	      <parameter value="128" name="Brightness" />
+	      <parameter value="255" name="Brightness" />
 	      <parameter value="800" name="Exposure" />
 	      <parameter value="62" name="WhiteBalanceU" />
 	      <parameter value="28" name="WhiteBalanceV" />
