@@ -1424,10 +1424,10 @@
 	      <parameter value="/dev/raw1394" name="Device" />
 	      <parameter value="255" name="Brightness" />
 	      <parameter value="800" name="Exposure" />
-	      <parameter value="73" name="WhiteBalanceU" />
-	      <parameter value="22" name="WhiteBalanceV" />
+	      <parameter value="62" name="WhiteBalanceU" />
+	      <parameter value="28" name="WhiteBalanceV" />
 	      <parameter value="180" name="Hue" />
-	      <parameter value="140" name="Saturation" />
+	      <parameter value="150" name="Saturation" />
 	      <parameter value="10" name="Gamma" />
 	      <parameter value="0.004" name="Shutter" /> <!-- 1/500 -->
 	      <parameter value="1000" name="Gain" /> <!-- best candidate to change, according to lighting -->
