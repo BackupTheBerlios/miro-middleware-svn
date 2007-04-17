@@ -38,7 +38,7 @@
       <parameter name="Sparrow::Parameters" >
 	<parameter value="true" name="Faulhaber" />
 	<parameter value="true" name="Sparrow2003" />
-	<parameter value="/dev/pcan0" name="Device" />
+	<parameter value="/dev/pcan32" name="Device" />
 	<parameter value="pcan" name="Module" />
         <parameter name="Pan">
 	  <parameter value="-160" name="RangeMin" />
