@@ -156,14 +156,12 @@ namespace Sparrow
   void
   Connection2003::setPanExt(double _rad,double _vel)
   {
-  std::cout << "################ setPanExt SparrowConnection<<" << Miro::rad2Deg(-_rad)<< " "<< Miro::rad2Deg(_vel) << std::endl;
     CanMessage message;
     message.length(7);
     message.id(CAN_PAN_GO_2005);
     message.byteData(0, 0);// servo number
     message.longData(1, (long)((double)params_->pan.ticksPerDegree * Miro::rad2Deg(-(_rad + params_->pan.offset))) );
     message.shortData(5, (short)((double) Miro::rad2Deg(_vel)) );  
-    std::cout << "message:  " << message << std::endl;
     write(message);
   }
 
