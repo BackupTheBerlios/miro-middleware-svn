@@ -560,7 +560,7 @@
 
       <instance type="LVF::Save" name="Save">
 	<parameter value="1" name="Interval" />
-	<parameter value="false" name="Activate" />
+	<parameter value="true" name="Activate" />
       </instance>
 
 
@@ -669,7 +669,11 @@
 	  <parameter value="DeviceUnicap" name="Name" />
 	  <parameter value="DeviceUnicap" name="Type" />
 	  <parameter name="Successor" >
-
+      <!-- save image -->
+      <parameter name="Filter" >
+	      <parameter value="Save1394" name="Name" />
+	      <parameter value="Save" name="Type" />
+	    </parameter>
 	    <!-- limit to lower part of the image (used for lines on the floor) -->
 	    <parameter name="Filter" >
 	      <parameter value="ROIListDummy" name="Name" />
@@ -1707,6 +1711,12 @@
 	<parameter name="Interface" >
 	  <parameter value="Canny" name="Name" />
 	</parameter>
+      </instance>
+
+ 
+      <instance type="LVF::Save" name="Save1394">
+	<parameter value="1" name="Interval" />
+	<parameter value="true" name="Activate" />
       </instance>
 
       <!-- Attention Control  -->
