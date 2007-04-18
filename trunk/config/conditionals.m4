@@ -148,10 +148,14 @@ AC_DEFUN([AC_DETERMINE_VIDEODEVICES],
 
 	if test "x$ac_request_unicap" = xyes; then
 		AC_CHECK_LIB(raw1394, raw1394_get_libversion, [ac_have_libraw1394=yes], [ac_have_libraw1394=no])
-		AC_CHECK_LIB(unicap, unicap_open, [ac_have_unicap_lib=yes], [ac_have_unicap_lib=no])
-		AC_CHECK_HEADER([unicap.h], [ac_have_unicap_header=yes], [ac_have_unicap_header=no])
+#		AC_CHECK_LIB(unicap, unicap_open, [ac_have_unicap_lib=yes], [ac_have_unicap_lib=no])
+#		AC_CHECK_HEADER([unicap.h], [ac_have_unicap_header=yes], [ac_have_unicap_header=no])
+		PKG_CHECK_MODULES(UNICAP, libunicap >= 0.2, [ac_have_unicap=yes], [ac_have_unicap=no])
+		CFLAGS="$CFLAGS $UNICAP_CFLAGS"
+		CXXFLAGS="$CXXFLAGS $UNICAP_CFLAGS"
+		LDFLAGS="$LDFLAGS $UNICAP_LIBS"
 
-		if test "x$ac_have_libraw1394" = xyes && test "x$ac_have_unicap_lib" = xyes && test  "x$ac_have_unicap_header" = xyes; then
+		if test "x$ac_have_libraw1394" = xyes && test "x$ac_have_unicap" = xyes; then
 			AC_DEFINE(MIRO_HAS_UNICAP)
 			ac_miro_has_unicap=yes
 		fi
