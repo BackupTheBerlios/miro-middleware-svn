@@ -399,7 +399,7 @@
           <parameter value="0.35" name="Bluerightgoalpost" />
           <parameter value="0.35" name="Yellowleftgoalpost" />
           <parameter value="0.35" name="Yellowrightgoalpost" />
-          <parameter value="0.50" name="Ball" />
+          <parameter value="0.0" name="Ball" />
           <parameter value="0.65" name="Robot" />
         </parameter>
         <parameter value="0.25" name="DiminishRate" />
