@@ -133,7 +133,6 @@ namespace Sparrow
   void
   Connection2003::setPan(double _rad)
   {
-  std::cout << "################ setPan SparrowConnection<<" << Miro::rad2Deg(-_rad)<< std::endl;
     CanMessage message;
 
     if (params_->pan.servo) {
@@ -149,7 +148,6 @@ namespace Sparrow
       message.longData(1, (long)((double)params_->pan.ticksPerDegree * 
 				 Miro::rad2Deg(-(_rad + params_->pan.offset))) );
     }
-    std::cout << "message:  " << message << std::endl;
     write(message);
   }
 
