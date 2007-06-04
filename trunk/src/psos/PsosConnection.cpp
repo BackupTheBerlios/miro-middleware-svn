@@ -56,7 +56,7 @@ namespace Psos
 
     synchTimerId = 
       reactor_->schedule_timer(eventHandler, 
-			       (void *)SYNCH_TIMER, // timer id
+			       &SYNCH_TIMER, // timer id
 			       synchDelay,        // delay
 			       synchTimeout);     // respawn every n sec.
     if (synchTimerId == -1)
@@ -64,7 +64,7 @@ namespace Psos
 
     watchdogTimerId = 
       reactor_->schedule_timer(eventHandler, 
-			       (void *)PING_TIMER, // timer id
+			       &PING_TIMER, // timer id
 			       watchdogTimeout,    // delay
 			       watchdogTimeout);   // respawn
     if (watchdogTimerId == -1)

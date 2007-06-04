@@ -29,7 +29,8 @@ namespace Psos
   class Message;
 
   // types of timers registerd for Mcp::EventHandler
-  typedef enum { PING_TIMER, SYNCH_TIMER } TimerType;
+  static const unsigned int PING_TIMER = 1;
+  static const unsigned int SYNCH_TIMER = 2;
 
   // values indicating beginning of a psos message
   static const char START_1 = 0xfa;
