@@ -75,6 +75,7 @@ main(int argc, char *argv[])
       else if (ACE_OS::strcasecmp(current_arg, eventChannelOpt) == 0) {
 	arg_shifter.consume_arg();
 	channelName = arg_shifter.get_current();
+        arg_shifter.consume_arg();
       } 
       else if (ACE_OS::strcasecmp(current_arg, unifiedOpt) == 0) {
 	arg_shifter.consume_arg();
