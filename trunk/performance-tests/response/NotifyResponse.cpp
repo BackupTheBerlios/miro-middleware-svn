@@ -20,17 +20,25 @@
 //
 // $Id$
 //
-#include <ace/Stats.h>
-#include <ace/Sample_History.h>
-#include <ace/High_Res_Timer.h>
-
 #include "idl/OdometryC.h"
 #include "idl/SparrowMotionC.h"
+
 #include "miro/StructuredPushConsumer.h"
 #include "miro/IO.h"
 #include "miro/Server.h"
 #include "miro/TimeHelper.h"
 #include "miro/Task.h"
+
+#include <ace/Sample_History.h>
+#include <ace/High_Res_Timer.h>
+#include <ace/Version.h>
+#if (ACE_MAJOR_VERSION > 5) || \
+  ( (ACE_MAJOR_VERSION == 5) && (ACE_MINOR_VERSION > 5) ) || \
+  ( (ACE_MAJOR_VERSION == 5) && (ACE_MINOR_VERSION == 5) && (ACE_BETA_VERSION >= 10) )
+#  include <ace/Throughput_Stats.h>
+#else
+#  include <ace/Stats.h>
+#endif
 
 #include <vector>
 #include <cmath>

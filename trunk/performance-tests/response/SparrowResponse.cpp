@@ -20,10 +20,6 @@
 //
 // $Id$
 //
-#include <ace/Stats.h>
-#include <ace/Sample_History.h>
-#include <ace/High_Res_Timer.h>
-
 #include "sparrow/SparrowConnection.h"
 #include "sparrow/SparrowConsumer.h"
 #include "sparrow/Parameters.h"
@@ -33,6 +29,17 @@
 #include "miro/ReactorTask.h"
 #include "miro/IO.h"
 #include "miro/Utils.h"
+
+#include <ace/Sample_History.h>
+#include <ace/High_Res_Timer.h>
+#include <ace/Version.h>
+#if (ACE_MAJOR_VERSION > 5) || \
+  ( (ACE_MAJOR_VERSION == 5) && (ACE_MINOR_VERSION > 5) ) || \
+  ( (ACE_MAJOR_VERSION == 5) && (ACE_MINOR_VERSION == 5) && (ACE_BETA_VERSION >= 10) )
+#  include <ace/Throughput_Stats.h>
+#else
+#  include <ace/Stats.h>
+#endif
 
 #include <iostream>
 #include <cmath>
