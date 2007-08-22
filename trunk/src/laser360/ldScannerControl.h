@@ -208,11 +208,11 @@ namespace ldoem_
     /// displayCurrentState
     ///
     /// @param message sting of the current state
-    void displayCurrentState( std::string message );
+    void displayCurrentState( std::string message, bool display_on );
 
     //---------------------------------------------------------------------------
     /// displayMessage
-    void displayMessage( std::string state );
+    void displayMessage( std::string state,  bool display_on );
 
     //---------------------------------------------------------------------------
     /// checkMessage
@@ -310,6 +310,10 @@ namespace ldoem_
     /// sector configuration count;
     static uint16 config_count_;
 
+    //---------------------------------------------------------------------------
+    /// sector step count;
+    static uint16 step_count_;
+    
     //---------------------------------------------------------------------------
     /// Display_on_ print command string to standard output
     static bool display_on_;

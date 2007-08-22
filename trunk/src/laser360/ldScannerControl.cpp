@@ -45,7 +45,7 @@ namespace ldoem_
   vectorDistance ScannerControl::distance_;
   vectorDistance ScannerControl::step_;
 
-  bool ScannerControl::display_on_           = true;
+  bool ScannerControl::display_on_           = false;
   bool ScannerControl::first_profile_        = false;
   bool ScannerControl::toggle_               = false;
   const uint16 ScannerControl::VECTOR_SIZE   = 5;
@@ -87,6 +87,7 @@ namespace ldoem_
   uint16 ScannerControl::port_value_           = 0x0001; // LED 0 (yellow)
   uint16 ScannerControl::profile_number_       = 0x0000; // profil number
   uint16 ScannerControl::profile_count_        = 0x0001; // profil count
+  uint16 ScannerControl::step_count_           = 360;    // step count
   uint16 ScannerControl::actual_profile_count_ = 0;      // actual profile count
   // 0x0700 profil format - ( measured distances, direction of measured distances, echo amplitudes )
   uint16 ScannerControl::profile_format_     = 0x0700;
@@ -102,10 +103,12 @@ namespace ldoem_
 
        // load scanner parameter configuration
        frequency_      = parameters_.frequency;
-       angle_          = parameters_.angel;
+       // Angle 1° corresponds 16,  mimimal angle with RS232/422 interface is 0.5°
+       angle_          = static_cast < uint16 > (16.0 * parameters_.scanResolution);
 
        profile_number_ = parameters_.profilnumber;
        profile_count_  = parameters_.profilcount;
+       step_count_     = static_cast < uint16 > (parameters_.fov / parameters_.scanResolution);
 
        sector_function_[0] = parameters_.sectorfunction0;
        sector_stop_[0]     = parameters_.sectorstop0;
@@ -254,7 +257,7 @@ namespace ldoem_
   //---------------------------------------------------------------------------
   void ScannerControl::getIdentification( std::string state )
   {
-    displayCurrentState( state );
+    displayCurrentState( state, display_on_ );
     // set identifacation item
     vector_item_[0] = name_of_sensor;
     serial_com_->setItem( GET_IDENTIFICATION, vector_item_ );
@@ -268,7 +271,7 @@ namespace ldoem_
   //---------------------------------------------------------------------------
   void ScannerControl::doReset( std::string state )
   {
-    displayCurrentState( state );
+    displayCurrentState( state, display_on_ );
     // set reset item
     vector_item_[0] = reset_level_;
     serial_com_->setItem( DO_RESET, vector_item_ );
@@ -282,7 +285,7 @@ namespace ldoem_
   //---------------------------------------------------------------------------
   void ScannerControl::setConfig( std::string state )
   {
-    displayCurrentState( state );
+    displayCurrentState( state, display_on_ );
     // set config items
     vector_item_[0] = interface_item_;
     vector_item_[1] = baudrate_;
@@ -300,7 +303,7 @@ namespace ldoem_
   //---------------------------------------------------------------------------
   void ScannerControl::setFunction( std::string state )
   {
-    displayCurrentState( state );
+    displayCurrentState( state, display_on_ );
     if ( config_count_ < SECTOR_SIZE )
     {
       // set function items
@@ -321,7 +324,7 @@ namespace ldoem_
   //---------------------------------------------------------------------------
   void ScannerControl::setAngle( std::string state )
   {
-    displayCurrentState( state );
+    displayCurrentState( state, display_on_ );
 
     // check angle
     if ( angle_ < 8 )
@@ -344,7 +347,7 @@ namespace ldoem_
   //---------------------------------------------------------------------------
   void ScannerControl::transeRotate( std::string state )
   {
-    displayCurrentState( state );
+    displayCurrentState( state, display_on_ );
 
     // check frequency
     if ( frequency_ > 15 || frequency_ < 5 )
@@ -363,7 +366,7 @@ namespace ldoem_
   //---------------------------------------------------------------------------
   void ScannerControl::transeMeasure( std::string state )
   {
-    displayCurrentState( state );
+    displayCurrentState( state, display_on_ );
     // send command string to scanner
     serial_com_->sendCommand( TRANSE_MEASURE, display_on_ );
     // set next state
@@ -374,7 +377,7 @@ namespace ldoem_
   //---------------------------------------------------------------------------
   void ScannerControl::setSignal( std::string state )
   {
-    displayCurrentState( state );
+    displayCurrentState( state, display_on_ );
     // set function items
     vector_item_[0] = port_value_;
     serial_com_->setItem( SET_SIGNAL, vector_item_ );
@@ -388,7 +391,7 @@ namespace ldoem_
   //---------------------------------------------------------------------------
   void ScannerControl::getProfile( std::string state )
   {
-    displayCurrentState( state );
+    displayCurrentState( state, display_on_ );
     // set function items
     vector_item_[0] = profile_number_;
     if ( profile_number_ == 0 )
@@ -420,7 +423,7 @@ namespace ldoem_
   //---------------------------------------------------------------------------
   void ScannerControl::getContinuouslyProfile( std::string state )
   {
-    displayCurrentState( state );
+    displayCurrentState( state, display_on_ );
 
     RangeGroupEventIDL * data = new RangeGroupEventIDL();
 
@@ -489,19 +492,24 @@ namespace ldoem_
       }
       x += 4;
     }
-
+/*
     for ( uint16 i = 0; i < vdistance.size(); i++ )
     {
       distance_.push_back( vdistance[i] );
-   //   step_.push_back( vstep[i] );
-   //   std::cout  << "  D: " << std::setw( 10 ) << vdistance[i] << ' ';
-   //   std::cout  << "  W: " << std::setw( 10 ) << vstep[i] << ' ' << std::endl;
     }
-
+*/       
+    float distance_value = 0;
+    while ( ! vdistance.empty() )
+    {
+       distance_value = vdistance.back();
+       vdistance.pop_back();
+       distance_.push_back(distance_value);
+    }
+   
     ACE_Time_Value now = ACE_OS::gettimeofday();
     timeA2C( now, data->time );
     data->group = 0;
-    int vals = 360;
+    int vals = step_count_;
     data->range.length( vals );
 
     if  ( sequence_ == 1 )
@@ -527,7 +535,7 @@ namespace ldoem_
   //---------------------------------------------------------------------------
   void ScannerControl::exitState( std::string state )
   {
-    displayCurrentState( state );
+    displayCurrentState( state, display_on_ );
     // set reset item
     vector_item_[0] = 0x0002;
     serial_com_->setItem( DO_RESET, vector_item_ );
@@ -544,21 +552,27 @@ namespace ldoem_
   }
 
   //---------------------------------------------------------------------------
-  void ScannerControl::displayCurrentState( std::string message )
+  void ScannerControl::displayCurrentState( std::string message, bool display_on )
   {
-    std::cout << "< Send > ";
-    std::cout.width( 15 );
-    std::cout << message << " -> ";
+    if ( display_on ) 
+    {
+      std::cout << "< Send > ";
+      std::cout.width( 15 );
+      std::cout << message << " -> ";
+    }  
   }
 
   //---------------------------------------------------------------------------
-  void ScannerControl::displayMessage( std::string state )
+  void ScannerControl::displayMessage( std::string state,  bool display_on )
   {
-    std::string message = "";
-    message = serial_com_->getRcvMessage();
-    std::cout << "< Rcv  > ";
-    std::cout.width( 15 );
-    std::cout << state << " <- " << message << std::endl;
+    if ( display_on ) 
+	{  
+      std::string message = "";
+      message = serial_com_->getRcvMessage();
+      std::cout << "< Rcv  > ";
+      std::cout.width( 15 );
+      std::cout << state << " <- " << message << std::endl;
+	}  
   }
 
   //---------------------------------------------------------------------------
@@ -581,7 +595,7 @@ namespace ldoem_
     parseMeasurementData( message, count );
 
     // wait
-    timeout.wait( 100 );
+    timeout.wait( 500 );
     getProfile( "GetProfile" );
 
   }
@@ -614,7 +628,8 @@ namespace ldoem_
       }
       islength.str( slength );
       islength >> std::hex >> y;
-      if ( y <= 126 )
+      if ( y <= 
+    		  126 )
         length[i - 1] = y;
       else
         return;
@@ -646,6 +661,7 @@ namespace ldoem_
     // substring length
     uint16 count = sdata.size() / ( 4 * 3 );
 
+    
     // convert distance
     x = 0;
     for ( uint16 i = 0; i < count; i ++ )
@@ -682,16 +698,24 @@ namespace ldoem_
       x += 12;
     }
 
+    float value = 0;
+    while ( ! vdistance.empty() )
+    {
+      value = vdistance.back();
+      vdistance.pop_back();
+      distance_.push_back(value);
+    }
+ /*
     for ( uint16 i = 0; i < vstep.size(); i++ )
     {
-      std::cout << "< W: " << std::setw( 6 )  << vstep[i] << ' ' << "  D: " << std::setw( 10 ) << vdistance[i] << ' '
+      std::cout << "< W: " << std::setw( 6 )  << vstep[i] << ' ' << "  D: " << std::setw( 10 ) << (distance_[i] * 1000) << ' '
          << "  E: " << std::setw( 4 )  << vecho[i] << " >" << std::endl;
-    }
-
+    } 
+*/
     ACE_Time_Value now = ACE_OS::gettimeofday();
     timeA2C( now, data->time );
     data->group = 0;
-    int vals = 360;
+    int vals = step_count_;
     data->range.length( vals );
 
     for ( long i = vals - 1; i >= 0; --i )
@@ -701,11 +725,11 @@ namespace ldoem_
         data->range[i] = static_cast<int>(distance_[i] * 1000);
       }
       else
+    	  
         data->range[i] = 0;
-
-      cout << "Distanzen: < " << data->range[i] << " > " << endl;
     }
     laserI_.integrateData( data );
+    distance_.clear();
   }
 
   //---------------------------------------------------------------------------
@@ -727,7 +751,7 @@ namespace ldoem_
           case RESP_IDENT:
             if ( serial_com_->newMessageRcv() )
             {
-              displayMessage( "Ident" );
+              displayMessage( "Ident", display_on_ );
               timeout.start( 5000 );
               doReset( "DoReset" );
             }
@@ -737,11 +761,12 @@ namespace ldoem_
               return ( - 1 );
             }
           break;
+          
 
           case RESP_RESET:
             if ( serial_com_->newMessageRcv() )
             {
-              displayMessage( "DoReset" );
+              displayMessage( "DoReset", display_on_ );
               timeout.start( 5000 );
               setConfig( "SetConfig" );
             }
@@ -755,7 +780,7 @@ namespace ldoem_
           case RESP_CONFIG:
             if ( serial_com_->newMessageRcv() )
             {
-              displayMessage( "SetConfig" );
+              displayMessage( "SetConfig", display_on_ );
               timeout.start( 5000 );
               setAngle( "SetStep" );
             }
@@ -769,7 +794,7 @@ namespace ldoem_
           case RESP_STEP:
             if ( serial_com_->newMessageRcv() )
             {
-              displayMessage( "SetStep" );
+              displayMessage( "SetStep", display_on_ );
               timeout.start( 5000 );
               setFunction( "SetFunction" );
             }
@@ -783,7 +808,7 @@ namespace ldoem_
           case RESP_FUNCTION:
             if ( serial_com_->newMessageRcv() )
             {
-              displayMessage( "SetFunction" );
+              displayMessage( "SetFunction", display_on_ );
               if  ( config_count_ < SECTOR_SIZE  )
               {
                 timeout.start( 5000 );
@@ -806,7 +831,7 @@ namespace ldoem_
             if ( serial_com_->newMessageRcv() )
             {
               timeout.start( 5000 );
-              displayMessage( "TranseRotate" );
+              displayMessage( "TranseRotate", display_on_ );
               transeMeasure( "TranseMeasure" );
             }
             else if ( timeout.isFinished() )
@@ -819,7 +844,7 @@ namespace ldoem_
           case RESP_MEASURE:
             if ( serial_com_->newMessageRcv() )
             {
-              displayMessage( "TranseMeasure" );
+              displayMessage( "TranseMeasure", display_on_ );
               timeout.start( 5000 );
               setSignal( "SetSignal" );
             }
@@ -833,7 +858,7 @@ namespace ldoem_
           case RESP_SIGNAL:
             if ( serial_com_->newMessageRcv() )
             {
-              displayMessage( "SetSignal" );
+              displayMessage( "SetSignal", display_on_ );
               timeout.start( 5000 );
               getProfile( "GetProfile" );
             }
@@ -845,12 +870,12 @@ namespace ldoem_
           break;
 
           case RESP_PROFILE:
-            if ( serial_com_->newMessageRcv() && ( actual_profile_count_ <= profile_count_ ) )
+            if ( serial_com_->newMessageRcv() && ( ( ( actual_profile_count_ <= profile_count_ ) && ( profile_number_ == 1 ) ) || ( profile_number_ == 2 ) ) ) 
             {
               timeout.start( 5000 );
               parseMeasurementHeader();
             }
-            else if ( actual_profile_count_ > profile_count_ )
+            else if ( ( actual_profile_count_ > profile_count_ ) && ( profile_number_ == 1 ) )
             {
               timeout.start( 5000 );
               exitState( "Reset" );
@@ -863,15 +888,11 @@ namespace ldoem_
           break;
 
           case CONTINUOUSLY:
-            if ( serial_com_->newMessageRcv()  /*&& ( actual_profile_count_ <= profile_count_ )*/  )
+            if ( serial_com_->newMessageRcv() )
             {
               timeout.start( 5000 );
               getContinuouslyProfile( "Continuously" );
             }
-  //          else if ( actual_profile_count_ > profile_count_ )
-  //          {
-  //            exitState( "Reset" );
-  //          }
             else if ( timeout.isFinished() )
             {
               std::cout << "Timeout" << std::endl;
@@ -882,7 +903,7 @@ namespace ldoem_
           case RESET:
             if ( serial_com_->newMessageRcv() )
             {
-              displayMessage( "Reset" );
+              displayMessage( "Reset", display_on_ );
               // set next state
               setState( EXIT );
             }

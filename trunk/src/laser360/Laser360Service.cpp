@@ -70,20 +70,20 @@ void calculateLaserDescription( Laser360::Parameters * parameters )
   parameters->laserDescription.scanType = Miro::RangeSensor::GROUPWISE;
   parameters->laserDescription.eventName = "Laser";
   parameters->laserDescription.group.length( 1 );
-  parameters->laserDescription.group[0].description.minRange = 50;
-  parameters->laserDescription.group[0].description.maxRange = 81910;
+  parameters->laserDescription.group[0].description.minRange;
+  parameters->laserDescription.group[0].description.maxRange;
   parameters->laserDescription.group[0].description.focus = Miro::deg2Rad( parameters->scanResolution );
 
   int values = ( int )( parameters->fov / parameters->scanResolution );
   parameters->laserDescription.group[0].sensor.length( values );
   for ( int i = 0; i < values; ++i )
   {
-    parameters->laserDescription.group[0].sensor[i].height = 300;
-    parameters->laserDescription.group[0].sensor[i].distance = 0;
+    parameters->laserDescription.group[0].sensor[i].height;
+    parameters->laserDescription.group[0].sensor[i].distance;
     parameters->laserDescription.group[0].sensor[i].alpha =
        Miro::deg2Rad( -( parameters->fov / 2 ) + i * parameters->scanResolution );
-    parameters->laserDescription.group[0].sensor[i].beta = 0;
-    parameters->laserDescription.group[0].sensor[i].gamma = 0;
+    parameters->laserDescription.group[0].sensor[i].beta;
+    parameters->laserDescription.group[0].sensor[i].gamma;
   }
 }
 
@@ -92,7 +92,7 @@ int main( int argc, char * argv[] )
 {
   int rc = 0;
 
-  Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
+  //Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
   Laser360::Parameters * parameters = Laser360::Parameters::instance();
 
   try
