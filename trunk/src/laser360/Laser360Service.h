@@ -69,7 +69,7 @@ namespace Miro
     /// Sceduling parameters for a realtime thread
     ACE_Sched_Params schedparams_;
 
-    //---------------------------------------------------------------------------
+    //----------------------------------------------------------------
     ///CORBA reference to odometry for position stamps
     CosNotifyChannelAdmin::EventChannel_var ec_;
 

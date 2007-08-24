@@ -3,11 +3,8 @@
   <config_global name="namespace" value="Laser360" />
   <config_global name="include" value="miro/SvcParameters.h" />
 
-  <config_group name="Miro">
+  <config_group name="Laser">
     <config_item parent="Miro::Tty" instance="true">
-      <constructor>
-      </constructor>
-
        <!--- device name   -->
        <config_parameter name="device" type="string" inherited="true" default="/dev/ttyS0" />
 

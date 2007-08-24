@@ -22,11 +22,13 @@
 //
 #include "Laser360Service.h"
 #include "Parameters.h"
+#include "miro/Utils.h"
+#include "miro/Configuration.h"
 
 namespace Miro
 {
 
-  //---------------------------------------------------------------------------
+  //---------frequency------------------------------------------------------------------
   LaserServer::LaserServer( int argc, char * argv[] ) : Miro::Server( argc, argv ), schedparams_( ACE_SCHED_FIFO, 10 ),
      ec_( Laser360::Parameters::instance()->notify ? tryResolveName < CosNotifyChannelAdmin::EventChannel > ( "EventChannel" ) :
      CosNotifyChannelAdmin::EventChannel::_nil() ),
@@ -51,8 +53,7 @@ namespace Miro
   //---------------------------------------------------------------------------
   LaserServer::~LaserServer()
   {
-
-    MIRO_LOG_DTOR( "Miro::Laser360Server" );
+	MIRO_LOG_DTOR( "Miro::Laser360Server" );
     connection_.stopTasks();
 
     // delete laser;
@@ -92,17 +93,18 @@ int main( int argc, char * argv[] )
 {
   int rc = 0;
 
-  //Miro::RobotParameters * robotParameters = Miro::RobotParameters::instance();
-  Laser360::Parameters * parameters = Laser360::Parameters::instance();
-
   try
   {
-
+    Laser360::Parameters * parameters = Laser360::Parameters::instance();
+          
     // Config file processing
     Miro::ConfigDocument * config = new Miro::ConfigDocument( argc, argv );
-    config->setSection( "Laser360" );
+    config->setSection( "Laser" );
+    config->getParameters("Laser360::Parameters", *parameters); 
     delete config;
 
+    MIRO_LOG_OSTR(LL_NOTICE, "Configuration:\n" << "  parameters:" << std::endl << *parameters);
+    
     calculateLaserDescription( parameters );
 
     MIRO_LOG( LL_NOTICE, "Initialize server daemon.\n" );

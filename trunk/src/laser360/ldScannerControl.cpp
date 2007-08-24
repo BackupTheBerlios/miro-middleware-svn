@@ -68,7 +68,7 @@ namespace ldoem_
     0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007 // sector number 0..7
   };
   // Measurement function for the sector
-  // 0: not onotialised
+  // 0: not initialized
   // 1: no measurement
   // 2: reserved
   // 3: normal measurement
@@ -79,7 +79,7 @@ namespace ldoem_
   // End angle of the sector
   uint16 ScannerControl::sector_stop_[8]     =
     {
-    0x1670, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000
+    0x1678, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000
   };
   uint16 ScannerControl::flashflag_            = 0x0001; // configuration written to flash memory
   uint16 ScannerControl::angle_                = 0x0010; // angle corresponds 1°
@@ -107,6 +107,11 @@ namespace ldoem_
        angle_          = static_cast < uint16 > (16.0 * parameters_.scanResolution);
 
        profile_number_ = parameters_.profilnumber;
+       
+       // set continuously measurement mode
+       if ( ( profile_number_ <= 0 ) || ( profile_number_ > 2 ) )
+    	 profile_number_ = 2;
+       
        profile_count_  = parameters_.profilcount;
        step_count_     = static_cast < uint16 > (parameters_.fov / parameters_.scanResolution);
 
@@ -222,7 +227,7 @@ namespace ldoem_
       crc = ( ( crc << 8 ) | ( static_cast < uint8 > ( value ) ) ) ^ crctab[crc >> 8];
       i += 4;
     }
-
+    angle_ = 0x0008;
     if ( crc == checkcrc )
     {
       return ( true );
@@ -329,7 +334,9 @@ namespace ldoem_
     // check angle
     if ( angle_ < 8 )
       angle_ = 0x0008;
-
+    else if ( angle_ >16 )
+      angle_ = 0x0010; 	
+    
     // set config items
     vector_item_[0] = GLOBAL_CONFIG;
     vector_item_[1] = GLOBAL_CONFIG;
@@ -417,7 +424,6 @@ namespace ldoem_
       // set next state
       setState( RESP_PROFILE );
     }
-    timeout.wait( 40 );
   }
 
   //---------------------------------------------------------------------------
@@ -492,12 +498,7 @@ namespace ldoem_
       }
       x += 4;
     }
-/*
-    for ( uint16 i = 0; i < vdistance.size(); i++ )
-    {
-      distance_.push_back( vdistance[i] );
-    }
-*/       
+   
     float distance_value = 0;
     while ( ! vdistance.empty() )
     {
@@ -593,9 +594,7 @@ namespace ldoem_
 
     // parse measurement data
     parseMeasurementData( message, count );
-
-    // wait
-    timeout.wait( 500 );
+    
     getProfile( "GetProfile" );
 
   }
@@ -692,12 +691,13 @@ namespace ldoem_
     {
       std::istringstream isecho;
       secho = sdata.substr( x, 4 );
-      isecho.str( secho );
+      isecho.str( secho );   // wait
+      //  timeout.wait( 500 );
       isecho >> std::hex >> echo;
       vecho.push_back( echo );
       x += 12;
     }
-
+ 
     float value = 0;
     while ( ! vdistance.empty() )
     {
@@ -705,13 +705,8 @@ namespace ldoem_
       vdistance.pop_back();
       distance_.push_back(value);
     }
- /*
-    for ( uint16 i = 0; i < vstep.size(); i++ )
-    {
-      std::cout << "< W: " << std::setw( 6 )  << vstep[i] << ' ' << "  D: " << std::setw( 10 ) << (distance_[i] * 1000) << ' '
-         << "  E: " << std::setw( 4 )  << vecho[i] << " >" << std::endl;
-    } 
-*/
+    
+ 
     ACE_Time_Value now = ACE_OS::gettimeofday();
     timeA2C( now, data->time );
     data->group = 0;
