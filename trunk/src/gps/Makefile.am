@@ -18,6 +18,12 @@ bin_PROGRAMS = GpsService
 
 GpsService_SOURCES = \
 	Parameters.xml \
+	GpsUTM.cpp \
+	GpsUTM.h \
+	GpsTranMerc.cpp \
+	GpsTranMerc.h \
+	GpsUTMConverter.cpp \
+	GpsUTMConverter.h \
 	CtGpsImpl.cpp \
 	CtGpsImpl.h \
 	GpsConnection.cpp \

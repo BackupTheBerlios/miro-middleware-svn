@@ -192,9 +192,20 @@ namespace GPS
     dilution_.dilution.vdop = NAN;
     dilution_.dilution.pdop = NAN;
 
+		use_utm_ = parameters_.useUTM;
     reference_.latitude = parameters_.reference_latitude;
     reference_.longitude = parameters_.reference_longitude;
     reference_.altitude = parameters_.reference_altitude;
+    if ( use_utm_ )
+    {
+    	if( isnan( reference_.latitude ) || isnan( reference_.longitude ) )
+    	{
+    		MIRO_LOG_OSTR( LL_PRATTLE, "Using UTM Coordinates but no reference point is set!" );
+    	}
+    	utm_converter_ = new UTMConverter();
+    	utm_converter_->setEllipsoid( UTMConverter::WGS84 );
+    	utm_converter_->setOrigin( reference_.latitude, reference_.longitude );
+    }
     MIRO_LOG_CTOR_END("GPS::GpsImpl");
   }
 
@@ -215,30 +226,36 @@ namespace GPS
 
       double newlat = _position.global.latitude;
       if (!isnan(newlat)) {
-	position_.global.latitude = newlat;
-	if (isnan(reference_.latitude))
-	  reference_.latitude = newlat;
-	position_.relative.y = (newlat - reference_.latitude) * 1000
-			     * METERS_PER_RAD;
+				position_.global.latitude = newlat;
+				if (isnan(reference_.latitude))
+	  			reference_.latitude = newlat;
+				position_.relative.y = (newlat - reference_.latitude) * 1000 * METERS_PER_RAD;
       }
-
+			
       double newlon = _position.global.longitude;
       if (!isnan(newlon)) {
-	position_.global.longitude = newlon;
-	if (isnan(reference_.longitude))
-	  reference_.longitude = newlon;
-	position_.relative.x = (newlon - reference_.longitude) * 1000
-			     * (METERS_PER_RAD * cos(reference_.latitude));
+				position_.global.longitude = newlon;
+				if (isnan(reference_.longitude))
+	  			reference_.longitude = newlon;
+				position_.relative.x = (newlon - reference_.longitude) * 1000 * (METERS_PER_RAD * cos(reference_.latitude));
       }
-
+			
       float newalt = _position.global.altitude;
       if (!isnan(newalt)) {
-	position_.global.altitude = newalt;
-	if (isnan(reference_.altitude))
-	  reference_.altitude = newalt;
-	position_.relative.z = (newalt - reference_.altitude) * 1000;
+				position_.global.altitude = newalt;
+				if (isnan(reference_.altitude))
+	  			reference_.altitude = newalt;
+				position_.relative.z = (newalt - reference_.altitude) * 1000;
       }
-
+			
+			// if useUTM is set then get reference as UTM coordinates
+			if ( use_utm_ )
+			{
+				utm_converter_->getUTM( position_.global.latitude, position_.global.longitude, 
+				                        utm_zone_, utm_hemisphere_, utm_easting_, utm_northing_ );
+				position_.relative.x = utm_easting_;  // set easting to relative x
+				position_.relative.y = utm_northing_; // set northing to relative y
+			}
       pos_cond_.broadcast();
     }
 

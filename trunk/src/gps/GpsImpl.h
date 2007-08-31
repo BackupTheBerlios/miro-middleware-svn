@@ -27,6 +27,7 @@
 #define GpsImpl_h
 
 #include "gps/Parameters.h"
+#include "gps/GpsUTMConverter.h"
 
 #include "idl/GpsS.h"
 #include "idl/GpsDataC.h"
@@ -175,6 +176,18 @@ namespace GPS
 
     //! Lock for reference_
     Miro::Mutex ref_mutex_;
+    //! Use UTM coordinates for refference
+    bool use_utm_;
+    //! UTMConverter
+    UTMConverter *utm_converter_;
+    //! UTM Zone_;
+    long utm_zone_;
+    //! UTM Hemisphere
+    char utm_hemisphere_;
+    //! UTM Easting = x
+    double utm_easting_;
+    //! UTM Northing = y
+    double utm_northing_;
     //! Position reference coordinates
     Miro::GpsPositionIDL reference_;
     //! Valid reference latitude range (about -85 .. 85 deg)
