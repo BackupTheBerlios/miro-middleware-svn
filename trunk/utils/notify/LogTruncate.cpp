@@ -20,72 +20,58 @@
 //
 // $Id$
 //
-#include "miro/Client.h"
-#include "miro/StructuredPushConsumer.h"
-#include "miro/TimeHelper.h"
+#include "miro/LogReader.h"
+#include "miro/Log.h"
 
-#include <ace/Mem_Map.h>
-#include <tao/CDR.h>
-
-using std::cout;
-using std::cerr;
-using std::endl;
-using std::flush;
-using std::cin;
+using namespace std;
+using namespace Miro;
 
 int
 main(int argc, char *argv[])
 {
-  if (argc == 1) {
-    cout << "usage: " << argv[0] << " <list of files>" << endl
+  Miro::Log::init(argc, argv);
+
+  if (argc <= 1) {
+    cerr << "usage: " << argv[0] << " <list of files>" << endl
 	 << "Deletes trailing zeros from a log file." << endl
 	 << "This happens if logNotify wasn't able to shutdown propperly." << endl;
     return 1;
   }
-
-  Miro::Client client(argc, argv);
 
   try {
     for (int i = 1; i < argc; ++i) {
       
       cout << "processing file: " << argv[i] << endl;
 
-      cout << "memory mapping file." << endl;
-      ACE_Mem_Map memoryMap(argv[i]);
-      if (0 == memoryMap.handle())
-	throw Miro::CException(errno, std::strerror(errno));
+      LogReader logFile(argv[i], LogReader::TRUNCATE);
 
-      TAO_InputCDR istr((char*)memoryMap.addr(), memoryMap.size());
-
-      ACE_Time_Value timeStamp;
-      Miro::TimeIDL timeIDL;
-      CosNotification::StructuredEvent event;
-      int counter = 0;
-      int totalLength = 0;
+      cout << "parsing cdr stream - " << logFile.events() << " events" << flush;
+      ACE_Time_Value t;
       
-      cout << "parsing cdr stream" << flush;
-      while(istr.length() != 0) {
-	totalLength = istr.rd_ptr() - (char*)memoryMap.addr();
-
-	istr >> timeIDL;
-	Miro::timeC2A(timeIDL, timeStamp);
-	if (timeStamp == ACE_Time_Value(0))
+      unsigned int events = logFile.events();
+      unsigned int i;
+      for (i = 0; i < events; ++i) {
+	if (logFile.eof()) {
+	  cerr << "\nend of file before event " << i + 1 << endl;
 	  break;
-	istr >> event;
-	if (!(counter++ % 3000))
-	  cout << "." << flush;
-      }
-      memoryMap.close();
-      cout << endl;
+	}
+	if (!logFile.parseTimeStamp(t)) {
+	  cerr << "\nend of file parsing timestamp " << i + 1 << endl;
+	  break;
+	}
+	if (!logFile.skipEvent()) {
+	  cerr << "\nend of file parsing event " << i + 1 << endl;
+	  break;
+	}
 
-      if (istr.length() == 0) {
-	cout << "file length == stream length" << endl;
+	if ((i % 10000) == 0) {
+	  cout << "." << flush;
+	}
       }
-      else {
-	cerr << "truncating file "<< argv[i] << " to size: " << totalLength << endl;
-	if (ACE_OS::truncate(argv[i], totalLength) == -1)
-	  throw Miro::CException(errno, std::strerror(errno));
-      }
+      logFile.events(i);
+      
+      cout << endl;
+      cout << "number of corrupted events: " << events - i << endl;
     }
   }
   catch (const Miro::Exception& e) {
