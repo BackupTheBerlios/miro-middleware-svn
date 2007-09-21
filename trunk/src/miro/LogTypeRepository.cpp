@@ -74,6 +74,11 @@ namespace Miro
       // add type to our repository
       types_.push_back(CORBA::TypeCode::_duplicate(type));
     }
+
+    ACE_Message_Block const * block = _istr.start();
+    totalLength_ = (block->rd_ptr() - block->base());
+
+    MIRO_DBG_OSTR(MIRO, LL_DEBUG, "LogTypeRepository - total length: " << totalLength_);
   }
 
   LogTypeRepository::~LogTypeRepository() throw ()

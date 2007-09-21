@@ -51,25 +51,40 @@
 
 namespace Miro
 {
-  LogReader::LogReader(std::string const& _fileName) throw (Exception) :
-    memMap_(_fileName.c_str(), -1, O_RDONLY),
+  using namespace std;
+
+  int const LogReader::READER = 0;
+  int const LogReader::TRUNCATE = 1;
+
+  LogReader::LogReader(string const& _fileName, int _mode) throw (Miro::Exception) :
+    mode_(_mode),
+    memMap_(_fileName.c_str(),  static_cast<size_t> (-1), O_RDWR,
+	    ACE_DEFAULT_FILE_PERMS, PROT_RDWR, 
+	    ACE_MAP_SHARED),
     header_(NULL),
     istr_(NULL),
     typeRepository_(NULL),
     next_(NULL),
     version_(1),
+    tcrOffsetSlot_(NULL),
     tcrOffset_(sizeof(LogHeader)),
+    eventsSlot_(NULL),
     events_(0),
     eof_(false)
   {
     if (memMap_.addr() == MAP_FAILED)
-      throw CException(errno, std::strerror(errno));
+      throw CException(errno, strerror(errno));
 
     try {
       MIRO_DBG(MIRO, LL_DEBUG, "Looking for log file type.");
       LogHeader::READ r;
       header_ = new (memMap_.addr()) LogHeader(r);
       version_ = header_->version;
+      
+      if (mode_ != READER && version_ < 3) {
+	throw Miro::Exception("Log truncation not supported for log file format prior v 3");
+      }
+ 
 
       istr_ = new TAO_InputCDR((char*)memMap_.addr() + sizeof(LogHeader),
 			       memMap_.size() - sizeof(LogHeader),
@@ -87,14 +102,17 @@ namespace Miro
 				 memMap_.size() - sizeof(LogHeader),
 				 (int)header_->byteOrder);
 
+	tcrOffsetSlot_ = istr_->rd_ptr();
 	istr_->read_ulong(tcrOffset_);
+
+	eventsSlot_ = istr_->rd_ptr();	
 	istr_->read_ulong(events_);
 
 	MIRO_DBG_OSTR(MIRO, LL_DEBUG, 
 		      "LogReader - TCR Offset: 0x" << 
-		      std::hex << tcrOffset_ << std::dec << std::endl <<
+		      hex << tcrOffset_ << dec << endl <<
 		      "LogReader - Number of events: " << 
-		      events_ << std::dec);
+		      events_ << dec);
 
 	TAO_InputCDR tcrIStream((char*)memMap_.addr() + tcrOffset_,
 				memMap_.size() - tcrOffset_,
@@ -113,6 +131,56 @@ namespace Miro
       istr_ = new TAO_InputCDR((char*)memMap_.addr(), memMap_.size());
     }
     MIRO_DBG_OSTR(MIRO, LL_DEBUG,  "version : " << version_);
+  }
+
+  LogReader::~LogReader()
+  {
+    if (mode_ == TRUNCATE) {
+      string filename = memMap_.filename();
+      size_t fileSize =  memMap_.size();
+      char * base = (char *)memMap_.addr();
+
+      //--------------------------------------------------------------------------
+      // place type codes at the end of the event stream
+      //--------------------------------------------------------------------------
+
+      char * dest = istr_->rd_ptr();
+      // 8 byte alignement
+      dest = ACE_ptr_align_binary(dest, 8);
+
+      // add the type repository to the length
+      size_t size = dest - base;
+      size_t totalSize = size + typeRepository_->totalLength();
+
+      MIRO_DBG_OSTR(MIRO, LL_DEBUG, 
+		    "LogReader - TRUNCATE base:       " << hex << (void*) base << dec << endl <<
+		    "LogReader - TRUNCATE size:       " << size << endl <<
+		    "LogReader - TRUNCATE tcr offset: " << hex << (void*)dest << dec << endl <<
+		    "LogReader - TRUNCATE tcr size:   " << typeRepository_->totalLength() << endl <<
+		    "LogReader - TRUNCATE total size: " << totalSize << endl);
+
+      packTCR(dest);
+
+      //--------------------------------------------------------------------------
+      // log file size cleanup
+      //--------------------------------------------------------------------------
+
+
+      // close the memory mapped file
+      memMap_.close();
+
+      if (fileSize > totalSize) {
+	MIRO_LOG_OSTR(LL_WARNING, "LogReader - TRUNCATE discarded bytes: " << fileSize - totalSize);
+
+	if (ACE_OS::truncate((filename).c_str(), totalSize) == -1) {
+	  // We shouldn't throw in a destructor...
+	  MIRO_LOG_OSTR(LL_WARNING, 
+			"LogReader - Error " << errno << 
+			" truncating log file " << filename  << endl
+			<< strerror(errno));
+	}
+      }
+    }
   }
 
   bool
@@ -159,6 +227,50 @@ namespace Miro
       MIRO_DBG(MIRO, LL_DEBUG, "eof 3");
       eof_ = true;
       return false;
+    }
+    return true;
+  }
+  
+  bool
+  LogReader::skipEvent() throw ()
+  {
+    if (eof_)
+      return false;
+
+    // version >= 2 parsing
+    if (version() >= 2) {
+      // get address of next event
+      char const * here = istr_->start()->rd_ptr();
+      ACE_UINT32 len;
+      if (!istr_->read_ulong(len)) {
+	MIRO_DBG(MIRO, LL_DEBUG, "eof h1");
+	eof_ = true;
+	return false;
+      }
+
+      if (len == 0) {
+	MIRO_DBG(MIRO, LL_DEBUG, "eof h2");
+	eof_ = true;
+	return false;
+      }
+
+      next_ = here + len;
+
+      rdPtr(next_);
+    }
+    // version 1 parsing
+    else {
+      CosNotification::FixedEventHeader header;
+      CosNotification::OptionalHeaderFields variable_header;
+      CosNotification::FilterableEventBody filterable_data;
+      CORBA::Any remainder_of_body;
+      if (!((*istr_) >> header)||
+	  !((*istr_) >> variable_header) ||
+	  !((*istr_) >> filterable_data) ||
+	  !((*istr_) >> remainder_of_body)) {
+	eof_ = true;
+	return false;
+      }
     }
     return true;
   }
@@ -333,5 +445,39 @@ namespace Miro
     }
 
     return true;
+  }
+
+
+  void
+  LogReader::events(unsigned long count) throw (Miro::Exception)
+  {    
+    if (mode_ != READER && version_ < 3) {
+      throw Miro::Exception("Log truncation not supported for log file format prior v 3");
+    }
+    
+    // TODO: honor byte swapping if necessary
+    *reinterpret_cast<ACE_UINT32 *>(eventsSlot_) = count;
+    events_ = count;
+
+  }
+ 
+  void
+  LogReader::packTCR(char * dest) throw ()
+  {
+    char const * const source = (char *)memMap_.addr() + tcrOffset_;
+    size_t size =  typeRepository_->totalLength();
+    size_t offset = dest - (char *)memMap_.addr();
+
+    memmove(dest, source, size);
+
+    // note new location of tcr
+    TAO_OutputCDR o(tcrOffsetSlot_, 4);
+    if (!o.write_ulong(offset))
+      throw Miro::Exception("Failed to write tcr offset count");
+
+    MIRO_DBG_OSTR(MIRO, LL_DEBUG,
+		  "LogWriter - TCR Offset: 0x" << hex << offset << dec <<endl <<
+		  "LogWriter - TCR number of events: " << events_ << endl <<
+		  "LogWriter - TCR length: " << size);
   }
 }

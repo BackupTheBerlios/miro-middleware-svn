@@ -89,9 +89,6 @@ namespace Miro
     char * numEventsSlot_;
     //! Variable holding the number of events in the log file.
     ACE_INT32 numEvents_;
-    //! Slot to write the length of the serialized structured event.
-    /** This is used for skipped parsing of the file. */
-    char * lengthSlot_;
     //! The length of the cdr stream
     size_t totalLength_;
     //! Flag indicating that the file is full.

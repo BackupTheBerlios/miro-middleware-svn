@@ -39,12 +39,16 @@ namespace Miro
   class LogReader
   {
   public:
+    static int const READER;
+    static int const TRUNCATE;
+
     //--------------------------------------------------------------------------
     // public methods
     //--------------------------------------------------------------------------
 
     //! Initializating constructor.
-    LogReader(std::string const& _fileName) throw (Exception);
+    LogReader(std::string const& _fileName, int mode = READER) throw (Miro::Exception);
+    ~LogReader();
 
     TAO_InputCDR * istr() { return istr_; }
     char const * rdPtr() const throw ();
@@ -52,21 +56,29 @@ namespace Miro
     bool parseTimeStamp(ACE_Time_Value& _stamp) throw ();
     bool parseEventHeader(CosNotification::FixedEventHeader& _header) throw ();
     bool parseEventBody(CosNotification::StructuredEvent& _event) throw ();
+    bool skipEvent() throw ();
     bool skipEventBody() throw ();
 
     //! Report the protocol version.
     unsigned short version() const throw ();
     //! Report the number of events in the log file.
     unsigned long events() const throw ();
+    //! Report the number of events in the log file.
+    void events(unsigned long count) throw (Miro::Exception);
     //! Flag indicating end of file.
     bool eof() const throw ();
 
     unsigned int progress() const throw ();
+
   protected:
+    void packTCR(char * dest) throw();
+
     //--------------------------------------------------------------------------
     // protected data
     //--------------------------------------------------------------------------
 
+    //! Mode of operations (READER, TRUNCATE)
+    int const mode_;
     //! Memory mapped file, holding the log.
     ACE_Mem_Map memMap_;
     //! File header.
@@ -80,8 +92,12 @@ namespace Miro
 
     //! Version number of the log file protocol.
     ACE_UINT16 version_;
+    //! Slot to write the offset of the type code repository in the log file. */
+    char * tcrOffsetSlot_;
     //! Offset of the type code repository in log file (version >= 3).
     ACE_UINT32 tcrOffset_;
+    //! Slot to write the offset of the type code repository in the log file. */
+    char * eventsSlot_;
     //! Number of events in log (version >= 3).
     ACE_UINT32 events_;
 
@@ -99,31 +115,21 @@ namespace Miro
   LogReader::rdPtr(char const * _rdPtr) throw () {
     eof_ = false;
 
-    delete istr_;
-    if (version() == 2) {
-      if (_rdPtr == NULL) {
-	eof_ = true;
-      }
-	
+    if (_rdPtr == NULL) {
+      eof_ = true;
+    }
 
+
+    if (version() == 2) {
       // TODO: solve this without operator new
       istr_ = new TAO_InputCDR(_rdPtr,
 			       ((char *)memMap_.addr() + memMap_.size()) - _rdPtr,
 			       (int)header_->byteOrder);
     }
     else {
-      istr_ = new TAO_InputCDR(_rdPtr,
-			       ((char *)memMap_.addr() + memMap_.size()) - _rdPtr);
+      ACE_Message_Block const * mblock = istr_->start();
+      const_cast<ACE_Message_Block *>(mblock)->rd_ptr(const_cast<char *>(_rdPtr));
     }
-
-    return; 
-
-    ACE_Message_Block const * mblock =
-      istr_->start();
-    char * rdPtr = const_cast<char *>(_rdPtr);
-
-    const_cast<ACE_Message_Block *>(mblock)->rd_ptr(rdPtr);
-    const_cast<ACE_Message_Block *>(mblock)->wr_ptr(rdPtr);
   }
   inline
   bool

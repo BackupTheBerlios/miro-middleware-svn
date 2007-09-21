@@ -39,11 +39,14 @@
 #endif
 
 #include <ace/FILE_Connector.h>
+#include <ace/OS_Memory.h>
 
 #include <cstdio>
 
 namespace Miro
 {
+  using namespace std;
+
   LogWriter::LogWriter(std::string const& _fileName,
 		       LogNotifyParameters const& _parameters) :
     parameters_(_parameters),
@@ -60,7 +63,6 @@ namespace Miro
     tcrOffsetSlot_(NULL),
     numEventsSlot_(NULL),
     numEvents_(0UL),
-    lengthSlot_(NULL),
     totalLength_(0),
     full_(false)
   {
@@ -81,7 +83,6 @@ namespace Miro
     //--------------------------------------------------------------------------
     // place type codes at the end of the event stream
     //--------------------------------------------------------------------------
-
     packTCR();
 
     //--------------------------------------------------------------------------
@@ -111,32 +112,20 @@ namespace Miro
       TimeBase::TimeT t;
       ORBSVCS_Time::Time_Value_to_TimeT(t, _stamp);
       
-      // write time stamp
-      if (ostr_.write_ulonglong(t)) {
-	
-	// set the length entry of the previous event
-	if (lengthSlot_ != NULL) {
-	  
-	  // calculate length
-	  char * here = ostr_.current()->wr_ptr() - sizeof(TimeBase::TimeT);
-	  CORBA::ULong length = here - lengthSlot_;
-	  
-	  // write the length of the previous event
-	  // direct writing is allowed, 
-	  // as the alignement is correct and we write in host byte order
-	  * reinterpret_cast<ACE_INT32 *>(lengthSlot_) = length;
-	}
-	
-	
+      if (ostr_.write_ulonglong(t)) { // write time stamp
+		
+	/*Slot to write the length of the serialized structured event.
+	 * This is used for skipped parsing of the file. */
+	char * lengthSlot =
 	// The alignement is okay as we wrote an ulonglong before
-	lengthSlot_ = ostr_.current()->wr_ptr();
+	  ostr_.current()->wr_ptr();
 
 	// write the length slot
 	if (ostr_.write_ulong(0) &&
 	    // write the header
 	    ostr_ << _event.header && 
 	    // write the filterable data
-	    ostr_ << _event.filterable_data) {
+	    ostr_ << _event.filterable_data) { // and now the data
 	  
 	  
 	  // serialize remainder_of_body
@@ -157,96 +146,44 @@ namespace Miro
 	      //----------------------------------------------------------------
 	      
 	  // if not type code repository full
-	  if (typeId != -2 && 
-	      // write type code id
-	      ostr_.write_long(typeId) &&
-	      // write any value if existent
-	      ( _event.remainder_of_body.impl() == NULL ||
-		_event.remainder_of_body.impl()->marshal_value(ostr_)) &&
-	      // not max file size reached
-	      (ostr_.total_length() <= parameters_.maxFileSize)) {
-
+	  if  (typeId != -2 && 
+		 // write type code id
+		 ostr_.write_long(typeId) &&
+		 // write any value if existent
+		 ( _event.remainder_of_body.impl() == NULL ||
+		   _event.remainder_of_body.impl()->marshal_value(ostr_)) &&
+		 // not max file size reached
+		 (ostr_.total_length() <= 
+		  (parameters_.maxFileSize - parameters_.tCRFileSize - 100000))) {
+	    // calculate length
+	    char * here = ACE_ptr_align_binary(ostr_.current()->wr_ptr(), ACE_CDR::LONGLONG_SIZE);
+	    CORBA::ULong length = here - lengthSlot;
+	    
+	    // write the length of the event
+	    // direct writing is allowed, 
+	    // as the alignement is correct and we write in host byte order
+	    *reinterpret_cast<ACE_INT32 *>(lengthSlot) = length;
+	    
 	    // write number of events
 	    // direct writing is allowed, 
 	    // as the alignement is correct and we write in host byte order
 	    *reinterpret_cast<ACE_INT32 *>(numEventsSlot_) = ++numEvents_;
-
+	    
 	    totalLength_ = ostr_.total_length();
 	    return true;
 	  }
 #else
-	  // if not type code repository full
-	  if (typeId != -2 && 
-	      // write type code id
-	      ostr_.write_long(typeId)) {
-
-	    ACE_TRY_NEW_ENV {
-	      TAO_InputCDR input(_event.remainder_of_body._tao_get_cdr (),
-				 _event.remainder_of_body._tao_byte_order ());
-	      
-#if ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 3))
-	      //----------------------------------------------------------------
-	      // we have ACE_ENV_ARG_PARAMETER
-	      //----------------------------------------------------------------
-	         
-	      CORBA::TypeCode::traverse_status status =
-		TAO_Marshal_Object::perform_append (tc.in(),
-						    &input,
-						    &ostr_
-						    ACE_ENV_ARG_PARAMETER);
-	      ACE_TRY_CHECK;
-	      
-	      if (status != CORBA::TypeCode::TRAVERSE_CONTINUE) {
-		full_ = true;
-		return false;
-	      }
-#else
-
-#if ((TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 2) && (TAO_BETA_VERSION >= 2))
-
-
-	      TAO_Marshal_Object::perform_append (tc.in (),
-						  &input,
-						  &ostr_
-						  ACE_ENV_ARG_PARAMETER);
-#else // TAO_MINOR_VERSION <= 2
-	      
-	      TAO_Marshal_Object::perform_append (tc.in (),
-						  &input,
-						  &ostr_,
-						  ACE_TRY_ENV);
-#endif
-
-	      ACE_TRY_CHECK;
-#endif
-	    }
-	    ACE_CATCH (CORBA_Exception, ex) {
-	      full_ = true;
-	      return false;
-	    }
-	    ACE_ENDTRY;
-
-	    if (ostr_.total_length() <= parameters_.maxFileSize) {
-
-	      // write number of events
-	      // direct writing is allowed, 
-	      // as the alignement is correct and we write in host byte order
-	      *reinterpret_cast<ACE_INT32 *>(numEventsSlot_) = ++numEvents_;
-
-	      totalLength_ = ostr_.total_length();
-	      return true;
-	    }
-	  }
+#error Only TAO >= Version 1.3.5 is supported
 #endif
 	}
       }
-    
-      MIRO_LOG_OSTR(Log::LL_ERROR, 
-		    "Event log data - max file size reached:" << 
-		    totalLength_ <<
-		    " - Event logging stopped.");
       full_ = true;
     }
+
+    MIRO_LOG_OSTR(Log::LL_ERROR, 
+		  "Event log data - max file size reached:" << 
+		  totalLength_ <<
+		  " - Event logging stopped.");
     return false;
   }
 
@@ -260,7 +197,7 @@ namespace Miro
     offset += (0x08 - (totalLength_ & 0x07)) & 0x07;
 
     dest += offset;
-    memcpy(dest, tcrOstr_.current()->base(), typeRepository_.totalLength());
+    memmove(dest, tcrOstr_.current()->base(), typeRepository_.totalLength());
 
     // note new location of tcr
     TAO_OutputCDR o_(tcrOffsetSlot_, 8);
