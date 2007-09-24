@@ -43,35 +43,41 @@ main(int argc, char *argv[])
       
       cout << "processing file: " << argv[i] << endl;
 
-      LogReader logFile(argv[i], LogReader::TRUNCATE);
-
-      cout << "parsing cdr stream - " << logFile.events() << " events" << flush;
-      ACE_Time_Value t;
-      
-      unsigned int events = logFile.events();
-      unsigned int i;
-      for (i = 0; i < events; ++i) {
-	if (logFile.eof()) {
-	  cerr << "\nend of file before event " << i + 1 << endl;
+      try {
+	LogReader logFile(argv[i], LogReader::TRUNCATE);
+	
+	cout << "parsing cdr stream - " << logFile.events() << " events" << flush;
+	ACE_Time_Value t;
+	
+	unsigned int events = logFile.events();
+	unsigned int i;
+	for (i = 0; i < events; ++i) {
+	  if (logFile.eof()) {
+	    cerr << "\nend of file before event " << i + 1 << endl;
+	    break;
+	  }
+	  if (!logFile.parseTimeStamp(t)) {
+	    cerr << "\nend of file parsing timestamp " << i + 1 << endl;
+	    break;
+	  }
+	  if (!logFile.skipEvent()) {
+	    cerr << "\nend of file parsing event " << i + 1 << endl;
 	  break;
+	  }
+	  
+	  if ((i % 10000) == 0) {
+	    cout << "." << flush;
+	  }
 	}
-	if (!logFile.parseTimeStamp(t)) {
-	  cerr << "\nend of file parsing timestamp " << i + 1 << endl;
-	  break;
-	}
-	if (!logFile.skipEvent()) {
-	  cerr << "\nend of file parsing event " << i + 1 << endl;
-	  break;
-	}
-
-	if ((i % 10000) == 0) {
-	  cout << "." << flush;
-	}
+	logFile.events(i);
+	
+	cout << endl;
+	cout << "number of corrupted events: " << events - i << endl;
       }
-      logFile.events(i);
-      
-      cout << endl;
-      cout << "number of corrupted events: " << events - i << endl;
+      catch (Miro::Exception const& e) {
+	cerr << "Error processing log file " << argv[i] << ": " << endl
+	     << e << endl;
+      }
     }
   }
   catch (const Miro::Exception& e) {
