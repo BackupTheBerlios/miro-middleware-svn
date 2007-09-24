@@ -28,6 +28,7 @@
 
 #include <algorithm>
 #include <sstream>
+#include <stdexcept>
 
 namespace Miro
 {
@@ -41,10 +42,10 @@ namespace Miro
     types_.reserve(64);
 
     pNumTypes_ = ostr_->current()->wr_ptr();
-    ostr_->write_ulong(0x01235678);
+    ostr_->write_ulong(0x00000000);
   }
 
-  LogTypeRepository::LogTypeRepository(TAO_InputCDR& _istr) throw (CException) :
+  LogTypeRepository::LogTypeRepository(TAO_InputCDR& _istr) throw (Exception) :
     ostr_(NULL),
     maxLength_(),
     totalLength_(),
@@ -57,7 +58,13 @@ namespace Miro
     // get number of types in cdr stream
     ACE_UINT32 numTypes;
     _istr.read_ulong(numTypes);
-    types_.reserve(numTypes);
+    try {
+      types_.reserve(numTypes);
+    }
+    catch (std::length_error const& e) {
+      MIRO_LOG_OSTR(LL_CRITICAL, "LogTypeRepository - std exception on types_.reseve(" << numTypes << ").");
+      throw Miro::Exception("Length error on reserving log type vector. Probable log-file corruption.");
+    }
 
     MIRO_DBG_OSTR(MIRO, LL_DEBUG, "LogTypeRepository - number of types: " << numTypes);
 
@@ -66,7 +73,8 @@ namespace Miro
       
       // read type code from the mmapped file
       CORBA::TypeCode_ptr type;
-      _istr >> type;
+      if (!(_istr >> type))
+	throw Exception("Error reading log type repository. LogFile corrupted.");
 
       // search for type code. fail, if already known
       MIRO_ASSERT(std::find(types_.begin(), types_.end(), type) == types_.end());

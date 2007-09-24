@@ -60,7 +60,7 @@ namespace Miro
     //! Initializing constructor for output stream.
     LogTypeRepository(TAO_OutputCDR * _ostr, size_t _maxLength = 1024*1024) throw (CException);
     //! Initializing constructor for input stream.
-    LogTypeRepository(TAO_InputCDR& _istr) throw (CException);
+    LogTypeRepository(TAO_InputCDR& _istr) throw (Exception);
 
     //! Cleaning up.
     virtual ~LogTypeRepository() throw ();

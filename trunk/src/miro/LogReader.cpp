@@ -75,62 +75,69 @@ namespace Miro
     if (memMap_.addr() == MAP_FAILED)
       throw CException(errno, strerror(errno));
 
-    try {
-      MIRO_DBG(MIRO, LL_DEBUG, "Looking for log file type.");
-      LogHeader::READ r;
-      header_ = new (memMap_.addr()) LogHeader(r);
-      version_ = header_->version;
-      
-      if (mode_ != READER && version_ < 3) {
-	throw Miro::Exception("Log truncation not supported for log file format prior v 3");
-      }
- 
+    if (memMap_.size() <= sizeof(LogHeader) + 2 * 4)
+      throw Exception("LogFile contains no data.");
 
+    MIRO_DBG(MIRO, LL_DEBUG, "Looking for log file type.");
+    LogHeader::READ r;
+    header_ = new (memMap_.addr()) LogHeader(r);
+    version_ = header_->version;
+    
+    if (mode_ != READER && version_ < 3) {
+      throw Miro::Exception("Log truncation not supported for log file format prior v 3");
+    }
+    
+    
+    istr_ = new TAO_InputCDR((char*)memMap_.addr() + sizeof(LogHeader),
+			     memMap_.size() - sizeof(LogHeader),
+			     (int)header_->byteOrder);
+    // version 2 log file
+    if (version() == 2) {
       istr_ = new TAO_InputCDR((char*)memMap_.addr() + sizeof(LogHeader),
 			       memMap_.size() - sizeof(LogHeader),
 			       (int)header_->byteOrder);
-      // version 2 log file
-      if (version() == 2) {
-	istr_ = new TAO_InputCDR((char*)memMap_.addr() + sizeof(LogHeader),
-				 memMap_.size() - sizeof(LogHeader),
-				 (int)header_->byteOrder);
-	typeRepository_ = new LogTypeRepository(*istr_);
-      }
-      // version 3 log file
-      else if (version() == 3) {
-	istr_ = new TAO_InputCDR((char*)memMap_.addr() + sizeof(LogHeader),
-				 memMap_.size() - sizeof(LogHeader),
-				 (int)header_->byteOrder);
-
-	tcrOffsetSlot_ = istr_->rd_ptr();
-	istr_->read_ulong(tcrOffset_);
-
-	eventsSlot_ = istr_->rd_ptr();	
-	istr_->read_ulong(events_);
-
-	MIRO_DBG_OSTR(MIRO, LL_DEBUG, 
-		      "LogReader - TCR Offset: 0x" << 
-		      hex << tcrOffset_ << dec << endl <<
-		      "LogReader - Number of events: " << 
-		      events_ << dec);
-
-	TAO_InputCDR tcrIStream((char*)memMap_.addr() + tcrOffset_,
-				memMap_.size() - tcrOffset_,
-				(int)header_->byteOrder);
-	typeRepository_ = new LogTypeRepository(tcrIStream);
-
-
-	MIRO_DBG_OSTR(MIRO, LL_PRATTLE, "LogReader - Good bit : " << istr_->good_bit());
-      }
-      else 
-	throw Exception("Unknown log format version.");
+      typeRepository_ = new LogTypeRepository(*istr_);
     }
-    catch (Miro::LogHeader::EFileType const&) {
-
-      // version 1 log file
-      istr_ = new TAO_InputCDR((char*)memMap_.addr(), memMap_.size());
+    // version 3 log file
+    else if (version() == 3) {
+      istr_ = new TAO_InputCDR((char*)memMap_.addr() + sizeof(LogHeader),
+			       memMap_.size() - sizeof(LogHeader),
+			       (int)header_->byteOrder);
+      
+      tcrOffsetSlot_ = istr_->rd_ptr();
+      if (!istr_->read_ulong(tcrOffset_))
+	throw Exception("Could not read tcrOffset_.");
+      if (tcrOffset_ > (memMap_.size() - sizeof(LogHeader) + 2 * 4)) {
+	throw Exception("tcrOffset_ outside file boundaries. Logfile corrupted.");
+      }
+      
+      eventsSlot_ = istr_->rd_ptr();	
+      if (!istr_->read_ulong(events_))
+	throw Exception("Could not read events_.");
+      if (events_ == 0) {
+	throw Exception("Log file contains zero events data.");
+      }
+      
+      MIRO_DBG_OSTR(MIRO, LL_DEBUG, 
+		    "LogReader - TCR Offset: 0x" << 
+		    hex << tcrOffset_ << dec << endl <<
+		    "LogReader - Number of events: " << 
+		    events_ << dec);
+      
+      TAO_InputCDR tcrIStream((char*)memMap_.addr() + tcrOffset_,
+			      memMap_.size() - tcrOffset_,
+			      (int)header_->byteOrder);
+      typeRepository_ = new LogTypeRepository(tcrIStream);
+      
+      
+      MIRO_DBG_OSTR(MIRO, LL_PRATTLE, "LogReader - Good bit : " << istr_->good_bit());
     }
-    MIRO_DBG_OSTR(MIRO, LL_DEBUG,  "version : " << version_);
+    else {
+      ostringstream s;
+      s << "Unsupported log format version: " +  version();
+      throw Exception(s.str());
+    }
+    MIRO_DBG_OSTR(MIRO, LL_DEBUG,  "version : " << version());
   }
 
   LogReader::~LogReader()
