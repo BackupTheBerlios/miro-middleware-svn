@@ -58,9 +58,9 @@ namespace Miro
 
   LogReader::LogReader(string const& _fileName, int _mode) throw (Miro::Exception) :
     mode_(_mode),
-    memMap_(_fileName.c_str(),  static_cast<size_t> (-1), O_RDWR,
-	    ACE_DEFAULT_FILE_PERMS, PROT_RDWR, 
-	    ACE_MAP_SHARED),
+    memMap_(_fileName.c_str(),  static_cast<size_t> (-1), (mode_ == TRUNCATE)? O_RDWR : O_RDONLY,
+	    ACE_DEFAULT_FILE_PERMS, PROT_WRITE, 
+	    (mode_ == TRUNCATE)? ACE_MAP_SHARED : ACE_MAP_PRIVATE),
     header_(NULL),
     istr_(NULL),
     typeRepository_(NULL),
@@ -462,10 +462,11 @@ namespace Miro
       throw Miro::Exception("Log truncation not supported for log file format prior v 3");
     }
     
-    // TODO: honor byte swapping if necessary
-    *reinterpret_cast<ACE_UINT32 *>(eventsSlot_) = count;
-    events_ = count;
-
+    if (events_ != count) {
+      // TODO: honor byte swapping if necessary
+      *reinterpret_cast<ACE_UINT32 *>(eventsSlot_) = count;
+      events_ = count;
+    }
   }
  
   void
@@ -475,13 +476,14 @@ namespace Miro
     size_t size =  typeRepository_->totalLength();
     size_t offset = dest - (char *)memMap_.addr();
 
-    memmove(dest, source, size);
+    if (dest != source) {
+      memmove(dest, source, size);
 
-    // note new location of tcr
-    TAO_OutputCDR o(tcrOffsetSlot_, 4);
-    if (!o.write_ulong(offset))
-      throw Miro::Exception("Failed to write tcr offset count");
-
+      // note new location of tcr
+      TAO_OutputCDR o(tcrOffsetSlot_, 4);
+      if (!o.write_ulong(offset))
+	throw Miro::Exception("Failed to write tcr offset count");
+    }
     MIRO_DBG_OSTR(MIRO, LL_DEBUG,
 		  "LogWriter - TCR Offset: 0x" << hex << offset << dec <<endl <<
 		  "LogWriter - TCR number of events: " << events_ << endl <<
