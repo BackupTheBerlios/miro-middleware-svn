@@ -51,6 +51,7 @@ namespace
   const char eventChannelOpt[] = "-event_channel";
   const char colocatedOpt[] = "-shared_ec";
   const char unifiedOpt[] = "-unified_ec";
+  const char excludeOpt[] = "-x";
   const char verboseOpt[] = "-v";
   const char localizeOpt[] = "-l";
   const char helpOpt[] = "-?";

@@ -450,6 +450,12 @@ MainForm::loadFile(QString const & _name )
 			 QString(e.what()));
     rc = false;
   }
+  catch (Miro::Exception const& e) {
+    QMessageBox::warning(this, "Error parsing file:",
+			 QString("File ") + _name + QString(":\n") +
+			 QString(e.what()));
+    rc = false;
+  }
   createEventMenu();
   enableButtons(fileSet_.size() != 0);
 }
