@@ -81,6 +81,10 @@ public:
 
   void addExclude(QString const & _eventName);
 
+  void exitOnReplayEnd(bool flag);
+  void setSpeed(int);
+  void setStartOnConsumers(int _numConsumers);
+
 public slots:
   void pause();
   void play();
@@ -110,6 +114,8 @@ public slots:
   void cutBack();
   void cutUndo();
 
+  void startOnConsumers();
+
 signals:
   void excludeEvent(const QString &, const QString&);
   void includeEvent(const QString &, const QString&);
@@ -123,6 +129,7 @@ protected:
   FileListDialog * fileListDialog_;
   EventView * eventView_;
   QTimer * timer_;
+  QTimer * autoStartTimer_;
 
   QPopupMenu *eventMenu_;
   QPopupMenu * toolsMenu_;
@@ -146,6 +153,9 @@ protected:
 
   int domainNameMenuId_;
   int eventViewId_;
+
+  bool exitOnReplayEnd_;
+  int numConsumers_;
 
   static ACE_Time_Value const MIN_TIME;
 };

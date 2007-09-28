@@ -35,8 +35,9 @@
 #include <orbsvcs/Notify/Notify_Default_Collection_Factory.h>
 #include <orbsvcs/Notify/Notify_Default_EMO_Factory.h>
 
-#include <qstring.h>
 #include <qapplication.h>
+#include <qstring.h>
+#include <qstringlist.h>
 
 #include <iostream>
 
@@ -47,11 +48,21 @@ namespace
   bool shared = false;
   bool unified = false;
   bool localizeDebug = false;
+  bool quit = false;
+  bool fast = false;
+  int consumers = -1;
+  bool gui = true;
+
+  QStringList excludeEvents;
 
   const char eventChannelOpt[] = "-event_channel";
   const char colocatedOpt[] = "-shared_ec";
   const char unifiedOpt[] = "-unified_ec";
+  const char noGuiOpt[] = "-t";
   const char excludeOpt[] = "-x";
+  const char autoStartOpt[] = "-a";
+  const char fastOpt[] = "-f";
+  const char quitOpt[] = "-q";
   const char verboseOpt[] = "-v";
   const char localizeOpt[] = "-l";
   const char helpOpt[] = "-?";
@@ -78,6 +89,11 @@ main(int argc, char *argv[])
 	channelName = arg_shifter.get_current();
         arg_shifter.consume_arg();
       } 
+      else if (ACE_OS::strcasecmp(current_arg, excludeOpt) == 0) {
+	arg_shifter.consume_arg();
+	excludeEvents.push_back(arg_shifter.get_current());
+        arg_shifter.consume_arg();
+      } 
       else if (ACE_OS::strcasecmp(current_arg, unifiedOpt) == 0) {
 	arg_shifter.consume_arg();
 	unified = true;
@@ -86,16 +102,41 @@ main(int argc, char *argv[])
 	arg_shifter.consume_arg();
 	localizeDebug = true;
       } 
+      else if (ACE_OS::strcasecmp(current_arg, autoStartOpt) == 0) {
+	arg_shifter.consume_arg();
+	consumers = atoi(arg_shifter.get_current());
+        arg_shifter.consume_arg();
+	if (consumers < 0) {
+	  return 1;
+	}
+      } 
       else if (ACE_OS::strcasecmp(current_arg, verboseOpt) == 0) {
 	arg_shifter.consume_arg();
 	verbose = true;
       } 
+      else if (ACE_OS::strcasecmp(current_arg, fastOpt) == 0) {
+	arg_shifter.consume_arg();
+	fast = true;
+      } 
+      else if (ACE_OS::strcasecmp(current_arg, noGuiOpt) == 0) {
+	arg_shifter.consume_arg();
+	gui = false;
+      } 
+      else if (ACE_OS::strcasecmp(current_arg, quitOpt) == 0) {
+	arg_shifter.consume_arg();
+	quit = true;
+      } 
       else if (ACE_OS::strcasecmp(current_arg, helpOpt) == 0) {
 	arg_shifter.consume_arg();
-	std::cerr << "usage: " << argv[0] << "[-shared_ec] [-unified_ec] [-v?]" << std::endl
+	std::cerr << "usage: " << argv[0] << "[-shared_ec name] [-unified_ec] [-a <n>] [-x <type_name>] [-ftqv?]" << std::endl
 		  << "  -shared_ec use existing event channels" << std::endl
                   << "  -event_channel the name of the event channels (default: EventChannel)" << std::endl
 		  << "  -unified_ec use one event channel for all robots" << std::endl
+		  << "  -x <type_name> exclude events with specified <type_name> from replay" << std::endl
+		  << "  -a <n> auto-start as soon as n consumers have connected" << std::endl
+		  << "  -f fast mode: play as fast as possible" << std::endl
+		  << "  -q quit on completion of run" << std::endl
+		  << "  -t text mode, no gui window" << std::endl
 		  << "  -v verbose mode" << std::endl
 		  << "  -? help: emit this text and stop" << std::endl;
 	return 0;
@@ -136,15 +177,6 @@ main(int argc, char *argv[])
       FileSet fileSet(&channelManager);
       MainForm mainWindow(app, fileSet);
       
-      // DOTO: implement that, please...
-      if (verbose)
-	std::cout << "adding excluded events" << std::endl;
-      for (int i = 2; i < argc; ++i) {
-	if (verbose)
-	  std::cout << argv[i] << std::endl;
-	mainWindow.addExclude(argv[i]);
-      }
-      
       // Scope operator to delimit the lifetime
       // of MyWidget, to prevent conflicts with CORBA cleanup
       {
@@ -152,7 +184,9 @@ main(int argc, char *argv[])
 	  std::cout << "set main widget" << std::endl;
 	app.setMainWidget( &mainWindow );
 	QObject::connect(&app, SIGNAL(lastWindowClosed()), &app, SLOT(quit()));
-	mainWindow.show();
+	if (gui) {
+	  mainWindow.show();
+	}
 	channelManager.detach(4);
 
 	// parse remaining args
@@ -161,7 +195,30 @@ main(int argc, char *argv[])
 	    std::cout << "using file " << argv[i] << std::endl;
 	  mainWindow.loadFile(argv[i]);
 	}
+	if (verbose)
+	  std::cout << "files loaded." << std::endl;
 	
+	if (excludeEvents.size() > 0) {
+	  if (verbose)
+	    std::cout << "adding excluded events" << std::endl;
+	  for (unsigned int i = 0; i < excludeEvents.size(); ++i) {
+	    if (verbose)
+	      std::cout << excludeEvents[i] << std::endl;
+	    mainWindow.addExclude(excludeEvents[i]);
+	  }
+	}
+
+	// set exit strategy
+	mainWindow.exitOnReplayEnd(quit);
+	// set fast mode
+	if (fast) {
+	  mainWindow.setSpeed(20);
+	}
+	if (consumers >= 0) {
+	  mainWindow.setStartOnConsumers(consumers);
+	}
+
+
 	if (verbose)
 	  std::cout << "exec application" << std::endl;
 	app.exec();
@@ -179,6 +236,5 @@ main(int argc, char *argv[])
     std::cerr << "Miro exception: " << e << std::endl;
     rc = 1;
   }
-
   return rc;
 }

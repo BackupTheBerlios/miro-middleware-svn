@@ -93,6 +93,8 @@ public:
   void coursorTime(ACE_Time_Value const& _t);
   void coursorTimeRel(ACE_Time_Value const& _t);
 
+  ChannelManager const * channelManager() const { return channelManager_; }
+
   //----------------------------------------------------------------------------
   // public slots
   //----------------------------------------------------------------------------

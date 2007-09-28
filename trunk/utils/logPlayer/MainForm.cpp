@@ -24,6 +24,7 @@
 #include "LogFile.h"
 #include "FileSet.h"
 #include "EventView.h"
+#include "ChannelManager.h"
 
 #include "../widgets/FileListDialog.h"
 
@@ -47,8 +48,11 @@
 #include <qmessagebox.h>
 #include <qinputdialog.h>
 #include <qfiledialog.h>
+#include <qobjectlist.h>
 
 #include <cstring>
+
+using namespace std;
 
 namespace 
 {
@@ -80,12 +84,15 @@ MainForm::MainForm(QApplication& _app, FileSet& _fileSet,
   fileSet_(_fileSet),
   fileListDialog_(new FileListDialog(this, "File list dialog", "Log files", filter)),
   eventView_(NULL),
-  timer_(new QTimer()),
+  timer_(new QTimer(this)),
+  autoStartTimer_(new QTimer(this)),
   eventMenu_(new QPopupMenu( this )),
   action_(false),
   speed_(1),
   history_(100),
-  domainNameMenuId_(0)
+  domainNameMenuId_(0),
+  exitOnReplayEnd_(false),
+  numConsumers_(0)
 {
   // the menu
   QPopupMenu *fileMenu = new QPopupMenu( this );
@@ -172,6 +179,9 @@ MainForm::MainForm(QApplication& _app, FileSet& _fileSet,
   connect( timer_, SIGNAL( timeout() ),
 	   (MainForm *)this, SLOT( step() ) );
 
+  connect( autoStartTimer_, SIGNAL( timeout() ),
+	   (MainForm *)this, SLOT( startOnConsumers() ) );
+
   connect( timeSlider, SIGNAL( valueChanged(int) ),
 	   this, SLOT( changed(int) ) );
   connect( timeSlider, SIGNAL( sliderPressed() ),
@@ -215,8 +225,27 @@ MainForm::MainForm(QApplication& _app, FileSet& _fileSet,
 
 // TODO: implement exclude from command line
 void
-MainForm::addExclude(QString const& /*_eventName*/)
+MainForm::addExclude(QString const& _eventName)
 {
+  cout << "add exclude: " << eventMenu_->count() << endl;
+
+  for (unsigned int j = 0; j < eventMenu_->count(); ++j) {
+    int domainId = eventMenu_->idAt(j);
+    QMenuItem * domainNameItem = eventMenu_->findItem(domainId);
+    QPopupMenu * m = domainNameItem->popup();
+
+    if (m != NULL) {
+      cout << "popup menu:" << m->name() << endl;
+      for (unsigned int i = 0; i < m->count(); ++i) {
+	int typeId = m->idAt(i);
+	if (m->text(typeId) == _eventName) {
+	  cout << "disable event: " << m->text(typeId) << endl;
+	  toggleExcludeEvent(domainId, typeId);	  
+	}
+      }
+    }
+  }
+
 }
 
 void 
@@ -326,7 +355,6 @@ MainForm::next()
   }
 }
 
-// TODO: implement that
 void 
 MainForm::prev() 
 {
@@ -355,14 +383,16 @@ MainForm::step()
       nextTime *= (speed_ > 0)? (double)speed_ : (1. / (double)-speed_);
       nextTime += timeCBase_;
 
-      // TODO fix that too
-      int interval = (fileSet_.coursorTime() <= nextTime)?
+      int interval = (fileSet_.coursorTime() <= nextTime || speed_ == 20)?
 	0 :
 	(fileSet_.coursorTime() - nextTime).msec();
       timer_->changeInterval(interval);
     }
     else {
       timer_->stop();
+      if (exitOnReplayEnd_) {
+	emit qApp->quit();
+      }
     }
   }
 }
@@ -381,6 +411,31 @@ MainForm::endAction()
 }
 
 void
+MainForm::setStartOnConsumers(int _numConsumers)
+{
+  numConsumers_ = _numConsumers;
+  autoStartTimer_->start(100);
+}
+
+
+void
+MainForm::startOnConsumers()
+{
+  ChannelManager::ChannelMap::const_iterator first, last = fileSet_.channelManager()->channelMap().end();
+  int sumConsumers = 0;
+  for (first = fileSet_.channelManager()->channelMap().begin(); first != last; ++first) {
+    CosNotifyChannelAdmin::AdminIDSeq_var admins =
+      first->second->get_all_consumeradmins();
+    sumConsumers += admins->length();
+  }
+
+  if (sumConsumers >= numConsumers_) {
+    play();
+    autoStartTimer_->stop();
+  }
+}
+
+void
 MainForm::timeAction(int hsec ) 
 {
   ACE_Time_Value t(hsec / 100, (hsec % 100) * 10000);
@@ -393,6 +448,16 @@ MainForm::speed( int _speed)
   speed_ = _speed;
   if (speed_ == 0)
     speed_ = 1;
+}
+
+void
+MainForm::setSpeed(int _speed) 
+{
+  speed_ = _speed;
+  if (speed_ == 0)
+    speed_ = 1;
+
+  speedDial->setValue((speed_ == 1)? 0 : speed_);
 }
 
 void 
@@ -607,4 +672,9 @@ void
 MainForm::cutUndo()
 {
   fileSet_.cutUndo();
+}
+
+void
+MainForm::exitOnReplayEnd(bool flag) {
+  exitOnReplayEnd_ = flag;
 }

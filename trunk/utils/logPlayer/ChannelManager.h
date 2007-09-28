@@ -36,6 +36,8 @@ class ChannelManager : public Miro::Server
   typedef Miro::Server Super;
 
 public:
+  typedef std::map<QString, CosNotifyChannelAdmin::EventChannel_ptr> ChannelMap;
+
   ChannelManager(int& argc, char * argv[], bool _shared, bool _unified, 
 		 QString const& _channelName);
   ~ChannelManager();
@@ -44,8 +46,9 @@ public:
   bool debugLocalize() const;
   void setDebugLoclaize(bool _debug);
 
+  ChannelMap const& channelMap() const { return channel_; }
+
 protected:
-  typedef std::map<QString, CosNotifyChannelAdmin::EventChannel_ptr> ChannelMap;
 
   bool shared_;
   bool unified_;
