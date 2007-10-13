@@ -49,26 +49,26 @@ namespace Can
   public:
     Message() {};
     virtual ~Message();
-    virtual int            length() const = NULL;
-    virtual void           length(int _len) = NULL;
+    virtual int            length() const = 0;
+    virtual void           length(int _len) = 0;
 
-    virtual char           charData(int i) const = NULL;
-    virtual void           charData(int i, char d) = NULL;
-    virtual unsigned char  byteData(int i) const = NULL;
-    virtual void           byteData(int i, unsigned char d) = NULL;
-    virtual short shortData(int i) const = NULL;
-    virtual void           shortData(int i, unsigned short d) = NULL; // sets two chars !
-    virtual long  longData(int i) const = NULL;
-    virtual void           longData(int i, unsigned long d) = NULL;   // sets four chars !
+    virtual char           charData(int i) const = 0;
+    virtual void           charData(int i, char d) = 0;
+    virtual unsigned char  byteData(int i) const = 0;
+    virtual void           byteData(int i, unsigned char d) = 0;
+    virtual short shortData(int i) const = 0;
+    virtual void           shortData(int i, unsigned short d) = 0; // sets two chars !
+    virtual long  longData(int i) const = 0;
+    virtual void           longData(int i, unsigned long d) = 0;   // sets four chars !
 
-    virtual void           setBuffer(int pos, const char * buffer, int length ) = NULL ;
+    virtual void           setBuffer(int pos, const char * buffer, int length ) = 0 ;
 
-    virtual CanId          id() const = NULL;
-    virtual void           id(CanId _id) = NULL;
+    virtual CanId          id() const = 0;
+    virtual void           id(CanId _id) = 0;
 
     //static drivertype driver;
 
-    virtual void canMessage(int ** msg_) = NULL;
+    virtual void canMessage(int ** msg_) = 0;
 //       std::cout << "normal canMessage" << std::endl;
 
   protected:
