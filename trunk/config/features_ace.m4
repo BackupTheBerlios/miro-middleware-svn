@@ -31,6 +31,9 @@ VDIR = conftest.obj/
 VSHDIR = conftest.shobj/
 LSRC  = conftest.cpp
 default: all
+__prebuild__:
+all.nested:
+all.local:
 include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
 include $(ACE_ROOT)/include/makeinclude/macros.GNU
 include $(TAO_CONFIG)
@@ -55,6 +58,9 @@ VDIR = conftest.obj/
 VSHDIR = conftest.shobj/
 LSRC  = conftest.bin.cpp
 default: all
+__prebuild__:
+all.nested:
+all.local:
 include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
 include $(ACE_ROOT)/include/makeinclude/macros.GNU
 include $(TAO_CONFIG)

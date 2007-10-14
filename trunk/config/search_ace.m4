@@ -31,7 +31,7 @@ AC_DEFUN([AC_SEARCH_ACE],
 
 # let's try some different possible places
 # if there is a directory given at the command line or if there is a environment variable
-# called TAO_ROOT, use this one
+# called ACE_ROOT, use this one
 	if test "${ACE_ROOT}" != "" ; then
 		LDFLAGS="$LDFLAGS -L$ACE_ROOT/ace -lACE"
 		CPPFLAGS="$CPPFLAGS -I$ACE_ROOT -D_GNU_SOURCE"
