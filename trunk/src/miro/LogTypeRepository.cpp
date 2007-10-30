@@ -108,7 +108,7 @@ namespace Miro
 
     // if memory is used up, fail.
     if (ostr_->total_length() + ostr.total_length() > maxLength_) {
-      MIRO_LOG(Log::LL_ERROR, "Event log type code repository full.");
+      MIRO_LOG(LL_ERROR, "Event log type code repository full.");
       full_ = true;
       return -2;
     }

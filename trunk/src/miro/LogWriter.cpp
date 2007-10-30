@@ -180,7 +180,7 @@ namespace Miro
       full_ = true;
     }
 
-    MIRO_LOG_OSTR(Log::LL_ERROR, 
+    MIRO_LOG_OSTR(LL_ERROR, 
 		  "Event log data - max file size reached:" << 
 		  totalLength_ <<
 		  " - Event logging stopped.");
