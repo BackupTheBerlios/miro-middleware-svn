@@ -66,6 +66,8 @@ namespace Miro
     totalLength_(0),
     full_(false)
   {
+    MIRO_LOG_CTOR("Miro::LogWriter");
+
     if (memMap_.addr() == MAP_FAILED)
       throw CException(errno, std::strerror(errno));
 
@@ -106,7 +108,7 @@ namespace Miro
 		      CosNotification::StructuredEvent const& _event)
   {
     // if there is place in the log file
-    if (!full_) {
+    if (!full_) { // not full
 
       // set the time stamp
       TimeBase::TimeT t;

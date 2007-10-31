@@ -59,7 +59,7 @@ namespace Miro
   LogReader::LogReader(string const& _fileName, int _mode) throw (Miro::Exception) :
     mode_(_mode),
     memMap_(_fileName.c_str(),  static_cast<size_t> (-1), (mode_ == TRUNCATE)? O_RDWR : O_RDONLY,
-	    ACE_DEFAULT_FILE_PERMS, PROT_WRITE, 
+	    ACE_DEFAULT_FILE_PERMS, PROT_RDWR, 
 	    (mode_ == TRUNCATE)? ACE_MAP_SHARED : ACE_MAP_PRIVATE),
     header_(NULL),
     istr_(NULL),
@@ -80,9 +80,10 @@ namespace Miro
 
     MIRO_DBG(MIRO, LL_DEBUG, "Looking for log file type.");
     LogHeader::READ r;
+
     header_ = new (memMap_.addr()) LogHeader(r);
     version_ = header_->version;
-    
+  
     if (mode_ != READER && version_ < 3) {
       throw Miro::Exception("Log truncation not supported for log file format prior v 3");
     }
