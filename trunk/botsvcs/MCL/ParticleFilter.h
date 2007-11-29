@@ -89,22 +89,29 @@ namespace Miro
 
       //! Clears the sample set.
       void clear();
-      //! Adds a number of samples to the current sample set.
-      void add(unsigned int _num);
       //! Adds a specified sample to the current sample set.
       void add(Sample const& _sample);
+      //! Adds a number of samples to the current sample set.
+      void add(unsigned int _num, double nX, double nY, double nAngle, const Sample& p );
+
+      //! Adds a specified sample to the current sample set.
+//      void add(Sample const& _sample);
+
       void resampling(bool _flag);
-      unsigned int process(Sample& _hypothesis, double& _var);
+      
+	  void process();
+
+	  unsigned int process(Sample& _hypothesis, double& _var);
       //! Returns the number of samples in the set.
       unsigned int samples() const { return samples_.size(); }
-
+	  
       bool evalStatistics() const;
       LocalizeStatisticsIDL & statistics();
       LocalizeStatisticsIDL const & statistics() const;
 
     protected:
       void update();
-      void select();
+      void select(bool);
 
       typedef typename std::vector<double> DoubleVector;
       typedef typename std::vector<Sample> SampleVector;
@@ -122,9 +129,39 @@ namespace Miro
     public:
       //! The sample set.
       SampleVector samples_;
-    protected:
+
+	  //! Method to delete a count of Samples 
+	  //! the first parameter says how many can we destroy in percentage
+	  //!  the second parameter tells us if we can see the goal !
+      int delSamples(int,bool lOwnGoalSeen, bool lOppGoalSeen);
+
+	  //! Sets new Samples with random coord. and angle !
+	  //! but if we can see the goal, only the position is random 
+	  //! in front of the robot!
+      void setSamples(int nSamples, double nX, double nY, double nAngle);
+
+	  //void newReSample(int);
+
+      void setSelect();
+
+	  //! contains the parameters from LocalizationParameters.xml
+	  void setParaSamples(int);
+
+      unsigned int nCountSamples_ ;
+
+	  //! Number of Samples
+	  int nSampleCount_ ;
+
+	  //! best Sample on the Field
+      Sample bestSample_ ;
+
+	  //!contains true if the goal was seen otherwise false
+	  bool lSeenGoal_ ;
+
       //! The score of the individual sample.
       DoubleVector sampleScore_;
+    protected:
+
       //! Partial sum vector for resampling.
       DoubleVector partialSum_;
 
