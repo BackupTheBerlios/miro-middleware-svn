@@ -38,7 +38,7 @@
       <parameter name="Sparrow::Parameters" >
 	<parameter value="true" name="Faulhaber" />
 	<parameter value="true" name="Sparrow2003" />
-	<parameter value="/dev/pcan32" name="Device" />
+	<parameter value="/dev/pcan0" name="Device" />
 	<parameter value="pcan" name="Module" />
 	<parameter name="InfraredDescription2003" >
 	  <parameter value="2" name="ScanType" />
@@ -309,7 +309,7 @@
 	<parameter value="30720" name="MaxPower" />
 	<parameter value="29" name="TicksL" />
 	<parameter value="32" name="TicksR" />
-	<parameter value="true" name="Goalie" />
+	<parameter value="false" name="Goalie" />
 	<parameter value="20.5" name="Deg2ServoTicksL" />
 	<parameter value="21.8" name="Deg2ServoTicksR" />
 	<parameter value="true" name="ChannelSharing" />
@@ -339,7 +339,7 @@
           <parameter value="0.5" name="Bluerightgoalpost" />
           <parameter value="0.5" name="Yellowleftgoalpost" />
           <parameter value="0.5" name="Yellowrightgoalpost" />
-          <parameter value="0.6" name="Ball" />
+          <parameter value="0.3" name="Ball" />
           <parameter value="0.55" name="Robot" />
         </parameter>
         <parameter name="APrioriBeingThere">
@@ -351,7 +351,7 @@
           <parameter value="0.0" name="Bluerightgoalpost" />
           <parameter value="0.0" name="Yellowleftgoalpost" />
           <parameter value="0.0" name="Yellowrightgoalpost" />
-          <parameter value="0.4" name="Ball" />
+          <parameter value="0.7" name="Ball" />
           <parameter value="0.4" name="Robot" />
         </parameter>
         <parameter name="APrioriSeenFloor">
@@ -515,6 +515,10 @@
 	      <parameter value="FilterYUV420PtoRGB_Debug" name="Name" />
 	      <parameter value="FilterYUV420PtoRGB" name="Type" />
 	      <parameter name="Successor" >
+			  <parameter name="Filter" >
+				  <parameter value="Enlarge_Omni" name="Name" />
+				  <parameter value="Enlarge4" name="Type" />
+			   </parameter>
 		<parameter name="Filter" >
 		  <parameter value="FilterOmni2Pan_Debug" name="Name" />
 		  <parameter value="FilterOmni2Pan" name="Type" />
@@ -557,10 +561,17 @@
 	  <parameter value="Omni" name="Name" />
 	</parameter>
       </instance>
+	  
+	  <instance type="LVF::Enlarge4" name="Enlarge_Omni">
+		  <parameter value="true" name="InterfaceInstance" />
+		  <parameter name="Interface" >
+			  <parameter value="Omni2" name="Name" />
+		  </parameter>
+      </instance>
 
       <instance type="LVF::Save" name="Save">
-	<parameter value="1" name="Interval" />
-	<parameter value="true" name="Activate" />
+	<parameter value="30" name="Interval" />
+	<parameter value="false" name="Activate" />
       </instance>
 
 
@@ -689,6 +700,10 @@
 	      </parameter>
 	      <parameter name="Successor" >
 		<parameter name="Filter" >
+		     <parameter value="Shrink2Gray" name="Name" />
+		     <parameter value="Shrink4" name="Type" />
+		</parameter>
+		<parameter name="Filter" >
 		  <parameter value="SobelVertical" name="Name" />
 		  <parameter value="Sobel" name="Type" />
 		</parameter>
@@ -718,6 +733,12 @@
 		<parameter name="Filter" >
 		  <parameter value="IndextoIndex" name="Name" />
 		  <parameter value="IndextoIndex" name="Type" />
+		  <parameter name="Successor" >
+		    <parameter name="Filter" >
+				<parameter value="Enlarge_Index" name="Name" />
+		  		<parameter value="Enlarge4" name="Type" />
+			</parameter>
+		   </parameter>
 		</parameter>
 		<parameter name="Filter" >
 		  <parameter value="ColorCount" name="Name" />
@@ -728,6 +749,18 @@
 		<parameter name="Filter" >
 		  <parameter value="AttentionBall" name="Name" />
 		  <parameter value="AttentionBall" name="Type" />
+	  	</parameter>
+		<parameter name="Filter" >
+			<parameter value="DockedBall" name="Name" />
+			<parameter value="DockedBall" name="Type" />
+		</parameter>
+		<parameter name="Filter" >
+			<parameter value="BallFusion" name="Name" />
+			<parameter value="BallFusion" name="Type" />
+			<parameter name="BackLink" >
+				<parameter value="AttentionBall" />
+				<parameter value="DockedBall" />
+			</parameter>
 		  <parameter name="Successor" >
 		    <parameter name="Filter" >
 		      <parameter value="ObjectTracking_Ball" name="Name" />
@@ -942,6 +975,13 @@
 		      </parameter>
 		    </parameter>
 		    <!-- Lines on the floor -->
+                 <parameter name="Filter" >
+		      <parameter value="LineFromGray" name="Type" />
+		      <parameter value="LineFromGray" name="Name" />
+                 <parameter name="BackLink" >
+			 <parameter value="Shrink2Gray" />
+                 </parameter>
+		      <parameter name="Successor" >
 		    <parameter name="Filter" >
 		      <parameter value="IndextoCanny" name="Type" />
 		      <parameter value="IndextoCannyGreenWhite" name="Name" />
@@ -969,6 +1009,8 @@
 		      </parameter>
 		    </parameter>
 		  </parameter>
+		</parameter>
+    </parameter>
 		</parameter>
 
 		<!-- Floor Check -->
@@ -1393,8 +1435,9 @@
 	      <parameter value="CollectRoboCupFeatures_Basic" name="Name" />
 	      <parameter value="CollectRoboCupFeatures" name="Type" />
 	      <parameter name="BackLink" >
-		<parameter value="IntegrateObservations_Ball" />
+		<parameter value="BallFusion" />
 		<parameter value="IntegrateObservations_Goal" />
+		<parameter value="AttentionLines" />
 		<parameter value="ColorCount" />
 	      </parameter>
 	    </parameter>
@@ -1403,12 +1446,12 @@
 	      <parameter value="CollectRoboCupFeatures_Full" name="Name" />
 	      <parameter value="CollectRoboCupFeatures" name="Type" />
 	      <parameter name="BackLink" >
-		<parameter value="IntegrateObservations_Ball" />
+		<parameter value="BallFusion" />
 		<!-- <parameter value="IntegrateObservations_Robots" />  -->
 		<parameter value="IntegrateObservations_Goal" />
 		<parameter value="IntegrateObservations_CornerPoles" />
 		<parameter value="IntegrateObservations_GoalPost" />
-		<!-- <parameter value="AttentionLines" /> -->
+		<parameter value="AttentionLines" />  
 		<parameter value="ColorCount" />
 		<parameter value="YUV422toIndexListShrink2" />
 		<parameter value="AttentionGoalCornerPoles" />
@@ -1422,6 +1465,10 @@
 	      <parameter name="Successor" >
 		<!-- Found stuff -->
 		<parameter name="Filter" >
+			<parameter value="Enlarge_Video" name="Name" />
+		  	<parameter value="Enlarge2" name="Type" />
+	  	</parameter> 
+		<parameter name="Filter" >
 		  <parameter value="ROIVisualBasic" name="Name" />
 		  <parameter value="ROIVisual" name="Type" />
 		  <parameter name="BackLink" >
@@ -1429,10 +1476,10 @@
 		  </parameter>
 		  <parameter name="Successor" >
 		    <parameter name="Filter" >
-		      <parameter value="Jpeg_ROIVisualBasic" name="Name" />
-		      <parameter value="Jpeg" name="Type" />
-		    </parameter>
+				<parameter value="Jpeg_ROIVisualBasic" name="Name" />
+    				<parameter value="Jpeg" name="Type" />
 		  </parameter>
+	  </parameter>
 		</parameter>
 		<parameter name="Filter" >
 		  <parameter value="ROIVisualFull" name="Name" />
@@ -1449,12 +1496,26 @@
 		</parameter>
 		<!-- Ball -->
 		<parameter name="Filter" >
+			<parameter value="ROIVisual_AttentionBall1" name="Name" />
+			<parameter value="ROIVisual" name="Type" />
+			<parameter name="BackLink" >
+				<parameter value="AttentionBall" />
+		  </parameter>
+	  </parameter>
+	  <parameter name="Filter" >
+		  <parameter value="ROIVisual_AttentionBall2" name="Name" />
+		  <parameter value="ROIVisual" name="Type" />
+		  <parameter name="BackLink" >
+			  <parameter value="DockedBall" />
+		  </parameter>
+	  </parameter>
+		<parameter name="Filter" >
 		  <parameter value="ROIVisual_AttentionBall" name="Name" />
 		  <parameter value="ROIVisual" name="Type" />
 		  <parameter name="BackLink" >
-		    <parameter value="AttentionBall" />
+		    <parameter value="BallFusion" />
 		  </parameter>
-		  <parameter name="Successor" >
+		  	  <parameter name="Successor" >
 		    <parameter name="Filter" >
 		      <parameter value="Jpeg_ROIVisual_AttentionBall" name="Name" />
 		      <parameter value="Jpeg" name="Type" />
@@ -1715,8 +1776,8 @@
 
  
       <instance type="LVF::Save" name="Save1394">
-	<parameter value="1" name="Interval" />
-	<parameter value="true" name="Activate" />
+	<parameter value="30" name="Interval" />
+	<parameter value="false" name="Activate" />
       </instance>
 
       <!-- Attention Control  -->
@@ -1732,6 +1793,15 @@
 	<parameter value="5" name="MinBlobPixels" />
 	<parameter value="0.3" name="MinBlobFill" />
       </instance>
+	  <instance type="LVF::DockedBall" name="DockedBall" >
+	<parameter value="false" name="Random" />
+	<parameter value="false" name="Rotate" />
+	<parameter value="120" name="MinBlobPixels" />
+	<parameter value="170" name="StartHeight" />
+	  </instance>
+	  <instance type="LVF::BallFusion" name="BallFusion" >
+	<parameter value="2" name="NumberBackLinks" />
+	  </instance>
       <instance type="LVF::ObjectTracking" name="ObjectTracking_Ball" >
 	<parameter value="1.0" name="InitialErrorVarFPM" />
 	<parameter value="0.01" name="SystemNoiseVarFPM" />
@@ -1763,12 +1833,12 @@
 	<parameter value="BLUEGOAL YELLOWGOAL" name="Type" />
       </instance>
       <instance type="LVF::ObjectTracking" name="ObjectTracking_Goal" >
-	<parameter value="1.0" name="InitialErrorVarFPM" />
+	<parameter value="0.8" name="InitialErrorVarFPM" />
 	<parameter value="0.01" name="SystemNoiseVarFPM" />
 	<parameter value="0.1" name="MeasurementNoiseVarX" />
 	<parameter value="0.1" name="MeasurementNoiseVarY" />
-	<parameter value="0.03333" name="RevisitInterval" />
-	<parameter value="20" name="DeletionThreshold" />
+	<parameter value="0.01111" name="RevisitInterval" />
+	<parameter value="10" name="DeletionThreshold" />
 	<parameter value="true" name="EmitMeasurementROI" />
       </instance>
       <instance type="LVF::IntegrateObservations" name="IntegrateObservations_Goal" >
@@ -2109,6 +2179,16 @@
 	<parameter value="false" name="AddPredictedToOutput" />
       </instance>
 
+
+ <instance type="LVF::LineFromGray" name="LineFromGray" >
+		<parameter value="220" name="LowThresh" />
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="LineNew" name="Name" />
+	</parameter>
+      </instance>
+
+
       <!-- Robots -->
       <instance type="LVF::ResizeROI" name="ResizeROI_2_Robots" >
 	<parameter value="0.05" name="Percentage" />
@@ -2156,7 +2236,7 @@
       </instance>
       <!-- Collect Basic Features -->
       <instance type="LVF::CollectRoboCupFeatures" name="CollectRoboCupFeatures_Basic" >
-	<parameter value="3" name="NumberBackLinks" />
+	<parameter value="4" name="NumberBackLinks" />
 	<parameter value="false" name="DynamicConnection" />
 	<parameter value="VisionCollectorBasic" name="InterfaceName" />
 	<parameter value="true" name="SendVisionResults" />
@@ -2172,8 +2252,8 @@
 	<parameter value="true" name="DynamicConnection" />
 	<parameter value="VisionCollectorFull" name="InterfaceName" />
 	<parameter value="2" name="ScaleFactorRunLength" />
-	<parameter value="6" name="UseIndexFrom" />
-	<parameter value="7" name="AttentionCornerPoles" />
+	<parameter value="7" name="UseIndexFrom" />
+	<parameter value="8" name="AttentionCornerPoles" />
 	<parameter value="false" name="Save" />
 	<parameter value="true" name="SendVisionResults" />
 	<parameter value="true" name="SendVisionImage" />
@@ -2197,6 +2277,12 @@
 	  <parameter value="BasicJ" name="Name" />
 	</parameter>
       </instance>
+	  <instance type="LVF::Enlarge2" name="Enlarge_Video" >
+		  <parameter value="true" name="InterfaceInstance" />
+		  <parameter name="Interface" >
+			  <parameter value="Video2" name="Name" />
+		  </parameter>
+      </instance>
       <instance type="LVF::ROIVisual" name="ROIVisualFull" >
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
@@ -2216,6 +2302,18 @@
 	  <parameter value="AttentionBall" name="Name" />
 	</parameter>
       </instance>
+	<instance type="LVF::ROIVisual" name="ROIVisual_AttentionBall1" >
+		<parameter value="true" name="InterfaceInstance" />
+		<parameter name="Interface" >
+			<parameter value="AttentionBall1" name="Name" />
+	     </parameter>
+    </instance>
+	<instance type="LVF::ROIVisual" name="ROIVisual_AttentionBall2" >
+		<parameter value="true" name="InterfaceInstance" />
+		<parameter name="Interface" >
+			<parameter value="AttentionBall2" name="Name" />
+	    </parameter>
+    </instance>
       <instance type="LVF::Jpeg" name="Jpeg_ROIVisual_AttentionBall" >
 	<parameter value="true" name="InterfaceInstance" />
 	<parameter name="Interface" >
@@ -2326,26 +2424,26 @@
 	  <parameter value="Index" name="Name" />
 	</parameter>
       </instance>
+	  <instance type="LVF::Enlarge4" name="Enlarge_Index" >
+		  <parameter value="true" name="InterfaceInstance" />
+		  <parameter name="Interface" >
+			  <parameter value="Index2" name="Name" />
+		  </parameter>
+      </instance>
     </section>
 
     <section name="Notification" >
       <parameter name="Miro::LogNotifyParameters" >
 	<parameter name="TypeName" >
-	  <parameter value="Pan" />
-	  <parameter value="Infrared" />
-	  <parameter value="Odometry" />
-	  <parameter value="RawPosition" />
-	  <parameter value="VisionData" />
-	  <parameter value="LineSamples" />
-	  <parameter value="GoalPosition" />
-	  <parameter value="BallPosition" />
-	  <parameter value="PatternChange" />
-	  <parameter value="ArbitrateChange" />
-	  <parameter value="LocalizedPosition" />
-	  <parameter value="LocalizeStatistics" />
-	  <parameter value="PositionHypothesis" />
+		<parameter value="Pan" />
+		<parameter value="Odometry" />
+		<parameter value="VisionData" />
+		<parameter value="LineSamples2" />
+		<parameter value="LineSamples" />
+		<parameter value="SharedBelief" />
+   	  	<parameter value="SharedWorld" />
 	</parameter>
-	<parameter value="157286400" name="MaxFileSize" />
+	<parameter value="100286400" name="MaxFileSize" />
       </parameter>
       <parameter name="Miro::NMC::Parameters" >
 	<parameter value="225.2.2.1:41006" name="MulticastGroup" />
