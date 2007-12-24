@@ -108,7 +108,7 @@ namespace Miro
       }
 
       // Set up connection socket
-      if (socket_->subscribe(parameters_->multicastGroup) == -1) {
+      if (socket_->join(parameters_->multicastGroup) == -1) {
 	throw Miro::Exception("Cannot subscribe multicast address");
       }
 
@@ -178,7 +178,7 @@ namespace Miro
       MIRO_DBG(NMC, LL_DEBUG, "Invalidating SH.");
       receiver_->invalidateSH();
       MIRO_DBG(NMC, LL_DEBUG, "Unsubscribing from multicast group.");
-      socket_->unsubscribe(parameters_->multicastGroup);
+      socket_->leave(parameters_->multicastGroup);
 
       MIRO_DBG(NMC, LL_DEBUG, "Deleting timeout handler.");
       delete timeoutHandler_;
