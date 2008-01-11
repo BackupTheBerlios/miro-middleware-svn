@@ -201,6 +201,10 @@ namespace Sparrow
   static const unsigned long CAN_R_IR_ALIVE2_2003    = 0x9e0f0601;
   static const unsigned long CAN_IR_SET_FREQ2_2003    = 0x02010106;
 
+  // compass massages
+
+  static const unsigned long CAN_Compass = 0x1111111;
+
 
 }
 #endif

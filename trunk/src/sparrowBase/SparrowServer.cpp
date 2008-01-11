@@ -118,6 +118,8 @@ SparrowBase::SparrowBase(Miro::Server& _server, bool _startReactorTask) :
     sparrowPanTilt = 
       new Sparrow::PanTiltImpl(sparrowConnection2003, 
 			       &panPushSupplier_);
+    sparrowCMPS03 = 
+      new Sparrow::CMPS03Impl(&structuredPushSupplier_);
     
     pSparrowConsumer2003->
       registerInterfaces(sparrowConnection2003,
@@ -127,6 +129,7 @@ SparrowBase::SparrowBase(Miro::Server& _server, bool _startReactorTask) :
 			 &infrared,
 			 pFaulhaber->pConsumer,
 			 sparrowPanTilt,
+			 sparrowCMPS03,
 			 aCollector);
     
     pSparrowMotion = 

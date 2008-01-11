@@ -21,6 +21,7 @@
 // $Id$
 //
 #include "idl/ButtonsC.h"
+#include "idl/CompassEventC.h"
 
 #include "SparrowConsumer2003.h"
 #include "SparrowConnection2003.h"
@@ -74,6 +75,7 @@ namespace Sparrow
 				   Miro::RangeSensorImpl * _pIR1,
 				   FaulMotor::Consumer * _faulConsumer,
 				   PanTiltImpl * _panTilt,
+				   CMPS03Impl * _CMPS03,
 				   AliveCollector * _aliveCollector)
   {
     connection_ = _connection;
@@ -81,6 +83,7 @@ namespace Sparrow
     pIR1_ = _pIR1;
     faulConsumer = _faulConsumer;
     panTilt_ = _panTilt;
+    pCMPS03_ = _CMPS03;
     pAliveCollector = _aliveCollector;
 
     if (pOdometry_) {
@@ -198,6 +201,12 @@ namespace Sparrow
 	pIR1_->integrateData(data);
       }
       break;
+    }
+
+    case CAN_Compass: {
+	Miro::CompassEventIDL data;
+ 	Miro::timeA2C(message.time(), data.time);
+	pCMPS03_->integrateData(data);
     }
 
       // Kicker_Alive, Pan_Alive, Motor_Alive, IR_Alive1+2

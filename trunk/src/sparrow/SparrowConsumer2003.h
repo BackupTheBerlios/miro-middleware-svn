@@ -27,6 +27,7 @@
 #include "AliveCollector.h"
 #include "faulMotor/FaulMotorConsumer.h"
 #include "sparrow/Parameters.h"
+#include "SparrowCMPS03Impl.h"
 
 #include "miro/Synch.h"
 #include "miro/DevConsumer.h"
@@ -66,6 +67,7 @@ namespace Sparrow
 				    Miro::RangeSensorImpl * _pIR1,
 				    FaulMotor::Consumer * _faulConsumer,
 				    PanTiltImpl * _panTilt,
+				    CMPS03Impl * _MCPS03,
 				    AliveCollector * _aliveCollector);
 
     static const int INTEGRATION_NUMBER;
@@ -79,6 +81,7 @@ namespace Sparrow
     Miro::OdometryImpl * pOdometry_;
     Miro::RangeSensorImpl * pIR1_;
     PanTiltImpl * panTilt_;
+    CMPS03Impl * pCMPS03_;
 
     IrValues irValues_;
     TimeIndex timeIndex_;

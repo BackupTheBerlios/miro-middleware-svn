@@ -42,6 +42,7 @@
 #include "sparrow/SparrowButtonsImpl.h"
 #include "sparrow/SparrowStallImpl.h"
 #include "sparrow/SparrowPanTiltImpl.h"
+#include "sparrow/SparrowCMPS03Impl.h"
 #include "sparrow/AliveEventHandler.h"
 
 #include "faulMotor/FaulMotorConnection.h"
@@ -115,6 +116,7 @@ public:
 
   Miro::OdometryImpl odometry;
   Miro::RangeSensorImpl infrared;
+
   //Miro::RangeSensorImpl * infrared2;
 
   // Sparrow board hardware abstraction
@@ -133,6 +135,7 @@ public:
   Sparrow::ButtonsImpl * sparrowButtons;
   Sparrow::StallImpl *  sparrowStall;
   Sparrow::PanTiltImpl * sparrowPanTilt;
+  Sparrow::CMPS03Impl * sparrowCMPS03;
 
   Miro::Odometry_ptr pOdometry;
   Miro::Motion_ptr pMotion;
@@ -141,6 +144,7 @@ public:
   Miro::Stall_ptr pStall;
   Miro::SparrowPanTilt_ptr pPanTilt;
   Miro::RangeSensor_ptr pInfrared;
+  Miro::Compass_ptr pCompass;
 
   /* NotifyMulticast */
 //   int argc_;
