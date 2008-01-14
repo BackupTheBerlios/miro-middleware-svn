@@ -366,7 +366,15 @@ namespace Sparrow
       }
       break;
     }
-
+	
+	
+		case CAN_R_Compass_2003:
+			std::cout << "            " <<message << std::endl;
+			std::cout <<(int)message.byteData(0) <<" " << (int)message.byteData(1)<< std::endl;
+			
+			break;
+			
+			
       // Pan 2005 messages
     case CAN_R_PAN_TICKSPERDEG_2005:
       MIRO_LOG_OSTR(LL_NOTICE, "SparrowConsumer2003: Received Pan2005 calibration message - Ticks per degree: " << message.longData(0));
