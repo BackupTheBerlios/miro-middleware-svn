@@ -33,8 +33,9 @@ sources = \
 	SparrowKickerImpl.cpp \
 	SparrowButtonsImpl.cpp \
 	SparrowStallImpl.cpp \
-	SparrowPanTiltImpl.cpp \
+	SparrowPanTiltImpl.cpp\
 	SparrowCMPS03Impl.cpp
+
 
 Parameters.h: Parameters.cpp
 

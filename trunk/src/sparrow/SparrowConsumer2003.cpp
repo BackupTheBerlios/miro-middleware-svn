@@ -203,11 +203,6 @@ namespace Sparrow
       break;
     }
 
-    case CAN_Compass: {
-	Miro::CompassEventIDL data;
- 	Miro::timeA2C(message.time(), data.time);
-	pCMPS03_->integrateData(data);
-    }
 
       // Kicker_Alive, Pan_Alive, Motor_Alive, IR_Alive1+2
 
@@ -368,13 +363,23 @@ namespace Sparrow
     }
 	
 	
-		case CAN_R_Compass_2003:
-			std::cout << "            " <<message << std::endl;
-			std::cout <<(int)message.byteData(0) <<" " << (int)message.byteData(1)<< std::endl;
+	case CAN_R_Compass_2003: {
+// 		std::cout << "Kompass: " << (int)message.byteData(0)*256 + (int)message.byteData(1)<< std::endl;
+		Miro::CompassEventIDL data;
+		data.heading = (-1)*(float)((int)message.byteData(0)*256 + (int)message.byteData(1));
+		if (data.heading == -0) data.heading =  0;
+        if (data.heading <= -180) data.heading =  360 + data.heading;
+
+		if((int)message.byteData(0) < 2){
+			data.heading = Miro::deg2Rad(data.heading);
+			Miro::timeA2C(message.time(), data.time);
+			pCMPS03_->integrateData(data);
+		}
+		break;
+	}
+
 			
-			break;
-			
-			
+
       // Pan 2005 messages
     case CAN_R_PAN_TICKSPERDEG_2005:
       MIRO_LOG_OSTR(LL_NOTICE, "SparrowConsumer2003: Received Pan2005 calibration message - Ticks per degree: " << message.longData(0));
