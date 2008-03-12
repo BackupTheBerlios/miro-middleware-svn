@@ -72,7 +72,6 @@ SparrowBase::SparrowBase(Miro::Server& _server, bool _startReactorTask) :
   ec_(notifyFactory_->create_channel(initialQos_, initialAdmin_, id_)),
   structuredPushSupplier_(ec_, server_.namingContextName),
   panPushSupplier_(ec_, server_.namingContextName),
-
   odometry(&structuredPushSupplier_, true, true),
   infrared( ( (Sparrow::Parameters::instance()->sparrow2003)?
 	      Sparrow::Parameters::instance()->infraredDescription2003:
@@ -118,8 +117,10 @@ SparrowBase::SparrowBase(Miro::Server& _server, bool _startReactorTask) :
     sparrowPanTilt = 
       new Sparrow::PanTiltImpl(sparrowConnection2003, 
 			       &panPushSupplier_);
+
     sparrowCMPS03 = 
-      new Sparrow::CMPS03Impl(&structuredPushSupplier_);
+			new Sparrow::CMPS03Impl(&structuredPushSupplier_);
+
     
     pSparrowConsumer2003->
       registerInterfaces(sparrowConnection2003,
@@ -184,6 +185,7 @@ SparrowBase::init(bool _startReactorTask)
   pInfrared = infrared._this();
   pKicker = sparrowKicker->_this();
   pPanTilt = sparrowPanTilt->_this();
+  pCompass = sparrowCMPS03->_this();
 
   server_.addToNameService(ec_, "EventChannel");
   server_.addToNameService(pOdometry, "Odometry");
@@ -191,6 +193,7 @@ SparrowBase::init(bool _startReactorTask)
   server_.addToNameService(pInfrared, "Infrared");
   server_.addToNameService(pKicker, "Kicker");
   server_.addToNameService(pPanTilt, "PanTilt");
+  server_.addToNameService(pCompass, "CMPS03");
   //if(!Sparrow::Parameters::instance()->sparrow2003){
 
   pButtons = sparrowButtons->_this();
