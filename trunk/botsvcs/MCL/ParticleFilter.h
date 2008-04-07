@@ -92,7 +92,7 @@ namespace Miro
       //! Adds a specified sample to the current sample set.
       void add(Sample const& _sample);
       //! Adds a number of samples to the current sample set.
-      void add(unsigned int _num, double nX, double nY, double nAngle, const Sample& p );
+      void add(unsigned int _num, double nX, double nY, double nAngle, const Sample& p, int field_length, int width_length );
 
       //! Adds a specified sample to the current sample set.
 //      void add(Sample const& _sample);
@@ -133,12 +133,12 @@ namespace Miro
 	  //! Method to delete a count of Samples 
 	  //! the first parameter says how many can we destroy in percentage
 	  //!  the second parameter tells us if we can see the goal !
-      int delSamples(int,bool lOwnGoalSeen, bool lOppGoalSeen);
+      int delSamples(int,bool lOwnGoalSeen, bool lOppGoalSeen, double nCurrentAngleRobot);
 
 	  //! Sets new Samples with random coord. and angle !
 	  //! but if we can see the goal, only the position is random 
 	  //! in front of the robot!
-      void setSamples(int nSamples, double nX, double nY, double nAngle);
+      void setSamples(int nSamples, double nX, double nY, double nAngle, int field_length, int width_length);
 
 	  //void newReSample(int);
 
@@ -154,6 +154,8 @@ namespace Miro
 
 	  //! best Sample on the Field
       Sample bestSample_ ;
+		
+	  Sample fSample_;
 
 	  //!contains true if the goal was seen otherwise false
 	  bool lSeenGoal_ ;
