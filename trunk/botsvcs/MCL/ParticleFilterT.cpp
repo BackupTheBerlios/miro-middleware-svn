@@ -210,25 +210,52 @@ to delete a number of samples you can change the percentage in the paramter file
 */
     template<class S, class F, class M, class O, class H, bool C, bool E>
     void
-    ParticleFilter<S, F, M, O, H, C, E>::add(unsigned int _num, double nX, double nY, double nAngle, const Sample& p) 
+    ParticleFilter<S, F, M, O, H, C, E>::add(unsigned int _num, double nX, double nY, double nAngle, const Sample& p, int field_length, int field_width) 
 	{
-		int nTemp = nCountSamples_ / 2;
-		_num = nCountSamples_ - nTemp;
-		NIX_DBG_OSTR(LOCALIZE, LL_DEBUG, "RANDOM BEST: " << nTemp );
+// ULI		unsigned int nTemp = nCountSamples_ / 2;
+unsigned int nTemp = _num / 2;
+//ULI hääää????
+// 		_num = nCountSamples_ - nTemp;
+		NIX_DBG_OSTR(LOCALIZE, LL_DEBUG, "RANDOM BEST: " << nTemp << " nCountSamples_:" << nCountSamples_ );
+		double nX_Sample = 0.;
+		double nY_Sample = 0.;
 		
 		for (unsigned int i = 0; i < nTemp; ++i) 
 		{
 			// add Samples with randXY and rand...
-			samples_.push_back(sampleFactory_.getBestGuess(true,p));
+//  			do{
+			fSample_ = sampleFactory_.getBestGuess(true,p);
+			
+ 			nX_Sample	= fSample_.x();
+ 			nY_Sample	= fSample_.y();
+
+//			NIX_DBG_OSTR(LOCALIZE, LL_DEBUG, "FACTORY_POSITION 1    X " << nX_Sample << "   Y " << nY_Sample);
+			
+//  			}while((abs(nX_Sample) > field_length/2) && (abs(nY_Sample) > (field_width+500)/2));
+			if((abs(nX_Sample) < field_length/2) && (abs(nY_Sample) < field_width+1000/2))
+				samples_.push_back(fSample_);
+
 		}
 		
 		NIX_DBG_OSTR(LOCALIZE, LL_DEBUG, "RANDOM: " << _num);
-	  for (unsigned int i = 0; i < _num; ++i) 
+for (unsigned int i = 0; i < nTemp; ++i) 
+// ULI	  for (unsigned int i = 0; i < _num; ++i) 
 	  {
 
+// 		do
+// 		{
 		Sample s(nX, nY, nAngle );
-		
-		samples_.push_back(sampleFactory_.getGauss(s, 300, Miro::deg2Rad(5)));
+
+		fSample_ = sampleFactory_.getGauss(s, 300, Miro::deg2Rad(5));
+
+		nX_Sample	= fSample_.x();
+		nY_Sample	= fSample_.y();
+
+//		NIX_DBG_OSTR(LOCALIZE, LL_DEBUG, "FACTORY_POSITION 2    Y" << nX_Sample << "   Y " << nY_Sample);
+// 		}while((abs(nX_Sample) > field_length/2) && (abs(nY_Sample) > (field_width+500)/2));
+		if((abs(nX_Sample) < field_length/2) && (abs(nY_Sample) < field_width+1000/2))
+		    samples_.push_back(fSample_);
+
       }
 
     }
@@ -258,17 +285,19 @@ to delete a number of samples you can change the percentage in the paramter file
 */
 	template<class S, class F, class M, class O, class H, bool C, bool E>
 	int 
-	ParticleFilter<S, F, M, O, H, C, E>::delSamples(int nPercentage, bool lOwnGoalSeen, bool lOppGoalSeen) 
+	ParticleFilter<S, F, M, O, H, C, E>::delSamples(int nPercentage, bool lOwnGoalSeen, bool lOppGoalSeen, double nCurrentAngleRobot) 
 	{
 		typename SampleVector::iterator nCount = samples_.begin();
-
-	 
+        typename SampleVector::iterator nEnd = samples_.end();
 
 		std::vector<int> histo;
 		std::vector<int>::iterator run = histo.begin();
+
 		histo.assign(20,0);
 
 		DoubleVector::iterator scoreI = sampleScore_.begin();
+
+         int nZaehler = 0;
 
 		unsigned int nCountSample = 0;
 
@@ -279,8 +308,10 @@ to delete a number of samples you can change the percentage in the paramter file
 
 		int nDelSamples = (int)(nSample / 100) * nPercentage;
 
+        nCountSamples_ = nDelSamples;
+
 		NIX_DBG_OSTR(LOCALIZE, LL_DEBUG, "Zu loeschende Samples: " << nDelSamples);
-		NIX_DBG_OSTR(LOCALIZE, LL_DEBUG, "Zu setzende Samples: " << nSampleCount_);
+		NIX_DBG_OSTR(LOCALIZE, LL_DEBUG, "Samples gesamt: " << nSampleCount_);
 
 		sampleScore_.resize(samples_.size());
 
@@ -331,18 +362,18 @@ to delete a number of samples you can change the percentage in the paramter file
 		}
 
 
-		NIX_DBG_OSTR(LOCALIZE, LL_DEBUG, "------------------------- HISTOGRAMM --------------------------" );
-
-		for(int j = 0; j < 4 ; j++)
-		{
-
-			NIX_DBG_OSTR(LOCALIZE, LL_DEBUG, (double)1/20*(j+1) << " ->  "  << histo[j] << "\t" <<
-											 (double)1/20*(j+5) << " ->  "  << histo[j+4] << "\t" <<
-											 (double)1/20*(j+9) << " ->  "  << histo[j+8] << "\t" <<
-											 (double)1/20*(j+13) << " ->  "  << histo[j+12] << "\t" <<
-											 (double)1/20*(j+17) << " ->  "  << histo[j+16] );
-
-		}
+// 		NIX_DBG_OSTR(LOCALIZE, LL_DEBUG, "------------------------- HISTOGRAMM --------------------------" );
+// 
+// 		for(int j = 0; j < 4 ; j++)
+// 		{
+// 
+// 			NIX_DBG_OSTR(LOCALIZE, LL_DEBUG, (double)1/20*(j+1) << " ->  "  << histo[j] << "\t" <<
+// 											 (double)1/20*(j+5) << " ->  "  << histo[j+4] << "\t" <<
+// 											 (double)1/20*(j+9) << " ->  "  << histo[j+8] << "\t" <<
+// 											 (double)1/20*(j+13) << " ->  "  << histo[j+12] << "\t" <<
+// 											 (double)1/20*(j+17) << " ->  "  << histo[j+16] );
+// 
+// 		}
 
 		int nTemp = 0;
 		double nGrenze = 0.00;
@@ -365,39 +396,61 @@ to delete a number of samples you can change the percentage in the paramter file
 			}
 		}
 
-		if(!lOwnGoalSeen && !lOppGoalSeen)
-		{
-			for(j; j != sampleScore_.end(); j++,nCount++) 
-			{
-				if(*j <= nGrenze && nDelSamples > 0 )
-				{
-					samples_.erase(nCount);
-					nDelSamples--;
-				}
-			}
-		}
-		else
-		{
-///\todo Loeschen der Samples im erlaubten Winkel, wenn ein Tor erkannt wurde ! 
-/*			
-			for(nCount; nCount != samples_.end(); nCount++) 
-			{
-				if(*nCount[2] <= nGrenze && nDelSamples > 0 )
-				{
-					samples_.erase(nCount);
-					nDelSamples--;
-				}
-			}
-*/
-		}
+// 		if(!lOwnGoalSeen && !lOppGoalSeen)
+// 		{
+// 			for(j; j != sampleScore_.end(); j++,nCount++) 
+// 			{
+// 				if(*j <= nGrenze && nDelSamples > 0 )
+// 				{
+// 					samples_.erase(nCount);
+// 					nDelSamples--;
+// 				}
+// 			}
+// 		}
+// 		else
+// 		{
+// ///\todo Loeschen der Samples im erlaubten Winkel, wenn ein Tor erkannt wurde ! 
+// /*              for(nCount; nCount < nEnd; ++nCount)
+//               {
+//                  if(nZaehler < samples_.size())
+//                  {
+//                    if(samples_.at(nZaehler).direction() < nCurrentAngleRobot && nDelSamples > 0 )
+//                    {
+//                       samples_.erase(nCount);
+//                       nDelSamples--;
+//                    }
+//                    nZaehler++;
+//                  }
+//                  else
+//                    break;
+//               }
+// */
+// 		}
 
 		bestSample_ = samples_.at(samples_.size()-1);
-		nCountSamples_ = nDelSamples;
 
-		if(nDelSamples == 0)
+//Patrick -> macht nicht wirklich Sinn  //ULI vielleicht doch!!!!!
+//Habs mal raus genommen !
+/*		if(nDelSamples == 0)
 			{
 				int nSize = samples_.size();
-			}
+			}*/
+//          nCountSamples_ = 0;
+//          int nAnzahl = samples_.size();
+//          int nStep   = (int)(nAnzahl*(nPercentage/100));
+//          int temp = (int)(100 / (100-nPercentage))+1;
+// 
+//          for(nCount; nCount < nEnd; ++nCount)
+//          {
+//             if(nAnzahl % temp != 0)
+//             {
+//                samples_.erase(nCount);
+//                nCountSamples_++;
+//             }
+//             nAnzahl--;
+//             sampleScore_.resize(samples_.size());
+//          }
+
 		return nCountSamples_;
 	}
 	
@@ -406,22 +459,23 @@ to delete a number of samples you can change the percentage in the paramter file
    ParticleFilter<S, F, M, O, H, C, E>::setSelect() 
 	{
           select(true);
-   }
+    }
 
 /*!
-\fn void ParticleFilter<S, F, M, O, H, C, E>::setSamples(int nSamples, double nX, double nY, double nAngle, bool lRandom) 
+\fn void ParticleFilter<S, F, M, O, H, C, E>::setSamples(int nSamples, double nX, double nY, double nAngle, int, LENGTH_FIELD, int WIDTH_FIELD) 
 \param nSamples number of samples to set
 \param nX		x-position of the Sample
 \param nY		y-position of the Sample
 \param nAngle   angle of the Sample
-\param lRandom  random Type: true -> surround the best sample otherwise random on the Field
+\param LENGTH_FIELD  Field length 
+\param WIDTH_FIELD  Field width
 \return void
 \brief add new samples to the field, half of the deleted samples around the best samples and the rest random on the field
 
 */
     template<class S, class F, class M, class O, class H, bool C, bool E>
     void
-    ParticleFilter<S, F, M, O, H, C, E>::setSamples(int nSamples, double nX, double nY, double nAngle) 
+    ParticleFilter<S, F, M, O, H, C, E>::setSamples(int nSamples, double nX, double nY, double nAngle, int field_length, int field_width) 
 	{
 
 	if(bestSample_.x() == 0 || bestSample_.y() == 0 || bestSample_.direction() == 0)
@@ -429,8 +483,8 @@ to delete a number of samples you can change the percentage in the paramter file
 		bestSample_ = sampleFactory_.getBestGuess(true,	bestSample_);
 	}
 
-        add(nCountSamples_, nX, nY, nAngle, bestSample_);
-
+//          add(nCountSamples_, nX, nY, nAngle, bestSample_, field_length, field_width);
+            add(nSamples, nX, nY, nAngle, bestSample_, field_length, field_width);
   	}
 
 /*
