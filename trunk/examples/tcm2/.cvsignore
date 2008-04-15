@@ -1,6 +1,5 @@
-TCM2Get
-TCM2Poll
-TCM2Stream
+CompassGet
+CompassStream
 Makefile.in
 Makefile
 .deps

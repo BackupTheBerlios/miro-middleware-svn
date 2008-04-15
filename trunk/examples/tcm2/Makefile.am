@@ -12,25 +12,22 @@
 include $(top_srcdir)/config/Make-rules
 
 
-bin_PROGRAMS = TCM2Get TCM2Poll TCM2Stream
+bin_PROGRAMS = CompassGet  CompassStream
 
 
-TCM2Get_SOURCES = TCM2Get.cpp
+CompassGet_SOURCES = CompassGet.cpp
 
-TCM2Get_LDADD = -lmiro 
-
-
-TCM2Poll_SOURCES = TCM2Poll.cpp
-
-TCM2Poll_LDADD = -lmiro 
+CompassGet_LDADD = -lmiro 
 
 
-TCM2Stream_SOURCES = TCM2Stream.cpp
-
-TCM2Stream_LDADD = -lmiro 
 
 
-all-local: TCM2Get TCM2Poll TCM2Stream
+CompassStream_SOURCES = CompassStream.cpp
+
+CompassStream_LDADD = -lmiro 
+
+
+all-local: CompassGet  CompassStream
 	$(INSTALLPROGRAMS)
 
 clean-local:
