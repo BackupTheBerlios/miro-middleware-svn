@@ -1190,7 +1190,7 @@
 <!-- Attention Control  --><!-- Ball -->    <instance type="LVF::AttentionBall" name="AttentionBall" >
       <parameter value="false" name="Random" />
       <parameter value="false" name="Rotate" />
-      <parameter value="false" name="LimitToOneBall" />
+      <parameter value="true" name="LimitToOneBall" />
       <parameter value="true" name="AssumeQuadROI" />
       <parameter value="3" name="MinBlobWidth" />
       <parameter value="3" name="MinBlobHeight" />
@@ -1638,6 +1638,7 @@
       </parameter>
     </instance>
 <!-- DEBUG --><!-- Found stuff -->    <instance type="LVF::ROIVisual" name="ROIVisualBasic" >
+      <parameter value="true" name="VisText" />
       <parameter value="true" name="InterfaceInstance" />
       <parameter name="Interface" >
         <parameter value="Basic" name="Name" />
