@@ -313,18 +313,19 @@
 			    <parameter name="Filter" >
 			      <parameter value="IndextoDistLowRes" name="Name" />
 			      <parameter value="IndextoDist" name="Type" />
-			      <parameter name="Successor" >
-				<!-- disable while debug flag in IndexToDist filter is disabled -->
-				<parameter name="Filter" >
-				<parameter value="IndextoIndex_Omni3" name="Name" />
-				<parameter value="IndextoIndex" name="Type" />
-			      </parameter>
-				<!-- disable this for the goalie -->
-				<parameter name="Filter" >
-				  <parameter value="ConnectionFake_LowRes" name="Name" />
-				  <parameter value="ConnectionFake" name="Type" />
-				</parameter>
-			      </parameter>
+                  <parameter name="Successor" >
+                     <!-- Visualization of distance profile (needs the #define DEBUG in IndexToDist.cc) -->
+                     <!--<parameter name="Filter" >
+                        <parameter value="IndextoIndex_Omni3" name="Name" />
+                        <parameter value="IndextoIndex" name="Type" />
+                     </parameter>-->
+                     
+                     <!--Disable this for goalie (does not need low res distance profile) -->
+                     <parameter name="Filter" >
+                        <parameter value="ConnectionFake_LowRes" name="Name" />
+                        <parameter value="ConnectionFake" name="Type" />
+                     </parameter>
+                  </parameter>
 			    </parameter>
 			  </parameter>
 			</parameter>
@@ -384,8 +385,12 @@
       <!-- OmniCam Parameters -->
 
       <!-- a couple of filters using no extra paramter set (to silence output on startup) -->
-      <instance type="LVF::Dilate" name="DilateOmni" />
-      <instance type="LVF::Erode" name="ErodeOmni" />
+      <instance type="LVF::Dilate" name="DilateOmni">
+         <parameter value="9" name="maskSize" />
+      </instance>
+      <instance type="LVF::Erode" name="ErodeOmni">
+         <parameter value="9" name="maskSize" />
+   </instance>
       <instance type="LVF::ConnectionFake" name="ConnectionFake_LowRes" />
       <instance type="LVF::ConnectionFake" name="ConnectionFake_FeaturesOmni" />
 
