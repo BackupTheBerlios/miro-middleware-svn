@@ -459,10 +459,10 @@
 
                   <parameter name="Successor" >
                    <!-- Visualization of distance profile (needs the #define DEBUG in IndexToDist.cc) -->
-                   <!--<parameter name="Filter" >
+                   <parameter name="Filter" >
                            <parameter value="IndextoIndex_Omni3" name="Name" />
                            <parameter value="IndextoIndex" name="Type" />
-                       </parameter>-->
+                   </parameter>
 
                     <!--Disable this for goalie (does not need low res distance profile) -->
                     <parameter name="Filter" >
@@ -1813,6 +1813,7 @@
         <parameter value="Pan" />
         <parameter value="Odometry" />
         <parameter value="VisionData" />
+        <parameter value="MergedDist" />
         <parameter value="LineSamples2" />
         <parameter value="LineSamples" />
         <parameter value="SharedBelief" />
