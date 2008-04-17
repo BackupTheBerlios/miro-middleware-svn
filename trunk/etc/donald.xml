@@ -465,10 +465,10 @@
                        </parameter>-->
 
                     <!--Disable this for goalie (does not need low res distance profile) -->
-                    <!-- <parameter name="Filter" >
+                    <parameter name="Filter" >
                            <parameter value="ConnectionFake_LowRes" name="Name" />
                            <parameter value="ConnectionFake" name="Type" />
-                       </parameter>-->
+                       </parameter>
                   </parameter>
 
                     </parameter>
