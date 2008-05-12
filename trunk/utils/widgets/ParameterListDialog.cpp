@@ -186,7 +186,8 @@ ParameterListDialog::setXML()
 
     if (!node_.isNull()) {
       parentNode_.removeChild(node_);
-      delete item_;
+      if (item_)
+        item_->deleteLater();
     }
     else {
       setModified(false);
@@ -224,11 +225,13 @@ ParameterListDialog::setXML()
   }
 
   // delete the current content
-  delete item_;
+  if (item_)
+    item_->deleteLater();
 
   // replace the xml subtree
   QDomNode node = tmpNode_.cloneNode();
   QDomNode oldNode = node_.parentNode().replaceChild(node, node_);
+  node_ = node;
 
   MIRO_ASSERT(!oldNode.isNull());
 
