@@ -67,7 +67,7 @@ Service::Service() :
   pCanEventHandler(new Can::EventHandler(pSparrowConsumer, Sparrow::Parameters::instance())),
   connection(reactorTask.reactor(), pCanEventHandler, pSparrowConsumer)
 {
-  pSparrowConsumer->registerInterfaces(&connection, NULL, NULL, NULL, NULL, NULL);
+  pSparrowConsumer->registerInterfaces(&connection, NULL, NULL, NULL, NULL, NULL, NULL);
 }
 
 int main(int argc, char * argv[])
