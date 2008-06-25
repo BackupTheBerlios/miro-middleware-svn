@@ -30,7 +30,18 @@
 // constants and definitions to access the drivers 
 //
 // $Log$
-// Revision 1.3  2003/10/29 13:25:26  rr4
+// Revision 1.4  2008/06/25 12:45:48  donald
+// bugfix for new pcan driver
+//
+//
+// typedef struct
+// {
+//   TPCANMsg Msg;          // the above message
+//   DWORD    dwTime;       // a timestamp in msec, read only
+//   WORD     wUsec;
+// } TPCANRdMsg;            // for PCAN_READ_MSG
+//
+// Revision 1.3  2003-10-29 13:25:26  rr4
 // virtual Message-class
 //
 // Revision 1.2  2003/06/20 21:22:01  gmayer
@@ -149,6 +160,7 @@ typedef struct
 {
   TPCANMsg Msg;          // the above message
   DWORD    dwTime;       // a timestamp in msec, read only
+  WORD	   wUsec;
 } TPCANRdMsg;            // for PCAN_READ_MSG
 
 typedef struct 
