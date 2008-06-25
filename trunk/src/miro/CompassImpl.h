@@ -28,6 +28,7 @@
 
 #include "Synch.h"
 #include "Thread.h"
+#include "Angle.h"
 #include <cmath>
 
 #include <orbsvcs/CosNotifyCommC.h>
@@ -90,6 +91,8 @@ namespace Miro
     virtual CompassEventIDL getHeading() throw();
     //! Compass interface method implementation.
     virtual CompassEventIDL getWaitHeading() throw (ETimeOut);
+   //! Compass interface set offset implementation.
+    virtual  void setOffset(CORBA::Double _offset) throw ();
 
   protected:
     //-------------------------------------------------------------------------
@@ -111,6 +114,8 @@ namespace Miro
     //! Thread for asynchronous dispatching of events.
     CompassDispatcher dispatcherThread_;
 
+    //! if compass has an offset
+    double compassOffset_;
     //! Timeout for getWaitHeading
     static ACE_Time_Value maxWait_;
   };

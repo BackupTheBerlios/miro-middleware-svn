@@ -26,6 +26,7 @@
 #include "StructuredPushSupplier.h"
 
 #include <cmath>
+#include <iostream>
 
 #if GCC_MAJOR_VERSION == 2
 #if GCC_MINOR_VERSION == 95
@@ -122,7 +123,8 @@ namespace Miro
     mutex_(),
     cond_(mutex_),
     asynchDispatching_(_asynchDispatching),
-    dispatcherThread_(_supplier)
+    dispatcherThread_(_supplier),
+    compassOffset_(0.)
   {
     data_.time.sec = 0;
     data_.time.usec = 0;
@@ -153,10 +155,11 @@ namespace Miro
 
     { // scope for guard
       Guard guard(mutex_);
-
+      double tmpAngle;
+      tmpAngle = _data.heading - compassOffset_;
+      Angle::normalize(tmpAngle);
       // Copy the new data
-      data_ = _data;
-
+      data_.heading = tmpAngle;
       cond_.broadcast();
     }
 
@@ -198,5 +201,10 @@ namespace Miro
       throw ETimeOut();
 
     return data_;
+  }
+ void
+ CompassImpl::setOffset(CORBA::Double _offset) throw()
+  {
+      compassOffset_ = _offset;
   }
 }

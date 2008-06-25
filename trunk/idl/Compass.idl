@@ -41,6 +41,8 @@ module Miro
      * positive values indicate a westward orientation of the robot.
      */
     CompassEventIDL getHeading();
+//     CompassEventIDL 
+    void setOffset(in double offset);
     //! Wait up to one second for a compass update and get it
     CompassEventIDL getWaitHeading() raises(ETimeOut);
   };
