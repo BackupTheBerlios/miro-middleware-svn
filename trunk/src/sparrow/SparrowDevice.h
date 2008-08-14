@@ -147,6 +147,9 @@ namespace Sparrow
   static const unsigned long CAN_TEST_ADD      = 0x860e0102;
   static const unsigned long CAN_TEST_RESULT   = 0x870e0102;
 
+  // battery status messages
+
+  static const unsigned long CAN_BAT_VOLTAGE   = 0x91010501;
 
   // Sparrow2003Messages
 

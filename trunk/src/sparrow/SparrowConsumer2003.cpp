@@ -378,6 +378,11 @@ namespace Sparrow
 		break;
 	}
 
+    case CAN_BAT_VOLTAGE:
+    {
+	
+    }
+    break;
 			
 
       // Pan 2005 messages
