@@ -130,7 +130,7 @@ namespace Video
       MIRO_LOG_OSTR(LL_ERROR,
 		    "Failed to open device: " << params_->device <<
 		    "\nPropably running on the wrong machine?");
-      throw Miro::CException(errno, std::strerror(errno));
+      throw Miro::CException(errno, strerror(errno));
     }
 
     fcntl(ioBuffer_.get_handle(), F_SETFD, FD_CLOEXEC);

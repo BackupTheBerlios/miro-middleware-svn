@@ -27,6 +27,7 @@
 #include "miro/Exception.h"
 
 #include <iosfwd>
+#include <cstring>
 
 namespace Miro 
 {
@@ -238,7 +239,7 @@ namespace Miro
       else {
 	crcsum <<= 1;
       }
-      crcsum ^= *(uint *)&abData;
+      crcsum ^= *(unsigned short *)&abData;
     }
 
     return crcsum;

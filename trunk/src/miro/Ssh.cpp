@@ -27,6 +27,8 @@
 //   Stefan Sablatnoeg
 //
 #include <unistd.h>
+#include <cstdlib>
+#include <cstring>
 #include <cstdio>
 #include <iostream>
 #include <sys/signal.h>

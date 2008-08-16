@@ -72,8 +72,8 @@ namespace B21Buttons
     DBG(cout << "Constructing B21Buttons::Connection" << endl);
 
     if (connector.connect(ioBuffer, fileName, 0, ACE_Addr::sap_any, 0, O_RDWR) == -1) {
-      cerr << "C Error " << errno << ": " << std::strerror(errno) << endl;
-      throw CException(errno, std::strerror(errno));
+      cerr << "C Error " << errno << ": " << strerror(errno) << endl;
+      throw CException(errno, strerror(errno));
     }
 
     // reset buttons
@@ -151,7 +151,7 @@ namespace B21Buttons
 
       ioBuffer.seek(LIGHTS_ADDR, SEEK_SET);
       if (ioBuffer.send_n(&value, 1) == -1) {
-	cerr << "C Error " << errno << ": " << std::strerror(errno) << endl;
+	cerr << "C Error " << errno << ": " << strerror(errno) << endl;
 	throw EDevIO();
       }
     }

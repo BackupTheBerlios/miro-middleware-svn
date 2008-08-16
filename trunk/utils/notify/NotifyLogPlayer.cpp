@@ -260,7 +260,7 @@ main(int argc, char *argv[])
   try {
     ACE_Mem_Map memoryMap(fileName);
     if (0 == memoryMap.handle())
-      throw Miro::CException(errno, std::strerror(errno));
+      throw Miro::CException(errno, strerror(errno));
     Task * task= new Task(notifyLogPlayer.pPushSupplier, memoryMap);
 
     cerr << "press return to start..." << flush;

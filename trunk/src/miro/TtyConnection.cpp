@@ -53,7 +53,7 @@ namespace Miro
       MIRO_LOG_OSTR(LL_CRITICAL,
 		    "Failed to open device: " << _parameters.device
 		    << "\nPropably running on the wrong machine?");
-      throw CException(errno, std::strerror(errno));
+      throw CException(errno, strerror(errno));
     }
 
     // let's initialize the TTY 

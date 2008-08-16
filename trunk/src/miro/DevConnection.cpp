@@ -58,7 +58,7 @@ namespace Miro
       MIRO_LOG_OSTR(LL_CRITICAL,
 		    "Failed to open device: " << _parameters.device <<
 		    "\nPropably running on the wrong machine?\n");
-      throw CException(errno, std::strerror(errno));
+      throw CException(errno, strerror(errno));
     }
 
     // we need a handler to listen to the asynchronous file handler

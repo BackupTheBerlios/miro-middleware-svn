@@ -61,8 +61,8 @@ SpeechConnection::SpeechConnection() throw(CException) :
   DBG(cout << "Constructing SpeechConnection" << endl);
 
   if (connector.connect(ioBuffer, deviceName) == -1) {
-    cerr << "C Error " << errno << ": " << std::strerror(errno) << endl;
-    throw CException(errno, std::strerror(errno));
+    cerr << "C Error " << errno << ": " << strerror(errno) << endl;
+    throw CException(errno, strerror(errno));
   }
 }
   
@@ -77,7 +77,7 @@ void
 SpeechConnection::writeString(const char* value) throw(EDevIO) 
 {
   if (ioBuffer.send_n(value, strlen(value)) == -1) {
-    cerr << "C Error " << errno << ": " << std::strerror(errno) << endl;
+    cerr << "C Error " << errno << ": " << strerror(errno) << endl;
     throw EDevIO();
   }
 }
@@ -86,7 +86,7 @@ void
 SpeechConnection::writeChar(char value) throw(EDevIO) 
 {
   if (ioBuffer.send_n(&value, 1) == -1) {
-    cerr << "C Error " << errno << ": " << std::strerror(errno) << endl;
+    cerr << "C Error " << errno << ": " << strerror(errno) << endl;
     throw EDevIO();
   }
 }
@@ -95,7 +95,7 @@ void
 SpeechConnection::getSettings(dtlk_settings * settings) const throw(EDevIO)
 {
   if (ioctl(ioBuffer.get_handle(), DTLK_INTERROGATE, settings) == -1) {
-    cerr << "C Error " << errno << ": " << std::strerror(errno) << endl;
+    cerr << "C Error " << errno << ": " << strerror(errno) << endl;
     throw EDevIO();
   }
 }
@@ -139,7 +139,7 @@ SpeechConnection::getStatus() const throw(EDevIO)
   char status = 0;
 
   if (ioctl(ioBuffer.get_handle(), DTLK_STATUS, status) == -1) {
-    cerr << "C Error " << errno << ": " << std::strerror(errno) << endl;
+    cerr << "C Error " << errno << ": " << strerror(errno) << endl;
     throw EDevIO();
   }
   return status;

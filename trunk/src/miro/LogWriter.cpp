@@ -69,7 +69,7 @@ namespace Miro
     MIRO_LOG_CTOR("Miro::LogWriter");
 
     if (memMap_.addr() == MAP_FAILED)
-      throw CException(errno, std::strerror(errno));
+      throw CException(errno, strerror(errno));
 
     // The alignement is okay as we wrote 8 bytes of LogHeader
     tcrOffsetSlot_ = ostr_.current()->wr_ptr();
@@ -99,7 +99,7 @@ namespace Miro
       MIRO_LOG_OSTR(LL_WARNING, 
 		    "LogWriter - Error " << errno << 
 		    " truncating log file " << fileName_  << std::endl
-		    << std::strerror(errno));
+		    << strerror(errno));
     }
   }
 

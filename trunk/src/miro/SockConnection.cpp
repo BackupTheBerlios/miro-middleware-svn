@@ -65,7 +65,7 @@ namespace Miro
 		{
 			MIRO_LOG_OSTR(LL_CRITICAL,
 				"Failed to set Address and Port: " << portName_ << hostName_);
-			throw CException(errno, std::strerror(errno));
+			throw CException(errno, strerror(errno));
 		}	
 
 		if (connector_.connect(peer_, srvr_, 0, ACE_Addr::sap_any, 0, O_RDWR) == -1) 
@@ -73,7 +73,7 @@ namespace Miro
 			MIRO_LOG_OSTR(LL_CRITICAL,
 				"Failed to open device: " << hostName_ << ":" << portName_
 				<< "\nEnsure the required Server is running?");
-			throw CException(errno, std::strerror(errno));
+			throw CException(errno, strerror(errno));
 		}
 
     	// we need a handler to listen to the asynchronous file handler

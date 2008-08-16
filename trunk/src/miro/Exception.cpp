@@ -23,6 +23,7 @@
 #include "Exception.h"
 
 #include <iostream>
+#include <cstring>
 
 namespace Miro
 {
@@ -108,7 +109,7 @@ namespace Miro
   CException::printToStream(std::ostream& _ostr) const
   {
     _ostr << what() << " - " 
-	  << error_num() << ": " << std::strerror(error_num());
+	  << error_num() << ": " << strerror(error_num());
   }
 
   /**

@@ -256,7 +256,7 @@ int main(int argc, char *argv[])
 	    }
 	  }
 	  else
-	    std::memcpy(image.buffer, frame.buffer, 3 * image.width * image.height);
+	    memcpy(image.buffer, frame.buffer, 3 * image.width * image.height);
 	}
 	
 	// save image
