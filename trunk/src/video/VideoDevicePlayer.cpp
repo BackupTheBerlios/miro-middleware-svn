@@ -23,8 +23,8 @@
 #include "VideoDevicePlayer.h"
 #include "BufferManager.h"
 
-#include <playerc++.h>
-#include <playerclient.h>
+#include <libplayerc++/playerc++.h>
+#include <libplayerc++/playerclient.h>
 
 namespace Video
 {
