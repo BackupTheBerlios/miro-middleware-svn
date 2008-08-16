@@ -13,6 +13,8 @@ ButtonsNotify
 ButtonsPoll
 CameraControlTest
 CanPerformance
+CompassGet
+CompassStream
 ConfigEditor
 CtGpsDemo
 DifferentialMotionTest
