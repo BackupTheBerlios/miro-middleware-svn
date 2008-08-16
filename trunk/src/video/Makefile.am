@@ -98,6 +98,7 @@ Parameters.h: Parameters.cpp
 Parameters.cpp: Parameters.xml
 
 
+libmiroVideo_la_LIBADD = $(playerlibraries)
 
 libmiroVideo_la_SOURCES = \
 	$(sources) \

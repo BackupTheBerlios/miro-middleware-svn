@@ -75,6 +75,7 @@ AC_DEFUN([AC_SEARCH_PLAYER_LOCAL],
 		CFLAGS=$OLD_CFLAGS
 
 		PLAYER_LDFLAGS="-L$1/lib"
+		PLAYER_LIBS="-lplayerc++ -lboost_signals -lboost_thread -lplayerc -lm -lplayerxdr -lplayererror"
 		PLAYER_CFLAGS="-I$1/client_libs/libplayerc -I$1/client_libs/libplayerc++ -I$1/client_libs -I$1/"
 	fi
 
