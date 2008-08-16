@@ -25,8 +25,8 @@
 
 #include "miro/MotionImpl.h"
 #include "idl/MotionS.h"
-#include <playerc++.h>
-#include <playerclient.h>
+#include <libplayerc++/playerc++.h>
+#include <libplayerc++/playerclient.h>
 
 class PositionProxy;
 

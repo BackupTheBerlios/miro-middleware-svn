@@ -23,8 +23,8 @@
 #ifndef PlayerConnection_h
 #define PlayerConnection_h
 
-#include <playerc++.h>
-#include <playerclient.h>
+#include <libplayerc++/playerc++.h>
+#include <libplayerc++/playerclient.h>
 
 using namespace PlayerCc;
 

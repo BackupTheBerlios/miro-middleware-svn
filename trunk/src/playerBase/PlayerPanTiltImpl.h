@@ -28,8 +28,8 @@
 
 #include "miro/Exception.h"
 
-#include <playerc++.h>
-#include <playerclient.h>
+#include <libplayerc++/playerc++.h>
+#include <libplayerc++/playerclient.h>
 
 // forward declarations
 class ACE_Reactor;

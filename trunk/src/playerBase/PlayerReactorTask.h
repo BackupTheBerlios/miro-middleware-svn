@@ -31,8 +31,8 @@
 
 #include <string>
 
-#include <playerc++.h>
-#include <playerclient.h>
+#include <libplayerc++/playerc++.h>
+#include <libplayerc++/playerclient.h>
 
 using namespace PlayerCc;
 

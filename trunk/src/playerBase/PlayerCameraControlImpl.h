@@ -29,8 +29,8 @@
 #include "miro/SvcParameters.h"
 #include "miro/TimeHelper.h"
 #include <cmath>
-#include <playerc++.h>
-#include <playerclient.h>
+#include <libplayerc++/playerc++.h>
+#include <libplayerc++/playerclient.h>
 
 class PlayerConnection;
 
