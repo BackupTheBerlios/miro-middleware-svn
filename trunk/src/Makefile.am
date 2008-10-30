@@ -17,7 +17,8 @@ globaldirs = \
 	laser \
 	laser360 \
 	gps \
-	fusedRangeSensor
+	fusedRangeSensor\
+	inertial
 
 if COND_B21
 b21dirs = \
