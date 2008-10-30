@@ -45,7 +45,14 @@ module Miro
      * from its own perspective.
      */
     float yaw;
-	
+
+    float accX;
+    float accY;
+    float accZ;
+
+    float gyrX;
+    float gyrY;
+    float gyrZ;	
 	};
 };
 
