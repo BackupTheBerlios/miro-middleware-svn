@@ -172,6 +172,7 @@ AC_CONFIG_FILES([Makefile
                  src/playerBase/Makefile
                  src/gps/Makefile
                  src/inertial/Makefile
+                 src/laser300/Makefile
                  examples/Makefile
                  examples/b21Motion/Makefile
                  examples/battery/Makefile
