@@ -171,6 +171,7 @@ AC_CONFIG_FILES([Makefile
                  src/video/Makefile
                  src/playerBase/Makefile
                  src/gps/Makefile
+                 src/inertial/Makefile
                  examples/Makefile
                  examples/b21Motion/Makefile
                  examples/battery/Makefile
