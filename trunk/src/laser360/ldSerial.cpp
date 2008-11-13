@@ -623,7 +623,7 @@ namespace ldoem_
     int flags = O_CREAT | O_RDWR | O_NONBLOCK;
 
 
-    descriptor_ = open( parameters_.device.c_str(), flags );
+    descriptor_ = open( parameters_.device.c_str(), flags, 0600 );
 
 /*
     // original port
