@@ -56,7 +56,7 @@ AC_DEFUN([AC_SEARCH_ACE],
 
 # if there is still no ACE found, try all these places but assume, that ACE is actually
 # installed (using make install, which is available for never versions)
-	if test x$ac_search_ace_success == "xno" ; then
+	if test x$ac_search_ace_success = "xno" ; then
 		if test "${ACE_ROOT}" != "" ; then
 			LDFLAGS="$LDFLAGS -L$ACE_ROOT/lib -lACE"
 			CPPFLAGS="$CPPFLAGS -I$ACE_ROOT/include -D_GNU_SOURCE"
@@ -76,7 +76,7 @@ AC_DEFUN([AC_SEARCH_ACE],
 
 # if there is still no ACE found, emit an error message and stop
 	AC_MSG_RESULT($ac_search_ace_success)
-	if test x$ac_search_ace_success == "xno"; then
+	if test x$ac_search_ace_success = "xno"; then
 		AC_MSG_ERROR([ACE not (properly) installed. Source tarball and CVS at: http://deuce.doc.wustl.edu/Download.html. Please check your installation! For more details about this problem, look at the end of config.log.])
 	fi
 ])

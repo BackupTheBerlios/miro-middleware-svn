@@ -68,7 +68,7 @@ AC_DEFUN([AC_SEARCH_TAO_POSITION],
 	CFLAGS=$OLD_CFLAGS
 
 # if we did not find TAO, assume a never version, where the TAO libs are installed in /lib instead of /ace
-	if test x$ac_search_tao_success == "xno" ; then
+	if test x$ac_search_tao_success = "xno" ; then
 		if test "${TAO_ROOT}" != "" ; then
 			LDFLAGS="$LDFLAGS -L$ACE_ROOT/lib -lTAO -lTAO_CosNotification -lTAO_CosNaming -lTAO_Strategies"
 			CPPFLAGS="$CPPFLAGS $ACE_CPPFLAGS -I$TAO_ROOT -I$TAO_ROOT/orbsvcs -D_GNU_SOURCE"
@@ -84,7 +84,7 @@ AC_DEFUN([AC_SEARCH_TAO_POSITION],
 
 # if there is still no TAO found, try all these places but assume, that TAO is actually
 # installed (using make install, which is available for never versions)
-	if test x$ac_search_tao_success == "xno" ; then
+	if test x$ac_search_tao_success = "xno" ; then
 		if test "${TAO_ROOT}" != "" ; then
 			LDFLAGS="$LDFLAGS -L$TAO_ROOT/lib -lTAO -lTAO_CosNotification -lTAO_CosNaming -lTAO_Strategies"
 			CPPFLAGS="$CPPFLAGS $ACE_CPPFLAGS -I$TAO_ROOT/include -D_GNU_SOURCE"
@@ -104,7 +104,7 @@ AC_DEFUN([AC_SEARCH_TAO_POSITION],
 
 # if there is still no TAO found, emit an error message and stop
 	AC_MSG_RESULT($ac_search_tao_success)
-	if test x$ac_search_tao_success == "xno"; then
+	if test x$ac_search_tao_success = "xno"; then
 		AC_MSG_ERROR([TAO not (properly) installed. Source tarball and CVS at: http://deuce.doc.wustl.edu/Download.html. Please check your installation! For more details about this problem, look at the end of config.log.])
 	fi
 ])
@@ -150,14 +150,14 @@ AC_DEFUN([AC_SEARCH_TAO_IDL],
 	exec AC_FD_MSG>/dev/null
 
 # search in the standard path or the path defined by $TAO_ROOT
-	if test "${TAO_ROOT}" == "" ; then
+	if test "${TAO_ROOT}" = "" ; then
 		AC_PATH_PROG(ac_taobindir, tao_idl, no)
 	else
 		AC_PATH_PROG(ac_taobindir, tao_idl, no, [$TAO_ROOT/TAO_IDL:$PATH])
 	fi
 
 # still not found? try the path of an installed tao version
-	if test x$ac_taobindir == xno ; then
+	if test x$ac_taobindir = xno ; then
 # argl, make sure that this test use another variable, otherwise this test uses the cached
 # result of the previous test and is therefor always false also
 		AC_PATH_PROG(ac_taobindir2, tao_idl, no, [$TAO_ROOT/bin])
