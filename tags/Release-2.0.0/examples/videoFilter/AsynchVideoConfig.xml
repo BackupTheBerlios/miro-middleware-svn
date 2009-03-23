@@ -1,0 +1,103 @@
+<!DOCTYPE MiroConfigDocument>
+<config>
+ <section name="Video" >
+  <instance type="Video::Parameters" name="AsynchService" >
+   <parameter value="384" name="Width" />
+   <parameter value="288" name="Height" />
+   <parameter value="rgb" name="Palette" />
+   <parameter name="Filter" >
+    <parameter value="AsynchDummy" name="Name" />
+    <parameter value="DeviceDummy" name="Type" />
+    <parameter name="Successor" >
+     <parameter>
+      <parameter value="AsynchGray" name="Name" />
+      <parameter value="FilterGray" name="Type" />
+     </parameter>
+     <parameter>
+      <parameter value="AsynchCopy" name="Name" />
+      <parameter value="FilterCopy" name="Type" />
+     </parameter>
+    </parameter>
+   </parameter>
+   <parameter value="AsynchBroker" name="VideoBroker" />
+   <parameter name="Scheduling" >
+    <parameter value="2" name="Policy" />
+    <parameter value="20" name="Priority" />
+   </parameter>
+  </instance>
+  <instance type="Video::DeviceDummyParameters" name="AsynchDummy" >
+   <parameter value="0.400000" name="Timeout" />
+   <parameter value="true" name="Cyclic" />
+   <parameter value="4" name="Buffers" />
+   <parameter value="./timeSeries/" name="Device" />
+  </instance>
+  <instance type="Video::FilterCopyParameters" name="AsynchCopy" >
+   <parameter value="true" name="InterfaceInstance" />
+   <parameter name="Interface" >
+    <parameter value="AsynchVideo" name="Name" />
+   </parameter>
+  </instance>
+  <instance type="FilterGrayParameters" name="AsynchGray" >
+   <parameter value="true" name="InterfaceInstance" />
+   <parameter name="Interface" >
+    <parameter value="AsynchGrayImage" name="Name" />
+   </parameter>
+  </instance>
+  <instance type="Video::Parameters" name="FirstService" >
+   <parameter value="rgb" name="Palette" />
+   <parameter value="384" name="Width" />
+   <parameter value="288" name="Height" />
+   <parameter name="Filter" >
+    <parameter value="DeviceDummy" name="Name" />
+    <parameter value="DeviceDummy" name="Type" />
+    <parameter name="Successor" >
+     <parameter name="Filter" >
+      <parameter value="FilterCopy" name="Name" />
+      <parameter value="FilterCopy" name="Type" />
+     </parameter>
+     <parameter name="Filter" >
+      <parameter value="FilterGray" name="Name" />
+      <parameter value="FilterGray" name="Type" />
+      <parameter name="Successor" >
+       <parameter name="Filter" >
+        <parameter value="FilterDiff" name="Name" />
+        <parameter value="FilterDiff" name="Type" />
+        <parameter name="BackLink" >
+         <parameter value="AsynchGray" />
+        </parameter>
+       </parameter>
+      </parameter>
+     </parameter>
+    </parameter>
+   </parameter>
+   <parameter value="true" name="SynchWithCurrent" />
+   <parameter name="Scheduling" >
+    <parameter value="2" name="Policy" />
+    <parameter value="10" name="Priority" />
+   </parameter>
+   <parameter value="true" name="SynchAllNew" />
+  </instance>
+  <instance type="Video::DeviceDummy" name="DeviceDummy" >
+   <parameter value="./timeSeries/" name="Device" />
+   <parameter value="4" name="Buffers" />
+   <parameter value="true" name="Cyclic" />
+   <parameter value="0.1000000" name="Timeout" />
+  </instance>
+  <instance type="Video::FilterCopy" name="FilterCopy" >
+   <parameter value="true" name="InterfaceInstance" />
+  </instance>
+  <instance type="FilterGray" name="FilterGray" >
+   <parameter value="true" name="InterfaceInstance" />
+   <parameter name="Interface" >
+    <parameter value="GrayImage" name="Name" />
+   </parameter>
+  </instance>
+  <instance type="FilterDiff" name="FilterDiff" >
+   <parameter value="true" name="InterfaceInstance" />
+   <parameter name="Interface" >
+    <parameter value="DiffImage" name="Name" />
+   </parameter>
+   <parameter value="1" name="HistorySize" />
+  </instance>
+ </section>
+</config>

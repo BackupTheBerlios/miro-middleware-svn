@@ -1,0 +1,42 @@
+## -*- Makefile -*- ##########################################################
+##
+## This file is part of Miro (The Middleware For Robots)
+##
+## $Id$
+##
+## Miro/templates/Makefile.am.qt
+##
+##############################################################################
+
+include $(top_srcdir)/config/Make-rules
+CPPFLAGS+=-include $(top_builddir)/pch/all_static.h
+
+SUFFIXES = .h .moc.cpp
+
+.h.moc.cpp:
+	$(QT_MOC) $< -o $@
+
+
+## program to be built
+bin_PROGRAMS = myBinary
+
+## sourcefiles needed for the binary to be built
+sources = mySourceFile.cpp mySourceFile.h myQtFile.h
+## sourcefiles that need to be compiled with qt's moc compiler also
+## (do NOT write header files for the qt-files here, but in the variable above)
+tomocsources = myQtFile.cpp
+
+## the prefix of the two following macros must have the same name as the respective binary
+myBinary_SOURCES = $(sources) $(tomocsources) $(tomocsources:.cpp=.moc.cpp)
+## you may add libraries to be linked here (normally, libmiro should be enough, it is
+## allready pre-linked against all necessary ACE, TAO and Qt variables)
+myBinary_LDADD = -lmiro
+
+BUILT_SOURCES = $(tomocsources:.cpp=.moc.cpp)
+CLEANFILES = $(BUILT_SOURCES)
+
+all-local: $(bin_PROGRAMS)
+	$(INSTALLPROGRAMS)
+
+clean-local:
+	$(CLEANPROGRAMS)

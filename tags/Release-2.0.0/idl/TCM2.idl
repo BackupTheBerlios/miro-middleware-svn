@@ -1,0 +1,53 @@
+// -*- idl -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware for Robots)
+// Copyright (C) 1999-2005
+// Department of Neuroinformatics, University of Ulm, Germany
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published
+// by the Free Software Foundation; either version 2, or (at your option)
+// any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, write to the Free Software Foundation,
+// Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+//
+// $Id$
+//
+#ifndef TCM2_idl
+#define TCM2_idl
+
+#include "Compass.idl"
+#include "Inclinometer.idl"
+#include "Magnetometer.idl"
+#include "Thermometer.idl"
+#include "TCM2Event.idl"
+#include "Exception.idl"
+
+module Miro
+{
+  //! Interface for the Pioneer TCM 2 module.
+  /**
+   * This module contains compass, inclinometer, magnetometer and
+   * thermometer. Those sensors' values can be accessed either by the
+   * respective base class's methods or in a single call to one of the
+   * methods defined in this super-class.
+   *
+   * @author Ingo van Lil
+   */
+  interface TCM2 : Compass, Inclinometer, Magnetometer, Thermometer
+  {
+    //! Read all sensors at once
+    TCM2EventIDL getData();
+    //! Wait up to one second for a sensor update and read all values.
+    TCM2EventIDL getWaitData() raises(ETimeOut);
+  };
+};
+
+#endif

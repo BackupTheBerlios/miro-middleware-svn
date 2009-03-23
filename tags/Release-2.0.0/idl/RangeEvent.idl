@@ -1,0 +1,93 @@
+// -*- idl -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware for Robots)
+// Copyright (C) 1999-2005
+// Department of Neuroinformatics, University of Ulm, Germany
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published
+// by the Free Software Foundation; either version 2, or (at your option)
+// any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, write to the Free Software Foundation,
+// Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+//
+// $Id$
+//
+#ifndef RangeEvent_idl
+#define RangeEvent_idl
+
+#include "Time.idl"
+
+module Miro
+{
+  //! A vector of sensor readings.
+  typedef sequence<long> RangeGroupIDL;
+  //! A vector of sensor groups.
+  typedef sequence<RangeGroupIDL> RangeScanIDL;
+
+  //! Range scan notification.
+  /**
+   * The data of a range sensor that acquires data in a contiuous scan
+   * pushes its data within this struct. 
+   */
+  struct RangeScanEventIDL
+  {
+    //! The time the scan was accquired.
+    TimeIDL time;
+    //! The full scan of all sensor groups.
+    RangeScanIDL range;
+  };
+
+  //! Range group notification.
+  /**
+   * The data of a range sensor that acquires data group wise
+   * pushes its data within this struct.
+   *
+   * An example of this sensor configuration are the Sparrow99 infrared sensors.
+   */
+  struct RangeGroupEventIDL
+  {
+    //! The time the scan was accquired.
+    TimeIDL time;
+    //! The group the sensors belong to.
+    unsigned short group;
+    //! The distance measurements of the scan group.
+    RangeGroupIDL range;
+  };
+
+  //! Range data of a single sensor.
+  struct RangeSensorIDL
+  {
+    //! The group the sensor belongs to.
+    unsigned short group;
+    //! The index of the sensor within the group.
+    unsigned short index;
+    //! The measured distance.
+    long range;
+  };
+
+  //! Range sensor bunch notification.
+  /**
+   * The data of a range sensor that acquires data in a discontiuous
+   * fashion pushes its data within this struct. Each sensor contains
+   * its own group id as well as its index.
+   *
+   * An example of this sensor configuration are the sonar sensors of
+   * the B21 and the Pioneer1.
+   */
+  struct RangeBunchEventIDL
+  {
+    //! The time the scan was accquired.
+    TimeIDL time;
+    //! The vector of sensor readings.
+    sequence<RangeSensorIDL> sensor;
+  };
+};
+#endif // rangeEvent_idl

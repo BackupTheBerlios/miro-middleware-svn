@@ -1,0 +1,7 @@
+PlayerBase
+Parameters.cpp
+Parameters.h
+Makefile.in
+Makefile
+.deps
+.libs

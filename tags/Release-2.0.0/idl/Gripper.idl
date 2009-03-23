@@ -1,0 +1,114 @@
+// -*- idl -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware for Robots)
+// Copyright (C) 1999-2005
+// Department of Neuroinformatics, University of Ulm, Germany
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published
+// by the Free Software Foundation; either version 2, or (at your option)
+// any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, write to the Free Software Foundation,
+// Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+//
+// $Id$
+//
+#ifndef Gripper_idl
+#define Gripper_idl
+
+#include "Time.idl"
+#include "Exception.idl"
+
+module Miro
+{
+  //! Interface for a simple gripper device.
+  /** 
+   * @author Guillem Pages Gassull
+   */
+  interface Gripper
+  {
+    //! Set the gripping pressure
+    /**
+     * Sets the pressure that the gripper will apply when grasping objects
+     * it is an approximation
+     *
+     * Not implemented yet
+     * 
+     * @param value The pressure to be applied in percentage
+     * @throw EOutOfBounds is thrown, if the requested pressure is beyound
+     * the device's capabilities
+     * @throw EDevIO is thrown to indicate low level device problems
+     */
+    void setGripPressure(in short value) raises (EOutOfBounds, EDevIO);
+
+    //! Opens the grip paddles
+    /**
+     *
+     * @throw EDevIO is thrown to indicate low level device problems
+     */ 
+    void openGrip() raises (EDevIO);
+
+    //! Closes the grip paddles
+    /**
+     *
+     * @throw EDevIO is thrown to indicate low level device problems
+     */ 
+    void closeGrip() raises (EDevIO);
+
+    //! Raises the gripper to the top position
+    /**
+     *
+     * @throw EDevIO is thrown to indicate low level device problems
+     */ 
+    void raiseGrip() raises (EDevIO);
+
+    //! Lowers the gripper to the bottom position
+    /**
+     *
+     * @throw EDevIO is thrown to indicate low level device problems
+     */ 
+    void lowerGrip() raises (EDevIO);
+
+    //! Raises the gripper to the top position and closes the paddles
+    /**
+     *
+     * @throw EDevIO is thrown to indicate low level device problems
+     */ 
+    void storeGrip() raises (EDevIO);
+
+    //! Lowers the gripper to the bottom position and opens the paddles
+    /**
+     *
+     * @throw EDevIO is thrown to indicate low level device problems
+     */ 
+    void deployGrip() raises (EDevIO);
+
+    //! Stops all gripper movement
+    /**
+     *
+     * @throw EDevIO is thrown to indicate low level device problems
+     */ 
+    void stopGrip() raises (EDevIO);
+
+    //! Moves the gripper for a period of time
+    /**
+     *
+     * Not implemented yet!!
+     *
+     * @param ms time to move the griper
+     * @throw EOutOfBounds is thrown, if the requested pressure is beyound
+     * the device's capabilities
+     * @throw EDevIO is thrown to indicate low level device problems
+     */
+    void moveGrip(in short ms) raises (EOutOfBounds, EDevIO);
+    
+  };
+};
+#endif // Gripper_idl

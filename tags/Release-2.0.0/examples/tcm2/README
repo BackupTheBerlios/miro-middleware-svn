@@ -1,0 +1,11 @@
+Example programs demonstrating the use of the TCM2 module interface. This
+module contains compass, inclinometer, magnetometer and thermometer.
+
+TCM2Get: Reads out the sensor limits and their current values from the TCM2
+         module and displays them.
+
+TCM2Poll: Polls for TCM2 updates and displays them as soon as they come in.
+
+TCM2Stream: Subscribes for TCM2 update notifications and displays the new
+            values as soon as they're received.
+

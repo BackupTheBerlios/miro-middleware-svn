@@ -1,0 +1,106 @@
+// -*- idl -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware for Robots)
+// Copyright (C) 1999-2005
+// Department of Neuroinformatics, University of Ulm, Germany
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published
+// by the Free Software Foundation; either version 2, or (at your option)
+// any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, write to the Free Software Foundation,
+// Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+//
+// $Id$
+//
+#ifndef DtlkSpeech_idl
+#define DtlkSpeech_idl
+
+#include "Exception.idl"
+#include "Speech.idl"
+
+module Miro
+{
+  //! Struct holding the current settings of the DoubleTalk speech card.
+  struct DtlkSpeechSettingsIDL
+  {
+    //    unsigned short serial_number; //<! 0-7Fh:0-7Fh
+    //    string rom_version;           //<! null terminated string
+    char mode;                   //!< 0=Character; 1=Phoneme; 2=Text
+    char punc_level;             //!< nB; 0-7
+    char formant_freq;           //!< nF; 0-9
+    char pitch;                  //!< nP; 0-99
+    char speed;                  //!< nS; 0-9
+    char volume;                 //!< nV; 0-9
+    char tone;                   //!< nX; 0-2
+    char expression;             //!< nE; 0-9
+    //    boolean ext_dict_loaded;      //!< true = exception dictionary loaded
+    //    boolean ext_dict_status;      //!< true = exception dictionary enabled
+    //    octet free_ram;               //!< # pages (truncated) remaining for text buffer
+    char articulation;           //!< nA; 0-9
+    char reverb;                 //!< nR; 0-9
+    //    octet eob;                    //<! 7Fh value indicating end of parameter block
+    //    boolean has_indexing;         //<! nonzero if indexing is implemented
+  };
+
+  //! Interface of the DtlkSpeech card.
+  /**
+   * This interface is desinged for the operation of the DoubleTalk
+   * speech card device. It registers as "Speech" at the naming service
+   * within the selected naming context.
+   *
+   * Read the excellent DoubleTalk documentation for a longer
+   * explanation of the possible operational modes.
+   *
+   * @author Hans Utz
+   */
+  interface DtlkSpeech: Speech
+  {
+    //! Speek character by character
+    const char CHARACTER_MODE = '\000';
+    //! Speek phonemes. 
+    /**
+     *This is usefull to make the card speek none
+     * english words.
+     */
+    const char POHNEME_MODE = '\001';
+    //! Speek characters as english text (default).
+    const char TEXT_MODE = '\002';
+
+    //! Keep the current setting of a parameter. 
+    /**
+     * This value can be specified for any parameter within the
+     * DtlkSpeechSettingsIDL struct. 
+     */
+    const char UNCHANGED = '\xff'; // -1
+
+    //! Process the rest of the text in the buffer.
+    const char FLUSH_TEXT = '\015'; // 13
+
+    //! Add text to the output buffer.
+    void insertText(in DtlkSpeechSettingsIDL settings, in string text) raises(EDevIO);
+    //! Skip the next word.
+    void skip() raises(EDevIO);
+    //! Clear the buffer.
+    void clear() raises(EDevIO);
+    //! Reset the card to default values.
+    void reset() raises(EDevIO);
+    //! Select a voice sceem. 
+    //    void setVoice(in char voice) raises(EDevIO, EOutOfBounds);
+
+    //unsigned long insertMark();
+
+    //! Insert a raw command into the output buffer.
+    void insertCommand(in char command, in char value) raises(EDevIO);
+    //! Query the current settings of the speech device.
+    DtlkSpeechSettingsIDL getSettings();
+  };
+};
+#endif // dtlkSpeeh_idl

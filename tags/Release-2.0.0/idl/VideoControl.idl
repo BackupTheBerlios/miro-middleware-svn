@@ -1,0 +1,91 @@
+// -*- idl -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware for Robots)
+// Copyright (C) 2005
+// Department of Software Technology, Technical University of Graz, Austria
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published
+// by the Free Software Foundation; either version 2, or (at your option)
+// any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, write to the Free Software Foundation,
+// Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+//
+// $Id$
+//
+#ifndef VIDEOCONTROL_IDL
+#define VIDEOCONTROL_IDL
+
+#include "Exception.idl"
+
+module Video
+{
+  //! List of possible (controllable, value-based) features a camera may have
+  enum CameraFeature 
+  {
+    BRIGHTNESS,
+    EXPOSURE,
+    FOCUS,
+    GAIN,
+    GAMMA,
+    HUE,
+    IRIS,
+    SATURATION,
+    SHARPNESS,
+    SHUTTER,
+    TEMPERATURE,
+    TRIGGER,
+    WHITE_BALANCE_BLUE,
+    WHITE_BALANCE_RED,
+    WHITE_BALANCE_SPEED,
+    WHITE_BALANCE_DELAY,
+    CONTRAST,
+    TIMEOUT,
+    STROBE_DURATION,
+    STROBE_DELAY,
+    BACKLIGHT_COMPENSATION,
+    FLICKERLESS_MODE,
+    DYNAMIC_NOISE_REDUCTION,
+    COMPRESSION
+  };
+
+  //! struct describing the possible values of one feature
+  struct FeatureDescription
+  {
+    CameraFeature feature;
+    boolean hasAutoMode;
+    double value;
+    double minValue;
+    double maxValue;
+  };
+
+  //! struct to set the values of one feature
+  struct FeatureSet
+  {
+    boolean autoMode;
+    double value;
+  };
+
+  //! vector over a couple of features
+  typedef sequence<FeatureDescription> FeatureSetVector;
+
+
+  //! The interface to get and set camera settings.
+  interface CameraControl
+  {
+    void getFeature(in CameraFeature feature, out FeatureSet set) raises(Miro::EOutOfBounds);
+    void setFeature(in CameraFeature feature, in FeatureSet set) raises(Miro::EOutOfBounds);
+
+    void getFeatureDescription(out FeatureSetVector features) raises(Miro::EOutOfBounds);
+  };
+};
+
+#endif
+

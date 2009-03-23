@@ -1,0 +1,11 @@
+.deps
+.libs
+Feature.lo
+FeatureManagementI.lo
+FeatureManager.lo
+FeatureRepository.lo
+Makefile
+Makefile.in
+WorldModel.lo
+libmiroMCL.la
+

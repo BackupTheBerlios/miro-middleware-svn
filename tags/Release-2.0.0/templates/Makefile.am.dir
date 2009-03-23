@@ -1,0 +1,22 @@
+## -*- Makefile -*- ##########################################################
+##
+## This file is part of Miro (The Middleware For Robots)
+##
+## $Id$
+##
+## Miro/templates/Makefile.am.dir
+##
+##############################################################################
+
+## insert unconditional directories here
+generaldirs = firstDir secondDir
+
+## example for conditional compilation
+if COND_PIONEER
+pioneerdirs = conditionalDir
+endif
+
+
+SUBDIRS = $(generaldirs) $(pioneerdirs)
+
+
