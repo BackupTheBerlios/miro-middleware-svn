@@ -102,7 +102,7 @@ main(int argc, char *argv[])
     
     cout << "Loop forever handling events." << endl;
     server.run();
-    cout << "Server stoped, exiting." << endl;
+    cout << "Server stopped, exiting." << endl;
   }
   catch (const CORBA::Exception & e) {
     cerr << "Uncaught CORBA exception: " << e << endl;
