@@ -43,7 +43,8 @@ module Miro
     YUV_411,
     YUV_422,
     YUV_420P,
-    HSV_24
+    HSV_24,
+    LUV_24
   };
 
   //! Struct describing the format of an image.

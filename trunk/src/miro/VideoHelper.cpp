@@ -54,6 +54,9 @@ namespace Miro
     case HSV_24:		//	hsv24
       pixelSize = 3;
       break;
+    case LUV_24:        //luv24
+      pixelSize = 3;
+      break;
     case BGR_32:	//	rgb32:
     case RGB_32:	//	bgr32:
       pixelSize = 4;
