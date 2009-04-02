@@ -347,75 +347,27 @@ AC_DEFUN([AC_DETERMINE_LIBDC_VERSION],
 	AC_LANG_PUSH(C)
 	AC_MSG_CHECKING(how to setup dma capture)
 	success=0
-	AC_TRY_COMPILE([
-		#include <dc1394/dc1394_control.h>
-	],[
-		dc1394camera_t *camera;
-		dc1394_dma_setup_capture(
-			camera,
-			DC1394_VIDEO_MODE_640x480_YUV422,
-			DC1394_ISO_SPEED_400,
-			DC1394_FRAMERATE_30,
-			4,
-			1);
-	],[
-	success=3
-	],[
-	])
-	if test $success -eq 0; then
-		AC_TRY_COMPILE([
-			#include <libdc1394/dc1394_control.h>
-		],[
-			raw1394handle_t handle;
-			nodeid_t node;
-			dc1394_dma_setup_capture(
-				handle,
-				node,
-				1,
-				FORMAT_VGA_NONCOMPRESSED,
-				MODE_640x480_YUV422,
-				SPEED_400,
-				FRAMERATE_30, 
-				4,
-				1,
-				1,
-				"/dev/blabla",
-				(dc1394_cameracapture *)NULL);
-		],[
-		success=2
-		],[
-		]); fi
-	if test $success -eq 0; then
-		AC_TRY_COMPILE([
-			#include <libdc1394/dc1394_control.h>
-		],[
-			raw1394handle_t handle;
-			nodeid_t node;
-			dc1394_dma_setup_capture(
-				handle,
-				node,
-				1,
-				FORMAT_VGA_NONCOMPRESSED,
-				MODE_640x480_YUV422,
-				SPEED_400,
-				FRAMERATE_30, 
-				4,
-				1,
-				"/dev/blabla",
-				(dc1394_cameracapture *)NULL);
-		],[
-		success=1
-		],[
-		]); fi
+        if test $success -eq 0; then
+                AC_TRY_COMPILE([
+                        #include <dc1394/control.h>
+                        #include <dc1394/capture.h>
+                ],[
+                        dc1394camera_t camera;
+                        dc1394_capture_setup(&camera, 10, DC1394_CAPTURE_FLAGS_DEFAULT);
+                ],[
+                success=22
+                ],[
+                ]); fi
+
 	AC_MSG_RESULT($success)
 	AC_LANG_POP()
 
 	AH_TEMPLATE([MIRO_HAS_LIBDC1394_VERSION], [the used libdc1394 version.])
-	if test $success -gt 0; then
+	if test $success -eq 22; then
 		ac_miro_has_1394_libversion=$success
 		AC_DEFINE_UNQUOTED(MIRO_HAS_LIBDC1394_VERSION, $success)
 		ac_have_libdc1394=yes
 	else
-		AC_MSG_ERROR([Cannot determine libdc1394 version. Giving up. For more details about this problem, look at the end of config.log.])
+		AC_MSG_ERROR([Cannot determine libdc1394 version. libdc1394 version 2.0.2 or greater is not installed on this system.  Giving up. For more details about this problem, look at the end of config.log.])
 	fi
 ])
