@@ -31,12 +31,7 @@
 #include "idl/VideoControlS.h"
 
 #include <libraw1394/raw1394.h>
-#if MIRO_HAS_LIBDC1394_VERSION == 1 || MIRO_HAS_LIBDC1394_VERSION == 2
-#include <libdc1394/dc1394_control.h>
-#else
-#include <dc1394/dc1394_control.h>
-#endif
-
+#include <dc1394/control.h>
 
 namespace Video
 {
@@ -89,16 +84,7 @@ namespace Video
     bool                    is_open_;
     //! Real device handle.
     raw1394handle_t         handle_;
-#if MIRO_HAS_LIBDC1394_VERSION == 1 || MIRO_HAS_LIBDC1394_VERSION == 2
-    //! Actual camera features.
-    dc1394_feature_set      features_;
-    //! Camera capture data structure.
-    dc1394_cameracapture *  p_camera_;
-    //! Selected image format.
-    long                    imageFormat_;
-    //! Framerate
-    int                     frameRate_;
-#else
+    dc1394_t *dc1394;
     //! Actual camera features.
     dc1394featureset_t features_;
     //! Camera capture data structure.
@@ -107,7 +93,6 @@ namespace Video
     dc1394video_mode_t      imageFormat_;
     //! Framerate
     dc1394framerate_t       frameRate_;
-#endif
   };
 };
 #endif // VIDEODEVICE1394_H

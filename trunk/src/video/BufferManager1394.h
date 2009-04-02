@@ -30,11 +30,7 @@
 #include "BufferManager.h"
 
 #include <libraw1394/raw1394.h>
-#if MIRO_HAS_LIBDC1394_VERSION == 1 || MIRO_HAS_LIBDC1394_VERSION == 2
-#include <libdc1394/dc1394_control.h>
-#else
-#include <dc1394/dc1394_control.h>
-#endif
+#include <dc1394/control.h>
 
 namespace Video
 {
@@ -44,15 +40,9 @@ namespace Video
     typedef BufferManager Super;
 
   public:
-#if MIRO_HAS_LIBDC1394_VERSION == 1 || MIRO_HAS_LIBDC1394_VERSION == 2
-    //! Initializing constructor.
-    BufferManager1394(Filter const * const _filter,
-		      dc1394_cameracapture *  _pCamera) throw (std::bad_alloc);
-#else
     //! Initializing constructor.
     BufferManager1394(Filter const * const _filter,
 		      dc1394camera_t *  _pCamera) throw (std::bad_alloc);
-#endif
 
    protected:
 
@@ -66,13 +56,11 @@ namespace Video
     void acquireOutputBuffer(unsigned long _index);
     void releaseOutputBuffer();
 
-#if MIRO_HAS_LIBDC1394_VERSION == 1 || MIRO_HAS_LIBDC1394_VERSION == 2
-    //! Camera capture data structure.
-    dc1394_cameracapture * pCamera_;
-#else
+    dc1394video_frame_t *frame;
+
     //! Camera capture data structure.
     dc1394camera_t * pCamera_;
-#endif
+
     //! Pointer to the camera parameters of this device
     const Miro::CameraParameters * camParams_;
   };
