@@ -37,7 +37,7 @@ const string XsensInertialSensorConnection::OUTPUT_SETTINGS_ACC = "ACC";
   {
 
     std::cout << "Init Hardware! " << std::endl;
-    std::cout << "outputmode " << parameters_.outputmode << " settings " << parameters_.outputsettings << endl;
+    std::cout << "outputmode " << parameters_.outputmode << " settings " << parameters_.outputsettings << std::endl;
     deviceName_     = parameters_.device;
     if ( parameters_.outputmode == OUTPUT_MODE_ORIENT )
       outputMode_   = OUTPUTMODE_ORIENT;
@@ -189,7 +189,7 @@ const string XsensInertialSensorConnection::OUTPUT_SETTINGS_ACC = "ACC";
       	inertial_data.inertial_data.accY = fdata[1];
       	inertial_data.inertial_data.accZ = fdata[2];
       } else
-      	cout << "output settings not supported" << endl;
+      	std::cout << "output settings not supported" << std::endl;
       
       ACE_Time_Value now = ACE_OS::gettimeofday( );
       timeA2C( now, inertial_data.time );
