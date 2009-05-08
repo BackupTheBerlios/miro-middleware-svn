@@ -1,15 +1,18 @@
 We are pleased to announce version 2.0.0 of Miro.
-
-It is our first official BerliOS hosted release. 
+ 
+It is our first official BerliOS hosted release.
 The tag in the cvs repository is tags/Release-2.0.0.
 You can obtain the sources with a simple:
 
-svn chekcout 
+svn checkout http://svn.berlios.de/svnroot/repos/miro-middleware/tags/Release-2.0.0
 
 Tar archives and the manual are also available at our web site.
 
-This is mostly a stability release. It is the snapshot of our current
-repository, before we start a new development cycle. We will deprecate old
-platforms and clean up code, so we wanted to create an official version of
-the status quo first.
+Archives:  http://developer.berlios.de/project/showfiles.php?group_id=10725
+  Manual:  http://developer.berlios.de/docman/?group_id=10725
 
+This is mostly a stability release. It is the snapshot of our current
+repository, before we start a new development cycle. We will deprecate old 
+platforms and clean up code, so we wanted to create an official version of the 
+status quo first.
+ 
