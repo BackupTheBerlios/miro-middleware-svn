@@ -21,7 +21,7 @@
 // $Id$
 //
 //
-// Authors: 
+// Authors:
 //   Hans Utz
 //   Stefan Enderle
 //   Stefan Sablatnoeg
@@ -32,10 +32,10 @@
 
 namespace Miro
 {
-  Miro::Task::Task() : 
-    super() 
+  Miro::Task::Task() :
+      super()
   {}
-  Miro::Task::~Task() 
+  Miro::Task::~Task()
   {}
 
   int

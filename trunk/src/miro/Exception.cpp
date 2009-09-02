@@ -32,25 +32,25 @@ namespace Miro
    *
    * @return Reference to the ostream.
    */
-  std::ostream& operator << (std::ostream& _ostr, const Exception& x) 
+  std::ostream& operator << (std::ostream& _ostr, const Exception& x)
   {
     x.printToStream(_ostr);
     return _ostr;
   }
 
   /** Noop implementation. */
-  Exception::Exception() throw() : 
-    Super(),
-    what_()
+  Exception::Exception() throw() :
+      Super(),
+      what_()
   {}
 
   /**
    * You can pass this constructor a string, which describes the
    * cause of the exception.
    */
-  Exception::Exception(const std::string& _what) throw() : 
-    Super(),
-    what_(_what) 
+  Exception::Exception(const std::string& _what) throw() :
+      Super(),
+      what_(_what)
   {}
 
   /** Noop implementation. */
@@ -61,10 +61,10 @@ namespace Miro
    * @return A pointer to the string describing the exception
    * reason.  This string is set when the exception is thrown.
    */
-  char const * 
-  Exception::what () const throw() 
+  char const *
+  Exception::what() const throw()
   {
-    return what_.c_str (); 
+    return what_.c_str();
   }
 
   /**
@@ -72,7 +72,7 @@ namespace Miro
    *
    * @return Reference to the ostream.
    */
-  void 
+  void
   Exception::printToStream(std::ostream& _ostr) const
   {
     _ostr << what();
@@ -83,8 +83,8 @@ namespace Miro
    * to be thrown to this constructor.
    */
   CException::CException(int _error, const std::string& _what) throw() :
-    Super(_what),
-    error_(_error)
+      Super(_what),
+      error_(_error)
   {}
 
   /** Noop implementation. */
@@ -95,9 +95,9 @@ namespace Miro
    * Returns a number describing the exception reason.
    * This number is set when the exception is thrown.
    */
-  int CException::error_num() const throw() 
-  { 
-    return error_; 
+  int CException::error_num() const throw()
+  {
+    return error_;
   }
 
   /**
@@ -108,8 +108,8 @@ namespace Miro
   void
   CException::printToStream(std::ostream& _ostr) const
   {
-    _ostr << what() << " - " 
-	  << error_num() << ": " << strerror(error_num());
+    _ostr << what() << " - "
+    << error_num() << ": " << strerror(error_num());
   }
 
   /**
@@ -117,7 +117,7 @@ namespace Miro
    * to be thrown to this constructor.
    */
   ACE_Exception::ACE_Exception(int _errno, const std::string& _what) throw() :
-    Super(_errno, _what) 
+      Super(_errno, _what)
   {}
 
   /** Noop implementation. */

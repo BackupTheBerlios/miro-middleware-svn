@@ -31,22 +31,23 @@ namespace Miro
   Singleton<Random> Random::instance;
 
   void
-  Random::initRandByTime() {
-    srand( ACE_OS::gettimeofday().usec() );
+  Random::initRandByTime()
+  {
+    srand(ACE_OS::gettimeofday().usec());
   }
 
   Random::Random() :
-    iset(false),
-    gset(0.),
-    gaussI_(0),
-    gauss2dI_(0),
-    uniform01I_(0),
-    uniform11I_(0)
+      iset(false),
+      gset(0.),
+      gaussI_(0),
+      gauss2dI_(0),
+      uniform01I_(0),
+      uniform11I_(0)
   {
     init();
   }
-    
-  void 
+
+  void
   Random::init()
   {
     double * iEnd = gauss_ + gaussS_;
@@ -63,37 +64,38 @@ namespace Miro
       *i = random11();
   }
 
-  double 
+  double
   Random::random01()
   {
     return (double)rand() / (RAND_MAX + 1.0);
   }
 
-  double 
+  double
   Random::random11()
   {
     return (double)rand() / ((RAND_MAX + 1.0) * .5) - 1.;
   }
 
-  double 
+  double
   Random::randomGauss()
   {
     double fac, rsq, v1, v2;
-    if(!iset) {
+    if (!iset) {
       do {
-	v1 = random11();
-	v2 = random11();
-	rsq = v1*v1 + v2*v2;
-      } while(rsq >= 1.0 || rsq == 0.0);
-      
+        v1 = random11();
+        v2 = random11();
+        rsq = v1 * v1 + v2 * v2;
+      }
+      while (rsq >= 1.0 || rsq == 0.0);
+
       fac = sqrt(-2.0 * log(rsq) / rsq);
       gset = v1 * fac;
       iset = true;
       return v2 * fac;
     }
-    else {  
+    else {
       iset = false;
-      return gset;  
+      return gset;
     }
   }
 

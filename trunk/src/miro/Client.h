@@ -54,9 +54,9 @@ namespace Miro
    *
    * See "Advanced CORBA programming in C++" for details.
    */
-    template<class T>
-    typename T::_ptr_type resolve_name(const Client& client, const char * name) 
-      throw(CORBA::Exception);
+  template<class T>
+  typename T::_ptr_type resolve_name(const Client& client, const char * name)
+  throw(CORBA::Exception);
 
   //! Base class for all Miro client applications.
   /**
@@ -77,16 +77,16 @@ namespace Miro
      * function and the ORB specific command line options are removed
      * from the argument vector.
      */
-    Client(int& argc, char *argv[], 
-	   const RobotParameters& _params = *RobotParameters::instance());
+    Client(int& argc, char *argv[],
+           const RobotParameters& _params = *RobotParameters::instance());
     Client(const Client& _client);
-    
+
     /**
      * Destructor.
      */
     virtual ~Client();
 
-    //! Accessor which returns the ORB pointer.  
+    //! Accessor which returns the ORB pointer.
     /**
      * Following the normal CORBA memory management rules of return
      * values from functions, this function duplicates the orb return
@@ -99,8 +99,8 @@ namespace Miro
      * See "Advanced CORBA programming in C++" for details.
      */
     template<class T>
-    typename T::_ptr_type resolveInit(const char * id) 
-      const throw(CORBA::Exception, Miro::Exception);
+    typename T::_ptr_type resolveInit(const char * id)
+    const throw(CORBA::Exception, Miro::Exception);
 
     /**
      * Helper functions to resolve names from the name service,
@@ -109,8 +109,8 @@ namespace Miro
      * See "Advanced CORBA programming in C++" for details.
      */
     template<class T>
-    typename T::_ptr_type resolveName(const char * name) 
-      const throw(CORBA::Exception);
+    typename T::_ptr_type resolveName(const char * name)
+    const throw(CORBA::Exception);
 
     /**
      * Helper functions to resolve names from the name service,
@@ -119,8 +119,8 @@ namespace Miro
      * See "Advanced CORBA programming in C++" for details.
      */
     template<class T>
-    typename T::_ptr_type tryResolveName(const char * name) 
-      const throw(CORBA::Exception);
+    typename T::_ptr_type tryResolveName(const char * name)
+    const throw(CORBA::Exception);
 
     /**
      * Helper functions to resolve names from the name service,
@@ -129,8 +129,8 @@ namespace Miro
      * See "Advanced CORBA programming in C++" for details.
      */
     template<class T>
-    typename T::_ptr_type resolveName(const CosNaming::Name& name) 
-      const throw(CORBA::Exception); 
+    typename T::_ptr_type resolveName(const CosNaming::Name& name)
+    const throw(CORBA::Exception);
 
     //   protected:
     /**
@@ -145,7 +145,7 @@ namespace Miro
      * Reference to the initial naming context.
      */
     CosNaming::NamingContext_var initialNamingContext;
-  
+
     /**
      * Reference to the Miro naming context.
      */
@@ -198,8 +198,8 @@ namespace Miro
 
   template<class T>
   typename T::_ptr_type
-  Client::resolveName(const char* name) 
-    const throw(CORBA::Exception)
+  Client::resolveName(const char* name)
+  const throw(CORBA::Exception)
   {
     CosNaming::Name n;
 
@@ -238,15 +238,15 @@ namespace Miro
 
   template<class T>
   typename T::_ptr_type
-  Client::resolveName(const CosNaming::Name& name)  
-    const throw(CORBA::Exception)
+  Client::resolveName(const CosNaming::Name& name)
+  const throw(CORBA::Exception)
   {
     CORBA::Object_var obj;
     obj = initialNamingContext->resolve(name);
     if (CORBA::is_nil(obj.in())) {
-      std::cerr << "Nil binding in Naming Service for " 
-		<< name[name.length() - 1].id
-		<< std::endl;
+      std::cerr << "Nil binding in Naming Service for "
+      << name[name.length() - 1].id
+      << std::endl;
       throw 0;
     }
 
@@ -256,14 +256,14 @@ namespace Miro
     }
     catch (const CORBA::Exception & e) {
       std::cerr << "Cannot narrow reference for"
-		<< name[name.length() - 1].id
-		<< std::endl;
+      << name[name.length() - 1].id
+      << std::endl;
       throw 0;
     }
     if (CORBA::is_nil(ref.in())) {
       std::cerr << "Reference has incorrect type: "
-		<< name[name.length() - 1].id
-		<< std::endl;
+      << name[name.length() - 1].id
+      << std::endl;
       throw 0;
     }
     return ref._retn();
@@ -271,8 +271,8 @@ namespace Miro
 
   template<class T>
   typename T::_ptr_type
-  resolve_name(const Client& client, const char* name) 
-    throw(CORBA::Exception)
+  resolve_name(const Client& client, const char* name)
+  throw(CORBA::Exception)
   {
     CosNaming::Name n;
 
@@ -313,8 +313,8 @@ namespace Miro
 
   template<class T>
   typename T::_ptr_type
-  Client::tryResolveName(const char* name) 
-    const throw(CORBA::Exception)
+  Client::tryResolveName(const char* name)
+  const throw(CORBA::Exception)
   {
     CosNaming::Name n;
 

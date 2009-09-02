@@ -27,14 +27,14 @@ namespace Miro
 {
 
   TiltImpl::TiltImpl(TiltParameters const& _params) :
-    params_(_params),
-    targetTilt_(0)
+      params_(_params),
+      targetTilt_(0)
   {}
 
-  TiltImpl::~TiltImpl() 
+  TiltImpl::~TiltImpl()
   {}
 
-  CORBA::Float TiltImpl::getTargetTilt() throw() 
+  CORBA::Float TiltImpl::getTargetTilt() throw()
   {
     return targetTilt_;
   }

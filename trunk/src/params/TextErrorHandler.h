@@ -27,25 +27,24 @@
 
 namespace Miro
 {
-  namespace CFG
-  {
+  namespace CFG {
     class TextErrorHandler : public QXmlErrorHandler
     {
       typedef QXmlErrorHandler Super;
 
     public:
-      
+
       virtual ~TextErrorHandler();
-      
-      virtual bool warning ( const QXmlParseException & exception );
-      virtual bool error ( const QXmlParseException & exception );
-      virtual bool fatalError ( const QXmlParseException & exception );
-      virtual QString errorString ();
-      
+
+      virtual bool warning(const QXmlParseException & exception);
+      virtual bool error(const QXmlParseException & exception);
+      virtual bool fatalError(const QXmlParseException & exception);
+      virtual QString errorString();
+
     protected:
       void createErrorMessage(const QString& type,
-			      const QXmlParseException & exception);
-      
+                              const QXmlParseException & exception);
+
       QString error_;
     };
   }

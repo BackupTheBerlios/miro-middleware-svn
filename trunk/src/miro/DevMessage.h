@@ -31,29 +31,33 @@ namespace Miro
   /**
    * The mother of all messages.
    *
-   * Derive your message class, the one which is shipped via a 
+   * Derive your message class, the one which is shipped via a
    * ACE_Message_Block to the consumer @ref Task from this class.
    *
    * It only contains a time stamp, which you have to set yourself
    * when you feel it is time. But the @ref Task class assumes the
    * data coming via its message queue to be a descendant of this
-   * class and the only way to stop him would have been, to 
+   * class and the only way to stop him would have been, to
    * templatize @ref Connection, @ref Task and @ref Event.
    *
    * @author Hans Utz
    */
-  class DevMessage 
+  class DevMessage
   {
   public:
-    //! We need a virtual detor as childs may define virtual methods.	  
+    //! We need a virtual detor as childs may define virtual methods.
     virtual ~DevMessage() {}
-    
+
     //! Time the message was produced by the device.
     ACE_Time_Value  time_;
     //! Get a constant reference to the time value.
-    const ACE_Time_Value& time() const { return time_;}
+    const ACE_Time_Value& time() const {
+      return time_;
+    }
     //! Get a non constant reference to the time value.
-    ACE_Time_Value& time() { return time_;}
+    ACE_Time_Value& time() {
+      return time_;
+    }
   };
 }
 

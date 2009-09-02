@@ -79,8 +79,8 @@ namespace Miro
   public:
     //! Initializing constructor.
     ThermometerImpl(const ThermometerParameters& _params,
-		 StructuredPushSupplier * _supplier,
-		 bool _asynchDispatching = false);
+                    StructuredPushSupplier * _supplier,
+                    bool _asynchDispatching = false);
     virtual ~ThermometerImpl();
 
     //! Pass a thermometer reading from the device into ThermometerImpl.
@@ -90,10 +90,10 @@ namespace Miro
     //! Thermometer interface method implementation.
     virtual ThermometerEventIDL getTemperature() throw();
     //! Thermometer interface method implementation.
-    virtual ThermometerEventIDL getWaitTemperature() throw (ETimeOut);
+    virtual ThermometerEventIDL getWaitTemperature() throw(ETimeOut);
     //! Thermometer interface method implementation.
     virtual void getMinMaxTemperature(CORBA::Float& minTemperature,
-				      CORBA::Float& maxTemperature) throw();
+                                      CORBA::Float& maxTemperature) throw();
 
   protected:
     //-------------------------------------------------------------------------

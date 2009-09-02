@@ -29,26 +29,24 @@
 
 namespace Miro
 {
-  namespace CFG
-  {
-    struct Parameter
-    {
+  namespace CFG {
+    struct Parameter {
       QString type_;
       QString name_;
       QString default_;
       QString fullDefault_;
       QString measure_;
       QString description_;
-      
+
       Parameter();
       Parameter(QString const& _type,
-		QString const& _name,
-		QString const& _default,
-		QString const& _fullDefault,
-		QString const& _measure,
-		QString const& _description);
+                QString const& _name,
+                QString const& _default,
+                QString const& _fullDefault,
+                QString const& _measure,
+                QString const& _description);
     };
-    
+
     bool operator < (Parameter const & lhs, Parameter const& rhs);
     bool operator == (Parameter const & lhs, Parameter const& rhs);
 

@@ -21,7 +21,7 @@
 // $Id$
 //
 //
-// Authors: 
+// Authors:
 //   Hans Utz
 //   Stefan Enderle
 //   Stefan Sablatnoeg
@@ -41,23 +41,23 @@ namespace Miro
   //
 
   DevConnection::DevConnection(ACE_Reactor * _reactor,
-			       DevEventHandler * _eventHandler,
-			       const DevParameters& _parameters) :
-    reactor_(_reactor),
-    eventHandler_(_eventHandler),
-    devName_(_parameters.device.c_str()),
-    ioBuffer_(),
-    connector_()
+                               DevEventHandler * _eventHandler,
+                               const DevParameters& _parameters) :
+      reactor_(_reactor),
+      eventHandler_(_eventHandler),
+      devName_(_parameters.device.c_str()),
+      ioBuffer_(),
+      connector_()
   {
     MIRO_DBG(MIRO, LL_NOTICE, "DevConnection intizialising\n");
-    
-    ACE_Time_Value tv(0,0); // none blocking open
-    if (connector_.connect(ioBuffer_, 
-			   devName_, 
-			   &tv, ACE_Addr::sap_any, 0, O_RDWR) == -1) {
+
+    ACE_Time_Value tv(0, 0); // none blocking open
+    if (connector_.connect(ioBuffer_,
+                           devName_,
+                           &tv, ACE_Addr::sap_any, 0, O_RDWR) == -1) {
       MIRO_LOG_OSTR(LL_CRITICAL,
-		    "Failed to open device: " << _parameters.device <<
-		    "\nPropably running on the wrong machine?\n");
+                    "Failed to open device: " << _parameters.device <<
+                    "\nPropably running on the wrong machine?\n");
       throw CException(errno, strerror(errno));
     }
 

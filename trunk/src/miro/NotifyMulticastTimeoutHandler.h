@@ -21,7 +21,7 @@
 // $Id$
 //
 //
-// Authors: 
+// Authors:
 //   Philipp Baer
 //
 #ifndef NotifyMulticastTimeoutHandler_h
@@ -29,10 +29,9 @@
 
 #include <ace/Event_Handler.h>
 
-namespace Miro 
+namespace Miro
 {
-  namespace NMC 
-  {
+  namespace NMC {
     class Receiver;
 
     /**
@@ -40,15 +39,15 @@ namespace Miro
      * reactor) the handle_timeout routine of the receiver to
      * invalidate events that are incomplete for longer time.
      */
-    class TimeoutHandler : public ACE_Event_Handler 
+    class TimeoutHandler : public ACE_Event_Handler
     {
       typedef ACE_Event_Handler Super;
-      
+
     public:
       TimeoutHandler(Receiver *_receiver);
 
       virtual int handle_timeout(const ACE_Time_Value &_tv,
-				 const void           *_act);
+                                 const void           *_act);
 
     protected:
       Receiver *receiver_;

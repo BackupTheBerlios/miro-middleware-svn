@@ -21,7 +21,7 @@
 // $Id$
 //
 //
-// Authors: 
+// Authors:
 //   Hans Utz
 //   Stefan Enderle
 //   Stefan Sablatnoeg
@@ -68,8 +68,8 @@ namespace Miro
      *        Name of the device to open.
      */
     TtyConnection(ACE_Reactor * _reactor,
-		  DevEventHandler * _eventHandler,
-		  const TtyParameters& _parameters);
+                  DevEventHandler * _eventHandler,
+                  const TtyParameters& _parameters);
     /**
      * Destructor.
      *

@@ -42,9 +42,9 @@ namespace Miro
    *
    * @author Guillem Pagès Gassull
    */
-  class  PanTiltImpl : public virtual POA_Miro::PanTilt, 
-		       public Miro::PanImpl,
-		       public Miro::TiltImpl
+  class  PanTiltImpl : public virtual POA_Miro::PanTilt,
+        public Miro::PanImpl,
+        public Miro::TiltImpl
   {
   public:
     //! Initializing constructor.
@@ -70,13 +70,15 @@ namespace Miro
 
   inline
   bool
-  PanTiltImpl::testPosition(PanTiltPositionIDL const& _value) const throw() {
+  PanTiltImpl::testPosition(PanTiltPositionIDL const& _value) const throw()
+  {
     return (testPan(_value.panValue) && testTilt(_value.tiltValue));
   }
-  
-  inline 
+
+  inline
   void
-  PanTiltImpl::setTargetPosition(PanTiltPositionIDL const& _value) throw() { 
+  PanTiltImpl::setTargetPosition(PanTiltPositionIDL const& _value) throw()
+  {
     setTargetPan(_value.panValue);
     setTargetTilt(_value.tiltValue);
   }

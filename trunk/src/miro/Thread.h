@@ -21,7 +21,7 @@
 // $Id$
 //
 //
-// Authors: 
+// Authors:
 //   Hans Utz
 //   Stefan Enderle
 //   Stefan Sablatnoeg
@@ -44,7 +44,7 @@ namespace Miro
 
   public:
     Thread(long _flags = THR_NEW_LWP | THR_JOINABLE,
-	   long _priority = ACE_DEFAULT_THREAD_PRIORITY);
+           long _priority = ACE_DEFAULT_THREAD_PRIORITY);
     virtual ~Thread();
 
     virtual void detach(int nthreads = 1);
@@ -63,7 +63,8 @@ namespace Miro
 
   inline
   bool
-  Thread::canceled() const {
+  Thread::canceled() const
+  {
     return canceled_;
   }
 }

@@ -40,7 +40,7 @@
   std::istream & \
   operator<<(std::istream &ostr, x &rhs)
 
-std::ostream & 
+std::ostream &
 operator<<(std::ostream &ostr, const ACE_TTY_IO::Serial_Params &rhs);
 OSTR_OPERATOR_DECL(ACE_INET_Addr);
 OSTR_OPERATOR_DECL(ACE_Sched_Params);
@@ -50,7 +50,8 @@ namespace std
   // set and vector ostream operators
   template<class T>
   std::ostream &
-  operator<<(std::ostream &ostr, const std::vector<T> &rhs) {
+  operator<<(std::ostream &ostr, const std::vector<T> &rhs)
+  {
     typename std::vector<T>::const_iterator first, last = rhs.end();
     for (first = rhs.begin(); first != last; ++first) {
       ostr << (*first) << std::endl;
@@ -59,7 +60,8 @@ namespace std
   }
   template<class T>
   std::ostream &
-  operator<<(std::ostream &ostr, const std::set<T> &rhs) {
+  operator<<(std::ostream &ostr, const std::set<T> &rhs)
+  {
     typename std::set<T>::const_iterator first, last = rhs.end();
     for (first = rhs.begin(); first != last; ++first) {
       ostr << (*first) << std::endl;
@@ -68,7 +70,7 @@ namespace std
   }
 }
 
-namespace Miro 
+namespace Miro
 {
   // exceptions
   OSTR_OPERATOR_DECL(EDevIO);

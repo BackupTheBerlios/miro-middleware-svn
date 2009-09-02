@@ -39,17 +39,17 @@ namespace Miro
     DevConsumer();
     virtual ~DevConsumer();
 
-  /**
-   * Handle dispatched Message.
-   *
-   * This method is called for each message extracted from the 
-   * file descriptor of thdevice.
-   *
-   * Overwrite this method for your own device consumer. You can
-   * pass any non handled message to the parent handler. This
-   * handleMessage implementation just prints a warning about an 
-   * unhandled message to cerr.
-   */
+    /**
+     * Handle dispatched Message.
+     *
+     * This method is called for each message extracted from the
+     * file descriptor of thdevice.
+     *
+     * Overwrite this method for your own device consumer. You can
+     * pass any non handled message to the parent handler. This
+     * handleMessage implementation just prints a warning about an
+     * unhandled message to cerr.
+     */
     virtual void handleMessage(const DevMessage * message);
   };
 }

@@ -27,15 +27,15 @@ namespace Miro
 {
 
   PanTiltImpl::PanTiltImpl(PanTiltParameters const& _params):
-    PanImpl(_params.pan),
-    TiltImpl(_params.tilt)
+      PanImpl(_params.pan),
+      TiltImpl(_params.tilt)
   {
   }
 
-  PanTiltImpl::~PanTiltImpl() 
+  PanTiltImpl::~PanTiltImpl()
   {}
 
-  PanTiltPositionIDL PanTiltImpl::getTargetPosition() throw() 
+  PanTiltPositionIDL PanTiltImpl::getTargetPosition() throw()
   {
     PanTiltPositionIDL targetPosition;
     ACE_Guard<ACE_Recursive_Thread_Mutex> guard(mutex_);

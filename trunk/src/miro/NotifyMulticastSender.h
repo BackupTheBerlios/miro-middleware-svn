@@ -21,7 +21,7 @@
 // $Id$
 //
 //
-// Authors: 
+// Authors:
 //   Hans Utz
 //   Philipp Baer
 //
@@ -44,31 +44,30 @@
 #include <deque>
 #endif
 
-namespace Miro 
+namespace Miro
 {
-  namespace NMC 
-  {
+  namespace NMC {
     // forward declerations
     class Config;
     class SH;
     class EventFilter;
     class Parameters;
 
-    class Sender : public Miro::StructuredPushConsumer 
+    class Sender : public Miro::StructuredPushConsumer
     {
       //--------------------------------------------------------------------------
       // private types
       //--------------------------------------------------------------------------
       typedef Miro::StructuredPushConsumer Super;
-     
+
     public:
       //--------------------------------------------------------------------------
       // public methods
       //--------------------------------------------------------------------------
       Sender(ACE_SOCK_Dgram_Mcast& _socket,
-	     CosNotifyChannelAdmin::EventChannel_ptr _ec,
-	     std::string const& _domainName,
-	     Parameters * _parameters);
+             CosNotifyChannelAdmin::EventChannel_ptr _ec,
+             std::string const& _domainName,
+             Parameters * _parameters);
 
       //! Default destructor.
       ~Sender();
@@ -93,39 +92,39 @@ namespace Miro
       // protected methods
       //--------------------------------------------------------------------------
       void subscribe(std::string const& _domain,
-		     std::string const& _type)
-	throw(CORBA::SystemException, CosNotifyComm::InvalidEventType);
+                     std::string const& _type)
+      throw(CORBA::SystemException, CosNotifyComm::InvalidEventType);
 
       void unsubscribe(std::string const& _domain,
-		       std::string const& _type)
-	throw(CORBA::SystemException, CosNotifyComm::InvalidEventType);
+                       std::string const& _type)
+      throw(CORBA::SystemException, CosNotifyComm::InvalidEventType);
 
       void marshalEvent(const CosNotification::StructuredEvent &_event);
 
       void sendCdrStream(TAO_OutputCDR &cdr);
 
       unsigned long int getFragmentCount(const ACE_Message_Block *_begin,
-					 const ACE_Message_Block *_end,
-					 int _iovSize,
-					 CORBA::ULong _maxFragmentPayload,
-					 CORBA::ULong &_totalLength);
+                                         const ACE_Message_Block *_end,
+                                         int _iovSize,
+                                         CORBA::ULong _maxFragmentPayload,
+                                         CORBA::ULong &_totalLength);
 
       void sendFragment(CORBA::ULong _requestId,
-			CORBA::ULong _requestSize,
-			CORBA::ULong _fragmentSize,
-			CORBA::ULong _fragmentOffset,
-			CORBA::ULong _fragmentId,
-			CORBA::ULong _fragmentCount,
-			CORBA::ULong _timestamp,
-			iovec _iov[],
-			int _iovcnt);
+                        CORBA::ULong _requestSize,
+                        CORBA::ULong _fragmentSize,
+                        CORBA::ULong _fragmentOffset,
+                        CORBA::ULong _fragmentId,
+                        CORBA::ULong _fragmentCount,
+                        CORBA::ULong _timestamp,
+                        iovec _iov[],
+                        int _iovcnt);
 
       void disconnect_structured_push_consumer(ACE_ENV_SINGLE_ARG_DECL_WITH_DEFAULTS)
-	throw(CORBA::SystemException);
+      throw(CORBA::SystemException);
 
       void push_structured_event(const CosNotification::StructuredEvent &_notification
-				 ACE_ENV_ARG_DECL_WITH_DEFAULTS)
-	throw(CORBA::SystemException, CosEventComm::Disconnected);
+                                 ACE_ENV_ARG_DECL_WITH_DEFAULTS)
+      throw(CORBA::SystemException, CosEventComm::Disconnected);
 
       void analyzeTraffic(CORBA::ULong _timestamp, CORBA::ULong _size);
 
@@ -138,7 +137,7 @@ namespace Miro
       ACE_SOCK_Dgram_Mcast& socket_;
       std::string const domainName_;
       unsigned long int requestId_;
-		
+
       EventFilter * event_filter_;
 
       CORBA::ULong lastTrafficAnalysis_;

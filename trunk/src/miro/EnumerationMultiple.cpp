@@ -21,7 +21,7 @@
 // $Id$
 //
 //
-// Authors: 
+// Authors:
 //   Hans Utz
 //   Stefan Enderle
 //   Stefan Sablatnoeg
@@ -46,13 +46,13 @@ namespace Miro
 
 
   EnumerationMultiple::EnumerationMultiple(vector<string> _enum, vector<string> _values) :
-    enum_(_enum),
-    values_(_values)
+      enum_(_enum),
+      values_(_values)
   {
     checkAvailability();
   }
 
-    
+
   void
   EnumerationMultiple::value(string _value)
   {
@@ -69,7 +69,7 @@ namespace Miro
   }
 
 
-  const 
+  const
   vector<string>&
   EnumerationMultiple::value() const
   {
@@ -77,7 +77,7 @@ namespace Miro
   }
 
 
-  const 
+  const
   vector<string>&
   EnumerationMultiple::assortment() const
   {
@@ -91,10 +91,10 @@ namespace Miro
     int pos = 0;
     std::vector<std::string> values;
     while (_values.find(" ", pos) < _values.size()) {
-      string tmp = _values.substr(pos, _values.find(" ", pos)-pos);
+      string tmp = _values.substr(pos, _values.find(" ", pos) - pos);
       if ((tmp != " ") && (tmp != ""))
-	values.push_back(tmp);
-      pos = _values.find(" ", pos)+1;
+        values.push_back(tmp);
+      pos = _values.find(" ", pos) + 1;
     }
     string tmp = _values.substr(pos, _values.size());
     if ((tmp != " ") && (tmp != ""))
@@ -108,29 +108,29 @@ namespace Miro
   EnumerationMultiple::checkAvailability()
   {
     // check if values are in assortment list
-    for (vector<string>::const_iterator j=enum_.begin(); j!=enum_.end(); ++j) {
+    for (vector<string>::const_iterator j = enum_.begin(); j != enum_.end(); ++j) {
       bool found = false;
-      for (vector<string>::const_iterator i=values_.begin(); i!=values_.end(); ++i)
-	if (*i == *j) {
-	  found = true;
-	  break;
-	}
+      for (vector<string>::const_iterator i = values_.begin(); i != values_.end(); ++i)
+        if (*i == *j) {
+          found = true;
+          break;
+        }
       if (!found)
-	throw Miro::Exception("Enumeration: tried to set value not in list of available values");
+        throw Miro::Exception("Enumeration: tried to set value not in list of available values");
     }
   }
 
 
-  std::ostream& 
+  std::ostream&
   operator<<(std::ostream& ostr, EnumerationMultiple _enum)
   {
-    for (vector<string>::const_iterator j=_enum.enum_.begin(); j!=_enum.enum_.end(); ++j)
+    for (vector<string>::const_iterator j = _enum.enum_.begin(); j != _enum.enum_.end(); ++j)
       ostr << *j;
     return ostr;
   }
 
 
-  std::istream& 
+  std::istream&
   operator>>(std::istream& istr, EnumerationMultiple& _enum)
   {
     std::string tmp;

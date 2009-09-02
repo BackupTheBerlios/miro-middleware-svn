@@ -21,7 +21,7 @@
 // $Id$
 //
 //
-// Authors: 
+// Authors:
 //   Hans Utz
 //   Philipp Baer
 //
@@ -45,10 +45,9 @@
 class ACE_Reactor;
 class ACE_SOCK_Dgram_Mcast;
 
-namespace Miro 
+namespace Miro
 {
-  namespace NMC 
-  {
+  namespace NMC {
 
     // forward declarations
 
@@ -89,18 +88,18 @@ namespace Miro
      * EventChannel
      */
 
-    class Adapter 
+    class Adapter
     {
 
     public:
       //! Initializing constructor.
       Adapter(int& _argc,
-	      char *_argv[],
-	      Miro::Client * _client,
-	      CosNotifyChannelAdmin::EventChannel_ptr _eventChannel,
-	      std::string& _domainName,
-	      Parameters * _parameters = Parameters::instance())
-	throw(CORBA::Exception, Miro::Exception);
+              char *_argv[],
+              Miro::Client * _client,
+              CosNotifyChannelAdmin::EventChannel_ptr _eventChannel,
+              std::string& _domainName,
+              Parameters * _parameters = Parameters::instance())
+      throw(CORBA::Exception, Miro::Exception);
 
       //! Destructor
       ~Adapter() throw();
@@ -110,8 +109,8 @@ namespace Miro
 
       void setEventFilter(EventFilter * _event_filter);
       void changeSubscription(const CosNotification::EventTypeSeq & added,
-			      const CosNotification::EventTypeSeq & removed
-			      ACE_ENV_ARG_DECL_WITH_DEFAULTS);
+                              const CosNotification::EventTypeSeq & removed
+                              ACE_ENV_ARG_DECL_WITH_DEFAULTS);
 
     protected:
       Parameters * parameters_;
@@ -136,4 +135,4 @@ namespace Miro
     };
   }
 }
-#endif // NotifyMulticastAdapter_h 
+#endif // NotifyMulticastAdapter_h

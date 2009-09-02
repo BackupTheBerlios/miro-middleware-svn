@@ -21,7 +21,7 @@
 // $Id$
 //
 //
-// Authors: 
+// Authors:
 //   Philipp Baer
 //
 #include "NotifyMulticastDefines.h"
@@ -32,8 +32,7 @@
 
 namespace Miro
 {
-  namespace NMC 
-  {
+  namespace NMC {
     /**
      *     Timeout handler for periodical updates on fragment registry.
      *
@@ -41,7 +40,7 @@ namespace Miro
      *     _receiver: Pointer to receiver instance
      */
     TimeoutHandler::TimeoutHandler(Receiver *_receiver) :
-      receiver_(_receiver)
+        receiver_(_receiver)
     {
       MIRO_LOG_CTOR("NMC:TimeoutHandler");
     }
@@ -55,10 +54,10 @@ namespace Miro
      */
     int
     TimeoutHandler::handle_timeout(const ACE_Time_Value &_tv,
-				   const void           *_act)
+                                   const void           *_act)
     {
       if (receiver_)
-	this->receiver_->handle_timeout(_tv, _act);
+        this->receiver_->handle_timeout(_tv, _act);
 
       return 0;
     }

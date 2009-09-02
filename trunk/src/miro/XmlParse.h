@@ -83,28 +83,30 @@ namespace Miro
   void operator <<= (ACE_Sched_Params& lhs, const QDomNode& node);
 
   template<class T>
-  void operator <<= (std::vector<T>& lhs, const QDomNode& node) {
+  void operator <<= (std::vector<T>& lhs, const QDomNode& node)
+  {
     lhs.clear();
     QDomNode n = node.firstChild();
     while (!n.isNull()) {
       if (n.isElement()) {
-	T t;
-	t <<= n;
-	lhs.push_back(t);
+        T t;
+        t <<= n;
+        lhs.push_back(t);
       }
       n = n.nextSibling();
     }
   }
 
   template<class T>
-  void operator <<= (std::set<T>& lhs, const QDomNode& node) {
+  void operator <<= (std::set<T>& lhs, const QDomNode& node)
+  {
     lhs.clear();
     QDomNode n = node.firstChild();
     while (!n.isNull()) {
       if (n.isElement()) {
-	T t;
-	t <<= n;
-	lhs.insert(t);
+        T t;
+        t <<= n;
+        lhs.insert(t);
       }
       n = n.nextSibling();
     }
@@ -130,7 +132,8 @@ namespace Miro
   QDomElement operator >>= (const ACE_Sched_Params& lhs, QDomNode& node);
 
   template<class T>
-  QDomElement operator >>= (const std::vector<T>& lhs, QDomNode& node) {
+  QDomElement operator >>= (const std::vector<T>& lhs, QDomNode& node)
+  {
     QDomDocument d = node.ownerDocument();
     QDomElement e = d.createElement("parameter");
     typename std::vector<T>::const_iterator f, l = lhs.end();
@@ -141,7 +144,8 @@ namespace Miro
     return e;
   }
   template<class T>
-  QDomElement operator >>= (const std::set<T>& lhs, QDomNode& node) {
+  QDomElement operator >>= (const std::set<T>& lhs, QDomNode& node)
+  {
     QDomDocument d = node.ownerDocument();
     QDomElement e = d.createElement("parameter");
     typename std::set<T>::const_iterator f, l = lhs.end();

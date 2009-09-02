@@ -44,9 +44,9 @@ namespace Miro
 
     //! Motion interface method implementation.
     virtual void getMinMaxVelocity(CORBA::Long& minTranslation,
-				   CORBA::Long& maxTranslation,
-				   double& minRotation,
-				   double& maxRotation) throw();
+                                   CORBA::Long& maxTranslation,
+                                   double& minRotation,
+                                   double& maxRotation) throw();
     //! Motion interface method implementation.
     virtual VelocityIDL getTargetVelocity() throw();
 
@@ -54,7 +54,7 @@ namespace Miro
     //! Memorize target velocity
     virtual void setTargetVelocity(const VelocityIDL& _velocity);
     //! Generalized test for velocity parameter correctness.
-    void testVelocityBounds(const VelocityIDL& _velocity) throw (EOutOfBounds);
+    void testVelocityBounds(const VelocityIDL& _velocity) throw(EOutOfBounds);
 
     //! Reference to Motion parameters
     const MotionParameters& params_;
@@ -70,22 +70,22 @@ namespace Miro
 
   /**
    * @param _velocity    Velocity to test.
-   * @throw EOutOfBounds if @reg _velocity excedes the bounds 
+   * @throw EOutOfBounds if @reg _velocity excedes the bounds
    * specified in @ref params_.
    */
   inline
   void
-  MotionImpl::testVelocityBounds(const VelocityIDL& _velocity) throw (EOutOfBounds)
+  MotionImpl::testVelocityBounds(const VelocityIDL& _velocity) throw(EOutOfBounds)
   {
     if (_velocity.translation < params_.minTranslation ||
-	_velocity.translation > params_.maxTranslation ||
-	_velocity.rotation < params_.minRotation ||
-	_velocity.rotation > params_.maxRotation) {
+          _velocity.translation > params_.maxTranslation ||
+          _velocity.rotation < params_.minRotation ||
+          _velocity.rotation > params_.maxRotation) {
       char buffer[50];
-      sprintf(buffer, 
-	      "Translation: %d\nRotation: %f", 
-	      _velocity.translation, 
-	      Miro::rad2Deg(_velocity.rotation));
+      sprintf(buffer,
+              "Translation: %d\nRotation: %f",
+              _velocity.translation,
+              Miro::rad2Deg(_velocity.rotation));
       throw EOutOfBounds(buffer);
     }
   }

@@ -21,7 +21,7 @@
 // $Id$
 //
 //
-// Authors: 
+// Authors:
 //   Philipp Baer
 //
 #ifndef NotifyMulticastEventHandler_h
@@ -29,27 +29,26 @@
 
 #include <ace/Event_Handler.h>
 
-namespace Miro 
+namespace Miro
 {
-  namespace NMC 
-  {
-    // forward declaration 
+  namespace NMC {
+    // forward declaration
     class Receiver;
     class Config;
-    
-    class EventHandler : public ACE_Event_Handler 
+
+    class EventHandler : public ACE_Event_Handler
     {
       typedef ACE_Event_Handler Super;
-      
+
     public:
       //! Initializing constructor.
       EventHandler(ACE_HANDLE _handle, Receiver *_receiver);
-      
+
       //! Inherited interface.
       virtual int handle_input(ACE_HANDLE _handle);
       //! Inherited interface.
       virtual ACE_HANDLE get_handle() const;
-      
+
     protected:
       ACE_HANDLE handle_;
       Receiver * receiver_;

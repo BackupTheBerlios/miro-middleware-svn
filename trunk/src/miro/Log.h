@@ -29,11 +29,11 @@
 
 // Macro definitions for logging and debug information
 //
-// MIRO_ASSERT: the standart assert macro. 
+// MIRO_ASSERT: the standart assert macro.
 // It is provided to enable disabling of assert macros in inline code
 // of Miro without disabling them for user code too.
 //
-// MIRO_LOG: 
+// MIRO_LOG:
 // The first argument is the log level/priority.
 // The second argument is (Category, Message);
 //
@@ -56,7 +56,7 @@
 // Untested up to now.
 //
 // MIRO_DBG_TRACE: trace macro.
-// It uses the ctor/dtor of a local variable to 
+// It uses the ctor/dtor of a local variable to
 // set/reset the trace depth.
 
 #ifdef HAVE_CONFIG_H
@@ -184,7 +184,7 @@
 
 #endif // !MIRO_NO_LOGGING
 
-namespace Miro 
+namespace Miro
 {
   class Log
   {
@@ -242,9 +242,9 @@ namespace Miro
     static unsigned int const BAP =     0x00800000;
 
     //! Log level of messages reporting an emergency.
-    /** 
+    /**
      * Your robot is on fire etc. This log level is not maskable,
-     * except if you turn of logging at configure time. 
+     * except if you turn of logging at configure time.
      */
     static signed int const LL_EMERGENCY = 0;
     //! Log level of messages reporting an alert.
@@ -295,8 +295,8 @@ namespace Miro
     {
     public:
       Trace(unsigned int _level = LL_TRACE,
-	    int _priority = LM_DEBUG,
-	    char const * _fun = __PRETTY_FUNCTION__);
+            int _priority = LM_DEBUG,
+            char const * _fun = __PRETTY_FUNCTION__);
       ~Trace();
     protected:
       //! Remember the log level for the dtor.
@@ -325,76 +325,85 @@ namespace Miro
    */
   inline
   Log::Trace::Trace(unsigned int _level, int _priority, char const * _fun) :
-    level_(_level),
-    priority_(_priority),
-    fun_(_fun)
+      level_(_level),
+      priority_(_priority),
+      fun_(_fun)
   {
 //    MIRO_DBG(level_, priority_, std::string("Entering ") + fun_);
   }
   inline
-  Log::Trace::~Trace() {
+  Log::Trace::~Trace()
+  {
 //    MIRO_DBG(level_, priority_, std::string("Leaving ") + fun_);
   }
   /** The default logging level is @ref LL_WARNING (4). */
   inline
   int
-  Log::level() throw() {
+  Log::level() throw()
+  {
     return level_;
   }
   /** This is usually done by the command line option -MiroLogLevel. */
   inline
   void
-  Log::level(int _level) throw() {
+  Log::level(int _level) throw()
+  {
     level_ = _level;
   }
   inline
   unsigned int
-  Log::mask() throw() {
+  Log::mask() throw()
+  {
     return mask_;
   }
   inline
   void
-  Log::mask(unsigned int _mask) throw() {
+  Log::mask(unsigned int _mask) throw()
+  {
     mask_ = _mask;
   }
 
   inline bool Log::compiledWithLog()
   {
 #if defined (MIRO_NO_LOGGING)
-     return false;
+    return false;
 #else
-     return true;
+    return true;
 #endif
   }
 
   inline bool Log::compiledWithDebug()
   {
 #if defined (MIRO_NO_DEBUG)
-     return false;
+    return false;
 #else
-     return true;
+    return true;
 #endif
   }
 
   inline
   bool
-  Log::enabled(int _priority) {
-    return 
-      (mask_ & _priority)>0;
+  Log::enabled(int _priority)
+  {
+    return
+      (mask_ & _priority) > 0;
   }
   inline
   char const *
-  Log::format() {
+  Log::format()
+  {
     return format_;
   }
   inline
   void
-  Log::format(char const * _format) {
+  Log::format(char const * _format)
+  {
     format_ = _format;
   }
   inline
   ACE_Log_Priority
-  Log::ll2LM(int _level) {
+  Log::ll2LM(int _level)
+  {
     assert(_level <= MAX_DBG_LEVEL);
     return aceLM_[_level];
   }

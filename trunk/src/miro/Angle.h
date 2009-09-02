@@ -91,7 +91,7 @@ namespace Miro
   /**
    * An Angle is asserted to be always within the range of
    * -PI < Angle <= PI.
-   * The internal representation of the data type is a double, 
+   * The internal representation of the data type is a double,
    * storing the angle in the radiant representation.
    * Conversion to and from degree is provided.
    *
@@ -106,43 +106,42 @@ namespace Miro
     /**
      * Initializes the angle to 0.
      */
-    Angle() : 
-      angle_(0.) 
-    {}
+    Angle() :
+        angle_(0.) {}
     //! Initializing constructor: radiant.
     /**
      * Initializes the angle to the in radiant specified value.
      */
-    explicit Angle(double alpha)  : 
-      angle_(alpha) 
-    { normalize(); }
+    explicit Angle(double alpha)  :
+        angle_(alpha) {
+      normalize();
+    }
     //! Copy constructor.
     /**
      * Initializes the angle by the given Angle alpha.
      */
-    Angle(const Angle& alpha) : 
-      angle_(alpha) 
-    {}
+    Angle(const Angle& alpha) :
+        angle_(alpha) {}
 
     // Access methods
 
     //! Get the Angle in radiant.
-    double rad() const { 
-      return angle_; 
+    double rad() const {
+      return angle_;
     }
     //! Get the Angle in degree.
-    double deg() const { 
-      return (180. / M_PI * angle_); 
+    double deg() const {
+      return (180. / M_PI * angle_);
     }
     //! Set the Angle in radiant.
-    void setRad(double alpha) { 
+    void setRad(double alpha) {
       angle_ = alpha;
-      normalize(); 
+      normalize();
     }
     //! Set the Angle in degree.
-    void setDeg(double alpha) { 
+    void setDeg(double alpha) {
       angle_ = (M_PI / 180.  * alpha);
-      normalize(); 
+      normalize();
     }
 
     // Type conversion
@@ -150,9 +149,9 @@ namespace Miro
     //! Conversion from double: radiant.
     /**
      * Converts an Angle to a double of the in radiant specified value.
-     */ 
-    operator double () const { 
-      return angle_; 
+     */
+    operator double() const {
+      return angle_;
     }
 
     // Assignment operators
@@ -162,10 +161,10 @@ namespace Miro
      * You can assign an Angle to another Angle. Wow!
      *
      * @return Reference to self.
-     */ 
-    Angle& operator = (const Angle& alpha) { 
-      angle_ = alpha.angle_; 
-      return *this; 
+     */
+    Angle& operator = (const Angle& alpha) {
+      angle_ = alpha.angle_;
+      return *this;
     }
     //! Assignment from double: radiant.
     /**
@@ -173,11 +172,11 @@ namespace Miro
      * and assigns it to the Angle.
      *
      * @return Reference to self.
-     */ 
-    Angle& operator = (double alpha) { 
-      angle_ = alpha; 
+     */
+    Angle& operator = (double alpha) {
+      angle_ = alpha;
       normalize();
-      return *this; 
+      return *this;
     }
 
     // Unary operators
@@ -189,17 +188,17 @@ namespace Miro
      *
      * @return Self.
      */
-    Angle operator+() const { 
-      return Angle(angle_); 
+    Angle operator+() const {
+      return Angle(angle_);
     }
     //! The negative Angle.
     /**
      * Vied in geometrical terms, the Angle is mirrored a the x axis.
      */
-    Angle operator-() const { 
-      return Angle(-angle_); 
+    Angle operator-() const {
+      return Angle(-angle_);
     }
-    
+
     // Combined assignment - calculation operators
 
     //! In place addition.
@@ -208,10 +207,10 @@ namespace Miro
      *
      * @return Reference to self.
      */
-    Angle& operator+=(const Angle& alpha) { 
-      angle_ += alpha.angle_; 
-      normalize1(); 
-      return *this; 
+    Angle& operator+=(const Angle& alpha) {
+      angle_ += alpha.angle_;
+      normalize1();
+      return *this;
     }
     //! In place subtraction.
     /**
@@ -219,32 +218,32 @@ namespace Miro
      *
      * @return Reference to self.
      */
-    Angle& operator-=(const Angle& alpha) { 
+    Angle& operator-=(const Angle& alpha) {
       angle_ -= alpha.angle_;
-      normalize1(); 
-      return *this; 
+      normalize1();
+      return *this;
     }
     //! In place addition.
     /**
-     * Add the scalar val to this Angle. 
+     * Add the scalar val to this Angle.
      *
      * @return Reference to self.
      */
-    Angle& operator+=(double val) { 
+    Angle& operator+=(double val) {
       angle_ += val;
-      normalize(); 
-      return *this; 
+      normalize();
+      return *this;
     }
     //! In place subtraction.
     /**
-     * Subtract the scalar val to this Angle. 
+     * Subtract the scalar val to this Angle.
      *
      * @return Reference to self.
      */
     Angle& operator-=(double val) {
       angle_ -= val;
       normalize();
-      return *this; 
+      return *this;
     }
     //! In place scalar multiplication.
     /**
@@ -253,9 +252,9 @@ namespace Miro
      * @return Reference to self.
      */
     Angle& operator*=(double val) {
-      angle_ *= val; 
+      angle_ *= val;
       normalize();
-      return *this; 
+      return *this;
     }
     //! In place scalar division.
     /**
@@ -263,31 +262,31 @@ namespace Miro
      *
      * @return Reference to self.
      */
-    Angle& operator/=(double val) { 
-      angle_ /= val; 
-      normalize(); 
-      return *this; 
+    Angle& operator/=(double val) {
+      angle_ /= val;
+      normalize();
+      return *this;
     }
 
     // Calculation operators
-    friend Angle    operator +  (Angle alpha, Angle beta);
-    friend Angle    operator +  (Angle alpha, double beta);
-    friend Angle    operator +  (double alpha, Angle beta);
-    friend Angle    operator -  (Angle alpha, Angle beta);
-    friend Angle    operator -  (Angle alpha, double beta);
-    friend Angle    operator -  (double alpha, Angle beta);
-    friend Angle    operator *  (Angle alpha, double val);
-    friend Angle    operator /  (Angle alpha, double val);
+    friend Angle    operator + (Angle alpha, Angle beta);
+    friend Angle    operator + (Angle alpha, double beta);
+    friend Angle    operator + (double alpha, Angle beta);
+    friend Angle    operator - (Angle alpha, Angle beta);
+    friend Angle    operator - (Angle alpha, double beta);
+    friend Angle    operator - (double alpha, Angle beta);
+    friend Angle    operator * (Angle alpha, double val);
+    friend Angle    operator / (Angle alpha, double val);
 
-  // Logical operators
+    // Logical operators
     friend bool     operator == (Angle alpha, Angle beta);
     friend bool     operator != (Angle alpha, Angle beta);
-    friend bool     operator <  (Angle alpha, Angle beta);
+    friend bool     operator < (Angle alpha, Angle beta);
 
-  // IO friend functions
+    // IO friend functions
     friend std::ostream& operator << (std::ostream& ostr, Angle alpha);
     friend std::istream& operator >> (std::istream& istr,  Angle& alpha);
- 
+
     static void normalize(double& _alpha);
     static void normalize1(double& _alpha);
 

@@ -31,12 +31,12 @@
 // forward declarations
 class QDomDocument;
 
-namespace Miro 
+namespace Miro
 {
   // forward declarations
   class ConfigParameters;
 
-  class ConfigDocument 
+  class ConfigDocument
   {
   public:
     typedef std::vector<std::string> StringVector;
@@ -46,17 +46,17 @@ namespace Miro
     //! Initializing constructor.
     ConfigDocument(QDomDocument * _document);
     //! Initializing constructor.
-    ConfigDocument(int& argc, 
-		   char * argv[], 
-		   std::string const& defaultname = std::string(""), 
-		   std::string const& documentname = std::string("MiroConfigDocument"),
-		   StringVector const& userPath = std::vector<std::string>())
-      throw (Exception);
-    ~ConfigDocument();    
+    ConfigDocument(int& argc,
+                   char * argv[],
+                   std::string const& defaultname = std::string(""),
+                   std::string const& documentname = std::string("MiroConfigDocument"),
+                   StringVector const& userPath = std::vector<std::string>())
+    throw(Exception);
+    ~ConfigDocument();
 
-    void init(std::string const& _defaultName = std::string(""), 
-	      StringVector const& _userPath = std::vector<std::string>())
-      throw(Exception);
+    void init(std::string const& _defaultName = std::string(""),
+              StringVector const& _userPath = std::vector<std::string>())
+    throw(Exception);
     void init(QDomDocument * _document) throw(Exception);
 
     void fini();
@@ -65,21 +65,21 @@ namespace Miro
 
     StringVector getInstances(std::string const& _type);
 
-    void getInstance(std::string const& _name, 
-		     ConfigParameters& parameters);
+    void getInstance(std::string const& _name,
+                     ConfigParameters& parameters);
 
     void getType(std::string const& _type,
-		 std::string const& _name, 
-		 ConfigParameters& parameters);
+                 std::string const& _name,
+                 ConfigParameters& parameters);
 
-    void getParameters(std::string const& _name, 
-		       ConfigParameters& parameters);
+    void getParameters(std::string const& _name,
+                       ConfigParameters& parameters);
 
 
     //! Create the fully qualified path from a file name and a set of search paths.
-    static std::string 
-    findFile(std::string const& name, 
-	     std::vector<std::string> const& userPath);
+    static std::string
+    findFile(std::string const& name,
+             std::vector<std::string> const& userPath);
 
 
   protected:
@@ -89,8 +89,9 @@ namespace Miro
   };
 
   inline
-  void 
-  ConfigDocument::setSection(const std::string& _section) {
+  void
+  ConfigDocument::setSection(const std::string& _section)
+  {
     section_ = _section;
   }
 }

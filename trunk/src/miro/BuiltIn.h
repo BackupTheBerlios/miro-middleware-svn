@@ -31,7 +31,7 @@
 #define MIRO_PREFETCH(x, y, z) __builtin_prefetch(x, y, z)
 #define MIRO_LIKELY(c)         __builtin_expect(!!(c),1)
 #define MIRO_UNLIKELY(c)       __builtin_expect(!!(c),0)
-#else 
+#else
 #define MIRO_PREFETCH(x, y, z)
 #define MIRO_LIKELY(c)
 #define MIRO_UNLIKELY(c)

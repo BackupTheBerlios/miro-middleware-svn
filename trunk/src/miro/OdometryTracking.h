@@ -42,16 +42,16 @@ namespace Miro
   {
     //! Super class type.
     typedef StructuredPushConsumer Super;
-    
+
   public:
     //! Initializing constructor.
     OdometryTracking(CosNotifyChannelAdmin::EventChannel_ptr _ec,
-		     const std::string& domainName);
+                     const std::string& domainName);
 
     //! CORBA StructuredPushConsumer interface method implementation.
     virtual void push_structured_event(const CosNotification::StructuredEvent & notification
-				       ACE_ENV_ARG_DECL_WITH_DEFAULTS)
-      throw(CORBA::SystemException, CosEventComm::Disconnected);
+                                       ACE_ENV_ARG_DECL_WITH_DEFAULTS)
+    throw(CORBA::SystemException, CosEventComm::Disconnected);
 
     //! Query position for a discrete time.
     MotionStatusIDL getPosition(const ACE_Time_Value& stamp) const;

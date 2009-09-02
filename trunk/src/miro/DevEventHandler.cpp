@@ -29,19 +29,19 @@
 
 namespace Miro
 {
-  DevEventHandler::DevEventHandler(DevConsumer * _consumer, 
-				   DevMessage * _message) :
-    Super(),
-    handle_(ACE_INVALID_HANDLE),
-    consumer_(_consumer),
-    message_(_message)
+  DevEventHandler::DevEventHandler(DevConsumer * _consumer,
+                                   DevMessage * _message) :
+      Super(),
+      handle_(ACE_INVALID_HANDLE),
+      consumer_(_consumer),
+      message_(_message)
   {
-    MIRO_DBG(MIRO,LL_CTOR_DTOR,"Constructing DevEvent.\n");
+    MIRO_DBG(MIRO, LL_CTOR_DTOR, "Constructing DevEvent.\n");
   }
 
   DevEventHandler::~DevEventHandler()
   {
-    MIRO_DBG(MIRO,LL_CTOR_DTOR,"Destructing DevEvent.\n");
+    MIRO_DBG(MIRO, LL_CTOR_DTOR, "Destructing DevEvent.\n");
 
     delete consumer_;
     // FIXME: this gives a segmentation fault with can
@@ -51,7 +51,7 @@ namespace Miro
   int
   DevEventHandler::handle_close(ACE_HANDLE, ACE_Reactor_Mask)
   {
-    MIRO_DBG(MIRO,LL_NOTICE,"Device handle_close called.\n");
+    MIRO_DBG(MIRO, LL_NOTICE, "Device handle_close called.\n");
 
     // commit suicide
     delete this;
@@ -71,7 +71,7 @@ namespace Miro
   }
 
   void
-  DevEventHandler::dispatchMessage() 
+  DevEventHandler::dispatchMessage()
   {
     consumer_->handleMessage(message_);
   }

@@ -33,11 +33,11 @@
 namespace Miro
 {
   LogTypeRepository::LogTypeRepository(TAO_OutputCDR * _ostr,
-				       size_t _maxLength) throw (CException):
-    ostr_(_ostr),
-    maxLength_(_maxLength),
-    totalLength_(ostr_->total_length()),
-    full_(false)
+                                       size_t _maxLength) throw(CException):
+      ostr_(_ostr),
+      maxLength_(_maxLength),
+      totalLength_(ostr_->total_length()),
+      full_(false)
   {
     types_.reserve(64);
 
@@ -45,11 +45,11 @@ namespace Miro
     ostr_->write_ulong(0x00000000);
   }
 
-  LogTypeRepository::LogTypeRepository(TAO_InputCDR& _istr) throw (Exception) :
-    ostr_(NULL),
-    maxLength_(),
-    totalLength_(),
-    full_(true)
+  LogTypeRepository::LogTypeRepository(TAO_InputCDR& _istr) throw(Exception) :
+      ostr_(NULL),
+      maxLength_(),
+      totalLength_(),
+      full_(true)
   {
     //--------------------------------------------------------------------------
     // parse log repository
@@ -70,11 +70,11 @@ namespace Miro
 
     // read each type from cdr stream
     for (ACE_UINT32 i = 0; i < numTypes; ++i) {
-      
+
       // read type code from the mmapped file
       CORBA::TypeCode_ptr type;
       if (!(_istr >> type))
-	throw Exception("Error reading log type repository. LogFile corrupted.");
+        throw Exception("Error reading log type repository. LogFile corrupted.");
 
       // search for type code. fail, if already known
       MIRO_ASSERT(std::find(types_.begin(), types_.end(), type) == types_.end());
@@ -89,12 +89,12 @@ namespace Miro
     MIRO_DBG_OSTR(MIRO, LL_DEBUG, "LogTypeRepository - total length: " << totalLength_);
   }
 
-  LogTypeRepository::~LogTypeRepository() throw ()
+  LogTypeRepository::~LogTypeRepository() throw()
   {
     // free type codes
     TypeCodeVector::const_iterator first, last = types_.end();
     for (first = types_.begin(); first != last; ++first) {
-      CORBA::release (*first);
+      CORBA::release(*first);
     }
   }
 

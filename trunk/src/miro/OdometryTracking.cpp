@@ -35,15 +35,15 @@ namespace Miro
    * registers its services.
    */
   OdometryTracking::OdometryTracking(CosNotifyChannelAdmin::EventChannel_ptr _ec,
-				     const std::string& _domainName) :
-    Super(_ec),
-    odoTruncate_(false),
-    rawTruncate_(false)
+                                     const std::string& _domainName) :
+      Super(_ec),
+      odoTruncate_(false),
+      rawTruncate_(false)
   {
-    MIRO_DBG(MIRO,LL_CTOR_DTOR, "Constructing OdometryTracking.\n");
-    
+    MIRO_DBG(MIRO, LL_CTOR_DTOR, "Constructing OdometryTracking.\n");
+
     // subscribe for the events we'd like to get
-    MIRO_DBG(MIRO,LL_NOTICE, "subscribe for events\n");
+    MIRO_DBG(MIRO, LL_NOTICE, "subscribe for events\n");
     CosNotification::EventTypeSeq added;
     added.length(2);
 
@@ -53,7 +53,7 @@ namespace Miro
     added[1].type_name   = CORBA::string_dup("RawPosition");
     setSubscriptions(added);
 
-    MIRO_DBG(MIRO,LL_NOTICE, "finished\n");
+    MIRO_DBG(MIRO, LL_NOTICE, "finished\n");
   }
 
   /**
@@ -62,8 +62,8 @@ namespace Miro
    */
   void
   OdometryTracking::push_structured_event(const CosNotification::StructuredEvent & notification
-					  ACE_ENV_ARG_DECL_NOT_USED)
-    throw(CORBA::SystemException, CosEventComm::Disconnected)
+                                          ACE_ENV_ARG_DECL_NOT_USED)
+  throw(CORBA::SystemException, CosEventComm::Disconnected)
   {
     MotionStatusIDL * odometry;
     RawPositionIDL * raw;
@@ -71,21 +71,21 @@ namespace Miro
     if (::operator >>= (notification.remainder_of_body, odometry)) {
       Guard guard(odoMutex);
       if (!odoTruncate_ && odoDeque.size() > maxDequeSize)
-	odoTruncate_ = true;
+        odoTruncate_ = true;
       if (odoTruncate_)
-	odoDeque.pop_back();
+        odoDeque.pop_back();
       odoDeque.push_front(*odometry);
     }
     else if (notification.remainder_of_body >>= raw) {
       Guard guard(rawMutex);
       if (!rawTruncate_ && rawDeque.size() > maxDequeSize)
-	rawTruncate_ = true;
+        rawTruncate_ = true;
       if (rawTruncate_)
-	rawDeque.pop_back();
+        rawDeque.pop_back();
       rawDeque.push_front(*raw);
     }
     else {
-      MIRO_LOG(LL_WARNING,"OdometryTracking: received message I did not subscribe for.\n");
+      MIRO_LOG(LL_WARNING, "OdometryTracking: received message I did not subscribe for.\n");
     }
   }
 
@@ -98,10 +98,10 @@ namespace Miro
     for (first = odoDeque.begin(); first != last; ++first) {
       timeC2A(first->time, t);
       if (t <= stamp)
-	break;
+        break;
     }
 
-    // TODO 
+    // TODO
     // add interpolation to minimize the error on robots
     // with slow odometry updates
 
@@ -110,7 +110,7 @@ namespace Miro
     //    double dxy = (first->velocity.translation / 1000.) * delta.msec();
 
 
-    return (first != last)? *first : MotionStatusIDL();
+    return (first != last) ? *first : MotionStatusIDL();
   }
 
 
@@ -122,13 +122,13 @@ namespace Miro
       ACE_Time_Value t;
       timeC2A(first->time, t);
       if (t <= stamp)
-	break;
+        break;
     }
 
-    // TODO 
+    // TODO
     // add interpolation to minimize the error on robots
     // with slow odometry updates
 
-    return (first != last)? first->position : PositionIDL();
+    return (first != last) ? first->position : PositionIDL();
   }
 };

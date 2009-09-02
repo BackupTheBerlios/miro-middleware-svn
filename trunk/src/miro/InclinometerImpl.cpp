@@ -40,16 +40,16 @@ namespace Miro
   ACE_Time_Value InclinometerDispatcher::maxWait_(0, 100000);
 
   InclinometerDispatcher::InclinometerDispatcher(StructuredPushSupplier * _supplier) :
-    supplier_(_supplier),
-    mutex_(),
-    cond_(mutex_)
+      supplier_(_supplier),
+      mutex_(),
+      cond_(mutex_)
   {
     if (supplier_) {
       // Status Notify Event initialization
-      notifyEvent_.header.fixed_header.event_type.domain_name = 
-	CORBA::string_dup(supplier_->domainName().c_str());
-      notifyEvent_.header.fixed_header.event_type.type_name = 
-	CORBA::string_dup("Inclinometer");
+      notifyEvent_.header.fixed_header.event_type.domain_name =
+        CORBA::string_dup(supplier_->domainName().c_str());
+      notifyEvent_.header.fixed_header.event_type.type_name =
+        CORBA::string_dup("Inclinometer");
       notifyEvent_.header.fixed_header.event_name = CORBA::string_dup("");
       notifyEvent_.header.variable_header.length(0);   // put nothing here
       notifyEvent_.filterable_data.length(0);          // put nothing here
@@ -72,13 +72,13 @@ namespace Miro
   {
     MIRO_LOG(LL_NOTICE, "Asynchronous Inclinometer dispatching");
 
-    while(!canceled()) {
+    while (!canceled()) {
       Guard guard(mutex_);
       ACE_Time_Value timeout(ACE_OS::gettimeofday());
       timeout += maxWait_;
       if (cond_.wait(&timeout) != -1 &&
-	  !canceled()) {
-	dispatch();
+            !canceled()) {
+        dispatch();
       }
     }
 
@@ -119,14 +119,14 @@ namespace Miro
    * a separate thread.
    */
   InclinometerImpl::InclinometerImpl(const InclinometerParameters& _params,
-			     StructuredPushSupplier * _supplier,
-			     bool _asynchDispatching) :
-    params_(_params),
-    supplier_(_supplier),
-    mutex_(),
-    cond_(mutex_),
-    asynchDispatching_(_asynchDispatching),
-    dispatcherThread_(_supplier)
+                                     StructuredPushSupplier * _supplier,
+                                     bool _asynchDispatching) :
+      params_(_params),
+      supplier_(_supplier),
+      mutex_(),
+      cond_(mutex_),
+      asynchDispatching_(_asynchDispatching),
+      dispatcherThread_(_supplier)
   {
     data_.time.sec = 0;
     data_.time.usec = 0;
@@ -150,13 +150,13 @@ namespace Miro
    *
    * @param data The new inclinometer reading
    */
-  void 
+  void
   InclinometerImpl::integrateData(const InclinometerEventIDL& _data)
   {
-    assert(_data.inclination.pitch > (float)-M_PI &&
-	   _data.inclination.pitch <= (float)M_PI);
-    assert(_data.inclination.roll > (float)-M_PI &&
-	   _data.inclination.roll <= (float)M_PI);
+    assert(_data.inclination.pitch > (float) - M_PI &&
+           _data.inclination.pitch <= (float)M_PI);
+    assert(_data.inclination.roll > (float) - M_PI &&
+           _data.inclination.roll <= (float)M_PI);
 
     { // scope for guard
       Guard guard(mutex_);
@@ -170,19 +170,20 @@ namespace Miro
     // send events
     if (supplier_) {
       if (asynchDispatching_) {
-	Guard guard(dispatcherThread_.mutex_);
-	dispatcherThread_.setData(data_);
-	dispatcherThread_.cond_.broadcast();
+        Guard guard(dispatcherThread_.mutex_);
+        dispatcherThread_.setData(data_);
+        dispatcherThread_.cond_.broadcast();
       }
       else {
-	dispatcherThread_.setData(data_);
-	dispatcherThread_.dispatch();
+        dispatcherThread_.setData(data_);
+        dispatcherThread_.dispatch();
       }
     }
   }
 
   void
-  InclinometerImpl::cancel() {
+  InclinometerImpl::cancel()
+  {
     if (asynchDispatching_)
       dispatcherThread_.cancel();
   }
@@ -209,7 +210,7 @@ namespace Miro
 
   void
   InclinometerImpl::getMinMaxPitch(CORBA::Float& minPitch,
-				   CORBA::Float& maxPitch) throw()
+                                   CORBA::Float& maxPitch) throw()
   {
     minPitch = params_.minPitch;
     maxPitch = params_.maxPitch;
@@ -217,7 +218,7 @@ namespace Miro
 
   void
   InclinometerImpl::getMinMaxRoll(CORBA::Float& minRoll,
-				  CORBA::Float& maxRoll) throw()
+                                  CORBA::Float& maxRoll) throw()
   {
     minRoll = params_.minRoll;
     maxRoll = params_.maxRoll;

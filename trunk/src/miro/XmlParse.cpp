@@ -58,13 +58,13 @@ namespace
   {
     QString value("");
 
-    if( !_node.isNull() ) {
+    if (!_node.isNull()) {
       QDomElement e = _node.toElement(); // try to convert the node to an element.
-      if( !e.isNull() ) {            // the node was really an element.
-	QDomAttr attribute = e.attributeNode(_attribute);
-	if (!attribute.isNull()) {
-	  value = attribute.value();
-	}
+      if (!e.isNull()) {             // the node was really an element.
+        QDomAttr attribute = e.attributeNode(_attribute);
+        if (!attribute.isNull()) {
+          value = attribute.value();
+        }
       }
     }
     return value;
@@ -73,7 +73,7 @@ namespace
 
 namespace Miro
 {
-  void operator <<= (bool& lhs, const QDomNode& node) 
+  void operator <<= (bool& lhs, const QDomNode& node)
   {
     QString value = getAttribute(node, QString("value"));
     if (value != "true" && value != "false")
@@ -86,7 +86,7 @@ namespace Miro
   {
     QDomDocument document = _node.ownerDocument();
     QDomElement e = document. createElement("parameter");
-    e.setAttribute("value", QString((lhs)? "true" : "false"));
+    e.setAttribute("value", QString((lhs) ? "true" : "false"));
     _node.appendChild(e);
     return e;
   }
@@ -112,11 +112,11 @@ namespace Miro
 
   void operator <<= (signed char& lhs, const QDomNode& node)
   {
-    bool valid = false; 
+    bool valid = false;
     QString value = getAttribute(node, QString("value"));
     signed short v = value.toUShort(&valid);
-    if (!valid || v < SCHAR_MIN || v > SCHAR_MAX ) 
-       throw Exception("Parse exception (signed char)"); 
+    if (!valid || v < SCHAR_MIN || v > SCHAR_MAX)
+      throw Exception("Parse exception (signed char)");
     lhs = v;
   }
 
@@ -136,8 +136,8 @@ namespace Miro
     bool valid = false;
     QString value = getAttribute(node, QString("value"));
     unsigned short v = value.toUShort(&valid);
-    if (!valid || v > UCHAR_MAX ) 
-       throw Exception("Parse exception (unsigned char)"); 
+    if (!valid || v > UCHAR_MAX)
+      throw Exception("Parse exception (unsigned char)");
     lhs = v;
   }
 
@@ -218,10 +218,10 @@ namespace Miro
   {
     QDomDocument document = _node.ownerDocument();
     QDomElement e = document. createElement("parameter");
-    // reverse tokenizer -- build a space separated string 
+    // reverse tokenizer -- build a space separated string
     std::vector<std::string> tmp1 = lhs.value();
     QString tmp2(tmp1[0].c_str());
-    for (std::vector<std::string>::const_iterator i=tmp1.begin()+1; i!=tmp1.end(); ++i)
+    for (std::vector<std::string>::const_iterator i = tmp1.begin() + 1; i != tmp1.end(); ++i)
       tmp2 += " " + QString(i->c_str());
     e.setAttribute("value", QString(tmp2));
     _node.appendChild(e);
@@ -239,7 +239,7 @@ namespace Miro
     if (dot > 0) {
       sec = value.left(dot);
       if (dot != ((int)value.length()) - 1)
-	usec = value.mid(dot + 1);
+        usec = value.mid(dot + 1);
     }
 
     // bring usec to 6 digits
@@ -275,9 +275,9 @@ namespace Miro
   {
     if (!_node.isNull()) {
       QDomNode n = _node.firstChild();
-      while(!n.isNull() ) {
+      while (!n.isNull()) {
         QDomElement e = n.toElement();
-        if( !e.isNull() ) {
+        if (!e.isNull()) {
           QDomAttr a = e.attributeNode("name");
           if (!a.isNull()) {
             QString i = a.value();
@@ -320,18 +320,18 @@ namespace Miro
             else if (i == "Xoutenb") {
               _lhs.xoutenb <<= n;
             }
-	    /*
-            else if (i == "Paritymode") {
-              _lhs.paritymode <<= n;
-            }
-	    */
+            /*
+                  else if (i == "Paritymode") {
+                    _lhs.paritymode <<= n;
+                  }
+            */
           }
         }
         n = n.nextSibling();
       }
     }
   }
-  QDomElement 
+  QDomElement
   operator>>= (const ACE_TTY_IO::Serial_Params& lhs, QDomNode& _node)
   {
     QDomDocument document = _node.ownerDocument();
@@ -383,25 +383,25 @@ namespace Miro
   {
     if (!_node.isNull()) {
       QDomNode n = _node.firstChild();
-      while(!n.isNull() ) {
+      while (!n.isNull()) {
         QDomElement e = n.toElement();
-        if( !e.isNull() ) {
+        if (!e.isNull()) {
           QDomAttr a = e.attributeNode("name");
           if (!a.isNull()) {
             QString i = a.value();
             if (i == "Policy") {
-	      int p;
-	      p <<= n;
+              int p;
+              p <<= n;
               _lhs.policy(p);
             }
             else if (i == "Priority") {
-	      int p;
-	      p <<= n;
+              int p;
+              p <<= n;
               _lhs.priority(p);
             }
             else if (i == "Quantum") {
-	      ACE_Time_Value t;
-	      t <<= n;
+              ACE_Time_Value t;
+              t <<= n;
               _lhs.quantum(t);
             }
           }
@@ -423,7 +423,7 @@ namespace Miro
     f.setAttribute("name", "Priority");
     f = (lhs.quantum() >>= e);
     f.setAttribute("name", "Quantum");
- 
+
     _node.appendChild(e);
     return e;
   }
@@ -431,63 +431,63 @@ namespace Miro
 
 
 #ifdef ANALYZED_THAT
-  void
-  operator<<= (ACE_TTY_IO::Serial_Params& _lhs, const QDomNode& _node)
-  {
-    if (!_node.isNull()) {
-      QDomNode n = _node.firstChild();
-      while(!n.isNull() ) {
-        QDomElement e = n.toElement();
-        if( !e.isNull() ) {
-          QDomAttr a = e.attributeNode("name");
-          if (!a.isNull()) {
-            QString i = a.value();
-            if (i == "Baudrate") {
-              _lhs.baudrate <<= n;
-            }
-            else if (i == "Ctsenb") {
-              _lhs.ctsenb <<= n;
-            }
-            else if (i == "Databits") {
-              _lhs.databits <<= n;
-            }
-            else if (i == "Modem") {
-              _lhs.modem <<= n;
-            }
-            else if (i == "Parityenb") {
-              _lhs.parityenb <<= n;
-            }
-            else if (i == "Rcvenb") {
-              _lhs.rcvenb <<= n;
-            }
-            else if (i == "Readtimeoutmsec") {
-              _lhs.readtimeoutmsec <<= n;
-            }
-            else if (i == "Rtsenb") {
-              _lhs.rtsenb <<= n;
-            }
-            else if (i == "Stopbits") {
-              _lhs.stopbits <<= n;
-            }
-            else if (i == "Xinenb") {
-              _lhs.xinenb <<= n;
-            }
-            else if (i == "Xofflim") {
-              _lhs.xofflim <<= n;
-            }
-            else if (i == "Xonlim") {
-              _lhs.xonlim <<= n;
-            }
-            else if (i == "Xoutenb") {
-              _lhs.xoutenb <<= n;
-            }
-            else if (i == "Paritymode") {
-              _lhs.paritymode <<= n;
-            }
+void
+operator<<= (ACE_TTY_IO::Serial_Params & _lhs, const QDomNode & _node)
+{
+  if (!_node.isNull()) {
+    QDomNode n = _node.firstChild();
+    while (!n.isNull()) {
+      QDomElement e = n.toElement();
+      if (!e.isNull()) {
+        QDomAttr a = e.attributeNode("name");
+        if (!a.isNull()) {
+          QString i = a.value();
+          if (i == "Baudrate") {
+            _lhs.baudrate <<= n;
+          }
+          else if (i == "Ctsenb") {
+            _lhs.ctsenb <<= n;
+          }
+          else if (i == "Databits") {
+            _lhs.databits <<= n;
+          }
+          else if (i == "Modem") {
+            _lhs.modem <<= n;
+          }
+          else if (i == "Parityenb") {
+            _lhs.parityenb <<= n;
+          }
+          else if (i == "Rcvenb") {
+            _lhs.rcvenb <<= n;
+          }
+          else if (i == "Readtimeoutmsec") {
+            _lhs.readtimeoutmsec <<= n;
+          }
+          else if (i == "Rtsenb") {
+            _lhs.rtsenb <<= n;
+          }
+          else if (i == "Stopbits") {
+            _lhs.stopbits <<= n;
+          }
+          else if (i == "Xinenb") {
+            _lhs.xinenb <<= n;
+          }
+          else if (i == "Xofflim") {
+            _lhs.xofflim <<= n;
+          }
+          else if (i == "Xonlim") {
+            _lhs.xonlim <<= n;
+          }
+          else if (i == "Xoutenb") {
+            _lhs.xoutenb <<= n;
+          }
+          else if (i == "Paritymode") {
+            _lhs.paritymode <<= n;
           }
         }
-        n = n.nextSibling();
       }
+      n = n.nextSibling();
     }
   }
+}
 #endif

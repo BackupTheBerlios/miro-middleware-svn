@@ -34,8 +34,7 @@ class QString;
 
 namespace Miro
 {
-  namespace CFG
-  {
+  namespace CFG {
     // forward declarations
     class Generator;
 
@@ -46,13 +45,13 @@ namespace Miro
       Parser(Generator& _generator);
 
       bool startDocument();
-      bool startElement(QString const&, QString const&, QString const& , 
-			QXmlAttributes const&);
+      bool startElement(QString const&, QString const&, QString const& ,
+                        QXmlAttributes const&);
       bool endElement(QString const&, QString const&, QString const&);
 
       QString errorString();
       bool characters(QString const& ch);
-  
+
     private:
       void reset();
 

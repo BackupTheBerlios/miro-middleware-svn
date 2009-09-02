@@ -33,28 +33,28 @@ namespace Miro
   ACE_Time_Value RangeSensorDispatcher::maxWait_(0, 100000);
 
   RangeSensorDispatcher::RangeSensorDispatcher(const ScanDescriptionIDL& _description,
-					       StructuredPushSupplier * _supplier) :
-    supplier_(_supplier),
-    mutex_(),
-    cond_(mutex_),
-    notifyEvent_(1),
-    eventPending_(1, false)
+      StructuredPushSupplier * _supplier) :
+      supplier_(_supplier),
+      mutex_(),
+      cond_(mutex_),
+      notifyEvent_(1),
+      eventPending_(1, false)
   {
     if (supplier_) {
       if (_description.scanType == RangeSensor::GROUPWISE) {
-	notifyEvent_.resize(_description.group.length());
-	eventPending_.resize(_description.group.length(), false);
+        notifyEvent_.resize(_description.group.length());
+        eventPending_.resize(_description.group.length(), false);
       }
 
       for (unsigned int i = 0; i < notifyEvent_.size(); ++i) {
-	// Notify Event initialization
-	notifyEvent_[i].header.fixed_header.event_type.domain_name =
-	  CORBA::string_dup(supplier_->domainName().c_str());
-	notifyEvent_[i].header.fixed_header.event_type.type_name =
-	  CORBA::string_dup(_description.eventName);
-	notifyEvent_[i].header.fixed_header.event_name = CORBA::string_dup("");
-	notifyEvent_[i].header.variable_header.length(0);   // put nothing here
-	notifyEvent_[i].filterable_data.length(0);          // put nothing here
+        // Notify Event initialization
+        notifyEvent_[i].header.fixed_header.event_type.domain_name =
+          CORBA::string_dup(supplier_->domainName().c_str());
+        notifyEvent_[i].header.fixed_header.event_type.type_name =
+          CORBA::string_dup(_description.eventName);
+        notifyEvent_[i].header.fixed_header.event_name = CORBA::string_dup("");
+        notifyEvent_[i].header.variable_header.length(0);   // put nothing here
+        notifyEvent_[i].filterable_data.length(0);          // put nothing here
       }
 
       // offer declaration
@@ -91,13 +91,13 @@ namespace Miro
   int
   RangeSensorDispatcher::svc()
   {
-    while(!canceled()) {
+    while (!canceled()) {
       Guard guard(mutex_);
       ACE_Time_Value timeout(ACE_OS::gettimeofday());
       timeout += maxWait_;
       if (cond_.wait(&timeout) != -1 &&
-	  !canceled()) {
-	dispatch();
+            !canceled()) {
+        dispatch();
       }
     }
 
@@ -109,8 +109,8 @@ namespace Miro
   {
     for (unsigned int i = 0; i < notifyEvent_.size(); ++i) {
       if (eventPending_[i]) {
-	supplier_->sendEvent(notifyEvent_[i]);
-	eventPending_[i] = false;
+        supplier_->sendEvent(notifyEvent_[i]);
+        eventPending_[i] = false;
       }
     }
   }
@@ -141,18 +141,18 @@ namespace Miro
    * will not any events.
    */
   RangeSensorImpl::RangeSensorImpl(const ScanDescriptionIDL& _description,
-				   StructuredPushSupplier * _supplier,
-				   bool _asynchDispatching) :
-    supplier_(_supplier),
-    description_(_description),
-    masking_(false),
-    mutex_(),
-    condition_(mutex_),
-    scan_(),
-    asynchDispatching_(_asynchDispatching),
-    dispatcherThread_(_description, _supplier)
+                                   StructuredPushSupplier * _supplier,
+                                   bool _asynchDispatching) :
+      supplier_(_supplier),
+      description_(_description),
+      masking_(false),
+      mutex_(),
+      condition_(mutex_),
+      scan_(),
+      asynchDispatching_(_asynchDispatching),
+      dispatcherThread_(_description, _supplier)
   {
-    MIRO_DBG_OSTR(MIRO,LL_CTOR_DTOR,"Constructing Miro::RangeSensorImpl. " << description_.eventName << std::endl);
+    MIRO_DBG_OSTR(MIRO, LL_CTOR_DTOR, "Constructing Miro::RangeSensorImpl. " << description_.eventName << std::endl);
 
     if (_description.group.length() == 0)
       throw Exception("RangeSensorImpl: Empty Scan Description");
@@ -161,10 +161,10 @@ namespace Miro
     for (unsigned int i = 0; i < scan_.range.length(); ++i) {
       scan_.range[i].length(description_.group[i].sensor.length());
       for (unsigned int j = 0; j < scan_.range[i].length(); ++j) {
-	scan_.range[i][j] = Miro::RangeSensor::INVALID_RANGE;
+        scan_.range[i][j] = Miro::RangeSensor::INVALID_RANGE;
 
-	if (description_.group[i].sensor[j].masked)
-	  masking_ = true;
+        if (description_.group[i].sensor[j].masked)
+          masking_ = true;
       }
     }
     if (asynchDispatching_)
@@ -173,7 +173,7 @@ namespace Miro
 
   RangeSensorImpl::~RangeSensorImpl()
   {
-    MIRO_DBG_OSTR(MIRO,LL_CTOR_DTOR,"Destructing Miro::RangeSensorImpl." << std::endl);
+    MIRO_DBG_OSTR(MIRO, LL_CTOR_DTOR, "Destructing Miro::RangeSensorImpl." << std::endl);
 
     if (asynchDispatching_)
       dispatcherThread_.cancel();
@@ -184,9 +184,9 @@ namespace Miro
   {
     if (masking_)
       for (int i = _data->range.length() - 1; i >= 0; --i)
-	for (int j = _data->range[i].length() - 1; j >= 0; --j)
-	  if (description_.group[i].sensor[j].masked)
-	    _data->range[i][j] = Miro::RangeSensor::INVALID_RANGE;
+        for (int j = _data->range[i].length() - 1; j >= 0; --j)
+          if (description_.group[i].sensor[j].masked)
+            _data->range[i][j] = Miro::RangeSensor::INVALID_RANGE;
 
     { // scope for guard
       Guard guard(mutex_);
@@ -196,13 +196,13 @@ namespace Miro
 
     if (supplier_) {
       if (asynchDispatching_) {
-	Guard guard(dispatcherThread_.mutex_);
-	dispatcherThread_.setData(_data);
-	dispatcherThread_.cond_.broadcast();
+        Guard guard(dispatcherThread_.mutex_);
+        dispatcherThread_.setData(_data);
+        dispatcherThread_.cond_.broadcast();
       }
       else {
-	dispatcherThread_.setData(_data);
-	dispatcherThread_.dispatch();
+        dispatcherThread_.setData(_data);
+        dispatcherThread_.dispatch();
       }
     }
     else {
@@ -216,8 +216,8 @@ namespace Miro
   {
     if (masking_)
       for (int j = _data->range.length() - 1; j >= 0; --j)
-	if (description_.group[_data->group].sensor[j].masked)
-	  _data->range[j] = Miro::RangeSensor::INVALID_RANGE;
+        if (description_.group[_data->group].sensor[j].masked)
+          _data->range[j] = Miro::RangeSensor::INVALID_RANGE;
 
     { // scope for guard
       Guard guard(mutex_);
@@ -230,13 +230,13 @@ namespace Miro
 
     if (supplier_) {
       if (asynchDispatching_) {
-	Guard guard(dispatcherThread_.mutex_);
-	dispatcherThread_.setData(_data);
-	dispatcherThread_.cond_.broadcast();
+        Guard guard(dispatcherThread_.mutex_);
+        dispatcherThread_.setData(_data);
+        dispatcherThread_.cond_.broadcast();
       }
       else {
-	dispatcherThread_.setData(_data);
-	dispatcherThread_.dispatch();
+        dispatcherThread_.setData(_data);
+        dispatcherThread_.dispatch();
       }
     }
     else {
@@ -251,29 +251,29 @@ namespace Miro
     { // scope for guard
       Guard guard(mutex_);
       for (int i = _data->sensor.length() - 1; i >= 0; --i) {
-	unsigned int group = _data->sensor[i].group;
-	unsigned int index = _data->sensor[i].index;
-	if (group < scan_.range.length() && index < scan_.range[group].length()) {
-	  if (masking_ && description_.group[group].sensor[index].masked)
-	    _data->sensor[i].range = Miro::RangeSensor::INVALID_RANGE;
-	  scan_.range[group][index] = _data->sensor[i].range;
-	}
-	else
-          MIRO_LOG_OSTR(LL_WARNING,"RangeSensor: integrated data beyond buffer boundaries: " 
-		    << group << " " << index << std::endl);
+        unsigned int group = _data->sensor[i].group;
+        unsigned int index = _data->sensor[i].index;
+        if (group < scan_.range.length() && index < scan_.range[group].length()) {
+          if (masking_ && description_.group[group].sensor[index].masked)
+            _data->sensor[i].range = Miro::RangeSensor::INVALID_RANGE;
+          scan_.range[group][index] = _data->sensor[i].range;
+        }
+        else
+          MIRO_LOG_OSTR(LL_WARNING, "RangeSensor: integrated data beyond buffer boundaries: "
+                        << group << " " << index << std::endl);
       }
       condition_.broadcast();
     }
 
     if (supplier_) {
       if (asynchDispatching_) {
-	Guard guard(dispatcherThread_.mutex_);
-	dispatcherThread_.setData(_data);
-	dispatcherThread_.cond_.broadcast();
+        Guard guard(dispatcherThread_.mutex_);
+        dispatcherThread_.setData(_data);
+        dispatcherThread_.cond_.broadcast();
       }
       else {
-	dispatcherThread_.setData(_data);
-	dispatcherThread_.dispatch();
+        dispatcherThread_.setData(_data);
+        dispatcherThread_.dispatch();
       }
     }
     else {
@@ -283,7 +283,8 @@ namespace Miro
   }
 
   void
-  RangeSensorImpl::cancel() {
+  RangeSensorImpl::cancel()
+  {
     if (asynchDispatching_)
       dispatcherThread_.cancel();
   }

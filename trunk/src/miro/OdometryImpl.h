@@ -32,7 +32,7 @@
 #include <orbsvcs/CosNotifyCommC.h>
 
 
-namespace Miro 
+namespace Miro
 {
   // forward decleration
   class StructuredPushSupplier;
@@ -43,12 +43,12 @@ namespace Miro
     typedef Thread Super;
   public:
     OdometryDispatcher(Miro::StructuredPushSupplier * _supplier,
-		       bool _rawPositionEvents = true);
+                       bool _rawPositionEvents = true);
     int svc();
     void cancel(bool _wait = true);
 
     void setData(const MotionStatusIDL& _status,
-		 const RawPositionIDL& _raw);
+                 const RawPositionIDL& _raw);
     void dispatch();
 
   protected:
@@ -67,7 +67,7 @@ namespace Miro
     CosNotification::StructuredEvent notifyEvent_;
     //! Preinitialized data structure for RawPosition events.
     CosNotification::StructuredEvent notifyRawEvent_;
-    
+
     //! Timeout for dispatching thread condition.
     static ACE_Time_Value maxWait_;
 
@@ -88,40 +88,40 @@ namespace Miro
   public:
     //! Initializing constructor.
     OdometryImpl(Miro::StructuredPushSupplier * _supplier,
-		 bool _rawPositionEvents = true,
-		 bool _asynchDispatching = false);
+                 bool _rawPositionEvents = true,
+                 bool _asynchDispatching = false);
     virtual ~OdometryImpl();
 
     //! Method to pass raw odometry data from the device into the OdometryImpl class.
     void integrateData(const MotionStatusIDL & data);
     void cancel();
-  
+
     //! Odometry interface method implementation.
     virtual void setPosition(const Miro::PositionIDL & pos) throw();
     //! Odometry interface method implementation.
     virtual void updatePosition(const Miro::PositionIDL & dPos) throw();
     //! Odometry interface method implementation.
-    virtual PositionIDL getPosition() throw();  
+    virtual PositionIDL getPosition() throw();
     //! Odometry interface method implementation.
-    virtual PositionIDL getWaitPosition() throw (ETimeOut);
+    virtual PositionIDL getWaitPosition() throw(ETimeOut);
     //! Odometry interface method implementation.
-    virtual PositionIDL getRawPosition() throw();  
+    virtual PositionIDL getRawPosition() throw();
     //! Odometry interface method implementation.
-    virtual PositionIDL getWaitRawPosition() throw (ETimeOut);
+    virtual PositionIDL getWaitRawPosition() throw(ETimeOut);
     //! Odometry interface method implementation.
-    virtual VelocityIDL getVelocity() throw();    
+    virtual VelocityIDL getVelocity() throw();
     //! Odometry interface method implementation.
-    virtual VelocityIDL getWaitVelocity() throw (ETimeOut);
+    virtual VelocityIDL getWaitVelocity() throw(ETimeOut);
     //! Odometry interface method implementation.
-    virtual MotionStatusIDL getStatus() throw();    
+    virtual MotionStatusIDL getStatus() throw();
     //! Odometry interface method implementation.
-    virtual MotionStatusIDL getWaitStatus() throw (ETimeOut);
+    virtual MotionStatusIDL getWaitStatus() throw(ETimeOut);
 
   protected:
     //-------------------------------------------------------------------------
     // protected methods
     //-------------------------------------------------------------------------
-    
+
     //! None-thread safe set postion stuff.
     void protectedSetPosition(const PositionIDL& robot);
     //! Calculate sine and cosine of the origin heading.
@@ -165,7 +165,8 @@ namespace Miro
   //---------------------------------------------------------------------------
   inline
   void
-  OdometryImpl::setTransformation() {
+  OdometryImpl::setTransformation()
+  {
     sinHeading_ = sin(origin_.heading);
     cosHeading_ = cos(origin_.heading);
   }

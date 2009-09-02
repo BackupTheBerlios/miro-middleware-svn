@@ -25,19 +25,18 @@
 
 #include "Log.h"
 
-namespace Miro 
+namespace Miro
 {
-  namespace NMC 
-  {
+  namespace NMC {
     /**
      *   Parameters:
      *     _receiver: Pointer to receiver object
      *     _config:   Pointer to NotifyMulticast configuration
      */
     EventHandler::EventHandler(ACE_HANDLE _handle,
-			       Receiver *_receiver) :
-      handle_(_handle),
-      receiver_(_receiver)
+                               Receiver *_receiver) :
+        handle_(_handle),
+        receiver_(_receiver)
     {
       MIRO_LOG_CTOR("NMC::EventHandler");
     }
@@ -46,7 +45,7 @@ namespace Miro
      *     Is called when input is available
      */
     int
-    EventHandler::handle_input(ACE_HANDLE /*_handle*/) 
+    EventHandler::handle_input(ACE_HANDLE /*_handle*/)
     {
       this->receiver_->handle_input();
       return 0;
@@ -57,7 +56,7 @@ namespace Miro
      *     Returns ACE handle
      */
     ACE_HANDLE
-    EventHandler::get_handle() const 
+    EventHandler::get_handle() const
     {
       return handle_;
     }

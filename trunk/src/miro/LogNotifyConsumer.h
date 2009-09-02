@@ -43,7 +43,7 @@ namespace Miro
     typedef StructuredPushConsumer Super;
 
   public:
-    /** 
+    /**
      *Initialization
      *
      * Connect the Consumer to the EventChannel.
@@ -52,19 +52,19 @@ namespace Miro
      * Registers for the events, that it wants to get pushed.
      */
     LogNotifyConsumer(Server& _server,
-		      CosNotifyChannelAdmin::EventChannel_ptr _ec,
-		      std::string const& _domainName,
-		      std::string const& _fileName = std::string(),
-		      LogNotifyParameters const& _parameters = *LogNotifyParameters::instance(),
-		      bool _keepAlive = true);
+                      CosNotifyChannelAdmin::EventChannel_ptr _ec,
+                      std::string const& _domainName,
+                      std::string const& _fileName = std::string(),
+                      LogNotifyParameters const& _parameters = *LogNotifyParameters::instance(),
+                      bool _keepAlive = true);
 
     //! Disconnect from the supplier.
     virtual ~LogNotifyConsumer();
 
     //! Inherited IDL interface: StructuredPushSupplier method
     virtual void push_structured_event(const CosNotification::StructuredEvent & notification
-				       ACE_ENV_ARG_DECL_WITH_DEFAULTS)
-      throw(CORBA::SystemException, CosEventComm::Disconnected);
+                                       ACE_ENV_ARG_DECL_WITH_DEFAULTS)
+    throw(CORBA::SystemException, CosEventComm::Disconnected);
 
     //! Default method to generate a file name for a log file.
     /**
@@ -82,7 +82,7 @@ namespace Miro
 
   protected:
     //! The default location for log files.
-    /** 
+    /**
      * The default location is defined by the environment variable MIRO_LOG.
      * If this variable is not defined, the current directory is used.
      */

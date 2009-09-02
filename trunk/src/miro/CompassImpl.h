@@ -80,7 +80,7 @@ namespace Miro
   public:
     //! Initializing constructor.
     CompassImpl(StructuredPushSupplier * _supplier,
-		 bool _asynchDispatching = false);
+                bool _asynchDispatching = false);
     virtual ~CompassImpl();
 
     //! Pass a compass reading from the device into CompassImpl.
@@ -90,9 +90,9 @@ namespace Miro
     //! Compass interface method implementation.
     virtual CompassEventIDL getHeading() throw();
     //! Compass interface method implementation.
-    virtual CompassEventIDL getWaitHeading() throw (ETimeOut);
-   //! Compass interface set offset implementation.
-    virtual  void setOffset(CORBA::Double _offset) throw ();
+    virtual CompassEventIDL getWaitHeading() throw(ETimeOut);
+    //! Compass interface set offset implementation.
+    virtual  void setOffset(CORBA::Double _offset) throw();
 
   protected:
     //-------------------------------------------------------------------------

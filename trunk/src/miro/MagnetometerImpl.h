@@ -79,8 +79,8 @@ namespace Miro
   public:
     //! Initializing constructor.
     MagnetometerImpl(const MagnetometerParameters& _params,
-		 StructuredPushSupplier * _supplier,
-		 bool _asynchDispatching = false);
+                     StructuredPushSupplier * _supplier,
+                     bool _asynchDispatching = false);
     virtual ~MagnetometerImpl();
 
     //! Pass a magnetometer reading from the device into MagnetometerImpl.
@@ -90,10 +90,10 @@ namespace Miro
     //! Magnetometer interface method implementation.
     virtual MagnetometerEventIDL getFieldStrength() throw();
     //! Magnetometer interface method implementation.
-    virtual MagnetometerEventIDL getWaitFieldStrength() throw (ETimeOut);
+    virtual MagnetometerEventIDL getWaitFieldStrength() throw(ETimeOut);
     //! Magnetometer interface method implementation.
     virtual void getMinMaxFieldStrength(CORBA::Float& minFieldStrength,
-				CORBA::Float& maxFieldStrength) throw();
+                                        CORBA::Float& maxFieldStrength) throw();
 
   protected:
     //-------------------------------------------------------------------------

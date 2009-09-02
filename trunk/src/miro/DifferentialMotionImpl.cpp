@@ -25,18 +25,18 @@
 namespace Miro
 {
   DifferentialMotionImpl::DifferentialMotionImpl(const DifferentialMotionParameters& _params) :
-    MotionImpl(_params),
-    params_(_params),
-    left_(0),
-    right_(0)
+      MotionImpl(_params),
+      params_(_params),
+      left_(0),
+      right_(0)
   {
   }
 
   void
   DifferentialMotionImpl::getMinMaxLRVelocity(CORBA::Long& minLTranslation,
-					      CORBA::Long& maxLTranslation,
-					      CORBA::Long& minRTranslation,
-					      CORBA::Long& maxRTranslation) throw()
+      CORBA::Long& maxLTranslation,
+      CORBA::Long& minRTranslation,
+      CORBA::Long& maxRTranslation) throw()
   {
     minLTranslation = params_.minLTranslation;
     maxLTranslation = params_.maxLTranslation;
@@ -46,7 +46,7 @@ namespace Miro
 
   void
   DifferentialMotionImpl::getTargetLRVelocity(CORBA::Long& left,
-					      CORBA::Long& right) throw()
+      CORBA::Long& right) throw()
   {
     Guard guard(mutex_);
 
@@ -55,7 +55,7 @@ namespace Miro
   }
 
   void
-  DifferentialMotionImpl::setTargetVelocity(const Miro::VelocityIDL& _velocity) 
+  DifferentialMotionImpl::setTargetVelocity(const Miro::VelocityIDL& _velocity)
   {
     velocity2lr(_velocity, left_, right_);
 
@@ -63,22 +63,22 @@ namespace Miro
 
     if (left_ < params_.minLTranslation) {
       left_ = params_.minLTranslation;
-      right_ = (CORBA::Long) (params_.minLTranslation +
-			      _velocity.rotation * params_.wheelBase);
+      right_ = (CORBA::Long)(params_.minLTranslation +
+                             _velocity.rotation * params_.wheelBase);
     }
     else if (left_ > params_.maxLTranslation) {
       left_ = params_.maxLTranslation;
-      right_ = (CORBA::Long) (params_.maxLTranslation +
-			      _velocity.rotation * params_.wheelBase);
+      right_ = (CORBA::Long)(params_.maxLTranslation +
+                             _velocity.rotation * params_.wheelBase);
     }
     if (right_ < params_.minRTranslation) {
-      left_ = (CORBA::Long) (params_.minRTranslation -
-			     _velocity.rotation * params_.wheelBase);
+      left_ = (CORBA::Long)(params_.minRTranslation -
+                            _velocity.rotation * params_.wheelBase);
       right_ = params_.minRTranslation;
     }
     else if (right_ > params_.maxRTranslation) {
-      left_ = (CORBA::Long) (params_.maxRTranslation -
-			     _velocity.rotation * params_.wheelBase);
+      left_ = (CORBA::Long)(params_.maxRTranslation -
+                            _velocity.rotation * params_.wheelBase);
       right_ = params_.maxRTranslation;
     }
 
@@ -87,7 +87,7 @@ namespace Miro
   }
 
   void
-  DifferentialMotionImpl::setTargetVelocity(CORBA::Long _left, CORBA::Long _right) 
+  DifferentialMotionImpl::setTargetVelocity(CORBA::Long _left, CORBA::Long _right)
   {
     left_ = _left;
     right_ = _right;

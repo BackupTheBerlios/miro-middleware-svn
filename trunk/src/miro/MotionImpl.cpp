@@ -29,7 +29,7 @@ namespace Miro
    * motion device.
    */
   MotionImpl::MotionImpl(const MotionParameters& _params) :
-    params_(_params)
+      params_(_params)
   {
     targetVelocity_.translation = 0;
     targetVelocity_.rotation = 0.;
@@ -37,9 +37,9 @@ namespace Miro
 
   void
   MotionImpl::getMinMaxVelocity(CORBA::Long& minTranslation,
-				CORBA::Long& maxTranslation,
-				double& minRotation,
-				double& maxRotation) throw()
+                                CORBA::Long& maxTranslation,
+                                double& minRotation,
+                                double& maxRotation) throw()
   {
     minTranslation = params_.minTranslation;
     maxTranslation = params_.maxTranslation;
@@ -55,7 +55,7 @@ namespace Miro
   }
 
   void
-  MotionImpl::setTargetVelocity(const VelocityIDL& _velocity) 
+  MotionImpl::setTargetVelocity(const VelocityIDL& _velocity)
   {
     targetVelocity_ = _velocity;
   }

@@ -79,16 +79,16 @@ namespace Miro
   public:
     //! Default constructor .
     BatteryImpl(StructuredPushSupplier * _supplier = 0, bool _asynchDispatching = false);
-  
+
     //! Virtual destructor.
     virtual ~BatteryImpl();
-  
+
     //! Method to pass raw battery data from the device into the BatteryImpl class.
     void integrateData(double _voltage)  ACE_THROW_SPEC(());
 
     //! Battery interface method implementation.
     virtual CORBA::Double getVoltage() ACE_THROW_SPEC(());
-	
+
     void cancel();
 
   protected:

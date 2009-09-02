@@ -55,15 +55,15 @@ namespace Miro
     /**
      * Constructor
      *
-     * @param consumer_ 
-     * A pointer to the consumer who's message queue is to be filled 
+     * @param consumer_
+     * A pointer to the consumer who's message queue is to be filled
      * by the event instance.
      *
      * @param messageSize
      * The size (sizeof()) of the message to be passed. The Event
-     * provides a ACE_Message_Block with messageSize bytes in its 
+     * provides a ACE_Message_Block with messageSize bytes in its
      * message buffer to copy the message into. - Well, not type safe,
-     * but the alternative would have been to templatize 
+     * but the alternative would have been to templatize
      * @ref Connection, @ref Event and @ref DevConsumer.
      */
     DevEventHandler(DevConsumer* _consumer, DevMessage* _message);
@@ -97,7 +97,7 @@ namespace Miro
     /**
      * pointer to the consumer instance
      */
-    DevConsumer* consumer_; 
+    DevConsumer* consumer_;
     DevMessage* message_;
   };
 }

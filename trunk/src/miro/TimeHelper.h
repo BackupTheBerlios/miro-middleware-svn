@@ -21,7 +21,7 @@
 // $Id$
 //
 //
-// Authors: 
+// Authors:
 //   Hans Utz
 //   Stefan Enderle
 //   Stefan Sablatnoeg
@@ -44,12 +44,14 @@ std::istream& operator >> (std::istream& istr, ACE_Time_Value& rhs);
 namespace Miro
 {
   inline
-  void timeC2A(const TimeIDL& in, ACE_Time_Value& out) {
+  void timeC2A(const TimeIDL& in, ACE_Time_Value& out)
+  {
     out.sec(in.sec);
     out.usec(in.usec);
   }
   inline
-  void timeA2C(const ACE_Time_Value& in, TimeIDL& out) {
+  void timeA2C(const ACE_Time_Value& in, TimeIDL& out)
+  {
     out.sec = in.sec();
     out.usec = in.usec();
   }

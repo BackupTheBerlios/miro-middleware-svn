@@ -79,8 +79,8 @@ namespace Miro
   public:
     //! Initializing constructor.
     InclinometerImpl(const InclinometerParameters& _params,
-		 StructuredPushSupplier * _supplier,
-		 bool _asynchDispatching = false);
+                     StructuredPushSupplier * _supplier,
+                     bool _asynchDispatching = false);
     virtual ~InclinometerImpl();
 
     //! Pass a inclinometer reading from the device into InclinometerImpl.
@@ -90,13 +90,13 @@ namespace Miro
     //! Inclinometer interface method implementation.
     virtual InclinometerEventIDL getInclination() throw();
     //! Inclinometer interface method implementation.
-    virtual InclinometerEventIDL getWaitInclination() throw (ETimeOut);
+    virtual InclinometerEventIDL getWaitInclination() throw(ETimeOut);
     //! Inclinometer interface method implementation.
     virtual void getMinMaxPitch(CORBA::Float& minPitch,
-				CORBA::Float& maxPitch) throw();
+                                CORBA::Float& maxPitch) throw();
     //! Inclinometer interface method implementation.
     virtual void getMinMaxRoll(CORBA::Float& minRoll,
-			       CORBA::Float& maxRoll) throw();
+                               CORBA::Float& maxRoll) throw();
 
   protected:
     //-------------------------------------------------------------------------

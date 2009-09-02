@@ -49,7 +49,7 @@ namespace Miro
   class Random
   {
   public:
-   
+
     //! Initialization using current time as random seed.
     /**
      * This adds some more none-determinism to the random number
@@ -63,7 +63,7 @@ namespace Miro
     static void initRandByTime();
 
     //! Default constructor.
-    /** Initializes the random number tables. 
+    /** Initializes the random number tables.
      *
      * The class holds some large arrays of random numbers. So don't
      * allocate it on the stack, but use the heap. Usually you don't
@@ -130,8 +130,9 @@ namespace Miro
   };
 
   inline
-  double const& 
-  Random::gauss01() {
+  double const&
+  Random::gauss01()
+  {
     double const& rc = gauss_[gaussI_];
     ++gaussI_ &= (gaussS_ - 1);
     MIRO_PREFETCH(&gauss_[gaussI_], 0, 0);
@@ -139,15 +140,17 @@ namespace Miro
   }
   inline
   std::complex<double> const&
-  Random::gauss2d01() {
+  Random::gauss2d01()
+  {
     std::complex<double> const& rc = gauss2d_[gauss2dI_];
     ++gauss2dI_ &= (gaussS_ - 1);
     MIRO_PREFETCH(&gauss2d_[gauss2dI_], 0, 0);
     return rc;
   }
   inline
-  double const& 
-  Random::uniform01() {
+  double const&
+  Random::uniform01()
+  {
     double const& rc = uniform01_[uniform01I_];
     ++uniform01I_ &= (uniformS_ - 1);
     MIRO_PREFETCH(&uniform01_[uniform01I_], 0, 0);
@@ -155,7 +158,8 @@ namespace Miro
   }
   inline
   double const&
-  Random::uniform11() {
+  Random::uniform11()
+  {
     double const& rc = uniform11_[uniform11I_];
     ++uniform11I_ &= (uniformS_ - 1);
     MIRO_PREFETCH(&uniform11_[uniform11I_], 0, 0);

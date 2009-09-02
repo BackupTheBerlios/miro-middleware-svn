@@ -37,13 +37,13 @@ namespace Miro
    * @author Guillem Pagès Gassull
    */
   class  PanImpl : public virtual PanTiltBase,
-		   public virtual POA_Miro::Pan
+        public virtual POA_Miro::Pan
   {
   public:
     //! Initializing constructor.
     PanImpl(PanParameters const& _params);
     virtual ~PanImpl();
-   
+
 
     //! Pan interface method implementation.
     virtual CORBA::Float getTargetPan() throw();
@@ -67,17 +67,19 @@ namespace Miro
     double targetPan_;
   };
 
-  inline 
-  bool 
-  PanImpl::testPan(CORBA::Float _angle) const throw() {
+  inline
+  bool
+  PanImpl::testPan(CORBA::Float _angle) const throw()
+  {
     return ((_angle >= float(params_.rangeMin)) &&
-	    (_angle <= float(params_.rangeMax)));
+            (_angle <= float(params_.rangeMax)));
   }
 
-  inline 
-  void 
-  PanImpl::setTargetPan(CORBA::Float _angle) throw() {
-    targetPan_ = _angle; 
+  inline
+  void
+  PanImpl::setTargetPan(CORBA::Float _angle) throw()
+  {
+    targetPan_ = _angle;
   }
 }
 

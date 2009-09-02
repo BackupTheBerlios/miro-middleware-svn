@@ -57,10 +57,10 @@ namespace Miro
 
     //! Initializing constructor.
     StructuredPushSupplier(CosNotifyChannelAdmin::EventChannel_ptr  _ec,
-			   std::string const& _domainName = std::string(),
-			   bool _connect = true,
-			   CosNotification::EventTypeSeq const& _offer = 
-			   CosNotification::EventTypeSeq());
+                           std::string const& _domainName = std::string(),
+                           bool _connect = true,
+                           CosNotification::EventTypeSeq const& _offer =
+                             CosNotification::EventTypeSeq());
 
     //! Destructor
     virtual ~StructuredPushSupplier();
@@ -84,7 +84,7 @@ namespace Miro
 
     //! Send one event.
     void sendEvent(const CosNotification::StructuredEvent& event);
-    
+
     //! Accessor method for the domain name.
     std::string const& domainName() const;
 
@@ -92,8 +92,8 @@ namespace Miro
     // public static methods
     //--------------------------------------------------------------------------
     static void initStructuredEvent(CosNotification::StructuredEvent& _event,
-				    std::string const& _domainName,
-				    std::string const& _typeName);
+                                    std::string const& _domainName,
+                                    std::string const& _typeName);
   protected:
     //--------------------------------------------------------------------------
     // protected types
@@ -108,18 +108,18 @@ namespace Miro
     // inherited IDL interfae
 
     //! CosNotifyComm::StructuredPushSupplier interface method implementation.
-    virtual void subscription_change (const CosNotification::EventTypeSeq & added,
-				      const CosNotification::EventTypeSeq & removed
-				      ACE_ENV_ARG_DECL_WITH_DEFAULTS)
-      throw(CORBA::SystemException, CosNotifyComm::InvalidEventType);
+    virtual void subscription_change(const CosNotification::EventTypeSeq & added,
+                                     const CosNotification::EventTypeSeq & removed
+                                     ACE_ENV_ARG_DECL_WITH_DEFAULTS)
+    throw(CORBA::SystemException, CosNotifyComm::InvalidEventType);
 
     //! CosNotifyComm::StructuredPushSupplier interface method implementation.
     virtual void disconnect_structured_push_supplier(ACE_ENV_SINGLE_ARG_DECL_WITH_DEFAULTS)
-      throw(CORBA::SystemException);
+    throw(CORBA::SystemException);
 
     //! Tell the admin about an offer change and update the subscription vector.
     void initiateOfferChange(CosNotification::EventTypeSeq const& _added,
-			     CosNotification::EventTypeSeq const& _removed);
+                             CosNotification::EventTypeSeq const& _removed);
 
     //--------------------------------------------------------------------------
     // protected static methods
@@ -132,18 +132,18 @@ namespace Miro
     // protected data
     //--------------------------------------------------------------------------
 
-   //! The channel we connect to. 
+    //! The channel we connect to.
     CosNotifyChannelAdmin::EventChannel_var ec_;
-    //! The group operator between admin-proxy's. 
+    //! The group operator between admin-proxy's.
     CosNotifyChannelAdmin::InterFilterGroupOperator ifgop_;
-    //! The suppllier admin id returned on supplier creation. 
+    //! The suppllier admin id returned on supplier creation.
     CosNotifyChannelAdmin::AdminID supplierAdminId_;
-    //! The supplier admin used. 
+    //! The supplier admin used.
     CosNotifyChannelAdmin::SupplierAdmin_var supplierAdmin_;
 
-    //! The proxy that we are connected to. 
+    //! The proxy that we are connected to.
     CosNotifyChannelAdmin::StructuredProxyPushConsumer_var proxyConsumer_;
-    //! This supplier's id. 
+    //! This supplier's id.
     CosNotifyChannelAdmin::ProxyID proxyConsumerId_;
     //! Our own object id.
     CosNotifyComm::StructuredPushSupplier_ptr objref_;
@@ -180,14 +180,16 @@ namespace Miro
    */
   inline
   bool
-  StructuredPushSupplier::subscribed(unsigned long _index) const {
+  StructuredPushSupplier::subscribed(unsigned long _index) const
+  {
     MIRO_ASSERT(_index < subscription_.size());
     return subscription_[_index];
   }
 
   inline
-  std::string const& 
-  StructuredPushSupplier::domainName() const {
+  std::string const&
+  StructuredPushSupplier::domainName() const
+  {
     return domainName_;
   }
 }

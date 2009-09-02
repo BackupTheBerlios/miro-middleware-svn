@@ -21,7 +21,7 @@
 // $Id$
 //
 //
-// Authors: 
+// Authors:
 //   Hans Utz
 //   Stefan Enderle
 //   Stefan Sablatnoeg
@@ -43,11 +43,11 @@ using std::cout;
 
 namespace Miro
 {
-  Thread::Thread(long _flags, long _priority) :  
-    Super(),
-    flags_(_flags),
-    priority_(_priority),
-    canceled_(true)
+  Thread::Thread(long _flags, long _priority) :
+      Super(),
+      flags_(_flags),
+      priority_(_priority),
+      canceled_(true)
   {
     DBG(cout << "Constructing [Miro::Thread]." << std::endl);
   }
@@ -78,18 +78,18 @@ namespace Miro
   }
 
   void
-  Thread::cancel(bool _wait) 
+  Thread::cancel(bool _wait)
   {
     DBG(cout << "[Miro::Thread] shutdown." << std::endl);
     if (!canceled_) {
       canceled_ = true;
       if (_wait)
-	wait();
+        wait();
     }
   }
 
   int
-  Thread::close(u_long /* flags */ )
+  Thread::close(u_long /* flags */)
   {
     DBG(cout << "[Miro::Thread] ended." << std::endl);
     return 0;

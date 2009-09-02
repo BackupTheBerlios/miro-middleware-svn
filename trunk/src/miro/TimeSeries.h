@@ -44,7 +44,7 @@
 #else //!MIRO_NO_PERFORMANCE_LOGGING
 
 #define MIRO_TIME_SERIES(x, y)
-#define MIRO_TIME_SERIES_N(x, y, n) 
+#define MIRO_TIME_SERIES_N(x, y, n)
 #define  MIRO_TIME_PROBE_START(x)
 #define MIRO_TIME_PROBE_DONE(x)
 
@@ -53,8 +53,7 @@
 namespace Miro
 {
   //! Struct holding timing statistics.
-  struct TimeStats
-  {
+  struct TimeStats {
     ACE_Time_Value min;
     ACE_Time_Value max;
     ACE_Time_Value mean;
@@ -71,7 +70,7 @@ namespace Miro
    * statistical evaluation for a scientific paper. But they provide
    * enough precision for generic timing evaluation.
    */
-  template<unsigned int N = 100UL>
+  template < unsigned int N = 100UL >
   class TimeSeries
   {
   public:
@@ -84,7 +83,7 @@ namespace Miro
     void start(ACE_Time_Value const& _stamp = ACE_OS::gettimeofday()) throw();
     //! Stop the time proble.
     void done(ACE_Time_Value const& _stamp = ACE_OS::gettimeofday()) throw();
-    
+
     //! Query last value.
     ACE_Time_Value const& last() const throw();
     //! Evaluate statistics.
@@ -123,12 +122,12 @@ namespace Miro
   template<unsigned int N>
   inline
   TimeSeries<N>::TimeSeries(std::string const& _name) throw() :
-    name_(_name),
-    begin_(stamp_),
-    end_(stamp_ + SIZE),
-    next_(stamp_),
-    full_(false),
-    started_(false)
+      name_(_name),
+      begin_(stamp_),
+      end_(stamp_ + SIZE),
+      next_(stamp_),
+      full_(false),
+      started_(false)
   {
   }
 
@@ -145,7 +144,7 @@ namespace Miro
   unsigned int
   TimeSeries<N>::size() const  throw()
   {
-    return (full_)? SIZE : next_ - begin_;
+    return (full_) ? SIZE : next_ - begin_;
   }
 
   template<unsigned int N>
@@ -176,7 +175,8 @@ namespace Miro
 
   template<unsigned int N>
   ACE_Time_Value const&
-  TimeSeries<N>::last() const throw() {
+  TimeSeries<N>::last() const throw()
+  {
     ACE_Time_Value * l = next_;
     if (l == begin_)
       l = end_;
@@ -189,23 +189,23 @@ namespace Miro
   TimeSeries<N>::eval(TimeStats& _stats) const throw()
   {
     ACE_Time_Value * first = begin_;
-    ACE_Time_Value * last = (full_)? end_ : next_;
+    ACE_Time_Value * last = (full_) ? end_ : next_;
 
     if (last - first > 2) {
       ACE_Time_Value * pMin = begin_;
       ACE_Time_Value * pMax = begin_;
-      
+
       _stats.mean = *begin_;
       _stats.var = tSquare(*begin_);
       for (++first; first != last; ++first) {
-	_stats.mean += *first;
-	_stats.var += tSquare(*first);
-	if (*first > *pMax) {
-	  pMax = first;
-	}
-	else if (*first < *pMin) {
-	  pMin = first;
-	}
+        _stats.mean += *first;
+        _stats.var += tSquare(*first);
+        if (*first > *pMax) {
+          pMax = first;
+        }
+        else if (*first < *pMin) {
+          pMin = first;
+        }
       }
       _stats.min = *pMin;
       _stats.max = *pMax;
@@ -224,7 +224,8 @@ namespace Miro
   template<unsigned int N>
   inline
   ACE_Time_Value
-  TimeSeries<N>::tSquare(ACE_Time_Value const& _t)  throw() {
+  TimeSeries<N>::tSquare(ACE_Time_Value const& _t)  throw()
+  {
     ACE_Time_Value v;
     double t = (double)_t.sec() + (double)_t.usec() / 1000000.;
     t *= t;

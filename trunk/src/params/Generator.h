@@ -31,8 +31,7 @@
 
 namespace Miro
 {
-  namespace CFG
-  {
+  namespace CFG {
     typedef std::multimap<QString, Type> GroupMap;
     typedef std::vector<QString> QStringVector;
 
@@ -63,9 +62,9 @@ namespace Miro
       void generateSource(std::ostream& ostr) const;
 
       QStringVector groups() const;
-      void getGroupedTypes(const QString& _group, 
-			   GroupMap::const_iterator& _first, 
-			   GroupMap::const_iterator& _last) const;
+      void getGroupedTypes(const QString& _group,
+                           GroupMap::const_iterator& _first,
+                           GroupMap::const_iterator& _last) const;
       const Type * getType(const QString& _name) const;
 
 

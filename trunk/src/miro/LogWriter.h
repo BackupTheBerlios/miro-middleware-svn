@@ -45,13 +45,13 @@ namespace Miro
 
     //! Initializating constructor.
     LogWriter(std::string const& _fileName,
-	      LogNotifyParameters const& _parameters = *LogNotifyParameters::instance());
+              LogNotifyParameters const& _parameters = *LogNotifyParameters::instance());
     //! Disconnect from the supplier.
     ~LogWriter();
 
     //! Inherited IDL interface: StructuredPushSupplier method
     bool logEvent(ACE_Time_Value const& _stamp,
-		  CosNotification::StructuredEvent const& _event);
+                  CosNotification::StructuredEvent const& _event);
     //! Report the protocol version.
     ACE_UINT16 version() const;
 
@@ -60,7 +60,7 @@ namespace Miro
     // protected methods
     //--------------------------------------------------------------------------
 
-    void packTCR() throw (CException);
+    void packTCR() throw(CException);
 
     //--------------------------------------------------------------------------
     // protected data
@@ -97,7 +97,8 @@ namespace Miro
 
   inline
   ACE_UINT16
-  LogWriter::version() const {
+  LogWriter::version() const
+  {
     return LogHeader::PROTOCOL_VERSION;
   }
 }

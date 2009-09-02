@@ -21,7 +21,7 @@
 // $Id$
 //
 //
-// Authors: 
+// Authors:
 //   Philipp Baer
 //
 #ifndef NotifyMulticastRequestEntry_h
@@ -38,31 +38,30 @@
 #include <orbsvcs/CosNotifyChannelAdminS.h>
 #include <orbsvcs/CosNotifyCommC.h>
 
-namespace Miro 
+namespace Miro
 {
-  namespace NMC 
-  {
-    class RequestEntry 
+  namespace NMC {
+    class RequestEntry
     {
     public:
       enum {
-	DEFAULT_FRAGMENT_BUFSIZ = 8
+        DEFAULT_FRAGMENT_BUFSIZ = 8
       };
 
       /** Initialize the fragment, allocating memory, etc. */
       RequestEntry(CORBA::Boolean byteOrder,
-		   CORBA::ULong   requestId,
-		   CORBA::ULong   requestSize,
-		   CORBA::ULong   fragmentCount);
-      ~RequestEntry (void);
+                   CORBA::ULong   requestId,
+                   CORBA::ULong   requestSize,
+                   CORBA::ULong   fragmentCount);
+      ~RequestEntry(void);
 
       /** Validate a fragment, it should be rejected if it is invalid.. */
       int validateFragment(CORBA::Boolean byteOrder,
-			   CORBA::ULong   requestSize,
-			   CORBA::ULong   fragmentSize,
-			   CORBA::ULong   fragmentOffset,
-			   CORBA::ULong   fragmentId,
-			   CORBA::ULong   fragmentCount) const;
+                           CORBA::ULong   requestSize,
+                           CORBA::ULong   fragmentSize,
+                           CORBA::ULong   fragmentOffset,
+                           CORBA::ULong   fragmentId,
+                           CORBA::ULong   fragmentCount) const;
 
       /* Has <fragment_id> been received? */
       int testReceived(CORBA::ULong fragmentId) const;
@@ -77,7 +76,7 @@ namespace Miro
       char* fragmentBuffer(CORBA::ULong fragmentOffset);
 
       /* Decode the events, the message must be complete. */
-      void decode(CosNotification::StructuredEvent &event) throw (CORBA::MARSHAL);
+      void decode(CosNotification::StructuredEvent &event) throw(CORBA::MARSHAL);
 
       /* Increment the timeout counter... */
       void incTimeout(void);

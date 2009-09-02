@@ -21,7 +21,7 @@
 // $Id$
 //
 //
-// Authors: 
+// Authors:
 //   Hans Utz
 //   Stefan Enderle
 //   Stefan Sablatnoeg
@@ -33,18 +33,18 @@
 namespace Miro
 {
   // IO friend functions
-  std::ostream& 
+  std::ostream&
   operator<<(std::ostream& ostr, Angle alpha)
   {
     return ostr << alpha.angle_;
   }
 
-  std::istream& 
+  std::istream&
   operator>>(std::istream& istr, Angle& alpha)
   {
     double a;
-    
-    if (istr >> a) 
+
+    if (istr >> a)
       alpha.setRad(a);
     return istr;
   }

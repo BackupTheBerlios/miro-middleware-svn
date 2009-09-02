@@ -36,15 +36,15 @@ namespace Miro
   //! Implementation of a dummy CameraControl interface.
   /**
    * This class offers a generic implementation for the CameraControl
-   * 
-   * It provides default implementations for the IDL methods as well as 
+   *
+   * It provides default implementations for the IDL methods as well as
    *  some helper methods.
-   * 
+   *
    * The corresponding methods should be overridden to achieve the desired
    *  functionality.
-   * Do not forget to set the target on the overriden method! 
+   * Do not forget to set the target on the overriden method!
    *  (setXXXTarget(value))
-   * 
+   *
    * In case a camera does not provide a specific function (e.g. focus),
    *  the function need not be overriden; by default the get/set methods
    *  test against the limits provided in the configuration XML file and
@@ -61,7 +61,7 @@ namespace Miro
 
 
     //! CameraControl interface method implementation.
-    virtual void setZoom(float value) throw(Miro::EDevIO, Miro::EOutOfBounds,Miro::ETimeOut);
+    virtual void setZoom(float value) throw(Miro::EDevIO, Miro::EOutOfBounds, Miro::ETimeOut);
     //! CameraControl interface method implementation.
     virtual float getZoom() throw(Miro::EDevIO, Miro::ETimeOut);
     //! CameraControl interface method implementation.
@@ -81,7 +81,7 @@ namespace Miro
     bool testZoom(float value);
 
     //! CameraControl interface method implementation.
-    virtual void setFocus(float value) throw(Miro::EDevIO, Miro::EOutOfBounds,Miro::ETimeOut);
+    virtual void setFocus(float value) throw(Miro::EDevIO, Miro::EOutOfBounds, Miro::ETimeOut);
     //! CameraControl interface method implementation.
     virtual float getFocus() throw(Miro::EDevIO, Miro::ETimeOut);
     //! CameraControl interface method implementation.
@@ -108,7 +108,7 @@ namespace Miro
     bool testFocus(float value);
 
     //! CameraControl interface method implementation.
-    virtual void setShutter(TimeIDL & value) throw(Miro::EDevIO, Miro::EOutOfBounds,Miro::ETimeOut);
+    virtual void setShutter(TimeIDL & value) throw(Miro::EDevIO, Miro::EOutOfBounds, Miro::ETimeOut);
     //! CameraControl interface method implementation.
     virtual TimeIDL getShutter() throw(Miro::EDevIO, Miro::ETimeOut);
     //! CameraControl interface method implementation.
@@ -143,47 +143,53 @@ namespace Miro
   };
 
   inline
-  bool CameraControlImpl::testZoom(float value) 
+  bool CameraControlImpl::testZoom(float value)
   {
-    if ((value>float(zoomParameters_.rangeMax)) || (value<float(zoomParameters_.rangeMin))) {
+    if ((value > float(zoomParameters_.rangeMax)) || (value < float(zoomParameters_.rangeMin))) {
       return false;
-    } else {
+    }
+    else {
       return true;
     }
   }
-  
+
   inline
-  bool CameraControlImpl::testFocus(float value) 
+  bool CameraControlImpl::testFocus(float value)
   {
-    if ((value>float(focusParameters_.rangeMax)) || (value<float(focusParameters_.rangeMin))) {
+    if ((value > float(focusParameters_.rangeMax)) || (value < float(focusParameters_.rangeMin))) {
       return false;
-    } else {
+    }
+    else {
       return true;
     }
   }
-  
+
   inline
-  bool CameraControlImpl::testShutter(const TimeIDL& value) 
+  bool CameraControlImpl::testShutter(const TimeIDL& value)
   {
     ACE_Time_Value aceValue;
-    Miro::timeC2A(value,aceValue);
-    if ((aceValue>shutterParameters_.rangeMax) || 
-	(aceValue<shutterParameters_.rangeMin)) {
+    Miro::timeC2A(value, aceValue);
+    if ((aceValue > shutterParameters_.rangeMax) ||
+          (aceValue < shutterParameters_.rangeMin)) {
       return false;
-    } else {
+    }
+    else {
       return true;
     }
   }
-  inline void CameraControlImpl::setTargetZoom(float value) {
-    currentZoom_=value;
+  inline void CameraControlImpl::setTargetZoom(float value)
+  {
+    currentZoom_ = value;
   }
-  inline void CameraControlImpl::setTargetFocus(float value) {
-    currentFocus_=value;
+  inline void CameraControlImpl::setTargetFocus(float value)
+  {
+    currentFocus_ = value;
   }
-  inline void CameraControlImpl::setTargetShutter(const TimeIDL& value) {
-    currentShutter_=value;
+  inline void CameraControlImpl::setTargetShutter(const TimeIDL& value)
+  {
+    currentShutter_ = value;
   }
-  
+
 }
 
 #endif // CameraControlImpl_h

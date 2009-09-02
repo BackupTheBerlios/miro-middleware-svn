@@ -27,12 +27,12 @@ namespace Miro
 {
   // Implementation skeleton constructor
   ObjectVectorImpl::ObjectVectorImpl() :
-    voltage_(-1) // uninicialized value
+      voltage_(-1) // uninicialized value
   {
-    for (int i=0; i<objectNumber; ++i) {
+    for (int i = 0; i < objectNumber; ++i) {
       mObj_[i] = new mirrorObject();
       mObj_[i]->data.length(10);
-      mObj_[i]->data[0]=421;
+      mObj_[i]->data[0] = 421;
     }
   }
 
@@ -52,9 +52,9 @@ namespace Miro
   mirrorObject *
   ObjectVectorImpl::getObjectVector(ObjectType _objectType) throw()
   {
-    int num; 
+    int num;
 
-    if (_objectType == FIRST) 
+    if (_objectType == FIRST)
       num = 0;
     else
       num = 1;
@@ -84,10 +84,10 @@ namespace Miro
       num = 0;
     else
       num = 1;
-	 
-     ACE_Time_Value objTime(ACE_OS::gettimeofday());
-     timeA2C(objTime,mObj_[num]->time);
-     mObj_[num]->data = _art.data;
+
+    ACE_Time_Value objTime(ACE_OS::gettimeofday());
+    timeA2C(objTime, mObj_[num]->time);
+    mObj_[num]->data = _art.data;
 
   }
   //ObstImpl::setObst(mirrorObject const& _art) ACE_THROW_SPEC(())

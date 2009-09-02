@@ -47,28 +47,30 @@ namespace Miro
     //--------------------------------------------------------------------------
 
     //! Initializating constructor.
-    LogReader(std::string const& _fileName, int mode = READER) throw (Miro::Exception);
+    LogReader(std::string const& _fileName, int mode = READER) throw(Miro::Exception);
     ~LogReader();
 
-    TAO_InputCDR * istr() { return istr_; }
-    char const * rdPtr() const throw ();
-    void rdPtr(char const * _rdPtr) throw ();
-    bool parseTimeStamp(ACE_Time_Value& _stamp) throw ();
-    bool parseEventHeader(CosNotification::FixedEventHeader& _header) throw ();
-    bool parseEventBody(CosNotification::StructuredEvent& _event) throw ();
-    bool skipEvent() throw ();
-    bool skipEventBody() throw ();
+    TAO_InputCDR * istr() {
+      return istr_;
+    }
+    char const * rdPtr() const throw();
+    void rdPtr(char const * _rdPtr) throw();
+    bool parseTimeStamp(ACE_Time_Value& _stamp) throw();
+    bool parseEventHeader(CosNotification::FixedEventHeader& _header) throw();
+    bool parseEventBody(CosNotification::StructuredEvent& _event) throw();
+    bool skipEvent() throw();
+    bool skipEventBody() throw();
 
     //! Report the protocol version.
-    unsigned short version() const throw ();
+    unsigned short version() const throw();
     //! Report the number of events in the log file.
-    unsigned long events() const throw ();
+    unsigned long events() const throw();
     //! Report the number of events in the log file.
-    void events(unsigned long count) throw (Miro::Exception);
+    void events(unsigned long count) throw(Miro::Exception);
     //! Flag indicating end of file.
-    bool eof() const throw ();
+    bool eof() const throw();
 
-    unsigned int progress() const throw ();
+    unsigned int progress() const throw();
 
   protected:
     void packTCR(char * dest) throw();
@@ -106,13 +108,15 @@ namespace Miro
   };
 
   inline
-  char const * 
-  LogReader::rdPtr() const throw () {
+  char const *
+  LogReader::rdPtr() const throw()
+  {
     return istr_->rd_ptr();
   }
   inline
   void
-  LogReader::rdPtr(char const * _rdPtr) throw () {
+  LogReader::rdPtr(char const * _rdPtr) throw()
+  {
     eof_ = false;
 
     if (_rdPtr == NULL) {
@@ -123,8 +127,8 @@ namespace Miro
     if (version() == 2) {
       // TODO: solve this without operator new
       istr_ = new TAO_InputCDR(_rdPtr,
-			       ((char *)memMap_.addr() + memMap_.size()) - _rdPtr,
-			       (int)header_->byteOrder);
+                               ((char *)memMap_.addr() + memMap_.size()) - _rdPtr,
+                               (int)header_->byteOrder);
     }
     else {
       ACE_Message_Block const * mblock = istr_->start();
@@ -133,22 +137,25 @@ namespace Miro
   }
   inline
   bool
-  LogReader::eof() const throw () {
+  LogReader::eof() const throw()
+  {
     return eof_;
   }
   inline
   unsigned short
-  LogReader::version() const throw () {
+  LogReader::version() const throw()
+  {
     return version_;
   }
   inline
   unsigned long
-  LogReader::events() const throw () {
+  LogReader::events() const throw()
+  {
     return events_;
   }
   inline
   bool
-  LogReader::skipEventBody() throw ()
+  LogReader::skipEventBody() throw()
   {
     //    CosNotification::StructuredEvent event;
     //    return parseEventBody(event);
@@ -164,10 +171,10 @@ namespace Miro
       CosNotification::FilterableEventBody filterable_data;
       CORBA::Any remainder_of_body;
       if (!((*istr_) >> variable_header) ||
-	  !((*istr_) >> filterable_data) ||
-	  !((*istr_) >> remainder_of_body)) {
-	eof_ = true;
-	return false;
+            !((*istr_) >> filterable_data) ||
+            !((*istr_) >> remainder_of_body)) {
+        eof_ = true;
+        return false;
       }
     }
 
@@ -175,10 +182,11 @@ namespace Miro
   }
   inline
   unsigned int
-  LogReader::progress() const throw () {
-    return (unsigned int)((double) ((char *) istr_->rd_ptr() - 
-				    (char *) memMap_.addr()) * 100. / 
-			  (double) memMap_.size());
+  LogReader::progress() const throw()
+  {
+    return (unsigned int)((double)((char *) istr_->rd_ptr() -
+                                   (char *) memMap_.addr()) * 100. /
+                          (double) memMap_.size());
   }
 }
 #endif

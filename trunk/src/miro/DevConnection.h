@@ -28,7 +28,7 @@
 // forward declarations
 class ACE_Reactor;
 
-namespace Miro 
+namespace Miro
 {
   // forward declarations
   class DevEventHandler;
@@ -60,9 +60,9 @@ namespace Miro
      * @param deviceName
      *        Name of the device to open.
      */
-    DevConnection(ACE_Reactor * _reactor, 
-		  DevEventHandler * _event,
-		  const DevParameters&  _parameters);
+    DevConnection(ACE_Reactor * _reactor,
+                  DevEventHandler * _event,
+                  const DevParameters&  _parameters);
     /**
      * Destructor.
      *
@@ -70,7 +70,7 @@ namespace Miro
      * stops the consumer task and closes the file descriptor.
      */
     virtual ~DevConnection();
-  
+
   protected:
     /** Pointer to the ACE_Reactor the @ref Event is registered to. */
     ACE_Reactor* reactor_;   // for event handling (file descriptors)

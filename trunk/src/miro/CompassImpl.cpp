@@ -41,16 +41,16 @@ namespace Miro
   ACE_Time_Value CompassDispatcher::maxWait_(0, 100000);
 
   CompassDispatcher::CompassDispatcher(StructuredPushSupplier * _supplier) :
-    supplier_(_supplier),
-    mutex_(),
-    cond_(mutex_)
+      supplier_(_supplier),
+      mutex_(),
+      cond_(mutex_)
   {
     if (supplier_) {
       // Status Notify Event initialization
-      notifyEvent_.header.fixed_header.event_type.domain_name = 
-	CORBA::string_dup(supplier_->domainName().c_str());
-      notifyEvent_.header.fixed_header.event_type.type_name = 
-	CORBA::string_dup("Compass");
+      notifyEvent_.header.fixed_header.event_type.domain_name =
+        CORBA::string_dup(supplier_->domainName().c_str());
+      notifyEvent_.header.fixed_header.event_type.type_name =
+        CORBA::string_dup("Compass");
       notifyEvent_.header.fixed_header.event_name = CORBA::string_dup("");
       notifyEvent_.header.variable_header.length(0);   // put nothing here
       notifyEvent_.filterable_data.length(0);          // put nothing here
@@ -73,13 +73,13 @@ namespace Miro
   {
     MIRO_LOG(LL_NOTICE, "Asynchronous Compass dispatching");
 
-    while(!canceled()) {
+    while (!canceled()) {
       Guard guard(mutex_);
       ACE_Time_Value timeout(ACE_OS::gettimeofday());
       timeout += maxWait_;
       if (cond_.wait(&timeout) != -1 &&
-	  !canceled()) {
-	dispatch();
+            !canceled()) {
+        dispatch();
       }
     }
 
@@ -118,13 +118,13 @@ namespace Miro
    * a separate thread.
    */
   CompassImpl::CompassImpl(StructuredPushSupplier * _supplier,
-			     bool _asynchDispatching) :
-    supplier_(_supplier),
-    mutex_(),
-    cond_(mutex_),
-    asynchDispatching_(_asynchDispatching),
-    dispatcherThread_(_supplier),
-    compassOffset_(0.)
+                           bool _asynchDispatching) :
+      supplier_(_supplier),
+      mutex_(),
+      cond_(mutex_),
+      asynchDispatching_(_asynchDispatching),
+      dispatcherThread_(_supplier),
+      compassOffset_(0.)
   {
     data_.time.sec = 0;
     data_.time.usec = 0;
@@ -147,11 +147,11 @@ namespace Miro
    *
    * @param data The new compass reading
    */
-  void 
+  void
   CompassImpl::integrateData(const CompassEventIDL& _data)
   {
-    assert(_data.heading > (float)-M_PI &&
-	   _data.heading <= (float)M_PI);
+    assert(_data.heading > (float) - M_PI &&
+           _data.heading <= (float)M_PI);
 
     { // scope for guard
       Guard guard(mutex_);
@@ -166,19 +166,20 @@ namespace Miro
     // send events
     if (supplier_) {
       if (asynchDispatching_) {
-	Guard guard(dispatcherThread_.mutex_);
-	dispatcherThread_.setData(data_);
-	dispatcherThread_.cond_.broadcast();
+        Guard guard(dispatcherThread_.mutex_);
+        dispatcherThread_.setData(data_);
+        dispatcherThread_.cond_.broadcast();
       }
       else {
-	dispatcherThread_.setData(data_);
-	dispatcherThread_.dispatch();
+        dispatcherThread_.setData(data_);
+        dispatcherThread_.dispatch();
       }
     }
   }
 
   void
-  CompassImpl::cancel() {
+  CompassImpl::cancel()
+  {
     if (asynchDispatching_)
       dispatcherThread_.cancel();
   }
@@ -202,9 +203,9 @@ namespace Miro
 
     return data_;
   }
- void
- CompassImpl::setOffset(CORBA::Double _offset) throw()
+  void
+  CompassImpl::setOffset(CORBA::Double _offset) throw()
   {
-      compassOffset_ = _offset;
+    compassOffset_ = _offset;
   }
 }

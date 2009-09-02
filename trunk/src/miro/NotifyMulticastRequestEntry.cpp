@@ -21,7 +21,7 @@
 // $Id$
 //
 //
-// Authors: 
+// Authors:
 //   Philipp Baer
 //
 #include "NotifyMulticastRequestEntry.h"
@@ -30,10 +30,9 @@
 
 #include <tao/CDR.h>
 
-namespace Miro 
+namespace Miro
 {
-  namespace NMC 
-  {
+  namespace NMC {
     /**
      *   Parameters:
      *     byteOrder:     byte order
@@ -42,14 +41,14 @@ namespace Miro
      *     fragmentCount: fragment count
      */
     RequestEntry::RequestEntry(CORBA::Boolean byteOrder,
-			       CORBA::ULong   requestId,
-			       CORBA::ULong   requestSize,
-			       CORBA::ULong   fragmentCount) :
-      byteOrder_(byteOrder),
-      requestId_(requestId),
-      requestSize_(requestSize),
-      fragmentCount_(fragmentCount),
-      timeoutCounter_(0) 
+                               CORBA::ULong   requestId,
+                               CORBA::ULong   requestSize,
+                               CORBA::ULong   fragmentCount) :
+        byteOrder_(byteOrder),
+        requestId_(requestId),
+        requestSize_(requestSize),
+        fragmentCount_(fragmentCount),
+        timeoutCounter_(0)
     {
       const int bitsPerUlong = sizeof(CORBA::ULong) * CHAR_BIT;
 
@@ -62,12 +61,12 @@ namespace Miro
       receivedFragmentsSize_ = fragmentCount_ / bitsPerUlong + 1;
 
       if (receivedFragmentsSize_ > DEFAULT_FRAGMENT_BUFSIZ) {
-	ACE_NEW(receivedFragments_, CORBA::ULong[receivedFragmentsSize_]);
-	ownReceivedFragments_ = 1;
+        ACE_NEW(receivedFragments_, CORBA::ULong[receivedFragmentsSize_]);
+        ownReceivedFragments_ = 1;
       }
 
       for (CORBA::ULong i = 0; i < receivedFragmentsSize_; ++i)
-	receivedFragments_[i] = 0;
+        receivedFragments_[i] = 0;
 
       CORBA::ULong idx = fragmentCount_ / bitsPerUlong;
       CORBA::ULong bit = fragmentCount_ % bitsPerUlong;
@@ -79,8 +78,8 @@ namespace Miro
     RequestEntry::~RequestEntry()
     {
       if (ownReceivedFragments_) {
-	ownReceivedFragments_ = 0;
-	delete[] receivedFragments_;
+        ownReceivedFragments_ = 0;
+        delete[] receivedFragments_;
       }
     }
 
@@ -100,20 +99,20 @@ namespace Miro
      */
     int
     RequestEntry::validateFragment(CORBA::Boolean byteOrder,
-				   CORBA::ULong   requestSize,
-				   CORBA::ULong   fragmentSize,
-				   CORBA::ULong   fragmentOffset,
-				   CORBA::ULong   /* fragmentId */,
-				   CORBA::ULong   fragmentCount) const 
+                                   CORBA::ULong   requestSize,
+                                   CORBA::ULong   fragmentSize,
+                                   CORBA::ULong   fragmentOffset,
+                                   CORBA::ULong   /* fragmentId */,
+                                   CORBA::ULong   fragmentCount) const
     {
       if (byteOrder     != byteOrder_ ||
-	  requestSize   != requestSize_ ||
-	  fragmentCount != fragmentCount_)
-	return 0;
+            requestSize   != requestSize_ ||
+            fragmentCount != fragmentCount_)
+        return 0;
 
       if (fragmentOffset                >= requestSize ||
-	  fragmentOffset + fragmentSize >  requestSize)
-	return 0;
+            fragmentOffset + fragmentSize >  requestSize)
+        return 0;
 
       return 1;
     }
@@ -128,14 +127,14 @@ namespace Miro
      *     fragmentId: fragment id
      */
     int
-    RequestEntry::testReceived(CORBA::ULong fragmentId) const 
+    RequestEntry::testReceived(CORBA::ULong fragmentId) const
     {
       const int bitsPerUlong = sizeof(CORBA::ULong) * CHAR_BIT;
 
       // Assume out-of-range fragments as received, so they are dropped...
 
       if (fragmentId > fragmentCount_)
-	return 1;
+        return 1;
 
       CORBA::ULong idx = fragmentId / bitsPerUlong;
       CORBA::ULong bit = fragmentId % bitsPerUlong;
@@ -153,14 +152,14 @@ namespace Miro
      *   Parameters:
      *     fragmentId: fragment id
      */
-    void RequestEntry::markReceived(CORBA::ULong fragmentId) 
+    void RequestEntry::markReceived(CORBA::ULong fragmentId)
     {
       const int bitsPerUlong = sizeof(CORBA::ULong) * CHAR_BIT;
 
       // Assume out-of-range fragments as received, so they are dropped...
 
       if (fragmentId > fragmentCount_)
-	return;
+        return;
 
       CORBA::ULong idx = fragmentId / bitsPerUlong;
       CORBA::ULong bit = fragmentId % bitsPerUlong;
@@ -175,11 +174,11 @@ namespace Miro
      *   Description:
      *     Tests, is entry was received completely
      */
-    int RequestEntry::complete (void) const 
+    int RequestEntry::complete(void) const
     {
       for (CORBA::ULong i = 0; i < receivedFragmentsSize_; ++i)
-	if (receivedFragments_[i] != 0xFFFFFFFF)
-	  return 0;
+        if (receivedFragments_[i] != 0xFFFFFFFF)
+          return 0;
 
       return 1;
     }
@@ -194,7 +193,7 @@ namespace Miro
      *   Parameters:
      *     fragmentOffset: fragment offset
      */
-    char* RequestEntry::fragmentBuffer(CORBA::ULong fragmentOffset) 
+    char* RequestEntry::fragmentBuffer(CORBA::ULong fragmentOffset)
     {
       return payload_.rd_ptr() + fragmentOffset;
     }
@@ -211,7 +210,7 @@ namespace Miro
      */
     void
     RequestEntry::decode(CosNotification::StructuredEvent &event)
-      throw (CORBA::MARSHAL)
+    throw(CORBA::MARSHAL)
     {
       CosNotification::EventHeader          header;
       CosNotification::FilterableEventBody  filterableBody;
@@ -220,7 +219,7 @@ namespace Miro
       TAO_InputCDR cdr(&payload_, ACE_static_cast(int, byteOrder_));
 
       if (!(cdr >> event)) {
-	throw CORBA::MARSHAL();
+        throw CORBA::MARSHAL();
       }
     }
 
@@ -231,8 +230,8 @@ namespace Miro
      *   Descritpion:
      *     Increments the timeout counter
      */
-    void 
-    RequestEntry::incTimeout(void) 
+    void
+    RequestEntry::incTimeout(void)
     {
       timeoutCounter_++;
     }
@@ -244,8 +243,8 @@ namespace Miro
      *   Descritpion:
      *     Returns the timeout
      */
-    int 
-    RequestEntry::getTimeout(void) const 
+    int
+    RequestEntry::getTimeout(void) const
     {
       return timeoutCounter_;
     }

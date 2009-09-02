@@ -51,19 +51,19 @@ class TAO_InputCDR;
 
 namespace Miro
 {
-  class LogTypeRepository 
+  class LogTypeRepository
   {
   public:
     //--------------------------------------------------------------------------
     // public methods
     //--------------------------------------------------------------------------
     //! Initializing constructor for output stream.
-    LogTypeRepository(TAO_OutputCDR * _ostr, size_t _maxLength = 1024*1024) throw (CException);
+    LogTypeRepository(TAO_OutputCDR * _ostr, size_t _maxLength = 1024*1024) throw(CException);
     //! Initializing constructor for input stream.
-    LogTypeRepository(TAO_InputCDR& _istr) throw (Exception);
+    LogTypeRepository(TAO_InputCDR& _istr) throw(Exception);
 
     //! Cleaning up.
-    virtual ~LogTypeRepository() throw ();
+    virtual ~LogTypeRepository() throw();
 
     //! Return the type id for the the type code.
     /**
@@ -87,14 +87,13 @@ namespace Miro
     //--------------------------------------------------------------------------
 
     typedef std::vector<CORBA::TypeCode_ptr> TypeCodeVector;
-    struct TCEq : public std::unary_function<char const *, bool>
-    {
+  struct TCEq : public std::unary_function<char const *, bool> {
       TCEq(CORBA::TypeCode_ptr _tc) : tc_(_tc) {}
-      
+
       bool operator()(CORBA::TypeCode_ptr _tc) const {
-	return tc_->equal(_tc);
+        return tc_->equal(_tc);
       }
-    protected:
+protected:
       CORBA::TypeCode_ptr tc_;
     };
 
@@ -122,15 +121,17 @@ namespace Miro
 
   inline
   size_t
-  LogTypeRepository::totalLength() const {
+  LogTypeRepository::totalLength() const
+  {
     return totalLength_;
   }
 
   inline
   CORBA::Long
-  LogTypeRepository::typeID(CORBA::TypeCode_ptr _type) {
+  LogTypeRepository::typeID(CORBA::TypeCode_ptr _type)
+  {
     // search for type code
-    TypeCodeVector::const_iterator where = 
+    TypeCodeVector::const_iterator where =
       std::find_if(types_.begin(), types_.end(), TCEq(_type));
     // return its index, if already known
     if (where != types_.end()) {
@@ -142,7 +143,8 @@ namespace Miro
 
   inline
   CORBA::TypeCode_ptr
-  LogTypeRepository::typeCode(ACE_INT32 _id) {
+  LogTypeRepository::typeCode(ACE_INT32 _id)
+  {
     CORBA::TypeCode_ptr tc =  CORBA::_tc_null;
     if (0 <= _id && _id < (ACE_INT32)types_.size()) {
       tc = types_[_id];

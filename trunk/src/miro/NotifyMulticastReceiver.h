@@ -21,7 +21,7 @@
 // $Id$
 //
 //
-// Authors: 
+// Authors:
 //   Hans Utz
 //   Philipp Baer
 //
@@ -51,16 +51,15 @@
 #include <vector>
 #include <algorithm>
 
-namespace Miro 
+namespace Miro
 {
-  namespace NMC 
-  {
+  namespace NMC {
     // forward declerations
     class Adapter;
     class Config;
     class SH;
 
-    class Receiver : public Miro::StructuredPushSupplier 
+    class Receiver : public Miro::StructuredPushSupplier
     {
       typedef Miro::StructuredPushSupplier Super;
 
@@ -77,10 +76,10 @@ namespace Miro
       //------------------------------------------------------------------------
 
       //! Initializing constructor.
-      Receiver(ACE_SOCK_Dgram_Mcast& _socket, 
-	       CosNotifyChannelAdmin::EventChannel_ptr _ec,
-	       std::string const& _domainName,
-	       Parameters const * _params = Parameters::instance());
+      Receiver(ACE_SOCK_Dgram_Mcast& _socket,
+               CosNotifyChannelAdmin::EventChannel_ptr _ec,
+               std::string const& _domainName,
+               Parameters const * _params = Parameters::instance());
 
       //! Defaint destructor.
       ~Receiver();
@@ -93,12 +92,12 @@ namespace Miro
 
       //! Sends an event through the MC-Notification-Channel.
       void sendEvent(CosNotification::StructuredEvent const & _event)
-	throw(CosEventComm::Disconnected);
+      throw(CosEventComm::Disconnected);
 
       //! Receive Data fram MC-Notification-Channel.
       int receiveData(iovec         *_iov,
-		      ACE_INET_Addr &_from,
-		      int            _flags = 0);
+                      ACE_INET_Addr &_from,
+                      int            _flags = 0);
 
       // ACE_Time_Value timestamp(const std::string _name);
 
@@ -116,18 +115,17 @@ namespace Miro
       typedef ACE_Hash_Map_Manager<RequestIndex, RequestEntry*, ACE_SYNCH_NULL_MUTEX> RequestMap;
       typedef ACE_Hash_Map_Entry<RequestIndex, RequestEntry*> RequestMapEntry;
 
-      struct EventData 
-      {
-	ACE_SOCK_Dgram_Mcast *socket;
-	CORBA::Boolean        byteOrder;
-	CORBA::ULong          requestId;
-	CORBA::ULong          requestSize;
-	CORBA::ULong          fragmentSize;
-	CORBA::ULong          fragmentOffset;
-	CORBA::ULong          fragmentId;
-	CORBA::ULong          fragmentCount;
-	CORBA::ULong          timestamp;
-	CORBA::ULong          systemTimestamp;
+      struct EventData {
+        ACE_SOCK_Dgram_Mcast *socket;
+        CORBA::Boolean        byteOrder;
+        CORBA::ULong          requestId;
+        CORBA::ULong          requestSize;
+        CORBA::ULong          fragmentSize;
+        CORBA::ULong          fragmentOffset;
+        CORBA::ULong          fragmentId;
+        CORBA::ULong          fragmentCount;
+        CORBA::ULong          timestamp;
+        CORBA::ULong          systemTimestamp;
       };
 
       //------------------------------------------------------------------------
@@ -137,14 +135,14 @@ namespace Miro
       //! Check if address (_from) is local.
       bool is_loopback(ACE_INET_Addr const &_from);
       int handle_event(ACE_INET_Addr const& form,
-		       EventData const& _eventData, 
-		       char const *_iov,
-		       unsigned long _len);
+                       EventData const& _eventData,
+                       char const *_iov,
+                       unsigned long _len);
 
       //! Inherited interface method.
       /** StructuredUDPReceiver method */
       virtual void disconnect_structured_push_supplier(ACE_ENV_SINGLE_ARG_DECL_WITH_DEFAULTS)
-	throw(CORBA::SystemException);
+      throw(CORBA::SystemException);
 
     private:
       //------------------------------------------------------------------------
@@ -179,8 +177,8 @@ namespace Miro
      *  @param from: address to check
      */
     inline
-    bool 
-    Receiver::is_loopback(const ACE_INET_Addr &_from) 
+    bool
+    Receiver::is_loopback(const ACE_INET_Addr &_from)
     {
       return (std::binary_search(localIPs_.begin(), localIPs_.end(), _from.get_ip_address()));
     }

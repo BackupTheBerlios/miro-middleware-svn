@@ -65,13 +65,13 @@ namespace Miro
     /**
      *   Uses the ACE_Task_Base class to run server threads
      */
-    class Worker : public ACE_Task_Base
+  class Worker : public ACE_Task_Base
     {
       typedef ACE_Task_Base Super;
     public:
       //! Initializing constructor.
-      Worker(ACE_Thread_Manager * _threadManager, 
-	     CORBA::ORB_ptr _orb, bool& _shutdown);
+      Worker(ACE_Thread_Manager * _threadManager,
+             CORBA::ORB_ptr _orb, bool& _shutdown);
 
       //! The thread entry point.
       virtual int svc();
@@ -90,7 +90,7 @@ namespace Miro
 
     //! Constructor.
     Server(int& argc, char *argv[],
-	   const RobotParameters& _params = *RobotParameters::instance());
+           const RobotParameters& _params = *RobotParameters::instance());
     Server(const Server& _server);
     ~Server();
 
@@ -107,15 +107,15 @@ namespace Miro
     //! Returns the reactor instance used by the ORB core.
     ACE_Reactor * reactor();
 
-    //! Shutdown the application. 
+    //! Shutdown the application.
     virtual void shutdown();
 
     //! Register an object reference at the CORBA naming service.
     void addToNameService(CORBA::Object_ptr _object, const std::string& _name);
     //! Register an object reference at the CORBA naming service.
-    void addToNameService(CORBA::Object_ptr _object, 
-			  CosNaming::NamingContext_ptr _context,
-			  const std::string& _name);
+    void addToNameService(CORBA::Object_ptr _object,
+                          CosNaming::NamingContext_ptr _context,
+                          const std::string& _name);
 
     bool rebind() const;
 
@@ -148,8 +148,9 @@ namespace Miro
   };
 
   inline
-  bool 
-  Server::rebind() const {
+  bool
+  Server::rebind() const
+  {
     return rebind_;
   }
 };

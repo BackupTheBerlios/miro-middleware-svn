@@ -31,23 +31,23 @@
 namespace Miro
 {
   LogHeader::LogHeader(WRITE) :
-    id(PROTOCOL_ID),
-    version(PROTOCOL_VERSION),
-    byteOrder(ACE_CDR_BYTE_ORDER)
+      id(PROTOCOL_ID),
+      version(PROTOCOL_VERSION),
+      byteOrder(ACE_CDR_BYTE_ORDER)
   {}
 
-  LogHeader::LogHeader(READ) throw (EFileType, EVersion)
+  LogHeader::LogHeader(READ) throw(EFileType, EVersion)
   {
     if (id != PROTOCOL_ID) {
       char idString[5] = "    ";
       *(reinterpret_cast<unsigned long *>(idString)) = id;
       throw EFileType(std::string("Wrong protocol ID for a Miro Log File (should be MLOG):") + idString);
     }
-    
+
     if (version > MAX_VERSION) {
       std::ostringstream o;
       o << version;
       throw EVersion("Unsupported protocol version: " + o.str());
     }
   }
-}  
+}

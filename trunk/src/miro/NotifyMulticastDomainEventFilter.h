@@ -26,18 +26,17 @@
 /* Miro includes */
 #include "NotifyMulticastEventFilter.h"
 
-namespace Miro 
+namespace Miro
 {
-  namespace NMC 
-  {
-    class DomainEventFilter : public EventFilter 
+  namespace NMC {
+    class DomainEventFilter : public EventFilter
     {
     public:
       /* constructor */
       DomainEventFilter(const std::string & _domain_name);
-      
+
       virtual bool isAccepted(const CosNotification::StructuredEvent &_event);
-      
+
     private :
       std::string domain_name_;
     };

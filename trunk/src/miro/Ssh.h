@@ -21,7 +21,7 @@
 // $Id$
 //
 //
-// Authors: 
+// Authors:
 //   Hans Utz
 //   Stefan Enderle
 //   Stefan Sablatnoeg
@@ -39,43 +39,49 @@
 #include <string>
 
 
-void killZombies(int=0);
+void killZombies(int = 0);
 
 class SSH
 {
 public:
 
-  SSH(int=1,int=2);
+  SSH(int = 1, int = 2);
 
   ~SSH();
 
   //IMPORTANT: Don't forget to close the conections before ending the program!
   //Otherwise it will hang up waiting for the connection to end
   void open(std::string);
-  
+
   void close();
-  
+
   void execSilent(std::string);
-  
+
   //the ssh needs to be opened with stdout redirected to input
-  std::string exec(std::string, int=30);
-  
+  std::string exec(std::string, int = 30);
+
   //the ssh needs to be opened with stdout redirected to input
-  bool ping(int=30);
+  bool ping(int = 30);
 
   int isRunning(std::string);
 
-  void kill(std::string,int=5);
+  void kill(std::string, int = 5);
   void kill(int);
 
-  inline std::string getMachine() {return machine;};
-  inline std::string getLocalMachine() {return localMachine;};
-  inline bool isOpen() {return opened;};
+  inline std::string getMachine() {
+    return machine;
+  };
+  inline std::string getLocalMachine() {
+    return localMachine;
+  };
+  inline bool isOpen() {
+    return opened;
+  };
 
 private:
   int pipeID;
   int inputIn, input;
-  int errorIn,error;
+  int errorIn, error;
   int oldStdin, oldStdout, oldStderr;
   int pidSSH;
 
@@ -83,7 +89,7 @@ private:
 
   std::string machine;
   std::string localMachine;
-  
+
 };
 
 #endif

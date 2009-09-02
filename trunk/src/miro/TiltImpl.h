@@ -36,8 +36,8 @@ namespace Miro
    *
    * @author Guillem Pagès Gassull
    */
-  class  TiltImpl :public virtual PanTiltBase,
-		   public virtual POA_Miro::Tilt
+  class  TiltImpl : public virtual PanTiltBase,
+        public virtual POA_Miro::Tilt
   {
   public:
     //! Initializing constructor.
@@ -66,17 +66,19 @@ namespace Miro
     CORBA::Float targetTilt_;
   };
 
-  inline 
+  inline
   bool
-  TiltImpl::testTilt(CORBA::Float _angle) const throw() {
+  TiltImpl::testTilt(CORBA::Float _angle) const throw()
+  {
     return ((_angle >= float(params_.rangeMin)) &&
-	    (_angle <= float(params_.rangeMax)));
+            (_angle <= float(params_.rangeMax)));
   }
-  
+
   inline
   void
-  TiltImpl::setTargetTilt(CORBA::Float _angle) throw() {
-    targetTilt_ = _angle; 
+  TiltImpl::setTargetTilt(CORBA::Float _angle) throw()
+  {
+    targetTilt_ = _angle;
   }
 }
 

@@ -21,7 +21,7 @@
 // $Id$
 //
 //
-// Authors: 
+// Authors:
 //   Hans Utz
 //   Stefan Enderle
 //   Stefan Sablatnoeg
@@ -38,15 +38,15 @@ using std::vector;
 namespace Miro
 {
   Enumeration::Enumeration(string _enum, string _values) :
-    enum_(_enum)
+      enum_(_enum)
   {
     // tokenize input values
     int pos = 0;
     while (_values.find(" ", pos) < _values.size()) {
-      string tmp = _values.substr(pos, _values.find(" ", pos)-pos);
+      string tmp = _values.substr(pos, _values.find(" ", pos) - pos);
       if ((tmp != " ") && (tmp != ""))
-	values_.push_back(tmp);
-      pos = _values.find(" ", pos)+1;
+        values_.push_back(tmp);
+      pos = _values.find(" ", pos) + 1;
     }
     string tmp = _values.substr(pos, _values.size());
     if ((tmp != " ") && (tmp != ""))
@@ -54,10 +54,10 @@ namespace Miro
 
     // check if initial default value is in assortment list
     bool found = false;
-    for (vector<string>::const_iterator i=values_.begin(); i!=values_.end(); ++i)
+    for (vector<string>::const_iterator i = values_.begin(); i != values_.end(); ++i)
       if (*i == enum_) {
-	found = true;
-	break;
+        found = true;
+        break;
       }
     if (!found)
       throw Miro::Exception("Enumeration: tried to set inital value not in list of available values");
@@ -65,30 +65,30 @@ namespace Miro
 
 
   Enumeration::Enumeration(string _enum, vector<string> _values) :
-    enum_(_enum),
-    values_(_values)
+      enum_(_enum),
+      values_(_values)
   {
     // check if initial default value is in assortment list
     bool found = false;
-    for (vector<string>::const_iterator i=values_.begin(); i!=values_.end(); ++i)
+    for (vector<string>::const_iterator i = values_.begin(); i != values_.end(); ++i)
       if (*i == enum_) {
-	found = true;
-	break;
+        found = true;
+        break;
       }
     if (!found)
       throw Miro::Exception("Enumeration: tried to set inital value not in list of available values");
   }
 
-    
+
   void
   Enumeration::value(string _value)
   {
     bool found = false;
-    for (vector<string>::const_iterator i=values_.begin(); i!=values_.end(); ++i) {
+    for (vector<string>::const_iterator i = values_.begin(); i != values_.end(); ++i) {
       if (_value == *i) {
-	enum_ = *i;
-	found = true;
-	break;
+        enum_ = *i;
+        found = true;
+        break;
       }
     }
     if (!found)
@@ -96,7 +96,7 @@ namespace Miro
   }
 
 
-  const 
+  const
   string&
   Enumeration::value() const
   {
@@ -104,7 +104,7 @@ namespace Miro
   }
 
 
-  const 
+  const
   vector<string>&
   Enumeration::assortment() const
   {
@@ -112,13 +112,13 @@ namespace Miro
   }
 
 
-  std::ostream& 
+  std::ostream&
   operator<<(std::ostream& ostr, Enumeration _enum)
   {
     return ostr << _enum.enum_;
   }
 
-  std::istream& 
+  std::istream&
   operator>>(std::istream& istr, Enumeration& _enum)
   {
     std::string tmp;

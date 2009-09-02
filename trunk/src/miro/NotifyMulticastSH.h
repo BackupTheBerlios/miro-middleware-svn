@@ -30,28 +30,27 @@
 
 #include <map>
 
-namespace Miro 
+namespace Miro
 {
-  namespace NMC
-  {
-    class SH : public ACE_Event_Handler 
+  namespace NMC {
+    class SH : public ACE_Event_Handler
     {
     public:
       SH(Sender *_sender,
-	 Receiver *_receiver);
+         Receiver *_receiver);
       virtual ~SH();
 
       virtual int handle_timeout(ACE_Time_Value const& _tv, void const *_act);
 
       void handleOffers(CosNotification::EventTypeSeq const& ets);
       void handleSubscriptions(CosNotification::EventTypeSeq const& ets);
-            
+
     protected:
       static const int DEFAULT_LIVETIME = 10;
 
       Sender *sender_;
       Receiver *receiver_;
-                
+
       typedef std::map<std::string, int> SubscribedMap;
       typedef std::map<std::pair<std::string, std::string> , int> OfferMap;
       SubscribedMap subscribedMap;

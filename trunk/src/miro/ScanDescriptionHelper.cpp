@@ -35,15 +35,15 @@ namespace Miro
   {
     if (!_node.isNull()) {
       QDomNode n = _node.firstChild();
-      while(!n.isNull() ) {
+      while (!n.isNull()) {
         QDomElement e = n.toElement();
-        if( !e.isNull() &&
-            e.tagName() == "parameter" ) {
+        if (!e.isNull() &&
+              e.tagName() == "parameter") {
           QDomAttr a = e.attributeNode("name");
           if (!a.isNull()) {
             QString i = a.value();
             if (i == "Focus") {
-	      _lhs.focus <<= n;
+              _lhs.focus <<= n;
               _lhs.focus = Miro::deg2Rad(_lhs.focus);
             }
             else if (i == "MaxRange") {
@@ -83,36 +83,36 @@ namespace Miro
   {
     if (!_node.isNull()) {
       QDomNode n = _node.firstChild();
-      while(!n.isNull() ) {
+      while (!n.isNull()) {
         QDomElement e = n.toElement();
-        if( !e.isNull() &&
-            e.tagName() == "parameter" ) {
+        if (!e.isNull() &&
+              e.tagName() == "parameter") {
           QDomAttr a = e.attributeNode("name");
           if (!a.isNull()) {
             QString i = a.value();
-	    double angle;
-	    bool truth;
+            double angle;
+            bool truth;
             if (i == "Alpha") {
-	      angle <<= n;
+              angle <<= n;
               _lhs.alpha = Miro::deg2Rad(angle);
             }
             else if (i == "Beta") {
-	      angle <<= n;
+              angle <<= n;
               _lhs.beta = Miro::deg2Rad(angle);
             }
             else if (i == "Gamma") {
-	      angle <<= n;
+              angle <<= n;
               _lhs.gamma = Miro::deg2Rad(angle);
             }
             else if (i == "Masked") {
-	      truth <<= n;
+              truth <<= n;
               _lhs.masked = truth;
             }
             else if (i == "Distance") {
-	      _lhs.distance <<= n;
+              _lhs.distance <<= n;
             }
             else if (i == "Height") {
-	      _lhs.height <<= n;
+              _lhs.height <<= n;
             }
           }
         }
@@ -151,10 +151,10 @@ namespace Miro
   {
     if (!_node.isNull()) {
       QDomNode n = _node.firstChild();
-      while(!n.isNull() ) {
+      while (!n.isNull()) {
         QDomElement e = n.toElement();
-        if( !e.isNull() &&
-            e.tagName() == "parameter" ) {
+        if (!e.isNull() &&
+              e.tagName() == "parameter") {
           QDomAttr a = e.attributeNode("name");
           if (!a.isNull()) {
             QString i = a.value();
@@ -166,8 +166,8 @@ namespace Miro
               QDomNode g = n.firstChild();
               while (!g.isNull()) {
                 e = n.toElement();
-                if ( !e.isNull() &&
-                     e.tagName() == "parameter" ) {
+                if (!e.isNull() &&
+                      e.tagName() == "parameter") {
 
                   unsigned long len = _lhs.sensor.length() + 1;
                   _lhs.sensor.length(len);
@@ -211,16 +211,16 @@ namespace Miro
   {
     if (!_node.isNull()) {
       QDomNode n = _node.firstChild();
-      while(!n.isNull() ) {
+      while (!n.isNull()) {
         QDomElement e = n.toElement();
-        if( !e.isNull() &&
-            e.tagName() == "parameter") {
+        if (!e.isNull() &&
+              e.tagName() == "parameter") {
           QDomAttr a = e.attributeNode("name");
           if (!a.isNull()) {
             QString i = a.value();
             if (i == "EventName") {
-	      std::string s;
-	      s <<= n;
+              std::string s;
+              s <<= n;
               _lhs.eventName = CORBA::string_dup(s.c_str());
             }
             else if (i == "Group") {
@@ -228,13 +228,13 @@ namespace Miro
               QDomNode g = n.firstChild();
               while (!g.isNull()) {
                 e = n.toElement();
-                if ( !e.isNull() &&
-                     e.tagName() == "parameter" ) {
-                
-	          unsigned long len = _lhs.group.length() + 1;
-	          _lhs.group.length(len);
-	          _lhs.group[len - 1].sensor.length(0);
-	          _lhs.group[len - 1] <<= g;
+                if (!e.isNull() &&
+                      e.tagName() == "parameter") {
+
+                  unsigned long len = _lhs.group.length() + 1;
+                  _lhs.group.length(len);
+                  _lhs.group[len - 1].sensor.length(0);
+                  _lhs.group[len - 1] <<= g;
                 }
                 g = g.nextSibling();
               }
@@ -274,248 +274,248 @@ namespace Miro
   }
 
   std::ostream&
-  operator << (std::ostream& ostr, const SensorDescriptionIDL& description) 
+  operator << (std::ostream& ostr, const SensorDescriptionIDL& description)
   {
     ostr << " minrange=" << description.minRange << "mm"
-	 << " maxrange=" << description.maxRange << "mm"
-	 << " focus=" << rad2Deg(description.focus) << "°";
+    << " maxrange=" << description.maxRange << "mm"
+    << " focus=" << rad2Deg(description.focus) << "°";
     return ostr;
   }
 
   std::ostream&
-  operator << (std::ostream& ostr, const SensorPositionIDL& position) 
+  operator << (std::ostream& ostr, const SensorPositionIDL& position)
   {
     ostr << " height=" << position.height << "mm"
-	 << " distance=" << position.distance << "mm"
-	 << " alpha=" << rad2Deg(position.alpha) << "°"
-	 << " beta=" << rad2Deg(position.beta) << "°"
-	 << " gamma=" << rad2Deg(position.gamma) << "°"
-	 << " masked=" << (position.masked? "true" : "false");
+    << " distance=" << position.distance << "mm"
+    << " alpha=" << rad2Deg(position.alpha) << "°"
+    << " beta=" << rad2Deg(position.beta) << "°"
+    << " gamma=" << rad2Deg(position.gamma) << "°"
+    << " masked=" << (position.masked ? "true" : "false");
     return ostr;
   }
 
   std::ostream&
-  operator << (std::ostream& ostr, const SensorGroupIDL& group) 
+  operator << (std::ostream& ostr, const SensorGroupIDL& group)
   {
     ostr << "description: " << group.description;
     for (unsigned int i = 0; i < group.sensor.length(); ++i) {
-      ostr << std::endl 
-	   << "sensor " << i << ": "
-	   << group.sensor[i];
+      ostr << std::endl
+      << "sensor " << i << ": "
+      << group.sensor[i];
     }
-    
+
     return ostr;
   }
 
   std::ostream&
-  operator << (std::ostream& ostr, const ScanDescriptionIDL& description) 
+  operator << (std::ostream& ostr, const ScanDescriptionIDL& description)
   {
     ostr << "  scan description:" << std::endl
-	 << "    scan type=" << description.scanType
-	 << "    event name=" << description.eventName;
+    << "    scan type=" << description.scanType
+    << "    event name=" << description.eventName;
     for (unsigned int i = 0; i < description.group.length(); ++i) {
-      ostr << std::endl 
-	   << "    group " << i << ":" << std::endl
-	   << description.group[i];
+      ostr << std::endl
+      << "    group " << i << ":" << std::endl
+      << description.group[i];
     }
-    
+
     return ostr;
   }
 };
 
 
 #ifdef ANALYZED_THAT
-  void
-  operator<<= (SensorDescriptionIDL& _lhs, const QDomNode& _node)
-  {
-    if (!_node.isNull()) {
-      QDomNode n = _node.firstChild();
-      while(!n.isNull() ) {
-        QDomElement e = n.toElement();
-        if( !e.isNull() ) {
-          QDomAttr a = e.attributeNode("name");
-          if (!a.isNull()) {
-            QString i = a.value();
-            if (i == "Focus") {
-              _lhs.focus <<= n;
-              _lhs.focus = Miro::deg2Rad(_lhs.focus);
-            }
-            else if (i == "MaxRange") {
-              _lhs.maxRange <<= n;
-            }
-            else if (i == "MinRange") {
-              _lhs.minRange <<= n;
-            }
+void
+operator<<= (SensorDescriptionIDL & _lhs, const QDomNode & _node)
+{
+  if (!_node.isNull()) {
+    QDomNode n = _node.firstChild();
+    while (!n.isNull()) {
+      QDomElement e = n.toElement();
+      if (!e.isNull()) {
+        QDomAttr a = e.attributeNode("name");
+        if (!a.isNull()) {
+          QString i = a.value();
+          if (i == "Focus") {
+            _lhs.focus <<= n;
+            _lhs.focus = Miro::deg2Rad(_lhs.focus);
+          }
+          else if (i == "MaxRange") {
+            _lhs.maxRange <<= n;
+          }
+          else if (i == "MinRange") {
+            _lhs.minRange <<= n;
           }
         }
-        n = n.nextSibling();
       }
+      n = n.nextSibling();
     }
   }
-  QDomElement
-  operator>>= (const SensorDescriptionIDL& _lhs, QDomNode& _node)
-  {
-    QDomDocument d = _node.ownerDocument();
-    QDomElement e = d.createElement("parameter");
-    _node.appendChild(e);
+}
+QDomElement
+operator>>= (const SensorDescriptionIDL & _lhs, QDomNode & _node)
+{
+  QDomDocument d = _node.ownerDocument();
+  QDomElement e = d.createElement("parameter");
+  _node.appendChild(e);
 
-    QDomElement g;
+  QDomElement g;
 
-    g = (_lhs.focus >>= e);
-    g.setAttribute("name", "Focus");
-    g = (_lhs.maxRange >>= e);
-    g.setAttribute("name", "MaxRange");
-    g = (_lhs.minRange >>= e);
-    g.setAttribute("name", "MinRange");
+  g = (_lhs.focus >>= e);
+  g.setAttribute("name", "Focus");
+  g = (_lhs.maxRange >>= e);
+  g.setAttribute("name", "MaxRange");
+  g = (_lhs.minRange >>= e);
+  g.setAttribute("name", "MinRange");
 
-    return e;
-  }
+  return e;
+}
 
-  void
-  operator<<= (SensorPositionIDL& _lhs, const QDomNode& _node)
-  {
-    if (!_node.isNull()) {
-      QDomNode n = _node.firstChild();
-      while(!n.isNull() ) {
-        QDomElement e = n.toElement();
-        if( !e.isNull() ) {
-          QDomAttr a = e.attributeNode("name");
-          if (!a.isNull()) {
-            QString i = a.value();
-            if (i == "Alpha") {
-              _lhs.alpha <<= n;
-              _lhs.alpha = Miro::deg2Rad(_lhs.alpha);
-            }
-            else if (i == "Beta") {
-              _lhs.beta <<= n;
-              _lhs.beta = Miro::deg2Rad(_lhs.beta);
-            }
-            else if (i == "Gamma") {
-              _lhs.gamma <<= n;
-              _lhs.gamma = Miro::deg2Rad(_lhs.gamma);
-            }
-            else if (i == "Masked") {
-              _lhs.masked <<= n;
-            }
-            else if (i == "Distance") {
-              _lhs.distance <<= n;
-            }
-            else if (i == "Height") {
-              _lhs.height <<= n;
-            }
+void
+operator<<= (SensorPositionIDL & _lhs, const QDomNode & _node)
+{
+  if (!_node.isNull()) {
+    QDomNode n = _node.firstChild();
+    while (!n.isNull()) {
+      QDomElement e = n.toElement();
+      if (!e.isNull()) {
+        QDomAttr a = e.attributeNode("name");
+        if (!a.isNull()) {
+          QString i = a.value();
+          if (i == "Alpha") {
+            _lhs.alpha <<= n;
+            _lhs.alpha = Miro::deg2Rad(_lhs.alpha);
+          }
+          else if (i == "Beta") {
+            _lhs.beta <<= n;
+            _lhs.beta = Miro::deg2Rad(_lhs.beta);
+          }
+          else if (i == "Gamma") {
+            _lhs.gamma <<= n;
+            _lhs.gamma = Miro::deg2Rad(_lhs.gamma);
+          }
+          else if (i == "Masked") {
+            _lhs.masked <<= n;
+          }
+          else if (i == "Distance") {
+            _lhs.distance <<= n;
+          }
+          else if (i == "Height") {
+            _lhs.height <<= n;
           }
         }
-        n = n.nextSibling();
       }
+      n = n.nextSibling();
     }
   }
-  QDomElement
-  operator>>= (const SensorPositionIDL& _lhs, QDomNode& _node)
-  {
-    QDomDocument d = _node.ownerDocument();
-    QDomElement e = d.createElement("parameter");
-    _node.appendChild(e);
+}
+QDomElement
+operator>>= (const SensorPositionIDL & _lhs, QDomNode & _node)
+{
+  QDomDocument d = _node.ownerDocument();
+  QDomElement e = d.createElement("parameter");
+  _node.appendChild(e);
 
-    QDomElement g;
+  QDomElement g;
 
-    g = (_lhs.alpha >>= e);
-    g.setAttribute("name", "Alpha");
-    g = (_lhs.beta >>= e);
-    g.setAttribute("name", "Beta");
-    g = (_lhs.gamma >>= e);
-    g.setAttribute("name", "Gamma");
-    g = (_lhs.masked >>= e);
-    g.setAttribute("name", "Masked");
-    g = (_lhs.distance >>= e);
-    g.setAttribute("name", "Distance");
-    g = (_lhs.height >>= e);
-    g.setAttribute("name", "Height");
+  g = (_lhs.alpha >>= e);
+  g.setAttribute("name", "Alpha");
+  g = (_lhs.beta >>= e);
+  g.setAttribute("name", "Beta");
+  g = (_lhs.gamma >>= e);
+  g.setAttribute("name", "Gamma");
+  g = (_lhs.masked >>= e);
+  g.setAttribute("name", "Masked");
+  g = (_lhs.distance >>= e);
+  g.setAttribute("name", "Distance");
+  g = (_lhs.height >>= e);
+  g.setAttribute("name", "Height");
 
-    return e;
-  }
+  return e;
+}
 
-  void
-  operator<<= (SensorGroupIDL& _lhs, const QDomNode& _node)
-  {
-    if (!_node.isNull()) {
-      QDomNode n = _node.firstChild();
-      while(!n.isNull() ) {
-        QDomElement e = n.toElement();
-        if( !e.isNull() ) {
-          QDomAttr a = e.attributeNode("name");
-          if (!a.isNull()) {
-            QString i = a.value();
-            if (i == "Description") {
-              _lhs.description <<= n;
-            }
-            else if (i == "Sensor") {
-              _lhs.sensor <<= n;
-            }
+void
+operator<<= (SensorGroupIDL & _lhs, const QDomNode & _node)
+{
+  if (!_node.isNull()) {
+    QDomNode n = _node.firstChild();
+    while (!n.isNull()) {
+      QDomElement e = n.toElement();
+      if (!e.isNull()) {
+        QDomAttr a = e.attributeNode("name");
+        if (!a.isNull()) {
+          QString i = a.value();
+          if (i == "Description") {
+            _lhs.description <<= n;
+          }
+          else if (i == "Sensor") {
+            _lhs.sensor <<= n;
           }
         }
-        n = n.nextSibling();
       }
+      n = n.nextSibling();
     }
   }
-  QDomElement
-  operator>>= (const SensorGroupIDL& _lhs, QDomNode& _node)
-  {
-    QDomDocument d = _node.ownerDocument();
-    QDomElement e = d.createElement("parameter");
-    _node.appendChild(e);
+}
+QDomElement
+operator>>= (const SensorGroupIDL & _lhs, QDomNode & _node)
+{
+  QDomDocument d = _node.ownerDocument();
+  QDomElement e = d.createElement("parameter");
+  _node.appendChild(e);
 
-    QDomElement g;
+  QDomElement g;
 
-    g = (_lhs.description >>= e);
-    g.setAttribute("name", "Description");
-    g = (_lhs.sensor >>= e);
-    g.setAttribute("name", "Sensor");
+  g = (_lhs.description >>= e);
+  g.setAttribute("name", "Description");
+  g = (_lhs.sensor >>= e);
+  g.setAttribute("name", "Sensor");
 
-    return e;
-  }
+  return e;
+}
 
-  void
-  operator<<= (ScanDescriptionIDL& _lhs, const QDomNode& _node)
-  {
-    if (!_node.isNull()) {
-      QDomNode n = _node.firstChild();
-      while(!n.isNull() ) {
-        QDomElement e = n.toElement();
-        if( !e.isNull() ) {
-          QDomAttr a = e.attributeNode("name");
-          if (!a.isNull()) {
-            QString i = a.value();
-            if (i == "EventName") {
-              _lhs.eventName <<= n;
-            }
-            else if (i == "Group") {
-              _lhs.group <<= n;
-            }
-            else if (i == "ScanType") {
-              _lhs.scanType <<= n;
-            }
+void
+operator<<= (ScanDescriptionIDL & _lhs, const QDomNode & _node)
+{
+  if (!_node.isNull()) {
+    QDomNode n = _node.firstChild();
+    while (!n.isNull()) {
+      QDomElement e = n.toElement();
+      if (!e.isNull()) {
+        QDomAttr a = e.attributeNode("name");
+        if (!a.isNull()) {
+          QString i = a.value();
+          if (i == "EventName") {
+            _lhs.eventName <<= n;
+          }
+          else if (i == "Group") {
+            _lhs.group <<= n;
+          }
+          else if (i == "ScanType") {
+            _lhs.scanType <<= n;
           }
         }
-        n = n.nextSibling();
       }
+      n = n.nextSibling();
     }
   }
-  QDomElement
-  operator>>= (const ScanDescriptionIDL& _lhs, QDomNode& _node)
-  {
-    QDomDocument d = _node.ownerDocument();
-    QDomElement e = d.createElement("parameter");
-    _node.appendChild(e);
+}
+QDomElement
+operator>>= (const ScanDescriptionIDL & _lhs, QDomNode & _node)
+{
+  QDomDocument d = _node.ownerDocument();
+  QDomElement e = d.createElement("parameter");
+  _node.appendChild(e);
 
-    QDomElement g;
+  QDomElement g;
 
-    g = (_lhs.eventName >>= e);
-    g.setAttribute("name", "EventName");
-    g = (_lhs.group >>= e);
-    g.setAttribute("name", "Group");
-    g = (_lhs.scanType >>= e);
-    g.setAttribute("name", "ScanType");
+  g = (_lhs.eventName >>= e);
+  g.setAttribute("name", "EventName");
+  g = (_lhs.group >>= e);
+  g.setAttribute("name", "Group");
+  g = (_lhs.scanType >>= e);
+  g.setAttribute("name", "ScanType");
 
-    return e;
-  }
+  return e;
+}
 #endif

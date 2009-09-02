@@ -60,7 +60,7 @@ namespace Miro
     ~VideoConnection();
 
     unsigned char const * bufferAddr(CORBA::ULong _index) const;
-    
+
   public:
     //! Pointer to the Video object connected to.
     Miro::Video_var video;
@@ -70,7 +70,7 @@ namespace Miro
     /** Parameter for subsequent calls. */
     CORBA::ULong id;
     //! Pointer to the shared memory buffer of the interface.
-    /** 
+    /**
      * This is NULL if the client is not colocated with the
      * VideoService on the same machine.
      */
@@ -83,7 +83,8 @@ namespace Miro
 
   inline
   unsigned char const *
-  VideoConnection::bufferAddr(CORBA::ULong _index) const {
+  VideoConnection::bufferAddr(CORBA::ULong _index) const
+  {
     return memory + handle->offset[_index];
   }
 
@@ -110,11 +111,11 @@ namespace Miro
     //! Initializing constructor.
     /**
      * @param connection Reference to the helper class instance.
-     * holding the connection to the Video object. 
+     * holding the connection to the Video object.
      * @param select Acquire the current or the next image. Default is next.
      */
     VideoAcquireImage(VideoConnection& _connection,
-		      Selection _select = Next);
+                      Selection _select = Next);
     //! Resource releasing destructor.
     /** Releases the acquired image. */
     ~VideoAcquireImage();
@@ -135,18 +136,17 @@ namespace Miro
   private:
     //! Private copy constructor to avoid accidental usage.
     VideoAcquireImage(VideoAcquireImage const& i)  :
-      connection_(i.connection_)
-    {}
+        connection_(i.connection_) {}
   };
 
   inline
   VideoAcquireImage::VideoAcquireImage(VideoConnection& _connection,
-				       Selection _select) :
-    connection_(_connection)
+                                       Selection _select) :
+      connection_(_connection)
   {
-    TimeIDL t = (_select == Current)?
-      connection_.video->acquireCurrentImage(connection_.id, index_) :
-      connection_.video->acquireNextImage(connection_.id, index_);
+    TimeIDL t = (_select == Current) ?
+                connection_.video->acquireCurrentImage(connection_.id, index_) :
+                connection_.video->acquireNextImage(connection_.id, index_);
     timeC2A(t, this->time);
     this->buffer = connection_.bufferAddr(index_);
   }

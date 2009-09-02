@@ -38,11 +38,11 @@ namespace Miro
    * be used as a mix in class for a robots specialized
    * DifferentialMotion interface implementation.
    *
-   * Note that it inherits also the base implementation for the 
+   * Note that it inherits also the base implementation for the
    * generalized Motion interface.
    */
   class DifferentialMotionImpl : public virtual POA_Miro::DifferentialMotion,
-				 public MotionImpl
+        public MotionImpl
   {
   public:
     //! Initializing constructor.
@@ -50,9 +50,9 @@ namespace Miro
 
     //! DifferentialMotion interface method implementation.
     virtual void getMinMaxLRVelocity(CORBA::Long& minLTranslation,
-				     CORBA::Long& maxLTranslation,
-				     CORBA::Long& minRTranslation,
-				     CORBA::Long& maxRTranslation) throw();
+                                     CORBA::Long& maxLTranslation,
+                                     CORBA::Long& minRTranslation,
+                                     CORBA::Long& maxRTranslation) throw();
     //! DifferentialMotion interface method implementation.
     virtual void getTargetLRVelocity(CORBA::Long& left, CORBA::Long& right) throw();
     //! Report the wheelbase.
@@ -70,7 +70,7 @@ namespace Miro
     virtual void setTargetVelocity(CORBA::Long _left, CORBA::Long _right);
 
     //! Generalized test for wheel velocity parameter correctness.
-    void testVelocityLRBounds(CORBA::Long _left, CORBA::Long _right) throw (EOutOfBounds);
+    void testVelocityLRBounds(CORBA::Long _left, CORBA::Long _right) throw(EOutOfBounds);
 
     //! Reference to DifferentialMotion parameters
     const DifferentialMotionParameters& params_;
@@ -87,21 +87,21 @@ namespace Miro
   /**
    * @param _left    Velocity to test for left whell.
    * @param _right   Velocity to test for right whell.
-   * @throw EOutOfBounds if a per wheel velocity excedes the bounds 
+   * @throw EOutOfBounds if a per wheel velocity excedes the bounds
    * specified in @ref params_.
    */
   inline
   void
   DifferentialMotionImpl::testVelocityLRBounds(CORBA::Long _left,
-					       CORBA::Long _right) throw (EOutOfBounds)
+      CORBA::Long _right) throw(EOutOfBounds)
   {
     if (_left < params_.minLTranslation ||
-	_left > params_.maxLTranslation ||
-	_right < params_.minRTranslation ||
-	_right > params_.maxRTranslation) {
+          _left > params_.maxLTranslation ||
+          _right < params_.minRTranslation ||
+          _right > params_.maxRTranslation) {
       char buffer[50];
-      sprintf(buffer, 
-	      "Left wheel: %d\nRight wheel: %d", _left, _right);
+      sprintf(buffer,
+              "Left wheel: %d\nRight wheel: %d", _left, _right);
       throw EOutOfBounds(buffer);
     }
   }
@@ -109,8 +109,8 @@ namespace Miro
   inline
   void
   DifferentialMotionImpl::lr2velocity(CORBA::Long left, CORBA::Long right,
-				      VelocityIDL& velocity)
-    throw()
+                                      VelocityIDL& velocity)
+  throw()
   {
     velocity.translation = (left + right) / 2;
     velocity.rotation = (double)(right - left) / (params_.wheelBase);
@@ -118,28 +118,30 @@ namespace Miro
 
   inline
   void
-  DifferentialMotionImpl::velocity2lr(const VelocityIDL& velocity, 
-				      CORBA::Long& left, CORBA::Long& right)
-    throw()
+  DifferentialMotionImpl::velocity2lr(const VelocityIDL& velocity,
+                                      CORBA::Long& left, CORBA::Long& right)
+  throw()
   {
     left = velocity.translation;
     right = velocity.translation;
 
     int delta = (int) rint(velocity.rotation * params_.wheelBase * .5);
-    
+
     //if  left speed > params_.maxLTranslation because of rotation we need to speed down
-    if (left-delta > params_.maxLTranslation) {
-	    left = params_.maxLTranslation;
-	    right = right + 2*delta;
-    }else{
-	     // here the same for right
-	    if (right+delta > params_.maxRTranslation) {
-		    right = params_.maxRTranslation;
-		    left  = left - 2*delta;
-	    }else{
-		    left -= delta;
-		    right += delta;
-           }
+    if (left - delta > params_.maxLTranslation) {
+      left = params_.maxLTranslation;
+      right = right + 2 * delta;
+    }
+    else {
+      // here the same for right
+      if (right + delta > params_.maxRTranslation) {
+        right = params_.maxRTranslation;
+        left  = left - 2 * delta;
+      }
+      else {
+        left -= delta;
+        right += delta;
+      }
     }
   }
 }

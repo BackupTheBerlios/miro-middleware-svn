@@ -40,16 +40,16 @@ namespace Miro
   ACE_Time_Value MagnetometerDispatcher::maxWait_(0, 100000);
 
   MagnetometerDispatcher::MagnetometerDispatcher(StructuredPushSupplier * _supplier) :
-    supplier_(_supplier),
-    mutex_(),
-    cond_(mutex_)
+      supplier_(_supplier),
+      mutex_(),
+      cond_(mutex_)
   {
     if (supplier_) {
       // Status Notify Event initialization
-      notifyEvent_.header.fixed_header.event_type.domain_name = 
-	CORBA::string_dup(supplier_->domainName().c_str());
-      notifyEvent_.header.fixed_header.event_type.type_name = 
-	CORBA::string_dup("Magnetometer");
+      notifyEvent_.header.fixed_header.event_type.domain_name =
+        CORBA::string_dup(supplier_->domainName().c_str());
+      notifyEvent_.header.fixed_header.event_type.type_name =
+        CORBA::string_dup("Magnetometer");
       notifyEvent_.header.fixed_header.event_name = CORBA::string_dup("");
       notifyEvent_.header.variable_header.length(0);   // put nothing here
       notifyEvent_.filterable_data.length(0);          // put nothing here
@@ -72,13 +72,13 @@ namespace Miro
   {
     MIRO_LOG(LL_NOTICE, "Asynchronous Magnetometer dispatching");
 
-    while(!canceled()) {
+    while (!canceled()) {
       Guard guard(mutex_);
       ACE_Time_Value timeout(ACE_OS::gettimeofday());
       timeout += maxWait_;
       if (cond_.wait(&timeout) != -1 &&
-	  !canceled()) {
-	dispatch();
+            !canceled()) {
+        dispatch();
       }
     }
 
@@ -119,14 +119,14 @@ namespace Miro
    * a separate thread.
    */
   MagnetometerImpl::MagnetometerImpl(const MagnetometerParameters& _params,
-			     StructuredPushSupplier * _supplier,
-			     bool _asynchDispatching) :
-    params_(_params),
-    supplier_(_supplier),
-    mutex_(),
-    cond_(mutex_),
-    asynchDispatching_(_asynchDispatching),
-    dispatcherThread_(_supplier)
+                                     StructuredPushSupplier * _supplier,
+                                     bool _asynchDispatching) :
+      params_(_params),
+      supplier_(_supplier),
+      mutex_(),
+      cond_(mutex_),
+      asynchDispatching_(_asynchDispatching),
+      dispatcherThread_(_supplier)
   {
     data_.time.sec = 0;
     data_.time.usec = 0;
@@ -151,7 +151,7 @@ namespace Miro
    *
    * @param data The new magnetometer reading
    */
-  void 
+  void
   MagnetometerImpl::integrateData(const MagnetometerEventIDL& _data)
   {
     { // scope for guard
@@ -166,19 +166,20 @@ namespace Miro
     // send events
     if (supplier_) {
       if (asynchDispatching_) {
-	Guard guard(dispatcherThread_.mutex_);
-	dispatcherThread_.setData(data_);
-	dispatcherThread_.cond_.broadcast();
+        Guard guard(dispatcherThread_.mutex_);
+        dispatcherThread_.setData(data_);
+        dispatcherThread_.cond_.broadcast();
       }
       else {
-	dispatcherThread_.setData(data_);
-	dispatcherThread_.dispatch();
+        dispatcherThread_.setData(data_);
+        dispatcherThread_.dispatch();
       }
     }
   }
 
   void
-  MagnetometerImpl::cancel() {
+  MagnetometerImpl::cancel()
+  {
     if (asynchDispatching_)
       dispatcherThread_.cancel();
   }
@@ -205,7 +206,7 @@ namespace Miro
 
   void
   MagnetometerImpl::getMinMaxFieldStrength(CORBA::Float& minFieldStrength,
-				    CORBA::Float& maxFieldStrength) throw()
+      CORBA::Float& maxFieldStrength) throw()
   {
     minFieldStrength = params_.minFieldStrength;
     maxFieldStrength = params_.maxFieldStrength;

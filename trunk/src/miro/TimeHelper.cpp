@@ -27,7 +27,7 @@
 #include <iostream>
 #include <sstream>
 
-std::ostream& 
+std::ostream&
 operator << (std::ostream& ostr, const ACE_Time_Value& rhs)
 {
   ostr << rhs.sec() << ".";
@@ -37,8 +37,8 @@ operator << (std::ostream& ostr, const ACE_Time_Value& rhs)
   return ostr;
 }
 
-std::istream& 
-operator >> (std::istream& istr, ACE_Time_Value& rhs) 
+std::istream&
+operator >> (std::istream& istr, ACE_Time_Value& rhs)
 {
   char c;
   long t;

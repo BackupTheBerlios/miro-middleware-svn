@@ -26,21 +26,18 @@
 /* Miro includes */
 #include "StructuredPushConsumer.h"
 
-namespace Miro 
+namespace Miro
 {
-  namespace NMC 
-  {
-    class EventFilter 
+  namespace NMC {
+    class EventFilter
     {
     public:
       //! Default constructor.
-      EventFilter() 
-      {};
-      
-      //! Default destructor 
-      virtual ~EventFilter() 
-      {};
-      
+      EventFilter() {};
+
+      //! Default destructor
+      virtual ~EventFilter() {};
+
       virtual bool isAccepted(const CosNotification::StructuredEvent &_event) = 0;
     };
   }

@@ -21,7 +21,7 @@
 // $Id$
 //
 //
-// Authors: 
+// Authors:
 //   Hans Utz
 //   Stefan Enderle
 //   Stefan Sablatnoeg
@@ -33,7 +33,7 @@
 
 namespace Miro
 {
-  /** 
+  /**
    * Wrapper for ACE_Task.
    *
    * This is just a simple wrapper to the ACE_Task template class
@@ -57,7 +57,7 @@ namespace Miro
     /**
      * Opens one single new thread, which enters the svc() method.
      *
-     * The parameter is actually just ignored, but it is best 
+     * The parameter is actually just ignored, but it is best
      * to supply NULL as a matter of style.
      *
      * If you want to open more than one thread, overwrite this method.

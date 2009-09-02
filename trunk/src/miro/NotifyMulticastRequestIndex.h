@@ -21,7 +21,7 @@
 // $Id$
 //
 //
-// Authors: 
+// Authors:
 //   Philipp Baer
 //
 #ifndef NotifyMulticastRequestIndex_h
@@ -37,13 +37,12 @@
 #endif
 #include <ace/INET_Addr.h>
 
-namespace Miro 
+namespace Miro
 {
-  namespace NMC 
-  {
-    class RequestIndex 
+  namespace NMC {
+    class RequestIndex
     {
-      
+
     public:
       //! Default constructor.
       RequestIndex();
@@ -63,35 +62,38 @@ namespace Miro
     };
 
     inline
-    RequestIndex::RequestIndex() : 
-      requestId_(0) 
+    RequestIndex::RequestIndex() :
+        requestId_(0)
     {}
 
     inline
     RequestIndex::RequestIndex(const ACE_INET_Addr &_from,
-			       CORBA::ULong _requestId) : 
-      from_(_from), 
-      requestId_(_requestId) 
+                               CORBA::ULong _requestId) :
+        from_(_from),
+        requestId_(_requestId)
     {}
 
-    inline 
-    u_long 
-    RequestIndex::hash() const {
+    inline
+    u_long
+    RequestIndex::hash() const
+    {
       return ((from_.get_ip_address() << 24)
-	      | (from_.get_port_number () << 8)
-	      | (requestId_ & 0x000000ff));
-    }
-
-    inline 
-    bool 
-    RequestIndex::operator==(RequestIndex const &rhs) const {
-      return (this->from_ == rhs.from_ &&
-	      this->requestId_ == rhs.requestId_);
+              | (from_.get_port_number() << 8)
+              | (requestId_ & 0x000000ff));
     }
 
     inline
-    bool 
-    RequestIndex::operator!=(RequestIndex const &rhs) const {
+    bool
+    RequestIndex::operator==(RequestIndex const &rhs) const
+    {
+      return (this->from_ == rhs.from_ &&
+              this->requestId_ == rhs.requestId_);
+    }
+
+    inline
+    bool
+    RequestIndex::operator!=(RequestIndex const &rhs) const
+    {
       return !(*this == rhs);
     }
   }

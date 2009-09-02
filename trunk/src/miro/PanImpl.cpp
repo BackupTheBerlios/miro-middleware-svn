@@ -26,20 +26,20 @@ namespace Miro
 {
 
   PanImpl::PanImpl(PanParameters const& _params) :
-    params_(_params),
-    targetPan_(0.f)
+      params_(_params),
+      targetPan_(0.f)
   {}
 
-  PanImpl::~PanImpl() 
+  PanImpl::~PanImpl()
   {}
 
-  CORBA::Float 
-  PanImpl::getTargetPan() throw() 
+  CORBA::Float
+  PanImpl::getTargetPan() throw()
   {
     return targetPan_;
   }
 
-  PanLimitsIDL 
+  PanLimitsIDL
   PanImpl::getPanLimits() throw()
   {
     PanLimitsIDL result;

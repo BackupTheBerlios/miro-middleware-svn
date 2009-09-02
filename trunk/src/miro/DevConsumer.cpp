@@ -21,7 +21,7 @@
 // $Id$
 //
 //
-// Authors: 
+// Authors:
 //   Hans Utz
 //   Stefan Enderle
 //   Stefan Sablatnoeg
@@ -46,9 +46,9 @@ namespace Miro
     MIRO_DBG(MIRO, LL_CTOR_DTOR, "Destructing DevConsumer.\n");
   }
 
-  void 
+  void
   DevConsumer::handleMessage(const DevMessage *)
   {
-    MIRO_DBG_OSTR(MIRO,LL_NOTICE,__FILE__ << ":" << __LINE__ << ":" << __FUNCTION__  << "() - Unhandled Message!" << std::endl);
+    MIRO_DBG_OSTR(MIRO, LL_NOTICE, __FILE__ << ":" << __LINE__ << ":" << __FUNCTION__  << "() - Unhandled Message!" << std::endl);
   }
 }

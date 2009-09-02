@@ -21,7 +21,7 @@
 // $Id$
 //
 //
-// Authors: 
+// Authors:
 //   Hans Utz
 //   Stefan Enderle
 //   Stefan Sablatnoeg
@@ -44,15 +44,15 @@ namespace Miro
     typedef ReactorTask Self;
 
   public:
-    ReactorTask(Miro::Server * _pServer = NULL, 
-		int size = 20, 
-		ACE_Sched_Params * pschedp = NULL);
+    ReactorTask(Miro::Server * _pServer = NULL,
+                int size = 20,
+                ACE_Sched_Params * pschedp = NULL);
     virtual ~ReactorTask();
 
     void shutdown();
 
     // methods defined by ACE_Task
-    virtual int svc ();
+    virtual int svc();
 
   protected:
     Server * pServer_;
@@ -63,7 +63,8 @@ namespace Miro
 
   inline
   void
-  ReactorTask::shutdown() {
+  ReactorTask::shutdown()
+  {
     canceled_ = true;
   }
 };

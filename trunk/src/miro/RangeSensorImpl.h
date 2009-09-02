@@ -42,7 +42,7 @@ namespace Miro
     typedef Thread Super;
   public:
     RangeSensorDispatcher(const ScanDescriptionIDL& _description,
-			  StructuredPushSupplier * _supplier);
+                          StructuredPushSupplier * _supplier);
     int svc();
     void cancel(bool _wait = true);
 
@@ -90,7 +90,7 @@ namespace Miro
     //! Preinitialized data structure for RangeSensor event.
     EventVector notifyEvent_;
     BoolVector eventPending_;
-    
+
     //! Timeout for dispatching thread condition.
     static ACE_Time_Value maxWait_;
 
@@ -112,8 +112,8 @@ namespace Miro
   public:
     //! Initializing constructor.
     RangeSensorImpl(const ScanDescriptionIDL& _description,
-		    StructuredPushSupplier * _supplier = NULL,
-		    bool _asychDispatching = false);
+                    StructuredPushSupplier * _supplier = NULL,
+                    bool _asychDispatching = false);
     ~RangeSensorImpl();
 
     //! Input from range sensors, that acquire full scans at once.

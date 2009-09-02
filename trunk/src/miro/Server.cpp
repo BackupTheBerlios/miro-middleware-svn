@@ -32,7 +32,7 @@
 
 static Miro::Server * pServer;
 
-extern "C" void handler (int signum)
+extern "C" void handler(int signum)
 {
   // check of sigint and sigterm
   if (signum == SIGINT || signum == SIGTERM) {
@@ -50,11 +50,11 @@ namespace Miro
    * @param orb      The Object request broker.
    * @param shutdown Cooperative shutdown indicator.
    */
-  Server::Worker::Worker (ACE_Thread_Manager * _threadManager,
-			  CORBA::ORB_ptr orb, bool& shutdown) :
-    Super(_threadManager),
-    orb_ (CORBA::ORB::_duplicate (orb)),
-    shutdown_(shutdown)
+  Server::Worker::Worker(ACE_Thread_Manager * _threadManager,
+                         CORBA::ORB_ptr orb, bool& shutdown) :
+      Super(_threadManager),
+      orb_(CORBA::ORB::_duplicate(orb)),
+      shutdown_(shutdown)
   {
   }
 
@@ -71,15 +71,15 @@ namespace Miro
   }
 
   Server::Server(int& argc, char *argv[],
-		 const RobotParameters& _params) :
-    Super(argc, argv, _params),
-    rebind_(true),
-    own_(true),
-    shutdown_(false),
-    signals_(),
-    worker_(&threadManager_, orb_.in(), shutdown_)
+                 const RobotParameters& _params) :
+      Super(argc, argv, _params),
+      rebind_(true),
+      own_(true),
+      shutdown_(false),
+      signals_(),
+      worker_(&threadManager_, orb_.in(), shutdown_)
   {
-    MIRO_DBG(MIRO,LL_CTOR_DTOR,"Constructing Miro::Server.\n");
+    MIRO_DBG(MIRO, LL_CTOR_DTOR, "Constructing Miro::Server.\n");
 
     // parse arguments
     ACE_Arg_Shifter arg_shifter(argc, argv);
@@ -88,11 +88,11 @@ namespace Miro
 
       const char rebindOpt[] = "-MiroRebindIOR";
       if (ACE_OS::strcasecmp(current_arg, rebindOpt) == 0) {
-	arg_shifter.consume_arg();
-	rebind_ = true;
+        arg_shifter.consume_arg();
+        rebind_ = true;
       }
       else
-	arg_shifter.ignore_arg ();
+        arg_shifter.ignore_arg();
     }
 
     // Get reference to Root POA.
@@ -100,62 +100,62 @@ namespace Miro
 
     // Get POA manager
     poa_mgr = poa->the_POAManager();
-        
+
     // register Signal handler for Ctr+C
     signals_.sig_add(SIGINT);
     signals_.sig_add(SIGTERM);
 
     pServer = this;
-    ACE_Sig_Action sa ((ACE_SignalHandler) handler, SIGINT);
-    ACE_Sig_Action sa2 ((ACE_SignalHandler) handler, SIGTERM);
+    ACE_Sig_Action sa((ACE_SignalHandler) handler, SIGINT);
+    ACE_Sig_Action sa2((ACE_SignalHandler) handler, SIGTERM);
 
     // Activate the POA manager.
     poa_mgr->activate();
 
-    MIRO_DBG(MIRO,LL_CTOR_DTOR, "Miro::Server. constructed\n");
+    MIRO_DBG(MIRO, LL_CTOR_DTOR, "Miro::Server. constructed\n");
   }
 
   Server::Server(const Server& _server) :
-    Super(_server),
-    poa(_server.rootPoa()),
-    poa_mgr(_server.poa_mgr),
-    rebind_(_server.rebind_),
-    own_(false),
-    shutdown_(true),
-    signals_(),
-    worker_(&threadManager_, orb_.in(), shutdown_)
+      Super(_server),
+      poa(_server.rootPoa()),
+      poa_mgr(_server.poa_mgr),
+      rebind_(_server.rebind_),
+      own_(false),
+      shutdown_(true),
+      signals_(),
+      worker_(&threadManager_, orb_.in(), shutdown_)
   {
-    MIRO_DBG(MIRO,LL_NOTICE, "Copy constructing Miro::Server.\n");
+    MIRO_DBG(MIRO, LL_NOTICE, "Copy constructing Miro::Server.\n");
   }
 
   Server::~Server()
   {
     if (own_) {
-      MIRO_DBG(MIRO,LL_CTOR_DTOR,"Destructing Miro::Server.\n");
+      MIRO_DBG(MIRO, LL_CTOR_DTOR, "Destructing Miro::Server.\n");
     }
     else {
-      MIRO_DBG(MIRO,LL_CTOR_DTOR, "Destructing cloned Miro::Server.\n");
+      MIRO_DBG(MIRO, LL_CTOR_DTOR, "Destructing cloned Miro::Server.\n");
     }
 
     if (!noNaming_) {
       CosNaming::Name n(1);
       n.length(1);
       try {
-	NameVector::const_iterator i;
-	for (i = nameVector_.begin(); i != nameVector_.end(); ++i) {
-	  n[0].id = CORBA::string_dup(i->c_str());
-	  namingContext->unbind(n);
-	}
-	ContextNameVector::const_iterator j;
-	for (j = contextNameVector_.begin(); j != contextNameVector_.end(); ++j) {
-	  n[0].id = CORBA::string_dup(j->second.c_str());
-	  j->first->unbind(n);
-	  CORBA::release(j->first);
-	}
+        NameVector::const_iterator i;
+        for (i = nameVector_.begin(); i != nameVector_.end(); ++i) {
+          n[0].id = CORBA::string_dup(i->c_str());
+          namingContext->unbind(n);
+        }
+        ContextNameVector::const_iterator j;
+        for (j = contextNameVector_.begin(); j != contextNameVector_.end(); ++j) {
+          n[0].id = CORBA::string_dup(j->second.c_str());
+          j->first->unbind(n);
+          CORBA::release(j->first);
+        }
       }
       catch (const CORBA::Exception& e) {
-        MIRO_LOG_OSTR(LL_ERROR,"Caught CORBA exception on unbinding: " << n[0].id 
-	  << "\nProbably the NameSevice went down while we run:\n" << e);
+        MIRO_LOG_OSTR(LL_ERROR, "Caught CORBA exception on unbinding: " << n[0].id
+                      << "\nProbably the NameSevice went down while we run:\n" << e);
       }
     }
 
@@ -190,7 +190,7 @@ namespace Miro
    *
    * @param nthreads Number of threads in the threadpool.
    */
-  void 
+  void
   Server::detach(unsigned int nthreads)
   {
     if (worker_.activate(THR_NEW_LWP | THR_JOINABLE, nthreads) != 0)
@@ -198,12 +198,12 @@ namespace Miro
   }
 
 
-  void 
+  void
   Server::wait()
   {
     worker_.wait();
   }
-  
+
   /**
    * Starts the server main loop, waits for shutdown
    * of the server.
@@ -217,13 +217,13 @@ namespace Miro
       detach(nthreads - 1);
     }
     worker_.svc();
-    worker_.wait(); 
+    worker_.wait();
     // Dectivate the POA manager.
     // poa_mgr->deactivate();
   }
 
   /**
-   * Adds an IOR at the naming service in the servers 
+   * Adds an IOR at the naming service in the servers
    * naming context.
    */
   void
@@ -235,28 +235,29 @@ namespace Miro
       n[0].id = CORBA::string_dup(_name.c_str());
 
       if (rebind_) {
-	// Force binding of references to make
-	// sure they are always up-to-date.
-	try {
-	  namingContext->unbind(n);
+        // Force binding of references to make
+        // sure they are always up-to-date.
+        try {
+          namingContext->unbind(n);
           MIRO_LOG_OSTR(LL_ERROR, "Object still bound in naming service: " << _name
-	       << "\nRebinding it.");
-	} catch (...) {
-	}
+                        << "\nRebinding it.");
+        }
+        catch (...) {
+        }
       }
 
       try {
-	namingContext->bind(n, _object);
+        namingContext->bind(n, _object);
       }
-      catch (CosNaming::NamingContext::AlreadyBound& ) {
-	MIRO_LOG_OSTR(LL_ERROR, "Object is already bound in naming service: "
-	     << n[0].id
-	     << "\nUse -MiroRebindIOR if you really want to rebind it.");
-	throw(0);
+      catch (CosNaming::NamingContext::AlreadyBound&) {
+        MIRO_LOG_OSTR(LL_ERROR, "Object is already bound in naming service: "
+                      << n[0].id
+                      << "\nUse -MiroRebindIOR if you really want to rebind it.");
+        throw(0);
       }
 
       nameVector_.push_back(_name);
-    }      
+    }
   }
 
   /**
@@ -264,9 +265,9 @@ namespace Miro
    * naming context.
    */
   void
-  Server::addToNameService(CORBA::Object_ptr _object, 
-			   CosNaming::NamingContext_ptr _context,
-			   const std::string& _name)
+  Server::addToNameService(CORBA::Object_ptr _object,
+                           CosNaming::NamingContext_ptr _context,
+                           const std::string& _name)
   {
     if (!noNaming_) {
       CosNaming::Name n(1);
@@ -274,27 +275,28 @@ namespace Miro
       n[0].id = CORBA::string_dup(_name.c_str());
 
       if (rebind_) {
-	// Force binding of references to make
-	// sure they are always up-to-date.
-	try {
-	  _context->unbind(n);
-	  MIRO_LOG_OSTR(LL_ERROR, "Object still bound in naming service: " << _name  << "\nRebinding it.");
-	} catch (...) {
-	}
+        // Force binding of references to make
+        // sure they are always up-to-date.
+        try {
+          _context->unbind(n);
+          MIRO_LOG_OSTR(LL_ERROR, "Object still bound in naming service: " << _name  << "\nRebinding it.");
+        }
+        catch (...) {
+        }
       }
 
       try {
-	_context->bind(n, _object);
+        _context->bind(n, _object);
       }
-      catch (CosNaming::NamingContext::AlreadyBound& ) {
-	MIRO_LOG_OSTR(LL_ERROR,  "Object is already bound in naming service: "
-	     << n[0].id 
-	     << "\nUse -MiroRebindIOR if you really want to rebind it.");
-	throw(0);
+      catch (CosNaming::NamingContext::AlreadyBound&) {
+        MIRO_LOG_OSTR(LL_ERROR,  "Object is already bound in naming service: "
+                      << n[0].id
+                      << "\nUse -MiroRebindIOR if you really want to rebind it.");
+        throw(0);
       }
 
       contextNameVector_.push_back(std::make_pair(CosNaming::NamingContext::_duplicate(_context), _name));
-    }      
+    }
   }
 
   /**

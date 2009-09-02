@@ -53,7 +53,7 @@ namespace Miro
    * @param T The concrete derived type of the factory.
    * @param B The common base type of the factory.
    */
-  template<class T, class B = typename T::Base>
+  template < class T, class B = typename T::Base >
   class Factory : public FactoryBase<B>
   {
   public:
@@ -70,7 +70,8 @@ namespace Miro
   /** @return An instance of a type Type. */
   template<class T, class B>
   T *
-  Factory<T, B>::instance() const {
+  Factory<T, B>::instance() const
+  {
     return new Type();
   }
 
@@ -100,7 +101,7 @@ namespace Miro
     virtual BaseType * instance(ParamType const&) const = 0;
   };
 
-  template<class T, class P, class B = typename T::Base>
+  template < class T, class P, class B = typename T::Base >
   class OneParamFactory : public OneParamFactoryBase<P, B>
   {
   public:
@@ -118,11 +119,12 @@ namespace Miro
 
   /**
    * @param param To be passed to the constructor of Type.
-   * @return An instance of a type Type. 
+   * @return An instance of a type Type.
    */
   template<class T, class P, class B>
   T *
-  OneParamFactory<T, P, B>::instance(ParamType const& _param) const {
+  OneParamFactory<T, P, B>::instance(ParamType const& _param) const
+  {
     return new Type(_param);
   }
 }
