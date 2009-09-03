@@ -31,7 +31,14 @@
 #include <iostream>
 #include <algorithm>
 
+#ifndef WIN32
 #include <sys/time.h>
+#else
+#include <qdatetime.h>
+#endif // WIN32
+
+#include "qt_compatibility.h"
+
 
 namespace
 {
@@ -112,14 +119,20 @@ namespace Miro
     }
 
     void
-    Generator::generateHeader(std::ostream& ostr) const
+    Generator::generateHeader(std::ostream& ostr, const QString& exportDirective) const
     {
       if (fileName_.isEmpty())
         throw QString("No file name specified.");
 
+#ifndef WIN32
       struct timeval t;
       struct timezone z;
       gettimeofday(&t, &z);
+      long unique = t.tv_usec;
+#else
+      QTime qt = QTime::currentTime();
+      long unique = qt.msec() + (qt.second() + qt.minute() * 60) * 1000;
+#endif
 
       int indent = 0;
 
@@ -128,10 +141,10 @@ namespace Miro
 
       ostr << head << std::endl;
       ostr << "#ifndef " << includeGuard
-      << "_" << t.tv_usec // make it truely unique
+      << "_" << unique // make it truely unique
       << std::endl
       << "#define " << includeGuard
-      << "_" << t.tv_usec // make it truely unique
+      << "_" << unique // make it truely unique
       << std::endl;
 
       QStringSet::const_iterator i;
@@ -143,6 +156,11 @@ namespace Miro
         ostr << std::endl;
       for (i = Include_.begin(); i != Include_.end(); ++i)
         ostr << "#include <" << *i << ">" << std::endl;
+
+      if (!exportDirective.isEmpty()) {
+        ostr << "\n// ACE dll export directive header" << std::endl;
+        ostr << "#include \"" << QSTRCAST(exportDirective) << ".h\"" << std::endl;
+      }
 
       ostr << std::endl;
 
@@ -172,7 +190,7 @@ namespace Miro
         if (first != type_.begin())
           ostr << std::endl;
         if (!first->isDummy())
-          first->generateHeader(ostr, indent);
+          first->generateHeader(ostr, indent, exportDirective);
       }
 
       // close namespace scope
@@ -204,6 +222,10 @@ namespace Miro
       ostr << "#include <miro/XmlParse.h>" << std::endl
       << "#include <qdom.h>" << std::endl
       << std::endl;
+
+      ostr << "#ifdef  HAVE_CONFIG_H\n"
+      "#include \"config.h\"\n"
+      "#endif//HAVE_CONFIG_H\n\n";
 
       // match the operator <<= from Miro into local namespace
       if (namespace_.size() == 0 ||
@@ -247,7 +269,11 @@ namespace Miro
       GroupMap::const_iterator first, last = groups_.end();
       for (first = groups_.begin(); first != last; ++first) {
         result.push_back(first->first);
+#if QT_VERSION >= 0x040000
+        result.back()[0] = result.back()[0].toUpper();
+#else // QT_VERSION >= 0x040000
         result.back()[0] = result.back()[0].upper();
+#endif // QT_VERSION >= 0x040000
       }
       std::sort(result.begin(), result.end());
       // FIXME: this should actually
@@ -274,11 +300,16 @@ namespace Miro
               first->fullName() == _name ||
               first->fullName() == _name + "Parameters") {
 
+#ifdef GCC_MAJOR_VERSION
 #if GCC_MAJOR_VERSION > 2
           return first.base();
 #else
           return first;
-#endif
+#endif // GCC_MAJOR_VERSION > 2
+#else
+          return &*first;
+#endif // GCC_MAJOR_VERSION
+
         }
       return NULL;
     }
@@ -316,8 +347,7 @@ namespace Miro
           // add parameter to set
           if (i == params.end()) {
             params.push_back(*first);
-          }
-          // overwrite default value of inherited parameter
+          } // overwrite default value of inherited parameter
           else {
             i->default_ = first->default_;
           }

@@ -35,6 +35,8 @@
 #include <iostream>
 #include <fstream>
 
+#include "qt_compatibility.h"
+
 using std::cout;
 using std::cerr;
 using std::ofstream;
@@ -47,6 +49,7 @@ QString baseName = "Parameters";
 QString headerExtension = "h";
 QString sourceExtension = "cpp";
 QString fileName = "Parameters.xml";
+QString exportDirective;
 
 int
 parseArgs(int& argc, char* argv[])
@@ -54,7 +57,7 @@ parseArgs(int& argc, char* argv[])
   int rc = 0;
   int c;
 
-  ACE_Get_Opt get_opts(argc, argv, "f:h:n:s:v?");
+  ACE_Get_Opt get_opts(argc, argv, "f:h:n:s:x:v?");
 
   while ((c = get_opts()) != -1) {
     switch (c) {
@@ -73,6 +76,9 @@ parseArgs(int& argc, char* argv[])
       case 'v':
         verbose = true;
         break;
+      case 'x':
+        exportDirective = get_opts.optarg;
+        break;
       case '?':
       default:
         cerr << "usage: " << argv[0] << "[-f file] [-i item] [-s=source] [-h=header] [-v?]" << std::endl
@@ -80,6 +86,7 @@ parseArgs(int& argc, char* argv[])
         << "  -n <name> base name of the output file (Parameters)" << std::endl
         << "  -s <extension> extension of the generated source file (cpp)" << std::endl
         << "  -h <extension> extension of the generated header file (h)" << std::endl
+        << "  -x <directive> add export directive to generated header" << std::endl
         << "  -v verbose mode" << std::endl
         << "  -? help: emit this text and stop" << std::endl;
         rc = 1;
@@ -108,7 +115,7 @@ main(int argc, char * argv[])
       Parser handler(generator);
 
       QFile xmlFile(fileName);
-      QXmlInputSource source(xmlFile);
+      QXmlInputSource source(&xmlFile);
       QXmlSimpleReader reader;
       TextErrorHandler errorHandler;
 
@@ -122,13 +129,16 @@ main(int argc, char * argv[])
 
         if (verbose)
           cout << "generating  " << (baseName + "." + sourceExtension) << std::endl;
-        ofstream sourceFile(baseName + "." + sourceExtension);
-        if (verbose)
+        QString sourceFilename(baseName + "." + sourceExtension);
+        ofstream sourceFile(qPrintable(sourceFilename));
+        if (verbose) {
           cout << "generating  " << (baseName + "." + headerExtension) << std::endl;
-        ofstream headerFile(baseName + "." + headerExtension);
+        }
+        QString headerFilename(baseName + "." + headerExtension);
+        ofstream headerFile(qPrintable(headerFilename));
 
         generator.generateSource(sourceFile);
-        generator.generateHeader(headerFile);
+        generator.generateHeader(headerFile, exportDirective);
       }
       else {
         cerr << "Error parsing " << fileName << std::endl

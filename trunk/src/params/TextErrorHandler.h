@@ -40,6 +40,7 @@ namespace Miro
       virtual bool error(const QXmlParseException & exception);
       virtual bool fatalError(const QXmlParseException & exception);
       virtual QString errorString();
+      virtual QString errorString() const;
 
     protected:
       void createErrorMessage(const QString& type,

@@ -81,6 +81,8 @@ namespace Miro
       QString const& nameSpace() const;
       //! Mark a type as having a singel global instance.
       void setInstance();
+      //! Mark a type as having a singel global, but unmanged instance.
+      void setUnmanagedInstance();
       //! Predicate inidcating the type has a single global instance.
       bool instance() const;
 
@@ -95,7 +97,7 @@ namespace Miro
       void addToConstructor(QString const& _ctor);
 
       //! Generate header file code.
-      void generateHeader(std::ostream& ostr, unsigned long _indent) const;
+      void generateHeader(std::ostream& ostr, unsigned long _indent, const QString& exportDirective = QString::null) const;
       //! Generate source file code.
       void generateSource(std::ostream& ostr, unsigned long _indent) const;
 
@@ -271,6 +273,16 @@ namespace Miro
     {
       addStatic(QString("Miro::Singleton<") +
                 QString(name()) + "Parameters>",
+                "instance");
+
+      instance_ = true;
+    }
+    inline
+    void
+    Type::setUnmanagedInstance()
+    {
+      addStatic(QString("Miro::Singleton<") +
+                QString(name()) + "Parameters, ACE_Recursive_Thread_Mutex, ACE_Unmanaged_Singleton>",
                 "instance");
 
       instance_ = true;

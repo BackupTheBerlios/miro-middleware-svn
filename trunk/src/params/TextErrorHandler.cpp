@@ -24,6 +24,8 @@
 
 #include <sstream>
 
+#include "qt_compatibility.h"
+
 namespace Miro
 {
   namespace CFG {
@@ -54,6 +56,12 @@ namespace Miro
 
     QString
     TextErrorHandler::errorString()
+    {
+      return error_;
+    }
+
+    QString
+    TextErrorHandler::errorString() const
     {
       return error_;
     }

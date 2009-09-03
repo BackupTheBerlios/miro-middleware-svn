@@ -67,6 +67,7 @@ namespace Miro
 
       bool staticConst_;
       bool instance_;
+      bool unmanaged_;
       bool string_;
       bool enumeration_;
       bool enumerationMultiple_;
@@ -78,6 +79,7 @@ namespace Miro
       bool serialParams_;
       bool scanDescription_;
       bool schedParams_;
+      bool text_;
 
       QString docu_;
       QString ctor_;

@@ -25,6 +25,8 @@
 #include <iostream>
 #include <algorithm>
 
+#include "qt_compatibility.h"
+
 namespace
 {
   QString spaces("                                                        ");
@@ -83,23 +85,29 @@ namespace Miro
     }
 
     void
-    Type::generateHeader(std::ostream& ostr, unsigned long _indent) const
+    Type::generateHeader(std::ostream& ostr, unsigned long _indent, const QString& exportDirective) const
     {
       //   if(name_.isEmpty())
       //     throw QString("No class name specified.");
 
       unsigned long indent = _indent;
 
+      std::string expStr = "";
+      if (!exportDirective.isEmpty()) {
+        expStr = QSTRCAST(QString(exportDirective + " "));
+      }
+
       if (!isExtern()) {
         // debug ostream operator
         if (parent_.isEmpty()) {
-          ostr << spaces.left(indent) << "struct " << name_ << "Parameters;" << std::endl
-          << spaces.left(indent) << "std::ostream&" << std::endl
+          ostr << spaces.left(indent) << "class " << name_ << "Parameters;" << std::endl
+          << spaces.left(indent) << expStr.c_str() << "std::ostream&" << std::endl
           << spaces.left(indent) << "operator << (std::ostream& ostr, const " << name_ << "Parameters& rhs);" << std::endl
           << std::endl;
         }
 
-        ostr << spaces.left(indent) << "class " << name_ << "Parameters";
+        ostr << spaces.left(indent) << "class " << expStr.c_str() << name_ << "Parameters";
+
         if (!parent_.isEmpty())
           ostr << " : public " << parent_;
 
@@ -167,7 +175,7 @@ namespace Miro
 
         if (parent_.isEmpty())
           ostr << spaces.left(indent) << "friend" << std::endl
-          << spaces.left(indent) << "std::ostream&" << std::endl
+          << spaces.left(indent) << expStr.c_str() << "std::ostream&" << std::endl
           << spaces.left(indent) << "operator << (std::ostream& ostr, const " << name_ << "Parameters& rhs);" << std::endl;
       }
       else {
@@ -311,7 +319,11 @@ namespace Miro
                 ostr << "\"" << j->description_;
               else {
                 QString name(j->name_);
+#if QT_VERSION >= 0x040000
+                name[0] = name[0].toUpper();
+#else
                 name[0] = name[0].upper();
+#endif
 
                 ostr << "\"" << name;
               }
@@ -380,7 +392,11 @@ namespace Miro
         ParameterVector::const_iterator j;
         for (j = parameter_.begin(); j != parameter_.end(); ++j) {
           QString name(j->name_);
+#if QT_VERSION >= 0x040000
+          name[0] = name[0].toUpper();
+#else
           name[0] = name[0].upper();
+#endif
           ostr << spaces.left(indent);
           if (j != parameter_.begin())
             ostr << "else ";
@@ -431,7 +447,11 @@ namespace Miro
       ParameterVector::const_iterator j;
       for (j = parameter_.begin(); j != parameter_.end(); ++j) {
         QString name(j->name_);
+#if QT_VERSION >= 0x040000
+        name[0] = name[0].toUpper();
+#else
         name[0] = name[0].upper();
+#endif
 
         if (j->type_ != "angle")
           ostr << spaces.left(indent) << "g = (" << classPrefix << j->name_ << " >>= e);" << std::endl;
