@@ -31,6 +31,7 @@
 #include <algorithm>
 #include <limits>
 #include <iostream>
+#include <string>
 
 #define XML_PARSE_QSTRING_IMPL(type, qstringmethod) \
   void operator <<= (type & _lhs, const QDomNode& _node) \
@@ -73,6 +74,8 @@ namespace
 
 namespace Miro
 {
+  using namespace std;
+
   void operator <<= (bool& lhs, const QDomNode& node)
   {
     QString value = getAttribute(node, QString("value"));
@@ -270,6 +273,9 @@ namespace Miro
     return e;
   }
 
+  static const char* SERIAL_MODES[] = { "none", "even", "odd", "mark", "space", NULL };
+  static const char* SERIAL_MODES_NONE = SERIAL_MODES[0];
+
   void
   operator<<= (ACE_TTY_IO::Serial_Params& _lhs, const QDomNode& _node)
   {
@@ -294,7 +300,11 @@ namespace Miro
               _lhs.modem <<= n;
             }
             else if (i == "Parityenb") {
-              _lhs.parityenb <<= n;
+              bool val;
+              val <<= n;
+              if (val)
+                throw Exception("Can't upgrade parityenb to paritymode silently (can't interpret 'true' value)");
+              _lhs.paritymode = SERIAL_MODES_NONE;
             }
             else if (i == "Rcvenb") {
               _lhs.rcvenb <<= n;
@@ -320,11 +330,15 @@ namespace Miro
             else if (i == "Xoutenb") {
               _lhs.xoutenb <<= n;
             }
-            /*
-                  else if (i == "Paritymode") {
-                    _lhs.paritymode <<= n;
-                  }
-            */
+            else if (i == "Paritymode") {
+              string s;
+              s <<= n;
+              size_t j;
+              for (j = 0; SERIAL_MODES[j] != NULL; ++j)
+                if (strcmp(s.c_str(), SERIAL_MODES[j]) == 0)
+                  break;
+              _lhs.paritymode = SERIAL_MODES[j];
+            }
           }
         }
         n = n.nextSibling();
@@ -340,8 +354,8 @@ namespace Miro
     QDomElement f;
     f = (lhs.baudrate >>= e);
     f.setAttribute("name", "Baudrate");
-    f = (lhs.parityenb >>= e);
-    f.setAttribute("name", "Parityenb");
+    f = (lhs.paritymode >>= e);
+    f.setAttribute("name", "Paritymode");
     f = (lhs.databits >>= e);
     f.setAttribute("name", "Databits");
     f = (lhs.stopbits >>= e);

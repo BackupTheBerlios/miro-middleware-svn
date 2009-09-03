@@ -84,7 +84,7 @@ std::ostream &
 operator<<(std::ostream &ostr, const ACE_TTY_IO::Serial_Params &rhs)
 {
   ostr << "baudrate = " << rhs.baudrate << std::endl
-  << "parityenb = " << rhs.parityenb << std::endl
+  << "paritymode = " << rhs.paritymode << std::endl
   << "databits = " << rhs.databits << std::endl
   << "stopbits = " << rhs.stopbits << std::endl
   << "readtimeoutmsec = " << rhs.readtimeoutmsec << std::endl

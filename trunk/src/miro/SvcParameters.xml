@@ -7,7 +7,6 @@
   <config_group name="ACE">
     <config_item name="ACE_TTY_IO::Serial_Params" final="false" dummy="true">
       <config_parameter name="baudrate" type="int" />
-      <config_parameter name="parityenb" type="int" />
       <config_parameter name="paritymode" type="std::string" />
       <config_parameter name="databits" type="int" />
       <config_parameter name="stopbits" type="int" />
@@ -40,7 +39,6 @@
       <config_parameter name="ttyParams" type="ACE_TTY_IO::Serial_Params" />
       <constructor>
         ttyParams.baudrate = 38400;
-        ttyParams.parityenb = 0;
         ttyParams.paritymode = 0;
         ttyParams.databits = 8;
         ttyParams.stopbits = 1; 
