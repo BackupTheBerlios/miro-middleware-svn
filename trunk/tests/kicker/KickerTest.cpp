@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
     std::cout << "Kicker test!" << std::endl
 	      << "Kick duration in msec (0 to quit): " << std::endl;
 
-    unsigned int duration;
+    int duration;
     while(std::cin >> duration &&
 	  duration > 0) {
       std::cout << "Kicker test!" << std::endl
