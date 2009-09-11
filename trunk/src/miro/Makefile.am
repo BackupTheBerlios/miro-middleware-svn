@@ -112,6 +112,12 @@ libmiroSsh_a_CPPFLAGS = -include $(top_builddir)/pch/all_static.h $(CPPFLAGS) $(
 endif
 
 extraheader = \
+	miro_Export.h \
+	miroCore_Export.h \
+	miroBase_Export.h \
+	miroXml_Export.h \
+	qt_compatibility.h \
+	platform_compatibility.h \
 	Angle.i \
 	Repository.h \
 	Factory.h \
@@ -119,6 +125,7 @@ extraheader = \
 	Repository.h \
 	Factory.h \
 	Synch.h \
+        Text.h \
 	DevMessage.h \
 	NotifyMulticastRequestIndex.h \
 	NotifyMulticastDefines.h \
