@@ -112,6 +112,7 @@ else
 if test "x$ac_miro_has_1394" == xyes; then if test $ac_miro_has_1394_libversion -ge 3; then miro_export_libs="$miro_export_libs -lraw1394 -ldc1394"; else miro_export_libs="$miro_export_libs -lraw1394 -ldc1394_control"; fi; fi
 if test "x$ac_miro_has_unicap" == xyes; then miro_export_libs="$miro_export_libs -lunicap"; fi
 if test "x$ac_compile_player" == xyes; then miro_export_libs="$miro_export_libs ${PLAYER_LDFLAGS} ${PLAYER_LIBS}"; fi
+if test "x$ac_compile_gazebo" == xyes; then miro_export_libs="$miro_export_libs ${GAZEBO_LDFLAGS} ${GAZEBO_LIBS}"; fi
 
 AC_SUBST(miro_export_acetao_cflags)
 AC_SUBST(miro_export_acetao_ldflags)
@@ -137,6 +138,7 @@ AC_SUBST(miro_export_sparrow99,"$ac_request_sparrow99")
 AC_SUBST(miro_export_pioneer, "$ac_request_pioneer")
 AC_SUBST(miro_export_b21, "$ac_request_b21")
 AC_SUBST(miro_export_player, "$ac_compile_player")
+AC_SUBST(miro_export_gazebo, "$ac_compile_gazebo")
 AC_SUBST(miro_export_speech, "$ac_compile_speech")
 
 # create makefiles
@@ -330,6 +332,13 @@ if test x$ac_compile_player = xyes; then
 	echo "compiler flags:" $PLAYER_CPPFLAGS
 	echo "libraries used:" $PLAYER_LIBS
 fi
+if test x$ac_compile_gazebo = xyes; then
+	echo ""
+	echo "Gazebo-related results:"
+	echo "linker flags:  " $GAZEBO_LDFLAGS
+	echo "compiler flags:" $GAEBO_CPPFLAGS
+	echo "libraries used:" $GAZEBO_LIBS
+fi
 echo ""
 echo "Feature:            |   Enabled   |   Disabled   "
 echo "-------------------------------------------------"
@@ -341,6 +350,8 @@ echo $ECHO_N "B21"
 if test "x$ac_request_b21" = xyes; then echo "                        X"; else echo "                                       X"; fi
 echo $ECHO_N "Player simulator"
 if test "x$ac_compile_player" = xyes; then echo "           X"; else echo "                          X"; fi
+echo $ECHO_N "Gazebo simulator"
+if test "x$ac_compile_gazebo" = xyes; then echo "           X"; else echo "                          X"; fi
 echo "-------------------------------------------------"
 echo $ECHO_N "BTTV"
 if test "x$ac_miro_has_bttv" = xyes; then echo "                       X"; else echo "                                      X"; fi
