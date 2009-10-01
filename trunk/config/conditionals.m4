@@ -40,6 +40,13 @@ AC_DEFUN([AC_DETERMINE_PLATFORMS],
 		ac_request_player=$enableval,
 		ac_request_player=no)
 
+   AC_ARG_ENABLE(
+       Gazebo,
+       AC_HELP_STRING([--enable-Gazebo], [Turn on Gazebo Libraries support (default off)]),
+       ac_request_gazebo=$enableval,
+       ac_request_gazebo=no)
+
+
 	AC_ARG_ENABLE(
 		Deprecated,
 		AC_HELP_STRING([--enable-Deprecated], [Turn on support for deprecated interfaces]),
@@ -55,6 +62,7 @@ AC_DEFUN([AC_DETERMINE_PLATFORMS],
 	AH_TEMPLATE([MIRO_HAS_PIONEER], [build with support for pioneer robots.])
 	AH_TEMPLATE([MIRO_HAS_B21], [build with support for B21 robots.])
 	AH_TEMPLATE([MIRO_HAS_PLAYER], [build with Player support.])
+	AH_TEMPLATE([MIRO_HAS_GAZEBO], [build with Gazebo support.])
 
 	AH_TEMPLATE([MIRO_HAS_DEPRECATED], [build with support for deprecated interfaces. ])
 
@@ -82,6 +90,19 @@ AC_DEFUN([AC_DETERMINE_PLATFORMS],
 	fi
 
 	AM_CONDITIONAL(COND_PLAYER, [test "x$ac_compile_player" = xyes])
+
+	if test "x$ac_request_gazebo" = xyes; then
+		AC_SEARCH_GAZEBO
+	fi
+
+	if test "x$ac_request_gazebo" = xyes &&
+		test "x$ac_has_gazebo" = xyes; then
+		AC_DEFINE(MIRO_HAS_GAZEBO)
+		ac_compile_gazebo=yes
+	fi
+
+	AM_CONDITIONAL(COND_GAZEBO, [test "x$ac_compile_gazebo" = xyes])
+
 ])
 
 

@@ -85,6 +85,10 @@ playerlibraries = \
 	$(PLAYER_LDFLAGS) $(PLAYER_LIBS)
 endif
 
+if COND_GAZEBO
+gazebolibraries = \
+	$(GAZEBO_LDFLAGS) $(GAZEBO_LIBS)
+endif
 
 # common build rules
 
