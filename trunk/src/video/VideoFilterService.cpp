@@ -44,6 +44,10 @@
 #ifdef MIRO_HAS_PLAYER
 #include "VideoDevicePlayer.h"
 #endif
+#ifdef MIRO_HAS_GAZEBO
+#include "VideoDeviceGazebo.h"
+#endif
+
 
 #include "VideoDeviceDummy.h"
 #include "VideoFilterBasic.h"
@@ -94,6 +98,10 @@ namespace Miro
 #ifdef MIRO_HAS_PLAYER
 	repo->registerFilter< ::Video::DevicePlayer>("DevicePlayer");
 #endif
+#ifdef MIRO_HAS_GAZEBO
+        repo->registerFilter< ::Video::DeviceGazebo>("DeviceGazebo");
+#endif
+
 
 	repo->registerFilter< ::Video::FilterCopy>("FilterCopy");
 	repo->registerFilter< ::Video::FilterSwap3>("FilterSwap3");

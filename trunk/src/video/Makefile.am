@@ -47,6 +47,9 @@ sources = \
 	VideoFilterRGBtoSeg.cpp \
 	VideoFilterDistanceScan.cpp
 
+gazebosources = \
+	VideoDeviceGazebo.cpp
+
 playersources = \
 	VideoDevicePlayer.cpp
 
@@ -69,6 +72,10 @@ unicapsources = \
 quickcamsources = \
 	BufferManagerQuickCam.cpp \
 	VideoDeviceQuickCam.cpp
+
+if COND_GAZEBO
+gazebosources_used = $(gazebosources)
+endif
 
 if COND_PLAYER
 playersources_used = $(playersources)
@@ -98,7 +105,7 @@ Parameters.h: Parameters.cpp
 Parameters.cpp: Parameters.xml
 
 
-libmiroVideo_la_LIBADD = $(playerlibraries)
+libmiroVideo_la_LIBADD = $(playerlibraries) $(gazebolibraries)
 
 libmiroVideo_la_SOURCES = \
 	$(sources) \
@@ -107,7 +114,9 @@ libmiroVideo_la_SOURCES = \
 	$(1394sources_used) \
 	$(unicapsources_used) \
 	$(quickcamsources_used) \
-	$(playersources_used)
+	$(playersources_used) \
+	$(gazebosources_used)
+
 
 if COND_PCH
 libmiroVideo_la_CPPFLAGS = -include $(top_builddir)/pch/all_shared.h $(CPPFLAGS) $(AM_CPPFLAGS)
@@ -128,7 +137,8 @@ VideoService_LDADD = \
 	$(QT_LIBS) \
 	$(1394libraries) \
 	$(unicaplibraries) \
-	$(playerlibraries)
+	$(playerlibraries) \
+	$(gazebolibraries)
 
 
 extraheader = \

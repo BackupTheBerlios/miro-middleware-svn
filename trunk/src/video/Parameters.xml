@@ -40,6 +40,11 @@
 
     </config_item>
 
+    <config_item name="DeviceGazebo" parent="Device" final="true">
+		<config_parameter name="cameraIface" type="string" default="camera_iface_1"/>
+    </config_item>
+
+
     <config_item name="DevicePlayer" parent="Device" final="true">
       <config_parameter name="playerHost" type="string" default="localhost"/>
       <config_parameter name="playerPort" type="int" default="-1"/>
