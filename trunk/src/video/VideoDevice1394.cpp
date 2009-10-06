@@ -77,7 +77,7 @@ namespace
 			  unsigned int sharpness);
   };
 
-  static Feature1394 feature1394[12] = {
+  static Feature1394 feature1394[13] = {
     { "brightness",  NULL, DC1394_FEATURE_BRIGHTNESS,  NULL },
     { "exposure",    NULL, DC1394_FEATURE_EXPOSURE,    NULL },
     { "focus",       NULL, DC1394_FEATURE_FOCUS,	NULL },
@@ -89,13 +89,15 @@ namespace
     { "sharpness",   NULL, DC1394_FEATURE_SHARPNESS,   NULL },
     { "shutter",     NULL, DC1394_FEATURE_SHUTTER,     NULL },
     { "temperature", NULL, DC1394_FEATURE_TEMPERATURE, NULL },
-    { "trigger",     NULL, DC1394_FEATURE_TRIGGER,     NULL }
+    { "trigger",     NULL, DC1394_FEATURE_TRIGGER,     NULL },
+    { "zoom",        NULL, DC1394_FEATURE_ZOOM,        NULL }
+
   };
 
   //---------------------------------------------------------------
   struct FeatureTable
   {
-    static const unsigned int NUM_FEATURES1394 = 12;
+    static const unsigned int NUM_FEATURES1394 = 13;
 
     FeatureTable(const Video::Device1394Parameters& _params) : 
       feature_(	feature1394 ) 
@@ -112,6 +114,7 @@ namespace
       feature_[9].pValue = & (_params.shutter);
       feature_[10].pValue = & (_params.temperature);
       feature_[11].pValue = & (_params.trigger);
+      feature_[12].pValue = & (_params.zoom);
     }
     const Feature1394& operator[] (unsigned int _index) { 
       return feature_[_index]; 
@@ -244,7 +247,6 @@ using std::cout;
     {
 	throw Miro::Exception("Device1394::initDevice: unable to get camera features");
     }
-
     if (Miro::Log::level() >= Miro::Log::LL_NOTICE)
     {
         dc1394_feature_print_all(&features_, stdout );
@@ -424,6 +426,7 @@ using std::cout;
     case BACKLIGHT_COMPENSATION:
     case FLICKERLESS_MODE:
     case DYNAMIC_NOISE_REDUCTION:
+    case ZOOM:		    set.value = params_.zoom; break;
     case COMPRESSION:
       std::cout << "camera doesn't support this parameter" << std::endl;
     }
@@ -467,6 +470,7 @@ using std::cout;
     case BACKLIGHT_COMPENSATION:
     case FLICKERLESS_MODE:
     case DYNAMIC_NOISE_REDUCTION:
+    case ZOOM:		    params_.zoom = valueOrNeg(set);break;
     case COMPRESSION:
       std::cout << "camera doesn't support this parameter" << std::endl;
     }
@@ -480,38 +484,66 @@ using std::cout;
       ACE_THROW_SPEC (( CORBA::SystemException, ::Miro::EOutOfBounds ))
   {
     FeatureSetVector f;
-    f.length(14);
+	f.length(0);
+	FeatureDescription desc;
+	bool valid = false;
+	for( int i = 0; i < DC1394_FEATURE_NUM; i++ )
+	{
+		valid = false;
+		switch( features_.feature[i].id )
+		{
+			case DC1394_FEATURE_BRIGHTNESS: valid = true; desc.feature = BRIGHTNESS; break;
+			case DC1394_FEATURE_EXPOSURE: valid = true; desc.feature = EXPOSURE; break;
+			case DC1394_FEATURE_FOCUS: valid = true; desc.feature = FOCUS; break;
+			case DC1394_FEATURE_GAIN: valid = true; desc.feature = GAIN; break;
+			case DC1394_FEATURE_GAMMA: valid = true; desc.feature = GAMMA; break;
+			case DC1394_FEATURE_HUE: valid = true; desc.feature = HUE; break;
+			case DC1394_FEATURE_IRIS: valid = true; desc.feature = IRIS; break;
+			case DC1394_FEATURE_SATURATION: valid = true; desc.feature = SATURATION; break;
+			case DC1394_FEATURE_SHARPNESS: valid = true; desc.feature = SHARPNESS; break;
+			case DC1394_FEATURE_SHUTTER: valid = true; desc.feature = SHUTTER; break;
+			case DC1394_FEATURE_TEMPERATURE: valid = true; desc.feature = TEMPERATURE; break;
+			case DC1394_FEATURE_TRIGGER: valid = true; desc.feature = TRIGGER; break;
+			case DC1394_FEATURE_WHITE_BALANCE: valid = true; desc.feature = WHITE_BALANCE_BLUE; break;
+			case DC1394_FEATURE_ZOOM: valid = true; desc.feature = ZOOM; break;
+		}
 
-    FeatureDescription desc0 = {BRIGHTNESS, true, params_.brightness, 128, 383};
-    f[0] = desc0;
-    FeatureDescription desc1 = {EXPOSURE, true, params_.exposure, 0, 511};
-    f[1] = desc1;
-    FeatureDescription desc2 = {FOCUS, true, params_.focus, 0, 100};
-    f[2] = desc2;
-    FeatureDescription desc3 = {GAIN, true, params_.gain, 0, 255};
-    f[3] = desc3;
-    FeatureDescription desc4 = {GAMMA, true, params_.gamma, 0, 1};
-    f[4] = desc4;
-    FeatureDescription desc5 = {HUE, true, params_.hue, 0, 100};
-    f[5] = desc5;
-    FeatureDescription desc6 = {IRIS, true, params_.iris, 0, 100};
-    f[6] = desc6;
-    FeatureDescription desc7 = {SATURATION, true, params_.saturation, 0, 255};
-    f[7] = desc7;
-    FeatureDescription desc8 = {SHARPNESS, true, params_.sharpness, 0, 255};
-    f[8] = desc8;
-    FeatureDescription desc9 = {SHUTTER, true, params_.shutter, 0, 7};
-    f[9] = desc9;
-    FeatureDescription desc10 = {TEMPERATURE, true, params_.temperature, 0, 100};
-    f[10] = desc10;
-    FeatureDescription desc11 = {TRIGGER, true, params_.trigger, 0, 100};
-    f[11] = desc11;
-    FeatureDescription desc12 = {WHITE_BALANCE_BLUE, true, params_.whiteBalance0, 0, 255};
-    f[12] = desc12;
-    FeatureDescription desc13 = {WHITE_BALANCE_RED, true, params_.whiteBalance1, 0, 255};
-    f[13] = desc13;
+		if( features_.feature[i].available == false )
+		{
+			valid = false;
+		}
 
-    features = new FeatureSetVector(f);
+		if( valid == true )
+		{
+
+			desc.hasAutoMode = false;
+			for( int j = 0; j < features_.feature[i].modes.num; j++)
+			{
+				if( features_.feature[i].modes.modes[j] == DC1394_FEATURE_MODE_AUTO )
+				{
+					desc.hasAutoMode = true;
+					break;
+				}
+			}
+
+			desc.minValue = features_.feature[i].min;
+			desc.maxValue = features_.feature[i].max;
+			desc.value = features_.feature[i].value;
+			f.length( f.length() + 1 );
+			f[f.length()-1] = desc;
+
+			if( desc.feature == WHITE_BALANCE_BLUE )
+			{
+				desc.feature = WHITE_BALANCE_RED;
+				f.length( f.length() + 1 );
+				f[f.length()-1] = desc;
+				
+			}
+		}
+	}
+
+	 features = new FeatureSetVector(f);
+
   }
 };
 

@@ -142,6 +142,7 @@
       <config_parameter name="whiteBalance1" type="int" default="184" />
       <config_parameter name="videoFormat" type="string" default="VGA" />
       <config_parameter name="videoMode" type="int" default="0" />
+      <config_parameter name="zoom" type="int" default="1" />
     </config_item>
 
     <config_item name="DeviceUnicap" parent="Device" final="true">
