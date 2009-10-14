@@ -17,6 +17,7 @@
               6  115200 bd
         -->
         
+
         <config_parameter name="baudrate" type="int" default="6" />
 
         <!-- 5..20 Scanning frequency in Hz, maximal frequency with RS232/422 interface is 15 Hz -->
