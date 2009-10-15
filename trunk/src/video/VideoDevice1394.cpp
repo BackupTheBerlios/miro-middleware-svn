@@ -66,73 +66,29 @@ namespace
     { {1024, 768, Miro::GREY_16}, DC1394_VIDEO_MODE_1024x768_MONO16}
   };
 
-  //---------------------------------------------------------------
-  struct Feature1394
-  {
-    char const * name;
-    int const * pValue;
-    dc1394feature_t code;
-    int (* set_function) (raw1394handle_t handle,
-			  nodeid_t node,
-			  unsigned int sharpness);
-  };
-
-  static Feature1394 feature1394[13] = {
-    { "brightness",  NULL, DC1394_FEATURE_BRIGHTNESS,  NULL },
-    { "exposure",    NULL, DC1394_FEATURE_EXPOSURE,    NULL },
-    { "focus",       NULL, DC1394_FEATURE_FOCUS,	NULL },
-    { "gain",        NULL, DC1394_FEATURE_GAIN,	NULL },
-    { "gamma",       NULL, DC1394_FEATURE_GAMMA,	NULL },
-    { "hue",         NULL, DC1394_FEATURE_HUE,         NULL },
-    { "iris",        NULL, DC1394_FEATURE_IRIS,	NULL },
-    { "saturation",  NULL, DC1394_FEATURE_SATURATION,  NULL },
-    { "sharpness",   NULL, DC1394_FEATURE_SHARPNESS,   NULL },
-    { "shutter",     NULL, DC1394_FEATURE_SHUTTER,     NULL },
-    { "temperature", NULL, DC1394_FEATURE_TEMPERATURE, NULL },
-    { "trigger",     NULL, DC1394_FEATURE_TRIGGER,     NULL },
-    { "zoom",        NULL, DC1394_FEATURE_ZOOM,        NULL }
-
-  };
-
-  //---------------------------------------------------------------
-  struct FeatureTable
-  {
-    static const unsigned int NUM_FEATURES1394 = 13;
-
-    FeatureTable(const Video::Device1394Parameters& _params) : 
-      feature_(	feature1394 ) 
-    {
-      feature_[0].pValue = & (_params.brightness);
-      feature_[1].pValue = & (_params.exposure);
-      feature_[2].pValue = & (_params.focus);
-      feature_[3].pValue = & (_params.gain);
-      feature_[4].pValue = & (_params.gamma);
-      feature_[5].pValue = & (_params.hue);
-      feature_[6].pValue = & (_params.iris);
-      feature_[7].pValue = & (_params.saturation);
-      feature_[8].pValue = & (_params.sharpness);
-      feature_[9].pValue = & (_params.shutter);
-      feature_[10].pValue = & (_params.temperature);
-      feature_[11].pValue = & (_params.trigger);
-      feature_[12].pValue = & (_params.zoom);
-    }
-    const Feature1394& operator[] (unsigned int _index) { 
-      return feature_[_index]; 
-    }
-    Feature1394 const * begin() const { 
-      return &feature_[0]; 
-    }
-    Feature1394 const * end() const { 
-      return &feature_[NUM_FEATURES1394]; 
-    }
-
-  protected:
-    Feature1394  * feature_;
-  };
 };
 
 namespace Video
 {
+
+	struct FeatDescTable;
+	std::ostream& operator<<(std::ostream& os, const FeatDescTable* data)
+	{
+		for( int i = 0; i < data->num_features; i++ )
+		{
+			os << "Feature: " << data->feature[i].name << " " 
+				<< "Code: " << data->feature[i].code << " "
+				<< "Avail: " << data->feature[i].avail << " "
+				<< "AutoModes: " << data->feature[i].autoModes << " "
+				<< "CurrMode: " << data->feature[i].currMode << " "
+				<< "CurrVal: " << data->feature[i].currVal << " "
+				<< "SetMode: " << data->feature[i].setMode << " "
+				<< "SetVal: " << data->feature[i].setValue << " "
+				<< "MinVal: " << data->feature[i].minVal << " "
+				<< "MaxVal: " << data->feature[i].maxVal << std::endl;
+		}
+		return os;
+	}
 
 using std::cout;
   using std::endl;
@@ -143,10 +99,8 @@ using std::cout;
     Super(_inputFormat),
     is_open_(false),
     handle_(0),
-      p_camera_(NULL),
+    p_camera_(NULL),
     frameRate_(DC1394_FRAMERATE_30)
-
-
   {
     MIRO_LOG_CTOR("Video::Device1394.");
 
@@ -179,7 +133,9 @@ using std::cout;
     if (_params)
         params_ = *(dynamic_cast<Device1394Parameters const *>(_params));
 
-    initDevice();
+	 myCamera = new FeatDescTable( params_ ); 
+
+	 initDevice();
     initSettings();
     setImageFormat();
     initCapture();
@@ -239,19 +195,89 @@ using std::cout;
 
     dc1394_camera_free_list ( camera_list );
 
-    //Ensure transmission is stopped
-//    dc1394_video_set_transmission(p_camera_, DC1394_OFF);
-
     //Get Camera Features
     if( dc1394_feature_get_all(p_camera_, &features_) != DC1394_SUCCESS )
     {
-	throw Miro::Exception("Device1394::initDevice: unable to get camera features");
+		throw Miro::Exception("Device1394::initDevice: unable to get camera features");
     }
+
+	 fillFeatureTable();
+
     if (Miro::Log::level() >= Miro::Log::LL_NOTICE)
     {
         dc1394_feature_print_all(&features_, stdout );
     }
   }
+
+	void Device1394::fillFeatureTable()
+	{
+		int automodes;
+
+		//Loop through all the camera features and populate the internal structure
+		for( int i = 0; i < DC1394_FEATURE_NUM; i++ )
+		{
+			for( int j = 0; j < myCamera->num_features; j++ )
+			{
+				if( features_.feature[i].id == myCamera->feature[j].code )
+				{
+
+					if( features_.feature[i].available == false )
+					{
+						myCamera->feature[j].avail = false;
+					}
+					else
+					{
+						automodes = 0;
+						myCamera->feature[j].avail = true;
+						myCamera->feature[j].minVal =features_.feature[i].min;
+						myCamera->feature[j].maxVal =features_.feature[i].max;
+						myCamera->feature[j].currVal =features_.feature[i].value;
+						for( int k = 0; k < features_.feature[i].modes.num; k++ )
+						{
+							if( features_.feature[i].modes.modes[k] == DC1394_FEATURE_MODE_AUTO )
+							{
+								automodes += AUTO;
+							}
+
+							if(  features_.feature[i].modes.modes[k] == DC1394_FEATURE_MODE_ONE_PUSH_AUTO )
+							{
+								automodes += AUTO_ONE_PUSH;
+							}
+						}
+
+						switch( automodes )
+						{
+							case 0: myCamera->feature[j].autoModes = MANUAL; break;
+							case 1: myCamera->feature[j].autoModes = AUTO; break;
+							case 2: myCamera->feature[j].autoModes = AUTO_ONE_PUSH; break;
+							case 3: myCamera->feature[j].autoModes = AUTO_BOTH;
+						}
+
+						switch( features_.feature[i].current_mode )
+						{
+							case DC1394_FEATURE_MODE_AUTO: myCamera->feature[j].currMode = AUTO; break;
+							case DC1394_FEATURE_MODE_ONE_PUSH_AUTO: myCamera->feature[j].currMode = AUTO_ONE_PUSH; break;
+							case DC1394_FEATURE_MODE_MANUAL: myCamera->feature[j].currMode = MANUAL; break;
+						}
+						
+					}
+					
+					if( features_.feature[i].id == DC1394_FEATURE_WHITE_BALANCE )
+					{
+						if( j == WHITE_BALANCE_BLUE )
+							myCamera->feature[j].currVal = features_.feature[i].BU_value;
+						else if( j == WHITE_BALANCE_RED )
+							myCamera->feature[j].currVal = features_.feature[i].RV_value;
+					}
+					else
+					{
+						break;
+					}
+
+				}
+			}
+		}
+	}
 
   //---------------------------------------------------------------
   void 
@@ -344,42 +370,12 @@ using std::cout;
   {
     MIRO_DBG(VIDEO, LL_DEBUG, "Device1394::initSettings()");
 
-    // set standardized features
-    FeatureTable featureTable(params_);
-    Feature1394 const * first;
-    Feature1394 const * last = featureTable.end();
-    for (first = featureTable.begin(); first != last; ++first) {
-      if (*(first->pValue) == -1) {
-	dc1394_feature_set_mode(p_camera_, first->code, DC1394_FEATURE_MODE_AUTO);
-      }
-      else if (*(first->pValue) >= 0) {
-	if (dc1394_feature_set_value(p_camera_, first->code, (*first->pValue)) != DC1394_SUCCESS)
-	  MIRO_LOG_OSTR(LL_WARNING,
-			"Feature " << 
-			first->name << " = " << (*first->pValue) <<
-			" not set.");
-
-	dc1394_feature_set_mode(p_camera_, first->code, DC1394_FEATURE_MODE_MANUAL);
-      }
-    }
-
-    // white balance
-    if (params_.whiteBalance0 == -1 ||
-	params_.whiteBalance1 == -1) {
-      dc1394_feature_set_mode(p_camera_, DC1394_FEATURE_WHITE_BALANCE, DC1394_FEATURE_MODE_AUTO);
-    }
-    else if (params_.whiteBalance0 >= 0 &&
-	     params_.whiteBalance1 >= 0) {
-      if (dc1394_feature_whitebalance_set_value(p_camera_,
-						params_.whiteBalance0,
-						params_.whiteBalance1) != DC1394_SUCCESS) {
-	MIRO_LOG_OSTR(LL_WARNING,
-		      "Feature WhiteBalance = " <<
-		      params_.whiteBalance0 << ":" << params_.whiteBalance1 <<
-		      " not set.");
-      }
-      dc1394_feature_set_mode(p_camera_, DC1394_FEATURE_WHITE_BALANCE, DC1394_FEATURE_MODE_MANUAL);
-    }
+	 FeatureSet set;
+	 for( int i = 0; i < myCamera->num_features; i++ )
+	 {
+		paramToFeatureSet( myCamera->feature[i].xmlparam, set );
+	   setFeature( myCamera->feature[i].miroCode, set);
+	 }
 
     // set framerate
     int value = params_.framerate;
@@ -397,47 +393,72 @@ using std::cout;
     MIRO_DBG(VIDEO, LL_DEBUG, "Device1394::initSettings() finished");
   }
 
+	void Device1394::paramToFeatureSet( int param, FeatureSet &set )
+	{
+		if( param == -1 )
+		{
+			set.autoMode = AUTO;
+			set.value = 0;
+		}
+		else if( param == -2 )
+		{
+			set.autoMode = AUTO_ONE_PUSH;
+			set.value = 0;
+		}
+		else if( param >= 0 )
+		{
+			set.autoMode = MANUAL;
+			set.value = param;
+		}
+	}
 
   void
   Device1394::getFeature(CameraFeature feature, FeatureSet_out set)
     ACE_THROW_SPEC (( CORBA::SystemException, ::Miro::EOutOfBounds ))
   {
-    switch (feature) {
-    case BRIGHTNESS:         params_.brightness < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.brightness; break;
-    case EXPOSURE:           params_.exposure < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.exposure; break;
-    case FOCUS:              params_.focus < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.focus; break;
-    case GAIN:               params_.gain < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.gain; break;
-    case GAMMA:              params_.gamma < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.gamma; break;
-    case HUE:                params_.hue < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.hue; break;
-    case IRIS:               params_.iris < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.iris; break;
-    case SATURATION:         params_.saturation < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.saturation; break;
-    case SHARPNESS:          params_.sharpness < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.sharpness; break;
-    case SHUTTER:            params_.shutter < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.shutter; break;
-    case TEMPERATURE:        params_.temperature < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.temperature; break;
-    case TRIGGER:            params_.trigger < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.trigger; break;
-    case WHITE_BALANCE_BLUE: params_.whiteBalance0 < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.whiteBalance0; break;
-    case WHITE_BALANCE_RED:  params_.whiteBalance1 < 0 ? set.autoMode=true : set.autoMode=false; set.value = params_.whiteBalance1; break;
-    case WHITE_BALANCE_SPEED:
-    case WHITE_BALANCE_DELAY:
-    case CONTRAST:
-    case TIMEOUT:
-    case STROBE_DURATION:
-    case STROBE_DELAY:
-    case BACKLIGHT_COMPENSATION:
-    case FLICKERLESS_MODE:
-    case DYNAMIC_NOISE_REDUCTION:
-    case ZOOM:		    set.value = params_.zoom; break;
-    case COMPRESSION:
-      std::cout << "camera doesn't support this parameter" << std::endl;
-    }
+	
+
+	uint32_t tmp;
+	uint32_t value;
+	dc1394feature_mode_t mode;
+	switch( myCamera->feature[feature].miroCode )
+	{
+		case WHITE_BALANCE_BLUE: dc1394_feature_whitebalance_get_value( p_camera_, &value, &tmp); break;
+		case WHITE_BALANCE_RED: dc1394_feature_whitebalance_get_value( p_camera_, &tmp, &value); break;
+		default:
+		{
+			dc1394_feature_get_value( p_camera_, myCamera->feature[feature].code, &value );
+			break;
+		}
+		
+	}
+
+	dc1394_feature_get_mode( p_camera_, myCamera->feature[feature].code, &mode ); 
+	
+	switch( mode )
+	{
+		case DC1394_FEATURE_MODE_AUTO: set.autoMode = AUTO; break;
+		case DC1394_FEATURE_MODE_MANUAL: set.autoMode = MANUAL; break;
+		case DC1394_FEATURE_MODE_ONE_PUSH_AUTO: set.autoMode = AUTO_ONE_PUSH; break;
+		default: cout << "UNKNOWN MODE " << endl; break;
+	}
+	
+	set.value = (int) value;
+	
+	myCamera->feature[feature].currMode = set.autoMode;
+	myCamera->feature[feature].currVal = set.value;
+
   }
 
 
   int
   Device1394::valueOrNeg(FeatureSet _set)
   {
-    if (_set.autoMode)
+    if (_set.autoMode == AUTO )
       return -1;
+    else if (_set.autoMode == AUTO_ONE_PUSH )
+      return -2;
+	
     return (int)_set.value;
   }
    
@@ -446,36 +467,92 @@ using std::cout;
   Device1394::setFeature(CameraFeature feature, const FeatureSet & set)
       ACE_THROW_SPEC (( CORBA::SystemException, ::Miro::EOutOfBounds ))
   {
-    switch (feature) {
-    case BRIGHTNESS:         params_.brightness = valueOrNeg(set); break;
-    case EXPOSURE:           params_.exposure = valueOrNeg(set); break;
-    case FOCUS:              params_.focus = valueOrNeg(set); break;
-    case GAIN:               params_.gain = valueOrNeg(set); break;
-    case GAMMA:              params_.gamma = valueOrNeg(set); break;
-    case HUE:                params_.hue = valueOrNeg(set); break;
-    case IRIS:               params_.iris = valueOrNeg(set); break;
-    case SATURATION:         params_.saturation = valueOrNeg(set); break;
-    case SHARPNESS:          params_.sharpness = valueOrNeg(set); break;
-    case SHUTTER:            params_.shutter = valueOrNeg(set); break;
-    case TEMPERATURE:        params_.temperature = valueOrNeg(set); break;
-    case TRIGGER:            params_.trigger = valueOrNeg(set); break;
-    case WHITE_BALANCE_BLUE: params_.whiteBalance0 = valueOrNeg(set); break;
-    case WHITE_BALANCE_RED:  params_.whiteBalance1 = valueOrNeg(set); break;
-    case WHITE_BALANCE_SPEED:
-    case WHITE_BALANCE_DELAY:
-    case CONTRAST:
-    case TIMEOUT:
-    case STROBE_DURATION:
-    case STROBE_DELAY:
-    case BACKLIGHT_COMPENSATION:
-    case FLICKERLESS_MODE:
-    case DYNAMIC_NOISE_REDUCTION:
-    case ZOOM:		    params_.zoom = valueOrNeg(set);break;
-    case COMPRESSION:
-      std::cout << "camera doesn't support this parameter" << std::endl;
-    }
 
-    initSettings();
+	//Check if feature is avail, value falls between min/max, and autoMode is avail
+	if( myCamera->feature[feature].avail == false )
+	{
+		cout << "Feature " << myCamera->feature[feature].name << " is unavailable for this camera" << endl;
+		return;
+	}
+
+	if( myCamera->feature[feature].autoModes < set.autoMode )
+	{
+		cout << "Feature " << myCamera->feature[feature].name << " does not support automode " << set.autoMode << endl;
+		return;
+	}
+
+	if( set.autoMode == MANUAL )
+	{
+		if( set.value < myCamera->feature[feature].minVal || set.value > myCamera->feature[feature].maxVal )
+		{
+			cout << "Value " << set.value << " falls outside the range min/max " << myCamera->feature[feature].minVal << "/" << myCamera->feature[feature].maxVal << " for feature " << myCamera->feature[feature].name << endl;
+			return;
+		}
+	}
+
+	myCamera->feature[feature].setValue = set.value;
+	myCamera->feature[feature].setMode = set.autoMode;
+
+	
+	if( myCamera->feature[feature].avail == true )
+	{
+	switch( feature )
+	{
+		case WHITE_BALANCE_BLUE: 
+		case WHITE_BALANCE_RED:
+		{
+	    	if (myCamera->feature[WHITE_BALANCE_BLUE].setMode == AUTO || myCamera->feature[WHITE_BALANCE_BLUE].setMode == AUTO ) 
+			{
+      		dc1394_feature_set_mode(p_camera_, DC1394_FEATURE_WHITE_BALANCE, DC1394_FEATURE_MODE_AUTO);
+    		}
+	    	else if (myCamera->feature[WHITE_BALANCE_BLUE].setValue == AUTO_ONE_PUSH || myCamera->feature[WHITE_BALANCE_BLUE].setValue == AUTO_ONE_PUSH ) 
+	 		{
+				dc1394_feature_set_mode(p_camera_, DC1394_FEATURE_WHITE_BALANCE, DC1394_FEATURE_MODE_ONE_PUSH_AUTO);
+	 		}
+    		else if (myCamera->feature[WHITE_BALANCE_BLUE].setValue >= 0 && myCamera->feature[WHITE_BALANCE_BLUE].setValue >= 0 )  
+			{
+      		if (dc1394_feature_whitebalance_set_value(p_camera_, myCamera->feature[WHITE_BALANCE_BLUE].setValue, myCamera->feature[WHITE_BALANCE_RED].setValue) != DC1394_SUCCESS) 
+				{
+					MIRO_LOG_OSTR(LL_WARNING,  "Feature WhiteBalance = " << params_.whiteBalance0 << ":" << params_.whiteBalance1 << " not set.");
+      		}
+				else
+				{
+						myCamera->feature[feature].currVal = myCamera->feature[feature].setValue;
+				}
+      		dc1394_feature_set_mode(p_camera_, DC1394_FEATURE_WHITE_BALANCE, DC1394_FEATURE_MODE_MANUAL);
+    		}
+			break;
+		}
+		default:
+		{
+			if( myCamera->feature[feature].setMode == AUTO )
+			{
+				 dc1394_feature_set_mode(p_camera_, myCamera->feature[feature].code, DC1394_FEATURE_MODE_AUTO);
+			}
+			else if( myCamera->feature[feature].setMode == AUTO_ONE_PUSH )
+			{
+		 		dc1394_feature_set_mode(p_camera_, myCamera->feature[feature].code, DC1394_FEATURE_MODE_ONE_PUSH_AUTO);
+			}
+			else 
+			{
+				if (dc1394_feature_set_value(p_camera_, myCamera->feature[feature].code, myCamera->feature[feature].setValue) != DC1394_SUCCESS) 
+				{
+		  			MIRO_LOG_OSTR(LL_WARNING, "Feature " << myCamera->feature[feature].name << " = " << myCamera->feature[feature].setValue << " not set.");
+				}
+				else
+				{
+					myCamera->feature[feature].currVal = myCamera->feature[feature].setValue;
+				}
+				dc1394_feature_set_mode(p_camera_, myCamera->feature[feature].code, DC1394_FEATURE_MODE_MANUAL);
+			}
+			break;
+		}
+	}
+	}
+	else
+	{
+		cout << "Feature " << myCamera->feature[feature].name << " Can't be set because it is not available on this camera" << endl;
+	}
   }
 
 
@@ -483,62 +560,29 @@ using std::cout;
   Device1394::getFeatureDescription (FeatureSetVector_out features)
       ACE_THROW_SPEC (( CORBA::SystemException, ::Miro::EOutOfBounds ))
   {
-    FeatureSetVector f;
+
+    if( dc1394_feature_get_all(p_camera_, &features_) != DC1394_SUCCESS )
+    {
+		throw Miro::Exception("Device1394::initDevice: unable to get camera features");
+    }
+	fillFeatureTable();
+
+   FeatureSetVector f;
 	f.length(0);
 	FeatureDescription desc;
-	bool valid = false;
-	for( int i = 0; i < DC1394_FEATURE_NUM; i++ )
+
+	for( int i = 0; i < myCamera->num_features; i++ )
 	{
-		valid = false;
-		switch( features_.feature[i].id )
+		//Only return available features
+		if( myCamera->feature[i].avail == true )
 		{
-			case DC1394_FEATURE_BRIGHTNESS: valid = true; desc.feature = BRIGHTNESS; break;
-			case DC1394_FEATURE_EXPOSURE: valid = true; desc.feature = EXPOSURE; break;
-			case DC1394_FEATURE_FOCUS: valid = true; desc.feature = FOCUS; break;
-			case DC1394_FEATURE_GAIN: valid = true; desc.feature = GAIN; break;
-			case DC1394_FEATURE_GAMMA: valid = true; desc.feature = GAMMA; break;
-			case DC1394_FEATURE_HUE: valid = true; desc.feature = HUE; break;
-			case DC1394_FEATURE_IRIS: valid = true; desc.feature = IRIS; break;
-			case DC1394_FEATURE_SATURATION: valid = true; desc.feature = SATURATION; break;
-			case DC1394_FEATURE_SHARPNESS: valid = true; desc.feature = SHARPNESS; break;
-			case DC1394_FEATURE_SHUTTER: valid = true; desc.feature = SHUTTER; break;
-			case DC1394_FEATURE_TEMPERATURE: valid = true; desc.feature = TEMPERATURE; break;
-			case DC1394_FEATURE_TRIGGER: valid = true; desc.feature = TRIGGER; break;
-			case DC1394_FEATURE_WHITE_BALANCE: valid = true; desc.feature = WHITE_BALANCE_BLUE; break;
-			case DC1394_FEATURE_ZOOM: valid = true; desc.feature = ZOOM; break;
-		}
-
-		if( features_.feature[i].available == false )
-		{
-			valid = false;
-		}
-
-		if( valid == true )
-		{
-
-			desc.hasAutoMode = false;
-			for( int j = 0; j < features_.feature[i].modes.num; j++)
-			{
-				if( features_.feature[i].modes.modes[j] == DC1394_FEATURE_MODE_AUTO )
-				{
-					desc.hasAutoMode = true;
-					break;
-				}
-			}
-
-			desc.minValue = features_.feature[i].min;
-			desc.maxValue = features_.feature[i].max;
-			desc.value = features_.feature[i].value;
+			desc.feature = myCamera->feature[i].miroCode;
+			desc.hasAutoMode  = myCamera->feature[i].autoModes;
+			desc.value = myCamera->feature[i].currVal;
+			desc.minValue = myCamera->feature[i].minVal;
+			desc.maxValue = myCamera->feature[i].maxVal;
 			f.length( f.length() + 1 );
 			f[f.length()-1] = desc;
-
-			if( desc.feature == WHITE_BALANCE_BLUE )
-			{
-				desc.feature = WHITE_BALANCE_RED;
-				f.length( f.length() + 1 );
-				f[f.length()-1] = desc;
-				
-			}
 		}
 	}
 
