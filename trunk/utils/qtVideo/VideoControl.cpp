@@ -65,7 +65,8 @@ static FeatureName featureName[] = {
   { Video::BACKLIGHT_COMPENSATION,  "Backlight Compensation" },
   { Video::FLICKERLESS_MODE,        "Flickerless Mode" },
   { Video::DYNAMIC_NOISE_REDUCTION, "Dynamic Noise Reduction" },
-  { Video::COMPRESSION,             "Compression" }
+  { Video::COMPRESSION,             "Compression" },
+  { Video::ZOOM,             			"Zoom" }
 };
 
 
@@ -83,9 +84,9 @@ Video::CameraFeature
 VideoControl::name2Feature(string _name)
 {
   for (unsigned int i=0; i<sizeof(featureName)/sizeof(featureName[0]); ++i)
-    if (_name == string(featureName[i].name))
-      return featureName[i].feature;
-  return Video::BRIGHTNESS; // suppress compile warning
+	 if (_name == string(featureName[i].name))
+	   return featureName[i].feature;
+	return Video::BRIGHTNESS; // suppress compile warning
 }
 
 
@@ -113,7 +114,6 @@ VideoControl::VideoControl(Miro::Client & _client,
   video_control_ = _client.resolveName<Video::CameraControl>(_name);
   Video::FeatureSetVector_var features;
   video_control_->getFeatureDescription(features);
-
   states_ = new FeatureState[features->length()];
 
   // create control widgets
@@ -176,11 +176,11 @@ VideoControl::autoChange(int _state)
 
   Video::FeatureSet set;
   if (_state == QButton::On) {
-    set.autoMode = true;
+    set.autoMode = Video::AUTO;
     states_[feature2Pos(feature)].slider->setEnabled(false);
     states_[feature2Pos(feature)].lineEdit->setEnabled(false);
   } else {
-    set.autoMode = false;
+    set.autoMode = Video::MANUAL;
     states_[feature2Pos(feature)].slider->setEnabled(true);
     states_[feature2Pos(feature)].lineEdit->setEnabled(true);
   }
@@ -199,7 +199,7 @@ VideoControl::valueChange(double _value)
   states_[feature2Pos(feature)].lineEdit->setText(ostr.str().c_str());
 
   Video::FeatureSet set;
-  set.autoMode = false;
+  set.autoMode = Video::MANUAL;
   set.value = _value;
   video_control_->setFeature(feature, set);
 }
