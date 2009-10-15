@@ -42,9 +42,9 @@ module Video
     SHUTTER,
     TEMPERATURE,
     TRIGGER,
+    ZOOM,
     WHITE_BALANCE_BLUE,
     WHITE_BALANCE_RED,
-	 ZOOM,
     WHITE_BALANCE_SPEED,
     WHITE_BALANCE_DELAY,
     CONTRAST,
@@ -57,11 +57,19 @@ module Video
     COMPRESSION
   };
 
+  enum AutoType
+  {
+    MANUAL,
+    AUTO,
+    AUTO_ONE_PUSH,
+    AUTO_BOTH
+  };
+
   //! struct describing the possible values of one feature
   struct FeatureDescription
   {
     CameraFeature feature;
-    boolean hasAutoMode;
+    AutoType hasAutoMode;
     double value;
     double minValue;
     double maxValue;
@@ -70,7 +78,7 @@ module Video
   //! struct to set the values of one feature
   struct FeatureSet
   {
-    boolean autoMode;
+    AutoType autoMode;
     double value;
   };
 
