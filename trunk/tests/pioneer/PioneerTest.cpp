@@ -112,7 +112,7 @@ Service::Service() :
   pOdometryImpl(new Miro::OdometryImpl(NULL)),
   pBatteryImpl(new Miro::BatteryImpl()),
   pCameraAnswer(new Pioneer::CameraAnswer()),
-  pConsumer(new Pioneer::Consumer(pRangeSensorImpl, NULL, NULL, NULL, pOdometryImpl, NULL, NULL, NULL, pCameraAnswer)),
+  pConsumer(new Pioneer::Consumer(pRangeSensorImpl, NULL, NULL, NULL, pOdometryImpl, NULL, NULL, NULL, NULL, pCameraAnswer)),
   pStallImpl(new Pioneer::StallImpl()),
   pTCM2Impl(new Pioneer::TCM2Impl(Pioneer::Parameters::instance()->tcm2Params, NULL)),
 #ifdef MIRO_HAS_DEPRECATED

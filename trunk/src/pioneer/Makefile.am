@@ -28,6 +28,8 @@ sources = \
 	PioneerMotionImpl.h \
 	PioneerStallImpl.cpp \
 	PioneerStallImpl.h \
+	PioneerChargerImpl.cpp \
+	PioneerChargerImpl.h \
 	CameraMessage.cpp \
 	CameraMessage.h \
 	CanonPanTiltImpl.cpp \

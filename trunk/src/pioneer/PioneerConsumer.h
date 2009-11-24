@@ -48,6 +48,7 @@ namespace Pioneer
   // forward declarations
   class Parameters;
   class MotionImpl;
+  class PioneerChargerImpl;
 
   static const int NUM_SONARS = 8;
 
@@ -70,6 +71,7 @@ namespace Pioneer
 	     Miro::OdometryImpl * _pOdometry = NULL,
 	     Miro::BatteryImpl * _pBattery = NULL,
 	     Pioneer::StallImpl * _pStall = NULL,
+	     Pioneer::PioneerChargerImpl * _pCharger = NULL,
 	     Pioneer::TCM2Impl * _pTCM2 = NULL,
 	     Pioneer::CameraAnswer * _pCameraAnswer = NULL);
     ~Consumer();
@@ -84,6 +86,7 @@ namespace Pioneer
     Miro::OdometryImpl * pOdometry;
     Miro::BatteryImpl * pBattery;
     Pioneer::StallImpl * pStall;
+    Pioneer::PioneerChargerImpl * pCharger;
     Pioneer::TCM2Impl * pTCM2;
     Pioneer::CameraAnswer * pCameraAnswer;
 

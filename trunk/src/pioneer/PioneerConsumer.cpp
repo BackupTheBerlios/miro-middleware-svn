@@ -25,6 +25,7 @@
 #include "Parameters.h"
 
 #include "PioneerMotionImpl.h"
+#include "PioneerChargerImpl.h"
 #include "idl/CompassEventC.h"
 #include "TCM2Impl.h"
 #include "CameraMessage.h"
@@ -69,6 +70,7 @@ namespace Pioneer
 		     Miro::OdometryImpl * _pOdometry,
 		     Miro::BatteryImpl * _pBattery,
 		     Pioneer::StallImpl * _pStall,
+		     Pioneer::PioneerChargerImpl * _pCharger,
 		     Pioneer::TCM2Impl * _pTCM2,
 		     Pioneer::CameraAnswer * _pCameraAnswer) :
     pSonar(_pSonar),
@@ -78,6 +80,7 @@ namespace Pioneer
     pOdometry(_pOdometry),
     pBattery(_pBattery),
     pStall(_pStall),
+    pCharger(_pCharger),
     pTCM2(_pTCM2),
     pCameraAnswer(_pCameraAnswer),
     prevX(0),
@@ -168,6 +171,9 @@ namespace Pioneer
 	  if (pMotion)
 	    pMotion->lr2velocity((CORBA::Long)velL, (CORBA::Long)velR, status_.velocity);
 	  pOdometry->integrateData(status_);   
+
+	  if (pCharger)
+	    pCharger->setFlags(message->flags());
 
 // cout << velL << "\t" << velR << "\t" << Miro::rad2Deg(status_.velocity.rotation) << endl;
 	}

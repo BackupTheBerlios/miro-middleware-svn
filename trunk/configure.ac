@@ -237,6 +237,7 @@ AC_CONFIG_FILES([Makefile
                  utils/qtJoystick/Makefile
                  utils/qtTouchPad/Makefile
                  utils/qtVideo/Makefile
+                 utils/qtCharger/Makefile
                  utils/rangeSensor/Makefile
                  utils/widgets/Makefile
 		 utils/notifyObserver/Makefile

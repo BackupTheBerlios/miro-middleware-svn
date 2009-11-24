@@ -117,9 +117,6 @@ namespace Miro
   void
   BatteryImpl::integrateData(double _voltage) ACE_THROW_SPEC(())
   {
-
-    std::cout << "BatteryImpl::integrateData" << std::endl;
-
     Guard guard(mutex_);
 
     // Copy the new data

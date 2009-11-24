@@ -39,6 +39,7 @@
 #include "pioneer/CanonCameraControlImpl.h"
 #include "pioneer/SonyPanTiltImpl.h"
 #include "pioneer/SonyCameraControlImpl.h"
+#include "pioneer/PioneerChargerImpl.h"
 
 #ifdef MIRO_HAS_DEPRECATED
 #include "pioneer/CanonCameraImpl.h"
@@ -110,6 +111,7 @@ private:
 
   Pioneer::MotionImpl motion;
   Pioneer::StallImpl  stall;
+  Pioneer::PioneerChargerImpl charger;
   Pioneer::TCM2Impl tcm2;
   Pioneer::CameraAnswer cameraAnswer;
   Miro::RangeSensorImpl sonar;
@@ -133,6 +135,7 @@ private:
   Miro::RangeSensor_var pTactile;
   Miro::RangeSensor_var pInfrared;
   Miro::Battery_var pBattery;
+  Miro::Charger_var pCharger;
 #ifdef MIRO_HAS_DEPRECATED
   Miro::CanonCamera_var pCanonCamera;
 #endif

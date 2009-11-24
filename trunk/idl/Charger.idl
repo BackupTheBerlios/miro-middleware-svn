@@ -24,7 +24,6 @@
 #define Charger_idl
 
 #include "Exception.idl"
-#include "Battery.idl"
 
 module Miro
 {
@@ -34,7 +33,7 @@ module Miro
    *
    * @author Gerald Steinbauer
    */
-  interface Charger : Battery
+  interface Charger
   {
     //! deploy the charger
     void deployCharger() raises (EDevIO);

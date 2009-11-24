@@ -19,6 +19,7 @@ globaldirs = \
 	qtVideo \
 	qtTouchPad \
 	qtJoystick \
+        qtCharger \
 	configEditor \
 	policyController \
 	policyEditor

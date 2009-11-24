@@ -60,6 +60,7 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
 					 &odometry,
 					 &battery,
 					 NULL, //stall
+                                         &charger,
 					 (Pioneer::Parameters::instance()->tcm2?&tcm2:NULL),
 					 //only add the camera if really present
 					 (Pioneer::Parameters::instance()->camera?&cameraAnswer:NULL))),
@@ -71,6 +72,7 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   // Service initialization
   motion(pioneerConnection),
   stall(/*pioneerConnection*/),
+  charger(pioneerConnection),
   tcm2(Pioneer::Parameters::instance()->tcm2Params, &structuredPushSupplier_),
   cameraAnswer(),
   sonar(Pioneer::Parameters::instance()->sonarDescription, &structuredPushSupplier_),
@@ -86,6 +88,7 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   pOdometry = odometry._this();
   pMotion = motion._this();
   pStall = stall._this();
+  pCharger = charger._this();
   pSonar = sonar._this();
   pTactile = tactile._this();
   pInfrared = infrared._this();
@@ -135,6 +138,7 @@ PioneerBase::PioneerBase(int argc, char *argv[]) :
   addToNameService(pOdometry.in(), "Odometry");
   addToNameService(pMotion.in(), "Motion");
   addToNameService(pStall.in(), "Stall");
+  addToNameService(pCharger.in(), "Charger");
   addToNameService(pSonar.in(), "Sonar");
   addToNameService(pTactile.in(), "Tactile");
   addToNameService(pInfrared.in(), "Infrared");
