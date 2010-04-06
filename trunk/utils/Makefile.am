@@ -19,7 +19,6 @@ globaldirs = \
 	qtVideo \
 	qtTouchPad \
 	qtJoystick \
-        qtCharger \
 	configEditor \
 	policyController \
 	policyEditor
@@ -32,6 +31,10 @@ sparrowdirs = \
 	Joystick
 endif
 
+if COND_PIONEER
+pioneerdirs = \
+	qtCharger
+endif
 
 
-SUBDIRS = $(globaldirs) $(sparrowdirs)
+SUBDIRS = $(globaldirs) $(sparrowdirs) $(pioneerdirs)
