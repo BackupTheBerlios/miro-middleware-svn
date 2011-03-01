@@ -149,6 +149,12 @@ namespace Miro
   }
 
   std::string
+  LogNotifyConsumer::getFileName()
+  {
+	return fileName_;
+  }
+
+  std::string 
   LogNotifyConsumer::path()
   {
     char * miro_log = ACE_OS::getenv("MIRO_LOG");

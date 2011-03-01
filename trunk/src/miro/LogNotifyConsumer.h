@@ -79,6 +79,7 @@ namespace Miro
 
     void measureTiming(unsigned int _nTimes);
     void evaluateTiming();
+    std::string getFileName();
 
   protected:
     //! The default location for log files.
