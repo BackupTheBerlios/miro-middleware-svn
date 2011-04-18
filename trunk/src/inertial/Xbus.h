@@ -71,6 +71,7 @@
 #include <termios.h>   	/* terminal i/o system, talks to /dev/tty* ports  */
 #include <unistd.h>		/* Read function */
 #include <sys/time.h>	/* gettimeofday function */
+#include <sys/stat.h>
 #endif
 
 #ifndef	INVALID_SET_FILE_POINTER
