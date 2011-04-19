@@ -53,9 +53,8 @@
     </config_item>
 
 	<config_item name="Sock" parent="Dev">
-		<config_parameter name="device" type="string" inherited="true" default="/dev/eth0" />
-      <config_parameter name="host" type="string" default="localhost" />
-      <config_parameter name="port" type="string" default="6665" />
+      	   <config_parameter name="host" type="string" default="localhost" />
+      	   <config_parameter name="port" type="string" default="6665" />
  	</config_item>
 
     <config_item name="Motion" parent="Config" final="false">

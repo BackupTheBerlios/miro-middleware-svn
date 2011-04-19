@@ -88,7 +88,6 @@ namespace Miro
     ** Define the connector classes
     */
     ACE_SOCK_Stream peer_;
-    const char* ifName_;
     const char* hostName_;
     const char* portName_;
     ACE_INET_Addr srvr_;

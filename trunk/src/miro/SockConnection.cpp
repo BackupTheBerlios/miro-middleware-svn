@@ -50,7 +50,6 @@ namespace Miro
                                  const SockParameters& _parameters) :
       reactor_(_reactor),
       eventHandler_(_eventHandler),
-      ifName_(_parameters.device.c_str()),
       hostName_(_parameters.host.c_str()),
       portName_(_parameters.port.c_str())
   {
