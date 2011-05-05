@@ -52,9 +52,10 @@
       </constructor>
     </config_item>
 
-	<config_item name="Sock" parent="Dev">
+	<config_item name="Sock" parent="Config" final="false">
       	   <config_parameter name="host" type="string" default="localhost" />
       	   <config_parameter name="port" type="string" default="6665" />
+      	   <config_parameter name="type" type="int" default="0" /> <!-- 0 = TCP -->
  	</config_item>
 
     <config_item name="Motion" parent="Config" final="false">
