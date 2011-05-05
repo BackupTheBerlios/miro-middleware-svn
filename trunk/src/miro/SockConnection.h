@@ -28,7 +28,11 @@
 #include <ace/DEV_Connector.h>
 #include <ace/INET_Addr.h>
 #include <ace/SOCK_Stream.h>
+#include <ace/SOCK_Dgram.h>
 #include <ace/SOCK_Connector.h>
+#include <ace/SOCK_Dgram_Mcast.h>
+
+enum { TCP, UDP, BROADCAST, MULTICAST };
 
 // forward declarations
 class ACE_Reactor;
@@ -76,7 +80,13 @@ namespace Miro
      */
     virtual ~SockConnection();
 
+   /*
+   ** Generic method for sending/receiving data via either tcp or udp
+   */
+   int socksend( unsigned char *buf, int size );
+   int sockrecv( unsigned char *buf, int size );
 
+    private:
     /** Pointer to the ACE_Reactor the @ref Event is registered to. */
     ACE_Reactor * reactor_;   // for event handling (file descriptors)
     /**
@@ -87,12 +97,14 @@ namespace Miro
     /*
     ** Define the connector classes
     */
-    ACE_SOCK_Stream peer_;
-    const char* hostName_;
-    const char* portName_;
-    ACE_INET_Addr srvr_;
-    ACE_INET_Addr local_;
+    ACE_SOCK_Stream peer_tcp_;
+    ACE_SOCK_Dgram peer_udp_;
+    ACE_SOCK_Dgram_Mcast multicast_dgram;
+    const char* host;
+    int port;
+    ACE_INET_Addr srvr;
     ACE_SOCK_Connector connector_;
+    int sock_type;
   };
 }
 

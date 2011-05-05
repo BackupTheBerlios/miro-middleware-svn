@@ -50,32 +50,97 @@ namespace Miro
                                  const SockParameters& _parameters) :
       reactor_(_reactor),
       eventHandler_(_eventHandler),
-      hostName_(_parameters.host.c_str()),
-      portName_(_parameters.port.c_str())
+      host(_parameters.host.c_str()),
+      port(atoi( _parameters.port.c_str() )),
+      sock_type( _parameters.type )
   {
+	  /* Variables */
 
-    MIRO_DBG(MIRO, LL_NOTICE, "SockConnection initialising\n");
+     MIRO_DBG(MIRO, LL_NOTICE, "SockConnection Initialization\n");   
 
-    /*
-    **  Initialize and pointer to a socket as the connection method
+   /*
+    ** How the connection is made depends on the requested socket type
     */
 
-    if (srvr_.set(portName_, hostName_) == -1) {
-      MIRO_LOG_OSTR(LL_CRITICAL,
-                    "Failed to set Address and Port: " << portName_ << hostName_);
-      throw CException(errno, strerror(errno));
-    }
+    switch( sock_type )
+    {
+		/* TCP Socket */
+       	case TCP:
+		 /*
+		 **  Initialize and pointer to a socket as the connection method
+		 */
 
-    if (connector_.connect(peer_, srvr_, 0, ACE_Addr::sap_any, 0, O_RDWR) == -1) {
-      MIRO_LOG_OSTR(LL_CRITICAL,
-                    "Failed to open device: " << hostName_ << ":" << portName_
-                    << "\nEnsure the required Server is running?");
-      throw CException(errno, strerror(errno));
-    }
+		 if (srvr.set(port, host) == -1) {
+			  MIRO_LOG_OSTR(LL_CRITICAL,
+						"Failed to set Address and Port: " << port << ":" << host << "\n");
+			  throw;
+		   }
 
-    // we need a handler to listen to the asynchronous file handler
-    // of the device
-    eventHandler_->set_handle(peer_.get_handle());
+ 		   /*
+		   ** Is this a stream (TCP socket) or a user datagram (UDP socket)
+		   */ 
+		   if (connector_.connect(peer_tcp_, srvr, 0, ACE_Addr::sap_any, 0, O_RDWR) == -1) 
+		   {
+			  MIRO_LOG_OSTR(LL_CRITICAL,
+					"TCP Failed to open device: " << host << ":" << port
+					<< "\nEnsure the required Server is running?");
+			  throw;
+		   }
+		   
+		   // we need a handler to listen to the asynchronous file handler
+		   // of the device
+		   eventHandler_->set_handle(peer_tcp_.get_handle());
+           break;
+
+		/* UDP Socket */
+       	case UDP:
+          srvr.set_port_number( port );
+           if (peer_udp_.open(srvr,ACE_PROTOCOL_FAMILY_INET,0,1) == -1)
+           {
+              MIRO_LOG_OSTR(LL_CRITICAL,
+                "UDP Failed to open device: " << host << ":" << port );
+              throw;
+           }
+           MIRO_LOG_OSTR(LL_CRITICAL, "UDP SockConnection Port Number " << port << "\n");
+
+     	   // we need a handler to listen to the asynchronous file handler
+    	   // of the device
+      	   eventHandler_->set_handle(peer_udp_.get_handle());
+           break;
+
+		/* Broadcast */
+       	case BROADCAST:
+          break;
+
+		/* Multicast */
+       	case MULTICAST:
+		 /*
+		 **  Initialize and pointer to a socket as the connection method
+		 */
+
+		 if (srvr.set(port, host) == -1) {
+			  MIRO_LOG_OSTR(LL_CRITICAL,
+						"Failed to set Address and Port: " << port << ":" << host << "\n");
+			  throw;
+		   }
+
+			if (multicast_dgram.join( srvr ) == -1 )
+			{
+				 MIRO_LOG_OSTR(LL_CRITICAL,
+				   "Multicast Failed to join device: " << host << ":" << port << "\n");
+				  throw;
+			}
+						
+			// we need a handler to listen to the asynchronous file handler
+			// of the device
+			eventHandler_->set_handle(multicast_dgram.get_handle());
+			
+           break;
+
+		default:
+            MIRO_LOG_OSTR(LL_CRITICAL, "Invalid Socket Type" << sock_type  );
+     }
+
     int rc =
       reactor_->register_handler(eventHandler_, ::ACE_Event_Handler::READ_MASK);
     if (rc == -1)
@@ -91,7 +156,99 @@ namespace Miro
     // Stop hardware triggered communication
     reactor_->remove_handler(eventHandler_,
                              ::ACE_Event_Handler::READ_MASK);
-    peer_.close();
+
+    switch( sock_type)
+    {
+		/* TCP Socket */
+       	case TCP:
+      	   peer_tcp_.close();
+		break;
+ 
+		/* UDP Socket */
+       	case UDP:
+           peer_udp_.close();
+		break;
+	
+		/* Broadcast */
+       	case BROADCAST:
+		break;
+
+		/* Multicast */
+       	case MULTICAST:
+           multicast_dgram.leave(srvr);
+		break;
+
+		default:
+            MIRO_LOG_OSTR(LL_CRITICAL, "Invalid Socket Type" << sock_type  );
+
+   }
   }
 
+   /*
+   ** Generic method for sending/receiving data via either tcp or udp
+   */
+   int SockConnection::socksend( unsigned char *buf, int size )
+   {
+     int status;
+
+    switch( sock_type)
+    {
+	/* TCP Socket */
+       	case TCP:
+           status = peer_tcp_.send_n(buf, size);
+	   break;
+ 
+	/* UDP Socket */
+       	case UDP:
+           status = peer_tcp_.send_n(buf, size);
+	   break;
+	
+	/* Broadcast */
+       	case BROADCAST:
+	   break;
+
+	/* Multicast */
+       	case MULTICAST:
+           status = multicast_dgram.send(buf, size);
+	   break;
+
+		default:
+            MIRO_LOG_OSTR(LL_CRITICAL, "Invalid Socket Type" << sock_type  );
+   }
+     return(status);
+   }
+   int SockConnection::sockrecv( unsigned char *buf, int size )
+   {
+    /* Variable */
+	int status;
+    ACE_INET_Addr remote_address((u_short)0);
+
+    switch( sock_type )
+    {
+		/* TCP Socket */
+       	case TCP:
+           status = peer_tcp_.recv(buf, size);
+	   break;
+ 
+		/* UDP Socket */
+       	case UDP:
+           status = peer_tcp_.recv(buf, size);
+	   break;
+	
+		/* Broadcast */
+       	case BROADCAST:
+	   break;
+
+		/* Multicast */
+       	case MULTICAST:
+           status = multicast_dgram.recv(buf, size, remote_address);
+           std::cout <<"Mutlicast bytes: " << status << std::endl;
+	   break;
+
+		default:
+            MIRO_LOG_OSTR(LL_CRITICAL, "Invalid Socket Type" << sock_type  );
+
+   }
+   return(status);
+  }
 }
