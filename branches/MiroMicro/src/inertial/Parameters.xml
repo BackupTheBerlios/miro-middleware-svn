@@ -1,0 +1,26 @@
+<!DOCTYPE xml SYSTEM "PolicyEditor_behaviour.dtd">
+<config>
+  <config_global name="namespace" value="Inertial" />
+  <config_global name="include" value="miro/SvcParameters.h" />
+  <config_group name="Inertial">
+    <config_item name="Inertial" instance="true">
+      <config_parameter name="device" type="string" default="/dev/ttyUSB2" />
+      <config_parameter name="outputmode" type="string" default="CALIB-ORIENT" />
+      <config_parameter name="outputsettings" type="string" default="ACC-GYR-EULER" />
+     <!--
+       this is the number of seconds we want to pass between two
+       consecutive polls from the laser
+       an ACE_Time_Value has microsecond resolution
+     -->
+      <config_parameter name="pollInterval" type="ACE_Time_Value" measure="usecs" default="0, 100000" />
+      <config_parameter name="inclinometer" type="Miro::InclinometerParameters" />
+        <constructor>
+          inclinometer.minPitch = Miro::deg2Rad(-20);
+          inclinometer.maxPitch = Miro::deg2Rad(20);
+          inclinometer.minRoll = Miro::deg2Rad(-20);
+          inclinometer.maxRoll = Miro::deg2Rad(20);
+        </constructor>
+      </config_item>
+
+    </config_group>
+</config>

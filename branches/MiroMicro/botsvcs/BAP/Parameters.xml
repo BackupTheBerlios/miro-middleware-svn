@@ -1,0 +1,40 @@
+<!DOCTYPE xml SYSTEM "PolicyEditor_behaviour.dtd">
+<config> 
+  <config_global name="include" value="botsvcs/BAP/Transition.h" />
+  <config_global name="include" value="botsvcs/BAP/BehaviourParameters.h" />
+  <config_global name="include" value="botsvcs/BAP/ArbiterParameters.h" />
+
+  <config_global name="namespace" value="Miro" />
+  <config_global name="namespace" value="BAP" />
+
+  <config_group name="behaviour">
+    
+    <config_item name="Behaviour" final="false" dummy="true">
+    </config_item>
+    
+    <config_item name="EventBehaviour" parent="Behaviour" final="false">
+    </config_item>
+    
+    <config_item name="TimedBehaviour" parent="Behaviour" final="false">
+      <config_parameter name="pace" type="ACE_Time_Value" default="0, 100000" measure="sec" />
+    </config_item>
+
+    <config_item name="TaskBehaviour" parent="Behaviour" final="false">
+    </config_item>
+    
+  </config_group>
+
+  <config_group name="arbiter">
+    <config_item name="Arbiter" final="false" dummy="true" />
+    <config_item name="PriorityArbiter" parent="Arbiter" final="false" />
+    <config_item name="MotionArbiter" parent="PriorityArbiter" />
+    <config_item name="PowerArbiter" parent="PriorityArbiter" />
+    <config_item name="ConstraintArbiter" parent="PriorityArbiter" dummy="true" >
+      <config_parameter name="maxVelocity" type="int" default="1500" measure="mm/s" />
+      <config_parameter name="maxAccel" type="int" default="2000" measure="mm/s" />
+      <config_parameter name="maxDecel" type="int" default="500" measure="mm/s" />
+      <config_parameter name="spaceResolution" type="int" default="20" measure="mm/s" />
+      <config_parameter name="pace" type="ACE_Time_Value" default="0, 50000" measure="ms" />
+    </config_item>
+  </config_group>
+</config>

@@ -1,0 +1,7 @@
+.deps
+.libs
+BehaviourEngineTest
+DummyBehaviourEngine
+Makefile
+Makefile.in
+ 

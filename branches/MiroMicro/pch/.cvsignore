@@ -1,0 +1,15 @@
+.deps
+.libs
+
+Makefile
+Makefile.in
+
+all.h
+all_shared.h
+all_shared.h.gch
+all_static.h
+all_static.h.gch
+
+foo.lo
+libfoo.la
+

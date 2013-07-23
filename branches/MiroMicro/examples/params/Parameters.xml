@@ -1,0 +1,37 @@
+<!DOCTYPE xml SYSTEM "PolicyEditor_behaviour.dtd">
+<config> 
+  <!-- some namespace for illustration -->
+  <config_global name="namespace" value="Test" />
+
+  <!-- include for the Miro::Parameters base class -->
+  <config_global name="include" value="miro/SvcParameters.h" />
+  <config_global name="Include" value="vector" />
+  <config_global name="Include" value="set" />
+
+  <!-- group names can be freely choosen -->
+  <!-- except for behaviours and arbiters -->
+  <config_group name="my_test_section">
+    
+    <!-- MyParameters are derived from Miro::ConfigParameters -->
+    <config_item name="My" parent="Miro::Config" instance="true" >
+      <config_parameter name="test1" type="bool" default="true" />
+      <config_parameter name="test2" type="char" default="a" />
+      <config_parameter name="test3" type="int" default="3" measure="mm" />
+      <config_parameter name="Test4" type="std::string" default="test" />
+      <config_parameter name="Tty" type="ACE_TTY_IO::Serial_Params" />
+      <config_parameter name="Motion" type="Miro::MotionParameters" />
+      <config_parameter name="TestVector" type="std::vector&lt;int&gt;" />
+      <config_parameter name="TestSet" type="std::set&lt;int&gt;" />
+    </config_item>
+
+    <config_item name="Friends" parent="Miro::Config" instance="false" >
+      <config_parameter name="foo" type="std::string" default="bar" />
+    </config_item>
+
+    <config_item name="More" parent="Test::Friends" instance="true" >
+      <config_parameter name="bar" type="std::string" default="foo" />
+    </config_item>
+
+  </config_group>
+
+</config>

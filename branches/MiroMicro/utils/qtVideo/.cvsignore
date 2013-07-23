@@ -1,0 +1,11 @@
+MainForm.moc.cpp
+QtVideo
+QtVideoControl
+VideoControlDialog.cpp
+VideoControlDialog.h
+VideoControlDialog.moc.cpp
+VideoControl.moc.cpp
+Makefile.in
+Makefile
+.deps
+.libs

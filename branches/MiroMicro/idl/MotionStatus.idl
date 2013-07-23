@@ -1,0 +1,68 @@
+// -*- idl -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware for Robots)
+// Copyright (C) 1999-2005
+// Department of Neuroinformatics, University of Ulm, Germany
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published
+// by the Free Software Foundation; either version 2, or (at your option)
+// any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, write to the Free Software Foundation,
+// Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+//
+// $Id$
+//
+#ifndef MotionStatus_idl
+#define MotionStatus_idl
+
+#include "Time.idl"
+#include "Position.idl"
+#include "Velocity.idl"
+
+module Miro
+{
+  //! The complete status of the mobile base at a discrete time.
+  /**
+   * Struct representing an Odometry event as passed via the 
+   * NotificationService.
+   */
+  struct MotionStatusIDL
+  {
+    //! The Time, the status was collected.
+    TimeIDL time;
+    //! Current position of the robot.
+    PositionIDL position;
+    //! Current velocity of the robot.
+    VelocityIDL velocity;
+  };
+
+  //! The raw position of the robot.
+  /**
+   * Struct representing an RawPosition event as passed via the
+   * NotificationService. 
+   *
+   * See the @ref Odometry interface for
+   * details.  
+   */
+  struct RawPositionIDL
+  {
+    //! The Time, the status was collected.
+    TimeIDL time;
+    //! Current position of the robot.
+    PositionIDL position;
+  };
+};
+
+#endif // MotionStatus_idl
+
+
+
+

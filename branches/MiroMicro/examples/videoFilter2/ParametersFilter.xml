@@ -1,0 +1,16 @@
+<!DOCTYPE xml SYSTEM "MiroParameterDescription.dtd">
+  <config> 
+    <config_global name="namespace" value="Video" />
+    <config_global name="include" value="video/Parameters.h" />
+    <config_group name="Video">
+      <config_item name="BallDetection" parent="Video::Filter" final="true">
+	<config_parameter name="redLow" type="int" default="200" />
+	<config_parameter name="redHigh" type="int" default="255" />
+	<config_parameter name="greenLow" type="int" default="0" />
+	<config_parameter name="greenHigh" type="int" default="50" />
+	<config_parameter name="blueLow" type="int" default="0" />
+	<config_parameter name="blueHigh" type="int" default="50" />
+	<config_parameter name="redRatio" type="double" default="0.05" />
+      </config_item>
+    </config_group>
+  </config>

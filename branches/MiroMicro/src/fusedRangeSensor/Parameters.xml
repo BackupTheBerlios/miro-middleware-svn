@@ -1,0 +1,11 @@
+<!DOCTYPE xml SYSTEM "PolicyEditor_behaviour.dtd">
+<config> 
+  <config_global name="namespace" value="Fused" />
+  <config_global name="include" value="miro/SvcParameters.h" />
+
+  <config_group name="Fused">
+    <config_item parent="Miro::Dev" instance="true">
+      <config_parameter name="fusedDescription" type="Miro::ScanDescriptionIDL"/>
+    </config_item>
+  </config_group>
+</config>

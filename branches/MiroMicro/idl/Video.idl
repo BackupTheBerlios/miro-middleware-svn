@@ -1,0 +1,212 @@
+// -*- idl -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware for Robots)
+// Copyright (C) 1999-2005
+// Department of Neuroinformatics, University of Ulm, Germany
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published
+// by the Free Software Foundation; either version 2, or (at your option)
+// any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, write to the Free Software Foundation,
+// Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+//
+// $Id$
+//
+#ifndef Video_idl
+#define Video_idl
+
+#include "Exception.idl"
+#include "Time.idl"
+#include "Config.idl"
+
+module Miro
+{
+  //! The available video formats
+  enum VideoPaletteIDL {
+    GREY_8,
+    INVALID,
+    GREY_16,
+    GREY_32,
+    RGB_24,
+    BGR_24,
+    RGB_32,
+    BGR_32,
+    YUV_24,
+    YUV_411,
+    YUV_422,
+    YUV_420P,
+    HSV_24,
+    LUV_24
+  };
+
+  //! Struct describing the format of an image.
+  struct ImageFormatIDL
+  {
+    //! Image width (columns).
+    unsigned long width;
+    //! Image height (rows).
+    unsigned long height;
+    //! Image palette (gray,rgb).
+    VideoPaletteIDL palette;
+  };
+
+  //! The image handle, containing all relevant image meta data.
+  typedef sequence<unsigned long> OffsetSequenceIDL;
+
+  //! The image handle, containing all relevant image meta data.
+  struct ImageHandleIDL
+  {
+    //! Shared memory key to image data.
+    long key;
+    //! Image format
+    ImageFormatIDL format;
+    //! Sequence of buffer offsets.
+    OffsetSequenceIDL offset;
+  };
+
+  typedef sequence<octet> SubImageDataIDL;
+
+  //! Interface to the frame grabber devices.
+  /**
+   * @author Steffen Simon
+   * @author Hans Utz
+   * @author Arnd Muehlenfeld
+   */
+  interface Video : Config
+  {
+    //! Connect to the service.
+    /**
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    ImageHandleIDL connect(out unsigned long id) raises(EDevIO);
+    //! Disconnect from the service.
+    /**
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    void disconnect(in unsigned long id) raises(EOutOfBounds, EDevIO);
+    //! Get the current image.
+    /**
+     * This call immediately returns the last grabbed image.
+     *
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    TimeIDL acquireCurrentImage(in unsigned long id, out unsigned long buffer)
+      raises(EOutOfBounds, EDevIO);
+    //! Get the next image.
+    /**
+     * This call waits and returns the next grabbed image.
+     *
+     * @throw EDevIO is thrown to indicate low level device problems.
+     */
+    TimeIDL acquireNextImage(in unsigned long id, out unsigned long buffer)
+      raises(EOutOfBounds, EDevIO, ETimeOut);
+
+    //! Release a previously acquired image.
+    void releaseImage(in unsigned long id, in unsigned long buffer)
+      raises(EOutOfBounds);
+
+    //! Get all the pixels of the current image, downsized to width=x height=y
+    SubImageDataIDL exportSubImage(inout unsigned long x, inout unsigned long y)
+      raises(EOutOfBounds, EDevIO);
+
+    //! Get all the pixels of the next image, downsized to width=x height=y
+    SubImageDataIDL exportWaitSubImage(inout unsigned long x, inout unsigned long y)
+      raises(EOutOfBounds, EDevIO, ETimeOut);
+  };
+
+  //! STruct encapsulating connection data.
+  struct VideoConnectionIDL
+  {
+    //! Connection identifier.
+    unsigned long id;
+    //! Filter name.
+    string filter;
+  };
+
+  //! A set of connections.
+  /** No duplicates are allowed. */
+  typedef sequence<VideoConnectionIDL> ConnectionSetIDL;
+  //! A set of buffer indexes.
+  typedef sequence<unsigned long> BufferSetIDL;
+
+  //! Struct holding timing statistics.
+  struct TimeStatsIDL
+  {
+    //! Minimum processing time.
+    TimeIDL min;
+    //! Maximum processing time.
+    TimeIDL max;
+    //! Average processing time.
+    TimeIDL mean;
+    //! Variance of the processing time.
+    TimeIDL var;
+  };
+
+  //! Struct describing a filter interface.
+  struct FilterInterfaceIDL
+  {
+    //! IOR of its the video interface.
+    /** Video::_nil if no interface is provided for this filter. */
+    Video ior;
+    //! Number of client connections to the filter.
+    unsigned long connections;
+    //! Name of the filters Video interface.
+    string name;
+  };
+
+  //! Struct holding a set of linked filters. */
+  typedef sequence<string> FilterLinkVector;
+
+  //! Struct describing the filter tree.
+  struct FilterTreeIDL
+  {
+    //! Number of active successors in the filter tree.
+    unsigned long connections;
+    //! Timing statistics of the filter.
+    TimeStatsIDL timeFilter;
+    //! Timing statistics of the filter subtree.
+    TimeStatsIDL timeSubtree;
+    //! Description of the filters video interface.
+    FilterInterfaceIDL videoInterface;
+
+    //! Filter name.
+    /** Note that this can differ from its Video interface name. */
+    string name;
+    //! Successor filter descriptions.
+    sequence<FilterTreeIDL> successors;
+    //! Names of the linked successor filters.
+    FilterLinkVector successorLinks;
+  };
+
+  //! Meta interface for video filter trees.
+  /**
+   * This interface offers methods that work on the filter tree
+   * provided by the VideoService, instead of an individual filter
+   * like the Video interface.
+   *
+   * It offers synchronised acces to multiple filters as well as
+   * statistical meta data of the filter tree.
+   */
+  interface VideoBroker
+  {
+    //! Acquire a synchronised set of images from multiple interfaces.
+    TimeIDL acquireNextImageSet(in ConnectionSetIDL connections, out BufferSetIDL buffers)
+      raises(EOutOfBounds, EDevIO, ETimeOut);
+    //! Release an image set.
+    void releaseImageSet(in ConnectionSetIDL connections, in BufferSetIDL buffers)
+      raises(EOutOfBounds);
+
+    //! Collect statistical information of the filter tree.
+    FilterTreeIDL filterTreeStats();
+  };
+};
+
+#endif // Video_idl

@@ -1,0 +1,252 @@
+// -*- c++ -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware for Robots)
+// Copyright (C) 1999-2005
+// Department of Neuroinformatics, University of Ulm, Germany
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published
+// by the Free Software Foundation; either version 2, or (at your option)
+// any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, write to the Free Software Foundation,
+// Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+//
+// $Id$
+//
+//
+// Authors:
+//   Philipp Baer
+//
+#include "NotifyMulticastRequestEntry.h"
+
+#include "Log.h"
+
+#include <tao/CDR.h>
+
+namespace Miro
+{
+  namespace NMC {
+    /**
+     *   Parameters:
+     *     byteOrder:     byte order
+     *     requestId:     request id
+     *     requestSize:   request size
+     *     fragmentCount: fragment count
+     */
+    RequestEntry::RequestEntry(CORBA::Boolean byteOrder,
+                               CORBA::ULong   requestId,
+                               CORBA::ULong   requestSize,
+                               CORBA::ULong   fragmentCount) :
+        byteOrder_(byteOrder),
+        requestId_(requestId),
+        requestSize_(requestSize),
+        fragmentCount_(fragmentCount),
+        timeoutCounter_(0)
+    {
+      const int bitsPerUlong = sizeof(CORBA::ULong) * CHAR_BIT;
+
+      ACE_CDR::grow(&payload_, requestSize_);
+      payload_.wr_ptr(requestSize_);
+
+      receivedFragments_ = defaultReceivedFragments_;
+      ownReceivedFragments_ = 0;
+
+      receivedFragmentsSize_ = fragmentCount_ / bitsPerUlong + 1;
+
+      if (receivedFragmentsSize_ > DEFAULT_FRAGMENT_BUFSIZ) {
+        ACE_NEW(receivedFragments_, CORBA::ULong[receivedFragmentsSize_]);
+        ownReceivedFragments_ = 1;
+      }
+
+      for (CORBA::ULong i = 0; i < receivedFragmentsSize_; ++i)
+        receivedFragments_[i] = 0;
+
+      CORBA::ULong idx = fragmentCount_ / bitsPerUlong;
+      CORBA::ULong bit = fragmentCount_ % bitsPerUlong;
+
+      receivedFragments_[idx] = (0xFFFFFFFF << bit);
+    }
+
+
+    RequestEntry::~RequestEntry()
+    {
+      if (ownReceivedFragments_) {
+        ownReceivedFragments_ = 0;
+        delete[] receivedFragments_;
+      }
+    }
+
+    /**
+     * RequestEntry::validateFragment()
+     *
+     *   Description:
+     *     Validates a given fragment
+     *
+     *   Parameters:
+     *     byteOrder:      byte order
+     *     requestSize:    request size
+     *     fragmentSize:   fragment size
+     *     fragmentOffset: fragment offset
+     *     fragmentId:     fragment id
+     *     fragmentCount:  fragment count
+     */
+    int
+    RequestEntry::validateFragment(CORBA::Boolean byteOrder,
+                                   CORBA::ULong   requestSize,
+                                   CORBA::ULong   fragmentSize,
+                                   CORBA::ULong   fragmentOffset,
+                                   CORBA::ULong   /* fragmentId */,
+                                   CORBA::ULong   fragmentCount) const
+    {
+      if (byteOrder     != byteOrder_ ||
+            requestSize   != requestSize_ ||
+            fragmentCount != fragmentCount_)
+        return 0;
+
+      if (fragmentOffset                >= requestSize ||
+            fragmentOffset + fragmentSize >  requestSize)
+        return 0;
+
+      return 1;
+    }
+
+    /**
+     * RequestEntry::testReceived()
+     *
+     *   Descritpion:
+     *     Tests, if eevent already received
+     *
+     *   Parameters:
+     *     fragmentId: fragment id
+     */
+    int
+    RequestEntry::testReceived(CORBA::ULong fragmentId) const
+    {
+      const int bitsPerUlong = sizeof(CORBA::ULong) * CHAR_BIT;
+
+      // Assume out-of-range fragments as received, so they are dropped...
+
+      if (fragmentId > fragmentCount_)
+        return 1;
+
+      CORBA::ULong idx = fragmentId / bitsPerUlong;
+      CORBA::ULong bit = fragmentId % bitsPerUlong;
+
+      return ACE_BIT_ENABLED(receivedFragments_[idx], 1 << bit);
+    }
+
+
+    /**
+     * RequestEntry::markReceived()
+     *
+     *   Descritpion:
+     *     Marks received fragments
+     *
+     *   Parameters:
+     *     fragmentId: fragment id
+     */
+    void RequestEntry::markReceived(CORBA::ULong fragmentId)
+    {
+      const int bitsPerUlong = sizeof(CORBA::ULong) * CHAR_BIT;
+
+      // Assume out-of-range fragments as received, so they are dropped...
+
+      if (fragmentId > fragmentCount_)
+        return;
+
+      CORBA::ULong idx = fragmentId / bitsPerUlong;
+      CORBA::ULong bit = fragmentId % bitsPerUlong;
+
+      ACE_SET_BITS(receivedFragments_[idx], 1 << bit);
+    }
+
+
+    /**
+     * RequestEntry::complete()
+     *
+     *   Description:
+     *     Tests, is entry was received completely
+     */
+    int RequestEntry::complete(void) const
+    {
+      for (CORBA::ULong i = 0; i < receivedFragmentsSize_; ++i)
+        if (receivedFragments_[i] != 0xFFFFFFFF)
+          return 0;
+
+      return 1;
+    }
+
+
+    /**
+     * RequestEntry::fragment_buffer()
+     *
+     *   Descritpion:
+     *     Returns a pointer to the fragment buffer plus fragmentOffset
+     *
+     *   Parameters:
+     *     fragmentOffset: fragment offset
+     */
+    char* RequestEntry::fragmentBuffer(CORBA::ULong fragmentOffset)
+    {
+      return payload_.rd_ptr() + fragmentOffset;
+    }
+
+
+    /**
+     * RequestEntry::decode()
+     *
+     *   Description:
+     *     Decodes (unmarshals) the request entry into an event
+     *
+     *   Parameters:
+     *     event: CosNotification::StructuredEvent object
+     */
+    void
+    RequestEntry::decode(CosNotification::StructuredEvent &event)
+    throw(CORBA::MARSHAL)
+    {
+      CosNotification::EventHeader          header;
+      CosNotification::FilterableEventBody  filterableBody;
+      CORBA::Any                            remainder;
+
+      TAO_InputCDR cdr(&payload_, ACE_static_cast(int, byteOrder_));
+
+      if (!(cdr >> event)) {
+        throw CORBA::MARSHAL();
+      }
+    }
+
+
+    /**
+     * RequestEntry::incTimeout()
+     *
+     *   Descritpion:
+     *     Increments the timeout counter
+     */
+    void
+    RequestEntry::incTimeout(void)
+    {
+      timeoutCounter_++;
+    }
+
+
+    /**
+     * RequestEntry::getTimeout()
+     *
+     *   Descritpion:
+     *     Returns the timeout
+     */
+    int
+    RequestEntry::getTimeout(void) const
+    {
+      return timeoutCounter_;
+    }
+  }
+}

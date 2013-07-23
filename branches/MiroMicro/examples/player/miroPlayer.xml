@@ -1,0 +1,318 @@
+<!DOCTYPE MiroConfigDocument>
+  <config>
+ <section name="Robot" >
+  <parameter name="Miro::RobotParameters" >
+   <parameter value="Miro" name="Name" />
+   <parameter value="GazeboRobot" name="Type" />
+  </parameter>
+ </section>
+ <section name="Player" >
+  <parameter name="Player::Parameters" >
+   <parameter value="0.001534" name="AngleConvFactor" />
+   <parameter value="0.006" name="DiffConvFactor" />
+   <parameter value="0.485" name="DistConvFactor" />
+   <parameter value="1" name="RangeConvFactor" />
+   <parameter value="20" name="Vel2Divisor" />
+   <parameter value="4" name="VelConvFactor" />
+   <parameter value="true" name="Infrared" />
+   <parameter name="Motion" >
+    <parameter value="500" name="MaxRotation" />
+    <parameter value="-500" name="MinRotation" />
+    <parameter value="2200" name="MaxTranslation" />
+    <parameter value="-2200" name="MinTranslation" />
+    <parameter value="340" name="WheelBase" />
+   </parameter>
+   <parameter name="SonarDescription" >
+    <parameter value="3" name="ScanType" />
+    <parameter value="Sonar" name="EventName" />
+    <parameter name="Group" >
+     <parameter>
+      <parameter name="Description" >
+       <parameter value="30" name="Focus" />
+       <parameter value="5000" name="MaxRange" />
+       <parameter value="200" name="MinRange" />
+      </parameter>
+      <parameter name="Sensor" >
+       <parameter>
+        <parameter value="60" name="Alpha" />
+        <parameter value="30" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="150" name="Distance" />
+        <parameter value="210" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="45" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="170" name="Distance" />
+        <parameter value="210" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="25" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="175" name="Distance" />
+        <parameter value="210" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="12.5" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="180" name="Distance" />
+        <parameter value="210" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="-12.5" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="180" name="Distance" />
+        <parameter value="210" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="-25" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="175" name="Distance" />
+        <parameter value="210" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="-45" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="170" name="Distance" />
+        <parameter value="210" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="-60" name="Alpha" />
+        <parameter value="-30" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="150" name="Distance" />
+        <parameter value="210" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="-120" name="Alpha" />
+        <parameter value="30" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="150" name="Distance" />
+        <parameter value="210" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="-135" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="170" name="Distance" />
+        <parameter value="210" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="-155" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="175" name="Distance" />
+        <parameter value="210" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="-167.5" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="180" name="Distance" />
+        <parameter value="210" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="167.5" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="180" name="Distance" />
+        <parameter value="210" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="155" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="175" name="Distance" />
+        <parameter value="210" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="135" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="170" name="Distance" />
+        <parameter value="210" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="120" name="Alpha" />
+        <parameter value="-30" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="150" name="Distance" />
+        <parameter value="210" name="Height" />
+       </parameter>
+      </parameter>
+     </parameter>
+     <parameter>
+      <parameter name="Description" >
+       <parameter value="30" name="Focus" />
+       <parameter value="5000" name="MaxRange" />
+       <parameter value="200" name="MinRange" />
+      </parameter>
+      <parameter name="Sensor" >
+       <parameter>
+        <parameter value="60" name="Alpha" />
+        <parameter value="30" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="150" name="Distance" />
+        <parameter value="1090" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="45" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="170" name="Distance" />
+        <parameter value="1090" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="25" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="175" name="Distance" />
+        <parameter value="1090" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="12.5" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="180" name="Distance" />
+        <parameter value="1090" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="-12.5" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="180" name="Distance" />
+        <parameter value="1090" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="-25" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="175" name="Distance" />
+        <parameter value="1090" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="-45" name="Alpha" />
+        <parameter value="0" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="170" name="Distance" />
+        <parameter value="1090" name="Height" />
+       </parameter>
+       <parameter>
+        <parameter value="-60" name="Alpha" />
+        <parameter value="-30" name="Beta" />
+        <parameter value="0" name="Gamma" />
+        <parameter value="false" name="Masked" />
+        <parameter value="150" name="Distance" />
+        <parameter value="1090" name="Height" />
+       </parameter>
+      </parameter>
+     </parameter>
+    </parameter>
+   </parameter>
+   <parameter value="true" name="Tactile" />
+   <parameter value="true" name="Sonar" />
+
+   <parameter value="true" name="Camera" />
+   <parameter name="CameraParams" >
+    <parameter name="UpsideDown" value="false" />
+    <parameter name="Zoom">
+     <parameter name="Present" value="true"/>
+     <parameter name="RangeMin" value="6"/>
+     <parameter name="RangeMax" value="60"/>
+    </parameter>
+   </parameter>
+   <parameter name="PanTiltParams">
+    <parameter name="Pan">
+     <parameter name="RangeMin" value="-55"/>
+     <parameter name="RangeMax" value="55"/>
+    </parameter>
+    <parameter name="Tilt">
+     <parameter name="RangeMin" value="-35"/>
+     <parameter name="RangeMax" value="35"/>
+    </parameter>
+   </parameter>
+  </parameter>
+ </section>
+
+ <section name="Sick" >
+  <parameter name="Laser::Parameters" >
+   <parameter value="/dev/laser" name="Device" />
+   <parameter name="TtyParams" >
+    <parameter value="500000" name="Baudrate" />
+   </parameter>
+   <parameter value="false" name="ContinousMode" />
+   <parameter value="false" name="Notify" />
+   <parameter value="0.100000" name="PollInterval" />
+   <parameter value="true" name="PositionStamps" />
+   <parameter value="true" name="Statistics" />
+   <parameter value="false" name="StdCrystal" />
+  </parameter>
+ </section>
+
+ <section name="Video" >
+
+   <instance type="Video::DevicePlayer" name="DevicePlayer">
+     <parameter value="true" name="InterfaceInstance" />
+   </instance>
+
+   <instance type="Video::Parameters" name="PlayerCam" >
+     <parameter value="rgb" name="Palette" />
+     <parameter value="320" name="Width" />
+     <parameter value="240" name="Height" />
+       <parameter name="Filter">
+         <parameter value="DevicePlayer" name="Name" />
+         <parameter value="DevicePlayer" name="Type" />
+	 <parameter name="Successor" >
+	    <parameter name="Filter" >
+	      <parameter value="FilterCopy" name="Type" />
+	      <parameter value="FilterCopy" name="Name" />
+	    </parameter>
+      	  </parameter>
+       </parameter>
+     </instance>
+ 
+     <instance type="Filter" name="FilterCopy">
+	<parameter value="true" name="InterfaceInstance" />
+	<parameter name="Interface" >
+	  <parameter value="video" name="Name" />
+	</parameter>
+      </instance>
+
+ </section>
+
+ <section name="Notification" >
+  <parameter name="Miro::LogNotifyParameters" >
+   <parameter name="TypeName" />
+   <parameter value="157286400" name="MaxFileSize" />
+  </parameter>
+ </section>
+</config>

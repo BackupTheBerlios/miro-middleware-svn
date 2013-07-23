@@ -1,0 +1,41 @@
+<!DOCTYPE xml SYSTEM "PolicyParametersConfigDocument.dtd">
+<config> 
+  <config_global name="include" value="botsvcs/BAP/Parameters.h" />
+
+  <config_group name="behaviour">
+    
+    <config_item name="TactileStop" parent="Miro::BAP::EventBehaviour">
+    </config_item>
+
+    <config_item name="Straight" parent="Miro::BAP::TimedBehaviour">
+      <config_parameter  name="Translation" type="long" measure="mm/s" default="500" />
+      <config_parameter  name="Rotation" type="angle" measure="&deg;/s" default="0" />
+    </config_item>
+    
+    <config_item name="Wander" parent="Miro::BAP::TimedBehaviour">
+      <config_parameter  name="ThresholdChange" type="double" measure="" default=".20" />
+      <config_parameter  name="ThresholdStraight" type="double" measure="" default=".5" />
+      <config_parameter  name="MinTranslation" type="long" measure="mm/s" default="200" />
+      <config_parameter  name="MaxTranslation" type="long" measure="mm/s" default="500" />
+      <config_parameter  name="MinRotation" type="angle" measure="&deg;/s" default="10" />
+      <config_parameter  name="MaxRotation" type="angle" measure="&deg;/s" default="90" />
+    </config_item>
+    
+    <config_item name="Timer" parent="Miro::BAP::TimedBehaviour">
+      <config_parameter  name="Time" type="ACE_Time_Value" default="10,0" measure="sec" />
+    </config_item>
+    
+    <config_item name="MoveToPoint" parent="Miro::BAP::EventBehaviour">
+      <config_parameter  name="FastTranslation" type="long" default="500" measure="mm/s"/>
+      <config_parameter  name="SlowTranslation" type="long" default="300" measure="mm/s"/>
+      <config_parameter  name="MaxRotation" type="angle" default="60" measure="&deg;/s"/>
+      <config_parameter  name="TargetX" type="double" default="0." measure="mm"/>
+      <config_parameter  name="TargetY" type="double" default="0." measure="mm"/>
+      <config_parameter  name="CorrectOrientation" type="bool" default="false" />
+      <config_parameter  name="Angle" type="Angle" default="0." measure="&deg;"/>
+      <config_parameter  name="Radius" type="double" default="200" measure="mm"/>
+      <config_parameter  name="Delta" type="Angle" default="10." measure="&deg;"/>
+    </config_item>
+    
+  </config_group>
+</config>

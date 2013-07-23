@@ -1,0 +1,7 @@
+MotionTest
+DifferentialMotionTest
+SynchroMotionTest
+Makefile.in
+Makefile
+.deps
+.libs

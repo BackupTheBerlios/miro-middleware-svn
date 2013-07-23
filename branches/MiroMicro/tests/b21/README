@@ -1,0 +1,9 @@
+Tool for low level b21 testing.
+
+- B21BaseTest tests the mcp board based synchro drive.
+- B21ButtonTest tests the button service on the robot.
+- B21StressBase tries to flood the mcp board with commands.
+  This is easily possible and we did not yet find an ideal
+  solution for this problem.
+- B21SelfTest another lowlevel test...
+

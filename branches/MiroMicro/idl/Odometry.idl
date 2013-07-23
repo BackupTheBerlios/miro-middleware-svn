@@ -1,0 +1,169 @@
+// -*- idl -*- ///////////////////////////////////////////////////////////////
+//
+// This file is part of Miro (The Middleware for Robots)
+// Copyright (C) 1999-2005
+// Department of Neuroinformatics, University of Ulm, Germany
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published
+// by the Free Software Foundation; either version 2, or (at your option)
+// any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, write to the Free Software Foundation,
+// Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+//
+// $Id$
+//
+#ifndef Odometry_idl
+#define Odometry_idl
+
+#include "Exception.idl"
+#include "Position.idl"
+#include "MotionStatus.idl"
+
+module Miro
+{
+  //! The basic odometry interface.
+  /** 
+   * Note that all robots also broadcast position status reports via
+   * the notification service.
+   *
+   * The different robots collects status reports at different pace:
+   * - B21: 10Hz
+   * - Pioneer1: 10Hz
+   * - Sparrow99: 10-100Hz (configurable)
+   *
+   * Event declaration:
+   * - type name = Odometry
+   * - remainder of body = @ref MotionStatusIDL
+   *
+   * Additionally the raw position (see @ref getRawPosition) can be
+   * broadcasted via the notification service.
+   *
+   * Event declaration:
+   * - type name = RawPosition
+   * - remainder of body = @ref RawPositionIDL
+   *
+   * @author Hans Utz
+   */
+  interface Odometry
+  {
+    //-------------------------------------------------------------------------
+    // position methods
+    //-------------------------------------------------------------------------
+
+    //! Set the current position.
+    /**
+     * Set the current position of the robot in the real world to be
+     * associated to the specified coordinates and heading.
+     *
+     * @param position The new position
+     */
+    void setPosition( in PositionIDL position );
+
+    //! Set the position relative to its current value.
+    /**
+     * Adjust the current position of the robot in the real world by the 
+     * specified coordinates and heading delta.
+     *
+     * @param deltaPosition Realtive position correction.
+     */
+    void updatePosition( in PositionIDL deltaPosition);
+
+    //! Get the current position of the robot.
+    /**
+     * @return The position, consisting of a point in world
+     * coordinates, as well as the robots heading.
+     */
+    PositionIDL getPosition();
+
+    //! Wait and get the next incoming position repot of the robot.
+    /**
+     * @throw ETimeOut This exception is thrown, when no report is
+     * received for longer than 5 times of the robots status report
+     * period. This usually indicates a crash of the controller board
+     * or a too high system load.
+     * @return The current position.
+     */
+    PositionIDL getWaitPosition() raises(ETimeOut);
+
+    //! Get the uncorrected position of the odometry.
+    /**
+     * The purpose of the raw position is not self localization but to
+     * provide a uniform coordinate frame to annotate locally
+     * percepted data with position stamps that are not jumping by
+     * localization updates, but only are affected by the odometry
+     * error over time.
+     *
+     * @return The raw position, consisting of a point in world
+     * coordinates, as well as the robots heading.
+     */
+    PositionIDL getRawPosition();
+
+    //! Wait and get the uncorrected position of the odometry.
+    /**
+     * The purpose of the raw position is not self localization but to
+     * provide a uniform coordinate frame to annotate locally
+     * percepted data with position stamps that are not jumping by
+     * localization updates, but only are affected by the odometry
+     * error over time.
+     *
+     * @throw ETimeOut is thrown, when no report is
+     * received for longer than 5 times of the robots status report
+     * period. This usually indicates a crash of the controller board
+     * or a too high system load.
+     * @return The raw position, consisting of a point in world
+     * coordinates, as well as the robots heading.
+     */
+    PositionIDL getWaitRawPosition() raises(ETimeOut);
+
+    //-------------------------------------------------------------------------
+    // status report methods
+    //-------------------------------------------------------------------------
+
+    //! Get the current velocity of the robot.
+    /**
+     * @return The robots translational and rotational velocity.
+     */
+    VelocityIDL getVelocity();
+
+    //! Wait and get the next incoming velocity repot of the robot.
+    /**
+     * @throw ETimeOut is thrown, when no report is
+     * received for longer than 5 times of the robots status report
+     * period. This usually indicates a crash of the controller board
+     * or a too high system load.
+     * @return The robots translational and rotational velocity.
+     */
+    VelocityIDL getWaitVelocity() raises(ETimeOut);
+
+    //! Get the current motion status of the robot.
+    /**
+     * @return The motion status consists of a timestamp, the robots
+     * current position, and its current velocity.
+     */
+
+    MotionStatusIDL getStatus();
+    //! Wait and get the next incoming motion status report of the robot.
+    /**
+     * @throw ETimeOut is thrown, when no report is
+     * received for longer than 5 times of the robots status report
+     * period. This usually indicates a crash of the controller board
+     * or a too high system load.
+     * @return The motion status consists of a timestamp, the robots
+     * current position, and its current velocity.
+     */
+    MotionStatusIDL getWaitStatus() raises(ETimeOut);
+  };
+};
+#endif // Odometry_idl
+
+
+
+

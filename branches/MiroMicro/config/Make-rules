@@ -1,0 +1,130 @@
+## -*- Makefile -*- ##########################################################
+##
+## This file is part of Miro (The Middleware For Robots)
+##
+## (c) 2003
+## Department of Neural Information Processing, University of Ulm, Germany
+##
+## $Id$
+##
+## Miro/config/Make-rules
+##
+##############################################################################
+
+# enabling reconfigure
+
+ACLOCAL_AMFLAGS = -I config
+
+# includes 
+
+AM_CXXFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/ -I$(top_builddir)/src -I$(top_builddir)/
+AM_CXXFLAGS += $(ACE_CFLAGS) $(TAO_CFLAGS) $(QT_CFLAGS)
+AM_CXXFLAGS += $(INHERITED_CPPFLAGS) $(INHERITED_SYMBOLS)
+AM_CXXFLAGS += -W -Wall -Woverloaded-virtual -DDEBUG -DQT_GENUINE_STR
+
+AM_CPPFLAGS =
+
+# lib search path
+
+AM_LDFLAGS = -L$(top_builddir)/lib
+
+# AM_LDFLAGS = -L@abs_top_builddir@/botsvcs/BAP -L@abs_top_builddir@/botsvcs/MCL -L@abs_top_builddir@/idl -L@abs_top_builddir@/src/abus -L@abs_top_builddir@/src/base -L@abs_top_builddir@/src/buttons -L@abs_top_builddir@/src/can -L@abs_top_builddir@/src/faulMotor -L@abs_top_builddir@/src/faulTty -L@abs_top_builddir@/src/laser -L@abs_top_builddir@/src/mcp -L@abs_top_builddir@/src/miro -L@abs_top_builddir@/src/msp -L@abs_top_builddir@/src/params -L@abs_top_builddir@/src/pioneer -L@abs_top_builddir@/src/psos -L@abs_top_builddir@/src/sparrow -L@abs_top_builddir@/src/sparrowBase -L@abs_top_builddir@/src/video -L@abs_top_builddir@/utils/widgets
+
+AM_LDFLAGS += $(ACE_LDFLAGS) $(TAO_LDFLAGS) $(QT_LDFLAGS)
+AM_LDFLAGS += $(INHERITED_LDFLAGS) -version-info `echo $(VERSION) | sed 's/\./:/g'`
+AM_LDFLAGS += -R$(ACE_ROOT)/lib
+
+
+# header include dirs
+
+idl_includedir         = $(includedir)/idl
+params_includedir      = $(includedir)/params
+abus_includedir        = $(includedir)/abus
+b21Base_includedir     = $(includedir)/b21Base
+base_includedir        = $(includedir)/base
+buttons_includedir     = $(includedir)/buttons
+can_includedir         = $(includedir)/can
+faulMotor_includedir   = $(includedir)/faulMotor
+faulTty_includedir     = $(includedir)/faulTty
+laser_includedir       = $(includedir)/laser
+mcp_includedir         = $(includedir)/mcp
+miro_includedir        = $(includedir)/miro
+msp_includedir         = $(includedir)/msp
+panTilt_includedir     = $(includedir)/panTilt
+pioneer_includedir     = $(includedir)/pioneer
+pioneerBase_includedir = $(includedir)/pioneerBase
+psos_includedir        = $(includedir)/psos
+sparrow_includedir     = $(includedir)/sparrow
+sparrowBase_includedir = $(includedir)/sparrowBase
+speech_includedir      = $(includedir)/speech
+sphinx_includedir      = $(includedir)/sphinx
+video_includedir       = $(includedir)/video
+botsvcsBAP_includedir  = $(includedir)/botsvcs/BAP
+botsvcsMCL_includedir  = $(includedir)/botsvcs/MCL
+
+if COND_IEEE1394
+if COND_IEEE1394_NEWLIB
+1394libraries = \
+	-lraw1394 \
+	-ldc1394
+else
+1394libraries = \
+	-lraw1394 \
+	-ldc1394_control
+endif
+endif
+
+if COND_UNICAP
+unicaplibraries = \
+	-lraw1394 \
+	-lunicap
+endif
+
+if COND_PLAYER
+playerlibraries = \
+	$(PLAYER_LDFLAGS) $(PLAYER_LIBS)
+endif
+
+if COND_GAZEBO
+gazebolibraries = \
+	$(GAZEBO_LDFLAGS) $(GAZEBO_LIBS)
+endif
+
+# common build rules
+
+SUFFIXES = .ui .xml .idl .h .moc.cpp C.cpp C.h C.i.h S.cpp S.h S.i.h
+
+.xml.cpp:
+	$(top_builddir)/src/makeParams/MakeParams -f $< -n $(@:.cpp=) -s cpp -h h
+
+.h.moc.cpp:
+	$(QT_MOC) $< -o $@
+
+.ui.h:
+	$(QT_UIC) -o $@ $<
+
+.ui.cpp:
+	$(QT_UIC) -o $@ -impl $*.h $<
+
+.idlC.cpp:
+	LD_LIBRARY_PATH=$(ACE_ROOT)/lib:$(ACE_ROOT)/ace $(TAO_IDL) -in -ci C.i.h -si S.i.h -Wp,-I$(top_srcdir)/idl -I$(top_srcdir)/idl $(TAO_CFLAGS) $<
+
+C.cppC.h: ;
+C.hC.i.h: ;
+C.i.hS.cpp: ;
+S.cppS.h: ;
+S.hS.i.h: ;
+
+# these rules do the trick of local install/cleaning the libraries and programs
+
+INSTALLLTLIBRARIES=@(installpath=@abs_top_builddir@/lib;hit=0; for i in $(lib_LTLIBRARIES); do if test $$i -nt $$installpath/$$i; then /bin/sh $(top_builddir)/libtool --mode=install /usr/bin/install $$i $$installpath/$$i; hit=1; fi; done; if test $$hit -gt 0; then libtool --finish $$installpath; fi)
+
+INSTALLLIBRARIES=@(installpath=@abs_top_builddir@/lib;hit=0; for i in $(lib_LIBRARIES); do if test $$i -nt $$installpath/$$i; then /bin/sh $(top_builddir)/libtool --mode=install /usr/bin/install $$i $$installpath/$$i; hit=1; fi; done; if test $$hit -gt 0; then libtool --finish $$installpath; fi)
+
+INSTALLPROGRAMS=@(installpath=@abs_top_builddir@/bin; for i in $(bin_PROGRAMS); do if test $$i -nt $$installpath/$$i; then /bin/sh $(top_builddir)/libtool --mode=install /usr/bin/install $$i $$installpath/$$i; fi; done)
+
+CLEANLTLIBRARIES=@(for i in $(lib_LTLIBRARIES); do if test -f $(top_builddir)/lib/$$i; then rm -f $(top_builddir)/lib/`basename $$i .la`.*; fi; done)
+
+CLEANLIBRARIES=@(for i in $(lib_LIBRARIES); do if test -f $(top_builddir)/lib/$$i; then rm -f $(top_builddir)/lib/$$i; fi; done)
+
+CLEANPROGRAMS=@(for i in $(bin_PROGRAMS); do if test -f $(top_builddir)/bin/$$i; then rm -f $(top_builddir)/bin/$$i; fi; done)

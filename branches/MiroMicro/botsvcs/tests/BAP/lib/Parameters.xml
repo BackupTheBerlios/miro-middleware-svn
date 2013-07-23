@@ -1,0 +1,29 @@
+<!DOCTYPE xml SYSTEM "PolicyParametersConfigDocument.dtd">
+<config> 
+  <config_global name="include" value="botsvcs/BAP/Parameters.h" />
+
+  <config_group name="behaviour">
+    
+    <config_item name="DummyBehaviour" parent="Miro::BAP::TimedBehaviour" final="false">
+      <config_parameter name="SendTransition" type="int" default="0" />
+      <config_parameter name="Dummy" type="int" default="0" />
+    </config_item>
+    <config_item name="DummyBehaviourB" parent="Miro::BAP::TimedBehaviour" final="false" />
+    <config_item name="DummyBehaviourD" parent="Miro::BAP::TimedBehaviour" final="true" />
+    
+    <config_item name="Behaviour0" parent="DummyBehaviour" dummy="true" />
+    <config_item name="Behaviour1" parent="DummyBehaviour" dummy="true" />
+    <config_item name="Behaviour2" parent="DummyBehaviour" dummy="true" />
+    <config_item name="Behaviour3" parent="DummyBehaviour" dummy="true" />
+
+    <config_item name="BehaviourB" parent="DummyBehaviourB" dummy="true" />
+
+  </config_group>
+
+  <config_group name="arbiter">   
+    <config_item name="DummyArbiter" parent="Miro::BAP::PriorityArbiter" final="false" />
+
+    <config_item name="Arbiter0" parent="DummyArbiter" dummy="true" />
+    <config_item name="Arbiter1" parent="DummyArbiter" dummy="true" />
+  </config_group>
+</config>

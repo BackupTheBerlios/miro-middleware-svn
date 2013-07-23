@@ -1,0 +1,55 @@
+<!DOCTYPE xml SYSTEM "MiroParameterDescription.dtd">
+<config> 
+  <config_global name="namespace" value="Miro" />
+
+  <config_group name="Config">
+    
+    <config_item name="Config" final="false" />
+    
+  </config_group>
+
+  <config_group name="Robot">
+    
+    <config_item name="Robot" parent="Config" instance="true">
+      <config_parameter name="name" type="std::string" default="Miro" />
+      <config_parameter name="type" type="std::string" default="Robot" />
+    </config_item>
+  </config_group>
+
+  <config_group name="Video">
+    <config_item name="Camera" parent="Config" final="true">
+      <config_parameter name="ncx" type="double" default="768.0" />
+      <config_parameter name="nfx" type="double" default="384.0" />
+      <config_parameter name="dx" type="double" default="0.00625" />
+      <config_parameter name="dy" type="double" default="0.0125" />
+      <config_parameter name="dpx" type="double" default="0.0125" />
+      <config_parameter name="dpy" type="double" default="0.0125" />
+      <config_parameter name="cx" type="double" default="0." />
+      <config_parameter name="cy" type="double" default="0." />
+      <config_parameter name="sx" type="double" default="0." />
+      <config_parameter name="f" type="double" default="0." />
+      <config_parameter name="kappa" type="double" default="0." />
+      <config_parameter name="p1" type="double" default="0." />
+      <config_parameter name="p2" type="double" default="0." />
+      <config_parameter name="tx" type="double" default="0." />
+      <config_parameter name="ty" type="double" default="0." />
+      <config_parameter name="tz" type="double" default="0." />
+      <config_parameter name="rx" type="double" default="0." />
+      <config_parameter name="ry" type="double" default="0." />
+      <config_parameter name="rz" type="double" default="0." />
+      <config_parameter name="r1" type="double" default="0." />
+      <config_parameter name="r2" type="double" default="0." />
+      <config_parameter name="r3" type="double" default="0." />
+      <config_parameter name="r4" type="double" default="0." />
+      <config_parameter name="r5" type="double" default="0." />
+      <config_parameter name="r6" type="double" default="0." />
+      <config_parameter name="r7" type="double" default="0." />
+      <config_parameter name="r8" type="double" default="0." />
+      <config_parameter name="r9" type="double" default="0." />
+
+      <config_parameter name="height" type="double" default="0." measure="mm" />
+      <config_parameter name="alpha" type="angle" default="0." measure="&deg;" />
+      <config_parameter name="latency" type="ACE_Time_Value" default="0, 120000" measure="sec"/>
+    </config_item>
+  </config_group>
+</config>

@@ -1,0 +1,7 @@
+Parameters.h
+Parameters.cpp
+libpsos.a
+Makefile.in
+Makefile
+.deps
+.libs

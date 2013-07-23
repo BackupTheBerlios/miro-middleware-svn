@@ -1,0 +1,6 @@
+.deps
+.libs
+DynamicPolicyTest
+Makefile
+Makefile.in
+
