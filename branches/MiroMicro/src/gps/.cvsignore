@@ -1,7 +1,0 @@
-GpsService
-Parameters.h
-Parameters.cpp
-Makefile.in
-Makefile
-.deps
-.libs

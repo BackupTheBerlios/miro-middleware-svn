@@ -1,3 +1,0 @@
-LD_LIBRARY_PATH must include path to libsphinx2.so.0 on execution time
-SPHINX_ROOT, FESTIVAL_ROOT and SPEECH_TOOLS_ROOT must be set to the corresponding paths
-make install must be done on sphinx2 module

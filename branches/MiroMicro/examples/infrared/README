@@ -1,4 +1,0 @@
-Example code for the RangeSensor interface.
-
-Polling the infrared is just the same as polling any other sensor
-designed as a RangeSensor interface.

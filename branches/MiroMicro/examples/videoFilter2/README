@@ -1,9 +1,0 @@
-start the example with:
-./VideoService -MCF ./runBallDetection.xml
-
-see the resulting image with:
-$MIRO_ROOT/bin/QtVideo -MNC Miro -n Ball
-
-if the VideoService run on a different machine, use:
-$MIRO_ROOT/bin/QtVideo -MNC Miro -n Ball -r
-

@@ -1,7 +1,0 @@
-Parameters.h
-Parameters.cpp
-libcan.a
-Makefile.in
-Makefile
-.deps
-.libs

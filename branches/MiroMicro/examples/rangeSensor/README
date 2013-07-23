@@ -1,9 +1,0 @@
-Example code for the RangeSensor interface.
-
-- ScanDescription: Query the interface for the scandescription.
-  Printing it on standart out.
-
-- SensorGet: Polling the RangeSensor interface.
-
-- SensorStream: Using the notification service for range event
-  delivery.

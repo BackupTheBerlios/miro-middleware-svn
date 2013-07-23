@@ -1,5 +1,0 @@
-Port of Activmedia's Aria SpeechSimple example to Miro
-it uses a polling mechanism to avoid having to run the base server prior to the speech server.
-In order to be run, it needs a running instance of SphinxSpeech
-After starting, speaking to the robot should make it repeat the sentences it understands.
-Control-C to exit.

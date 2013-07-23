@@ -1,7 +1,0 @@
-- skip and clear seem not to work
-  find reason and/or discard those methods from the interface
-- greatings message can't be set
-  dito
-- the dtlk device can do indexing
-  set up a Event_Handler and pipe the index into the EC - 
-  as soon as we have one

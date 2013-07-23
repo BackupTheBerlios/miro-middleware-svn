@@ -1,6 +1,0 @@
-NotifyObserver
-*.moc.cpp
-Makefile.in
-Makefile
-.deps
-.libs

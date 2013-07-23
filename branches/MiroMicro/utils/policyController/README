@@ -1,4 +1,0 @@
-GUI control panel for the BehaviourEngine interface.
-
-Use the -MNC <robot_name> option, if you want to select your robot on
-program startup.

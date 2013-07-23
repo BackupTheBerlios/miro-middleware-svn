@@ -1,9 +1,0 @@
-Parameters.h
-Parameters.cpp
-LogNotify
-NotifyLogPlayer
-LogTruncate
-Makefile.in
-Makefile
-.deps
-.libs
