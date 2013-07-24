@@ -44,6 +44,9 @@ using std::ofstream;
 using namespace Miro::CFG;
 
 bool verbose = false;
+#if JSONCPP_FOUND
+bool useJson = false;
+#endif
 
 QString baseName = "Parameters";
 QString headerExtension = "h";
@@ -57,7 +60,7 @@ parseArgs(int& argc, char* argv[])
   int rc = 0;
   int c;
 
-  ACE_Get_Opt get_opts(argc, argv, "f:h:n:s:x:v?");
+  ACE_Get_Opt get_opts(argc, argv, "f:h:n:s:x:vj?");
 
   while ((c = get_opts()) != -1) {
     switch (c) {
@@ -79,6 +82,11 @@ parseArgs(int& argc, char* argv[])
       case 'x':
         exportDirective = get_opts.optarg;
         break;
+#if JSONCPP_FOUND
+      case 'j':
+	useJson = true;
+        break;
+#endif
       case '?':
       default:
         cerr << "usage: " << argv[0] << "[-f file] [-i item] [-s=source] [-h=header] [-v?]" << std::endl
@@ -87,6 +95,9 @@ parseArgs(int& argc, char* argv[])
         << "  -s <extension> extension of the generated source file (cpp)" << std::endl
         << "  -h <extension> extension of the generated header file (h)" << std::endl
         << "  -x <directive> add export directive to generated header" << std::endl
+#if JSONCPP_FOUND
+	<< "  -j Include JSON support in generated files" << std::endl
+#endif
         << "  -v verbose mode" << std::endl
         << "  -? help: emit this text and stop" << std::endl;
         rc = 1;
@@ -113,6 +124,9 @@ main(int argc, char * argv[])
       generator.setHeaderExtension(headerExtension);
 
       Parser handler(generator);
+#if JSONCPP_FOUND
+      handler.setUseJson(useJson);
+#endif
 
       QFile xmlFile(fileName);
       QXmlInputSource source(&xmlFile);
