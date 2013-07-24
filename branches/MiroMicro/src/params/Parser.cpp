@@ -26,6 +26,11 @@
 
 #include <qstring.h>
 
+namespace 
+{
+  QString currentParameterName;
+}
+
 namespace Miro
 {
   namespace CFG {
@@ -33,8 +38,15 @@ namespace Miro
         type_(),
         generator_(_generator),
         parsing_(false),
+        parameterParsing_(false),
+        docuParsing_(false),
+        ctorParsing_(false),
+
         staticConst_(false),
         instance_(false),
+        unmanaged_(false),
+        userSingleton_(false),
+        userSingletonName_(),
         string_(false),
         enumeration_(false),
         enumerationMultiple_(false),
@@ -45,7 +57,11 @@ namespace Miro
         inetAddr_(false),
         serialParams_(false),
         scanDescription_(false),
-        schedParams_(false)
+        schedParams_(false),
+        text_(false)
+#if JSONCPP_FOUND
+	, useJson_(false)
+#endif
     {
     }
 
@@ -53,8 +69,15 @@ namespace Miro
     Parser::reset()
     {
       parsing_ = false;
+      parameterParsing_ = false;
+      docuParsing_ = false;
+      ctorParsing_ = false;
+
       staticConst_ = false;
       instance_ = false;
+      unmanaged_ = false;
+      userSingleton_ = false;
+      userSingletonName_ = "";
       string_ = false;
       enumeration_ = false;
       enumerationMultiple_ = false;
@@ -66,10 +89,18 @@ namespace Miro
       serialParams_ = false;
       scanDescription_ = false;
       schedParams_ = false;
+      text_ = false;
+
+      docu_ = "";
+      ctor_ = "";
+      error_ = "";
     }
 
     bool Parser::startDocument()
     {
+#if JSONCPP_FOUND
+      generator_.setUseJson(useJson_);
+#endif
       return true;
     }
 
@@ -151,12 +182,19 @@ namespace Miro
             error_ = "No group name specified.";
             break;
           }
+#if QT_VERSION >= 0x040000
+          str[0] = str[0].toUpper();
+#else
           str[0] = str[0].upper();
+#endif
           group_ = str;
         }
         else if (qName == "config_item") {
 
           type_ = Type();
+#if JSONCPP_FOUND
+	  type_.setUseJson(useJson_);
+#endif
 
           // get class name
           str = attributes.value("name");
@@ -188,7 +226,22 @@ namespace Miro
             type_.setExtern(str == "true");
 
           // get instance tag
-          instance_ = (attributes.value(QString("instance")) == QString("true"));
+          QString instance = attributes.value(QString("instance"));
+          if (instance == QString("true")) {
+            instance_ = true;
+          }
+          else if (instance == QString("false")) {
+            instance_ = false;
+          }
+          else if (instance == QString("unmanaged")) {
+            instance_ = true;
+            unmanaged_ = true;
+          } 
+          else if (!instance.isEmpty()) {
+            instance_ = true;
+            userSingleton_ = true;
+            userSingletonName_ = instance;
+          } 
         }
         else if (parsing_) {
           if (qName == "config_parameter") {
@@ -199,8 +252,13 @@ namespace Miro
               error_ = "No parameter name specified.";
               break;
             }
+	    currentParameterName = name;
 
+#if QT_VERSION >= 0x040000
+            name[0] = name[0].toLower();
+#else
             name[0] = name[0].lower();
+#endif
             QString type = attributes.value("type");
             if (type.isEmpty()) {
               error_ = "No parameter type specified.";
@@ -214,6 +272,13 @@ namespace Miro
             }
             else if (type == "std::string") {
               string_ = true;
+            }
+            else if (type == "Text") {
+              type = "Miro::" + type;
+              text_ = true;
+            }
+            else if (type == "Miro::Text") {
+              text_ = true;
             }
             else if (type == "Enumeration" || type == "Miro::Enumeration") {
               if (type == "Enumeration")
@@ -283,12 +348,17 @@ namespace Miro
 
             // parse for common ACE_Time_Value default error
             QString fullDef;
-            if (type == "ACE_Time_Value" &&
-                  def.find('.') != -1) {
+#if QT_VERSION >= 0x040000
+            if (type == "ACE_Time_Value" && def.contains('.'))
+#else
+            if (type == "ACE_Time_Value" && def.find('.') != -1)
+#endif
+	    {
               error_ = "ACE_Time_Value format is (x, y), no dot.";
               break;
             }
             else if (type == "std::string" ||
+                     type == "Miro::Text" ||
                      type == "Miro::BAP::TransitionMessage")
               fullDef = "\"" + def + "\"";
             else if (type == "Miro::Enumeration") {
@@ -325,9 +395,15 @@ namespace Miro
                 error_ = "Static const declaration without default value for " + type_.name();
                 break;
               }
-              for (unsigned int i = 0; i < name.length(); ++i) {
-                name[i] = name[i].upper();
-              }
+              // XXX mallan: qstring generating ambiguous overload errors on windows
+              //for (unsigned int i = 0; i < name.length(); ++i) {
+              //  name[i] = name[i].upper();
+              //}
+#if QT_VERSION >= 0x040000
+              name = name.toUpper();
+#else
+              name = name.upper();
+#endif
             }
 
             // inherited parameter handling
@@ -345,13 +421,15 @@ namespace Miro
               type_.addToConstructor(name + QString(" = ") + fullDef + QString(";"));
             }
             else {
-              QString measure = attributes.value("measure");
+              QString unit = attributes.value("measure");
+              if (unit == "")
+                unit = attributes.value("unit");
 
               if (!staticConst_) {
-                type_.addParameter(Parameter(type, name, def, fullDef, measure, QString()));
+                type_.addParameter(Parameter(type, name, def, fullDef, unit, docu_));
               }
               else {
-                type_.addStaticConstParameter(Parameter(type, name, def, fullDef, measure, QString()));
+                type_.addStaticConstParameter(Parameter(type, name, def, fullDef, unit, docu_));
               }
             }
           }
@@ -389,60 +467,107 @@ namespace Miro
             error_ = "Type " + type_.name() + " defined extern but also has a parent.";
             break;
           }
-          if (instance_) {
+          if (instance_ && !unmanaged_ && !userSingleton_) {
             generator_.addInclude("miro/Singleton.h");
             type_.setInstance();
           }
+          if (instance_ && unmanaged_) {
+            generator_.addInclude("miro/Singleton.h");
+            type_.setUnmanagedInstance();
+          }
+          if (instance_ && userSingleton_) {
+            type_.setUserInstance(userSingletonName_);
+          }
           if (string_)
             generator_.addInclude("string");
+          if (text_)
+            generator_.addInclude("miro/Text.h");
           if (enumeration_)
             generator_.addInclude("miro/Enumeration.h");
           if (enumerationMultiple_)
             generator_.addInclude("miro/EnumerationMultiple.h");
           if (vector_) {
             generator_.addInclude("vector");
-            generator_.addSrcInclude("miro/IO.h");
+            generator_.addSrcInclude("miro/MiroIO.h");
           }
           if (set_) {
             generator_.addInclude("set");
-            generator_.addSrcInclude("miro/IO.h");
+            generator_.addSrcInclude("miro/MiroIO.h");
           }
           if (angle_)
             generator_.addInclude("miro/Angle.h");
           if (timeValue_) {
             generator_.addInclude("ace/Time_Value.h");
             generator_.addSrcInclude("miro/TimeHelper.h");
+            generator_.addSrcInclude("miro/XmlParseAce.h");
+#if JSONCPP_FOUND
+	    if (useJson_) {
+		generator_.addSrcInclude("miro/JsonParseAce.h");
+	    }
+#endif
           }
           if (serialParams_) {
             generator_.addInclude("ace/TTY_IO.h");
-            generator_.addSrcInclude("miro/IO.h");
+            generator_.addSrcInclude("miro/MiroIO.h");
+            generator_.addSrcInclude("miro/XmlParseAce.h");
+#if JSONCPP_FOUND
+	    if (useJson_) {
+		generator_.addSrcInclude("miro/JsonParseAce.h");
+	    }
+#endif
           }
           if (schedParams_) {
             generator_.addInclude("ace/Sched_Params.h");
-            generator_.addSrcInclude("miro/IO.h");
+            generator_.addSrcInclude("miro/MiroIO.h");
+            generator_.addSrcInclude("miro/XmlParseAce.h");
+#if JSONCPP_FOUND
+	    if (useJson_) {
+		generator_.addSrcInclude("miro/JsonParseAce.h");
+	    }
+#endif
           }
-          if (instance_) {
+          if (inetAddr_) {
             generator_.addInclude("ace/INET_Addr.h");
-            generator_.addSrcInclude("miro/IO.h");
+            generator_.addSrcInclude("miro/MiroIO.h");
+            generator_.addSrcInclude("miro/XmlParseAce.h");
+#if JSONCPP_FOUND
+	    if (useJson_) {
+		generator_.addSrcInclude("miro/JsonParseAce.h");
+	    }
+#endif
           }
           if (scanDescription_) {
             generator_.addInclude("idl/ScanDescriptionC.h");
             generator_.addSrcInclude("idl/RangeSensorC.h");
             generator_.addSrcInclude("miro/ScanDescriptionHelper.h");
           }
+#if JSONCPP_FOUND
+	  if (useJson_) {
+	    generator_.addSrcInclude("miro/JsonCpp.h");
+	  }
+#endif
           generator_.addType(group_, type_);
 
           reset();
         }
         else if (parameterParsing_ && qName == "config_parameter") {
+	  currentParameterName = "";
           parameterParsing_ = false;
         }
         else if (ctorParsing_ && qName == "constructor") {
           ctorParsing_ = false;
           type_.addToConstructor(ctor_);
+          ctor_ = "";
         }
         else if (docuParsing_ && qName == "documentation") {
           docuParsing_ = false;
+	  if (parameterParsing_) {
+	    type_.addToParameterDocumentation(currentParameterName, docu_);
+	  }
+	  else {
+	    type_.addToDocumentation(docu_);
+	  }
+          docu_ = "";
         }
 
         rc = true;
@@ -462,6 +587,9 @@ namespace Miro
     {
       if (ctorParsing_) {
         ctor_ += ch;
+      }
+      if (docuParsing_) {
+        docu_ += ch;
       }
       return true;
     }

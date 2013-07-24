@@ -53,6 +53,9 @@ namespace Miro
 
       void setBaseName(const QString& _baseName);
       void setHeaderExtension(const QString& _extensionName);
+#if JSONCPP_FOUND
+      void setUseJson(bool _useJson) { useJson_ = _useJson; }
+#endif
       void addNamespace(const QString& _namespace);
       void clearNamespace();
 
@@ -88,6 +91,9 @@ namespace Miro
       QString fileName_;
       QString extensionName_;
       QStringVector namespace_;
+#if JSONCPP_FOUND
+      bool useJson_;
+#endif
 
       TypeVector type_;
       GroupMap groups_;

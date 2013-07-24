@@ -39,7 +39,10 @@ namespace Miro
         final_(true),
         dummy_(false),
         extern_(false),
-        instance_(false)
+        instance_(INSTANCE_NONE)
+#if JSONCPP_FOUND
+	, useJson_(false)
+#endif
     {}
 
     void
@@ -52,6 +55,20 @@ namespace Miro
     Type::addToConstructor(QString const& _ctor)
     {
       ctor_.push_back(_ctor);
+    }
+
+    void
+    Type::addToDocumentation(QString const& _doc)
+    {
+      doc_.push_back(_doc);
+    }
+
+    void
+    Type::addToParameterDocumentation(QString const& _name, QString const& _doc)
+    {
+      if (_name != "") {
+	parameterDocumentation_[_name].push_back(_doc);
+      }
     }
 
     void
@@ -85,12 +102,12 @@ namespace Miro
     }
 
     void
-    Type::generateHeader(std::ostream& ostr, unsigned long _indent, const QString& exportDirective) const
+    Type::generateHeader(std::ostream& ostr, unsigned int _indent, const QString& exportDirective) const
     {
       //   if(name_.isEmpty())
       //     throw QString("No class name specified.");
 
-      unsigned long indent = _indent;
+      unsigned int indent = _indent;
 
       std::string expStr = "";
       if (!exportDirective.isEmpty()) {
@@ -166,6 +183,12 @@ namespace Miro
         if (parameter_.size() > 0 || parent_.isEmpty()) {
           ostr << spaces.left(indent) << "virtual void operator <<= (const QDomNode&);" << std::endl;
           ostr << spaces.left(indent) << "virtual QDomElement operator >>= (QDomNode&) const;" << std::endl;
+#if JSONCPP_FOUND
+	  if (useJson_) {
+	      ostr << spaces.left(indent) << "virtual void operator <<= (const Json::Value&);" << std::endl;
+	      ostr << spaces.left(indent) << "virtual Json::Value operator >>= (Json::Value&) const;" << std::endl;
+	  }
+#endif
         }
         // debug output operator
         if (parameter_.size() > 0 || parent_.isEmpty()) {
@@ -181,8 +204,8 @@ namespace Miro
       else {
         // if this is a externally defined class,
         // use global operators for parsing
-        ostr << spaces.left(indent) << "void operator <<= (" << name_ << "&, const QDomNode&);" << std::endl;
-        ostr << spaces.left(indent) << "QDomElement operator >>= (const " << name_ << "&, QDomNode&);" << std::endl;
+        ostr << spaces.left(indent) << QSTRCAST(exportDirective) << " void operator <<= (" << name_ << "&, const QDomNode&);" << std::endl;
+        ostr << spaces.left(indent) << QSTRCAST(exportDirective) << " QDomElement operator >>= (const " << name_ << "&, QDomNode&);" << std::endl;
 
       }
 
@@ -190,15 +213,74 @@ namespace Miro
         indent -= STEP;
         ostr << spaces.left(indent) << "};" << std::endl;
       }
+
+      switch (instance_) {
+      case INSTANCE_MANAGED:
+	ostr << std::endl
+             << spaces.left(indent) << "typedef ACE_Singleton<"    
+             << name_  << "Parameters, ACE_SYNCH_RECURSIVE_MUTEX> "
+	     << name_ << "ParametersInstance;" << std::endl;
+	break;
+      case INSTANCE_UNMANAGED:
+	ostr << std::endl
+	     << spaces.left(indent) << "typedef ACE_Unmanaged_Singleton<"
+	     << name_  << "Parameters, ACE_SYNCH_RECURSIVE_MUTEX> "
+	     << name_ << "ParametersInstance;" << std::endl;
+	break;
+      case INSTANCE_USER:
+	ostr << std::endl
+	     << spaces.left(indent) << "typedef " << userSingleton_ << "<"
+	     << name_  << "Parameters> "
+	     << name_ << "ParametersInstance;" << std::endl;
+	break;
+      case INSTANCE_DLL:
+      case INSTANCE_NONE:
+	break;
+      }
     }
 
     void
-    Type::generateSource(std::ostream& ostr, unsigned long _indent) const
+    Type::generateSingleton(std::ostream& ostr, unsigned int indent,
+			    QString const& namespaceQualifier,
+			    QString const& exportDirective) const
+    {
+      // add instance declarations
+      QString exportUpper = exportDirective.toUpper();
+      exportUpper.chop(7); // get rid of _Export
+
+      switch (instance_) {
+      case INSTANCE_MANAGED:
+	ostr << spaces.left(indent) << exportUpper
+             << "_SINGLETON_DECLARE(ACE_Singleton, "               
+	     << namespaceQualifier << name_
+             << "Parameters, ACE_SYNCH_RECURSIVE_MUTEX);" << std::endl;
+	break;
+      case INSTANCE_UNMANAGED:
+	ostr << spaces.left(indent) << exportUpper
+	     << "_SINGLETON_DECLARE(ACE_Unmanaged_Singleton, "
+	     << namespaceQualifier << name_
+	     << "Parameters, ACE_SYNCH_RECURSIVE_MUTEX);" << std::endl;
+	break;
+      case INSTANCE_USER:
+	ostr << spaces.left(indent) << exportUpper
+	     << "_SINGLETON_DECLARATION(" << userSingleton_ << "< "
+	     << namespaceQualifier << name_
+	     << "Parameters >);" << std::endl;
+	break;
+      case INSTANCE_DLL:
+      case INSTANCE_NONE:
+	break;
+      }
+
+    }
+
+    void
+    Type::generateSource(std::ostream& ostr, unsigned int _indent) const
     {
       //   if(name_.isEmpty())
       //     throw QString("No class name specified.");
 
-      unsigned long indent = _indent;
+      unsigned int indent = _indent;
 
       if (!isExtern()) {
         QStringVector::const_iterator i;
@@ -294,6 +376,23 @@ namespace Miro
           << spaces.left(indent) << name_ << "Parameters::operator >>= (QDomNode& _node) const" << std::endl;
           generateQDomInOperator(ostr, "this->", indent);
 
+#if JSONCPP_FOUND
+	  if (useJson_) {
+	      // operator <<=
+	    ostr << spaces.left(indent) << "void" << std::endl
+		 << spaces.left(indent) << name_ << "Parameters::operator <<= (const Json::Value&";
+	    if (parameter_.size() > 0 || !parent_.isEmpty())
+		ostr << " _node";
+	    ostr << ")" << std::endl;
+	    generateJsonOutOperator(ostr, "this->", indent);
+
+	    // operator >>=
+	    ostr << spaces.left(indent) << "Json::Value" << std::endl
+		 << spaces.left(indent) << name_ << "Parameters::operator >>= (Json::Value& _node) const" << std::endl;
+	    generateJsonInOperator(ostr, "this->", indent);
+	  }
+#endif // JSONCPP_FOUND
+
           // stream output
           ostr << std::endl
           << spaces.left(indent) << "void" << std::endl
@@ -356,15 +455,30 @@ namespace Miro
         ostr << spaces.left(indent) << "QDomElement" << std::endl
         << spaces.left(indent) << "operator>>= (const " << name_ << "& _lhs, QDomNode& _node)" << std::endl;
         generateQDomInOperator(ostr, "_lhs.", indent);
+
+#if JSONCPP_FOUND
+	if (useJson_) {
+          // operator <<=
+          ostr << spaces.left(indent) << "void" << std::endl
+	       << spaces.left(indent) << "operator<<= (" << name_ << "& _lhs, const Json::Value& _node)" << std::endl;
+
+	  generateJsonOutOperator(ostr, "_lhs.", indent);
+
+	  // operator >>=
+	  ostr << spaces.left(indent) << "Json::Value" << std::endl
+	       << spaces.left(indent) << "operator>>= (const " << name_ << "& _lhs, Json::Value& _node)" << std::endl;
+	  generateJsonInOperator(ostr, "_lhs.", indent);
+	}
+#endif // JSONCPP_FOUND
       }
     }
 
     // operator <<=
     void
     Type::generateQDomOutOperator(std::ostream& ostr,
-                                  QString const& classPrefix, unsigned long indent) const
+                                  QString const& classPrefix, unsigned int indent) const
     {
-      unsigned long preIndent = indent;
+      unsigned int preIndent = indent;
 
       ostr << spaces.left(indent) << "{" << std::endl;
       indent += STEP;
@@ -428,7 +542,7 @@ namespace Miro
     // operator >>=
     void
     Type::generateQDomInOperator(std::ostream& ostr,
-                                 QString const& classPrefix, unsigned long indent) const
+                                 QString const& classPrefix, unsigned int indent) const
     {
       ostr << spaces.left(indent) << "{" << std::endl;
       indent += STEP;
@@ -466,6 +580,70 @@ namespace Miro
       indent -= STEP;
       ostr << spaces.left(indent) << "}" << std::endl;
     }
+
+#if JSONCPP_FOUND
+    // operator <<=
+    void
+    Type::generateJsonOutOperator(std::ostream& ostr,
+                                  QString const& classPrefix, unsigned int indent) const
+    {
+      unsigned int preIndent = indent;
+
+      ostr << spaces.left(indent) << "{" << std::endl;
+      indent += STEP;
+
+      if (!parent_.isEmpty())
+        ostr << spaces.left(indent) << classPrefix << "Super::operator <<= (_node);" << std::endl
+	     << std::endl;
+      if (parameter_.size() > 0) {
+        ostr << spaces.left(indent) << "if (!_node.isNull()) {" << std::endl;
+        indent += STEP;
+
+        ParameterVector::const_iterator j;
+        for (j = parameter_.begin(); j != parameter_.end(); ++j) {
+          ostr << spaces.left(indent) << classPrefix << j->name_ << " <<= _node[\"" << j->name_ << "\"];" << std::endl;
+          if (j->type_ == "angle") {
+            ostr << spaces.left(indent) << classPrefix << j->name_
+		 << " = Miro::deg2Rad(" << classPrefix << j->name_ << ");" << std::endl;
+	  }
+        }
+
+        indent -= STEP;
+        ostr << spaces.left(indent) << "}" << std::endl;
+      }
+      while (indent > preIndent) {
+        indent -= STEP;
+        ostr << spaces.left(indent) << "}" << std::endl;
+      }
+    }
+
+    // operator >>=
+    void
+    Type::generateJsonInOperator(std::ostream& ostr,
+                                 QString const& classPrefix, unsigned int indent) const
+    {
+      ostr << spaces.left(indent) << "{" << std::endl;
+      indent += STEP;
+
+      if (!parent_.isEmpty()) {
+        ostr << spaces.left(indent) << "Super::operator >>= (_node);" << std::endl;
+      }
+
+      ParameterVector::const_iterator j;
+      for (j = parameter_.begin(); j != parameter_.end(); ++j) {
+	if (j->type_ != "angle") {
+	  ostr << spaces.left(indent) << classPrefix << j->name_ << " >>= _node[\"" << j->name_ << "\"];" << std::endl;
+        } else {
+	  ostr << spaces.left(indent) << "Miro::rad2Deg(" << classPrefix << j->name_ << ") >>= _node[\"" << j->name_ << "\"];" << std::endl;
+	}
+      }
+
+      ostr << std::endl
+	   << spaces.left(indent) << "return _node;" << std::endl;
+      indent -= STEP;
+      ostr << spaces.left(indent) << "}" << std::endl;
+    }
+#endif // JSONCPP_FOUND
 
     bool
     Type::isIntegralType(QString const& _type)

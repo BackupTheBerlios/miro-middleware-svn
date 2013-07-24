@@ -49,8 +49,13 @@ namespace Miro
                         QXmlAttributes const&);
       bool endElement(QString const&, QString const&, QString const&);
 
-      QString errorString();
+      QString errorString() const;
       bool characters(QString const& ch);
+
+#if JSONCPP_FOUND
+      void setUseJson(bool _useJson) { useJson_ = _useJson; }
+      bool getUseJson(void) { return useJson_; }
+#endif
 
     private:
       void reset();
@@ -68,6 +73,8 @@ namespace Miro
       bool staticConst_;
       bool instance_;
       bool unmanaged_;
+      bool userSingleton_;
+      QString userSingletonName_;
       bool string_;
       bool enumeration_;
       bool enumerationMultiple_;
@@ -84,6 +91,10 @@ namespace Miro
       QString docu_;
       QString ctor_;
       QString error_;
+
+#if JSONCPP_FOUND
+      bool useJson_;
+#endif
     };
   }
 }

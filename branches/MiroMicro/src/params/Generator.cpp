@@ -52,6 +52,9 @@ namespace Miro
 {
   namespace CFG {
     Generator::Generator()
+#if JSONCPP_FOUND
+      : useJson_(false)
+#endif
     {
       addInclude("iostream");
       addInclude("qdom.h");
@@ -128,10 +131,10 @@ namespace Miro
       struct timeval t;
       struct timezone z;
       gettimeofday(&t, &z);
-      long unique = t.tv_usec;
+      int unique = t.tv_usec;
 #else
       QTime qt = QTime::currentTime();
-      long unique = qt.msec() + (qt.second() + qt.minute() * 60) * 1000;
+      int unique = qt.msec() + (qt.second() + qt.minute() * 60) * 1000;
 #endif
 
       int indent = 0;
@@ -171,6 +174,14 @@ namespace Miro
         ostr << std::endl;
       }
 
+#if JSONCPP_FOUND
+      if (useJson_) {
+        ostr << "namespace Json {" << std::endl;
+        ostr << "  class Value;" << std::endl;
+        ostr << "};" << std::endl;
+      }
+#endif
+
       QStringVector::const_iterator f, l = namespace_.end();
       for (f = namespace_.begin(); f != l; ++f) {
         ostr << spaces.left(indent) << "namespace " <<  *f << std::endl
@@ -199,6 +210,24 @@ namespace Miro
         ostr << spaces.left(indent) << "}" << std::endl;
       }
 
+      if (!exportDirective.isEmpty()) {
+	QString namespaceQualifier;
+	QStringVector::const_iterator f, l = namespace_.end();
+	for (f = namespace_.begin(); f != l; ++f) {
+	  namespaceQualifier += *f;
+	  namespaceQualifier += "::";
+	}
+	TypeVector::const_iterator first, last = type_.end();
+	for (first = type_.begin(); first != last; ++first) {
+	  if (first != type_.begin())
+	    ostr << std::endl;
+	  if (!first->isDummy())
+	    first->generateSingleton(ostr, indent,
+				     namespaceQualifier,
+				     exportDirective);
+	}
+      }
+
       ostr << std::endl
       << "#endif // " << fileName_ << "_" << extensionName_ << std::endl;
     }
@@ -223,27 +252,30 @@ namespace Miro
       << "#include <qdom.h>" << std::endl
       << std::endl;
 
+#if JSONCPP_FOUND
+      if (useJson_) {
+        ostr << "#include <miro/JsonParse.h>" << std::endl;
+      }
+#endif
+
       ostr << "#ifdef  HAVE_CONFIG_H\n"
       "#include \"config.h\"\n"
       "#endif//HAVE_CONFIG_H\n\n";
-
-      // match the operator <<= from Miro into local namespace
-      if (namespace_.size() == 0 ||
-            namespace_.front() != QString("Miro")) {
-        ostr << "namespace" << std::endl
-        << "{" << std::endl
-        << "  using Miro::operator<<=;" << std::endl
-        << "  using Miro::operator>>=;" << std::endl
-        << "  using Miro::operator<<;" << std::endl
-        << "};" << std::endl
-        << std::endl;
-      }
 
       QStringVector::const_iterator f, l = namespace_.end();
       for (f = namespace_.begin(); f != l; ++f) {
         ostr << spaces.left(indent) << "namespace " <<  *f << std::endl
         << spaces.left(indent) << "{" << std::endl;
         indent += STEP;
+      }
+
+      // match the operator <<= from Miro into local namespace
+      if (namespace_.empty() ||
+	  namespace_.front() != QString("Miro")) {
+        ostr << spaces.left(indent) << "using Miro::operator<<=;" << std::endl
+	     << spaces.left(indent) << "using Miro::operator>>=;" << std::endl
+	     << spaces.left(indent) << "using Miro::operator<<;" << std::endl
+	     << std::endl;
       }
 
       TypeVector::const_iterator first, last = type_.end();

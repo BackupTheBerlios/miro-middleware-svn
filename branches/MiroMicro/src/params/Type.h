@@ -83,8 +83,13 @@ namespace Miro
       void setInstance();
       //! Mark a type as having a singel global, but unmanged instance.
       void setUnmanagedInstance();
+      //! Mark a type as having a singel global instance.of user-defined type
+      void setUserInstance(QString const& singletonType);
       //! Predicate inidcating the type has a single global instance.
       bool instance() const;
+#if JSONCPP_FOUND
+      void setUseJson(bool _useJson) { useJson_ = _useJson; }
+#endif
 
       //! Add as static member.
       void addStatic(QString const& _type, QString const& _name);
@@ -95,11 +100,18 @@ namespace Miro
       //! Add to constrctor.
       /** Workaround for specifying defaults for complex types. */
       void addToConstructor(QString const& _ctor);
+      //! Add documentation
+      void addToDocumentation(QString const& _doc);
+      //! Add documentation for parameter
+      void addToParameterDocumentation(QString const& _name, QString const& _doc);
 
       //! Generate header file code.
-      void generateHeader(std::ostream& ostr, unsigned long _indent, const QString& exportDirective = QString::null) const;
+      void generateHeader(std::ostream& ostr, unsigned int _indent, const QString& exportDirective = QString::null) const;
+      void generateSingleton(std::ostream& ostr, unsigned int _indent, 
+			     QString const& namespaceQualifier,
+			     QString const& exportDirective) const;
       //! Generate source file code.
-      void generateSource(std::ostream& ostr, unsigned long _indent) const;
+      void generateSource(std::ostream& ostr, unsigned int _indent) const;
 
       //! Accessor to the parameters of the type.
       ParameterVector const& parameterSet() const;
@@ -114,16 +126,27 @@ namespace Miro
       typedef std::pair<QString, QString> QStringPair;
       typedef std::vector<QStringPair> QStringPairVector;
       typedef std::vector<QString> QStringVector;
+      typedef std::map<QString, QStringVector> QStringMap;
+
+      enum InstanceType { INSTANCE_NONE, INSTANCE_MANAGED, INSTANCE_UNMANAGED, INSTANCE_DLL, INSTANCE_USER };
 
       //----------------------------------------------------------------------------
       // protected methods
       //----------------------------------------------------------------------------
       void generateQDomOutOperator(std::ostream& ostr,
                                    QString const& classPrefix,
-                                   unsigned long indent) const;
+                                   unsigned int indent) const;
       void generateQDomInOperator(std::ostream& ostr,
                                   QString const& classPrefix,
-                                  unsigned long indent) const;
+                                  unsigned int indent) const;
+#if JSONCPP_FOUND
+      void generateJsonOutOperator(std::ostream& ostr,
+				   QString const& classPrefix,
+				   unsigned int indent) const;
+      void generateJsonInOperator(std::ostream& ostr,
+                                  QString const& classPrefix,
+                                  unsigned int indent) const;
+#endif
 
       //----------------------------------------------------------------------------
       // protected static methods
@@ -137,21 +160,28 @@ namespace Miro
       QString name_;
       QString parent_;
       QString nameSpace_;
+      QString userSingleton_;
 
       bool final_;
       bool dummy_;
       bool extern_;
-      bool instance_;
+      InstanceType instance_;
 
       QStringVector ctor_;
+      QStringVector doc_;
       ParameterVector parameter_;
       QStringPairVector staticData_;
       ParameterVector staticConstParameter_;
 
+      QStringMap parameterDocumentation_;
+#if JSONCPP_FOUND
+      bool useJson_;
+#endif
+
       //----------------------------------------------------------------------------
       // protected static data
       //----------------------------------------------------------------------------
-      static unsigned long const STEP = 2;
+      static unsigned int const STEP = 2;
     };
 
     inline
@@ -229,7 +259,7 @@ namespace Miro
     Type::fullName() const
     {
       QString full = nameSpace_ + name_;
-      if (!dummy_)
+      if (!dummy_ && !extern_)
         full += "Parameters";
       return full;
     }
@@ -265,7 +295,7 @@ namespace Miro
     bool
     Type::instance() const
     {
-      return instance_;
+      return instance_ != INSTANCE_NONE;
     }
     inline
     void
@@ -275,7 +305,7 @@ namespace Miro
                 QString(name()) + "Parameters>",
                 "instance");
 
-      instance_ = true;
+      instance_ = INSTANCE_MANAGED;
     }
     inline
     void
@@ -285,7 +315,18 @@ namespace Miro
                 QString(name()) + "Parameters, ACE_Recursive_Thread_Mutex, ACE_Unmanaged_Singleton>",
                 "instance");
 
-      instance_ = true;
+      instance_ = INSTANCE_UNMANAGED;
+    }
+    inline
+    void
+    Type::setUserInstance(QString const& singletonType)
+    {
+      addStatic(singletonType + QString("<") +
+                QString(name()) + "Parameters>",
+                "instance");
+
+      instance_ = INSTANCE_USER;
+      userSingleton_ = singletonType;
     }
   }
 }
