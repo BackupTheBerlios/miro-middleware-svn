@@ -1,55 +1,58 @@
 <!DOCTYPE xml SYSTEM "MiroParameterDescription.dtd">
-<config> 
-  <config_global name="namespace" value="Miro" />
-
-  <config_group name="Config">
+  <config> 
+    <config_global name="namespace" value="Miro" />
+    <config_global name="include" value="ConfigParameters.h" />
+    <config_global name="include" value="RobotParameters.h" />
     
-    <config_item name="Config" final="false" />
-    
-  </config_group>
+    <config_group name="Notification">    
+      <config_item name="NotifySvc" parent="Miro::Config" instance="true" final="true" >
+	<config_parameter name="factoryName" type="string" default="NotifyEventChannelFactory" />
+	<config_parameter name="channelNames" type="std::vector&lt;std::string&gt;" />
+	<constructor>
+	  channelNames.push_back(Miro::RobotParameters::instance()->eventChannelName);
+	</constructor>
+      </config_item>
 
-  <config_group name="Robot">
-    
-    <config_item name="Robot" parent="Config" instance="true">
-      <config_parameter name="name" type="std::string" default="Miro" />
-      <config_parameter name="type" type="std::string" default="Robot" />
-    </config_item>
-  </config_group>
+      <config_item name="Event" parent="Miro::Config" instance="false" final="false" >
+	<config_parameter name="type" type="string" />
+	<config_parameter name="domain" type="string" />
+      </config_item>
 
-  <config_group name="Video">
-    <config_item name="Camera" parent="Config" final="true">
-      <config_parameter name="ncx" type="double" default="768.0" />
-      <config_parameter name="nfx" type="double" default="384.0" />
-      <config_parameter name="dx" type="double" default="0.00625" />
-      <config_parameter name="dy" type="double" default="0.0125" />
-      <config_parameter name="dpx" type="double" default="0.0125" />
-      <config_parameter name="dpy" type="double" default="0.0125" />
-      <config_parameter name="cx" type="double" default="0." />
-      <config_parameter name="cy" type="double" default="0." />
-      <config_parameter name="sx" type="double" default="0." />
-      <config_parameter name="f" type="double" default="0." />
-      <config_parameter name="kappa" type="double" default="0." />
-      <config_parameter name="p1" type="double" default="0." />
-      <config_parameter name="p2" type="double" default="0." />
-      <config_parameter name="tx" type="double" default="0." />
-      <config_parameter name="ty" type="double" default="0." />
-      <config_parameter name="tz" type="double" default="0." />
-      <config_parameter name="rx" type="double" default="0." />
-      <config_parameter name="ry" type="double" default="0." />
-      <config_parameter name="rz" type="double" default="0." />
-      <config_parameter name="r1" type="double" default="0." />
-      <config_parameter name="r2" type="double" default="0." />
-      <config_parameter name="r3" type="double" default="0." />
-      <config_parameter name="r4" type="double" default="0." />
-      <config_parameter name="r5" type="double" default="0." />
-      <config_parameter name="r6" type="double" default="0." />
-      <config_parameter name="r7" type="double" default="0." />
-      <config_parameter name="r8" type="double" default="0." />
-      <config_parameter name="r9" type="double" default="0." />
+      <config_item name="EventTimeout" parent="Miro::Config" instance="false" final="false" >
+	<config_parameter name="typeName" type="string" />
+	<config_parameter name="timeout" type="ACE_Time_Value" default="0" />
+      </config_item>
 
-      <config_parameter name="height" type="double" default="0." measure="mm" />
-      <config_parameter name="alpha" type="angle" default="0." measure="&deg;" />
-      <config_parameter name="latency" type="ACE_Time_Value" default="0, 120000" measure="sec"/>
-    </config_item>
-  </config_group>
-</config>
+      <config_item name="ChannelReplicator" parent="Miro::Config" instance="true" final="true" >
+	<config_parameter name="sourceChannel" type="string" default="NotifyEventChannel" />
+	<config_parameter name="targetChannel" type="string" default="LowBandwidthChannel" />
+	<config_parameter name="events" type="std::vector&lt;EventTimeoutParameters&gt;" />
+	<config_parameter name="reconnectTimeout" type="ACE_Time_Value" default="5, 0" />
+      </config_item>
+
+      <config_item name="LogNotify" parent="Miro::Config" instance="true">
+	<config_parameter name="TCRFileSize" type="unsigned long" default="1024*1024" measure="bytes" />
+	<config_parameter name="MaxFileSize" type="unsigned long" default="100*1024*1024" measure="bytes" />
+	<config_parameter name="TypeName" type="std::vector&lt;std::string&gt;" />
+	<config_parameter name="event" type="std::vector&lt;EventParameters&gt;" />
+      </config_item>
+
+      <config_item name="Include" parent="Miro::Config" instance="false">
+	<config_parameter name="name" type="std::string" />
+	<config_parameter name="excludePrefix" type="std::vector&lt;std::string&gt;" />
+	<config_parameter name="explicitInclude" type="std::vector&lt;std::string&gt;" />
+      </config_item>
+
+      <config_item name="LogInterceptor" parent="Miro::Config" instance="true">
+	<config_parameter name="name" type="string" default="CmdLog" />
+	<config_parameter name="asciiLog" type="bool" default="false" />
+	<config_parameter name="notifyLog" type="bool" default="false" />
+	<config_parameter name="logAllExceptions" type="bool" default="true" />
+	<config_parameter name="sendTimeout" type="ACE_Time_Value" default="0, 100000" />
+	<config_parameter name="objects" type="std::vector&lt;IncludeParameters&gt;" />
+	<config_parameter name="interfaces" type="std::vector&lt;IncludeParameters&gt;" />
+      </config_item>
+
+    </config_group>
+  </config>
+  

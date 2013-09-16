@@ -1,8 +1,8 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware for Robots)
-// Copyright (C) 1999-2005
-// Department of Neuroinformatics, University of Ulm, Germany
+// Copyright (C) 1999-2013
+// Department of Neural Information Processing, University of Ulm
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published
@@ -18,15 +18,15 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-// $Id$
-//
 #include "LogNotifyConsumer.h"
+#include "LogWriter.h"
 
 #include "Server.h"
 #include "Exception.h"
 #include "TimeHelper.h"
 #include "Log.h"
 
+#include <ace/OS_NS_sys_time.h>
 #include <ace/Sample_History.h>
 #include <ace/Version.h>
 #if (ACE_MAJOR_VERSION > 5) || \
@@ -37,66 +37,95 @@
 #  include <ace/Stats.h>
 #endif
 
+#include <sstream>
+
 namespace Miro
 {
-  LogNotifyConsumer::LogNotifyConsumer(Server& _server,
-                                       CosNotifyChannelAdmin::EventChannel_ptr _ec,
+  using namespace std;
+
+  LogNotifyConsumer::LogNotifyConsumer(CosNotifyChannelAdmin::EventChannel_ptr _ec,
                                        std::string const& _domainName,
                                        std::string const& _fileName,
-                                       LogNotifyParameters const& _parameters,
-                                       bool _keepAlive) :
+                                       LogNotifyParameters const& _parameters) :
       Super(_ec),
-      server_(_server),
       parameters_(_parameters),
       domainName_(_domainName),
       fileName_((_fileName.size() == 0) ? defaultFileName() : _fileName),
       mutex_(),
-      logWriter_(fileName_, _parameters),
-      keepAlive_(_keepAlive),
+      logWriter_(new LogWriter(fileName_ + "-00.mlog", _parameters)),
+      logNum_(0),
       history_(NULL),
       nTimes_(0)
   {
+    MIRO_LOG_CTOR("LogNotifyConsumer");
+
     CosNotification::EventTypeSeq added;
     added.length(parameters_.typeName.size() + parameters_.event.size());
 
-    int index = 0;
-    for (unsigned int i = 0; i < parameters_.typeName.size(); ++i, ++index) {
-      added[index].domain_name =  CORBA::string_dup(domainName_.c_str());
-      added[index].type_name =
-        CORBA::string_dup(parameters_.typeName[i].c_str());
+    if (parameters_.typeName.size() == 0 &&
+                parameters_.event.size() == 0) {
+      added.length(1);
+      added[0].domain_name = CORBA::string_dup("*");
+      added[0].type_name = CORBA::string_dup("*");
     }
+    else {
 
-    for (unsigned int i = 0; i < parameters_.event.size(); ++i, ++index) {
-      added[index].domain_name =
-        CORBA::string_dup(parameters_.event[i].domain.c_str());
-      added[index].type_name =
-        CORBA::string_dup(parameters_.event[i].type.c_str());
+      int index = 0;
+      for (unsigned int i = 0; i < parameters_.typeName.size(); ++i, ++index) {
+        added[index].domain_name =  CORBA::string_dup(domainName_.c_str());
+        added[index].type_name =
+          CORBA::string_dup(parameters_.typeName[i].c_str());
+      }
+
+      for (unsigned int i = 0; i < parameters_.event.size(); ++i, ++index) {
+        added[index].domain_name =
+          CORBA::string_dup(parameters_.event[i].domain.c_str());
+        added[index].type_name =
+          CORBA::string_dup(parameters_.event[i].type.c_str());
+      }
     }
     setSubscriptions(added);
+    connect();
   }
 
   LogNotifyConsumer::~LogNotifyConsumer()
   {
+    MIRO_LOG_DTOR("LogNotifyConsumer");
+
+    delete logWriter_;
     delete history_;
   }
 
   void
-  LogNotifyConsumer::push_structured_event(const CosNotification::StructuredEvent & notification
-      ACE_ENV_ARG_DECL_NOT_USED)
-  throw(CORBA::SystemException, CosEventComm::Disconnected)
+  LogNotifyConsumer::closeWriter()
+  {
+    ACE_Guard<ACE_Recursive_Thread_Mutex> guard(mutex_);
+    delete logWriter_;
+    logWriter_ = 0;
+  }
+
+  void
+  LogNotifyConsumer::push_structured_event(const CosNotification::StructuredEvent & notification)
+  throw(CosEventComm::Disconnected)
   {
     ACE_hrtime_t start = ACE_OS::gethrtime();
 
-    Miro::Guard guard(mutex_);
+    ACE_Guard<ACE_Recursive_Thread_Mutex> guard(mutex_);
 
-    if (connected_) {
-      if (!logWriter_.logEvent(ACE_OS::gettimeofday(), notification)) {
-        MIRO_LOG(Log::LL_NOTICE,
-                 "Disconnecting event log consumer since max file size reached.");
-        connected_ = false;
-        disconnect();
-        if (!keepAlive_)
-          server_.shutdown();
+    if (logWriter_ && connected()) {
+      if (!logWriter_->logEvent(ACE_OS::gettimeofday(), notification)) {
+        MIRO_LOG(LL_NOTICE,
+                 "Event log consumer max file size reached. - Starting new log file.");
+
+        delete logWriter_;
+        ++logNum_;
+        std::stringstream num;
+        num << "-";
+        num.width(2);
+        num.fill('0');
+        num << logNum_ << ".mlog";
+        logWriter_ = new LogWriter(fileName_ + num.str(), parameters_);
+        logWriter_->logEvent(ACE_OS::gettimeofday(), notification);
       }
     }
 
@@ -145,16 +174,10 @@ namespace Miro
   std::string
   LogNotifyConsumer::defaultFileName() const
   {
-    return path() + domainName_ + "_" + timeStringMinute() + ".log";
+    return path() + domainName_ + "_" + timeStringMinute();
   }
 
   std::string
-  LogNotifyConsumer::getFileName()
-  {
-	return fileName_;
-  }
-
-  std::string 
   LogNotifyConsumer::path()
   {
     char * miro_log = ACE_OS::getenv("MIRO_LOG");

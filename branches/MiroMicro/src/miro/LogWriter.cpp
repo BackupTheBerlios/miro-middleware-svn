@@ -1,8 +1,8 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware for Robots)
-// Copyright (C) 1999-2005
-// Department of Neuroinformatics, University of Ulm, Germany
+// Copyright (C) 1999-2013
+// Department of Neural Information Processing, University of Ulm
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published
@@ -17,8 +17,6 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-//
-// $Id$
 //
 #include "LogWriter.h"
 #include "LogTypeRepository.h"
@@ -69,7 +67,7 @@ namespace Miro
     MIRO_LOG_CTOR("Miro::LogWriter");
 
     if (memMap_.addr() == MAP_FAILED)
-      throw CException(errno, strerror(errno));
+      throw CException(errno, "Opening " + _fileName + ": " + strerror(errno));
 
     // The alignement is okay as we wrote 8 bytes of LogHeader
     tcrOffsetSlot_ = ostr_.current()->wr_ptr();
@@ -112,7 +110,7 @@ namespace Miro
 
       // set the time stamp
       TimeBase::TimeT t;
-      ORBSVCS_Time::Time_Value_to_TimeT(t, _stamp);
+      ORBSVCS_Time::Absolute_Time_Value_to_TimeT(t, _stamp);
 
       if (ostr_.write_ulonglong(t)) { // write time stamp
 
@@ -124,10 +122,10 @@ namespace Miro
 
         // write the length slot
         if (ostr_.write_ulong(0) &&
-              // write the header
-              ostr_ << _event.header &&
-              // write the filterable data
-              ostr_ << _event.filterable_data) { // and now the data
+                    // write the header
+                    ostr_ << _event.header &&
+                    // write the filterable data
+                    ostr_ << _event.filterable_data) { // and now the data
 
 
           // serialize remainder_of_body
@@ -149,14 +147,19 @@ namespace Miro
 
           // if not type code repository full
           if (typeId != -2 &&
-                // write type code id
-                ostr_.write_long(typeId) &&
-                // write any value if existent
-                (_event.remainder_of_body.impl() == NULL ||
-                 _event.remainder_of_body.impl()->marshal_value(ostr_)) &&
-                // not max file size reached
-                (ostr_.total_length() <=
-                 (parameters_.maxFileSize - parameters_.tCRFileSize - 100000))) {
+                      // write type code id
+                      ostr_.write_long(typeId) &&
+                      // write any value if existent
+                      (_event.remainder_of_body.impl() == NULL ||
+                       _event.remainder_of_body.impl()->marshal_value(ostr_)) &&
+                      // not max file size reached
+                      (ostr_.total_length() <=
+                       (parameters_.maxFileSize - parameters_.tCRFileSize - 100000))) {
+
+            ostr_.consolidate();
+
+            MIRO_ASSERT(ostr_.current() == ostr_.begin());
+
             // calculate length
             char * here = ACE_ptr_align_binary(ostr_.current()->wr_ptr(), ACE_CDR::LONGLONG_SIZE);
             CORBA::ULong length = here - lengthSlot;

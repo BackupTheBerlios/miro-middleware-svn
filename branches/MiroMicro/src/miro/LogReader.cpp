@@ -1,8 +1,8 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware for Robots)
-// Copyright (C) 1999-2005
-// Department of Neuroinformatics, University of Ulm, Germany
+// Copyright (C) 1999-2013
+// Department of Neural Information Processing, University of Ulm
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published
@@ -18,16 +18,12 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-// $Id$
-//
 #include "LogReader.h"
 #include "LogHeader.h"
 #include "LogTypeRepository.h"
 #include "Log.h"
 #include "Exception.h"
 #include "TimeHelper.h"
-
-#include "idl/TimeC.h"
 
 #include <orbsvcs/Time_Utilities.h>
 #include <orbsvcs/CosNotificationC.h>
@@ -100,7 +96,7 @@ namespace Miro
       typeRepository_ = new LogTypeRepository(*istr_);
     }
     // version 3 log file
-    else if (version() == 3) {
+    else if (version() == 3 || version() == 4) {
       istr_ = new TAO_InputCDR((char*)memMap_.addr() + sizeof(LogHeader),
                                memMap_.size() - sizeof(LogHeader),
                                (int)header_->byteOrder);
@@ -135,7 +131,7 @@ namespace Miro
     }
     else {
       ostringstream s;
-      s << "Unsupported log format version: " +  version();
+      s << "Unsupported log format version: "  << version();
       throw Exception(s.str());
     }
     MIRO_DBG_OSTR(MIRO, LL_DEBUG,  "version : " << version());
@@ -195,8 +191,8 @@ namespace Miro
   LogReader::parseTimeStamp(ACE_Time_Value& _stamp) throw()
   {
     if (eof_ ||
-          istr_->length() == 0 ||
-          istr_->rd_ptr() == 0)
+                istr_->length() == 0 ||
+                istr_->rd_ptr() == 0)
       return false;
 
     // version >= 2 parsing
@@ -211,16 +207,23 @@ namespace Miro
       }
 
       if (next_ != NULL &&
-            next_ != istr_->rd_ptr() - sizeof(TimeBase::TimeT)) {
+                  next_ != istr_->rd_ptr() - sizeof(TimeBase::TimeT)) {
         MIRO_LOG_OSTR(LL_ERROR,
                       "mismatch: " << (void*)next_ <<
                       "\t " << (void *)(istr_->rd_ptr() - sizeof(TimeBase::TimeT)));
       }
 
-      ORBSVCS_Time::TimeT_to_Time_Value(_stamp, t);
+      if (version() >= 4) {
+        ORBSVCS_Time::Absolute_TimeT_to_Time_Value(_stamp, t);
+      }
+      else {
+        ORBSVCS_Time::TimeT_to_Time_Value(_stamp, t);
+      }
     }
     // version 1 parsing
     else {
+      MIRO_LOG(LL_ERROR, "version 1 log files not supported");
+#if 0
       TimeIDL timeStamp;
       if (!((*istr_) >> timeStamp)) {
         MIRO_DBG(MIRO, LL_DEBUG, "eof 2");
@@ -229,6 +232,7 @@ namespace Miro
       }
 
       timeC2A(timeStamp, _stamp);
+#endif
     }
 
     if (_stamp == ACE_Time_Value::zero) {
@@ -273,9 +277,9 @@ namespace Miro
       CosNotification::FilterableEventBody filterable_data;
       CORBA::Any remainder_of_body;
       if (!((*istr_) >> header) ||
-            !((*istr_) >> variable_header) ||
-            !((*istr_) >> filterable_data) ||
-            !((*istr_) >> remainder_of_body)) {
+                  !((*istr_) >> variable_header) ||
+                  !((*istr_) >> filterable_data) ||
+                  !((*istr_) >> remainder_of_body)) {
         eof_ = true;
         return false;
       }
@@ -331,7 +335,7 @@ namespace Miro
     // get the rest of the header (variable header)
     // get the filterable data
     if (!((*istr_) >> _event.header.variable_header) ||
-          !((*istr_) >> _event.filterable_data)) {
+                !((*istr_) >> _event.filterable_data)) {
       MIRO_DBG(MIRO, LL_DEBUG, "eof e2");
       eof_ = true;
       return false;
@@ -405,8 +409,8 @@ namespace Miro
                                            istr_
                                            ACE_ENV_ARG_PARAMETER);
 #else // TAO_MINOR_VERSION <= 1
-      CORBA::TypeCode::traverse_status status =
-        TAO_Marshal_Object::perform_skip(tc, istr_, ACE_TRY_ENV);
+        CORBA::TypeCode::traverse_status status =
+          TAO_Marshal_Object::perform_skip(tc, istr_, ACE_TRY_ENV);
 #endif
         ACE_TRY_CHECK;
 
@@ -457,7 +461,7 @@ namespace Miro
 
 
   void
-  LogReader::events(unsigned long count) throw(Miro::Exception)
+  LogReader::events(ACE_UINT32 count) throw(Miro::Exception)
   {
     if (mode_ != READER && version_ < 3) {
       throw Miro::Exception("Log truncation not supported for log file format prior v 3");
@@ -471,7 +475,7 @@ namespace Miro
   }
 
   void
-  LogReader::packTCR(char * dest) throw()
+  LogReader::packTCR(char * dest) throw(Miro::Exception)
   {
     char const * const source = (char *)memMap_.addr() + tcrOffset_;
     size_t size =  typeRepository_->totalLength();

@@ -1,8 +1,8 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware for Robots)
-// Copyright (C) 1999-2005
-// Department of Neuroinformatics, University of Ulm, Germany
+// Copyright (C) 1999-2013 
+// Department of Neural Information Processing, University of Ulm
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published
@@ -18,81 +18,45 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-// $Id$
-//
-#ifndef miroServer_h
-#define miroServer_h
+#ifndef miro_Server_h
+#define miro_Server_h
+
+#include "miro_Export.h"
 
 #include "Client.h"
-#include "Singleton.h"
-
-#include <ace/Event_Handler.h>
-#include <ace/Signal.h>
-#include <ace/Task.h>
-
-#include <tao/Version.h>
-#if TAO_MAJOR_VERSION > 1 || \
-	        ( TAO_MAJOR_VERSION == 1 && TAO_MINOR_VERSION > 4 ) || \
-        ( TAO_MAJOR_VERSION == 1 && TAO_MINOR_VERSION == 4 && TAO_BETA_VERSION >= 3 )
-#include <orbsvcs/Naming/Naming_Client.h>
-#include <orbsvcs/Naming/Naming_Server.h>
-#else
-#include <orbsvcs/Naming/Naming_Utils.h>
-#endif
-
-#include <orbsvcs/CosNamingC.h>
 
 #include <vector>
 
-//! forward declaration
-class ACE_Reactor;
-
 namespace Miro
 {
-  class Server : public Client
+  // forward declaration
+  class ServerWorker;
+  class ServerData;
+
+  //! The server helper class.
+  /** You normally need an instance of this class, if you want to
+   * initialze your ORB for use as a Server.  It provides helper
+   * methods for registering and activating your servant objects at a
+   * POA and for running the ORB event loop with multiple threads and
+   * also in the background, if required.
+   *
+   * Note that you can have multiple server objects. But make sure,
+   * you passed the command line parameters to the first instance, if
+   * you want to allow the processing of ORB command line parameters.
+   *
+   * Note that the Server helper class deactivates all objects from
+   * the POA, that where activated through its activate_... member
+   * methods on destruction.
+   */
+  class miro_Export Server : public Client
   {
     typedef Client Super;
-    typedef Server Self;
-
-    //--------------------------------------------------------------------------
-    // nested class definitions
-    //--------------------------------------------------------------------------
-
-    // MiroEvent shouldn´t be subclassed any further,
-    // so we make it private to MiroServer
-
-    //! Detached server thread pool.
-    /**
-     *   Uses the ACE_Task_Base class to run server threads
-     */
-  class Worker : public ACE_Task_Base
-    {
-      typedef ACE_Task_Base Super;
-    public:
-      //! Initializing constructor.
-      Worker(ACE_Thread_Manager * _threadManager,
-             CORBA::ORB_ptr _orb, bool& _shutdown);
-
-      //! The thread entry point.
-      virtual int svc();
-
-      // Singleton instance of worker threads.
-      //      static Snigleton<Worker> instance;
-
-    protected:
-      //! The orb.
-      CORBA::ORB_var orb_;
-      //! Cooperative shutdown indicator.
-      bool& shutdown_;
-    };
-
   public:
 
     //! Constructor.
-    Server(int& argc, char *argv[],
-           const RobotParameters& _params = *RobotParameters::instance());
-    Server(const Server& _server);
-    ~Server();
+    Server(int& argc = _dummy_argc, ACE_TCHAR *argv[] = NULL);
+    //! Resource cleanup.
+    virtual ~Server();
 
     //! Executes the server main routine.
     void run(unsigned int nthreads = 1);
@@ -101,60 +65,102 @@ namespace Miro
     //! Wait for server main loop completion.
     void wait();
 
-    //! Accessor which returns the root poa.
-    PortableServer::POA_ptr rootPoa() const;
+    //! Accessor to the ServerWorker instance, which holds the CORBA details.
+    ServerWorker * worker() throw() {
+      return _worker;
+    }
 
-    //! Returns the reactor instance used by the ORB core.
-    ACE_Reactor * reactor();
-
-    //! Shutdown the application.
+    //! Shutdown the server threads.
+    /** All server threads will return. Even the once spawned through another
+     * instance of the Server class.
+     */
     virtual void shutdown();
 
+    bool isShutdown() const throw();
+
+    /**
+     * Activate @param servant, using the POA <activate_object> call.  Users
+     * can call this method multiple times to activate multiple objects.
+     *
+     * @param servant  The servant to activate under the default POA.
+     * @param pass_ownership Pass the ownership of the @ref servant instance
+     *                     to the server. This requires the servant instance to
+     *                     be heap-allocated.  The server object will then ensure
+     *                     propper resource cleanup on destruction. - If for
+     *                     some reason you do not want to pass
+     *                     ownership, simply pass false as parameter
+     *                     But you then have to make sure, that the @ref servant object
+     *                     lifetime exceeds that of the @ref Server instance.
+     */
+    void activate(PortableServer::ServantBase * servant,
+                  bool pass_ownership = true);
+
+    /**
+     * Activate @param servant, using the POA <activate_object> call with
+     * a portable object adapter initialized with a bidir policy.  Users
+     * can call this method multiple times to activate multiple objects.
+     *
+     * @param servant  The servant to activate under the bidir POA.
+     * @param pass_ownership Pass the ownership of the @ref servant instance
+     *                     to the server. This requires the servant instance to
+     *                     be heap-allocated.  The server object will then ensure
+     *                     propper resource cleanup on destruction. - If for
+     *                     some reason you do not want to pass
+     *                     ownership, simply pass false as parameter
+     *                     But you then have to make sure, that the @ref servant object
+     *                     lifetime exceeds that of the @ref Server instance.
+     */
+    void activateBiDir(PortableServer::ServantBase * servant,
+                       bool pass_ownership = true);
+
+    /**
+     * Activate @param servant
+     * using the POA <activate_object_with_id> created from the string
+     * @param object_name. Users should call this to activate objects under
+     * the child_poa.
+     *
+     * By default, the ownership of the servant object is passed to
+     * the server. So make sure, to heap-allocate your servant. The
+     * server object will ensure propper resource cleanup on
+     * destruction. of the method
+     * call.
+     *
+     * @param object_name  String name which will be used to create
+     *                     an Object ID for the servant. This represents also
+     *                     the name used in the naming service.
+     * @param servant  The servant to activate under the child POA.
+     * @param pass_ownership Pass the ownership of the @ref servant instance
+     *                     to the server. This requires the servant instance to
+     *                     be heap-allocated.  The server object will then ensure
+     *                     propper resource cleanup on destruction. - If for
+     *                     some reason you do not want to pass
+     *                     ownership, simply pass false as parameter
+     *                     But you then have to make sure, that the @ref servant object
+     *                     lifetime exceeds that of the @ref Server instance.
+     */
+    void activateNamedObject(std::string const& object_name,
+                             PortableServer::ServantBase * servant,
+                             bool pass_ownership = true);
+
     //! Register an object reference at the CORBA naming service.
-    void addToNameService(CORBA::Object_ptr _object, const std::string& _name);
-    //! Register an object reference at the CORBA naming service.
-    void addToNameService(CORBA::Object_ptr _object,
-                          CosNaming::NamingContext_ptr _context,
-                          const std::string& _name);
+    void addToNameService(CORBA::Object * _obj, const std::string& _name);
 
-    bool rebind() const;
-
-//  protected:
-    //! Reference to Root POA.
-    PortableServer::POA_var poa;
-
-    //!  Reference to POA manager.
-    PortableServer::POAManager_var poa_mgr;
-
-    //! Force rebinding of references in the naming service
-    bool rebind_;
-    bool own_;
-
-    typedef std::vector<std::string> NameVector;
-    typedef std::vector<std::pair<CosNaming::NamingContext_ptr, std::string> > ContextNameVector;
-    NameVector nameVector_;
-    ContextNameVector contextNameVector_;
+  protected:
+    //! Shared worker thread pool.
+    ServerWorker * const _worker;
+    //! Hidden server data.
+    ServerData * const _data;
 
   private:
-    bool shutdown_;
-
-    //! Signal set to be handled by the event handler.
-    ACE_Sig_Set signals_;
-
-    ACE_Thread_Manager threadManager_;
-
-    //! Shared worker thread pool.
-    Worker worker_;
+    //! Copy construction prohibited.
+    Server(Server const&) : Client(), _worker(NULL), _data(NULL) {}
+    //! Assignement operation prohibited.
+    Server & operator = (Server const &) {
+      return *this;
+    }
   };
-
-  inline
-  bool
-  Server::rebind() const
-  {
-    return rebind_;
-  }
-};
-#endif
+}
+#endif // miro_Server_h
 
 
 

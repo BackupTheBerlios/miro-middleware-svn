@@ -1,8 +1,8 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware for Robots)
-// Copyright (C) 1999-2005
-// Department of Neuroinformatics, University of Ulm, Germany
+// Copyright (C) 1999-2013
+// Department of Neural Information Processing, University of Ulm
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published
@@ -18,9 +18,7 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-// $Id$
-//
-#include "miro/IO.h"
+#include "miro/MiroIO.h"
 #include "miro/Log.h"
 
 
@@ -71,29 +69,6 @@ main(int argc, char * argv[])
   MIRO_DBG(MIRO,LL_DEBUG,"MIRO_DBG LL_DEBUG");
   MIRO_DBG(MIRO,LL_TRACE,"MIRO_DBG LL_TRACE");
   MIRO_DBG(MIRO,LL_PRATTLE,"MIRO_DBG LL_PRATTLE");
-
-  cout << "Testing debug categories\n";
-  MIRO_DBG(MIRO,LL_EMERGENCY,"MIRO");
-  MIRO_DBG(VIDEO,LL_EMERGENCY,"VIDEO");
-  MIRO_DBG(SPHINX,LL_EMERGENCY,"SPHINX");
-  MIRO_DBG(PIONEER,LL_EMERGENCY,"PIONEER");
-  MIRO_DBG(FAUL,LL_EMERGENCY,"FAUL");
-  MIRO_DBG(SPARROW,LL_EMERGENCY,"SPARROW");
-  MIRO_DBG(SICK,LL_EMERGENCY,"SICK");
-  MIRO_DBG(DTLK,LL_EMERGENCY,"DTLK");
-  MIRO_DBG(DP,LL_EMERGENCY,"DP");
-  MIRO_DBG(B21,LL_EMERGENCY,"B21");
-
-  cout << "Testing category/loglevel masking\n";
-  ::Miro::Log::mask(::Miro::Log::SPARROW);
-  ::Miro::Log::level(::Miro::Log::LL_ERROR);
-  MIRO_LOG(LL_ERROR, "Log: LL_ERROR (should appear)");
-  MIRO_LOG(LL_WARNING, "Log: LL_WARNING (should not appear)");
-  MIRO_DBG(B21, LL_ERROR, "Dbg: B21 LL_ERROR (should not appear)");
-  MIRO_DBG(B21, LL_WARNING, "Dbg: B21 LL_WARNING (should not appear)");
-  MIRO_DBG(SPARROW, LL_ERROR, "Dbg: SPARROW LL_ERROR (should appear)");
-  MIRO_DBG(SPARROW, LL_WARNING, "Dbg: SPARROW LL_WARNING (should not appear)");
-  cout << "Two messages should have appeared\n";
 
   return 0;
 }

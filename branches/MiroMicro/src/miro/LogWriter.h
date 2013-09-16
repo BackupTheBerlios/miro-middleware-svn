@@ -1,8 +1,8 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware for Robots)
-// Copyright (C) 1999-2005
-// Department of Neuroinformatics, University of Ulm, Germany
+// Copyright (C) 1999-2013 
+// Department of Neural Information Processing, University of Ulm
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published
@@ -18,15 +18,15 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-// $Id$
-//
 #ifndef LogWriter_h
 #define LogWriter_h
 
 #include "LogHeader.h"
 #include "LogTypeRepository.h"
 #include "StructuredPushConsumer.h"
-#include "miro/SvcParameters.h"
+#include "miro/Parameters.h"
+
+#include "miro_Export.h"
 
 #include <ace/Mem_Map.h>
 #include <ace/High_Res_Timer.h>
@@ -36,7 +36,7 @@
 
 namespace Miro
 {
-  class LogWriter
+  class miro_Export LogWriter
   {
   public:
     //--------------------------------------------------------------------------

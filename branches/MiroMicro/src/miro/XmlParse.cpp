@@ -1,8 +1,8 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware for Robots)
-// Copyright (C) 1999-2005
-// Department of Neuroinformatics, University of Ulm, Germany
+// Copyright (C) 1999-2013
+// Department of Neural Information Processing, University of Ulm
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published
@@ -18,44 +18,45 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-// $Id$
-//
 #include "XmlParse.h"
 #include "Angle.h"
-
-#include <ace/INET_Addr.h>
-#include <ace/Sched_Params.h>
+#include "Text.h"
+#include "Robot.h"
+#include "ConfigParameters.h"
 
 #include <qstring.h>
 
 #include <algorithm>
+#include <climits>
 #include <limits>
-#include <iostream>
-#include <string>
 
-#define XML_PARSE_QSTRING_IMPL(type, qstringmethod) \
-  void operator <<= (type & _lhs, const QDomNode& _node) \
-  { \
-    bool valid; \
-    QString value = getAttribute(_node, QString("value")); \
-    _lhs = value.  qstringmethod  (&valid); \
-    if (!valid) \
-      throw Exception("Parse exception ("+ QString(" type ") +")");	\
-  } \
-  QDomElement operator >>= (const type & _lhs, QDomNode& _node) \
-  { \
-    QString value; \
-    QDomDocument document = _node.ownerDocument(); \
-    QDomElement e = document. createElement("parameter"); \
-    value.setNum(_lhs); \
-    e.setAttribute("value", value); \
-    _node.appendChild(e); \
-    return e; \
+#include "qt_compatibility.h"
+
+#define XML_PARSE_QSTRING_IMPL(type, qstringmethod)			\
+  void operator <<= (type & _lhs, const QDomNode& _node)		\
+  {									\
+    bool valid;								\
+    QString value = getAttribute(_node, QString("value"));		\
+    Miro::Robot::substitute(value);                                     \
+    _lhs = value.  qstringmethod  (&valid);				\
+    if (!valid) {							\
+      throwException(_node, value, #type);					\
+    }									\
+  }									\
+  QDomElement operator >>= (const type & _lhs, QDomNode& _node)		\
+  {									\
+    QString value;							\
+    QDomDocument document = _node.ownerDocument();			\
+    QDomElement e = document. createElement("parameter");		\
+    value.setNum(_lhs);							\
+    e.setAttribute("value", value);					\
+    _node.appendChild(e);						\
+    return e;								\
   }
 
 namespace
 {
-  const QString getAttribute(QDomNode _node, const QString& _attribute)
+  QString getAttribute(QDomNode _node, const QString& _attribute)
   {
     QString value("");
 
@@ -70,6 +71,36 @@ namespace
     }
     return value;
   }
+
+
+  void throwException(const QDomNode& _node, QString const& value, char const * type)
+  {
+    QString e("Parse exception - expected type=");
+    e += type;
+    e += " ";
+
+#if QT_VERSION >= 0x040100
+    if (_node.lineNumber() != -1) {
+      QString lineNumber;
+      lineNumber.setNum(_node.lineNumber());
+      e.append("line number=");
+      e.append(lineNumber);
+      e.append(" ");
+    }
+#endif
+
+    QString name = getAttribute(_node, QString("name"));
+    if (!name.isEmpty()) {
+      e.append("name=");
+      e.append(name);
+      e.append(" ");
+    }
+
+    e.append("value=");
+    e.append(value);
+
+    throw Miro::Exception(qPrintable(e));
+  }
 };
 
 namespace Miro
@@ -79,8 +110,9 @@ namespace Miro
   void operator <<= (bool& lhs, const QDomNode& node)
   {
     QString value = getAttribute(node, QString("value"));
+    Miro::Robot::substitute(value);
     if (value != "true" && value != "false")
-      throw Exception("Parse exception (bool)");
+      throwException(node, value, "bool");
 
     lhs = (value == "true");
   }
@@ -97,10 +129,15 @@ namespace Miro
   void operator <<= (char& lhs, const QDomNode& node)
   {
     QString value = getAttribute(node, QString("value"));
+    Miro::Robot::substitute(value);
     if (value.length() != 1)
-      throw Exception("Parse exception (char)");
+      throwException(node, value, "char");
 
+#if QT_VERSION >= 0x040000
+    lhs = value[0].toAscii();
+#else
     lhs = value[0].latin1();
+#endif
   }
 
   QDomElement operator >>= (const char& lhs, QDomNode& _node)
@@ -117,9 +154,10 @@ namespace Miro
   {
     bool valid = false;
     QString value = getAttribute(node, QString("value"));
+    Miro::Robot::substitute(value);
     signed short v = value.toUShort(&valid);
     if (!valid || v < SCHAR_MIN || v > SCHAR_MAX)
-      throw Exception("Parse exception (signed char)");
+      throwException(node, value, "signed char");
     lhs = v;
   }
 
@@ -128,7 +166,7 @@ namespace Miro
     QString value;
     QDomDocument document = _node.ownerDocument();
     QDomElement e = document. createElement("parameter");
-    value.setNum(lhs); \
+    value.setNum(lhs);
     e.setAttribute("value", value);
     _node.appendChild(e);
     return e;
@@ -138,9 +176,10 @@ namespace Miro
   {
     bool valid = false;
     QString value = getAttribute(node, QString("value"));
+    Miro::Robot::substitute(value);
     unsigned short v = value.toUShort(&valid);
     if (!valid || v > UCHAR_MAX)
-      throw Exception("Parse exception (unsigned char)");
+      throwException(node, value, "unsigned char");
     lhs = v;
   }
 
@@ -149,7 +188,7 @@ namespace Miro
     QString value;
     QDomDocument document = _node.ownerDocument();
     QDomElement e = document. createElement("parameter");
-    value.setNum(lhs); \
+    value.setNum(lhs);
     e.setAttribute("value", value);
     _node.appendChild(e);
     return e;
@@ -168,9 +207,10 @@ namespace Miro
   {
     bool valid;
     QString value = getAttribute(node, QString("value"));
+    Miro::Robot::substitute(value);
     lhs = deg2Rad(value.toDouble(&valid));
     if (!valid)
-      throw Exception("Parse exception (Angle)");
+      throwException(node, value, "Angle");
   }
 
   QDomElement operator >>= (const Angle& lhs, QDomNode& _node)
@@ -186,7 +226,10 @@ namespace Miro
 
   void operator <<= (std::string& lhs, const QDomNode& node)
   {
-    lhs = getAttribute(node, QString("value")).latin1();
+    QString value = getAttribute(node, QString("value"));
+    Miro::Robot::substitute(value);
+
+    lhs = qPrintable(value);
   }
 
   QDomElement operator >>= (const std::string& lhs, QDomNode& _node)
@@ -198,310 +241,28 @@ namespace Miro
     return e;
   }
 
-  void operator <<= (Miro::Enumeration& lhs, const QDomNode& node)
+  void operator <<= (Text& lhs, const QDomNode& node)
   {
-    lhs.value(getAttribute(node, QString("value")).latin1());
-  }
+    QDomNode n(node);
+    if (!n.isNull()) {
+      QDomElement const e = n.toElement(); // try to convert the node to an element.
+      if (!e.isNull()) {             // the node was really an element.
+	QString value = e.text();
+	Miro::Robot::substitute(value);
 
-  QDomElement operator >>= (const Miro::Enumeration& lhs, QDomNode& _node)
-  {
-    QDomDocument document = _node.ownerDocument();
-    QDomElement e = document. createElement("parameter");
-    e.setAttribute("value", QString(lhs.value().c_str()));
-    _node.appendChild(e);
-    return e;
-  }
-
-  void operator <<= (Miro::EnumerationMultiple& lhs, const QDomNode& node)
-  {
-    lhs.value(getAttribute(node, QString("value")).latin1());
-  }
-
-  QDomElement operator >>= (const Miro::EnumerationMultiple& lhs, QDomNode& _node)
-  {
-    QDomDocument document = _node.ownerDocument();
-    QDomElement e = document. createElement("parameter");
-    // reverse tokenizer -- build a space separated string
-    std::vector<std::string> tmp1 = lhs.value();
-    QString tmp2(tmp1[0].c_str());
-    for (std::vector<std::string>::const_iterator i = tmp1.begin() + 1; i != tmp1.end(); ++i)
-      tmp2 += " " + QString(i->c_str());
-    e.setAttribute("value", QString(tmp2));
-    _node.appendChild(e);
-    return e;
-  }
-
-  void operator <<= (ACE_Time_Value& lhs, const QDomNode& node)
-  {
-    bool valid;
-    QString value = getAttribute(node, QString("value"));
-    int dot = value.find('.');
-
-    QString sec = value;
-    QString usec = "0";
-    if (dot > 0) {
-      sec = value.left(dot);
-      if (dot != ((int)value.length()) - 1)
-        usec = value.mid(dot + 1);
-    }
-
-    // bring usec to 6 digits
-    usec += QString("000000").left(std::min(0, 6 - (int)usec.length()));
-    usec = usec.left(6);
-
-    lhs.sec(sec.toULong(&valid));
-    if (!valid)
-      throw Exception("Parse exception (ACE_Time_Value)");
-    lhs.usec(usec.toULong(&valid));
-    if (!valid)
-      throw Exception("Parse exception (ACE_Time_Value)");
-  }
-
-  QDomElement operator >>= (const ACE_Time_Value& lhs, QDomNode& _node)
-  {
-    static const QString zero("000000");
-
-    QString s;
-    QString us;
-    s.setNum(lhs.sec());
-    us.setNum(lhs.usec());
-
-    QDomDocument document = _node.ownerDocument();
-    QDomElement e = document. createElement("parameter");
-    e.setAttribute("value", s + "." + zero.left(6 - us.length()) + us);
-    _node.appendChild(e);
-    return e;
-  }
-
-  static const char* SERIAL_MODES[] = { "none", "even", "odd", "mark", "space", NULL };
-  static const char* SERIAL_MODES_NONE = SERIAL_MODES[0];
-
-  void
-  operator<<= (ACE_TTY_IO::Serial_Params& _lhs, const QDomNode& _node)
-  {
-    if (!_node.isNull()) {
-      QDomNode n = _node.firstChild();
-      while (!n.isNull()) {
-        QDomElement e = n.toElement();
-        if (!e.isNull()) {
-          QDomAttr a = e.attributeNode("name");
-          if (!a.isNull()) {
-            QString i = a.value();
-            if (i == "Baudrate") {
-              _lhs.baudrate <<= n;
-            }
-            else if (i == "Ctsenb") {
-              _lhs.ctsenb <<= n;
-            }
-            else if (i == "Databits") {
-              _lhs.databits <<= n;
-            }
-            else if (i == "Modem") {
-              _lhs.modem <<= n;
-            }
-            else if (i == "Parityenb") {
-              bool val;
-              val <<= n;
-              if (val)
-                throw Exception("Can't upgrade parityenb to paritymode silently (can't interpret 'true' value)");
-              _lhs.paritymode = SERIAL_MODES_NONE;
-            }
-            else if (i == "Rcvenb") {
-              _lhs.rcvenb <<= n;
-            }
-            else if (i == "Readtimeoutmsec") {
-              _lhs.readtimeoutmsec <<= n;
-            }
-            else if (i == "Rtsenb") {
-              _lhs.rtsenb <<= n;
-            }
-            else if (i == "Stopbits") {
-              _lhs.stopbits <<= n;
-            }
-            else if (i == "Xinenb") {
-              _lhs.xinenb <<= n;
-            }
-            else if (i == "Xofflim") {
-              _lhs.xofflim <<= n;
-            }
-            else if (i == "Xonlim") {
-              _lhs.xonlim <<= n;
-            }
-            else if (i == "Xoutenb") {
-              _lhs.xoutenb <<= n;
-            }
-            else if (i == "Paritymode") {
-              string s;
-              s <<= n;
-              size_t j;
-              for (j = 0; SERIAL_MODES[j] != NULL; ++j)
-                if (strcmp(s.c_str(), SERIAL_MODES[j]) == 0)
-                  break;
-              _lhs.paritymode = SERIAL_MODES[j];
-            }
-          }
-        }
-        n = n.nextSibling();
+        lhs = string(value.toAscii());
       }
     }
   }
-  QDomElement
-  operator>>= (const ACE_TTY_IO::Serial_Params& lhs, QDomNode& _node)
-  {
-    QDomDocument document = _node.ownerDocument();
-    QDomElement e = document. createElement("parameter");
 
-    QDomElement f;
-    f = (lhs.baudrate >>= e);
-    f.setAttribute("name", "Baudrate");
-    f = (lhs.paritymode >>= e);
-    f.setAttribute("name", "Paritymode");
-    f = (lhs.databits >>= e);
-    f.setAttribute("name", "Databits");
-    f = (lhs.stopbits >>= e);
-    f.setAttribute("name", "Stopbits");
-    f = (lhs.readtimeoutmsec >>= e);
-    f.setAttribute("name", "Readtimeoutmsec");
-    f = (lhs.modem >>= e);
-    f.setAttribute("name", "Modem");
-    f = (lhs.rcvenb >>= e);
-    f.setAttribute("name", "Rcvenb");
-    f = (lhs.ctsenb >>= e);
-    f.setAttribute("name", "Ctsenb");
-    f = (lhs.rtsenb >>= e);
-    f.setAttribute("name", "Rtsenb");
-    f = (lhs.xinenb >>= e);
-    f.setAttribute("name", "Xinenb");
-    f = (lhs.xoutenb >>= e);
-    f.setAttribute("name", "Xoutenb");
-
-    _node.appendChild(e);
-    return e;
-  }
-
-  void operator <<= (ACE_INET_Addr& lhs, const QDomNode& node)
-  {
-    lhs.set(getAttribute(node, QString("value")));
-  }
-
-  QDomElement operator >>= (const ACE_INET_Addr& lhs, QDomNode& _node)
+  QDomElement operator >>= (const Text& lhs, QDomNode& _node)
   {
     QDomDocument document = _node.ownerDocument();
     QDomElement e = document.createElement("parameter");
-    e.setAttribute("value", QString(lhs.get_host_addr()));
-    _node.appendChild(e);
-    return e;
-  }
-
-  void operator <<= (ACE_Sched_Params& _lhs, const QDomNode& _node)
-  {
-    if (!_node.isNull()) {
-      QDomNode n = _node.firstChild();
-      while (!n.isNull()) {
-        QDomElement e = n.toElement();
-        if (!e.isNull()) {
-          QDomAttr a = e.attributeNode("name");
-          if (!a.isNull()) {
-            QString i = a.value();
-            if (i == "Policy") {
-              int p;
-              p <<= n;
-              _lhs.policy(p);
-            }
-            else if (i == "Priority") {
-              int p;
-              p <<= n;
-              _lhs.priority(p);
-            }
-            else if (i == "Quantum") {
-              ACE_Time_Value t;
-              t <<= n;
-              _lhs.quantum(t);
-            }
-          }
-        }
-        n = n.nextSibling();
-      }
-    }
-  }
-
-  QDomElement operator >>= (const ACE_Sched_Params& lhs, QDomNode& _node)
-  {
-    QDomDocument document = _node.ownerDocument();
-    QDomElement e = document. createElement("parameter");
-
-    QDomElement f;
-    f = (lhs.policy() >>= e);
-    f.setAttribute("name", "Policy");
-    f = (lhs.priority() >>= e);
-    f.setAttribute("name", "Priority");
-    f = (lhs.quantum() >>= e);
-    f.setAttribute("name", "Quantum");
-
+    QDomText t;
+    t.setNodeValue(lhs.c_str());
+    e.appendChild(t);
     _node.appendChild(e);
     return e;
   }
 }
-
-
-#ifdef ANALYZED_THAT
-void
-operator<<= (ACE_TTY_IO::Serial_Params & _lhs, const QDomNode & _node)
-{
-  if (!_node.isNull()) {
-    QDomNode n = _node.firstChild();
-    while (!n.isNull()) {
-      QDomElement e = n.toElement();
-      if (!e.isNull()) {
-        QDomAttr a = e.attributeNode("name");
-        if (!a.isNull()) {
-          QString i = a.value();
-          if (i == "Baudrate") {
-            _lhs.baudrate <<= n;
-          }
-          else if (i == "Ctsenb") {
-            _lhs.ctsenb <<= n;
-          }
-          else if (i == "Databits") {
-            _lhs.databits <<= n;
-          }
-          else if (i == "Modem") {
-            _lhs.modem <<= n;
-          }
-          else if (i == "Parityenb") {
-            _lhs.parityenb <<= n;
-          }
-          else if (i == "Rcvenb") {
-            _lhs.rcvenb <<= n;
-          }
-          else if (i == "Readtimeoutmsec") {
-            _lhs.readtimeoutmsec <<= n;
-          }
-          else if (i == "Rtsenb") {
-            _lhs.rtsenb <<= n;
-          }
-          else if (i == "Stopbits") {
-            _lhs.stopbits <<= n;
-          }
-          else if (i == "Xinenb") {
-            _lhs.xinenb <<= n;
-          }
-          else if (i == "Xofflim") {
-            _lhs.xofflim <<= n;
-          }
-          else if (i == "Xonlim") {
-            _lhs.xonlim <<= n;
-          }
-          else if (i == "Xoutenb") {
-            _lhs.xoutenb <<= n;
-          }
-          else if (i == "Paritymode") {
-            _lhs.paritymode <<= n;
-          }
-        }
-      }
-      n = n.nextSibling();
-    }
-  }
-}
-#endif

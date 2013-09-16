@@ -1,6 +1,0 @@
-Example code for the notification channel usage.
-
-- GenericNotify just subscribes for the event specified at the command
-  line, and reports events to standart out.
-
-  Usefull to test whether events come in at all.

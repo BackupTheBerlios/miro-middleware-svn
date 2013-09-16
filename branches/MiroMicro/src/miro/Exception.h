@@ -1,8 +1,8 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware for Robots)
-// Copyright (C) 1999-2005
-// Department of Neuroinformatics, University of Ulm, Germany
+// Copyright (C) 1999-2013 
+// Department of Neural Information Processing, University of Ulm
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published
@@ -18,10 +18,10 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-// $Id$
-//
 #ifndef miro_Exception_h
 #define miro_Exception_h
+
+#include "miroBase_Export.h"
 
 #include <exception>
 #include <string>
@@ -33,7 +33,8 @@
     typedef ::Miro::Exception Super; \
   public: \
     N() throw(): Super() {}  \
-    N(std::string const& _what) throw() : Super(_what) {} \
+    explicit N(char const * _what) throw() : Super(_what) {} \
+    explicit N(std::string const& _what) throw() : Super(_what) {} \
     virtual ~N() throw() {} \
   }
 
@@ -41,14 +42,6 @@
 /**
  * To not pollute the global namespace of users of Miro, all classes, structs
  * and helper functions are encapsulated into the namespace Miro.
- *
- * For an introduction into the namespace feature of c++ see:
- * - http://www.cplusplus.com/doc/tutorial/tut5-2.html
- * - http://www.mvps.org/windev/cpp/nspaces.html
- * - Also the hard copy manual constains a short description of
- *   how namespaces are used in Miro.
- * - And Stroustrup's C++ contains a longer description.
- *
  */
 namespace Miro
 {
@@ -56,7 +49,7 @@ namespace Miro
   class Exception;
 
   //! Debug output stream operator.
-  std::ostream& operator << (std::ostream& ostr, const Exception& x);
+  miroBase_Export std::ostream& operator << (std::ostream& ostr, const Exception& x);
 
 
   //!The root of the server side exception hierarchy.
@@ -66,14 +59,16 @@ namespace Miro
    * defined in Exception.idl. As a pure client programmer you can
    * safely ignore this class and its derivates.
    */
-  class Exception : public std::exception
+  class miroBase_Export Exception : public std::exception
   {
     typedef exception Super;
   public:
     //! Default constructor.
     Exception() throw();
     //! Initializing constructor
-    Exception(std::string const& _what) throw();
+    explicit Exception(std::string const& _what) throw();
+    //! Initializing constructor for const char* (to resolve ambiguity)
+    explicit Exception(const char* _what) throw();
     //! Virtual dtor.
     virtual ~Exception() throw();
 
@@ -87,11 +82,11 @@ namespace Miro
   private:
     std::string const what_;
 
-    friend std::ostream& operator << (std::ostream& ostr, const Exception& x);
+    friend miroBase_Export std::ostream& operator << (std::ostream& ostr, const Exception& x);
   };
 
   //! Class to throw C errors as exceptions.
-  class CException : public Exception
+  class miroBase_Export CException : public Exception
   {
     typedef Exception Super;
   public:
@@ -107,20 +102,6 @@ namespace Miro
 
   private:
     int error_;
-  };
-
-  //!  Class to throw errors of the ACE library as exceptions.
-  /**
-   * ACE errors are actually just C errors. But that way we can
-   * seperate them from ordinary, unwrapped C stuff.
-   */
-  class ACE_Exception : public CException
-  {
-    typedef CException Super;
-  public:
-    //! Initializing constructor.
-    ACE_Exception(int _errno, const std::string& _what) throw();
-    virtual ~ACE_Exception() throw();
   };
 }
 #endif // miro_Exception_h

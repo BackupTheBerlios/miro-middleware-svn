@@ -577,8 +577,7 @@ namespace Miro
     }
 
     QString
-    Parser::errorString()
-    {
+    Parser::errorString() const {
       return error_;
     }
 

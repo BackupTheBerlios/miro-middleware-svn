@@ -1,8 +1,8 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware for Robots)
-// Copyright (C) 1999-2005
-// Department of Neuroinformatics, University of Ulm, Germany
+// Copyright (C) 1999-2013
+// Department of Neural Information Processing, University of Ulm
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published
@@ -18,30 +18,31 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-// $Id$
-//
 #include "TimeHelper.h"
 
 #include <ace/Date_Time.h>
+#include <ace/OS_NS_sys_time.h>
 
 #include <iostream>
 #include <sstream>
 
+#if ((ACE_MAJOR_VERSION <= 5) && (ACE_MINOR_VERSION < 8)) 
 std::ostream&
 operator << (std::ostream& ostr, const ACE_Time_Value& rhs)
 {
   ostr << rhs.sec() << ".";
   ostr.width(6);
   ostr.fill('0');
-  ostr << rhs.usec();
+  ostr << ::abs(rhs.usec());
   return ostr;
 }
+#endif
 
 std::istream&
 operator >> (std::istream& istr, ACE_Time_Value& rhs)
 {
   char c;
-  long t;
+  unsigned long t;
 
   istr >> t >> c;
   rhs.sec(t);
@@ -49,8 +50,8 @@ operator >> (std::istream& istr, ACE_Time_Value& rhs)
   if (c != '.')
     return istr;
 
-  istr >> t;
-  rhs.usec(t);
+  if (istr >> t)
+    rhs.usec(t);
   return istr;
 }
 

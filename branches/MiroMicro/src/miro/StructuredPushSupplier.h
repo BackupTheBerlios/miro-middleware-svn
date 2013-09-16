@@ -1,8 +1,8 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware for Robots)
-// Copyright (C) 1999-2005
-// Department of Neuroinformatics, University of Ulm, Germany
+// Copyright (C) 1999-2013 
+// Department of Neural Information Processing, University of Ulm
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published
@@ -18,22 +18,28 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-// $Id$
-//
-#ifndef miroSturcturedPushSupplier_h
-#define miroSturcturedPushSupplier_h
+#ifndef miro_SturcturedPushSupplier_h
+#define miro_SturcturedPushSupplier_h
 
-#include "Synch.h"
 #include "Log.h"
+#include "Exception.h"
+#include "TimeHelper.h"
+#include "miro_Export.h"
 
 #include <orbsvcs/CosNotifyChannelAdminS.h>
 #include <orbsvcs/CosNotifyCommC.h>
+
+#include <ace/Synch.h>
+#include <ace/OS_NS_sys_time.h>
 
 #include <string>
 #include <vector>
 
 namespace Miro
 {
+  // forward declaration
+  class Server;
+
   //! StructuredPushSupplier interface implementation.
   /**
    * This class implements the StructuredPushSupplier interface of the
@@ -42,25 +48,25 @@ namespace Miro
    * supplier and allowes efficient querying of this information for
    * event producers.
    */
-  class StructuredPushSupplier : public POA_CosNotifyComm::StructuredPushSupplier
+  class miro_Export StructuredPushSupplier : public POA_CosNotifyComm::StructuredPushSupplier
   {
   public:
+    MIRO_EXCEPTION_TYPE(EAlreadyConnected);
+
     //--------------------------------------------------------------------------
     // public types
     //--------------------------------------------------------------------------
 
-    typedef std::vector<unsigned long> IndexVector;
+    typedef std::vector<unsigned int> IndexVector;
 
     //--------------------------------------------------------------------------
     // public methods
     //--------------------------------------------------------------------------
 
     //! Initializing constructor.
-    StructuredPushSupplier(CosNotifyChannelAdmin::EventChannel_ptr  _ec,
-                           std::string const& _domainName = std::string(),
-                           bool _connect = true,
-                           CosNotification::EventTypeSeq const& _offer =
-                             CosNotification::EventTypeSeq());
+    StructuredPushSupplier(CosNotifyChannelAdmin::EventChannel_ptr _ec);
+    //! Initializing constructor.
+    StructuredPushSupplier();
 
     //! Destructor
     virtual ~StructuredPushSupplier();
@@ -69,31 +75,28 @@ namespace Miro
     void connect();
     //! Disconnect supplier to proxy consumer.
     void disconnect();
+    //! Report the connection status.
+    bool connected() const throw();
 
     //! Test whether an offered event is subscribed.
-    bool subscribed(unsigned long _index) const;
+    bool subscribed(unsigned int _index) const;
     //! Test whether an offered event is subscribed.
-    bool subscribed(std::string const& _domain, std::string const& _type) const;
+    bool subscribed(std::string const& _domain, std::string const& _type = "") const;
 
-    //! Add an offers to the notification channel.
-    unsigned long addOffer(CosNotification::StructuredEvent const& _added);
-    //! Add a set of offers to the notification channel.
-    IndexVector addOffers(CosNotification::EventTypeSeq const& _added);
     //! Set the set of offers to the notification channel.
     void setOffers(CosNotification::EventTypeSeq const& _offers);
+    //! Set the set of offers to the notification channel.
+    void setSingleOffer(std::string const& _type_name, std::string const& _domain_name = "");
 
     //! Send one event.
     void sendEvent(const CosNotification::StructuredEvent& event);
-
-    //! Accessor method for the domain name.
-    std::string const& domainName() const;
 
     //--------------------------------------------------------------------------
     // public static methods
     //--------------------------------------------------------------------------
     static void initStructuredEvent(CosNotification::StructuredEvent& _event,
                                     std::string const& _domainName,
-                                    std::string const& _typeName);
+                                    std::string const& _typeName = "");
   protected:
     //--------------------------------------------------------------------------
     // protected types
@@ -105,17 +108,18 @@ namespace Miro
     // protected methods
     //--------------------------------------------------------------------------
 
-    // inherited IDL interfae
+    //! @{ inherited IDL interfae
 
     //! CosNotifyComm::StructuredPushSupplier interface method implementation.
     virtual void subscription_change(const CosNotification::EventTypeSeq & added,
-                                     const CosNotification::EventTypeSeq & removed
-                                     ACE_ENV_ARG_DECL_WITH_DEFAULTS)
-    throw(CORBA::SystemException, CosNotifyComm::InvalidEventType);
+                                     const CosNotification::EventTypeSeq & removed)
+    throw(CosNotifyComm::InvalidEventType);
 
     //! CosNotifyComm::StructuredPushSupplier interface method implementation.
-    virtual void disconnect_structured_push_supplier(ACE_ENV_SINGLE_ARG_DECL_WITH_DEFAULTS)
-    throw(CORBA::SystemException);
+    virtual void disconnect_structured_push_supplier()
+    throw();
+
+    //! @}
 
     //! Tell the admin about an offer change and update the subscription vector.
     void initiateOfferChange(CosNotification::EventTypeSeq const& _added,
@@ -129,9 +133,12 @@ namespace Miro
     static CosNotification::EventTypeSeq asterixOffer();
 
     //--------------------------------------------------------------------------
-    // protected data
+    // private data
     //--------------------------------------------------------------------------
+  private:
+    Server * serverHelper_;
 
+  protected:
     //! The channel we connect to.
     CosNotifyChannelAdmin::EventChannel_var ec_;
     //! The group operator between admin-proxy's.
@@ -145,15 +152,12 @@ namespace Miro
     CosNotifyChannelAdmin::StructuredProxyPushConsumer_var proxyConsumer_;
     //! This supplier's id.
     CosNotifyChannelAdmin::ProxyID proxyConsumerId_;
-    //! Our own object id.
-    CosNotifyComm::StructuredPushSupplier_ptr objref_;
 
-    //! Event domain name.
-    std::string domainName_;
 
     //! Lock for the connected_ flag.
-    mutable Miro::Mutex connectedMutex_;
-    //! If true, the supplier is connected to the event channel.
+    mutable ACE_Recursive_Thread_Mutex connectedMutex_;
+
+  private:
     bool connected_;
 
     //! Vector of offered event types
@@ -166,11 +170,27 @@ namespace Miro
   void
   StructuredPushSupplier::sendEvent(const CosNotification::StructuredEvent& event)
   {
-    if (connected_) {
+    if (serverHelper_) {
+      ACE_Time_Value before = ACE_OS::gettimeofday();
       proxyConsumer_->push_structured_event(event);
+      ACE_Time_Value after = ACE_OS::gettimeofday();
+      ACE_Time_Value elapsed = after - before;
+
+      if (elapsed > ACE_Time_Value(0, 400000)) {
+        MIRO_LOG_OSTR(LL_ERROR,
+                      "StructuredPushSupplier: needed " << elapsed << "s to send a "
+                      << event.header.fixed_header.event_type.type_name);
+      }
     }
   }
 
+
+  inline
+  bool
+  StructuredPushSupplier::connected() const throw()
+  {
+    return connected_;
+  }
 
   /**
    * @param index The index of the event in the offer vector.  This
@@ -180,17 +200,10 @@ namespace Miro
    */
   inline
   bool
-  StructuredPushSupplier::subscribed(unsigned long _index) const
+  StructuredPushSupplier::subscribed(unsigned int _index) const
   {
     MIRO_ASSERT(_index < subscription_.size());
     return subscription_[_index];
-  }
-
-  inline
-  std::string const&
-  StructuredPushSupplier::domainName() const
-  {
-    return domainName_;
   }
 }
 #endif

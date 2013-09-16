@@ -1,8 +1,8 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware for Robots)
-// Copyright (C) 1999-2005
-// Department of Neuroinformatics, University of Ulm, Germany
+// Copyright (C) 1999-2013
+// Department of Neural Information Processing, University of Ulm
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published
@@ -17,8 +17,6 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-//
-// $Id$
 //
 #include "LogTypeRepository.h"
 #include "Log.h"
@@ -61,7 +59,7 @@ namespace Miro
     try {
       types_.reserve(numTypes);
     }
-    catch (std::length_error const& e) {
+    catch (std::length_error const& /*e*/) {
       MIRO_LOG_OSTR(LL_CRITICAL, "LogTypeRepository - std exception on types_.reseve(" << numTypes << ").");
       throw Miro::Exception("Length error on reserving log type vector. Probable log-file corruption.");
     }

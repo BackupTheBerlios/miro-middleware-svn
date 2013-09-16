@@ -1,8 +1,8 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware for Robots)
-// Copyright (C) 1999-2005
-// Department of Neuroinformatics, University of Ulm, Germany
+// Copyright (C) 1999-2013
+// Department of Neural Information Processing, University of Ulm
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published
@@ -18,170 +18,148 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-// $Id$
-//
 #include "Server.h"
+#include "ServerWorker.h"
+#include "ServerData.h"
+#include "ClientParameters.h"
+#include "ClientData.h"
+#include "Log.h"
 #include "Exception.h"
+#include "NamingRepository.h"
 
-#include <ace/Synch.h>
-#include <ace/Arg_Shifter.h>
-#include <ace/OS.h>
-
-#include <tao/ORB_Core.h>
-#include <miro/Log.h>
-
-static Miro::Server * pServer;
-
-extern "C" void handler(int signum)
-{
-  // check of sigint and sigterm
-  if (signum == SIGINT || signum == SIGTERM) {
-    MIRO_LOG_OSTR(LL_CRITICAL, "Signal received: " << signum);
-    pServer->shutdown();
-  }
-}
-
+#ifndef MIRO_NO_CORBA
+#  include <tao/ORB_Core.h>
+#  include <tao/PortableServer/Servant_Base.h>
+#  include <orbsvcs/CosNamingC.h>
+#endif // MIRO_NO_CORBA
 
 namespace Miro
 {
-  using ::operator<<;
+  using namespace std;
 
-  /**
-   * @param orb      The Object request broker.
-   * @param shutdown Cooperative shutdown indicator.
-   */
-  Server::Worker::Worker(ACE_Thread_Manager * _threadManager,
-                         CORBA::ORB_ptr orb, bool& shutdown) :
-      Super(_threadManager),
-      orb_(CORBA::ORB::_duplicate(orb)),
-      shutdown_(shutdown)
+  Server::Server(int& argc, ACE_TCHAR *argv[]) :
+      Super(argc, argv),
+      _worker(ServerWorker::instance()),
+      _data(new ServerData())
   {
-  }
-
-  int
-  Server::Worker::svc()
-  {
-    MIRO_LOG(LL_NOTICE, "Entering (detached) server loop.");
-    while (!shutdown_) {
-      ACE_Time_Value timeSlice(0, 200000);
-      orb_->perform_work(timeSlice);
-    }
-    MIRO_LOG(LL_NOTICE, "Leaving (detached) server loop.");
-    return 0;
-  }
-
-  Server::Server(int& argc, char *argv[],
-                 const RobotParameters& _params) :
-      Super(argc, argv, _params),
-      rebind_(true),
-      own_(true),
-      shutdown_(false),
-      signals_(),
-      worker_(&threadManager_, orb_.in(), shutdown_)
-  {
-    MIRO_DBG(MIRO, LL_CTOR_DTOR, "Constructing Miro::Server.\n");
-
-    // parse arguments
-    ACE_Arg_Shifter arg_shifter(argc, argv);
-    while (arg_shifter.is_anything_left()) {
-      const ACE_TCHAR *current_arg = arg_shifter.get_current();
-
-      const char rebindOpt[] = "-MiroRebindIOR";
-      if (ACE_OS::strcasecmp(current_arg, rebindOpt) == 0) {
-        arg_shifter.consume_arg();
-        rebind_ = true;
-      }
-      else
-        arg_shifter.ignore_arg();
-    }
-
-    // Get reference to Root POA.
-    poa = resolveInit<PortableServer::POA>("RootPOA");
-
-    // Get POA manager
-    poa_mgr = poa->the_POAManager();
-
-    // register Signal handler for Ctr+C
-    signals_.sig_add(SIGINT);
-    signals_.sig_add(SIGTERM);
-
-    pServer = this;
-    ACE_Sig_Action sa((ACE_SignalHandler) handler, SIGINT);
-    ACE_Sig_Action sa2((ACE_SignalHandler) handler, SIGTERM);
-
-    // Activate the POA manager.
-    poa_mgr->activate();
-
-    MIRO_DBG(MIRO, LL_CTOR_DTOR, "Miro::Server. constructed\n");
-  }
-
-  Server::Server(const Server& _server) :
-      Super(_server),
-      poa(_server.rootPoa()),
-      poa_mgr(_server.poa_mgr),
-      rebind_(_server.rebind_),
-      own_(false),
-      shutdown_(true),
-      signals_(),
-      worker_(&threadManager_, orb_.in(), shutdown_)
-  {
-    MIRO_DBG(MIRO, LL_NOTICE, "Copy constructing Miro::Server.\n");
+    MIRO_LOG_CTOR("Miro::Server");
   }
 
   Server::~Server()
   {
-    if (own_) {
-      MIRO_DBG(MIRO, LL_CTOR_DTOR, "Destructing Miro::Server.\n");
-    }
-    else {
-      MIRO_DBG(MIRO, LL_CTOR_DTOR, "Destructing cloned Miro::Server.\n");
-    }
+    MIRO_LOG_DTOR("Miro::Server");
 
-    if (!noNaming_) {
-      CosNaming::Name n(1);
-      n.length(1);
-      try {
-        NameVector::const_iterator i;
-        for (i = nameVector_.begin(); i != nameVector_.end(); ++i) {
-          n[0].id = CORBA::string_dup(i->c_str());
-          namingContext->unbind(n);
+#ifndef MIRO_NO_CORBA
+    {
+      PortableServer::POA_var poa = _worker->rootPoa();
+      ServerData::ObjectIdVector::const_iterator first, last = _data->poaObjects.end();
+      for (first = _data->poaObjects.begin(); first != last; ++first) {
+        try {
+          CORBA::String_var name =
+            PortableServer::ObjectId_to_string(first->in());
+          MIRO_DBG_OSTR(MIRO, LL_DEBUG, "Deactivating object: " << name.in());
         }
-        ContextNameVector::const_iterator j;
-        for (j = contextNameVector_.begin(); j != contextNameVector_.end(); ++j) {
-          n[0].id = CORBA::string_dup(j->second.c_str());
-          j->first->unbind(n);
-          CORBA::release(j->first);
+        catch (CORBA::Exception& e) {
+          MIRO_LOG_OSTR(LL_ERROR, "Failed to convert object id to string: " << e);
+        }
+        poa->deactivate_object(first->in());
+      }
+    } {
+      PortableServer::POA_var child_poa = _worker->npPoa();
+      ServerData::ObjectIdVector::const_iterator first, last = _data->npPoaObjects.end();
+      for (first = _data->npPoaObjects.begin(); first != last; ++first) {
+        try {
+          CORBA::String_var name =
+            PortableServer::ObjectId_to_string(first->in());
+          MIRO_DBG_OSTR(MIRO, LL_DEBUG, "Deactivating object: " << name.in());
+        }
+        catch (CORBA::Exception& e) {
+          MIRO_LOG_OSTR(LL_ERROR, "Failed to convert object id to string: " << e);
+        }
+        child_poa->deactivate_object(first->in());
+      }
+    } {
+      PortableServer::POA_var child_poa = _worker->bdPoa();
+      ServerData::ObjectIdVector::const_iterator first, last = _data->bdPoaObjects.end();
+      for (first = _data->bdPoaObjects.begin(); first != last; ++first) {
+        try {
+          CORBA::String_var name =
+            PortableServer::ObjectId_to_string(first->in());
+          MIRO_DBG_OSTR(MIRO, LL_DEBUG, "Deactivating bidir object: " << name.in());
+        }
+        catch (CORBA::Exception& e) {
+          MIRO_LOG_OSTR(LL_ERROR, "Failed to convert object id to string: " << e);
+        }
+        child_poa->deactivate_object(first->in());
+      }
+    }
+#else // MIRO_NO_CORBA
+    {
+      ServerData::ObjectIdVector::const_iterator first, last = _data->poaObjects.end();
+      for (first = _data->poaObjects.begin(); first != last; ++first) {
+        MIRO_DBG(MIRO, LL_DEBUG, "Deleting default POA servant object.");
+        delete *first;
+      }
+      MIRO_DBG(MIRO, LL_DEBUG, "Deleting default POA servants done.");
+    } {
+      ServerData::ObjectIdVector::const_iterator first, last = _data->npPoaObjects.end();
+      for (first = _data->npPoaObjects.begin(); first != last; ++first) {
+        MIRO_DBG(MIRO, LL_DEBUG, "Deleting persistent POA servant object.");
+        delete *first;
+      }
+      MIRO_DBG(MIRO, LL_DEBUG, "Deleting persistent POA servant done.");
+    } {
+      ServerData::ObjectIdVector::const_iterator first, last = _data->bdPoaObjects.end();
+      for (first = _data->bdPoaObjects.begin(); first != last; ++first) {
+        MIRO_DBG(MIRO, LL_DEBUG, "Deleting bidir POA servant object.");
+        delete *first;
+      }
+      MIRO_DBG(MIRO, LL_DEBUG, "Deleting bidir POA servant done.");
+    }
+#endif // MIRO_NO_CORBA
+
+    if (!_params->noNaming) {
+#ifndef MIRO_NO_CORBA
+
+      ServerData::StringVector::const_iterator i;
+      try {
+        CosNaming::Name n;
+        for (i = _data->nameVector.begin(); i != _data->nameVector.end(); ++i) {
+          path2Name(i->c_str(), n);
+
+          Client::_data->initialNamingContext->unbind(n);
         }
       }
       catch (const CORBA::Exception& e) {
-        MIRO_LOG_OSTR(LL_ERROR, "Caught CORBA exception on unbinding: " << n[0].id
+        MIRO_LOG_OSTR(LL_ERROR,
+                      "Caught CORBA exception on unbinding: " << *i
                       << "\nProbably the NameSevice went down while we run:\n" << e);
+      }
+#else // MIRO_NO_CORBA
+      MIRO_ASSERT(0);
+#endif // MIRO_NO_CORBA
+    }
+    else {
+      ServerData::StringVector::const_iterator i;
+      try {
+        for (i = _data->nameVector.begin(); i != _data->nameVector.end(); ++i) {
+          std::string n = name2FullName(i->c_str());
+          MIRO_DBG_OSTR(MIRO, LL_DEBUG, "Deleting naming repository entry: " << n);
+          NamingRepository::instance()->remove(n);
+        }
+        MIRO_DBG(MIRO, LL_DEBUG, "Deleting naming repository done.");
+      }
+      catch (NamingRepository::ENotRegistered const& /*e*/) {
+        MIRO_LOG_OSTR(LL_ERROR, "Caught exception on unbinding: " << *i
+                      << "\nThere seems to be an name clash somewhere!");
+
       }
     }
 
-    if (own_) {
-      MIRO_LOG(LL_NOTICE, "Deactivating POA manager.\n");
-      //poa_mgr->deactivate(0, 0);
-      MIRO_LOG(LL_NOTICE, "Destroying the POA.\n");
-      //poa->destroy(0, 0);
-      MIRO_LOG(LL_NOTICE, "Performing remaining work in POA\n");
-      ACE_Time_Value timeSlice(0, 200000);
-      //orb_->perform_work(timeSlice);
-      MIRO_LOG(LL_NOTICE, "Destroying the ORB.\n");
-      //orb_->shutdown(1);
-    }
-  }
+    delete _data;
+    _worker->remove_ref();
 
-  // Return the root POA reference
-  /**
-   * Following the normal CORBA memory management rules of return
-   * values from functions, this function duplicates the poa return
-   * value before returning it.
-   */
-  PortableServer::POA_ptr
-  Server::rootPoa() const
-  {
-    return PortableServer::POA::_duplicate(poa.in());
+    MIRO_LOG_DTOR_END("Miro::Server");
   }
 
   /**
@@ -193,15 +171,16 @@ namespace Miro
   void
   Server::detach(unsigned int nthreads)
   {
-    if (worker_.activate(THR_NEW_LWP | THR_JOINABLE, nthreads) != 0)
-      throw Miro::Exception("Miro::Server: Cannot activate client threads");
+    _worker->shutdown_ = false;
+    if (_worker->activate(THR_NEW_LWP | THR_JOINABLE | THR_INHERIT_SCHED, nthreads, 1) != 0)
+      throw Miro::Exception("Miro::Server: Cannot activate client threads.");
   }
 
 
   void
   Server::wait()
   {
-    worker_.wait();
+    _worker->wait();
   }
 
   /**
@@ -213,13 +192,8 @@ namespace Miro
   void
   Server::run(unsigned int nthreads)
   {
-    if (nthreads > 1) {
-      detach(nthreads - 1);
-    }
-    worker_.svc();
-    worker_.wait();
-    // Dectivate the POA manager.
-    // poa_mgr->deactivate();
+    detach(nthreads);
+    _worker->wait();
   }
 
   /**
@@ -227,76 +201,53 @@ namespace Miro
    * naming context.
    */
   void
-  Server::addToNameService(CORBA::Object_ptr _object, const std::string& _name)
+  Server::addToNameService(CORBA::Object * _object, const std::string& _name)
   {
-    if (!noNaming_) {
-      CosNaming::Name n(1);
-      n.length(1);
-      n[0].id = CORBA::string_dup(_name.c_str());
+    if (!_params->noNaming) {
+#ifndef MIRO_NO_CORBA
+      CosNaming::Name n;
+      path2Name(_name.c_str(), n);
 
-      if (rebind_) {
-        // Force binding of references to make
-        // sure they are always up-to-date.
-        try {
-          namingContext->unbind(n);
-          MIRO_LOG_OSTR(LL_ERROR, "Object still bound in naming service: " << _name
-                        << "\nRebinding it.");
-        }
-        catch (...) {
-        }
+      if (n.length() < 1) {
+        MIRO_LOG(LL_ERROR, "Object name empty.");
+        return;
+      }
+
+      CosNaming::Name path = n;
+      path.length(n.length() - 1);
+      CosNaming::NamingContext_var nc = getNamingContext(path);
+
+      CosNaming::Name name;
+      name.length(1);
+      name[0] = n[n.length() - 1];
+
+      // Force binding of references to make
+      // sure they are always up-to-date.
+      try {
+        nc->unbind(name);
+        MIRO_LOG_OSTR(LL_ERROR, "Object still bound in naming service: " << _name
+                      << "\nRebinding it.");
+      }
+      catch (...) {
       }
 
       try {
-        namingContext->bind(n, _object);
+        nc->bind(name, _object);
       }
       catch (CosNaming::NamingContext::AlreadyBound&) {
         MIRO_LOG_OSTR(LL_ERROR, "Object is already bound in naming service: "
-                      << n[0].id
-                      << "\nUse -MiroRebindIOR if you really want to rebind it.");
+                      << _name);
         throw(0);
       }
 
-      nameVector_.push_back(_name);
+#else // MIRO_NO_CORBA
+      MIRO_ASSERT(0);
+#endif // MIRO_NO_CORBA
     }
-  }
-
-  /**
-   * Adds an IOR at the naming service in a specified
-   * naming context.
-   */
-  void
-  Server::addToNameService(CORBA::Object_ptr _object,
-                           CosNaming::NamingContext_ptr _context,
-                           const std::string& _name)
-  {
-    if (!noNaming_) {
-      CosNaming::Name n(1);
-      n.length(1);
-      n[0].id = CORBA::string_dup(_name.c_str());
-
-      if (rebind_) {
-        // Force binding of references to make
-        // sure they are always up-to-date.
-        try {
-          _context->unbind(n);
-          MIRO_LOG_OSTR(LL_ERROR, "Object still bound in naming service: " << _name  << "\nRebinding it.");
-        }
-        catch (...) {
-        }
-      }
-
-      try {
-        _context->bind(n, _object);
-      }
-      catch (CosNaming::NamingContext::AlreadyBound&) {
-        MIRO_LOG_OSTR(LL_ERROR,  "Object is already bound in naming service: "
-                      << n[0].id
-                      << "\nUse -MiroRebindIOR if you really want to rebind it.");
-        throw(0);
-      }
-
-      contextNameVector_.push_back(std::make_pair(CosNaming::NamingContext::_duplicate(_context), _name));
+    else {
+      NamingRepository::instance()->add(name2FullName(_name.c_str()), _object);
     }
+    _data->nameVector.push_back(_name);
   }
 
   /**
@@ -307,20 +258,77 @@ namespace Miro
   Server::shutdown()
   {
     // tell the orb to return from run()
-    shutdown_ = true;
+    ServerWorker::shutdown();
   }
 
-  /**
-   * Be careful to use this reactor with any mutex protected servant
-   * code. It's easy to deadlock. Create your own reactor task
-   * instead.  Anyhow, as long as you just want to use some timers
-   * etc. go ahead.
-   */
-  ACE_Reactor *
-  Server::reactor()
+  bool
+  Server::isShutdown() const throw()
   {
-    // @@ Please see if there's a way to get to the Reactor without
-    // using the TAO_ORB_Core_instance().
-    return TAO_ORB_Core_instance()->reactor();
+    return ServerWorker::isShutdown();
   }
-};
+
+  void
+  Server::activate(PortableServer::ServantBase * servant, bool pass_ownership)
+  {
+#ifndef MIRO_NO_CORBA
+    PortableServer::POA_var poa = _worker->rootPoa();
+    PortableServer::ObjectId_var id = poa->activate_object(servant);
+
+    if (pass_ownership) {
+      servant->_remove_ref();
+    }
+    _data->poaObjects.push_back(id);
+#else // MIRO_NO_CORBA
+
+    if (pass_ownership)
+      _data->poaObjects.push_back(servant);
+#endif // MIRO_NO_CORBA
+  }
+  void
+  Server::activateBiDir(PortableServer::ServantBase * servant, bool pass_ownership)
+  {
+#ifndef MIRO_NO_CORBA
+    PortableServer::POA_var poa = _worker->bdPoa();
+    PortableServer::ObjectId_var id = poa->activate_object(servant);
+
+    if (pass_ownership) {
+      servant->_remove_ref();
+    }
+    _data->bdPoaObjects.push_back(id);
+
+#else // MIRO_NO_CORBA
+
+    if (pass_ownership)
+      _data->bdPoaObjects.push_back(servant);
+#endif // MIRO_NO_CORBA
+  }
+
+  void
+  Server::activateNamedObject(std::string const& object_name,
+                              PortableServer::ServantBase * servant,
+                              bool pass_ownership)
+  {
+#ifndef MIRO_NO_CORBA
+    MIRO_ASSERT(object_name.length() != 0);
+
+    PortableServer::POA_var child_poa = _worker->npPoa();
+    PortableServer::ObjectId_var id =
+      PortableServer::string_to_ObjectId(object_name.c_str());
+
+    child_poa->activate_object_with_id(id.in(), servant);
+
+    CORBA::Object_var obj = child_poa->id_to_reference(id.in());
+
+    if (pass_ownership) {
+      servant->_remove_ref();
+    }
+    _data->npPoaObjects.push_back(id);
+#else // MIRO_NO_CORBA
+    CORBA::Object * obj = servant;
+    if (pass_ownership)
+      _data->npPoaObjects.push_back(servant);
+#endif // MIRO_NO_CORBA
+
+    addToNameService(obj, object_name);
+  }
+}

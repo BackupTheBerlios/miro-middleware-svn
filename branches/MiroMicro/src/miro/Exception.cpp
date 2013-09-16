@@ -1,8 +1,8 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware for Robots)
-// Copyright (C) 1999-2005
-// Department of Neuroinformatics, University of Ulm, Germany
+// Copyright (C) 1999-2013
+// Department of Neural Information Processing, University of Ulm
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published
@@ -18,12 +18,9 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-// $Id$
-//
 #include "Exception.h"
 
 #include <iostream>
-#include <cstring>
 
 namespace Miro
 {
@@ -49,6 +46,15 @@ namespace Miro
    * cause of the exception.
    */
   Exception::Exception(const std::string& _what) throw() :
+      Super(),
+      what_(_what)
+  {}
+
+  /**
+   * You can pass this constructor a string, which describes the
+   * cause of the exception.
+   */
+  Exception::Exception(const char* _what) throw() :
       Super(),
       what_(_what)
   {}
@@ -109,18 +115,6 @@ namespace Miro
   CException::printToStream(std::ostream& _ostr) const
   {
     _ostr << what() << " - "
-    << error_num() << ": " << strerror(error_num());
+    << error_num() << ": " << ::strerror(error_num());
   }
-
-  /**
-   * Pass the value of errno and a string describing the cause for this exception
-   * to be thrown to this constructor.
-   */
-  ACE_Exception::ACE_Exception(int _errno, const std::string& _what) throw() :
-      Super(_errno, _what)
-  {}
-
-  /** Noop implementation. */
-  ACE_Exception::~ACE_Exception() throw()
-  {}
 }

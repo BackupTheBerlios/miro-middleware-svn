@@ -1,8 +1,8 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware for Robots)
-// Copyright (C) 1999-2005
-// Department of Neuroinformatics, University of Ulm, Germany
+// Copyright (C) 1999-2013
+// Department of Neural Information Processing, University of Ulm
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published
@@ -18,38 +18,44 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-// $Id$
-//
 #include "StructuredPushConsumer.h"
+#include "Server.h"
+#include "Log.h"
+#include "ServerWorker.h"
+#include "ClientParameters.h"
+
+#include <tao/Version.h>
 
 #include <cstring>
-#include <miro/Log.h>
 
 namespace Miro
 {
-  using ::operator<<;
+  using namespace std;
 
   /**
    * @param _ec Reference to the event channel.
-   * @param _connect Connect the consumer to the event channel.
-   * @param _subscriptions Initial list of subscriptions.
    */
-  StructuredPushConsumer::StructuredPushConsumer(CosNotifyChannelAdmin::EventChannel_ptr _ec,
-      bool _connect,
-      CosNotification::EventTypeSeq  const& _subscriptions) :
+  StructuredPushConsumer::StructuredPushConsumer(CosNotifyChannelAdmin::EventChannel_ptr _ec) :
+      serverHelper_(NULL),
       ec_(CosNotifyChannelAdmin::EventChannel::_duplicate(_ec)),
       ifgop_(CosNotifyChannelAdmin::OR_OP),
       consumerAdminId_(),
       consumerAdmin_(),
       connectedMutex_(),
-      connected_(0),
-      subscribed_(false),
-      subscriptions_(asterixSubscription()),
-      offers_(subscriptions_.length(), false)
+      connected_(false),
+      subscribed_(),
+      subscriptions_(),
+      offers_()
   {
-    MIRO_DBG(MIRO, LL_CTOR_DTOR, "Constructing StructuredPushConsumer.\n");
+    MIRO_LOG_CTOR("StructuredPushConsumer");
 
     consumerAdmin_ = ec_->new_for_consumers(ifgop_, consumerAdminId_);
+
+    // remove catch all offer
+    CosNotification::EventTypeSeq added;
+    CosNotification::EventTypeSeq removed = asterixSubscription();
+    consumerAdmin_->subscription_change(added, removed);
+
     CosNotifyChannelAdmin::ProxySupplier_var proxySupplier =
       consumerAdmin_->
       obtain_notification_push_supplier(CosNotifyChannelAdmin::STRUCTURED_EVENT,
@@ -58,97 +64,161 @@ namespace Miro
 
     // narrow
     proxySupplier_ =
-      CosNotifyChannelAdmin::StructuredProxyPushSupplier::_narrow(proxySupplier.in());
-    MIRO_ASSERT(!CORBA::is_nil(proxySupplier_.in()));
+      CORBA_dynamic_cast<CosNotifyChannelAdmin::StructuredProxyPushSupplier>(proxySupplier.in());
 
-    setSubscriptions(_subscriptions);
-
-    if (_connect)
-      connect();
+    MIRO_LOG_CTOR_END("StructuredPushConsumer");
   }
 
-  /** Disconnect from the event channel. */
+  /**
+   * @param _ec Reference to the event channel.
+   */
+  StructuredPushConsumer::StructuredPushConsumer() :
+      serverHelper_(NULL),
+      ec_(),
+      ifgop_(CosNotifyChannelAdmin::OR_OP),
+      consumerAdminId_(),
+      consumerAdmin_(),
+      connectedMutex_(),
+      connected_(false),
+      subscribed_(),
+      subscriptions_(),
+      offers_()
+  {
+    MIRO_LOG_CTOR("StructuredPushConsumer");
+
+    Client client;
+    ec_ = client.resolveName<CosNotifyChannelAdmin::EventChannel>(Miro::RobotParameters::instance()->eventChannelName);
+
+    consumerAdmin_ = ec_->new_for_consumers(ifgop_, consumerAdminId_);
+
+    // remove catch all offer
+    CosNotification::EventTypeSeq added;
+    CosNotification::EventTypeSeq removed = asterixSubscription();
+    consumerAdmin_->subscription_change(added, removed);
+
+    CosNotifyChannelAdmin::ProxySupplier_var proxySupplier =
+      consumerAdmin_->
+      obtain_notification_push_supplier(CosNotifyChannelAdmin::STRUCTURED_EVENT,
+                                        proxySupplierId_);
+    MIRO_ASSERT(!CORBA::is_nil(proxySupplier.in()));
+
+    // narrow
+    proxySupplier_ =
+      CORBA_dynamic_cast<CosNotifyChannelAdmin::StructuredProxyPushSupplier>(proxySupplier.in());
+
+    MIRO_LOG_CTOR_END("StructuredPushConsumer");
+  }
+
   StructuredPushConsumer::~StructuredPushConsumer()
   {
-    disconnect();
-    consumerAdmin_->destroy();
-    MIRO_DBG(MIRO, LL_CTOR_DTOR, "Destructing StructuredPushConsumer.");
+    MIRO_LOG_DTOR("StructuredPushConsumer");
+
+    if (serverHelper_ != NULL) {
+      MIRO_LOG(LL_NOTICE, "StructuredPushConsumer still connected.");
+    }
+      
+    delete serverHelper_;
+
+    MIRO_LOG_DTOR_END("StructuredPushConsumer");
   }
+
+  void
+  StructuredPushConsumer::setHistoryQoS(CORBA::Long historySize, 
+		     CORBA::Long order)
+  {
+    CosNotification::QoSProperties properties;
+    properties.length(2);
+
+    // only queue one event per consumer
+    properties[0].name = CORBA::string_dup(CosNotification::MaxEventsPerConsumer);
+    properties[0].value <<= CORBA::Long(historySize);
+    
+    // discard older events
+    properties[1].name = CORBA::string_dup(CosNotification::DiscardPolicy);
+    properties[1].value <<= CORBA::Long(order);
+
+    consumerAdmin_->set_qos(properties);
+    
+  }
+
 
   void
   StructuredPushConsumer::connect()
   {
     MIRO_DBG(MIRO, LL_NOTICE, "Connecting StructuredPushConsumer.");
 
-    Guard guard(connectedMutex_);
+    ACE_Guard<ACE_Recursive_Thread_Mutex> guard(connectedMutex_);
 
-    if (connected_ == 0) {
-      // Activate the consumer with the default_POA_
-      objref_ = this->_this();
+    if (connected_)
+      throw EAlreadyConnected();
 
-      proxySupplier_->connect_structured_push_consumer(objref_);
-      connected_ = 1;
+    // create the server class
+    serverHelper_ = new Server();
+    // Activate the consumer with the bidir POA
+    serverHelper_->activate(this, false);
+    // get a client reference
+    CosNotifyComm::StructuredPushConsumer_var objref = this->_this();
+    // connect to the proxy supplier
+    proxySupplier_->connect_structured_push_consumer(objref);
 
-      MIRO_DBG(MIRO, LL_PRATTLE, "currently offered messages:");
-
-      CosNotification::EventTypeSeq_var events =
-        proxySupplier_->obtain_offered_types(CosNotifyChannelAdmin::ALL_NOW_UPDATES_ON);
-      for (unsigned long i = 0; i < events->length(); ++i) {
-        for (unsigned long j = 0; j < subscriptions_.length(); ++j) {
-          if (strcmp(events[i].type_name, subscriptions_[j].type_name) == 0 &&
-                strcmp(events[i].domain_name, subscriptions_[j].domain_name) == 0) {
-            offers_[j] = true;
-            break;
-          }
-        }
-        MIRO_DBG_OSTR(MIRO, LL_PRATTLE, "  " << events[i].domain_name << "\t"
-                      << "  " << events[i].type_name << std::endl);
-      }
-    }
+    connected_ = true;
   }
 
   void
   StructuredPushConsumer::disconnect()
   {
-    Guard guard(connectedMutex_);
-    if (connected_ == 1) {
-      MIRO_DBG(MIRO, LL_NOTICE, "Disconnecting StructuredPushConsumer.\n");
-      connected_ = -1;
+    MIRO_DBG(MIRO, LL_NOTICE, "Disconnecting StructuredPushConsumer.");
+
+    Server * s = NULL;
+    {
+      ACE_Guard<ACE_Recursive_Thread_Mutex> guard(connectedMutex_);
+      if (!connected_) {
+        MIRO_LOG(LL_ERROR, "Already disconnected.");
+        return;
+      }
+
       try {
+
+        // there were shutdown issues with this particular version of TAO
+        // unfortunately it was used in the hmp field test, so we need to
+        // preserve this special-casing
+#if !( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 5) && (TAO_BETA_VERSION == 8) )
         proxySupplier_->disconnect_structured_push_supplier();
-
-        // Get reference to Root POA.
-        PortableServer::POA_var poa = _default_POA();
-
-        // Deactivate.
-        PortableServer::ObjectId_var oid =
-          poa->reference_to_id(objref_);
-
-        CORBA::release(objref_);
-
-        // deactivate from the poa.
-        poa->deactivate_object(oid.in());
+        consumerAdmin_->destroy();
+#endif
       }
       catch (const CORBA::Exception & e) {
-        MIRO_LOG_OSTR(LL_ERROR, "StructuredPushConsumer::disconnect() CORBA exception on: " << std::endl
-                      << e << std::endl);
+        MIRO_LOG_OSTR(LL_ERROR,
+                      "StructuredPushConsumer::disconnect() CORBA exception on:\n"
+                      << e);
       }
+
+      // prevent double delete, if server owns consumer
+      s = serverHelper_;
+      serverHelper_ = NULL;
+      connected_ = false;
     }
+
+    // ensure no access to member data, as this might result in deletion of consumer
+    delete s;
   }
 
   /**
-   * @param domain Event domain name.
-   * @param type Event type name.
+   * @param type_name Event type name.
+   * @param domain_name Event domain name.
    */
   bool
-  StructuredPushConsumer::offered(std::string const& _domain,
-                                  std::string const& _type) const
+  StructuredPushConsumer::offered(std::string const& _type_name, std::string const& _domain_name) const
   {
-    Guard guard(connectedMutex_);
+    std::string domain_name(_domain_name);
+    if (domain_name.length() == 0)
+      domain_name = ClientParameters::instance()->namingContextName;
 
-    for (unsigned long i = 0; i < subscriptions_.length(); ++i) {
-      if (_domain == static_cast<char const *>(subscriptions_[i].domain_name) &&
-            _type == static_cast<char const *>(subscriptions_[i].type_name))
+    ACE_Guard<ACE_Recursive_Thread_Mutex> guard(connectedMutex_);
+
+    for (unsigned int i = 0; i < subscriptions_.length(); ++i) {
+      if (_type_name == static_cast<char const *>(subscriptions_[i].type_name) &&
+                  domain_name == static_cast<char const *>(subscriptions_[i].domain_name))
         return offers_[i];
     }
     return false;
@@ -169,74 +239,6 @@ namespace Miro
   /**
    * The consumer will register the subscriptions at its event consumer admin.
    * The admin will make sure, the notification channel suppliers are informed
-   * about new subscription. That way, suppliers can query whether the events they
-   * offer are currently subscribed by any supplier.
-   *
-   * Internally the consumer keeps track of the events offered by suppliers.
-   * A user of the consumer can query at the consumer for each subscribed event,
-   * wheter it is offered by any supplier or not. This way an event sink
-   * can determine whether the demanded information is produced by the system.
-   *
-   * For efficient querying of offer/subscription matches, this method returns a
-   * vector containing a handle for each added subscription. This handle can be used
-   * for efficient querying of the availability of suppliers for a
-   * particular event type vie the offered method.
-   */
-  StructuredPushConsumer::IndexVector
-  StructuredPushConsumer::addSubscriptons(CosNotification::EventTypeSeq const& _added)
-  {
-    Guard guard(connectedMutex_);
-
-    CORBA::ULong subscriptionsLen = subscriptions_.length();
-    CORBA::ULong addedLen = _added.length();
-    CORBA::ULong newSubscriptionsLen = subscriptionsLen;
-
-    // assigned indexes
-    IndexVector indexes(addedLen);
-
-    // actually added events
-    CosNotification::EventTypeSeq added;
-    // dummy: allway empty
-    CosNotification::EventTypeSeq removed;
-
-    // enlarge the offers vector by the maximum required size
-    subscriptions_.length(subscriptionsLen + addedLen);
-    added.length(addedLen);
-
-    for (unsigned int i = 0; i < addedLen; ++i) {
-      unsigned int j = 0;
-      for (; j < subscriptionsLen; ++j) {
-        // search whether already offered
-        if (strcmp(subscriptions_[j].type_name, _added[i].type_name) == 0 &&
-              strcmp(subscriptions_[j].domain_name, _added[i].domain_name) == 0) {
-          indexes[i] = j;
-          break;
-        }
-      }
-
-      // add new offer to list of offers
-      if (j == subscriptionsLen) {
-        subscriptions_[newSubscriptionsLen] = _added[i];
-        added[newSubscriptionsLen - subscriptionsLen] = _added[i];
-        indexes[i] = newSubscriptionsLen;
-        ++newSubscriptionsLen;
-      }
-    }
-    // resize offers vector to actual size
-    subscriptions_.length(newSubscriptionsLen);
-    added.length(newSubscriptionsLen - subscriptionsLen);
-
-    initiateSubscriptionChange(added, removed);
-
-    return indexes;
-  }
-
-  /**
-   *
-   * This will overwrite all previously set or added subscriptions.
-   *
-   * The consumer will register the subscriptions at its event consumer admin.
-   * The admin will make sure, the notification channel suppliers are informed
    * about new subscriptions. That way, suppliers can query whether events it
    * offers are currently subscribed by any consumer.
    *
@@ -251,10 +253,9 @@ namespace Miro
    * @param offers The vector of new subscirptions.
    */
   void
-  StructuredPushConsumer::setSubscriptions(CosNotification::EventTypeSeq const& _newSubscriptions,
-      bool _subscribe)
+  StructuredPushConsumer::setSubscriptions(CosNotification::EventTypeSeq const& _newSubscriptions)
   {
-    Guard guard(connectedMutex_);
+    ACE_Guard<ACE_Recursive_Thread_Mutex> guard(connectedMutex_);
 
     CORBA::ULong offersLen = subscriptions_.length();
     CORBA::ULong newOffersLen = _newSubscriptions.length();
@@ -274,14 +275,14 @@ namespace Miro
     for (unsigned int i = 0; i < newOffersLen; ++i) {
       unsigned int j;
       for (j = 0; j < offersLen; ++j) {
-        // search whether already offered
+        // search whether already subscribed
         if (strcmp(_newSubscriptions[i].type_name, subscriptions_[j].type_name) == 0 &&
-              strcmp(_newSubscriptions[i].domain_name, subscriptions_[j].domain_name) == 0) {
+                    strcmp(_newSubscriptions[i].domain_name, subscriptions_[j].domain_name) == 0) {
           break;
         }
       }
 
-      // add new offer to list of added offers
+      // if not, add new subscription to list of added subscriptions
       if (j == offersLen) {
         added[addedIndex] = _newSubscriptions[i];
         ++addedIndex;
@@ -293,12 +294,12 @@ namespace Miro
       for (j = 0; j < newOffersLen; ++j) {
         // search whether still offered
         if (strcmp(subscriptions_[i].type_name, _newSubscriptions[j].type_name) == 0 &&
-              strcmp(subscriptions_[i].domain_name, _newSubscriptions[j].domain_name) == 0) {
+                    strcmp(subscriptions_[i].domain_name, _newSubscriptions[j].domain_name) == 0) {
           break;
         }
       }
 
-      // add odl offer to list of removed offers
+      // if not, add old subscription to list of removed subscriptions
       if (j == newOffersLen) {
         removed[removedIndex] = subscriptions_[i];
         ++removedIndex;
@@ -314,73 +315,85 @@ namespace Miro
 
     // do the offers change and performe bookkeeping
     initiateSubscriptionChange(added, removed);
-
-    subscribed_ = _subscribe;
   }
 
   void
-  StructuredPushConsumer::setSingleSubscription(std::string const& _domain,
-      std::string const& _type)
+  StructuredPushConsumer::setSingleSubscription(std::string const& _type_name,
+      std::string const& _domain_name)
   {
-    CosNotification::EventTypeSeq subscriptions;
-    subscriptions.length(1);
-    subscriptions[0].domain_name = CORBA::string_dup(_domain.c_str());
-    subscriptions[0].type_name = CORBA::string_dup(_type.c_str());
+    std::string domain_name(_domain_name);
+    if (domain_name.length() == 0) {
+      domain_name = ClientParameters::instance()->namingContextName;
+    }
 
-    setSubscriptions(subscriptions);
+    CosNotification::EventTypeSeq subscription;
+    // an empty subscription is now handled as an asterix subscription...
+    if (_type_name.length() != 0) {
+      subscription.length(1);
+      subscription[0].domain_name = domain_name.c_str();
+      subscription[0].type_name = _type_name.c_str();
+    }
+    setSubscriptions(subscription);
+
+    if (_type_name.length() != 0 &&
+                !offered(0)) {
+      MIRO_LOG_OSTR(LL_WARNING,
+                    "StructuredPushConsumer - event subscribed not (yet) offered: domain_name=" <<
+                    domain_name << " type_name=" << _type_name);
+    }
   }
-
-
 
   void
   StructuredPushConsumer::offer_change(const CosNotification::EventTypeSeq& added,
-                                       const CosNotification::EventTypeSeq& removed
-                                       ACE_ENV_ARG_DECL_NOT_USED)
-  throw(CORBA::SystemException, CosNotifyComm::InvalidEventType)
+                                       const CosNotification::EventTypeSeq& removed)
+  throw(CosNotifyComm::InvalidEventType)
   {
-    MIRO_DBG_OSTR(MIRO, LL_PRATTLE, "StructuredPushConsumer: offer change" << std::endl
-                  << "subscription change" << std::endl
-                  << "added messages:" << std::endl);
-    for (unsigned long i = 0; i < added.length(); ++i) {
-      for (unsigned long j = 0; j < subscriptions_.length(); ++j) {
+    MIRO_DBG_OSTR(MIRO,
+                  LL_PRATTLE,
+                  "StructuredPushConsumer: offer change\nadded messages:");
+
+    for (unsigned int i = 0; i < added.length(); ++i) {
+      for (unsigned int j = 0; j < subscriptions_.length(); ++j) {
         if (strcmp(added[i].type_name, subscriptions_[j].type_name) == 0 &&
-              strcmp(added[i].domain_name, subscriptions_[j].domain_name) == 0) {
+                    strcmp(added[i].domain_name, subscriptions_[j].domain_name) == 0) {
           offers_[j] = true;
           break;
         }
       }
-      MIRO_DBG_OSTR(MIRO, LL_PRATTLE, " " << added[i].domain_name << "\t"
-                    << "  " << added[i].type_name << std::endl);
+      MIRO_DBG_OSTR(MIRO,
+                    LL_PRATTLE,
+                    " " << added[i].domain_name << "\t"
+                    << "  " << added[i].type_name);
     }
-    MIRO_DBG(MIRO, LL_PRATTLE, "removed messages:\n");
-    for (unsigned long i = 0; i < removed.length(); ++i) {
-      for (unsigned long j = 0; j < subscriptions_.length(); ++j) {
+    MIRO_DBG(MIRO, LL_PRATTLE, "removed messages:");
+    for (unsigned int i = 0; i < removed.length(); ++i) {
+      for (unsigned int j = 0; j < subscriptions_.length(); ++j) {
         if (strcmp(removed[i].type_name, subscriptions_[j].type_name) == 0 &&
-              strcmp(removed[i].domain_name, subscriptions_[j].domain_name) == 0) {
+                    strcmp(removed[i].domain_name, subscriptions_[j].domain_name) == 0) {
           offers_[j] = false;
           break;
         }
       }
-      MIRO_DBG_OSTR(MIRO, LL_PRATTLE, "  " << removed[i].domain_name << "\t"
-                    << "  " << removed[i].type_name << std::endl);
+      MIRO_DBG_OSTR(MIRO,
+                    LL_PRATTLE,
+                    "  " << removed[i].domain_name << "\t"
+                    << "  " << removed[i].type_name);
     }
   }
 
   void
-  StructuredPushConsumer::push_structured_event(const CosNotification::StructuredEvent & /*notification*/
-      ACE_ENV_ARG_DECL_NOT_USED)
-  throw(CORBA::SystemException, CosEventComm::Disconnected)
+  StructuredPushConsumer::push_structured_event(const CosNotification::StructuredEvent & /*notification*/)
+  throw(CosEventComm::Disconnected)
   {
-    MIRO_LOG(LL_ERROR, "You have to overwrite StructuredPushConsumer::push_structured_event\n");
+    MIRO_LOG(LL_ERROR, "You have to overwrite StructuredPushConsumer::push_structured_event!");
   }
 
   void
-  StructuredPushConsumer::disconnect_structured_push_consumer(ACE_ENV_SINGLE_ARG_DECL_NOT_USED)
-  throw(CORBA::SystemException)
+  StructuredPushConsumer::disconnect_structured_push_consumer()
+  throw()
   {
-    MIRO_DBG(MIRO, LL_NOTICE, "StructuredPushConsumer: disconnect consumer\n");
-
-    connected_ = -1;
+    MIRO_DBG(MIRO, LL_NOTICE, "StructuredPushConsumer: disconnect consumer.");
+    disconnect();
   }
 
   void
@@ -390,16 +403,32 @@ namespace Miro
     // reserve space in subscriptions vector
     offers_.resize(subscriptions_.length(), false);
 
+    MIRO_DBG(MIRO, LL_TRACE, "StructuredPushConsumer subscription change\nadded messages:");
+
+    for (unsigned int i = 0; i < _added.length(); ++i) {
+      MIRO_DBG_OSTR(MIRO,
+                    LL_TRACE,
+                    "  " << _added[i].domain_name << "\t" << "  " << _added[i].type_name);
+    }
+
+    MIRO_DBG(MIRO, LL_TRACE, "removed messages:");
+    for (unsigned int i = 0; i < _removed.length(); ++i) {
+      MIRO_DBG_OSTR(MIRO,
+                    LL_TRACE,
+                    "  " << _removed[i].domain_name << "\t" << "  " << _removed[i].type_name);
+    }
     // inform the supplier admin about the new offers
-    consumerAdmin_->subscription_change(_added, _removed);
+    proxySupplier_->subscription_change(_added, _removed);
 
     // generate list of subscribed offers
     CosNotification::EventTypeSeq_var offers =
       proxySupplier_->obtain_offered_types(CosNotifyChannelAdmin::ALL_NOW_UPDATES_ON);
-    for (unsigned long i = 0; i < offers->length(); ++i) {
-      for (unsigned long j = 0; j < subscriptions_.length(); ++j) {
-        if (strcmp(offers[i].type_name, subscriptions_[j].type_name) == 0 &&
-              strcmp(offers[i].domain_name, subscriptions_[j].domain_name) == 0) {
+
+    for (unsigned int i = 0; i < subscriptions_.length(); ++i) {
+      offers_[i] = false;
+      for (unsigned int j = 0; j < offers->length(); ++j) {
+        if (strcmp(subscriptions_[i].type_name, offers[j].type_name) == 0 &&
+                    strcmp(subscriptions_[i].domain_name, offers[j].domain_name) == 0) {
           offers_[i] = true;
           break;
         }

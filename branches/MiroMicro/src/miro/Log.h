@@ -1,8 +1,8 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware for Robots)
-// Copyright (C) 1999-2005
-// Department of Neuroinformatics, University of Ulm, Germany
+// Copyright (C) 1999-2013 
+// Department of Neural Information Processing, University of Ulm
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published
@@ -18,12 +18,13 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-// $Id$
-//
 #ifndef miro_Log_h
 #define miro_Log_h
 
+#include "miroCore_Export.h"
+
 #include <ace/Log_Msg.h>
+
 #include <sstream>
 #include <cassert>
 
@@ -61,6 +62,21 @@
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
+
+#if defined(_WIN32)
+//# define MIRO_FUNCTION __FUNCTION__ VC2005: predefined macro cannot appear outside function body
+#  define MIRO_FUNCTION "UNKNOWN"
+#elif defined(__STDC__)
+# if __STDC_VERSION__ - 0 >= 199901L /* c99 says this is here */
+#   define MIRO_FUNCTION __func__
+# elif defined(__GNUC__)   /* less than C99, try GCC extension */
+#   define MIRO_FUNCTION __PRETTY_FUNCTION__
+# else
+#   define MIRO_FUNCTION "UNKNOWN"
+# endif
+#else
+# define MIRO_FUNCTION "UNKNOWN"
 #endif
 
 #if defined (MIRO_NO_DEBUG)
@@ -111,7 +127,7 @@
 #define MIRO_DBG(Category, Loglevel, X) \
   do { \
     if (::Miro::Log::level() >= ::Miro::Log::Loglevel && \
-	::Miro::Log::enabled(::Miro::Log::Category)) { \
+	::Miro::Log::enabled(::Miro::LC::Category)) { \
       ACE_Log_Msg *ace___ = ACE_Log_Msg::instance (); \
       ace___->log(::Miro::Log::ll2LM(::Miro::Log::Loglevel), \
 		  ::Miro::Log::format(), X); \
@@ -120,7 +136,7 @@
 #define MIRO_DBG_OSTR(Category, Loglevel, O) \
   do { \
     if (::Miro::Log::level() >= ::Miro::Log::Loglevel && \
-	::Miro::Log::enabled(::Miro::Log::Category)) { \
+	::Miro::Log::enabled(::Miro::LC::Category)) { \
       ACE_Log_Msg *ace___ = ACE_Log_Msg::instance (); \
       std::ostringstream ostr__; \
       ostr__ << O; \
@@ -186,11 +202,34 @@
 
 namespace Miro
 {
-  class Log
+  namespace LC {
+    //! Log category of the miro core components.
+    static unsigned int const MIRO = 0x00000800;
+    //! Log category of the notify components.
+    static unsigned int const NMC =  0x00001000;
+    //! Text version of the category.
+    extern ACE_TCHAR const * const MIRO_NAME;
+    //! Text version of the category.
+    extern ACE_TCHAR const * const NMC_NAME;
+  }
+
+  //! Logging facilities of the MIRO project.
+  /**
+   * MIRO uses the ACE_Log framework for logging purposes.
+   * However it extends the ACE_LOG macros in order to provide a more
+   * elaborate set of logging facilities.
+   *
+   * MIRO logging facilities use two variables to determine log
+   * verbosity, the log level, and the log category. These can be
+   * specified through command line parameters by the user. Each
+   * message, who's priority lies below the selected log level or
+   * who's category is not for output is rejected.
+   */
+  class miroCore_Export Log
   {
   public:
     //! Initializethe logging module.
-    static void init(int& argc, char * argv[]);
+    static void init(int& argc, ACE_TCHAR * argv[]);
     //! Query the current logging level.
     static int level() throw();
     //! Set the current logging level.
@@ -208,38 +247,16 @@ namespace Miro
     static bool compiledWithDebug();
     //! Helper method to convert a Miro LogLevel into an ACE LogMessage
     static ACE_Log_Priority ll2LM(int _level);
-    //! Setting the log format.
-    static void format(char const * _format);
+    /** Setting the log format.
+     * IMPORTANT: <format> must be a statically allocated const ACE_TCHAR*
+     */
+    static void format(ACE_TCHAR const * _format);
     //! Accessor returning a pointer to the current log format.
     static char const * format();
-
-    //! Log cathegory of the miro core components.
-    static unsigned int const MIRO =    0x00000800;
-    //! Log cathegory of the video components.
-    static unsigned int const VIDEO =   0x00001000;
-    //! Log cathegory of the Sphinx Speech components.
-    static unsigned int const SPHINX =  0x00002000;
-    //! Log cathegory of the Pioneer components.
-    static unsigned int const PIONEER = 0x00004000;
-    //! Log cathegory of the faulhaber components.
-    static unsigned int const FAUL =    0x00008000;
-    //! Log cathegory of the Sparrow components.
-    static unsigned int const SPARROW = 0x00010000;
-    //! Log cathegory of the Sick laser range finder components.
-    static unsigned int const SICK =    0x00020000;
-    //! Log cathegory of the DoubleTalk components.
-    static unsigned int const DTLK =    0x00040000;
-    //! Log cathegory of the DirectedPerception components.
-    /** The pantilt unit of the B21. */
-    static unsigned int const DP =      0x00080000;
-    //! Log cathegory of the B21 components
-    static unsigned int const B21 =     0x00100000;
-    //! Log cathegory of the NMC components
-    static unsigned int const NMC =     0x00200000;
-    //! Log cathegory of the NMC components
-    static unsigned int const MCL =     0x00400000;
-    //! Log cathegory of the NMC components
-    static unsigned int const BAP =     0x00800000;
+    /** Register an additonal log category.
+     * IMPORTANT: <name> must be a statically allocated const ACE_TCHAR*
+     */
+    static void register_category(unsigned int _category, ACE_TCHAR const * _name);
 
     //! Log level of messages reporting an emergency.
     /**
@@ -296,7 +313,7 @@ namespace Miro
     public:
       Trace(unsigned int _level = LL_TRACE,
             int _priority = LM_DEBUG,
-            char const * _fun = __PRETTY_FUNCTION__);
+            char const * _fun = MIRO_FUNCTION);
       ~Trace();
     protected:
       //! Remember the log level for the dtor.
@@ -386,7 +403,7 @@ namespace Miro
   Log::enabled(int _priority)
   {
     return
-      (mask_ & _priority) > 0;
+      (mask_ & _priority) != 0;
   }
   inline
   char const *
@@ -396,7 +413,7 @@ namespace Miro
   }
   inline
   void
-  Log::format(char const * _format)
+  Log::format(ACE_TCHAR const * _format)
   {
     format_ = _format;
   }
@@ -404,9 +421,8 @@ namespace Miro
   ACE_Log_Priority
   Log::ll2LM(int _level)
   {
-    assert(_level <= MAX_DBG_LEVEL);
+    MIRO_ASSERT(_level <= MAX_DBG_LEVEL);
     return aceLM_[_level];
   }
-
 }
 #endif // miro_Log_h

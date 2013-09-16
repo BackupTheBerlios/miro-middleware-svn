@@ -1,8 +1,8 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware for Robots)
-// Copyright (C) 1999-2005
-// Department of Neuroinformatics, University of Ulm, Germany
+// Copyright (C) 1999-2013 
+// Department of Neural Information Processing, University of Ulm
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published
@@ -18,56 +18,36 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-// $Id$
-//
-//
-// Authors:
-//   Hans Utz
-//   Stefan Enderle
-//   Stefan Sablatnoeg
-//
 #ifndef miroReactorTask_hh
 #define miroReactorTask_hh
 
-#include "Thread.h"
+#include "miroCore_Export.h"
+
+#include <ace/Task.h>
 #include <ace/Reactor.h>
 #include <ace/Sched_Params.h>
 
 namespace Miro
 {
-  // forward declaration
-  class Server;
-
-  class ReactorTask : public Thread
+  class miroCore_Export ReactorTask : public ACE_Task_Base
   {
-    typedef Thread  Super;
-    typedef ReactorTask Self;
-
   public:
-    ReactorTask(Miro::Server * _pServer = NULL,
-                int size = 20,
-                ACE_Sched_Params * pschedp = NULL);
+    ReactorTask(ACE_Sched_Params * pschedp = NULL, bool shutdownOnException = true, int size = 20);
     virtual ~ReactorTask();
 
-    void shutdown();
+    void shutdown(bool waitFinished = true) throw();
 
-    // methods defined by ACE_Task
+    // methods defined by ACE_Task_Base
     virtual int svc();
 
-  protected:
-    Server * pServer_;
+  private:
+    void conditionalShutdown();
 
-    ACE_Reactor reactor_;
     ACE_Sched_Params schedp_;
+    ACE_Reactor reactor_;
+    bool shutdownOnException_;
   };
-
-  inline
-  void
-  ReactorTask::shutdown()
-  {
-    canceled_ = true;
-  }
-};
+}
 
 #endif
 

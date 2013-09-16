@@ -1,8 +1,8 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware for Robots)
-// Copyright (C) 1999-2005
-// Department of Neuroinformatics, University of Ulm, Germany
+// Copyright (C) 1999-2013
+// Department of Neural Information Processing, University of Ulm
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published
@@ -18,27 +18,16 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-// $Id$
-//
-//
-// Authors:
-//   Hans Utz
-//   Stefan Enderle
-//   Stefan Sablatnoeg
-//
 #include "Enumeration.h"
-#include "miro/Exception.h"
 
 #include <iostream>
-
-using std::string;
-using std::vector;
-
+#include <algorithm>
 
 namespace Miro
 {
-  Enumeration::Enumeration(string _enum, string _values) :
-      enum_(_enum)
+  using namespace std;
+
+  Enumeration::Enumeration(string const& _enum, string const& _values) throw(EInvalid, EDuplicates)
   {
     // tokenize input values
     int pos = 0;
@@ -52,76 +41,49 @@ namespace Miro
     if ((tmp != " ") && (tmp != ""))
       values_.push_back(tmp);
 
-    // check if initial default value is in assortment list
-    bool found = false;
-    for (vector<string>::const_iterator i = values_.begin(); i != values_.end(); ++i)
-      if (*i == enum_) {
-        found = true;
-        break;
-      }
-    if (!found)
-      throw Miro::Exception("Enumeration: tried to set inital value not in list of available values");
+    makeSet();
+    value(_enum);
   }
 
 
-  Enumeration::Enumeration(string _enum, vector<string> _values) :
-      enum_(_enum),
+  Enumeration::Enumeration(string const& _enum, vector<string> const& _values) throw(EInvalid, EDuplicates) :
       values_(_values)
   {
-    // check if initial default value is in assortment list
-    bool found = false;
-    for (vector<string>::const_iterator i = values_.begin(); i != values_.end(); ++i)
-      if (*i == enum_) {
-        found = true;
-        break;
-      }
-    if (!found)
-      throw Miro::Exception("Enumeration: tried to set inital value not in list of available values");
+    makeSet();
+    value(_enum);
   }
-
 
   void
-  Enumeration::value(string _value)
+  Enumeration::value(string const& _value) throw(EInvalid, EDuplicates)
   {
-    bool found = false;
-    for (vector<string>::const_iterator i = values_.begin(); i != values_.end(); ++i) {
-      if (_value == *i) {
-        enum_ = *i;
-        found = true;
-        break;
-      }
-    }
-    if (!found)
-      throw Miro::Exception("Enumeration: tried to set value not in list of available values");
+    StringVector::const_iterator i;
+
+    i = lower_bound(values_.begin(), values_.end(), _value);
+    if (i == values_.end())
+      throw EInvalid("Enumeration: tried to set value not in list of available values: " + _value);
+
+    enum_ = i;
   }
 
-
-  const
-  string&
-  Enumeration::value() const
+  void
+  Enumeration::makeSet() throw(EDuplicates)
   {
-    return enum_;
+    sort(values_.begin(), values_.end());
+    StringVector::iterator i = unique(values_.begin(), values_.end());
+    if (i != values_.end())
+      throw EDuplicates("Duplicates in enumeration set.");
   }
 
-
-  const
-  vector<string>&
-  Enumeration::assortment() const
+  ostream&
+  operator<<(std::ostream& ostr, Enumeration const& _enum)
   {
-    return values_;
+    return ostr << _enum.value();
   }
 
-
-  std::ostream&
-  operator<<(std::ostream& ostr, Enumeration _enum)
-  {
-    return ostr << _enum.enum_;
-  }
-
-  std::istream&
+  istream&
   operator>>(std::istream& istr, Enumeration& _enum)
   {
-    std::string tmp;
+    string tmp;
     istr >> tmp;
     _enum.value(tmp); // this way, error handling is done by value()
     return istr;

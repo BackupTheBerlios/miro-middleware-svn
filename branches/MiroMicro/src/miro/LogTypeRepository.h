@@ -1,8 +1,8 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware for Robots)
-// Copyright (C) 1999-2005
-// Department of Neuroinformatics, University of Ulm, Germany
+// Copyright (C) 1999-2013 
+// Department of Neural Information Processing, University of Ulm
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published
@@ -18,8 +18,6 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-// $Id$
-//
 #ifndef LogTypeRepository_h
 #define LogTypeRepository_h
 
@@ -27,7 +25,7 @@
 
 #include <ace/Mem_Map.h>
 #include <tao/Version.h>
-#if (TAO_MAJOR_VERION > 1) || \
+#if (TAO_MAJOR_VERSION > 1) || \
   ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION > 4) ) ||		\
   ( (TAO_MAJOR_VERSION == 1) && (TAO_MINOR_VERSION == 4) && (TAO_BETA_VERSION > 7) )
 #  include <tao/AnyTypeCode/TypeCode.h>
@@ -87,7 +85,7 @@ namespace Miro
     //--------------------------------------------------------------------------
 
     typedef std::vector<CORBA::TypeCode_ptr> TypeCodeVector;
-  struct TCEq : public std::unary_function<char const *, bool> {
+    struct TCEq : public std::unary_function<char const *, bool> {
       TCEq(CORBA::TypeCode_ptr _tc) : tc_(_tc) {}
 
       bool operator()(CORBA::TypeCode_ptr _tc) const {

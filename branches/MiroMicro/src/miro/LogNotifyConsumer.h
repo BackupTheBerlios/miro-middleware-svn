@@ -1,8 +1,8 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware for Robots)
-// Copyright (C) 1999-2005
-// Department of Neuroinformatics, University of Ulm, Germany
+// Copyright (C) 1999-2013 
+// Department of Neural Information Processing, University of Ulm
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published
@@ -18,15 +18,15 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-// $Id$
-//
-#ifndef LogNotifyConsumer_h
-#define LogNotifyConsumer_h
+#ifndef miro_LogNotifyConsumer_h
+#define miro_LogNotifyConsumer_h
 
 #include "StructuredPushConsumer.h"
-#include "miro/SvcParameters.h"
+#include "miro/Parameters.h"
 
-#include "LogWriter.h"
+#include <ace/High_Res_Timer.h>
+
+#include "miro_Export.h"
 
 #include <string>
 
@@ -36,9 +36,9 @@ class ACE_Sample_History;
 namespace Miro
 {
   // forward declarations
-  class Server;
+  class LogWriter;
 
-  class LogNotifyConsumer : public Miro::StructuredPushConsumer
+  class miro_Export LogNotifyConsumer : public Miro::StructuredPushConsumer
   {
     typedef StructuredPushConsumer Super;
 
@@ -51,20 +51,17 @@ namespace Miro
      *
      * Registers for the events, that it wants to get pushed.
      */
-    LogNotifyConsumer(Server& _server,
-                      CosNotifyChannelAdmin::EventChannel_ptr _ec,
+    LogNotifyConsumer(CosNotifyChannelAdmin::EventChannel_ptr _ec,
                       std::string const& _domainName,
                       std::string const& _fileName = std::string(),
-                      LogNotifyParameters const& _parameters = *LogNotifyParameters::instance(),
-                      bool _keepAlive = true);
+                      LogNotifyParameters const& _parameters = *LogNotifyParameters::instance());
 
     //! Disconnect from the supplier.
     virtual ~LogNotifyConsumer();
 
-    //! Inherited IDL interface: StructuredPushSupplier method
-    virtual void push_structured_event(const CosNotification::StructuredEvent & notification
-                                       ACE_ENV_ARG_DECL_WITH_DEFAULTS)
-    throw(CORBA::SystemException, CosEventComm::Disconnected);
+    //! Inherited IDL interface: StructuredPushConsumer method
+    virtual void push_structured_event(const CosNotification::StructuredEvent & notification)
+    throw(CosEventComm::Disconnected);
 
     //! Default method to generate a file name for a log file.
     /**
@@ -79,7 +76,7 @@ namespace Miro
 
     void measureTiming(unsigned int _nTimes);
     void evaluateTiming();
-    std::string getFileName();
+    void closeWriter();
 
   protected:
     //! The default location for log files.
@@ -89,9 +86,6 @@ namespace Miro
      */
     static std::string path();
 
-    //! Reference to the server.
-    /** Used only for shutdown signalling (see @keepAlive_). */
-    Server& server_;
     //! Reference to the parameters.
     LogNotifyParameters const& parameters_;
     //! The default domain name of the events.
@@ -100,14 +94,11 @@ namespace Miro
     //! The name of the log file.
     std::string fileName_;
 
-    Miro::Mutex mutex_;
+    ACE_Recursive_Thread_Mutex mutex_;
 
     //! The log device.
-    LogWriter logWriter_;
-
-    //! End the server if logfile is full.
-    /** Default is false. */
-    bool keepAlive_;
+    LogWriter * logWriter_;
+    int logNum_;
 
     ACE_Sample_History * history_;
     int nTimes_;

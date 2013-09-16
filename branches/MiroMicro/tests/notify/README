@@ -1,7 +1,0 @@
-Tool for basic notification channel testing.
-
-Not of general interest, but maybe usefull to get familiar with this
-service.
-
-Starts up a notification service, opens a channel and provides a
-simple text interface for sending some different types of messages.

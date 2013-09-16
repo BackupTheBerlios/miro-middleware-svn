@@ -1,8 +1,8 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware for Robots)
-// Copyright (C) 1999-2005
-// Department of Neuroinformatics, University of Ulm, Germany
+// Copyright (C) 1999-2013 
+// Department of Neural Information Processing, University of Ulm
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published
@@ -18,26 +18,17 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-// $Id$
-//
 #ifndef XmlParse_h
 #define XmlParse_h
 
 #include "Exception.h"
-#include "Enumeration.h"
-#include "EnumerationMultiple.h"
-
-#include <ace/TTY_IO.h>
+#include "miroXml_Export.h"
 
 #include <qdom.h>
 
 #include <string>
 #include <vector>
 #include <set>
-
-// forward declarations
-class ACE_Time_Value;
-class ACE_INET_Addr;
 
 
 #define EXCEPTION_SUBTYPE(type, parent) \
@@ -55,6 +46,7 @@ namespace Miro
 {
   // forward declarations
   class Angle;
+  class Text;
 
   // XML parsing exceptions
 
@@ -63,24 +55,20 @@ namespace Miro
   EXCEPTION_SUBTYPE(UnnamedParameterException, XmlException);
   EXCEPTION_SUBTYPE(UnknownParameterException, XmlException);
 
-  void operator <<= (bool& lhs, const QDomNode& node);
-  void operator <<= (char& lhs, const QDomNode& node);
-  void operator <<= (unsigned char& lhs, const QDomNode& node);
-  void operator <<= (short& lhs, const QDomNode& node);
-  void operator <<= (unsigned short& lhs, const QDomNode& node);
-  void operator <<= (int& lhs, const QDomNode& node);
-  void operator <<= (unsigned int& lhs, const QDomNode& node);
-  void operator <<= (long& lhs, const QDomNode& node);
-  void operator <<= (unsigned long& lhs, const QDomNode& node);
-  void operator <<= (double& lhs, const QDomNode& node);
-  void operator <<= (Angle& lhs, const QDomNode& node);
-  void operator <<= (std::string& lhs, const QDomNode& node);
-  void operator <<= (Miro::Enumeration& lhs, const QDomNode& node);
-  void operator <<= (Miro::EnumerationMultiple& lhs, const QDomNode& node);
-  void operator <<= (ACE_Time_Value& lhs, const QDomNode& node);
-  void operator <<= (ACE_TTY_IO::Serial_Params& lhs, const QDomNode& node);
-  void operator <<= (ACE_INET_Addr& lhs, const QDomNode& node);
-  void operator <<= (ACE_Sched_Params& lhs, const QDomNode& node);
+  miroXml_Export void operator <<= (bool& lhs, const QDomNode& node);
+  miroXml_Export void operator <<= (char& lhs, const QDomNode& node);
+  miroXml_Export void operator <<= (unsigned char& lhs, const QDomNode& node);
+  miroXml_Export void operator <<= (short& lhs, const QDomNode& node);
+  miroXml_Export void operator <<= (unsigned short& lhs, const QDomNode& node);
+  miroXml_Export void operator <<= (int& lhs, const QDomNode& node);
+  miroXml_Export void operator <<= (unsigned int& lhs, const QDomNode& node);
+  miroXml_Export void operator <<= (long& lhs, const QDomNode& node);
+  miroXml_Export void operator <<= (unsigned long& lhs, const QDomNode& node);
+  miroXml_Export void operator <<= (float& lhs, const QDomNode& node);
+  miroXml_Export void operator <<= (double& lhs, const QDomNode& node);
+  miroXml_Export void operator <<= (Angle& lhs, const QDomNode& node);
+  miroXml_Export void operator <<= (std::string& lhs, const QDomNode& node);
+  miroXml_Export void operator <<= (Text& lhs, const QDomNode& node);
 
   template<class T>
   void operator <<= (std::vector<T>& lhs, const QDomNode& node)
@@ -112,24 +100,20 @@ namespace Miro
     }
   }
 
-  QDomElement operator >>= (const bool& lhs, QDomNode& node);
-  QDomElement operator >>= (const char& lhs, QDomNode& node);
-  QDomElement operator >>= (const unsigned char& lhs, QDomNode& node);
-  QDomElement operator >>= (const short& lhs, QDomNode& node);
-  QDomElement operator >>= (const unsigned short& lhs, QDomNode& node);
-  QDomElement operator >>= (const int& lhs, QDomNode& node);
-  QDomElement operator >>= (const unsigned int& lhs, QDomNode& node);
-  QDomElement operator >>= (const long& lhs, QDomNode& node);
-  QDomElement operator >>= (const unsigned long& lhs, QDomNode& node);
-  QDomElement operator >>= (const double& lhs, QDomNode& node);
-  QDomElement operator >>= (const Angle& lhs, QDomNode& node);
-  QDomElement operator >>= (const std::string& lhs, QDomNode& node);
-  QDomElement operator >>= (const Miro::Enumeration& lhs, QDomNode& node);
-  QDomElement operator >>= (const Miro::EnumerationMultiple& lhs, QDomNode& node);
-  QDomElement operator >>= (const ACE_Time_Value& lhs, QDomNode& node);
-  QDomElement operator >>= (const ACE_TTY_IO::Serial_Params& lhs, QDomNode& node);
-  QDomElement operator >>= (const ACE_INET_Addr& lhs, QDomNode& node);
-  QDomElement operator >>= (const ACE_Sched_Params& lhs, QDomNode& node);
+  miroXml_Export QDomElement operator >>= (const bool& lhs, QDomNode& node);
+  miroXml_Export QDomElement operator >>= (const char& lhs, QDomNode& node);
+  miroXml_Export QDomElement operator >>= (const unsigned char& lhs, QDomNode& node);
+  miroXml_Export QDomElement operator >>= (const short& lhs, QDomNode& node);
+  miroXml_Export QDomElement operator >>= (const unsigned short& lhs, QDomNode& node);
+  miroXml_Export QDomElement operator >>= (const int& lhs, QDomNode& node);
+  miroXml_Export QDomElement operator >>= (const unsigned int& lhs, QDomNode& node);
+  miroXml_Export QDomElement operator >>= (const long& lhs, QDomNode& node);
+  miroXml_Export QDomElement operator >>= (const unsigned long& lhs, QDomNode& node);
+  miroXml_Export QDomElement operator >>= (const float& lhs, QDomNode& node);
+  miroXml_Export QDomElement operator >>= (const double& lhs, QDomNode& node);
+  miroXml_Export QDomElement operator >>= (const Angle& lhs, QDomNode& node);
+  miroXml_Export QDomElement operator >>= (const std::string& lhs, QDomNode& node);
+  miroXml_Export QDomElement operator >>= (const Text& lhs, QDomNode& node);
 
   template<class T>
   QDomElement operator >>= (const std::vector<T>& lhs, QDomNode& node)

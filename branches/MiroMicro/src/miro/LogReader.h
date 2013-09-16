@@ -1,8 +1,8 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware for Robots)
-// Copyright (C) 1999-2005
-// Department of Neuroinformatics, University of Ulm, Germany
+// Copyright (C) 1999-2013 
+// Department of Neural Information Processing, University of Ulm
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published
@@ -18,14 +18,14 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-// $Id$
-//
 #ifndef LogReader_h
 #define LogReader_h
 
 #include "LogHeader.h"
 #include "LogTypeRepository.h"
-#include "miro/SvcParameters.h"
+#include "miro/Parameters.h"
+
+#include "miro_Export.h"
 
 #include <orbsvcs/CosNotificationC.h>
 #include <tao/CDR.h>
@@ -36,7 +36,7 @@
 namespace Miro
 {
 
-  class LogReader
+  class miro_Export LogReader
   {
   public:
     static int const READER;
@@ -64,16 +64,16 @@ namespace Miro
     //! Report the protocol version.
     unsigned short version() const throw();
     //! Report the number of events in the log file.
-    unsigned long events() const throw();
+    ACE_UINT32 events() const throw();
     //! Report the number of events in the log file.
-    void events(unsigned long count) throw(Miro::Exception);
+    void events(ACE_UINT32 count) throw(Miro::Exception);
     //! Flag indicating end of file.
     bool eof() const throw();
 
     unsigned int progress() const throw();
 
   protected:
-    void packTCR(char * dest) throw();
+    void packTCR(char * dest) throw(Miro::Exception);
 
     //--------------------------------------------------------------------------
     // protected data
@@ -125,7 +125,7 @@ namespace Miro
 
 
     if (version() == 2) {
-      // TODO: solve this without operator new
+      delete istr_;
       istr_ = new TAO_InputCDR(_rdPtr,
                                ((char *)memMap_.addr() + memMap_.size()) - _rdPtr,
                                (int)header_->byteOrder);
@@ -148,7 +148,7 @@ namespace Miro
     return version_;
   }
   inline
-  unsigned long
+  ACE_UINT32
   LogReader::events() const throw()
   {
     return events_;
@@ -171,8 +171,8 @@ namespace Miro
       CosNotification::FilterableEventBody filterable_data;
       CORBA::Any remainder_of_body;
       if (!((*istr_) >> variable_header) ||
-            !((*istr_) >> filterable_data) ||
-            !((*istr_) >> remainder_of_body)) {
+                  !((*istr_) >> filterable_data) ||
+                  !((*istr_) >> remainder_of_body)) {
         eof_ = true;
         return false;
       }

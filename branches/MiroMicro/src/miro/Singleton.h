@@ -1,8 +1,8 @@
 // -*- c++ -*- ///////////////////////////////////////////////////////////////
 //
 // This file is part of Miro (The Middleware for Robots)
-// Copyright (C) 1999-2005
-// Department of Neuroinformatics, University of Ulm, Germany
+// Copyright (C) 1999-2013 
+// Department of Neural Information Processing, University of Ulm
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published
@@ -18,12 +18,10 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-// $Id$
-//
-#ifndef miroSingleton_h
-#define miroSingleton_h
+#ifndef miro_Singleton_h
+#define miro_Singleton_h
 
-#include "miro/Synch.h"
+#include <ace/Synch.h>
 #include <ace/Singleton.h>
 
 namespace Miro
@@ -77,5 +75,5 @@ namespace Miro
   }
 }
 
-#endif
+#endif // miro_Singleton_h
 
