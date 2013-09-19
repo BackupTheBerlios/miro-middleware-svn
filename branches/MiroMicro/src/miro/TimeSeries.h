@@ -18,13 +18,17 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-#ifndef Miro_TimeSeries_h
-#define Miro_TimeSeries_h
+// $Id$
+//
+#ifndef miro_TimeSeries_h
+#define miro_TimeSeries_h
 
 #include "Log.h"
+#include "miroCore_Export.h"
 
 #include <ace/Time_Value.h>
-#include <ace/OS.h>
+#include <ace/OS_NS_sys_time.h>
+#include <ace/OS_NS_time.h>
 
 #include <iosfwd>
 
@@ -43,7 +47,7 @@
 
 #define MIRO_TIME_SERIES(x, y)
 #define MIRO_TIME_SERIES_N(x, y, n)
-#define  MIRO_TIME_PROBE_START(x)
+#define MIRO_TIME_PROBE_START(x)
 #define MIRO_TIME_PROBE_DONE(x)
 
 #endif // !MIRO_PERFORMANCE_LOGGING
@@ -59,7 +63,7 @@ namespace Miro
   };
 
   //! Output operator for TimeStats.
-  std::ostream& operator<<(std::ostream& _ostr, TimeStats const& _rhs);
+  miroCore_Export std::ostream& operator<<(std::ostream& _ostr, TimeStats const& _rhs);
 
   //! Class for simple time series evaluation.
   /** It calculates a floating mean of the last N time probes.  The
@@ -69,7 +73,7 @@ namespace Miro
    * enough precision for generic timing evaluation.
    */
   template < unsigned int N = 100UL >
-  class TimeSeries
+  class miroCore_Export TimeSeries
   {
   public:
     static const unsigned int SIZE = N;
@@ -86,6 +90,8 @@ namespace Miro
     ACE_Time_Value const& last() const throw();
     //! Evaluate statistics.
     void eval(TimeStats& _stats) const throw();
+    //! Evaluate statistics.
+    TimeStats eval() const throw();
     //! Return the size of the histogram
     unsigned int size() const throw();
     //! True if the histogram holds the maximum number of entries.
@@ -220,6 +226,15 @@ namespace Miro
   }
 
   template<unsigned int N>
+  TimeStats
+  TimeSeries<N>::eval() const throw()
+  {
+    TimeStats stats;
+    this->eval(stats);
+    return stats;
+  }
+
+  template<unsigned int N>
   inline
   ACE_Time_Value
   TimeSeries<N>::tSquare(ACE_Time_Value const& _t)  throw()
@@ -230,6 +245,14 @@ namespace Miro
     v.set(t);
     return v;
   }
+
+  template<unsigned int N>
+  inline
+  std::string const&
+  TimeSeries<N>::name() const throw()
+  {
+    return name_;
+  }
 }
 
-#endif // Miro_TimeSeries_h
+#endif // miro_TimeSeries_h

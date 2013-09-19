@@ -23,13 +23,6 @@
 	<config_parameter name="timeout" type="ACE_Time_Value" default="0" />
       </config_item>
 
-      <config_item name="ChannelReplicator" parent="Miro::Config" instance="true" final="true" >
-	<config_parameter name="sourceChannel" type="string" default="NotifyEventChannel" />
-	<config_parameter name="targetChannel" type="string" default="LowBandwidthChannel" />
-	<config_parameter name="events" type="std::vector&lt;EventTimeoutParameters&gt;" />
-	<config_parameter name="reconnectTimeout" type="ACE_Time_Value" default="5, 0" />
-      </config_item>
-
       <config_item name="LogNotify" parent="Miro::Config" instance="true">
 	<config_parameter name="TCRFileSize" type="unsigned long" default="1024*1024" measure="bytes" />
 	<config_parameter name="MaxFileSize" type="unsigned long" default="100*1024*1024" measure="bytes" />

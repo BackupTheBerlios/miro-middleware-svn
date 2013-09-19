@@ -27,9 +27,9 @@ namespace Miro
 {
   std::ostream& operator<<(std::ostream& _ostr, TimeStats const& _rhs)
   {
-    _ostr << "min: " << _rhs.min << std::endl
-    << "max: " << _rhs.max << std::endl
-    << "mean: " << _rhs.mean << std::endl;
+    _ostr << "min: " << _rhs.min << "sec \t"
+    << "max: " << _rhs.max << "sec \t"
+    << "mean: " << _rhs.mean << "sec" << std::endl ;
 
     return _ostr;
   }
